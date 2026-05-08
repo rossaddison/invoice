@@ -25,10 +25,11 @@ use Yiisoft\Html\Html;
 <tr>
 <?php
     /**
-     * @var App\Invoice\Entity\ProductProperty $productProperty
+     * @var App\Infrastructure\Persistence\ProductProperty\ProductProperty $productProperty
      */
     foreach ($all as $productProperty) {
-        $productPropertyArguments = ['id' => $productProperty->getProperty_id(), '_language' => $language];
+        $productPropertyArguments = ['id' => $productProperty->reqId(),
+            '_language' => $language];
         echo Html::openTag('td');
         echo Html::a($productProperty->getName() ?? '#', $urlGenerator->generate(
             'productproperty/view',
@@ -39,7 +40,7 @@ use Yiisoft\Html\Html;
         echo $productProperty->getValue();
         echo Html::closeTag('td');
     }
-?>  
+?>
 </tr>
 </tbody>
 </table>

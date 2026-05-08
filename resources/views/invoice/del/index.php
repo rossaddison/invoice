@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\DeliveryLocation;
+use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
@@ -37,12 +37,12 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @psalm-var positive-int $page
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$toolbarReset = A::tag()
+$toolbarReset =  new A()
   ->addAttributes(['type' => 'reset'])
   ->addClass('btn btn-danger me-1 ajax-loader')
-  ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+  ->content( new I()->addClass('bi bi-bootstrap-reboot'))
   ->href($urlGenerator->generate($currentRoute->getName() ?? 'deliverylocation/index'))
   ->id('btn-reset')
   ->render();
@@ -51,15 +51,15 @@ $columns = [
     new DataColumn(
         'id',
         header: 'id',
-        content: static fn(DeliveryLocation $model) => (string) $model->getId(),
+        content: static fn(DeliveryLocation $model) => (string) $model->reqId(),
         withSorting: true,
     ),
     new DataColumn(
         'client_id',
         header: $translator->translate('client'),
         content: static function (DeliveryLocation $model) use ($cR): string {
-            if ($cR->repoClientCount($model->getClient_id()) > 0) {
-                return $cR->repoClientquery($model->getClient_id())->getClient_name();
+            if ($cR->repoClientCount($model->reqClientId()) > 0) {
+                return $cR->repoClientquery($model->reqClientId())->getClientName();
             }
             return '#';
         },
@@ -67,34 +67,29 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('quote.delivery.location.index.button.list'),
-        content: static function (DeliveryLocation $model) use ($urlGenerator, $qR, $dateHelper): string {
-            $deliveryLocationId = $model->getId();
-            if (null !== $deliveryLocationId) {
-                $quotes = $qR->findAllWithDeliveryLocation($deliveryLocationId);
-                $buttons = '';
-                $button = '';
-                /**
-                 * @var App\Invoice\Entity\Quote $quote
-                 */
-                foreach ($quotes as $quote) {
-                    $quoteId = $quote->getId();
-                    if (null !== $quoteId) {
-                        $button = (string) Html::a(
-                            ($quote->getNumber() ?? '#') .
-                                   ' ' .
-                                   ($quote->getDate_created())->format('Y-m-d'),
-                            $urlGenerator->generate('quote/view', ['id' => $quoteId]),
-                            ['class' => 'btn btn-primary btn-sm',
-                                'data-bs-toggle' => 'tooltip',
-                                'title' => $quoteId,
-                            ],
-                        );
-                        $buttons .= $button . str_repeat("&nbsp;", 1);
-                    }
-                }
-                return $buttons;
+        content: static function (DeliveryLocation $model) use ($urlGenerator, $qR): string {
+            $deliveryLocationId = $model->reqId();
+            $quotes = $qR->findAllWithDeliveryLocation($deliveryLocationId);
+            $buttons = '';
+            /**
+             * @var App\Infrastructure\Persistence\Quote\Quote $quote
+             */
+            foreach ($quotes as $quote) {
+                $quoteId = $quote->reqId();
+                $button = (string) Html::a(
+                    ($quote->getNumber() ?? '#') .
+                           ' ' .
+                           ($quote->getDateCreated())->format('Y-m-d'),
+                    $urlGenerator->generate('quote/view', ['id' => $quoteId]),
+                    ['class' => 'btn btn-primary btn-sm',
+                        'data-bs-toggle' => 'tooltip',
+                        'title' => $quoteId,
+                    ],
+                );
+                $buttons .= $button . str_repeat("&nbsp;", 1);
             }
-            return '';
+            return $buttons;
+            
         },
         withSorting: true,
         encodeContent: false,
@@ -102,39 +97,33 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('delivery.location.index.button.list'),
-        content: static function (DeliveryLocation $model) use ($urlGenerator, $iR, $dateHelper): string {
-            $deliveryLocationId = $model->getId();
-            if (null !== $deliveryLocationId) {
-                $invoices = $iR->findAllWithDeliveryLocation($deliveryLocationId);
-                $buttons = '';
-                $button = '';
-                /**
-                 * @var App\Invoice\Entity\Inv $invoice
-                 */
-                foreach ($invoices as $invoice) {
-                    $invoiceId = $invoice->getId();
-                    if (null !== $invoiceId) {
-                        $button = (string) Html::a(
-                            ($invoice->getNumber() ?? '#') .
-                                ' ' .
-                                ($invoice->getDate_created())->format(
-                                    'Y-m-d',
-                                ),
-                            $urlGenerator->generate(
-                                'inv/view',
-                                ['id' => $invoiceId],
-                            ),
-                            ['class' => 'btn btn-primary btn-sm',
-                                'data-bs-toggle' => 'tooltip',
-                                'title' => $invoiceId,
-                            ],
-                        );
-                        $buttons .= $button . str_repeat("&nbsp;", 1);
-                    }
-                }
-                return $buttons;
+        content: static function (DeliveryLocation $model) use ($urlGenerator, $iR): string {
+            $deliveryLocationId = $model->reqId();
+            $invoices = $iR->findAllWithDeliveryLocation($deliveryLocationId);
+            $buttons = '';
+            /**
+             * @var App\Infrastructure\Persistence\Inv\Inv $invoice
+             */
+            foreach ($invoices as $invoice) {
+                $invoiceId = $invoice->reqId();
+                $button = (string) Html::a(
+                    ($invoice->getNumber() ?? '#') .
+                        ' ' .
+                        ($invoice->getDateCreated())->format(
+                            'Y-m-d',
+                        ),
+                    $urlGenerator->generate(
+                        'inv/view',
+                        ['id' => $invoiceId],
+                    ),
+                    ['class' => 'btn btn-primary btn-sm',
+                        'data-bs-toggle' => 'tooltip',
+                        'title' => $invoiceId,
+                    ],
+                );
+                $buttons .= $button . str_repeat("&nbsp;", 1);
             }
-            return '';
+            return $buttons;
         },
         withSorting: true,
         encodeContent: false,
@@ -143,65 +132,75 @@ $columns = [
         'global_location_number',
         header: $translator->translate('delivery.location.global.location.number'),
         content: static function (DeliveryLocation $model): string {
-            return $model->getGlobal_location_number() ?? '';
+            return $model->getGlobalLocationNumber() ?? '';
         },
         encodeContent: true,
     ),
     new DataColumn(
         'date_created',
         header: $translator->translate('date.created'),
-        content: static fn(DeliveryLocation $model): string => ($model->getDate_created())->format(
-            'Y-m-d',
-        ),
+        content: static function(DeliveryLocation $model) use ($s) : string {
+            return $model->getDateCreated()
+                         ->setTimeZone(new DateTimeZone(
+                            $s->getSetting('time_zone') ?:
+                            'Europe/London'))
+                         ->format('Y-m-d H:i:s'); 
+        }
+    ),
+    new DataColumn(
+        'date_modified',
+        header: $translator->translate('common.date.modified'),
+        content: static function(DeliveryLocation $model) use ($s) : string {
+            return $model->getDateModified()
+                         ->setTimeZone(new DateTimeZone(
+                            $s->getSetting('time_zone') ?:
+                            'Europe/London'))
+                         ->format('Y-m-d H:i:s'); 
+        }
     ),
     new DataColumn(
         header: $translator->translate('view'),
         content: static function (DeliveryLocation $model) use ($urlGenerator): string {
-            return Html::a(
-                Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']),
-                $urlGenerator->generate('del/view', ['id' => $model->getId()]),
-                [
-                ],
-            )->render();
+            return (new A())
+                ->addClass('btn btn-outline-info btn-sm')
+                ->encode(false)
+                ->content((new I())->addClass('bi bi-eye')->render())
+                ->href($urlGenerator->generate('del/view', ['id' => $model->reqId()]))
+                ->render();
         },
-        encodeContent: false,        
+        encodeContent: false,
     ),
     new DataColumn(
         header: $translator->translate('edit'),
         content: static function (DeliveryLocation $model) use ($urlGenerator): string {
-            return Html::a(
-                Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']),
-                $urlGenerator->generate(
+            return (new A())
+                ->addClass('btn btn-outline-warning btn-sm')
+                ->encode(false)
+                ->content((new I())->addClass('bi bi-pencil-square')->render())
+                ->href($urlGenerator->generate(
                     'del/edit',
-                    ['id' => $model->getId()],
+                    ['id' => $model->reqId()],
                     ['origin' => 'del', 'origin_id' => '', 'action' => 'index'],
-                ),
-                [],
-            )->render();
+                ))
+                ->render();
         },
-        encodeContent: false,        
+        encodeContent: false,
     ),
     new DataColumn(
         header: $translator->translate('delete'),
         content: static function (DeliveryLocation $model) use ($translator, $urlGenerator): string {
-            return Html::a(
-                Html::tag(
-                    'button',
-                    Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
-                    [
-                        'type' => 'submit',
-                        'class' => 'dropdown-button',
-                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
-                    ],
-                ),
-                $urlGenerator->generate('del/delete', ['id' => $model->getId()]),
-                [],
-            )->render();
+            return (new A())
+                ->addClass('btn btn-outline-danger btn-sm')
+                ->encode(false)
+                ->content((new I())->addClass('bi bi-trash')->render())
+                ->href($urlGenerator->generate('del/delete', ['id' => $model->reqId()]))
+                ->addAttributes(['onclick' => "return confirm('" . $translator->translate('delete.record.warning') . "');"])
+                ->render();
         },
-        encodeContent: false, 
-    ),           
+        encodeContent: false,
+    ),
 ];
-        
+
 $urlCreator = new UrlCreator($urlGenerator);
 $urlCreator->__invoke([], OrderHelper::stringToArray($sortString));
 $defaultPageSizeOffsetPaginator = (int) $s->getSetting('default_list_limit');
@@ -217,7 +216,7 @@ $sortedAndPagedPaginator = (new OffsetPaginator($dels))
     ->withSort($sort)
     ->withToken(PageToken::next((string) $page));
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $sortedAndPagedPaginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -225,9 +224,9 @@ $grid_summary = $s->grid_summary(
     '',
 );
 $toolbarString =
-    Form::tag()->post($urlGenerator->generate('del/index'))->csrf($csrf)->open() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+     new Form()->post($urlGenerator->generate('del/index'))->csrf($csrf)->open() .
+     new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+     new Form()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
@@ -246,7 +245,7 @@ echo GridView::widget()
 ->header($translator->translate('delivery.location'))
 ->id('w341-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($sortedAndPagedPaginator))
-->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'del') . ' ' . $grid_summary)
+->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'del') . ' ' . $gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

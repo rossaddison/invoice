@@ -4,40 +4,35 @@ declare(strict_types=1);
 
 namespace App\Invoice\PaymentPeppol;
 
-use App\Invoice\Entity\PaymentPeppol;
+use App\Infrastructure\Persistence\PaymentPeppol\PaymentPeppol;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class PaymentPeppolForm extends FormModel
 {
-    private ?string $inv_id = '';
-    private ?string $id = '';
-
+    private ?int $inv_id = null;
+    
     #[Required]
     private ?int $auto_reference = null;
 
     #[Required]
     private ?string $provider = '';
 
-    public function __construct(PaymentPeppol $paymentPeppol)
+    public static function show(PaymentPeppol $paymentPeppol): self
     {
-        $this->inv_id = $paymentPeppol->getInv_id();
-        $this->id = $paymentPeppol->getId();
-        $this->auto_reference = $paymentPeppol->getAuto_reference();
-        $this->provider = $paymentPeppol->getProvider();
+        $form = new self();
+        $form->inv_id = $paymentPeppol->reqInvId();
+        $form->auto_reference = $paymentPeppol->getAutoReference();
+        $form->provider = $paymentPeppol->getProvider();
+        return $form;
     }
 
-    public function getInv_id(): ?string
+    public function getInvId(): ?int
     {
         return $this->inv_id;
     }
 
-    public function getId(): ?string
-    {
-        return $this->id;
-    }
-
-    public function getAuto_reference(): ?int
+    public function getAutoReference(): ?int
     {
         return $this->auto_reference;
     }

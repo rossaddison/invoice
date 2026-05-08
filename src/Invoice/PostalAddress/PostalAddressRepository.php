@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\PostalAddress;
 
 use Cycle\ORM\Select;
-use App\Invoice\Entity\PostalAddress;
+use App\Infrastructure\Persistence\PostalAddress\PostalAddress;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
@@ -89,11 +89,11 @@ final class PostalAddressRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @psalm-return TEntity|null
      * @return PostalAddress|null
      */
-    public function repoPostalAddressLoadedquery(string $id): ?PostalAddress
+    public function repoPostalAddressLoadedquery(int $id): ?PostalAddress
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -101,10 +101,10 @@ final class PostalAddressRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return int
      */
-    public function repoCount(string $id): int
+    public function repoCount(int $id): int
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -113,10 +113,10 @@ final class PostalAddressRepository extends Select\Repository
 
     /**
      * @psalm-return TEntity|null
-     * @param string $client_id
+     * @param int $client_id
      * @return PostalAddress|null
      */
-    public function repoClient(string $client_id): ?PostalAddress
+    public function repoClient(int $client_id): ?PostalAddress
     {
         $query = $this->select()
                       ->where(['client_id' => $client_id]);
@@ -124,10 +124,10 @@ final class PostalAddressRepository extends Select\Repository
     }
 
     /**
-     * @param string $client_id
+     * @param int $client_id
      * @return EntityReader
      */
-    public function repoClientAll(string $client_id): EntityReader
+    public function repoClientAll(int $client_id): EntityReader
     {
         $query = $this->select()
                       ->where(['client_id' => $client_id]);
@@ -135,10 +135,10 @@ final class PostalAddressRepository extends Select\Repository
     }
 
     /**
-     * @param string $client_id
+     * @param int $client_id
      * @return int
      */
-    public function repoClientCount(string $client_id): int
+    public function repoClientCount(int $client_id): int
     {
         $query = $this->select()
                       ->where(['client_id' => $client_id]);

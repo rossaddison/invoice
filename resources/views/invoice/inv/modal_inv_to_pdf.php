@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 /**
  * Related logic: see id="inv-to-pdf" triggered by <a href="#inv-to-pdf" data-bs-toggle="modal"  style="text-decoration:none"> views/inv/view.php
- * @var App\Invoice\Entity\Inv $inv
+ * @var App\Infrastructure\Persistence\Inv\Inv $inv
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var string $csrf
  */
-$inv_id = $inv->getId();
 ?>
-   
+
 <div id="inv-to-pdf" class="modal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -23,40 +22,43 @@ $inv_id = $inv->getId();
                 <form>
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
                     <div class="control-label">
-                        <?= $translator->translate('custom.fields'); ?>?                
+                        <?= $translator->translate('custom.fields'); ?>?
                     </div>
-                    <input type="hidden" name="inv_id-" . <?php $inv_id; ?> id="inv_id-" . <?php $inv_id; ?> value="<?php $inv_id; ?>">
-                </form>    
+                    <input type="hidden"
+                           name="inv_id-<?php $inv->reqId(); ?>"
+                           id="inv_id-<?php $inv->reqId(); ?>"
+                           value="<?php $inv->reqId(); ?>">
+                </form>
             </div>
             <div class="modal-footer">
               <div class="btn-group">
                     <!-- display Settings...View...Invoices...Pdf Settings...G(ie. stream)...Folder(ie.archive)...</>(ie Html)... -->
                     <button type="button" data-bs-toggle = "tooltip" title="stream/archive/html">
                     <div>
-                        <i class="fa fa-google"></i>
+                        <i class="bi bi-google"></i>
                         <?php if ((!empty($s->getSetting('pdf_stream_inv'))) && ($s->getSetting('pdf_stream_inv') === '1')) { ?>
-                            <i class="fa fa-check"></i>
+                            <i class="bi bi-check-lg"></i>
                         <?php } else {?>
-                            <i class="fa fa-times"></i>
-                        <?php } ?>    
-                        <i class="fa fa-folder"></i>
+                            <i class="bi bi-x-lg"></i>
+                        <?php } ?>
+                        <i class="bi bi-folder"></i>
                         <?php if ((!empty($s->getSetting('pdf_archive_inv'))) && ($s->getSetting('pdf_archive_inv') === '1')) { ?>
-                            <i class="fa fa-check"></i>
+                            <i class="bi bi-check-lg"></i>
                         <?php } else {?>
-                            <i class="fa fa-times"></i>
+                            <i class="bi bi-x-lg"></i>
                         <?php } ?>
                     </div>
                     </button>
                     <button class="inv_to_pdf_confirm_with_custom_fields btn btn-success" id="inv_to_pdf_confirm_with_custom_fields" type="button">
-                        <i class="fa fa-check"></i> <?= $translator->translate('yes'); ?>
+                        <i class="bi bi-check-lg"></i> <?= $translator->translate('yes'); ?>
                     </button>
                     <button class="inv_to_pdf_confirm_without_custom_fields btn btn-info" id="inv_to_pdf_confirm_without_custom_fields" type="button">
-                        <i class="fa fa-times"></i> <?= $translator->translate('no'); ?>
-                    </button>                
-                    <button class="btn btn-danger" type="button" data-bs-dismiss="modal">
-                        <i class="fa fa-times"></i> <?= $translator->translate('back'); ?>
+                        <i class="bi bi-x-lg"></i> <?= $translator->translate('no'); ?>
                     </button>
-                </div>  
+                    <button class="btn btn-danger" type="button" data-bs-dismiss="modal">
+                        <i class="bi bi-x-lg"></i> <?= $translator->translate('back'); ?>
+                    </button>
+                </div>
             </div>
         </div>
     </div>

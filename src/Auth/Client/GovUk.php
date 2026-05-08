@@ -180,7 +180,7 @@ class GovUk extends OAuth2
      */
     protected function splitIdTokenIntoJwtHeader(string $id_token): string
     {
-        return $jwtHeader = explode('.', $id_token)[0];
+        return explode('.', $id_token)[0];
     }
 
     /**
@@ -308,7 +308,7 @@ class GovUk extends OAuth2
         $rsa = PublicKeyLoader::load([
             'n' => $rsaKey['modulus'],
             'e' => $rsaKey['publicExponent'],
-        ], 'raw');
+        ], $_ENV['GOVUK_PHPSECLIB3_PUBLIC_KEY_LOADER_RAW']);
 
         // Return the PEM-formatted public key
         return $rsa->toString('PKCS8');

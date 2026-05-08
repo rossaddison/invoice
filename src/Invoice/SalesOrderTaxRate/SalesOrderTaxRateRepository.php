@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderTaxRate;
 
-use App\Invoice\Entity\SalesOrderTaxRate;
+use App\Infrastructure\Persistence\SalesOrderTaxRate\SalesOrderTaxRate;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -34,7 +34,7 @@ final class SalesOrderTaxRateRepository extends Select\Repository
     public function findAllPreloaded(): EntityReader
     {
         $query = $this->select()
-                      ->load('salesorder')
+                      ->load('sales_order')
                       ->load('tax_rate');
         return $this->prepareDataReader($query);
     }
@@ -85,12 +85,12 @@ final class SalesOrderTaxRateRepository extends Select\Repository
     //used in salesorder/view to determine if a 'one-off'  salesorder tax rate acquired from tax rates is to be applied to the salesorder
     //salesorder tax rates are children of their parent tax rate and are normally used when all products use the same tax rate ie. no item tax
     /**
-     * @param string|null $salesorder_id
+     * @param int $sales_order_id
      */
-    public function repoCount(?string $salesorder_id): int
+    public function repoCount(int $sales_order_id): int
     {
         return $this->select()
-                      ->where(['so_id' => $salesorder_id])
+                      ->where(['sales_order_id' => $sales_order_id])
                       ->count();
     }
 
@@ -100,30 +100,30 @@ final class SalesOrderTaxRateRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoSalesOrderTaxRatequery(string $id): ?SalesOrderTaxRate
+    public function repoSalesOrderTaxRatequery(int $id): ?SalesOrderTaxRate
     {
         $query = $this->select()
-                      ->load('salesorder')
+                      ->load('sales_order')
                       ->load('tax_rate')
                       ->where(['id' => $id]);
         return  $query->fetchOne() ?: null;
     }
 
     // find all salesorder tax rates used for a specific salesorder normally to apply include_item_tax
-    // (see function calculate_salesorder_taxes in NumberHelper
+    // (see function calculateSalesorderTaxes in NumberHelper
     // load 'tax rate' so that we can use tax_rate_id through the BelongTo relation in the Entity
     // to access the parent tax rate table's percent name and percentage
     // which we will use in salesorder/view
 
     /**
-     * @param string $salesorder_id
+     * @param int $sales_order_id
      * @return EntityReader
      */
-    public function repoSalesOrderquery(string $salesorder_id): EntityReader
+    public function repoSalesOrderquery(int $sales_order_id): EntityReader
     {
         $query = $this->select()
                       ->load('tax_rate')
-                      ->where(['so_id' => $salesorder_id]);
+                      ->where(['sales_order_id' => $sales_order_id]);
         return $this->prepareDataReader($query);
     }
 
@@ -132,7 +132,7 @@ final class SalesOrderTaxRateRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoTaxRatequery(string $tax_rate_id): ?SalesOrderTaxRate
+    public function repoTaxRatequery(int $tax_rate_id): ?SalesOrderTaxRate
     {
         $query = $this->select()
                       ->load('tax_rate')
@@ -140,10 +140,10 @@ final class SalesOrderTaxRateRepository extends Select\Repository
         return  $query->fetchOne() ?: null;
     }
 
-    public function repoGetSalesOrderTaxRateAmounts(string $salesorder_id): EntityReader
+    public function repoGetSalesOrderTaxRateAmounts(int $sales_order_id): EntityReader
     {
         $query = $this->select()
-                      ->where(['so_id' => $salesorder_id]);
+                      ->where(['sales_order_id' => $sales_order_id]);
         return $this->prepareDataReader($query);
     }
 }

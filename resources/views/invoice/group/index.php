@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Group;
+use App\Infrastructure\Persistence\Group\Group;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -27,12 +27,12 @@ use Yiisoft\Router\CurrentRoute;
  * @var string $csrf
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$toolbarReset = A::tag()
+$toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'group/index'))
     ->id('btn-reset')
     ->render();
@@ -41,33 +41,33 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Group $model) => Html::encode($model->getId()),
+        content: static fn (Group $model): string => (string) $model->reqId(),
     ),
     new DataColumn(
         'name',
         header: $translator->translate('name'),
-        content: static fn(Group $model) => Html::encode($model->getName()),
+        content: static fn (Group $model): string => Html::encode($model->getName()),
     ),
     new DataColumn(
         'identifier_format',
         header: $translator->translate('identifier.format'),
-        content: static fn(Group $model) => Html::encode($model->getIdentifier_format()),
+        content: static fn (Group $model): string => Html::encode($model->getIdentifierFormat()),
     ),
     new DataColumn(
         'left_pad',
         header: $translator->translate('left.pad'),
-        content: static fn(Group $model) => Html::encode($model->getLeft_pad()),
+        content: static fn (Group $model): string => (string) ($model->getLeftPad() ?? ''),
     ),
     new DataColumn(
         'next_id',
         header: $translator->translate('next.id'),
-        content: static fn(Group $model) => Html::encode($model->getNext_id()),
+        content: static fn (Group $model): string => (string) ($model->getNextId() ?? ''),
     ),
     new ActionColumn(buttons: [
         new ActionButton(
             content: '🔎',
             url: static function (Group $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('group/view', ['id' => $model->getId()]);
+                return $urlGenerator->generate('group/view', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -77,7 +77,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (Group $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('group/edit', ['id' => $model->getId()]);
+                return $urlGenerator->generate('group/edit', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -87,7 +87,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (Group $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('group/delete', ['id' => $model->getId()]);
+                return $urlGenerator->generate('group/delete', ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),
@@ -98,16 +98,16 @@ $columns = [
 ];
 
 $toolbarString
-    = Form::tag()->post($urlGenerator->generate('group/index'))->csrf($csrf)->open()
-    . A::tag()
+    =  new Form()->post($urlGenerator->generate('group/index'))->csrf($csrf)->open()
+    .  new A()
     ->href($urlGenerator->generate('group/add'))
     ->addClass('btn btn-info')
     ->content('➕')
     ->render()
-    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-    . Form::tag()->close();
+    .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    .  new Form()->close();
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -125,7 +125,7 @@ echo GridView::widget()
 ->id('w75-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'group') . ' ' . $grid_summary)
+->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'group') . ' ' . $gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

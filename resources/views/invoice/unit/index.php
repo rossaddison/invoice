@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Unit;
+use App\Infrastructure\Persistence\Unit\Unit;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
 use Yiisoft\View\WebView;
@@ -16,7 +16,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
- * @var App\Invoice\Entity\Unit $unit
+ * @var App\Infrastructure\Persistence\Unit\Unit $unit
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
  * @var string $alert
@@ -28,12 +28,12 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var WebView $this
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$toolbarReset = A::tag()
+$toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'unit/index'))
     ->id('btn-reset')
     ->render();
@@ -42,44 +42,49 @@ $columns = [
     new DataColumn(
         property: 'unit_id',
         header: $translator->translate('id'),
-        content: static fn(Unit $model) => Html::encode($model->getUnit_id()),
+        content: static fn (Unit $model) => Html::encode($model->reqId()),
     ),
     new DataColumn(
         property: 'unit_name',
         header: $translator->translate('unit.name'),
-        content: static fn(Unit $model) => Html::encode($model->getUnit_name()),
+        content: static fn (Unit $model) => Html::encode($model->getUnitName()),
     ),
     new DataColumn(
         property: 'unit_name_plrl',
         header: $translator->translate('unit.name.plrl'),
-        content: static fn(Unit $model) => Html::encode($model->getUnit_name_plrl()),
+        content: static fn (Unit $model) => Html::encode($model->getUnitNamePlrl()),
     ),
 
-    new ActionColumn(buttons: [
+    new ActionColumn(
+        before: Html::openTag('div', ['class' => 'btn-group', 'role' => 'group']),
+        after: Html::closeTag('div'),
+        buttons: [
         new ActionButton(
             content: '🔎',
             url: static function (Unit $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('unit/view', ['unit_id' => $model->getUnit_id()]);
+                return $urlGenerator->generate('unit/view', ['unit_id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
                 'title' => $translator->translate('view'),
+                'class' => 'btn btn-outline-primary btn-sm',
             ],
         ),
         new ActionButton(
             content: '✎',
             url: static function (Unit $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('unit/edit', ['unit_id' => $model->getUnit_id()]);
+                return $urlGenerator->generate('unit/edit', ['unit_id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
                 'title' => $translator->translate('edit'),
+                'class' => 'btn btn-outline-warning btn-sm',
             ],
         ),
         new ActionButton(
             content: '❌',
             url: static function (Unit $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('unit/delete', ['unit_id' => $model->getUnit_id()]);
+                return $urlGenerator->generate('unit/delete', ['unit_id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),
@@ -89,7 +94,7 @@ $columns = [
     ]),
 ];
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -97,14 +102,14 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('unit/index'))->csrf($csrf)->open()
-    . A::tag()
+$toolbarString =  new Form()->post($urlGenerator->generate('unit/index'))->csrf($csrf)->open()
+    .  new A()
     ->href($urlGenerator->generate('unit/add'))
     ->addClass('btn btn-info')
     ->content('➕')
     ->render()
-    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-    . Form::tag()->close();
+    .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    .  new Form()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
@@ -116,7 +121,7 @@ echo GridView::widget()
 ->id('w175-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($grid_summary)
+->summaryTemplate($gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

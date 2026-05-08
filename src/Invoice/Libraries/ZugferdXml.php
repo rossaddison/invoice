@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Invoice\Libraries;
 
-use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\InvAmount;
-use App\Invoice\Entity\InvItem;
+use App\Infrastructure\Persistence\Inv\Inv;
+use App\Infrastructure\Persistence\InvAmount\InvAmount;
+use App\Infrastructure\Persistence\InvItem\InvItem;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as iiaR;
 use Yiisoft\Html\Html;
+use Yiisoft\Translator\TranslatorInterface as Translator;
 use Doctrine\Common\Collections\ArrayCollection;
 use DOMDocument;
 use DOMElement;
@@ -26,11 +27,16 @@ final class ZugferdXml
      * @param iiaR $iiaR
      * @param InvAmount $inv_amount
      */
-    public function __construct(public sR $sR, public Inv $invoice, public iiaR $iiaR, public InvAmount $inv_amount)
+    public function __construct(public sR $sR,
+        public Inv $invoice,
+        public iiaR $iiaR,
+        public InvAmount $inv_amount,
+        private readonly Translator $translator,
+    )
     {
         $this->items = $this->invoice->getItems();
         $this->currencyCode = $this->sR->getSetting('currency_code');
-        $this->company = $this->sR->get_config_company_details();
+        $this->company = $this->sR->getConfigCompanyDetails();
     }
 
     /**
@@ -38,7 +44,6 @@ final class ZugferdXml
      */
     public function xml(): string
     {
-        /** @var DOMDocument $doc */
         $doc = new DOMDocument('1.0', 'UTF-8');
         $doc->formatOutput = true;
         $root = $doc->createElement('rsm:CrossIndustryDocument');
@@ -74,12 +79,12 @@ final class ZugferdXml
     {
         $node = $doc->createElement('rsm:HeaderExchangedDocument');
         $node->appendChild($doc->createElement('ram:ID', $this->invoice->getNumber() ?? ''));
-        $node->appendChild($doc->createElement('ram:Name', $this->sR->trans('invoice')));
+        $node->appendChild($doc->createElement('ram:Name', $this->translator->translate('invoice')));
         $node->appendChild($doc->createElement('ram:TypeCode', (string) 380));
 
         // IssueDateTime
         $dateNode = $doc->createElement('ram:IssueDateTime');
-        $dateNode->appendChild($this->dateElement($doc, $this->invoice->getDate_created()));
+        $dateNode->appendChild($this->dateElement($doc, $this->invoice->getDateCreated()));
         $node->appendChild($dateNode);
 
         // IncludedNote
@@ -123,7 +128,7 @@ final class ZugferdXml
         $node->appendChild($this->xmlApplicableSupplyChainTradeSettlement($doc));
         /**
          * @var int $index
-         * @var \App\Invoice\Entity\InvItem $item
+         * @var \App\Infrastructure\Persistence\InvItem\InvItem $item
          */
         foreach ($this->invoice->getItems() as $index => $item) {
             $node->appendChild($this->xmlIncludedSupplyChainTradeLineItem($doc, $index + 1, $item));
@@ -182,20 +187,20 @@ final class ZugferdXml
     protected function xmlBuyerTradeParty(DOMDocument $doc): DOMElement
     {
         $node = $doc->createElement('ram:BuyerTradeParty');
-        $node->appendChild($doc->createElement('ram:Name', Html::encode($this->invoice->getClient()?->getClient_name())));
+        $node->appendChild($doc->createElement('ram:Name', Html::encode($this->invoice->getClient()?->getClientName())));
 
         // PostalTradeAddress
         $addressNode = $doc->createElement('ram:PostalTradeAddress');
-        $addressNode->appendChild($doc->createElement('ram:PostcodeCode', Html::encode($this->invoice->getClient()?->getClient_zip())));
-        $addressNode->appendChild($doc->createElement('ram:LineOne', Html::encode($this->invoice->getClient()?->getClient_address_1())));
-        $addressNode->appendChild($doc->createElement('ram:LineTwo', Html::encode($this->invoice->getClient()?->getClient_address_2())));
-        $addressNode->appendChild($doc->createElement('ram:CityName', Html::encode($this->invoice->getClient()?->getClient_city())));
-        $addressNode->appendChild($doc->createElement('ram:CountryID', Html::encode($this->invoice->getClient()?->getClient_country())));
+        $addressNode->appendChild($doc->createElement('ram:PostcodeCode', Html::encode($this->invoice->getClient()?->getClientZip())));
+        $addressNode->appendChild($doc->createElement('ram:LineOne', Html::encode($this->invoice->getClient()?->getClientAddress1())));
+        $addressNode->appendChild($doc->createElement('ram:LineTwo', Html::encode($this->invoice->getClient()?->getClientAddress2())));
+        $addressNode->appendChild($doc->createElement('ram:CityName', Html::encode($this->invoice->getClient()?->getClientCity())));
+        $addressNode->appendChild($doc->createElement('ram:CountryID', Html::encode($this->invoice->getClient()?->getClientCountry())));
         $node->appendChild($addressNode);
 
         // SpecifiedTaxRegistration
-        $node->appendChild($this->xmlSpecifiedTaxRegistration($doc, 'VA', $this->invoice->getClient()?->getClient_vat_id() ?? ''));
-        $node->appendChild($this->xmlSpecifiedTaxRegistration($doc, 'FC', Html::encode($this->invoice->getClient()?->getClient_tax_code())));
+        $node->appendChild($this->xmlSpecifiedTaxRegistration($doc, 'VA', $this->invoice->getClient()?->getClientVatId() ?? ''));
+        $node->appendChild($this->xmlSpecifiedTaxRegistration($doc, 'FC', Html::encode($this->invoice->getClient()?->getClientTaxCode())));
 
         return $node;
     }
@@ -226,7 +231,7 @@ final class ZugferdXml
         // ActualDeliverySupplyChainEvent
         $eventNode = $doc->createElement('ram:ActualDeliverySupplyChainEvent');
         $dateNode = $doc->createElement('ram:OccurrenceDateTime');
-        $dateNode->appendChild($this->dateElement($doc, $this->invoice->getDate_created()));
+        $dateNode->appendChild($this->dateElement($doc, $this->invoice->getDateCreated()));
         $eventNode->appendChild($dateNode);
 
         $node->appendChild($eventNode);
@@ -265,7 +270,7 @@ final class ZugferdXml
     {
         $result = [];
         /**
-         * @var \App\Invoice\Entity\InvItem $item
+         * @var \App\Infrastructure\Persistence\InvItem\InvItem $item
          */
         foreach ($this->invoice->getItems() as $item) {
             if ($item->getTaxRate()?->getTaxRatePercent() == 0) {
@@ -275,9 +280,11 @@ final class ZugferdXml
             if (!isset($result[$key])) {
                 $result[$key] = 0.00;
             }
-            $item_id = $item->getId();
-            /** @var \App\Invoice\Entity\InvItemAmount $inv_item_amount */
-            $inv_item_amount = $this->iiaR->repoInvItemAmountquery((string) $item_id);
+            $item_id = $item->reqId();
+/**
+ * @var \App\Infrastructure\Persistence\InvItemAmount\InvItemAmount $inv_item_amount
+ */
+            $inv_item_amount = $this->iiaR->repoInvItemAmountquery($item_id);
 
             $result[$key] += $inv_item_amount->getSubtotal() ?? 0.00;
         }
@@ -332,11 +339,11 @@ final class ZugferdXml
     protected function xmlSpecifiedTradeSettlementMonetarySummation(DOMDocument $doc): DOMElement
     {
         $node = $doc->createElement('ram:SpecifiedTradeSettlementMonetarySummation');
-        $node->appendChild($this->currencyElement($doc, 'ram:LineTotalAmount', $this->inv_amount->getItem_subtotal() ?: 0.00));
+        $node->appendChild($this->currencyElement($doc, 'ram:LineTotalAmount', $this->inv_amount->getItemSubtotal() ?: 0.00));
         $node->appendChild($this->currencyElement($doc, 'ram:ChargeTotalAmount', 0));
         $node->appendChild($this->currencyElement($doc, 'ram:AllowanceTotalAmount', 0));
-        $node->appendChild($this->currencyElement($doc, 'ram:TaxBasisTotalAmount', $this->inv_amount->getItem_subtotal() ?: 0.00));
-        $node->appendChild($this->currencyElement($doc, 'ram:TaxTotalAmount', $this->inv_amount->getItem_tax_total() ?: 0.00));
+        $node->appendChild($this->currencyElement($doc, 'ram:TaxBasisTotalAmount', $this->inv_amount->getItemSubtotal() ?: 0.00));
+        $node->appendChild($this->currencyElement($doc, 'ram:TaxTotalAmount', $this->inv_amount->getItemTaxTotal() ?: 0.00));
         $node->appendChild($this->currencyElement($doc, 'ram:GrandTotalAmount', $this->inv_amount->getTotal() ?? 0.00));
         $node->appendChild($this->currencyElement($doc, 'ram:TotalPrepaidAmount', $this->inv_amount->getPaid() ?? 0.00));
         $node->appendChild($this->currencyElement($doc, 'ram:DuePayableAmount', $this->inv_amount->getBalance() ?? 0.00));
@@ -431,7 +438,7 @@ final class ZugferdXml
 
         // SpecifiedTradeSettlementMonetarySummation
         $sumNode = $doc->createElement('ram:SpecifiedTradeSettlementMonetarySummation');
-        $sumNode->appendChild($this->currencyElement($doc, 'ram:LineTotalAmount', $this->inv_amount->getItem_subtotal() ?: 0.00));
+        $sumNode->appendChild($this->currencyElement($doc, 'ram:LineTotalAmount', $this->inv_amount->getItemSubtotal() ?: 0.00));
         $node->appendChild($sumNode);
 
         return $node;

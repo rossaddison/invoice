@@ -19,13 +19,13 @@ use Yiisoft\Html\Tag\Form;
 
 ?>
 
-<?= Form::tag()
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('CustomValueForm')
     ->open()
-?> 
+?>
 
 <?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
@@ -34,7 +34,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::text($form, 'value')
                     ->label($translator->translate('value'))
                     ->addInputAttributes([
-                        'class' => 'form-control',
+                        'class' => 'form-control form-control-lg',
                         'style' => 'background:lightblue',
                         'disabled' => 'disabled',
                         'id' => 'value'])
@@ -46,7 +46,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::text($form, 'custom_field_id')
     ->label($translator->translate('field'))
     ->addInputAttributes([
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'style' => 'background:lightblue',
         'disabled' => 'disabled',
         'id' => 'value'])
@@ -57,4 +57,4 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= $button::back(); ?>
-<?= Form::tag()->close(); ?>
+<?=  new Form()->close(); ?>

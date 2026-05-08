@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Related logic: see InvController function view_modal_delete_inv
+ * Related logic: see InvController function viewModalDeleteInv
  * Related logic: see inv/view.php id="delete-inv" triggered by <a href="#delete-inv" data-bs-toggle="modal"  style="text-decoration:none">
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -24,17 +24,17 @@ declare(strict_types=1);
             <div class="modal-body">
                 <div class="alert alert-danger"><?= $translator->translate('delete.invoice.warning'); ?></div>
                 <form action="<?= $urlGenerator->generate($actionName, $actionArguments) ?>" method="POST">
-                    <input type="hidden" name="_csrf" value="<?= $csrf ?>"> 
+                    <input type="hidden" name="_csrf" value="<?= $csrf ?>">
                     <div class="btn-group">
                         <button type="submit" class="btn btn-danger">
-                            <i class="fa fa-trash-o fa-margin"></i> <?= $translator->translate('confirm.deletion') ?>
+                            <i class="fa bi-trash-o fa-margin"></i> <?= $translator->translate('confirm.deletion') ?>
                         </button>
                         <a href="#" class="btn btn-default" data-bs-dismiss="modal">
-                            <i class="fa fa-times"></i> <?= $translator->translate('cancel'); ?>
+                            <i class="bi bi-x-lg"></i> <?= $translator->translate('cancel'); ?>
                         </a>
                     </div>
                 </form>
-            </div>    
+            </div>
         </div>
     </div>
 </div>

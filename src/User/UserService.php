@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\User;
 
+use App\Infrastructure\Persistence\User\User;
 use Yiisoft\Access\AccessCheckerInterface;
 use Yiisoft\User\CurrentUser;
 
@@ -13,7 +14,8 @@ final readonly class UserService
         private CurrentUser $currentUser,
         private UserRepository $repository,
         private AccessCheckerInterface $accessChecker,
-    ) {}
+    ) {
+    }
 
     /**
      * @return User|null
@@ -22,7 +24,7 @@ final readonly class UserService
     {
         $userId = $this->currentUser->getId();
         if (null !== $userId) {
-            return $this->repository->findById($userId);
+            return $this->repository->findById((int) $userId);
         }
         return null;
     }
@@ -31,6 +33,8 @@ final readonly class UserService
     {
         $userId = $this->currentUser->getId();
 
-        return null !== $userId && $this->accessChecker->userHasPermission($userId, $permission);
+        return null !== $userId && $this->accessChecker->userHasPermission(
+            $userId, $permission
+        );
     }
 }

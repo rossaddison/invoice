@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 
-// Container
-echo Html::openTag('div', ['class' => 'container-fluid', 'style' => 'max-width: 1400px; padding: 20px;']);
+/**
+ * (no view variables required)
+ */
 
+// Container
+echo Html::openTag('div', [
+    'class' => 'container-fluid',
+    'style' => 'font-size: var(--inv-form-fs); max-width: 1400px; padding: 20px;']);
 // Header Row
 echo Html::openTag('div', ['class' => 'row']);
 echo Html::openTag('div', ['class' => 'col-12']);

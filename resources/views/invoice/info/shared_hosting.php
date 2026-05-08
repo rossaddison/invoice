@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 ?>
 
+<div style="font-size: calc(var(--inv-form-fs) + 2px);">
 <p><b>How do I host yii3i on shared hosting?</b></p>
 
 
@@ -22,7 +23,7 @@ RewriteRule ^ %1 [L,NE,R=302]<br>
 RewriteRule ^((?!public/).*)$ public/$1 [L,NC]<br></p>
 <br>
 <p><b>No access to composer update</b><br>
-More than often on shared hosting you will not be able to run a composer update. 
+More than often on shared hosting you will not be able to run a composer update.
    Your focus will be on replacing your vendor folder through SFTP/FTP e.g. filezilla, and your /config/.merge-plan.php file from your localhost setup.</p>
 <p><b>One.com Shared Hosting for testing rossaddison/invoice yii3i.co.uk</b></p>
 <p>config/common/params.php</p>
@@ -31,14 +32,14 @@ More than often on shared hosting you will not be able to run a composer update.
     'adminEmail' => 'admin@example.com',
     /**
      * Note: This setting is critical to the sending of emails since it is used in SettingsRepository getConfigSenderEmail()
-     * Used in critical function e.g src/Auth/Controller/SignUpController function signup amd 
-     * src/Auth/Controller/ForgotController function forgot 
-     */  
+     * Used in critical function e.g src/Auth/Controller/SignUpController function signup amd
+     * src/Auth/Controller/ForgotController function forgot
+     */
     'senderEmail' => 'sender@your.web.site.domain.com'
 ],
 'symfony/mailer' => [
     'esmtpTransport' => [
-       'enabled' => true, 
+       'enabled' => true,
        'scheme' => 'smtp', // "smtps": using TLS, "smtp": without using TLS.
        'host' => 'send.one.com',
        'port' => 465,
@@ -57,5 +58,6 @@ More than often on shared hosting you will not be able to run a composer update.
             driver: \Cycle\Database\Driver\MySQL\MySQLDriver::class,
         ),
     ],
-]    
+]
 </pre></p>
+</div>

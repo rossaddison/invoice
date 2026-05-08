@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\DeliveryLocation;
 
-use App\Invoice\Entity\DeliveryLocation;
+use App\Infrastructure\Persistence\Client\Client;
+use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -77,13 +78,12 @@ final class DeliveryLocationRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @psalm-return TEntity|null
      * @return DeliveryLocation|null
      */
-    public function repoDeliveryLocationquery(string $id): ?DeliveryLocation
+    public function repoDeliveryLocationquery(int $id): ?DeliveryLocation
     {
-        // Delivery Location id defaults to 0 in the Entity Delivery Location
         if ($id > 0) {
             $query = $this->select()->where(['id' => $id]);
             return  $query->fetchOne() ?: null;
@@ -93,10 +93,10 @@ final class DeliveryLocationRepository extends Select\Repository
 
     /**
      * Get all delivery locations associated with a Client
-     * @param string $client_id
+     * @param int $client_id
      * @return EntityReader
      */
-    public function repoClientquery(string $client_id): EntityReader
+    public function repoClientquery(int $client_id): EntityReader
     {
         $query = $this->select()
                       ->where(['client_id' => $client_id]);
@@ -104,10 +104,10 @@ final class DeliveryLocationRepository extends Select\Repository
     }
 
     /**
-     * @param string $client_id
+     * @param int $client_id
      * @return int
      */
-    public function repoClientCount(string $client_id): int
+    public function repoClientCount(int $client_id): int
     {
         $query = $this->select()
                       ->where(['client_id' => $client_id]);
@@ -115,10 +115,10 @@ final class DeliveryLocationRepository extends Select\Repository
     }
 
     /**
-     * @param string $inv_id
+     * @param int $inv_id
      * @return int
      */
-    public function repoInvoiceCount(string $inv_id): int
+    public function repoInvoiceCount(int $inv_id): int
     {
         $query = $this->select()
                       ->where(['inv_id' => $inv_id]);
@@ -126,10 +126,10 @@ final class DeliveryLocationRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return int
      */
-    public function repoCount(string $id): int
+    public function repoCount(int $id): int
     {
         $query = $this->select()
                       ->where(['id' => $id]);

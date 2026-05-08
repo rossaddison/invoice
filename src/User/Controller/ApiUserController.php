@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\User\Controller;
 
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 use App\User\UserRepository;
 use OpenApi\Annotations as OA;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Router\CurrentRoute;
 
 /**
@@ -18,7 +18,9 @@ use Yiisoft\Router\CurrentRoute;
  */
 final readonly class ApiUserController
 {
-    public function __construct(private DataResponseFactoryInterface $responseFactory) {}
+    public function __construct(private DataResponseFactoryInterface $responseFactory)
+    {
+    }
 
     /**
      * @OA\Get (
@@ -28,7 +30,7 @@ final readonly class ApiUserController
      * @OA\Response (response="200", description="Get users list")
      * )
      */
-    public function index(UserRepository $userRepository): \Yiisoft\DataResponse\DataResponse
+    public function index(UserRepository $userRepository): \Psr\Http\Message\ResponseInterface
     {
         $users = $userRepository->getReader();
 
@@ -59,7 +61,7 @@ final readonly class ApiUserController
      * @OA\Response (response="200", description="Get user info")
      * )
      */
-    public function profile(UserRepository $userRepository, CurrentRoute $currentRoute): \Yiisoft\DataResponse\DataResponse
+    public function profile(UserRepository $userRepository, CurrentRoute $currentRoute): \Psr\Http\Message\ResponseInterface
     {
         $login = $currentRoute->getArgument('login');
         if (null !== $login) {

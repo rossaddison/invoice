@@ -1,0 +1,233 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Infrastructure\Persistence\ClientPeppol;
+
+use App\Infrastructure\Persistence\Client\Client;
+use App\Infrastructure\Persistence\Trait\RequireId;
+use App\Invoice\ClientPeppol\ClientPeppolRepository;
+use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Relation\BelongsTo;
+
+#[Entity(repository: ClientPeppolRepository::class)]
+class ClientPeppol
+{
+    use RequireId;
+
+    #[Column(type: 'primary')]
+    private ?int $id = null;
+
+    #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
+    private ?Client $client = null;
+
+    public function __construct(
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $client_id = null,
+        #[Column(type: 'string(100)', nullable: false)]
+        private string $endpointid = '',
+        #[Column(type: 'string(4)', nullable: false)]
+        private string $endpointid_schemeid = '',
+        #[Column(type: 'string(100)', nullable: false)]
+        private string $identificationid = '',
+        #[Column(type: 'string(4)', nullable: false)]
+        private string $identificationid_schemeid = '',
+        #[Column(type: 'string(100)', nullable: false)]
+        private string $taxschemecompanyid = '',
+        #[Column(type: 'string(7)', nullable: false)]
+        private string $taxschemeid = '',
+        #[Column(type: 'string(100)', nullable: false)]
+        private string $legal_entity_registration_name = '',
+        #[Column(type: 'string(100)', nullable: false)]
+        private string $legal_entity_companyid = '',
+        #[Column(type: 'string(5)', nullable: false)]
+        private string $legal_entity_companyid_schemeid = '',
+        #[Column(type: 'string(50)', nullable: false)]
+        private string $legal_entity_company_legal_form = '',
+        #[Column(type: 'string(20)', nullable: false)]
+        private string $financial_institution_branchid = '',
+        #[Column(type: 'string(30)', nullable: false)]
+        private string $accounting_cost = '',
+        #[Column(type: 'string(20)', nullable: false)]
+        private string $supplier_assigned_accountid = '',
+        #[Column(type: 'string(20)', nullable: false)]
+        private string $buyer_reference = '',
+    ) {
+    }
+
+    public function reqId(): int
+    {
+        return $this->requireId($this->id, 'ClientPeppol');
+    }
+
+    public function hasIdentity(): bool
+    {
+        return $this->id !== null;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function getClient(): ?Client
+    {
+        return $this->client;
+    }
+
+    public function setClient(?Client $client): void
+    {
+        $this->client = $client;
+    }
+
+    public function reqClientId(): int
+    {
+        return $this->requireId($this->client_id, 'Client');
+    }
+
+    public function setClientId(int $client_id): void
+    {
+        $this->client_id = $client_id;
+    }
+
+    public function getEndpointid(): string
+    {
+        return $this->endpointid;
+    }
+
+    public function setEndpointid(string $input): void
+    {
+        $this->endpointid = $input;
+    }
+
+    public function getEndpointidSchemeid(): string
+    {
+        return $this->endpointid_schemeid;
+    }
+
+    public function setEndpointidSchemeid(string $input): void
+    {
+        $this->endpointid_schemeid = $input;
+    }
+
+    public function getIdentificationid(): string
+    {
+        return $this->identificationid;
+    }
+
+    public function setIdentificationid(string $input): void
+    {
+        $this->identificationid = $input;
+    }
+
+    public function getIdentificationidSchemeid(): string
+    {
+        return $this->identificationid_schemeid;
+    }
+
+    public function setIdentificationidSchemeid(string $input): void
+    {
+        $this->identificationid_schemeid = $input;
+    }
+
+    public function getTaxschemecompanyid(): string
+    {
+        return $this->taxschemecompanyid;
+    }
+
+    public function setTaxschemecompanyid(string $input): void
+    {
+        $this->taxschemecompanyid = $input;
+    }
+
+    public function getTaxschemeid(): string
+    {
+        return $this->taxschemeid;
+    }
+
+    public function setTaxschemeid(string $input): void
+    {
+        $this->taxschemeid = $input;
+    }
+
+    public function getLegalEntityRegistrationName(): string
+    {
+        return $this->legal_entity_registration_name;
+    }
+
+    public function setLegalEntityRegistrationName(string $input): void
+    {
+        $this->legal_entity_registration_name = $input;
+    }
+
+    public function getLegalEntityCompanyid(): string
+    {
+        return $this->legal_entity_companyid;
+    }
+
+    public function setLegalEntityCompanyid(string $input): void
+    {
+        $this->legal_entity_companyid = $input;
+    }
+
+    public function getLegalEntityCompanyidSchemeid(): string
+    {
+        return $this->legal_entity_companyid_schemeid;
+    }
+
+    public function setLegalEntityCompanyidSchemeid(string $input): void
+    {
+        $this->legal_entity_companyid_schemeid = $input;
+    }
+
+    public function getLegalEntityCompanyLegalForm(): string
+    {
+        return $this->legal_entity_company_legal_form;
+    }
+
+    public function setLegalEntityCompanyLegalForm(string $input): void
+    {
+        $this->legal_entity_company_legal_form = $input;
+    }
+
+    public function getFinancialInstitutionBranchid(): string
+    {
+        return $this->financial_institution_branchid;
+    }
+
+    public function setFinancialInstitutionBranchid(string $input): void
+    {
+        $this->financial_institution_branchid = $input;
+    }
+
+    public function getAccountingCost(): string
+    {
+        return $this->accounting_cost;
+    }
+
+    public function setAccountingCost(string $input): void
+    {
+        $this->accounting_cost = $input;
+    }
+
+    public function getSupplierAssignedAccountId(): string
+    {
+        return $this->supplier_assigned_accountid;
+    }
+
+    public function setSupplierAssignedAccountId(string $input): void
+    {
+        $this->supplier_assigned_accountid = $input;
+    }
+
+    public function getBuyerReference(): string
+    {
+        return $this->buyer_reference;
+    }
+
+    public function setBuyerReference(string $input): void
+    {
+        $this->buyer_reference = $input;
+    }
+}

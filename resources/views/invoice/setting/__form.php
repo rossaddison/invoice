@@ -31,7 +31,7 @@ use Yiisoft\Html\Tag\Form;
 <?= $translator->translate('setting.form'); ?>
 <?= Html::closeTag('h1'); ?>
 <?=
-    Form::tag()
+     new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -54,8 +54,8 @@ use Yiisoft\Html\Tag\Form;
     ->label($translator->translate('setting.key'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('setting.key'),
-        'value' => Html::encode($form->getSetting_key() ?? ''),
-        'class' => 'form-control',
+        'value' => Html::encode($form->getSettingKey() ?? ''),
+        'class' => 'form-control form-control-lg',
         'id' => 'setting_key',
     ])
     ->required(true)
@@ -65,15 +65,15 @@ use Yiisoft\Html\Tag\Form;
     ->label($translator->translate('setting.value'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('setting.value'),
-        'value' => Html::encode($form->getSetting_value() ?? ''),
-        'class' => 'form-control',
+        'value' => Html::encode($form->getSettingValue() ?? ''),
+        'class' => 'form-control form-control-lg',
         'id' => 'setting_value',
     ])
     ->required(true)
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
 <?= Html::closeTag('div'); ?>
-<?= Form::tag()->close(); ?>
+<?=  new Form()->close(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

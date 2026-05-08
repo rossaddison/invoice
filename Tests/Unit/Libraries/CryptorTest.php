@@ -32,19 +32,7 @@ class CryptorTest extends Unit
         
         $this->assertInstanceOf(Cryptor::class, $cryptor);
     }
-
-    public function testConstructorWithInvalidCipher(): void
-    {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('unknown cipher algo');
-    }
-
-    public function testConstructorWithInvalidHashAlgo(): void
-    {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('unknown hash algo');
-    }
-
+    
     public function testEncryptDecryptBasicString(): void
     {
         $plaintext = 'Hello, World!';

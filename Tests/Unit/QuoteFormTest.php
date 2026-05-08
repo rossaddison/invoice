@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Quote;
 
-use App\Invoice\Entity\Quote;
-use App\Invoice\Entity\Client;
-use App\Invoice\Entity\Group;
+use App\Infrastructure\Persistence\Quote\Quote;
+use App\Infrastructure\Persistence\Client\Client;
+use App\Infrastructure\Persistence\Group\Group;
 use App\Invoice\Quote\QuoteForm;
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Validator\Validator;
 use Yiisoft\Validator\ValidatorInterface;
@@ -115,7 +115,6 @@ final class QuoteFormTest extends TestCase
             'password' => '', // Empty optional field
             'notes' => '', // Empty longText field
             'discount_amount' => 0.0,
-            'discount_percent' => 0.0
         ]);
         
         $result = $this->validator->validate($form);
@@ -132,7 +131,6 @@ final class QuoteFormTest extends TestCase
             'group_id' => 1,
             'status_id' => 2,
             'discount_amount' => 123.45,
-            'discount_percent' => 15.5,
             'delivery_location_id' => 5
         ]);
         
@@ -145,16 +143,14 @@ final class QuoteFormTest extends TestCase
      */
     public function testFormInitializationFromEntity(): void
     {
-        $form = new QuoteForm($this->quote);
+        $form = QuoteForm::show($this->quote);
         
-        $this->assertEquals('QUOTE-001', $form->getNumber());
         $this->assertEquals('Test quote notes', $form->getNotes());
-        $this->assertEquals(1, $form->getClient_id());
-        $this->assertEquals(1, $form->getGroup_id());
-        $this->assertEquals(1, $form->getStatus_id());
-        $this->assertEquals(100.50, $form->getDiscount_amount());
-        $this->assertEquals(10.0, $form->getDiscount_percent());
-        $this->assertEquals('test-quote-key', $form->getUrl_key());
+        $this->assertEquals(1, $form->getClientId());
+        $this->assertEquals(1, $form->getGroupId());
+        $this->assertEquals(1, $form->getStatusId());
+        $this->assertEquals(100.50, $form->getDiscountAmount());
+        $this->assertEquals('test-quote-key', $form->getUrlKey());
         $this->assertEquals('quote-password', $form->getPassword());
     }
 
@@ -163,16 +159,15 @@ final class QuoteFormTest extends TestCase
      */
     public function testGettersReturnCorrectTypes(): void
     {
-        $form = new QuoteForm($this->quote);
+        $form = QuoteForm::show($this->quote);
         
         $this->assertIsString($form->getNumber());
         $this->assertIsString($form->getNotes());
-        $this->assertIsInt($form->getClient_id());
-        $this->assertIsInt($form->getGroup_id());
-        $this->assertIsInt($form->getStatus_id());
-        $this->assertIsFloat($form->getDiscount_amount());
-        $this->assertIsFloat($form->getDiscount_percent());
-        $this->assertIsString($form->getUrl_key());
+        $this->assertIsInt($form->getClientId());
+        $this->assertIsInt($form->getGroupId());
+        $this->assertIsInt($form->getStatusId());
+        $this->assertIsFloat($form->getDiscountAmount());
+        $this->assertIsString($form->getUrlKey());
         $this->assertIsString($form->getPassword());
     }
 
@@ -206,18 +201,17 @@ final class QuoteFormTest extends TestCase
         $now = new DateTimeImmutable();
         
         $quote->method('getNumber')->willReturn('QUOTE-001');
-        $quote->method('getDate_created')->willReturn($now);
-        $quote->method('getInv_id')->willReturn('1');
-        $quote->method('getSo_id')->willReturn('1');
-        $quote->method('getGroup_id')->willReturn('1');
-        $quote->method('getClient_id')->willReturn('1');
-        $quote->method('getStatus_id')->willReturn(1);
-        $quote->method('getDiscount_amount')->willReturn(100.50);
-        $quote->method('getDiscount_percent')->willReturn(10.0);
-        $quote->method('getUrl_key')->willReturn('test-quote-key');
+        $quote->method('getDateCreated')->willReturn($now);
+        $quote->method('getInvId')->willReturn(1);
+        $quote->method('getSoId')->willReturn(1);
+        $quote->method('reqGroupId')->willReturn(1);
+        $quote->method('reqClientId')->willReturn(1);
+        $quote->method('reqStatusId')->willReturn(1);
+        $quote->method('getDiscountAmount')->willReturn(100.50);
+        $quote->method('getUrlKey')->willReturn('test-quote-key');
         $quote->method('getPassword')->willReturn('quote-password');
         $quote->method('getNotes')->willReturn('Test quote notes');
-        $quote->method('getDelivery_location_id')->willReturn('5');
+        $quote->method('getDeliveryLocationId')->willReturn(5);
         $quote->method('getClient')->willReturn($client);
         $quote->method('getGroup')->willReturn($group);
         $quote->method('getUser')->willReturn($user);
@@ -231,7 +225,7 @@ final class QuoteFormTest extends TestCase
     private function createFormWithData(array $data): QuoteForm
     {
         $quote = $this->createMockQuote();
-        $form = new QuoteForm($quote);
+        $form = QuoteForm::show($quote);
         
         // Use reflection to set properties for testing
         $reflection = new \ReflectionClass($form);

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\CategoryPrimary;
 
 use App\Invoice\BaseController;
-use App\Invoice\Entity\CategoryPrimary;
+use App\Infrastructure\Persistence\CategoryPrimary\CategoryPrimary;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
 use App\Service\WebControllerService;
@@ -13,14 +13,14 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Exception;
 
 final class CategoryPrimaryController extends BaseController
@@ -34,11 +34,11 @@ final class CategoryPrimaryController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->categoryPrimaryService = $categoryPrimaryService;
         $this->factory = $factory;
     }
@@ -53,7 +53,7 @@ final class CategoryPrimaryController extends BaseController
         FormHydrator $formHydrator,
     ): Response {
         $categoryPrimary = new CategoryPrimary();
-        $form = new CategoryPrimaryForm($categoryPrimary);
+        $form = new CategoryPrimaryForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'categoryprimary/add',
@@ -73,7 +73,7 @@ final class CategoryPrimaryController extends BaseController
                 $parameters['form'] = $form;
             } // is_array($body)
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     public function index(
@@ -83,7 +83,6 @@ final class CategoryPrimaryController extends BaseController
         int $page = 1,
     ): Response {
         $categoryPrimary = $categoryPrimaryRepository->findAllPreloaded();
-        /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $paginator = (new OffsetPaginator($categoryPrimary))
         ->withPageSize($settingRepository->positiveListLimit())
@@ -96,7 +95,7 @@ final class CategoryPrimaryController extends BaseController
             'defaultPageSizeOffsetPaginator' => $settingRepository->getSetting('default_list_limit')
                                                           ? (int) $settingRepository->getSetting('default_list_limit') : 1,
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -114,13 +113,15 @@ final class CategoryPrimaryController extends BaseController
                 $categoryPrimary = $this->categoryprimary($categoryPrimaryRepository, $id);
                 if ($categoryPrimary) {
                     $this->categoryPrimaryService->deleteCategoryPrimary($categoryPrimary);
-                    $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
-                    return $this->webService->getRedirectResponse('categoryprimary/index');
+                    $this->flashMessage('info',
+                        $this->translator->translate('record.successfully.deleted'));
                 }
             }
             return $this->webService->getRedirectResponse('categoryprimary/index');
+            // catch the foreign key constraint
         } catch (Exception $e) {
-            $this->flashMessage('danger', $e->getMessage());
+            unset($e);
+            $this->flashMessage('danger', $this->translator->translate('cannot.delete'));
             return $this->webService->getRedirectResponse('categoryprimary/index');
         }
     }
@@ -135,7 +136,7 @@ final class CategoryPrimaryController extends BaseController
         if ($id) {
             $categoryprimary = $this->categoryprimary($categoryPrimaryRepository, $id);
             if ($categoryprimary) {
-                $form = new CategoryPrimaryForm($categoryprimary);
+                $form = CategoryPrimaryForm::show($categoryprimary);
                 $parameters = [
                     'title' => $this->translator->translate('edit'),
                     'actionName' => 'categoryprimary/edit',
@@ -155,7 +156,7 @@ final class CategoryPrimaryController extends BaseController
                         $parameters['form'] = $form;
                     }
                 }
-                return $this->viewRenderer->render('_form', $parameters);
+                return $this->webViewRenderer->render('_form', $parameters);
             }
         }
         return $this->webService->getRedirectResponse('categoryprimary/index');
@@ -168,13 +169,7 @@ final class CategoryPrimaryController extends BaseController
      */
     private function categoryprimary(CategoryPrimaryRepository $categoryPrimaryRepository, int $id): ?CategoryPrimary
     {
-        if ($id) {
-            $categoryPrimary = $categoryPrimaryRepository->repoCategoryPrimaryQuery((string) $id);
-            if (null !== $categoryPrimary) {
-                return $categoryPrimary;
-            }
-        }
-        return null;
+        return $categoryPrimaryRepository->repoCategoryPrimaryQuery($id);
     }
 
     /**
@@ -189,16 +184,15 @@ final class CategoryPrimaryController extends BaseController
 
     /**
      * @param CategoryPrimaryRepository $categoryPrimaryRepository
-     * @param SettingRepository $settingRepository
      * @param int id
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function view(CategoryPrimaryRepository $categoryPrimaryRepository, #[RouteArgument('id')] int $id): \Yiisoft\DataResponse\DataResponse|Response
+    public function view(CategoryPrimaryRepository $categoryPrimaryRepository, #[RouteArgument('id')] int $id): \Psr\Http\Message\ResponseInterface
     {
         if ($id) {
             $category_primary = $this->categoryprimary($categoryPrimaryRepository, $id);
             if ($category_primary) {
-                $form = new CategoryPrimaryForm($category_primary);
+                $form = CategoryPrimaryForm::show($category_primary);
                 $parameters = [
                     'title' => $this->translator->translate('view'),
                     'actionName' => 'categoryprimary/view',
@@ -206,7 +200,7 @@ final class CategoryPrimaryController extends BaseController
                     'form' => $form,
                     'category_primary' => $category_primary,
                 ];
-                return $this->viewRenderer->render('_view', $parameters);
+                return $this->webViewRenderer->render('_view', $parameters);
             }
         }
         return $this->webService->getRedirectResponse('categoryprimary/index');

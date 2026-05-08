@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\CustomValue;
 
-use App\Invoice\Entity\CustomValue;
-use App\Invoice\Entity\CustomField;
+use App\Infrastructure\Persistence\CustomValue\CustomValue;
+use App\Infrastructure\Persistence\CustomField\CustomField;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -79,16 +79,16 @@ final class CustomValueRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return CustomValue|null
      */
-    public function repoCustomValuequery(string $id): ?CustomValue
+    public function repoCustomValuequery(int $id): ?CustomValue
     {
         $query = $this->select()->where(['id' => $id]);
         return  $query->fetchOne() ?: null;
     }
 
-    public function repoCustomValueDropDown(string $id, string $customFieldId): ?CustomValue
+    public function repoCustomValueDropDown(int $id, int $customFieldId): ?CustomValue
     {
         $query = $this->select()
                       ->where(['id' => $id])
@@ -97,10 +97,10 @@ final class CustomValueRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return int
      */
-    public function repoCount(string $id): int
+    public function repoCount(int $id): int
     {
         return $this->select()
                       ->where(['id' => $id])
@@ -122,7 +122,7 @@ final class CustomValueRepository extends Select\Repository
      * @param int $custom_field_id
      * @return int
      */
-    public function repoCustomFieldquery_count(int $custom_field_id): int
+    public function repoCustomFieldqueryCount(int $custom_field_id): int
     {
         return $this->select()
                       ->where(['custom_field_id' => $custom_field_id])
@@ -130,17 +130,21 @@ final class CustomValueRepository extends Select\Repository
     }
 
     /**
+     * Purpose: Attach hard coded custom field values to custom field
      * @param EntityReader $custom_fields
      * @return array
      */
-    public function attach_hard_coded_custom_field_values_to_custom_field(EntityReader $custom_fields): array
+    public function fixCfValueToCf(EntityReader $custom_fields): array
     {
         $custom_values = [];
         /** @var CustomField $custom_field */
         foreach ($custom_fields as $custom_field) {
-            if (in_array($custom_field->getType(), ['SINGLE-CHOICE','MULTIPLE-CHOICE','RADIOLIST-CHOICE'])) {
-                // build the $custom_values array with the eg. dropdown values for the field whether it be a multiple-choice field or a single-choice field
-                $custom_values[$custom_field->getId()] = $this->repoCustomFieldquery((int) $custom_field->getId());
+            if (in_array($custom_field->getType(),
+                    ['SINGLE-CHOICE','MULTIPLE-CHOICE','RADIOLIST-CHOICE'])) {
+// build the $custom_values array with the eg. dropdown values for the field
+// whether it be a multiple-choice field or a single-choice field
+                $custom_values[$custom_field->reqId()] =
+                        $this->repoCustomFieldquery($custom_field->reqId());
             }
         }
         return $custom_values;

@@ -27,7 +27,7 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
 
-echo Form::tag()
+echo  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -55,12 +55,12 @@ echo Form::tag()
                     ->header($translator->translate('error.summary'))
                     ->onlyCommonErrors()
 ?>
-            <?= Html::closeTag('div'); ?>    
+            <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::select($form, 'client_id')
     ->label($translator->translate('user.account.clients'))
-    ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getClient_id()))
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
+    ->value(Html::encode($form->getClientId()))
     ->prompt($translator->translate('none'))
     ->optionsData($clients)
     ->tabIndex(1)
@@ -68,11 +68,11 @@ echo Form::tag()
     ->required(true)
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
-            <?= Html::closeTag('div'); ?>            
+            <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::select($form, 'group_id')
     ->label($translator->translate('quote.group'))
-    ->addInputAttributes(['class' => 'form-control'])
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
     ->value($defaultGroupId ?: 0)
     ->prompt($translator->translate('none'))
     ->optionsData($groups)
@@ -80,11 +80,11 @@ echo Form::tag()
     ->required(true)
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
-            <?= Html::closeTag('div'); ?>                                       
+            <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::password($form, 'password')
     ->label($translator->translate('password'))
-    ->addInputAttributes(['class' => 'form-control'])
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
     ->value(Html::encode($form->getPassword()))
     ->placeholder($translator->translate('password'))
     ->tabIndex(3)
@@ -97,19 +97,9 @@ echo Form::tag()
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
-                <?= Field::hidden($form, 'discount_amount')
-    ->hideLabel(true);
-?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Field::hidden($form, 'discount_percent')
-    ->hideLabel(true);
-?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div'); ?>
                 <?= Field::textarea($form, 'notes')
     ->label($translator->translate('note'))
-    ->addInputAttributes(['class' => 'form-control'])
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
     ->value(Html::encode($form->getNotes()))
     ->placeholder($translator->translate('note'))
     ->hint($translator->translate('hint.this.field.is.not.required'));
@@ -119,18 +109,18 @@ echo Form::tag()
                 <?= Field::text($form, 'url_key')
     ->disabled(true)
     ->label($translator->translate('upload.url.key'))
-    ->addInputAttributes(['class' => 'form-control'])
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
     ->value(Html::encode($urlKey));
 ?>
-            <?= Html::closeTag('div'); ?>                                    
+            <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-                
+
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 
-<?= Html::closeTag('form'); ?> 
+<?= Html::closeTag('form'); ?>

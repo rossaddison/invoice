@@ -21,25 +21,25 @@ use Yiisoft\Html\Tag\Form;
  */
 ?>
 
-<?= Form::tag()
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('InvRecurringForm')
     ->open() ?>
 
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
-<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
-<?= Html::openTag('div', ['id' => 'headerbar']); ?>    
+<?= Html::openTag('div', ['id' => 'headerbar']); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
-        <?= Html::openTag('div', ['class' => 'row']); ?>            
+        <?= Html::openTag('div', ['class' => 'row']); ?>
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('p'); ?>
                     <?= $translator->translate('recurring.original.invoice.date') . '(' . $dateHelper->display() . ')'; ?>
@@ -49,7 +49,7 @@ use Yiisoft\Html\Tag\Form;
                     <?= Field::hidden($form, 'inv_id')
                         ->hideLabel();
 ?>
-                <?= Html::closeTag('div'); ?>       
+                <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?php
     $optionsDataFrequency = [];
@@ -57,10 +57,10 @@ use Yiisoft\Html\Tag\Form;
  * @var string $key
  * @var string $value
  */
-foreach ($numberHelper->recur_frequencies() as $key => $value) {
+foreach ($numberHelper->recurFrequencies() as $key => $value) {
     $optionsDataFrequency[$key] = $translator->translate($value);
 }
-?> 
+?>
                     <?=
     /**
      * Purpose: Changing this frequency will calculate the start date from the current (above) immutable invoice date
@@ -80,7 +80,7 @@ foreach ($numberHelper->recur_frequencies() as $key => $value) {
         ->label($translator->translate('start') . " (" . $dateHelper->display() . ") ")
         ->value(!is_string($start = $form->getStart()) ? $start?->format('Y-m-d') : '');
 ?>
-                <?= Html::closeTag('div'); ?>                
+                <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::date($form, 'next')
     ->label($translator->translate('next') . " (" . $dateHelper->display() . ") ")
@@ -91,7 +91,7 @@ foreach ($numberHelper->recur_frequencies() as $key => $value) {
     ])
     ->readonly(true);
 ?>
-                <?= Html::closeTag('div'); ?>                
+                <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::date($form, 'end')
         ->label($translator->translate('end') . " (" . $dateHelper->display() . ") ")
@@ -107,4 +107,4 @@ foreach ($numberHelper->recur_frequencies() as $key => $value) {
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?= Form::tag()->close(); ?>
+<?=  new Form()->close(); ?>

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Family;
 
-use App\Invoice\Entity\Family;
+use App\Infrastructure\Persistence\Family\Family;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -74,7 +74,7 @@ final class FamilyRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoFamilyquery(string $family_id): ?Family
+    public function repoFamilyquery(int $family_id): ?Family
     {
         $query = $this
             ->select()
@@ -83,11 +83,12 @@ final class FamilyRepository extends Select\Repository
     }
 
     /**
-     * @param string $category_primary_id
-     * @param string $category_secondary_id
+     * @param int $category_primary_id
+     * @param int $category_secondary_id
      * @return EntityReader
      */
-    public function repoCategoryPrimaryAndSecondaryQuery(string $category_primary_id, string $category_secondary_id): EntityReader
+    public function repoCategoryPrimaryAndSecondaryQuery(int $category_primary_id,
+            int $category_secondary_id): EntityReader
     {
         $select = $this->select();
         $query = $select
@@ -96,7 +97,7 @@ final class FamilyRepository extends Select\Repository
         return $this->prepareDataReader($query);
     }
 
-    public function repoCategorySecondaryIdQuery(string $category_secondary_id): EntityReader
+    public function repoCategorySecondaryIdQuery(int $category_secondary_id): EntityReader
     {
         $select = $this->select();
         $query = $select
@@ -107,7 +108,7 @@ final class FamilyRepository extends Select\Repository
     /**
      * @return array
      */
-    public function optionsDataFamilyNamesWithCategorySecondaryId(string $category_secondary_id): array
+    public function optionsDataFamilyNamesWithCategorySecondaryId(int $category_secondary_id): array
     {
         $familyNames = $this->repoCategorySecondaryIdQuery($category_secondary_id);
         $optionsDataFamilyNames = [];
@@ -115,10 +116,8 @@ final class FamilyRepository extends Select\Repository
          * @var Family $family
          */
         foreach ($familyNames as $family) {
-            $familyId = $family->getFamily_id();
-            if (null !== $familyId) {
-                $optionsDataFamilyNames[$familyId] = ($family->getFamily_name() ?? '');
-            }
+            $familyId = $family->reqId();
+            $optionsDataFamilyNames[$familyId] = ($family->getFamilyName() ?? '');
         }
         return $optionsDataFamilyNames;
     }

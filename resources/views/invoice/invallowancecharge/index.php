@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\InvAllowanceCharge;
+use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -27,7 +27,6 @@ use Yiisoft\Router\CurrentRoute;
  * @var Yiisoft\Data\Cycle\Reader\EntityReader $invAllowanceCharges
  * @var Yiisoft\Data\Paginator\OffsetPaginator $sortedAndPagedPaginator
  * @var Yiisoft\Data\Reader\Sort $sort
- * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Yii\DataView\YiiRouter\UrlCreator $urlCreator
@@ -40,12 +39,12 @@ use Yiisoft\Router\CurrentRoute;
  */
 $vat = $s->getSetting('enable_vat_registration');
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$toolbarReset = A::tag()
+$toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'invallowancecharge/index'))
     ->id('btn-reset')
     ->render();
@@ -54,14 +53,14 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(InvAllowanceCharge $model) => $model->getId(),
+        content: static fn (InvAllowanceCharge $model) => $model->reqId(),
         withSorting: true,
     ),
     new DataColumn(
         property: 'filterInvNumber',
         header: $translator->translate('invoice'),
         content: static function (InvAllowanceCharge $model) use ($urlGenerator): A {
-            return Html::a($model->getInv()?->getNumber() ?? '#', $urlGenerator->generate('inv/view', ['id' => $model->getInv_id()]), []);
+            return Html::a($model->getInv()?->getNumber() ?? '#', $urlGenerator->generate('inv/view', ['id' => (string) $model->reqInvId()]), []);
         },
         encodeContent: false,
         filter: $optionsDataInvNumberDropDownFilter,
@@ -88,20 +87,23 @@ $columns = [
     new DataColumn(
         property: 'amount',
         header: $translator->translate('allowance.or.charge.amount'),
-        content: static fn(InvAllowanceCharge $model) => $model->getAmount(),
+        content: static fn (InvAllowanceCharge $model) => $model->getAmount()
+            ?? 0.00,
         withSorting: true,
     ),
     new DataColumn(
         property: 'vat_or_tax',
         header: $vat ? $translator->translate('vat') : $translator->translate('tax'),
-        content: static fn(InvAllowanceCharge $model) => $model->getVatOrTax(),
+        content: static fn (InvAllowanceCharge $model) => $model->getVatOrTax()
+            ?? 0.00,
         withSorting: true,
     ),
     new ActionColumn(buttons: [
         new ActionButton(
             content: '🔎',
             url: static function (InvAllowanceCharge $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('invallowancecharge/view', ['id' => $model->getId()]);
+                return $urlGenerator->generate('invallowancecharge/view', [
+                    'id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -111,7 +113,8 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (InvAllowanceCharge $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('invallowancecharge/edit', ['id' => $model->getId()]);
+                return $urlGenerator->generate('invallowancecharge/edit', [
+                    'id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -121,19 +124,21 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (InvAllowanceCharge $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('invallowancecharge/delete', ['id' => $model->getId()]);
+                return $urlGenerator->generate('invallowancecharge/delete', [
+                    'id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),
-                'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                'onclick' => "return confirm(" .
+                "'" . $translator->translate('delete.record.warning') . "');",
             ],
         ),
     ]),
 ];
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('invallowancecharge/index'))->csrf($csrf)->open()
-    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-    . Form::tag()->close();
+$toolbarString =  new Form()->post($urlGenerator->generate('invallowancecharge/index'))->csrf($csrf)->open()
+    .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    .  new Form()->close();
 
 $urlCreator = new UrlCreator($urlGenerator);
 $urlCreator->__invoke([], OrderHelper::stringToArray($sortString));
@@ -142,12 +147,13 @@ $sort = Sort::only(['id', 'inv_id', 'allowance_charge_id', 'amount', 'vat_or_tax
     ->withOrderString($sortString);
 
 $sortedAndPagedPaginator = (new OffsetPaginator($invAllowanceCharges))
-    ->withPageSize($defaultPageSizeOffsetPaginator > 0 ? $defaultPageSizeOffsetPaginator : 1)
+    ->withPageSize($defaultPageSizeOffsetPaginator > 0 ?
+        $defaultPageSizeOffsetPaginator : 1)
     ->withCurrentPage($page)
     ->withSort($sort)
     ->withToken(PageToken::next((string) $page));
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $sortedAndPagedPaginator,
     $translator,
     $defaultPageSizeOffsetPaginator,
@@ -174,7 +180,7 @@ echo GridView::widget()
 ->id('w937-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($sortedAndPagedPaginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'invallowancecharge') . ' ' . $grid_summary)
+->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'invallowancecharge') . ' ' . $gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

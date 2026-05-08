@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Delivery;
 
 use App\Invoice\BaseController;
-use App\Invoice\Entity\Delivery;
+use App\Infrastructure\Persistence\Delivery\Delivery;
 use App\Invoice\Inv\InvRepository;
 use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
 use App\Invoice\Setting\SettingRepository as sR;
@@ -24,7 +24,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Exception;
 
 final class DeliveryController extends BaseController
@@ -37,11 +37,11 @@ final class DeliveryController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->deliveryService = $deliveryService;
     }
 
@@ -60,21 +60,21 @@ final class DeliveryController extends BaseController
         InvRepository $iR,
         DLR $delRepo,
     ): Response {
-        $inv_id = $currentRoute->getArgument('inv_id');
-        $inv = $iR->repoInvLoadedquery((string) $inv_id);
+        $inv_id = (int) $currentRoute->getArgument('inv_id');
+        $inv = $iR->repoInvLoadedquery($inv_id);
         if (null !== $inv) {
-            $dels = $delRepo->repoClientquery($inv->getClient_id());
+            $dels = $delRepo->repoClientquery($inv->reqClientId());
             $delivery = new Delivery();
             // inv_id is a hidden field and is static
-            $delivery->setInv_id((int) $inv_id);
-            $form = new DeliveryForm($delivery);
+            $delivery->setInvId($inv_id);
+            $form = new DeliveryForm();
             $parameters = [
                 'title' => $this->translator->translate('delivery.add'),
                 'actionName' => 'delivery/add',
-                'actionArguments' => ['inv_id' => $inv->getId()],
+                'actionArguments' => ['inv_id' => $inv->reqId()],
                 'errors' => [],
                 'form' => $form,
-                'del_count' => $delRepo->repoClientCount($inv->getClient_id()),
+                'del_count' => $delRepo->repoClientCount($inv->reqClientId()),
                 'dels' => $dels,
                 'inv' => $inv,
             ];
@@ -82,14 +82,14 @@ final class DeliveryController extends BaseController
                 $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     if (is_array($body)) {
-                        $this->deliveryService->saveDelivery($delivery, $body, $this->sR);
+                        $this->deliveryService->saveDelivery($delivery, $body);
                         return $this->webService->getRedirectResponse('inv/edit', ['id' => $inv_id]);
                     }
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getNotFoundResponse();
     }
@@ -115,7 +115,7 @@ final class DeliveryController extends BaseController
                 // - => 'desc'  so -id => default descending on id
                 // Show the latest quotes first => -id
                 ->withOrderString($query_params['sort'] ?? '-id');
-        $deliveries = $this->deliveries_with_sort($dR, $sort);
+        $deliveries = $this->deliveriesWithSort($dR, $sort);
         $paginator = (new OffsetPaginator($deliveries))
                 ->withPageSize($this->sR->positiveListLimit())
                 ->withCurrentPage($currentPageNeverZero)
@@ -126,7 +126,7 @@ final class DeliveryController extends BaseController
             'deliveries' => $this->deliveries($dR),
             'max' => (int) $this->sR->getSetting('default_list_limit'),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -137,7 +137,8 @@ final class DeliveryController extends BaseController
      *
      * @psalm-return SortableDataInterface&DataReaderInterface<int, Delivery>
      */
-    private function deliveries_with_sort(DeliveryRepository $dR, Sort $sort): SortableDataInterface
+    public function deliveriesWithSort(DeliveryRepository $dR, Sort $sort):
+        SortableDataInterface
     {
         return $dR->findAllPreloaded()
                          ->withSort($sort);
@@ -185,34 +186,36 @@ final class DeliveryController extends BaseController
     ): Response {
         $delivery = $this->delivery($currentRoute, $deliveryRepository);
         if ($delivery) {
-            $form = new DeliveryForm($delivery);
-            $inv_id = $delivery->getInv_id();
-            $inv = $iR->repoInvLoadedquery((string) $inv_id);
-            if (null !== $inv) {
-                $dels = $delRepo->repoClientquery($inv->getClient_id());
-                $parameters = [
-                    'title' => $this->translator->translate('edit'),
-                    'actionName' => 'delivery/edit',
-                    'actionArguments' => ['id' => $delivery->getId()],
-                    'errors' => [],
-                    'form' => $form,
-                    'inv' => $inv,
-                    'del_count' => $delRepo->repoClientCount($inv->getClient_id()),
-                    'dels' => $dels,
-                ];
-                if ($request->getMethod() === Method::POST) {
-                    $body = $request->getParsedBody() ?? [];
-                    if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                        if (is_array($body)) {
-                            $this->deliveryService->saveDelivery($delivery, $body, $this->sR);
-                            return $this->webService->getRedirectResponse('delivery/index');
+            $form = new DeliveryForm();
+            $inv_id = $delivery->getInvId();
+            if ($inv_id > 0) {
+                $inv = $iR->repoInvLoadedquery($inv_id);
+                if (null !== $inv) {
+                    $dels = $delRepo->repoClientquery($inv->reqClientId());
+                    $parameters = [
+                        'title' => $this->translator->translate('edit'),
+                        'actionName' => 'delivery/edit',
+                        'actionArguments' => ['id' => $delivery->reqId()],
+                        'errors' => [],
+                        'form' => $form,
+                        'inv' => $inv,
+                        'del_count' => $delRepo->repoClientCount($inv->reqClientId()),
+                        'dels' => $dels,
+                    ];
+                    if ($request->getMethod() === Method::POST) {
+                        $body = $request->getParsedBody() ?? [];
+                        if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                            if (is_array($body)) {
+                                $this->deliveryService->saveDelivery($delivery, $body);
+                                return $this->webService->getRedirectResponse('delivery/index');
+                            }
                         }
+                        $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+                        $parameters['form'] = $form;
                     }
-                    $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-                    $parameters['form'] = $form;
-                }
-                return $this->viewRenderer->render('_form', $parameters);
-            } // null!==$inv
+                    return $this->webViewRenderer->render('_form', $parameters);
+                } // null!==$inv
+            }     
         }
         return $this->webService->getRedirectResponse('delivery/index');
     }
@@ -226,13 +229,9 @@ final class DeliveryController extends BaseController
      */
     private function delivery(CurrentRoute $currentRoute, DeliveryRepository $deliveryRepository): ?Delivery
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $deliveryRepository->repoDeliveryquery($id);
-        }
-        return null;
+        $id = (int) $currentRoute->getArgument('id');
+        return $deliveryRepository->repoDeliveryquery($id);
     }
-
     /**
      * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
@@ -246,22 +245,22 @@ final class DeliveryController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param DeliveryRepository $deliveryRepository
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function view(CurrentRoute $currentRoute, DeliveryRepository $deliveryRepository): \Yiisoft\DataResponse\DataResponse|Response
+    public function view(CurrentRoute $currentRoute, DeliveryRepository $deliveryRepository): \Psr\Http\Message\ResponseInterface
     {
         $delivery = $this->delivery($currentRoute, $deliveryRepository);
         if ($delivery) {
-            $form = new DeliveryForm($delivery);
+            $form = new DeliveryForm();
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'delivery/view',
-                'actionArguments' => ['id' => $delivery->getId()],
+                'actionArguments' => ['id' => $delivery->reqId()],
                 'errors' => [],
                 'form' => $form,
                 'delivery' => $delivery,
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('delivery/index');
     }

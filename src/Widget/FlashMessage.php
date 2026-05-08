@@ -11,7 +11,13 @@ use Yiisoft\Bootstrap5\AlertVariant;
 
 final class FlashMessage extends Widget
 {
-    public function __construct(private readonly FlashInterface $flash) {}
+    /**
+     * @param FlashInterface $flash
+     * @psalm-suppress PossiblyUnusedMethod
+     */
+    public function __construct(private readonly FlashInterface $flash)
+    {
+    }
 
     #[\Override]
     public function render(): string

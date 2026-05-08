@@ -18,7 +18,6 @@ use Yiisoft\Bootstrap5\AlertVariant;
 
 if (!empty($errors)) {
     /**
-     * @var string $field
      * @var string $error
      */
     foreach ($errors as $field => $error) {

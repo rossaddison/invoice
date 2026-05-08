@@ -4,43 +4,37 @@ declare(strict_types=1);
 
 namespace App\Invoice\Contract;
 
-use App\Invoice\Entity\Contract;
+use App\Infrastructure\Persistence\Contract\Contract;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 use DateTimeImmutable;
 
 final class ContractForm extends FormModel
 {
-    private ?int $id = null;
-
     #[Required]
-    private ?string $reference = '';
+    private ?string $reference = null;
 
     #[Required]
     private ?string $name = '';
 
     #[Required]
-    private readonly DateTimeImmutable $period_start;
+    private mixed $period_start = '';
 
     #[Required]
-    private readonly DateTimeImmutable $period_end;
+    private mixed $period_end = '';
 
     #[Required]
-    private ?string $client_id = '';
+    private ?int $client_id = null;
 
-    public function __construct(Contract $contract)
+    public static function show(Contract $contract): self
     {
-        $this->id = $contract->getId();
-        $this->reference = $contract->getReference();
-        $this->name = $contract->getName();
-        $this->period_start = $contract->getPeriod_start();
-        $this->period_end = $contract->getPeriod_end();
-        $this->client_id = $contract->getClient_id();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
+        $form = new self();
+        $form->reference = $contract->getReference();
+        $form->name = $contract->getName();
+        $form->period_start = $contract->getPeriodStart()->format('Y-m-d');
+        $form->period_end = $contract->getPeriodEnd()->format('Y-m-d');
+        $form->client_id = $contract->reqClientId();
+        return $form;
     }
 
     public function getReference(): ?string
@@ -53,17 +47,23 @@ final class ContractForm extends FormModel
         return $this->name;
     }
 
-    public function getPeriod_start(): DateTimeImmutable
+    public function getPeriodStart(): DateTimeImmutable|string
     {
+        /**
+         * @var DateTimeImmutable|string $this->period_start
+         */
         return $this->period_start;
     }
 
-    public function getPeriod_end(): DateTimeImmutable
+    public function getPeriodEnd(): DateTimeImmutable|string
     {
+        /**
+         * @var DateTimeImmutable|string $this->period_end
+         */
         return $this->period_end;
     }
 
-    public function getClient_id(): ?string
+    public function getClientId(): ?int
     {
         return $this->client_id;
     }

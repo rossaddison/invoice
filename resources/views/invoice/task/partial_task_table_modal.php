@@ -29,23 +29,30 @@ use Yiisoft\Html\Html;
 
         <?php
             /**
-             * @var App\Invoice\Entity\Task $task
+             * @var App\Infrastructure\Persistence\Task\Task $task
              */
             foreach ($tasks as $task) { ?>
             <tr class="task-row">
                 <td class="text-left">
-                    <input type="checkbox" class="modal-task-id" name="task_ids[]"
-                           id="task-id-<?= $task->getId() ?>" value="<?= $task->getId(); ?>">
+                    <input type="checkbox"
+                           class="modal-task-id"
+                           name="task_ids[]"
+                           id="task-id-<?= $task->reqId() ?>"
+                           value="<?= $task->reqId(); ?>">
                 </td>
                 <td nowrap class="text-left">
-                    <b><?php echo ($projectR->count($task->getProject_id()) > 0 ? $projectR->repoProjectquery($task->getProject_id())?->getName() : '') ?></b>
+                    <b><?php echo ($p = $task->getProject()) !== null
+                        && $projectR->count($p->reqId()) > 0 ?
+                        $projectR->repoProjectquery(
+                            $p->reqId())?->getName() ?? '' : '' ?>
+                    </b>
                 </td>
                 <td>
                     <b><?php echo Html::encode($task->getName()); ?></b>
                 </td>
                 <td>
                     <?php
-                        $finishDate = $task->getFinish_date();
+                        $finishDate = $task->getFinishDate();
                 if ($finishDate instanceof \DateTimeImmutable) {
                     $fDate = $finishDate->format('Y-m-d');
                 }
@@ -62,7 +69,7 @@ use Yiisoft\Html\Html;
                     <?= nl2br(Html::encode($task->getDescription())); ?>
                 </td>
                 <td class="amount">
-                    <?= $numberHelper->format_currency($task->getPrice()); ?>
+                    <?= $numberHelper->formatCurrency($task->getPrice()); ?>
                 </td>
             </tr>
         <?php } ?>

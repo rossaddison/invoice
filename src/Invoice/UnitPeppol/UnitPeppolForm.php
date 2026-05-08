@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace App\Invoice\UnitPeppol;
 
-use App\Invoice\Entity\UnitPeppol;
+use App\Infrastructure\Persistence\UnitPeppol\UnitPeppol;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
 
 final class UnitPeppolForm extends FormModel
 {
-    private ?string $id = '';
     #[Required]
-    private ?string $unit_id = '';
+    private ?int $unit_id = null;
     #[Required]
     #[Length(min: 0, max: 3)]
     private ?string $code = '';
@@ -23,21 +22,17 @@ final class UnitPeppolForm extends FormModel
     #[Required]
     private ?string $description = '';
 
-    public function __construct(UnitPeppol $unitPeppol)
+    public static function show(UnitPeppol $unitPeppol): self
     {
-        $this->id = $unitPeppol->getId();
-        $this->unit_id = $unitPeppol->getUnit_id();
-        $this->code = $unitPeppol->getCode();
-        $this->name = $unitPeppol->getName();
-        $this->description = $unitPeppol->getDescription();
+        $form = new self();
+        $form->unit_id = $unitPeppol->reqUnitId();
+        $form->code = $unitPeppol->getCode();
+        $form->name = $unitPeppol->getName();
+        $form->description = $unitPeppol->getDescription();
+        return $form;
     }
-
-    public function getId(): ?string
-    {
-        return $this->id;
-    }
-
-    public function getUnit_id(): ?string
+    
+    public function getUnitId(): ?int
     {
         return $this->unit_id;
     }

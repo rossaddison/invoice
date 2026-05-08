@@ -6,6 +6,9 @@ namespace App\Invoice\Helpers;
 
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 
+/**
+ * @psalm-suppress UnusedClass
+ */
 class GoogleTranslateTypeNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
     /**

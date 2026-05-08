@@ -1,10 +1,10 @@
-<?php
+<?php 
 
 declare(strict_types=1);
 
 namespace App\Invoice\ClientNote;
 
-use App\Invoice\Entity\ClientNote;
+use App\Infrastructure\Persistence\ClientNote\ClientNote;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 use DateTimeImmutable;
@@ -14,29 +14,30 @@ final class ClientNoteForm extends FormModel
     #[Required]
     private ?int $client_id = null;
 
-    // Bugfix: Could not enter #[Required] here instead of ->required(true)
-    private mixed $date_note = '';
+    private ?string $date_note = null;
 
     #[Required]
     private ?string $note = '';
 
-    public function __construct(ClientNote $clientNote)
+    public static function show(ClientNote $clientNote): self
     {
-        $this->client_id = (int) $clientNote->getClient_id();
-        $this->date_note = $clientNote->getDate_note();
-        $this->note = $clientNote->getNote();
+        $form = new self();
+        $form->client_id = $clientNote->reqClientId();
+        $dateNote = $clientNote->getDateNote();
+        $form->date_note = $dateNote instanceof DateTimeImmutable
+            ? $dateNote->format('Y-m-d')
+            : null;
+        $form->note = $clientNote->getNote();
+        return $form;
     }
 
-    public function getClient_id(): ?int
+    public function getClientId(): ?int
     {
         return $this->client_id;
     }
 
-    public function getDate_note(): string|DateTimeImmutable
+    public function getDateNote(): ?string
     {
-        /**
-         * @var DateTimeImmutable|string $this->date_note
-         */
         return $this->date_note;
     }
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * @var App\Invoice\Entity\QuoteItem $quoteitem
+ * @var App\Infrastructure\Persistence\QuoteItem\QuoteItem $quoteitem
  * @var Yiisoft\View\View $this
  * @var Yiisoft\Translator\Translator $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -21,7 +21,7 @@ use Yiisoft\Html\Html;
  <div class="mb3 form-group">
    <label for="tax_rate_id" class="form-label" style="background:lightblue"><?= $translator->translate('tax.rate'); ?></label>
    <?php  $actionNameTax = 'taxrate/view';
-$actionArgumentsTax = ['tax_rate_id' => $quoteitem->getTaxRate()?->getTaxRateId()];
+$actionArgumentsTax = ['tax_rate_id' => $quoteitem->getTaxRate()?->reqId()];
 $taxRateName = $quoteitem->getTaxRate()?->getTaxRateName();
 if (null !== $taxRateName) {
     echo Html::a($taxRateName, $urlGenerator->generate($actionNameTax, $actionArgumentsTax))->render();
@@ -31,8 +31,8 @@ if (null !== $taxRateName) {
  <div class="mb3 form-group">
    <label for="product_id" class="form-label" style="background:lightblue"><?= $translator->translate('product'); ?></label>
    <?php  $actionNameProduct = 'product/view';
-$actionArgumentsProduct = ['id' => $quoteitem->getProduct()?->getProduct_id()];
-$productName = $quoteitem->getProduct()?->getProduct_name();
+$actionArgumentsProduct = ['id' => $quoteitem->getProduct()?->reqId()];
+$productName = $quoteitem->getProduct()?->getProductName();
 if (null !== $productName) {
     echo Html::a($productName, $urlGenerator->generate($actionNameProduct, $actionArgumentsProduct))->render();
 }
@@ -41,7 +41,7 @@ if (null !== $productName) {
  <div class="mb3 form-group">
    <label for="quote_id" class="form-label" style="background:lightblue"><?= $translator->translate('quote'); ?></label>
    <?php  $actionNameQuote = 'quote/view';
-$actionArgumentsQuote = ['id' => $quoteitem->getQuote()?->getId()];
+$actionArgumentsQuote = ['id' => $quoteitem->getQuote()?->reqId()];
 $quoteNumber = $quoteitem->getQuote()?->getNumber();
 if (null !== $quoteNumber) {
     echo Html::a($quoteNumber, $urlGenerator->generate($actionNameQuote, $actionArgumentsQuote))->render();

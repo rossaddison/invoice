@@ -13,7 +13,7 @@ class CurrencyHelperTest extends Unit
     private function createCurrencyHelper(): CurrencyHelper
     {
         $reflection = new ReflectionClass(CurrencyHelper::class);
-        return $reflection->newInstanceWithoutConstructor();
+        return $reflection->newInstanceWithoutConstructor(); // NOSONAR: php:S3011
     }
 
     public function testFindExistingCurrencyUSD(): void

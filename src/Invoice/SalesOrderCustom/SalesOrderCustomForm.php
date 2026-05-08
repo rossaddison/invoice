@@ -4,31 +4,33 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderCustom;
 
-use App\Invoice\Entity\SalesOrderCustom;
+use App\Infrastructure\Persistence\SalesOrderCustom\SalesOrderCustom;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class SalesOrderCustomForm extends FormModel
 {
-    private ?int $so_id = null;
+    private ?int $sales_order_id = null;
     private ?int $custom_field_id = null;
 
     #[Required]
     private ?string $value = '';
 
-    public function __construct(SalesOrderCustom $salesOrderCustom)
+    public static function show(SalesOrderCustom $salesOrderCustom): self
     {
-        $this->so_id = (int) $salesOrderCustom->getSo_id();
-        $this->custom_field_id = (int) $salesOrderCustom->getCustom_field_id();
-        $this->value = $salesOrderCustom->getValue();
+        $form = new self();
+        $form->sales_order_id = $salesOrderCustom->reqSalesOrderId();
+        $form->custom_field_id = $salesOrderCustom->reqCustomFieldId();
+        $form->value = $salesOrderCustom->getValue();
+        return $form;
     }
 
-    public function getSo_id(): ?int
+    public function getSalesOrderId(): ?int
     {
-        return $this->so_id;
+        return $this->sales_order_id;
     }
 
-    public function getCustom_field_id(): ?int
+    public function getCustomFieldId(): ?int
     {
         return $this->custom_field_id;
     }

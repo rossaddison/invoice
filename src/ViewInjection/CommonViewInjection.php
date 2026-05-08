@@ -7,15 +7,21 @@ namespace App\ViewInjection;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\Yii\View\Renderer\CommonParametersInjectionInterface;
-use App\Invoice\Entity\Company;
-use App\Invoice\Entity\CompanyPrivate;
+use App\Infrastructure\Persistence\Company\Company;
+use App\Infrastructure\Persistence\CompanyPrivate\CompanyPrivate;
 use App\Invoice\Company\CompanyRepository;
 use App\Invoice\CompanyPrivate\CompanyPrivateRepository;
 use App\Invoice\Setting\SettingRepository;
 
 final readonly class CommonViewInjection implements CommonParametersInjectionInterface
 {
-    public function __construct(private UrlGeneratorInterface $url, private CompanyRepository $companyRepository, private CompanyPrivateRepository $companyPrivateRepository, private SettingRepository $settingRepository, private Translator $translator) {}
+    public function __construct(private UrlGeneratorInterface $url,
+        private CompanyRepository $companyRepository,
+        private CompanyPrivateRepository $companyPrivateRepository,
+        private SettingRepository $settingRepository,
+        private Translator $translator)
+    {
+    }
 
     /**
      * @return array
@@ -47,8 +53,9 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
             if ($company->getCurrent() == '1') {
                 $companyName = $company->getName();
                 $companyWeb = $company->getWeb();
-                $companyAddress1 = $company->getAddress_1();
-                $companyAddress2 = $company->getAddress_2();
+                $companySeoDescription = $company->getSeoDescription();
+                $companyAddress1 = $company->getAddress1();
+                $companyAddress2 = $company->getAddress2();
                 $companyCity = $company->getCity();
                 $companyState = $company->getState();
                 $companyZip = $company->getZip();
@@ -62,14 +69,17 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
                  * @var CompanyPrivate $private
                  */
                 foreach ($companyPrivates as $private) {
-                    if ($private->getCompany_id() == (string) $company->getId()) {
-                        // site's logo: take the first logo where the current date falls within the logo's start and end dates
-                        if (($private->getStart_date()?->format('Y-m-d') < (new \DateTimeImmutable('now'))->format('Y-m-d')) && ($private->getEnd_date()?->format('Y-m-d') > (new \DateTimeImmutable('now'))->format('Y-m-d'))) {
-                            $companyLogoFileName = $private->getLogo_filename();
-                            $companyLogoWidth = $private->getLogo_width();
-                            $companyLogoHeight = $private->getLogo_height();
-                            $companyStartDate = $private->getStart_date()?->format('Y-m-d');
-                            //  break;
+                    if ($private->reqCompanyId() === $company->reqId()) {
+// site's logo: take the first logo where the current date falls within
+//  the logo's start and end dates
+                        if (($private->getStartDate()?->format('Y-m-d') <
+                            (new \DateTimeImmutable('now'))->format('Y-m-d'))
+                            && ($private->getEndDate()?->format('Y-m-d') >
+                            (new \DateTimeImmutable('now'))->format('Y-m-d'))) {
+                            $companyLogoFileName = $private->getLogoFilename();
+                            $companyLogoWidth = $private->getLogoWidth();
+                            $companyLogoHeight = $private->getLogoHeight();
+                            $companyStartDate = $private->getStartDate()?->format('Y-m-d');
                         }
                     }
                 }
@@ -78,7 +88,7 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
         $logoPath = (
             (isset($companyLogoFileName) && !empty($companyLogoFileName))
                                       ? '/logo/' . $companyLogoFileName
-                                      : '/site/' . $this->settingRepository->public_logo() . '.png'
+                                      : '/site/' . $this->settingRepository->publicLogo() . '.png'
         );
 
         return [
@@ -96,6 +106,8 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
             'companyLogoWidth' => $companyLogoWidth ?? 80,
             'companyLogoHeight' => $companyLogoHeight ?? 40,
             'companyName' => $companyName ?? '',
+            'companySeoDescription' => $companySeoDescription ??
+                'Search Engine Optimization Description',
             'companyStartDate' => $companyStartDate ?? date('Y-m-d'),
             'companyWeb' => $companyWeb ?? 'mywebpage.com',
             'logoPath' => $logoPath,
@@ -104,7 +116,8 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
 
             /**
              * Related logic: see \invoice\resources\messages\en\app.php
-             * Related logic: see \invoice\vendor\yiisoft\yii-view\src\ViewRenderer.php function getCommonParameters
+             * Related logic: see \invoice\vendor\yiisoft\yii-view\src\
+             *  ViewRenderer.php function getCommonParameters
              */
             'about' => [
                 'we' => $this->translator->translate('site.soletrader.about.we'),
@@ -171,6 +184,12 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
             ],
             'onetimepassworderror' => [
                 'onetimePasswordError' => $this->translator->translate('two.factor.authentication.error'),
+            ],
+            'onetimepasswordfailure' => [
+                'onetimePasswordFailure' => $this->translator->translate('two.factor.authentication.attempt.failure'),
+            ],
+            'onetimepasswordsuccess' => [
+                'onetimePasswordSuccess' => $this->translator->translate('two.factor.authentication.attempt.success'),
             ],
             'resetpasswordfailed' => [
                 'resetPasswordFailed' => $this->translator->translate('password.reset.failed'),

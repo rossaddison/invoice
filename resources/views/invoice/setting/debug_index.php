@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Setting;
+use App\Infrastructure\Persistence\Setting\Setting;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -39,21 +39,29 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @psalm-var positive-int $page
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$toolbarReset = A::tag()
+echo Html::openTag('div', ['class' => 'mb-3']);
+echo (new \Yiisoft\Html\Tag\A())
+    ->href($urlGenerator->generate('commonerrors/index'))
+    ->addClass('btn btn-warning')
+    ->content('⚙ Common Errors Check')
+    ->render();
+echo Html::closeTag('div');
+
+$toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-    ->href($urlGenerator->generate($currentRoute->getName() ?? 'setting/debug_index'))
+    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
+    ->href($urlGenerator->generate($currentRoute->getName() ?? 'setting/debugIndex'))
     ->id('btn-reset')
     ->render();
 
-$toolbarFilter = A::tag()
+$toolbarFilter =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('setting_filters_submit')
     ->addClass('btn btn-info me-1')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
     ->href('#setting_filters_submit')
     ->id('setting_filters_submit')
     ->render();
@@ -62,28 +70,28 @@ $columns = [
     new DataColumn(
         property: 'id',
         header: $translator->translate('id'),
-        content: static fn(Setting $model) => Html::encode($model->getSetting_id()),
+        content: static fn (Setting $model) => Html::encode($model->reqSettingId()),
         withSorting: true,
     ),
     new DataColumn(
         property: 'setting_key',
         header: $translator->translate('setting.key'),
-        content: static fn(Setting $model) => Html::encode($model->getSetting_key()),
+        content: static fn (Setting $model) => Html::encode($model->getSettingKey()),
         withSorting: true,
-        filter: (new DropdownFilter())->optionsData($optionsDataSettingsKeyDropDownFilter),
+        filter:  new DropdownFilter()->optionsData($optionsDataSettingsKeyDropDownFilter),
     ),
     new DataColumn(
         property: 'setting_value',
         header: $translator->translate('setting.value'),
-        content: static fn(Setting $model) => Html::encode($model->getSetting_value()),
+        content: static fn (Setting $model) => Html::encode($model->getSettingValue()),
         withSorting: true,
-        filter: (new DropdownFilter())->optionsData($optionsDataSettingsValueDropDownFilter),
+        filter:  new DropdownFilter()->optionsData($optionsDataSettingsValueDropDownFilter),
     ),
     new ActionColumn(buttons: [
         new ActionButton(
             content: '🔎',
             url: static function (Setting $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('setting/view', ['setting_id' => $model->getSetting_id()]);
+                return $urlGenerator->generate('setting/view', ['setting_id' => $model->reqSettingId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -93,7 +101,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (Setting $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('setting/edit', ['setting_id' => $model->getSetting_id()]);
+                return $urlGenerator->generate('setting/edit', ['setting_id' => $model->reqSettingId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -103,7 +111,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (Setting $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('setting/delete', ['setting_id' => $model->getSetting_id()]);
+                return $urlGenerator->generate('setting/delete', ['setting_id' => $model->reqSettingId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),
@@ -124,7 +132,7 @@ $sortedAndPagedPaginator = (new OffsetPaginator($settings))
     ->withSort($sort)
     ->withToken(PageToken::next((string) $page));
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $sortedAndPagedPaginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -132,15 +140,15 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('setting/debug_index'))->csrf($csrf)->open()
-    . A::tag()
+$toolbarString =  new Form()->post($urlGenerator->generate('setting/debugIndex'))->csrf($csrf)->open()
+    .  new A()
     ->href($urlGenerator->generate('setting/add'))
     ->addClass('btn btn-info')
     ->content('➕')
     ->render()
-    . Div::tag()->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render()
-    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-    . Form::tag()->close();
+    .  new Div()->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render()
+    .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    .  new Form()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
@@ -164,7 +172,7 @@ echo GridView::widget()
 ->id('w439-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($sortedAndPagedPaginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlFastRouteGenerator, 'setting') . ' ' . $grid_summary)
+->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlFastRouteGenerator, 'setting') . ' ' . $gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Invoice\ItemLookup;
 
-use App\Invoice\Entity\ItemLookup;
+use App\Infrastructure\Persistence\ItemLookup\ItemLookup;
 
 final readonly class ItemLookupService
 {
-    public function __construct(private ItemLookupRepository $repository) {}
+    public function __construct(private ItemLookupRepository $repository)
+    {
+    }
 
     /**
      * @param ItemLookup $model

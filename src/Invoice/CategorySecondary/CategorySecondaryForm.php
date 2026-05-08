@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\CategorySecondary;
 
-use App\Invoice\Entity\CategorySecondary;
+use App\Infrastructure\Persistence\CategorySecondary\CategorySecondary;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
@@ -14,16 +14,19 @@ final class CategorySecondaryForm extends FormModel
 
     #[Required]
     private ?string $name = '';
-    private ?int $id = null;
-
-    public function __construct(CategorySecondary $categorySecondary)
+    
+    public static function show(CategorySecondary $categorySecondary): self
     {
-        $this->category_primary_id = $categorySecondary->getCategory_primary_id();
-        $this->name = $categorySecondary->getName();
-        $this->id = $categorySecondary->getId();
+        $form = new self();
+        
+        $form->category_primary_id = $categorySecondary->reqCategoryPrimaryId();
+        
+        $form->name = $categorySecondary->getName() ?? '';
+        
+        return $form;
     }
 
-    public function getCategory_primary_id(): ?int
+    public function getCategoryPrimaryId(): ?int
     {
         return $this->category_primary_id;
     }
@@ -31,11 +34,6 @@ final class CategorySecondaryForm extends FormModel
     public function getName(): ?string
     {
         return $this->name;
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     /**

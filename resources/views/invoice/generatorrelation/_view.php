@@ -20,9 +20,9 @@ use Yiisoft\Html\Tag\Form;
  */
 ?>
 
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
@@ -31,7 +31,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('h1'); ?>
 
 <?=
-    Form::tag()
+     new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -46,16 +46,16 @@ use Yiisoft\Html\Tag\Form;
 <?php
 $optionsDataGenerators = [];
 /**
- * @var App\Invoice\Entity\Gentor $generator
+ * @var App\Infrastructure\Persistence\Gentor\Gentor $generator
  */
 foreach ($generators as $generator) {
-    $optionsDataGenerators[$generator->getGentor_id()] = $generator->getCamelcase_capital_name();
+    $optionsDataGenerators[$generator->reqGentorId()] = $generator->getCamelcaseCapitalName();
 }
 
 echo Field::select($form, 'gentor_id')
 ->label($translator->translate('generator.relation.form.entity.generator'))
 ->addInputAttributes([
-    'class' => 'form-control',
+    'class' => 'form-control form-control-lg',
     'id' => 'gentor_id',
     'readonly' => 'readonly',
     'disabled' => 'disabled',
@@ -70,12 +70,12 @@ echo Field::select($form, 'gentor_id')
     ->label($translator->translate('generator.relation.form.lowercase.name'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('generator.relation.form.lowercase.name'),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'lowercasename',
         'readonly' => 'readonly',
         'disabled' => 'disabled',
     ])
-    ->value(Html::encode($form->getLowercase_name()))
+    ->value(Html::encode($form->getLowercaseName()))
 ?>
 <?= Html::closeTag('div'); ?>
 
@@ -84,12 +84,12 @@ echo Field::select($form, 'gentor_id')
     ->label($translator->translate('generator.relation.form.camelcase.name'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('generator.relation.form.camelcase.name'),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'camelcasename',
         'readonly' => 'readonly',
         'disabled' => 'disabled',
     ])
-    ->value(Html::encode($form->getCamelcase_name()))
+    ->value(Html::encode($form->getCamelcaseName()))
 ?>
 <?= Html::closeTag('div'); ?>
 
@@ -98,17 +98,17 @@ echo Field::select($form, 'gentor_id')
     ->label($translator->translate('generator.relation.form.view.field.name'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('generator.relation.form.view.field.name'),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'view_field_name',
         'readonly' => 'readonly',
         'disabled' => 'disabled',
     ])
-    ->value(Html::encode($form->getView_field_name()))
+    ->value(Html::encode($form->getViewFieldName()))
 ?>
 <?= Html::closeTag('div'); ?>
 
-<?= $button::backSave(); ?>    
-<?= Form::tag()->close(); ?>
+<?= $button::backSave(); ?>
+<?=  new Form()->close(); ?>
 
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

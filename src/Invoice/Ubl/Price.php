@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Ubl;
 
+use App\Invoice\Setting\SettingRepository;
 use Sabre\Xml\Writer;
 use Sabre\Xml\XmlSerializable;
 
@@ -11,7 +12,15 @@ class Price implements XmlSerializable
 {
     private string $unitCode = UnitCode::UNIT;
 
-    public function __construct(private readonly ?AllowanceCharge $allowanceCharge, private readonly string $priceAmount, private readonly string $baseQuantity, private readonly string $unitCodeListId) {}
+    public function __construct(
+        private readonly ?AllowanceCharge $allowanceCharge,
+        private readonly string $priceAmount,
+        private readonly string $baseQuantity,
+        private readonly string $unitCodeListId,
+        private SettingRepository $s,
+    )
+    {
+    }
 
     /**
      * Related logic: see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?p=3&q=Price
@@ -31,14 +40,17 @@ class Price implements XmlSerializable
         $writer->write([
             [
                 'name' => Schema::CBC . 'PriceAmount',
-                'value' => number_format((float) $this->priceAmount ?: 0.00, 2, '.', ''),
+                'value' => $this->s->currencyConverter(
+                 number_format((float) $this->priceAmount ?: 0.00, 2, '.', '')),
                 'attributes' => [
-                    'currencyID' => Generator::$currencyID,
+                    'currencyID' =>
+                                $this->s->getSetting('peppol_document_curency'),
                 ],
             ],
             [
                 'name' => Schema::CBC . 'BaseQuantity',
-                'value' => number_format((float) $this->baseQuantity ?: 0, 2, '.', ''),
+                'value' =>
+                    number_format((float) $this->baseQuantity ?: 0, 2, '.', ''),
                 'attributes' => $baseQuantityAttributes,
             ],
         ]);

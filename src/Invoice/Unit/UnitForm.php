@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace App\Invoice\Unit;
 
-use App\Invoice\Entity\Unit;
+use App\Infrastructure\Persistence\Unit\Unit;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
 
 final class UnitForm extends FormModel
 {
-    private ?int $unit_id = null;
-
     #[Required]
     #[Length(min: 0, max: 50)]
     private ?string $unit_name = null;
@@ -20,24 +18,20 @@ final class UnitForm extends FormModel
     #[Length(min: 0, max: 50)]
     private ?string $unit_name_plrl = null;
 
-    public function __construct(Unit $unit)
+    public static function show(Unit $unit): self
     {
-        $this->unit_id = $unit->getUnit_id();
-        $this->unit_name = $unit->getUnit_name();
-        $this->unit_name_plrl = $unit->getUnit_name_plrl();
+        $form = new self();
+        $form->unit_name = $unit->getUnitName();
+        $form->unit_name_plrl = $unit->getUnitNamePlrl();
+        return $form;
     }
 
-    public function getUnit_id(): ?int
-    {
-        return $this->unit_id;
-    }
-
-    public function getUnit_name(): ?string
+    public function getUnitName(): ?string
     {
         return $this->unit_name;
     }
 
-    public function getUnit_name_plrl(): ?string
+    public function getUnitNamePlrl(): ?string
     {
         return $this->unit_name_plrl;
     }

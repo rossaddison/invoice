@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\User\Console;
 
 use App\Auth\Form\SignupForm;
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 use LogicException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -40,14 +40,6 @@ final class CreateCommand extends Command
             ->addArgument('isAdmin', InputArgument::OPTIONAL, 'Create user as admin');
     }
 
-    /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @param string $error
-     * @param string $attribute
-     * @throws LogicException
-     * @return int
-     */
     #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -82,15 +74,12 @@ final class CreateCommand extends Command
 
         if (!$user instanceof User) {
             $errors = $this->signupForm->getValidationResult()->getErrorMessagesIndexedByProperty();
-            array_walk($errors, fn(string $error, string $attribute): mixed => $io->error("$attribute: $error"));
+            array_walk($errors, fn (string $error, string $attribute): mixed => $io->error("$attribute: $error"));
             return ExitCode::DATAERR;
         }
 
         if ($isAdmin) {
-            $userId = $user->getId();
-            if ($userId === null) {
-                throw new LogicException('User Id is NULL');
-            }
+            $userId = $user->reqId();
             $this->manager->assign('admin', $userId);
         }
         $io->success('User created');

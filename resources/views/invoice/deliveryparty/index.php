@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\DeliveryParty;
+use App\Infrastructure\Persistence\DeliveryParty\DeliveryParty;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -24,38 +24,38 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $csrf
  */
 
-$toolbarReset = A::tag()
+$toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'deliveryparty/index'))
     ->id('btn-reset')
     ->render();
 
-$toolbar = Div::tag();
+echo new Div();
 
 $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(DeliveryParty $model) => Html::encode($model->getId()),
+        content: static fn (DeliveryParty $model) => Html::encode($model->reqId()),
     ),
     new DataColumn(
         'party_name',
         header: $translator->translate('name'),
-        content: static fn(DeliveryParty $model) => Html::encode($model->getPartyName()),
+        content: static fn (DeliveryParty $model) => Html::encode($model->getPartyName()),
     ),
     new DataColumn(
         header: $translator->translate('view'),
         content: static function (DeliveryParty $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('deliveryparty/view', ['id' => $model->getId()]), []);
+            return Html::a(Html::tag('i', '', ['class' => 'bi-eye']), $urlGenerator->generate('deliveryparty/view', ['id' => $model->reqId()]), []);
         },
     ),
     new DataColumn(
         'id',
         header: $translator->translate('delivery.party.edit'),
         content: static function (DeliveryParty $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('deliveryparty/edit', ['id' => $model->getId()]), []);
+            return Html::a(Html::tag('i', '', ['class' => 'bi-pencil-square']), $urlGenerator->generate('deliveryparty/edit', ['id' => $model->reqId()]), []);
         },
     ),
     new DataColumn(
@@ -64,14 +64,14 @@ $columns = [
             return Html::a(
                 Html::tag(
                     'button',
-                    Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
+                    Html::tag('i', '', ['class' => 'bi-trash']),
                     [
                         'type' => 'submit',
                         'class' => 'dropdown-button',
                         'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                     ],
                 ),
-                $urlGenerator->generate('deliveryparty/delete', ['id' => $model->getId()]),
+                $urlGenerator->generate('deliveryparty/delete', ['id' => $model->reqId()]),
                 [],
             );
         },
@@ -79,19 +79,19 @@ $columns = [
     ),
 ];
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarString
-    = Form::tag()->post($urlGenerator->generate('deliveryparty/index'))->csrf($csrf)->open()
-    . A::tag()
+    =  new Form()->post($urlGenerator->generate('deliveryparty/index'))->csrf($csrf)->open()
+    .  new A()
         ->href($urlGenerator->generate('deliveryparty/add'))
         ->addClass('btn btn-info')
         ->content('➕')
         ->render()
-    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-    . Form::tag()->close();
+    .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    .  new Form()->close();
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -109,7 +109,7 @@ echo GridView::widget()
     ->id('w15-grid')
     ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->summaryTemplate($grid_summary)
+    ->summaryTemplate($gridSummary)
     ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
     ->noResultsText($translator->translate('no.records'))
     ->toolbar($toolbarString);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\User\Controller;
 
 use App\User\UserRepository;
+use App\Invoice\Setting\SettingRepository as SR;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Yiisoft\Data\Paginator\OffsetPaginator;
@@ -14,45 +15,40 @@ use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Input\Http\Attribute\Parameter\Body;
 use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class UserController
 {
     public function __construct(
-        private ViewRenderer $viewRenderer,
+        private WebViewRenderer $webViewRenderer,
+        private readonly SR $sR,
     ) {
-        $this->viewRenderer = $viewRenderer->withControllerName('user');
+        $this->webViewRenderer = $webViewRenderer->withControllerName('user');
     }
 
     public function index(
         UserRepository $userRepository,
-        #[Body]
-        ?array $body,
         #[Query('sort')]
-        ?string $sortOrder = null,
+        ?string $querySort = null,
         #[RouteArgument('page')]
-        int $page = 1,
-        #[RouteArgument('pagesize')]
-        int $pageSize = null,
+        string $page = '1',
+        #[Query('page')]
+        ?string $queryPage = null,
     ): Response {
-        $order = null !== $sortOrder ? OrderHelper::stringToArray($sortOrder) : [];
-        $sort = Sort::only(['id', 'login'])->withOrder($order);
         /**
-         * @var \Yiisoft\Data\Cycle\Reader\EntityReader $dataReader
+         * @var \Yiisoft\Data\Cycle\Reader\EntityReader $users
          */
-        $dataReader = $userRepository->findAllPreloaded();
-
-        if ($pageSize === null) {
-            $pageSize = (int) ($body['pageSize'] ?? OffsetPaginator::DEFAULT_PAGE_SIZE);
-        }
-
-        $offsetPaginator = (new OffsetPaginator($dataReader));
-        $paginator = $offsetPaginator
-                      ->withPageSize($pageSize > 0 ? $pageSize : 1)
-                      ->withSort($sort)
-                      ->withToken(PageToken::next((string) $page));
-
-        return $this->viewRenderer->render('index', ['paginator' => $paginator]);
+        $users = $userRepository->findAllPreloaded();
+        $page = $queryPage ?? $page;
+        
+        return $this->webViewRenderer->render('index', [
+            'defaultPageSizeOffsetPaginator' =>
+                    $this->sR->getSetting('default_list_limit') ?
+                        (int) $this->sR->getSetting('default_list_limit') : 1,
+            'page' => (int) $page > 0 ? (int) $page : 1,
+            'sortString' => $querySort ?? '-id',
+            'users' => $users,
+        ]);
     }
 
     public function profile(
@@ -67,6 +63,6 @@ final class UserController
             return $responseFactory->createResponse(404);
         }
 
-        return $this->viewRenderer->render('profile', ['item' => $item]);
+        return $this->webViewRenderer->render('profile', ['item' => $item]);
     }
 }

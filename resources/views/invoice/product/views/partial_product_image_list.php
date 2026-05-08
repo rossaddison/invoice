@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-use App\Invoice\Entity\ProductImage;
+use App\Infrastructure\Persistence\ProductImage\ProductImage;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 
 /**
- * Related logic: see ...src\Invoice\Product\ProductController function view_partial_product_image
+ * Related logic: see ...src\Invoice\Product\ProductController function viewPartialProductImage
  * Related logic: see ...resources\views\invoice\product\views\partial_product_image.php
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Invoice\Helpers\DateHelper $dateHelper
@@ -26,12 +26,12 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
             new DataColumn(
                 'file_name_original',
                 header: $translator->translate('name'),
-                content: static fn(ProductImage $model): string => Html::encode($model->getFile_name_original()),
+                content: static fn (ProductImage $model): string => Html::encode($model->getFileNameOriginal()),
             ),
             new DataColumn(
                 'uploaded_date',
                 header: $translator->translate('date'),
-                content: static fn(ProductImage $model): string => ($model->getUploaded_date())->format('Y-m-d'),
+                content: static fn (ProductImage $model): string => ($model->getUploadedDate())->format('Y-m-d'),
             ),
             new DataColumn(
                 header: $translator->translate('download'),
@@ -39,7 +39,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
                     return Html::a(
                         Html::tag(
                             'button',
-                            Html::tag('i', '', ['class' => 'fa fa-download fa-margin']),
+                            Html::tag('i', '', ['class' => 'bi bi-download']),
                             [
                                 'type' => 'submit',
                                 'class' => 'dropdown-button',
@@ -47,7 +47,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
                         ),
                         // route action => product/download_image_file
                         // route name => /image
-                        $urlGenerator->generate('product/download_image_file', ['product_image_id' => $model->getId(), '_language' => 'en']),
+                        $urlGenerator->generate('product/downloadImageFile', ['product_image_id' => $model->reqId(), '_language' => 'en']),
                         [],
                     );
                 },
@@ -59,13 +59,13 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
                     return Html::a(
                         Html::tag(
                             'button',
-                            Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']),
+                            Html::tag('i', '', ['class' => 'bi bi-pencil']),
                             [
                                 'type' => 'submit',
                                 'class' => 'dropdown-button',
                             ],
                         ),
-                        $urlGenerator->generate('productimage/edit', ['id' => $model->getId(), '_language' => 'en']),
+                        $urlGenerator->generate('productimage/edit', ['id' => $model->reqId(), '_language' => 'en']),
                         [],
                     );
                 },
@@ -77,14 +77,14 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
                     return Html::a(
                         Html::tag(
                             'button',
-                            Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
+                            Html::tag('i', '', ['class' => 'bi-trash']),
                             [
                                 'type' => 'submit',
                                 'class' => 'dropdown-button',
                                 'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                             ],
                         ),
-                        $urlGenerator->generate('productimage/delete', ['id' => $model->getId(), '_language' => 'en']),
+                        $urlGenerator->generate('productimage/delete', ['id' => $model->reqId(), '_language' => 'en']),
                         [],
                     );
                 },
@@ -92,7 +92,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
         ]
 ?>
     <?php
-    $grid_summary = $s->grid_summary(
+    $gridSummary = $s->gridSummary(
         $paginator,
         $translator,
         (int) $s->getSetting('default_list_limit'),
@@ -105,7 +105,7 @@ echo GridView::widget()
 ->columns(...$columns)
 ->dataReader($paginator)
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($grid_summary)
+->summaryTemplate($gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.attachments'))
 ?>

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\CategoryPrimary;
+use App\Infrastructure\Persistence\CategoryPrimary\CategoryPrimary;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -14,7 +14,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
- * @var App\Invoice\Entity\CategoryPrimary $categoryprimary
+ * @var App\Infrastructure\Persistence\CategoryPrimary\CategoryPrimary $categoryprimary
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
@@ -26,34 +26,34 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $csrf
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$toolbarReset = A::tag()
+$toolbarReset =  new A()
   ->addAttributes(['type' => 'reset'])
   ->addClass('btn btn-danger me-1 ajax-loader')
-  ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+  ->content( new I()->addClass('bi bi-bootstrap-reboot'))
   ->href($urlGenerator->generate($currentRoute->getName() ?? 'categoryprimary/index'))
   ->id('btn-reset')
   ->render();
 
-$toolbar = Div::tag();
+echo new Div();
 
 $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(CategoryPrimary $model) => (string) $model->getId(),
+        content: static fn (CategoryPrimary $model) => (string) $model->reqId(),
     ),
     new DataColumn(
         'name',
         header: $translator->translate('name'),
-        content: static fn(CategoryPrimary $model) => Html::encode($model->getName() ?? ''),
+        content: static fn (CategoryPrimary $model) => Html::encode($model->getName() ?? ''),
     ),
     new ActionColumn(buttons: [
         new ActionButton(
             content: '🔎',
             url: static function (CategoryPrimary $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('categoryprimary/view', ['id' => $model->getId()]);
+                return $urlGenerator->generate('categoryprimary/view', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -63,7 +63,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (CategoryPrimary $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('categoryprimary/edit', ['id' => $model->getId()]);
+                return $urlGenerator->generate('categoryprimary/edit', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -73,7 +73,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (CategoryPrimary $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('categoryprimary/delete', ['id' => $model->getId()]);
+                return $urlGenerator->generate('categoryprimary/delete', ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),
@@ -83,16 +83,16 @@ $columns = [
     ]),
 ];
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('categoryprimary/index'))->csrf($csrf)->open()
-    . A::tag()
+$toolbarString =  new Form()->post($urlGenerator->generate('categoryprimary/index'))->csrf($csrf)->open()
+    .  new A()
         ->href($urlGenerator->generate('categoryprimary/add'))
         ->addAttributes(['style' => 'text-decoration:none'])
         ->content('➕')
         ->render()
-    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-    . Form::tag()->close();
+    .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    .  new Form()->close();
 
-$grid_summary = $s->grid_summary($paginator, $translator, (int) $s->getSetting('default.list.limit'), $translator->translate('plural'), '');
+$gridSummary = $s->gridSummary($paginator, $translator, (int) $s->getSetting('default.list.limit'), $translator->translate('plural'), '');
 
 echo GridView::widget()
   ->bodyRowAttributes(['class' => 'align-middle'])
@@ -104,7 +104,7 @@ echo GridView::widget()
   ->id('w194-grid')
   ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
   ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-  ->summaryTemplate($grid_summary)
+  ->summaryTemplate($gridSummary)
   ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
   ->noResultsText($translator->translate('no.records'))
   ->toolbar($toolbarString);

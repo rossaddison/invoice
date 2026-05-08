@@ -4,22 +4,18 @@ declare(strict_types=1);
 
 namespace App\Command\Invoice;
 
-use App\Invoice\Entity\AllowanceCharge;
-use App\Invoice\Entity\InvAllowanceCharge;
-use App\Invoice\Entity\InvItemAllowanceCharge;
-use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\InvAmount;
-use App\Invoice\Entity\InvCustom;
-use App\Invoice\Entity\InvItem;
-use App\Invoice\Entity\InvItemAmount;
-use App\Invoice\Entity\InvRecurring;
-use App\Invoice\Entity\InvSentLog;
-use App\Invoice\Entity\InvTaxRate;
-use App\Invoice\Entity\Merchant;
-use App\Invoice\Entity\Payment;
-use App\Invoice\Entity\PaymentCustom;
-use App\Invoice\Entity\PaymentMethod;
-use App\Invoice\Entity\PaymentPeppol;
+use App\Infrastructure\Persistence\{
+    AllowanceCharge\AllowanceCharge, InvAllowanceCharge\InvAllowanceCharge,
+    InvItemAllowanceCharge\InvItemAllowanceCharge, Inv\Inv,
+    InvAmount\InvAmount, InvCustom\InvCustom, InvItem\InvItem,
+    InvItemAmount\InvItemAmount, InvRecurring\InvRecurring,
+    InvSentLog\InvSentLog, InvTaxRate\InvTaxRate
+};
+use App\Infrastructure\Persistence\Merchant\Merchant;
+use App\Infrastructure\Persistence\Payment\Payment;
+use App\Infrastructure\Persistence\PaymentCustom\PaymentCustom;
+use App\Infrastructure\Persistence\PaymentMethod\PaymentMethod;
+use App\Infrastructure\Persistence\PaymentPeppol\PaymentPeppol;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

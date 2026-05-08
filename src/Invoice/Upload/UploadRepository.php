@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Upload;
 
-use App\Invoice\Entity\Upload;
+use App\Infrastructure\Persistence\Upload\Upload;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -112,10 +112,10 @@ final class UploadRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return Upload|null
      */
-    public function repoUploadquery(string $id): ?Upload
+    public function repoUploadquery(int $id): ?Upload
     {
         $query = $this->select()
                       ->where(['id' => $id]);

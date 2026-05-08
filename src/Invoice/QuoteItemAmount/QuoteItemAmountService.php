@@ -4,37 +4,54 @@ declare(strict_types=1);
 
 namespace App\Invoice\QuoteItemAmount;
 
-use App\Invoice\Entity\QuoteItemAmount;
+use App\Infrastructure\Persistence\QuoteItemAmount\QuoteItemAmount;
+use App\Invoice\QuoteItem\QuoteItemRepository;
 
 final readonly class QuoteItemAmountService
 {
-    public function __construct(private QuoteItemAmountRepository $repository) {}
+    public function __construct(
+        private QuoteItemAmountRepository $repository,
+        private QuoteItemRepository $quoteItemRepository,
+    ) {
+    }
+
+    private function persist(
+        QuoteItemAmount $model,
+        array $quoteitem
+    ): void {
+        $quote_item = $this->quoteItemRepository
+            ->repoQuoteItemquery((int) $quoteitem['quote_item_id']);
+        if ($quote_item) {
+            $model->setQuoteItem($quote_item);
+        }
+    }
 
     /**
      * @param QuoteItemAmount $model
      * @param array $quoteitem
      */
-    public function saveQuoteItemAmountNoForm(QuoteItemAmount $model, array $quoteitem): void
-    {
-        $model->setQuote_item_id((int) $quoteitem['quote_item_id']);
-        /**
-         * @var float $quoteitem['subtotal']
-         * @var float $quoteitem['taxtotal']
-         * @var float $quoteitem['discount']
-         * @var float $quoteitem['total']
-         */
-        $model->setSubtotal($quoteitem['subtotal']);
-        $model->setTax_total($quoteitem['taxtotal']);
-        $model->setDiscount($quoteitem['discount']);
-        $model->setTotal($quoteitem['total']);
+    public function saveQuoteItemAmountNoForm(
+        QuoteItemAmount $model,
+        array $quoteitem
+    ): void {
+        $this->persist($model, $quoteitem);
+        // The total of all the charges of the quote item
+        $model->setCharge((float) $quoteitem['charge']);
+        // The total of all the allowances of the quote item
+        $model->setAllowance((float) $quoteitem['allowance']);
+        $model->setSubtotal((float) $quoteitem['subtotal']);
+        $model->setTaxTotal((float) $quoteitem['taxtotal']);
+        $model->setDiscount((float) $quoteitem['discount']);
+        $model->setTotal((float) $quoteitem['total']);
         $this->repository->save($model);
     }
 
     /**
      * @param QuoteItemAmount $model
      */
-    public function deleteQuoteItemAmount(QuoteItemAmount $model): void
-    {
+    public function deleteQuoteItemAmount(
+        QuoteItemAmount $model
+    ): void {
         $this->repository->delete($model);
     }
 }

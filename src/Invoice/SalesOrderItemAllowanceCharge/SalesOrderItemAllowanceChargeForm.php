@@ -1,0 +1,72 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Invoice\SalesOrderItemAllowanceCharge;
+
+use App\Infrastructure\Persistence\SalesOrderItemAllowanceCharge\{
+    SalesOrderItemAllowanceCharge,
+};
+use Yiisoft\FormModel\FormModel;
+use Yiisoft\Validator\Rule\Required;
+
+/**
+ * @psalm-suppress UnusedClass
+ */
+final class SalesOrderItemAllowanceChargeForm extends FormModel
+{
+    private ?int $sales_order_id = null;
+    #[Required]
+    private ?int $allowance_charge_id = null;
+    #[Required]
+    private ?float $amount = null;
+    #[Required]
+    private ?float $vat_or_tax = null;
+
+    public function __construct(
+        SalesOrderItemAllowanceCharge $salesorderItemAllowanceCharge,
+        private readonly ?int $sales_order_item_id)
+    {
+        $this->sales_order_id =
+            (int) $salesorderItemAllowanceCharge->getSalesOrderId();
+        $this->allowance_charge_id =
+            (int) $salesorderItemAllowanceCharge->getAllowanceChargeId();
+        $this->amount = (float) $salesorderItemAllowanceCharge->getAmount();
+        $this->vat_or_tax = (float) $salesorderItemAllowanceCharge->getVatOrTax();
+    }
+
+    public function getSalesOrderId(): ?int
+    {
+        return $this->sales_order_id;
+    }
+
+    public function getSalesOrderItemId(): ?int
+    {
+        return $this->sales_order_item_id;
+    }
+
+    public function getAllowanceChargeId(): ?int
+    {
+        return $this->allowance_charge_id;
+    }
+
+    public function getAmount(): ?float
+    {
+        return $this->amount;
+    }
+
+    public function getVatOrTax(): ?float
+    {
+        return $this->vat_or_tax;
+    }
+
+    /**
+     * @return string
+     * @psalm-return ''
+     */
+    #[\Override]
+    public function getFormName(): string
+    {
+        return '';
+    }
+}

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Related logic: see App\Invoice\Helpers\PdfHelper function generate_quote_pdf
+ * Related logic: see App\Invoice\Helpers\PdfHelper function generateQuotePdf
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH
  * @var App\Invoice\CustomValue\CustomValueRepository $cvR
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -14,12 +14,12 @@ declare(strict_types=1);
 ?>
 <?php
 /**
- * @var App\Invoice\Entity\CustomField $custom_field
+ * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
  */ foreach ($custom_fields as $custom_field): ?>
     <?php if ($custom_field->getLocation() !== 1) {
         continue;
     } ?>
     <?php echo '<td>'; ?>
-    <?php  $cvH->print_field_for_pdf($translator, $quote_custom_values, $custom_field, $cvR); ?>                                   
+    <?php  $cvH->printFieldForPdf($translator, $quote_custom_values, $custom_field, $cvR); ?>
     <?php echo '</td>'; ?>
 <?php endforeach;

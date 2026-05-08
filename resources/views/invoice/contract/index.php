@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Contract;
-use App\Invoice\Entity\Inv;
+use App\Infrastructure\Persistence\Contract\Contract;
+use App\Infrastructure\Persistence\Inv\Inv;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -28,51 +28,46 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $csrf
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$toolbarReset = A::tag()
+$toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'contract/index'))
     ->id('btn-reset')
     ->render();
 
-$toolbar = Div::tag();
+echo new Div();
 
 $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Contract $model) => Html::encode($model->getId()),
+        content: static fn (Contract $model) => Html::encode($model->reqId()),
     ),
     new DataColumn(
         'id',
         header: $translator->translate('contract.index.button.list'),
         content: static function (Contract $model) use ($urlGenerator, $iR): string {
-            $modelId = $model->getId();
-            if (null !== $modelId) {
-                $invoices = $iR->findAllWithContract($modelId);
-                $buttons = '';
-                $button = '';
-                /**
-                 * @var Inv $invoice
-                 */
-                foreach ($invoices as $invoice) {
-                    $button = (string) Html::a(
-                        $invoice->getNumber() ?? '#',
-                        $urlGenerator->generate('inv/view', ['id' => $invoice->getId()]),
-                        ['class' => 'btn btn-primary btn-sm',
-                            'data-bs-toggle' => 'tooltip',
-                            'title' => $model->getReference(),
-                        ],
-                    );
-                    $buttons .= $button . str_repeat("&nbsp;", 1);
-                }
-                return $buttons;
-            } else {
-                return '';
+            $modelId = $model->reqId();
+            $invoices = $iR->findAllWithContract($modelId);
+            $buttons = '';
+            /**
+             * @var Inv $invoice
+             */
+            foreach ($invoices as $invoice) {
+                $button = (string) Html::a(
+                    $invoice->getNumber() ?? '#',
+                    $urlGenerator->generate('inv/view', ['id' => $invoice->reqId()]),
+                    ['class' => 'btn btn-primary btn-sm',
+                        'data-bs-toggle' => 'tooltip',
+                        'title' => $model->getReference(),
+                    ],
+                );
+                $buttons .= $button . str_repeat("&nbsp;", 1);
             }
+            return $buttons;
         },
         encodeContent: false,
     ),
@@ -80,35 +75,36 @@ $columns = [
         'client_id',
         header: $translator->translate('client'),
         content: static function (Contract $model) use ($cR): string {
-            $client = ($cR->repoClientCount($model->getClient_id()) > 0 ? ($cR->repoClientquery($model->getClient_id()))->getClient_name() : '');
+            $client = ($cR->repoClientCount($model->reqClientId()) > 0 ?
+                    ($cR->repoClientquery($model->reqClientId()))->getClientName() : '');
             return $client;
         },
     ),
     new DataColumn(
         'name',
         header: $translator->translate('contract.name'),
-        content: static fn(Contract $model): string => Html::encode($model->getName()),
+        content: static fn (Contract $model): string => Html::encode($model->getName()),
     ),
     new DataColumn(
         'reference',
         header: $translator->translate('contract.reference'),
-        content: static fn(Contract $model): string => Html::encode($model->getReference()),
+        content: static fn (Contract $model): string => Html::encode($model->getReference()),
     ),
     new DataColumn(
         'period_start',
         header: $translator->translate('contract.period.start'),
-        content: static fn(Contract $model): string => ($model->getPeriod_start())->format('Y-m-d'),
+        content: static fn (Contract $model): string => ($model->getPeriodStart())->format('Y-m-d'),
     ),
     new DataColumn(
         'period_end',
         header: $translator->translate('contract.period.end'),
-        content: static fn(Contract $model): string => ($model->getPeriod_end())->format('Y-m-d'),
+        content: static fn (Contract $model): string => ($model->getPeriodEnd())->format('Y-m-d'),
     ),
     new ActionColumn(buttons: [
         new ActionButton(
             content: '🔎',
             url: static function (Contract $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('contract/view', ['id' => $model->getId()]);
+                return $urlGenerator->generate('contract/view', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -118,7 +114,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (Contract $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('contract/edit', ['id' => $model->getId()]);
+                return $urlGenerator->generate('contract/edit', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -128,7 +124,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (Contract $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('contract/delete', ['id' => $model->getId()]);
+                return $urlGenerator->generate('contract/delete', ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),
@@ -139,11 +135,11 @@ $columns = [
 ];
 
 $toolbarString
-    = Form::tag()->post($urlGenerator->generate('contract/index'))->csrf($csrf)->open()
-    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-    . Form::tag()->close();
+    =  new Form()->post($urlGenerator->generate('contract/index'))->csrf($csrf)->open()
+    .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    .  new Form()->close();
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -161,7 +157,7 @@ echo GridView::widget()
 ->id('w11-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($grid_summary)
+->summaryTemplate($gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

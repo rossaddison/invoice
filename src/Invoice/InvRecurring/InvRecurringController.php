@@ -7,7 +7,7 @@ namespace App\Invoice\InvRecurring;
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
 // Entities
-use App\Invoice\Entity\InvRecurring;
+use App\Infrastructure\Persistence\InvRecurring\InvRecurring;
 // Forms
 use App\Invoice\Inv\InvService as IS;
 use App\Invoice\Inv\InvRepository as IR;
@@ -24,7 +24,7 @@ use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Log\Logger;
@@ -34,7 +34,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class InvRecurringController extends BaseController
 {
@@ -54,11 +54,11 @@ final class InvRecurringController extends BaseController
         SR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->_logger = new Logger();
         $this->factory = $factory;
         $this->invCustomService = $invCustomService;
@@ -74,10 +74,9 @@ final class InvRecurringController extends BaseController
      * @param CurrentRoute $currentRoute
      * @param IRR $irR
      */
-    public function index(CurrentRoute $currentRoute, IRR $irR): \Yiisoft\DataResponse\DataResponse
+    public function index(CurrentRoute $currentRoute, IRR $irR): \Psr\Http\Message\ResponseInterface
     {
         $pageNum = (int) $currentRoute->getArgument('page', '1');
-        /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
         $paginator = (new OffsetPaginator($this->invrecurrings($irR)))
         ->withPageSize($this->sR->positiveListLimit())
@@ -89,11 +88,11 @@ final class InvRecurringController extends BaseController
             'canEdit' => $canEdit,
             'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
                                                       ? (int) $this->sR->getSetting('default_list_limit') : 1,
-            'recur_frequencies' => $numberhelper->recur_frequencies(),
+            'recur_frequencies' => $numberhelper->recurFrequencies(),
             'invrecurrings' => $this->invrecurrings($irR),
             'alert' => $this->alert(),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -109,15 +108,15 @@ final class InvRecurringController extends BaseController
         FormHydrator $formHydrator,
         IR $iR,
     ): Response {
-        $inv_id = $currentRoute->getArgument('inv_id');
+        $inv_id = (int) $currentRoute->getArgument('inv_id');
         $invRecurring = new InvRecurring();
-        $form = new InvRecurringForm($invRecurring, (int) $inv_id);
-        if (null !== $inv_id) {
+        $form = new InvRecurringForm();
+        if ($inv_id > 0) {
             $baseInvoice = $iR->repoInvUnloadedquery($inv_id);
             if (null !== $baseInvoice) {
                 // Only invoices with a status of sent can be  made recurring
-                if ($baseInvoice->getStatus_id() == 2) {
-                    $invDateCreated = $baseInvoice->getDate_created();
+                if ($baseInvoice->reqStatusId() == 2) {
+                    $invDateCreated = $baseInvoice->getDateCreated();
                     $parameters = [
                         'title' => $this->translator->translate('add'),
                         'actionName' => 'invrecurring/add',
@@ -137,7 +136,7 @@ final class InvRecurringController extends BaseController
                         $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                         $parameters['form'] = $form;
                     }
-                    return $this->viewRenderer->render('_form', $parameters);
+                    return $this->webViewRenderer->render('_form', $parameters);
                 }
                 $this->flashMessage('danger', $this->translator->translate('recurring.status.sent.only') . '❗');
                 // Redirect back to the invoice view instead of showing 404
@@ -153,10 +152,9 @@ final class InvRecurringController extends BaseController
      * @param Request $request
      * @param FormHydrator $formHydrator
      */
-    public function multiple(Request $request, FormHydrator $formHydrator, IR $iR): \Yiisoft\DataResponse\DataResponse
+    public function multiple(Request $request, FormHydrator $formHydrator, IR $iR): \Psr\Http\Message\ResponseInterface
     {
         $data = $request->getQueryParams();
-        $parameters = ['success' => 0];
         /**
          * Purpose: Provide a list of ids from inv/index checkbox column as an array
          * @var array $data['keylist']
@@ -164,15 +162,14 @@ final class InvRecurringController extends BaseController
         $keyList = $data['keylist'] ?? [];
         if (!empty($keyList)) {
             /**
-             * @var string $key
              * @var string $value
              */
-            foreach ($keyList as $key => $value) {
-                $baseInvoice = $iR->repoInvUnloadedquery($value);
+            foreach ($keyList as $value) {
+                $baseInvoice = $iR->repoInvUnloadedquery((int) $value);
                 if (null !== $baseInvoice) {
-                    if ($baseInvoice->getStatus_id() == '2') {
+                    if ($baseInvoice->reqStatusId() == 2) {
                         $invRecurring = new InvRecurring();
-                        $form = new InvRecurringForm($invRecurring, (int) $value);
+                        $form = new InvRecurringForm();
                         $body_array = [
                             'inv_id' => $value,
                             'start' => $data['recur_start_date'] ?? null,
@@ -205,7 +202,7 @@ final class InvRecurringController extends BaseController
     {
         $inv_recurring = $this->invrecurring($currentRoute, $iR);
         if ($inv_recurring) {
-            $ivr = $iR->repoInvRecurringquery($inv_recurring->getId());
+            $ivr = $iR->repoInvRecurringquery($inv_recurring->reqId());
             if ($ivr) {
                 $dateTime = new \DateTime();
                 $ivr->setEnd($dateTime);
@@ -234,14 +231,14 @@ final class InvRecurringController extends BaseController
     ): Response {
         $inv_recurring = $this->invrecurring($currentRoute, $invrecurringRepository);
         if ($inv_recurring) {
-            $form = new InvRecurringForm($inv_recurring, (int) $inv_recurring->getInv_id());
-            $base_invoice = $iR->repoInvUnloadedquery($inv_recurring->getInv_id());
+            $form = InvRecurringForm::show($inv_recurring, $inv_recurring->reqInvId());
+            $base_invoice = $iR->repoInvUnloadedquery($inv_recurring->reqInvId());
             if (null !== $base_invoice) {
-                $invDateCreated = $base_invoice->getDate_created();
+                $invDateCreated = $base_invoice->getDateCreated();
                 $parameters = [
                     'title' => $this->translator->translate('edit'),
                     'actionName' => 'invrecurring/start',
-                    'actionArguments' => ['id' => $inv_recurring->getId()],
+                    'actionArguments' => ['id' => $inv_recurring->reqId()],
                     'errors' => [],
                     'invDateCreated' => $invDateCreated,
                     'form' => $form,
@@ -257,7 +254,7 @@ final class InvRecurringController extends BaseController
                     $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                     $parameters['form'] = $form;
                 }
-                return $this->viewRenderer->render('_form', $parameters);
+                return $this->webViewRenderer->render('_form', $parameters);
             } // null!== $base_invoice
         }
         return $this->webService->getNotFoundResponse();
@@ -297,7 +294,7 @@ final class InvRecurringController extends BaseController
         $invrecurring = new InvRecurring();
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            return $invrecurringRepository->repoInvRecurringquery($id);
+            return $invrecurringRepository->repoInvRecurringquery((int) $id);
             // InvRecurring/null can be returned here
         }
         return $invrecurring;
@@ -328,25 +325,22 @@ final class InvRecurringController extends BaseController
     /**
      * @param Request $request
      * @param IR $iR
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function get_recur_start_date(Request $request, IR $iR): \Yiisoft\DataResponse\DataResponse
+    public function getRecurStartDate(Request $request, IR $iR): \Psr\Http\Message\ResponseInterface
     {
         $body = $request->getQueryParams();
-        /**
-         * @var int $body['inv_id']
-         */
-        $inv_id = $body['inv_id'];
-        $base_invoice = $iR->repoInvUnloadedquery((string) $inv_id);
+        $inv_id = (int) $body['inv_id'];
+        $base_invoice = $iR->repoInvUnloadedquery($inv_id);
         if (null !== $base_invoice) {
-            $immutable_invoice_date = $base_invoice->getDate_created();
+            $immutable_invoice_date = $base_invoice->getDateCreated();
             // see InvRecurringRepository recur_frequencies eg. '8M' => 'calendar_month_8',
             $recur_frequency = (string) $body['frequency'];
             $dateHelper = new DateHelper($this->sR);
             $parameters = [
                 'success' => 1,
                 // Show the recur_start_date in Y-m-d format
-                'start_date' => $dateHelper->add_to_immutable($immutable_invoice_date, $recur_frequency),
+                'start_date' => $dateHelper->addToImmutable($immutable_invoice_date, $recur_frequency),
             ];
             return $this->factory->createResponse(Json::encode($parameters));
         }
@@ -358,20 +352,20 @@ final class InvRecurringController extends BaseController
 
     /**
      * @param CurrentRoute $currentRoute
-     * @param IRR $invrecurringRepository
+     * @param IRR $invrecurrR
      * @param IR $iR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function view(CurrentRoute $currentRoute, IRR $invrecurringRepository, IR $iR): \Yiisoft\DataResponse\DataResponse|Response
+    public function view(CurrentRoute $currentRoute, IRR $invrecurrR, IR $iR): \Psr\Http\Message\ResponseInterface
     {
-        $inv_recurring = $this->invrecurring($currentRoute, $invrecurringRepository);
+        $inv_recurring = $this->invrecurring($currentRoute, $invrecurrR);
         if ($inv_recurring) {
-            $invRecurringId = $inv_recurring->getId();
-            $form = new InvRecurringForm($inv_recurring, (int) $invRecurringId);
-            $invId = $inv_recurring->getInv_id();
+            $invRecurringId = $inv_recurring->reqId();
+            $form = InvRecurringForm::show($inv_recurring, $inv_recurring->reqInvId());
+            $invId = $inv_recurring->reqInvId();
             $base_invoice = $iR->repoInvUnloadedquery($invId);
             if (null !== $base_invoice) {
-                $invDateCreated = $base_invoice->getDate_created();
+                $invDateCreated = $base_invoice->getDateCreated();
                 $parameters = [
                     'title' => $this->translator->translate('view'),
                     'actionName' => 'invrecurring/view',
@@ -379,9 +373,10 @@ final class InvRecurringController extends BaseController
                     'errors' => [],
                     'form' => $form,
                     'invDateCreated' => $invDateCreated,
-                    'invrecurring' => $invrecurringRepository->repoInvRecurringquery($invRecurringId),
+                    'invrecurring' =>
+                    $invrecurrR->repoInvRecurringquery($invRecurringId),
                 ];
-                return $this->viewRenderer->render('_view', $parameters);
+                return $this->webViewRenderer->render('_view', $parameters);
             }
         }
         return $this->webService->getNotFoundResponse();

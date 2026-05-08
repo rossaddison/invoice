@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Invoice\DeliveryParty;
 
-use App\Invoice\Entity\DeliveryParty;
+use App\Infrastructure\Persistence\DeliveryParty\DeliveryParty;
 
 final readonly class DeliveryPartyService
 {
-    public function __construct(private DeliveryPartyRepository $repository) {}
+    public function __construct(private DeliveryPartyRepository $repository)
+    {
+    }
 
     public function saveDeliveryParty(DeliveryParty $model, array $array): void
     {

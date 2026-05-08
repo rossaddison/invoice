@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -rn \"App\\\\\\\\\\\\\\\\Invoice\\\\\\\\\\\\\\\\Entity\\\\\\\\\" src/Infrastructure/Persistence/)",
+      "Bash(vendor/bin/psalm)"
+    ]
+  }
+}

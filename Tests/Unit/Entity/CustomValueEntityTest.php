@@ -4,29 +4,19 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Entity;
 
-use App\Invoice\Entity\CustomValue;
-use App\Invoice\Entity\CustomField;
+use App\Infrastructure\Persistence\CustomValue\CustomValue;
 use Codeception\Test\Unit;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class CustomValueEntityTest extends Unit
 {
-    private MockObject $customField;
-    
     public string $updatedData = 'Updated data';
-    
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->customField = $this->createMock(CustomField::class);
-    }
+
 
     public function testConstructorWithDefaults(): void
     {
         $customValue = new CustomValue();
         
-        $this->assertSame('', $customValue->getId());
-        $this->assertNull($customValue->getCustom_field_id());
+        $this->assertFalse($customValue->hasIdentity());
         $this->assertSame('', $customValue->getValue());
         $this->assertNull($customValue->getCustomField());
     }
@@ -35,8 +25,8 @@ class CustomValueEntityTest extends Unit
     {
         $customValue = new CustomValue(1, 5, 'Custom field value');
         
-        $this->assertSame('1', $customValue->getId());
-        $this->assertSame(5, $customValue->getCustom_field_id());
+        $this->assertSame(1, $customValue->reqId());
+        $this->assertSame(5, $customValue->reqCustomFieldId());
         $this->assertSame('Custom field value', $customValue->getValue());
         $this->assertNull($customValue->getCustomField()); // Relationship set by ORM
     }
@@ -45,8 +35,8 @@ class CustomValueEntityTest extends Unit
     {
         $customValue = new CustomValue(null, 10, 'Test value');
         
-        $this->assertSame('', $customValue->getId());
-        $this->assertSame(10, $customValue->getCustom_field_id());
+        $this->assertFalse($customValue->hasIdentity());
+        $this->assertSame(10, $customValue->reqCustomFieldId());
         $this->assertSame('Test value', $customValue->getValue());
     }
 
@@ -55,21 +45,21 @@ class CustomValueEntityTest extends Unit
         $customValue = new CustomValue();
         
         $customValue->setId(123);
-        $this->assertSame('123', $customValue->getId());
+        $this->assertSame(123, $customValue->reqId());
         
         $customValue->setId(456);
-        $this->assertSame('456', $customValue->getId());
+        $this->assertSame(456, $customValue->reqId());
     }
 
     public function testCustomFieldIdSetterAndGetter(): void
     {
         $customValue = new CustomValue();
         
-        $customValue->setCustom_field_id(10);
-        $this->assertSame(10, $customValue->getCustom_field_id());
+        $customValue->setCustomFieldId(10);
+        $this->assertSame(10, $customValue->reqCustomFieldId());
         
-        $customValue->setCustom_field_id(25);
-        $this->assertSame(25, $customValue->getCustom_field_id());
+        $customValue->setCustomFieldId(25);
+        $this->assertSame(25, $customValue->reqCustomFieldId());
     }
 
     public function testValueSetterAndGetter(): void
@@ -91,18 +81,17 @@ class CustomValueEntityTest extends Unit
         $this->assertNull($customValue->getCustomField());
     }
 
-    public function testIdReturnsString(): void
+    public function testIdReturnsInt(): void
     {
         $customValue = new CustomValue();
-        
-        // Test that ID is always returned as string
+
         $customValue->setId(0);
-        $this->assertIsString($customValue->getId());
-        $this->assertSame('0', $customValue->getId());
-        
+        $this->assertIsInt($customValue->reqId());
+        $this->assertSame(0, $customValue->reqId());
+
         $customValue->setId(999);
-        $this->assertIsString($customValue->getId());
-        $this->assertSame('999', $customValue->getId());
+        $this->assertIsInt($customValue->reqId());
+        $this->assertSame(999, $customValue->reqId());
     }
 
     public function testCommonCustomFieldValues(): void
@@ -180,19 +169,19 @@ class CustomValueEntityTest extends Unit
         
         // Zero ID
         $customValue->setId(0);
-        $this->assertSame('0', $customValue->getId());
-        
+        $this->assertSame(0, $customValue->reqId());
+
         // Large ID
         $customValue->setId(999999999);
-        $this->assertSame('999999999', $customValue->getId());
+        $this->assertSame(999999999, $customValue->reqId());
         
         // Zero custom field ID
-        $customValue->setCustom_field_id(0);
-        $this->assertSame(0, $customValue->getCustom_field_id());
+        $customValue->setCustomFieldId(0);
+        $this->assertSame(0, $customValue->reqCustomFieldId());
         
         // Large custom field ID
-        $customValue->setCustom_field_id(888888888);
-        $this->assertSame(888888888, $customValue->getCustom_field_id());
+        $customValue->setCustomFieldId(888888888);
+        $this->assertSame(888888888, $customValue->reqCustomFieldId());
     }
 
     public function testEmptyValueHandling(): void
@@ -213,11 +202,11 @@ class CustomValueEntityTest extends Unit
         
         // Setup a complete custom value
         $customValue->setId(1);
-        $customValue->setCustom_field_id(5);
+        $customValue->setCustomFieldId(5);
         $customValue->setValue('Complete custom field value');
         
-        $this->assertSame('1', $customValue->getId());
-        $this->assertSame(5, $customValue->getCustom_field_id());
+        $this->assertSame(1, $customValue->reqId());
+        $this->assertSame(5, $customValue->reqCustomFieldId());
         $this->assertSame('Complete custom field value', $customValue->getValue());
         $this->assertNull($customValue->getCustomField()); // Relationship set by ORM
     }
@@ -240,8 +229,8 @@ class CustomValueEntityTest extends Unit
         foreach ($fieldTypeValues as $value) {
             $customValue = new CustomValue(null, 1, $value);
             
-            $this->assertSame('', $customValue->getId());
-            $this->assertSame(1, $customValue->getCustom_field_id());
+            $this->assertFalse($customValue->hasIdentity());
+            $this->assertSame(1, $customValue->reqCustomFieldId());
             $this->assertSame($value, $customValue->getValue());
         }
     }
@@ -251,8 +240,8 @@ class CustomValueEntityTest extends Unit
         $customValue = new CustomValue(100, 200, 'Test consistency');
         
         // Multiple calls should return same values
-        $this->assertSame($customValue->getId(), $customValue->getId());
-        $this->assertSame($customValue->getCustom_field_id(), $customValue->getCustom_field_id());
+        $this->assertSame($customValue->reqId(), $customValue->reqId());
+        $this->assertSame($customValue->reqCustomFieldId(), $customValue->reqCustomFieldId());
         $this->assertSame($customValue->getValue(), $customValue->getValue());
         $this->assertSame($customValue->getCustomField(), $customValue->getCustomField());
     }
@@ -262,8 +251,8 @@ class CustomValueEntityTest extends Unit
         $customValue = new CustomValue();
         
         // Set up relationship reference
-        $customValue->setCustom_field_id(10);
-        $this->assertSame(10, $customValue->getCustom_field_id());
+        $customValue->setCustomFieldId(10);
+        $this->assertSame(10, $customValue->reqCustomFieldId());
         
         // CustomField relationship is null until set by ORM
         $this->assertNull($customValue->getCustomField());
@@ -282,8 +271,8 @@ class CustomValueEntityTest extends Unit
         foreach ($scenarios as $index => $scenario) {
             $customValue = new CustomValue($index + 1, $scenario['field_id'], $scenario['value']);
             
-            $this->assertSame((string)($index + 1), $customValue->getId());
-            $this->assertSame($scenario['field_id'], $customValue->getCustom_field_id());
+            $this->assertSame($index + 1, $customValue->reqId());
+            $this->assertSame($scenario['field_id'], $customValue->reqCustomFieldId());
             $this->assertSame($scenario['value'], $customValue->getValue());
         }
     }
@@ -348,29 +337,28 @@ class CustomValueEntityTest extends Unit
         
         // Initial setup
         $customValue->setId(1);
-        $customValue->setCustom_field_id(5);
+        $customValue->setCustomFieldId(5);
         $customValue->setValue('Initial value');
         
-        $this->assertSame('1', $customValue->getId());
-        $this->assertSame(5, $customValue->getCustom_field_id());
+        $this->assertSame(1, $customValue->reqId());
+        $this->assertSame(5, $customValue->reqCustomFieldId());
         $this->assertSame('Initial value', $customValue->getValue());
         
         // Modification
-        $customValue->setCustom_field_id(10);
+        $customValue->setCustomFieldId(10);
         $customValue->setValue('Modified value');
         
-        $this->assertSame('1', $customValue->getId()); // ID unchanged
-        $this->assertSame(10, $customValue->getCustom_field_id()); // Field ID changed
+        $this->assertSame(1, $customValue->reqId()); // ID unchanged
+        $this->assertSame(10, $customValue->reqCustomFieldId()); // Field ID changed
         $this->assertSame('Modified value', $customValue->getValue()); // Value changed
     }
 
     public function testPropertyTypes(): void
     {
         $customValue = new CustomValue(123, 456, 'type test');
-        
-        // Test return types
-        $this->assertIsString($customValue->getId());
-        $this->assertIsInt($customValue->getCustom_field_id());
+
+        $this->assertIsInt($customValue->reqId());
+        $this->assertIsInt($customValue->reqCustomFieldId());
         $this->assertIsString($customValue->getValue());
         $this->assertNull($customValue->getCustomField());
     }
@@ -381,33 +369,30 @@ class CustomValueEntityTest extends Unit
         
         // Test negative ID (though probably not used in practice)
         $customValue->setId(-1);
-        $this->assertSame('-1', $customValue->getId());
+        $this->assertSame(-1, $customValue->reqId());
         
-        $customValue->setCustom_field_id(-5);
-        $this->assertSame(-5, $customValue->getCustom_field_id());
+        $customValue->setCustomFieldId(-5);
+        $this->assertSame(-5, $customValue->reqCustomFieldId());
     }
 
     public function testEntityStateAfterConstruction(): void
     {
-        // Test various constructor states
         $entity1 = new CustomValue();
-        $this->assertSame('', $entity1->getId());
-        $this->assertNull($entity1->getCustom_field_id());
+        $this->assertFalse($entity1->hasIdentity());
         $this->assertSame('', $entity1->getValue());
-        
+
         $entity2 = new CustomValue(1);
-        $this->assertSame('1', $entity2->getId());
-        $this->assertNull($entity2->getCustom_field_id());
+        $this->assertSame(1, $entity2->reqId());
         $this->assertSame('', $entity2->getValue());
-        
+
         $entity3 = new CustomValue(1, 2);
-        $this->assertSame('1', $entity3->getId());
-        $this->assertSame(2, $entity3->getCustom_field_id());
+        $this->assertSame(1, $entity3->reqId());
+        $this->assertSame(2, $entity3->reqCustomFieldId());
         $this->assertSame('', $entity3->getValue());
-        
+
         $entity4 = new CustomValue(1, 2, 'Full Value');
-        $this->assertSame('1', $entity4->getId());
-        $this->assertSame(2, $entity4->getCustom_field_id());
+        $this->assertSame(1, $entity4->reqId());
+        $this->assertSame(2, $entity4->reqCustomFieldId());
         $this->assertSame('Full Value', $entity4->getValue());
     }
 
@@ -416,10 +401,10 @@ class CustomValueEntityTest extends Unit
         $customValue = new CustomValue();
         
         // Step 1: Create with field reference
-        $customValue->setCustom_field_id(1);
+        $customValue->setCustomFieldId(1);
         $customValue->setValue('Initial data');
         
-        $this->assertSame(1, $customValue->getCustom_field_id());
+        $this->assertSame(1, $customValue->reqCustomFieldId());
         $this->assertSame('Initial data', $customValue->getValue());
         
         // Step 2: Update value
@@ -427,8 +412,8 @@ class CustomValueEntityTest extends Unit
         $this->assertSame($this->updatedData, $customValue->getValue());
         
         // Step 3: Change field reference
-        $customValue->setCustom_field_id(2);
-        $this->assertSame(2, $customValue->getCustom_field_id());
+        $customValue->setCustomFieldId(2);
+        $this->assertSame(2, $customValue->reqCustomFieldId());
         $this->assertSame($this->updatedData, $customValue->getValue()); // Value unchanged
     }
 

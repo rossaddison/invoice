@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\QuoteCustom;
 
-use App\Invoice\Entity\QuoteCustom;
+use App\Infrastructure\Persistence\QuoteCustom\QuoteCustom;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
@@ -16,19 +16,21 @@ final class QuoteCustomForm extends FormModel
     #[Required]
     private ?string $value = '';
 
-    public function __construct(QuoteCustom $quoteCustom)
+    public static function show(QuoteCustom $quoteCustom, int $quote_id): self
     {
-        $this->quote_id = (int) $quoteCustom->getQuote_id();
-        $this->custom_field_id = (int) $quoteCustom->getCustom_field_id();
-        $this->value = $quoteCustom->getValue();
+        $form = new self();
+        $form->quote_id = $quote_id;
+        $form->custom_field_id = $quoteCustom->reqCustomFieldId();
+        $form->value = $quoteCustom->getValue();
+        return $form;
     }
 
-    public function getQuote_id(): ?int
+    public function getQuoteId(): ?int
     {
         return $this->quote_id;
     }
 
-    public function getCustom_field_id(): ?int
+    public function getCustomFieldId(): ?int
     {
         return $this->custom_field_id;
     }

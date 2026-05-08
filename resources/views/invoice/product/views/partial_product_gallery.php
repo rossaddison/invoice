@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /**
  * Related logic: see ...src\Invoice\Product\ProductController function view $parameters['partial_product_gallery']
- * @var App\Invoice\Entity\Product $product
+ * @var App\Infrastructure\Persistence\Product\Product $product
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\View\WebView $this
@@ -22,21 +22,21 @@ if ($invEdit && $invView) {
   <div class="panel-heading">
       <i tooltip="data-bs-toggle" title="<?= $s->isDebugMode(9);?>">
         <?= $translator->translate('productimage.gallery'); ?>
-        <?= $product->getProduct_name(); ?></i>
+        <?= $product->getProductName(); ?></i>
   </div>
   <div class="panel-body clearfix">
     <div class="container">
-        <?php if ($invView && $invEdit) { ?> 
+        <?php if ($invView && $invEdit) { ?>
         <div class='row'>
             <?php
                /**
-                * @var App\Invoice\Entity\ProductImage $productImage
+                * @var App\Infrastructure\Persistence\ProductImage\ProductImage $productImage
                 */
                foreach ($productImages as $productImage) { ?>
                 <a data-bs-toggle="lightbox" data-gallery="example-gallery" class="col-sm-4">
-                    <img src="<?= '/products/' . $productImage->getFile_name_original(); ?>"   class="img-fluid">
+                    <img src="<?= '/products/' . $productImage->getFileNameOriginal(); ?>"   class="img-fluid">
                 </a>
-             <?php } ?> 
+             <?php } ?>
         </div>
         <?php } ?>
     </div>

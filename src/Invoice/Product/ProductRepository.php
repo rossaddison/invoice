@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Product;
 
-use App\Invoice\Entity\Product;
+use App\Infrastructure\Persistence\Product\Product;
 use Cycle\ORM\Select;
 use Throwable;
 use Cycle\Database\Injection\Parameter;
@@ -120,28 +120,29 @@ final class ProductRepository extends Select\Repository
         );
     }
 
-    public function filter_family_id(string $family_id): EntityReader
+    public function filterFamilyId(int $family_id): EntityReader
     {
         $select = $this->select();
-        $query = $select->where(['family_id' => ltrim(rtrim($family_id))]);
+        $query = $select->where(['family_id' => $family_id]);
         return $this->prepareDataReader($query);
     }
 
-    public function filter_product_sku(string $product_sku): EntityReader
+    public function filterProductSku(string $product_sku): EntityReader
     {
         $select = $this->select();
         $query = $select->where(['product_sku' => ltrim(rtrim($product_sku))]);
         return $this->prepareDataReader($query);
     }
 
-    public function filter_product_price(string $product_price): EntityReader
+    public function filterProductPrice(string $product_price): EntityReader
     {
         $select = $this->select();
         $query = $select->where(['product_price' => ltrim(rtrim($product_price))]);
         return $this->prepareDataReader($query);
     }
 
-    public function filter_product_sku_price(string $product_price, string $product_sku): EntityReader
+    public function filterProductSkuPrice(string $product_price,
+            string $product_sku): EntityReader
     {
         $select = $this->select();
         $query = $select->where(['product_price' => ltrim(rtrim($product_price))])
@@ -150,13 +151,13 @@ final class ProductRepository extends Select\Repository
     }
 
     /**
-     * @param string|null $product_id
+     * @param int $product_id
      *
      * @return Product|null
      *
      * @psalm-return TEntity|null
      */
-    public function repoProductquery(?string $product_id): ?Product
+    public function repoProductquery(int $product_id): ?Product
     {
         $query = $this
             ->select()
@@ -180,6 +181,28 @@ final class ProductRepository extends Select\Repository
     }
 
     /**
+     * Assist in checking for existing products when generating from family
+     * @psalm-return EntityReader
+     */
+    public function repoProductWithFamilyIdQuery(
+        string $product_name, int $family_id): EntityReader
+    {
+        $query = $this
+            ->select()
+            ->load('family')
+            ->load('tax_rate')
+            ->load('unit');
+
+        if (!empty($product_name) && ($family_id > 0)) {
+            $query = $query
+                    ->andWhere(['family_id' => $family_id])
+                    ->andWhere(['product_name' => ltrim(rtrim($product_name))]);
+        }
+
+        return $this->prepareDataReader($query);
+    }
+
+    /**
      * Get products with filter using views/invoice/product/modal_product_lookups_inv or ...quote
      * Excludes zero-valued products for invoice/quote selection
      *
@@ -194,24 +217,34 @@ final class ProductRepository extends Select\Repository
             ->load('unit')
             ->where(['product_price' => ['>' => 0]]);
 
+        // Convert family_id to integer for proper comparison
+        $family_id_int = (int) $family_id;
+
+        // Debug logging (remove in production)
+        error_log("repoProductwithfamilyquery - product_name: '$product_name', family_id: '$family_id', family_id_int: $family_id_int");
+
         //lookup without filters eg. product/lookup
-        if (empty($product_name) && (empty($family_id))) {
-            // Base query already excludes zero prices
+        if (empty($product_name) && empty($family_id)) {
+            // Base query already excludes zero prices - return all products with price > 0
+            error_log("Query: All products with price > 0");
         }
 
         //eg. product/lookup?fp=Cleaning%20Services
-        if ((!empty($product_name)) && (empty($family_id))) {
+        if (!empty($product_name) && empty($family_id)) {
             $query = $query->andWhere(['product_name' => ltrim(rtrim($product_name))]);
+            error_log("Query: Filter by product_name only");
         }
 
-        //eg. product/lookup?Cleaning%20Services&ff=4
-        if (!empty($product_name) && ($family_id > (string) 0)) {
-            $query = $query->andWhere(['family_id' => $family_id])->andWhere(['product_name' => ltrim(rtrim($product_name))]);
+        //eg. product/lookup?fp=Cleaning%20Services&ff=4
+        if (!empty($product_name) && $family_id_int > 0) {
+            $query = $query->andWhere(['family_id' => $family_id_int])->andWhere(['product_name' => ltrim(rtrim($product_name))]);
+            error_log("Query: Filter by family_id ($family_id_int) AND product_name");
         }
 
         //eg. product/lookup?ff=4
-        if (empty($product_name) && ($family_id > (string) 0)) {
-            $query = $query->andWhere(['family_id' => $family_id]);
+        if (empty($product_name) && $family_id_int > 0) {
+            $query = $query->andWhere(['family_id' => $family_id_int]);
+            error_log("Query: Filter by family_id ($family_id_int) only");
         }
 
         return $this->prepareDataReader($query);
@@ -232,10 +265,10 @@ final class ProductRepository extends Select\Repository
     }
 
     /**
-     * @param string $product_id
+     * @param int $product_id
      * @return int
      */
-    public function repoCount(string $product_id): int
+    public function repoCount(int $product_id): int
     {
         return $this->select()
                       ->where(['id' => $product_id])

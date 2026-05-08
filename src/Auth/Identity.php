@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Auth;
 
-use App\User\User;
+use App\Infrastructure\Persistence\{
+    Trait\RequireId, User\User
+};
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -14,6 +16,8 @@ use Yiisoft\User\Login\Cookie\CookieLoginIdentityInterface;
 #[Entity(repository: IdentityRepository::class)]
 class Identity implements CookieLoginIdentityInterface
 {
+    use RequireId;
+ 
     #[Column(type: 'primary')]
     private ?int $id = null;
 
@@ -24,25 +28,25 @@ class Identity implements CookieLoginIdentityInterface
     private ?User $user = null;
 
     /**
-     * A #[HasOne(target: Identity::class)] relationship exists in the User table so no need for a user_id column here as
+     * A #[HasOne(target: Identity::class)] relationship exists in the User
+     *  table so no need for a user_id column here as
      * it gets built automatically by the User's HasOne Identity relationship
      */
-    public function __construct(
-        User $user = null,
-    ) {
+    public function __construct() {
         $this->authKey = $this->regenerateCookieLoginKey();
     }
 
     #[\Override]
     public function getId(): ?string
     {
-        return (string) $this->id;
+        return ((string) $this->requireId($this->id, 'Identity')) ?: null;
     }
 
-    public function getUser_id(): ?string
+    public function getUserId(): ?int
     {
         if ($this->user) {
-            return $this->user->getId();
+            // raise an exception if the user is not persisted
+            return $this->user->reqId();
         }
         return null;
     }

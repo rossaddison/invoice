@@ -20,20 +20,20 @@ use Yiisoft\Html\Tag\Form;
  */
 ?>
 
-<?= Form::tag()
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('ProjectForm')
     ->open() ?>
 
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
-<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
@@ -49,14 +49,14 @@ use Yiisoft\Html\Tag\Form;
                 <?php
     $optionsDataClient = [];
 /**
- * @var App\Invoice\Entity\Client $client
+ * @var App\Infrastructure\Persistence\Client\Client $client
  */
 foreach ($clients as $client) {
-    $clientName = $client->getClient_name();
-    $clientSurname = $client->getClient_surname() ?? '';
-    $clientId = $client->getClient_id();
+    $clientName = $client->getClientName();
+    $clientSurname = $client->getClientSurname() ?? '';
+    $clientId = $client->reqId();
     // Only add to the dropdown if the following conditions are satisfied
-    if ((strlen($clientName) > 0) && (strlen(($clientSurname)) > 0) && (null !== $clientId)) {
+    if ((strlen($clientName) > 0) && (strlen(($clientSurname)) > 0)) {
         $optionsDataClient[$clientId] = $clientName . ' ' . $clientSurname;
     }
 }
@@ -64,9 +64,9 @@ echo Field::select($form, 'client_id')
 ->label($translator->translate('client'))
 ->addInputAttributes([
     'id' => 'client_id',
-    'class' => 'form-control',
+    'class' => 'form-control form-control-lg',
 ])
-->value(Html::encode($form->getClient_id() ?? ''))
+->value(Html::encode($form->getClientId() ?? ''))
 ->optionsData($optionsDataClient)
 ->hint($translator->translate('hint.this.field.is.required'));
 ?>
@@ -76,7 +76,7 @@ echo Field::select($form, 'client_id')
     ->label($translator->translate('project.name'))
     ->addInputAttributes([
         'id' => 'name',
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'placeholder' => $translator->translate('project.name'),
     ])
     ->value(Html::encode($form->getName() ?? ''))
@@ -90,4 +90,4 @@ echo Field::select($form, 'client_id')
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?= Form::tag()->close() ?>
+<?=  new Form()->close() ?>

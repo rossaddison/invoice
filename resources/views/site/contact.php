@@ -37,10 +37,10 @@ use Yiisoft\Html\Tag\P;
                         <?= Html::openTag('h2', ['class' => 'h1 mb-3']);?>
                             <?= (string) $contact['touch']; ?>
                         <?= Html::closeTag('h2'); ?>
-                        <?= P::tag()
+                        <?=  new P()
                             ->addClass('lead fs-4 text-secondary mb-5')
                             ->content((string) $contact['lookout'])
-                            ->render(); ?> 
+                            ->render(); ?>
                         <?= Html::openTag('div', ['class' => 'd-flex mb-4']); ?>
                             <?= Html::openTag('div', ['class' => 'me-4 text-primary']); ?>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-geo" viewBox="0 0 16 16">
@@ -48,11 +48,11 @@ use Yiisoft\Html\Tag\P;
                                 </svg>
                             <?= Html::closeTag('div'); ?>
                             <?= Html::openTag('div'); ?>
-                                <?= H4::tag()
+                                <?=  new H4()
                                     ->addClass('mb-3')
                                     ->content(str_repeat(' ', 2) . (string) $contact['address'])
                                     ->render(); ?>
-                                <?= Html::openTag('address', ['class' => 'mb-0 text-secondary']); ?>    
+                                <?= Html::openTag('address', ['class' => 'mb-0 text-secondary']); ?>
                                     <?= $companyAddress1 . ', '
                                         . $companyAddress2 . ', '
                                         . $companyCity . ', '
@@ -67,13 +67,13 @@ use Yiisoft\Html\Tag\P;
                                 </svg>
                             <?= Html::closeTag('div'); ?>
                             <?= Html::openTag('div'); ?>
-                                <?= H4::tag()
+                                <?=  new H4()
                                     ->addClass('mb-3')
                                     ->content((string) $contact['phone'])
                                     ->render(); ?>
                                 <?= Html::openTag('p', ['class' => 'mb-0']); ?>
                                     <?=
-                                        A::tag()
+                                         new A()
                                         ->href('tel:+15057922430')
                                         ->addClass('link-secondary text-decoration-none')
                                         ->content($companyPhone)
@@ -90,18 +90,18 @@ use Yiisoft\Html\Tag\P;
                                   </svg>
                             <?= Html::closeTag('div'); ?>
                             <?= Html::openTag('div'); ?>
-                                <?= H4::tag()
+                                <?=  new H4()
 ->addClass('mb-3')
 ->content((string) $contact['email'])
 ->render(); ?>
                                 <?= Html::openTag('p'); ?>
-                                    <?= A::tag()
+                                    <?=  new A()
     ->href('mailto:demo@yourdomain.com')
     ->addClass('link-secondary text-decoration-none')
     ->content($companyEmail)
     ->render();
 ?>
-                                <?= Html::closeTag('p'); ?>    
+                                <?= Html::closeTag('p'); ?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('div'); ?>
                     <?= Html::closeTag('div'); ?>
@@ -109,4 +109,4 @@ use Yiisoft\Html\Tag\P;
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('section'); ?> 
+<?= Html::closeTag('section'); ?>

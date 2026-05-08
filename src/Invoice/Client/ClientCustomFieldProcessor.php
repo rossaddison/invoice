@@ -7,7 +7,7 @@ namespace App\Invoice\Client;
 use App\Invoice\CustomFieldProcessor;
 use App\Invoice\ClientCustom\ClientCustomRepository;
 use App\Invoice\ClientCustom\ClientCustomService;
-use App\Invoice\Entity\ClientCustom;
+use App\Infrastructure\Persistence\ClientCustom\ClientCustom;
 use App\Invoice\ClientCustom\ClientCustomForm;
 use Yiisoft\FormModel\FormHydrator;
 
@@ -16,22 +16,23 @@ final class ClientCustomFieldProcessor implements CustomFieldProcessor
     public function __construct(
         private readonly ClientCustomRepository $clientCustomRepository,
         private readonly ClientCustomService $clientCustomService,
-    ) {}
+    ) {
+    }
 
     #[\Override]
-    public function exists(string $entityId, string $customFieldId): bool
+    public function exists(int $entityId, int $customFieldId): bool
     {
         return $this->clientCustomRepository->repoClientCustomCount($entityId, $customFieldId) > 0;
     }
 
     #[\Override]
-    public function findExisting(string $entityId, string $customFieldId): ?\App\Invoice\Entity\ClientCustom
+    public function findExisting(int $entityId, int $customFieldId): ?\App\Infrastructure\Persistence\ClientCustom\ClientCustom
     {
         return $this->clientCustomRepository->repoFormValuequery($entityId, $customFieldId);
     }
 
     #[\Override]
-    public function createEntity(): \App\Invoice\Entity\ClientCustom
+    public function createEntity(): \App\Infrastructure\Persistence\ClientCustom\ClientCustom
     {
         return new ClientCustom();
     }
@@ -39,10 +40,10 @@ final class ClientCustomFieldProcessor implements CustomFieldProcessor
     #[\Override]
     public function createForm(object $entity): \Yiisoft\FormModel\FormModelInterface
     {
-        if (!$entity instanceof \App\Invoice\Entity\ClientCustom) {
+        if (!$entity instanceof \App\Infrastructure\Persistence\ClientCustom\ClientCustom) {
             throw new \InvalidArgumentException('Entity must be an instance of ClientCustom');
         }
-        return new ClientCustomForm($entity);
+        return new ClientCustomForm();
     }
 
     #[\Override]
@@ -58,7 +59,7 @@ final class ClientCustomFieldProcessor implements CustomFieldProcessor
     #[\Override]
     public function save(object $entity, array $inputData): void
     {
-        if (!$entity instanceof \App\Invoice\Entity\ClientCustom) {
+        if (!$entity instanceof \App\Infrastructure\Persistence\ClientCustom\ClientCustom) {
             throw new \InvalidArgumentException('Entity must be an instance of ClientCustom');
         }
         $this->clientCustomService->saveClientCustom($entity, $inputData);

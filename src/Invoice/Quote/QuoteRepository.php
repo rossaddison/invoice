@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Quote;
 
-use App\Invoice\Entity\Quote;
+use App\Infrastructure\Persistence\Quote\Quote;
 use App\Invoice\Group\GroupRepository as GR;
 use Cycle\ORM\Select;
 use Throwable;
@@ -24,7 +24,9 @@ final class QuoteRepository extends Select\Repository
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      */
-    public function __construct(Select $select, private readonly EntityWriter $entityWriter, private readonly Translator $translator)
+    public function __construct(Select $select,
+            private readonly EntityWriter $entityWriter,
+            private readonly Translator $translator)
     {
         parent::__construct($select);
     }
@@ -55,6 +57,18 @@ final class QuoteRepository extends Select\Repository
         return $this->prepareDataReader($query);
     }
 
+    public function filterClient(string $fullName): EntityReader
+    {
+        $nameParts = explode(' ', $fullName);
+        $firstName = $nameParts[0];
+        $secondName = $nameParts[1] ?? '';
+        $query = $this->select()
+                       ->load(['client'])
+                       ->where(['client.client_name' => $firstName])
+                       ->where(['client.client_surname' => $secondName]);
+        return $this->prepareDataReader($query);
+    }
+
     /**
      * Get Quotes with filter
      *
@@ -80,6 +94,20 @@ final class QuoteRepository extends Select\Repository
         $query = $this->select()
                       ->where(['delivery_location_id' => $delivery_location_id]);
         return $this->prepareDataReader($query);
+    }
+
+    /**
+     * @param int $user_id
+     * @param int $client_id
+     * @return int
+     */
+    public function countAllWithUserClient(int $user_id, int $client_id): int
+    {
+        return $this->select()
+                ->load(['user', 'client'])
+                ->where(['user.id' => $user_id])
+                ->andWhere(['client.id' => $client_id])
+                ->count();
     }
 
     /**
@@ -146,7 +174,7 @@ final class QuoteRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoQuoteUnLoadedquery(string $id): ?Quote
+    public function repoQuoteUnLoadedquery(int $id): ?Quote
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -158,7 +186,7 @@ final class QuoteRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoQuoteLoadedquery(string $id): ?Quote
+    public function repoQuoteLoadedquery(int $id): ?Quote
     {
         $query = $this->select()
                       ->load(['client','group','user'])
@@ -167,11 +195,11 @@ final class QuoteRepository extends Select\Repository
     }
 
     /**
-     * @param string|null $quote_id
+     * @param int|null $quote_id
      * @param int $status_id
      * @return Quote|null
      */
-    public function repoQuoteStatusquery(?string $quote_id, int $status_id): ?Quote
+    public function repoQuoteStatusquery(?int $quote_id, int $status_id): ?Quote
     {
         $query = $this->select()->where(['id' => $quote_id])
                                 ->where(['status_id' => $status_id]);
@@ -181,9 +209,9 @@ final class QuoteRepository extends Select\Repository
     /**
      * @psalm-param 1 $status_id
      *
-     * @param string|null $quote_id
+     * @param int|null $quote_id
      */
-    public function repoQuoteStatuscount(?string $quote_id, int $status_id): int
+    public function repoQuoteStatuscount(?int $quote_id, int $status_id): int
     {
         return $this->select()->where(['id' => $quote_id])
                                 ->where(['status_id' => $status_id])
@@ -194,7 +222,7 @@ final class QuoteRepository extends Select\Repository
      * @param string $url_key
      * @return Quote|null
      */
-    public function repoUrl_key_guest_loaded(string $url_key): ?Quote
+    public function repoUrlKeyGuestLoaded(string $url_key): ?Quote
     {
         $query = $this->select()
                        ->load('client')
@@ -206,7 +234,7 @@ final class QuoteRepository extends Select\Repository
      * @param string $url_key
      * @return int
      */
-    public function repoUrl_key_guest_count(string $url_key): int
+    public function repoUrlKeyGuestCount(string $url_key): int
     {
         return $this->select()
                       ->where(['url_key' => $url_key])
@@ -214,11 +242,11 @@ final class QuoteRepository extends Select\Repository
     }
 
     /**
-     * @param string $quote_id
+     * @param int $quote_id
      * @param array $user_client
      * @return int
      */
-    public function repoClient_guest_count(string $quote_id, array $user_client = []): int
+    public function repoClientGuestCount(int $quote_id, array $user_client = []): int
     {
         return $this->select()
                       ->where(['id' => $quote_id])
@@ -231,7 +259,7 @@ final class QuoteRepository extends Select\Repository
      * @param array $user_client
      * @return EntityReader
      */
-    public function repoGuest_Clients_Sent_Viewed_Approved_Rejected_Cancelled(int $status_id, array $user_client = []): EntityReader
+    public function repoGuestClientsSentViewedApprovedRejectedCancelled(int $status_id, array $user_client = []): EntityReader
     {
         // Get specific statuses
         if ($status_id > 0) {
@@ -255,37 +283,37 @@ final class QuoteRepository extends Select\Repository
         return [
             '0' => [
                 'label' => $translator->translate('all'),
-                'class' => 'all',
+                'class' => 'secondary',
                 'href' => 0,
             ],
             '1' => [
                 'label' => $translator->translate('draft'),
-                'class' => 'draft',
+                'class' => 'secondary',
                 'href' => 1,
             ],
             '2' => [
                 'label' => $translator->translate('sent'),
-                'class' => 'sent',
+                'class' => 'primary',
                 'href' => 2,
             ],
             '3' => [
                 'label' => $translator->translate('viewed'),
-                'class' => 'viewed',
+                'class' => 'warning',
                 'href' => 3,
             ],
             '4' => [
                 'label' => $translator->translate('approved'),
-                'class' => 'approved',
+                'class' => 'success',
                 'href' => 4,
             ],
             '5' => [
                 'label' => $translator->translate('rejected'),
-                'class' => 'rejected',
+                'class' => 'danger',
                 'href' => 5,
             ],
             '6' => [
                 'label' => $translator->translate('canceled'),
-                'class' => 'canceled',
+                'class' => 'secondary',
                 'href' => 6,
             ],
         ];
@@ -312,18 +340,18 @@ final class QuoteRepository extends Select\Repository
     }
 
     /**
-     * @param string $group_id
+     * @param int $group_id
      * @return mixed
      */
-    public function get_quote_number(string $group_id, GR $gR): mixed
+    public function getQuoteNumber(int $group_id, GR $gR): mixed
     {
-        return $gR->generate_number((int) $group_id);
+        return $gR->generateNumber($group_id);
     }
 
     /**
      * @psalm-return Select<TEntity>
      */
-    public function is_draft(): Select
+    public function isDraft(): Select
     {
         return $this->select()->where(['status_id' => 1]);
     }
@@ -331,7 +359,7 @@ final class QuoteRepository extends Select\Repository
     /**
      * @psalm-return Select<TEntity>
      */
-    public function is_sent(): Select
+    public function isSent(): Select
     {
         return $this->select()->where(['status_id' => 2]);
     }
@@ -339,7 +367,7 @@ final class QuoteRepository extends Select\Repository
     /**
      * @psalm-return Select<TEntity>
      */
-    public function is_viewed(): Select
+    public function isViewed(): Select
     {
         return $this->select()->where(['status_id' => 3]);
     }
@@ -347,7 +375,7 @@ final class QuoteRepository extends Select\Repository
     /**
      * @psalm-return Select<TEntity>
      */
-    public function is_approved(): Select
+    public function isApproved(): Select
     {
         return $this->select()->where(['status_id' => 4]);
     }
@@ -355,7 +383,7 @@ final class QuoteRepository extends Select\Repository
     /**
      * @psalm-return Select<TEntity>
      */
-    public function is_rejected(): Select
+    public function isRejected(): Select
     {
         return $this->select()->where(['status_id' => 5]);
     }
@@ -363,7 +391,7 @@ final class QuoteRepository extends Select\Repository
     /**
      * @psalm-return Select<TEntity>
      */
-    public function is_canceled(): Select
+    public function isCanceled(): Select
     {
         return $this->select()->where(['status_id' => 6]);
     }
@@ -373,7 +401,7 @@ final class QuoteRepository extends Select\Repository
      *
      * @psalm-return Select<TEntity>
      */
-    public function is_open(): Select
+    public function isOpen(): Select
     {
         return $this->select()->where(['status_id' => ['in' => new Parameter([2,3])]]);
     }
@@ -381,7 +409,7 @@ final class QuoteRepository extends Select\Repository
     /**
      * @psalm-return Select<TEntity>
      */
-    public function guest_visible(): Select
+    public function guestVisible(): Select
     {
         return $this->select()->where(['status_id' => ['in' => new Parameter([2,3,4,5])]]);
     }
@@ -391,7 +419,7 @@ final class QuoteRepository extends Select\Repository
      *
      * @psalm-return Select<TEntity>
      */
-    public function by_client(int $client_id): Select
+    public function byClient(int $client_id): Select
     {
         return $this->select()
                       ->where(['client_id' => $client_id]);
@@ -403,7 +431,7 @@ final class QuoteRepository extends Select\Repository
      *
      * @psalm-return EntityReader
      */
-    public function by_client_quote_status(int $client_id, int $status_id): EntityReader
+    public function byClientQuoteStatus(int $client_id, int $status_id): EntityReader
     {
         $query = $this->select()
                       ->where(['client_id' => $client_id])
@@ -416,7 +444,7 @@ final class QuoteRepository extends Select\Repository
      * @param int $status_id
      * @return int
      */
-    public function by_client_quote_status_count(int $client_id, int $status_id): int
+    public function byClientQuoteStatusCount(int $client_id, int $status_id): int
     {
         return $this->select()
                       ->where(['client_id' => $client_id])
@@ -429,7 +457,7 @@ final class QuoteRepository extends Select\Repository
      *
      * @psalm-return Select<TEntity>
      */
-    public function approve_or_reject_quote_by_key(string $url_key): Select
+    public function approveOrRejectQuoteByKey(string $url_key): Select
     {
         return $this->select()
                       ->where(['status_id' => ['in' => new Parameter([2,3,4,5])]])
@@ -437,10 +465,10 @@ final class QuoteRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return Select
      */
-    public function approve_or_reject_quote_by_id(string $id): Select
+    public function approveOrRejectQuoteById(int $id): Select
     {
         return $this->select()
                       ->where(['status_id' => ['in' => new Parameter([2,3,4,5])]])
@@ -448,9 +476,9 @@ final class QuoteRepository extends Select\Repository
     }
 
     /**
-     * @param string|null $quote_id
+     * @param int|null $quote_id
      */
-    public function repoCount(?string $quote_id): int
+    public function repoCount(?int $quote_id): int
     {
         return $this->select()
                       ->where(['id' => $quote_id])

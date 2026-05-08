@@ -193,7 +193,6 @@ final class DeveloperSandboxHmrc extends OAuth2
             ],
         );
 
-        /** @var ResponseInterface $response */
         $response = $this->sendRequest($request);
 
         // Decode response body into an associative array
@@ -248,7 +247,7 @@ final class DeveloperSandboxHmrc extends OAuth2
      */
     public function getTestUserArray(): array
     {
-        return $testUser = [
+        return [
             'userId' => '341862201113',
             'password' => Random::string(12),
             'userFullName' => 'Fay Izzard',
@@ -325,18 +324,6 @@ final class DeveloperSandboxHmrc extends OAuth2
     protected function getDefaultScope(): string
     {
         return 'read:self-assessment write:self-assessment';
-    }
-
-    /**
-     * Format as UTC+00:00
-     * @return string
-     */
-    private function dateTimeZone(): string
-    {
-        $timezone = date_default_timezone_get();
-        $dateTimeZone = new DateTimeZone($timezone);
-        $offset = $dateTimeZone->getOffset(new DateTime('now', $dateTimeZone)) / 3600;
-        return $formattedOffset = ($offset >= 0 ? 'UTC+' : 'UTC') . sprintf('%02d:00', abs($offset));
     }
 
     public function getAuthorizedIpAddressEndpoints(): array

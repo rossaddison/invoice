@@ -4,46 +4,48 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderTaxRate;
 
-use App\Invoice\Entity\SalesOrderTaxRate;
+use App\Infrastructure\Persistence\SalesOrderTaxRate\SalesOrderTaxRate;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class SalesOrderTaxRateForm extends FormModel
 {
-    private ?int $so_id = null;
+    private ?int $sales_order_id = null;
 
     #[Required]
     private ?int $tax_rate_id = null;
 
     private ?int $include_item_tax = null;
-    private ?float $so_tax_rate_amount = null;
+    private ?float $sales_order_tax_rate_amount = null;
 
-    public function __construct(SalesOrderTaxRate $salesOrderTaxRate)
+    public static function show(SalesOrderTaxRate $salesOrderTaxRate): self
     {
-        $this->so_id = (int) $salesOrderTaxRate->getSo_id();
-        $this->tax_rate_id = (int) $salesOrderTaxRate->getTax_rate_id();
-        $this->include_item_tax = $salesOrderTaxRate->getInclude_item_tax();
-        $this->so_tax_rate_amount = $salesOrderTaxRate->getSo_tax_rate_amount();
+        $form = new self();
+        $form->sales_order_id = $salesOrderTaxRate->reqSalesOrderId();
+        $form->tax_rate_id = $salesOrderTaxRate->reqTaxRateId();
+        $form->include_item_tax = $salesOrderTaxRate->getIncludeItemTax();
+        $form->sales_order_tax_rate_amount = $salesOrderTaxRate->getSalesOrderTaxRateAmount();
+        return $form;
     }
 
-    public function getSo_id(): ?int
+    public function getSalesOrderId(): ?int
     {
-        return $this->so_id;
+        return $this->sales_order_id;
     }
 
-    public function getTax_rate_id(): ?int
+    public function getTaxRateId(): ?int
     {
         return $this->tax_rate_id;
     }
 
-    public function getInclude_item_tax(): ?int
+    public function getIncludeItemTax(): ?int
     {
         return $this->include_item_tax;
     }
 
-    public function getSo_tax_rate_amount(): float
+    public function getSalesOrderTaxRateAmount(): float
     {
-        return $this->so_tax_rate_amount ?? 0.00;
+        return $this->sales_order_tax_rate_amount ?? 0.00;
     }
 
     /**

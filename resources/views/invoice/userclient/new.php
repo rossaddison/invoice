@@ -7,8 +7,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Security\Random;
 
 /**
- * @var App\Invoice\Entity\UserInv $userinv
- * @var App\Invoice\Entity\Client $client
+ * @var App\Infrastructure\Persistence\UserInv\UserInv $userinv
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Invoice\Client\ClientRepository $cR
  * @var App\Invoice\Helpers\ClientHelper $clientHelper
@@ -39,7 +38,7 @@ use Yiisoft\Security\Random;
         <?= Html::openTag('div', ['class' => 'col-xs-12 col-md-6 col-md-offset-3']); ?>
             <?= Field::hidden($form, 'user_id')
                     ->inputId('user_id-' . Random::string(10))
-                    ->value($userinv->getUser_id()); ?>
+                    ->value($userinv->reqUserId()); ?>
                 <?= Html::openTag('div', ['class' => 'panel panel-default']); ?>
                     <?= Html::openTag('div', ['class' => 'panel-heading']); ?>
                         <?= Html::encode($userinv->getName()); ?>
@@ -52,14 +51,14 @@ use Yiisoft\Security\Random;
                                 ->onlyProperties(...['client_name', 'client_surname', 'client_email', 'client_age'])
                                 ->onlyCommonErrors()
 ?>
-                            
+
                             <?= Field::checkbox($form, 'user_all_clients')
     ->inputLabelAttributes([
         'class' => 'form-check-label',
     ])
     ->inputClass('form-check-input')
     ->ariaDescribedBy($translator->translate('user.all.clients'))
-?>    
+?>
                             <?= Html::openTag('div'); ?>
                                 <?= $translator->translate('user.all.clients.text') ?>
                             <?= Html::closeTag('div'); ?>
@@ -67,26 +66,24 @@ use Yiisoft\Security\Random;
 
                         <?= Html::openTag('div', ['id' => 'list_client']); ?>
                             <?php
-   $clients = !empty($availableClientIdList) ? $cR->repoUserClient($availableClientIdList) : [];
+   $clients = !empty($availableClientIdList)
+           ? $cR->repoUserClient($availableClientIdList) : [];
 if ($clients) {
     $optionsDataClient = [];
     /**
      * @var Yiisoft\Data\Cycle\Reader\EntityReader|array $clients
-     * @var App\Invoice\Entity\Client $client
+     * @var App\Infrastructure\Persistence\Client\Client $client
      */
     foreach ($clients as $client) {
-        $clientId = $client->getClient_id();
-        if (null !== $clientId) {
-            $optionsDataClient[$clientId] = Html::encode($clientHelper->format_client($client));
-        }
+        $optionsDataClient[$client->reqId()] = Html::encode(
+            $clientHelper->formatClient($client));
     }
     echo Field::select($form, 'client_id')
     ->label($translator->translate('client'))
     ->addInputAttributes([
         'id' => 'client_id',
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'autofocus' => 'autofocus',
-        'selected' => $s->check_select(Html::encode($body['client_id'] ?? ''), $client->getClient_id()),
     ])
     ->optionsData($optionsDataClient);
 
@@ -97,7 +94,7 @@ if ($clients) {
     ->label($translator->translate('client'))
     ->addInputAttributes([
         'id' => 'client_id',
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'autofocus' => 'autofocus',
     ])
     ->optionsData($optionsDataClient);

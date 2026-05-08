@@ -5,25 +5,37 @@ declare(strict_types=1);
 namespace App\Invoice\Family;
 
 use App\Invoice\BaseController;
-use App\Invoice\Entity\Family;
+use App\Infrastructure\Persistence\Family\Family;
+use App\Infrastructure\Persistence\FamilyCustom\FamilyCustom;
+use App\Infrastructure\Persistence\Product\Product;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\CategoryPrimary\CategoryPrimaryRepository as cpR;
 use App\Invoice\CategorySecondary\CategorySecondaryRepository as csR;
+use App\Invoice\CustomField\CustomFieldRepository as cfR;
+use App\Invoice\CustomValue\CustomValueRepository as cvR;
 use App\Invoice\Family\FamilyRepository as fR;
+use App\Invoice\Product\ProductRepository as pR;
+use App\Invoice\Product\ProductService;
+use App\Invoice\TaxRate\TaxRateRepository as trR;
+use App\Invoice\Unit\UnitRepository as uR;
+use App\Invoice\FamilyCustom\FamilyCustomForm;
+use App\Invoice\FamilyCustom\FamilyCustomService;
+use App\Invoice\FamilyCustom\FamilyCustomRepository as fcR;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
+use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class FamilyController extends BaseController
 {
@@ -31,25 +43,34 @@ final class FamilyController extends BaseController
 
     public function __construct(
         private FamilyService $familyService,
+        private FamilyCustomService $familyCustomService,
+        private FamilyCustomFieldProcessor $familyCustomFieldProcessor,
         private DataResponseFactoryInterface $factory,
+        private UrlGeneratorInterface $urlGenerator,
         SessionInterface $session,
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator,
+                $webViewRenderer, $session, $sR, $flash);
         $this->familyService = $familyService;
         $this->factory = $factory;
+        $this->urlGenerator = $urlGenerator;
     }
 
     /**
+     * @param Request $request
      * @param CurrentRoute $currentRoute
-     * @param FamilyRepository $familyRepository
+     * @param fR $familyRepository
      * @param cpR $cpR
      * @param csR $csR
+     * @param trR $taxRateRepository
+     * @param uR $unitRepository
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function index(
         Request $request,
@@ -57,10 +78,11 @@ final class FamilyController extends BaseController
         fR $familyRepository,
         cpR $cpR,
         csR $csR,
-    ): \Yiisoft\DataResponse\DataResponse {
+        trR $taxRateRepository,
+        uR $unitRepository,
+    ): \Psr\Http\Message\ResponseInterface {
         $families = $this->familys($familyRepository);
         $pageNum = (int) $currentRoute->getArgument('page', '1');
-        /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
         $query_params = $request->getQueryParams();
         $parameters = [
@@ -76,21 +98,20 @@ final class FamilyController extends BaseController
              */
             'cpR' => $cpR,
             'csR' => $csR,
+            'modal_generate_products' => $this->indexModalGenerateProducts($taxRateRepository, $unitRepository),
             'defaultPageSizeOffsetPaginator' => (int) $this->sR->getSetting('default_list_limit'),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
      * Build a 3 tiered dependency drop down search form
      * @param cpR $cpR
-     * @param csR $csR
      * @return Response
      */
-    public function search(cpR $cpR, csR $csR): Response
+    public function search(cpR $cpR): Response
     {
-        $family = new Family();
-        $form = new FamilyForm($family);
+        $form = new FamilyForm();
         $parameters = [
             'title' => $this->translator->translate('search.family'),
             'form' => $form,
@@ -100,20 +121,30 @@ final class FamilyController extends BaseController
             'categorySecondaries' => [],
             'familyNames' => [],
         ];
-        return $this->viewRenderer->render('_search', $parameters);
+        return $this->webViewRenderer->render('_search', $parameters);
     }
 
     /**
      * @param Request $request
      * @param FormHydrator $formHydrator
+     * @param cfR $cfR
+     * @param cvR $cvR
      * @param cpR $cpR
      * @param csR $csR
      * @return Response
      */
-    public function add(Request $request, FormHydrator $formHydrator, cpR $cpR, csR $csR): Response
+    public function add(
+        Request $request,
+        FormHydrator $formHydrator,
+        cfR $cfR,
+        cvR $cvR,
+        cpR $cpR,
+        csR $csR
+    ): Response
     {
-        $family = new Family();
-        $form = new FamilyForm($family);
+        $form = new FamilyForm();
+        $familyCustomForm = new FamilyCustomForm();
+        $custom = $this->fetchCustomFieldsAndValues($cfR, $cvR, 'family_custom');
         $parameters = [
             'title' => $this->translator->translate('add.family'),
             'actionName' => 'family/add',
@@ -121,34 +152,69 @@ final class FamilyController extends BaseController
             'categoryPrimaries' => $cpR->optionsDataCategoryPrimaries(),
             'categorySecondaries' => $csR->optionsDataCategorySecondaries(),
             'errors' => [],
+            'errorsCustom' => [],
             'form' => $form,
+            'customFields' => $custom['customFields'],
+            'customValues' => $custom['customValues'],
+            'familyCustomValues' => [],
+            'familyCustomForm' => $familyCustomForm,
         ];
         if ($request->getMethod() === Method::POST) {
-            $body = $request->getParsedBody() ?? [];
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
+                    $family = new Family();
                     $this->familyService->saveFamily($family, $body);
-                    return $this->webService->getRedirectResponse('family/index');
+                    if ($family->hasIdentity()) {
+                        $family_id = $family->reqId();
+                        if (isset($body['custom'])) {
+                            // Retrieve the custom array
+                            /** @var array $custom */
+                            $custom = $body['custom'];
+                            /**
+                             * @var int $custom_field_id
+                             * @var array|string $value
+                             */
+                            foreach ($custom as $custom_field_id => $value) {
+                                $familyCustom = new FamilyCustom();
+                                $familyCustomForm = new FamilyCustomForm();
+                                $family_custom = [];
+                                $family_custom['family_id'] = $family_id;
+                                $family_custom['custom_field_id'] = $custom_field_id;
+                                $family_custom['value'] = is_array($value) ? serialize($value) : $value;
+                                if ($formHydrator->populateAndValidate($familyCustomForm, $family_custom)) {
+                                    $this->familyCustomService->saveFamilyCustom($familyCustom, $family_custom);
+                                }
+    // These two can be used to create customised labels for custom field error validation on the form
+    // Currently not used.
+                                $parameters['familyCustomForm'] = $familyCustomForm;
+                                $parameters['errorsCustom'] = $familyCustomForm->getValidationResult()->getErrorMessagesIndexedByProperty();
+                            }
+                        }
+                        $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
+                        return $this->webService->getRedirectResponse('family/index');
+                    }
                 }
+            } else {
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             }
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-            $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        $parameters['form'] = $form;
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
      * @param Request $request
      * @param fR $fR
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function names(Request $request, fR $fR): \Yiisoft\DataResponse\DataResponse
+    public function names(Request $request, fR $fR): \Psr\Http\Message\ResponseInterface
     {
         $queryParams = $request->getQueryParams();
 
-        $categorySecondaryId = (string) $queryParams['category_secondary_id'];
+        $categorySecondaryId = (int) $queryParams['category_secondary_id'];
 
-        if ($categorySecondaryId) {
+        if ($categorySecondaryId > 0) {
             $familyNames = $fR->optionsDataFamilyNamesWithCategorySecondaryId($categorySecondaryId);
 
             $parameters = [
@@ -169,13 +235,13 @@ final class FamilyController extends BaseController
     /**
      * @param Request $request
      * @param csR $csR
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function secondaries(Request $request, csR $csR): \Yiisoft\DataResponse\DataResponse
+    public function secondaries(Request $request, csR $csR): \Psr\Http\Message\ResponseInterface
     {
         $queryParams = $request->getQueryParams();
 
-        $categoryPrimaryId = (string) $queryParams['category_primary_id'];
+        $categoryPrimaryId = (int) $queryParams['category_primary_id'];
 
         if ($categoryPrimaryId) {
             $secondaryCategories = $csR->optionsDataCategorySecondariesWithCategoryPrimaryId($categoryPrimaryId);
@@ -199,39 +265,117 @@ final class FamilyController extends BaseController
      * @param string $id
      * @param Request $request
      * @param FamilyRepository $familyRepository
+     * @param fcR $fcR
+     * @param cfR $cfR
+     * @param cvR $cvR
      * @param cpR $cpR
      * @param csR $csR
      * @param FormHydrator $formHydrator
      * @return Response
      */
-    public function edit(#[RouteArgument('id')] string $id, Request $request, fR $familyRepository, cpR $cpR, csR $csR, FormHydrator $formHydrator): Response
+    public function edit(
+        #[RouteArgument('id')] string $id,
+        Request $request,
+        fR $familyRepository,
+        fcR $fcR,
+        cfR $cfR,
+        cvR $cvR,
+        cpR $cpR,
+        csR $csR,
+        FormHydrator $formHydrator
+    ): Response
     {
-        $family = $this->family($id, $familyRepository);
+        $family = $this->family((int) $id, $familyRepository);
         if ($family) {
-            $form = new FamilyForm($family);
+            $form = FamilyForm::show($family);
+            $familyCustom = new FamilyCustom();
+            $familyCustomForm = FamilyCustomForm::show($familyCustom);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'family/edit',
-                'actionArguments' => ['id' => $family->getFamily_id()],
+                'actionArguments' => ['id' => $familyId = $family->reqId()],
                 'categoryPrimaries' => $cpR->optionsDataCategoryPrimaries(),
                 'categorySecondaries' => $csR->optionsDataCategorySecondaries(),
                 'errors' => [],
+                'errorsCustom' => [],
+                'family' => $family,
                 'form' => $form,
+                'customFields' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'family_custom')['customFields'],
+                'customValues' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'family_custom')['customValues'],
+                'familyCustomValues' => $this->familyCustomValues($familyId, $fcR),
+                'familyCustomForm' => $familyCustomForm,
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
-                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    if (is_array($body)) {
-                        $this->familyService->saveFamily($family, $body);
-                        return $this->webService->getRedirectResponse('family/index');
+                if (is_array($body)) {
+                    $returned_form = $this->saveFormFields($body, $form, $family, $formHydrator);
+                    $parameters['body'] = $body;
+                    if (!$returned_form->isValid()) {
+                        $parameters['form'] = $returned_form;
+                        $parameters['errors'] =
+                            $returned_form->getValidationResult()
+                                          ->getErrorMessagesIndexedByProperty();
+                        return $this->webViewRenderer->render('_form', $parameters);
                     }
-                }
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-                $parameters['form'] = $form;
+                    $this->processCustomFields(
+                        $body,
+                        $formHydrator,
+                        $this->familyCustomFieldProcessor,
+                        $familyId
+                    );
+                } // is_array
+                $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
+                return $this->webService->getRedirectResponse('family/index');
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('family/index');
+    }
+
+    /**
+     * @param array $body
+     * @param FamilyForm $form
+     * @param Family $family
+     * @param FormHydrator $formHydrator
+     * @return FamilyForm
+     */
+    public function saveFormFields(array $body, FamilyForm $form, Family $family, FormHydrator $formHydrator): FamilyForm
+    {
+        if ($formHydrator->populateAndValidate($form, $body)) {
+            $commalist = trim((string) ($body['family_commalist'] ?? ''));
+            $prefix    = trim((string) ($body['family_productprefix'] ?? ''));
+            if ($commalist !== '' && $prefix === '') {
+                $this->flash->add(
+                    'warning',
+                    $this->translator->translate('family.product.prefix.required.when.commalist.filled'),
+                    true
+                );
+                return $form;
+            }
+            $this->familyService->saveFamily($family, $body);
+        }
+        return $form;
+    }
+
+    /**
+     * @param int $family_id
+     * @param fcR $fcR
+     * @return array
+     */
+    public function familyCustomValues(int $family_id, fcR $fcR): array
+    {
+        $custom_field_form_values = [];
+        if ($fcR->repoFamilyCount($family_id) > 0) {
+            $family_custom_fields = $fcR->repoFields($family_id);
+            /**
+             * @var int $key
+             * @var string $val
+             */
+            foreach ($family_custom_fields as $key => $val) {
+                $custom_field_form_values['custom[' . (string) $key . ']'] = $val;
+            }
+        }
+        return $custom_field_form_values;
     }
 
     /**
@@ -242,7 +386,7 @@ final class FamilyController extends BaseController
     public function delete(#[RouteArgument('id')] string $id, fR $familyRepository): Response
     {
         try {
-            $family = $this->family($id, $familyRepository);
+            $family = $this->family((int) $id, $familyRepository);
             if ($family) {
                 $this->familyService->deleteFamily($family);
                 return $this->webService->getRedirectResponse('family/index');
@@ -258,37 +402,179 @@ final class FamilyController extends BaseController
     /**
      * @param string $id
      * @param FamilyRepository $familyRepository
+     * @param fcR $fcR
+     * @param cfR $cfR
+     * @param cvR $cvR
      * @param cpR $cpR
      * @param csR $csR
      */
-    public function view(#[RouteArgument('id')] string $id, fR $familyRepository, cpR $cpR, csR $csR): Response
+    public function view(#[RouteArgument('id')] string $id, fR $familyRepository, fcR $fcR, cfR $cfR, cvR $cvR, cpR $cpR, csR $csR): Response
     {
-        $family = $this->family($id, $familyRepository);
+        $family = $this->family((int) $id, $familyRepository);
         if ($family) {
-            $form = new FamilyForm($family);
+            $form = FamilyForm::show($family);
+            $familyCustom = new FamilyCustom();
+            $familyCustomForm = FamilyCustomForm::show($familyCustom);
             $parameters = [
                 'title' => $this->translator->translate('view'),
+                'familyCustomForm' => $familyCustomForm,
+                'custom_fields' => $cfR->repoTablequery('family_custom'),
+                'customValues' => $cvR->fixCfValueToCf($cfR->repoTablequery('family_custom')),
+                'cpR' => $cpR,
                 'actionName' => 'family/view',
-                'actionArguments' => ['id' => $family->getFamily_id()],
+                'actionArguments' => ['id' => $familyId = $family->reqId()],
+                'familyCustomValues' => $this->familyCustomValues($familyId, $fcR),
                 'categoryPrimaries' => $cpR->optionsDataCategoryPrimaries(),
                 'categorySecondaries' => $csR->optionsDataCategorySecondaries(),
                 'errors' => [],
                 'family' => $family,
                 'form' => $form,
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('family/index');
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @param FamilyRepository $familyRepository
      * @return Family|null
      */
-    private function family(#[RouteArgument('id')] string $id, fR $familyRepository): ?Family
+    private function family(#[RouteArgument('id')] int $id, fR $familyRepository): ?Family
     {
         return $familyRepository->repoFamilyquery($id);
+    }
+
+    /**
+     * Generate products from selected families using their comma lists
+     * @param Request $request
+     * @param fR $familyRepository
+     * @param pR $productRepository
+     * @return Response
+     */
+    public function generateProducts(
+        Request $request,
+        fR $familyRepository,
+        pR $productRepository,
+        ProductService $productService
+    ): Response {
+        $body = $request->getParsedBody();
+        if ($request->getMethod() === Method::POST && isset($body['family_ids'])) {
+            $familyIds = (array) $body['family_ids'];
+            $taxRateId = (string) ($body['tax_rate_id'] ?? '');
+            $unitId    = (string) ($body['unit_id'] ?? '');
+
+            if (empty($familyIds) || $taxRateId === '' || $unitId === '') {
+                return $this->factory->createResponse(Json::encode([
+                    'success' => false,
+                    'message' => 'Missing required parameters: family_ids, tax_rate_id, or unit_id',
+                ]))->withHeader('Content-Type', 'application/json');
+            }
+
+            $generatedCount = 0;
+            $errors         = [];
+            $newProductIds  = [];
+
+            try {
+                /** @var int $familyId */
+                foreach ($familyIds as $familyId) {
+                    $family = $familyRepository->repoFamilyquery($familyId);
+                    if (!$family) {
+                        $errors[] = "Family with ID $familyId not found";
+                        continue;
+                    }
+
+                    if (strlen($cl = $family->getFamilyCommalist() ?? '') === 0
+                        || strlen($pp = $family->getFamilyProductprefix() ?? '') === 0
+                    ) {
+                        $errors[] = "Family '{$family->getFamilyName()}' missing comma list or product prefix";
+                        continue;
+                    }
+
+                    foreach (array_filter(array_map('trim', explode(',', $cl))) as $item) {
+                        $productName = $pp . ' ' . $item;
+
+                        if ($productRepository->repoProductWithFamilyIdQuery($productName, $familyId)->count() > 0) {
+                            $errors[] = "Product '$productName' already exists";
+                            continue;
+                        }
+
+                        $newProduct = new Product();
+                        $productService->saveProduct($newProduct, [
+                            'ProductForm' => [
+                                'product_name'        => $productName,
+                                'product_description' => $productName,
+                                'product_sku'         => $item,
+                                'product_price'       => 0.00,
+                                'family_id'           => $familyId,
+                                'tax_rate_id'         => $taxRateId,
+                                'unit_id'             => $unitId,
+                            ],
+                        ]);
+
+                        if ($newProduct->hasIdentity()) {
+                            $newProductIds[] = (string) $newProduct->reqId();
+                        }
+                        $generatedCount++;
+                    }
+                }
+
+                if ($generatedCount > 0 && !empty($newProductIds)) {
+                    $redirectUrl  =
+                            $this->urlGenerator->generate(
+                                    'productclient/associate-multiple', [
+                        'product_ids' => implode(',', $newProductIds),
+                        'index'       => '0',
+                    ]);
+                    $responseData = [
+                        'success'      => true,
+                        'count'        => $generatedCount,
+                        'message'      =>
+                            "Generated $generatedCount products."
+                            . " Redirecting to client association.",
+                        'redirect_url' => $redirectUrl,
+                    ];
+                } else {
+                    $responseData = [
+                        'success' => true,
+                        'count'   => $generatedCount,
+                        'message' =>
+                            $generatedCount === 0 ?
+                                'No products generated' :
+                                    "Generated $generatedCount products",
+                    ];
+                }
+
+                if (!empty($errors)) {
+                    $responseData['warnings'] = $errors;
+                }
+
+                return $this->factory->createResponse(Json::encode($responseData))
+                    ->withHeader('Content-Type', 'application/json');
+
+            } catch (\Throwable $e) {
+                return $this->factory->createResponse(Json::encode([
+                    'success' => false,
+                    'message' => 'Error generating products: ' . $e->getMessage(),
+                ]))->withHeader('Content-Type', 'application/json');
+            }
+        }
+
+        return $this->factory->createResponse(Json::encode([
+            'success' => false,
+            'message' => 'Invalid request method or missing data',
+        ]))->withHeader('Content-Type', 'application/json');
+    }
+
+    /**
+     * Generate the product generation modal
+     */
+    private function indexModalGenerateProducts(trR $taxRateRepository, uR $unitRepository): string
+    {
+        return $this->webViewRenderer->renderPartialAsString('//invoice/family/modal_generate_products', [
+            'taxRates' => $taxRateRepository->findAllPreloaded(),
+            'units' => $unitRepository->findAllPreloaded(),
+        ]);
     }
 
     /**

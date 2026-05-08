@@ -5,8 +5,8 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * Related logic: see InvController function view_modal_create_credit
- * @var App\Invoice\Entity\Inv $inv
+ * Related logic: see InvController function viewModalCreateCredit
+ * @var App\Infrastructure\Persistence\Inv\Inv $inv
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -26,13 +26,13 @@ use Yiisoft\Html\Html;
             <div class="modal-body">
                 <form>
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-                    <input type="hidden" name="user_id" id="user_id" class="form-control" value="<?= $inv->getUser_id(); ?>">
+                    <input type="hidden" name="user_id" id="user_id" class="form-control form-control-lg" value="<?= $inv->reqUserId(); ?>">
 
                     <input type="hidden" name="parent_id" id="parent_id"
-                           value="<?= $inv->getId(); ?>">
+                           value="<?= $inv->reqId(); ?>">
 
                     <input type="hidden" name="client_id" id="client_id" class="hidden"
-                           value="<?= $inv->getClient_id(); ?>">
+                           value="<?= $inv->reqClientId(); ?>">
 
                     <input type="hidden" name="inv_date_created" id="inv_date_created"
                            value="<?=
@@ -41,7 +41,7 @@ echo $credit_date; ?>">
 
                     <div class="form-group">
                         <label for="inv_password"><?= $translator->translate('password'); ?></label>
-                        <input type="text" name="inv_password" id="inv_password" class="form-control"
+                        <input type="text" name="inv_password" id="inv_password" class="form-control form-control-lg"
                                value="<?= $s->getSetting('invoice_pre_password') == '' ? '' : $s->getSetting('invoice_pre_password'); ?>"
                                style="margin: 0 auto;" autocomplete="off">
                     </div>
@@ -51,15 +51,15 @@ echo $credit_date; ?>">
                         <select name="inv_group_id" id="inv_group_id" class="hidden">
                             <?php
      /**
-      * @var App\Invoice\Entity\Group $invoice_group
+      * @var App\Infrastructure\Persistence\Group\Group $invoice_group
       */
      foreach ($invoice_groups as $invoice_group) { ?>
-                                <option value="<?= $invoice_group->getId(); ?>"
-                                    <?php if ($s->getSetting('default_invoice_group') === $invoice_group->getId()) {
+                                <option value="<?= $invoice_group->reqId(); ?>"
+                                    <?php if ($s->getSetting('default_invoice_group') === (string) $invoice_group->reqId()) {
                                         echo 'selected="selected"';
                                         $credit_invoice_group = Html::encode($invoice_group->getName() ?? '');
                                     } ?>>
-                                    <?php if ($s->getSetting('default_invoice_group') === $invoice_group->getId()) {
+                                    <?php if ($s->getSetting('default_invoice_group') === (string) $invoice_group->reqId()) {
                                         echo $credit_invoice_group;
                                     } else {
                                         echo '';
@@ -72,7 +72,7 @@ echo $credit_date; ?>">
                     <p><strong><?= $translator->translate('credit.invoice.details'); ?></strong></p>
 
                     <ul>
-                        <li><?= $translator->translate('client') . ': ' . Html::encode($inv->getClient()?->getClient_name()); ?></li>
+                        <li><?= $translator->translate('client') . ': ' . Html::encode($inv->getClient()?->getClientName()); ?></li>
                         <li><?= $translator->translate('credit.invoice.date') . ': ' . $credit_date; ?></li>
                         <li><?= $translator->translate('group') . ': ' . (!empty($credit_invoice_group) ? $credit_invoice_group : ''); ?></li>
                     </ul>
@@ -80,15 +80,15 @@ echo $credit_date; ?>">
                     <div class="alert alert-danger no-margin">
                         <?= $translator->translate('create.credit.invoice.alert'); ?>
                     </div>
-                </form>    
+                </form>
             </div>
             <div class="modal-footer">
                 <div class="btn-group">
                     <button class="create-credit-confirm btn btn-success" id="create-credit-confirm" type="button">
-                        <i class="fa fa-check"></i> <?= $translator->translate('confirm'); ?>
+                        <i class="bi bi-check-lg"></i> <?= $translator->translate('confirm'); ?>
                     </button>
                     <button class="btn btn-danger" type="button" data-bs-dismiss"modal">
-                        <i class="fa fa-times"></i> <?= $translator->translate('cancel'); ?>
+                        <i class="bi bi-x-lg"></i> <?= $translator->translate('cancel'); ?>
                     </button>
                 </div>
             </div>

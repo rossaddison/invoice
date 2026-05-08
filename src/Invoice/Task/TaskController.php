@@ -6,9 +6,9 @@ namespace App\Invoice\Task;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\Task;
-use App\Invoice\Entity\InvItem;
-use App\Invoice\Entity\QuoteItem;
+use App\Infrastructure\Persistence\Task\Task;
+use App\Infrastructure\Persistence\InvItem\InvItem;
+use App\Infrastructure\Persistence\QuoteItem\QuoteItem;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository as ACIR;
 use App\Invoice\InvItemAmount\InvItemAmountService as iiaS;
@@ -21,6 +21,7 @@ use App\Invoice\Payment\PaymentRepository as pymR;
 use App\Invoice\Project\ProjectRepository as prjctR;
 use App\Invoice\Quote\QuoteRepository as qR;
 use App\Invoice\QuoteAmount\QuoteAmountRepository as qaR;
+use App\Invoice\QuoteAllowanceCharge\QuoteAllowanceChargeRepository as acqR;
 use App\Invoice\QuoteItem\QuoteItemRepository as qiR;
 use App\Invoice\QuoteItemAmount\QuoteItemAmountRepository as qiaR;
 use App\Invoice\QuoteItemAmount\QuoteItemAmountService as qiaS;
@@ -36,7 +37,7 @@ use App\Invoice\QuoteItem\QuoteItemService;
 use App\Invoice\QuoteItem\QuoteItemForm;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Json\Json;
 use Yiisoft\Http\Method;
 use Yiisoft\Input\Http\Attribute\Parameter\Query;
@@ -44,7 +45,7 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Yiisoft\FormModel\FormHydrator;
 
 final class TaskController extends BaseController
@@ -60,11 +61,11 @@ final class TaskController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->invitemService = $invitemService;
         $this->quoteitemService = $quoteitemService;
     }
@@ -74,7 +75,7 @@ final class TaskController extends BaseController
      * @param tR $tR
      * @param prjctR $prjctR
      */
-    public function index(tR $tR, prjctR $prjctR, #[Query('page')] int $page = null): \Yiisoft\DataResponse\DataResponse
+    public function index(tR $tR, prjctR $prjctR, #[Query('page')] ?int $page = null): \Psr\Http\Message\ResponseInterface
     {
         $canEdit = $this->rbac();
         $parameters = [
@@ -84,7 +85,7 @@ final class TaskController extends BaseController
             'prjctR' => $prjctR,
             'tasks' => $this->tasks($tR),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -101,7 +102,7 @@ final class TaskController extends BaseController
         trR $trR,
     ): Response {
         $task = new Task();
-        $form = new TaskForm($task);
+        $form = new TaskForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'task/add',
@@ -125,7 +126,7 @@ final class TaskController extends BaseController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -147,11 +148,11 @@ final class TaskController extends BaseController
     ): Response {
         $task = $this->task($currentRoute, $tR);
         if ($task) {
-            $form = new TaskForm($task);
+            $form = TaskForm::show($task);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'task/edit',
-                'actionArguments' => ['id' => $task->getId()],
+                'actionArguments' => ['id' => $task->reqId()],
                 'alert' => $this->alert(),
                 'form' => $form,
                 'errors' => [],
@@ -170,7 +171,7 @@ final class TaskController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('task/index');
     }
@@ -194,26 +195,26 @@ final class TaskController extends BaseController
     /**
      * @return string[][]
      *
-     * @psalm-return array{1: array{label: string, class: 'draft'}, 2: array{label: string, class: 'viewed'}, 3: array{label: string, class: 'sent'}, 4: array{label: string, class: 'paid'}}
+     * @psalm-return array{1: array{label: string, class: 'secondary'}, 2: array{label: string, class: 'warning'}, 3: array{label: string, class: 'success'}, 4: array{label: string, class: 'primary'}}
      */
     public function getStatuses(TranslatorInterface $translator): array
     {
         return [
             1 => [
                 'label' => $translator->translate('not.started'),
-                'class' => 'draft',
+                'class' => 'secondary',
             ],
             2 => [
                 'label' => $translator->translate('in.progress'),
-                'class' => 'viewed',
+                'class' => 'warning',
             ],
             3 => [
                 'label' => $translator->translate('complete'),
-                'class' => 'sent',
+                'class' => 'success',
             ],
             4 => [
                 'label' => $translator->translate('invoiced'),
-                'class' => 'paid',
+                'class' => 'primary',
             ],
         ];
     }
@@ -233,7 +234,7 @@ final class TaskController extends BaseController
      * @param iR $iR
      * @param pymR $pymR
      */
-    public function selection_inv(
+    public function selectionInv(
         FormHydrator $formHydrator,
         Request $request,
         ACIR $aciR,
@@ -245,11 +246,11 @@ final class TaskController extends BaseController
         iaR $iaR,
         iR $iR,
         pymR $pymR,
-    ): \Yiisoft\DataResponse\DataResponse {
+    ): \Psr\Http\Message\ResponseInterface {
         $select_items = $request->getQueryParams();
         /** @var array $task_ids */
         $task_ids = ($select_items['task_ids'] ?: []);
-        $inv_id = (string) $select_items['inv_id'];
+        $inv_id = (int) $select_items['inv_id'];
         // Use Spiral||Cycle\Database\Injection\Parameter to build 'IN' array of tasks.
         $tasks = $taskR->findinTasks($task_ids);
         $numberHelper = new NumberHelper($this->sR);
@@ -257,32 +258,37 @@ final class TaskController extends BaseController
         $order = 1;
         /** @var Task $task */
         foreach ($tasks as $task) {
-            $task->setPrice((float) $numberHelper->format_amount($task->getPrice()));
-            $this->save_task_lookup_item_inv($order, $task, $inv_id, $taskR, $trR, $iiaR, $formHydrator);
+            $task->setPrice((float) $numberHelper->formatAmount($task->getPrice()));
+            $this->saveTaskLookupItemInv($order, $task, $inv_id, $taskR, $trR,
+                $iiaR, $iiR, $formHydrator);
             $order++;
         }
-        $numberHelper->calculate_inv((string) $this->session->get('inv_id'), $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
+        $numberHelper->calculateInv((int) $this->session->get('inv_id'), $aciR,
+            $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
         return $this->factory->createResponse(Json::encode($tasks));
     }
 
     /**
      * @param int $order
      * @param Task $task
-     * @param string $inv_id
+     * @param int $inv_id
      * @param tR $taskR
      * @param trR $trR
      * @param iiaR $iiaR
+     * @param iiR $iiR
      * @param FormHydrator $formHydrator
      */
-    private function save_task_lookup_item_inv(int $order, Task $task, string $inv_id, tR $taskR, trR $trR, iiaR $iiaR, FormHydrator $formHydrator): void
+    private function saveTaskLookupItemInv(int $order, Task $task,
+            int $inv_id, tR $taskR, trR $trR, iiaR $iiaR, iiR $iiR,
+            FormHydrator $formHydrator): void
     {
         $invItem = new InvItem();
-        $form = new InvItemForm($invItem, (int) $inv_id);
+        $form = new InvItemForm();
         $ajax_content = [
             'name' => $task->getName(),
             'inv_id' => $inv_id,
-            'tax_rate_id' => $task->getTax_rate_id(),
-            'task_id' => $task->getId(),
+            'tax_rate_id' => $task->reqTaxRateId(),
+            'task_id' => $task->reqId(),
             'product_id' => null,
             'date_added' => new \DateTimeImmutable('now'),
             'description' => $task->getDescription(),
@@ -294,7 +300,8 @@ final class TaskController extends BaseController
             'order' => $order,
         ];
         if ($formHydrator->populateAndValidate($form, $ajax_content)) {
-            $this->invitemService->addInvItem_task($invItem, $ajax_content, $inv_id, $taskR, $trR, new iiaS($iiaR), $iiaR, $this->sR);
+            $this->invitemService->addInvItemTask($invItem, $ajax_content,
+                    (string) $inv_id, $taskR, $trR, new iiaS($iiaR, $iiR), $iiaR);
         }
     }
 
@@ -310,9 +317,9 @@ final class TaskController extends BaseController
      * @param qtrR $qtrR
      * @param qaR $qaR
      * @param qR $qR
-     * @param pymR $pymR
+     * @param acqR $acqR
      */
-    public function selection_quote(
+    public function selectionQuote(
         FormHydrator $formHydrator,
         Request $request,
         tR $taskR,
@@ -323,12 +330,12 @@ final class TaskController extends BaseController
         qtrR $qtrR,
         qaR $qaR,
         qR $qR,
-        pymR $pymR,
-    ): \Yiisoft\DataResponse\DataResponse {
+        acqR $acqR,
+    ): \Psr\Http\Message\ResponseInterface {
         $select_items = $request->getQueryParams();
         /** @var array $task_ids */
         $task_ids = ($select_items['task_ids'] ?: []);
-        $quote_id = (string) $select_items['quote_id'];
+        $quote_id = (int) $select_items['quote_id'];
         // Use Spiral||Cycle\Database\Injection\Parameter to build 'IN' array of tasks.
         $tasks = $taskR->findinTasks($task_ids);
         $numberHelper = new NumberHelper($this->sR);
@@ -336,33 +343,35 @@ final class TaskController extends BaseController
         $order = 1;
         /** @var Task $task */
         foreach ($tasks as $task) {
-            $task->setPrice((float) $numberHelper->format_amount($task->getPrice()));
-            $this->save_task_lookup_item_quote($order, $task, $quote_id, $taskR, $trR, $qiaR, $qiaS, $formHydrator);
+            $task->setPrice((float) $numberHelper->formatAmount($task->getPrice()));
+            $this->saveTaskLookupItemQuote($order, $task, $quote_id, $taskR, $trR, $qiaR, $qiaS, $formHydrator);
             $order++;
         }
-        $numberHelper->calculate_quote($quote_id, $qiR, $qiaR, $qtrR, $qaR, $qR);
+        $numberHelper->calculateQuote($quote_id, $acqR, $qiR, $qiaR, $qtrR, $qaR, $qR);
         return $this->factory->createResponse(Json::encode($tasks));
     }
 
     /**
      * @param int $order
      * @param Task $task
-     * @param string $quote_id
+     * @param int $quote_id
      * @param tR $taskR
      * @param trR $trR
      * @param qiaR $qiaR
      * @param qiaS $qiaS
      * @param FormHydrator $formHydrator
      */
-    private function save_task_lookup_item_quote(int $order, Task $task, string $quote_id, tR $taskR, trR $trR, qiaR $qiaR, qiaS $qiaS, FormHydrator $formHydrator): void
+    private function saveTaskLookupItemQuote(int $order, Task $task, int $quote_id,
+            tR $taskR, trR $trR, qiaR $qiaR, qiaS $qiaS,
+            FormHydrator $formHydrator): void
     {
         $quoteItem = new QuoteItem();
-        $form = new QuoteItemForm($quoteItem, $quote_id);
+        $form = new QuoteItemForm();
         $ajax_content = [
             'name' => $task->getName(),
             'quote_id' => $quote_id,
-            'tax_rate_id' => $task->getTax_rate_id(),
-            'task_id' => $task->getId(),
+            'tax_rate_id' => $task->reqTaxRateId(),
+            'task_id' => $task->reqId(),
             'product_id' => null,
             'date_added' => new \DateTimeImmutable('now'),
             'description' => $task->getDescription(),
@@ -374,7 +383,7 @@ final class TaskController extends BaseController
             'order' => $order,
         ];
         if ($formHydrator->populateAndValidate($form, $ajax_content)) {
-            $this->quoteitemService->addQuoteItemTask($quoteItem, $ajax_content, $quote_id, $taskR, $qiaR, $qiaS, $trR, $this->translator);
+            $this->quoteitemService->addQuoteItemTask($quoteItem, $ajax_content, $quote_id, $taskR, $qiaR, $qiaS, $trR);
         }
     }
 
@@ -383,28 +392,28 @@ final class TaskController extends BaseController
      * @param tR $tR
      * @param trR $trR
      * @param prjctR $pR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function view(
         CurrentRoute $currentRoute,
         tR $tR,
         trR $trR,
         prjctR $pR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $task = $this->task($currentRoute, $tR);
         if ($task) {
-            $taskForm = new TaskForm($task);
+            $taskForm = TaskForm::show($task);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'task/view',
-                'actionArguments' => ['id' => $task->getId()],
+                'actionArguments' => ['id' => $task->reqId()],
                 'errors' => [],
                 'form' => $taskForm,
-                'task' => $tR->repoTaskquery($task->getId()),
+                'task' => $tR->repoTaskquery($task->reqId()),
                 'taxRates' => $trR->optionsDataTaxRates(),
                 'projects' => $pR->optionsDataProjects(),
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('task/index');
     }
@@ -429,11 +438,7 @@ final class TaskController extends BaseController
      */
     private function task(CurrentRoute $currentRoute, tR $tR): ?Task
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $tR->repoTaskquery($id);
-        }
-        return null;
+        return $tR->repoTaskquery((int) $currentRoute->getArgument('id'));
     }
 
     /**

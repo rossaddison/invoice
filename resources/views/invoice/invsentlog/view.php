@@ -23,7 +23,7 @@ use Yiisoft\FormModel\Field;
 <?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
 <?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?><?= Html::openTag('div', ['class' => 'card-header']); ?>
-<?= Form::tag()
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -41,29 +41,23 @@ use Yiisoft\FormModel\Field;
         <?= Html::encode($title); ?>
     <?= Html::closeTag('h5'); ?>
     <?= Html::openTag('div'); ?>
-        <?= Field::text($form, 'id')
-            ->value(Html::encode($form->getId()))
-            ->readonly(true)
-?>
-    <?= Html::closeTag('div'); ?>
-    <?= Html::openTag('div'); ?>
         <?= Field::text($form, 'inv_id')
-   ->label($translator->translate('number'))
-   ->addInputAttributes([
-       'class' => 'form-control',
-   ])
-   ->value(Html::encode($form->getInv()?->getNumber() ?? '#'))
-   ->placeholder($translator->translate('number'))
-   ->readonly(true)
-?>
+           ->label($translator->translate('number'))
+           ->addInputAttributes([
+               'class' => 'form-control form-control-lg',
+           ])
+           ->value(Html::encode($form->getInv()?->getNumber() ?? '#'))
+           ->placeholder($translator->translate('number'))
+           ->readonly(true)
+        ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div'); ?>
         <?= Field::text($form, 'date_sent')
    ->label($translator->translate('email.date'))
    ->addInputAttributes([
-       'class' => 'form-control',
+       'class' => 'form-control form-control-lg',
    ])
-   ->value(Html::encode(!is_string($form->getDate_sent()) ? $form->getDate_sent()?->format('l, d-M-y H:i:s T') : ''))
+   ->value(Html::encode(!is_string($form->getDateSent()) ? $form->getDateSent()?->format('l, d-M-y H:i:s T') : ''))
    ->placeholder($translator->translate('date.sent'))
    ->readonly(true)
 ?>

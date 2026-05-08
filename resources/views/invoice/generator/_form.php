@@ -22,9 +22,9 @@ use Yiisoft\Html\Tag\Form;
 
 ?>
 
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
@@ -32,21 +32,21 @@ use Yiisoft\Html\Tag\Form;
 <?= $translator->translate('generator.add'); ?>
 <?= Html::closeTag('h1'); ?>
 
-<?= Form::tag()
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('GeneratorForm')
     ->open()
-?> 
+?>
 <?= $button::backSave() ?>
 <?= Html::openTag('div', ['class' => 'container']); ?>
     <?= Html::openTag('div', ['class' => 'row']); ?>
-        <?= Html::openTag('div', ['class' => 'col card mb-3']); ?> 
+        <?= Html::openTag('div', ['class' => 'col card mb-3']); ?>
             <?= Html::openTag('div', ['class' => 'card-header']); ?>
                     <?= Html::openTag('h5'); ?><?= $translator->translate('generator.table'); ?><?= Html::closeTag('h5'); ?>
-            <?= Html::closeTag('div'); ?>  
-            <?= Html::openTag('div'); ?>  
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div'); ?>
                 <?php
                     $optionsDataTable = [];
 /**
@@ -65,7 +65,7 @@ echo Field::select($form, 'pre_entity_table')
     'placeholder' => $translator->translate('generator.table.used.to.generate.entity.controller.repository'),
 ])
 ->optionsData($optionsDataTable)
-->value(Html::encode($form->getPre_entity_table()));
+->value(Html::encode($form->getPreEntityTable()));
 ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
@@ -81,24 +81,24 @@ echo Field::select($form, 'pre_entity_table')
         ->addInputAttributes([
             'placeholder' => $translator->translate('generator.namespace.before.entity'),
         ])
-        ->value(Html::encode($form->getNamespace_path() ?: 'App\Invoice'))
+        ->value(Html::encode($form->getNamespacePath() ?: 'App\Invoice'))
 ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'col card mb-3']); ?> 
+        <?= Html::openTag('div', ['class' => 'col card mb-3']); ?>
             <?= Html::openTag('div', ['class' => 'card-header']); ?>
                 <?= Html::openTag('h5'); ?>
                     <?= $translator->translate('generator.controller.and.repository'); ?>
                 <?= Html::closeTag('h5'); ?>
-            <?= Html::closeTag('div'); ?>  
+            <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
                 <?= Field::text($form, 'route_prefix')
 ->label($translator->translate('generator.route.prefix'))
 ->addInputAttributes([
     'placeholder' => $translator->translate('generator.route.prefix'),
 ])
-->value(Html::encode($form->getRoute_prefix() ?: 'invoice'))
+->value(Html::encode($form->getRoutePrefix() ?: 'invoice'))
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
@@ -107,7 +107,7 @@ echo Field::select($form, 'pre_entity_table')
     ->addInputAttributes([
         'placeholder' => $translator->translate('generator.route.suffix'),
     ])
-    ->value(Html::encode($form->getRoute_suffix() ?: 'product'))
+    ->value(Html::encode($form->getRouteSuffix() ?: 'product'))
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
@@ -116,7 +116,7 @@ echo Field::select($form, 'pre_entity_table')
     ->addInputAttributes([
         'placeholder' => $translator->translate('generator.camelcase.capital.name.product'),
     ])
-    ->value(Html::encode($form->getCamelcase_capital_name() ?: ''))
+    ->value(Html::encode($form->getCamelcaseCapitalName() ?: ''))
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
@@ -125,7 +125,7 @@ echo Field::select($form, 'pre_entity_table')
     ->addInputAttributes([
         'placeholder' => $translator->translate('generator.small.singular.name.product'),
     ])
-    ->value(Html::encode($form->getSmall_singular_name() ?: ''))
+    ->value(Html::encode($form->getSmallSingularName() ?: ''))
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
@@ -134,7 +134,7 @@ echo Field::select($form, 'pre_entity_table')
     ->addInputAttributes([
         'placeholder' => $translator->translate('generator.small.plural.name.products'),
     ])
-    ->value(Html::encode($form->getSmall_plural_name()))
+    ->value(Html::encode($form->getSmallPluralName()))
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
@@ -143,9 +143,9 @@ echo Field::select($form, 'pre_entity_table')
     ->inputClass('form-check-input')
     ->ariaDescribedBy($translator->translate('generator.flash.include'))
 ?>
-            <?= Html::closeTag('div'); ?>           
+            <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'col card mb-3']); ?> 
+        <?= Html::openTag('div', ['class' => 'col card mb-3']); ?>
             <?= Html::openTag('div', ['class' => 'card-header']); ?>
                 <?= Html::openTag('h5'); ?><?= $translator->translate('generator.controller.path.layout'); ?><?= Html::closeTag('h5'); ?>
             <?= Html::closeTag('div'); ?>
@@ -155,7 +155,7 @@ echo Field::select($form, 'pre_entity_table')
     ->addInputAttributes([
         'placeholder' => $translator->translate('generator.controller.layout.directory.placeholder'),
     ])
-    ->value(Html::encode($form->getController_layout_dir() ?: 'dirname(dirname(__DIR__))'))
+    ->value(Html::encode($form->getControllerLayoutDir() ?: 'dirname(dirname(__DIR__))'))
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
@@ -164,7 +164,7 @@ echo Field::select($form, 'pre_entity_table')
     ->addInputAttributes([
         'placeholder' => $translator->translate('generator.controller.layout.directory.dot.path.placeholder'),
     ])
-    ->value(Html::encode($form->getController_layout_dir_dot_path() ?: '@views/layout/invoice.php'))
+    ->value(Html::encode($form->getControllerLayoutDirDotPath() ?: '@views/layout/invoice.php'))
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
@@ -174,7 +174,7 @@ echo Field::select($form, 'pre_entity_table')
     ->ariaDescribedBy($translator->translate('generator.created.at.include'))
 ?>
             <?= Html::closeTag('div'); ?>
-            
+
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
                 <?= Field::checkbox($form, 'modified_include')
     ->inputLabelAttributes(['class' => 'form-check-label'])

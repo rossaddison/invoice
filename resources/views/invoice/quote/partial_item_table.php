@@ -2,28 +2,30 @@
 
 declare(strict_types=1);
 
-use Yiisoft\Html\Html;
+use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\A;
+use Yiisoft\Html\Tag\Option;
 
 /**
- * @var App\Invoice\Entity\Quote $quote
- * @var App\Invoice\Entity\QuoteAmount $quoteAmount
+ * @var App\Infrastructure\Persistence\Quote\Quote $quote
+ * @var App\Infrastructure\Persistence\QuoteAmount\QuoteAmount $quoteAmount
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Invoice\QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository $acqiR
  * @var App\Invoice\QuoteItemAmount\QuoteItemAmountRepository $qiaR
  * @var App\Invoice\ProductImage\ProductImageRepository $piR
- * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Session\SessionInterface $session
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Router\CurrentRoute $currentRoute
+ * @var array $packHandleShipTotal
  * @var array $quoteItems
  * @var array $quoteTaxRates
  * @var array $products
  * @var array $tasks
  * @var array $taxRates
  * @var array $units
- * @var bool $draft
  * @var bool $invEdit
  * @var string $csrf
  * @var string $included
@@ -31,474 +33,878 @@ use Yiisoft\Html\Tag\A;
  */
 
 $vat = $s->getSetting('enable_vat_registration');
-?>
 
-<div>
-        <table id="item_table" class="items table table-responsive table-bordered no-margin">
-            <thead>
-            <tr><i class="fa fa-info-circle" data-bs-toggle="tooltip" title="<?= $s->isDebugMode(19); ?>"></i></tr>    
-            <tr>               
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-            </tr>
-            </thead>
-            
-            <?php
-            //**********************************************************************************************
-            // New
-            //**********************************************************************************************
-?>
+ echo H::openTag('div'); //1
+  echo H::openTag('table', [
+      'id' => 'item_table',
+      'class' => 'items table table-responsive table-bordered no-margin',
+  ]); //2
+   echo H::openTag('thead'); //3
+    echo H::openTag('tr'); //4
+     echo H::openTag('i', [
+         'class' => 'bi bi-info-circle',
+         'data-bs-toggle' => 'tooltip',
+         'title' => $s->isDebugMode(19),
+     ]); //5
+     echo H::closeTag('i'); //5
+    echo H::closeTag('tr'); //4
+    echo H::openTag('tr'); //4
+     echo H::openTag('th'); //5
+     echo H::closeTag('th'); //5
+     echo H::openTag('th'); //5
+     echo H::closeTag('th'); //5
+     echo H::openTag('th'); //5
+     echo H::closeTag('th'); //5
+     echo H::openTag('th'); //5
+     echo H::closeTag('th'); //5
+     echo H::openTag('th'); //5
+     echo H::closeTag('th'); //5
+     echo H::openTag('th'); //5
+     echo H::closeTag('th'); //5
+     echo H::openTag('th'); //5
+     echo H::closeTag('th'); //5
+    echo H::closeTag('tr'); //4
+   echo H::closeTag('thead'); //3
 
-            <tbody id="new_row" style="display: none;">
-            <tr>
-                <td class="td-text">
-                    <input type="hidden" name="quote_id" maxlength="7" size="7" value="<?= $quote->getId(); ?>">
-                    <input type="hidden" name="item_id" maxlength="7" size="7" value="">
-                    <input type="hidden" name="item_product_id" maxlength="7" size="7" value="">
-                </td>
-                <td class="td-amount td-quantity">
-                    <div class="input-group">
-                        <span class="input-group-text"><?= $translator->translate('quantity'); ?></span>
-                        <input type="text" name="item_quantity" class="input-sm form-control amount" value="1.00">
-                    </div>
-                </td>
-                <td class="td-amount">
-                    <div class="input-group">
-                        <span class="input-group-text"><?= $translator->translate('price'); ?></span>
-                        <input type="text" name="item_price" class="input-sm form-control amount" value="0.00">
-                    </div>
-                </td>
-                <td class="td-amount td-vert-middle">
-                    <div class="input-group">
-                        <span class="input-group-text"><?= $translator->translate('item.discount'); ?></span>
-                        <input type="text" name="item_discount_amount" class="input-sm form-control amount"
-                               data-bs-toggle = "tooltip" data-placement="bottom"
-                               title="<?= $s->getSetting('currency_symbol') . ' ' . $translator->translate('per.item'); ?>" value="0.00">
-                    </div>
-                </td>
-                <td td-vert-middle>
-                    <div class="input-group">
-                        <span class="input-group-text"><?= $translator->translate('tax.rate'); ?></span>
-                        <select name="item_tax_rate_id" class="form-control">
-                            <option value="0"><?= $translator->translate('none'); ?></option>
-                            <?php
-                    /**
-                     * @var App\Invoice\Entity\TaxRate $taxRate
-                     */
-                    foreach ($taxRates as $taxRate) { ?>
-                                <option value="<?php echo $taxRate->getTaxRateId(); ?>">
-                                    <?php
-                                        $taxRatePercent = $numberHelper->format_amount($taxRate->getTaxRatePercent());
-                        $taxRateName = $taxRate->getTaxRateName();
-                        if ($taxRatePercent >= 0.00 && null !== $taxRatePercent && null !== $taxRateName) {
-                            echo $taxRatePercent . '% - ' . ($taxRateName);
-                        }
-                        ?>
-                                </option>
-                            <?php } ?>
-                        </select>
-                    </div>
-                </td>
-            </tr>           
-            <tr>
-                <td class="td-textarea">
-                    <div class="input-group">
-                        <span class="input-group-text"><?= $translator->translate('item'); ?></span>
-                        <input type="text" name="item_name" class="input-sm form-control" value="" disabled>
-                    </div>
-                    <div class="input-group">
-                        <span class="input-group-text"><?= $translator->translate('description'); ?></span>
-                        <textarea name="item_description" class="form-control"></textarea>
-                    </div>
-                    <div class="input-group">
-                        <span class="input-group-text"></span>
-                        <textarea name="item_note" class="form-control"></textarea>
-                    </div>
-                </td>
-                <td class="td-amount">
-                    <div class="input-group">
-                            <span class="input-group-text"><?= $translator->translate('product.unit'); ?></span>
-                            <select name="item_product_unit_id" class="form-control" disabled>
-                                <option value="0"><?= $translator->translate('none'); ?></option>
-                                <?php
-                        /**
-                         * @var App\Invoice\Entity\Unit $unit
-                         */
-                        foreach ($units as $unit) { ?>
-                                    <option value="<?= $unit->getUnit_id(); ?>">
-                                        <?= Html::encode($unit->getUnit_name()) . "/" . Html::encode($unit->getUnit_name_plrl()); ?>
-                                    </option>
-                                <?php } ?>
-                            </select>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td class="td-amount td-vert-middle table-primary">
-                    <span><?= $translator->translate('subtotal'); ?></span><br/>
-                    <span name="subtotal" class="amount"></span>
-                </td>
-                <td class="td-amount td-vert-middle">
-                    <span><?= $translator->translate('discount'); ?></span><br/>
-                    <span name="item_discount_total" class="amount"></span>
-                </td>
-                <td class="td-amount td-vert-middle">
-                    <span><?= $translator->translate('tax'); ?></span><br/>
-                    <span name="item_tax_total" class="amount"></span>
-                </td>
-                <td class="td-amount td-vert-middle">
-                    <span><?= $translator->translate('total'); ?></span><br/>
-                    <span name="item_total" class="amount"></span>
-                </td>
-            </tr>
-            </tbody>
-            
-            <?php
-                //*************************************************************************************
-                // Current
-                // ************************************************************************************
-                $count = 1;
+//*********
+// Current
+// ********
+$count = 1;
 /**
- * @var App\Invoice\Entity\QuoteItem $item
+ * @var App\Infrastructure\Persistence\QuoteItem\QuoteItem $item
  */
 foreach ($quoteItems as $item) {
-    $productId = $item->getProduct_id();
-    $taskId = $item->getTask_id();
+    $productId = $item->getProductId();
+    $taskId = $item->getTaskId();
     $productRef = '';
     $taskRef = '';
     if ($productId > 0) {
-        $productRef = A::tag()
-           ->href($urlGenerator->generate('product/view', ['_language' => (string) $session->get('_language'), 'id' => $productId]))
-           ->content($productId)
-           ->render();
+        $productRef =  new A()
+            ->href($urlGenerator->generate(
+                'product/view',
+                [
+                    '_language' => (string) $session->get('_language'),
+                    'id' => $productId,
+                ]
+            ))
+            ->content((string) $productId)
+            ->render();
     }
     if ($taskId > 0) {
-        $taskRef = A::tag()
-           ->href($urlGenerator->generate('task/view', ['_language' => (string) $session->get('_language'), 'id' => $taskId]))
-           ->content($taskId)
-           ->render();
+        $taskRef =  new A()
+            ->href($urlGenerator->generate(
+                'task/view',
+                [
+                    '_language' => (string) $session->get('_language'),
+                    'id' => $taskId,
+                ]
+            ))
+            ->content((string) $taskId)
+            ->render();
     }
-    ?>
-                <tbody class="item">
-                <tr>
-                    <td class="td-text">
-                        <b>
-                            <div class="input-group">
-                                
-                        <?php echo $count . '-' . $item->getQuote_id() . '-' . $item->getId() . '-'
-        . ($productId > 0 ? $productRef : '')
-        . ($taskId > 0 ? $taskRef : ''); ?>
-                                
-                            </div>
-                        </b>                           
-                    </td>                    
-                    <td class="td-textarea">
-                        <div class="input-group">
-                            <span class="input-group-text"><b><?= $item->getProduct_id() > 0 ? $translator->translate('item') : $translator->translate('tasks') ; ?></b></span>
-                            <select name="item_name" class="form-control" disabled>
-                            <?php if ($item->getProduct_id() > 0) { ?>    
-                                <option value="0"><?= $translator->translate('none'); ?></option>
-                                <?php
-                                /**
-                                 * @var App\Invoice\Entity\Product $product
-                                 */
-                                foreach ($products as $product) { ?>
-                                    <option value="<?php echo $product->getProduct_id(); ?>"
-                                            <?php if ($item->getProduct_id() == $product->getProduct_id()) { ?>selected="selected"<?php } ?>>
-                                        <?php echo $product->getProduct_name(); ?>
-                                    </option>
-                                <?php } ?>
-                            <?php } ?>
-                            <?php if ($item->getTask_id() > 0) { ?>    
-                                <option value="0"><?= $translator->translate('none'); ?></option>
-                                <?php
-                                /**
-                                 * @var App\Invoice\Entity\Task $task
-                                 */
-                                foreach ($tasks as $task) { ?>
-                                    <option value="<?php echo $task->getId(); ?>"
-                                            <?php if ($item->getTask_id() == $task->getId()) { ?>selected="selected"<?php } ?>>
-                                        <?php echo $task->getName(); ?>
-                                    </option>
-                                <?php } ?>
-                            <?php } ?>        
-                            </select>
-                        </div>
-                    </td>  
-                    <td class="td-amount td-quantity">
-                        <div class="input-group">
-                            <span class="input-group-text"><b><?= $translator->translate('quantity'); ?></b></span></b>
-                            <input disabled type="text" maxlength="4" size="4" name="item_quantity" class="input-sm form-control amount" data-bs-toggle = "tooltip" title="quote_item->quantity"
-                                   value="<?= $numberHelper->format_amount($item->getQuantity()); ?>">
-                        </div>
-                    </td>
-                    <td class="td-amount">
-                      <div class="input-group">
-                          <span class="input-group-text"><b><?= $translator->translate('price'); ?></b></span>
-                          <input disabled type="text" maxlength="4" size="4" name="item_price" class="input-sm form-control amount" data-bs-toggle = "tooltip" title="quote_item->price"
-                                 value="<?= $numberHelper->format_amount($item->getPrice()); ?>">
-                      </div>
-                    </td>
-                    <td class="td-amount ">
-                        <div class="input-group">
-                            <span class="input-group-text"><b><?= $vat === '0' ? $translator->translate('item.discount') : $translator->translate('cash.discount'); ?></b></span>
-                            <input disabled type="text" maxlength="4" size="4" name="item_discount_amount" class="input-sm form-control amount" data-bs-toggle = "tooltip" title="quote_item->discount_amount"
-                                   value="<?= $numberHelper->format_amount($item->getDiscount_amount()); ?>"
-                                   data-bs-toggle = "tooltip" data-placement="bottom"
-                                   title="<?= $s->getSetting('currency_symbol') . ' ' . $translator->translate('per.item'); ?>">
-                        </div>
-                    </td>
-                    
-                    <td>
-                        <div class="input-group">
-                            <span class="input-group-text"><b><?= $vat === '0' ? $translator->translate('tax.rate') : $translator->translate('vat.rate') ?></b></span>
-                            <select disabled name="item_tax_rate_id" class="form-control" data-bs-toggle = "tooltip" title="quote_item->tax_rate_id">
-                                <option value="0"><?= $translator->translate('none'); ?></option>
-                                <?php
-                                /**
-                                 * @var App\Invoice\Entity\TaxRate $taxRate
-                                 */
-                                 foreach ($taxRates as $taxRate) { ?>
-                                                 <option value="<?php echo $taxRate->getTaxRateId(); ?>"
-                                                         <?php if ($item->getTax_rate_id() == $taxRate->getTaxRateId()) { ?>selected="selected"<?php } ?>>
-                                                        <?php
-                                             $taxRatePercent = $numberHelper->format_amount($taxRate->getTaxRatePercent());
-                                     $taxRateName = $taxRate->getTaxRateName();
-                                     if ($taxRatePercent >= 0.00 && null !== $taxRatePercent && null !== $taxRateName) {
-                                         echo $taxRatePercent . '% - ' . $taxRateName;
-                                     }
-                                     ?>
-                                    </option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                    </td>
-<?php // Buttons for line item start here?>
-                    <td class="td-icon text-right td-vert-middle">                        
-                        <?php if ($invEdit === true) { ?>
-                            <?php if ($piR->repoCount((int) $item->getProduct_id()) > 0) { ?>
-                            <span data-bs-toggle="tooltip" title="<?= $translator->translate('productimage.gallery') . (($item->getProduct_id() > 0) ? ($item->getProduct()?->getProduct_name() ?? '') : ($item->getTask()?->getName() ?? '')); ?>">
-                            <a class="btn btn-info fa fa-eye" data-bs-toggle="modal" href="#view-product-<?= $item->getId(); ?>" style="text-decoration:none"></a></span> 
-                            <div id="view-product-<?= $item->getId(); ?>" class="modal modal-lg" tabindex="-1">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form>
-                                                <div class="form-group">
-                                                    <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-                                                    <?php $productImages = $piR->repoProductImageProductquery((int) $item->getProduct_id()); ?>
-                                                    <?php
-                                    /**
-                                     * @var App\Invoice\Entity\ProductImage $productImage
-                                     */
-                                    foreach ($productImages as $productImage) { ?>
-                                                        <?php if (!empty($productImage->getFile_name_original())) { ?> 
-                                                           <a data-bs-toggle="modal" class="col-sm-4">
-                                                              <img src="<?= '/products/' . $productImage->getFile_name_original(); ?>"  class="img-fluid">
-                                                           </a>
-                                                        <?php } ?> 
-                                                    <?php } ?>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?= $translator->translate('cancel'); ?></button>
-                                        </div>  
-                                    </div>
-                                </div>
-                             </div>
-                            <?php } ?>
-                             <!-- Make sure to fill the third parameter of generate in order to use query parameters --> 
-                             <a href="<?= $urlGenerator->generate('quote/delete_quote_item', ['id' => $item->getId(),'_language' => $currentRoute->getArgument('_language')]) ?>" class="btn btn-danger btn" onclick="return confirm('<?= $translator->translate('delete.record.warning'); ?>');"><i class="fa fa-trash"></i></a>
-                             <?php if ($item->getTask_id() > 0) { ?>    
-                              <a href="<?= $urlGenerator->generate('quoteitem/edit_task', ['id' => $item->getId(), '_language' => $currentRoute->getArgument('_language')]) ?>" class="btn btn-success btn"><i class="fa fa-pencil"></i></a>
-                            <?php } ?>
-                            <?php if ($item->getProduct_id() > 0) { ?>    
-                              <a href="<?= $urlGenerator->generate('quoteitem/edit_product', ['id' => $item->getId(), '_language' => $currentRoute->getArgument('_language')]) ?>" class="btn btn-success btn"><i class="fa fa-pencil"></i></a>
-                            <?php } ?>
-                        <?php } ?>
-                    </td>
-                </tr>
-<?php // Buttons for line item end here?>
-                <tr>
-                    <td></td>   
-                    <td>    
-                        <div class="input-group">
-                            <span class="input-group-text" data-bs-toggle = "tooltip" title="quote_item->description"><b><?= $translator->translate('description'); ?></b></span>
-                            <textarea disabled name="item_description" class="form-control" rows="1"><?= Html::encode($item->getDescription()); ?></textarea>
-                        </div>
-                    </td>    
-                    <td>    
-                    </td>
-                    <td class="td-amount">
-                        <div class="input-group">
-                        <?php if ($item->getProduct_id() > 0) { ?>        
-                            <span class="input-group-text"><b><?= $translator->translate('product.unit');?></b></span>
-                            <span class="input-group-text" name="item_product_unit"><?= $item->getProduct_unit();?></span>
-                        <?php } ?>
-                        <?php if ($item->getTask_id() > 0) { ?>        
-                            <span class="input-group-text"><b><?= $item->getTask()?->getName(); ?></b></span>
-                            <span class="input-group-text" name="item_task_unit"><?php echo !is_string($finishDate = $item->getTask()?->getFinish_date()) ? $finishDate?->format('Y-m-d') : '';?></span>
-                        <?php } ?>    
-                        </div>
-                    </td>
-                    <td class="td-amount"></td>
-                    <td class="td-amount"></td>   
-                    <td class="td-amount"></td>   
-                </tr>
-                <tr> 
-                    <td class="td-amount"></td>
-                    <td class="td-amount"></td>
-                    <td class="td-amount"></td>
-                    <td class="td-amount td-vert-middle">
-                        <span><b><?= $translator->translate('subtotal'); ?></b></span><br/>
-                        
-                        <span name="subtotal" class="amount" data-bs-toggle = "tooltip" title="quote_item_amount->subtotal using QuoteItemController/edit_product->saveQuoteItemAmount">
-                            <!-- This subtotal is worked out in QuoteItemController/edit_product->saveQuoteItemAmount function -->
-                            <?= $numberHelper->format_currency($qiaR->repoQuoteItemAmountquery($item->getId())?->getSubtotal()); ?>
-                        </span>
-                    </td>
-                    <td class="td-amount td-vert-middle">
-                        <span><b>(<?= $vat === '0' ? $translator->translate('discount') : $translator->translate('early.settlement.cash.discount') ?>)</b></span><br/>
-                        <span name="item_discount_total" class="amount" data-bs-toggle = "tooltip" title="quote_item_amount->discount">
-                            (<?= $numberHelper->format_currency($qiaR->repoQuoteItemAmountquery($item->getId())?->getDiscount()); ?>)
-                        </span>
-                    </td>
-                    <td class="td-amount td-vert-middle">
-                        <span><b><?= $vat === '0' ? $translator->translate('tax') : $translator->translate('vat.abbreviation') ?></b></span><br/>
-                        <span name="item_tax_total" class="amount" data-bs-toggle = "tooltip" title="quote_item_amount->tax_total">
-                            <?= $numberHelper->format_currency($qiaR->repoQuoteItemAmountquery($item->getId())?->getTax_total()); ?>
-                        </span>
-                    </td>
-                    <td class="td-amount td-vert-middle">
-                        <span><b><?= $translator->translate('total'); ?></b></span><br/>
-                        <span name="item_total" class="amount" data-bs-toggle = "tooltip" title="quote_item_amount->total">
-                            <?= $numberHelper->format_currency($qiaR->repoQuoteItemAmountquery($item->getId())?->getTotal()); ?>
-                        </span>
-                    </td>                   
-                </tr>
-                </tbody>
-            <?php
-                 $count = $count + 1;
+   echo H::openTag('tbody', ['class' => 'item']); //3
+    echo H::openTag('tr'); //4
+     echo H::openTag('td', [
+         'class' => 'td-text',
+         'style' => 'background-color: lightgreen',
+     ]); //5
+      echo H::openTag('b'); //6
+       echo H::openTag('div', ['class' => 'input-group']); //7
+       echo (string) $count
+           . '-' . $item->reqQuoteId() . '-'
+           . $item->reqId() . '-'
+           . ($productId > 0 ? $productRef : '')
+           . ($taskId > 0 ? $taskRef : '');
+       echo H::closeTag('div'); //7
+      echo H::closeTag('b'); //6
+     echo H::closeTag('td'); //5
+     echo H::openTag('td', ['class' => 'td-textarea']); //5
+      echo H::openTag('div', ['class' => 'input-group']); //6
+       echo H::openTag('span', ['class' => 'input-group-text']); //7
+        echo H::openTag('b'); //8
+        echo($productId > 0 ?
+            $translator->translate('item') :
+            $translator->translate('tasks'));
+        echo H::closeTag('b'); //8
+       echo H::closeTag('span'); //7
+       echo H::openTag('select', [
+           'name' => 'item_name',
+           'class' => 'form-control form-control-lg',
+           'disabled' => true,
+       ]); //7
+       if ($productId > 0) {
+           echo  new Option()
+               ->value('0')
+               ->content($translator->translate('none'));
+           /**
+            * @var App\Infrastructure\Persistence\Product\Product $product
+            */
+           foreach ($products as $product) {
+               echo  new Option()
+                   ->value($product->reqId())
+                   ->selected($productId == $product->reqId())
+                   ->content($product->getProductName() ?? '');
+           }
+       }
+       if ($taskId > 0) {
+           echo  new Option()
+               ->value('0')
+               ->content($translator->translate('none'));
+           /**
+            * @var App\Infrastructure\Persistence\Task\Task $task
+            */
+           foreach ($tasks as $task) {
+               echo  new Option()
+                   ->value($task->reqId())
+                   ->selected($item->getTaskId() == $task->reqId())
+                   ->content($task->getName() ?? '');
+           }
+       }
+       echo H::closeTag('select'); //7
+      echo H::closeTag('div'); //6
+     echo H::closeTag('td'); //5
+     echo H::openTag('td', ['class' => 'td-amount td-quantity']); //5
+      echo H::openTag('div', ['class' => 'input-group']); //6
+       echo H::openTag('span', ['class' => 'input-group-text']); //7
+        echo H::openTag('b'); //8
+        echo $translator->translate('quantity');
+        echo H::closeTag('b'); //8
+       echo H::closeTag('span'); //7
+       echo H::openTag('input', [
+           'disabled' => true,
+           'type' => 'text',
+           'maxlength' => '4',
+           'size' => '4',
+           'name' => 'item_quantity',
+           'class' => 'input-sm form-control amount',
+           'data-bs-toggle' => 'tooltip',
+           'title' => 'quote_item->quantity',
+           'value' => $numberHelper->formatAmount($item->getQuantity()),
+       ]);
+       echo H::closeTag('input');
+      echo H::closeTag('div'); //6
+     echo H::closeTag('td'); //5
+     echo H::openTag('td', ['class' => 'td-amount']); //5
+      echo H::openTag('div', ['class' => 'input-group']); //6
+       echo H::openTag('span', ['class' => 'input-group-text']); //7
+        echo H::openTag('b'); //8
+        echo $translator->translate('price');
+        echo H::closeTag('b'); //8
+       echo H::closeTag('span'); //7
+       echo H::openTag('input', [
+           'disabled' => true,
+           'type' => 'text',
+           'maxlength' => '4',
+           'size' => '4',
+           'name' => 'item_price',
+           'class' => 'input-sm form-control amount',
+           'data-bs-toggle' => 'tooltip',
+           'title' => 'quote_item->price',
+           'value' => $numberHelper->formatAmount($item->getPrice()),
+       ]);
+       echo H::closeTag('input');
+      echo H::closeTag('div'); //6
+     echo H::closeTag('td'); //5
+     echo H::openTag('td', ['class' => 'td-amount']); //5
+      echo H::openTag('div', ['class' => 'input-group']); //6
+       echo H::openTag('span', ['class' => 'input-group-text']); //7
+        echo H::openTag('b'); //8
+        echo $vat === '0' ? $translator->translate('item.discount') :
+            $translator->translate('cash.discount');
+        echo H::closeTag('b'); //8
+       echo H::closeTag('span'); //7
+       echo H::openTag('input', [
+           'disabled' => true,
+           'type' => 'text',
+           'maxlength' => '4',
+           'size' => '4',
+           'name' => 'item_discount_amount',
+           'class' => 'input-sm form-control amount',
+           'data-bs-toggle' => 'tooltip',
+           'title' => $s->getSetting('currency_symbol') . ' ' .
+               $translator->translate('per.item'),
+           'data-placement' => 'bottom',
+           'value' => $numberHelper->formatAmount($item->getDiscountAmount()),
+       ]);
+       echo H::closeTag('input');
+      echo H::closeTag('div'); //6
+     echo H::closeTag('td'); //5
+     echo H::openTag('td'); //5
+      echo H::openTag('div', ['class' => 'input-group']); //6
+       echo H::openTag('span', ['class' => 'input-group-text']); //7
+        echo H::openTag('b'); //8
+        echo $vat === '0' ?
+            $translator->translate('tax.rate') :
+            $translator->translate('vat.rate');
+        echo H::closeTag('b'); //8
+       echo H::closeTag('span'); //7
+       echo H::openTag('select', [
+           'disabled' => true,
+           'name' => 'item_tax_rate_id',
+           'class' => 'form-control form-control-lg',
+           'data-bs-toggle' => 'tooltip',
+           'title' => 'quote_item->tax_rate_id',
+       ]); //7
+       echo  new Option()
+           ->value('0')
+           ->content($translator->translate('none'));
+       /**
+        * @var App\Infrastructure\Persistence\TaxRate\TaxRate $taxRate
+        */
+       foreach ($taxRates as $taxRate) {
+           $taxRatePercent = $numberHelper->formatAmount(
+               $taxRate->getTaxRatePercent()
+           );
+           $taxRateName = $taxRate->getTaxRateName();
+           $taxRateContent = '';
+           if ($taxRatePercent >= 0.00
+               && null !== $taxRatePercent
+               && null !== $taxRateName) {
+               $taxRateContent = $taxRatePercent . '% - ' . $taxRateName;
+           }
+           echo  new Option()
+               ->value((string) $taxRate->reqId())
+               ->selected($item->reqTaxRateId() == $taxRate->reqId())
+               ->content($taxRateContent);
+       }
+       echo H::closeTag('select'); //7
+      echo H::closeTag('div'); //6
+     echo H::closeTag('td'); //5
+    // Buttons for line item start here
+     echo H::openTag('td', ['class' => 'td-vert-middle btn-group']); //5
+    if ($invEdit === true) {
+        if ($piR->repoCount((int) $item->getProductId()) > 0) {
+            echo H::openTag('span', [
+                'data-bs-toggle' => 'tooltip',
+                'title' => $translator->translate('productimage.gallery')
+                    . ($productId > 0
+                        ? ($item->getProduct()?->getProductName()
+                            ?? '') : ($item->getTask()?->getName()
+                                ?? '')),
+            ]); //6
+             echo H::openTag('a', [
+                 'class' => 'btn btn-info',
+                 'data-bs-toggle' => 'modal',
+                 'href' => '#view-product-' . $item->reqId(),
+                 'style' => 'text-decoration:none',
+             ]); //7
+              echo H::openTag('i', ['class' => 'bi bi-eye']); //8
+              echo H::closeTag('i'); //8
+             echo H::closeTag('a'); //7
+            echo H::closeTag('span'); //6
+            echo H::openTag('div', [
+                'id' => 'view-product-' . $item->reqId(),
+                'class' => 'modal modal-lg',
+                'tabindex' => '-1',
+            ]); //6
+             echo H::openTag('div', ['class' => 'modal-dialog']); //7
+              echo H::openTag('div', ['class' => 'modal-content']); //8
+               echo H::openTag('div', ['class' => 'modal-header']); //9
+                echo H::openTag('button', [
+                    'type' => 'button',
+                    'class' => 'btn-close',
+                    'data-bs-dismiss' => 'modal',
+                    'aria-label' => 'Close',
+                ]); //10
+                echo H::closeTag('button'); //10
+               echo H::closeTag('div'); //9
+               echo H::openTag('div', ['class' => 'modal-body']); //9
+                echo H::openTag('form'); //10
+                 echo H::openTag('div', ['class' => 'form-group']); //11
+                 echo H::openTag('input', [
+                     'type' => 'hidden',
+                     'name' => '_csrf',
+                     'value' => $csrf,
+                 ]);
+                 echo H::closeTag('input');
+                 if (null!==($productId = $item->getProductId())) {
+                    $productImages = $piR->repoProductImageProductquery($productId);
+                 } else {
+                    $productImages = $piR->repoProductImageProductquery(0);
+                 }
+                 /**
+                  * @var App\Infrastructure\Persistence\ProductImage\ProductImage $productImage
+                  */
+                 foreach ($productImages as $productImage) {
+                     if (!empty($productImage->getFileNameOriginal())) {
+                         echo H::openTag('a', [
+                             'data-bs-toggle' => 'modal',
+                             'class' => 'col-sm-4',
+                         ]); //12
+                         echo H::openTag('img', [
+                             'src' => '/products/' .
+                                 $productImage->getFileNameOriginal(),
+                             'class' => 'img-fluid',
+                             'alt' => 'Original File Name',
+                         ]);
+                         echo H::closeTag('img');
+                         echo H::closeTag('a'); //12
+                     }
+                 }
+                 echo H::closeTag('div'); //11
+                echo H::closeTag('form'); //10
+               echo H::closeTag('div'); //9
+               echo H::openTag('div', ['class' => 'modal-footer']); //9
+                echo H::openTag('button', [
+                    'type' => 'button',
+                    'class' => 'btn btn-secondary',
+                    'data-bs-dismiss' => 'modal',
+                ]); //10
+                echo $translator->translate('cancel');
+                echo H::closeTag('button'); //10
+               echo H::closeTag('div'); //9
+              echo H::closeTag('div'); //8
+             echo H::closeTag('div'); //7
+            echo H::closeTag('div'); //6
+        }
+        // Make sure to fill the third parameter of
+        // generate in order to use query parameters
+        if ($s->getSetting('enable_peppol') === '1') {
+            echo H::openTag('a', [
+                'href' => $urlGenerator->generate(
+                    'quoteitemallowancecharge/index',
+                    [
+                        'quote_item_id' => $item->reqId(),
+                        '_language' => $currentRoute->getArgument('_language'),
+                    ],
+                    ['quote_item_id' => $item->reqId()]
+                ),
+                'class' => 'btn btn-primary btn',
+                'data-bs-toggle' => 'tooltip',
+                'title' => $translator->translate('allowance.or.charge.index'),
+            ]); //6
+             echo H::openTag('i', [
+                 'class' => ($acqiR->repoQuoteItemCount(
+                     $item->reqId()
+                 ) > 0 ?
+                         'bi bi-list' : 'bi bi-plus-lg'),
+             ]); //7
+             echo H::closeTag('i'); //7
+            echo H::closeTag('a'); //6
+        }
+        echo H::openTag('a', [
+            'href' => $urlGenerator->generate('quote/deleteQuoteItem', [
+                'id' => $item->reqId(),
+                '_language' => $currentRoute->getArgument('_language'),
+            ]),
+            'class' => 'btn btn-secondary btn',
+            'onclick' => "return confirm('" .
+                $translator->translate('delete.record.warning') . "');",
+        ]); //6
+        echo '❌';
+        echo H::closeTag('a'); //6
+        if ($taskId > 0) {
+            echo H::openTag('a', [
+                'href' => $urlGenerator->generate('quoteitem/editTask', [
+                    'id' => $item->reqId(),
+                    '_language' => $currentRoute->getArgument('_language'),
+                ]),
+                'class' => 'btn btn-success btn',
+            ]); //6
+            echo '🖉';
+            echo H::closeTag('a'); //6
+        }
+        if ($productId > 0) {
+            echo H::openTag('a', [
+                'href' => $urlGenerator->generate('quoteitem/editProduct', [
+                    'id' => $item->reqId(),
+                    '_language' => $currentRoute->getArgument('_language'),
+                ]),
+                'class' => 'btn btn-success btn',
+            ]); //6
+            echo '🖉';
+            echo H::closeTag('a'); //6
+        }
+    }
+     echo H::closeTag('td'); //5
+    echo H::closeTag('tr'); //4
+    // Buttons for line item end here
+    echo H::openTag('tr'); //4
+     echo H::openTag('td'); //5
+     echo H::closeTag('td'); //5
+     echo H::openTag('td'); //5
+      echo H::openTag('div', ['class' => 'input-group']); //6
+       echo H::openTag('span', [
+           'class' => 'input-group-text',
+           'data-bs-toggle' => 'tooltip',
+           'title' => 'quote_item->description',
+       ]); //7
+        echo H::openTag('b'); //8
+        echo $translator->translate('description');
+        echo H::closeTag('b'); //8
+       echo H::closeTag('span'); //7
+       echo H::openTag('textarea', [
+           'disabled' => true,
+           'name' => 'item_description',
+           'class' => 'form-control form-control-lg',
+           'rows' => '1',
+       ]); //7
+       echo H::encode($item->getDescription());
+       echo H::closeTag('textarea'); //7
+      echo H::closeTag('div'); //6
+     echo H::closeTag('td'); //5
+     echo H::openTag('td', ['class' => 'td-amount']); //5
+      echo H::openTag('div', ['class' => 'input-group']); //6
+      if ($productId > 0) {
+          echo H::openTag('span', ['class' => 'input-group-text']); //7
+           echo H::openTag('b'); //8
+           echo $translator->translate('product.unit');
+           echo H::closeTag('b'); //8
+          echo H::closeTag('span'); //7
+          echo H::openTag('span', [
+              'class' => 'input-group-text',
+              'name' => 'item_product_unit',
+          ]); //7
+          echo $item->getProductUnit();
+          echo H::closeTag('span'); //7
+      }
+      if ($taskId > 0) {
+          echo H::openTag('span', ['class' => 'input-group-text']); //7
+           echo H::openTag('b'); //8
+           echo $item->getTask()?->getName();
+           echo H::closeTag('b'); //8
+          echo H::closeTag('span'); //7
+          echo H::openTag('span', [
+              'class' => 'input-group-text',
+              'name' => 'item_task_unit',
+          ]); //7
+          echo !is_string(
+              $finishDate =
+                  $item->getTask()?->getFinishDate()
+          ) ?
+                      $finishDate?->format('Y-m-d') : '';
+          echo H::closeTag('span'); //7
+      }
+      echo H::closeTag('div'); //6
+     echo H::closeTag('td'); //5
+     echo H::openTag('td', ['class' => 'td-amount']); //5
+     if ($productId > 0) {
+          echo H::openTag('b'); //6
+          echo $numberHelper->formatAmount(($item->getQuantity() ?? 0.00)
+                                            * ($item->getPrice() ?? 0.00));
+          echo H::closeTag('b'); //6
+     }
+     echo H::closeTag('td'); //5
+     echo H::openTag('td', ['class' => 'td-amount']); //5
+     echo H::closeTag('td'); //5
+     echo H::openTag('td', ['class' => 'td-amount']); //5
+      echo H::openTag('b'); //6
+      echo $numberHelper->formatAmount(($item->getQuantity() ?? 0.00)
+                                        * ($item->getPrice() ?? 0.00)
+                                        * ($item->getTaxRate()?->getTaxRatePercent()
+                                        ?? 0.00) / 100);
+      echo H::closeTag('b'); //6
+     echo H::closeTag('td'); //5
+     echo H::openTag('td', ['class' => 'td-amount']); //5
+     echo H::closeTag('td'); //5
+    echo H::closeTag('tr'); //4
+    if ($s->getSetting('enable_peppol') === '1') {
+        /**
+         * Used if Peppol is enabled in order to generate electronic
+         * invoices
+         * @var App\Infrastructure\Persistence\QuoteItemAllowanceCharge\QuoteItemAllowanceCharge $quoteItemAllowanceCharge
+         */
+        foreach ($acqiR->repoQuoteItemquery($item->reqId()) as $quoteItemAllowanceCharge) {
+            $isCharge =
+                ($quoteItemAllowanceCharge->getAllowanceCharge()?->getIdentifier() == 1 ?
+                    true : false);
+            echo H::openTag('tr'); //4
+             echo H::openTag('td', ['class' => 'td-amount']); //5
+              echo H::openTag('b'); //6
+              echo $quoteItemAllowanceCharge->getAllowanceCharge()?->getIdentifier() == '1'
+                  ? $translator->translate('allowance.or.charge.charge')
+                  : '(' . $translator->translate('allowance.or.charge.allowance')
+                      . ')';
+              echo H::closeTag('b'); //6
+             echo H::closeTag('td'); //5
+             echo H::openTag('td', ['class' => 'td-amount']); //5
+              echo H::openTag('b'); //6
+              echo $translator->translate('allowance.or.charge.reason.code') . ': ' .
+                  ($quoteItemAllowanceCharge->getAllowanceCharge()?->getReasonCode() ?? '#');
+              echo H::closeTag('b'); //6
+             echo H::closeTag('td'); //5
+             echo H::openTag('td', ['class' => 'td-amount']); //5
+              echo H::openTag('b'); //6
+              echo $translator->translate('allowance.or.charge.reason') . ': '
+                  . ($quoteItemAllowanceCharge->getAllowanceCharge()?->getReason() ?? '#');
+              echo H::closeTag('b'); //6
+             echo H::closeTag('td'); //5
+             echo H::openTag('td', ['class' => 'td-amount']); //5
+              echo H::openTag('b'); //6
+              echo ($isCharge ? '' : '(') . $numberHelper->formatCurrency(
+                  $quoteItemAllowanceCharge->getAmount()
+              ) . ($isCharge ? '' : ')');
+              echo H::closeTag('b'); //6
+             echo H::closeTag('td'); //5
+             echo H::openTag('td', ['class' => 'td-amount']); //5
+             echo H::closeTag('td'); //5
+             echo H::openTag('td', ['class' => 'td-amount']); //5
+              echo H::openTag('b'); //6
+              echo ($isCharge ? '' : '(') . $numberHelper->formatCurrency(
+                  $quoteItemAllowanceCharge->getVatOrTax()
+              ) . ($isCharge ? '' : ')');
+              echo H::closeTag('b'); //6
+             echo H::closeTag('td'); //5
+             echo H::openTag('td', ['class' => 'td-amount']); //5
+             echo H::closeTag('td'); //5
+            echo H::closeTag('tr'); //4
+        }
+    }
+    echo H::openTag('tr'); //4
+     echo H::openTag('td', ['class' => 'td-amount']); //5
+     echo H::closeTag('td'); //5
+     echo H::openTag('td', ['class' => 'td-amount']); //5
+     echo H::closeTag('td'); //5
+     echo H::openTag('td', ['class' => 'td-amount']); //5
+     echo H::closeTag('td'); //5
+     echo H::openTag('td', [
+         'class' => 'td-amount td-vert-middle',
+         'style' => 'background-color: lightblue',
+     ]); //5
+      echo H::openTag('span'); //6
+       echo H::openTag('b'); //7
+       echo $translator->translate('subtotal');
+       echo H::closeTag('b'); //7
+      echo H::closeTag('span'); //6
+      echo H::openTag('br');
+      echo H::closeTag('br');
+      echo H::openTag('span', [
+          'name' => 'subtotal',
+          'class' => 'amount',
+          'data-bs-toggle' => 'tooltip',
+          'title' =>
+'quote_item_amount->subtotal using QuoteItemController/edit_product->saveQuoteItemAmount',
+      ]); //6
+      echo "\n";
+      echo '    <!-- This subtotal is worked out in' . "\n";
+      echo '        QuoteItemController/edit_product->saveQuoteItemAmount function -->' . "\n";
+      echo $numberHelper->formatCurrency($qiaR->repoQuoteItemAmountquery(
+          $item->reqId()
+      )?->getSubtotal());
+      echo H::closeTag('span'); //6
+     echo H::closeTag('td'); //5
+     echo H::openTag('td', ['class' => 'td-amount td-vert-middle']); //5
+      echo H::openTag('span'); //6
+       echo H::openTag('b'); //7
+       echo '(' . ($vat === '0' ? $translator->translate('discount') :
+           $translator->translate('early.settlement.cash.discount')) . ')';
+       echo H::closeTag('b'); //7
+      echo H::closeTag('span'); //6
+      echo H::openTag('br');
+      echo H::closeTag('br');
+      echo H::openTag('span', [
+          'name' => 'item_discount_total',
+          'class' => 'amount',
+          'data-bs-toggle' => 'tooltip',
+          'title' => 'quote_item_amount->discount',
+      ]); //6
+      echo '(' . $numberHelper->formatCurrency(
+          $qiaR->repoQuoteItemAmountquery(
+              $item->reqId()
+          )?->getDiscount()
+      ) . ')';
+      echo H::closeTag('span'); //6
+     echo H::closeTag('td'); //5
+     echo H::openTag('td', [
+         'class' => 'td-amount td-vert-middle',
+         'style' => 'background-color: lightpink',
+     ]); //5
+      echo H::openTag('span'); //6
+       echo H::openTag('b'); //7
+       echo $vat === '0' ? $translator->translate('tax') :
+           $translator->translate('vat.abbreviation');
+       echo H::closeTag('b'); //7
+      echo H::closeTag('span'); //6
+      echo H::openTag('br');
+      echo H::closeTag('br');
+      echo H::openTag('span', [
+          'name' => 'item_tax_total',
+          'class' => 'amount',
+          'data-bs-toggle' => 'tooltip',
+          'title' => 'quote_item_amount->tax_total',
+      ]); //6
+      echo $numberHelper->formatCurrency(
+          $qiaR->repoQuoteItemAmountquery(
+              $item->reqId()
+          )?->getTaxTotal()
+      );
+      echo H::closeTag('span'); //6
+     echo H::closeTag('td'); //5
+     echo H::openTag('td', [
+         'class' => 'td-amount td-vert-middle',
+         'style' => 'background-color: lightyellow',
+     ]); //5
+      echo H::openTag('span'); //6
+       echo H::openTag('b'); //7
+       echo $translator->translate('total');
+       echo H::closeTag('b'); //7
+      echo H::closeTag('span'); //6
+      echo H::openTag('br');
+      echo H::closeTag('br');
+      echo H::openTag('span', [
+          'name' => 'item_total',
+          'class' => 'amount',
+          'data-bs-toggle' => 'tooltip',
+          'title' => 'quote_item_amount->total',
+      ]); //6
+      echo $numberHelper->formatCurrency(
+          $qiaR->repoQuoteItemAmountquery(
+              $item->reqId()
+          )?->getTotal()
+      );
+      echo H::closeTag('span'); //6
+     echo H::closeTag('td'); //5
+    echo H::closeTag('tr'); //4
+   echo H::closeTag('tbody'); //3
+    $count = $count + 1;
 }
-/**************************/
+
 /* Quote items end here */
-/**************************/
-?> 
-        </table>
-    </div>
-     <br>
-    <?php
-        /***********************/
-        /*   Totals start here */
-        /***********************/
-?> 
-    <?= Html::openTag('div', ['class' => 'row']); ?>
-        <div class="col-xs-12 col-md-4" quote_tax_rates="<?php $quoteTaxRates; ?>"></div>
-        <div class="col-xs-12 visible-xs visible-sm"><br></div>
-        <div class="col-xs-12 col-md-6 col-md-offset-2 col-lg-4 col-lg-offset-4">
-            <table class="table table-bordered text-right">
-                <tr><i class="fa fa-info-circle" data-bs-toggle="tooltip" title="<?= $s->isDebugMode(19); ?>"></i></tr>
-                <tr>
-                    <td style="width: 40%;"><b><?= $translator->translate('subtotal'); ?></b></td>
-                    <td style="width: 60%;" class="amount" id="amount_subtotal" data-bs-toggle = "tooltip" title="quote_amount->item_subtotal =  quote_item(s)->subtotal - quote_item(s)->discount + quote_item(s)->charge">
-    <?php echo $numberHelper->format_currency($quoteAmount->getItem_subtotal() > 0.00 ? $quoteAmount->getItem_subtotal() : 0.00); ?></td>
-                </tr>
-                <tr>
-                    <td>
-                        <span>
-                            <b><?= $vat == '1' ? $translator->translate('vat.break.down') : $translator->translate('item.tax'); ?></b>
-                        </span>    
-                    </td>
-                    <td class="amount" data-bs-toggle = "tooltip" id="amount_item_tax_total" title="quote_amount->item_tax_total">
-    <?php echo $numberHelper->format_currency($quoteAmount->getItem_tax_total() > 0 ? $quoteAmount->getItem_tax_total() : 0.00); ?></td>
-                </tr>
-                <?php if ($vat === '0') { ?>
-                <tr>
-                    <td>
-                        <b>
-                        <?php if ($invEdit === true) { ?>
-                            <a href="#add-quote-tax" data-bs-toggle="modal" class="btn-xs"> <i class="fa fa-plus-circle"></i></a>
-                        <?php } ?>
-                        <?= $translator->translate('tax'); ?>
-                        </b>    
-                    </td>
-                    <td>
-                        <?php if ($quoteTaxRates) {
-                            /**
-                             * @var App\Invoice\Entity\QuoteTaxRate $quoteTaxRate
-                             */
-                            foreach ($quoteTaxRates as $quoteTaxRate) { ?>
-                            <div data-bs-toggle="tooltip" title="<?= $quoteTaxRate->getInclude_item_tax() == '1' ? $included : $excluded; ?>">
-                                    <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-                                    <?php if ($invEdit === true) { ?>
-                                    <span  class="btn btn-xs btn-link" onclick="return confirm('<?= $translator->translate('delete.tax.warning'); ?>');">
-                                        <a  href="<?= $urlGenerator->generate(
-                                            'quote/delete_quote_tax_rate',
-                                            ['_language' => $currentRoute->getArgument('_language'),
-                                                'id' => $quoteTaxRate->getId()],
-                                        ) ?>">
-                                        <i class="fa fa-trash"></i></a>
-                                    </span>
-                                    <?php } ?>
-                                    <span class="text-muted">
-                                        <?php
-                                            $taxRatePercent = $quoteTaxRate->getTaxRate()?->getTaxRatePercent();
-                                $numberPercent = $numberHelper->format_amount($taxRatePercent);
-                                $taxRateName = $quoteTaxRate->getTaxRate()?->getTaxRateName();
-                                if ($taxRatePercent >= 0.00 && null !== $taxRateName && $numberPercent >= 0.00 && null !== $numberPercent) {
-                                    Html::encode($taxRateName . ' ' . $numberPercent);
-                                }
-                                ?>
-                                    </span>
-                                    <span class="amount" data-bs-toggle = "tooltip" title="quote_tax_rate->quote_tax_rate_amount">
-                                        <?php echo $numberHelper->format_currency($quoteTaxRate->getQuote_tax_rate_amount()); ?>
-                                    </span>
-                                    <br>
-                            </div>        
-                            <?php }
-                            } else {
-                                echo $numberHelper->format_currency('0');
-                            } ?>
-                    </td>
-                </tr>
-                <?php } ?>
-                <?php if ($vat === '0') { ?>
-                <tr>
-                    <td class="td-vert-middle"><b>(<?= $translator->translate('discount'); ?>)</b></td>
-                    <td class="clearfix">
-                        <div class="discount-field">
-                            <div class="input-group input-group">
-                                <input id="quote_discount_amount" name="quote_discount_amount"
-                                       class="discount-option form-control amount" data-bs-toggle = "tooltip" title="quote->discount_amount" disabled
-                                       value="<?= $numberHelper->format_amount($quote->getDiscount_amount() != 0 ? $quote->getDiscount_amount() : ''); ?>">
-                                <div
-                                    class="input-group-text"><?= $s->getSetting('currency_symbol'); ?></div>
-                            </div>
-                        </div>
-                        <div class="discount-field">
-                            <div class="input-group input-group">
-                                <input id="quote_discount_percent" name="quote_discount_percent" data-bs-toggle = "tooltip" title="quote->discount_percent" disabled
-                                       value="<?= $numberHelper->format_amount($quote->getDiscount_percent() != 0 ? $quote->getDiscount_percent() : ''); ?>"
-                                       class="discount-option form-control amount">
-                                <div class="input-group-text">&percnt;</div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <?php } ?>               
-                <tr>
-                    <td><b><?= $translator->translate('total'); ?></b></td>
-                    <td class="amount" id="amount_quote_total" data-bs-toggle = "tooltip" title="quote_amount->total"><b><?php echo $numberHelper->format_currency($quoteAmount->getTotal() ?? 0.00); ?></b></td>
-                </tr>
-            </table>
-        </div>
-    <hr>
+
+  echo H::closeTag('table'); //2
+ echo H::closeTag('div'); //1
+echo H::openTag('br');
+echo H::closeTag('br');
+
+/*   Totals start here */
+
+ echo H::openTag('div', ['class' => 'row']); //1
+
+  echo H::openTag('div', [
+      'class' => 'col-xs-12 col-md-4',
+      'quote_tax_rates' => '',
+  ]); //2
+  echo H::closeTag('div'); //2
+  echo H::openTag('div', ['class' => 'col-xs-12 visible-xs visible-sm']); //2
+  echo H::openTag('br');
+  echo H::closeTag('br');
+  echo H::closeTag('div'); //2
+  echo H::openTag('div', [
+      'class' => 'col-xs-12 col-md-6 col-md-offset-2 col-lg-4 col-lg-offset-4',
+  ]); //2
+   echo H::openTag('table', ['class' => 'table table-bordered text-right']); //3
+    echo H::openTag('thead'); //4
+     echo H::openTag('tr', ['hidden' => true]); //5
+      echo H::openTag('th'); //6
+      echo '<!-- description header of quote totals -->';
+      echo H::closeTag('th'); //6
+      echo H::openTag('th'); //6
+      echo '<!-- currency header of quote totals -->';
+      echo H::closeTag('th'); //6
+     echo H::closeTag('tr'); //5
+    echo H::closeTag('thead'); //4
+    echo H::openTag('tbody'); //4
+     echo H::openTag('tr'); //5
+      echo H::openTag('i', [
+          'class' => 'bi bi-info-circle',
+          'data-bs-toggle' => 'tooltip',
+          'title' => $s->isDebugMode(19),
+      ]); //6
+      echo H::closeTag('i'); //6
+     echo H::closeTag('tr'); //5
+     echo H::openTag('tr'); //5
+      echo H::openTag('td', ['style' => 'width: 40%;']); //6
+       echo H::openTag('b'); //7
+       echo $translator->translate('subtotal');
+       echo H::closeTag('b'); //7
+      echo H::closeTag('td'); //6
+      echo H::openTag('td', [
+          'style' => 'width: 60%;background-color: lightblue',
+          'class' => 'amount',
+          'id' => 'amount_subtotal',
+          'data-bs-toggle' => 'tooltip',
+          'title' => 'quote_amount->item_subtotal=quote_item(s)->
+                            subtotal - quote_item(s)->discount + quote_item(s)->charge',
+      ]); //6
+      echo $numberHelper->formatCurrency($quoteAmount->getItemSubtotal() ?? 0.00);
+      echo H::closeTag('td'); //6
+     echo H::closeTag('tr'); //5
+     echo H::openTag('tr'); //5
+      echo H::openTag('td'); //6
+       echo H::openTag('span'); //7
+        echo H::openTag('b'); //8
+        echo $vat === '1' ? $translator->translate('vat.break.down') :
+            $translator->translate('item.tax');
+        echo H::closeTag('b'); //8
+       echo H::closeTag('span'); //7
+      echo H::closeTag('td'); //6
+      echo H::openTag('td', [
+          'class' => 'amount',
+          'style' => 'background-color: lightpink',
+          'data-bs-toggle' => 'tooltip',
+          'id' => 'amount_item_tax_total',
+          'title' => 'quote_amount->item_tax_total',
+      ]); //6
+      echo $numberHelper->formatCurrency($quoteAmount->getItemTaxTotal() ?? 0.00);
+      echo H::closeTag('td'); //6
+     echo H::closeTag('tr'); //5
+     echo H::openTag('tr'); //5
+      echo H::openTag('td'); //6
+       echo H::openTag('b'); //7
+       echo $translator->translate('allowance.or.charge.shipping.handling.packaging');
+       echo H::closeTag('b'); //7
+      echo H::closeTag('td'); //6
+      echo H::openTag('td', [
+          'class' => 'amount',
+          'id' => 'amount_quote_allowance_charge_total',
+          'data-bs-toggle' => 'tooltip',
+          'title' => 'quote_amount->packhandleship_total',
+      ]); //6
+       echo H::openTag('b'); //7
+       echo $numberHelper->formatCurrency(
+           $packHandleShipTotal['totalAmount'] ?? 0.00
+       );
+       echo H::closeTag('b'); //7
+      echo H::closeTag('td'); //6
+     echo H::closeTag('tr'); //5
+     echo H::openTag('tr'); //5
+      echo H::openTag('td'); //6
+       echo H::openTag('b'); //7
+       echo  new A()->content(
+           $vat === '1' ? $translator->translate(
+               'allowance.or.charge.shipping.handling.packaging.vat'
+           ) :
+               $translator->translate(
+                   'allowance.or.charge.shipping.handling.packaging.tax'
+               )
+       )->href(
+           $urlGenerator->generate('quoteallowancecharge/index', [], [
+               'filterQuoteNumber' => $quote->getNumber()])
+       );
+       echo H::closeTag('b'); //7
+      echo H::closeTag('td'); //6
+      echo H::openTag('td', [
+          'class' => 'amount',
+          'id' => 'amount_quote_allowance_charge_tax',
+          'data-bs-toggle' => 'tooltip',
+          'title' => 'quote_amount->packhandleship_tax',
+      ]); //6
+       echo H::openTag('b'); //7
+       echo $numberHelper->formatCurrency(
+           $packHandleShipTotal['totalTax'] ?? 0.00
+       );
+       echo H::closeTag('b'); //7
+      echo H::closeTag('td'); //6
+     echo H::closeTag('tr'); //5
+if ($vat === '0') {
+     echo H::openTag('tr'); //5
+      echo H::openTag('td'); //6
+       echo H::openTag('b'); //7
+    if ($invEdit === true) {
+         echo H::openTag('a', [
+             'href' => '#add-quote-tax',
+             'data-bs-toggle' => 'modal',
+             'class' => 'btn-xs',
+             'style' => 'text-decoration:none',
+         ]); //8
+         echo '➕';
+         echo H::closeTag('a'); //8
+    }
+       echo $translator->translate('tax');
+       echo H::closeTag('b'); //7
+      echo H::closeTag('td'); //6
+      echo H::openTag('td'); //6
+    if ($quoteTaxRates) {
+        /**
+         * @var App\Infrastructure\Persistence\QuoteTaxRate\QuoteTaxRate $quoteTaxRate
+         */
+        foreach ($quoteTaxRates as $quoteTaxRate) {
+             echo H::openTag('div', [
+                 'data-bs-toggle' => 'tooltip',
+                 'title' => $quoteTaxRate->getIncludeItemTax()
+                     == '1' ? $included : $excluded,
+                 'tabindex' => '0',
+             ]); //7
+             echo H::openTag('input', [
+                 'type' => 'hidden',
+                 'name' => '_csrf',
+                 'value' => $csrf,
+             ]);
+             echo H::closeTag('input');
+            if ($invEdit === true) {
+                 echo H::openTag('span'); //8
+                 echo  new A()
+                     ->addAttributes([
+                         'class' => 'btn btn-secondary',
+                         'style' => 'text-decoration:none',
+                         'data-bs-toggle' => 'tooltip',
+                         'title' => $translator->translate('delete'),
+                     ])
+                     ->content('❌')
+                     ->href($urlGenerator->generate('quote/deleteQuoteTaxRate', [
+                         '_language' => $currentRoute->getArgument('_language'),
+                         'id'        => $quoteTaxRate->reqId(),
+                     ]));
+                 echo H::closeTag('span'); //8
+            }
+             echo H::openTag('span', ['class' => 'text-muted']); //8
+             $taxRatePercent = $quoteTaxRate->getTaxRate()?->getTaxRatePercent();
+             $numberPercent = $numberHelper->formatAmount($taxRatePercent);
+             $taxRateName = $quoteTaxRate->getTaxRate()?->getTaxRateName();
+             if ($taxRatePercent >= 0.00
+                     && null !== $taxRateName
+                     && $numberPercent >= 0.00
+                 && null !== $numberPercent) {
+                 echo H::encode(' ' . $taxRateName
+                         . ' '
+                         . $numberPercent
+                         . ' ');
+             }
+             echo H::closeTag('span'); //8
+             echo H::openTag('span', [
+                 'class' => 'amount',
+                 'data-bs-toggle' => 'tooltip',
+                 'title' => 'quote_tax_rate->quote_tax_rate_amount',
+             ]); //8
+             echo $numberHelper->formatCurrency($quoteTaxRate->getQuoteTaxRateAmount());
+             echo H::closeTag('span'); //8
+             echo H::openTag('br');
+             echo H::closeTag('br');
+             echo H::closeTag('div'); //7
+        }
+    } else {
+        echo $numberHelper->formatCurrency('0');
+    }
+      echo H::closeTag('td'); //6
+     echo H::closeTag('tr'); //5
+}
+if (($quote->getDiscountAmount() ?? 0.00) !== 0.00) {
+     echo H::openTag('tr'); //5
+      echo H::openTag('td', ['class' => 'td-vert-middle']); //6
+       echo H::openTag('b'); //7
+       echo '(' . $translator->translate('discount') . ')';
+       echo H::closeTag('b'); //7
+      echo H::closeTag('td'); //6
+      echo H::openTag('td', ['class' => 'clearfix']); //6
+       echo H::openTag('div', ['class' => 'discount-field']); //7
+        echo H::openTag('div', ['class' => 'input-group input-group']); //8
+        echo $numberHelper->formatCurrency($quote->getDiscountAmount() ?? 0.00);
+        echo H::closeTag('div'); //8
+       echo H::closeTag('div'); //7
+      echo H::closeTag('td'); //6
+     echo H::closeTag('tr'); //5
+}
+     echo H::openTag('tr'); //5
+      echo H::openTag('td'); //6
+       echo H::openTag('b'); //7
+       echo $translator->translate('total');
+       echo H::closeTag('b'); //7
+      echo H::closeTag('td'); //6
+      echo H::openTag('td', [
+          'class' => 'amount',
+          'style' => 'background-color:lightyellow',
+          'id' => 'amount_quote_total',
+          'data-bs-toggle' => 'tooltip',
+          'title' => 'quote_amount->total',
+      ]); //6
+       echo H::openTag('b'); //7
+       echo $numberHelper->formatCurrency($quoteAmount->getTotal() ?? 0.00);
+       echo H::closeTag('b'); //7
+      echo H::closeTag('td'); //6
+     echo H::closeTag('tr'); //5
+    echo H::closeTag('tbody'); //4
+   echo H::closeTag('table'); //3
+  echo H::closeTag('div'); //2
+ echo H::closeTag('div'); //1
+echo H::openTag('hr');
+echo H::closeTag('hr');

@@ -25,16 +25,16 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('h1');?>
     <?= Html::encode($title); ?>
 <?=Html::closeTag('h1'); ?>
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
 <?= $translator->translate('setting.company.private'); ?>
 <?= Html::closeTag('h1'); ?>
 
-<?= Form::tag()
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -50,7 +50,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= Field::text($form, 'company_public_name')
                         ->readonly(true); ?>
-                <?= Html::closeTag('div'); ?>    
+                <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= Field::text($form, 'tax_code')
@@ -62,7 +62,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= Field::text($form, 'gln')
-                        ->addInputAttributes(['class' => 'form-control'])
+                        ->addInputAttributes(['class' => 'form-control form-control-lg',])
                         ->label($translator->translate('gln'))
                         ->readonly(true)
                         ->value(Html::encode($form->getGln() ??  '')); ?>
@@ -76,16 +76,16 @@ use Yiisoft\Html\Tag\Form;
                         <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                             <?= Field::text($form, 'logo_filename')
                                 ->readonly(true)
-                                ->value($form->getLogo_filename()); ?>
+                                ->value($form->getLogoFilename()); ?>
                         <?= Html::closeTag('div'); ?>
                         <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                             <?= Field::image()
-                               ->src('/logo/' . ($form->getLogo_filename() ?? '#'))
-                               ->height($form->getLogo_height())
-                               ->width($form->getLogo_width()); ?>
+                               ->src('/logo/' . ($form->getLogoFilename() ?? '#'))
+                               ->height($form->getLogoHeight())
+                               ->width($form->getLogoWidth()); ?>
                         <?= Html::closeTag('div'); ?>
-                    <?= Html::closeTag('div'); ?>  
-                <?= Html::Tag('br'); ?> 
+                    <?= Html::closeTag('div'); ?>
+                <?= Html::Tag('br'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= Field::text($form, 'logo_width')
                         ->readonly(true); ?>
@@ -99,44 +99,44 @@ use Yiisoft\Html\Tag\Form;
                         ->readonly(true); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= Html::openTag('div', ['class' => 'input-group']); ?>               
+                    <?= Html::openTag('div', ['class' => 'input-group']); ?>
                         <?= Field::date($form, 'start_date')
                             ->addInputAttributes(
                                 [
-                                    'class' => 'form-control',
+                                    'class' => 'form-control form-control-lg',
                                     'placeholder' => ' (' . $dateHelper->display() . ')',
                                     'readonly' => 'readonly',
                                     'disabled' => 'disabled',
                                 ],
                             )
-                            ->value(Html::encode(!is_string($startdate = $form->getStart_date()) && null !== $startdate
+                            ->value(Html::encode(!is_string($startdate = $form->getStartDate()) && null !== $startdate
                                                 ? $startdate->format('Y-m-d')
                                                 : (new \DateTimeImmutable('now'))->format('Y-m-d')));
 ?>
-                    <?= Html::closeTag('div'); ?>                                
+                    <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= Html::openTag('div', ['class' => 'input-group']); ?>               
+                    <?= Html::openTag('div', ['class' => 'input-group']); ?>
                         <?= Field::date($form, 'end_date')
     ->addInputAttributes(
         [
-            'class' => 'form-control',
+            'class' => 'form-control form-control-lg',
             'placeholder' => ' (' . $dateHelper->display() . ')',
             'readonly' => 'readonly',
             'disabled' => 'disabled',
         ],
     )
-    ->value(Html::encode(!is_string($enddate = $form->getEnd_date()) && null !== $enddate
+    ->value(Html::encode(!is_string($enddate = $form->getEndDate()) && null !== $enddate
                         ? $enddate->format('Y-m-d')
                         : (new \DateTimeImmutable('now'))->format('Y-m-d')));
 ?>
-                    <?= Html::closeTag('div'); ?>                                
+                    <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
-        <?= Html::closeTag('div'); ?>    
+        <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= $button::back(); ?>
-<?= Form::tag()->close() ?>
+<?=  new Form()->close() ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

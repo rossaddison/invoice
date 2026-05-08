@@ -7,14 +7,20 @@ namespace App\Invoice\Helpers;
 use App\Invoice\Setting\SettingRepository as SR;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Session\SessionInterface;
+use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Session\Flash\Flash;
 
 class InvoiceHelper
 {
-    public function __construct(private readonly SR $s, private readonly SessionInterface $session) {}
+    public function __construct(private readonly SR $s,
+            private readonly SessionInterface $session,
+            private readonly TranslatorInterface $translator)
+    {
+    }
 
     /**
      * @psalm-param 'danger' $level
+     * @psalm-suppress UnusedReturnValue
      */
     private function flash(string $level, string $message): Flash
     {
@@ -23,7 +29,7 @@ class InvoiceHelper
         return $flash;
     }
 
-    public function invoice_logo(): string
+    public function invoiceLogo(): string
     {
         $aliases = new Aliases(['@invoice' => dirname(__DIR__),
             '@img' => dirname(__DIR__) . DIRECTORY_SEPARATOR
@@ -39,7 +45,7 @@ class InvoiceHelper
      *
      * @return string
      */
-    public function invoice_logo_pdf()
+    public function invoiceLogoPdf()
     {
         $aliases = new Aliases(['@invoice' => dirname(__DIR__),
             '@img' => dirname(__DIR__) . DIRECTORY_SEPARATOR
@@ -64,7 +70,7 @@ class InvoiceHelper
      * @param mixed $subNumb
      * @return string
      */
-    public function invoice_genCodeline(string $slipType, mixed $amount, string $rnumb, mixed $subNumb): string
+    public function invoiceGenCodeline(string $slipType, mixed $amount, string $rnumb, mixed $subNumb): string
     {
         $isEur = false;
 
@@ -75,16 +81,16 @@ class InvoiceHelper
         }
 
         if (!$isEur && $amount > 99999999.95) {
-            $this->flash('danger', $this->s->trans('invalid_amount'));
+            $this->flash('danger', $this->translator->translate('invalid.amount'));
         } elseif ($isEur && $amount > 99999999.99) {
-            $this->flash('danger', $this->s->trans('invalid_amount'));
+            $this->flash('danger', $this->translator->translate('invalid.amount'));
         }
 
         $amountLine = sprintf('%010d', (float) $amount * 100.00);
-        $checkSlAmount = $this->invoice_recMod10($slipType . $amountLine);
+        $checkSlAmount = $this->invoiceRecMod10($slipType . $amountLine);
 
         if (!preg_match("/\d{2}-\d{1,6}-\d{1}/", (string) $subNumb)) {
-            $this->flash('danger', $this->s->trans('Invalid subscriber number'));
+            $this->flash('danger', $this->translator->translate('invalid.subscriber.number'));
         }
 
         $subNumb_exploded = explode('-', (string) $subNumb);
@@ -101,7 +107,7 @@ class InvoiceHelper
      *
      * @param string $in
      */
-    public function invoice_recMod10($in): int
+    public function invoiceRecMod10($in): int
     {
         $line = [0, 9, 4, 6, 8, 2, 7, 1, 3, 5];
         $carry = 0;

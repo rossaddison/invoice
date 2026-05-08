@@ -1,0 +1,103 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Infrastructure\Persistence\ClientCustom;
+
+use App\Infrastructure\Persistence\Client\Client;
+use App\Infrastructure\Persistence\CustomField\CustomField;
+use App\Infrastructure\Persistence\Trait\RequireId;
+use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Relation\BelongsTo;
+
+#[Entity(repository: \App\Invoice\ClientCustom\ClientCustomRepository::class)]
+class ClientCustom
+{
+    use RequireId;
+
+    #[BelongsTo(target: Client::class, nullable: false)]
+    private ?Client $client = null;
+
+    #[BelongsTo(target: CustomField::class, nullable: false)]
+    private ?CustomField $custom_field = null;
+
+    public function __construct(
+        #[Column(type: 'primary')]
+        private ?int $id = null,
+        #[Column(type: 'integer(11)',
+        nullable: false)]
+        private ?int $client_id = null,
+        #[Column(type: 'integer(11)',
+        nullable: false)]
+        private ?int $custom_field_id = null,
+        #[Column(type: 'text', nullable: true)]
+        private ?string $value = null)
+    {
+    }
+
+    public function getClient(): ?Client
+    {
+        return $this->client;
+    }
+
+    public function setClient(?Client $client): void
+    {
+        $this->client = $client;
+    }
+
+    public function getCustomField(): ?CustomField
+    {
+        return $this->custom_field;
+    }
+
+    public function setCustomField(?CustomField $custom_field): void
+    {
+        $this->custom_field = $custom_field;
+    }
+
+    public function reqId(): int
+    {
+        return $this->requireId($this->id, 'ClientCustom');
+    }
+
+    public function hasIdentity(): bool
+    {
+        return $this->id !== null;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function reqClientId(): int
+    {
+        return $this->requireId($this->client_id, 'Client');
+    }
+
+    public function setClientId(int $client_id): void
+    {
+        $this->client_id = $client_id;
+    }
+
+    public function reqCustomFieldId(): int
+    {
+        return $this->requireId($this->custom_field_id, 'Custom Field');
+    }
+
+    public function setCustomFieldId(int $custom_field_id): void
+    {
+        $this->custom_field_id = $custom_field_id;
+    }
+
+    public function getValue(): ?string
+    {
+        return $this->value;
+    }
+
+    public function setValue(string $value): void
+    {
+        $this->value = $value;
+    }
+}

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Invoice\UnitPeppol;
 
 use App\Invoice\BaseController;
-use App\Invoice\Entity\Unit;
-use App\Invoice\Entity\UnitPeppol;
+use App\Infrastructure\Persistence\Unit\Unit;
+use App\Infrastructure\Persistence\UnitPeppol\UnitPeppol;
 use App\Invoice\Helpers\Peppol\Peppol_UNECERec20_11e;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Unit\UnitRepository;
@@ -22,7 +22,7 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Exception;
 
 final class UnitPeppolController extends BaseController
@@ -35,11 +35,11 @@ final class UnitPeppolController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->unitpeppolService = $unitpeppolService;
     }
 
@@ -55,11 +55,10 @@ final class UnitPeppolController extends BaseController
         UnitRepository $unitRepository,
     ): Response {
         $enece = new Peppol_UNECERec20_11e();
-        /** @var array $enece_array */
-        $enece_array = $enece->getUNECERec20_11e();
+        $enece_array = $enece->getUNECERec2011e();
         $units = $unitRepository->findAllPreloaded();
         $unitPeppol = new UnitPeppol();
-        $form = new UnitPeppolForm($unitPeppol);
+        $form = new UnitPeppolForm();
         $parameters = [
             'title' => $this->translator->translate('unit.peppol.add'),
             'actionName' => 'unitpeppol/add',
@@ -101,7 +100,7 @@ final class UnitPeppolController extends BaseController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -114,7 +113,7 @@ final class UnitPeppolController extends BaseController
         $parameters = [
             'alert' => $this->alert(),
             'unitpeppols' => $this->unitpeppols($unitpeppolRepository),
-            'grid_summary' => $this->sR->grid_summary(
+            'gridSummary' => $this->sR->gridSummary(
                 $paginator,
                 $this->translator,
                 (int) $this->sR->getSetting('default_list_limit'),
@@ -123,7 +122,7 @@ final class UnitPeppolController extends BaseController
             ),
             'paginator' => $paginator,
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -137,7 +136,7 @@ final class UnitPeppolController extends BaseController
     ): Response {
         try {
             $unitpeppol = $this->unitpeppol($currentRoute, $unitpeppolRepository);
-            if ($unitpeppol) {
+            if (null!==$unitpeppol) {
                 $this->unitpeppolService->deleteUnitPeppol($unitpeppol);
                 $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('unitpeppol/index');
@@ -167,13 +166,13 @@ final class UnitPeppolController extends BaseController
         $unitPeppol = $this->unitpeppol($currentRoute, $unitpeppolRepository);
         $units = $unitRepository->findAllPreloaded();
         $enece = new Peppol_UNECERec20_11e();
-        $enece_array = $enece->getUNECERec20_11e();
-        if ($unitPeppol) {
-            $form = new UnitPeppolForm($unitPeppol);
+        $enece_array = $enece->getUNECERec2011e();
+        if (null!==$unitPeppol) {
+            $form = UnitPeppolForm::show($unitPeppol);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'unitpeppol/edit',
-                'actionArguments' => ['id' => $unitPeppol->getId()],
+                'actionArguments' => ['id' => $unitPeppol->reqId()],
                 'eneces' => $enece_array,
                 'errors' => [],
                 'form' => $form,
@@ -191,7 +190,7 @@ final class UnitPeppolController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('unitpeppol/index');
     }
@@ -200,16 +199,13 @@ final class UnitPeppolController extends BaseController
 
     /**
      * @param CurrentRoute $currentRoute
-     * @param UnitPeppolRepository $unitpeppolRepository
+     * @param UnitPeppolRepository $upepR
      * @return UnitPeppol|null
      */
-    private function unitpeppol(CurrentRoute $currentRoute, UnitPeppolRepository $unitpeppolRepository): ?UnitPeppol
+    private function unitpeppol(CurrentRoute $currentRoute,
+        UnitPeppolRepository $upepR): UnitPeppol|null
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $unitpeppolRepository->repoUnitPeppolLoadedquery($id);
-        }
-        return null;
+        return $upepR->repoUnitPeppolLoadedquery((int) $currentRoute->getArgument('id'));
     }
 
     /**
@@ -226,29 +222,29 @@ final class UnitPeppolController extends BaseController
      * @param CurrentRoute $currentRoute
      * @param UnitRepository $unitRepository
      * @param UnitPeppolRepository $unitpeppolRepository
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function view(
         CurrentRoute $currentRoute,
         UnitRepository $unitRepository,
         UnitPeppolRepository $unitpeppolRepository,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $unitPeppol = $this->unitpeppol($currentRoute, $unitpeppolRepository);
         $units = $unitRepository->findAllPreloaded();
         $enece = new Peppol_UNECERec20_11e();
-        $eneceArray = $enece->getUNECERec20_11e();
-        if ($unitPeppol) {
-            $form = new UnitPeppolForm($unitPeppol);
+        $eneceArray = $enece->getUNECERec2011e();
+        if (null!==$unitPeppol) {
+            $form = UnitPeppolForm::show($unitPeppol);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'unitpeppol/view',
-                'actionArguments' => ['id' => $unitPeppol->getId()],
+                'actionArguments' => ['id' => $unitPeppol->reqId()],
                 'form' => $form,
                 'eneces' => $eneceArray,
                 'optionsDataEneces' => $this->optionsDataEneces($eneceArray),
                 'optionsDataUnits' => $this->optionsDataUnits($units),
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('unitpeppol/index');
     }
@@ -293,8 +289,7 @@ final class UnitPeppolController extends BaseController
          * @var Unit $unit
          */
         foreach ($units as $unit) {
-            $key = $unit->getUnit_id();
-            null !== $key ? $optionsDataUnits[$key] = $unit->getUnit_name() . ' ' . $unit->getUnit_name_plrl() : '';
+            $optionsDataUnits[$unit->reqId()] = $unit->getUnitName() . ' ' . $unit->getUnitNamePlrl();
         }
         return $optionsDataUnits;
     }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /**
  * Related logic: see GeneratorController function form
- * @var App\Invoice\Entity\Gentor $generator
+ * @var App\Infrastructure\Persistence\Gentor\Gentor $generator
  * @var Cycle\Database\Table $orm_schema
  * @var array $relations
  */
@@ -12,14 +12,14 @@ declare(strict_types=1);
 echo "<?php\n";
 ?>
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var App\Invoice\<?= $generator->getCamelcase_capital_name(); ?>\<?= $generator->getCamelcase_capital_name(); ?>Form $form
+ * @var App\Invoice\<?= $generator->getCamelcaseCapitalName(); ?>\<?= $generator->getCamelcaseCapitalName(); ?>Form $form
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -28,15 +28,15 @@ use Yiisoft\Html\Tag\Form;
  * @var string $title
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  * @psalm-var array<string,list<string>> $errors
- * @psalm-var array<array-key, array<array-key, string>|string> $<?= $generator->getSmall_singular_name(); ?>         
+ * @psalm-var array<array-key, array<array-key, string>|string> $<?= $generator->getSmallSingularName(); ?>
  */
 
 <?php
     echo "?>";
 echo '<?= Html::openTag(\'h1\'); ?><?= Html::encode($title) ?><?= Html::closeTag(\'h1\'); ?>';
-echo "<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>";
-echo "<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>";
-echo "<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>";
+echo "<?= Html::openTag('div',['class'=>'container-fluid py-3']); ?>";
+echo "<?= Html::openTag('div',['class'=>'row justify-content-center']); ?>";
+echo "<?= Html::openTag('div',['class'=>'col-12 col-lg-10 col-xl-10']); ?>";
 echo "<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>";
 echo "<?= Html::openTag('div',['class'=>'card-header']); ?>";
 
@@ -44,11 +44,11 @@ echo "<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>";
 echo '<?= $title; ?>';
 echo "<?= Html::closeTag('h1'); ?>";
 
-echo "<?= Form::tag()";
+echo "<?=  new Form()";
 echo '->post($urlGenerator->generate($actionName, $actionArguments))';
 echo "->enctypeMultipartFormData()";
 echo '->csrf($csrf)';
-echo "->id('" . $generator->getCamelcase_capital_name() . "Form')";
+echo "->id('" . $generator->getCamelcaseCapitalName() . "Form')";
 echo "->open()";
 echo "?>";
 echo '<?= $button::backSave(); ?>';
@@ -61,25 +61,22 @@ echo              '<?= Html::encode($title) ?>; ?>';
 echo "      <?= Html::closeTag('h5'); ?>";
 
 /**
- * @var App\Invoice\Entity\GentorRelation $relation
+ * @var App\Infrastructure\Persistence\GentorRelation\GentorRelation $relation
  */
 foreach ($relations as $relation) {
     echo "    <?= Html::openTag('div'); ?>";
-    echo '    <?= Field::select($' . 'form, ' . "'" . ($relation->getLowercase_name() ?? '') . "_id')";
+    echo '    <?= Field::select($' . 'form, ' . "'" . ($relation->getLowercaseName() ?? '') . "_id')";
     echo "      ->addInputAttributes([";
-    echo "           'class' => 'form-control'";
+    echo "           'class' => 'form-control form-control-lg',";
     echo "      ])";
-    echo '      ->value($form->get' . ucfirst($relation->getLowercase_name() ?? '') . "_id())";
+    echo '      ->value($form->get' . ucfirst($relation->getLowercaseName() ?? '') . "_id())";
     echo '      ->prompt($translator->translate(\'i.none\'))';
-    echo '      ->optionsData($' . ($relation->getLowercase_name() ?? '') . 's)';
+    echo '      ->optionsData($' . ($relation->getLowercaseName() ?? '') . 's)';
     echo '    ?>';
 }
 echo '      <?= Html::closeTag(\'div\'); ?>';
 
 // exclude relations or fields ending in '_id'
-/**
- * @var Cycle\Database\ColumnInterface $column
- */
 foreach ($orm_schema->getColumns() as $column) {
     /**
      * If the column is not a relation column ending in _id
@@ -125,9 +122,9 @@ foreach ($orm_schema->getColumns() as $column) {
             echo '<?= Field::text($form,' . "'" . $column->getName() . "')";
             echo '    ->label($translator->translate(' . $column->getName() . '))';
             echo '    ->addInputAttributes([';
-            echo "        'class' => 'form-control'";
+            echo "        'class' => 'form-control form-control-lg',";
             echo '    ])';
-            echo '    ->value($s->format_amount((float)($form->get' . ucfirst($column->getName()) . '() ?? 0.00)))';
+            echo '    ->value($s->formatAmount((float)($form->get' . ucfirst($column->getName()) . '() ?? 0.00)))';
             echo '    ->placeholder($translator->translate(' . "'" . $column->getName() . '))';
             echo '?>';
             echo '<?= Html::closeTag(\'div\'); ?>';
@@ -142,7 +139,7 @@ foreach ($orm_schema->getColumns() as $column) {
             echo '<?= Field::text($form,' . "'" . $column->getName() . "')";
             echo '    ->label($translator->translate(' . $column->getName() . '))';
             echo '    ->addInputAttributes([';
-            echo "        'class' => 'form-control'";
+            echo "        'class' => 'form-control form-control-lg',";
             echo '    ])';
             echo '    ->value(Html::encode(' . '$' . 'form->get' . $column->getName() . '()' . '))';
             echo '    ->placeholder($' . 'translator->translate(' . "'" . $column->getName() . '))';
@@ -155,7 +152,7 @@ foreach ($orm_schema->getColumns() as $column) {
             echo '<?= Field::text($form,' . "'" . $column->getName() . "')";
             echo '    ->label($translator->translate(' . $column->getName() . '))';
             echo '    ->addInputAttributes([';
-            echo "        'class' => 'form-control'";
+            echo "        'class' => 'form-control form-control-lg',";
             echo '    ])';
             echo '    ->value(Html::encode(' . '$' . 'form->get' . $column->getName() . '))';
             echo '    ->placeholder($' . 'translator->translate(' . "'" . $column->getName() . '))';

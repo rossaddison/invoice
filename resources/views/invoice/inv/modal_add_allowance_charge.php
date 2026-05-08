@@ -28,14 +28,13 @@ use Yiisoft\Html\Html;
                             'data-bs-dismiss' => 'modal',
                         ],
                     ); ?>
-                        <?= '❌'; ?>        
+                        <?= '❌'; ?>  
                     <?= Html::closeTag('button'); ?>
                 <?= Html::closeTag('h5'); ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'modal-body']); ?>
-                <?= $modal_add_allowance_charge_form; ?>    
+                <?= $modal_add_allowance_charge_form; ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-   

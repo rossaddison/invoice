@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Task;
+use App\Infrastructure\Persistence\Task\Task;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Html\Html;
@@ -19,7 +19,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 /**
- * @var App\Invoice\Entity\Task $task
+ * @var App\Infrastructure\Persistence\Task\Task $task
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
  * @var App\Invoice\Setting\SettingRepository $s
@@ -38,30 +38,30 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @psalm-var positive-int $page
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $statuses = [
     1 => [
         'label' => $translator->translate('not.started'),
-        'class' => 'draft',
+        'class' => 'secondary',
     ],
     2 => [
         'label' => $translator->translate('in.progress'),
-        'class' => 'viewed',
+        'class' => 'warning',
     ],
     3 => [
         'label' => $translator->translate('complete'),
-        'class' => 'sent',
+        'class' => 'success',
     ],
     4 => [
         'label' => $translator->translate('invoiced'),
-        'class' => 'paid',
+        'class' => 'primary',
     ],
 ];
-$toolbarReset = A::tag()
+$toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'task/index'))
     ->id('btn-reset')
     ->render();
@@ -70,13 +70,16 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Task $model) => Html::encode($model->getId()),
+        content: static fn (Task $model) => Html::encode($model->reqId()),
     ),
     new DataColumn(
         'project_id',
         header: $translator->translate('project'),
         content: static function (Task $model) use ($prjctR): string {
-            return Html::encode(($prjctR->count($model->getProject_id()) > 0 ? $prjctR->repoProjectquery($model->getProject_id())?->getName() : ''));
+            return Html::encode(
+                    ($p = $model->getProject()) !== null
+                    && $prjctR->count($p->reqId()) > 0 ?
+                    $prjctR->repoProjectquery($p->reqId())?->getName() ?? '' : '');
         },
     ),
     new DataColumn(
@@ -103,38 +106,38 @@ $columns = [
         'name',
         header: $translator->translate('name'),
         withSorting: true,
-        content: static fn(Task $model): string => Html::encode($model->getName()),
+        content: static fn (Task $model): string => Html::encode($model->getName()),
     ),
     new DataColumn(
         'description',
         header: $translator->translate('description'),
-        content: static fn(Task $model): string => Html::encode(ucfirst($model->getDescription())),
+        content: static fn (Task $model): string => Html::encode(ucfirst($model->getDescription())),
     ),
     new DataColumn(
         'price',
         header: $translator->translate('price'),
-        content: static fn(Task $model): string => Html::encode($s->format_currency(null !== $model->getPrice() ? $model->getPrice() : 0.00)),
+        content: static fn (Task $model): string => Html::encode($s->formatCurrency(null !== $model->getPrice() ? $model->getPrice() : 0.00)),
     ),
     new DataColumn(
         'finish_date',
         header: $translator->translate('task.finish.date'),
         content: static function (Task $model): string {
             /**
-             * @psalm-suppress PossiblyInvalidMethodCall $model->getFinish_date()->format('Y-m-d')
+             * @psalm-suppress PossiblyInvalidMethodCall $model->getFinishDate()->format('Y-m-d')
              */
-            return Html::encode($model->getFinish_date() instanceof \DateTimeImmutable ? $model->getFinish_date()->format('Y-m-d') : '');
+            return Html::encode($model->getFinishDate() instanceof \DateTimeImmutable ? $model->getFinishDate()->format('Y-m-d') : '');
         },
     ),
     new DataColumn(
         'tax_rate_id',
         header: $translator->translate('tax.rate'),
-        content: static fn(Task $model): string => ($model->getTaxrate()?->getTaxRateId() > 0) ? Html::encode($model->getTaxrate()?->getTaxRateName()) : $translator->translate('none'),
+        content: static fn (Task $model): string => ($model->getTaxRate()?->reqId() > 0) ? Html::encode($model->getTaxrate()?->getTaxRateName()) : $translator->translate('none'),
     ),
     new ActionColumn(buttons: [
         new ActionButton(
             content: '🔎',
             url: static function (Task $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('task/view', ['id' => $model->getId()]);
+                return $urlGenerator->generate('task/view', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -144,7 +147,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (Task $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('task/edit', ['id' => $model->getId()]);
+                return $urlGenerator->generate('task/edit', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -154,7 +157,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (Task $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('task/delete', ['id' => $model->getId()]);
+                return $urlGenerator->generate('task/delete', ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),
@@ -169,7 +172,7 @@ $paginator = (new OffsetPaginator($tasks))
     ->withCurrentPage($page)
     ->withToken(PageToken::next((string) $page));
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -177,14 +180,14 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('task/index'))->csrf($csrf)->open()
-    . A::tag()
+$toolbarString =  new Form()->post($urlGenerator->generate('task/index'))->csrf($csrf)->open()
+    .  new A()
     ->href($urlGenerator->generate('task/add'))
     ->addClass('btn btn-info')
     ->content('➕')
     ->render()
-    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-    . Form::tag()->close();
+    .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    .  new Form()->close();
 
 /**
  * Related logic: see vendor\yiisoft\yii-dataview\src\GridView.php for the sequence of functions which can effect rendering
@@ -200,7 +203,7 @@ echo GridView::widget()
 ->id('w64-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($grid_summary)
+->summaryTemplate($gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

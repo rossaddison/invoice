@@ -3,10 +3,12 @@
 declare(strict_types=1);
 
 /**
- * Related logic: see InvController function view, search modal_add_inv_tax
  * Related logic: see id="add-inv-tax" triggered by <a href="#add-inv-tax" data-bs-toggle="modal"  style="text-decoration:none"> on views/inv/view.php line 67
- * Related logic: see Invoice/Asset/rebuild-1.13/js/inv.js/$(document).on('click', '#inv_tax_submit', function () {
- * Related logic: see InvController/save_inv_tax_rate
+ * Related logic: see Invoice/Asset/rebuild/js/invoice-typescript-iife.js
+ *  built from src\typescript\invoice.ts function 
+ * Related logic: see Inv\Trait function saveInvTaxRate and
+ *   src\typescript\invoice.ts function
+ *   private async handleAddInvoiceTax(invTaxSubmit: HTMLElement): Promise<void> {
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -31,16 +33,16 @@ declare(strict_types=1);
                             <?= $translator->translate('tax.rate'); ?>
                         </label>
                         <div>
-                            <select name="inv_tax_rate_id" id="inv_tax_rate_id" class="form-control" required>
+                            <select name="inv_tax_rate_id" id="inv_tax_rate_id" class="form-control form-control-lg" required>
                                 <option value="0"><?= $translator->translate('none'); ?></option>
                                 <?php
                                     /**
-                                     * @var App\Invoice\Entity\TaxRate $taxRate
+                                     * @var App\Infrastructure\Persistence\TaxRate\TaxRate $taxRate
                                      */
                                     foreach ($taxRates as $taxRate) { ?>
-                                    <option value="<?= $taxRate->getTaxRateId(); ?>">
+                                    <option value="<?= $taxRate->reqId(); ?>">
                                         <?php
-                                                $taxRatePercent = $numberHelper->format_amount($taxRate->getTaxRatePercent());
+                                                $taxRatePercent = $numberHelper->formatAmount($taxRate->getTaxRatePercent());
                                         $taxRateName = $taxRate->getTaxRateName();
                                         if ($taxRatePercent >= 0.00 && null !== $taxRatePercent && null !== $taxRateName) {
                                             echo $taxRatePercent . '% - ' . ($taxRateName);
@@ -58,7 +60,7 @@ declare(strict_types=1);
                         </label>
 
                         <div>
-                            <select name="include_inv_item_tax" id="include_inv_item_tax" class="form-control">
+                            <select name="include_inv_item_tax" id="include_inv_item_tax" class="form-control form-control-lg">
                                 <?php if ($s->getSetting('enable_vat_registration') === '0') { ?>
                                 <option value="0">
                                     <?php echo $translator->translate('apply.before.item.tax'); ?>
@@ -70,16 +72,16 @@ declare(strict_types=1);
                             </select>
                         </div>
                     </div>
-                </form>    
+                </form>
             </div>
             <div class="modal-footer">
                 <div class="btn-group">
                     <!-- see src/Invoice/Asset/rebuild-1.13/js/inv.js $(document).on('click', '#inv_tax_submit', function -->
                     <button class="inv_tax_submit btn btn-success" id="inv_tax_submit" type="button">
-                        <i class="fa fa-check"></i><?= $translator->translate('submit'); ?>
+                        <i class="bi bi-check-lg"></i><?= $translator->translate('submit'); ?>
                     </button>
                     <button class="btn btn-danger" type="button" data-bs-dismiss="modal">
-                        <i class="fa fa-times"></i> <?= $translator->translate('cancel'); ?>
+                        <i class="bi bi-x-lg"></i> <?= $translator->translate('cancel'); ?>
                     </button>
                 </div>
             </div>

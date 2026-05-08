@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Invoice\CustomField;
 
-use App\Invoice\Entity\CustomField;
+use App\Infrastructure\Persistence\CustomField\CustomField;
 
 final readonly class CustomFieldService
 {
-    public function __construct(private CustomFieldRepository $repository) {}
+    public function __construct(private CustomFieldRepository $repository)
+    {
+    }
 
     /**
      * @param CustomField $model

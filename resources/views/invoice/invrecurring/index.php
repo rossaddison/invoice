@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\InvRecurring;
+use App\Infrastructure\Persistence\InvRecurring\InvRecurring;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Form;
@@ -15,7 +15,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
- * @var App\Invoice\Entity\InvRecurring $invRecurring
+ * @var App\Infrastructure\Persistence\InvRecurring\InvRecurring $invRecurring
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
@@ -33,15 +33,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $status
  */
 
-echo $alert;
-
-$toolbarReset = A::tag()
-        ->addAttributes(['type' => 'reset'])
-        ->addClass('btn btn-primary me-1 ajax-loader')
-        ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-        ->href($urlGenerator->generate($currentRoute->getName() ?? 'invrecurring/index'))
-        ->id('btn-reset')
-        ->render();
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 /**
  * @var ColumnInterface[] $columns
@@ -50,55 +42,59 @@ $columns = [
     new DataColumn(
         'next',
         header: $translator->translate('status'),
-        content: static fn(InvRecurring $model)
-            => Span::tag()
-            ->addClass(null !== $model->getNext() ? 'btn btn-success' : 'btn btn-danger')
-            ->content(null !== $model->getNext() ? $translator->translate('active') : $translator->translate('inactive'))
-            ->render(),
+        content: static function (InvRecurring $model) use ($translator): string {
+            $active = null !== $model->getNext();
+            return (new Span())
+                ->addClass($active ? 'btn btn-success' : 'btn btn-danger')
+                ->content($translator->translate($active ? 'active' : 'inactive'))
+                ->render();
+        },
         encodeContent: false,
     ),
     new DataColumn(
         'inv_id',
         header: $translator->translate('base.invoice'),
         content: static function (InvRecurring $model) use ($urlGenerator): A {
-            return A::tag()
+            return  new A()
                     ->addClass('style', 'text-decoration:none')
                     ->content($model->getInv()?->getNumber() ?? '#')
-                    ->href($urlGenerator->generate('inv/view', ['id' => $model->getInv_id()]));
+                    ->href($urlGenerator->generate('inv/view', ['id' => (string) 
+                        $model->reqInvId()]));
         },
         encodeContent: false,
     ),
     new DataColumn(
         'id',
         header: $translator->translate('date.created'),
-        content: static fn(InvRecurring $model)
-        => Html::encode(!is_string($dateCreated = $model->getInv()?->getDate_created()) && null !== $dateCreated ? $dateCreated->format('Y-m-d') : ''),
+        content: static fn (InvRecurring $model)
+        => Html::encode(!is_string($dateCreated = $model->getInv()?->getDateCreated()) && null !== $dateCreated ? $dateCreated->format('Y-m-d') : ''),
         withSorting: false,
     ),
     new DataColumn(
         'start',
         header: $translator->translate('start.date'),
-        content: static fn(InvRecurring $model)
+        content: static fn (InvRecurring $model)
         => Html::encode(!is_string($recurringStart = $model->getStart()) ? $recurringStart->format('Y-m-d') : ''),
     ),
     new DataColumn(
         'end',
         header: $translator->translate('end.date'),
-        content: static fn(InvRecurring $model)
+        content: static fn (InvRecurring $model)
         => Html::encode(!is_string($recurringEnd = $model->getEnd()) && null !== $recurringEnd
                      ? $recurringEnd->format('Y-m-d') : ''),
     ),
     new DataColumn(
         'frequency',
         header: $translator->translate('every'),
-        content: static fn(InvRecurring $model)
+        content: static fn (InvRecurring $model)
         => Html::encode($translator->translate((string) $recur_frequencies[$model->getFrequency()])),
     ),
     new DataColumn(
         'next',
         header: $translator->translate('next.date'),
-        content: static fn(InvRecurring $model)
-        => Html::encode(null !== $model->getNext() ? ((!is_string($recurringNext = $model->getNext()) && null !== $recurringNext) ? $recurringNext->format('Y-m-d') : '') : ''),
+        content: static fn (InvRecurring $model)
+        => Html::encode(!is_string($recurringNext = $model->getNext()) && null !== $recurringNext
+                     ? $recurringNext->format('Y-m-d') : ''),
     ),
     new ActionColumn(buttons: [
         new ActionButton(
@@ -106,19 +102,20 @@ $columns = [
                 return null !== $model->getNext() ? '🛑' : '🏃';
             },
             url: static function (InvRecurring $model) use ($urlGenerator): string {
-                return null !== $model->getNext() ? $urlGenerator->generate('invrecurring/stop', ['id' => $model->getId()]) : $urlGenerator->generate('invrecurring/start', ['id' => $model->getId()]);
+                $active = null !== $model->getNext();
+                return $urlGenerator->generate($active ? 'invrecurring/stop' : 'invrecurring/start', ['id' => $model->reqId()]);
             },
             attributes: function (InvRecurring $model) use ($translator): array {
                 return [
                     'data-bs-toggle' => 'tooltip',
-                    'title' => null !== $model->getNext() ? $translator->translate('stop') : $translator->translate('start'),
+                    'title' => $translator->translate(null !== $model->getNext() ? 'stop' : 'start'),
                 ];
             },
         ),
         new ActionButton(
             content: '🔎',
             url: static function (InvRecurring $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('invrecurring/view', ['id' => $model->getId()]);
+                return $urlGenerator->generate('invrecurring/view', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -128,7 +125,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (InvRecurring $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('invrecurring/delete', ['id' => $model->getId()]);
+                return $urlGenerator->generate('invrecurring/delete', ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),
@@ -139,9 +136,9 @@ $columns = [
 ];
 
 $toolbarString
-    = Form::tag()->post($urlGenerator->generate('invrecurring/index'))->csrf($csrf)->open()
-    . Form::tag()->close();
-$grid_summary = $s->grid_summary(
+    =  new Form()->post($urlGenerator->generate('invrecurring/index'))->csrf($csrf)->open()
+    .  new Form()->close();
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -158,7 +155,7 @@ echo GridView::widget()
 ->id('w31-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'invrecurring') . ' ' . $grid_summary)
+->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'invrecurring') . ' ' . $gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

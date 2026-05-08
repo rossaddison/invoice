@@ -4,19 +4,28 @@ declare(strict_types=1);
 
 namespace App\Invoice\Merchant;
 
-use App\Invoice\Entity\Merchant;
+use App\Infrastructure\Persistence\Merchant\Merchant;
+use App\Invoice\Inv\InvRepository as IR;
 
 final readonly class MerchantService
 {
-    public function __construct(private MerchantRepository $repository) {}
+    public function __construct(
+        private MerchantRepository $repository,
+        private IR $iR,
+    ) {
+    }
 
     /**
      * @param Merchant $model
      * @param array $array
      */
-    public function saveMerchant(Merchant $model, array $array): void
-    {
-        isset($array['inv_id']) ? $model->setInv_id((int) $array['inv_id']) : '';
+    public function saveMerchant(
+        Merchant $model,
+        array $array
+    ): void {
+        $this->persist($model, $array);
+        isset($array['inv_id']) ?
+            $model->setInvId((int) $array['inv_id']) : '';
         $model->setSuccessful((bool) $array['successful']);
 
         $datetime = new \DateTime();
@@ -24,32 +33,59 @@ final readonly class MerchantService
          * @var string $array['date']
          */
         $date = $array['date'] ?? '';
-        $model->setDate($datetime::createFromFormat('Y-m-d', $date));
+        $model->setDate(
+            $datetime::createFromFormat('Y-m-d', $date));
 
-        isset($array['driver']) ? $model->setDriver((string) $array['driver']) : '';
-        isset($array['response']) ? $model->setResponse((string) $array['response']) : '';
-        isset($array['reference']) ? $model->setReference((string) $array['reference']) : '';
+        isset($array['driver']) ?
+            $model->setDriver((string) $array['driver']) : '';
+        isset($array['response']) ?
+            $model->setResponse((string) $array['response']) : '';
+        isset($array['reference']) ?
+            $model->setReference(
+                (string) $array['reference']) : '';
         $this->repository->save($model);
+    }
+
+    private function persist(
+        Merchant $model,
+        array $array
+    ): void {
+        $inv = 'inv_id';
+        if (isset($array[$inv])) {
+            $invEntity = $this->iR->repoInvUnLoadedquery((int) $array[$inv]);
+            if ($invEntity) {
+                $model->setInv($invEntity);
+            }
+        }
     }
 
     /**
      * @param Merchant $model
      * @param array $array
      */
-    public function saveMerchant_via_payment_handler(Merchant $model, array $array): void
-    {
-        $model->setInv_id((int) $array['inv_id']);
+    public function saveMerchantViaPaymentHandler(
+        Merchant $model,
+        array $array
+    ): void {
+        $this->persist($model, $array);
+        $model->setInvId((int) $array['inv_id']);
         /** @var bool $array['merchant_response_successful'] */
-        $model->setSuccessful($array['merchant_response_successful']);
+        $model->setSuccessful(
+            $array['merchant_response_successful']);
         /** @var \DateTime $array['merchant_response_date'] */
         $model->setDate($array['merchant_response_date']);
-        /** @var string $array['merchant_response_driver'] */
+        /**
+         * @var string $array['merchant_response_driver']
+         */
         $model->setDriver($array['merchant_response_driver']);
         // Payment success message
         /** @var string $array['merchant_response'] */
         $model->setResponse($array['merchant_response']);
-        /** @var string $array['merchant_response_reference'] */
-        $model->setReference($array['merchant_response_reference']);
+        /**
+         * @var string $array['merchant_response_reference']
+         */
+        $model->setReference(
+            $array['merchant_response_reference']);
         $this->repository->save($model);
     }
 

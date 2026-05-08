@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\Merchant;
 
-use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\Merchant;
+use App\Infrastructure\Persistence\Inv\Inv;
+use App\Infrastructure\Persistence\Merchant\Merchant;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 use DateTimeImmutable;
@@ -23,17 +23,19 @@ final class MerchantForm extends FormModel
     private ?string $response = '';
     #[Required]
     private ?string $reference = '';
-    private readonly ?Inv $inv;
+    private ?Inv $inv = null;
 
-    public function __construct(Merchant $merchant)
+    public static function show(Merchant $merchant): self
     {
-        $this->inv_id = (int) $merchant->getInv_id();
-        $this->successful = $merchant->getSuccessful();
-        $this->date = $merchant->getDate();
-        $this->driver = $merchant->getDriver();
-        $this->response = $merchant->getResponse();
-        $this->reference = $merchant->getReference();
-        $this->inv = $merchant->getInv();
+        $form = new self();
+        $form->inv_id = $merchant->reqInvId();
+        $form->successful = $merchant->getSuccessful();
+        $form->date = $merchant->getDate();
+        $form->driver = $merchant->getDriver();
+        $form->response = $merchant->getResponse();
+        $form->reference = $merchant->getReference();
+        $form->inv = $merchant->getInv();
+        return $form;
     }
 
     public function getInv(): ?Inv
@@ -41,7 +43,7 @@ final class MerchantForm extends FormModel
         return $this->inv;
     }
 
-    public function getInv_id(): ?int
+    public function getInvId(): ?int
     {
         return $this->inv_id;
     }

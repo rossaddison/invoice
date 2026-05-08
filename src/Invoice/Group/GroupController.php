@@ -6,7 +6,7 @@ namespace App\Invoice\Group;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\Group;
+use App\Infrastructure\Persistence\Group\Group;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
 use App\User\UserService;
@@ -20,7 +20,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class GroupController extends BaseController
 {
@@ -32,23 +32,21 @@ final class GroupController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->groupService = $groupService;
     }
 
     /**
      * @param GroupRepository $groupRepository
      * @param Request $request
-     * @param GroupService $service
      */
-    public function index(GroupRepository $groupRepository, Request $request, GroupService $service): \Yiisoft\DataResponse\DataResponse
+    public function index(GroupRepository $groupRepository, Request $request): Response
     {
         $page = (int) $request->getAttribute('page', '1');
-        /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $paginator = (new DataOffsetPaginator($this->groups($groupRepository)))
         ->withPageSize($this->sR->positiveListLimit())
@@ -63,7 +61,7 @@ final class GroupController extends BaseController
             'groups' => $this->groups($groupRepository),
             'alert' => $this->alert(),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -76,7 +74,7 @@ final class GroupController extends BaseController
         FormHydrator $formHydrator,
     ): Response {
         $group = new Group();
-        $form = new GroupForm($group);
+        $form = GroupForm::show($group);
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'group/add',
@@ -96,7 +94,7 @@ final class GroupController extends BaseController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -114,11 +112,11 @@ final class GroupController extends BaseController
     ): Response {
         $group = $this->group($currentRoute, $groupRepository);
         if ($group) {
-            $form = new GroupForm($group);
+            $form = GroupForm::show($group);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'group/edit',
-                'actionArguments' => ['id' => $group->getId()],
+                'actionArguments' => ['id' => $group->reqId()],
                 'errors' => [],
                 'form' => $form,
             ];
@@ -133,7 +131,7 @@ final class GroupController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('group/index');
     }
@@ -164,24 +162,24 @@ final class GroupController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param GroupRepository $groupRepository
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return Response
      */
     public function view(
         CurrentRoute $currentRoute,
         GroupRepository $groupRepository,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): Response {
         $group = $this->group($currentRoute, $groupRepository);
         if ($group) {
-            $form = new GroupForm($group);
+            $form = GroupForm::show($group);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'group/view',
-                'actionArguments' => ['id' => $group->getId()],
+                'actionArguments' => ['id' => $group->reqId()],
                 'errors' => [],
                 'form' => $form,
-                'group' => $groupRepository->repoGroupquery($group->getId()),
+                'group' => $groupRepository->repoGroupquery($group->reqId()),
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('group/index');
     }
@@ -189,28 +187,26 @@ final class GroupController extends BaseController
     /**
      * @return bool|Response
      */
+    /** @psalm-suppress UnusedReturnValue */
     private function rbac(): bool|Response
     {
         $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('permission'));
+            $this->flashMessage('warning',
+                $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('group/index');
         }
         return $canEdit;
     }
 
     /**
-     * @param CurrentRoute $currentRoute
-     * @param GroupRepository $groupRepository
+     * @param CurrentRoute $curR
+     * @param GroupRepository $gR
      * @return Group|null
      */
-    private function group(CurrentRoute $currentRoute, GroupRepository $groupRepository): ?Group
+    private function group(CurrentRoute $curR, GroupRepository $gR): ?Group
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $groupRepository->repoGroupquery($id);
-        }
-        return null;
+        return $gR->repoGroupquery((int) $curR->getArgument('id'));        
     }
 
     /**

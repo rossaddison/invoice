@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\InvSentLog;
+use App\Infrastructure\Persistence\InvSentLog\InvSentLog;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -12,7 +12,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
- * @var App\Invoice\Entity\UserInv $userInv
+ * @var App\Infrastructure\Persistence\UserInv\UserInv $userInv
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
  * @var App\Widget\PageSizeLimiter $pageSizeLimiter
@@ -27,16 +27,16 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataGuestInvNumberDropDownFilter
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 /*
  * Related logic: see https://emojipedia.org/incoming-envelope
  */
 
-$toolbarReset = A::tag()
+$toolbarReset =  new A()
   ->addAttributes(['type' => 'reset'])
   ->addClass('btn btn-danger me-1 ajax-loader')
-  ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+  ->content( new I()->addClass('bi bi-bootstrap-reboot'))
   ->href($urlGenerator->generate($currentRoute->getName() ?? 'invsentlog/guest'))
   ->id('btn-reset')
   ->render();
@@ -46,7 +46,7 @@ $columns = [
         'id',
         header: $translator->translate('id'),
         content: static function (InvSentLog $model): string {
-            return (string) $model->getId();
+            return (string) $model->reqId();
         },
     ),
     new DataColumn(
@@ -55,7 +55,7 @@ $columns = [
         content: static function (InvSentLog $model) use ($urlGenerator): A {
             return Html::a(($model->getInv()?->getNumber() ?? '#') . ' 🔍', $urlGenerator->generate(
                 'inv/view',
-                ['id' => $model->getId()],
+                ['id' => $model->reqId()],
             ), ['style' => 'text-decoration:none']);
         },
         encodeContent: false,
@@ -65,21 +65,21 @@ $columns = [
     new DataColumn(
         'inv_id',
         header: $translator->translate('setup.db.username.info'),
-        content: static fn(InvSentLog $model) => $model->getInv()?->getUser()->getLogin(),
+        content: static fn (InvSentLog $model) => $model->getInv()?->getUser()->getLogin(),
     ),
     new DataColumn(
         'client_id',
         header: $translator->translate('client'),
-        content: static fn(InvSentLog $model): string => Html::encode($model->getClient()?->getClient_full_name() ?? ''),
+        content: static fn (InvSentLog $model): string => Html::encode($model->getClient()?->getClientFullName() ?? ''),
     ),
     new DataColumn(
         'date_sent',
         header: $translator->translate('email.date'),
-        content: static fn(InvSentLog $model): string => ($model->getDate_sent())->format('l, d-M-Y H:i:s T'),
+        content: static fn (InvSentLog $model): string => ($model->getDateSent())->format('l, d-M-Y H:i:s T'),
     ),
 ];
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     $defaultPageSizeOffsetPaginator,
@@ -87,9 +87,9 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('invsentlog/guest'))->csrf($csrf)->open()
-                 . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-                 . Form::tag()->close();
+$toolbarString =  new Form()->post($urlGenerator->generate('invsentlog/guest'))->csrf($csrf)->open()
+                 .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+                 .  new Form()->close();
 
 echo GridView::widget()
   ->bodyRowAttributes(['class' => 'align-middle'])
@@ -103,6 +103,6 @@ echo GridView::widget()
   ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
   ->summaryTemplate(($viewInv
                        ? $pageSizeLimiter::buttonsGuest($userInv, $urlGenerator, $translator, 'invsentlog', $defaultPageSizeOffsetPaginator) : '') . ' '
-                       . $grid_summary)->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
+                       . $gridSummary)->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
   ->noResultsText($translator->translate('no.records'))
   ->toolbar($toolbarString);

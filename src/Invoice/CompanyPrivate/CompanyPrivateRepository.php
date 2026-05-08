@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\CompanyPrivate;
 
-use App\Invoice\Entity\CompanyPrivate;
+use App\Infrastructure\Persistence\CompanyPrivate\CompanyPrivate;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -82,7 +82,7 @@ final class CompanyPrivateRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoCompanyPrivatequery(string $id): ?CompanyPrivate
+    public function repoCompanyPrivatequery(int $id): ?CompanyPrivate
     {
         $query = $this->select()->load('company')->where(['id' => $id]);
         return  $query->fetchOne() ?: null;
@@ -93,7 +93,7 @@ final class CompanyPrivateRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoCompanyquery(string $id): ?CompanyPrivate
+    public function repoCompanyquery(int $id): ?CompanyPrivate
     {
         $query = $this->select()
                       ->load('company')

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Invoice\Entity;
 
-use App\Invoice\Entity\Unit;
-use App\Invoice\Entity\UnitPeppol;
+use App\Infrastructure\Persistence\Unit\Unit;
+use App\Infrastructure\Persistence\UnitPeppol\UnitPeppol;
 use PHPUnit\Framework\TestCase;
 
 class UnitPeppolEntityTest extends TestCase
@@ -18,8 +18,7 @@ class UnitPeppolEntityTest extends TestCase
     {
         $unitPeppol = new UnitPeppol();
         
-        $this->assertSame('', $unitPeppol->getId());
-        $this->assertSame('', $unitPeppol->getUnit_id());
+        $this->assertFalse($unitPeppol->hasIdentity());
         $this->assertSame('', $unitPeppol->getCode());
         $this->assertSame('', $unitPeppol->getName());
         $this->assertSame('', $unitPeppol->getDescription());
@@ -36,8 +35,8 @@ class UnitPeppolEntityTest extends TestCase
             description: 'Unit of mass equal to one thousand grams'
         );
         
-        $this->assertSame('1', $unitPeppol->getId());
-        $this->assertSame('100', $unitPeppol->getUnit_id());
+        $this->assertSame(1, $unitPeppol->reqId());
+        $this->assertSame(100, $unitPeppol->reqUnitId());
         $this->assertSame('KGM', $unitPeppol->getCode());
         $this->assertSame('Kilogram', $unitPeppol->getName());
         $this->assertSame('Unit of mass equal to one thousand grams', $unitPeppol->getDescription());
@@ -48,15 +47,15 @@ class UnitPeppolEntityTest extends TestCase
         $unitPeppol = new UnitPeppol();
         $unitPeppol->setId(50);
         
-        $this->assertSame('50', $unitPeppol->getId());
+        $this->assertSame(50, $unitPeppol->reqId());
     }
 
     public function testUnitIdSetterAndGetter(): void
     {
         $unitPeppol = new UnitPeppol();
-        $unitPeppol->setUnit_id(200);
+        $unitPeppol->setUnitId(200);
         
-        $this->assertSame('200', $unitPeppol->getUnit_id());
+        $this->assertSame(200, $unitPeppol->reqUnitId());
     }
 
     public function testCodeSetterAndGetter(): void
@@ -100,37 +99,37 @@ class UnitPeppolEntityTest extends TestCase
         $unitPeppol = new UnitPeppol();
         $unitPeppol->setId(999);
         
-        $this->assertIsString($unitPeppol->getId());
-        $this->assertSame('999', $unitPeppol->getId());
+        $this->assertIsInt($unitPeppol->reqId());
+        $this->assertSame(999, $unitPeppol->reqId());
     }
 
     public function testUnitIdTypeConversion(): void
     {
         $unitPeppol = new UnitPeppol();
-        $unitPeppol->setUnit_id(777);
+        $unitPeppol->setUnitId(777);
         
-        $this->assertIsString($unitPeppol->getUnit_id());
-        $this->assertSame('777', $unitPeppol->getUnit_id());
+        $this->assertIsInt($unitPeppol->reqUnitId());
+        $this->assertSame(777, $unitPeppol->reqUnitId());
     }
 
     public function testZeroIds(): void
     {
         $unitPeppol = new UnitPeppol();
         $unitPeppol->setId(0);
-        $unitPeppol->setUnit_id(0);
+        $unitPeppol->setUnitId(0);
         
-        $this->assertSame('0', $unitPeppol->getId());
-        $this->assertSame('0', $unitPeppol->getUnit_id());
+        $this->assertSame(0, $unitPeppol->reqId());
+        $this->assertSame(0, $unitPeppol->reqUnitId());
     }
 
     public function testNegativeIds(): void
     {
         $unitPeppol = new UnitPeppol();
         $unitPeppol->setId(-1);
-        $unitPeppol->setUnit_id(-5);
+        $unitPeppol->setUnitId(-5);
         
-        $this->assertSame('-1', $unitPeppol->getId());
-        $this->assertSame('-5', $unitPeppol->getUnit_id());
+        $this->assertSame(-1, $unitPeppol->reqId());
+        $this->assertSame(-5, $unitPeppol->reqUnitId());
     }
 
     public function testLargeIds(): void
@@ -139,10 +138,10 @@ class UnitPeppolEntityTest extends TestCase
         $largeId = PHP_INT_MAX;
         
         $unitPeppol->setId($largeId);
-        $unitPeppol->setUnit_id($largeId - 1);
+        $unitPeppol->setUnitId($largeId - 1);
         
-        $this->assertSame((string)$largeId, $unitPeppol->getId());
-        $this->assertSame((string)($largeId - 1), $unitPeppol->getUnit_id());
+        $this->assertSame($largeId, $unitPeppol->reqId());
+        $this->assertSame($largeId - 1, $unitPeppol->reqUnitId());
     }
 
     public function testEmptyStringFields(): void
@@ -292,14 +291,14 @@ class UnitPeppolEntityTest extends TestCase
         $unit = $this->createMock(Unit::class);
         
         $unitPeppol->setId(1);
-        $unitPeppol->setUnit_id(100);
+        $unitPeppol->setUnitId(100);
         $unitPeppol->setUnit($unit);
         $unitPeppol->setCode('KGM');
         $unitPeppol->setName('Kilogram');
         $unitPeppol->setDescription('Complete setup: Unit of mass equal to 1000 grams');
         
-        $this->assertSame('1', $unitPeppol->getId());
-        $this->assertSame('100', $unitPeppol->getUnit_id());
+        $this->assertSame(1, $unitPeppol->reqId());
+        $this->assertSame(100, $unitPeppol->reqUnitId());
         $this->assertSame($unit, $unitPeppol->getUnit());
         $this->assertSame('KGM', $unitPeppol->getCode());
         $this->assertSame('Kilogram', $unitPeppol->getName());
@@ -316,8 +315,8 @@ class UnitPeppolEntityTest extends TestCase
             description: 'Unit of length'
         );
         
-        $this->assertIsString($unitPeppol->getId());
-        $this->assertIsString($unitPeppol->getUnit_id());
+        $this->assertIsInt($unitPeppol->reqId());
+        $this->assertIsInt($unitPeppol->reqUnitId());
         $this->assertIsString($unitPeppol->getCode());
         $this->assertIsString($unitPeppol->getName());
         $this->assertIsString($unitPeppol->getDescription());
@@ -334,12 +333,12 @@ class UnitPeppolEntityTest extends TestCase
         $this->assertNull($unitPeppol->getUnit());
         
         // Set first unit
-        $unitPeppol->setUnit_id(100);
+        $unitPeppol->setUnitId(100);
         $unitPeppol->setUnit($unit1);
         $this->assertSame($unit1, $unitPeppol->getUnit());
         
         // Replace with second unit
-        $unitPeppol->setUnit_id(200);
+        $unitPeppol->setUnitId(200);
         $unitPeppol->setUnit($unit2);
         $this->assertSame($unit2, $unitPeppol->getUnit());
         
@@ -359,21 +358,21 @@ class UnitPeppolEntityTest extends TestCase
         );
         
         // Verify initial state
-        $this->assertSame('999', $unitPeppol->getId());
-        $this->assertSame('888', $unitPeppol->getUnit_id());
+        $this->assertSame(999, $unitPeppol->reqId());
+        $this->assertSame(888, $unitPeppol->reqUnitId());
         $this->assertSame('INIT', $unitPeppol->getCode());
         $this->assertSame('Initial Unit', $unitPeppol->getName());
         $this->assertSame('Initial description', $unitPeppol->getDescription());
         
         // Modify and verify changes
         $unitPeppol->setId(111);
-        $unitPeppol->setUnit_id(222);
+        $unitPeppol->setUnitId(222);
         $unitPeppol->setCode('MOD');
         $unitPeppol->setName('Modified Unit');
         $unitPeppol->setDescription('Modified description');
         
-        $this->assertSame('111', $unitPeppol->getId());
-        $this->assertSame('222', $unitPeppol->getUnit_id());
+        $this->assertSame(111, $unitPeppol->reqId());
+        $this->assertSame(222, $unitPeppol->reqUnitId());
         $this->assertSame('MOD', $unitPeppol->getCode());
         $this->assertSame('Modified Unit', $unitPeppol->getName());
         $this->assertSame('Modified description', $unitPeppol->getDescription());

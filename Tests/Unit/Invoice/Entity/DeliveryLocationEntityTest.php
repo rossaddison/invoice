@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Invoice\Entity;
 
-use App\Invoice\Entity\Client;
-use App\Invoice\Entity\DeliveryLocation;
+use App\Infrastructure\Persistence\Client\Client;
+use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 
@@ -27,52 +27,51 @@ class DeliveryLocationEntityTest extends TestCase
     {
         $deliveryLocation = new DeliveryLocation();
         
-        $this->assertNull($deliveryLocation->getId());
-        $this->assertSame('', $deliveryLocation->getClient_id());
+        $this->assertFalse($deliveryLocation->hasIdentity());
+        $this->assertSame(0, $deliveryLocation->reqClientId());
         $this->assertSame('', $deliveryLocation->getName());
         $this->assertSame('', $deliveryLocation->getBuildingNumber());
-        $this->assertSame('', $deliveryLocation->getAddress_1());
-        $this->assertSame('', $deliveryLocation->getAddress_2());
+        $this->assertSame('', $deliveryLocation->getAddress1());
+        $this->assertSame('', $deliveryLocation->getAddress2());
         $this->assertSame('', $deliveryLocation->getCity());
         $this->assertSame('', $deliveryLocation->getState());
         $this->assertSame('', $deliveryLocation->getZip());
         $this->assertSame('', $deliveryLocation->getCountry());
-        $this->assertSame('', $deliveryLocation->getGlobal_location_number());
-        $this->assertSame('', $deliveryLocation->getElectronic_address_scheme());
-        $this->assertInstanceOf(DateTimeImmutable::class, $deliveryLocation->getDate_created());
-        $this->assertInstanceOf(DateTimeImmutable::class, $deliveryLocation->getDate_modified());
+        $this->assertSame('', $deliveryLocation->getGlobalLocationNumber());
+        $this->assertSame('', $deliveryLocation->getElectronicAddressScheme());
+        $this->assertInstanceOf(DateTimeImmutable::class, $deliveryLocation->getDateCreated());
+        $this->assertInstanceOf(DateTimeImmutable::class, $deliveryLocation->getDateModified());
         $this->assertNull($deliveryLocation->getClient());
     }
 
     public function testConstructorWithAllParameters(): void
     {
-        $deliveryLocation = new DeliveryLocation(
-            id: 1,
-            client_id: 123,
-            name: $this->mainWarehouse,
-            building_number: '10A',
-            address_1: '123 Industrial Drive',
-            address_2: 'Suite 200',
-            city: 'Business City',
-            state: 'CA',
-            zip: '90210',
-            country: 'USA',
-            global_location_number: $this->seqNumbers,
-            electronic_address_scheme: 'GLN'
-        );
+        $deliveryLocation = new DeliveryLocation();
+        $deliveryLocation->setId(1);
+        $deliveryLocation->setClientId(123);
+        $deliveryLocation->setName($this->mainWarehouse);
+        $deliveryLocation->setBuildingNumber('10A');
+        $deliveryLocation->setAddress1('123 Industrial Drive');
+        $deliveryLocation->setAddress2('Suite 200');
+        $deliveryLocation->setCity('Business City');
+        $deliveryLocation->setState('CA');
+        $deliveryLocation->setZip('90210');
+        $deliveryLocation->setCountry('USA');
+        $deliveryLocation->setGlobalLocationNumber($this->seqNumbers);
+        $deliveryLocation->setElectronicAddressScheme('GLN');
         
-        $this->assertSame(1, $deliveryLocation->getId());
-        $this->assertSame('123', $deliveryLocation->getClient_id());
+        $this->assertSame(1, $deliveryLocation->reqId());
+        $this->assertSame(123, $deliveryLocation->reqClientId());
         $this->assertSame($this->mainWarehouse, $deliveryLocation->getName());
         $this->assertSame('10A', $deliveryLocation->getBuildingNumber());
-        $this->assertSame('123 Industrial Drive', $deliveryLocation->getAddress_1());
-        $this->assertSame('Suite 200', $deliveryLocation->getAddress_2());
+        $this->assertSame('123 Industrial Drive', $deliveryLocation->getAddress1());
+        $this->assertSame('Suite 200', $deliveryLocation->getAddress2());
         $this->assertSame('Business City', $deliveryLocation->getCity());
         $this->assertSame('CA', $deliveryLocation->getState());
         $this->assertSame('90210', $deliveryLocation->getZip());
         $this->assertSame('USA', $deliveryLocation->getCountry());
-        $this->assertSame($this->seqNumbers, $deliveryLocation->getGlobal_location_number());
-        $this->assertSame('GLN', $deliveryLocation->getElectronic_address_scheme());
+        $this->assertSame($this->seqNumbers, $deliveryLocation->getGlobalLocationNumber());
+        $this->assertSame('GLN', $deliveryLocation->getElectronicAddressScheme());
     }
 
     public function testIdSetterAndGetter(): void
@@ -80,15 +79,15 @@ class DeliveryLocationEntityTest extends TestCase
         $deliveryLocation = new DeliveryLocation();
         $deliveryLocation->setId(100);
         
-        $this->assertSame(100, $deliveryLocation->getId());
+        $this->assertSame(100, $deliveryLocation->reqId());
     }
 
     public function testClientIdSetterAndGetter(): void
     {
         $deliveryLocation = new DeliveryLocation();
-        $deliveryLocation->setClient_id(456);
+        $deliveryLocation->setClientId(456);
         
-        $this->assertSame('456', $deliveryLocation->getClient_id());
+        $this->assertSame(456, $deliveryLocation->reqClientId());
     }
 
     public function testNameSetterAndGetter(): void
@@ -110,17 +109,17 @@ class DeliveryLocationEntityTest extends TestCase
     public function testAddress1SetterAndGetter(): void
     {
         $deliveryLocation = new DeliveryLocation();
-        $deliveryLocation->setAddress_1('456 Commerce Blvd');
+        $deliveryLocation->setAddress1('456 Commerce Blvd');
         
-        $this->assertSame('456 Commerce Blvd', $deliveryLocation->getAddress_1());
+        $this->assertSame('456 Commerce Blvd', $deliveryLocation->getAddress1());
     }
 
     public function testAddress2SetterAndGetter(): void
     {
         $deliveryLocation = new DeliveryLocation();
-        $deliveryLocation->setAddress_2('Floor 3');
+        $deliveryLocation->setAddress2('Floor 3');
         
-        $this->assertSame('Floor 3', $deliveryLocation->getAddress_2());
+        $this->assertSame('Floor 3', $deliveryLocation->getAddress2());
     }
 
     public function testCitySetterAndGetter(): void
@@ -158,17 +157,17 @@ class DeliveryLocationEntityTest extends TestCase
     public function testGlobalLocationNumberSetterAndGetter(): void
     {
         $deliveryLocation = new DeliveryLocation();
-        $deliveryLocation->setGlobal_location_number('9876543210987');
+        $deliveryLocation->setGlobalLocationNumber('9876543210987');
         
-        $this->assertSame('9876543210987', $deliveryLocation->getGlobal_location_number());
+        $this->assertSame('9876543210987', $deliveryLocation->getGlobalLocationNumber());
     }
 
     public function testElectronicAddressSchemeSetterAndGetter(): void
     {
         $deliveryLocation = new DeliveryLocation();
-        $deliveryLocation->setElectronic_address_scheme('EAN');
+        $deliveryLocation->setElectronicAddressScheme('EAN');
         
-        $this->assertSame('EAN', $deliveryLocation->getElectronic_address_scheme());
+        $this->assertSame('EAN', $deliveryLocation->getElectronicAddressScheme());
     }
 
     public function testClientSetterAndGetter(): void
@@ -180,21 +179,21 @@ class DeliveryLocationEntityTest extends TestCase
         $this->assertSame($client, $deliveryLocation->getClient());
     }
 
-    public function testIsNewRecord(): void
+    public function testhasIdentity(): void
     {
         $deliveryLocation = new DeliveryLocation();
-        $this->assertTrue($deliveryLocation->isNewRecord());
+        $this->assertFalse($deliveryLocation->hasIdentity());
         
         $deliveryLocation->setId(1);
-        $this->assertFalse($deliveryLocation->isNewRecord());
+        $this->assertTrue($deliveryLocation->hasIdentity());
     }
 
     public function testDateTimeImmutableProperties(): void
     {
         $deliveryLocation = new DeliveryLocation();
         
-        $dateCreated = $deliveryLocation->getDate_created();
-        $dateModified = $deliveryLocation->getDate_modified();
+        $dateCreated = $deliveryLocation->getDateCreated();
+        $dateModified = $deliveryLocation->getDateModified();
         
         $this->assertInstanceOf(DateTimeImmutable::class, $dateCreated);
         $this->assertInstanceOf(DateTimeImmutable::class, $dateModified);
@@ -207,14 +206,14 @@ class DeliveryLocationEntityTest extends TestCase
         $deliveryLocation = new DeliveryLocation();
         $deliveryLocation->setName($this->mainWarehouse);
         $deliveryLocation->setBuildingNumber('1');
-        $deliveryLocation->setAddress_1('100 Industrial Way');
+        $deliveryLocation->setAddress1('100 Industrial Way');
         $deliveryLocation->setCity('Commerce City');
         $deliveryLocation->setState('CO');
         $deliveryLocation->setZip('80022');
         $deliveryLocation->setCountry('USA');
         
         $this->assertSame($this->mainWarehouse, $deliveryLocation->getName());
-        $this->assertSame('100 Industrial Way', $deliveryLocation->getAddress_1());
+        $this->assertSame('100 Industrial Way', $deliveryLocation->getAddress1());
         $this->assertSame('Commerce City', $deliveryLocation->getCity());
     }
 
@@ -222,23 +221,23 @@ class DeliveryLocationEntityTest extends TestCase
     {
         $deliveryLocation = new DeliveryLocation();
         $deliveryLocation->setName('Downtown Store');
-        $deliveryLocation->setAddress_1('567 Main Street');
-        $deliveryLocation->setAddress_2('Ground Floor');
+        $deliveryLocation->setAddress1('567 Main Street');
+        $deliveryLocation->setAddress2('Ground Floor');
         $deliveryLocation->setCity('Downtown');
         $deliveryLocation->setState('NY');
         $deliveryLocation->setZip('10001');
         $deliveryLocation->setCountry($this->unitedStates);
         
         $this->assertSame('Downtown Store', $deliveryLocation->getName());
-        $this->assertSame('567 Main Street', $deliveryLocation->getAddress_1());
-        $this->assertSame('Ground Floor', $deliveryLocation->getAddress_2());
+        $this->assertSame('567 Main Street', $deliveryLocation->getAddress1());
+        $this->assertSame('Ground Floor', $deliveryLocation->getAddress2());
     }
 
     public function testInternationalLocation(): void
     {
         $deliveryLocation = new DeliveryLocation();
         $deliveryLocation->setName('European Distribution Center');
-        $deliveryLocation->setAddress_1('Logistics Park 15');
+        $deliveryLocation->setAddress1('Logistics Park 15');
         $deliveryLocation->setCity('Rotterdam');
         $deliveryLocation->setState('Zuid-Holland');
         $deliveryLocation->setZip('3000 AA');
@@ -257,21 +256,21 @@ class DeliveryLocationEntityTest extends TestCase
         
         $deliveryLocation = new DeliveryLocation();
         $deliveryLocation->setName($longName);
-        $deliveryLocation->setAddress_1($longAddress);
+        $deliveryLocation->setAddress1($longAddress);
         
         $this->assertSame($longName, $deliveryLocation->getName());
-        $this->assertSame($longAddress, $deliveryLocation->getAddress_1());
+        $this->assertSame($longAddress, $deliveryLocation->getAddress1());
     }
 
     public function testSpecialCharactersInAddress(): void
     {
         $deliveryLocation = new DeliveryLocation();
         $deliveryLocation->setName('Müller & Co. Warehouse');
-        $deliveryLocation->setAddress_1('Straße der Einheit 123');
+        $deliveryLocation->setAddress1('Straße der Einheit 123');
         $deliveryLocation->setCity('München');
         
         $this->assertSame('Müller & Co. Warehouse', $deliveryLocation->getName());
-        $this->assertSame('Straße der Einheit 123', $deliveryLocation->getAddress_1());
+        $this->assertSame('Straße der Einheit 123', $deliveryLocation->getAddress1());
         $this->assertSame('München', $deliveryLocation->getCity());
     }
 
@@ -279,12 +278,12 @@ class DeliveryLocationEntityTest extends TestCase
     {
         $deliveryLocation = new DeliveryLocation();
         $deliveryLocation->setName('東京配送センター');
-        $deliveryLocation->setAddress_1('新宿区西新宿1-1-1');
+        $deliveryLocation->setAddress1('新宿区西新宿1-1-1');
         $deliveryLocation->setCity('東京');
         $deliveryLocation->setCountry('日本');
         
         $this->assertSame('東京配送センター', $deliveryLocation->getName());
-        $this->assertSame('新宿区西新宿1-1-1', $deliveryLocation->getAddress_1());
+        $this->assertSame('新宿区西新宿1-1-1', $deliveryLocation->getAddress1());
         $this->assertSame('東京', $deliveryLocation->getCity());
         $this->assertSame('日本', $deliveryLocation->getCountry());
     }
@@ -294,16 +293,16 @@ class DeliveryLocationEntityTest extends TestCase
         $deliveryLocation = new DeliveryLocation();
         
         $deliveryLocation->setId(0);
-        $this->assertSame(0, $deliveryLocation->getId());
+        $this->assertSame(0, $deliveryLocation->reqId());
         
         $deliveryLocation->setId(999999);
-        $this->assertSame(999999, $deliveryLocation->getId());
+        $this->assertSame(999999, $deliveryLocation->reqId());
         
-        $deliveryLocation->setClient_id(0);
-        $this->assertSame('0', $deliveryLocation->getClient_id());
-        
-        $deliveryLocation->setClient_id(999999);
-        $this->assertSame('999999', $deliveryLocation->getClient_id());
+        $deliveryLocation->setClientId(0);
+        $this->assertSame(0, $deliveryLocation->reqClientId());
+
+        $deliveryLocation->setClientId(999999);
+        $this->assertSame(999999, $deliveryLocation->reqClientId());
     }
 
     public function testCompleteDeliveryLocationSetup(): void
@@ -312,64 +311,63 @@ class DeliveryLocationEntityTest extends TestCase
         $client = $this->createMock(Client::class);
         
         $deliveryLocation->setId(1);
-        $deliveryLocation->setClient_id(123);
+        $deliveryLocation->setClientId(123);
         $deliveryLocation->setClient($client);
         $deliveryLocation->setName('Complete Test Location');
         $deliveryLocation->setBuildingNumber('100');
-        $deliveryLocation->setAddress_1('Main Business Street');
-        $deliveryLocation->setAddress_2('Unit 5');
+        $deliveryLocation->setAddress1('Main Business Street');
+        $deliveryLocation->setAddress2('Unit 5');
         $deliveryLocation->setCity($this->testCity);
         $deliveryLocation->setState('Test State');
         $deliveryLocation->setZip($this->oneToFive);
         $deliveryLocation->setCountry($this->testCountry);
-        $deliveryLocation->setGlobal_location_number($this->seqNumbers);
-        $deliveryLocation->setElectronic_address_scheme('GLN');
+        $deliveryLocation->setGlobalLocationNumber($this->seqNumbers);
+        $deliveryLocation->setElectronicAddressScheme('GLN');
         
-        $this->assertSame(1, $deliveryLocation->getId());
-        $this->assertSame('123', $deliveryLocation->getClient_id());
+        $this->assertSame(1, $deliveryLocation->reqId());
+        $this->assertSame(123, $deliveryLocation->reqClientId());
         $this->assertSame($client, $deliveryLocation->getClient());
         $this->assertSame('Complete Test Location', $deliveryLocation->getName());
         $this->assertSame('100', $deliveryLocation->getBuildingNumber());
-        $this->assertSame('Main Business Street', $deliveryLocation->getAddress_1());
-        $this->assertSame('Unit 5', $deliveryLocation->getAddress_2());
+        $this->assertSame('Main Business Street', $deliveryLocation->getAddress1());
+        $this->assertSame('Unit 5', $deliveryLocation->getAddress2());
         $this->assertSame($this->testCity, $deliveryLocation->getCity());
         $this->assertSame('Test State', $deliveryLocation->getState());
         $this->assertSame($this->oneToFive, $deliveryLocation->getZip());
         $this->assertSame($this->testCountry, $deliveryLocation->getCountry());
-        $this->assertSame($this->mainWarehouse, $deliveryLocation->getGlobal_location_number());
-        $this->assertSame('GLN', $deliveryLocation->getElectronic_address_scheme());
-        $this->assertFalse($deliveryLocation->isNewRecord());
+        $this->assertSame($this->seqNumbers, $deliveryLocation->getGlobalLocationNumber());
+        $this->assertSame('GLN', $deliveryLocation->getElectronicAddressScheme());
+        $this->assertTrue($deliveryLocation->hasIdentity());
     }
 
     public function testGetterMethodsConsistency(): void
     {
-        $deliveryLocation = new DeliveryLocation(
-            id: 1,
-            client_id: 123,
-            name: 'Test Location',
-            building_number: '5A',
-            address_1: 'Test Street',
-            address_2: 'Suite 1',
-            city: $this->testCity,
-            state: 'TS',
-            zip: $this->oneToFive,
-            country: $this->testCountry,
-            global_location_number: $this->seqNumbers,
-            electronic_address_scheme: 'GLN'
-        );
-        
-        $this->assertIsInt($deliveryLocation->getId());
-        $this->assertIsString($deliveryLocation->getClient_id());
+        $deliveryLocation = new DeliveryLocation();
+        $deliveryLocation->setId(1);
+        $deliveryLocation->setClientId(123);
+        $deliveryLocation->setName('Test Location');
+        $deliveryLocation->setBuildingNumber('5A');
+        $deliveryLocation->setAddress1('Test Street');
+        $deliveryLocation->setAddress2('Suite 1');
+        $deliveryLocation->setCity($this->testCity);
+        $deliveryLocation->setState('TS');
+        $deliveryLocation->setZip($this->oneToFive);
+        $deliveryLocation->setCountry($this->testCountry);
+        $deliveryLocation->setGlobalLocationNumber($this->seqNumbers);
+        $deliveryLocation->setElectronicAddressScheme('GLN');
+
+        $this->assertIsInt($deliveryLocation->reqId());
+        $this->assertIsInt($deliveryLocation->reqClientId());
         $this->assertIsString($deliveryLocation->getName());
         $this->assertIsString($deliveryLocation->getBuildingNumber());
-        $this->assertIsString($deliveryLocation->getAddress_1());
-        $this->assertIsString($deliveryLocation->getAddress_2());
+        $this->assertIsString($deliveryLocation->getAddress1());
+        $this->assertIsString($deliveryLocation->getAddress2());
         $this->assertIsString($deliveryLocation->getCity());
         $this->assertIsString($deliveryLocation->getState());
         $this->assertIsString($deliveryLocation->getZip());
         $this->assertIsString($deliveryLocation->getCountry());
-        $this->assertIsString($deliveryLocation->getGlobal_location_number());
-        $this->assertIsString($deliveryLocation->getElectronic_address_scheme());
+        $this->assertIsString($deliveryLocation->getGlobalLocationNumber());
+        $this->assertIsString($deliveryLocation->getElectronicAddressScheme());
     }
 
     public function testGlobalLocationNumberFormats(): void
@@ -377,16 +375,16 @@ class DeliveryLocationEntityTest extends TestCase
         $deliveryLocation = new DeliveryLocation();
         
         // Standard 13-digit GLN
-        $deliveryLocation->setGlobal_location_number($this->seqNumbers);
-        $this->assertSame($this->seqNumbers, $deliveryLocation->getGlobal_location_number());
+        $deliveryLocation->setGlobalLocationNumber($this->seqNumbers);
+        $this->assertSame($this->seqNumbers, $deliveryLocation->getGlobalLocationNumber());
         
         // Empty GLN
-        $deliveryLocation->setGlobal_location_number('');
-        $this->assertSame('', $deliveryLocation->getGlobal_location_number());
+        $deliveryLocation->setGlobalLocationNumber('');
+        $this->assertSame('', $deliveryLocation->getGlobalLocationNumber());
         
         // Null GLN
-        $deliveryLocation->setGlobal_location_number(null);
-        $this->assertNull($deliveryLocation->getGlobal_location_number());
+        $deliveryLocation->setGlobalLocationNumber(null);
+        $this->assertNull($deliveryLocation->getGlobalLocationNumber());
     }
 
     public function testElectronicAddressSchemeTypes(): void
@@ -396,22 +394,21 @@ class DeliveryLocationEntityTest extends TestCase
         $schemes = ['GLN', 'EAN', 'DUNS', 'UBL'];
         
         foreach ($schemes as $scheme) {
-            $deliveryLocation->setElectronic_address_scheme($scheme);
-            $this->assertSame($scheme, $deliveryLocation->getElectronic_address_scheme());
+            $deliveryLocation->setElectronicAddressScheme($scheme);
+            $this->assertSame($scheme, $deliveryLocation->getElectronicAddressScheme());
         }
     }
 
     public function testPropertyTypes(): void
     {
-        $deliveryLocation = new DeliveryLocation(
-            id: 1,
-            client_id: 123
-        );
-        
-        $this->assertIsInt($deliveryLocation->getId());
-        $this->assertIsString($deliveryLocation->getClient_id());
-        $this->assertInstanceOf(DateTimeImmutable::class, $deliveryLocation->getDate_created());
-        $this->assertInstanceOf(DateTimeImmutable::class, $deliveryLocation->getDate_modified());
+        $deliveryLocation = new DeliveryLocation();
+        $deliveryLocation->setId(1);
+        $deliveryLocation->setClientId(123);
+
+        $this->assertIsInt($deliveryLocation->reqId());
+        $this->assertIsInt($deliveryLocation->reqClientId());
+        $this->assertInstanceOf(DateTimeImmutable::class, $deliveryLocation->getDateCreated());
+        $this->assertInstanceOf(DateTimeImmutable::class, $deliveryLocation->getDateModified());
     }
 
     public function testNegativeIds(): void
@@ -419,35 +416,35 @@ class DeliveryLocationEntityTest extends TestCase
         $deliveryLocation = new DeliveryLocation();
         
         $deliveryLocation->setId(-1);
-        $this->assertSame(-1, $deliveryLocation->getId());
+        $this->assertSame(-1, $deliveryLocation->reqId());
         
-        $deliveryLocation->setClient_id(-100);
-        $this->assertSame('-100', $deliveryLocation->getClient_id());
+        $deliveryLocation->setClientId(-100);
+        $this->assertSame(-100, $deliveryLocation->reqClientId());
     }
 
     public function testDeliveryLocationWorkflow(): void
     {
         // Create new delivery location
         $deliveryLocation = new DeliveryLocation();
-        $this->assertTrue($deliveryLocation->isNewRecord());
+        $this->assertFalse($deliveryLocation->hasIdentity());
         
         // Set basic information
         $deliveryLocation->setName('New Delivery Location');
-        $deliveryLocation->setAddress_1('123 New Street');
+        $deliveryLocation->setAddress1('123 New Street');
         $deliveryLocation->setCity('New City');
         $deliveryLocation->setZip($this->oneToFive);
         
         // Still new until ID is set
-        $this->assertTrue($deliveryLocation->isNewRecord());
+        $this->assertFalse($deliveryLocation->hasIdentity());
         
         // Assign ID (simulating database save)
         $deliveryLocation->setId(1);
-        $this->assertFalse($deliveryLocation->isNewRecord());
+        $this->assertTrue($deliveryLocation->hasIdentity());
         
         // Update location
-        $deliveryLocation->setAddress_1('456 Updated Street');
-        $this->assertSame('456 Updated Street', $deliveryLocation->getAddress_1());
-        $this->assertFalse($deliveryLocation->isNewRecord());
+        $deliveryLocation->setAddress1('456 Updated Street');
+        $this->assertSame('456 Updated Street', $deliveryLocation->getAddress1());
+        $this->assertTrue($deliveryLocation->hasIdentity());
     }
 
     public function testTimezoneHandling(): void
@@ -456,7 +453,7 @@ class DeliveryLocationEntityTest extends TestCase
         $deliveryLocation = new DeliveryLocation();
         $afterTime = time();
         
-        $createdTime = $deliveryLocation->getDate_created()->getTimestamp();
+        $createdTime = $deliveryLocation->getDateCreated()->getTimestamp();
         $this->assertGreaterThanOrEqual($beforeTime, $createdTime);
         $this->assertLessThanOrEqual($afterTime, $createdTime);
     }
@@ -465,21 +462,21 @@ class DeliveryLocationEntityTest extends TestCase
     {
         $deliveryLocation = new DeliveryLocation();
         
-        $this->assertTrue($deliveryLocation->isNewRecord());
+        $this->assertFalse($deliveryLocation->hasIdentity());
         $this->assertNull($deliveryLocation->getClient());
-        $this->assertInstanceOf(DateTimeImmutable::class, $deliveryLocation->getDate_created());
-        $this->assertInstanceOf(DateTimeImmutable::class, $deliveryLocation->getDate_modified());
+        $this->assertInstanceOf(DateTimeImmutable::class, $deliveryLocation->getDateCreated());
+        $this->assertInstanceOf(DateTimeImmutable::class, $deliveryLocation->getDateModified());
     }
 
     public function testNullValueHandling(): void
     {
         $deliveryLocation = new DeliveryLocation();
         
-        $deliveryLocation->setGlobal_location_number(null);
-        $this->assertNull($deliveryLocation->getGlobal_location_number());
+        $deliveryLocation->setGlobalLocationNumber(null);
+        $this->assertNull($deliveryLocation->getGlobalLocationNumber());
         
-        $deliveryLocation->setElectronic_address_scheme(null);
-        $this->assertNull($deliveryLocation->getElectronic_address_scheme());
+        $deliveryLocation->setElectronicAddressScheme(null);
+        $this->assertNull($deliveryLocation->getElectronicAddressScheme());
         
         $deliveryLocation->setClient(null);
         $this->assertNull($deliveryLocation->getClient());

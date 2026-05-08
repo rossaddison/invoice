@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Command\Invoice;
 
-use App\Invoice\Entity\Gentor;
-use App\Invoice\Entity\GentorRelation;
+use App\Infrastructure\Persistence\Gentor\Gentor;
+use App\Infrastructure\Persistence\GentorRelation\GentorRelation;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

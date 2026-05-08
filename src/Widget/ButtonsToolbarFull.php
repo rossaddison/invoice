@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Widget;
 
-use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\Sumex;
+use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\InvAmount\InvAmountRepository;
 use App\Invoice\Setting\SettingRepository;
 use Yiisoft\Html\Html;
@@ -20,19 +19,26 @@ use Yiisoft\Translator\TranslatorInterface;
  */
 final readonly class ButtonsToolbarFull
 {
+    /**
+     * @psalm-suppress PossiblyUnusedMethod
+     * @param TranslatorInterface $translator
+     * @param UrlGeneratorInterface $urlGenerator
+     * @param SettingRepository $settingRepository
+     */
     public function __construct(
         private TranslatorInterface $translator,
         private UrlGeneratorInterface $urlGenerator,
         private SettingRepository $settingRepository,
-    ) {}
+    ) {
+    }
 
     /**
      * Generate comprehensive invoice actions toolbar with all features
+     * @psalm-suppress UnusedParam $paymentView, $isRecurring
      */
     public function render(
         Inv $inv,
         InvAmountRepository $iaR,
-        ?Sumex $sumex = null,
         bool $invEdit = true,
         bool $paymentView = true,
         bool $read_only = false,
@@ -41,18 +47,20 @@ final readonly class ButtonsToolbarFull
         bool $isRecurring = false,
         bool $paymentCfExist = false,
     ): string {
-        $invId = $inv->getId();
+        $invId = $inv->reqId();
         $primaryButtons = [];
-        $advancedButtons = [];
 
         // View originating quote (if exists)
-        if (!empty($inv->getQuote_id()) && $inv->getQuote_id() !== '0') {
+        if (($quoteId = $inv->getQuoteId()) > 0) {
             $primaryButtons[] = $this->createButton(
                 'view-quote',
-                $this->urlGenerator->generate('quote/view', ['id' => $inv->getQuote_id()]),
+                $this->urlGenerator->generate('quote/view',
+                    ['id' => $quoteId]),
                 'fa-file-text-o',
                 'btn-info',
-                $this->translator->translate('view') . ' ' . $this->translator->translate('quote'),
+                $this->translator->translate('view')
+                    . ' '
+                    . $this->translator->translate('quote'),
             );
         }
 
@@ -68,14 +76,12 @@ final readonly class ButtonsToolbarFull
         }
 
         // PDF Generation
-        $pdfTitle = $this->settingRepository->getSetting('sumex') === '1'
-            ? $this->translator->translate('generate.sumex')
-            : $this->translator->translate('download.pdf');
+        $pdfTitle = $this->translator->translate('download.pdf');
 
         $primaryButtons[] = $this->createModalButton(
             'pdf',
             '#inv-to-pdf',
-            'fa-file-pdf-o',
+            'bi-file-pdf',
             'btn-success',
             $pdfTitle,
         );
@@ -84,7 +90,8 @@ final readonly class ButtonsToolbarFull
         if ($invEdit) {
             $primaryButtons[] = $this->createButton(
                 'email',
-                $this->urlGenerator->generate('inv/email_stage_0', ['id' => $invId]),
+                $this->urlGenerator->generate('inv/emailStage0',
+                        ['id' => $invId]),
                 'fa-envelope',
                 'btn-info',
                 $this->translator->translate('send.email'),
@@ -103,8 +110,10 @@ final readonly class ButtonsToolbarFull
         }
 
         // Payment Entry
-        $invAmount = $iaR->repoInvAmountcount((int) $invId) > 0 ? $iaR->repoInvquery((int) $invId) : null;
-        if ($invAmount && $invAmount->getBalance() >= 0.00 && $inv->getStatus_id() !== 1 && $invEdit) {
+        $invAmount = $iaR->repoInvAmountcount($invId) > 0 ?
+            $iaR->repoInvquery($invId) : null;
+        if ($invAmount && $invAmount->getBalance() >= 0.00
+            && $inv->reqStatusId() !== 1 && $invEdit) {
             $primaryButtons[] = $this->createButton(
                 'payment',
                 $this->urlGenerator->generate('payment/add'),
@@ -114,15 +123,19 @@ final readonly class ButtonsToolbarFull
                 [
                     'class' => 'invoice-add-payment',
                     'data-invoice-id' => Html::encode($invId),
-                    'data-invoice-balance' => Html::encode($invAmount->getBalance()),
-                    'data-invoice-payment-method' => Html::encode($inv->getPayment_method()),
+                    'data-invoice-balance' =>
+                        Html::encode($invAmount->getBalance()),
+                    'data-invoice-payment-method' =>
+                        Html::encode($inv->getPaymentMethod()),
                     'data-payment-cf-exist' => Html::encode($paymentCfExist),
                 ],
             );
         }
 
         // Credit Invoice Creation
-        if (($read_only === true || $inv->getStatus_id() === 4) && $invEdit && !(int) $inv->getCreditinvoice_parent_id() > 0) {
+        if (($read_only === true || $inv->reqStatusId() === 4)
+                && $invEdit
+                && !(int) $inv->getCreditinvoiceParentId() > 0) {
             $primaryButtons[] = $this->createModalButton(
                 'credit',
                 '#create-credit-inv',
@@ -137,7 +150,8 @@ final readonly class ButtonsToolbarFull
         if ($invEdit) {
             $primaryButtons[] = $this->createButton(
                 'recurring',
-                $this->urlGenerator->generate('invrecurring/add', ['inv_id' => $invId]),
+                $this->urlGenerator->generate('invrecurring/add',
+                    ['inv_id' => $invId]),
                 'fa-refresh',
                 'btn-secondary',
                 $this->translator->translate('create.recurring'),
@@ -145,44 +159,49 @@ final readonly class ButtonsToolbarFull
         }
 
         // Get advanced buttons
-        $advancedButtons = $this->getAdvancedButtons($inv, $sumex, $invEdit, $enabledGateways, $vat);
+        $advancedButtons = $this->getAdvancedButtons(
+            $inv, $invEdit, $enabledGateways, $vat);
 
         return $this->renderFullToolbar($primaryButtons, $advancedButtons, $inv);
     }
 
     private function getAdvancedButtons(
         Inv $inv,
-        ?Sumex $sumex,
         bool $invEdit,
         array $enabledGateways,
         string $vat,
     ): array {
-        $invId = $inv->getId();
+        $invId = $inv->reqId();
         $buttons = [];
 
         // Tax and Allowance/Charge buttons
-        if ($invEdit && $vat === '0') {
+        if ($invEdit
+            && $vat === '0'
+            // Only allow adding if the invoice is in draft mode
+            && $inv->reqStatusId() == 1) {
             $buttons[] = $this->createModalButton(
                 'add-tax',
                 '#add-inv-tax',
-                'fa-plus',
+                'bi-plus',
                 'btn-outline-secondary',
                 $this->translator->translate('add.invoice.tax'),
             );
         }
 
-        if ($invEdit) {
+        if ($invEdit
+            // Only allow adding if the invoice is in draft mode
+            && $inv->reqStatusId() == 1) {
             $buttons[] = $this->createModalButton(
                 'allowance-charge',
                 '#add-inv-allowance-charge',
-                'fa-plus',
+                'bi-plus',
                 'btn-outline-secondary',
                 $this->translator->translate('allowance.or.charge.inv.add'),
             );
         }
 
         // PEPPOL features
-        if ($invEdit && $inv->getSo_id()) {
+        if ($invEdit && ($inv->getSoId() > 0)) {
             $buttons[] = $this->createWindowButton(
                 'peppol',
                 $this->urlGenerator->generate('inv/peppol', ['id' => $invId]),
@@ -192,19 +211,45 @@ final readonly class ButtonsToolbarFull
             );
 
             // Delivery location
+            // Route: '/del/add/{client_id}[/{origin}/{origin_id}/{action}]')
+            // Related logic: src/Service/WebControllerService
             $buttons[] = $this->createButton(
                 'delivery-location',
-                $this->urlGenerator->generate('del/add', ['client_id' => $inv->getClient_id()]),
-                'fa-plus',
+                $this->urlGenerator->generate('del/add',
+                    // Arguments
+                    [
+                        'client_id' => $inv->reqClientId(),
+                    ],
+                    // QueryParameters
+                    [
+                        'origin' => 'inv',
+                        'origin_id' => $invId,
+                        'action' => 'view',
+                    ],
+                    // Hash e.g. If the peppol document currency is empty return
+                    // cursor to the actual input box
+                    // Related logic: e.g. $this->webService->getRedirectResponse(
+                    // 'setting/tabIndex',
+                    // ARGUMENTS
+                    // ['_language' => 'en'],
+                    // QUERYPARAMETERS
+                    // ['active' => $this->translator->translate(
+                    //    'peppol.electronic.invoicing'),
+                    // HASH
+                    //'settings[peppol_document_currency]']);
+                    ''),
+                'bi-plus',
                 'btn-outline-info',
                 $this->translator->translate('delivery.location.add'),
             );
 
             // PEPPOL toggle
-            $peppolStreamToggle = $this->settingRepository->getSetting('peppol_stream_toggle') === '1';
+            $peppolStreamToggle = $this->settingRepository->getSetting(
+                'peppol_xml_stream') === '1';
             $buttons[] = $this->createButton(
                 'peppol-toggle',
-                $this->urlGenerator->generate('inv/peppol_stream_toggle', ['id' => $invId]),
+                $this->urlGenerator->generate('inv/peppolStreamToggle',
+                    ['id' => $invId]),
                 $peppolStreamToggle ? 'fa-toggle-on' : 'fa-toggle-off',
                 'btn-outline-info',
                 $this->translator->translate('peppol.stream.toggle'),
@@ -213,7 +258,7 @@ final readonly class ButtonsToolbarFull
             // External validators
             $buttons[] = $this->createWindowButton(
                 'ecosio-validator',
-                'https://ecosio.com/en/peppol-and-xml-document-validator-button/?pk_abe=EN_Peppol_XML_Validator_Page&pk_abv=With_CTA',
+                'https://ecosio.com/en/peppol-e-invoice-xml-document-validator/',
                 'fa-check',
                 'btn-outline-success',
                 $this->translator->translate('peppol.ecosio.validator'),
@@ -229,7 +274,8 @@ final readonly class ButtonsToolbarFull
         }
 
         // Payment gateways - REMOVED
-        // Pay-now buttons should only appear in the options dropdown menu, not in the toolbar
+        // Pay-now buttons should only appear in the options dropdown menu,
+        // not in the toolbar
 
         // Modal PDF (if enabled)
         if ($this->settingRepository->getSetting('pdf_stream_inv') === '1') {
@@ -243,7 +289,8 @@ final readonly class ButtonsToolbarFull
         } else {
             $buttons[] = $this->createButton(
                 'modal-pdf-settings',
-                $this->urlGenerator->generate('setting/tab_index', [], ['active' => 'invoices'], 'settings[pdf_stream_inv]'),
+                $this->urlGenerator->generate('setting/tabIndex', [],
+                    ['active' => 'invoices'], 'settings[pdf_stream_inv]'),
                 'fa-desktop',
                 'btn-outline-secondary',
                 $this->translator->translate('pdf.modal') . ' ❌',
@@ -251,9 +298,7 @@ final readonly class ButtonsToolbarFull
         }
 
         // HTML Preview
-        $htmlTitle = $this->settingRepository->getSetting('sumex') === '1'
-            ? $this->translator->translate('html.sumex.yes')
-            : $this->translator->translate('html.sumex.no');
+        $htmlTitle = 'Html Preview';
 
         $buttons[] = $this->createModalButton(
             'html-preview',
@@ -263,23 +308,21 @@ final readonly class ButtonsToolbarFull
             $htmlTitle,
         );
 
-        // Sumex editing
-        if ($sumex && (null !== $sumex->getInvoice())) {
-            $buttons[] = $this->createButton(
-                'sumex-edit',
-                $this->urlGenerator->generate('sumex/edit', ['id' => $invId]),
-                'fa-edit',
-                'btn-outline-info',
-                $this->translator->translate('sumex.edit'),
-            );
-        }
+        // Chrome PDF Viewer Extension
+        $buttons[] = $this->createWindowButton(
+            'chrome-pdf-viewer',
+            'https://chromewebstore.google.com/detail/pdf-viewer/oemmndcbldboiebfnladdacbdfmadadm?pli=1',
+            'fa-chrome',
+            'btn-outline-primary',
+            $this->translator->translate('install.pdf.viewer.extension'),
+        );
 
         // Delete buttons (if allowed)
         if ($this->canDeleteInvoice($inv, $invEdit)) {
             $buttons[] = $this->createModalButton(
                 'delete-invoice',
                 '#delete-inv',
-                'fa-trash',
+                'bi-trash',
                 'btn-outline-danger',
                 $this->translator->translate('delete'),
             );
@@ -287,9 +330,11 @@ final readonly class ButtonsToolbarFull
             $buttons[] = $this->createModalButton(
                 'delete-items',
                 '#delete-items',
-                'fa-trash',
+                'bi-trash',
                 'btn-outline-danger',
-                $this->translator->translate('delete') . ' ' . $this->translator->translate('item'),
+                $this->translator->translate('delete')
+                    . ' '
+                    . $this->translator->translate('item'),
             );
         }
 
@@ -298,11 +343,12 @@ final readonly class ButtonsToolbarFull
 
     private function canDeleteInvoice(Inv $inv, bool $invEdit): bool
     {
-        return ($inv->getStatus_id() === 1
-                || ($this->settingRepository->getSetting('enable_invoice_deletion') === '1'
-                 && $inv->getIs_read_only() === false))
-               && !$inv->getSo_id()
-               && $invEdit;
+        return ($inv->reqStatusId() === 1
+                && $this->settingRepository->getSetting(
+                    'enable_invoice_deletion') === '1'
+                && $inv->getIsReadOnly() === false
+                && !($inv->getSoId() > 0)
+                && $invEdit);
     }
 
     private function createButton(
@@ -361,11 +407,17 @@ final readonly class ButtonsToolbarFull
         ];
     }
 
-    private function renderFullToolbar(array $primaryButtons, array $advancedButtons, Inv $inv): string
+    private function renderFullToolbar(
+        array $primaryButtons, array $advancedButtons, Inv $inv): string
     {
         $string = Html::openTag('div', [
             'class' => 'invoice-actions-toolbar-full',
-            'style' => 'margin: 8px 0; padding: 8px 12px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border: 1px solid #dee2e6; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 12px; flex-wrap: wrap;',
+            'style' =>
+                'margin: 8px 0; padding: 8px 12px; background:'
+                . ' linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); '
+                . ' border: 1px solid #dee2e6; border-radius: 6px;'
+                . ' box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: '
+                . ' flex; align-items: center; gap: 12px; flex-wrap: wrap;',
         ]);
 
         /**
@@ -381,7 +433,8 @@ final readonly class ButtonsToolbarFull
         // Divider
         if (!empty($advancedButtons)) {
             $string .= Html::openTag('div', [
-                'style' => 'height: 20px; width: 1px; background: #dee2e6; margin: 0 4px;',
+                'style' =>
+                'height: 20px; width: 1px; background: #dee2e6; margin: 0 4px;',
             ]);
             $string .= Html::closeTag('div');
         }
@@ -399,11 +452,12 @@ final readonly class ButtonsToolbarFull
 
     private function renderButton(array $button): string
     {
-        $link = A::tag()
+        $link =  new A()
             ->id('toolbar-full-' . (string) $button['id'])
             ->addClass('btn', (string) $button['class'], 'btn-sm')
             ->attribute('title', (string) $button['title'])
-            ->content('<i class="fa ' . Html::encode((string) $button['icon']) . '"></i> ' . Html::encode($button['title']));
+            ->content('<i class="fa ' . Html::encode((string) $button['icon'])
+                    . '"></i> ' . Html::encode($button['title']));
 
         // Add additional attributes
         if (isset($button['attributes'])) {
@@ -423,7 +477,8 @@ final readonly class ButtonsToolbarFull
                 break;
             case 'window':
                 $link = $link->href('#')
-                           ->attribute('onclick', "window.open('" . Html::encode((string) $button['href']) . "')");
+                           ->attribute('onclick', "window.open('"
+                               . Html::encode((string) $button['href']) . "')");
                 break;
             case 'link':
             default:
@@ -434,62 +489,20 @@ final readonly class ButtonsToolbarFull
         return $link->encode(false)->render(); // Allow HTML content for icon
     }
 
-    private function renderStatusIndicators(Inv $inv): string
-    {
-        $string = Html::openTag('div', [
-            'class' => 'invoice-status-indicators',
-            'style' => 'margin: 6px 0; display: flex; gap: 6px; align-items: center; flex-wrap: wrap;',
-        ]);
-
-        if ($inv->getIs_read_only() === true) {
-            $string .= Span::tag()
-                ->addClass('badge bg-danger')
-                ->attribute('style', 'font-size: 0.75rem; padding: 4px 8px; border-radius: 12px;')
-                ->content('🔒 ' . $this->translator->translate('read.only'))
-                ->render();
-        }
-
-        $statusClass = match ($inv->getStatus_id()) {
-            1 => 'bg-secondary',
-            2 => 'bg-info',
-            3 => 'bg-warning',
-            4 => 'bg-success',
-            5 => 'bg-danger',
-            default => 'bg-light',
-        };
-
-        $statusText = match ($inv->getStatus_id()) {
-            1 => '📝 ' . $this->translator->translate('draft'),
-            2 => '📤 ' . $this->translator->translate('sent'),
-            3 => '👁 ' . $this->translator->translate('viewed'),
-            4 => '✅ ' . $this->translator->translate('paid'),
-            5 => '⚠️ ' . $this->translator->translate('overdue'),
-            default => '❓ ' . $this->translator->translate('unknown'),
-        };
-
-        $string .= Span::tag()
-            ->addClass('badge ' . $statusClass)
-            ->attribute('style', 'font-size: 0.75rem; padding: 4px 8px; border-radius: 12px;')
-            ->content($statusText)
-            ->render();
-
-        $string .= Html::closeTag('div');
-        return $string;
-    }
-
     private function renderInlineStatusIndicators(Inv $inv): string
     {
         $string = '';
 
-        if ($inv->getIs_read_only() === true) {
-            $string .= Span::tag()
+        if ($inv->getIsReadOnly() === true) {
+            $string .=  new Span()
                 ->addClass('badge bg-danger')
-                ->attribute('style', 'font-size: 0.7rem; padding: 3px 6px; border-radius: 10px; margin-right: 6px;')
+                ->attribute('style', 'font-size: 0.7rem; padding:'
+                    . ' 3px 6px; border-radius: 10px; margin-right: 6px;')
                 ->content('🔒 ' . $this->translator->translate('read.only'))
                 ->render();
         }
 
-        $statusClass = match ($inv->getStatus_id()) {
+        $statusClass = match ($inv->reqStatusId()) {
             1 => 'bg-secondary',
             2 => 'bg-info',
             3 => 'bg-warning',
@@ -498,7 +511,7 @@ final readonly class ButtonsToolbarFull
             default => 'bg-light',
         };
 
-        $statusText = match ($inv->getStatus_id()) {
+        $statusText = match ($inv->reqStatusId()) {
             1 => '📝 ' . $this->translator->translate('draft'),
             2 => '📤 ' . $this->translator->translate('sent'),
             3 => '👁 ' . $this->translator->translate('viewed'),
@@ -507,9 +520,10 @@ final readonly class ButtonsToolbarFull
             default => '❓ ' . $this->translator->translate('unknown'),
         };
 
-        $string .= Span::tag()
+        $string .=  new Span()
             ->addClass('badge ' . $statusClass)
-            ->attribute('style', 'font-size: 0.7rem; padding: 3px 6px; border-radius: 10px;')
+            ->attribute('style',
+                'font-size: 0.7rem; padding: 3px 6px; border-radius: 10px;')
             ->content($statusText)
             ->render();
 

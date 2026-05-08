@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\CustomField;
 
-use App\Invoice\Entity\CustomField;
+use App\Infrastructure\Persistence\CustomField\CustomField;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -80,10 +80,10 @@ final class CustomFieldRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return CustomField|null
      */
-    public function repoCustomFieldquery(string $id): ?CustomField
+    public function repoCustomFieldquery(int $id): ?CustomField
     {
         $query = $this->select()
                       ->where(['id' => $id]);

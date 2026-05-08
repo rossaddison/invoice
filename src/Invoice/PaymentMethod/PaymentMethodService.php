@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Invoice\PaymentMethod;
 
-use App\Invoice\Entity\PaymentMethod;
+use App\Infrastructure\Persistence\PaymentMethod\PaymentMethod;
 
 final readonly class PaymentMethodService
 {
-    public function __construct(private PaymentMethodRepository $repository) {}
+    public function __construct(private PaymentMethodRepository $repository)
+    {
+    }
 
     /**
      * @param PaymentMethod $model

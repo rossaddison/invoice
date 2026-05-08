@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\ProductImage;
 
-use App\Invoice\Entity\ProductImage;
+use App\Infrastructure\Persistence\ProductImage\ProductImage;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 use DateTimeImmutable;
@@ -20,26 +20,32 @@ final class ProductImageForm extends FormModel
 
     #[Required]
     private mixed $uploaded_date = '';
-
-    public function __construct(ProductImage $productImage, private readonly ?int $product_id)
+    private ?int $product_id = null;
+    
+    public static function show(
+        ProductImage $productImage,
+        ?int $product_id): self
     {
-        $this->file_name_original = $productImage->getFile_name_original();
-        $this->file_name_new = $productImage->getFile_name_new();
-        $this->description = $productImage->getDescription();
-        $this->uploaded_date = $productImage->getUploaded_date();
+        $form = new self();
+        $form->file_name_original = $productImage->getFileNameOriginal();
+        $form->file_name_new = $productImage->getFileNameNew();
+        $form->description = $productImage->getDescription();
+        $form->uploaded_date = $productImage->getUploadedDate();
+        $form->product_id = $product_id;
+        return $form;
     }
 
-    public function getProduct_id(): ?int
+    public function getProductId(): ?int
     {
         return $this->product_id;
     }
 
-    public function getFile_name_original(): string
+    public function getFileNameOriginal(): string
     {
         return $this->file_name_original;
     }
 
-    public function getFile_name_new(): string
+    public function getFileNameNew(): string
     {
         return $this->file_name_new;
     }
@@ -49,7 +55,7 @@ final class ProductImageForm extends FormModel
         return $this->description;
     }
 
-    public function getUploaded_date(): string|DateTimeImmutable
+    public function getUploadedDate(): string|DateTimeImmutable
     {
         /**
          * @var DateTimeImmutable|string $this->uploaded_date

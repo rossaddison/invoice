@@ -28,7 +28,7 @@ use Yiisoft\Html\Tag\Td;
 <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-            <div class="card border border-dark shadow-2-strong rounded-3">                
+            <div class="card border border-dark shadow-2-strong rounded-3">
                 <div class="card-header bg-dark text-white">
                     <h5 class="fw-normal h3 text-center"><?= $translator->translate('two.factor.authentication'); ?></h5>
                 </div>
@@ -69,9 +69,9 @@ use Yiisoft\Html\Tag\Td;
                         CSS;
 
 // Table header
-$headerRow = Thead::tag()
+$headerRow =  new Thead()
     ->rows(
-        Tr::tag()->dataStrings(['#', $translator->translate('oauth2.backup.recovery.codes')]),
+         new Tr()->dataStrings(['#', $translator->translate('oauth2.backup.recovery.codes')]),
     );
 $rows = [];
 /**
@@ -79,9 +79,9 @@ $rows = [];
  * @var string $code
  */
 foreach ($codes as $index => $code) {
-    $rows[] = Tr::tag()->cells(
-        Td::tag()->content((string) ((int) $index + 1)),
-        Td::tag()->content(Html::encode($code)),
+    $rows[] =  new Tr()->cells(
+         new Td()->content((string) ((int) $index + 1)),
+         new Td()->content(Html::encode($code)),
     );
 }
 
@@ -89,7 +89,7 @@ foreach ($codes as $index => $code) {
 echo $style;
 
 if (!empty($codes)) {
-    echo Table::tag()
+    echo  new Table()
         ->header($headerRow)
         ->rows(...$rows)
         ->addAttributes(['class' => 'recovery-table'])
@@ -97,13 +97,13 @@ if (!empty($codes)) {
 }
 ?>
                     <?php
-    $button = new Button($currentRoute, $translator, $urlGenerator);
+    $button = new Button($translator, $urlGenerator);
 $regenerateCodesUrl = $urlGenerator->generate('auth/regenerateCodes');
 echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
 ?>
-                </div>    
-                <div class="card-body p-2 text-center">    
-                    <?= Form::tag()
+                </div>
+                <div class="card-body p-2 text-center">
+                    <?=  new Form()
     ->post($urlGenerator->generate('auth/verifyLogin'))
     ->class('form-floating')
     ->csrf($csrf)
@@ -123,7 +123,7 @@ echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
     )
     ->error($error ?? '')
     ->required(true)
-    ->inputClass('form-control')
+    ->inputClass('form-control form-control-lg',)
     ->label($translator->translate('layout.password.otp.6.8'))
     ->autofocus();
 ?>
@@ -132,7 +132,7 @@ echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
     ->buttonClass('btn btn-primary')
     ->name('code-button')
     ->content($translator->translate('layout.submit')) ?>
-                    <?= Form::tag()->close() ?>
+                    <?=  new Form()->close() ?>
                 </div>
                 <div class="card-body p-1 text-center">
                     <?php for ($i = 1; $i <= 9; $i++): ?>

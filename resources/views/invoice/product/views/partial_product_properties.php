@@ -5,7 +5,7 @@ use Yiisoft\Html\Html;
 
 /**
  * Related logic: see App\Invoice\Product\ProductController function view $parameters['partial_product_properties']
- * @var App\Invoice\Entity\Product $product
+ * @var App\Infrastructure\Persistence\Product\Product $product
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var string $language
@@ -15,7 +15,7 @@ use Yiisoft\Html\Html;
  */
 
 $languageArgument = ['_language' => $language];
-$productPropertyArguments = ['product_id' => $product->getProduct_id(), '_language' => $language];
+$productPropertyArguments = ['product_id' => $product->reqId(), '_language' => $language];
 ?>
 <div>
 <label class="btn btn-info">
@@ -34,10 +34,10 @@ $productPropertyArguments = ['product_id' => $product->getProduct_id(), '_langua
             'productproperty/add',
             $productPropertyArguments,
         ),
-        ['class' => 'btn btn-primary fa fa-plus'],
+        ['class' => 'btn btn-primary bi bi-plus-lg'],
     ); ?>
 </div>
 <br>
 <div class="table-responsive btn btn-info">
      <?= $productpropertys; ?>
-</div>    
+</div>

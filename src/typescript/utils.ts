@@ -164,16 +164,16 @@ export async function processBatchWithProgress<T, R>(
 ): Promise<R[]> {
     const { batchSize = 5, timeoutMs = 30000, maxRetries = 3, onProgress } = options;
     const { promise, resolve, reject } = Promise.withResolvers<R[]>();
-    
+
     const results: R[] = [];
     let completed = 0;
-    
+
     // Process items in batches to avoid overwhelming the system
     const processBatch = async (batch: T[], startIndex: number): Promise<R[]> => {
         const batchPromises = batch.map(async (item, batchIndex) => {
             const globalIndex = startIndex + batchIndex;
             let lastError: Error | null = null;
-            
+
             // Retry logic with exponential backoff
             for (let attempt = 0; attempt <= maxRetries; attempt++) {
                 try {
@@ -182,12 +182,12 @@ export async function processBatchWithProgress<T, R>(
                             new Error(`Processing timeout for item ${globalIndex}`)
                         ), timeoutMs);
                     });
-                    
+
                     const result = await Promise.race([
                         processor(item, globalIndex),
                         timeoutPromise
                     ]);
-                    
+
                     completed++;
                     onProgress?.(completed, items.length);
                     return result;
@@ -199,16 +199,16 @@ export async function processBatchWithProgress<T, R>(
                     }
                 }
             }
-            
+
             throw new Error(
                 `Failed to process item ${globalIndex} after ${maxRetries + 1} attempts`,
                 { cause: lastError }
             );
         });
-        
+
         return Promise.all(batchPromises);
     };
-    
+
     try {
         // Process all batches sequentially to control load
         for (let i = 0; i < items.length; i += batchSize) {
@@ -216,11 +216,11 @@ export async function processBatchWithProgress<T, R>(
             const batchResults = await processBatch(batch, i);
             results.push(...batchResults);
         }
-        
+
         resolve(results);
     } catch (error) {
         reject(error);
     }
-    
+
     return promise;
 }

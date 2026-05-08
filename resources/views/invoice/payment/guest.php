@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Payment;
+use App\Infrastructure\Persistence\Payment\Payment;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -24,28 +24,28 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $csrf
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$toolbarReset = A::tag()
+$toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'payment/guest'))
     ->id('btn-reset')
     ->render();
 
-$toolbar = Div::tag();
+echo new Div();
 
 $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Payment $model): string => Html::encode($model->getId()),
+        content: static fn (Payment $model): string => Html::encode($model->reqId()),
     ),
     new DataColumn(
         property: 'paymentDateFilter',
         header: $translator->translate('payment.date'),
-        content: static fn(Payment $model): string|DateTimeImmutable => !is_string($date = $model->getPayment_date())
+        content: static fn (Payment $model): string|DateTimeImmutable => !is_string($date = $model->getPaymentDate())
                                                                         ? $date->format('Y-m-d') : '',
         filter: true,
     ),
@@ -53,7 +53,7 @@ $columns = [
         property: 'paymentAmountFilter',
         header: $translator->translate('amount'),
         content: static function (Payment $model) use ($s): string {
-            return $s->format_currency($model->getAmount() >= 0.00
+            return $s->formatCurrency($model->getAmount() >= 0.00
                                        ? $model->getAmount() : 0.00);
         },
         encodeContent: false,
@@ -62,14 +62,14 @@ $columns = [
     new DataColumn(
         'note',
         header: $translator->translate('note'),
-        content: static fn(Payment $model): string => Html::encode($model->getNote()),
+        content: static fn (Payment $model): string => Html::encode($model->getNote()),
         encodeContent: false,
     ),
     new DataColumn(
         'inv_id',
         header: $translator->translate('invoice'),
         content: static function (Payment $model) use ($urlGenerator): A {
-            return Html::a($model->getInv()?->getNumber() ?? '', $urlGenerator->generate('inv/view', ['id' => $model->getInv_id()]), ['style' => 'text-decoration:none']);
+            return Html::a($model->getInv()?->getNumber() ?? '', $urlGenerator->generate('inv/view', ['id' => $model->reqInvId()]), ['style' => 'text-decoration:none']);
         },
         encodeContent: false,
     ),
@@ -77,16 +77,16 @@ $columns = [
         'inv_id',
         header: $translator->translate('total'),
         content: static function (Payment $model) use ($s, $iaR): string {
-            $inv_amount = (($iaR->repoInvAmountCount((int) $model->getInv_id()) > 0) ? $iaR->repoInvquery((int) $model->getInv_id()) : null);
-            return $s->format_currency(null !== $inv_amount ? $inv_amount->getTotal() : 0.00);
+            $inv_amount = (($iaR->repoInvAmountCount($model->reqInvId()) > 0) ? $iaR->repoInvquery($model->reqInvId()) : null);
+            return $s->formatCurrency(null !== $inv_amount ? $inv_amount->getTotal() : 0.00);
         },
         encodeContent: false,
     ),
     new DataColumn(
         header: $translator->translate('paid'),
         content: static function (Payment $model) use ($s, $iaR): string {
-            $inv_amount = (($iaR->repoInvAmountCount((int) $model->getInv_id()) > 0) ? $iaR->repoInvquery((int) $model->getInv_id()) : null);
-            return $s->format_currency(null !== $inv_amount ? $inv_amount->getPaid() : 0.00);
+            $inv_amount = (($iaR->repoInvAmountCount($model->reqInvId()) > 0) ? $iaR->repoInvquery($model->reqInvId()) : null);
+            return $s->formatCurrency(null !== $inv_amount ? $inv_amount->getPaid() : 0.00);
         },
         encodeContent: false,
     ),
@@ -94,8 +94,8 @@ $columns = [
         'id',
         header: $translator->translate('balance'),
         content: static function (Payment $model) use ($s, $iaR): string {
-            $inv_amount = (($iaR->repoInvAmountCount((int) $model->getInv_id()) > 0) ? $iaR->repoInvquery((int) $model->getInv_id()) : null);
-            return $s->format_currency(null !== $inv_amount ? $inv_amount->getBalance() : 0.00);
+            $inv_amount = (($iaR->repoInvAmountCount($model->reqInvId()) > 0) ? $iaR->repoInvquery($model->reqInvId()) : null);
+            return $s->formatCurrency(null !== $inv_amount ? $inv_amount->getBalance() : 0.00);
         },
         encodeContent: false,
     ),
@@ -109,9 +109,9 @@ $columns = [
     ),
 ];
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('payment/guest'))->csrf($csrf)->open()
-        . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-        . Form::tag()->close();
+$toolbarString =  new Form()->post($urlGenerator->generate('payment/guest'))->csrf($csrf)->open()
+        .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+        .  new Form()->close();
 
 echo GridView::widget()
     ->bodyRowAttributes(['class' => 'align-middle'])

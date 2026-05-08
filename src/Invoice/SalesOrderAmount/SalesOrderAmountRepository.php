@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderAmount;
 
-use App\Invoice\Entity\SalesOrderAmount;
+use App\Infrastructure\Persistence\SalesOrderAmount\SalesOrderAmount;
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
 use App\Invoice\Setting\SettingRepository as SR;
@@ -83,13 +83,10 @@ final class SalesOrderAmountRepository extends Select\Repository
         );
     }
 
-    /**
-     * @param string $so_id
-     */
-    public function repoSalesOrderAmountCount(string $so_id): int
+    public function repoSalesOrderAmountCount(int $sales_order_id): int
     {
         return $this->select()
-                      ->where(['so_id' => $so_id])
+                      ->where(['sales_order_id' => $sales_order_id])
                       ->count();
     }
 
@@ -98,41 +95,41 @@ final class SalesOrderAmountRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoSalesOrderAmountqueryTest(string $so_id): ?SalesOrderAmount
+    public function repoSalesOrderAmountqueryTest(int $sales_order_id): ?SalesOrderAmount
     {
         $query = $this->select()
-                      ->load('so')
-                      ->where(['so_id' => $so_id]);
+                      ->load('sales_order')
+                      ->where(['sales_order_id' => $sales_order_id]);
         return  $query->fetchOne() ?: null;
     }
 
     /**
-     * @param string $so_id
+     * @param int $sales_order_id
      *
      * @return SalesOrderAmount|null
      *
      * @psalm-return TEntity|null
      */
-    public function repoSoquery(string $so_id): ?SalesOrderAmount
+    public function repoSoquery(int $sales_order_id): ?SalesOrderAmount
     {
         $query = $this->select()
-                      ->load('so')
-                      ->where(['so_id' => $so_id]);
+                      ->load('sales_order')
+                      ->where(['sales_order_id' => $sales_order_id]);
         return  $query->fetchOne() ?: null;
     }
 
     /**
-     * @param string $so_id
+     * @param int $sales_order_id
      *
      * @return SalesOrderAmount|null
      *
      * @psalm-return TEntity|null
      */
-    public function repoSalesOrderquery(string $so_id): ?SalesOrderAmount
+    public function repoSalesOrderquery(int $sales_order_id): ?SalesOrderAmount
     {
         $query = $this->select()
-                      ->load('so')
-                      ->where(['so_id' => $so_id]);
+                      ->load('sales_order')
+                      ->where(['sales_order_id' => $sales_order_id]);
         return  $query->fetchOne() ?: null;
     }
 
@@ -150,9 +147,9 @@ final class SalesOrderAmountRepository extends Select\Repository
          * @var \DateTimeImmutable $range['upper']
          */
         $query = $this->select()
-                      ->where(['so.status_id' => $key])
-                      ->andWhere('so.date_created', '>=', $datehelper->date_from_mysql_without_style($range['lower']))
-                      ->andWhere('so.date_created', '<=', $datehelper->date_from_mysql_without_style($range['upper']));
+                      ->where(['sales_order.status_id' => $key])
+                      ->andWhere('sales_order.date_created', '>=', $datehelper->dateFromMysqlWithoutStyle($range['lower']))
+                      ->andWhere('sales_order.date_created', '<=', $datehelper->dateFromMysqlWithoutStyle($range['upper']));
         return $this->prepareDataReader($query);
     }
 
@@ -162,7 +159,7 @@ final class SalesOrderAmountRepository extends Select\Repository
      * @param SR $sR
      * @return int
      */
-    public function repoStatusTotals_Num_Total(int $key, array $range, SR $sR): int
+    public function repoStatusTotalsNumTotal(int $key, array $range, SR $sR): int
     {
         $datehelper = new DateHelper($sR);
         /**
@@ -170,10 +167,10 @@ final class SalesOrderAmountRepository extends Select\Repository
          * @var \DateTimeImmutable $range['upper']
          */
         return $this->select()
-                      ->load('so')
-                      ->where(['so.status_id' => $key])
-                      ->andWhere('so.date_created', '>=', $datehelper->date_from_mysql_without_style($range['lower']))
-                      ->andWhere('so.date_created', '<=', $datehelper->date_from_mysql_without_style($range['upper']))
+                      ->load('sales_order')
+                      ->where(['sales_order.status_id' => $key])
+                      ->andWhere('sales_order.date_created', '>=', $datehelper->dateFromMysqlWithoutStyle($range['lower']))
+                      ->andWhere('sales_order.date_created', '<=', $datehelper->dateFromMysqlWithoutStyle($range['upper']))
                       ->count();
     }
 
@@ -184,7 +181,7 @@ final class SalesOrderAmountRepository extends Select\Repository
      * @param string $period
      * @return array
      */
-    public function get_status_totals(SOR $soR, SR $sR, Translator $translator, string $period): array
+    public function getStatusTotals(SOR $soR, SR $sR, Translator $translator, string $period): array
     {
         $return = [];
         // $period eg. this-month, last-month derived from $sR->getSetting('invoice or so_overview_period')
@@ -202,12 +199,12 @@ final class SalesOrderAmountRepository extends Select\Repository
                 $total = $total + (float) $so_amount->getTotal();
             }
             $return[$key] = [
-                'so_status_id' => $key,
+                'sales_order_status_id' => $key,
                 'class' => $status['class'],
                 'label' => $status['label'],
                 'href' => (string) $status['href'],
                 'sum_total' => $total,
-                'num_total' => $this->repoStatusTotals_Num_Total($key, $range, $sR) ?: 0,
+                'num_total' => $this->repoStatusTotalsNumTotal($key, $range, $sR) ?: 0,
             ];
         }
         return $return;

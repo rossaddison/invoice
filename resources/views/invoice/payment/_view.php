@@ -22,20 +22,20 @@ use Yiisoft\Html\Tag\Form;
  */
 ?>
 
-<?= Form::tag()
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('PaymentForm')
     ->open() ?>
 
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
-<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
     <?= Html::encode($translator->translate('payment.form')) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
@@ -51,12 +51,12 @@ use Yiisoft\Html\Tag\Form;
                 <?php
     $optionsDataPaymentMethod = [];
 /**
- * @var App\Invoice\Entity\PaymentMethod $paymentMethod
+ * @var App\Infrastructure\Persistence\PaymentMethod\PaymentMethod $paymentMethod
  */
 foreach ($paymentMethods as $paymentMethod) {
-    $paymentMethodId = $paymentMethod->getId();
+    $paymentMethodId = $paymentMethod->reqId();
     $paymentMethodName = $paymentMethod->getName();
-    if ((strlen($paymentMethodId) > 0)
+    if ($paymentMethodId > 0
         && (strlen(($paymentMethodName ?? '')) > 0) && (null !== $paymentMethodName)) {
         $optionsDataPaymentMethod[$paymentMethodId] = $paymentMethodName;
     }
@@ -79,7 +79,7 @@ echo Field::select($form, 'payment_method_id')
         ])
         ->value(Html::encode($form->getInv()?->getNumber() ?? $translator->translate('number.no')))
 ?>
-                <?= Html::closeTag('div'); ?>    
+                <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::date($form, 'payment_date')
     ->label($translator->translate('date'))
@@ -87,7 +87,7 @@ echo Field::select($form, 'payment_method_id')
         'readonly' => 'readonly',
         'disabled' => 'disabled',
     ])
-    ->value(Html::encode($form->getPayment_date() instanceof DateTimeImmutable ? $form->getPayment_date()->format('Y-m-d') : ''))
+    ->value(Html::encode($form->getPaymentDate() instanceof DateTimeImmutable ? $form->getPaymentDate()->format('Y-m-d') : ''))
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -96,7 +96,7 @@ echo Field::select($form, 'payment_method_id')
     ->addInputAttributes([
         'placeholder' => $translator->translate('note'),
         'value' => Html::encode($form->getNote() ?? ''),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'note',
         'readonly' => 'readonly',
         'disabled' => 'disabled',
@@ -117,11 +117,11 @@ echo Field::select($form, 'payment_method_id')
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= $viewCustomFields; ?>
-            <?= Html::closeTag('div'); ?>    
+            <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?= Form::tag()->close() ?>   
+<?=  new Form()->close() ?>

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\CategorySecondary;
 
-use App\Invoice\Entity\CategorySecondary;
+use App\Infrastructure\Persistence\CategorySecondary\CategorySecondary;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -88,7 +88,7 @@ final class CategorySecondaryRepository extends Select\Repository
         );
     }
 
-    public function repoCategoryPrimaryIdQuery(string $category_primary_id): EntityReader
+    public function repoCategoryPrimaryIdQuery(int $category_primary_id): EntityReader
     {
         $select = $this->select();
         $query = $select
@@ -97,11 +97,11 @@ final class CategorySecondaryRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @psalm-return TEntity|null
      * @return CategorySecondary|null
      */
-    public function repoCategorySecondaryQuery(string $id): ?CategorySecondary
+    public function repoCategorySecondaryQuery(int $id): ?CategorySecondary
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -109,11 +109,11 @@ final class CategorySecondaryRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @psalm-return TEntity|null
      * @return CategorySecondary|null
      */
-    public function repoCategorySecondaryLoadedQuery(string $id): ?CategorySecondary
+    public function repoCategorySecondaryLoadedQuery(int $id): ?CategorySecondary
     {
         $query = $this->select()
                       ->load('category_primary')
@@ -132,10 +132,9 @@ final class CategorySecondaryRepository extends Select\Repository
          * @var CategorySecondary $categorySecondary
          */
         foreach ($categorySecondaries as $categorySecondary) {
-            $categorySecondaryId = $categorySecondary->getId();
-            if (null !== $categorySecondaryId) {
-                $optionsDataCategorySecondaries[$categorySecondaryId] = ($categorySecondary->getName() ?? '');
-            }
+            $categorySecondaryId = $categorySecondary->reqId();
+            $optionsDataCategorySecondaries[$categorySecondaryId] =
+                ($categorySecondary->getName() ?? '');
         }
         return $optionsDataCategorySecondaries;
     }
@@ -143,27 +142,29 @@ final class CategorySecondaryRepository extends Select\Repository
     /**
      * @return array
      */
-    public function optionsDataCategorySecondariesWithCategoryPrimaryId(string $category_primary_id): array
-    {
-        $categorySecondaries = $this->repoCategoryPrimaryIdQuery($category_primary_id);
+    public function optionsDataCategorySecondariesWithCategoryPrimaryId(
+        int $category_primary_id
+    ): array {
+        $categorySecondaries = $this->repoCategoryPrimaryIdQuery(
+            $category_primary_id
+        );
         $optionsDataCategorySecondaries = [];
         /**
          * @var CategorySecondary $categorySecondary
          */
         foreach ($categorySecondaries as $categorySecondary) {
-            $categorySecondaryId = $categorySecondary->getId();
-            if (null !== $categorySecondaryId) {
-                $optionsDataCategorySecondaries[$categorySecondaryId] = ($categorySecondary->getName() ?? '');
-            }
+            $categorySecondaryId = $categorySecondary->reqId();
+            $optionsDataCategorySecondaries[$categorySecondaryId] =
+                ($categorySecondary->getName() ?? '');
         }
         return $optionsDataCategorySecondaries;
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return int
      */
-    public function repoCount(string $id): int
+    public function repoCount(int $id): int
     {
         $query = $this->select()
                       ->where(['id' => $id]);

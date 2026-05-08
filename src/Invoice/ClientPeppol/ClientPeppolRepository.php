@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\ClientPeppol;
 
-use App\Invoice\Entity\ClientPeppol;
+use App\Infrastructure\Persistence\ClientPeppol\ClientPeppol;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -90,11 +90,11 @@ final class ClientPeppolRepository extends Select\Repository
     }
 
     /**
-     * @param string $client_id
+     * @param int $client_id
      * @psalm-return TEntity|null
      * @return ClientPeppol|null
      */
-    public function repoClientPeppolLoadedquery(string $client_id): ?ClientPeppol
+    public function repoClientPeppolLoadedquery(int $client_id): ?ClientPeppol
     {
         $query = $this->select()
                       ->load('client')
@@ -103,10 +103,10 @@ final class ClientPeppolRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return int
      */
-    public function repoCount(string $id): int
+    public function repoCount(int $id): int
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -114,10 +114,10 @@ final class ClientPeppolRepository extends Select\Repository
     }
 
     /**
-     * @param string $client_id
+     * @param int $client_id
      * @return int
      */
-    public function repoClientCount(string $client_id): int
+    public function repoClientCount(int $client_id): int
     {
         $query = $this->select()
                       ->where(['client_id' => $client_id]);

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Product;
+use App\Infrastructure\Persistence\Product\Product;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -16,11 +16,13 @@ use Yiisoft\Yii\DataView\GridView\Column\ActionButton;
 use Yiisoft\Yii\DataView\GridView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
+use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
 use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 /**
  * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Invoice\ProductClient\ProductClientRepository $productClientR
  * @var App\Widget\GridComponents $gridComponents
  * @var App\Widget\PageSizeLimiter $pageSizeLimiter
  * @var Yiisoft\Router\CurrentRoute $currentRoute
@@ -30,6 +32,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlFastRouteGenerator
  * @var Yiisoft\Yii\DataView\YiiRouter\UrlCreator $urlCreator
+ * @var bool $visible
  * @var int $defaultPageSizeOffsetPaginator
  * @var string $alert
  * @var string $csrf
@@ -39,23 +42,31 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @psalm-var positive-int $page
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$toolbarReset = A::tag()
+$allVisible =  new A()
+        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('hide.or.unhide.columns')])
+        ->addClass('btn btn-warning me-1 ajax-loader')
+        ->content('↔️')
+        ->href($urlGenerator->generate('setting/visible', ['origin' => 'product']))
+        ->id('btn-all-visible')
+        ->render();
+
+$toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-    ->href($urlGenerator->generate($currentRoute->getName() ?? 'product/index'))
+    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
+    ->href($urlGenerator->generate('product/index'))
     ->id('btn-reset')
     ->render();
 
 // Trigger $(document).on('click', '#product_filters_submit', function () located in C:\wamp64\www\invoice\src\Invoice\Asset\rebuild-1.13\js\product.js
 // which in turn runs the ProductController.php index_filters function which returns the index view with the productReppositories search
-$toolbarFilter = A::tag()
+$toolbarFilter =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('product_filters_submit')
     ->addClass('btn btn-info me-1')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
     ->href('#product_filters_submit')
     ->id('product_filters_submit')
     ->render();
@@ -64,110 +75,192 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Product $model) => Html::encode($model->getProduct_id()),
+        content: static fn (Product $model) => Html::encode($model->reqId()),
         withSorting: true,
     ),
     new DataColumn(
         property: 'family_id',
         header: $translator->translate('family.name'),
         encodeHeader: true,
-        content: static fn(Product $model): string => Html::encode($model->getFamily()?->getFamily_name() ?? ''),
-        filter: (new DropdownFilter())->optionsData($optionsDataFamiliesDropdownFilter),
+        content: static fn (Product $model): string => Html::encode($model->getFamily()?->getFamilyName() ?? ''),
+        filter: DropdownFilter::widget()
+                ->addAttributes([
+                    'name' => 'family_id',
+                    'class' => 'native-reset',
+                ])
+                ->optionsData($optionsDataFamiliesDropdownFilter),
         visible: true,
         withSorting: true,
+    ),
+    new DataColumn(
+        property: 'product_name',
+        header: $translator->translate('product.name'),
+        encodeHeader: true,
+        content: static fn (Product $model): string => Html::encode($model->getProductName()),
+        visible: true,
+        withSorting: false,
+    ),
+    new DataColumn(
+        property: 'client_associations',
+        header: $translator->translate('recent.clients'), 
+        encodeHeader: true,
+        content: static function (Product $model) use (
+                $productClientR, $translator, $urlGenerator, $gridComponents): string {
+            $productClients = $productClientR->findByProductId($productId = $model->reqId());
+            $model->setProductClients();
+            /**
+             * @var App\Infrastructure\Persistence\ProductClient\ProductClient $productClient
+             */
+            foreach ($productClients as $productClient) {
+                $model->addProductClient($productClient);
+            }
+            // If there are no clients, return empty string
+            $clientCount = $model->getProductClients()->count();
+            if ($clientCount === 0) {
+                return '';
+            }
+            // Unique collapse id per product so toggles don't conflict
+            $collapseId = 'clients-product-' . $productId;
+            
+            // Button that toggles the mini table (uses Bootstrap 5 collapse)
+            $buttonHtml = Html::tag(
+                'button', '➡️' . ' ' . Html::encode((string) $clientCount),
+                [
+                    'type' => 'button',
+                    'class' => 'btn btn-sm btn-outline-primary me-2',
+                    'data-bs-toggle' => 'collapse',
+                    'data-bs-target' => '#' . $collapseId,
+                    'aria-expanded' => 'true',
+                    'aria-controls' => $collapseId,
+                ]
+            );
+            
+            // The mini table content generated by the existing helper
+            $tableHtml = $gridComponents->gridMiniTableOfClientsForProduct(
+                $model,
+                $min_clients_per_row = 4,
+                $translator,    
+                $urlGenerator,
+            );
+            
+            // Wrap the table in a collapse container so it can be hidden/shown.
+            // We set it to "show" by default. Toggle will collapse/expand it.
+            $collapseHtml =  new Div()
+                ->id($collapseId)
+                ->addClass('collapse show mt-2')
+                ->content($tableHtml)
+                ->encode(false)
+                ->render();
+
+            return $buttonHtml . $collapseHtml;
+        },
+        encodeContent: false,
     ),
     new DataColumn(
         property: 'product_sku',
         header: $translator->translate('product.sku'),
         encodeHeader: true,
-        content: static fn(Product $model): string => Html::encode($model->getProduct_sku()),
-        filter: (new DropdownFilter())->optionsData($optionsDataProductsDropdownFilter),
+        content: static fn (Product $model): string => Html::encode($model->getProductSku()),
+        filter: DropdownFilter::widget()
+                ->addAttributes([
+                    'name' => 'product_sku',
+                    'class' => 'native-reset',
+                ])
+                ->optionsData($optionsDataProductsDropdownFilter),
         visible: true,
         withSorting: false,
     ),
     new DataColumn(
         property: 'product_description',
         header: $translator->translate('product.description'),
-        content: static fn(Product $model): string => Html::encode(ucfirst($model->getProduct_description() ?? '')),
+        content: static fn (Product $model): string => Html::encode(ucfirst($model->getProductDescription() ?? '')),
+        visible: true,
         withSorting: true,
     ),
     new DataColumn(
         property: 'product_price',
         header: $translator->translate('product.price') . ' ( ' . $s->getSetting('currency_symbol') . ' ) ',
-        content: static fn(Product $model): string => Html::encode($model->getProduct_price()),
-        filter: true,
+        content: static fn (Product $model): string => Html::encode($model->getProductPrice()),
+        filter: TextInputFilter::widget()
+                ->addAttributes([
+                    'style' => 'max-width: 50px',
+                    'class' => 'native-reset',
+                ]),
+        visible: true,
         withSorting: false,
     ),
     new DataColumn(
         property: 'product_price_base_quantity',
         header: $translator->translate('product.price.base.quantity'),
-        content: static fn(Product $model): string => Html::encode($model->getProduct_price_base_quantity()),
+        content: static fn (Product $model): string => Html::encode($model->getProductPriceBaseQuantity()),
+        visible: $visible,
         withSorting: true,
     ),
     new DataColumn(
         property: 'product_unit',
         header: $translator->translate('product.unit'),
-        content: static fn(Product $model): string => Html::encode((ucfirst($model->getUnit()?->getUnit_name() ?? ''))),
+        content: static fn (Product $model): string => Html::encode((ucfirst($model->getUnit()?->getUnitName() ?? ''))),
+        visible: true,
     ),
     new DataColumn(
         property: 'tax_rate_id',
         header: $translator->translate('tax.rate'),
-        content: static fn(Product $model): string => ($model->getTaxrate()?->getTaxRateId() > 0)
+        content: static fn (Product $model): string => ($model->getTaxrate()?->reqId() > 0)
                     ? Html::encode($model->getTaxrate()?->getTaxRateName())
                     : $translator->translate('none'),
+        visible: $visible,
         withSorting: true,
-    ),
-    new DataColumn(
-        property: 'product_tariff',
-        header: $s->getSetting('sumex') ? $translator->translate('product.tariff') . '(' . $s->getSetting('currency_symbol') . ')' : '',
-        content: static fn(Product $model): string => ($s->getSetting('sumex')
-                    ? Html::encode($model->getProduct_tariff())
-                    : Html::encode($translator->translate('none'))),
-        visible: $s->getSetting('sumex') ? true : false,
     ),
     new DataColumn(
         header: $translator->translate('product.property.add'),
         content: static function (Product $model) use ($urlGenerator): A {
             return Html::a(
-                Html::tag('i', '', ['class' => 'fa fa-plus fa-margin dropdown-button text-decoration-none']),
-                $urlGenerator->generate('productproperty/add', ['product_id' => $model->getProduct_id()]),
+                Html::tag('i', '', ['class' => 'bi-plus dropdown-button text-decoration-none']),
+                $urlGenerator->generate('productproperty/add', ['product_id' => $model->reqId()]),
                 [],
             );
         },
         encodeContent: false,
+        visible: $visible,
     ),
-    new ActionColumn(buttons: [
+    new ActionColumn(
+        before: Html::openTag('div', ['class' => 'btn-group', 'role' => 'group']),
+        after: Html::closeTag('div'),
+        buttons: [
         new ActionButton(
             content: '🔎',
             url: function (Product $model) use ($urlGenerator): string {
                 /** @psalm-suppress InvalidArgument */
-                return $urlGenerator->generate('product/view', ['id' => $model->getProduct_id()]);
+                return $urlGenerator->generate('product/view', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
                 'title' => $translator->translate('view'),
+                'class' => 'btn btn-outline-primary btn-sm',
             ],
         ),
         new ActionButton(
             content: '✎',
             url: function (Product $model) use ($urlGenerator): string {
                 /** @psalm-suppress InvalidArgument */
-                return $urlGenerator->generate('product/edit', ['id' => $model->getProduct_id()]);
+                return $urlGenerator->generate('product/edit', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
                 'title' => $translator->translate('edit'),
+                'class' => 'btn btn-outline-warning btn-sm',
             ],
         ),
         new ActionButton(
             content: '❌',
             url: function (Product $model) use ($urlGenerator): string {
                 /** @psalm-suppress InvalidArgument */
-                return $urlGenerator->generate('product/delete', ['id' => $model->getProduct_id()]);
+                return $urlGenerator->generate('product/delete', ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),
                 'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                'class' => 'btn btn-outline-danger btn-sm',
             ],
         ),
     ]),
@@ -186,7 +279,7 @@ $sortedAndPagedPaginator = (new OffsetPaginator($products))
     ->withSort($sort)
     ->withToken(PageToken::next((string) $page));
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $sortedAndPagedPaginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -194,19 +287,35 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('product/index'))->csrf($csrf)->open()
-    . A::tag()
-    ->href($urlGenerator->generate('product/add'))
-    ->addClass('btn btn-info')
-    ->content('➕')
-    ->render()
-    . Div::tag()->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render()
-    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-    . Form::tag()->close();
+// Add left-aligned wrapper when additional columns are visible to accommodate more columns
+$tableOrTableResponsive = $visible ? 'table-responsive' : 'table';
+
+$toolbarString
+    =  new Form()->post($urlGenerator->generate('product/index'))->csrf($csrf)->open()
+    .  new Div()->addClass('float-start')->content(
+        '<h4 class="me-3 d-inline-block">' . $translator->translate('products') . '</h4>'
+        . '<div class="btn-group me-2" role="group">'
+        . $allVisible
+        . $toolbarReset
+        . $toolbarFilter
+        .  new A()
+            ->href($urlGenerator->generate('product/add'))
+            ->addClass('btn btn-info')
+            ->content('➕')
+            ->render()
+        . '</div>'
+    )->encode(false)->render()
+    .  new Form()->close();
+
+echo $toolbarString;
+
+if ($visible) {
+    echo '<div class="text-start">';
+}
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
-->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-product'])
+->tableAttributes(['class' => $tableOrTableResponsive . ' table-striped text-center h-75','id' => 'table-product'])
 /** @psalm-suppress InvalidArgument */
 ->columns(...$columns)
 ->dataReader($sortedAndPagedPaginator)
@@ -219,14 +328,17 @@ echo GridView::widget()
 // the down arrow will appear if column values are descending
 ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-->header($translator->translate('products'))
 ->urlQueryParameters(['filter_product_sku', 'filter_product_price'])
 ->emptyCell($translator->translate('not.set'))
 ->emptyCellAttributes(['style' => 'color:red'])
 ->id('w4-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($sortedAndPagedPaginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlFastRouteGenerator, 'product') . ' ' . $grid_summary)
+->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlFastRouteGenerator, 'product') . ' ' . $gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
-->noResultsText($translator->translate('no.records'))
-->toolbar($toolbarString);
+->noResultsText($translator->translate('no.records'));
+
+// Close the left-aligned wrapper div when additional columns are visible
+if ($visible) {
+    echo '</div>';
+}

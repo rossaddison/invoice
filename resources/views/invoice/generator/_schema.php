@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Related logic: see GeneratorController function quick_view_schema
+ * Related logic: see GeneratorController function quickViewSchema
  * @var Cycle\Database\TableInterface[] $tables
  * @var bool $isGuest
  * @var string $alerts
@@ -15,9 +15,6 @@ declare(strict_types=1);
 $alerts;
 
 if (!$isGuest) {
-    /**
-     * @var Cycle\Database\TableInterface $table
-     */
     foreach ($tables as $table) {
         echo '<div>';
         echo '<br>';
@@ -47,22 +44,21 @@ if (!$isGuest) {
              * @var array $enumValues
              * @var string $enum
              */
-            foreach (($enumValues = $column->getEnumValues()) as $enum) {
-                $temp = $enum;
-                $temp .= " " . $temp;
+            foreach ($column->getEnumValues() as $enum) {
+                $temp .= " " . $enum;
             }
             echo '<td>' . $temp . '</td>';
+
             $var = '';
 
             /**
              * @var array $columnConstraints
              * @var string $constraint
              */
-            foreach (($columnConstraints = $column->getConstraints()) as $constraint) {
-                $var = $constraint;
-                $var .= " " . $var;
+            foreach ($column->getConstraints() as $constraint) {
+                $var .= " " . $constraint;
             }
-            echo '<td>' . $temp . '</td>';
+            echo '<td>' . $var . '</td>';
             echo '</tr>';
         }
         echo '</tbody>';

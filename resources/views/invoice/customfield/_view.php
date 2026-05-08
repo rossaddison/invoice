@@ -22,7 +22,7 @@ use Yiisoft\Html\Tag\Form;
 ?>
 
 <?=
-    Form::tag()
+     new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -36,16 +36,6 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div'); ?>
     <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                <?= Field::text($form, 'id')
-                ->addInputAttributes(['style' => 'background:lightblue'])
-                ->label($translator->translate('id'))
-                ->value(Html::encode($form->getId() ?? ''))
-                ->readonly(true);
-?>
-            <?= Html::closeTag('div'); ?>
-
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'table')
     ->addInputAttributes(['style' => 'background:lightblue'])
@@ -91,7 +81,7 @@ use Yiisoft\Html\Tag\Form;
 ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
-    <?= Html::closeTag('div'); ?>    
+    <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= $button::back(); ?>
-<?= Form::tag()->close(); ?>
+<?=  new Form()->close(); ?>

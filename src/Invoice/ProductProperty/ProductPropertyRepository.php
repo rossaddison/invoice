@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\ProductProperty;
 
-use App\Invoice\Entity\ProductProperty;
+use App\Infrastructure\Persistence\ProductProperty\ProductProperty;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -39,10 +39,10 @@ final class ProductPropertyRepository extends Select\Repository
     }
 
     /**
-     * @param string $product_id
+     * @param int $product_id
      * @return EntityReader
      */
-    public function findAllProduct(string $product_id): EntityReader
+    public function findAllProduct(int $product_id): EntityReader
     {
         $query = $this->select()
                       ->where(['product_id' => $product_id]);
@@ -101,11 +101,11 @@ final class ProductPropertyRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @psalm-return TEntity|null
      * @return ProductProperty|null
      */
-    public function repoProductPropertyLoadedquery(string $id): ?ProductProperty
+    public function repoProductPropertyLoadedquery(int $id): ?ProductProperty
     {
         $query = $this->select()
                       ->load('product')
@@ -114,10 +114,10 @@ final class ProductPropertyRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return int
      */
-    public function repoCount(string $id): int
+    public function repoCount(int $id): int
     {
         $query = $this->select()
                       ->where(['id' => $id]);

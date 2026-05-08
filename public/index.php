@@ -8,7 +8,7 @@ use Yiisoft\Yii\Runner\Http\HttpApplicationRunner;
  * @psalm-suppress RiskyTruthyFalsyComparison getenv('YII_C3')
  */
 if (getenv('YII_C3')) {
-    $c3 = dirname(__DIR__) . '/c3.php';
+    $c3 = dirname(__DIR__) . '/vendor/codeception/c3/c3.php';
     if (file_exists($c3)) {
         require_once $c3;
     }
@@ -31,6 +31,10 @@ if (PHP_SAPI === 'cli-server') {
 
 chdir(dirname(__DIR__));
 require_once dirname(__DIR__) . '/autoload.php';
+
+// Suppress E_DEPRECATED from vendor libraries (e.g. curl_close in payment SDKs)
+// that cannot be patched directly. Remove once upstream packages are updated.
+error_reporting(E_ALL & ~E_DEPRECATED);
 
 // Run HTTP application runner
 $runner = new HttpApplicationRunner(

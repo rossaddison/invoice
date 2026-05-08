@@ -7,7 +7,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * Related logic: see ...src\Invoice\Product\ProductController function view_partial_product_image
+ * Related logic: see ...src\Invoice\Product\ProductController function viewPartialProductImage
  * @var App\Invoice\Product\ImageAttachForm $form
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -33,7 +33,7 @@ if ($invEdit && $invView) {
     </div>
     <div class="panel-body clearfix">
         <div class="container">
-            <?php if ($invView && $invEdit) { ?> 
+            <?php if ($invView && $invEdit) { ?>
             <?php echo $partial_product_image_info; ?>
             <?= Html::openTag('div', ['class' => 'row']); ?>
                 <div>
@@ -41,7 +41,7 @@ if ($invEdit && $invView) {
                         <h5><?= Html::encode($this->getTitle()) ?></h5>
                     </div>
                     <div>
-                        <?= Form::tag()
+                        <?=  new Form()
                            ->post($urlGenerator->generate($actionName, $actionArguments))
                            ->enctypeMultipartFormData()
                            ->csrf($csrf)
@@ -69,7 +69,7 @@ if ($invEdit && $invView) {
                             'name' => 'contact-button',
                         ],
                     ]) ?>
-                        <?= Form::tag()->close() ?>
+                        <?=  new Form()->close() ?>
                     </div>
                 </div>
             </div>

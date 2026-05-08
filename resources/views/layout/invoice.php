@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Asset\InvoiceAsset;
+use App\Invoice\Asset\InvoiceCdnAsset as InvCdn;
+use App\Invoice\Asset\InvoiceNodeModulesAsset as InvNm;
 use App\Invoice\Asset\MonospaceAsset;
 use App\Invoice\Asset\NProgressAsset;
 // PCI Compliant Payment Gateway Assets
-use App\Invoice\Asset\pciAsset\stripe_v10_Asset;
-use App\Invoice\Asset\pciAsset\amazon_pay_v2_7_Asset;
-use App\Invoice\Asset\pciAsset\braintree_dropin_1_33_7_Asset;
-use App\Asset\AppAsset;
+use App\Invoice\Asset\pciAsset\StripeVersionTenAsset;
+use App\Invoice\Asset\pciAsset\AmazonPayTwoSevenAsset;
+use App\Invoice\Asset\pciAsset\BraintreeDropInOneThirtyThreeSevenAsset;
+
+use App\Asset\AppCdnAsset;
+use App\Asset\AppNodeModulesAsset;
+
 use App\Widget\PerformanceMetrics;
-use Yiisoft\Html\Tag\Button;
-use Yiisoft\Html\Tag\Form;
-use Yiisoft\Html\Tag\I;
-use Yiisoft\Html\Tag\Style;
-use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Meta;
+use Yiisoft\Bootstrap5\Assets\BootstrapCdnAsset as BsCdn;
+use Yiisoft\Bootstrap5\Assets\BootstrapAsset as BsNm;
 use Yiisoft\Bootstrap5\ButtonSize;
 use Yiisoft\Bootstrap5\Dropdown;
 use Yiisoft\Bootstrap5\DropdownItem;
@@ -27,7 +27,13 @@ use Yiisoft\Bootstrap5\NavLink;
 use Yiisoft\Bootstrap5\NavStyle;
 use Yiisoft\Bootstrap5\Offcanvas;
 use Yiisoft\Bootstrap5\OffcanvasPlacement;
-
+use Yiisoft\Html\Tag\Button;
+use Yiisoft\Html\Tag\Form;
+use Yiisoft\Html\Tag\I;
+use Yiisoft\Html\Tag\Img;
+use Yiisoft\Html\Tag\Style;
+use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\Meta;
 /**
  * Related logic: see ...src\ViewInjection\LayoutViewInjection
  * @var Psr\Http\Message\ServerRequestInterface $request
@@ -40,6 +46,9 @@ use Yiisoft\Bootstrap5\OffcanvasPlacement;
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\View\WebView $this
+ * @var bool $appCdnNotNodeModule
+ * @var bool $invCdnNotNodeModule
+ * @var bool $bootstrap5CdnNotNodeModule
  * @var bool $bootstrap5OffcanvasEnable
  * @var bool $isGuest
  * @var bool $buildDatabase
@@ -47,6 +56,8 @@ use Yiisoft\Bootstrap5\OffcanvasPlacement;
  * @var string $bootstrap5OffcanvasPlacement
  * @var string $bootstrap5LayoutInvoiceNavbarFont
  * @var string $bootstrap5LayoutInvoiceNavbarFontSize
+ * @var int $bootstrap5FormInputHeight
+ * @var int $bootstrap5FormFontSize
  * @var string $brandLabel
  * @var string $csrf
  * @var string $companyLogoHeight
@@ -57,89 +68,100 @@ use Yiisoft\Bootstrap5\OffcanvasPlacement;
  * @var string $logoPath
  * @var string $read_write
  * @var string $scrutinizerRepository
- *
+ * @var string $splitterLanguage
+ * @var string $splitterRegion
+ * @var string $currentLocaleFlag
+ * @var array<string,string> $localeFlags
+ * @var DropdownItem $afZA
+ * @var DropdownItem $arBH
+ * @var DropdownItem $az
+ * @var DropdownItem $beBY
+ * @var DropdownItem $bs
+ * @var DropdownItem $zhCN
+ * @var DropdownItem $zhTW
+ * @var DropdownItem $en
+ * @var DropdownItem $fil
+ * @var DropdownItem $fr
+ * @var DropdownItem $gdGB
+ * @var DropdownItem $haNG
+ * @var DropdownItem $heIL
+ * @var DropdownItem $igNG
+ * @var DropdownItem $nl
+ * @var DropdownItem $de
+ * @var DropdownItem $id
+ * @var DropdownItem $it
+ * @var DropdownItem $ja
+ * @var DropdownItem $pl
+ * @var DropdownItem $ptBR
+ * @var DropdownItem $ru
+ * @var DropdownItem $sk
+ * @var DropdownItem $sl
+ * @var DropdownItem $es
+ * @var DropdownItem $uk
+ * @var DropdownItem $uz
+ * @var DropdownItem $vi
+ * @var DropdownItem $yoNG
+ * @var DropdownItem $zuZA
  * Related logic: see ...src\ViewInjection\LayoutViewInjection.php
  * @var string $userLogin
  *
  * @var string $xdebug
+ *
  */
-$assetManager->register(AppAsset::class);
-$assetManager->register(InvoiceAsset::class);
-$assetManager->register(NProgressAsset::class);
-$assetManager->register(Yiisoft\Bootstrap5\Assets\BootstrapAsset::class);
-$s->getSetting('monospace_amounts') == 1 ? $assetManager->register(MonospaceAsset::class) : '';
-$assetManager->register(stripe_v10_Asset::class);
-$assetManager->register(amazon_pay_v2_7_Asset::class);
-$assetManager->register(braintree_dropin_1_33_7_Asset::class);
-$vat = ($s->getSetting('enable_vat_registration') == '0');
-// NOTE: $locale must correspond with SettingRepository/locale_language_array and
-// ALSO: src/Invoice/Language/{folder_name}
-$locale = match ($currentRoute->getArgument('_language') ?? 'en') {
-    /**
-     * Note: case 'x' must follow config/web/params locale => ['locales' => [ 'x' => 'x-XX'] format i.e. use key and NOT value i.e. use 'x' and NOT 'x-XX'
-     * Note: If there is more than one official language in the country use the format x-YY for 'case' which should correspond with above locales array
-     */
-    'af-ZA' => 'AfrikaansSouthAfrican',
-    'ar-BH' => 'ArabicBahrainian',
-    'az' => 'Azerbaijani',
-    'bs' => 'Bosnian',
-    'de' => 'German',
-    'en' => 'English',
-    'fil' => 'Filipino',
-    'fr' => 'French',
-    'id' => 'Indonesian',
-    'it' => 'Italian',
-    'ja' => 'Japanese',
-    'pl-PL' => 'Polish',
-    'pt-BR' => 'PortugeseBrazil',
-    'nl' => 'Dutch',
-    'ru' => 'Russian',
-    'sk' => 'Slovakian',
-    'sl' => 'Slovenian',
-    'es' => 'Spanish',
-    'uk' => 'Ukrainian',
-    'uz' => 'Uzbek',
-    'vi' => 'Vietnamese',
-    'zh-CN' => 'ChineseSimplified',
-    'zh-TW' => 'TiawaneseMandarin',
-    'zu-ZA' => 'ZuluSouthAfrican',
-    default   => 'English',
-};
 
+// Settings ... View ... General
+$assetManager->register($appCdnNotNodeModule ? AppCdnAsset::class
+                                             : AppNodeModulesAsset::class);
+$assetManager->register($invCdnNotNodeModule ? InvCdn::class : InvNm::class);
+$assetManager->register(NProgressAsset::class);
+$assetManager->register($bootstrap5CdnNotNodeModule ? BsCdn::class : BsNm::class);
+$s->getSetting('monospace_amounts') == 1 ?
+    $assetManager->register(MonospaceAsset::class) : '';
+$assetManager->register(StripeVersionTenAsset::class);
+$assetManager->register(AmazonPayTwoSevenAsset::class);
+$assetManager->register(BraintreeDropInOneThirtyThreeSevenAsset::class);
+$vat = ($s->getSetting('enable_vat_registration') == '0');
 $this->addCssFiles($assetManager->getCssFiles());
 $this->addCssStrings($assetManager->getCssStrings());
 $this->addJsFiles($assetManager->getJsFiles());
-
 $this->addJsStrings($assetManager->getJsStrings());
 $this->addJsVars($assetManager->getJsVars());
-
-// Platform, Performance, and Clear Assets Cache, and links Menu will disappear if set to false;
+$t = $translator;
+$itemFontArray = [
+    'style' => 'font-size: ' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;'
+    . ' color: black;'];
+// Platform, Performance, and Clear Assets Cache, and links Menu will disappear
+// if set to false;
 /**
  * Related logic: see src\ViewInjection\LayoutViewInjection.php $debugMode
  */
 $this->beginPage();
 ?>
 <!DOCTYPE html>
-<html class="h-100" lang="<?= $currentRoute->getArgument('_language') ?? 'en'; ?>">
-    <head>
-        <?= Meta::documentEncoding('utf-8') ?>
-        <?= Meta::pragmaDirective('X-UA-Compatible', 'IE=edge') ?>
-        <?= Meta::data('viewport', 'width=device-width, initial-scale=1') ?>
-        <?= Style::tag()->content('#nprogress .bar {
-                    height: 2px !important; /* ~2mm */
-                    background: #2196f3 !important;
-                }')->render();
-?>
-        <title>
-            <?= $s->getSetting('custom_title') ?: 'Yii-Invoice'; ?>
-        </title>
-        <?php $this->head() ?>
-    </head>
-    <body>
-        <?php
-    Html::tag('Noscript', Html::tag('Div', $translator->translate('please.enable.js'), ['class' => 'alert alert-danger no-margin']));
-?>
-        <?php
+<?php
+echo Html::openTag('html',
+        ['class' => 'h-100', 'lang' => $splitterLanguage ?: 'en']);
+ echo Html::openTag('head'); //1
+ echo Meta::documentEncoding('utf-8');
+ echo Meta::data('viewport', 'width=device-width, initial-scale=1');
+  echo new Style()->content(
+    ':root {'
+    . ' --inv-nav-fs: ' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;'
+    . ' --inv-nav-ff: ' . $bootstrap5LayoutInvoiceNavbarFont . ';'
+    . ' --inv-input-height: ' . $bootstrap5FormInputHeight . 'px;'
+    . ' --inv-form-fs: ' . $bootstrap5FormFontSize . 'px;'
+    . ' }'
+  )->render();
+ echo Html::openTag('title'); //1
+  echo $s->getSetting('custom_title') ?: 'Yii-Invoice';
+ echo Html::closeTag('title'); //1
+ $this->head();
+echo Html::closeTag('head');
+echo Html::openTag('body');
+ echo Html::tag('noscript',
+  Html::tag('div', $t->translate('please.enable.js'),
+   ['class' => 'alert alert-danger no-margin']),
+ );
 echo Html::script('NProgress.start();')->type('module');
 $this->beginBody();
 
@@ -150,53 +172,61 @@ $offcanvasPlacement = match ($bootstrap5OffcanvasPlacement) {
     'top' => OffcanvasPlacement::TOP,
 };
 
-echo($bootstrap5OffcanvasEnable ? Offcanvas::widget()
+echo $bootstrap5OffcanvasEnable ? Offcanvas::widget()
         ->id('offcanvas' . ucFirst($bootstrap5OffcanvasPlacement))
         ->placement($offcanvasPlacement)
         ->title('Offcanvas')
-        ->togglerContent('Toggle ' . strtolower($bootstrap5OffcanvasPlacement) . ' offcanvas')
-        ->begin() : '');
+        ->togglerContent('Toggle '
+            . strtolower($bootstrap5OffcanvasPlacement) . ' offcanvas')
+        ->begin() : '';
 
 echo NavBar::widget()
-  // public folder represented by first forward slash ie. root
-  ->addClass('navbar bg-body-tertiary')
-  ->brandImage($logoPath)
-  ->brandImageAttributes(
-      ['margin' => $companyLogoMargin, 'width' => $companyLogoWidth, 'height' => $companyLogoHeight],
-  )
-  ->brandText(str_repeat('&nbsp;', 7) . $brandLabel)
-  ->brandUrl($urlGenerator->generate('invoice/index'))
-  ->container(false)
-  ->containerAttributes([])
-  ->addCssStyle([
-      'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize,
-      'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
-  ])
-  ->id('navbar')
-  ->begin();
+//->addClass('navbar bg-body-tertiary')
+->brandImage($logoPath)
+->brandImageAttributes(
+    ['margin' => $companyLogoMargin, 'width' => $companyLogoWidth,
+     'height' => $companyLogoHeight],
+)
+->brandText(str_repeat('&nbsp;', 7) . $brandLabel)
+->brandUrl($urlGenerator->generate('invoice/index'))
+->container(false)
+->containerAttributes([])
+->addCssStyle([
+    'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
+    'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
+])
+->id('navbar')
+->begin();
 
 // Logout
-echo Form::tag()
+echo  new Form()
 ->post($urlGenerator->generate('auth/logout'))
 ->csrf($csrf)
 ->open()
-. (string) Button::submit(
-    $translator->translate('menu.logout', ['login' => Html::encode(preg_replace('/\d+/', '', $userLogin))]),
-)
-->class('btn btn-xs btn-warning')
-. Form::tag()->close();
+. Button::submit(
+    (new I())->addClass('bi bi-box-arrow-right me-1')->render()
+    . Html::encode($t->translate('menu.logout',
+        ['login' => Html::encode(preg_replace('/\d+/', '', $userLogin))])),
+)->encode(false)
+->addClass('btn btn-outline-danger')
+->addStyle('font-size: '
+                . $bootstrap5LayoutInvoiceNavbarFontSize
+                . 'px; padding: '
+                . ((int) $bootstrap5LayoutInvoiceNavbarFontSize * 0.15)
+                . 'px '
+                . ((int) $bootstrap5LayoutInvoiceNavbarFontSize * 0.4) . 'px;')
+.  new Form()->close();
 
-$subMenuPhpInfo = [
+$ifaq = 'invoice/faq';
+$sel = 'selection';
+$tpc = 'topic';
+
+$subMenuPrometheus = [
     0 => [
         'items' => [
-            $translator->translate('faq.php.info.all') => ['invoice/phpinfo', ['selection' => '-1']],
-            $translator->translate('faq.php.info.general') => ['invoice/phpinfo', ['selection' => '1']],
-            $translator->translate('faq.php.info.credits') => ['invoice/phpinfo', ['selection' => '2']],
-            $translator->translate('faq.php.info.configuration') => ['invoice/phpinfo', ['selection' => '4']],
-            $translator->translate('faq.php.info.modules') => ['invoice/phpinfo', ['selection' => '8']],
-            $translator->translate('faq.php.info.environment') => ['invoice/phpinfo', ['selection' => '16']],
-            $translator->translate('faq.php.info.variables') => ['invoice/phpinfo', ['selection' => '32']],
-            $translator->translate('faq.php.info.licence') => ['invoice/phpinfo', ['selection' => '64']],
+            'Dashboard' => ['prometheus/dashboard', []],
+            'Raw Metrics' => ['prometheus/metrics', []],
+            'Health Check' => ['prometheus/health', []],
         ],
     ],
 ];
@@ -209,271 +239,668 @@ if ((null !== $currentPath) && !$isGuest) {
         ->addAttributes(['style' => 'background-color: #ffcccb'])
         ->items(
             Dropdown::widget()
-            ->addClass('navbar fs-4')
             ->togglerVariant(ButtonVariant::INFO)
             ->togglerContent('📋')
             ->togglerSize(ButtonSize::LARGE)
+            ->addCssStyle([
+                'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
+                'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
+            ])
             ->items(
-                // Assets Clear
-                DropdownItem::link(
-                    $translator->translate('utility.assets.clear'),
-                    $urlGenerator->generate('setting/clear'),
-                    false,
-                    false,
-                    [
-                        'data-bs-toggle' => 'tooltip',
-                        'title' => 'Clear the assets cache which resides in /public/assets.',
-                    ],
-                ),
                 // Vat exists? Show red or green background
-                DropdownItem::text($translator->translate('vat'), ['style' => $vat ? 'background-color: #ffcccb' : 'background-color: #90EE90']),
+                DropdownItem::text($t->translate('vat'), $itemFontArray +
+                    ['style' => $vat ? 'color: black; background-color: #ffcccb' :
+                        'color: black; background-color: #90EE90']),
                 // Debug Mode
-                DropdownItem::text($translator->translate('debug')),
+                DropdownItem::text($t->translate('debug'), $itemFontArray),
                 // Locale
-                DropdownItem::text(
-                    'Locale ➡️ ' . $locale,
-                ),
+                DropdownItem::text($t->translate('region')
+                    . ' ➡️ ' . ($splitterRegion ?: 'unknown'), $itemFontArray),
                 // cldr
-                DropdownItem::text('cldr ➡️ ' . ($currentRoute->getArgument('_language') ?? 'unknown')),
+                DropdownItem::text('cldr ➡️ ' . ($splitterLanguage ?: 'unknown'),
+                    $itemFontArray),
                 // File Location
-                DropdownItem::text('File Location ➡️ ' . $s->debug_mode_file_location(0)),
+                DropdownItem::text('File Location ➡️ '
+                    . $s->debugModeFileLocation(0), $itemFontArray),
             ),
             // FAQ's
             Dropdown::widget()
-            ->addClass('navbar fs-4')
-            ->addAttributes([
-                'style' => 'font-size: 2rem; color: cornflowerblue;',
+            ->addTogglerCssStyle([
+                'color: cornflowerblue;',
+                'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
+                'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
             ])
             ->togglerVariant(ButtonVariant::INFO)
-            ->togglerContent($translator->translate('faq'))
+            ->togglerContent($t->translate('faq'))
             ->togglerSize(ButtonSize::LARGE)
             ->items(
-                DropdownItem::link('Console Commands', $urlGenerator->generate('invoice/faq', ['topic' => 'consolecommands', 'selection' => ''])),
-                DropdownItem::link($translator->translate('faq.taxpoint'), $urlGenerator->generate('invoice/faq', ['topic' => 'tp', 'selection' => ''])),
-                DropdownItem::link($translator->translate('faq.shared.hosting'), $urlGenerator->generate('invoice/faq', ['topic' => 'shared', 'selection' => ''])),
-                DropdownItem::link($translator->translate('faq.payment.provider'), $urlGenerator->generate('invoice/faq', ['topic' => 'paymentprovider', 'selection' => ''])),
-                DropdownItem::text($subMenu->generate($translator->translate('faq.php.info.details'), $urlGenerator, $subMenuPhpInfo)),
-                DropdownItem::link('JavaScript Analysis', $urlGenerator->generate('invoice/faq', ['topic' => 'javascript_analysis', 'selection' => ''])),
-                DropdownItem::link('Codeception Selectors Checklist', $urlGenerator->generate('invoice/faq', ['topic' => 'codeception_selectors_checklist', 'selection' => ''])),
-                DropdownItem::link($translator->translate('faq.oauth2'), $urlGenerator->generate('invoice/faq', ['topic' => 'oauth2', 'selection' => ''])),
-                DropdownItem::link($translator->translate('faq.ai.callback.session'), $urlGenerator->generate('invoice/faq', ['topic' => 'ai_callback_session', 'selection' => ''])),
+                DropdownItem::link('Console Commands',
+                    $urlGenerator->generate($ifaq,
+                        [$tpc => 'consolecommands', $sel => '']),
+                        itemAttributes: $itemFontArray),
+                DropdownItem::link($t->translate('faq.taxpoint'),
+                    $urlGenerator->generate($ifaq,
+                        [$tpc => 'tp', $sel => '']),
+                        itemAttributes: $itemFontArray),
+                DropdownItem::link($t->translate('faq.shared.hosting'),
+                    $urlGenerator->generate($ifaq,
+                        [$tpc => 'shared', $sel => '']),
+                        itemAttributes: $itemFontArray),
+                DropdownItem::link($t->translate('faq.wsl.to.alpine'),
+                    $urlGenerator->generate($ifaq,
+                        [$tpc => 'wsl_to_alpine', $sel => '']),
+                        itemAttributes: $itemFontArray),
+                DropdownItem::link($t->translate('faq.payment.provider'),
+                    $urlGenerator->generate($ifaq,
+                        [$tpc => 'paymentprovider', $sel => '']),
+                        itemAttributes: $itemFontArray),
+                DropdownItem::link('JavaScript Analysis',
+                    $urlGenerator->generate($ifaq,
+                        [$tpc => 'javascript_analysis', $sel => '']),
+                        itemAttributes: $itemFontArray),
+                DropdownItem::link('Codeception Selectors Checklist',
+                    $urlGenerator->generate($ifaq,
+                        [$tpc => 'codeception_selectors_checklist', $sel => '']),
+                        itemAttributes: $itemFontArray),
+                DropdownItem::link($t->translate('faq.oauth2'),
+                    $urlGenerator->generate($ifaq,
+                        [$tpc => 'oauth2', $sel => '']),
+                        itemAttributes: $itemFontArray),
+                DropdownItem::link($t->translate('faq.ai.callback.session'),
+                    $urlGenerator->generate($ifaq,
+                        [$tpc => 'ai_callback_session', $sel => '']),
+                        itemAttributes: $itemFontArray),
+            ),
+            // E-Invoicing
+            Dropdown::widget()
+            ->attributes(['class' => 'inv-warn'])
+            ->togglerVariant(ButtonVariant::INFO)
+            ->togglerContent( new Img()
+                         ->width((int) $bootstrap5LayoutInvoiceNavbarFontSize * 2)
+                         ->height((int) $bootstrap5LayoutInvoiceNavbarFontSize * 1)
+                         ->src('/site/e-invoice-emoji.png'))
+            ->togglerSize(ButtonSize::SMALL)
+            ->items(
+                DropdownItem::link('European Invoicing',
+                    'https://ec.europa.eu/digital-building-blocks/'
+                    . 'wikis/display/'
+                    . 'DIGITAL/Compliance+with+eInvoicing+standard',
+                    itemAttributes: $itemFontArray + ['target' => '_blank']),
+                DropdownItem::link('European Digital Testing',
+                    'https://ec.europa.eu/digital-building-blocks/'
+                    . 'wikis/display/DIGITAL/'
+                    . 'eInvoicing+Conformance+Testing',
+                    itemAttributes: $itemFontArray + ['target' => '_blank']),
+                DropdownItem::link('What does a Peppol ID look like?',
+                    'https://ecosio.com/en/blog/how-peppol-ids-work/',
+                    itemAttributes: $itemFontArray + ['target' => '_blank']),
+                DropdownItem::link('Peppol Accounting Requirements',
+                    'https://docs.peppol.eu/poacc/billing/3.0/bis/#accountingreq',
+                    itemAttributes: $itemFontArray + ['target' => '_blank']),
+                DropdownItem::link('➡️ Peppol Billing 3.0 - Syntax',
+                    'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/',
+                    itemAttributes: $itemFontArray + ['target' => '_blank']),
+                DropdownItem::link('➡️ Peppol Billing 3.0 - Tree',
+                    'https://docs.peppol.eu/poacc/billing/3.0/'
+                    . 'syntax/ubl-invoice/tree/',
+                    itemAttributes: $itemFontArray + ['target' => '_blank']),
+                DropdownItem::link('Universal Business Language 2.1 (UBL)',
+                    'https://www.datypic.com/sc/ubl21/ss.html',
+                    itemAttributes: $itemFontArray + ['target' => '_blank']),
+                DropdownItem::link('StoreCove Documentation',
+                    'https://www.storecove.com/docs',
+                    itemAttributes: $itemFontArray + ['target' => '_blank']),
+                DropdownItem::link('Peppol Company Search',
+                    'https://directory.peppol.eu/public',
+                    itemAttributes: $itemFontArray + ['target' => '_blank']),
+                DropdownItem::link('ISO 3 letter currency codes - 4217 alpha-3',
+                    'https://www.iso.org/iso-4217-currency-codes.html',
+                    itemAttributes: $itemFontArray + ['target' => '_blank']),
+                DropdownItem::link('Xml Example 2.1',
+                    'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/',
+                    itemAttributes: $itemFontArray + ['target' => '_blank']),
+                DropdownItem::link(content: 'Xml Example 3.0', url:
+                    'https://github.com/OpenPEPPOL/peppol-bis-invoice-3/blob/master/'
+                    . 'rules/examples/base-example.xml',
+                    itemAttributes: $itemFontArray + ['target' => '_blank']),
+                DropdownItem::link('Ecosio Xml Validator',
+                    'https://ecosio.com/en/peppol-and-xml-document-validator/',
+                    itemAttributes: $itemFontArray + ['target' => '_blank']),
+                DropdownItem::link('Xml CodeLists',
+                    'https://github.com/OpenPEPPOL/peppol-bis-invoice-3/'
+                    . 'tree/master/structure/codelist',
+                    itemAttributes: $itemFontArray + ['target' => '_blank']),
+                DropdownItem::link('Convert XML to PHP Array Online',
+                    'https://wtools.io/convert-xml-to-php-array',
+                    itemAttributes: $itemFontArray + ['target' => '_blank']),
+                DropdownItem::link('Writing XML using Sabre',
+                    'https://sabre.io/xml/writing/',
+                    itemAttributes: $itemFontArray + ['target' => '_blank']),
+                DropdownItem::link('Scotland - e-invoice Template - Lessons Learned',
+                    'https://www.gov.scot/publications/einvoicing-guide/documents/',
+                    itemAttributes: $itemFontArray + ['target' => '_blank']),
+                DropdownItem::divider(),
+                DropdownItem::link('Understanding Same Site Cookies',
+                    'https://andrewlock.net/understanding-samesite-cookies/'
+                    . '#:~:text=SameSite%3DLax%20cookies%20are%20not,Lax'
+                    . '%20(or%20Strict%20)%20cookies',
+                    itemAttributes: $itemFontArray + ['target' => '_blank']),
             ),
             // Generator
             Dropdown::widget()
-            ->addClass('navbar fs-4')
-            ->attributes([
-                'style' => 'background-color: #ffcccb',
+            ->attributes(['class' => 'inv-warn'])
+            ->addTogglerCssStyle([
+                'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
+                'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
+                'color' => '#ffc107',
             ])
             ->togglerVariant(ButtonVariant::INFO)
-            ->togglerContent($translator->translate('generator'))
+            ->togglerContent($t->translate('generator'))
             ->togglerSize(ButtonSize::LARGE)
             ->items(
                 DropdownItem::link(
-                    $translator->translate('generator'),
+                    $t->translate('generator'),
                     $urlGenerator->generate('generator/index'),
                     false,
-                    false,
+                    itemAttributes: $itemFontArray,
                 ),
                 DropdownItem::link(
-                    $translator->translate('generator.relations'),
+                    $t->translate('generator.relations'),
                     $urlGenerator->generate('generatorrelation/index'),
                     false,
-                    false,
+                    itemAttributes: $itemFontArray,
                 ),
                 DropdownItem::link(
-                    $translator->translate('generator.add'),
+                    $t->translate('generator.add'),
                     $urlGenerator->generate('generator/add'),
                     false,
-                    false,
+                    itemAttributes: $itemFontArray,
                 ),
                 DropdownItem::link(
-                    $translator->translate('generator.relations.add'),
+                    $t->translate('generator.relations.add'),
                     $urlGenerator->generate('generatorrelation/add'),
                     false,
-                    false,
+                    itemAttributes: $itemFontArray,
                 ),
                 DropdownItem::link(
-                    $translator->translate('development.schema'),
-                    $urlGenerator->generate('generator/quick_view_schema'),
+                    $t->translate('development.schema'),
+                    $urlGenerator->generate('generator/quickViewSchema'),
                     false,
-                    false,
+                    itemAttributes: $itemFontArray,
                 ),
-                // Using the saved locale dropdown setting under Settings ... Views ... Google Translate, translate one of the three files located in
+                // Using the saved locale dropdown setting under Settings
+                // ... Views ... Google Translate, translate one of the three
+                // files located in
                 // ..resources/views/generator/templates_protected
-                // Your Json file must be located in src/Invoice/google_translate_unique folder
+                // Your Json file must be located in src/Invoice/
+                // google_translate_unique folder
                 // Get your downloaded Json file from
                 DropdownItem::link(
-                    $translator->translate('generator.google.translate.app'),
-                    $urlGenerator->generate('generator/google_translate_lang', ['type' => 'app']),
+                    $t->translate('generator.google.translate.app'),
+                    $urlGenerator->generate('generator/googleTranslateLang',
+                        ['type' => 'app']),
                     false,
-                    false,
-                    ['data-bs-toggle' => 'tooltip', 'title' => $s->where('google_translate_json_filename'), 'hidden' => !$debugMode],
+                    itemAttributes: $itemFontArray +
+                    ['data-bs-toggle' => 'tooltip',
+                        'title' => $s->where('google_translate_json_filename'),
+                            'hidden' => !$debugMode],
                 ),
                 DropdownItem::link(
-                    $translator->translate('generator.google.translate.diff'),
-                    $urlGenerator->generate('generator/google_translate_lang', ['type' => 'diff']),
+                    $t->translate('generator.google.translate.diff'),
+                    $urlGenerator->generate('generator/googleTranslateLang',
+                        ['type' => 'diff']),
                     false,
-                    false,
-                    ['data-bs-toggle' => 'tooltip', 'title' => 'src\Invoice\Language\English\diff_lang.php', 'hidden' => !$debugMode],
+                    itemAttributes: $itemFontArray +
+                    ['data-bs-toggle' => 'tooltip',
+                        'title' => 'src\Invoice\Language\English\diff_lang.php',
+                            'hidden' => !$debugMode],
                 ),
                 DropdownItem::link(
-                    $translator->translate('test.reset.setting'),
-                    $urlGenerator->generate('invoice/setting_reset'),
+                    $t->translate('generator.google.translate.info'),
+                    $urlGenerator->generate('generator/googleTranslateInfo'),
                     false,
-                    false,
-                    ['data-bs-toggle' => 'tooltip', 'title' => $translator->translate('test.reset.setting.tooltip'), 'hidden' => !$debugMode],
+                    itemAttributes: $itemFontArray +
+                    ['data-bs-toggle' => 'tooltip',
+                        'title' => 'Translate resources/views/invoice/info/en/'
+                        . 'invoice.php',
+                            'hidden' => !$debugMode],
                 ),
                 DropdownItem::link(
-                    $translator->translate('test.reset'),
-                    $urlGenerator->generate('invoice/test_data_reset'),
+                    $t->translate('test.reset.setting'),
+                    $urlGenerator->generate('invoice/settingReset'),
                     false,
-                    false,
-                    ['data-bs-toggle' => 'tooltip', 'title' => $translator->translate('test.reset.tooltip'), 'hidden' => !$debugMode],
+                    itemAttributes: $itemFontArray +
+                    ['data-bs-toggle' => 'tooltip',
+                        'title' => $t->translate('test.reset.setting.tooltip'),
+                            'hidden' => !$debugMode],
                 ),
                 DropdownItem::link(
-                    $translator->translate('test.remove'),
-                    $urlGenerator->generate('invoice/test_data_remove'),
+                    $t->translate('test.reset'),
+                    $urlGenerator->generate('invoice/testDataReset'),
                     false,
+                    itemAttributes: $itemFontArray +
+                    ['data-bs-toggle' => 'tooltip',
+                        'title' => $t->translate('test.reset.tooltip'),
+                            'hidden' => !$debugMode],
+                ),
+                DropdownItem::link(
+                    $t->translate('test.remove'),
+                    $urlGenerator->generate('invoice/testDataRemove'),
                     false,
-                    ['data-bs-toggle' => 'tooltip', 'title' => $translator->translate('test.remove.tooltip'), 'hidden' => !$debugMode],
+                    itemAttributes: $itemFontArray +
+                    ['data-bs-toggle' => 'tooltip',
+                        'title' => $t->translate('test.remove.tooltip'),
+                            'hidden' => !$debugMode],
                 ),
             ),
             // Performance
             Dropdown::widget()
-            ->addClass('navbar fs-4')
             ->addAttributes([
-                'style' => $read_write ? 'background-color: #ffcccb'
-                                       : 'background-color: #90EE90',
+                'class' => $read_write ? 'inv-warn' : 'inv-ok',
                 'data-bs-toggle' => 'tooltip',
-                'title' => $read_write ? $translator->translate('performance.label.switch.on')
-                                       : $translator->translate('performance.label.switch.off'),
+                'title' => $read_write ? $t->translate(
+                                                'performance.label.switch.on')
+                                       : $t->translate(
+                                               'performance.label.switch.off'),
                 'hidden' => !$debugMode,
             ])
+            ->addTogglerCssStyle([
+                'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
+                'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
+                'color' => '#20c997',
+            ])
             ->togglerVariant(ButtonVariant::INFO)
-            ->togglerContent($translator->translate('performance'))
+            ->togglerContent($t->translate('performance'))
             ->togglerSize(ButtonSize::LARGE)
             ->items(
-                DropdownItem::text($translator->translate('platform.xdebug') . ' ' . $xdebug, ['data-bs-toggle' => 'tooltip', 'title' => 'Via Wampserver Menu: Icon..Php 8.1.8-->Php extensions-->xdebug 3.1.5(click)-->Allow php command prompt to restart automatically-->(click)Restart All Services-->No typing in or editing of a php.ini file!!']),
-                DropdownItem::text('...config/common/params.php SyncTable currently not commented out and PhpFileSchemaProvider::MODE_READ_AND_WRITE...fast....MODE_WRITE_ONLY...slower'),
+                DropdownItem::text(
+                    $t->translate('platform.xdebug')
+                        . ' ' . $xdebug,
+                        [
+                            'data-bs-toggle' => 'tooltip',
+                            'title' => 'Via Wampserver Menu: Icon..Php 8.1.8'
+                            . '-->Php extensions-->xdebug 3.1.5(click)'
+                            . '-->Allow php command prompt to restart automatically'
+                            . '-->(click)Restart All Services'
+                            . '-->No typing in or editing of a php.ini file!!'
+                        ],
+                    itemAttributes: $itemFontArray,
+                ),
+                DropdownItem::text(
+                    '...config/common/params.php SyncTable currently'
+                    . ' not commented out'
+                    . ' and PhpFileSchemaProvider::MODE_READ_AND_WRITE...fast....'
+                    . 'MODE_WRITE_ONLY...slower',
+                    itemAttributes: $itemFontArray),
                 DropdownItem::divider(),
-                DropdownItem::text('Non-CLI/Non-FCGI: Manually Edit c:\wamp64\bin\apache\apache{version}\bin php.ini then ... Wampserver Icon ... Restart All Services'),
-                DropdownItem::text('php.ini (line 425): max_execution_time (pref 360) = ' . ((string) ini_get('max_execution_time') ?: 'unknown') . (((string) ini_get('max_execution_time')  == 360 ? '✅' : '❌'))),
-                DropdownItem::text('php.ini: (line 1788): opcache.jit (pref see nothing) = ' . ((string) ini_get('opcache.jit') ?: 'unknown') . (((string) ini_get('opcache.jit')  == '' ? '✅' : '❌'))),
-                DropdownItem::text('php.ini: (line 1791): opcache.enable (pref 1) = ' . ((string) ini_get('opcache.enable') ?: 'unknown') . (((string) ini_get('opcache.enable')  == 1 ? '✅' : '❌'))),
-                DropdownItem::text('php.ini (line 1794): opcache.enable_cli (pref 1) = ' . ((string) ini_get('opcache.enable_cli') ?: 'unknown') . (((string) ini_get('opcache.enable_cli') == 1 ? '✅' : '❌'))),
-                DropdownItem::text('php.ini (line 1797): opcache.memory_consumption (pref 128) = ' . ((string) ini_get('opcache.memory_consumption') ?: 'unknown') . (((string) ini_get('opcache.memory_consumption')  == 128 ? '✅' : '❌')), ['data-bs-toggle' => 'tooltip', 'title' => 'e.g. change manually in C:\wamp64\bin\php\php8.1.13\phpForApache.ini and restart all services.']),
-                DropdownItem::text('php.ini (line 1800): opcache.interned_strings_buffer (pref 64 for frameworks) = ' . ((string) ini_get('opcache.interned_strings_buffer') ?: 'unknown') . (((string) ini_get('opcache.interned_strings_buffer')  == 64 ? '✅' : '❌'))),
-                DropdownItem::text('php.ini (line 1804): opcache.max_accelerated_files (pref 10000) = ' . ((string) ini_get('opcache.max_accelerated_files') ?: 'unknown') . (((string) ini_get('opcache.max_accelerated_files') == 10000 ? '✅' : '❌'))),
-                DropdownItem::text('php.ini: (line 1818): opcache.validate_timestamps (pref 0 for production and 1 for development i.e. files checked on change) = ' . ((string) ini_get('opcache.validate_timestamps') == 1 ? '1' : 'unknown') . (((string) ini_get('opcache.validate_timestamps') == 1 ? '✅' : '❌'))),
-                DropdownItem::text('php.ini: (line 1822): opcache.revalidate_freq (production: check for changes every 60 sec, development: 0 immediate updates) = ' . ((string) ini_get('opcache.revalidate_freq') == 0 ? '0' : 'unknown') . (((string) ini_get('opcache.revalidate_freq') == 0 ? '✅' : '❌'))),
+                DropdownItem::text(
+                    'Non-CLI/Non-FCGI: Manually Edit'
+                    . ' c:\wamp64\bin\apache\apache{version}\bin'
+                    . ' php.ini then '
+                    . '... Wampserver Icon ... Restart All Services',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::text(
+                    'php.ini (line 425): max_execution_time (pref 400) = '
+                    . ((string) ini_get('max_execution_time') ?: 'unknown')
+                    . (((string) ini_get('max_execution_time')  == 400 ?
+                    '✅' : '❌')), itemAttributes: $itemFontArray),
+                DropdownItem::text(
+                    'php.ini: (line 1788): opcache.jit (pref see nothing) = '
+                    . ((string) ini_get('opcache.jit') ?: 'unknown')
+                    . (((string) ini_get('opcache.jit')  == '' ?
+                    '✅' : '❌')), itemAttributes: $itemFontArray),
+                DropdownItem::text(
+                    'php.ini: (line 1791): opcache.enable (pref 1) = '
+                    . ((string) ini_get('opcache.enable') ?: 'unknown')
+                    . (((string) ini_get('opcache.enable')  == 1 ?
+                    '✅' : '❌')), itemAttributes: $itemFontArray),
+                DropdownItem::text(
+                    'php.ini (line 1794): opcache.enable_cli (pref 1) = '
+                    . ((string) ini_get('opcache.enable_cli') ?: 'unknown')
+                    . (((string) ini_get('opcache.enable_cli') == 1 ?
+                    '✅' : '❌')), itemAttributes: $itemFontArray),
+                DropdownItem::text(
+                    'php.ini (line 1797): opcache.memory_consumption (pref 128) = '
+                    . ((string) ini_get('opcache.memory_consumption') ?:
+                            'unknown')
+                    . (((string) ini_get('opcache.memory_consumption')
+                            == 128 ?
+                    '✅' : '❌')), itemAttributes: $itemFontArray +
+                    ['data-bs-toggle' => 'tooltip',
+                            'title' =>
+                    'e.g. change manually in '
+                    . 'C:\wamp64\bin\php\php8.1.13\phpForApache.ini'
+                    . ' and restart all services.']),
+                DropdownItem::text(
+                    'php.ini (line 1800): opcache.interned_strings_buffer'
+                    . ' (pref 64 for frameworks) = '
+                    . ((string) ini_get('opcache.interned_strings_buffer')
+                            ?: 'unknown')
+                    . (((string) ini_get('opcache.interned_strings_buffer')
+                            == 64 ? '✅' : '❌')),
+                    itemAttributes: $itemFontArray),
+                DropdownItem::text(
+                    'php.ini (line 1804): opcache.max_accelerated_files'
+                    . ' (pref 10000) = '
+                    . ((string) ini_get('opcache.max_accelerated_files')
+                    ?: 'unknown')
+                    . (((string) ini_get('opcache.max_accelerated_files')
+                            == 10000 ? '✅' : '❌')),
+                    itemAttributes: $itemFontArray),
+                DropdownItem::text(
+                    'php.ini: (line 1818): opcache.validate_timestamps'
+                    . ' (pref 0 for production'
+                    . ' and 1 for development i.e. files checked on change) = '
+                    . ((string) ini_get('opcache.validate_timestamps')
+                        == 1 ? '1' : 'unknown')
+                    . (((string) ini_get('opcache.validate_timestamps')
+                        == 1 ? '✅' : '❌')),
+                    itemAttributes: $itemFontArray),
+                DropdownItem::text(
+                    'php.ini: (line 1822): opcache.revalidate_freq'
+                    . ' (production: check'
+                    . ' for changes every 60 sec, development:'
+                    . ' 0 immediate updates) = '
+                    . ((string) ini_get('opcache.revalidate_freq')
+                            == 0 ? '0' : 'unknown')
+                    . (((string) ini_get('opcache.revalidate_freq')
+                            == 0 ? '✅' : '❌')),
+                        itemAttributes: $itemFontArray),
                 DropdownItem::divider(),
-                // https://tideways.com/profiler/blog/fine-tune-your-opcache-configuration-to-avoid-caching-suprises
-                DropdownItem::text(PerformanceMetrics::opCacheHealthCheck()),
+                    // https://tideways.com/profiler/blog/
+                    // fine-tune-your-opcache-configuration-to
+                    // -avoid-caching-suprises
+                DropdownItem::text(PerformanceMetrics::opCacheHealthCheck(),
+                        itemAttributes: $itemFontArray),
                 DropdownItem::divider(),
-                DropdownItem::text('Left Click Wampserver Icon... Php ... Php Settings ... Memory Limit'),
-                DropdownItem::text('php.ini (line 451): memory_limit (pref 1024 M) = ' . ((string) ini_get('memory_limit') ?: 'unknown') . (((string) ini_get('memory_limit') == '1024M' ? '✅' : '❌'))),
+                DropdownItem::link('Downloaded and loaded php extension for APCu '
+                    . (extension_loaded('apcu') ? '✅' : '❌'),
+                    'https://pecl.php.net/package/APCu/5.1.28/windows',
+                        itemAttributes: $itemFontArray),
                 DropdownItem::divider(),
-                DropdownItem::text('.env: BUILD_DATABASE= (pref see nothing) = ' . ($buildDatabase ? 'You have built the database using BUILD_DATABASE=true, now assign the environment varirable to nothing i.e. BUILD_DATABASE=' : '✅')),
-                DropdownItem::text('config.params: yiisoft/yii-debug: enabled , disable for improved performance'),
-                DropdownItem::text('config.params: yiisoft/yii-debug-api: enabled, disable for improved performance'),
+                DropdownItem::text(
+                    'Left Click Wampserver Icon... Php ... Php Settings'
+                    . ' ... Memory Limit',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::text(
+                    'php.ini (line 451): memory_limit (pref 1024 M) = '
+                    . ((string) ini_get('memory_limit') ?: 'unknown')
+                    . (((string) ini_get('memory_limit') == '1024M' ? '✅' : '❌')),
+                    itemAttributes: $itemFontArray),
+                DropdownItem::divider(),
+                DropdownItem::text(
+                    '.env: BUILD_DATABASE= (pref see nothing) = '
+                    . ($buildDatabase ?
+                    'You have built the database using'
+                    . ' BUILD_DATABASE=true, now assign the '
+                    . ' environment varirable to nothing i.e. BUILD_DATABASE=' :
+                        '✅'),
+                    itemAttributes: $itemFontArray),
+                DropdownItem::text(
+                    'config.params: yiisoft/yii-debug: enabled ,'
+                    . ' disable for improved performance',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::text(
+                    'config.params: yiisoft/yii-debug-api: enabled,'
+                    . ' disable for improved performance',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::divider(),
+                // Prometheus Monitoring Section
+                DropdownItem::text($subMenu->generate('Prometheus Monitoring',
+                    $urlGenerator, $subMenuPrometheus,
+                    $bootstrap5LayoutInvoiceNavbarFont,
+                    $bootstrap5LayoutInvoiceNavbarFontSize)),
             ),
             // Platform
             Dropdown::widget()
-            ->addClass('navbar fs-4')
             ->addAttributes([
                 'hidden' => !$debugMode,
             ])
+            ->addTogglerCssStyle([
+                'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
+                'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
+                'color' => '#adb5bd',
+            ])
             ->togglerVariant(ButtonVariant::INFO)
-            ->togglerContent($translator->translate('platform'))
+            ->togglerContent($t->translate('platform'))
             ->togglerSize(ButtonSize::LARGE)
             ->items(
                 DropdownItem::text('WAMP'),
-                DropdownItem::text($translator->translate('platform.editor') . ': Apache Netbeans IDE 23 64 bit'),
-                DropdownItem::text($translator->translate('platform.server') . ': Wampserver 3.3.6 64 bit'),
-                DropdownItem::text('Apache: 2.4.59 64 bit'),
-                DropdownItem::text($translator->translate('platform.mySqlVersion') . ': 8.3.0 '),
-                DropdownItem::text($translator->translate('platform.windowsVersion') . ': Windows 11 Pro Edition'),
-                DropdownItem::text($translator->translate('platform.PhpVersion') . ' ' . PHP_VERSION),
-                DropdownItem::link($translator->translate('platform.PhpSupport'), 'https://php.net/supported-versions'),
-                DropdownItem::link($translator->translate('platform.update'), 'https://wampserver.aviatechno.net/'),
-                DropdownItem::link('Bootstrap 5 Icons with Filter', 'https://icons.getbootstrap.com/'),
-                DropdownItem::link('BootstrapBrain Free Wavelight Template', 'https://bootstrapbrain.com/template/free-bootstrap-5-multipurpose-one-page-template-wave/'),
-                DropdownItem::link('Html to Markdown', 'https://convertsimple.com/convert-html-to-markdown/'),
-                DropdownItem::link('European Invoicing', 'https://ec.europa.eu/digital-building-blocks/wikis/display/DIGITAL/Compliance+with+eInvoicing+standard'),
-                DropdownItem::link('European Digital Testing', 'https://ec.europa.eu/digital-building-blocks/wikis/display/DIGITAL/eInvoicing+Conformance+Testing'),
-                DropdownItem::link('What does a Peppol ID look like?', 'https://ecosio.com/en/blog/how-peppol-ids-work/'),
-                DropdownItem::link('Peppol Accounting Requirements', 'https://docs.peppol.eu/poacc/billing/3.0/bis/#accountingreq'),
-                DropdownItem::link('➡️ Peppol Billing 3.0 - Syntax', 'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/'),
-                DropdownItem::link('➡️ Peppol Billing 3.0 - Tree', 'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/tree/'),
-                DropdownItem::link('Universal Business Language 2.1 (UBL)', 'http://www.datypic.com/sc/ubl21/ss.html'),
-                DropdownItem::link('StoreCove Documentation', 'https://www.storecove.com/docs'),
-                DropdownItem::link('Peppol Company Search', 'https://directory.peppol.eu/public'),
-                DropdownItem::link('ISO 3 letter currency codes - 4217 alpha-3', 'https://www.iso.org/iso-4217-currency-codes.html'),
-                DropdownItem::link('Xml Example 2.1', 'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/'),
-                DropdownItem::link('Xml Example 3.0', 'https://github.com/OpenPEPPOL/peppol-bis-invoice-3/blob/master/rules/examples/base-example.xml'),
-                DropdownItem::link('Ecosio Xml Validator', 'https://ecosio.com/en/peppol-and-xml-document-validator/'),
-                DropdownItem::link('Xml CodeLists', 'https://github.com/OpenPEPPOL/peppol-bis-invoice-3/tree/master/structure/codelist'),
-                DropdownItem::link('Convert XML to PHP Array Online', 'https://wtools.io/convert-xml-to-php-array'),
-                DropdownItem::link('Writing XML using Sabre', 'https://sabre.io/xml/writing/'),
-                DropdownItem::link('Understanding Same Site Cookies', 'https://andrewlock.net/understanding-samesite-cookies/#:~:text=SameSite%3DLax%20cookies%20are%20not,Lax%20(or%20Strict%20)%20cookies'),
-                DropdownItem::link('HMRC Developer Hub', 'https://developer.service.hmrc.gov.uk/developer/login'),
-                DropdownItem::link('HMRC Developer Hub - Web App Via Server', 'https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/'),
-                DropdownItem::link('Scotland - e-invoice Template - Lessons Learned', 'https://www.gov.scot/publications/einvoicing-guide/documents/'),
-                DropdownItem::link('German, and Swiss Law Amendments now prioritize Opensource in Public Sector', 'https://interoperable-europe.ec.europa.eu/collection/open-source-observatory-osor/news/germanys-ozg-20-favors-open-source-solutions'),
-                DropdownItem::link('Jsonld  Playground for flattening Jsonld files', 'https://json-ld.org/playground/'),
-                DropdownItem::link('Converting flattened file to php array', 'https://wtools.io/convert-json-to-php-array'),
-                DropdownItem::link('Jsonld  Playground for flattening Jsonld files', 'https://json-ld.org/playground/'),
-                DropdownItem::link('jQuery UI 1.14.1 (9th March 2025) - Customize download - {keycode; Widgets => datepicker}', 'https://jqueryui.com/download/'),
-                DropdownItem::link('Using ngrok and Wampserver VirtualHosts', 'https://ngrok.com/docs/using-ngrok-with/virtualHosts/'),
-                DropdownItem::link('Using ngrok and webhook testing', 'https://ngrok.com/use-cases/webhook-testing'),
-                DropdownItem::link('Google Oauth2 Playground', 'https://developers.google.com/oauthplayground'),
-                DropdownItem::link('Google Oauth2 Web Application', 'https://console.cloud.google.com/apis/credentials/oauthclient'),
+                DropdownItem::text(
+                    $t->translate('platform.editor')
+                    . ': Apache Netbeans IDE 28 64 bit',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::text($t->translate('platform.server')
+                    . ': Wampserver 3.4.0 64 bit',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::text('Apache: 2.4.65 64 bit',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::text($t->translate('platform.mySqlVersion')
+                    . ': 9.1.0 ',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::text($t->translate('platform.windowsVersion')
+                    . ': Windows 11 Pro Edition',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::text($t->translate('platform.PhpVersion')
+                    . ' ' . PHP_VERSION,
+                    itemAttributes: $itemFontArray),
+                DropdownItem::link($t->translate('platform.PhpSupport'),
+                    'https://php.net/supported-versions',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::link($t->translate('Psalm\'s Daniil Gentilli\'s Blog'),
+                    'https://blog.daniil.it/',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::link($t->translate('platform.update'),
+                    'https://wampserver.aviatechno.net/',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::link('Testing temporary signup emails',
+                    'https://guerrillamail.com/',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::link('Email forwarding instead of a mailserver',
+                    'https://improvmx.com/',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::link('Packages Microsoft Com',
+                    'https://packages.microsoft.com/',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::link(
+                    'Microsoft Typescript-Go Development Site for Typescript'
+                    . ' Version 7 (10x faster):'
+                    . ' Superceding Typescript 5.95',
+                    'https://github.com/microsoft/typescript-go',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::link('SonarLint4NetbeansPlugin',
+                    'https://plugins.netbeans.apache.org/catalogue/?id=21',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::link('Eclipse IDE for Php',
+                    'https://www.eclipse.org/downloads/',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::link('Windows Installer Netbeans 28',
+                    'https://installers.friendsofapachenetbeans.org/',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::link('Bootstrap 5 Icons with Filter',
+                    'https://icons.getbootstrap.com/',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::link('BootstrapBrain Free Wavelight Template',
+                    'https://bootstrapbrain.com/template/'
+                    . 'free-bootstrap-5-multipurpose-one-page-template-wave/',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::link('Html to Markdown',
+                    'https://convertsimple.com/convert-html-to-markdown/',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::divider(),
+                DropdownItem::link('HMRC Developer Hub',
+                    'https://developer.service.hmrc.gov.uk/developer/login',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::link('E-Invoicing UK Compulsory from April 2029',
+                    'https://www.gov.uk/government/consultations/'
+                    . 'promoting-electronic-invoicing-across-uk-businesses'
+                    . '-and-the-public-sector/'
+                    . 'outcome/promoting-electronic-invoicing'
+                    . '-across-uk-businesses-and-the'
+                    . '-public-sector-consultation-response',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::divider(),
+                DropdownItem::link('Cycle/orm HasOne Relation: Using the'
+                    . ' outerKey explicitly to avoid auto inserted'
+                    . ' CamelCase Foreign Keys',
+                    'https://cycle-orm.dev/docs/relation-has-one/'
+                    . 'current/en#differences-from-belongsto',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::divider(),
+                DropdownItem::link('German, and Swiss Law Amendments now'
+                    . ' prioritize Opensource in Public Sector',
+                    'https://interoperable-europe.ec.europa.eu/collection/'
+                    . 'open-source-observatory-osor/'
+                    . 'news/'
+                    . 'germanys-ozg-20-favors-open-source-solutions',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::link('StoreCove Whitepapers',
+                    'https://www.storecove.com/us/en/whitepapers',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::link('Jsonld  Playground for flattening Jsonld files',
+                    'https://json-ld.org/playground/',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::link('Converting flattened file to php array',
+                    'https://wtools.io/convert-json-to-php-array',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::link('Using ngrok and Wampserver VirtualHosts',
+                    'https://ngrok.com/docs/using-ngrok-with/virtualHosts/',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::link('Using ngrok and webhook testing',
+                    'https://ngrok.com/use-cases/webhook-testing',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::link('Google Oauth2 Playground',
+                    'https://developers.google.com/oauthplayground',
+                    itemAttributes: $itemFontArray),
+                DropdownItem::link('Google Oauth2 Web Application',
+                    'https://console.cloud.google.com/apis/credentials/oauthclient',
+                    itemAttributes: $itemFontArray),
             ),
             // Php Watch
             Dropdown::widget()
-            ->addClass('navbar fs-4')
             ->addAttributes([
-                'style' => 'font-size: 1rem;',
+                'class' => 'inv-php-menu',
                 'hidden' => !$debugMode,
+            ])
+            ->addTogglerCssStyle([
+                'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
+                'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
             ])
             ->togglerVariant(ButtonVariant::INFO)
             ->togglerContent('🐘')
             ->togglerSize(ButtonSize::LARGE)
             ->items(
-                DropdownItem::link('8.3', 'https://php.watch/versions/8.3', $debugMode, false, ['style' => 'background-color: #ffcccb']),
-                DropdownItem::link('8.4', 'https://php.watch/versions/8.4', $debugMode, false, ['style' => 'background-color: #ffcccb']),
-                DropdownItem::link('8.5', 'https://php.watch/versions/8.5', $debugMode, false, ['style' => 'background-color: #ffcccb']),
+                DropdownItem::link('8.3',
+                    'https://php.watch/versions/8.3',
+                    $debugMode, false, itemAttributes: $itemFontArray +
+                    ['style' => 'background-color: #ffcccb']),
+                DropdownItem::link('8.4',
+                    'https://php.watch/versions/8.4',
+                    $debugMode, false, itemAttributes: $itemFontArray +
+                    ['style' => 'background-color: #ffcccb']),
+                DropdownItem::link('8.5',
+                    'https://php.watch/versions/8.5',
+                    $debugMode, false, itemAttributes: $itemFontArray +
+                    ['style' => 'background-color: #ffcccb']),
             ),
             // Emojipedia.org
             Dropdown::widget()
-            ->addClass('navbar fs-4')
             ->addAttributes([
-                'style' => 'font-size: 2rem; color: cornflowerblue;',
+                'class' => 'inv-emoji-menu',
                 'hidden' => !$debugMode,
+            ])
+            ->addTogglerCssStyle([
+                'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
+                'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
             ])
             ->togglerVariant(ButtonVariant::INFO)
             ->togglerContent('😀')
             ->togglerSize(ButtonSize::LARGE)
             ->items(
-                DropdownItem::link('✅', 'https://emojipedia.org/check-mark-button', $debugMode, false, ['style' => 'background-color: #ffcccb']),
-                DropdownItem::link('❌', 'https://emojipedia.org/cross-mark', $debugMode, false, ['style' => 'background-color: #ffcccb']),
-                DropdownItem::link('⬅', 'https://emojipedia.org/left-arrow', $debugMode, false, ['style' => 'background-color: #ffcccb']),
-                DropdownItem::link('➡', 'https://emojipedia.org/right-arrow', $debugMode, false, ['style' => 'background-color: #ffcccb']),
-                DropdownItem::link('🖉', 'https://emojipedia.org/lower-left-pencil', $debugMode, false, ['style' => 'background-color: #ffcccb']),
-                DropdownItem::link('🔘', 'https://emojipedia.org/radio-button', $debugMode, false, ['style' => 'background-color: #ffcccb']),
-                DropdownItem::link('☑️', 'https://emojipedia.org/check-box-with-check', $debugMode, false, ['style' => 'background-color: #ffcccb']),
-                DropdownItem::link('🐘', 'https://emojipedia.org/elephant', $debugMode, false, ['style' => 'background-color: #ffcccb']),
+                DropdownItem::link('✅',
+                    'https://emojipedia.org/check-mark-button',
+                    $debugMode,
+                    false, itemAttributes: $itemFontArray +
+                    ['style' => 'background-color: #ffcccb']),
+                DropdownItem::link('➕',
+                    'https://emojipedia.org/plus', $debugMode,
+                    false, itemAttributes: $itemFontArray +
+                    ['style' => 'background-color: #ffcccb']),
+                DropdownItem::link('❌',
+                    'https://emojipedia.org/cross-mark', $debugMode,
+                    false, itemAttributes: $itemFontArray +
+                    ['style' => 'background-color: #ffcccb']),
+                DropdownItem::link('🛈',
+                    'https://emojipedia.org/'
+                    . 'circled-information-source', $debugMode,
+                    false, itemAttributes: $itemFontArray +
+                    ['style' => 'background-color: #ffcccb']),
+                DropdownItem::link('⬅',
+                    'https://emojipedia.org/left-arrow', $debugMode,
+                    false, itemAttributes: $itemFontArray +
+                    ['style' => 'background-color: #ffcccb']),
+                DropdownItem::link('➡',
+                    'https://emojipedia.org/right-arrow', $debugMode,
+                    false, itemAttributes: $itemFontArray +
+                    ['style' => 'background-color: #ffcccb']),
+                DropdownItem::link('↔️',
+                    'https://emojipedia.org/left-right-arrow', $debugMode,
+                    false, itemAttributes: $itemFontArray +
+                    ['style' => 'background-color: #ffcccb']),
+                DropdownItem::link('🖉',
+                    'https://emojipedia.org/lower-left-pencil', $debugMode,
+                    false, itemAttributes: $itemFontArray +
+                    ['style' => 'background-color: #ffcccb']),
+                DropdownItem::link('🔘',
+                    'https://emojipedia.org/radio-button', $debugMode,
+                    false, itemAttributes: $itemFontArray +
+                    ['style' => 'background-color: #ffcccb']),
+                DropdownItem::link('☑️',
+                    'https://emojipedia.org/check-box-with-check', $debugMode,
+                    false, itemAttributes: $itemFontArray +
+                        ['style' => 'background-color: #ffcccb']),
+                DropdownItem::link('🐘',
+                    'https://emojipedia.org/elephant', $debugMode,
+                    false, itemAttributes: $itemFontArray +
+                    ['style' => 'background-color: #ffcccb']),
+                DropdownItem::link('⚙️',
+                    'https://emojipedia.org/gear', $debugMode,
+                    false, itemAttributes: $itemFontArray +
+                    ['style' => 'background-color: #ffcccb']),
             ),
         );
     }
 
     echo Nav::widget()
-    ->class('nav')
-    ->addAttributes(['style' => 'background-color: #e3f2fd'])
+    ->class('navbar inv-nav')
     ->items(
+        // Translate
+        Dropdown::widget()
+        ->addClass('navbar')
+        ->addAttributes([
+            'class' => 'inv-cornflower',
+            'data-bs-toggle' => 'tooltip',
+            'title' => $t->translate('language'),
+            'url' => '#',
+        ])
+        ->addTogglerCssStyle([
+                'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
+                'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
+                'color' => '#0dcaf0',
+        ])
+        ->togglerVariant(ButtonVariant::INFO)
+        ->togglerContent($currentLocaleFlag . ' ' . new I()->class('bi bi-translate'))
+        ->togglerSize(ButtonSize::LARGE)
+        ->items(
+// Related logic: config/web/params, src/ViewInjection/LayoutViewInjection
+            $afZA, $arBH, $az, $beBY, $bs, $zhCN, $zhTW, $en,
+            $fil, $fr, $gdGB, $haNG, $heIL, $igNG, $nl, $de,
+            $id, $it, $ja, $pl, $ptBR,
+            $ru, $sk, $sl, $es, $uk, $uz, $vi, $yoNG, $zuZA
+        ),
         NavLink::to(
             //label
-            I::tag()->class('fa fa-dashboard'),
+             new I()->class('bi bi-speedometer'),
             // url
             $urlGenerator->generate('invoice/dashboard'),
             // active
@@ -491,265 +918,376 @@ if ((null !== $currentPath) && !$isGuest) {
         ),
         // Settings
         Dropdown::widget()
-        ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent(I::tag()->addClass('fa fa-cogs'))
+        ->addClass('navbar')
+        ->addTogglerCssStyle([
+            'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
+            'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
+            'color' => '#adb5bd',
+        ])
+        ->togglerVariant(ButtonVariant::SECONDARY)
+        ->togglerContent( new I()->addClass('bi bi-gear'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
-            DropdownItem::link($translator->translate('view'), $urlGenerator->generate('setting/debug_index'), false, !$debugMode, ['style' => 'background-color: #ffcccb', 'hidden' => !$debugMode]),
-            DropdownItem::link($translator->translate('setting.add'), $urlGenerator->generate('setting/add'), false, !$debugMode, ['style' => 'background-color: #ffcccb', 'hidden' => !$debugMode]),
-            DropdownItem::link($translator->translate('caution.delete.invoices'), $urlGenerator->generate('inv/flush'), false, !$debugMode, ['style' => 'background-color: #ffcccb', 'hidden' => !$debugMode]),
-            DropdownItem::link($translator->translate('view'), $urlGenerator->generate('setting/tab_index')),
-            DropdownItem::link($translator->translate((($s->getSetting('install_test_data') == '1') && ($s->getSetting('use_test_data') == '1'))
-            ? 'install.test.data' : 'install.test.data.goto.tab.index'), (($s->getSetting('install_test_data') == '1' && $s->getSetting('use_test_data') == '1')
-            ? $urlGenerator->generate('invoice/index') : $urlGenerator->generate('setting/tab_index')), ($s->getSetting('install_test_data') == '1' && $s->getSetting('use_test_data') == '1')),
-            DropdownItem::link($translator->translate('email.template'), $urlGenerator->generate('emailtemplate/index')),
-            DropdownItem::link($translator->translate('email.from.dropdown'), $urlGenerator->generate('from/index')),
-            DropdownItem::link($translator->translate('email.log'), $urlGenerator->generate('invsentlog/index')),
-            DropdownItem::link($translator->translate('custom.fields'), $urlGenerator->generate('customfield/index')),
-            DropdownItem::link($translator->translate('group'), $urlGenerator->generate('group/index')),
-            DropdownItem::link($translator->translate('archive'), $urlGenerator->generate('inv/archive')),
-            DropdownItem::link($translator->translate('payment.method'), $urlGenerator->generate('paymentmethod/index')),
-            DropdownItem::link($translator->translate('tax.rate'), $urlGenerator->generate('taxrate/index')),
-            DropdownItem::link($translator->translate('contract'), $urlGenerator->generate('contract/index')),
-            DropdownItem::link($translator->translate('user.account'), $urlGenerator->generate('userinv/index')),
-            DropdownItem::link($translator->translate('password.change'), $urlGenerator->generate('auth/change')),
-            DropdownItem::link($translator->translate('user.api.list'), $urlGenerator->generate('user/index')),
-            DropdownItem::link($translator->translate('setting.company'), $urlGenerator->generate('company/index')),
-            DropdownItem::link($translator->translate('setting.company.private'), $urlGenerator->generate('companyprivate/index')),
-            DropdownItem::link($translator->translate('setting.company.profile'), $urlGenerator->generate('profile/index')),
+            DropdownItem::link($t->translate('debug') . ': ' . $t->translate('view'),
+                $urlGenerator->generate('setting/debugIndex'),
+                    false, !$debugMode,
+                        $itemFontArray + ['style' => 'background-color: #ffcccb; font-size: ' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;',
+                         'hidden' => !$debugMode]),
+            DropdownItem::link($t->translate('setting.add'),
+                $urlGenerator->generate('setting/add'),
+                    false, !$debugMode,
+                        $itemFontArray + ['style' => 'background-color: #ffcccb; font-size: ' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;',
+                         'hidden' => !$debugMode]),
+            DropdownItem::link($t->translate('caution.delete.invoices'),
+                $urlGenerator->generate('inv/flush'),
+                    false, !$debugMode,
+                        $itemFontArray + ['style' => 'background-color: #ffcccb; font-size: ' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;',
+                         'hidden' => !$debugMode]),
+            DropdownItem::link($t->translate('view'),
+                $urlGenerator->generate('setting/tabIndex'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate((
+                ($s->getSetting('install_test_data') == '1')
+                && ($s->getSetting('use_test_data') == '1'))
+                ? 'install.test.data' : 'install.test.data.goto.tab.index'),
+                    (($s->getSetting('install_test_data') == '1'
+                        && $s->getSetting('use_test_data') == '1')
+                ? $urlGenerator->generate('invoice/index') :
+                $urlGenerator->generate('setting/tabIndex')),
+                    ($s->getSetting('install_test_data') == '1'
+                        && $s->getSetting('use_test_data') == '1'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('email.template'),
+                $urlGenerator->generate('emailtemplate/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('email.from.dropdown'),
+                $urlGenerator->generate('from/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('email.log'),
+                $urlGenerator->generate('invsentlog/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('custom.fields'),
+                $urlGenerator->generate('customfield/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('group'),
+                $urlGenerator->generate('group/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('archive'),
+                $urlGenerator->generate('inv/archive'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('payment.method'),
+                $urlGenerator->generate('paymentmethod/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('tax.rate'),
+                $urlGenerator->generate('taxrate/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('contract'),
+                $urlGenerator->generate('contract/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('user.account'),
+                $urlGenerator->generate('userinv/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('password.change'),
+                $urlGenerator->generate('auth/change'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('user.api.list'),
+                $urlGenerator->generate('user/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('setting.company'),
+                $urlGenerator->generate('company/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('setting.company.private'),
+                $urlGenerator->generate('companyprivate/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('setting.company.profile'),
+                $urlGenerator->generate('profile/index'),
+                itemAttributes: $itemFontArray),
         ),
         // peppol
         Dropdown::widget()
-        ->addClass('navbar fs-4')
+        ->addClass('navbar')
         ->addAttributes([
             'style' => 'font-size: 1rem; color: cornflowerblue;',
             'url' => '#',
         ])
-        ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent($translator->translate('peppol.abbreviation'))
+        ->addTogglerCssStyle([
+            'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
+            'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
+            'color' => '#ffa500',
+        ])
+        ->togglerVariant(ButtonVariant::WARNING)
+        ->togglerContent($t->translate('peppol.abbreviation'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
-            DropdownItem::link($translator->translate('allowance.or.charge.add'), $urlGenerator->generate('allowancecharge/index')),
-            DropdownItem::link($translator->translate('peppol.store.cove.1.1.1'), 'https://www.storecove.com/register/'),
-            DropdownItem::link($translator->translate('peppol.store.cove.1.1.2'), $urlGenerator->generate('setting/tab_index')),
-            DropdownItem::link($translator->translate('peppol.store.cove.1.1.3'), $urlGenerator->generate('invoice/store_cove_call_api')),
-            DropdownItem::link($translator->translate('peppol.store.cove.1.1.4'), $urlGenerator->generate('invoice/store_cove_send_test_json_invoice')),
+            DropdownItem::link($t->translate('allowance.or.charge.add'),
+                $urlGenerator->generate('allowancecharge/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('peppol.store.cove.1.1.1'),
+                'https://www.storecove.com/register/',
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('peppol.store.cove.1.1.2'),
+                $urlGenerator->generate('setting/tabIndex'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('peppol.store.cove.1.1.3'),
+                $urlGenerator->generate('invoice/storeCoveCallApi'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('peppol.store.cove.1.1.4'),
+                $urlGenerator->generate('invoice/storeCoveSendTestJsonInvoice'),
+                itemAttributes: $itemFontArray
+            ),
         ),
         // Client
         Dropdown::widget()
-        ->addClass('navbar fs-4')
-        ->addAttributes([
-            'style' => 'font-size: 1rem; color: cornflowerblue;',
+        ->addClass('navbar')
+        ->addTogglerCssStyle([
+            'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
+            'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
+            'color' => '#198754',
         ])
-        ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent(I::tag()->addClass('bi bi-people'))
+        ->togglerVariant(ButtonVariant::SUCCESS)
+        ->togglerContent( new I()->addClass('bi bi-people'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
-            DropdownItem::link($translator->translate('client.add'), $urlGenerator->generate('client/add', ['origin' => 'main'])),
-            DropdownItem::link($translator->translate('client.view'), $urlGenerator->generate('client/index')),
-            DropdownItem::link($translator->translate('client.note.add'), $urlGenerator->generate('clientnote/add')),
-            DropdownItem::link($translator->translate('client.note.view'), $urlGenerator->generate('clientnote/index')),
-            DropdownItem::link($translator->translate('delivery.location'), $urlGenerator->generate('del/index')),
+            DropdownItem::link($t->translate('client.add'),
+                $urlGenerator->generate('client/add', ['origin' => 'main']),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('client.view'),
+                $urlGenerator->generate('client/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('client.note.add'),
+                $urlGenerator->generate('clientnote/add'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('client.note.view'),
+                $urlGenerator->generate('clientnote/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('delivery.location'),
+                $urlGenerator->generate('del/index'),
+                itemAttributes: $itemFontArray),
         ),
         // Quote
         Dropdown::widget()
-        ->addClass('navbar fs-4')
-        ->addAttributes([
-            'style' => 'font-size: 1rem; color: cornflowerblue;',
+        ->addClass('navbar inv-cornflower')
+        ->addTogglerCssStyle([
+            'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
+            'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
+            'color' => '#0dcaf0',
         ])
         ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent($translator->translate('quote'))
+        ->togglerContent(new I()->addClass('bi bi-chat-square-text') . ' ' . $t->translate('quote'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
-            DropdownItem::link($translator->translate('create.quote'), $urlGenerator->generate('quote/add', ['origin' => 'main'])),
-            DropdownItem::link($translator->translate('view'), $urlGenerator->generate('quote/index')),
+            DropdownItem::link($t->translate('create.quote'),
+                $urlGenerator->generate('quote/add', ['origin' => 'main']),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('view'),
+                $urlGenerator->generate('quote/index'),
+                itemAttributes: $itemFontArray),
         ),
         // SalesOrder
         Dropdown::widget()
-        ->addClass('navbar fs-4')
-        ->addAttributes([
-            'style' => 'font-size: 1rem; color: cornflowerblue;',
+        ->addClass('navbar inv-cornflower')
+        ->addTogglerCssStyle([
+            'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
+            'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
+            'color' => '#0d6efd',
         ])
-        ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent($translator->translate('salesorder'))
+        ->togglerVariant(ButtonVariant::PRIMARY)
+        ->togglerContent(new I()->addClass('bi bi-bag') . ' ' . $t->translate('salesorder'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
-            DropdownItem::link($translator->translate('view'), $urlGenerator->generate('salesorder/index')),
+            DropdownItem::link($t->translate('view'),
+                $urlGenerator->generate('salesorder/index'),
+                itemAttributes: $itemFontArray),
         ),
         // Invoice
         Dropdown::widget()
-        ->addClass('navbar fs-4')
-        ->addAttributes([
-            'style' => 'font-size: 1rem; color: cornflowerblue;',
+        ->addClass('navbar inv-cornflower')
+        ->addTogglerCssStyle([
+            'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
+            'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
+            'color' => '#dc3545',
         ])
-        ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent($translator->translate('invoice'))
+        ->togglerVariant(ButtonVariant::DANGER)
+        ->togglerContent(new I()->addClass('bi bi-file-text') . ' ' . $t->translate('invoice'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
-            DropdownItem::link($translator->translate('create.invoice'), $urlGenerator->generate('inv/add', ['origin' => 'main'])),
-            DropdownItem::link($translator->translate('view'), $urlGenerator->generate('inv/index')),
-            DropdownItem::link($translator->translate('recurring'), $urlGenerator->generate('invrecurring/index')),
+            DropdownItem::link($t->translate('create.invoice'),
+                $urlGenerator->generate('inv/add', ['origin' => 'main']),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('view'),
+                $urlGenerator->generate('inv/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('recurring'),
+                $urlGenerator->generate('invrecurring/index'),
+                itemAttributes: $itemFontArray),
         ),
         // Payment
         Dropdown::widget()
-        ->addClass('navbar fs-4')
-        ->addAttributes([
-            'style' => 'font-size: 1rem; color: cornflowerblue;',
+        ->addClass('navbar inv-cornflower')
+        ->addTogglerCssStyle([
+                'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
+                'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
+                'color' => '#20c997',
         ])
-        ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent(I::tag()->addClass('bi bi-coin'))
+        ->togglerVariant(ButtonVariant::SUCCESS)
+        ->togglerContent( new I()->addClass('bi bi-coin'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
-            DropdownItem::link($translator->translate('enter.payment'), $urlGenerator->generate('payment/add')),
-            DropdownItem::link($translator->translate('view'), $urlGenerator->generate('payment/index')),
-            DropdownItem::link($translator->translate('payment.logs'), $urlGenerator->generate('payment/online_log')),
+            DropdownItem::link($t->translate('enter.payment'),
+                $urlGenerator->generate('payment/add'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('view'),
+                $urlGenerator->generate('payment/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('payment.logs'),
+                $urlGenerator->generate('payment/onlineLog'),
+                itemAttributes: $itemFontArray),
         ),
         // Product
         Dropdown::widget()
-        ->addClass('navbar fs-4')
-        ->addAttributes([
-            'style' => 'font-size: 1rem; color: cornflowerblue;',
+        ->addClass('navbar inv-cornflower')
+        ->addTogglerCssStyle([
+                'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
+                'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
+                'color' => '#fd7e14',
         ])
-        ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent($translator->translate('product'))
+        ->togglerVariant(ButtonVariant::WARNING)
+        ->togglerContent(new I()->addClass('bi bi-box-seam') . ' ' . $t->translate('product'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
-            DropdownItem::link($translator->translate('add.product'), $urlGenerator->generate('product/add')),
-            DropdownItem::link($translator->translate('view'), $urlGenerator->generate('product/index')),
-            DropdownItem::link($translator->translate('category.primary'), $urlGenerator->generate('categoryprimary/index')),
-            DropdownItem::link($translator->translate('category.secondary'), $urlGenerator->generate('categorysecondary/index')),
-            DropdownItem::link($translator->translate('family'), $urlGenerator->generate('family/index')),
-            DropdownItem::link($translator->translate('family.search'), $urlGenerator->generate('family/search')),
-            DropdownItem::link($translator->translate('unit'), $urlGenerator->generate('unit/index')),
-            DropdownItem::link($translator->translate('peppol.unit'), $urlGenerator->generate('unitpeppol/index')),
+            DropdownItem::link($t->translate('add.product'),
+                $urlGenerator->generate('product/add'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('view'),
+                $urlGenerator->generate('product/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('category.primary'),
+                $urlGenerator->generate('categoryprimary/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('category.secondary'),
+                $urlGenerator->generate('categorysecondary/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('family'),
+                $urlGenerator->generate('family/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('family.search'),
+                $urlGenerator->generate('family/search'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('faq'),
+                $urlGenerator->generate('qa/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('unit'),
+                $urlGenerator->generate('unit/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('peppol.unit'),
+                $urlGenerator->generate('unitpeppol/index'),
+                itemAttributes: $itemFontArray),
         ),
-        // Tasks
         Dropdown::widget()
-        ->addClass('navbar fs-4')
-        ->addAttributes([
-            'style' => 'font-size: 1rem; color: cornflowerblue;',
-        ])
-        ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent($translator->translate('tasks'))
+        ->addClass('navbar inv-cornflower')
+        ->addTogglerCssStyle([
+                'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
+                'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
+                'color' => '#6f42c1',
+            ])
+        ->togglerVariant(ButtonVariant::SECONDARY)
+        ->togglerContent(new I()->addClass('bi bi-check2-square'). ' ' . $t->translate('tasks'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
-            DropdownItem::link($translator->translate('add.task'), $urlGenerator->generate('task/add')),
-            DropdownItem::link($translator->translate('view'), $urlGenerator->generate('task/index')),
+            DropdownItem::link($t->translate('add.task'),
+                $urlGenerator->generate('task/add'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('view'),
+                $urlGenerator->generate('task/index'),
+                itemAttributes: $itemFontArray),
         ),
         // Projects
         Dropdown::widget()
-        ->addClass('navbar fs-4')
-        ->addAttributes([
-            'style' => 'font-size: 1rem; color: cornflowerblue;',
-        ])
-        ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent($translator->translate('projects'))
+        ->addClass('navbar inv-cornflower')
+        ->addTogglerCssStyle([
+                'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
+                'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
+                'color' => '#6610f2',
+            ])
+        ->togglerVariant(ButtonVariant::PRIMARY)
+        ->togglerContent(new I()->addClass('bi bi-kanban'). ' ' . $t->translate('projects'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
-            DropdownItem::link($translator->translate('create.project'), $urlGenerator->generate('project/add')),
-            DropdownItem::link($translator->translate('view'), $urlGenerator->generate('project/index')),
+            DropdownItem::link($t->translate('create.project'),
+                $urlGenerator->generate('project/add'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('view'),
+                $urlGenerator->generate('project/index'),
+                itemAttributes: $itemFontArray),
         ),
         // Reports
         Dropdown::widget()
-        ->addClass('navbar fs-4')
-        ->addAttributes([
-            'style' => 'font-size: 1rem; color: cornflowerblue;',
+        ->addClass('navbar inv-cornflower')
+        ->addTogglerCssStyle([
+                'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
+                'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
+                'color' => '#343a40',
         ])
-        ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent($translator->translate('reports'))
+        ->togglerVariant(ButtonVariant::DARK)
+        ->togglerContent(new I()->addClass('bi bi-bar-chart-line') . ' ' . $t->translate('reports'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
-            DropdownItem::link($translator->translate('sales.by.client'), $urlGenerator->generate('report/sales_by_client_index')),
-            DropdownItem::link($translator->translate('report.sales.by.product'), $urlGenerator->generate('report/sales_by_product_index')),
-            DropdownItem::link($translator->translate('report.sales.by.task'), $urlGenerator->generate('report/sales_by_task_index')),
-            DropdownItem::link($translator->translate('sales.by.date'), $urlGenerator->generate('report/sales_by_year_index')),
-            DropdownItem::link($translator->translate('payment.history'), $urlGenerator->generate('report/payment_history_index')),
-            DropdownItem::link($translator->translate('aging'), $urlGenerator->generate('report/invoice_aging_index')),
-            DropdownItem::link($translator->translate('report.test.fraud.prevention.headers.api'), $urlGenerator->generate('backend/hmrc/fphValidate')),
-        ),
-        // Translate
-        Dropdown::widget()
-        ->addAttributes([
-            'style' => 'font-size: 1rem; color: cornflowerblue;',
-            'data-bs-toggle' => 'tooltip',
-            'title' => $translator->translate('language'),
-            'url' => '#',
-        ])
-        ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent(I::tag()->class('bi bi-translate'))
-        ->togglerSize(ButtonSize::LARGE)
-        ->items(
-            DropdownItem::link('Afrikaans South African', $urlGenerator->generateFromCurrent(['_language' => 'af-ZA'], fallbackRouteName: 'site/index')),
-            DropdownItem::link('Arabic Bahrainian/ عربي', $urlGenerator->generateFromCurrent(['_language' => 'ar-BH'], fallbackRouteName: 'site/index')),
-            DropdownItem::link('Azerbaijani / Azərbaycan', $urlGenerator->generateFromCurrent(['_language' => 'az'], fallbackRouteName: 'site/index')),
-            DropdownItem::link('Bosnian / Bosanski', $urlGenerator->generateFromCurrent(['_language' => 'bs'], fallbackRouteName: 'site/index')),
-            DropdownItem::link('Chinese Simplified / 简体中文', $urlGenerator->generateFromCurrent(['_language' => 'zh-CN'], fallbackRouteName: 'site/index')),
-            DropdownItem::link('Tiawanese Mandarin / 简体中文', $urlGenerator->generateFromCurrent(['_language' => 'zh-TW'], fallbackRouteName: 'site/index')),
-            DropdownItem::link('English', $urlGenerator->generateFromCurrent(['_language' => 'en'], fallbackRouteName: 'site/index')),
-            DropdownItem::link('Filipino / Filipino', $urlGenerator->generateFromCurrent(['_language' => 'fil'], fallbackRouteName: 'site/index')),
-            DropdownItem::link('French / Français', $urlGenerator->generateFromCurrent(['_language' => 'fr'], fallbackRouteName: 'site/index')),
-            DropdownItem::link('Dutch / Nederlands', $urlGenerator->generateFromCurrent(['_language' => 'nl'], fallbackRouteName: 'site/index')),
-            DropdownItem::link('German / Deutsch', $urlGenerator->generateFromCurrent(['_language' => 'de'], fallbackRouteName: 'site/index')),
-            DropdownItem::link('Indonesian / bahasa Indonesia', $urlGenerator->generateFromCurrent(['_language' => 'id'], fallbackRouteName: 'site/index')),
-            DropdownItem::link('Italian / Italiano', $urlGenerator->generateFromCurrent(['_language' => 'it'], fallbackRouteName: 'site/index')),
-            DropdownItem::link('Japanese / 日本', $urlGenerator->generateFromCurrent(['_language' => 'ja'], fallbackRouteName: 'site/index')),
-            DropdownItem::link('Polish / Polski', $urlGenerator->generateFromCurrent(['_language' => 'pl'], fallbackRouteName: 'site/index')),
-            DropdownItem::link('Portugese Brazilian / Português Brasileiro', $urlGenerator->generateFromCurrent(['_language' => 'pt-BR'], fallbackRouteName: 'site/index')),
-            DropdownItem::link('Russian / Русский', $urlGenerator->generateFromCurrent(['_language' => 'ru'], fallbackRouteName: 'site/index')),
-            DropdownItem::link('Slovakian / Slovenský', $urlGenerator->generateFromCurrent(['_language' => 'sk'], fallbackRouteName: 'site/index')),
-            DropdownItem::link('Slovenian / Slovenski', $urlGenerator->generateFromCurrent(['_language' => 'sl'], fallbackRouteName: 'site/index')),
-            DropdownItem::link('Spanish /  Española x', $urlGenerator->generateFromCurrent(['_language' => 'es'], fallbackRouteName: 'site/index')),
-            DropdownItem::link('Ukrainian / українська', $urlGenerator->generateFromCurrent(['_language' => 'uk'], fallbackRouteName: 'site/index')),
-            DropdownItem::link('Uzbek / o' . "'" . 'zbek', $urlGenerator->generateFromCurrent(['_language' => 'uz'], fallbackRouteName: 'site/index')),
-            DropdownItem::link('Vietnamese / Tiếng Việt', $urlGenerator->generateFromCurrent(['_language' => 'vi'], fallbackRouteName: 'site/index')),
-            DropdownItem::link('Zulu South African/ Zulu South African', $urlGenerator->generateFromCurrent(['_language' => 'zu-ZA'], fallbackRouteName: 'site/index')),
+            DropdownItem::link($t->translate('sales.by.client'),
+                $urlGenerator->generate('report/salesByClientIndex'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('report.sales.by.product'),
+                $urlGenerator->generate('report/salesByProductIndex'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('report.sales.by.task'),
+                $urlGenerator->generate('report/salesByTaskIndex'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('sales.by.date'),
+                $urlGenerator->generate('report/salesByYearIndex'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('payment.history'),
+                $urlGenerator->generate('report/paymentHistoryIndex'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('aging'),
+                $urlGenerator->generate('report/invoiceAgingIndex'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate(
+                    'report.test.fraud.prevention.headers.api'),
+                $urlGenerator->generate('backend/hmrc/fphValidate'),
+                itemAttributes: $itemFontArray),
         ),
     )
-         ->styles(NavStyle::NAVBAR);
+    ->styles(NavStyle::NAVBAR);
 } //null!== currentPath && !isGuest
 echo NavBar::end();
 echo $bootstrap5OffcanvasEnable ? Offcanvas::end() : '';
-?>
-
-        <div id="main-area">
-            <?php
-// Display the sidebar if enabled
-    if ($s->getSetting('disable_sidebar') !== (string) 1) {
-        include dirname(__DIR__) . '/invoice/layout/sidebar.php';
-    }
-?>
-            <main class="container py-4">
-                                    <?php echo $content; ?>
-            </main>
-
-            <div id="fullpage-loader" style="display: none">
-                <div class="loader-content">
-                    <i id="loader-icon" class="fa fa-cog fa-spin"></i>
-                    <div id="loader-error" style="display: none">
-                        <br/>
-                        <a href="" class="btn btn-primary btn-sm" target="_blank">
-                            <i class="fa fa-support"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="text-right">
-                    <button type="button" class="fullpage-loader-close btn btn-link tip" aria-label="<?php $translator->translate('close'); ?>"
-                            title="<?= $translator->translate('close'); ?>" data-placement="left">
-                        <span aria-hidden="true"><i class="fa fa-close"></i></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <footer class="container py-4">
-                            <?= PerformanceMetrics::widget(); ?>
-        </footer>
-        <?php
-            echo Html::script('NProgress.done();')->type('module');
+echo Html::openTag('div', ['id' => 'main-area']);
+ // Display the sidebar if enabled
+ if ($s->getSetting('disable_sidebar') !== (string) 1) {
+  include_once dirname(__DIR__) . '/invoice/layout/sidebar.php';
+ }
+ echo Html::openTag('main', ['class' => 'container-fluid py-4']); //1
+  echo $content;
+ echo Html::closeTag('main'); //1
+ echo Html::openTag('div', [
+  'id' => 'fullpage-loader',
+  'style' => 'display: none',
+ ]); //1
+  echo Html::openTag('div', ['class' => 'loader-content']); //2
+   echo Html::openTag('div', [
+    'id' => 'loader-icon',
+    'class' => 'spinner-border text-primary',
+    'role' => 'status',
+   ]);
+    echo Html::tag('span', 'Loading...', ['class' => 'visually-hidden']);
+   echo Html::closeTag('div');
+  echo Html::closeTag('div'); //2
+ echo Html::closeTag('div'); //1
+echo Html::closeTag('div');
+echo Html::openTag('footer', ['class' => 'container py-4']);
+ echo PerformanceMetrics::widget();
+echo Html::closeTag('footer');
+echo Html::script('NProgress.done();')->type('module');
 $this->endBody();
-?>
-    </body>
-</html>
-
-<?php
-    $this->endPage();
-?>
+echo Html::closeTag('body');
+echo Html::closeTag('html');
+$this->endPage();

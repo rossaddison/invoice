@@ -6,7 +6,7 @@ namespace App\Invoice\Company;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\Company;
+use App\Infrastructure\Persistence\Company\Company;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
 use App\User\UserService;
@@ -19,7 +19,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class CompanyController extends BaseController
 {
@@ -32,19 +32,19 @@ final class CompanyController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->companyService = $companyService;
     }
 
     /**
      * @param CompanyRepository $companyRepository
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function index(CompanyRepository $companyRepository): \Yiisoft\DataResponse\DataResponse
+    public function index(CompanyRepository $companyRepository): \Psr\Http\Message\ResponseInterface
     {
         $this->rbac();
         $companies = $this->companies($companyRepository);
@@ -55,7 +55,7 @@ final class CompanyController extends BaseController
             'company_public' => $this->translator->translate('company.public'),
             'alert' => $this->alert(),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -68,7 +68,7 @@ final class CompanyController extends BaseController
         FormHydrator $formHydrator,
     ): Response {
         $body = $request->getParsedBody() ?? [];
-        $form = new CompanyForm(new Company());
+        $form = new CompanyForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'company/add',
@@ -89,7 +89,7 @@ final class CompanyController extends BaseController
             $parameters['form'] = $form;
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -107,11 +107,11 @@ final class CompanyController extends BaseController
     ): Response {
         $company = $this->company($currentRoute, $companyRepository);
         if ($company) {
-            $form = new CompanyForm($company);
+            $form = CompanyForm::show($company);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'company/edit',
-                'actionArguments' => ['id' => $company->getId()],
+                'actionArguments' => ['id' => $company->reqId()],
                 'errors' => [],
                 'form' => $form,
                 'formFields' => $this->formFields,
@@ -128,7 +128,7 @@ final class CompanyController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('company/index');
     }
@@ -162,15 +162,15 @@ final class CompanyController extends BaseController
     ): Response {
         $company = $this->company($currentRoute, $companyRepository);
         if ($company) {
-            $form = new CompanyForm($company);
+            $form = CompanyForm::show($company);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'company/view',
-                'actionArguments' => ['id' => $company->getId()],
+                'actionArguments' => ['id' => $company->reqId()],
                 'companyPublic' => $this->translator->translate('company.public'),
                 'form' => $form,
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('company/index');
     }
@@ -178,6 +178,7 @@ final class CompanyController extends BaseController
     /**
      * @return Response|true
      */
+    /** @psalm-suppress UnusedReturnValue */
     private function rbac(): bool|Response
     {
         $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
@@ -195,11 +196,8 @@ final class CompanyController extends BaseController
      */
     private function company(CurrentRoute $currentRoute, CompanyRepository $companyRepository): ?Company
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $companyRepository->repoCompanyquery($id);
-        }
-        return null;
+        $id = (int) $currentRoute->getArgument('id');
+        return $companyRepository->repoCompanyquery($id);
     }
 
     /**

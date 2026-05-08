@@ -4,42 +4,32 @@ declare(strict_types=1);
 
 namespace App\Widget;
 
-use App\Invoice\Entity\Quote;
-use App\Invoice\Setting\SettingRepository;
+use App\Infrastructure\Persistence\Quote\Quote;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Span;
 use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Security\Random;
 use Yiisoft\Translator\TranslatorInterface;
 
 final readonly class QuoteToolbar
 {
-    public function __construct(
-        private SettingRepository $settingRepository,
+        public function __construct(
         private UrlGeneratorInterface $urlGenerator,
         private TranslatorInterface $translator,
-    ) {}
-
-    public function render(Quote $quote, bool $quoteEdit, string $vat, float $quoteAmountTotal): string
-    {
-        $quoteId = $quote->getId();
-        $buttons = $this->buildButtons($quote, $quoteEdit, $vat, $quoteAmountTotal);
-
-        return $this->renderToolbar($buttons);
+    ) {
     }
 
     private function buildButtons(Quote $quote, bool $quoteEdit, string $vat, ?float $quoteAmountTotal): array
     {
-        $quoteId = $quote->getId();
+        $quoteId = $quote->reqId();
         $buttons = [];
 
         // View created invoice (if exists)
-        if ($quote->getInv_id() !== '0' && !empty($quote->getInv_id())) {
+        if ($quote->getInvId() !== 0) {
             $buttons[] = $this->createLinkButton(
                 'view-invoice',
-                $this->urlGenerator->generate('inv/view', ['id' => $quote->getInv_id()]),
-                'fa-file-text',
+                $this->urlGenerator->generate('inv/view', ['id' => $quote->getInvId()]),
+                'bi-file-text',
                 'btn-outline-success',
                 $this->translator->translate('view') . ' ' . $this->translator->translate('invoice'),
             );
@@ -50,7 +40,7 @@ final readonly class QuoteToolbar
             $buttons[] = $this->createLinkButton(
                 'edit-quote',
                 $this->urlGenerator->generate('quote/edit', ['id' => $quoteId]),
-                'fa-edit',
+                'bi-pencil-square',
                 'btn-outline-primary',
                 $this->translator->translate('edit'),
             );
@@ -61,7 +51,7 @@ final readonly class QuoteToolbar
             $buttons[] = $this->createModalButton(
                 'add-quote-tax',
                 '#add-quote-tax',
-                'fa-plus',
+                'bi-plus-circle',
                 'btn-outline-secondary',
                 $this->translator->translate('add.quote.tax'),
             );
@@ -71,18 +61,18 @@ final readonly class QuoteToolbar
         $buttons[] = $this->createModalButton(
             'quote-to-pdf',
             '#quote-to-pdf',
-            'fa-print',
+            'bi-printer',
             'btn-outline-info',
             $this->translator->translate('download.pdf'),
         );
 
         // Email button (only if editing allowed, quote is draft, and has amount)
         if (null !== $quoteAmountTotal) {
-            if ($quoteEdit && ($quote->getStatus_id() === 1) && ($quoteAmountTotal > 0)) {
+            if ($quoteEdit && ($quote->reqStatusId() === 1) && ($quoteAmountTotal > 0)) {
                 $buttons[] = $this->createLinkButton(
                     'send-email',
-                    $this->urlGenerator->generate('quote/email_stage_0', ['id' => $quoteId]),
-                    'fa-send',
+                    $this->urlGenerator->generate('quote/emailStage0', ['id' => $quoteId]),
+                    'bi-send',
                     'btn-outline-success',
                     $this->translator->translate('send.email'),
                 );
@@ -90,13 +80,13 @@ final readonly class QuoteToolbar
         }
 
         // Quote to SO button - show enabled if approved, disabled if not approved
-        if ($quoteEdit && $quote->getSo_id() === '0' && null !== $quoteAmountTotal && $quoteAmountTotal > 0) {
-            if ($quote->getStatus_id() === 4) {
+        if ($quoteEdit && $quote->getSoId() === 0 && null !== $quoteAmountTotal && $quoteAmountTotal > 0) {
+            if ($quote->reqStatusId() === 4) {
                 // Quote is approved - show enabled button
                 $buttons[] = $this->createModalButton(
                     'quote-to-so',
                     '#quote-to-so',
-                    'fa-refresh',
+                    'bi-arrow-repeat',
                     'btn-outline-warning',
                     $this->translator->translate('quote.to.so'),
                 );
@@ -104,7 +94,7 @@ final readonly class QuoteToolbar
                 // Quote not approved - show disabled button with indicator
                 $buttons[] = $this->createDisabledButton(
                     'quote-to-so-disabled',
-                    'fa-refresh',
+                    'bi-arrow-repeat',
                     'btn-outline-secondary',
                     $this->translator->translate('quote.to.so') . ' (' . $this->translator->translate('approval.required') . ')',
                     $this->translator->translate('quote.must.be.approved.first'),
@@ -113,21 +103,23 @@ final readonly class QuoteToolbar
         }
 
         // Quote to Invoice button - show enabled if approved, disabled if not approved (but don't show if already converted)
-        if ($quoteEdit && $quote->getInv_id() === '0' && null !== $quoteAmountTotal && $quoteAmountTotal > 0) {
-            if ($quote->getStatus_id() === 4) {
+        if ($quoteEdit && $quote->getInvId() === 0 && null !== $quoteAmountTotal && $quoteAmountTotal > 0) {
+            if ($quote->reqStatusId() === 4) {
                 // Quote is approved - show enabled button
-                $buttons[] = $this->createModalButton(
-                    'quote-to-invoice',
-                    '#quote-to-invoice',
-                    'fa-refresh',
-                    'btn-outline-primary',
-                    $this->translator->translate('quote.to.invoice'),
-                );
+                $buttons[] = [
+                    'type' => 'modal',
+                    'id' => 'quote-to-invoice',
+                    'href' => '#quote-to-invoice',
+                    'icon' => 'bi-arrow-repeat',
+                    'class' => '',
+                    'title' => $this->translator->translate('quote.to.invoice'),
+                    'style' => 'background-color: #ffffff !important; border: 2px solid #b19cd9 !important; color: #b19cd9 !important; font-weight: 500;'
+                ];
             } else {
                 // Quote not approved - show disabled button with indicator
                 $buttons[] = $this->createDisabledButton(
                     'quote-to-invoice-disabled',
-                    'fa-refresh',
+                    'bi-arrow-repeat',
                     'btn-outline-secondary',
                     $this->translator->translate('quote.to.invoice') . ' (' . $this->translator->translate('approval.required') . ')',
                     $this->translator->translate('quote.must.be.approved.first'),
@@ -135,12 +127,22 @@ final readonly class QuoteToolbar
             }
         }
 
+        if ($quoteEdit) {
+            $buttons[] = $this->createModalButton(
+                'allowance-charge',
+                '#add-quote-allowance-charge',
+                'bi-plus-circle',
+                'btn-outline-secondary',
+                $this->translator->translate('allowance.or.charge.quote.add'),
+            );
+        }
+
         // Copy Quote button
         if ($quoteEdit) {
             $buttons[] = $this->createModalButton(
                 'quote-to-quote',
                 '#quote-to-quote',
-                'fa-copy',
+                'bi-copy',
                 'btn-outline-secondary',
                 $this->translator->translate('copy.quote'),
             );
@@ -151,7 +153,7 @@ final readonly class QuoteToolbar
             $buttons[] = $this->createModalButton(
                 'delete-quote',
                 '#delete-quote',
-                'fa-trash',
+                'bi-trash',
                 'btn-outline-danger',
                 $this->translator->translate('delete.quote'),
             );
@@ -162,7 +164,7 @@ final readonly class QuoteToolbar
             $buttons[] = $this->createModalButton(
                 'delete-items',
                 '#delete-items',
-                'fa-trash',
+                'bi-trash',
                 'btn-outline-danger',
                 $this->translator->translate('delete') . ' ' . $this->translator->translate('item'),
             );
@@ -171,7 +173,8 @@ final readonly class QuoteToolbar
         return $buttons;
     }
 
-    private function createLinkButton(string $id, string $href, string $icon, string $class, string $title): array
+    private function createLinkButton(string $id, string $href, string $icon,
+        string $class, string $title): array
     {
         return [
             'type' => 'link',
@@ -183,7 +186,8 @@ final readonly class QuoteToolbar
         ];
     }
 
-    private function createModalButton(string $id, string $href, string $icon, string $class, string $title): array
+    private function createModalButton(string $id, string $href, string $icon,
+        string $class, string $title): array
     {
         return [
             'type' => 'modal',
@@ -195,7 +199,8 @@ final readonly class QuoteToolbar
         ];
     }
 
-    private function createDisabledButton(string $id, string $icon, string $class, string $title, string $tooltip): array
+    private function createDisabledButton(string $id, string $icon,
+        string $class, string $title, string $tooltip): array
     {
         return [
             'type' => 'disabled',
@@ -206,16 +211,6 @@ final readonly class QuoteToolbar
             'title' => $title,
             'tooltip' => $tooltip,
         ];
-    }
-
-    private function renderToolbar(array $buttons): string
-    {
-        return Html::openTag('div', [
-            'class' => 'quote-actions-toolbar d-flex flex-wrap gap-2 align-items-center',
-            'style' => 'margin-bottom: 1rem;',
-        ])
-        . $this->renderButtons($buttons)
-        . Html::closeTag('div');
     }
 
     private function renderButtons(array $buttons): string
@@ -235,10 +230,10 @@ final readonly class QuoteToolbar
     private function renderButton(array $button): string
     {
         $baseClasses = 'btn ' . (string) $button['class'];
-        $iconHtml = Html::openTag('i', ['class' => 'fa ' . (string) $button['icon']]) . Html::closeTag('i');
+        $iconHtml = Html::openTag('i', ['class' => 'bi ' . (string) $button['icon']]) . Html::closeTag('i');
 
         if ((string) $button['type'] === 'link') {
-            return A::tag()
+            return  new A()
                 ->href((string) $button['href'])
                 ->addClass($baseClasses)
                 ->id($this->getButtonId($button))
@@ -247,7 +242,7 @@ final readonly class QuoteToolbar
                 ->render();
         } elseif ((string) $button['type'] === 'disabled') {
             // Disabled button with tooltip
-            return A::tag()
+            return  new A()
                 ->href('#')
                 ->addClass($baseClasses . ' disabled')
                 ->id($this->getButtonId($button))
@@ -261,12 +256,16 @@ final readonly class QuoteToolbar
                 ->render();
         } else {
             // Modal button
-            return A::tag()
+            $styleAttr = isset($button['style'])
+                ? 'text-decoration: none; ' . (string) $button['style']
+                : 'text-decoration: none';
+
+            return  new A()
                 ->href((string) $button['href'])
                 ->addClass($baseClasses)
                 ->id($this->getButtonId($button))
                 ->attribute('data-bs-toggle', 'modal')
-                ->attribute('style', 'text-decoration: none')
+                ->attribute('style', $styleAttr)
                 ->content($iconHtml . ' ' . (string) $button['title'])
                 ->encode(false)
                 ->render();
@@ -278,7 +277,7 @@ final readonly class QuoteToolbar
         $badges = [];
 
         // Quote status indicator
-        $statusClass = match ($quote->getStatus_id()) {
+        $statusClass = match ($quote->reqStatusId()) {
             1 => 'bg-secondary',    // Draft
             2 => 'bg-primary',      // Sent
             3 => 'bg-warning',      // Viewed
@@ -287,7 +286,7 @@ final readonly class QuoteToolbar
             default => 'bg-light',
         };
 
-        $statusText = match ($quote->getStatus_id()) {
+        $statusText = match ($quote->reqStatusId()) {
             1 => $this->translator->translate('draft'),
             2 => $this->translator->translate('sent'),
             3 => $this->translator->translate('viewed'),
@@ -296,22 +295,22 @@ final readonly class QuoteToolbar
             default => $this->translator->translate('unknown'),
         };
 
-        $badges[] = Span::tag()
+        $badges[] =  new Span()
             ->addClass('badge ' . $statusClass . ' me-2')
             ->content($statusText)
             ->render();
 
         // SO status indicator if quote has been converted
-        if ($quote->getSo_id() !== '0' && !empty($quote->getSo_id())) {
-            $badges[] = Span::tag()
+        if ($quote->getSoId() !== 0) {
+            $badges[] =  new Span()
                 ->addClass('badge bg-info me-2')
                 ->content($this->translator->translate('converted.to.so'))
                 ->render();
         }
 
         // Invoice status indicator if quote has been converted
-        if ($quote->getInv_id() !== '0' && !empty($quote->getInv_id())) {
-            $badges[] = Span::tag()
+        if ($quote->getInvId() !== 0) {
+            $badges[] =  new Span()
                 ->addClass('badge bg-success me-2')
                 ->content($this->translator->translate('converted.to.invoice'))
                 ->render();
@@ -322,7 +321,6 @@ final readonly class QuoteToolbar
 
     public function renderWithStatus(Quote $quote, bool $quoteEdit, string $vat, ?float $quoteAmountTotal): string
     {
-        $quoteId = $quote->getId();
         $buttons = $this->buildButtons($quote, $quoteEdit, $vat, $quoteAmountTotal);
         $statusBadges = $this->renderInlineStatusIndicators($quote);
 

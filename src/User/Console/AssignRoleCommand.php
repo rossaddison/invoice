@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\User\Console;
 
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 use InvalidArgumentException;
 use Stringable;
 use Symfony\Component\Console\Command\Command;
@@ -70,13 +70,10 @@ final class AssignRoleCommand extends Command
             if (null === $user) {
                 throw new InvalidArgumentException('Can\'t find user');
             }
-            if (null === $user->getId()) {
+            if (!($user->hasIdentity())) {
                 throw new InvalidArgumentException('User Id is NULL');
             }
 
-            /**
-             * @var string $roleName
-             */
             $role = $this->itemsStorage->getRole($roleName);
 
             if (null === $role) {

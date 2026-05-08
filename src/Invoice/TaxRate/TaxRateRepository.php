@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\TaxRate;
 
-use App\Invoice\Entity\TaxRate;
+use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -70,10 +70,10 @@ final class TaxRateRepository extends Select\Repository
     }
 
     /**
-     * @param string $tax_rate_id
+     * @param int $tax_rate_id
      * @return TaxRate|null
      */
-    public function repoTaxRatequery(string $tax_rate_id): ?TaxRate
+    public function repoTaxRatequery(int $tax_rate_id): ?TaxRate
     {
         $query = $this
             ->select()
@@ -94,10 +94,10 @@ final class TaxRateRepository extends Select\Repository
     }
 
     /**
-     * @param string $tax_rate_id
+     * @param int $tax_rate_id
      * @return int
      */
-    public function repoCount(string $tax_rate_id): int
+    public function repoCount(int $tax_rate_id): int
     {
         return $this->select()
                       ->where(['id' => $tax_rate_id])
@@ -124,10 +124,11 @@ final class TaxRateRepository extends Select\Repository
          * @var TaxRate $taxRate
          */
         foreach ($taxRates as $taxRate) {
-            $taxRateId = $taxRate->getTaxRateId();
-            if (null !== $taxRateId) {
-                $optionsDataTaxRates[$taxRateId] = ($taxRate->getTaxRateName() ?? '') . '  ' . (string) ($taxRate->getTaxRatePercent() ?? '');
-            }
+            $taxRateId = $taxRate->reqId();
+            $optionsDataTaxRates[$taxRateId] = ($taxRate->getTaxRateName() ?? '')
+                . '  '
+                . (string) ($taxRate->getTaxRatePercent() ?? '');
+            
         }
         return $optionsDataTaxRates;
     }

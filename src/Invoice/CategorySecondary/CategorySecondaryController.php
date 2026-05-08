@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\CategorySecondary;
 
 use App\Invoice\BaseController;
-use App\Invoice\Entity\CategorySecondary;
+use App\Infrastructure\Persistence\CategorySecondary\CategorySecondary;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\CategoryPrimary\CategoryPrimaryRepository;
 use App\User\UserService;
@@ -14,14 +14,14 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Exception;
 
 final class CategorySecondaryController extends BaseController
@@ -33,13 +33,13 @@ final class CategorySecondaryController extends BaseController
         private DataResponseFactoryInterface $factory,
         SessionInterface $session,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         sR $sR,
         TranslatorInterface $translator,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->categorySecondaryService = $categorySecondaryService;
         $this->factory = $factory;
     }
@@ -50,7 +50,7 @@ final class CategorySecondaryController extends BaseController
         CategoryPrimaryRepository $categoryPrimaryRepository,
     ): Response {
         $categorySecondary = new CategorySecondary();
-        $form = new CategorySecondaryForm($categorySecondary);
+        $form = new CategorySecondaryForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'categorysecondary/add',
@@ -71,7 +71,7 @@ final class CategorySecondaryController extends BaseController
                 $parameters['form'] = $form;
             }
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     public function index(
@@ -93,7 +93,7 @@ final class CategorySecondaryController extends BaseController
             'defaultPageSizeOffsetPaginator' => $settingRepository->getSetting('default_list_limit')
                 ? (int) $settingRepository->getSetting('default_list_limit') : 1,
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     public function delete(
@@ -125,7 +125,7 @@ final class CategorySecondaryController extends BaseController
     ): Response {
         $categorySecondary = $this->categorysecondary($categorySecondaryRepository, $id);
         if ($categorySecondary) {
-            $form = new CategorySecondaryForm($categorySecondary);
+            $form = CategorySecondaryForm::show($categorySecondary);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'categorysecondary/edit',
@@ -145,7 +145,7 @@ final class CategorySecondaryController extends BaseController
                     $parameters['form'] = $form;
                 }
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('categorysecondary/index');
     }
@@ -153,7 +153,7 @@ final class CategorySecondaryController extends BaseController
     private function categorysecondary(CategorySecondaryRepository $categorySecondaryRepository, int $id): ?CategorySecondary
     {
         if ($id) {
-            return $categorySecondaryRepository->repoCategorySecondaryLoadedQuery((string) $id);
+            return $categorySecondaryRepository->repoCategorySecondaryLoadedQuery($id);
         }
         return null;
     }
@@ -167,17 +167,17 @@ final class CategorySecondaryController extends BaseController
      * @param CategorySecondaryRepository $categorysecondaryRepository
      * @param CategoryPrimaryRepository $categoryPrimaryRepository
      * @param int $id
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function view(
         CategorySecondaryRepository $categorysecondaryRepository,
         CategoryPrimaryRepository $categoryPrimaryRepository,
         #[RouteArgument('id')]
         int $id,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $categorysecondary = $this->categorysecondary($categorysecondaryRepository, $id);
         if ($categorysecondary) {
-            $form = new CategorySecondaryForm($categorysecondary);
+            $form = CategorySecondaryForm::show($categorysecondary);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'categorysecondary/view',
@@ -186,7 +186,7 @@ final class CategorySecondaryController extends BaseController
                 'categorysecondaries' => $categorysecondary,
                 'category_primarys' => $categoryPrimaryRepository->optionsDataCategoryPrimaries(),
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('categorysecondary/index');
     }

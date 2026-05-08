@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Project;
+use App\Infrastructure\Persistence\Project\Project;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Html\Html;
@@ -18,7 +18,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 /**
- * @var App\Invoice\Entity\Project $project
+ * @var App\Infrastructure\Persistence\Project\Project $project
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
  * @var Yiisoft\Data\Cycle\Reader\EntityReader $projects
@@ -31,12 +31,12 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @psalm-var positive-int $page
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$toolbarReset = A::tag()
+$toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'project/index'))
     ->id('btn-reset')
     ->render();
@@ -45,14 +45,14 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Project $model) => Html::encode($model->getId()),
+        content: static fn (Project $model) => Html::encode($model->reqId()),
     ),
     new DataColumn(
         'client_id',
         header: $translator->translate('client'),
         content: static function (Project $model): string {
-            $clientName = $model->getClient()?->getClient_name() ?? '';
-            $clientSurname = $model->getClient()?->getClient_surname() ?? '';
+            $clientName = $model->getClient()?->getClientName() ?? '';
+            $clientSurname = $model->getClient()?->getClientSurname() ?? '';
             if ((strlen($clientName) > 0) && (strlen(($clientSurname)) > 0)) {
                 return Html::encode($clientName . ' ' . $clientSurname);
             } else {
@@ -63,37 +63,43 @@ $columns = [
     new DataColumn(
         'name',
         header: $translator->translate('project.name'),
-        content: static fn(Project $model): string => Html::encode(ucfirst($model->getName() ?? '')),
+        content: static fn (Project $model): string => Html::encode(ucfirst($model->getName() ?? '')),
     ),
-    new ActionColumn(buttons: [
+    new ActionColumn(
+        before: Html::openTag('div', ['class' => 'btn-group', 'role' => 'group']),
+        after: Html::closeTag('div'),
+        buttons: [
         new ActionButton(
             content: '🔎',
             url: static function (Project $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('project/view', ['id' => $model->getId()]);
+                return $urlGenerator->generate('project/view', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
                 'title' => $translator->translate('view'),
+                'class' => 'btn btn-outline-primary btn-sm',
             ],
         ),
         new ActionButton(
             content: '✎',
             url: static function (Project $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('project/edit', ['id' => $model->getId()]);
+                return $urlGenerator->generate('project/edit', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
                 'title' => $translator->translate('edit'),
+                'class' => 'btn btn-outline-warning btn-sm',
             ],
         ),
         new ActionButton(
             content: '❌',
             url: static function (Project $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('project/delete', ['id' => $model->getId()]);
+                return $urlGenerator->generate('project/delete', ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),
                 'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                'class' => 'btn btn-outline-danger btn-sm',
             ],
         ),
     ]),
@@ -104,7 +110,7 @@ $paginator = (new OffsetPaginator($projects))
     ->withCurrentPage($page)
     ->withToken(PageToken::next((string) $page));
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -112,14 +118,14 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('project/index'))->csrf($csrf)->open()
-    . A::tag()
+$toolbarString =  new Form()->post($urlGenerator->generate('project/index'))->csrf($csrf)->open()
+    .  new A()
     ->href($urlGenerator->generate('project/add'))
     ->addClass('btn btn-info')
     ->content('➕')
     ->render()
-    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-    . Form::tag()->close();
+    .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    .  new Form()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
@@ -132,7 +138,7 @@ echo GridView::widget()
 ->id('w84-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($grid_summary)
+->summaryTemplate($gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

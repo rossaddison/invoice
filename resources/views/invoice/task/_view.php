@@ -22,21 +22,21 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataStatus
  */
 ?>
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
 <?= $translator->translate('tasks.form'); ?>
 <?= Html::closeTag('h1'); ?>
-<?= Form::tag()
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('TaskForm')
     ->open()
-?> 
+?>
 <?= Html::openTag('div'); ?>
     <?= Field::text($form, 'name')
         ->label($translator->translate('name'))
@@ -58,7 +58,7 @@ use Yiisoft\Html\Tag\Form;
     ])
     ->value(Html::encode($form->getDescription()))
     ->placeholder($translator->translate('description'))
-?>                    
+?>
     <?= Html::tag('br'); ?>
     <?= Field::select($form, 'project_id')
     ->label($translator->translate('project'))
@@ -67,7 +67,7 @@ use Yiisoft\Html\Tag\Form;
         'disabled' => 'disabled',
     ])
     ->optionsData($projects)
-    ->value($form->getProject_id())
+    ->value($form->getProjectId())
     ->prompt($translator->translate('none'))
 ?>
     <?= Html::tag('br'); ?>
@@ -78,7 +78,7 @@ use Yiisoft\Html\Tag\Form;
         'disabled' => 'disabled',
     ])
     ->optionsData($taxRates)
-    ->value($form->getTax_rate_id())
+    ->value($form->getTaxRateId())
     ->prompt($translator->translate('none'))
 ?>
     <?= Html::tag('br'); ?>
@@ -88,9 +88,9 @@ use Yiisoft\Html\Tag\Form;
         'readonly' => 'readonly',
         'disabled' => 'disabled',
     ])
-    ->value($s->format_amount(($form->getPrice() ?? 0.00)))
+    ->value($s->formatAmount(($form->getPrice() ?? 0.00)))
     ->placeholder($translator->translate('price'))
-    ->hint($translator->translate('hint.this.field.is.required')); ?>         
+    ->hint($translator->translate('hint.this.field.is.required')); ?>
     <?= Html::tag('br'); ?>
     <?=
     Field::date($form, 'finish_date')
@@ -99,31 +99,31 @@ use Yiisoft\Html\Tag\Form;
         'readonly' => 'readonly',
         'disabled' => 'disabled',
     ])
-    ->value(Html::encode($form->getFinish_date() instanceof \DateTimeImmutable
-                         ? $form->getFinish_date()->format('Y-m-d') : (is_string(
-                             $form->getFinish_date(),
+    ->value(Html::encode($form->getFinishDate() instanceof \DateTimeImmutable
+                         ? $form->getFinishDate()->format('Y-m-d') : (is_string(
+                             $form->getFinishDate(),
                          )
-                         ? $form->getFinish_date() : '')))
-?>    
+                         ? $form->getFinishDate() : '')))
+?>
     <?= Html::tag('br'); ?>
     <?php
     $optionsDataStatus = [];
 $statuses = [
     1 => [
         'label' => $translator->translate('not.started'),
-        'class' => 'draft',
+        'class' => 'secondary',
     ],
     2 => [
         'label' => $translator->translate('in.progress'),
-        'class' => 'viewed',
+        'class' => 'warning',
     ],
     3 => [
         'label' => $translator->translate('complete'),
-        'class' => 'sent',
+        'class' => 'success',
     ],
     4 => [
         'label' => $translator->translate('invoiced'),
-        'class' => 'paid',
+        'class' => 'primary',
     ],
 ];
 /**
@@ -147,9 +147,9 @@ foreach ($statuses as $key => $status) {
     ->optionsData($optionsDataStatus)
     ->value($form->getStatus())
 ?>
-<?= Html::closeTag('div'); ?>     
+<?= Html::closeTag('div'); ?>
 <?= $button::back(); ?>
-<?= Form::tag()->close(); ?>
+<?=  new Form()->close(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

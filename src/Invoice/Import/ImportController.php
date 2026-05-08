@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Invoice\Import;
 
+use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\BaseController;
 use App\Service\WebControllerService;
 use App\User\UserService;
 // Exceptions
 use App\Invoice\Helpers\InvoicePlane\Exception\NoConnectionException;
 //Entities
-use App\Invoice\Entity\TaxRate;
+use App\Infrastructure\Persistence\TaxRate\TaxRate;
 // Repositories
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Family\FamilyRepository;
@@ -32,7 +33,7 @@ use Yiisoft\Db\Query\Query;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class ImportController extends BaseController
 {
@@ -48,11 +49,11 @@ final class ImportController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->cR = $cR;
         $this->uR = $uR;
         $this->fR = $fR;
@@ -91,7 +92,7 @@ final class ImportController extends BaseController
             'action' => ['import/index'],
             'alert' => $this->alert(),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     public function invoiceplane(): Response
@@ -142,7 +143,7 @@ final class ImportController extends BaseController
         } else {
             $this->flashMessage('info', $this->translator->translate('invoiceplane.no.connection'));
         }
-        return $this->webService->getRedirectResponse('setting/tab_index');
+        return $this->webService->getRedirectResponse('setting/tabIndex');
     }
 
     private function inputUnit(Connection $db): array
@@ -171,17 +172,11 @@ final class ImportController extends BaseController
 
     private function ensureMandatoryTaxRatesInstalled(): void
     {
-        /**
-         * @var TaxRate $taxRateService
-         */
         $taxRateService = new TaxRate();
         $taxRateService->setTaxRateName('Zero');
         $taxRateService->setTaxRatePercent(0);
         $taxRateService->setTaxRateDefault(false);
         $this->trR->save($taxRateService);
-        /**
-         * @var TaxRate $taxRateStandard
-         */
         $taxRateStandard = new TaxRate();
         $taxRateStandard->setTaxRateName('Standard');
         $taxRateStandard->setTaxRatePercent(20);
@@ -226,9 +221,6 @@ final class ImportController extends BaseController
                 'client_tax_code',
                 'client_language',
                 'client_active',
-                'client_avs',
-                'client_insurednumber',
-                'client_veka',
                 'client_birthdate',
                 'client_gender',
             ])
@@ -267,9 +259,9 @@ final class ImportController extends BaseController
          * @var array $unit
          */
         foreach ($units as $unit) {
-            $newUnit = new \App\Invoice\Entity\Unit();
-            $newUnit->setUnit_name((string) $unit['unit_name']);
-            $newUnit->setUnit_name_plrl((string) $unit['unit_name_plrl']);
+            $newUnit = new \App\Infrastructure\Persistence\Unit\Unit();
+            $newUnit->setUnitName((string) $unit['unit_name']);
+            $newUnit->setUnitNamePlrl((string) $unit['unit_name_plrl']);
             $this->uR->save($newUnit);
         }
         $this->flashMessage('info', $this->translator->translate('invoiceplane.units'));
@@ -281,8 +273,8 @@ final class ImportController extends BaseController
          * @var array $family
          */
         foreach ($families as $family) {
-            $newFamily = new \App\Invoice\Entity\Family();
-            $newFamily->setFamily_name((string) $family['family_name']);
+            $newFamily = new \App\Infrastructure\Persistence\Family\Family();
+            $newFamily->setFamilyName((string) $family['family_name']);
             $this->fR->save($newFamily);
         }
         $this->flashMessage('info', $this->translator->translate('invoiceplane.families'));
@@ -308,31 +300,28 @@ final class ImportController extends BaseController
          * @var array $client
          */
         foreach ($clients as $client) {
-            $newClient = new \App\Invoice\Entity\Client();
-            $newClient->setClient_date_created((string) $client['client_date_created']);
-            $newClient->setClient_date_modified((string) $client['client_date_modified']);
-            $newClient->setClient_name((string) $client['client_name']);
-            $newClient->setClient_surname((string) $client['client_surname']);
-            $newClient->setClient_address_1((string) $client['client_address_1']);
-            $newClient->setClient_address_2((string) $client['client_address_2']);
-            $newClient->setClient_city((string) $client['client_city']);
-            $newClient->setClient_state((string) $client['client_state']);
-            $newClient->setClient_zip((string) $client['client_zip']);
-            $newClient->setClient_country((string) $client['client_country']);
-            $newClient->setClient_phone((string) $client['client_phone']);
-            $newClient->setClient_fax((string) $client['client_fax']);
-            $newClient->setClient_mobile((string) $client['client_mobile']);
-            $newClient->setClient_email((string) $client['client_email']);
-            $newClient->setClient_web((string) $client['client_web']);
-            $newClient->setClient_vat_id((string) $client['client_vat_id']);
-            $newClient->setClient_tax_code((string) $client['client_tax_code']);
-            $newClient->setClient_language((string) $client['client_language']);
-            $newClient->setClient_active($client['client_active'] === '1' ? true : false);
-            $newClient->setClient_avs((string) $client['client_avs']);
-            $newClient->setClient_insurednumber((string) $client['client_insurednumber']);
-            $newClient->setClient_veka((string) $client['client_veka']);
-            $newClient->setClient_birthdate(new \DateTime((string) $client['client_birthdate']));
-            $newClient->setClient_gender((int) $client['client_gender']);
+            $newClient = new Client();
+            $newClient->setClientDateCreated((string) $client['client_date_created']);
+            $newClient->setClientDateModified((string) $client['client_date_modified']);
+            $newClient->setClientName((string) $client['client_name']);
+            $newClient->setClientSurname((string) $client['client_surname']);
+            $newClient->setClientAddress1((string) $client['client_address_1']);
+            $newClient->setClientAddress2((string) $client['client_address_2']);
+            $newClient->setClientCity((string) $client['client_city']);
+            $newClient->setClientState((string) $client['client_state']);
+            $newClient->setClientZip((string) $client['client_zip']);
+            $newClient->setClientCountry((string) $client['client_country']);
+            $newClient->setClientPhone((string) $client['client_phone']);
+            $newClient->setClientFax((string) $client['client_fax']);
+            $newClient->setClientMobile((string) $client['client_mobile']);
+            $newClient->setClientEmail((string) $client['client_email']);
+            $newClient->setClientWeb((string) $client['client_web']);
+            $newClient->setClientVatId((string) $client['client_vat_id']);
+            $newClient->setClientTaxCode((string) $client['client_tax_code']);
+            $newClient->setClientLanguage((string) $client['client_language']);
+            $newClient->setClientActive($client['client_active'] === '1' ? true : false);
+            $newClient->setClientBirthdate(new \DateTimeImmutable((string) $client['client_birthdate']));
+            $newClient->setClientGender((int) $client['client_gender']);
             $this->cR->save($newClient);
         }
         $this->flashMessage('info', $this->translator->translate('invoiceplane.clients'));
@@ -344,17 +333,16 @@ final class ImportController extends BaseController
          * @var array $product
          */
         foreach ($products as $product) {
-            $newProduct = new \App\Invoice\Entity\Product();
-            $newProduct->setFamily_id((int) $product['family_id']);
-            $newProduct->setProduct_sku((string) $product['product_sku']);
-            $newProduct->setProduct_name((string) $product['product_name']);
-            $newProduct->setProduct_description((string) $product['product_description']);
-            $newProduct->setProduct_price((float) $product['product_price']);
-            $newProduct->setPurchase_price((float) $product['purchase_price']);
-            $newProduct->setProvider_name((string) $product['provider_name']);
-            $newProduct->setTax_rate_id((int) $product['tax_rate_id']);
-            $newProduct->setUnit_id((int) $product['unit_id']);
-            $newProduct->setProduct_tariff((float) $product['product_tariff']);
+            $newProduct = new \App\Infrastructure\Persistence\Product\Product();
+            $newProduct->setFamilyId((int) $product['family_id']);
+            $newProduct->setProductSku((string) $product['product_sku']);
+            $newProduct->setProductName((string) $product['product_name']);
+            $newProduct->setProductDescription((string) $product['product_description']);
+            $newProduct->setProductPrice((float) $product['product_price']);
+            $newProduct->setPurchasePrice((float) $product['purchase_price']);
+            $newProduct->setProviderName((string) $product['provider_name']);
+            $newProduct->setTaxRateId((int) $product['tax_rate_id']);
+            $newProduct->setUnitId((int) $product['unit_id']);
             $this->pR->save($newProduct);
         }
         $this->flashMessage('info', $this->translator->translate('invoiceplane.products'));

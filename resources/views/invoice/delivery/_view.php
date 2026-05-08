@@ -7,7 +7,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var App\Invoice\Entity\Inv $inv
+ * @var App\Infrastructure\Persistence\Inv\Inv $inv
  * @var App\Invoice\Delivery\DeliveryForm $form
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Setting\SettingRepository $s
@@ -26,9 +26,9 @@ use Yiisoft\Html\Tag\Form;
 
 ?>
 
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
@@ -36,13 +36,13 @@ use Yiisoft\Html\Tag\Form;
 <?= $translator->translate('delivery.form'); ?>
 <?= Html::closeTag('h1'); ?>
 
-<?= Form::tag()
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('DeliveryForm')
     ->open()
-?> 
+?>
     <?= Html::openTag('div', ['class' => 'headerbar']); ?>
         <?= Html::openTag('h1', ['class' => 'headerbar-title']); ?>
             <?= Html::encode($title) ?>
@@ -60,7 +60,7 @@ use Yiisoft\Html\Tag\Form;
                 'role' => 'presentation',
                 'autocomplete' => 'off',
             ])
-            ->value(!is_string($createdDate = $form->getDate_created()) ? $createdDate->format('Y-m-d') : '');
+            ->value(!is_string($createdDate = $form->getDateCreated()) ? $createdDate->format('Y-m-d') : '');
 ?>
             <?=
     Field::hidden($form, 'date_modified')
@@ -71,65 +71,63 @@ use Yiisoft\Html\Tag\Form;
         'role' => 'presentation',
         'autocomplete' => 'off',
     ])
-    ->value(!is_string($modifiedDate = $form->getDate_modified()) ? $modifiedDate->format('Y-m-d') : '')
+    ->value(!is_string($modifiedDate = $form->getDateModified()) ? $modifiedDate->format('Y-m-d') : '')
 ?>
-            
+
             <?=
     Field::date($form, 'start_date')
     ->label($translator->translate('delivery.start.date') . ' (' . $dateHelper->display() . ')')
     ->required(true)
-    ->value(!is_string($startDate = $form->getStart_date()) ? $startDate->format('Y-m-d') : '')
+    ->value(!is_string($startDate = $form->getStartDate()) ? $startDate->format('Y-m-d') : '')
     ->readonly(true);
-?>    
-           
+?>
+
             <?=
     Field::date($form, 'actual_delivery_date')
     ->label($translator->translate('delivery.actual.delivery.date') . ' (' . $dateHelper->display() . ')')
-    ->value(Html::encode(!is_string($actualDeliveryDate = $form->getActual_delivery_date()) ? $actualDeliveryDate->format('Y-m-d') : ''))
+    ->value(Html::encode(!is_string($actualDeliveryDate = $form->getActualDeliveryDate()) ? $actualDeliveryDate->format('Y-m-d') : ''))
     ->hint($translator->translate('hint.this.field.is.not.required'))
     ->readonly(true);
 ?>
             <?=
     Field::date($form, 'end_date')
     ->label($translator->translate('delivery.end.date') . ' (' . $dateHelper->display() . ')')
-    ->value(Html::encode(!is_string($endDate = $form->getEnd_date()) ? $endDate->format('Y-m-d') : ''))
+    ->value(Html::encode(!is_string($endDate = $form->getEndDate()) ? $endDate->format('Y-m-d') : ''))
     ->readonly(true)
-?>
-            <?= Field::hidden($form, 'id')
-    ->addInputAttributes([
-        'form-control',
-        'id' => 'id',
-    ])
-    ->value(Html::encode($form->getId()))
 ?>
             <?= Field::hidden($form, 'inv_id')
     ->addInputAttributes([
-        'form-control',
+        'form-control form-control-lg',
         'id' => 'inv_id',
     ])
-    ->value(Html::encode($form->getInv_id()))
+    ->value(Html::encode($form->getInvId()))
 ?>
             <?php
     if ($del_count > 0) {
         $optionsDataDel = [];
-        /**
-         * @var App\Invoice\Entity\DeliveryLocation $del
-         */
+/**
+ * @var App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation $del
+ */
         foreach ($dels as $del) {
-            if (null !== $delId = $del->getId()) {
-                $optionsDataDel[$delId] = ($del->getAddress_1() ?? '') . ', ' . ($del->getAddress_2() ?? '') . ', ' . ($del->getCity() ?? '') . ', ' . ($del->getZip() ?? '');
-            }
+            $optionsDataDel[$del->reqId()] = ($del->getAddress1() ?? '')
+                    . ', '
+                    . ($del->getAddress2() ?? '')
+                    . ', '
+                    . ($del->getCity() ?? '')
+                    . ', '
+                    . ($del->getZip() ?? '');
+            
         }
         echo Field::select($form, 'delivery_location_id')
         ->label($translator->translate('delivery.location'))
         ->addInputAttributes([
-            'class' => 'form-control',
+            'class' => 'form-control form-control-lg',
             'id' => 'delivery_location_id',
         ])
         ->optionsData($optionsDataDel)
-        ->value(Html::encode($form->getDelivery_location_id()));
+        ->value(Html::encode($form->getDeliveryLocationId()));
     } else {
-        echo Html::a($translator->translate('delivery.location.add'), $urlGenerator->generate('del/add', ['client_id' => $inv->getClient_id()]), ['class' => 'btn btn-danger btn-lg mt-3']);
+        echo Html::a($translator->translate('delivery.location.add'), $urlGenerator->generate('del/add', ['client_id' => $inv->reqClientId()]), ['class' => 'btn btn-danger btn-lg mt-3']);
     }
 ?>
         <?= Html::closeTag('div'); ?>

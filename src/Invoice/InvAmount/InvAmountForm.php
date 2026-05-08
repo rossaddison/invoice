@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvAmount;
 
-use App\Invoice\Entity\InvAmount;
+use App\Infrastructure\Persistence\{
+    InvAmount\InvAmount
+};
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
@@ -38,21 +40,23 @@ final class InvAmountForm extends FormModel
     #[Required]
     private ?float $balance = null;
 
-    public function __construct(InvAmount $invAmount)
+    public static function show(InvAmount $invAmount): self
     {
-        $this->inv_id = (int) $invAmount->getInv_id();
-        $this->sign = $invAmount->getSign();
-        $this->item_subtotal = $invAmount->getItem_subtotal();
-        $this->item_tax_total = $invAmount->getItem_tax_total();
-        $this->packhandleship_total = $invAmount->getPackhandleship_total();
-        $this->packhandleship_tax = $invAmount->getPackhandleship_tax();
-        $this->tax_total = $invAmount->getTax_total();
-        $this->total = $invAmount->getTotal();
-        $this->paid = $invAmount->getPaid();
-        $this->balance = $invAmount->getBalance();
+        $form = new self();
+        $form->inv_id = $invAmount->reqInvId();
+        $form->sign = $invAmount->getSign();
+        $form->item_subtotal = $invAmount->getItemSubtotal();
+        $form->item_tax_total = $invAmount->getItemTaxTotal();
+        $form->packhandleship_total = $invAmount->getPackhandleshipTotal();
+        $form->packhandleship_tax = $invAmount->getPackhandleshipTax();
+        $form->tax_total = $invAmount->getTaxTotal();
+        $form->total = $invAmount->getTotal();
+        $form->paid = $invAmount->getPaid();
+        $form->balance = $invAmount->getBalance();
+        return $form;
     }
 
-    public function getInv_id(): ?int
+    public function getInvId(): ?int
     {
         return $this->inv_id;
     }
@@ -62,27 +66,27 @@ final class InvAmountForm extends FormModel
         return $this->sign;
     }
 
-    public function getItem_subtotal(): ?float
+    public function getItemSubtotal(): ?float
     {
         return $this->item_subtotal;
     }
 
-    public function getItem_tax_total(): ?float
+    public function getItemTaxTotal(): ?float
     {
         return $this->item_tax_total;
     }
 
-    public function getPackhandleship_total(): ?float
+    public function getPackhandleshipTotal(): ?float
     {
         return $this->packhandleship_total;
     }
 
-    public function getPackhandleship_tax(): ?float
+    public function getPackhandleshipTax(): ?float
     {
         return $this->packhandleship_tax;
     }
 
-    public function getTax_total(): ?float
+    public function getTaxTotal(): ?float
     {
         return $this->tax_total;
     }

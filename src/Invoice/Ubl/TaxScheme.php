@@ -9,12 +9,14 @@ use Sabre\Xml\XmlSerializable;
 
 class TaxScheme implements XmlSerializable
 {
-    public function __construct(private readonly string $id) {}
+    public function __construct(private readonly string $id)
+    {
+    }
 
     /**
      * @return string
      */
-    public function getId(): string
+    public function reqId(): string
     {
         return $this->id;
     }
@@ -29,7 +31,7 @@ class TaxScheme implements XmlSerializable
             'name' => Schema::CAC . 'TaxScheme',
             'value' => [
                 'name' => Schema::CBC . 'ID',
-                'value' => $this->getId(),
+                'value' => $this->reqId(),
             ]]);
     }
 }

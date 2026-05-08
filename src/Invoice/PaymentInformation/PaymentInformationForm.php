@@ -7,6 +7,9 @@ namespace App\Invoice\PaymentInformation;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
+/**
+ * @psalm-suppress UnusedClass
+ */
 final class PaymentInformationForm extends FormModel
 {
     private string $gateway_driver = '';

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\AllowanceCharge;
 
-use App\Invoice\Entity\AllowanceCharge;
+use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -91,11 +91,11 @@ final class AllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @psalm-return TEntity|null
      * @return AllowanceCharge|null
      */
-    public function repoAllowanceChargequery(string $id): ?AllowanceCharge
+    public function repoAllowanceChargequery(int $id): ?AllowanceCharge
     {
         $query = $this->select()
                       ->load('tax_rate')
@@ -104,10 +104,10 @@ final class AllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return int
      */
-    public function repoCount(string $id): int
+    public function repoCount(int $id): int
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -122,7 +122,7 @@ final class AllowanceChargeRepository extends Select\Repository
          * @var AllowanceCharge $allowanceCharge
          */
         foreach ($allowanceCharges as $allowanceCharge) {
-            $key = $allowanceCharge->getId();
+            $key = $allowanceCharge->reqId();
             $key ? ($optionsDataAllowanceCharges[$key] = ($allowanceCharge->getIdentifier()
             ? $this->translator->translate('allowance.or.charge.charge')
             : $this->translator->translate('allowance.or.charge.allowance'))

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Upload;
 
-use App\Invoice\Entity\Upload;
+use App\Infrastructure\Persistence\Upload\Upload;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 use DateTimeImmutable;
@@ -26,32 +26,34 @@ final class UploadForm extends FormModel
 
     private mixed $uploaded_date = '';
 
-    public function __construct(Upload $upload)
+    public static function show(Upload $upload): self
     {
-        $this->client_id = (int) $upload->getClient_id();
-        $this->url_key = $upload->getUrl_key();
-        $this->file_name_original = $upload->getFile_name_original();
-        $this->file_name_new = $upload->getFile_name_new();
-        $this->description = $upload->getDescription();
-        $this->uploaded_date = $upload->getUploaded_date();
+        $form = new self();
+        $form->client_id = $upload->reqClientId();
+        $form->url_key = $upload->getUrlKey();
+        $form->file_name_original = $upload->getFileNameOriginal();
+        $form->file_name_new = $upload->getFileNameNew();
+        $form->description = $upload->getDescription();
+        $form->uploaded_date = $upload->getUploadedDate();
+        return $form;
     }
 
-    public function getClient_id(): ?int
+    public function getClientId(): ?int
     {
         return $this->client_id;
     }
 
-    public function getUrl_key(): string
+    public function getUrlKey(): string
     {
         return $this->url_key;
     }
 
-    public function getFile_name_original(): string
+    public function getFileNameOriginal(): string
     {
         return $this->file_name_original;
     }
 
-    public function getFile_name_new(): string
+    public function getFileNameNew(): string
     {
         return $this->file_name_new;
     }
@@ -61,7 +63,7 @@ final class UploadForm extends FormModel
         return $this->description;
     }
 
-    public function getUploaded_date(): string|DateTimeImmutable
+    public function getUploadedDate(): string|DateTimeImmutable
     {
         /**
          * @var DateTimeImmutable|string $this->uploaded_date

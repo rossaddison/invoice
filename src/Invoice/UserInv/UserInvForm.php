@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\UserInv;
 
-use App\User\User;
-use App\Invoice\Entity\UserInv;
+use App\Infrastructure\Persistence\User\User;
+use App\Infrastructure\Persistence\UserInv\UserInv;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
@@ -16,7 +16,8 @@ final class UserInvForm extends FormModel
     private ?int $user_id = null;
 
     /**
-     * Related logic: see Dropdown 0 = Admin, 1 = Not Admin i.e. User with viewInv permission (not editInv Permission)
+     * Related logic: see Dropdown 0 = Admin, 1 = Not Admin i.e.
+     * User with viewInv permission (not editInv Permission)
      */
     #[Required]
     private ?int $type = null;
@@ -63,40 +64,42 @@ final class UserInvForm extends FormModel
     private ?int $gln = null;
     #[Length(min: 0, max: 7, skipOnEmpty: true)]
     private ?string $rcc = '';
-    private ?int $listLimit = 10;
+    private ?int $list_limit = 10;
 
-    private readonly ?User $user;
+    private ?User $user = null;
 
-    public function __construct(UserInv $userinv)
+    public static function show(UserInv $userinv): self
     {
-        $this->user_id = (int) $userinv->getUser_id();
-        $this->type = $userinv->getType();
-        $this->active = $userinv->getActive();
-        $this->language = $userinv->getLanguage();
-        $this->name = $userinv->getName();
-        $this->company = $userinv->getCompany();
-        $this->address_1 = $userinv->getAddress_1();
-        $this->address_2 = $userinv->getAddress_2();
-        $this->city = $userinv->getCity();
-        $this->state = $userinv->getState();
-        $this->zip = $userinv->getZip();
-        $this->country = $userinv->getCountry();
-        $this->phone = $userinv->getPhone();
-        $this->fax = $userinv->getFax();
-        $this->mobile = $userinv->getMobile();
-        $this->web = $userinv->getWeb();
-        $this->vat_id = $userinv->getVat_id();
-        $this->tax_code = $userinv->getTax_code();
-        $this->all_clients = $userinv->getAll_clients();
-        $this->subscribernumber = $userinv->getSubscribernumber();
-        $this->iban = $userinv->getIban();
-        $this->gln = $userinv->getGln();
-        $this->rcc = $userinv->getRcc();
-        $this->listLimit = $userinv->getListLimit();
-        $this->user = $userinv->getUser();
+        $form = new self();
+        $form->user_id = $userinv->reqUserId();
+        $form->type = $userinv->getType();
+        $form->active = $userinv->getActive();
+        $form->language = $userinv->getLanguage();
+        $form->name = $userinv->getName();
+        $form->company = $userinv->getCompany();
+        $form->address_1 = $userinv->getAddress1();
+        $form->address_2 = $userinv->getAddress2();
+        $form->city = $userinv->getCity();
+        $form->state = $userinv->getState();
+        $form->zip = $userinv->getZip();
+        $form->country = $userinv->getCountry();
+        $form->phone = $userinv->getPhone();
+        $form->fax = $userinv->getFax();
+        $form->mobile = $userinv->getMobile();
+        $form->web = $userinv->getWeb();
+        $form->vat_id = $userinv->getVatId();
+        $form->tax_code = $userinv->getTaxCode();
+        $form->all_clients = $userinv->getAllClients();
+        $form->subscribernumber = $userinv->getSubscribernumber();
+        $form->iban = $userinv->getIban();
+        $form->gln = $userinv->getGln();
+        $form->rcc = $userinv->getRcc();
+        $form->list_limit = $userinv->getListLimit();
+        $form->user = $userinv->getUser();
+        return $form;
     }
 
-    public function getUser_id(): ?int
+    public function getUserId(): ?int
     {
         return $this->user_id;
     }
@@ -131,12 +134,12 @@ final class UserInvForm extends FormModel
         return $this->company;
     }
 
-    public function getAddress_1(): ?string
+    public function getAddress1(): ?string
     {
         return $this->address_1;
     }
 
-    public function getAddress_2(): ?string
+    public function getAddress2(): ?string
     {
         return $this->address_2;
     }
@@ -181,17 +184,17 @@ final class UserInvForm extends FormModel
         return $this->web;
     }
 
-    public function getVat_id(): ?string
+    public function getVatId(): ?string
     {
         return $this->vat_id;
     }
 
-    public function getTax_code(): ?string
+    public function getTaxCode(): ?string
     {
         return $this->tax_code;
     }
 
-    public function getAll_clients(): ?bool
+    public function getAllClients(): ?bool
     {
         return $this->all_clients;
     }
@@ -218,7 +221,7 @@ final class UserInvForm extends FormModel
 
     public function getListLimit(): ?int
     {
-        return $this->listLimit;
+        return $this->list_limit;
     }
 
     /**

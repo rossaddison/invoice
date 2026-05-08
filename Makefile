@@ -15,6 +15,9 @@ menu: ## Show the Invoice SYSTEM MENU (Make targets)
 	@echo "                 Invoice SYSTEM MENU (Make targets)"
 	@echo "================================================================================"
 	@echo "make install           - Composer and NPM install (or calls install.bat if found)"
+	@echo "make ext-check         - Check required PHP extensions (pre-install)"
+	@echo "make ext-json          - Check extensions with JSON output"
+	@echo "make ext-silent        - Check extensions silently (exit code only)"
 	@echo "make p                 - Run PHP Psalm"
 	@echo "make pf FILE=src/Foo.php     - Run PHP Psalm on specific file"
 	@echo "make pd DIR=src/           - Run PHP Psalm on directory"
@@ -26,6 +29,7 @@ menu: ## Show the Invoice SYSTEM MENU (Make targets)
 	@echo "make ccl               - Composer clear-cache & update --lock"
 	@echo "make cv                - Composer validate"
 	@echo "make cda               - Composer dump-autoload"
+	@echo "make ca                - Composer audit"
 	@echo "make cu                - Composer update"
 	@echo "make nu                - Update Node modules"
 	@echo "make nco               - npm: Check Outdated"
@@ -42,7 +46,13 @@ menu: ## Show the Invoice SYSTEM MENU (Make targets)
 	@echo "make tsl               - TypeScript Lint"
 	@echo "make tsf               - TypeScript Format"
 	@echo "make nb                - npm run build"
+	@echo "make ai                - Angular: Install Dependencies"
+	@echo "make as                - Angular: Serve Development"
+	@echo "make ab                - Angular: Build Production"
+	@echo "make ag COMPONENT=name - Angular: Generate Component"
+	@echo "make al                - Angular: Lint Check"
 	@echo "make crc               - Composer Require Checker"
+	@echo "make sda               - Shipmonk Composer Dependency Analyser"
 	@echo "make ct                - Codeception Tests"
 	@echo "make cb                - Codeception Build"
 	@echo "make rdr               - Rector Dry Run"
@@ -52,10 +62,17 @@ menu: ## Show the Invoice SYSTEM MENU (Make targets)
 	@echo "make sq                - Snyk Security Check (Quick - High Severity Only)"
 	@echo "make sf                - Snyk Security Check (Full - Code + Dependencies)"
 	@echo "make sd                - Snyk Security Check (Dependencies Only)"
+	@echo "make pcs               - PHP CodeSniffer: Check 85-char line length"
+	@echo "make pcsf FILE=src/Foo.php - PHP CodeSniffer: Check specific file"
+	@echo "make pcsd DIR=src/         - PHP CodeSniffer: Check specific directory"
+	@echo "make pcsr              - PHP CodeSniffer: Full report with details"
 	@echo "make sc FILE=path/to/file      - Snyk Security Code Check on Specific File"
 	@echo "make ss                - Snyk Security Summary (Total Issues Count Only)"
 	@echo "make sj                - Snyk Security JSON Output (Machine Readable)"
 	@echo "make sh                - Snyk Security High Severity Only"
+	@echo "make ghi               - Install GitHub CLI"
+	@echo "make gha               - GitHub CLI Auth Status"
+	@echo "make ghc               - GitHub CLI Copilot Version Check"
 	@echo "make serve             - PHP Built-in serve"
 	@echo "make ucr USERNAME= user PASSWORD= pass      - user/create"
 	@echo "make uar ROLE=admin USERID=1                - user/assignRole"
@@ -95,6 +112,34 @@ install: ## Composer and NPM install (or calls install.bat if found)
 		composer install; \
 		npm install; \
 	fi
+endif
+
+#
+# Extension Checker
+#
+
+ifeq ($(PRIMARY_GOAL),ext-check)
+ext-check: ## Check required PHP extensions (based on invoice_build.yml)
+	@echo "================================================================================"
+	@echo "              PHP Extension Checker (Pre-Installation)"
+	@echo "================================================================================"
+	@echo "Checking required PHP extensions for Invoice System..."
+	@echo "Based on invoice_build.yml workflow requirements"
+	@echo ""
+	@php scripts/extension-checker.php
+	@echo ""
+	@echo "[INFO] If extensions are missing, follow the instructions above."
+	@echo "[INFO] You may need to restart WAMP/Apache after making changes."
+endif
+
+ifeq ($(PRIMARY_GOAL),ext-json)
+ext-json: ## Check extensions and output JSON format
+	@php scripts/extension-checker.php --json
+endif
+
+ifeq ($(PRIMARY_GOAL),ext-silent)
+ext-silent: ## Check extensions silently (exit code only)
+	@php scripts/extension-checker.php --silent
 endif
 
 #
@@ -181,6 +226,11 @@ endif
 ifeq ($(PRIMARY_GOAL),cda)
 cda: ## Composer dump-autoload
 	composer dump-autoload -o
+endif
+
+ifeq ($(PRIMARY_GOAL),ca)
+ca: ## Composer audit
+	composer audit --ansi
 endif
 
 ifeq ($(PRIMARY_GOAL),cu)
@@ -277,12 +327,73 @@ nb: ## npm run build
 endif
 
 #
+# Angular Commands
+#
+
+ifeq ($(PRIMARY_GOAL),ai)
+ai: ## Angular: Install Dependencies
+	@echo "======== ANGULAR DEPENDENCY INSTALLATION WARNING ========"
+	@echo "⚠️  WARNING: This will install Angular dependencies!"
+	@echo "📝 This may modify existing TypeScript/ESLint configuration"
+	@echo "🔄 Ensure you have reviewed package.json and tsconfig files"
+	@echo "🚨 BACKUP your current setup before proceeding!"
+	@echo "========================================================="
+	@read -p "Continue with Angular dependency installation? (Y/N): " confirm; \
+	if [ "$$confirm" = "Y" ] || [ "$$confirm" = "y" ]; then \
+		echo "Installing Angular dependencies..."; \
+		npm install; \
+		echo "Angular dependencies installed. Check for any conflicts."; \
+	else \
+		echo "Angular installation cancelled."; \
+	fi
+endif
+
+ifeq ($(PRIMARY_GOAL),as)
+as: ## Angular: Serve Development
+	@echo "Starting Angular development server..."
+	@echo "⚠️  This runs Angular in development mode"
+	@echo "📝 Angular components will be available at http://localhost:4200"
+	@echo "🔄 In production, Angular integrates with Yii3 PHP layout"
+	npm run ng:serve
+endif
+
+ifeq ($(PRIMARY_GOAL),ab)
+ab: ## Angular: Build Production
+	@echo "Building Angular for production..."
+	@echo "📝 This builds Angular components for integration with Yii3"
+	npm run ng:build
+endif
+
+ifeq ($(PRIMARY_GOAL),ag)
+ag: ## Angular: Generate Component (usage: make ag COMPONENT=dashboard)
+ifndef COMPONENT
+	$(error Please provide COMPONENT, e.g. 'make ag COMPONENT=user-profile')
+endif
+	@echo "Generating Angular component: $(COMPONENT)"
+	npm run angular:generate-component $(COMPONENT)
+endif
+
+ifeq ($(PRIMARY_GOAL),al)
+al: ## Angular: Lint Check
+	@echo "Running Angular-specific linting..."
+	@echo "📝 This checks Angular components and templates"
+	npm run lint:angular
+endif
+
+#
 # Composer Tools
 #
 
 ifeq ($(PRIMARY_GOAL),crc)
 crc: ## Composer Require Checker
 	php -d memory_limit=512M vendor/bin/composer-require-checker
+endif
+
+ifeq ($(PRIMARY_GOAL),sda)
+sda: ## Shipmonk Composer Dependency Analyser
+	@echo "Running Shipmonk Composer Dependency Analyser..."
+	@echo "(https://github.com/shipmonk-rnd/composer-dependency-analyser)"
+	php vendor/bin/composer-dependency-analyser
 endif
 
 #
@@ -363,6 +474,63 @@ endif
 ifeq ($(PRIMARY_GOAL),sh)
 sh: ## Snyk Security High Severity Only
 	snyk code test --severity-threshold=high
+endif
+
+#
+# GitHub CLI
+#
+
+ifeq ($(PRIMARY_GOAL),ghi)
+ghi: ## Install GitHub CLI
+	@echo "Installing GitHub CLI..."
+	@if command -v gh >/dev/null 2>&1; then \
+		echo "[INFO] GitHub CLI is already installed."; \
+		gh --version; \
+	else \
+		if command -v winget >/dev/null 2>&1; then \
+			winget install --id GitHub.cli; \
+		elif command -v brew >/dev/null 2>&1; then \
+			brew install gh; \
+		elif command -v apt-get >/dev/null 2>&1; then \
+			echo "Installing GitHub CLI via official script..."; \
+			curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
+			sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg && \
+			echo "deb [arch=$$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
+			sudo apt-get update && \
+			sudo apt-get install gh -y; \
+		else \
+			echo "[ERROR] No supported package manager found."; \
+			echo "Please install manually from https://cli.github.com/"; \
+		fi; \
+	fi
+endif
+
+ifeq ($(PRIMARY_GOAL),gha)
+gha: ## GitHub CLI Auth Status
+	@command -v gh >/dev/null 2>&1 || (echo "[ERROR] GitHub CLI not installed. Run 'make ghi' first." && exit 1)
+	@gh auth status
+endif
+
+ifeq ($(PRIMARY_GOAL),ghc)
+ghc: ## GitHub CLI Copilot Version Check
+	@command -v gh >/dev/null 2>&1 || (echo "[ERROR] GitHub CLI not installed. Run 'make ghi' first." && exit 1)
+	@echo "Checking Copilot access..."
+	@gh api user/copilot_seat_details 2>/dev/null && \
+		(echo "✓ Copilot access confirmed" && \
+		 echo "" && \
+		 echo "Manage subscription: https://github.com/settings/copilot") || \
+		(echo "✗ No Copilot subscription found via API" && \
+		 echo "" && \
+		 echo "If you have a subscription but it's not detected:" && \
+		 echo "  1. Check authenticated account: gh auth status" && \
+		 echo "  2. Verify subscription: https://github.com/settings/copilot" && \
+		 echo "  3. Try re-authenticating: gh auth login" && \
+		 echo "" && \
+		 echo "If you need Copilot access:" && \
+		 echo "  - Individual: https://github.com/features/copilot" && \
+		 echo "  - Organization: Contact your GitHub admin")
+	@echo ""
+	@gh --version
 endif
 
 #
@@ -475,4 +643,40 @@ info: ## System Info / Diagnostics
 	npm list --depth=0
 endif
 
-.PHONY: menu help install p pf pd pc pi cas co cwn ccl cv cda cu nu nco nsu nmu nma nes2024 nvm na crc ct cb rdr rmc csd csf sq sf sd sc ss sj sh serve ucr uar rl tt ii ist igt iit1 iqt2 ist3 int4 iut5 iait6 info tsb tsd tsw tst tsl tsf nb
+#
+# PHP CodeSniffer Line Length Checking (85 characters)
+#
+
+ifeq ($(PRIMARY_GOAL),pcs)
+pcs: ## Run PHP CodeSniffer to check 85-character line length
+	@echo "Checking PHP files for 85-character line length limit..."
+	php -d memory_limit=1024M vendor/bin/phpcs --standard=phpcs.xml.dist
+endif
+
+ifeq ($(PRIMARY_GOAL),pcsf)
+pcsf: ## Run PHP CodeSniffer on specific file (usage: make pcsf FILE=src/Invoice.php)
+ifndef FILE
+	$(error Please provide FILE, e.g. 'make pcsf FILE=src/Invoice/Invoice.php')
+endif
+	@echo "Checking $(FILE) for 85-character line length..."
+	php -d memory_limit=1024M vendor/bin/phpcs --standard=Generic --sniffs=Generic.Files.LineLength \
+		--runtime-set lineLimit 85 --runtime-set absoluteLineLimit 85 $(FILE)
+endif
+
+ifeq ($(PRIMARY_GOAL),pcsd)
+pcsd: ## Run PHP CodeSniffer on specific directory (usage: make pcsd DIR=src/)
+ifndef DIR
+	$(error Please provide DIR, e.g. 'make pcsd DIR=src/')
+endif
+	@echo "Checking $(DIR) for 85-character line length..."
+	php -d memory_limit=1024M vendor/bin/phpcs --standard=Generic --sniffs=Generic.Files.LineLength \
+		--runtime-set lineLimit 85 --runtime-set absoluteLineLimit 85 $(DIR)
+endif
+
+ifeq ($(PRIMARY_GOAL),pcsr)
+pcsr: ## Run PHP CodeSniffer with detailed report
+	@echo "Running detailed line length report..."
+	php -d memory_limit=1024M vendor/bin/phpcs --standard=phpcs.xml.dist --report=full --report-width=120
+endif
+
+.PHONY: menu help install ext-check ext-json ext-silent p pf pd pc pi cas co cwn ccl cv cda ca cu nu nco nsu nmu nma nes2024 nvm na crc sda ct cb rdr rmc csd csf sq sf sd sc ss sj sh ghi gha ghc serve ucr uar rl tt ii ist igt iit1 iqt2 ist3 int4 iut5 iait6 info tsb tsd tsw tst tsl tsf nb ai as ab ag al pcs pcsf pcsd pcsr

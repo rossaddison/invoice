@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace App\Invoice\AllowanceCharge;
 
-use App\Invoice\Entity\AllowanceCharge;
+use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Rule\Integer;
 
 final class AllowanceChargeForm extends FormModel
 {
-    private readonly string $id;
-
     #[Required]
     private ?bool $identifier = false;
 
@@ -39,17 +37,18 @@ final class AllowanceChargeForm extends FormModel
     #[Integer(min: 1)]
     private ?int $tax_rate_id = null;
 
-    public function __construct(AllowanceCharge $allowanceCharge)
+    public static function show(AllowanceCharge $allowanceCharge) : self
     {
-        $this->id = $allowanceCharge->getId();
-        $this->identifier = $allowanceCharge->getIdentifier();
-        $this->level = $allowanceCharge->getLevel();
-        $this->reason_code = $allowanceCharge->getReasonCode();
-        $this->reason = $allowanceCharge->getReason();
-        $this->multiplier_factor_numeric = $allowanceCharge->getMultiplierFactorNumeric();
-        $this->amount = $allowanceCharge->getAmount();
-        $this->base_amount = $allowanceCharge->getBaseAmount();
-        $this->tax_rate_id = (int) $allowanceCharge->getTaxRateId();
+        $form = new self();
+        $form->identifier = $allowanceCharge->getIdentifier();
+        $form->level = $allowanceCharge->getLevel();
+        $form->reason_code = $allowanceCharge->getReasonCode();
+        $form->reason = $allowanceCharge->getReason();
+        $form->multiplier_factor_numeric = $allowanceCharge->getMultiplierFactorNumeric();
+        $form->amount = $allowanceCharge->getAmount();
+        $form->base_amount = $allowanceCharge->getBaseAmount();
+        $form->tax_rate_id = $allowanceCharge->getTaxRateId();
+        return $form;
     }
 
     public function getIdentifier(): ?bool
@@ -90,11 +89,6 @@ final class AllowanceChargeForm extends FormModel
     public function getTaxRateId(): ?int
     {
         return $this->tax_rate_id;
-    }
-
-    public function getId(): string
-    {
-        return $this->id;
     }
 
     /**

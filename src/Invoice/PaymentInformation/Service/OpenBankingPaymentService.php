@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\PaymentInformation\Service;
 
-use App\Invoice\Entity\Company;
-use App\Invoice\Entity\CompanyPrivate;
-use App\Invoice\Entity\Inv;
+use App\Infrastructure\Persistence\Company\Company;
+use App\Infrastructure\Persistence\CompanyPrivate\CompanyPrivate;
+use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Setting\Trait\OpenBankingProviders;
 use GuzzleHttp\Client as GuzzleClient;
@@ -25,7 +25,8 @@ final class OpenBankingPaymentService
         private readonly SessionInterface $session,
         private readonly sR $sR,
         private readonly UrlGenerator $urlGenerator,
-    ) {}
+    ) {
+    }
 
     /**
      * Get the Open Banking authentication URL with PKCE.
@@ -54,7 +55,7 @@ final class OpenBankingPaymentService
             'scope'                 => $this->openBanking->getScope(),
             'code_challenge'        => $codeChallenge,
             'code_challenge_method' => 'S256',
-            'redirect_uri' => $this->urlGenerator->generate('paymentinformation/openbanking_oauth_complete', ['url_key' => $url_key, '_language' => 'en'], [], null),
+            'redirect_uri' => $this->urlGenerator->generate('paymentinformation/openbankingOauthComplete', ['url_key' => $url_key, '_language' => 'en'], [], null),
         ]);
     }
 
@@ -89,7 +90,7 @@ final class OpenBankingPaymentService
             $request,
             $code,
             [
-                'redirect_uri'  => $this->urlGenerator->generateAbsolute('paymentinformation/openbanking_complete', ['url_key' => $url_key]),
+                'redirect_uri'  => $this->urlGenerator->generateAbsolute('paymentinformation/openbankingTokenComplete', ['url_key' => $url_key]),
                 'code_verifier' => $codeVerifier,
             ],
         );
@@ -105,9 +106,6 @@ final class OpenBankingPaymentService
              */
             foreach ($company->getCompanyPrivates() as $companyPrivate) {
                 if ($companyPrivate->isActiveToday()) {
-                    /**
-                     * @var CompanyPrivate $activeCompanyPrivate
-                     */
                     $activeCompanyPrivate = $companyPrivate;
                     break; // Stop at the first active one
                 }
@@ -179,7 +177,7 @@ final class OpenBankingPaymentService
     public function paymentStatusAndDetails(string $urlKey, float $amount, Inv $invoice, array $items_array): array
     {
 
-        $merchant_payment_reference = 'won-' . ($invoice->getNumber() ?? '#') . '-' . ($invoice->getClient()?->getClient_full_name() ?? 'No Client Full Name');
+        $merchant_payment_reference = 'won-' . ($invoice->getNumber() ?? '#') . '-' . ($invoice->getClient()?->getClientFullName() ?? 'No Client Full Name');
         $payment_description = '';
         /**
          * @var string $item
@@ -187,7 +185,7 @@ final class OpenBankingPaymentService
         foreach ($items_array as $item) {
             $payment_description .= $item . ', ';
         }
-        $customer_email_address = $invoice->getClient()?->getClient_email();
+        $customer_email_address = $invoice->getClient()?->getClientEmail();
         $apiKey               = $this->sR->getSetting('gateway_open_banking_with_wonderful_apiToken');
         $providerConfig       = $this->getOpenBankingProviderConfig('wonderful');
         if (null !== $providerConfig) {

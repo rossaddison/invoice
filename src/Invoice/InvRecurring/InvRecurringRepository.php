@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\InvRecurring;
 
 use App\Invoice\Helpers\DateHelper;
-use App\Invoice\Entity\InvRecurring;
+use App\Infrastructure\Persistence\InvRecurring\InvRecurring;
 use App\Invoice\Setting\SettingRepository;
 use Cycle\ORM\Select;
 use Yiisoft\Data\Reader\Sort;
@@ -72,10 +72,10 @@ final class InvRecurringRepository extends Select\Repository
 
     // cycle/ORM/src/Select fetchOne
     /**
-     * @param string $id
+     * @param int $id
      * @return TEntity|null
      */
-    public function repoInvRecurringquery(string $id): ?InvRecurring
+    public function repoInvRecurringquery(int $id): ?InvRecurring
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -83,14 +83,14 @@ final class InvRecurringRepository extends Select\Repository
     }
 
     // The invoice is recurring if at least one id is found
-    public function repoCount(string $inv_id): int
+    public function repoCount(int $inv_id): int
     {
         $query = $this->select()
                       ->where(['inv_id' => $inv_id]);
         return $query->count();
     }
 
-    public function recur_frequencies(): array
+    public function recurFrequencies(): array
     {
         return [
             '1D' => 'calendar.day.1',
@@ -134,9 +134,8 @@ final class InvRecurringRepository extends Select\Repository
      *
      * @psalm-return EntityReader
      */
-    public function active(SettingRepository $s): EntityReader
+    public function active(): EntityReader
     {
-        $datehelper = new DateHelper($s);
         $query = $this->select()
                       ->where('next_date', '<', date('Y-m-d'))
                       ->orWhere('end_date', '>', date('Y-m-d'))
@@ -144,9 +143,8 @@ final class InvRecurringRepository extends Select\Repository
         return $this->prepareDataReader($query);
     }
 
-    public function CountActive(SettingRepository $s): int
+    public function CountActive(): int
     {
-        $datehelper = new DateHelper($s);
         return $this->select()
                       ->where('next_date', '<', date('Y-m-d'))
                       ->orWhere('end_date', '>', date('Y-m-d'))

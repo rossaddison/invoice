@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderItem;
 
-use App\Invoice\Entity\SalesOrderItem;
+use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
 use Cycle\ORM\Select;
 use Cycle\Database\Injection\Parameter;
 use Throwable;
@@ -86,7 +86,7 @@ final class SalesOrderItemRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoSalesOrderItemquery(string $id): ?SalesOrderItem
+    public function repoSalesOrderItemquery(int $id): ?SalesOrderItem
     {
         $query = $this->select()->load(['tax_rate','product','sales_order'])
                                 ->where(['id' => $id]);
@@ -98,7 +98,7 @@ final class SalesOrderItemRepository extends Select\Repository
      *
      * @psalm-return EntityReader
      */
-    public function repoSalesOrderItemIdquery(string $salesorder_id): EntityReader
+    public function repoSalesOrderItemIdquery(int $salesorder_id): EntityReader
     {
         $query = $this->select()
                       ->load(['tax_rate','product','sales_order'])
@@ -111,7 +111,7 @@ final class SalesOrderItemRepository extends Select\Repository
      *
      * @psalm-return EntityReader
      */
-    public function repoSalesOrderquery(string $salesorder_id): EntityReader
+    public function repoSalesOrderquery(int $salesorder_id): EntityReader
     {
         $query = $this->select()
                       ->load(['tax_rate','product','sales_order'])
@@ -119,14 +119,14 @@ final class SalesOrderItemRepository extends Select\Repository
         return $this->prepareDataReader($query);
     }
 
-    public function repoCount(string $salesorder_id): int
+    public function repoCount(int $salesorder_id): int
     {
         return $this->select()
                       ->where(['sales_order_id' => $salesorder_id])
                       ->count();
     }
 
-    public function repoSalesOrderItemCount(string $id): int
+    public function repoSalesOrderItemCount(int $id): int
     {
         return $this->select()
                       ->where(['id' => $id])

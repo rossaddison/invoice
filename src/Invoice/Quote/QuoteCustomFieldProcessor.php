@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Quote;
 
 use App\Invoice\CustomFieldProcessor;
-use App\Invoice\Entity\QuoteCustom;
+use App\Infrastructure\Persistence\QuoteCustom\QuoteCustom;
 use App\Invoice\QuoteCustom\QuoteCustomForm;
 use App\Invoice\QuoteCustom\QuoteCustomRepository;
 use App\Invoice\QuoteCustom\QuoteCustomService;
@@ -21,22 +21,23 @@ final class QuoteCustomFieldProcessor implements CustomFieldProcessor
     public function __construct(
         private readonly QuoteCustomRepository $repository,
         private readonly QuoteCustomService $service,
-    ) {}
+    ) {
+    }
 
     #[\Override]
-    public function exists(string $entityId, string $customFieldId): bool
+    public function exists(int $entityId, int $customFieldId): bool
     {
         return $this->repository->repoQuoteCustomCount($entityId, $customFieldId) > 0;
     }
 
     #[\Override]
-    public function findExisting(string $entityId, string $customFieldId): ?\App\Invoice\Entity\QuoteCustom
+    public function findExisting(int $entityId, int $customFieldId): ?\App\Infrastructure\Persistence\QuoteCustom\QuoteCustom
     {
         return $this->repository->repoFormValuequery($entityId, $customFieldId);
     }
 
     #[\Override]
-    public function createEntity(): \App\Invoice\Entity\QuoteCustom
+    public function createEntity(): \App\Infrastructure\Persistence\QuoteCustom\QuoteCustom
     {
         return new QuoteCustom();
     }
@@ -48,7 +49,7 @@ final class QuoteCustomFieldProcessor implements CustomFieldProcessor
             throw new \InvalidArgumentException('Entity must be an instance of QuoteCustom');
         }
 
-        return new QuoteCustomForm($entity);
+        return new QuoteCustomForm();
     }
 
     #[\Override]

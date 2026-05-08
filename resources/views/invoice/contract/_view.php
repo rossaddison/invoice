@@ -22,7 +22,7 @@ use Yiisoft\Html\Tag\Form;
 ?>
 
 <?=
-    Form::tag()
+     new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -30,15 +30,11 @@ use Yiisoft\Html\Tag\Form;
     ->open()
 ?>
 
-<?= Field::text($form, 'client_id')->readonly(true);?>    
+<?= Field::text($form, 'client_id')->readonly(true);?>
 <?= Field::text($form, 'reference')->readonly(true);?>
 <?= Field::text($form, 'name')->readonly(true);?>
 <?= Field::text($form, 'period_start')
-    ->value(
-        Html::encode(Html::encode($form->getPeriod_start()->format('Y-m-d'))),
-    )->readonly(true);?>
+    ->value(Html::encode($form->getPeriodStart()))->readonly(true); ?>
 <?= Field::text($form, 'period_end')
-    ->value(
-        Html::encode(Html::encode($form->getPeriod_end()->format('Y-m-d'))),
-    )->readonly(true);?>
+    ->value(Html::encode($form->getPeriodEnd()))->readonly(true); ?>
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\UserCustom;
 
-use App\Invoice\Entity\UserCustom;
+use App\Infrastructure\Persistence\UserCustom\UserCustom;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -84,7 +84,7 @@ final class UserCustomRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoUserCustomquery(string $id): ?UserCustom
+    public function repoUserCustomquery(int $id): ?UserCustom
     {
         $query = $this->select()->load('user')->where(['id' => $id]);
         return  $query->fetchOne() ?: null;

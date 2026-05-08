@@ -6,20 +6,15 @@ namespace App\Auth\Controller;
 
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
-use App\Auth\AuthService;
-use App\Auth\Form\LoginForm;
-use App\Auth\Form\TwoFactorAuthenticationSetupForm;
-use App\Auth\Form\TwoFactorAuthenticationVerifyLoginForm;
-use App\Auth\Trait\Callback;
-use App\Auth\Trait\Oauth2;
-use App\Auth\Permissions;
-use App\Auth\TokenRepository;
-use App\Invoice\Entity\UserInv;
+use App\Auth\{AuthService, Form\LoginForm, Form\TwoFactorAuthenticationSetupForm,
+    Form\TwoFactorAuthenticationVerifyLoginForm, Trait\Callback, Trait\ClassList,
+    Trait\Oauth2, Client\OpenBanking, Permissions, TokenRepository};
+use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Setting\Trait\OpenBankingProviders;
 use App\Invoice\UserInv\UserInvRepository;
 use App\Service\WebControllerService;
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 use App\User\UserRepository;
 use App\User\RecoveryCodeService;
 use OTPHP\TOTP;
@@ -29,38 +24,30 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
-use Yiisoft\Assets\AssetManager;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
-use Yiisoft\Factory\Factory;
-use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Html\Tag\A;
-use Yiisoft\Http\Method;
-use Yiisoft\Json\Json;
-use Yiisoft\Rbac\Manager as Manager;
-use Yiisoft\Router\FastRoute\UrlGenerator;
-use Yiisoft\Security\Random;
-use Yiisoft\Security\TokenMask;
-use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Session\SessionInterface;
-use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\User\Login\Cookie\CookieLogin;
-use Yiisoft\User\Login\Cookie\CookieLoginIdentityInterface;
-use Yiisoft\View\WebView;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
-use App\Auth\Client\OpenBanking;
-use Yiisoft\Yii\AuthClient\StateStorage\StateStorageInterface;
-use Yiisoft\Yii\AuthClient\Widget\AuthChoice;
-use Yiisoft\Yii\RateLimiter\CounterInterface;
+use Yiisoft\{Assets\AssetManager,
+    DataResponse\ResponseFactory\DataResponseFactoryInterface, Factory\Factory,
+    FormModel\FormHydrator, Html\Html, Html\Tag\A, Html\Tag\Style, Http\Method,
+    Json\Json, Rbac\Manager as Manager, Router\FastRoute\UrlGenerator,
+    Security\Random, Security\TokenMask, Session\Flash\Flash,
+    Session\SessionInterface, Translator\TranslatorInterface,
+    User\Login\Cookie\CookieLogin, User\Login\Cookie\CookieLoginIdentityInterface,
+    View\WebView, Yii\View\Renderer\WebViewRenderer,
+    Yii\AuthClient\StateStorage\StateStorageInterface,
+    Yii\AuthClient\Widget\AuthChoice, Yii\RateLimiter\CounterInterface};
 
 final class AuthController
 {
     use Callback;
+    
+    use ClassList;
+    
     //initialize .env file at root with oauth2.0 settings
     use Oauth2;
 
     use OpenBankingProviders;
 
-    public const string DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN = 'developersandboxhmrc-access';
+    public const string
+            DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN = 'developersandboxhmrc-access';
     public const string FACEBOOK_ACCESS_TOKEN = 'facebook-access';
     public const string GITHUB_ACCESS_TOKEN = 'github-access';
     public const string GOOGLE_ACCESS_TOKEN = 'google-access';
@@ -80,7 +67,7 @@ final class AuthController
         private readonly RecoveryCodeService $recoveryCodeService,
         private readonly DataResponseFactoryInterface $factory,
         private readonly WebControllerService $webService,
-        private ViewRenderer $viewRenderer,
+        private WebViewRenderer $webViewRenderer,
         private readonly Manager $manager,
         private readonly SessionInterface $session,
         private readonly SettingRepository $sR,
@@ -88,7 +75,6 @@ final class AuthController
         private readonly LoggerInterface $logger,
         private readonly TranslatorInterface $translator,
         // trait variables
-        private readonly Flash $flash,
         private readonly CounterInterface $rateLimiter,
         private readonly ClientInterface $configWebDiAuthGuzzle,
         private readonly RequestFactoryInterface $requestFactory,
@@ -97,7 +83,7 @@ final class AuthController
         private readonly StateStorageInterface $stateStorage,
         private readonly Factory $yiisoftFactory,
     ) {
-        $this->viewRenderer = $viewRenderer->withControllerName('auth');
+        $this->webViewRenderer = $webViewRenderer->withControllerName('auth');
         // use the Oauth2 trait function
         $this->initializeOauth2IdentityProviderCredentials();
         $this->initializeOauth2IdentityProviderDualUrls();
@@ -119,8 +105,9 @@ final class AuthController
         $client = $authChoice->getClient($clientName);
         $codeVerifier = Random::string(128);
         $this->session->set('code_verifier', $codeVerifier);
-        $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
-        $selectedIdentityProviders = $this->selectedIdentityProviders($codeChallenge);
+        $rTrim = rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '=');
+        $codeChallenge = strtr($rTrim, '+/', '-_');
+        $selectedIdentityProviders = $this->idpList($codeChallenge);
         $selectedClient = (array) $selectedIdentityProviders[$clientName];
         $clientParams = (array) $selectedClient['params'];
         $clientAuthUrl = $client->buildAuthUrl($request, $clientParams);
@@ -131,38 +118,71 @@ final class AuthController
 
     public function callback(
         ServerRequestInterface $request,
-        TokenRepository $tokenRepository,
-        UserInvRepository $userInvRepository,
-        UserRepository $userRepository,
+        TokenRepository $tR,
+        UserInvRepository $uiR,
+        UserRepository $uR,
         string $_language,
     ): ResponseInterface {
         $qp = $request->getQueryParams();
-        $authclient   = isset($qp['authclient'])  &&  is_string($qp['authclient'])  && $qp['authclient'] !== '' ? $qp['authclient'] : null;
-        $code         = isset($qp['code'])  &&  is_string($qp['code'])  && $qp['code'] !== '' ? $qp['code'] : null;
-        $state        = isset($qp['state'])  &&  is_string($qp['state'])  && $qp['state'] !== '' ? $qp['state'] : null;
-        $error        = isset($qp['error'])  &&  is_string($qp['error'])  && $qp['error'] !== '' ? $qp['error'] : null;
-        $errorCode    = isset($qp['error_code'])  &&  is_string($qp['error_code'])  && $qp['error_code'] !== '' ? $qp['error_code'] : null;
-        $errorReason  = isset($qp['error_reason'])  &&  is_string($qp['error_reason']) && $qp['error_reason'] !== '' ? $qp['error_reason'] : null;
-        $sessionState = isset($qp['session_state'])  &&  is_string($qp['session_state']) && $qp['session_state'] !== '' ? $qp['session_state'] : null;
-        $deviceId     = isset($qp['device_id'])  &&  is_string($qp['device_id']) && $qp['device_id'] !== '' ? $qp['device_id'] : null;
+        $authclient   = isset($qp['authclient'])
+                &&  is_string($qp['authclient'])
+                && $qp['authclient'] !== '' ?
+                $qp['authclient'] : null;
+        $code         = isset($qp['code'])
+                &&  is_string($qp['code'])
+                && $qp['code'] !== '' ? $qp['code'] : null;
+        $state        = isset($qp['state'])
+                &&  is_string($qp['state'])
+                && $qp['state'] !== '' ? $qp['state'] : null;
+        $error        = isset($qp['error'])
+                &&  is_string($qp['error'])
+                && $qp['error'] !== '' ? $qp['error'] : null;
+        $errorCode    = isset($qp['error_code'])
+                &&  is_string($qp['error_code'])
+                && $qp['error_code'] !== '' ? $qp['error_code'] : null;
+        $errorReason  = isset($qp['error_reason'])
+                &&  is_string($qp['error_reason'])
+                && $qp['error_reason'] !== '' ? $qp['error_reason'] : null;
+        $sessionState = isset($qp['session_state'])
+                &&  is_string($qp['session_state'])
+                && $qp['session_state'] !== '' ? $qp['session_state'] : null;
+        $deviceId     = isset($qp['device_id'])
+                &&  is_string($qp['device_id'])
+                && $qp['device_id'] !== '' ? $qp['device_id'] : null;
 
         if ($authclient === null) {
-            throw new \InvalidArgumentException("Missing or invalid 'authclient' query parameter.");
+            throw new \InvalidArgumentException("Missing or invalid 'authclient'"
+                    . " query parameter.");
         }
 
         return match ($authclient) {
-            'developersandboxhmrc' => $this->callbackDeveloperGovSandboxHmrc($request, $this->translator, $tokenRepository, $userInvRepository, $userRepository, $_language, $code, $state),
-            'facebook' => $this->callbackFacebook($request, $this->translator, $tokenRepository, $userInvRepository, $userRepository, $_language, $code, $state, $error, $errorCode, $errorReason),
-            'github' => $this->callbackGithub($request, $this->translator, $tokenRepository, $userInvRepository, $userRepository, $_language, $code, $state),
-            'google' => $this->callbackGoogle($request, $this->translator, $tokenRepository, $userInvRepository, $userRepository, $_language, $code, $state),
-            'govuk' => $this->callbackGovUk($request, $this->translator, $tokenRepository, $userInvRepository, $userRepository, $_language, $code, $state),
-            'linkedin' => $this->callbackLinkedIn($request, $this->translator, $tokenRepository, $userInvRepository, $userRepository, $_language, $code, $state),
-            'microsoftonline' => $this->callbackMicrosoftOnline($request, $this->translator, $tokenRepository, $userInvRepository, $userRepository, $_language, $code, $state, (string) $sessionState),
-            'openbanking' => $this->callbackOpenBanking($request, $this->translator, $tokenRepository, $userInvRepository, $userRepository, $_language, $code, $state),
-            'x' => $this->callbackX($request, $this->translator, $tokenRepository, $userInvRepository, $userRepository, $_language, $code, $state),
-            'vkontakte' => $this->callbackVKontakte($request, $this->translator, $tokenRepository, $userInvRepository, $userRepository, $_language, $code, $state, (string) $deviceId),
-            'yandex' => $this->callbackYandex($request, $this->translator, $tokenRepository, $userInvRepository, $userRepository, $_language, $code, $state),
-            default => throw new \InvalidArgumentException("Unsupported 'authclient' value: {$authclient}"),
+            'developersandboxhmrc' => $this->callbackDeveloperGovSandboxHmrc(
+                    $request, $this->translator, $tR, $uiR, $uR, $_language,
+                    $code, $state),
+            'facebook' => $this->callbackFacebook($request, $this->translator,
+                    $tR, $uiR, $uR, $_language, $code, $state, $error,
+                    $errorCode, $errorReason),
+            'github' => $this->callbackGithub($request, $this->translator, $tR,
+                    $uiR, $uR, $_language, $code, $state),
+            'google' => $this->callbackGoogle($request, $this->translator, $tR,
+                    $uiR, $uR, $_language, $code, $state),
+            'govuk' => $this->callbackGovUk($request, $this->translator, $tR,
+                    $uiR, $uR, $_language, $code, $state),
+            'linkedin' => $this->callbackLinkedIn($request, $this->translator,
+                    $tR, $uiR, $uR, $_language, $code, $state),
+            'microsoftonline' => $this->callbackMicrosoftOnline($request,
+                    $this->translator, $tR, $uiR, $uR, $_language, $code, $state,
+                    (string) $sessionState),
+            'openbanking' => $this->callbackOpenBanking($request,
+                    $this->translator, $code, $state),
+            'x' => $this->callbackX($request, $this->translator, $tR, $uiR, $uR,
+                    $_language, $code, $state),
+            'vkontakte' => $this->callbackVKontakte($request, $this->translator,
+                    $tR, $uiR, $uR, $_language, $code, $state, (string) $deviceId),
+            'yandex' => $this->callbackYandex($request, $this->translator, $tR,
+                    $uiR, $uR, $_language, $code, $state),
+            default => throw new \InvalidArgumentException(
+                    "Unsupported 'authclient' value: {$authclient}"),
         };
     }
 
@@ -171,7 +191,8 @@ final class AuthController
         TranslatorInterface $translator,
         FormHydrator $formHydrator,
         CookieLogin $cookieLogin,
-        // use the 'active' field of the extension table userinv to verify that the user has been made active through e.g. email verificaiton
+        // use the 'active' field of the extension table userinv to verify that
+        // the user has been made active through e.g. email verificaiton
         UserInvRepository $uiR,
         UserRepository $uR,
         TokenRepository $tR,
@@ -182,21 +203,27 @@ final class AuthController
         $loginForm = new LoginForm($this->authService, $translator);
 
         $openBankingAuthUrl = '';
-        $selectedOpenBankingProvider = $this->sR->getSetting('open_banking_provider');
+        $openBankChoice = $this->sR->getSetting('open_banking_provider');
         // If a provider has been selected, configure the client accordingly
-        if (strlen($selectedOpenBankingProvider) > 0) {
-            $providerConfig = $this->getOpenBankingProviderConfig($selectedOpenBankingProvider);
+        if (strlen($openBankChoice) > 0) {
+            $providerConfig = $this->getOpenBankingProviderConfig(
+                $openBankChoice);
             if ($providerConfig !== null) {
                 $authChoice = AuthChoice::widget();
                 /** @var OpenBanking $openBanking */
                 $openBanking = $authChoice->getClient('openbanking');
                 $openBanking->setAuthUrl((string) $providerConfig['authUrl']);
                 $openBanking->setTokenUrl((string) $providerConfig['tokenUrl']);
-                $openBanking->setScope(isset($providerConfig['scope']) ? (string) $providerConfig['scope'] : null);
+                $openBanking->setScope(isset($providerConfig['scope']) ?
+                        (string) $providerConfig['scope'] : null);
                 $codeVerifier = Random::string(128);
-                $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
+                $hash = hash('sha256', $codeVerifier, true);
+                $rTrim = rtrim(base64_encode($hash), '=');
+                $codeChallenge = strtr($rTrim, '+/', '-_');
                 $this->session->set('code_verifier', $codeVerifier);
-                $openBankingAuthUrl = $openBanking->getAuthUrl() . '?' . http_build_query([
+                $openBankingAuthUrl = $openBanking->getAuthUrl()
+                        . '?'
+                        . http_build_query([
                     'response_type' => 'code',
                     'scope' => $openBanking->getScope(),
                     'code_challenge' => $codeChallenge,
@@ -209,56 +236,68 @@ final class AuthController
             $identity = $this->authService->getIdentity();
             $userId = $identity->getId();
             if (null !== $userId) {
-                $userInv = $uiR->repoUserInvUserIdquery($userId);
+                $userInv = $uiR->repoUserInvUserIdquery((int) $userId);
                 if (null !== $userInv) {
                     $user = $userInv->getUser();
                     if (null !== $user) {
                         // if using two-factor-authentication
                         if ($this->sR->getSetting('enable_tfa') == '1') {
-                            $this->tfaIsEnabledBlockBaseController($userId);
+                            $this->tfaIsEnabledBlockBaseController();
                             $enabled = $user->is2FAEnabled();
                             // setup if not enabled already
-                            if ($enabled == false) {
+                            if (!$enabled) {
                                 $this->session->set('pending_2fa_user_id', $userId);
                                 // show the setup form so that the user can register
-                                return $this->webService->getRedirectResponse('auth/showSetup');
+                                return $this->webService->getRedirectResponse(
+                                        'auth/showSetup');
                             }
                             $this->session->set('verified_2fa_user_id', $userId);
-                            return $this->webService->getRedirectResponse('auth/verifyLogin');
+                            return $this->webService->getRedirectResponse(
+                                        'auth/verifyLogin');
                         }
-                        $this->tfaNotEnabledUnblockBaseController($userId);
-                        /**
-                         * Related logic: see UserInvController function signup where the userinv active field is made active i.e. true upon a positive email verification
-                         */
+                        $this->tfaNotEnabledUnblockBaseController();
+/**
+ * Related logic: see UserInvController function signup where the userinv
+ * active field is made active i.e. true upon a positive email verification
+ */
                         $status = $userInv->getActive();
-                        /**
-                         * The admin does not automatically have a 'userinv account with status as active' IF
-                         * signing up NOT by email e.g by localhost  . The below code, if ($isAdminUser) {
-                            }, => makes allowances for this.
-                         * Related logic: see UserInvController function signup which is triggered once user's email verification link is clicked in their user account
-                         *      and the userinv account's status field is made active i.e. 1
-                         */
+/**
+ * The admin does not automatically have a 'userinv account with status as active' IF
+ * signing up NOT by email e.g by localhost  . The below code, if ($isAdminUser) {
+    }, => makes allowances for this.
+ * Related logic: see UserInvController function signup which is triggered once
+ *  user's email verification link is clicked in their user account
+ * and the userinv account's status field is made active i.e. 1
+ */
                         $isAdminUser = $this->isAdminUser($userId);
 
                         if ($status || $isAdminUser) {
-                            // Disable email verification token for admin users who don't need email verification
+// Disable email verification token for admin users who don't need email verification
                             if ($isAdminUser) {
-                                $this->disableToken($tR, $userId, 'email-verification');
+                                $this->disableToken($tR, $userId,
+                                        'email-verification');
                             }
-                            // Regenerate session ID on successful login
+// Regenerate session ID on successful login
                             $this->session->regenerateId();
-                            if ($identity instanceof CookieLoginIdentityInterface && $loginForm->getPropertyValue('rememberMe')) {
-                                return $cookieLogin->addCookie($identity, $this->redirectToInvoiceIndex());
+		            $this->session->set('tfa_verified', true);
+                            if ($identity instanceof CookieLoginIdentityInterface
+                                    && $loginForm->getPropertyValue('rememberMe')) {
+                                return $cookieLogin->addCookie($identity,
+                                        $this->redirectToInvoiceIndex());
                             }
                             return $this->redirectToInvoiceIndex();
                         }
 
-                        /**
-                         * If the observer user is signing up WITHOUT email (=> userinv account status is 0), e.g. by console ... yii userinv/assignRole observer 2,
-                         * the admin will have to make the user active via Settings Invoice User Account AND assign the user an added client
-                         * Also the token that was originally assigned on signup, must now be 'disabled' because the admin is responsible for making the user active
-                         */
-                        $this->disableToken($tR, $userId, $this->getTokenType('email-verification'));
+/**
+ * If the observer user is signing up WITHOUT email (=> userinv account status is 0),
+ *  e.g. by console ... yii userinv/assignRole observer 2,
+ * the admin will have to make the user active via Settings Invoice User Account
+ *  AND assign the user an added client
+ * Also the token that was originally assigned on signup, must now be 'disabled'
+ *  because the admin is responsible for making the user active
+ */
+                        $this->disableToken($tR, $userId,
+                                $this->getTokenType('email-verification'));
                         return $this->redirectToAdminMustMakeActive();
                     }
                 }
@@ -268,53 +307,84 @@ final class AuthController
 
         $codeVerifier = Random::string(128);
         $this->session->set('code_verifier', $codeVerifier);
-        $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
-        return $this->viewRenderer->render(
+        $codeChallenge = strtr(rtrim(base64_encode(hash('sha256',
+                $codeVerifier, true)), '='), '+/', '-_');
+        return $this->webViewRenderer->render(
             'login',
             [
+                'class' => $this->classList(),
                 'formModel' => $loginForm,
-                'selectedOpenBankingProvider' => $selectedOpenBankingProvider,
-                'noOpenBankingContinueButton' => $this->sR->getSetting('no_openbanking_continue_button') == '1' ? true : false,
+                'openBankChoice' => $openBankChoice,
+                'noOpenBankingContinueButton' =>
+                $this->sR->getSetting('no_openbanking_continue_button') == '1' ?
+                    true : false,
                 'openBankingAuthUrl' => $openBankingAuthUrl,
+                //Fade-out CSS for TFA badge
+                'styleTagFadeOut' =>  new Style()->content(
+                    '.fade-out { opacity: 1; transition: opacity 40s ease-in; }'
+                        . ' .fade-out.hidden { opacity: 0; }'),
                 'request' => $request,
-                'selectedIdentityProviders' => $this->selectedIdentityProviders($codeChallenge),
+                'idpList' => $this->idpList(
+                    $codeChallenge),
+                // Fade-out JS: this will fade out the badge after 2 seconds;
+                // adjust as needed
+                'fadeOutJS' => Html::script($this->fadeOutScript())
+                                ->type('text/javascript')
+                                ->charset('utf-8'),
             ],
         );
     }
+    
+    private function fadeOutScript(): string
+    {
+        return <<<JS
+            document.addEventListener('DOMContentLoaded', function() {
+            var badge = document.getElementById('tfa-badge');
+                if (badge) {
+                    setTimeout(function() {
+                        badge.classList.add('hidden');
+                    }, 2000);
+                }
+            });
+            JS;
+    }
 
     /**
-     * Step 1: Download Aegis 2FA app https://play.google.com/store/apps/details?id=com.beemdevelopment.aegis&hl=en-US&pli=1 onto your mobile
-     * Step 2: Add a new Qr code by pressing the plus sign at the bottom right corner
+     * Step 1: Download Aegis 2FA app
+     *  https://play.google.com/store/apps/details?id=com.beemdevelopment.
+     *  aegis&hl=en-US&pli=1 onto your mobile
+     * Step 2: Add a new Qr code by pressing the plus sign at the bottom right
+     *  corner
      * Step 3: Scan the Qr code generated by the setup form with your mobile
      *         or enter the long key into the android app
      *         Your app may ask you to overwrite your previous entry or you can
-     *         hold down on your current entry (the letter next to the 6 digit code)
-     *         and delete it.
+     *         hold down on your current entry (the letter next to the 6 digit
+     *         code) and delete it.
      * Step 4: Enter the TOTP (Timed One Time Password) within the limited time
      *
-     * @param ServerRequestInterface $request
      * @param TranslatorInterface $translator
      * @param UserRepository $userRepository
      * @return ResponseInterface
      */
     public function showSetup(
-        ServerRequestInterface $request,
         TranslatorInterface $translator,
         UserRepository $userRepository,
     ): ResponseInterface {
         $userId = (int) $this->session->get('pending_2fa_user_id');
-        $user = $userRepository->findById((string) $userId);
-        if (null !== $user) {
+        $user = $userRepository->findById($userId);
+        if ($user->hasIdentity()) {
             $email = $user->getEmail();
             if (strlen($email) > 0) {
                 $totp = TOTP::create();
+                /** @var non-empty-string $email */
                 $totp->setLabel($email);
                 $secret = $totp->getSecret();
                 $this->session->set('2fa_temp_secret', $secret);
                 $qrContent = $totp->getProvisioningUri();
                 $qrDataUri = $this->generateQrDataUri($qrContent);
                 $form = new TwoFactorAuthenticationSetupForm($translator);
-                return $this->viewRenderer->render('setup', [
+                return $this->webViewRenderer->render('setup', [
+                    'class' => $this->classList(),
                     'qrDataUri' => $qrDataUri,
                     'totpSecret' => $secret,
                     'error' => '',
@@ -327,9 +397,9 @@ final class AuthController
 
     /**
      * Related logic: see src\Auth\Asset\rebuild\js\keypad_copy_to_clipboard.js
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return ResponseInterface
      */
-    public function ajaxShowSetup(ServerRequestInterface $request): \Yiisoft\DataResponse\DataResponse
+    public function ajaxShowSetup(ServerRequestInterface $request): ResponseInterface
     {
         $params = $request->getQueryParams();
         $parameters = [
@@ -341,8 +411,8 @@ final class AuthController
     }
 
     /**
-     * On successful setup, the User table's 'tfa_enabled' field will be set to true
-     * and the totp_secret will be set for function's verifyLogin's use
+     * On successful setup, the User table's 'tfa_enabled' field will be set to
+     * true and the totp_secret will be set for function's verifyLogin's use
      *
      * During the verifyLogin function TFA is disabled
      *
@@ -362,28 +432,33 @@ final class AuthController
         $rateLimitKey = 'auth_setup_' . hash('sha256', $clientIp);
 
         if (!$this->checkRateLimit($rateLimitKey)) {
-            $this->logger->log(LogLevel::WARNING, 'Rate limit reached for 2FA setup from IP: ' . $clientIp);
+            $this->logger->log(LogLevel::WARNING,
+                    'Rate limit reached for 2FA setup from IP: ' . $clientIp);
             return $this->redirectToOneTimePasswordError();
         }
 
         $pendingUserId = (int) $this->session->get('pending_2fa_user_id');
         $body = $request->getParsedBody() ?? [];
+        $tfa = 'two.factor.authentication';
+        $tfans = $tfa . '.no.secret.generated';
+        $tfaicf =  $tfa . '.invalid.code.format';
+        $tfaafms =  $tfa . '.attempt.failure.must.setup';
+        $tfaaf = $tfa . '.attempt.failure';
         if (is_array($body)) {
             $inputCode = $this->sanitizeAndValidateCode($body['code'] ?? '');
             if ($inputCode !== null) {
                 if ($pendingUserId > 0) {
-                    $user = $userRepository->findById((string) $pendingUserId);
-                    if (null !== $user) {
+                    $user = $userRepository->findById($pendingUserId);
+                    if ($user->hasIdentity()) {
                         /** @var mixed $tempSecretRaw */
                         $tempSecretRaw = $this->session->get('2fa_temp_secret');
-                        $tempSecret = (\is_string($tempSecretRaw) && $tempSecretRaw !== '') ? $tempSecretRaw : null;
-                        $error = '';
+                        $tempSecret = (\is_string($tempSecretRaw)
+                                && $tempSecretRaw !== '') ? $tempSecretRaw : null;
                         if ($tempSecret === null) {
-                            $error = $translator->translate('two.factor.authentication.no.secret.generated');
+                            $error = $translator->translate($tfans);
                         } elseif (!$this->isValidTotpCode($inputCode)) {
-                            $error = $translator->translate('two.factor.authentication.invalid.code.format');
+                            $error = $translator->translate($tfaicf);
                         } else {
-                            /** @var non-empty-string $tempSecret */
                             $totp = TOTP::create($tempSecret);
                             if ($totp->verify($inputCode)) {
                                 $user->setTotpSecret($tempSecret);
@@ -393,31 +468,38 @@ final class AuthController
                                 $this->session->remove('pending_2fa_user_id');
                                 // Regenerate session ID on successful setup
                                 $this->session->regenerateId();
-                                $this->session->set('verified_2fa_user_id', $pendingUserId);
-                                return $this->webService->getRedirectResponse('auth/verifyLogin', );
+                                $this->session->set('verified_2fa_user_id',
+                                                                 $pendingUserId);
+                                $avl = 'auth/verifyLogin';
+                                return $this->webService
+                                            ->getRedirectResponse($avl);
                             }
-                            if ($this->sR->getSetting('enable_tfa_with_disabling') == '1') {
-                                $error = $translator->translate('two.factor.authentication.attempt.failure.must.setup');
+                            $etwd = 'enable_tfa_with_disabling';
+                            if ($this->sR->getSetting($etwd) == '1') {
+                                $error = $translator->translate($tfaafms);
                             } else {
-                                $error = $translator->translate('two.factor.authentication.attempt.failure');
+                                $error = $translator->translate($tfaaf);
                             }
                         }
 
                         // Re-render the setup page with error and QR code
                         $safeSecret = $tempSecret ?? TOTP::create()->getSecret();
-                        /** @var non-empty-string $safeSecret */
                         $totp = TOTP::create($safeSecret);
                         // Set the label again here!
-                        $totp->setLabel($user->getEmail());
+                        $userEmail = $user->getEmail();
+                        if ($userEmail !== '') {
+                            $totp->setLabel($userEmail);
+                        }
 
                         $qrContent = $totp->getProvisioningUri();
                         $qrDataUri = $this->generateQrDataUri($qrContent);
-
-                        return $this->viewRenderer->render('setup', [
+                        $tfasf = new TwoFactorAuthenticationSetupForm($translator);
+                        return $this->webViewRenderer->render('setup', [
+                            'class' => $this->classList(),
                             'qrDataUri' => $qrDataUri,
                             'totpSecret' => $totp->getSecret(),
                             'error' => $error,
-                            'formModel' => new TwoFactorAuthenticationSetupForm($translator),
+                            'formModel' => $tfasf,
                         ]);
                     }
                 }
@@ -427,8 +509,9 @@ final class AuthController
     }
 
     /**
-     * Step 4: Enter a different 6-digit code than the setup 6-digit code but with the same secret
-     * derived from the original Qr Code. i.e. do not scan in an additional Qr Code.
+     * Step 4: Enter a different 6-digit code than the setup 6-digit code but
+     * with the same secret derived from the original Qr Code. i.e. do not scan
+     * in an additional Qr Code.
      *
      * Verify 2FA code during login process if the User:tfa_enabled field is true
      * and the User:totpsecret field has been setup during the qrcode setup.
@@ -445,17 +528,24 @@ final class AuthController
         TranslatorInterface $translator,
         UserRepository $userRepository,
     ): ResponseInterface {
-        $verifiedUserId = (int) $this->session->get('verified_2fa_user_id');
+        $tfa = 'two.factor.authentication';
+        $tfafvl = 'two.factor.authentication.form.verify.login';
+        $tfarlr = $tfa . '.rate.limit.reached';
+        $tfaaf = $tfa . '.attempt.failure';
+        $etwd = 'enable_tfa_with_disabling';
+        $tfaitc = $tfa . '.invalid.totp.code';
+        $tfaibrc = $tfa . '.invalid.backup.recovery.code';
+        $vuid = (int) $this->session->get('verified_2fa_user_id');
         $form = new TwoFactorAuthenticationVerifyLoginForm($translator);
         $codes = [];
-        $user = $userRepository->findById((string) $verifiedUserId);
-        if (null !== $user) {
-            // Only display the recovery codes once i.e. if the user does not have any
+        $user = $userRepository->findById($vuid);
+        if ($user->hasIdentity()) {
+        // Only display the recovery codes once i.e. if the user does not have any
             if (!$this->recoveryCodeService->userHasBackupCodes($user)) {
                 $codes = $this->generateBackupRecoveryCodes($user);
                 $this->session->set('backup_recovery_codes', $codes);
             }
-            if ($this->session->get('regenerate_codes') == true) {
+            if ($this->session->get('regenerate_codes')) {
                 $this->removeBackupRecoveryCodes($user);
                 $codes = $this->generateBackupRecoveryCodes($user);
                 $this->session->set('backup_recovery_codes', $codes);
@@ -463,7 +553,7 @@ final class AuthController
             }
         }
         $parameters = [
-            'title' => $translator->translate('two.factor.authentication.form.verify.login'),
+            'title' => $translator->translate($tfafvl),
             'actionName' => 'auth/verifyLogin',
             'actionArguments' => [],
             'errors' => [],
@@ -472,60 +562,71 @@ final class AuthController
             // empty $codes => show button to regenerate
             'codes' => $codes,
         ];
+        $reached = 'Rate limit reached for 2FA verification from IP: ';
         if ($request->getMethod() === Method::POST) {
             // Apply rate limiting for authentication attempts
             $clientIp = $this->getClientIpAddress($request);
             $rateLimitKey = 'auth_verify_' . hash('sha256', $clientIp);
             /** Related logic: see config/web/di/rate-limit.php */
             if (!$this->checkRateLimit($rateLimitKey)) {
-                $this->logger->log(LogLevel::WARNING, 'Rate limit reached for 2FA verification from IP: ' . $clientIp);
-                $error = $translator->translate('two.factor.authentication.rate.limit.reached');
-                return $this->viewRenderer->render('verify', [
+                $this->logger->log(LogLevel::WARNING, $reached . $clientIp);
+                $error = $translator->translate($tfarlr);
+                return $this->webViewRenderer->render('verify', [
                     'error' => $error,
                     'formModel' => $form,
                     'codes' => $codes,
                 ]);
             }
-
             $body = $request->getParsedBody();
             if (is_array($body)) {
                 $inputCode = $this->sanitizeAndValidateCode($body['code'] ?? '');
                 if (null !== $inputCode) {
-                    if ($verifiedUserId > 0) {
-                        $user = $userRepository->findById((string) $verifiedUserId);
-                        if (null !== $user) {
+                    if ($vuid > 0) {
+                        $user = $userRepository->findById($vuid);
+                        if ($user->hasIdentity()) {
                             $totpSecretRaw = $user->getTotpSecret();
-                            $totpSecret = (\is_string($totpSecretRaw) && $totpSecretRaw !== '') ? $totpSecretRaw : null;
-                            $error = '';
-                            if ($totpSecret !== null && $this->isValidTotpCode($inputCode)) {
-                                /** @var non-empty-string $totpSecret */
-                                $totp = TOTP::create($totpSecret);
+                            $totpSec = (\is_string($totpSecretRaw)
+                                    && $totpSecretRaw !== '')
+                                    ? $totpSecretRaw : null;
+                            if ($totpSec !== null
+                                    && $this->isValidTotpCode($inputCode)) {
+                                $tokenApplySec = TokenMask::apply($totpSec);
+                                $totp = TOTP::create($totpSec);
                                 if ($totp->verify($inputCode)) {
-                                    if ($this->sR->getSetting('enable_tfa_with_disabling') == '1') {
+                                    if ($this->sR->getSetting($etwd) == '1') {
                                         $user->setTotpSecret('');
                                         $user->set2FAEnabled(false);
                                         $userRepository->save($user);
                                     }
-                                    // Regenerate session ID on successful authentication
+                                    // Regenerate session ID on successful
+                                    // authentication
                                     $this->session->regenerateId();
-                                    $this->removeSessionTempsAndPermitEntryToBaseController($verifiedUserId);
-                                    /** Related logic: see HmrcController function fphValidate */
+                                    $this->remSessTempsPermitEntryBase($vuid);
+                                    /**
+                                     * Related logic: HmrcController function
+                                     *  fphValidate
+                                     */
                                     $this->session->set('otp', $inputCode);
-                                    $this->session->set('otpRef', TokenMask::apply($totpSecret));
+                                    $this->session->set('otpRef', $tokenApplySec);
                                     return $this->redirectToInvoiceIndex();
                                 }
-                                $error = $translator->translate('two.factor.authentication.invalid.totp.code');
+                                $error = $translator->translate($tfaitc);
                             } else {
-                                // The user has forgotten their $inputCode so try a backup code
-                                if ($totpSecret !== null && $this->recoveryCodeService->validateAndMarkCodeAsUsed($user, $inputCode)) {
-                                    $this->removeSessionTempsAndPermitEntryToBaseController($verifiedUserId);
+                                // The user has forgotten their $inputCode so
+                                // try a backup code
+                                if ($totpSec !== null
+                                        && $this->recoveryCodeService
+                                                ->validateAndMarkCodeAsUsed(
+                                                    $user, $inputCode)) {
+                                    $tokenApplySec = TokenMask::apply($totpSec);
+                                    $this->remSessTempsPermitEntryBase($vuid);
                                     $this->session->set('otp', $inputCode);
-                                    $this->session->set('otpRef', TokenMask::apply($totpSecret));
+                                    $this->session->set('otpRef', $tokenApplySec);
                                     return $this->redirectToInvoiceIndex();
                                 }
-                                $error = $translator->translate('two.factor.authentication.invalid.backup.recovery.code');
+                                $error = $translator->translate($tfaibrc);
                             }
-                            return $this->viewRenderer->render('verify', [
+                            return $this->webViewRenderer->render('verify', [
                                 'error' => $error,
                                 'formModel' => $form,
                                 'codes' => $codes,
@@ -533,30 +634,27 @@ final class AuthController
                         }
                     }
                 } // null!==$inputCode
-                $parameters['error'] = $translator->translate('two.factor.authentication.attempt.failure');
+                $parameters['error'] = $translator->translate($tfaaf);
             }
         }
-        return $this->viewRenderer->render('verify', $parameters);
+        return $this->webViewRenderer->render('verify', $parameters);
     }
 
-    private function removeSessionTempsAndPermitEntryToBaseController(int $verifiedUserId): void
+    // Remove session temps and permit entry to the Base Controller
+    private function remSessTempsPermitEntryBase(int $verifiedUserId): void
     {
         // Validate session integrity before proceeding
+        $sivffuid = 'Session integrity validation failed for user ID: ';
         if (!$this->validateSessionIntegrity($verifiedUserId)) {
-            $this->logger->log(LogLevel::WARNING, 'Session integrity validation failed for user ID: ' . $verifiedUserId);
+            $this->logger->log(LogLevel::WARNING, $sivffuid  . $verifiedUserId);
             // Clear all session data instead of invalidate which doesn't exist
             $this->session->clear();
             return;
         }
-
         $this->session->remove('pending_2fa_user_id');
         $this->session->remove('backup_recovery_codes');
         $this->session->remove('verified_2fa_user_id');
-        $roles = $this->manager->getRolesByUserId($verifiedUserId);
-        foreach ($roles as $role) {
-            $this->manager->removeChild($role->getName(), Permissions::NO_ENTRY_TO_BASE_CONTROLLER);
-            $this->manager->addChild($role->getName(), Permissions::ENTRY_TO_BASE_CONTROLLER);
-        }
+        $this->session->set('tfa_verified', true);
     }
 
     /**
@@ -573,19 +671,19 @@ final class AuthController
         }
 
         // Verify session has required 2FA data
-        /** @var int $verifiedUserId */
         $verifiedUserId = (int) $this->session->get('verified_2fa_user_id');
 
         return $verifiedUserId === $userId;
     }
 
-    public function disableToken(
+    private function disableToken(
         TokenRepository $tR,
         ?string $userId = null,
         string $identityProvider = '',
     ): void {
         if (null !== $userId) {
-            $token = $tR->findTokenByIdentityIdAndType($userId, $this->getTokenType($identityProvider));
+            $getTTIP = $this->getTokenType($identityProvider);
+            $token = $tR->findTokenByIdentityIdAndType((int) $userId, $getTTIP);
             if (null !== $token) {
                 $token->setToken('already_used_token_' . (string) time());
                 $tR->save($token);
@@ -594,25 +692,27 @@ final class AuthController
     }
 
     /**
-     * Validates the 'authState' session variable against the 'state' returned by an identity provider.
-     * Ensures state integrity and prevents CSRF attacks.
+     * Validates the 'authState' session variable against the 'state' returned by
+     * an identity provider. Ensures state integrity and prevents CSRF attacks.
      *
-     * @param string $identityProvider
+     * @param string $idP
      * @param string $state
      * @psalm-return void
      */
-    private function blockInvalidState(string $identityProvider, string $state): void
+    private function blockInvalidState(string $idP, string $state): void
     {
         // Early return if state is empty
         if ($state === '') {
-            $this->logger->log(LogLevel::ALERT, "Invalid or empty OAuth2 state parameter from provider: {$identityProvider}");
+            $param = "Invalid or empty OAuth2 state parameter from provider:";
+            $this->logger->log(LogLevel::ALERT, $param . " {$idP}");
             exit(1);
         }
 
         // Sanitize state parameter to prevent injection attacks
         $sanitizedState = preg_replace('/[^a-zA-Z0-9\-_]/', '', $state);
+        $chars = "State parameter contains invalid characters from provider:";
         if ($sanitizedState === '') {
-            $this->logger->log(LogLevel::ALERT, "State parameter contains invalid characters from provider: {$identityProvider}");
+            $this->logger->log(LogLevel::ALERT, $chars . " {$idP}");
             exit(1);
         }
 
@@ -620,26 +720,31 @@ final class AuthController
 
         try {
             // raises an exception if the idP is not found
-            $client = $authChoice->getClient($identityProvider);
+            $client = $authChoice->getClient($idP);
             /**
              * @var string|null $sessionState
              */
             $sessionState = $client->getSessionAuthState();
 
             if ($sessionState === null) {
-                $this->logger->log(LogLevel::ALERT, "Session Auth state is null for provider: {$identityProvider}");
+                $this->logger->log(LogLevel::ALERT,
+                    "Session Auth state is null for provider: {$idP}");
                 exit(1);
             }
 
             // Use constant-time comparison to prevent timing attacks
             if (!$sessionState || !hash_equals($sessionState, $state)) {
-                // State is invalid, possible cross-site request forgery. Exit with an error code.
-                $this->logger->log(LogLevel::ALERT, 'CSRF attack attempt detected for provider: ' . $identityProvider);
+                // State is invalid, possible cross-site request forgery.
+                // Exit with an error code.
+                $this->logger->log(LogLevel::ALERT,
+                        "CSRF attack attempt detected for provider: {$idP}");
                 exit(1);
             }
         } catch (\Exception $e) {
             // Log exception details for debugging
-            $this->logger->log(LogLevel::ALERT, "Exception validating OAuth2 state for provider: {$identityProvider}. Error: " . $e->getMessage());
+            $this->logger->log(LogLevel::ALERT,
+            "Exception validating OAuth2 state for provider: {$idP}. Error: "
+                . $e->getMessage());
             exit(1);
         }
     }
@@ -654,39 +759,51 @@ final class AuthController
      * @param string $provider e.g. github
      * @return string
      */
-    private function proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(TranslatorInterface $translator, User $user, UserInvRepository $uiR, string $language, string $_language, string $randomAndTimeToken, string $provider): string
+    private function proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
+            TranslatorInterface $translator,
+            User $user,
+            UserInvRepository $uiR,
+            string $language,
+            string $_language,
+            string $randomAndTimeToken,
+            string $provider): string
     {
         $tokenType = $this->getTokenType($provider);
         $tokenWithMask = TokenMask::apply($randomAndTimeToken);
         $userInv = new UserInv();
-        if (null !== ($userId = $user->getId())) {
-            $userInv->setUser_id((int) $userId);
-            // if the user is administrator assign 0 => 'Administrator', 1 => Not Administrator
-            $userInv->setType($user->getId() == 1 ? 0 : 1);
-            // when the user clicks on the button, make the user active in the userinv extension table. Initially keep the user inactive.
-            $userInv->setActive(false);
-            $userInv->setLanguage($language);
-            $uiR->save($userInv);
-            return A::tag()
-                // When the url is clicked by the user, return to userinv/$provider to activate the user and assign a client to the user
-                // depending on whether 'Assign a client to user on signup' has been chosen under View ... Settings...General. The user will be able to
-                // edit their userinv details on the client side as well as the client record.
-                ->href($this->urlGenerator->generateAbsolute(
-                    'userinv/signup',
-                    [
-                        '_language' => $_language,
-                        'language' => $language,
-                        'token' => $tokenWithMask,
-                        'tokenType' => $tokenType,
-                    ],
-                ))
-                ->addClass('btn btn-success')
-                ->content($translator->translate('identity.provider.authentication.successful'))
-                ->render();
-        }
-        return '';
+        $ipas = 'identity.provider.authentication.successful';
+        $userId = $user->reqId();
+        $userInv->setUserId($userId);
+        // if the user is administrator assign 0 => 'Administrator',
+        // 1 => Not Administrator
+        $userInv->setType($userId == 1 ? 0 : 1);
+        // when the user clicks on the button, make the user active in the
+        // userinv extension table. Initially keep the user inactive.
+        $userInv->setActive(false);
+        $userInv->setLanguage($language);
+        $uiR->save($userInv);
+        return new A()
+        // When the url is clicked by the user, return to userinv/$provider
+        // to activate the user and assign a client to the user
+        // depending on whether 'Assign a client to user on signup' has been
+        // chosen under View ... Settings...General. The user will be able to
+        // edit their userinv details on the client side as well as the
+        // client record.
+            ->href($this->urlGenerator->generateAbsolute(
+                'userinv/signup',
+                [
+                    '_language' => $_language,
+                    'language' => $language,
+                    'token' => $tokenWithMask,
+                    'tokenType' => $tokenType,
+                ],
+            ))
+            ->addClass('btn btn-success')
+            ->content($translator->translate($ipas))
+            ->render();
     }
 
+    /** @psalm-suppress PossiblyUnusedReturnValue */
     public function logout(
         UserRepository $uR,
         UserInvRepository $uiR,
@@ -696,15 +813,16 @@ final class AuthController
 
         // if enable_tfa_with_disabling setting has changed during login of admin
         // make sure this is reflected in the user setting.
-        if (($this->sR->getSetting('enable_tfa_with_disabling') == '1') && $this->sR->getSetting('enable_tfa') == '1') {
+        if (($this->sR->getSetting('enable_tfa_with_disabling') == '1')
+                && $this->sR->getSetting('enable_tfa') == '1') {
             if (null !== $userId) {
-                $userInv = $uiR->repoUserInvUserIdquery($userId);
+                $userInv = $uiR->repoUserInvUserIdquery((int) $userId);
                 if (null !== $userInv) {
                     $user = $userInv->getUser();
                     if (null !== $user) {
                         if ($this->sR->getSetting('enable_tfa') == '1') {
                             $enabled = $user->is2FAEnabled();
-                            if ($enabled == true) {
+                            if ($enabled) {
                                 $user->set2FAEnabled(false);
                                 // Securely clear TOTP secret
                                 $totpSecret = $user->getTotpSecret();
@@ -720,73 +838,34 @@ final class AuthController
             }
             $this->session->remove('verified_2fa_user_id');
         }
-
-        if (null !== $userId) {
-            if ($this->manager->userHasPermission($userId, Permissions::ENTRY_TO_BASE_CONTROLLER)) {
-                $roles = $this->manager->getRolesByUserId($userId);
-                foreach ($roles as $role) {
-                    $this->manager->removeChild($role->getName(), Permissions::ENTRY_TO_BASE_CONTROLLER);
-                }
-            }
-        }
-
-        // Secure cleanup of session data
-        $this->secureClearSensitiveData();
-
-        // Clear all session data completely for security
+         // prevent session fixation
+        $this->session->regenerateId();
+        // Current — only clears data, keeps session alive
         $this->session->clear();
-
         $this->authService->logout();
         return $this->redirectToMain();
     }
 
-    public function regenerateCodes(UserRepository $uR): ResponseInterface
+    public function regenerateCodes(): ResponseInterface
     {
         $this->session->set('regenerate_codes', true);
         return $this->webService->getRedirectResponse('auth/verifyLogin');
     }
 
-    private function tfaIsEnabledBlockBaseController(string $userId): void
+    private function tfaIsEnabledBlockBaseController(): void
     {
-        // see config/common/routes.php Permissions::ENTRY_TO_BASE_CONTROLLER
-        // Prevent access to the BaseController during tfa with an additional permission Permissions::NO_ENTRY_TO_BASE_CONTROLLER
-        // which has been incorporated in the BaseController
-        // Replace this permission with Permissions::ENTRY_TO_BASE_CONTROLLER on completion
-        if (!$this->manager->userHasPermission($userId, Permissions::NO_ENTRY_TO_BASE_CONTROLLER)) {
-            $roles = $this->manager->getRolesByUserId($userId);
-            foreach ($roles as $role) {
-                $this->manager->addChild($role->getName(), Permissions::NO_ENTRY_TO_BASE_CONTROLLER);
-            }
-        }
-        if ($this->manager->userHasPermission($userId, Permissions::ENTRY_TO_BASE_CONTROLLER)) {
-            $roles = $this->manager->getRolesByUserId($userId);
-            foreach ($roles as $role) {
-                $this->manager->removeChild($role->getName(), Permissions::ENTRY_TO_BASE_CONTROLLER);
-            }
-        }
+        $this->session->set('tfa_verified', false);
     }
 
-    private function tfaNotEnabledUnblockBaseController(string $userId): void
+    private function tfaNotEnabledUnblockBaseController(): void
     {
-        // If tfa is not being used, the Permissions::NO_ENTRY_TO_BASE_CONTROLLER must be removed
-        if ($this->manager->userHasPermission($userId, Permissions::NO_ENTRY_TO_BASE_CONTROLLER)) {
-            $roles = $this->manager->getRolesByUserId($userId);
-            foreach ($roles as $role) {
-                $this->manager->removeChild($role->getName(), Permissions::NO_ENTRY_TO_BASE_CONTROLLER);
-            }
-        }
-        // If tfa is not being used, the Permissions::ENTRY_TO_BASE_CONTROLLER permission can be added now
-        if (!$this->manager->userHasPermission($userId, Permissions::ENTRY_TO_BASE_CONTROLLER)) {
-            $roles = $this->manager->getRolesByUserId($userId);
-            foreach ($roles as $role) {
-                $this->manager->addChild($role->getName(), Permissions::ENTRY_TO_BASE_CONTROLLER);
-            }
-        }
+        $this->session->set('tfa_verified', true);
     }
 
     private function redirectToMain(): ResponseInterface
     {
-        return $this->webService->getRedirectResponse('site/index', ['_language' => 'en']);
+        return $this->webService->getRedirectResponse('site/index',
+                ['_language' => 'en']);
     }
 
     private function redirectToInvoiceIndex(): ResponseInterface
@@ -796,7 +875,8 @@ final class AuthController
 
     private function redirectToAdminMustMakeActive(): ResponseInterface
     {
-        return $this->webService->getRedirectResponse('site/adminmustmakeactive', ['_language' => 'en']);
+        return $this->webService->getRedirectResponse('site/adminmustmakeactive',
+                ['_language' => 'en']);
     }
 
     /**
@@ -912,19 +992,19 @@ final class AuthController
     private function generateQrDataUri(string $content): string
     {
         $eccLevel = $this->sR->getSetting('qr_ecc_level');
-        // @psalm-suppress RedundantCondition
         $options = new QROptions([
             'eccLevel' => strlen($eccLevel) > 0 ? (int) $eccLevel : 0b01,
             'imageBase64' => true,
             'scale' => 4,
         ]);
-        /** @var string */
-        return (new QRCode($options))->render($content);
+        /** @psalm-suppress InvalidArgument $options **/
+        return (string) (new QRCode($options))->render($content);
     }
 
     private function redirectToOneTimePasswordError(): ResponseInterface
     {
-        return $this->webService->getRedirectResponse('site/onetimepassworderror', ['_language' => 'en']);
+        return $this->webService->getRedirectResponse('site/onetimepassworderror',
+                ['_language' => 'en']);
     }
 
     private function removeBackupRecoveryCodes(User $user): void
@@ -959,7 +1039,6 @@ final class AuthController
         // Overwrite sensitive variables with random data before unsetting
         /** @var string[] $sensitiveVars */
         foreach ($sensitiveVars as &$var) {
-            /** @var string $var */
             $var = str_repeat('0', strlen($var));
             $var = Random::string(strlen($var));
             unset($var);
@@ -983,12 +1062,15 @@ final class AuthController
     {
         try {
             $result = $this->rateLimiter->hit($key);
-            // The hit method returns a CounterState object, check if the limit is not reached
-            /** Related logic: see config/web/di/rate-limit ... adjust down to 2 for testing ... default 4 **/
+            // The hit method returns a CounterState object, check if the limit
+            // is not reached
+            /** Related logic: see config/web/di/rate-limit ... adjust down
+             *  to 2 for testing ... default 4 **/
             return !$result->isLimitReached();
         } catch (\Exception $e) {
             // Log error but don't block authentication if rate limiter fails
-            $this->logger->log(LogLevel::ERROR, 'Rate limiter error: ' . $e->getMessage());
+            $this->logger->log(
+                    LogLevel::ERROR, 'Rate limiter error: ' . $e->getMessage());
             return true;
         }
     }
@@ -1012,17 +1094,21 @@ final class AuthController
         ];
 
         foreach ($ipHeaders as $header) {
-            if (!empty($serverParams[$header]) && is_string($serverParams[$header])) {
+            if (!empty($serverParams[$header])
+                    && is_string($serverParams[$header])) {
                 $ip = trim($serverParams[$header]);
 
-                // Handle comma-separated IPs (X-Forwarded-For can contain multiple IPs)
+                // Handle comma-separated IPs
+                // (X-Forwarded-For can contain multiple IPs)
                 if (str_contains($ip, ',')) {
                     $ips = explode(',', $ip);
                     $ip = trim($ips[0]); // Use the first IP
                 }
 
                 // Validate IP address format
-                if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+                if (filter_var($ip,
+                        FILTER_VALIDATE_IP,
+                        FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
                     return $ip;
                 }
             }

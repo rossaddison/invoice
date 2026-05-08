@@ -6,7 +6,7 @@ namespace App\Invoice\TaxRate;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\TaxRate;
+use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use App\Invoice\Enum\StoreCoveTaxType;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
 use App\Invoice\Setting\SettingRepository as sR;
@@ -21,7 +21,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class TaxRateController extends BaseController
 {
@@ -33,11 +33,11 @@ final class TaxRateController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->taxRateService = $taxRateService;
     }
 
@@ -45,7 +45,7 @@ final class TaxRateController extends BaseController
      * @param int $page
      * @param TaxRateRepository $taxRateRepository
      */
-    public function index(TaxRateRepository $taxRateRepository, #[Query('page')] int $page = null): \Yiisoft\DataResponse\DataResponse
+    public function index(TaxRateRepository $taxRateRepository, #[Query('page')] ?int $page = null): \Psr\Http\Message\ResponseInterface
     {
         $canEdit = $this->rbac();
         $parameters = [
@@ -54,7 +54,7 @@ final class TaxRateController extends BaseController
             'canEdit' => $canEdit,
             'alert' => $this->alert(),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -66,7 +66,7 @@ final class TaxRateController extends BaseController
     {
         $peppolArrays = new PeppolArrays();
         $taxRate = new TaxRate();
-        $form = new TaxRateForm($taxRate);
+        $form = new TaxRateForm();
         $parameters = [
             'title' => $this->translator->translate('tax.rate.add'),
             'actionName' => 'taxrate/add',
@@ -88,17 +88,9 @@ final class TaxRateController extends BaseController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('__form', $parameters);
+        return $this->webViewRenderer->render('__form', $parameters);
     }
 
-    /**
-     * @param Request $request
-     * @param CurrentRoute $currentRoute
-     * @param SettingRepository $settingRepository
-     * @param TaxRateRepository $taxrateRepository
-     * @param FormHydrator $formHydrator
-     * @return Response
-     */
     public function edit(
         Request $request,
         CurrentRoute $currentRoute,
@@ -108,11 +100,11 @@ final class TaxRateController extends BaseController
         $taxRate = $this->taxRate($currentRoute, $taxRateRepository);
         $peppolArrays = new PeppolArrays();
         if ($taxRate) {
-            $form = new TaxRateForm($taxRate);
+            $form = TaxRateForm::show($taxRate);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'taxrate/edit',
-                'actionArguments' => ['tax_rate_id' => $taxRate->getTaxRateId()],
+                'actionArguments' => ['tax_rate_id' => $taxRate->reqId()],
                 'form' => $form,
                 'errors' => [],
                 'optionsDataPeppolTaxRateCode' => $this->optionsDataPeppolTaxRateCode($peppolArrays->getUncl5305()),
@@ -130,7 +122,7 @@ final class TaxRateController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('__form', $parameters);
+            return $this->webViewRenderer->render('__form', $parameters);
         }
         return $this->webService->getRedirectResponse('taxrate/index');
     }
@@ -162,20 +154,20 @@ final class TaxRateController extends BaseController
     public function view(
         CurrentRoute $currentRoute,
         TaxRateRepository $taxRateRepository,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $taxRate = $this->taxRate($currentRoute, $taxRateRepository);
         $peppolArrays = new PeppolArrays();
         if ($taxRate) {
-            $form = new TaxRateForm($taxRate);
+            $form = TaxRateForm::show($taxRate);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'taxrate/view',
-                'actionArguments' => ['tax_rate_id' => $taxRate->getTaxRateId()],
+                'actionArguments' => ['tax_rate_id' => $taxRate->reqId()],
                 'form' => $form,
                 'optionsDataPeppolTaxRateCode' => $this->optionsDataPeppolTaxRateCode($peppolArrays->getUncl5305()),
                 'optionsDataStoreCoveTaxType' => $this->optionsDataStoreCoveTaxType(),
             ];
-            return $this->viewRenderer->render('__view', $parameters);
+            return $this->webViewRenderer->render('__view', $parameters);
         }
         return $this->webService->getRedirectResponse('taxrate/index');
     }
@@ -202,7 +194,7 @@ final class TaxRateController extends BaseController
     {
         $tax_rate_id = $currentRoute->getArgument('tax_rate_id');
         if (null !== $tax_rate_id) {
-            return $taxRateRepository->repoTaxRatequery($tax_rate_id);
+            return $taxRateRepository->repoTaxRatequery((int) $tax_rate_id);
         }
         return null;
     }
@@ -226,8 +218,9 @@ final class TaxRateController extends BaseController
         $optionsDataPeppolTaxRateCode = [];
         /**
          * @var array $value
+         * @psalm-suppress UnusedVariable $value
          */
-        foreach ($peppolTaxRateCodeArray as $key => $value) {
+        foreach ($peppolTaxRateCodeArray as $value) {
             /**
              * @var string $value['Id']
              * @var string $value['Name']
@@ -244,7 +237,7 @@ final class TaxRateController extends BaseController
     private function optionsDataStoreCoveTaxType(): array
     {
         $optionsDataStoreCoveTaxType = [];
-        foreach (array_column(StoreCoveTaxType::cases(), 'value') as $key => $value) {
+        foreach (array_column(StoreCoveTaxType::cases(), 'value') as $value) {
             $optionsDataStoreCoveTaxType[$value] = str_replace('_', ' ', ucfirst($value));
         }
         return $optionsDataStoreCoveTaxType;

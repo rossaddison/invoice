@@ -16,11 +16,23 @@ class CountryHelper
      * @param string $cldr
      * @return mixed
      */
-    public function get_country_list(string $cldr): mixed
+    public function getCountryList(string $cldr): mixed
     {
-        $new_aliases = new Aliases(['@helpers' => __DIR__, '@country_list' => '@helpers/Country-list']);
-        $file = $new_aliases->get('@country_list') . DIRECTORY_SEPARATOR . $cldr . DIRECTORY_SEPARATOR . 'country.php';
-        $default_english = $new_aliases->get('@country_list') . DIRECTORY_SEPARATOR . 'en' . DIRECTORY_SEPARATOR . 'country.php';
+        $new_aliases = new Aliases(
+            [
+                '@helpers' => __DIR__,
+                '@country_list' => '@helpers/Country-list'
+            ]);
+        $file = $new_aliases->get('@country_list')
+                . DIRECTORY_SEPARATOR
+                . $cldr
+                . DIRECTORY_SEPARATOR
+                . 'country.php';
+        $default_english = $new_aliases->get('@country_list')
+                . DIRECTORY_SEPARATOR
+                . 'en'
+                . DIRECTORY_SEPARATOR
+                . 'country.php';
         if (file_exists($file)) {
             /**
              * @psalm-suppress UnresolvableInclude
@@ -34,16 +46,17 @@ class CountryHelper
     }
 
     /**
-     * Returns the countryname of a given $countrycode, translated in the language $cldr.
+     * Returns the countryname of a given $countrycode, translated in the
+     * language $cldr.
      *
      * @param string $cldr
      * @param string $countrycode
      * @return string
      */
-    public function get_country_name(string $cldr, string $countrycode): string
+    public function getCountryName(string $cldr, string $countrycode): string
     {
         /** @var array $countries */
-        $countries = $this->get_country_list($cldr);
+        $countries = $this->getCountryList($cldr);
         /** @var string $countries[$countrycode] */
         return $countries[$countrycode] ?? $countrycode;
     }
@@ -53,10 +66,11 @@ class CountryHelper
      * @param string $country_name
      * @return string
      */
-    public function get_country_identification_code_with_country_list(string $cldr, string $country_name): string
+    public function getCountryIdentificationCodeWithCountryList(
+                                    string $cldr, string $country_name): string
     {
         /** @var array $countries */
-        $countries = $this->get_country_list($cldr);
+        $countries = $this->getCountryList($cldr);
         /**
          * @var array $key
          * @var string $value
@@ -74,10 +88,11 @@ class CountryHelper
      * @param string $name
      * @return string
      */
-    public function get_country_identification_code_with_league(string $name): string
+    public function getCountryIdentificationCodeWithLeague(
+        string $name): string
     {
         //https://github.com/thephpleague/iso3166
-        $data = (new ISO3166())->name($name);
+        $data =  new ISO3166()->name($name);
         // return the 2-letter country code
         /** @var string $data['alpha2'] */
         return !empty($data['alpha2']) ? $data['alpha2'] : '';

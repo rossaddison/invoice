@@ -6,7 +6,7 @@ namespace App\Invoice\PaymentMethod;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\PaymentMethod;
+use App\Infrastructure\Persistence\PaymentMethod\PaymentMethod;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
 use App\Service\WebControllerService;
@@ -18,7 +18,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class PaymentMethodController extends BaseController
 {
@@ -30,28 +30,35 @@ final class PaymentMethodController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->paymentmethodService = $paymentmethodService;
     }
 
     /**
-     * @param PaymentMethodRepository $paymentmethodRepository
      * @param Request $request
-     * @param PaymentMethodService $service
+     * @param CurrentRoute $currentRoute
+     * @param PaymentMethodRepository $paymentmethodRepository
      */
-    public function index(PaymentMethodRepository $paymentmethodRepository, Request $request, PaymentMethodService $service): \Yiisoft\DataResponse\DataResponse
+    public function index(Request $request, CurrentRoute $currentRoute, PaymentMethodRepository $paymentmethodRepository): Response
     {
         $canEdit = $this->rbac();
+        if ($canEdit instanceof Response) {
+            return $canEdit;
+        }
+        $page = (int) $currentRoute->getArgument('page', '1');
+        $currentPageNeverZero = $page > 0 ? $page : 1;
+        $query_params = $request->getQueryParams();
         $parameters = [
-            'canEdit' => $canEdit,
             'payment_methods' => $this->paymentmethods($paymentmethodRepository),
             'alert' => $this->alert(),
+            'page' => $currentPageNeverZero,
+            'sortString' => $query_params['sort'] ?? '-id',
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -61,7 +68,7 @@ final class PaymentMethodController extends BaseController
      */
     public function add(Request $request, FormHydrator $formHydrator): Response
     {
-        $form = new PaymentMethodForm(new PaymentMethod());
+        $form = new PaymentMethodForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'paymentmethod/add',
@@ -81,7 +88,7 @@ final class PaymentMethodController extends BaseController
             $parameters['form'] = $form;
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -99,11 +106,11 @@ final class PaymentMethodController extends BaseController
     ): Response {
         $payment_method = $this->paymentmethod($currentRoute, $paymentmethodRepository);
         if ($payment_method) {
-            $form = new PaymentMethodForm($payment_method);
+            $form = PaymentMethodForm::show($payment_method);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'paymentmethod/edit',
-                'actionArguments' => ['id' => $payment_method->getId()],
+                'actionArguments' => ['id' => $payment_method->reqId()],
                 'errors' => [],
                 'form' => $form,
             ];
@@ -118,7 +125,7 @@ final class PaymentMethodController extends BaseController
                 $parameters['form'] = $form;
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         } // if payment_method
         return $this->webService->getRedirectResponse('paymentmethod/index');
     }
@@ -149,53 +156,48 @@ final class PaymentMethodController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param PaymentMethodRepository $paymentmethodRepository
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return Response
      */
-    public function view(CurrentRoute $currentRoute, PaymentMethodRepository $paymentmethodRepository): \Yiisoft\DataResponse\DataResponse|Response
+    public function view(CurrentRoute $currentRoute, PaymentMethodRepository $paymentmethodRepository): Response
     {
         $payment_method = $this->paymentmethod($currentRoute, $paymentmethodRepository);
-        $parameters = [];
         if ($payment_method) {
-            $form = new PaymentMethodForm($payment_method);
+            $form = PaymentMethodForm::show($payment_method);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'paymentmethod/view',
-                'actionArguments' => ['id' => $payment_method->getId()],
+                'actionArguments' => ['id' => $payment_method->reqId()],
                 'form' => $form,
-                'paymentmethod' => $paymentmethodRepository->repoPaymentMethodquery($payment_method->getId()),
+                'paymentmethod' =>
+                    $paymentmethodRepository->repoPaymentMethodquery(
+                            $payment_method->reqId()),
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('paymentmethod/index');
     }
 
-    /**
-     * @return Response|true
-     */
     private function rbac(): bool|Response
     {
         $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('permission'));
+            $this->flashMessage('warning',
+                    $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('paymentmethod/index');
         }
         return $canEdit;
     }
 
     /**
-     * @param CurrentRoute $currentRoute
-     * @param PaymentMethodRepository $paymentmethodRepository
+     * @param CurrentRoute $curR
+     * @param PaymentMethodRepository $pmR
      * @return PaymentMethod|null
      */
     private function paymentmethod(
-        CurrentRoute $currentRoute,
-        PaymentMethodRepository $paymentmethodRepository,
+        CurrentRoute $curR,
+        PaymentMethodRepository $pmR,
     ): ?PaymentMethod {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $paymentmethodRepository->repoPaymentMethodquery($id);
-        }
-        return null;
+        return $pmR->repoPaymentMethodquery((int) $curR->getArgument('id'));
     }
 
     /**

@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderItem;
 
-use App\Invoice\Entity\SalesOrderItem as SoItem;
+use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem as SoItem;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
 
 final class SalesOrderItemForm extends FormModel
 {
-    private ?string $id = '';
-    private ?string $so_id = '';
     #[Length(min: 0, max: 50, skipOnEmpty: true)]
     private ?string $peppol_po_itemid = '';
     #[Length(min: 0, max: 50, skipOnEmpty: true)]
@@ -20,9 +18,8 @@ final class SalesOrderItemForm extends FormModel
 
     #[Required]
     private ?string $tax_rate_id = '';
-
-    #[Required]
     private ?string $product_id = '';
+    private ?string $task_id = '';
     private mixed $date_added = '';
     #[Length(min: 0, max: 200, skipOnEmpty: true)]
     private ?string $name = '';
@@ -38,68 +35,67 @@ final class SalesOrderItemForm extends FormModel
     #[Required]
     private ?float $discount_amount = null;
 
-    #[Required]
-    private ?float $charge_amount = null;
-
     private ?int $order = null;
     #[Length(min: 0, max: 50, skipOnEmpty: true)]
     private ?string $product_unit = '';
 
-    #[Required]
     private ?int $product_unit_id = null;
 
-    public function __construct(SoItem $salesOrderItem)
+    private ?string $so_id = null;
+    
+    public static function show(
+        SoItem $salesOrderItem,
+        ?string $so_id): self
     {
-        $this->id = $salesOrderItem->getId();
-
-        //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-BuyersItemIdentification/
-        $this->peppol_po_itemid = $salesOrderItem->getPeppol_po_itemid();
-
+        $form = new self();
+        $form->so_id = $so_id;
+//https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-BuyersItemIdentification/
+        $form->peppol_po_itemid = $salesOrderItem->getPeppolPoItemid();
         //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-OrderLineReference/
-        $this->peppol_po_lineid = $salesOrderItem->getPeppol_po_lineid();
-
-        $this->date_added = $salesOrderItem->getDate_added();
-        $this->name = $salesOrderItem->getName();
-        $this->description = $salesOrderItem->getDescription();
-        $this->quantity = $salesOrderItem->getQuantity();
-        $this->price = $salesOrderItem->getPrice();
-        $this->discount_amount = $salesOrderItem->getDiscount_amount();
-        $this->order = $salesOrderItem->getOrder();
-        $this->product_unit = $salesOrderItem->getProduct_unit();
-        $this->so_id = $salesOrderItem->getSales_order_id();
-        $this->tax_rate_id = $salesOrderItem->getTax_rate_id();
-        $this->product_id = $salesOrderItem->getProduct_id();
-        $this->product_unit_id = (int) $salesOrderItem->getProduct_unit_id();
+        $form->peppol_po_lineid = $salesOrderItem->getPeppolPoLineid();
+        $form->name = $salesOrderItem->getName();
+        $form->description = $salesOrderItem->getDescription();
+        $form->quantity = $salesOrderItem->getQuantity();
+        $form->price = $salesOrderItem->getPrice();
+        $form->discount_amount = $salesOrderItem->getDiscountAmount();
+        $form->order = $salesOrderItem->getOrder();
+        $form->product_unit = $salesOrderItem->getProductUnit();
+        $form->tax_rate_id = (string) $salesOrderItem->getTaxRateId();
+        $form->product_id = (string) $salesOrderItem->getProduct()?->reqId();
+        $form->task_id = (string) $salesOrderItem->getTask()?->reqId();
+        $form->product_unit_id = $salesOrderItem->getProductUnitId();
+        $form->date_added = $salesOrderItem->getDateAdded();
+        return $form;
     }
 
-    public function getId(): ?string
-    {
-        return $this->id;
-    }
-
-    public function getSo_id(): ?string
+    public function getSoId(): ?string
     {
         return $this->so_id;
     }
 
-    public function getPeppol_po_itemid(): ?string
+    public function getPeppolPoItemid(): ?string
     {
         return $this->peppol_po_itemid;
     }
 
-    public function getPeppol_po_lineid(): ?string
+    public function getPeppolPoLineid(): ?string
     {
         return $this->peppol_po_lineid;
     }
 
-    public function getTax_rate_id(): ?string
+    public function getTaxRateId(): ?string
     {
         return $this->tax_rate_id;
     }
 
-    public function getProduct_id(): ?string
+    public function getProductId(): ?string
     {
         return $this->product_id;
+    }
+
+    public function getTaskId(): ?string
+    {
+        return $this->task_id;
     }
 
     public function getName(): ?string
@@ -122,14 +118,9 @@ final class SalesOrderItemForm extends FormModel
         return $this->price;
     }
 
-    public function getDiscount_amount(): ?float
+    public function getDiscountAmount(): ?float
     {
         return $this->discount_amount;
-    }
-
-    public function getCharge_amount(): ?float
-    {
-        return $this->charge_amount;
     }
 
     public function getOrder(): ?int
@@ -137,12 +128,12 @@ final class SalesOrderItemForm extends FormModel
         return $this->order;
     }
 
-    public function getProduct_unit(): ?string
+    public function getProductUnit(): ?string
     {
         return $this->product_unit;
     }
 
-    public function getProduct_unit_id(): ?int
+    public function getProductUnitId(): ?int
     {
         return $this->product_unit_id;
     }

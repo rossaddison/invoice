@@ -4,23 +4,53 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderTaxRate;
 
-use App\Invoice\Entity\SalesOrderTaxRate;
+use App\Infrastructure\Persistence\SalesOrderTaxRate\SalesOrderTaxRate;
+use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
+use App\Invoice\TaxRate\TaxRateRepository as TRR;
 
 final readonly class SalesOrderTaxRateService
 {
-    public function __construct(private SalesOrderTaxRateRepository $repository) {}
+    public function __construct(
+        private SalesOrderTaxRateRepository $repository,
+        private SOR $soR,
+        private TRR $trR,
+    ) {
+    }
+
+    private function persist(
+        SalesOrderTaxRate $model,
+        array $array
+    ): void {
+        $sales_order = $this->soR->repoSalesOrderUnLoadedquery(
+            (int) $array['sales_order_id']
+        );
+        if ($sales_order) {
+            $model->setSalesOrder($sales_order);
+            $model->setSalesOrderId($sales_order->reqId());
+        }
+        $tax_rate = $this->trR->repoTaxRatequery((int) $array['tax_rate_id']
+        );
+        if ($tax_rate) {
+            $model->setTaxRate($tax_rate);
+            $model->setTaxRateId($tax_rate->reqId());
+        }
+    }
 
     /**
      * @param SalesOrderTaxRate $model
      * @param array $array
      */
-    public function saveSoTaxRate(SalesOrderTaxRate $model, array $array): void
-    {
-        isset($array['so_id']) ? $model->setSo_id((int) $array['so_id']) : '';
-        isset($array['tax_rate_id']) ? $model->setTax_rate_id((int) $array['tax_rate_id']) : '';
-        $model->setInclude_item_tax((int) $array['include_item_tax'] ?: 0);
-        $model->setSo_tax_rate_amount((float) $array['so_tax_rate_amount'] ?: 0.00);
-
+    public function saveSoTaxRate(
+        SalesOrderTaxRate $model,
+        array $array
+    ): void {
+        $this->persist($model, $array);
+        $model->setIncludeItemTax(
+            (int) $array['include_item_tax'] ?: 0
+        );
+        $model->setSalesOrderTaxRateAmount(
+            (float) $array['sales_order_tax_rate_amount'] ?: 0.00
+        );
         $this->repository->save($model);
     }
 

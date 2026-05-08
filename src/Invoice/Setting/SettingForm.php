@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Setting;
 
-use App\Invoice\Entity\Setting;
+use App\Infrastructure\Persistence\Setting\Setting;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
@@ -18,18 +18,20 @@ final class SettingForm extends FormModel
     #[Length(min: 0, max: 191)]
     private ?string $setting_value = null;
 
-    public function __construct(Setting $setting)
+    public static function show(Setting $setting): self
     {
-        $this->setting_key = $setting->getSetting_key();
-        $this->setting_value = $setting->getSetting_value();
+        $form = new self();
+        $form->setting_key = $setting->getSettingKey();
+        $form->setting_value = $setting->getSettingValue();
+        return $form;
     }
 
-    public function getSetting_key(): ?string
+    public function getSettingKey(): ?string
     {
         return $this->setting_key;
     }
 
-    public function getSetting_value(): ?string
+    public function getSettingValue(): ?string
     {
         return $this->setting_value;
     }

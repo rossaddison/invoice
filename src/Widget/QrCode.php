@@ -9,14 +9,14 @@ use chillerlan\QRCode\QRCode as ChillQrCode;
 
 final class QrCode
 {
-    public static function absoluteUrl(string $absoluteUrl = null, string $directions = '', int $pixels = 40): void
+    public static function absoluteUrl(?string $absoluteUrl = null, string $directions = '', int $pixels = 40): void
     {
         /**
          * @var float|int|string $qrCode
          */
-        $qrCode = (new ChillQrCode())->render($absoluteUrl);
+        $qrCode =  new ChillQrCode()->render($absoluteUrl);
         printf(
-            Img::tag()
+             new Img()
             ->addAttributes(['data-bs-toggle' => 'tooltip', 'title' => $directions])
             ->width($pixels)
             ->height($pixels)

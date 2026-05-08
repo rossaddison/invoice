@@ -29,7 +29,7 @@ if ($invEdit && $invView) {
 <div class="panel panel-default no-margin">
     <div class="panel-heading">
         <b>
-            <?= I::tag()
+            <?=  new I()
                ->addClass('bi bi-info-circle')
                ->addAttributes([
                    'tooltip' => 'data-bs-toggle',
@@ -37,18 +37,18 @@ if ($invEdit && $invView) {
                ])
                ->content(' ' . $translator->translate('attachments'));
 ?>
-        </b>    
+        </b>
     </div>
     <div class="panel-body clearfix">
         <div class="container">
-            <?php if ($invView && $invEdit) { ?> 
+            <?php if ($invView && $invEdit) { ?>
             <?= Html::openTag('div', ['class' => 'row']); ?>
                 <div>
                     <div>
                         <h5><?= Html::encode($title) ?></h5>
                     </div>
                     <div>
-                        <?= Form::tag()
+                        <?=  new Form()
                 ->post($urlGenerator->generate($actionName, $actionArguments))
                 ->enctypeMultipartFormData()
                 ->csrf($csrf)
@@ -72,13 +72,13 @@ if ($invEdit && $invView) {
                         [
                             $translator->translate('layout.submit'),
                             'type' => 'submit',
-                            'title' => 'actions: inv/view_partial_inv_attachments and inv/attachment',
+                            'title' => 'actions: inv/viewPartialInvAttachments and inv/attachment',
                             'tooltip' => 'data-bs-toggle',
                             'class' => 'btn btn-sm btn-primary',
                             'name' => 'contact-button',
                         ],
                     ]) ?>
-                        <?= Form::tag()->close() ?>
+                        <?=  new Form()->close() ?>
                     </div>
                 </div>
             </div>

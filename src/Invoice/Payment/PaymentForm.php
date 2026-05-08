@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\Payment;
 
-use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\Payment;
+use App\Infrastructure\Persistence\{
+    Inv\Inv, Payment\Payment
+};
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Rule\GreaterThan;
@@ -15,7 +16,6 @@ final class PaymentForm extends FormModel
 {
     #[Required]
     private ?int $payment_method_id = null;
-
     private mixed $payment_date = '';
     #[GreaterThan(0)]
     private ?float $amount = null;
@@ -25,22 +25,24 @@ final class PaymentForm extends FormModel
     private ?int $inv_id = null;
     private ?Inv $inv = null;
 
-    public function __construct(Payment $payment)
+    public static function show(Payment $payment): self
     {
-        $this->payment_method_id = (int) $payment->getPayment_method_id();
-        $this->payment_date = $payment->getPayment_date();
-        $this->amount = $payment->getAmount();
-        $this->note = $payment->getNote();
-        $this->inv_id = (int) $payment->getInv_id();
-        $this->inv = $payment->getInv();
+        $form = new self();
+        $form->payment_method_id = $payment->reqPaymentMethodId();
+        $form->payment_date = $payment->getPaymentDate();
+        $form->amount = $payment->getAmount();
+        $form->note = $payment->getNote();
+        $form->inv_id = $payment->reqInvId();
+        $form->inv = $payment->getInv();
+        return $form;
     }
 
-    public function getPayment_method_id(): ?int
+    public function getPaymentMethodId(): ?int
     {
         return $this->payment_method_id;
     }
 
-    public function getPayment_date(): string|DateTimeImmutable|null
+    public function getPaymentDate(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string|null $this->payment_date
@@ -58,7 +60,7 @@ final class PaymentForm extends FormModel
         return $this->note;
     }
 
-    public function getInv_id(): ?int
+    public function getInvId(): ?int
     {
         return $this->inv_id;
     }

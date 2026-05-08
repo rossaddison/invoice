@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Client;
 
 use Cycle\ORM\Select;
-use App\Invoice\Entity\Client;
+use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\UserClient\UserClientRepository;
 use Cycle\Database\Injection\Parameter;
 use Throwable;
@@ -109,12 +109,8 @@ final class ClientRepository extends Select\Repository
                 ->withOrder(['id' => 'asc']),
         );
     }
-
-    /**
-     * @param string $id
-     * @return int
-     */
-    public function repoClientCount(string $id): int
+    
+    public function repoClientCount(int $id): int
     {
         return $this->select()
                       ->where(['id' => $id])
@@ -126,7 +122,7 @@ final class ClientRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoClientquery_orig(string $id): ?Client
+    public function repoClientqueryOrig(int $id): ?Client
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -138,7 +134,7 @@ final class ClientRepository extends Select\Repository
      *
      * @psalm-return TEntity
      */
-    public function repoClientquery(string $id): Client
+    public function repoClientquery(int $id): Client
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -181,32 +177,36 @@ final class ClientRepository extends Select\Repository
     public function optionsData(UserClientRepository $ucR): array
     {
         $optionsData = [];
-        if (!$ucR->getClients_with_user_accounts() == []) {
+        if (!$ucR->getClientsWithUserAccounts() == []) {
             /**
              * @var Client $client
              */
-            foreach ($this->repoUserClient($ucR->getClients_with_user_accounts()) as $client) {
-                $optionsData[(int) $client->getClient_id()] = ($client->getClient_name() ?: '??') . str_repeat(' ', 3) . ($client->getClient_surname() ?? '??');
+            foreach ($this->repoUserClient($ucR->getClientsWithUserAccounts())
+                    as $client) {
+                $optionsData[$client->reqId()] = ($client->getClientName()
+                    ?: '??')
+                        . str_repeat(' ', 3)
+                        . ($client->getClientSurname() ?? '??');
             }
         }
         return $optionsData;
     }
 
-    public function filter_client_name(string $client_name): EntityReader
+    public function filterClientName(string $client_name): EntityReader
     {
         $select = $this->select();
         $query = $select->where(['client_name' => ltrim(rtrim($client_name))]);
         return $this->prepareDataReader($query);
     }
 
-    public function filter_client_surname(string $client_surname): EntityReader
+    public function filterClientSurname(string $client_surname): EntityReader
     {
         $select = $this->select();
         $query = $select->where(['client_surname' => ltrim(rtrim($client_surname))]);
         return $this->prepareDataReader($query);
     }
 
-    public function filter_client_name_surname(string $client_name, string $client_surname): EntityReader
+    public function filterClientNameSurname(string $client_name, string $client_surname): EntityReader
     {
         $select = $this->select();
         $query = $select->where(['client_name' => ltrim(rtrim($client_name))])

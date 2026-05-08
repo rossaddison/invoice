@@ -9,7 +9,9 @@ use Yiisoft\Translator\TranslatorInterface;
 
 final class PeppolSalesOrderNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
-    public function __construct(private readonly TranslatorInterface $translator) {}
+    public function __construct(private readonly TranslatorInterface $translator)
+    {
+    }
 
     #[\Override]
     public function getName(): string

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvItemAllowanceCharge;
 
-use App\Invoice\Entity\InvItemAllowanceCharge;
+use App\Infrastructure\Persistence\InvItemAllowanceCharge\InvItemAllowanceCharge;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -90,10 +90,10 @@ final class InvItemAllowanceChargeRepository extends Select\Repository
 
     /**
      * All item allowances or charges for this invoice
-     * @param string $inv_id
+     * @param int $inv_id
      * @return EntityReader
      */
-    public function repoACIquery(string $inv_id): EntityReader
+    public function repoACIquery(int $inv_id): EntityReader
     {
         $query = $this->select()
                       ->where(['inv_id' => $inv_id]);
@@ -101,11 +101,11 @@ final class InvItemAllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @psalm-return TEntity|null
      * @return InvItemAllowanceCharge|null
      */
-    public function repoInvItemAllowanceChargequery(string $id): ?InvItemAllowanceCharge
+    public function repoInvItemAllowanceChargequery(int $id): ?InvItemAllowanceCharge
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -113,10 +113,10 @@ final class InvItemAllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return int
      */
-    public function repoCount(string $id): int
+    public function repoCount(int $id): int
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -124,10 +124,10 @@ final class InvItemAllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @param string $inv_id
+     * @param int $inv_id
      * @return int
      */
-    public function repoInvCount(string $inv_id): int
+    public function repoInvCount(int $inv_id): int
     {
         $query = $this->select()
                       ->where(['inv_id' => $inv_id]);
@@ -135,10 +135,10 @@ final class InvItemAllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @param string $inv_item_id
+     * @param int $inv_item_id
      * @return int
      */
-    public function repoInvItemCount(string $inv_item_id): int
+    public function repoInvItemCount(int $inv_item_id): int
     {
         $query = $this->select()
                       ->where(['inv_item_id' => $inv_item_id]);
@@ -147,10 +147,10 @@ final class InvItemAllowanceChargeRepository extends Select\Repository
 
     /**
      * All allowances and charges for this invoice item
-     * @param string $inv_item_id
+     * @param int $inv_item_id
      * @return EntityReader
      */
-    public function repoInvItemquery(string $inv_item_id): EntityReader
+    public function repoInvItemquery(int $inv_item_id): EntityReader
     {
         $query = $this->select()
                       ->load('allowance_charge')
@@ -164,7 +164,7 @@ final class InvItemAllowanceChargeRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoInvItemOriginalquery(string $inv_item_id): ?InvItemAllowanceCharge
+    public function repoInvItemOriginalquery(int $inv_item_id): ?InvItemAllowanceCharge
     {
         $query = $this->select()
                       ->load('allowance_charge')

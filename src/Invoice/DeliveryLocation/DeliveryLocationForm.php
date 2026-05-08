@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\DeliveryLocation;
 
-use App\Invoice\Entity\DeliveryLocation;
+use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
@@ -12,8 +12,8 @@ use DateTimeImmutable;
 
 final class DeliveryLocationForm extends FormModel
 {
-    private readonly DateTimeImmutable $date_created;
-    private readonly DateTimeImmutable $date_modified;
+    private mixed $date_created = '';
+    private mixed $date_modified = '';
 
     #[Required]
     private ?string $client_id = '';
@@ -49,37 +49,52 @@ final class DeliveryLocationForm extends FormModel
 
     #[Length(min: 0, max: 4, skipOnEmpty: true)]
     private ?string $electronic_address_scheme = '';
-
-    public function __construct(DeliveryLocation $del)
+    
+    public static function show(DeliveryLocation $del): self
     {
-        $this->date_created = $del->getDate_created();
-        $this->date_modified = $del->getDate_modified();
-        $this->client_id = $del->getClient_id();
-        $this->name = $del->getName();
-        $this->building_number = $del->getBuildingNumber();
-        $this->address_1 = $del->getAddress_1();
-        $this->address_2 = $del->getAddress_2();
-        $this->city = $del->getCity();
-        $this->state = $del->getState();
-        $this->zip = $del->getZip();
-        $this->country = $del->getCountry();
+        $form = new self();
+        $form->date_created = $del->getDateCreated();
+        $form->date_modified = $del->getDateModified();
+        $form->client_id = (string) $del->reqClientId();
+        $form->name = $del->getName();
+        $form->building_number = $del->getBuildingNumber();
+        $form->address_1 = $del->getAddress1();
+        $form->address_2 = $del->getAddress2();
+        $form->city = $del->getCity();
+        $form->state = $del->getState();
+        $form->zip = $del->getZip();
+        $form->country = $del->getCountry();
         // 13 digit code
-        $this->global_location_number = $del->getGlobal_location_number();
+        $form->global_location_number = $del->getGlobalLocationNumber();
         // the key of the array is saved
-        $this->electronic_address_scheme = $del->getElectronic_address_scheme();
+        $form->electronic_address_scheme = $del->getElectronicAddressScheme();
+        return $form;
     }
-
-    public function getDate_created(): DateTimeImmutable
+    
+    public function getDateCreated(): DateTimeImmutable
     {
-        return $this->date_created;
+        
+        if ($this->date_created instanceof DateTimeImmutable) {
+            return $this->date_created;
+        }
+        if (is_string($this->date_created) && $this->date_created !== '') {
+            return new DateTimeImmutable($this->date_created);
+        }
+        return new DateTimeImmutable('now');
     }
 
-    public function getDate_modified(): DateTimeImmutable
+    public function getDateModified(): DateTimeImmutable
     {
-        return $this->date_modified;
+        if ($this->date_modified instanceof DateTimeImmutable) {
+            return $this->date_modified;
+        }
+        if (is_string($this->date_modified) && $this->date_modified !== '') {
+            return new DateTimeImmutable($this->date_modified);
+        }
+        return new DateTimeImmutable('now');
     }
 
-    public function getClient_id(): ?string
+    public function getClientId(): ?string
     {
         return $this->client_id;
     }
@@ -94,12 +109,12 @@ final class DeliveryLocationForm extends FormModel
         return $this->building_number;
     }
 
-    public function getAddress_1(): ?string
+    public function getAddress1(): ?string
     {
         return $this->address_1;
     }
 
-    public function getAddress_2(): ?string
+    public function getAddress2(): ?string
     {
         return $this->address_2;
     }
@@ -124,12 +139,12 @@ final class DeliveryLocationForm extends FormModel
         return $this->country;
     }
 
-    public function getGlobal_location_number(): ?string
+    public function getGlobalLocationNumber(): ?string
     {
         return $this->global_location_number;
     }
 
-    public function getElectronic_address_scheme(): ?string
+    public function getElectronicAddressScheme(): ?string
     {
         return $this->electronic_address_scheme;
     }

@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\PaymentInformation\Service;
 
-use App\Invoice\Entity\Inv;
-use App\Invoice\Libraries\Crypt;
+use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\Setting\SettingRepository;
 use Braintree\Gateway;
 use Braintree\CustomerGateway;
@@ -21,11 +20,8 @@ class BraintreePaymentService
 {
     public function __construct(
         private readonly SettingRepository $settings,
-        private readonly Crypt $crypt,
         private readonly LoggerInterface $logger,
-        private string $salt,
     ) {
-        $this->salt = (new Crypt())->salt();
     }
 
     /**
@@ -51,11 +47,11 @@ class BraintreePaymentService
     {
         $gateway = $this->createGateway();
         $customerGateway = new CustomerGateway($gateway);
-        $clientId = $invoice->getClient_id();
+        $clientId = $invoice->reqClientId();
 
         try {
             // Try to find existing customer
-            $customerGateway->find($clientId);
+            $customerGateway->find((string) $clientId);
             $this->logger->info('Braintree customer found', ['client_id' => $clientId]);
             return true;
         } catch (\Braintree\Exception\NotFound $e) {
@@ -65,9 +61,9 @@ class BraintreePaymentService
             try {
                 $result = $customerGateway->create([
                     'id' => $clientId,
-                    'firstName' => $invoice->getClient()?->getClient_name(),
-                    'lastName' => $invoice->getClient()?->getClient_surname(),
-                    'email' => $invoice->getClient()?->getClient_email(),
+                    'firstName' => $invoice->getClient()?->getClientName(),
+                    'lastName' => $invoice->getClient()?->getClientSurname(),
+                    'email' => $invoice->getClient()?->getClientEmail(),
                 ]);
 
                 if ($result->success) {
@@ -199,7 +195,7 @@ class BraintreePaymentService
     public function getMerchantId(): string
     {
         $merchantId = $this->settings->getSetting('gateway_braintree_merchantId');
-        return (string) $this->crypt->decode($merchantId ?: '');
+        return (string) $this->settings->decode($merchantId ?: '');
     }
 
     /**
@@ -207,7 +203,8 @@ class BraintreePaymentService
      */
     public function getEnvironment(): string
     {
-        return $this->settings->getSetting('gateway_braintree_sandbox') === '1' ? 'sandbox' : 'production';
+        return $this->settings->getSetting('gateway_braintree_sandbox') === '1'
+                      ? 'sandbox' : 'production';
     }
 
     /**
@@ -216,7 +213,7 @@ class BraintreePaymentService
     private function getPublicKey(): string
     {
         $publicKey = $this->settings->getSetting('gateway_braintree_publicKey');
-        return (string) $this->crypt->decode($publicKey ?: '');
+        return (string) $this->settings->decode($publicKey ?: '');
     }
 
     /**
@@ -225,7 +222,7 @@ class BraintreePaymentService
     private function getPrivateKey(): string
     {
         $privateKey = $this->settings->getSetting('gateway_braintree_privateKey');
-        return (string) $this->crypt->decode($privateKey ?: '');
+        return (string) $this->settings->decode($privateKey ?: '');
     }
 
     /**

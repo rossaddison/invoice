@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Invoice\Generator;
 
-use App\Invoice\Entity\Gentor;
+use App\Infrastructure\Persistence\Gentor\Gentor;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class GeneratorForm extends FormModel
 {
-    private ?int $id = null;
     #[Required]
     private string $route_prefix = '';
     #[Required]
@@ -36,65 +35,67 @@ final class GeneratorForm extends FormModel
     private bool $updated_include = true;
     private bool $deleted_include = true;
 
-    public function __construct(Gentor $generator)
+    public static function show(Gentor $generator): self
     {
-        $this->route_prefix = $generator->getRoute_prefix();
-        $this->route_suffix = $generator->getRoute_suffix();
-        $this->camelcase_capital_name = $generator->getCamelcase_capital_name();
-        $this->small_singular_name = $generator->getSmall_singular_name();
-        $this->small_plural_name = $generator->getSmall_plural_name();
-        $this->namespace_path = $generator->getNamespace_path();
-        $this->controller_layout_dir = $generator->getController_layout_dir();
-        $this->controller_layout_dir_dot_path = $generator->getController_layout_dir_dot_path();
-        $this->pre_entity_table = $generator->getPre_entity_table();
-        $this->flash_include = $generator->isFlash_include();
-        $this->created_include = $generator->isCreated_include();
-        $this->modified_include = $generator->isModified_include();
-        $this->updated_include = $generator->isUpdated_include();
-        $this->deleted_include = $generator->isDeleted_include();
+        $form = new self();
+        $form->route_prefix = $generator->getRoutePrefix();
+        $form->route_suffix = $generator->getRouteSuffix();
+        $form->camelcase_capital_name = $generator->getCamelcaseCapitalName();
+        $form->small_singular_name = $generator->getSmallSingularName();
+        $form->small_plural_name = $generator->getSmallPluralName();
+        $form->namespace_path = $generator->getNamespacePath();
+        $form->controller_layout_dir = $generator->getControllerLayoutDir();
+        $form->controller_layout_dir_dot_path = $generator->getControllerLayoutDirDotPath();
+        $form->pre_entity_table = $generator->getPreEntityTable();
+        $form->flash_include = $generator->isFlashInclude();
+        $form->created_include = $generator->isCreatedInclude();
+        $form->modified_include = $generator->isModifiedInclude();
+        $form->updated_include = $generator->isUpdatedInclude();
+        $form->deleted_include = $generator->isDeletedInclude();
+        return $form;
     }
 
-    public function getRoute_prefix(): string
+    public function getRoutePrefix(): string
     {
         return $this->route_prefix;
     }
 
-    public function getRoute_suffix(): string
+    public function getRouteSuffix(): string
     {
         return $this->route_suffix;
     }
 
-    public function getCamelcase_capital_name(): string
+    public function getCamelcaseCapitalName(): string
     {
         return $this->camelcase_capital_name;
     }
 
-    public function getSmall_singular_name(): string
+    public function getSmallSingularName(): string
     {
         return $this->small_singular_name;
     }
 
-    public function getSmall_plural_name(): string
+    public function getSmallPluralName(): string
     {
         return $this->small_plural_name;
     }
 
-    public function getNamespace_path(): string
+    public function getNamespacePath(): string
     {
         return $this->namespace_path;
     }
 
-    public function getController_layout_dir(): string
+    public function getControllerLayoutDir(): string
     {
         return $this->controller_layout_dir;
     }
 
-    public function getController_layout_dir_dot_path(): string
+    public function getControllerLayoutDirDotPath(): string
     {
         return $this->controller_layout_dir_dot_path;
     }
 
-    public function getPre_entity_table(): string
+    public function getPreEntityTable(): string
     {
         return $this->pre_entity_table;
     }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Task;
 
-use App\Invoice\Entity\Task;
+use App\Infrastructure\Persistence\Task\Task;
 use Cycle\ORM\Select;
 use Throwable;
 use Cycle\Database\Injection\Parameter;
@@ -104,7 +104,7 @@ final class TaskRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoTaskquery(string $id): ?Task
+    public function repoTaskquery(int $id): ?Task
     {
         $query = $this->select()->load('tax_rate')
                                 ->where(['id' => $id]);
@@ -136,10 +136,10 @@ final class TaskRepository extends Select\Repository
     }
 
     /**
-     * @param string $task_id
+     * @param int $task_id
      * @return int
      */
-    public function repoCount(string $task_id): int
+    public function repoCount(int $task_id): int
     {
         return $this->select()
                       ->where(['id' => $task_id])
@@ -155,19 +155,19 @@ final class TaskRepository extends Select\Repository
         return [
             '1' => [
                 'label' => $translator->translate('not.started'),
-                'class' => 'draft',
+                'class' => 'secondary',
             ],
             '2' => [
                 'label' => $translator->translate('in.progress'),
-                'class' => 'viewed',
+                'class' => 'warning',
             ],
             '3' => [
                 'label' => $translator->translate('complete'),
-                'class' => 'sent',
+                'class' => 'success',
             ],
             '4' => [
                 'label' => $translator->translate('invoiced'),
-                'class' => 'paid',
+                'class' => 'primary',
             ],
         ];
     }

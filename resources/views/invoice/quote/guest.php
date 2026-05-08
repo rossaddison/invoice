@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Quote;
+use App\Infrastructure\Persistence\Quote\Quote;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -12,7 +12,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
- * @var App\Invoice\Entity\Quote $quote
+ * @var App\Infrastructure\Persistence\Quote\Quote $quote
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Quote\QuoteRepository $qR
  * @var App\Invoice\QuoteAmount\QuoteAmountRepository $qaR
@@ -34,31 +34,31 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $status
  */
 
-echo $alert;
-
-$toolbarReset = A::tag()
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
+$quoteGuest = 'quote/guest';
+$toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-    ->href($urlGenerator->generate($currentRoute->getName() ?? 'quote/guest'))
+    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
+    ->href($urlGenerator->generate($currentRoute->getName() ?? $quoteGuest))
     ->id('btn-reset')
     ->render();
 
-$toolbar = Div::tag();
+echo new Div();
 
-$statusBar =  Div::tag()
+$statusBar =   new Div()
     ->addClass('btn-group index-options')
     ->content(
         Html::a(
             $translator->translate('all'),
-            $urlGenerator->generate('quote/guest', ['page' => 1, 'status' => 0]),
+            $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 0]),
             [
                 'class' => 'btn ' . ($status == 0 ? 'btn-primary' : 'btn-default'),
             ],
         )
         . Html::a(
             $translator->translate('sent'),
-            $urlGenerator->generate('quote/guest', ['page' => 1, 'status' => 2]),
+            $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 2]),
             [
                 'class' => 'btn ' . ($status == 2 ? 'btn-primary' : 'btn-default'),
                 'style' => 'text-decoration:none',
@@ -66,7 +66,7 @@ $statusBar =  Div::tag()
         )
         . Html::a(
             $translator->translate('viewed'),
-            $urlGenerator->generate('quote/guest', ['page' => 1, 'status' => 3]),
+            $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 3]),
             [
                 'class' => 'btn ' . ($status == 3 ? 'btn-primary' : 'btn-default'),
                 'style' => 'text-decoration:none',
@@ -74,7 +74,7 @@ $statusBar =  Div::tag()
         )
         . Html::a(
             $translator->translate('approved'),
-            $urlGenerator->generate('quote/guest', ['page' => 1, 'status' => 4]),
+            $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 4]),
             [
                 'class' => 'btn ' . ($status == 4 ? 'btn-primary' : 'btn-default'),
                 'style' => 'text-decoration:none',
@@ -82,7 +82,7 @@ $statusBar =  Div::tag()
         )
         . Html::a(
             $translator->translate('rejected'),
-            $urlGenerator->generate('quote/guest', ['page' => 1, 'status' => 5]),
+            $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 5]),
             [
                 'class' => 'btn ' . ($status == 5 ? 'btn-primary' : 'btn-default'),
                 'style' => 'text-decoration:none',
@@ -90,7 +90,7 @@ $statusBar =  Div::tag()
         )
         . Html::a(
             $translator->translate('canceled'),
-            $urlGenerator->generate('quote/guest', ['page' => 1, 'status' => 6]),
+            $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 6]),
             [
                 'class' => 'btn ' . ($status == 6 ? 'btn-primary' : 'btn-default'),
                 'style' => 'text-decoration:none',
@@ -105,7 +105,7 @@ $columns = [
         'id',
         header: $translator->translate('id'),
         content: static function (Quote $model): string {
-            return (string) $model->getId();
+            return (string) $model->reqId();
         },
         withSorting: true,
     ),
@@ -113,12 +113,9 @@ $columns = [
         'status_id',
         header: $translator->translate('status'),
         content: static function (Quote $model) use ($qR): Yiisoft\Html\Tag\CustomTag|string {
-            if (null !== $model->getStatus_id()) {
-                $span = $qR->getSpecificStatusArrayLabel((string) $model->getStatus_id());
-                $class = $qR->getSpecificStatusArrayClass((string) $model->getStatus_id());
-                return Html::tag('span', $span, ['id' => '#quote-guest','class' => 'label ' . $class]);
-            }
-            return '';
+            $span = $qR->getSpecificStatusArrayLabel((string) $model->reqStatusId());
+                $class = $qR->getSpecificStatusArrayClass((string) $model->reqStatusId());
+                return Html::tag('span', $span, ['id' => '#quote-guest','class' => 'badge text-bg-' . $class]);
         },
         encodeContent: false,
         withSorting: true,
@@ -127,7 +124,7 @@ $columns = [
         property: 'filterQuoteNumber',
         header: $translator->translate('quote.number'),
         content: static function (Quote $model) use ($urlGenerator): A {
-            return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('quote/view', ['id' => $model->getId()]), ['style' => 'text-decoration:none']);
+            return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('quote/view', ['id' => $model->reqId()]), ['style' => 'text-decoration:none']);
         },
         encodeContent: false,
         filter: \Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
@@ -136,38 +133,35 @@ $columns = [
     new DataColumn(
         'client_id',
         header: $translator->translate('id'),
-        content: static fn(Quote $model): string => Html::encode($model->getClient()?->getClient_name() ?? ''),
+        content: static fn (Quote $model): string => Html::encode($model->getClient()?->getClientName() ?? ''),
     ),
     new DataColumn(
         'date_created',
         header: $translator->translate('date.created'),
-        content: static fn(Quote $model): string => ($model->getDate_created())->format('Y-m-d'),
+        content: static fn (Quote $model): string => ($model->getDateCreated())->format('Y-m-d'),
         withSorting: true,
     ),
     new DataColumn(
         'date_expires',
-        content: static fn(Quote $model): string => ($model->getDate_expires())->format('Y-m-d'),
+        content: static fn (Quote $model): string => ($model->getDateExpires())->format('Y-m-d'),
         withSorting: true,
     ),
     new DataColumn(
         'date_required',
-        content: static fn(Quote $model): string => ($model->getDate_required())->format('Y-m-d'),
+        content: static fn (Quote $model): string => ($model->getDateRequired())->format('Y-m-d'),
     ),
     new DataColumn(
         'id',
         header: $translator->translate('total'),
         content: static function (Quote $model) use ($s, $qaR): string {
-            $quote_id = $model->getId();
-            if (null !== $quote_id) {
-                $quote_amount = (($qaR->repoQuoteAmountCount($quote_id) > 0) ? $qaR->repoQuotequery($quote_id) : null);
-                return $s->format_currency(null !== $quote_amount ? $quote_amount->getTotal() : 0.00);
-            }
-            return '';
+            $quote_id = $model->reqId();
+            $quote_amount = (($qaR->repoQuoteAmountCount($quote_id) > 0) ? $qaR->repoQuotequery($quote_id) : null);
+            return $s->formatCurrency(null !== $quote_amount ? $quote_amount->getTotal() : 0.00);
         },
     ),
 ];
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -176,10 +170,10 @@ $grid_summary = $s->grid_summary(
 );
 
 $toolbarString
-    = Form::tag()->post($urlGenerator->generate('quote/guest'))->csrf($csrf)->open()
+    =  new Form()->post($urlGenerator->generate('quote/guest'))->csrf($csrf)->open()
     . $statusBar
-    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-    . Form::tag()->close();
+    .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    .  new Form()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
@@ -201,7 +195,7 @@ echo GridView::widget()
 ->id('w7-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate(($editInv ? $pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'quote') : '') . ' ' . $grid_summary)
+->summaryTemplate(($editInv ? $pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'quote') : '') . ' ' . $gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

@@ -9,7 +9,9 @@ use Sabre\Xml\XmlSerializable;
 
 class PaymentTerms implements XmlSerializable
 {
-    public function __construct(private readonly ?string $note) {}
+    public function __construct(private readonly ?string $note)
+    {
+    }
 
     /**
      * Related logic: see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?p=3&q=PaymentTerms

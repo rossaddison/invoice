@@ -6,5 +6,5 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 
 return [
-    Flash::class => static fn(SessionInterface $session) => new Flash($session),
+    Flash::class => static fn (SessionInterface $session) => new Flash($session),
 ];

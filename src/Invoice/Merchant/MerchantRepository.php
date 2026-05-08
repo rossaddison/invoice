@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Merchant;
 
-use App\Invoice\Entity\Merchant;
+use App\Infrastructure\Persistence\Merchant\Merchant;
 // Cycle
 use Cycle\Database\Injection\Parameter;
 use Cycle\ORM\Select;
@@ -87,7 +87,7 @@ final class MerchantRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoMerchantquery(string $id): ?Merchant
+    public function repoMerchantquery(int $id): ?Merchant
     {
         $query = $this->select()->load('inv')
                                 ->where(['id' => $id]);

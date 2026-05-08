@@ -6,6 +6,9 @@ namespace App\Backend\Exception;
 
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 
+/**
+ * @psalm-suppress UnusedClass
+ */
 final class HeaderArrayNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
     /**

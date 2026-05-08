@@ -4,59 +4,54 @@ declare(strict_types=1);
 
 namespace App\Invoice\Delivery;
 
-use App\Invoice\Entity\Delivery;
+use App\Infrastructure\Persistence\Delivery\Delivery;
 use Yiisoft\FormModel\FormModel;
 use DateTimeImmutable;
 
 final class DeliveryForm extends FormModel
 {
-    private readonly mixed $date_created;
-    private readonly mixed $date_modified;
-    private readonly mixed $start_date;
-    private readonly mixed $actual_delivery_date;
-    private readonly mixed $end_date;
-    private ?int $id = null;
+    private mixed $date_created = '';
+    private mixed $date_modified = '';
+    private mixed $start_date = '';
+    private mixed $actual_delivery_date = '';
+    private mixed $end_date = '';
     private ?int $delivery_location_id = null;
     private ?int $delivery_party_id = null;
     private ?int $inv_id = null;
     private ?int $inv_item_id = null;
 
-    public function __construct(Delivery $delivery)
+    public static function show(Delivery $delivery): self
     {
-        $this->id = $delivery->getId();
-        $this->date_created = $delivery->getDate_created();
-        $this->date_modified = $delivery->getDate_modified();
-        $this->start_date = $delivery->getStart_date();
-        $this->actual_delivery_date = $delivery->getActual_delivery_date();
-        $this->end_date = $delivery->getEnd_date();
-        $this->delivery_location_id = (int) $delivery->getDelivery_location_id();
-        $this->delivery_party_id = (int) $delivery->getDelivery_party_id();
-        $this->inv_id = $delivery->getInv_id();
-        $this->inv_item_id = $delivery->getInv_item_id();
+        $form = new self();
+        $form->date_created = $delivery->getDateCreated();
+        $form->date_modified = $delivery->getDateModified();
+        $form->start_date = $delivery->getStartDate();
+        $form->actual_delivery_date = $delivery->getActualDeliveryDate();
+        $form->end_date = $delivery->getEndDate();
+        $form->delivery_location_id = $delivery->hasDeliveryLocationId() ? $delivery->reqDeliveryLocationId() : null;
+        $form->delivery_party_id = $delivery->hasDeliveryPartyId() ? $delivery->reqDeliveryPartyId() : null;
+        $form->inv_id = $delivery->getInvId();
+        $form->inv_item_id = $delivery->getInvItemId();
+        return $form;
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getDate_created(): string|DateTimeImmutable
+    public function getDateCreated(): string|DateTimeImmutable
     {
         /**
          * @var DateTimeImmutable|string $this->date_created
          */
-        return $this->date_created;
-    }
+            return $this->date_created;
+        }
 
-    public function getDate_modified(): string|DateTimeImmutable
+    public function getDateModified(): string|DateTimeImmutable
     {
         /**
          * @var DateTimeImmutable|string $this->date_modified
          */
-        return $this->date_modified;
-    }
+            return $this->date_modified;
+        }
 
-    public function getStart_date(): string|DateTimeImmutable
+    public function getStartDate(): string|DateTimeImmutable
     {
         /**
          * @var DateTimeImmutable|string $this->start_date
@@ -64,7 +59,7 @@ final class DeliveryForm extends FormModel
         return $this->start_date;
     }
 
-    public function getActual_delivery_date(): string|DateTimeImmutable
+    public function getActualDeliveryDate(): string|DateTimeImmutable
     {
         /**
          * @var DateTimeImmutable|string $this->actual_delivery_date
@@ -72,7 +67,7 @@ final class DeliveryForm extends FormModel
         return $this->actual_delivery_date;
     }
 
-    public function getEnd_date(): string|DateTimeImmutable
+    public function getEndDate(): string|DateTimeImmutable
     {
         /**
          * @var DateTimeImmutable|string $this->end_date
@@ -80,22 +75,22 @@ final class DeliveryForm extends FormModel
         return $this->end_date;
     }
 
-    public function getDelivery_location_id(): ?int
+    public function getDeliveryLocationId(): ?int
     {
         return $this->delivery_location_id;
     }
 
-    public function getDelivery_party_id(): ?int
+    public function getDeliveryPartyId(): ?int
     {
         return $this->delivery_party_id;
     }
 
-    public function getInv_id(): ?int
+    public function getInvId(): ?int
     {
         return $this->inv_id;
     }
 
-    public function getInv_item_id(): ?int
+    public function getInvItemId(): ?int
     {
         return $this->inv_item_id;
     }

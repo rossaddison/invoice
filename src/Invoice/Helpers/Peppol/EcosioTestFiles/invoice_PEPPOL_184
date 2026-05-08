@@ -1,0 +1,257 @@
+<?xml version="1.0"?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+ <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+ <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0</cbc:CustomizationID>
+ <cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
+ <cbc:ID>184</cbc:ID>
+ <cbc:IssueDate>2026-01-07</cbc:IssueDate>
+ <cbc:DueDate>2026-02-11</cbc:DueDate>
+ <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
+ <cbc:Note>This is a note</cbc:Note>
+ <cbc:TaxPointDate>2026-01-07</cbc:TaxPointDate>
+ <cbc:DocumentCurrencyCode>USD</cbc:DocumentCurrencyCode>
+ <cbc:BuyerReference>jjjj</cbc:BuyerReference>
+ <cac:InvoicePeriod>
+  <cbc:StartDate>2026-01-01</cbc:StartDate>
+  <cbc:EndDate>2026-01-31</cbc:EndDate>
+ </cac:InvoicePeriod>
+ <cac:OrderReference>
+  <cbc:ID>jjjj</cbc:ID>
+  <cbc:SalesOrderID>91</cbc:SalesOrderID>
+ </cac:OrderReference>
+ <cac:ContractDocumentReference/>
+ <cac:AdditionalDocumentReference>
+  <cbc:ID>INV182</cbc:ID>
+  <cbc:DocumentDescription></cbc:DocumentDescription>
+ </cac:AdditionalDocumentReference>
+ <cac:AccountingSupplierParty>
+  <cac:Party>
+   <cbc:EndpointID schemeID="0088">7300010000001</cbc:EndpointID>
+   <cac:PartyIdentification>
+    <cbc:ID schemeID="0088">5060012349998</cbc:ID>
+   </cac:PartyIdentification>
+   <cac:PartyName>
+    <cbc:Name>MyCompanyName</cbc:Name>
+   </cac:PartyName>
+   <cac:PostalAddress>
+    <cbc:StreetName>Main Street 1</cbc:StreetName>
+    <cbc:AdditionalStreetName>Po Box 351</cbc:AdditionalStreetName>
+    <cbc:CityName>London</cbc:CityName>
+    <cbc:PostalZone>W1G 8LZ</cbc:PostalZone>
+    <cbc:CountrySubentity>Region A</cbc:CountrySubentity>
+    <cac:Country>
+     <cbc:IdentificationCode>GB</cbc:IdentificationCode>
+    </cac:Country>
+   </cac:PostalAddress>
+   <cac:PartyTaxScheme>
+    <cbc:CompanyID>GB999888777</cbc:CompanyID>
+    <cac:TaxScheme>
+     <cbc:ID>VAT</cbc:ID>
+    </cac:TaxScheme>
+   </cac:PartyTaxScheme>
+   <cac:PartyLegalEntity>
+    <cbc:RegistrationName>Full Formal Seller Name LTD.</cbc:RegistrationName>
+    <cbc:CompanyID schemeID="0002">987654321</cbc:CompanyID>
+   </cac:PartyLegalEntity>
+   <cac:Contact>
+    <cbc:Name>Joe Bloggs</cbc:Name>
+    <cbc:Telephone>801 801 801</cbc:Telephone>
+    <cbc:ElectronicMail>test.name@foo.bar</cbc:ElectronicMail>
+   </cac:Contact>
+  </cac:Party>
+ </cac:AccountingSupplierParty>
+ <cac:AccountingCustomerParty>
+  <cac:Party>
+   <cbc:EndpointID schemeID="0192">joe.bloggs@web.com</cbc:EndpointID>
+   <cac:PartyIdentification>
+    <cbc:ID schemeID="0088">SE8765456787</cbc:ID>
+   </cac:PartyIdentification>
+   <cac:PartyName>
+    <cbc:Name>Foreign Client</cbc:Name>
+   </cac:PartyName>
+   <cac:PostalAddress>
+    <cbc:StreetName>178 ABBEYHILL STREET</cbc:StreetName>
+    <cbc:AdditionalStreetName>CARNTYNE</cbc:AdditionalStreetName>
+    <cbc:CityName>GLASGOW</cbc:CityName>
+    <cbc:PostalZone>G32 6LN</cbc:PostalZone>
+    <cbc:CountrySubentity>United Kingdom</cbc:CountrySubentity>
+    <cac:Country>
+     <cbc:IdentificationCode>GB</cbc:IdentificationCode>
+    </cac:Country>
+   </cac:PostalAddress>
+   <cac:PartyTaxScheme>
+    <cbc:CompanyID>SE8765456787</cbc:CompanyID>
+    <cac:TaxScheme>
+     <cbc:ID>58</cbc:ID>
+    </cac:TaxScheme>
+   </cac:PartyTaxScheme>
+   <cac:PartyLegalEntity>
+    <cbc:RegistrationName>Buyer Full Name AS</cbc:RegistrationName>
+    <cbc:CompanyID schemeID="0002">0002</cbc:CompanyID>
+   </cac:PartyLegalEntity>
+   <cac:Contact>
+    <cbc:Name>Foreign</cbc:Name>
+    <cbc:Telephone></cbc:Telephone>
+    <cbc:ElectronicMail>email@email.com</cbc:ElectronicMail>
+   </cac:Contact>
+  </cac:Party>
+ </cac:AccountingCustomerParty>
+ <cac:Delivery>
+  <cbc:ActualDeliveryDate>2026-01-07</cbc:ActualDeliveryDate>
+  <cac:DeliveryLocation>
+   <cbc:ID schemeID="0190">8989898989844</cbc:ID>
+   <cac:Address>
+    <cbc:StreetName>178 ABBEYHILL STREET</cbc:StreetName>
+    <cbc:AdditionalStreetName>CARNTYNE</cbc:AdditionalStreetName>
+    <cbc:CityName>GLASGOW</cbc:CityName>
+    <cbc:PostalZone>G32 6LN</cbc:PostalZone>
+    <cbc:CountrySubentity>Lanarkshire</cbc:CountrySubentity>
+    <cac:Country>
+     <cbc:IdentificationCode>GB</cbc:IdentificationCode>
+    </cac:Country>
+   </cac:Address>
+  </cac:DeliveryLocation>
+ </cac:Delivery>
+ <cac:PaymentMeans>
+  <cbc:PaymentMeansCode name="Credit Transfer">30</cbc:PaymentMeansCode>
+  <cbc:PaymentID>peppolINV1822026-01-11</cbc:PaymentID>
+  <cac:PayeeFinancialAccount>
+   <cbc:ID>IBAN number</cbc:ID>
+   <cbc:Name>FF</cbc:Name>
+   <cac:FinancialInstitutionBranch>
+    <cbc:ID>9999</cbc:ID>
+   </cac:FinancialInstitutionBranch>
+  </cac:PayeeFinancialAccount>
+ </cac:PaymentMeans>
+ <cac:PaymentTerms>
+  <cbc:Note></cbc:Note>
+ </cac:PaymentTerms>
+ <cac:TaxTotal>
+  <cbc:TaxAmount currencyID="GBP">829.20</cbc:TaxAmount>
+  <cac:TaxSubtotal>
+   <cbc:TaxableAmount currencyID="USD">5.00</cbc:TaxableAmount>
+   <cbc:TaxAmount currencyID="USD">1.00</cbc:TaxAmount>
+   <cac:TaxCategory>
+    <cbc:ID>S</cbc:ID>
+    <cbc:Percent>20</cbc:Percent>
+    <cac:TaxScheme>
+     <cbc:ID>VAT</cbc:ID>
+    </cac:TaxScheme>
+   </cac:TaxCategory>
+  </cac:TaxSubtotal>
+ </cac:TaxTotal>
+ <cbc:TaxAmount currencyID="USD">1.00</cbc:TaxAmount>
+ <cac:LegalMonetaryTotal>
+  <cbc:LineExtensionAmount currencyID="USD">4146.00</cbc:LineExtensionAmount>
+  <cbc:TaxExclusiveAmount currencyID="USD">4146.00</cbc:TaxExclusiveAmount>
+  <cbc:TaxInclusiveAmount currencyID="USD">4975.20</cbc:TaxInclusiveAmount>
+  <cbc:AllowanceTotalAmount currencyID="USD">0.00</cbc:AllowanceTotalAmount>
+  <cbc:PayableAmount currencyID="USD">4975.20</cbc:PayableAmount>
+ </cac:LegalMonetaryTotal>
+ <cac:InvoiceLine>
+  <cbc:ID>510</cbc:ID>
+  <cbc:Note>Clean a screen2</cbc:Note>
+  <cbc:InvoicedQuantity unitCode="10">6</cbc:InvoicedQuantity>
+  <cbc:LineExtensionAmount currencyID="USD">5,451.12</cbc:LineExtensionAmount>
+  <cbc:AccountingCost>4217:2323:2323</cbc:AccountingCost>
+  <cac:InvoicePeriod>
+   <cbc:StartDate>2026-01-01</cbc:StartDate>
+   <cbc:EndDate>2026-01-31</cbc:EndDate>
+  </cac:InvoicePeriod>
+  <cac:OrderLineReference>
+   <cbc:LineID>44444444</cbc:LineID>
+  </cac:OrderLineReference>
+  <cac:DocumentReference>
+   <cbc:ID>INV182</cbc:ID>
+   <cbc:DocumentTypeCode>130</cbc:DocumentTypeCode>
+  </cac:DocumentReference>
+  <cac:Item>
+   <cbc:Description>Clean a screen2</cbc:Description>
+   <cbc:Name>Cleen Screans2</cbc:Name>
+   <cac:BuyersItemIdentification>
+    <cbc:ID>4566544</cbc:ID>
+   </cac:BuyersItemIdentification>
+   <cac:SellersItemIdentification>
+    <cbc:ID>dgsdfgsdfg</cbc:ID>
+   </cac:SellersItemIdentification>
+   <cac:StandardItemIdentification>
+    <cbc:ID schemeID="0160">11111111111111</cbc:ID>
+   </cac:StandardItemIdentification>
+   <cac:OriginCountry>
+    <cbc:IdentificationCode></cbc:IdentificationCode>
+   </cac:OriginCountry>
+   <cac:CommodityClassification>
+    <cbc:ItemClassificationCode listID="PROD" listVersionID="">9873242</cbc:ItemClassificationCode>
+   </cac:CommodityClassification>
+   <cac:ClassifiedTaxCategory>
+    <cbc:ID>S</cbc:ID>
+    <cbc:Percent>20</cbc:Percent>
+    <cac:TaxScheme>
+     <cbc:ID>VAT</cbc:ID>
+    </cac:TaxScheme>
+   </cac:ClassifiedTaxCategory>
+  </cac:Item>
+  <cac:Price>
+   <cbc:PriceAmount currencyID="USD">908.52</cbc:PriceAmount>
+   <cbc:BaseQuantity unitCode="10">6</cbc:BaseQuantity>
+   <cac:AllowanceCharge>
+    <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+    <cbc:Amount currencyID="USD">0.00</cbc:Amount>
+    <cbc:BaseAmount currencyID="USD">908.52</cbc:BaseAmount>
+   </cac:AllowanceCharge>
+  </cac:Price>
+ </cac:InvoiceLine>
+ <cac:InvoiceLine>
+  <cbc:ID>511</cbc:ID>
+  <cbc:Note>This is a vase that we will be selling</cbc:Note>
+  <cbc:InvoicedQuantity unitCode="10">1</cbc:InvoicedQuantity>
+  <cbc:LineExtensionAmount currencyID="USD">104.52</cbc:LineExtensionAmount>
+  <cbc:AccountingCost>4217:2323:2323</cbc:AccountingCost>
+  <cac:InvoicePeriod>
+   <cbc:StartDate>2026-01-01</cbc:StartDate>
+   <cbc:EndDate>2026-01-31</cbc:EndDate>
+  </cac:InvoicePeriod>
+  <cac:OrderLineReference>
+   <cbc:LineID>99999999</cbc:LineID>
+  </cac:OrderLineReference>
+  <cac:DocumentReference>
+   <cbc:ID>INV182</cbc:ID>
+   <cbc:DocumentTypeCode>130</cbc:DocumentTypeCode>
+  </cac:DocumentReference>
+  <cac:Item>
+   <cbc:Description>This is a vase that we will be selling</cbc:Description>
+   <cbc:Name>New Product666</cbc:Name>
+   <cac:BuyersItemIdentification>
+    <cbc:ID>66666666</cbc:ID>
+   </cac:BuyersItemIdentification>
+   <cac:SellersItemIdentification>
+    <cbc:ID>fasfasfasf</cbc:ID>
+   </cac:SellersItemIdentification>
+   <cac:StandardItemIdentification>
+    <cbc:ID schemeID="0160">34567890345671</cbc:ID>
+   </cac:StandardItemIdentification>
+   <cac:OriginCountry>
+    <cbc:IdentificationCode></cbc:IdentificationCode>
+   </cac:OriginCountry>
+   <cac:CommodityClassification>
+    <cbc:ItemClassificationCode listID="PROD" listVersionID="">6666666</cbc:ItemClassificationCode>
+   </cac:CommodityClassification>
+   <cac:ClassifiedTaxCategory>
+    <cbc:ID>S</cbc:ID>
+    <cbc:Percent>20</cbc:Percent>
+    <cac:TaxScheme>
+     <cbc:ID>VAT</cbc:ID>
+    </cac:TaxScheme>
+   </cac:ClassifiedTaxCategory>
+  </cac:Item>
+  <cac:Price>
+   <cbc:PriceAmount currencyID="USD">104.52</cbc:PriceAmount>
+   <cbc:BaseQuantity unitCode="10">1</cbc:BaseQuantity>
+   <cac:AllowanceCharge>
+    <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+    <cbc:Amount currencyID="USD">0.00</cbc:Amount>
+    <cbc:BaseAmount currencyID="USD">104.52</cbc:BaseAmount>
+   </cac:AllowanceCharge>
+  </cac:Price>
+ </cac:InvoiceLine>
+</Invoice>

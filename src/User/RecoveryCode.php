@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\User;
 
+use App\Infrastructure\Persistence\User\User;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -31,7 +32,7 @@ class RecoveryCode
         $this->date_created = new DateTimeImmutable('now');
     }
 
-    public function getId(): ?int
+    public function reqId(): ?int
     {
         return $this->id;
     }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Invoice\Entity\CustomField;
+use App\Infrastructure\Persistence\CustomField\CustomField;
 use Codeception\Test\Unit;
 
 class CustomFieldEntityTest extends Unit
@@ -21,7 +21,7 @@ class CustomFieldEntityTest extends Unit
     {
         $defaultCustomField = new CustomField();
         
-        $this->assertEquals('', $defaultCustomField->getId());
+        $this->assertFalse($defaultCustomField->hasIdentity());
         $this->assertEquals('', $defaultCustomField->getTable());
         $this->assertEquals('', $defaultCustomField->getLabel());
         $this->assertEquals('', $defaultCustomField->getType());
@@ -42,7 +42,7 @@ class CustomFieldEntityTest extends Unit
             required: true
         );
 
-        $this->assertEquals('1', $customField->getId());
+        $this->assertSame(1, $customField->reqId());
         $this->assertEquals('invoice', $customField->getTable());
         $this->assertEquals('Custom Label', $customField->getLabel());
         $this->assertEquals('TEXT', $customField->getType());
@@ -53,13 +53,13 @@ class CustomFieldEntityTest extends Unit
 
     public function testIdSetterAndGetter(): void
     {
-        $this->assertEquals('', $this->customField->getId());
+        $this->assertFalse($this->customField->hasIdentity());
         
         $this->customField->setId(42);
-        $this->assertEquals('42', $this->customField->getId());
+        $this->assertSame(42, $this->customField->reqId());
         
         $this->customField->setId(0);
-        $this->assertEquals('0', $this->customField->getId());
+        $this->assertSame(0, $this->customField->reqId());
     }
 
     public function testTableSetterAndGetter(): void
@@ -184,7 +184,7 @@ class CustomFieldEntityTest extends Unit
         $this->customField->setOrder(10);
         $this->customField->setRequired(true);
 
-        $this->assertEquals('100', $this->customField->getId());
+        $this->assertSame(100, $this->customField->reqId());
         $this->assertEquals('invoice', $this->customField->getTable());
         $this->assertEquals('Project Reference', $this->customField->getLabel());
         $this->assertEquals('TEXT', $this->customField->getType());
@@ -197,12 +197,12 @@ class CustomFieldEntityTest extends Unit
     {
         // Test that getId always returns a string, even for numeric IDs
         $this->customField->setId(123);
-        $this->assertIsString($this->customField->getId());
-        $this->assertEquals('123', $this->customField->getId());
+        $this->assertIsInt($this->customField->reqId());
+        $this->assertSame(123, $this->customField->reqId());
         
         $this->customField->setId(0);
-        $this->assertIsString($this->customField->getId());
-        $this->assertEquals('0', $this->customField->getId());
+        $this->assertIsInt($this->customField->reqId());
+        $this->assertSame(0, $this->customField->reqId());
     }
 
     public function testOptionalCustomField(): void
@@ -218,7 +218,7 @@ class CustomFieldEntityTest extends Unit
             required: false
         );
 
-        $this->assertEquals('50', $optionalField->getId());
+        $this->assertSame(50, $optionalField->reqId());
         $this->assertEquals('client', $optionalField->getTable());
         $this->assertEquals('Notes', $optionalField->getLabel());
         $this->assertEquals('TEXT', $optionalField->getType());
@@ -240,7 +240,7 @@ class CustomFieldEntityTest extends Unit
             required: true
         );
 
-        $this->assertEquals('60', $requiredField->getId());
+        $this->assertSame(60, $requiredField->reqId());
         $this->assertEquals('invoice', $requiredField->getTable());
         $this->assertEquals('Department Code', $requiredField->getLabel());
         $this->assertEquals('SELECT', $requiredField->getType());
@@ -260,7 +260,7 @@ class CustomFieldEntityTest extends Unit
         $this->customField->setOrder(15);
         $this->customField->setRequired(true);
         
-        $this->assertEquals('777', $this->customField->getId());
+        $this->assertSame(777, $this->customField->reqId());
         $this->assertEquals('product', $this->customField->getTable());
         $this->assertEquals('Category', $this->customField->getLabel());
         $this->assertEquals('SELECT', $this->customField->getType());

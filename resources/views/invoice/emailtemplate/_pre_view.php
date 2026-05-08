@@ -26,7 +26,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
      <?= $translator->translate('preview'); ?>
 <?= Html::closeTag('h1'); ?>
-<?= Form::tag()
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -40,10 +40,10 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
     <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div'); ?>
-            <?= Html::openTag('body'); ?>                
-                <?= $form->getEmail_template_body(); ?>
+            <?= Html::openTag('body'); ?>
+                <?= $form->getEmailTemplateBody(); ?>
         <?= Html::closeTag('body'); ?>
-        <?= Br::tag(); ?>
+        <?=  new Br(); ?>
     <?= Html::closeTag('div'); ?>
     <?= $button::back(); ?>
 <?= Html::closeTag('form'); ?>

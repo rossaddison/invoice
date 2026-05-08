@@ -23,20 +23,20 @@ use Yiisoft\Html\Tag\Form;
  */
 ?>
 
-<?= Form::tag()
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('UnitPeppolForm')
     ->open() ?>
 
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
-<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
@@ -53,7 +53,7 @@ use Yiisoft\Html\Tag\Form;
                     <?= Field::select($form, 'unit_id')
     ->label($translator->translate('id'))
     ->optionsData($optionsDataUnits)
-    ->value(Html::encode($form->getUnit_id() ?? ''))
+    ->value(Html::encode($form->getUnitId() ?? ''))
     ->disabled(true)
 ?>
                 <?= Html::closeTag('div'); ?>
@@ -82,7 +82,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <!-- https://dev.to/dcodeyt/creating-beautiful-html-tables-with-css-428l
                     class styled-table found at C:\wamp64\www\yii3-i\src\Invoice\Asset\invoice\css\yii3i.css
-                    --> 
+                    -->
                     <?= Html::openTag('table', ['class' => 'styled-table']); ?>
                         <?= Html::openTag('thead'); ?>
                             <?= Html::openTag('tr'); ?>
@@ -101,9 +101,8 @@ use Yiisoft\Html\Tag\Form;
                             <?php
         /**
          * @var string $key
-         * @var string $value
          */
-        foreach ($eneces as $key => $value) {
+        foreach (array_keys($eneces) as $key) {
             /**
              * @var array $eneces[$key]
              */
@@ -127,7 +126,7 @@ use Yiisoft\Html\Tag\Form;
         } ?>
                         <?= Html::closeTag('tbody'); ?>
                     <?= Html::closeTag('table'); ?>
-                <?= Html::closeTag('div'); ?>    
+                <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
@@ -135,4 +134,4 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?= Form::tag()->close() ?>
+<?=  new Form()->close() ?>

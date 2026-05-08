@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Group;
 
-use App\Invoice\Entity\Group;
+use App\Infrastructure\Persistence\Group\Group;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
@@ -19,12 +19,14 @@ final class GroupForm extends FormModel
     #[Required]
     private ?int $left_pad = null;
 
-    public function __construct(Group $group)
+    public static function show(Group $group): self
     {
-        $this->name = $group->getName();
-        $this->identifier_format = $group->getIdentifier_format();
-        $this->next_id = (int) $group->getNext_id();
-        $this->left_pad = (int) $group->getLeft_pad();
+        $form = new self();
+        $form->name = $group->getName();
+        $form->identifier_format = $group->getIdentifierFormat();
+        $form->next_id = (int) $group->getNextId();
+        $form->left_pad = (int) $group->getLeftPad();
+        return $form;
     }
 
     public function getName(): ?string
@@ -32,17 +34,17 @@ final class GroupForm extends FormModel
         return $this->name;
     }
 
-    public function getIdentifier_format(): ?string
+    public function getIdentifierFormat(): ?string
     {
         return $this->identifier_format;
     }
 
-    public function getNext_id(): ?int
+    public function getNextId(): ?int
     {
         return $this->next_id;
     }
 
-    public function getLeft_pad(): ?int
+    public function getLeftPad(): ?int
     {
         return $this->left_pad;
     }

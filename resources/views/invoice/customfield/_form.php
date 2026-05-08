@@ -24,7 +24,7 @@ use Yiisoft\Html\Tag\Form;
 ?>
 
 <?=
-    Form::tag()
+     new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -33,9 +33,9 @@ use Yiisoft\Html\Tag\Form;
 ?>
 
     <?= Html::openTag('div'); ?>
-    <?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-    <?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-    <?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+    <?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+    <?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+    <?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
     <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
     <?= Html::openTag('div', ['class' => 'card-header']); ?>
     <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
@@ -69,7 +69,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::select($form, 'table')
         ->label($translator->translate('table'))
         ->addInputAttributes([
-            'class' => 'form-control',
+            'class' => 'form-control form-control-lg',
             'id' => 'table',
         ])
         ->value(Html::encode($form->getTable() ?? ''))
@@ -82,7 +82,7 @@ use Yiisoft\Html\Tag\Form;
         ->label($translator->translate('label'))
         ->addInputAttributes([
             'placeholder' => $translator->translate('label'),
-            'class' => 'form-control',
+            'class' => 'form-control form-control-lg',
             'id' => 'label',
         ])
         ->value(Html::encode($form->getLabel() ?? ''))
@@ -111,7 +111,7 @@ foreach ($types as $type) {
                     ->label($translator->translate('type'))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('type'),
-                        'class' => 'form-control',
+                        'class' => 'form-control form-control-lg',
                         'id' => 'type',
                     ])
                     ->value(Html::encode($form->getType() ?? ''))
@@ -311,7 +311,7 @@ foreach ($types as $type) {
             <?= Html::openTag('div', ['class' => 'form-group']); ?>
                 <label for="location"><?= $translator->translate('position'); ?></label> 
                 <?php $valueSelected = Html::encode($form->getLocation() ??  ''); ?>
-                <select name="location" id="location" class="form-control"></select>
+                <select name="location" id="location" class="form-control form-control-lg"></select>
             <?= Html::closeTag('div'); ?>
 
         <?= Html::closeTag('div'); ?>
@@ -329,9 +329,6 @@ foreach ($types as $type) {
  * @psalm-var array<string, list<string>>|\Traversable<string, list<string>>|string|null $positions
  * @psalm-var array|string|null $valueSelected
  */
-
-// Normalize $positions into an array for use in the view
-$positionsArray = [];
 
 if (is_string($positions)) {
     /**
@@ -420,5 +417,5 @@ echo Html::script($js)->type('module');
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>                
-<?= Form::tag()->close(); ?>
+<?=  new Form()->close(); ?>
 

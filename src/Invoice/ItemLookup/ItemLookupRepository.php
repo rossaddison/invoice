@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\ItemLookup;
 
-use App\Invoice\Entity\ItemLookup;
+use App\Infrastructure\Persistence\ItemLookup\ItemLookup;
 use Cycle\ORM\Select;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
@@ -76,10 +76,10 @@ final class ItemLookupRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return TEntity|null
      */
-    public function repoItemLookupquery(string $id): ?ItemLookup
+    public function repoItemLookupquery(int $id): ?ItemLookup
     {
         $query = $this->select()->where(['id' => $id]);
         return  $query->fetchOne();

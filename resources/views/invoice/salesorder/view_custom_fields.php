@@ -26,7 +26,7 @@ declare(strict_types=1);
                                 <?php $i = 0; ?>
                                 <?php
                                     /**
-                                     * @var App\Invoice\Entity\CustomField
+                                     * @var App\Infrastructure\Persistence\CustomField\CustomField
                                      */
                                     foreach ($customFields as $customField): ?>
                                     <?php if ($customField->getLocation() != 0) {
@@ -34,7 +34,7 @@ declare(strict_types=1);
                                     } ?>
                                     <?php $i++; ?>
                                     <?php if ($i % 2 != 0): ?>
-                                        <?php $cvH->print_field_for_view($customField, $form, $salesOrderCustomValues, $customValues); ?>
+                                        <?php $cvH->printFieldForView($customField, $form, $salesOrderCustomValues); ?>
                                     <?php endif; ?>
                                 <?php endforeach; ?>
                             </div>
@@ -42,7 +42,7 @@ declare(strict_types=1);
                                 <?php $i = 0; ?>
                                 <?php
                                     /**
-                                     * @var App\Invoice\Entity\CustomField
+                                     * @var App\Infrastructure\Persistence\CustomField\CustomField
                                      */
                                     foreach ($customFields as $customField): ?>
                                     <?php if ($customField->getLocation() !== 0) {
@@ -50,7 +50,7 @@ declare(strict_types=1);
                                     } ?>
                                     <?php $i++; ?>
                                     <?php if ($i % 2 == 0): ?>
-                                        <?php $cvH->print_field_for_view($customField, $form, $salesOrderCustomValues, $customValues); ?>
+                                        <?php $cvH->printFieldForView($customField, $form, $salesOrderCustomValues); ?>
                                     <?php endif; ?>
                                 <?php endforeach; ?>
                             </div>

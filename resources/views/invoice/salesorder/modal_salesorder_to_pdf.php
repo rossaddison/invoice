@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /**
  * Related logic: see id="so-to-pdf" triggered by <a href="#so-to-pdf" data-bs-toggle="modal"  style="text-decoration:none"> on views/salesorder/view.php
- * @var App\Invoice\Entity\SalesOrder $so
+ * @var App\Infrastructure\Persistence\SalesOrder\SalesOrder $so
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var string $csrf
  * */
@@ -20,21 +20,21 @@ declare(strict_types=1);
                 <form>
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
                     <div class="control-label">
-                        <?= $translator->translate('custom.fields'); ?>?                
+                        <?= $translator->translate('custom.fields'); ?>?
                     </div>
-                    <input type="hidden" name="salesorder_id" id="salesorder_id" value="<?php echo $so->getId(); ?>">
-                </form>    
+                    <input type="hidden" name="salesorder_id" id="salesorder_id" value="<?php echo $so->reqId(); ?>">
+                </form>
             </div>
             <div class="modal-footer">
                 <div class="btn-group">
                     <button class="salesorder_to_pdf_confirm_with_custom_fields btn btn-success" id="salesorder_to_pdf_confirm_with_custom_fields" type="button">
-                        <i class="fa fa-check"></i> <?= $translator->translate('yes'); ?>
+                        <i class="bi bi-check-lg"></i> <?= $translator->translate('yes'); ?>
                     </button>
                     <button class="salesorder_to_pdf_confirm_without_custom_fields btn btn-info" id="salesorder_to_pdf_confirm_without_custom_fields" type="button">
-                        <i class="fa fa-times"></i> <?= $translator->translate('no'); ?>
-                    </button>                
+                        <i class="bi bi-x-lg"></i> <?= $translator->translate('no'); ?>
+                    </button>
                     <button class="btn btn-danger" type="button" data-bs-dismiss"modal">
-                        <i class="fa fa-times"></i> <?= $translator->translate('back'); ?>
+                        <i class="bi bi-x-lg"></i> <?= $translator->translate('back'); ?>
                     </button>
                 </div>
             </div>

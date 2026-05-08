@@ -19,7 +19,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\AuthClient\RequestUtil;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class HmrcController extends BaseController
 {
@@ -33,25 +33,25 @@ final class HmrcController extends BaseController
         SR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->httpClient = $httpClient;
         $this->requestFactory = $requestFactory;
         $this->session = $session;
         $this->sR = $sR;
         $this->translator = $translator;
         $this->userService = $userService;
-        $this->viewRenderer = $viewRenderer->withViewPath('@hmrc');
+        $this->webViewRenderer = $webViewRenderer->withViewPath('@hmrc');
     }
 
-    public function index(): \Yiisoft\DataResponse\DataResponse
+    public function index(): \Psr\Http\Message\ResponseInterface
     {
         $parameters = [
             'text' => 'This is a text',
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -75,7 +75,6 @@ final class HmrcController extends BaseController
 
     public function fphValidate(): Response
     {
-        $headers = [];
         $otp = (int) $this->session->get('otp');
         $otpReference = (string) $this->session->get('otpRef');
         if ($otp > 99999 && $otp < 1000000 && strlen($otpReference) > 0) {
@@ -219,7 +218,7 @@ final class HmrcController extends BaseController
      * @param string $govVendorVersion
      * @return array
      */
-    public function WebAppViaServerBuildArrayFromStrings(
+    public function webAppViaServerBuildArrayFromStrings(
         string $govClientConnectionMethod,
         string $govClientBrowserJsUserAgent,
         string $govClientDeviceID,
@@ -304,7 +303,7 @@ final class HmrcController extends BaseController
      */
     private function getRequestLoggingMiddleware(string $logFile): callable
     {
-        return fn(callable $handler): callable => function (Request $request, array $options) use ($handler, $logFile): PromiseInterface {
+        return fn (callable $handler): callable => function (Request $request, array $options) use ($handler, $logFile): PromiseInterface {
             $headersJson = json_encode($request->getHeaders(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
             // Prevent log corruption if encoding fails

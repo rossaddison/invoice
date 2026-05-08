@@ -1,12 +1,17 @@
-{    
-    "sonarlint.connectedMode.project": {
-        "connectionId": "rossaddison-sonarcloud",
-        "projectKey": "rossaddison_invoice"
-    },
+{
     "sonarlint.connectedMode.connections.sonarcloud": [
         {
             "connectionId": "rossaddison-sonarcloud",
             "organizationKey": "rossaddison"
         }
-    ]
+    ],
+    "sonarlint.connectedMode.project": {
+        "connectionId": "rossaddison",
+        "projectKey": "rossaddison_invoice"
+    },
+    "typescript.experimental.useTsgo": true,
+    "typescript.preferences.quoteStyle": "single",
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    }
 }

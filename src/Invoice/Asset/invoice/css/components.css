@@ -2,7 +2,7 @@
 |   =========================================================
 |   Component Styles - Yii3i Reorganized CSS
 |   =========================================================
-|   
+|
 |   This file contains UI component styles:
 |   - Buttons and button groups
 |   - Forms and form controls
@@ -13,10 +13,10 @@
 |   - Alerts and notifications
 |   - Labels and badges
 |   - Progress bars and loaders
-|   
+|
 |   Original source: src/Invoice/Asset/invoice/css/style.css (component sections)
 |   Also includes styles from src/Invoice/Asset/invoiceDark/sass/_custom_styles.scss
-|   
+|
 |   TODO: Complete migration of all Bootstrap components from style.css
 */
 
@@ -79,7 +79,7 @@ fieldset[disabled] .btn {
   color: #fff;
 }
 
-.btn-default:hover, 
+.btn-default:hover,
 .btn-default:focus {
   color: #fff;
 }
@@ -197,7 +197,7 @@ fieldset[disabled] .btn {
   margin: 0;
 }
 
-#item_table tr.item input, 
+#item_table tr.item input,
 #item_table tr.item textarea {
   border-color: #e5e5e5;
   border-radius: 0;
@@ -370,8 +370,8 @@ fieldset[disabled] .btn {
   background-color: var(--background-alt);
 }
 
-.active > .dropdown-button, 
-.active > .dropdown-button:hover, 
+.active > .dropdown-button,
+.active > .dropdown-button:hover,
 .active > .dropdown-button:focus {
   color: #fff;
   text-decoration: none;
@@ -379,13 +379,13 @@ fieldset[disabled] .btn {
   background-color: var(--primary-color);
 }
 
-.disabled > .dropdown-button, 
-.disabled > .dropdown-button:hover, 
+.disabled > .dropdown-button,
+.disabled > .dropdown-button:hover,
 .disabled > .dropdown-button:focus {
   color: var(--text-muted);
 }
 
-.disabled > .dropdown-button:hover, 
+.disabled > .dropdown-button:hover,
 .disabled > .dropdown-button:focus {
   text-decoration: none;
   background-color: transparent;

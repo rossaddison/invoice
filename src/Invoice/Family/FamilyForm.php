@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Family;
 
-use App\Invoice\Entity\Family;
+use App\Infrastructure\Persistence\Family\Family;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
@@ -13,30 +13,48 @@ final class FamilyForm extends FormModel
     #[Required]
     private ?string $family_name = '';
 
-    public ?string $category_primary_id = null;
+    public ?string $family_commalist = '';
 
-    public ?string $category_secondary_id = null;
+    public ?string $family_productprefix = '';
 
-    public function __construct(Family $family)
+    public ?int $category_primary_id = null;
+
+    public ?int $category_secondary_id = null;
+
+    public static function show(Family $family): self
     {
-        $this->family_name = $family->getFamily_name();
-        $this->category_primary_id = $family->getCategory_primary_id();
-        $this->category_secondary_id = $family->getCategory_secondary_id();
+        $form = new self();
+        $form->family_name = $family->getFamilyName();
+        $form->family_commalist = $family->getFamilyCommalist();
+        $form->family_productprefix = $family->getFamilyProductprefix();
+        $form->category_primary_id = $family->reqCategoryPrimaryId();
+        $form->category_secondary_id = $family->reqCategorySecondaryId();
+        return $form;
     }
 
-    public function getFamily_name(): ?string
+    public function getFamilyName(): ?string
     {
         return $this->family_name;
     }
 
-    public function getCategory_primary_id(): string
+    public function getCategoryPrimaryId(): ?int
     {
-        return (string) $this->category_primary_id;
+        return $this->category_primary_id;
     }
 
-    public function getCategory_secondary_id(): string
+    public function getCategorySecondaryId(): ?int
     {
-        return (string) $this->category_secondary_id;
+        return $this->category_secondary_id;
+    }
+
+    public function getFamilyCommalist(): ?string
+    {
+        return $this->family_commalist;
+    }
+
+    public function getFamilyProductprefix(): ?string
+    {
+        return $this->family_productprefix;
     }
 
     /**

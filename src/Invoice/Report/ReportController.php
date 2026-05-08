@@ -6,9 +6,9 @@ namespace App\Invoice\Report;
 
 use App\Invoice\BaseController;
 // Entites
-use App\Invoice\Entity\Client;
-use App\Invoice\Entity\InvAmount;
-use App\Invoice\Entity\Payment;
+use App\Infrastructure\Persistence\Client\Client;
+use App\Infrastructure\Persistence\InvAmount\InvAmount;
+use App\Infrastructure\Persistence\Payment\Payment;
 // Repositories
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Inv\InvRepository;
@@ -34,7 +34,7 @@ use Yiisoft\Http\Method;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 class ReportController extends BaseController
 {
@@ -45,46 +45,46 @@ class ReportController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
     }
 
     /**
      * @param Request $request
-     * @param ViewRenderer $head
+     * @param WebViewRenderer $head
      * @param ClientRepository $cR
      * @param InvAmountRepository $iaR
      * @return array|\Mpdf\Mpdf|Response|string
      * @psalm-suppress MixedInferredReturnType
      */
-    public function invoice_aging_index(
+    public function invoiceAgingIndex(
         Request $request,
-        ViewRenderer $head,
+        WebViewRenderer $head,
         ClientRepository $cR,
         InvAmountRepository $iaR,
     ): Response|\Mpdf\Mpdf|array|string {
         $parameters = [
             'head' => $head,
             'alert' => $this->alert(),
-            'actionName' => 'report/invoice_aging_index',
+            'actionName' => 'report/invoiceAgingIndex',
             'actionArguments' => [],
         ];
         if ($request->getMethod() === Method::POST) {
             $data = [
-                'results' => $this->invoice_aging_report($cR, $iaR) ?: [],
+                'results' => $this->invoiceAgingReport($cR, $iaR) ?: [],
                 'numberHelper' => new NumberHelper($this->sR),
-                'dueInvoices' => $this->invoice_aging_due_invoices($iaR) ?: [],
+                'dueInvoices' => $this->invoiceAgingDueInvoices($iaR) ?: [],
             ];
-            $mpdfhelper = new MpdfHelper();
+            $mpdfhelper = new MpdfHelper($this->translator);
             // Forth parameter $password is empty because these reports are intended for management only
             // Sixth parameter $isInvoice is false because reports and not Invoices are being generated
             // Last parameter $quote_or_invoice is false because reports are being generated which are not meant for clients
             /** @psalm-suppress MixedReturnStatement */
-            return $mpdfhelper->pdf_create(
-                $this->viewRenderer->renderPartialAsString('//invoice/report/invoice_aging', $data),
+            return $mpdfhelper->pdfCreate(
+                $this->webViewRenderer->renderPartialAsString('//invoice/report/invoice_aging', $data),
                 $this->translator->translate('aging'),
                 true,
                 '',
@@ -97,7 +97,7 @@ class ReportController extends BaseController
                 null,
             );
         }
-        return $this->viewRenderer->render('invoice_aging_index', $parameters);
+        return $this->webViewRenderer->render('invoice_aging_index', $parameters);
     }
 
     /**
@@ -105,7 +105,7 @@ class ReportController extends BaseController
      * @param InvAmountRepository $iaR
      * @return array
      */
-    private function invoice_aging_report(
+    private function invoiceAgingReport(
         ClientRepository $cR,
         InvAmountRepository $iaR,
     ): array {
@@ -127,24 +127,24 @@ class ReportController extends BaseController
         if (null !== $clients) {
             /** @var Client $client */
             foreach ($clients as $client) {
-                $row['client'] = $clienthelper->format_client($client);
+                $row['client'] = $clienthelper->formatClient($client);
                 if (null !== $fifteens) {
-                    $row['range_1'] = $numberhelper->format_amount($this->invoice_aging_sum($fifteens, $client->getClient_id()));
+                    $row['range_1'] = $numberhelper->formatAmount($this->invoiceAgingSum($fifteens, $client->reqId()));
                 } else {
                     $row['range_1'] = 0.00;
                 }
                 if (null !== $thirties) {
-                    $row['range_2'] = $numberhelper->format_amount($this->invoice_aging_sum($thirties, $client->getClient_id()));
+                    $row['range_2'] = $numberhelper->formatAmount($this->invoiceAgingSum($thirties, $client->reqId()));
                 } else {
                     $row['range_2'] = 0.00;
                 }
                 if (null !== $overthirties) {
-                    $row['range_3'] = $numberhelper->format_amount($this->invoice_aging_sum($overthirties, $client->getClient_id()));
+                    $row['range_3'] = $numberhelper->formatAmount($this->invoiceAgingSum($overthirties, $client->reqId()));
                 } else {
                     $row['range_3'] = 0.00;
                 }
                 if (null !== $one_to_year) {
-                    $row['total_balance'] = $numberhelper->format_amount($this->invoice_aging_sum($one_to_year, $client->getClient_id()));
+                    $row['total_balance'] = $numberhelper->formatAmount($this->invoiceAgingSum($one_to_year, $client->reqId()));
                 } else {
                     $row['total_balance'] = 0.00;
                 }
@@ -158,7 +158,7 @@ class ReportController extends BaseController
      * @param InvAmountRepository $iaR
      * @return array
      */
-    private function invoice_aging_due_invoices(InvAmountRepository $iaR): array
+    private function invoiceAgingDueInvoices(InvAmountRepository $iaR): array
     {
         $numberhelper = new NumberHelper($this->sR);
         $fifteens = $iaR->AgingCount(1, 15) > 0 ? $iaR->Aging(1, 15) : null;
@@ -177,7 +177,7 @@ class ReportController extends BaseController
                     $row = [
                         'range_index' => 1,
                         'invoice_number' => $fifteen->getInv()?->getNumber(),
-                        'invoice_balance' => $numberhelper->format_amount($fifteen->getBalance()),
+                        'invoice_balance' => $numberhelper->formatAmount($fifteen->getBalance()),
                     ];
                 }
                 $results[] = $row;
@@ -190,7 +190,7 @@ class ReportController extends BaseController
                     $row = [
                         'range_index' => 2,
                         'invoice_number' => $thirty->getInv()?->getNumber(),
-                        'invoice_balance' => $numberhelper->format_amount($thirty->getBalance()),
+                        'invoice_balance' => $numberhelper->formatAmount($thirty->getBalance()),
                     ];
                 }
                 $results[] = $row;
@@ -203,7 +203,7 @@ class ReportController extends BaseController
                     $row = [
                         'range_index' => 3,
                         'invoice_number' => $overthirty->getInv()?->getNumber(),
-                        'invoice_balance' => $numberhelper->format_amount($overthirty->getBalance()),
+                        'invoice_balance' => $numberhelper->formatAmount($overthirty->getBalance()),
                     ];
                 }
                 $results[] = $row;
@@ -215,12 +215,13 @@ class ReportController extends BaseController
     /**
      * @psalm-param \Yiisoft\Data\Reader\DataReaderInterface<array-key, array|object> $invamounts
      */
-    private function invoice_aging_sum(\Yiisoft\Data\Reader\DataReaderInterface $invamounts, ?int $client_id): float
+    private function invoiceAgingSum(\Yiisoft\Data\Reader\DataReaderInterface $invamounts, ?int $client_id): float
     {
         $sum = 0.00;
         foreach ($invamounts as $invamount) {
             if ($invamount instanceof InvAmount) {
-                $sum += ($client_id == $invamount->getInv()?->getClient_id()) ? ($invamount->getBalance() ?? 0.00) : 0.00;
+                $sum += ($client_id == $invamount->getInv()?->reqClientId()) ?
+                        ($invamount->getBalance() ?? 0.00) : 0.00;
             }
         }
         return $sum;
@@ -228,24 +229,24 @@ class ReportController extends BaseController
 
     /**
      * @param Request $request
-     * @param ViewRenderer $head
+     * @param WebViewRenderer $head
      * @param PaymentRepository $pymtR
      * @return array|\Mpdf\Mpdf|Response|string
      * @psalm-suppress MixedInferredReturnType
      */
-    public function payment_history_index(
+    public function paymentHistoryIndex(
         Request $request,
-        ViewRenderer $head,
+        WebViewRenderer $head,
         PaymentRepository $pymtR,
     ): Response|\Mpdf\Mpdf|array|string {
         $dateHelper = new DateHelper($this->sR);
         $parameters = [
             'head' => $head,
             'alert' => $this->alert(),
-            'actionName' => 'report/payment_history_index',
+            'actionName' => 'report/paymentHistoryIndex',
             'actionArguments' => [],
             'dateHelper' => $dateHelper,
-            'startTaxYear' => $dateHelper->tax_year_to_immutable()->format('Y-m-d'),
+            'startTaxYear' => $dateHelper->taxYearToImmutable()->format('Y-m-d'),
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
@@ -256,15 +257,15 @@ class ReportController extends BaseController
                     'from_date' => $from_date,
                     'to_date' => $to_date,
                     //Date Invoice Client Payment Method Note Amount
-                    'results' => $this->payment_history_report($pymtR, $from_date, $to_date)
+                    'results' => $this->paymentHistoryReport($pymtR, $from_date, $to_date)
                              ?: [],
                     'dateHelper' => $dateHelper,
                     'numberHelper' => new NumberHelper($this->sR),
                 ];
-                $mpdfHelper = new MpdfHelper();
+                $mpdfHelper = new MpdfHelper($this->translator);
                 /** @psalm-suppress MixedReturnStatement */
-                return $mpdfHelper->pdf_create(
-                    $this->viewRenderer->renderPartialAsString('//invoice/report/payment_history', $data),
+                return $mpdfHelper->pdfCreate(
+                    $this->webViewRenderer->renderPartialAsString('//invoice/report/payment_history', $data),
                     $this->translator->translate('payment.history'),
                     true,
                     '',
@@ -279,7 +280,7 @@ class ReportController extends BaseController
             } //is_array body
             return $this->webService->getNotFoundResponse();
         }
-        return $this->viewRenderer->render('payment_history_index', $parameters);
+        return $this->webViewRenderer->render('payment_history_index', $parameters);
     }
 
     /**
@@ -291,13 +292,13 @@ class ReportController extends BaseController
      *
      * @psalm-return list{0?: array{payment_date: mixed, payment_invoice: mixed, payment_client: string, payment_method: mixed, payment_note: mixed, payment_amount: mixed},...}
      */
-    private function payment_history_report(
+    private function paymentHistoryReport(
         PaymentRepository $pymtR,
         string $from,
         string $to,
     ): array {
         $clienthelper = new ClientHelper($this->sR);
-        $payments = $pymtR->repoPaymentLoaded_from_to_count($from, $to) > 0 ? $pymtR->repoPaymentLoaded_from_to($from, $to) : null;
+        $payments = $pymtR->repoPaymentLoadedFromToCount($from, $to) > 0 ? $pymtR->repoPaymentLoadedFromTo($from, $to) : null;
         //Report Headings: Date, Invoice, Client, Payment Method, Note, Amount
         $results = [];
         $row = [
@@ -311,10 +312,10 @@ class ReportController extends BaseController
         if (null !== $payments) {
             /** @var Payment $payment */
             foreach ($payments as $payment) {
-                $row['payment_date'] = $payment->getPayment_date();
+                $row['payment_date'] = $payment->getPaymentDate();
                 $row['payment_invoice'] = $payment->getInv()?->getNumber();
                 // Client Name and Surname
-                $row['payment_client'] = $clienthelper->format_client($payment->getInv()?->getClient());
+                $row['payment_client'] = $clienthelper->formatClient($payment->getInv()?->getClient());
                 $row['payment_method'] = $payment->getPaymentMethod()?->getName();
                 $row['payment_note'] = $payment->getNote();
                 $row['payment_amount'] = $payment->getAmount();
@@ -327,16 +328,16 @@ class ReportController extends BaseController
 
     /**
      * @param Request $request
-     * @param ViewRenderer $head
+     * @param WebViewRenderer $head
      * @param ClientRepository $cR
      * @param InvRepository $iR
      * @param InvAmountRepository $iaR
      * @return array|\Mpdf\Mpdf|Response|string
      * @psalm-suppress MixedInferredReturnType
      */
-    public function sales_by_client_index(
+    public function salesByClientIndex(
         Request $request,
-        ViewRenderer $head,
+        WebViewRenderer $head,
         ClientRepository $cR,
         InvRepository $iR,
         InvAmountRepository $iaR,
@@ -345,10 +346,10 @@ class ReportController extends BaseController
         $parameters = [
             'head' => $head,
             'alert' => $this->alert(),
-            'actionName' => 'report/sales_by_client_index',
+            'actionName' => 'report/salesByClientIndex',
             'actionArguments' => [],
             'dateHelper' => $dateHelper,
-            'startTaxYear' => $dateHelper->tax_year_to_immutable()->format('Y-m-d'),
+            'startTaxYear' => $dateHelper->taxYearToImmutable()->format('Y-m-d'),
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
@@ -358,14 +359,14 @@ class ReportController extends BaseController
                 $data = [
                     'from_date' => $from_date,
                     'to_date' => $to_date,
-                    'results' => $this->sales_by_client_report($cR, $iR, $dateHelper->date_to_mysql($from_date), $dateHelper->date_to_mysql($to_date), $iaR),
+                    'results' => $this->salesByClientReport($cR, $iR, $dateHelper->dateToMysql($from_date), $dateHelper->dateToMysql($to_date), $iaR),
                     'numberHelper' => new NumberHelper($this->sR),
                     'clientHelper' => new ClientHelper($this->sR),
                 ];
-                $mpdfhelper = new MpdfHelper();
+                $mpdfhelper = new MpdfHelper($this->translator);
                 /** @psalm-suppress MixedReturnStatement */
-                return $mpdfhelper->pdf_create(
-                    $this->viewRenderer->renderPartialAsString('//invoice/report/sales_by_client', $data),
+                return $mpdfhelper->pdfCreate(
+                    $this->webViewRenderer->renderPartialAsString('//invoice/report/sales_by_client', $data),
                     $this->translator->translate('sales.by.client'),
                     true,
                     '',
@@ -380,7 +381,7 @@ class ReportController extends BaseController
             } // is_array body
             return $this->webService->getNotFoundResponse();
         }
-        return $this->viewRenderer->render('sales_by_client_index', $parameters);
+        return $this->webViewRenderer->render('sales_by_client_index', $parameters);
     }
 
     /**
@@ -391,7 +392,7 @@ class ReportController extends BaseController
      * @param InvAmountRepository $iaR
      * @return array
      */
-    private function sales_by_client_report(
+    private function salesByClientReport(
         ClientRepository $cR,
         InvRepository $iR,
         string $from,
@@ -419,28 +420,26 @@ class ReportController extends BaseController
          * @var Client $client
          */
         foreach ($clients as $client) {
-            $client_id = $client->getClient_id();
-            if (null !== $client_id) {
-                // Client Name and Surname
-                $row['client_name_surname'] = $clienthelper->format_client($client);
-                $row['inv_count'] = $iR->repoCountByClient($client_id);
-                $row['sales_no_tax'] = $iR->repoCountByClient($client_id) > 0
-                              ? $iR->with_item_subtotal_from_to($client_id, $from, $to, $iaR)
-                              : 0.00;
-                // plus
-                $row['item_tax_total'] = $iR->repoCountByClient($client_id) > 0
-                              ? $iR->with_item_tax_total_from_to($client_id, $from, $to, $iaR)
-                              : 0.00;
-                // plus
-                $row['tax_total'] = $iR->repoCountByClient($client_id) > 0
-                              ? $iR->with_tax_total_from_to($client_id, $from, $to, $iaR)
-                              : 0.00;
-                // equals
-                $row['sales_with_tax'] = $iR->repoCountByClient($client_id) > 0
-                              ? $iR->with_total_from_to($client_id, $from, $to, $iaR)
-                              : 0.00;
-                $results[] = $row;
-            } // null!==$client_id;
+            $client_id = $client->reqId();
+            // Client Name and Surname
+            $row['client_name_surname'] = $clienthelper->formatClient($client);
+            $row['inv_count'] = $iR->repoCountByClient($client_id);
+            $row['sales_no_tax'] = $iR->repoCountByClient($client_id) > 0
+                          ? $iR->withItemSubtotalFromTo($client_id, $from, $to, $iaR)
+                          : 0.00;
+            // plus
+            $row['item_tax_total'] = $iR->repoCountByClient($client_id) > 0
+                          ? $iR->withItemTaxTotalFromTo($client_id, $from, $to, $iaR)
+                          : 0.00;
+            // plus
+            $row['tax_total'] = $iR->repoCountByClient($client_id) > 0
+                          ? $iR->withTaxTotalFromTo($client_id, $from, $to, $iaR)
+                          : 0.00;
+            // equals
+            $row['sales_with_tax'] = $iR->repoCountByClient($client_id) > 0
+                          ? $iR->withTotalFromTo($client_id, $from, $to, $iaR)
+                          : 0.00;
+            $results[] = $row;
         }
         return $results;
     }
@@ -451,16 +450,16 @@ class ReportController extends BaseController
 
     /**
      * @param Request $request
-     * @param ViewRenderer $head
+     * @param WebViewRenderer $head
      * @param ProductRepository $pR
      * @param InvRepository $iR
      * @param InvItemAmountRepository $iiaR
      * @return array|\Mpdf\Mpdf|Response|string
      * @psalm-suppress MixedInferredReturnType
      */
-    public function sales_by_product_index(
+    public function salesByProductIndex(
         Request $request,
-        ViewRenderer $head,
+        WebViewRenderer $head,
         ProductRepository $pR,
         InvRepository $iR,
         InvItemAmountRepository $iiaR,
@@ -470,10 +469,10 @@ class ReportController extends BaseController
         $parameters = [
             'head' => $head,
             'alert' => $this->alert(),
-            'actionName' => 'report/sales_by_product_index',
+            'actionName' => 'report/salesByProductIndex',
             'actionArguments' => [],
             'dateHelper' => $dateHelper,
-            'startTaxYear' => $dateHelper->tax_year_to_immutable()->format('Y-m-d'),
+            'startTaxYear' => $dateHelper->taxYearToImmutable()->format('Y-m-d'),
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
@@ -483,13 +482,13 @@ class ReportController extends BaseController
                 $data = [
                     'from_date' => $from_date,
                     'to_date' => $to_date,
-                    'results' => $this->sales_by_product_report($pR, $iR, $dateHelper->date_to_mysql($from_date), $dateHelper->date_to_mysql($to_date), $iiaR),
+                    'results' => $this->salesByProductReport($pR, $iR, $dateHelper->dateToMysql($from_date), $dateHelper->dateToMysql($to_date), $iiaR),
                     'numberHelper' => new NumberHelper($this->sR),
                 ];
-                $mpdfhelper = new MpdfHelper();
+                $mpdfhelper = new MpdfHelper($this->translator);
                 /** @psalm-suppress MixedReturnStatement */
-                return $mpdfhelper->pdf_create(
-                    $this->viewRenderer->renderPartialAsString('///invoice/report/sales_by_product', $data),
+                return $mpdfhelper->pdfCreate(
+                    $this->webViewRenderer->renderPartialAsString('///invoice/report/sales_by_product', $data),
                     $this->translator->translate('report.sales.by.product'),
                     true,
                     '',
@@ -504,7 +503,7 @@ class ReportController extends BaseController
             } // is_array body
             return $this->webService->getNotFoundResponse();
         }
-        return $this->viewRenderer->render('sales_by_product_index', $parameters);
+        return $this->webViewRenderer->render('sales_by_product_index', $parameters);
     }
 
     /**
@@ -515,7 +514,7 @@ class ReportController extends BaseController
      * @param InvItemAmountRepository $iiaR
      * @return array
      */
-    private function sales_by_product_report(
+    private function salesByProductReport(
         ProductRepository $pR,
         InvRepository $iR,
         string $from,
@@ -535,20 +534,20 @@ class ReportController extends BaseController
         ];
         $products = $pR->findAllPreloaded();
         /**
-         * @var \\App\Invoice\Entity\Product $product
+         * @var \App\Infrastructure\Persistence\Product\Product $product
          */
         foreach ($products as $product) {
-            $product_id = (int) $product->getProduct_id();
+            $product_id = $product->reqId();
             if (!empty($product_id)) {
                 // Product name
-                $row['product_name'] = (string) $product->getProduct_name();
+                $row['product_name'] = (string) $product->getProductName();
                 $row['inv_count'] = $iR->repoCountByProduct($product_id);
                 $row['sales_no_tax'] = $iR->repoCountByProduct($product_id) > 0
-                              ? $iR->with_item_subtotal_from_to_using_product($product_id, $from, $to, $iiaR)
+                              ? $iR->withItemSubtotalFromToUsingProduct($product_id, $from, $to, $iiaR)
                               : 0.00;
                 // plus
                 $row['item_tax_total'] = $iR->repoCountByProduct($product_id) > 0
-                              ? $iR->with_item_tax_total_from_to_using_product($product_id, $from, $to, $iiaR)
+                              ? $iR->withItemTaxTotalFromToUsingProduct($product_id, $from, $to, $iiaR)
                               : 0.00;
                 $results[] = $row;
             } // null!==$product_id;
@@ -562,16 +561,16 @@ class ReportController extends BaseController
 
     /**
      * @param Request $request
-     * @param ViewRenderer $head
+     * @param WebViewRenderer $head
      * @param TaskRepository $taskR
      * @param InvRepository $iR
      * @param InvItemAmountRepository $iiaR
      * @return array|\Mpdf\Mpdf|Response|string
      * @psalm-suppress MixedInferredReturnType
      */
-    public function sales_by_task_index(
+    public function salesByTaskIndex(
         Request $request,
-        ViewRenderer $head,
+        WebViewRenderer $head,
         TaskRepository $taskR,
         InvRepository $iR,
         InvItemAmountRepository $iiaR,
@@ -583,10 +582,10 @@ class ReportController extends BaseController
             'head' => $head,
             'body' => $body,
             'alert' => $this->alert(),
-            'actionName' => 'report/sales_by_task_index',
+            'actionName' => 'report/salesByTaskIndex',
             'actionArguments' => [],
             'dateHelper' => $dateHelper,
-            'startTaxYear' => $dateHelper->tax_year_to_immutable()->format('Y-m-d'),
+            'startTaxYear' => $dateHelper->taxYearToImmutable()->format('Y-m-d'),
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
@@ -596,13 +595,13 @@ class ReportController extends BaseController
                 $data = [
                     'from_date' => $from_date,
                     'to_date' => $to_date,
-                    'results' => $this->sales_by_task_report($taskR, $iR, $dateHelper->date_to_mysql($from_date), $dateHelper->date_to_mysql($to_date), $iiaR),
+                    'results' => $this->salesByTaskReport($taskR, $iR, $dateHelper->dateToMysql($from_date), $dateHelper->dateToMysql($to_date), $iiaR),
                     'numberHelper' => new NumberHelper($this->sR),
                 ];
-                $mpdfhelper = new MpdfHelper();
+                $mpdfhelper = new MpdfHelper($this->translator);
                 /** @psalm-suppress MixedReturnStatement */
-                return $mpdfhelper->pdf_create(
-                    $this->viewRenderer->renderPartialAsString('//invoice/report/sales_by_task', $data),
+                return $mpdfhelper->pdfCreate(
+                    $this->webViewRenderer->renderPartialAsString('//invoice/report/sales_by_task', $data),
                     $this->translator->translate('report.sales.by.task'),
                     true,
                     '',
@@ -617,7 +616,7 @@ class ReportController extends BaseController
             } // is_array body
             return $this->webService->getNotFoundResponse();
         }
-        return $this->viewRenderer->render('sales_by_task_index', $parameters);
+        return $this->webViewRenderer->render('sales_by_task_index', $parameters);
     }
 
     /**
@@ -628,7 +627,7 @@ class ReportController extends BaseController
      * @param InvItemAmountRepository $iiaR
      * @return array
      */
-    private function sales_by_task_report(
+    private function salesByTaskReport(
         TaskRepository $taskR,
         InvRepository $iR,
         string $from,
@@ -648,20 +647,20 @@ class ReportController extends BaseController
         ];
         $tasks = $taskR->findAllPreloaded();
         /**
-         * @var \\App\Invoice\Entity\Task $task
+         * @var \App\Infrastructure\Persistence\Task\Task $task
          */
         foreach ($tasks as $task) {
-            $task_id = (int) $task->getId();
+            $task_id = $task->reqId();
             if (!empty($task_id)) {
                 // Task name
                 $row['task_name'] = (string) $task->getName();
                 $row['inv_count'] = $iR->repoCountByTask($task_id);
                 $row['sales_no_tax'] = $iR->repoCountByTask($task_id) > 0
-                              ? $iR->with_item_subtotal_from_to_using_task($task_id, $from, $to, $iiaR)
+                              ? $iR->withItemSubtotalFromToUsingTask($task_id, $from, $to, $iiaR)
                               : 0.00;
                 // plus
                 $row['item_tax_total'] = $iR->repoCountByTask($task_id) > 0
-                              ? $iR->with_item_tax_total_from_to_using_task($task_id, $from, $to, $iiaR)
+                              ? $iR->withItemTaxTotalFromToUsingTask($task_id, $from, $to, $iiaR)
                               : 0.00;
                 $results[] = $row;
             } // null!==$task_id;
@@ -671,16 +670,16 @@ class ReportController extends BaseController
 
     /**
      * @param Request $request
-     * @param ViewRenderer $head
+     * @param WebViewRenderer $head
      * @param ClientRepository $cR
      * @param InvRepository $iR
      * @param InvAmountRepository $iaR
      * @return array|\Mpdf\Mpdf|Response|string
      * @psalm-suppress MixedInferredReturnType
      */
-    public function sales_by_year_index(
+    public function salesByYearIndex(
         Request $request,
-        ViewRenderer $head,
+        WebViewRenderer $head,
         ClientRepository $cR,
         InvRepository $iR,
         InvAmountRepository $iaR,
@@ -691,10 +690,10 @@ class ReportController extends BaseController
             'head' => $head,
             'body' => $body,
             'alert' => $this->alert(),
-            'actionName' => 'report/sales_by_year_index',
+            'actionName' => 'report/salesByYearIndex',
             'actionArguments' => [],
             'dateHelper' => $dateHelper,
-            'startTaxYear' => $dateHelper->tax_year_to_immutable()->format('Y-m-d'),
+            'startTaxYear' => $dateHelper->taxYearToImmutable()->format('Y-m-d'),
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
@@ -704,18 +703,18 @@ class ReportController extends BaseController
                 $data = [
                     'from_date' => $from_date,
                     'to_date' => $to_date,
-                    'results' => $this->sales_by_year_report($cR, $iR, $dateHelper->date_to_mysql($from_date), $dateHelper->date_to_mysql($to_date), $iaR)
+                    'results' => $this->salesByYearReport($cR, $iR, $dateHelper->dateToMysql($from_date), $dateHelper->dateToMysql($to_date), $iaR)
                              ?: [],
                     'n' => new NumberHelper($this->sR),
                     'clienthelper' => new ClientHelper($this->sR),
                 ];
-                $mpdfhelper = new MpdfHelper();
+                $mpdfhelper = new MpdfHelper($this->translator);
                 // Forth parameter $password is empty because these reports are intended for management only
                 // Sixth parameter $isInvoice is false because reports and not Invoices are being generated
                 // Last parameter $quote_or_invoice is false because reports are being generated which are not meant for clients
                 /** @psalm-suppress MixedReturnStatement */
-                return $mpdfhelper->pdf_create(
-                    $this->viewRenderer->renderPartialAsString('//invoice/report/sales_by_year', $data),
+                return $mpdfhelper->pdfCreate(
+                    $this->webViewRenderer->renderPartialAsString('//invoice/report/sales_by_year', $data),
                     $this->translator->translate('sales.by.date'),
                     true,
                     '',
@@ -730,10 +729,10 @@ class ReportController extends BaseController
             } // is_array body
             return $this->webService->getNotFoundResponse();
         }
-        return $this->viewRenderer->render('sales_by_year_index', $parameters);
+        return $this->webViewRenderer->render('sales_by_year_index', $parameters);
     }
 
-    private function sales_by_year_report(
+    private function salesByYearReport(
         ClientRepository $cR,
         InvRepository $iR,
         string $from,
@@ -801,11 +800,11 @@ class ReportController extends BaseController
             foreach ($clients as $client) {
                 // Convert the mysql $from which is a string into an immutable so that we can use the add function
                 // associated with immutable dates
-                $immutable_from = $dateHelper->ymd_to_immutable($from);
-                $immutable_to = $dateHelper->ymd_to_immutable($to);
+                $immutable_from = $dateHelper->ymdToImmutable($from);
+                $immutable_to = $dateHelper->ymdToImmutable($to);
                 $interval = new \DateInterval('P1Y');
                 $daterange = new \DatePeriod($immutable_from, $interval, $immutable_to);
-                $client_id = (int) $client->getClient_id();
+                $client_id = $client->reqId();
                 foreach ($daterange as $current_year) {
                     $additional_year = $this->quarters($year, $immutable_from, $current_year, $client, $clientHelper, $client_id, $iR, $iaR);
                     $results[] = $additional_year;
@@ -857,7 +856,7 @@ class ReportController extends BaseController
                 $year['quarters'][$quarter]['end'] = $quarter_to;
 
                 $sales_no_tax = $iR->repoCountByClient($client_id) > 0
-                              ? $iR->with_item_subtotal_from_to(
+                              ? $iR->withItemSubtotalFromTo(
                                   $client_id,
                                   $quarter_from,
                                   $quarter_to,
@@ -867,7 +866,7 @@ class ReportController extends BaseController
                 $year['quarters'][$quarter]['sales_no_tax'] = $sales_no_tax;
 
                 $item_tax_total = $iR->repoCountByClient($client_id) > 0
-                                ? $iR->with_item_tax_total_from_to(
+                                ? $iR->withItemTaxTotalFromTo(
                                     $client_id,
                                     $quarter_from,
                                     $quarter_to,
@@ -877,7 +876,7 @@ class ReportController extends BaseController
                 $year['quarters'][$quarter]['item_tax_total'] = $item_tax_total;
 
                 $tax_total = $iR->repoCountByClient($client_id) > 0
-                              ? $iR->with_tax_total_from_to(
+                              ? $iR->withTaxTotalFromTo(
                                   $client_id,
                                   $quarter_from,
                                   $quarter_to,
@@ -887,7 +886,7 @@ class ReportController extends BaseController
                 $year['quarters'][$quarter]['tax_total'] = $tax_total;
 
                 $sales_with_tax = $iR->repoCountByClient($client_id) > 0
-                              ? $iR->with_total_from_to(
+                              ? $iR->withTotalFromTo(
                                   $client_id,
                                   $quarter_from,
                                   $quarter_to,
@@ -897,7 +896,7 @@ class ReportController extends BaseController
                 $year['quarters'][$quarter]['sales_with_tax'] = $sales_with_tax;
 
                 $paid = $iR->repoCountByClient($client_id) > 0
-                              ? $iR->with_paid_from_to(
+                              ? $iR->withPaidFromTo(
                                   $client_id,
                                   $quarter_from,
                                   $quarter_to,
@@ -910,27 +909,27 @@ class ReportController extends BaseController
             $to = $year['quarters']['fourth']['end'];
             $year['year'] = $current_year->format('Y');
             // Client Name and Surname
-            $year['Name'] = $clienthelper->format_client($client);
+            $year['Name'] = $clienthelper->formatClient($client);
             // Item subtotal = Sales without taxes
-            $year['VAT_ID'] = $client->getClient_vat_id();
+            $year['VAT_ID'] = $client->getClientVatId();
             $year['period_sales_no_tax'] = $iR->repoCountByClient($client_id) > 0
-                          ? $iR->with_item_subtotal_from_to($client_id, $from, $to, $iaR)
+                          ? $iR->withItemSubtotalFromTo($client_id, $from, $to, $iaR)
                           : 0.00;
             // plus
             $year['period_item_tax_total'] = $iR->repoCountByClient($client_id) > 0
-                          ? $iR->with_item_tax_total_from_to($client_id, $from, $to, $iaR)
+                          ? $iR->withItemTaxTotalFromTo($client_id, $from, $to, $iaR)
                           : 0.00;
             // plus
             $year['period_tax_total'] = $iR->repoCountByClient($client_id) > 0
-                          ? $iR->with_tax_total_from_to($client_id, $from, $to, $iaR)
+                          ? $iR->withTaxTotalFromTo($client_id, $from, $to, $iaR)
                           : 0.00;
             // equals
             $year['period_sales_with_tax'] = $iR->repoCountByClient($client_id) > 0
-                          ? $iR->with_total_from_to($client_id, $from, $to, $iaR)
+                          ? $iR->withTotalFromTo($client_id, $from, $to, $iaR)
                           : 0.00;
             // what the customer has actually paid towards the annual sales with tax
             $year['period_total_paid'] = $iR->repoCountByClient($client_id) > 0
-                          ? $iR->with_paid_from_to($client_id, $from, $to, $iaR)
+                          ? $iR->withPaidFromTo($client_id, $from, $to, $iaR)
                           : 0.00;
             return $year;
         }

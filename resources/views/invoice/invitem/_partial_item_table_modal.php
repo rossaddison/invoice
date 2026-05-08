@@ -6,7 +6,7 @@ use Yiisoft\Html\Html;
 
 /**
  * Related logic: see Invoice...View...{select invoice}...Options dropdown button
- * Related logic: see InvController function view and function view_modal_delete_items
+ * Related logic: see InvController function view and function viewModalDeleteItems
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var array $invItems
@@ -18,7 +18,7 @@ use Yiisoft\Html\Html;
         <tr>
             <th>&nbsp;</th>
             <th><?= $translator->translate('item'); ?></th>
-            <th><?= $translator->translate('product.sku'); ?></th>            
+            <th><?= $translator->translate('product.sku'); ?></th>
             <th><?= $translator->translate('product.name'); ?></th>
             <th><?= $translator->translate('product.description'); ?></th>
             <th class="text-right"><?= $translator->translate('product.price'); ?></th>
@@ -26,29 +26,29 @@ use Yiisoft\Html\Html;
         </tr>
         <?php
             /**
-             * @var App\Invoice\Entity\InvItem $invItem
+             * @var App\Infrastructure\Persistence\InvItem\InvItem $invItem
              */
             foreach ($invItems as $invItem) { ?>
             <tr class="product">
                 <td class="text-left">
-                    <input type="checkbox" name="item_ids[]" value="<?php echo $invItem->getId();?>">
+                    <input type="checkbox" name="item_ids[]" value="<?php echo $invItem->reqId();?>">
                 </td>
                 <td nowrap class="text-left">
-                    <b><?= Html::encode($invItem->getId()); ?></b>
+                    <b><?= Html::encode($invItem->reqId()); ?></b>
                 </td>
                 <td nowrap class="text-left">
-                    <b><?= Html::encode($invItem->getProduct() ? $invItem->getProduct()?->getProduct_sku() : ''); ?></b>
+                    <b><?= Html::encode($invItem->getProduct() ? $invItem->getProduct()?->getProductSku() : ''); ?></b>
                 </td>
                 <td>
-                    <b><?= Html::encode($invItem->getProduct() ? ($invItem->getProduct()?->getProduct_name() ?? '')
+                    <b><?= Html::encode($invItem->getProduct() ? ($invItem->getProduct()?->getProductName() ?? '')
                                      : ($invItem->getTask() ? ($invItem->getTask()?->getName() ?? '') : '')); ?></b>
                 </td>
                 <td>
-                    <?= nl2br(Html::encode($invItem->getProduct() ? $invItem->getProduct()?->getProduct_description()
+                    <?= nl2br(Html::encode($invItem->getProduct() ? $invItem->getProduct()?->getProductDescription()
                                         : ($invItem->getTask() ? $invItem->getTask()?->getDescription() : ''))); ?>
                 </td>
                 <td class="text-right">
-                    <?= $numberHelper->format_currency($invItem->getProduct() ? ($invItem->getProduct()?->getProduct_price() ?? 999.99)
+                    <?= $numberHelper->formatCurrency($invItem->getProduct() ? ($invItem->getProduct()?->getProductPrice() ?? 999.99)
                                                     : ($invItem->getTask() ? ($invItem->getTask()?->getPrice() ?? 999.99) : '')); ?>
                 </td>
                 <td class="text-right">

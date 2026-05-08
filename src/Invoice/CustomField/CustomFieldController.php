@@ -6,7 +6,7 @@ namespace App\Invoice\CustomField;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\CustomField;
+use App\Infrastructure\Persistence\CustomField\CustomField;
 use App\Invoice\CustomValue\CustomValueRepository;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
@@ -24,7 +24,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class CustomFieldController extends BaseController
 {
@@ -36,11 +36,11 @@ final class CustomFieldController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->customFieldService = $customFieldService;
     }
 
@@ -48,7 +48,7 @@ final class CustomFieldController extends BaseController
      * @param CustomFieldRepository $customfieldRepository
      * @param Request $request
      */
-    public function index(CustomFieldRepository $customfieldRepository, Request $request): \Yiisoft\DataResponse\DataResponse
+    public function index(CustomFieldRepository $customfieldRepository, Request $request): \Psr\Http\Message\ResponseInterface
     {
         $query_params = $request->getQueryParams();
         /**
@@ -66,17 +66,18 @@ final class CustomFieldController extends BaseController
         ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next((string) $page));
         $this->rbac();
-        $this->flashMessage('info', $this->viewRenderer->renderPartialAsString('//invoice/info/custom_field'));
+        $this->flashMessage('info', $this->webViewRenderer->renderPartialAsString('//invoice/info/custom_field'));
         $parameters = [
             'page' => $page,
             'paginator' => $paginator,
-            'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
-                                                  ? (int) $this->sR->getSetting('default_list_limit') : 1,
-            'custom_tables' => $this->custom_tables(),
-            'custom_value_fields' => self::custom_value_fields(),
+            'defaultPageSizeOffsetPaginator' =>
+                $this->sR->getSetting('default_list_limit') ?
+                    (int) $this->sR->getSetting('default_list_limit') : 1,
+            'custom_tables' => $this->customTables(),
+            'custom_value_fields' => self::customValueFields(),
             'alert' => $this->alert(),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -104,16 +105,16 @@ final class CustomFieldController extends BaseController
     ): Response {
         $body = $request->getParsedBody() ?? [];
         $custom_field = new CustomField();
-        $form = new CustomFieldForm($custom_field);
+        $form = new CustomFieldForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'customfield/add',
             'actionArguments' => [],
             'errors' => [],
             'form' => $form,
-            'tables' => $this->custom_tables(),
-            'user_input_types' => $this->user_input_types(),
-            'custom_value_fields' => $this->custom_value_fields(),
+            'tables' => $this->customTables(),
+            'user_input_types' => $this->userInputTypes(),
+            'custom_value_fields' => $this->customValueFields(),
             // Create an array for "moduled" ES6 jquery script. The script is "moduled" and therefore deferred by default to avoid
             // the $ undefined reference error in the DOM.
             'positions' => $this->positions(),
@@ -129,7 +130,7 @@ final class CustomFieldController extends BaseController
             $parameters['form'] = $form;
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -147,16 +148,16 @@ final class CustomFieldController extends BaseController
     ): Response {
         $custom_field = $this->customfield($currentRoute, $customfieldRepository);
         if ($custom_field) {
-            $form = new CustomFieldForm($custom_field);
+            $form = CustomFieldForm::show($custom_field);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'customfield/edit',
-                'actionArguments' => ['id' => $custom_field->getId()],
+                'actionArguments' => ['id' => $custom_field->reqId()],
                 'errors' => [],
                 'form' => $form,
-                'tables' => $this->custom_tables(),
-                'user_input_types' => $this->user_input_types(),
-                'custom_value_fields' => $this->custom_value_fields(),
+                'tables' => $this->customTables(),
+                'user_input_types' => $this->userInputTypes(),
+                'custom_value_fields' => $this->customValueFields(),
                 'positions' => $this->positions(),
             ];
             if ($request->getMethod() === Method::POST) {
@@ -170,7 +171,7 @@ final class CustomFieldController extends BaseController
                 $parameters['form'] = $form;
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('customfield/index');
     }
@@ -184,7 +185,7 @@ final class CustomFieldController extends BaseController
     {
         $custom_field = $this->customfield($currentRoute, $customfieldRepository);
         if ($custom_field instanceof CustomField) {
-            $custom_values = $customvalueRepository->repoCustomFieldquery_count((int) $custom_field->getId());
+            $custom_values = $customvalueRepository->repoCustomFieldqueryCount($custom_field->reqId());
             // Make sure all custom values associated with the custom field have been deleted first before commencing
             if (!($custom_values > 0)) {
                 $this->customFieldService->deleteCustomField($custom_field);
@@ -204,16 +205,16 @@ final class CustomFieldController extends BaseController
     {
         $custom_field = $this->customfield($currentRoute, $customfieldRepository);
         if ($custom_field) {
-            $form = new CustomFieldForm($custom_field);
+            $form = CustomFieldForm::show($custom_field);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'customfield/edit',
-                'actionArguments' => ['id' => $custom_field->getId()],
+                'actionArguments' => ['id' => $custom_field->reqId()],
                 'errors' => [],
                 'form' => $form,
-                'custom_tables' => $this->custom_tables(),
+                'custom_tables' => $this->customTables(),
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('customfield/index');
     }
@@ -221,6 +222,7 @@ final class CustomFieldController extends BaseController
     /**
      * @return Response|true
      */
+    /** @psalm-suppress UnusedReturnValue */
     private function rbac(): bool|Response
     {
         $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
@@ -232,17 +234,16 @@ final class CustomFieldController extends BaseController
     }
 
     /**
-     * @param CurrentRoute $currentRoute
-     * @param CustomFieldRepository $customfieldRepository
+     * @param CurrentRoute $curR
+     * @param CustomFieldRepository $cfR
      * @return CustomField|null
      */
-    private function customfield(CurrentRoute $currentRoute, CustomFieldRepository $customfieldRepository): ?CustomField
+    private function customfield(
+        CurrentRoute $curR,
+        CustomFieldRepository $cfR): ?CustomField
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $customfieldRepository->repoCustomFieldquery($id);
-        }
-        return null;
+        $id = (int) $curR->getArgument('id');
+        return $cfR->repoCustomFieldquery($id);
     }
 
     /**
@@ -305,10 +306,11 @@ final class CustomFieldController extends BaseController
     /**
      * @return array
      */
-    private function custom_tables(): array
+    private function customTables(): array
     {
         return [
             'client_custom' => 'client',
+            'family_custom' => 'family',
             'product_custom' => 'product',
             'inv_custom' => 'invoice',
             'payment_custom' => 'payment',
@@ -323,7 +325,7 @@ final class CustomFieldController extends BaseController
      *
      * @psalm-return list{'SINGLE-CHOICE', 'MULTIPLE-CHOICE', 'RADIOLIST-CHOICE'}
      */
-    public static function custom_value_fields(): array
+    public static function customValueFields(): array
     {
         return [
             'SINGLE-CHOICE',
@@ -345,7 +347,7 @@ final class CustomFieldController extends BaseController
             'URL'
         }
      */
-    public function user_input_types(): array
+    public function userInputTypes(): array
     {
         return [
             'BOOLEAN',

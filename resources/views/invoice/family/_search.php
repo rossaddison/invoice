@@ -23,7 +23,7 @@ use Yiisoft\Html\Tag\Form;
  */
 ?>
 
-<?= Form::tag()
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -35,7 +35,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
       <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
         <?= Html::openTag('div', ['class' => 'card-header']); ?>
-          <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
+          <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
             <?= Html::encode($title) ?>
           <?= Html::closeTag('h1'); ?>
           <?= Html::openTag('div', ['id' => 'headerbar']); ?>
@@ -49,7 +49,7 @@ use Yiisoft\Html\Tag\Form;
                           'class' => 'form-control  alert alert-warning',
                           'id' => 'family-category-primary-id',
                       ])
-                      ->value($form->getCategory_primary_id())
+                      ->value($form->getCategoryPrimaryId())
                       ->prompt($translator->translate('none'))
                       ->optionsData($categoryPrimaries);
 ?>
@@ -61,7 +61,7 @@ use Yiisoft\Html\Tag\Form;
         'class' => 'form-control  alert alert-warning',
         'id' => 'family-category-secondary-id',
     ])
-    ->value($form->getCategory_secondary_id())
+    ->value($form->getCategorySecondaryId())
     ->optionsData($categorySecondaries);
 ?>
                 <?= Html::closeTag('div'); ?>
@@ -70,10 +70,10 @@ use Yiisoft\Html\Tag\Form;
   ->label($translator->translate('family.name'))
   ->addInputAttributes([
       'placeholder' => $translator->translate('family.name'),
-      'class' => 'form-control',
+      'class' => 'form-control form-control-lg',
       'id' => 'family-name',
   ])
-  ->value($form->getFamily_name())
+  ->value($form->getFamilyName())
   ->optionsData($familyNames);
 ?>
                 <?= Html::closeTag('div'); ?>
@@ -86,4 +86,4 @@ use Yiisoft\Html\Tag\Form;
   <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 
-<?= Form::tag()->close() ?>
+<?=  new Form()->close() ?>

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Unit;
 
-use App\Invoice\Entity\Unit;
+use App\Infrastructure\Persistence\Unit\Unit;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -70,10 +70,10 @@ final class UnitRepository extends Select\Repository
     }
 
     /**
-     * @param string $unit_id
+     * @param int $unit_id
      * @return int
      */
-    public function repoCount(string $unit_id): int
+    public function repoCount(int $unit_id): int
     {
         return $this->select()
                       ->where(['id' => $unit_id])
@@ -85,7 +85,7 @@ final class UnitRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoUnitquery(string $unit_id): ?Unit
+    public function repoUnitquery(int $unit_id): ?Unit
     {
         $query = $this
             ->select()
@@ -109,21 +109,21 @@ final class UnitRepository extends Select\Repository
      * Return either the singular unit name or the plural unit name,
      * depending on the quantity
      *
-     * @param string $unit_id
+     * @param int $unit_id
      * @param int $quantity
      * @return string|Unit|null
      */
-    public function singular_or_plural_name(string $unit_id, int $quantity): string|Unit|null
+    public function singularOrPluralName(int $unit_id, int $quantity): string|Unit|null
     {
-        if ((int) $unit_id === 0) {
+        if ($unit_id === 0) {
             return '';
         }
         $unit = $this->repoUnitquery($unit_id);
         if ($unit) {
             if ($quantity == -1 || $quantity == 1) {
-                return $unit->getUnit_name();
+                return $unit->getUnitName();
             }
-            return $unit->getUnit_name_plrl();
+            return $unit->getUnitNamePlrl();
         }
         return null;
     }

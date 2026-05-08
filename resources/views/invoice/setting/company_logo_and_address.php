@@ -35,47 +35,59 @@ use App\Widget\QrCode as QrCodeWidget;
 ?>
 <div style="width:100%;height:175px;overflow:auto;">
     <table style="width:100%">
-        <tr> 
+        <tr>
             <td style="width:33%;text-align:left">
                 <div id="logo">
-                    <?php
-                        /**
-                         * Related logic: see src/Invoice/Setting/SettingRepository function get_company_private_logos_folder_aliases()
-                         * Related logic: see CompanyPrivateController function add()
-                         *
-                         * The private logo filename which exists between a start and end date is modified with Random::string(4)
-                         * and transferred to the public logo location i.e destination.public.logo
-                         *
-                         * If the destination.public.logo does not exist, the default.public.site logo will take precedence
-                         *
-                         * Aliases @base, @company_private_logos, @public, @public\logo
-                         */
-                        $aliases = $s->get_company_private_logos_folder_aliases();
+<?php
+    /**
+     * Related logic:
+     * see src/Invoice/Setting/SettingRepository function
+     *  get_company_private_logos_folder_aliases()
+     * Related logic: see CompanyPrivateController function add()
+     *
+     * The private logo filename which exists between a start and end date is
+     * modified with Random::string(4) and transferred to the public logo
+     * location i.e destination.public.logo
+     *
+     * If the destination.public.logo does not exist,
+     *  the default.public.site logo will take precedence
+     *
+     * Aliases @base, @company_private_logos, @public, @public\logo
+     */
+                        $aliases = $s->getCompanyPrivateLogosFolderAliases();
 /**
  * @var string $company['logofilenamewithsuffix']
  */
 $filenameWithSuffix = $company['logofilenamewithsuffix'] ?? 'logo.png';
-$destinationPublicLogo = $aliases->get('@public_logo') . DIRECTORY_SEPARATOR . $filenameWithSuffix;
-$destinationPublicSite = $aliases->get('@public') . DIRECTORY_SEPARATOR . 'site' . DIRECTORY_SEPARATOR . $filenameWithSuffix;
+$destinationPublicLogo = $aliases->get('@public_logo')
+    . DIRECTORY_SEPARATOR
+        . $filenameWithSuffix;
+$destinationPublicSite = $aliases->get('@public')
+    . DIRECTORY_SEPARATOR
+    . 'site' . DIRECTORY_SEPARATOR
+    . $filenameWithSuffix;
 /**
- * The public folder source can be either the 'site' folder ('default') or the 'logo' folder ('private')
+ * The public folder source can be either the 'site' folder ('default') or the
+ *  'logo' folder ('private')
  * @var string $company['logopublicsource']
  * @var string $logoPublicSource]
  */
 $logoPublicSource = $company['logopublicsource'] ?? 'default.public.site';
 $logoFileNameWithPath = match ($logoPublicSource) {
-    // default public site folder i.e. permanent 'globe' logo sitting in @base/public/site
+    // default public site folder i.e. permanent 'globe' logo sitting
+    //  in @base/public/site
     'default.public.site' => $destinationPublicSite,
-    // public logo folder i.e. modified private logo transferred from @company_private_logos to
+    // public logo folder i.e. modified private logo transferred from
+    //  @company_private_logos to
     // @base/public/logo
     'destination.public.logo' => $destinationPublicLogo,
 };
-echo Img::tag()
+echo  new Img()
 ->height(100)
 ->width(150)
 ->src($logoFileNameWithPath)
 ->render();
-?>    
+?>
                 </div>
             </td>
             <?php if ($isInvoice) { ?>
@@ -87,7 +99,7 @@ echo Img::tag()
                 ]), $translator->translate('qr.code'), 150);
                 Html::closeTag('div');
                 ?>
-            </td> 
+            </td>
             <?php } ?>
             <td style="width:33%;text-align:left">
                 <?php
@@ -120,12 +132,12 @@ echo '<div>' . Html::encode($company['city'] ? $translator->translate('city') . 
 echo '<div>' . Html::encode($company['state'] ? $translator->translate('state') . ': ' . $company['state'] : '') . '</div>';
 echo '<div>' . Html::encode($company['zip'] ? $translator->translate('zip') . ': ' . $company['zip'] : '') . '</div>';
 echo '</div>';
-echo '<div>' . $countryHelper->get_country_name($translator->translate('cldr'), ($company['country'] ?? 'United Kingdom')) . '</div>';
+echo '<div>' . $countryHelper->getCountryName($translator->translate('cldr'), ($company['country'] ?? 'United Kingdom')) . '</div>';
 echo '<br/>';
 echo '<div>' . $translator->translate('phone.abbr') . ': ' . Html::encode($company['phone'] ?? '') . '</div>';
 echo '<div>' . $translator->translate('fax.abbr') . ': ' . Html::encode($company['fax'] ?? '') . '</div>';
 ?>
             </td>
         </tr>
-    </table>    
+    </table>
 </div>

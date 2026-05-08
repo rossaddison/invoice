@@ -31,7 +31,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
     <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?><?= $translator->translate('create.invoice'); ?><?= Html::closeTag('h1'); ?>
-        <?= Form::tag()
+        <?=  new Form()
             ->post($urlGenerator->generate($actionName, $actionArguments))
             ->enctypeMultipartFormData()
             ->csrf($csrf)->id('InvForm')
@@ -44,30 +44,30 @@ use Yiisoft\Html\Tag\Form;
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::select($form, 'client_id')
                                         ->label($translator->translate('client'))
-                                        ->addInputAttributes(['class' => 'form-control'])
-                                        ->value(Html::encode($form->getClient_id()))
+                                        ->addInputAttributes(['class' => 'form-control form-control-lg',])
+                                        ->value(Html::encode($form->getClientId()))
                                         ->prompt($translator->translate('none'))
                                         ->optionsData($clients)
                                         ->hint($translator->translate('hint.this.field.is.required'));
 
 ?>
-                                <?= Html::closeTag('div'); ?>            
+                                <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::select($form, 'group_id')
     ->label($translator->translate('group'))
-    ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getGroup_id() >= 0 ? $form->getGroup_id() : $defaultGroupId))
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
+    ->value(Html::encode($form->getGroupId() >= 0 ? $form->getGroupId() : $defaultGroupId))
     ->prompt($translator->translate('none'))
     ->optionsData($groups)
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
-                                <?= Html::closeTag('div'); ?>                                       
+                                <?= Html::closeTag('div'); ?>
                                  <?= Html::openTag('div'); ?>
                                      <?= Field::date($form, 'date_created')
     ->label($translator->translate('date.created'))
-    ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode(!is_string($form->getDate_created()) && null !== $form->getDate_created()
-                                    ? $form->getDate_created()->format('Y-m-d') : ''))
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
+    ->value(Html::encode(!is_string($form->getDateCreated()) && null !== $form->getDateCreated()
+                                    ? $form->getDateCreated()->format('Y-m-d') : ''))
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                                 <?= Html::closeTag('div'); ?>
@@ -75,15 +75,15 @@ use Yiisoft\Html\Tag\Form;
                                     <?= Field::hidden($form, 'date_modified')
     ->hideLabel()
     ->label($translator->translate('date.modified'))
-    ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode(!is_string($form->getDate_modified()) && null !== $form->getDate_modified()
-                                    ? $form->getDate_modified()->format('Y-m-d') : ''))
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
+    ->value(Html::encode(!is_string($form->getDateModified()) && null !== $form->getDateModified()
+                                    ? $form->getDateModified()->format('Y-m-d') : ''))
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::password($form, 'password')
     ->label($translator->translate('password'))
-    ->addInputAttributes(['class' => 'form-control', 'autocomplete' => 'current-password'])
+    ->addInputAttributes(['class' => 'form-control form-control-lg', 'autocomplete' => 'current-password'])
     ->value(Html::encode($form->getPassword()))
     ->placeholder($translator->translate('password'))
     ->hint($translator->translate('hint.this.field.is.not.required'));
@@ -92,50 +92,50 @@ use Yiisoft\Html\Tag\Form;
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::text($form, 'time_created')
     ->label($translator->translate('time.created'))
-    ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode(date('h:i:s', (!is_string($form->getTime_created()) && null !== $form->getTime_created()
-                                              ? $form->getTime_created()->getTimestamp() : null))))
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
+    ->value(Html::encode(date('h:i:s', (!is_string($form->getTimeCreated()) && null !== $form->getTimeCreated()
+                                              ? $form->getTimeCreated()->getTimestamp() : null))))
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::hidden($form, 'date_tax_point')
     ->hideLabel(true)
     ->label($translator->translate('tax.point'))
-    ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode(!is_string($form->getDate_tax_point()) && null !== $form->getDate_tax_point()
-                                    ? $form->getDate_tax_point()->format('Y-m-d') : ''));
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
+    ->value(Html::encode(!is_string($form->getDateTaxPoint()) && null !== $form->getDateTaxPoint()
+                                    ? $form->getDateTaxPoint()->format('Y-m-d') : ''));
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::hidden($form, 'stand_in_code')
     ->hideLabel(true)
-    ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getStand_in_code()))
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
+    ->value(Html::encode($form->getStandInCode()))
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::hidden($form, 'date_supplied')
     ->hideLabel(true)
     ->label($translator->translate('date.supplied'))
-    ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode(!is_string($form->getDate_supplied()) && null !== $form->getDate_supplied()
-                                    ? $form->getDate_supplied()->format('Y-m-d') : ''));
-?>    
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
+    ->value(Html::encode(!is_string($form->getDateSupplied()) && null !== $form->getDateSupplied()
+                                    ? $form->getDateSupplied()->format('Y-m-d') : ''));
+?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::hidden($form, 'date_due')
     ->hideLabel(true)
     ->label($translator->translate('date.due'))
-    ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode(!is_string($form->getDate_due()) && null !== $form->getDate_due()
-                                    ? $form->getDate_due()->format('Y-m-d') : ''));
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
+    ->value(Html::encode(!is_string($form->getDateDue()) && null !== $form->getDateDue()
+                                    ? $form->getDateDue()->format('Y-m-d') : ''));
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::hidden($form, 'number')
     ->hideLabel(true)
     ->label($translator->translate('number'))
-    ->addInputAttributes(['class' => 'form-control'])
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
     ->value(Html::encode($form->getNumber()))
     //->placeholder($translator->translate('number'));
 ?>
@@ -144,23 +144,15 @@ use Yiisoft\Html\Tag\Form;
                                     <?= Field::hidden($form, 'discount_amount')
     ->hideLabel(true)
     ->label($translator->translate('discount.amount'))
-    ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($s->format_amount(($form->getDiscount_amount() ?? 0.00))))
-?>
-                                <?= Html::closeTag('div'); ?>
-                                <?= Html::openTag('div'); ?>
-                                    <?= Field::hidden($form, 'discount_percent')
-    ->hideLabel(true)
-    ->label($translator->translate('discount.percent'))
-    ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($s->format_amount(($form->getDiscount_percent() ?? 0.00))))
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
+    ->value(Html::encode($s->formatAmount(($form->getDiscountAmount() ?? 0.00))))
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::hidden($form, 'terms')
     ->hideLabel(true)
     ->label($translator->translate('terms'))
-    ->addInputAttributes(['class' => 'form-control'])
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
     ->value(Html::encode($form->getTerms() ?? $s->getSetting('default_invoice_terms') ?: $translator->translate('payment.term.general')))
     //->placeholder($translator->translate('terms'));
 ?>
@@ -168,7 +160,7 @@ use Yiisoft\Html\Tag\Form;
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::textarea($form, 'note')
     ->label($translator->translate('note'))
-    ->addInputAttributes(['class' => 'form-control'])
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
     ->value(Html::encode($form->getNote()))
     ->placeholder($translator->translate('note'))
     ->hint($translator->translate('hint.this.field.is.not.required'));
@@ -177,7 +169,7 @@ use Yiisoft\Html\Tag\Form;
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::text($form, 'document_description')
     ->label($translator->translate('description.document'))
-    ->addInputAttributes(['class' => 'form-control'])
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
     ->value(Html::encode($form->getDocumentDescription()))
     ->placeholder($translator->translate('description.document'))
     ->hint($translator->translate('hint.this.field.is.not.required'))
@@ -187,48 +179,48 @@ use Yiisoft\Html\Tag\Form;
                                     <?= Field::hidden($form, 'url_key')
     ->hideLabel(true)
     ->label($translator->translate('url.key'))
-    ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getUrl_key() ?? $urlKey))
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
+    ->value(Html::encode($form->getUrlKey() ?? $urlKey))
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::hidden($form, 'payment_method')
     ->hideLabel(true)
     ->label($translator->translate('payment.method'))
-    ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getPayment_method() ?? ($s->getSetting('invoice_default_payment_method') ?: 1)))
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
+    ->value(Html::encode($form->getPaymentMethod() ?? ($s->getSetting('invoice_default_payment_method') ?: 1)))
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::hidden($form, 'contract_id')
     ->hideLabel(true)
     ->label($translator->translate('contract.id'))
-    ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getContract_id() ?? 0))
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
+    ->value(Html::encode($form->getContractId() ?? 0))
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::hidden($form, 'delivery_id')
     ->hideLabel(true)
     ->label($translator->translate('delivery'))
-    ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getDelivery_id() ?? 0))
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
+    ->value(Html::encode($form->getDeliveryId() ?? 0))
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::hidden($form, 'delivery_location_id')
     ->hideLabel(true)
     ->label($translator->translate('delivery.location'))
-    ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getDelivery_location_id() ?? 0))
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
+    ->value(Html::encode($form->getDeliveryLocationId() ?? 0))
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::hidden($form, 'postal_address_id')
     ->hideLabel(true)
     ->label($translator->translate('postal.address'))
-    ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getPostal_address_id() ?? 0))
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
+    ->value(Html::encode($form->getPostalAddressId() ?? 0))
 ?>
                                 <?= Html::closeTag('div'); ?>
                             <?= Html::closeTag('div'); ?>
@@ -239,8 +231,8 @@ use Yiisoft\Html\Tag\Form;
 
             <?= $button::backSave(); ?>
 
-            <?= Html::closeTag('form'); ?>        
-        
+            <?= Html::closeTag('form'); ?>
+
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

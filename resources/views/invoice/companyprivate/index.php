@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\CompanyPrivate;
+use App\Infrastructure\Persistence\CompanyPrivate\CompanyPrivate;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -26,12 +26,12 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $id
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$toolbarReset = A::tag()
+$toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'companyprivate/index'))
     ->id('btn-reset')
     ->render();
@@ -40,17 +40,17 @@ $columns = [
     new DataColumn(
         'company_public_name',
         header: $translator->translate('company.public'),
-        content: static fn(CompanyPrivate $model) => Html::encode($model->getCompany()?->getName()),
+        content: static fn (CompanyPrivate $model) => Html::encode($model->getCompany()?->getName()),
     ),
     new DataColumn(
         'logo_filename',
-        content: static fn(CompanyPrivate $model) => Html::encode($model->getLogo_filename()),
+        content: static fn (CompanyPrivate $model) => Html::encode($model->getLogoFilename()),
     ),
     new ActionColumn(buttons: [
         new ActionButton(
             content: '🔎',
             url: static function (CompanyPrivate $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('companyprivate/view', ['id' => $model->getId()]);
+                return $urlGenerator->generate('companyprivate/view', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -60,7 +60,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (CompanyPrivate $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('companyprivate/edit', ['id' => $model->getId()]);
+                return $urlGenerator->generate('companyprivate/edit', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -70,7 +70,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (CompanyPrivate $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('companyprivate/delete', ['id' => $model->getId()]);
+                return $urlGenerator->generate('companyprivate/delete', ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),
@@ -81,16 +81,16 @@ $columns = [
 ];
 
 $toolbarString
-    = Form::tag()->post($urlGenerator->generate('companyprivate/index'))->csrf($csrf)->open()
-    . A::tag()
+    =  new Form()->post($urlGenerator->generate('companyprivate/index'))->csrf($csrf)->open()
+    .  new A()
         ->href($urlGenerator->generate('companyprivate/add'))
         ->addAttributes(['style' => 'text-decoration:none'])
         ->content('➕')
         ->render()
-    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-    . Form::tag()->close();
+    .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    .  new Form()->close();
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -108,7 +108,7 @@ echo GridView::widget()
 ->id('w53-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($grid_summary)
+->summaryTemplate($gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

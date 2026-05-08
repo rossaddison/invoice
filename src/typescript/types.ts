@@ -38,6 +38,7 @@ export interface ApiResponse {
     errors?: Record<string, string[]>;
     validation_errors?: Record<string, string[]>;
     new_invoice_id?: string;
+    redirect_url?: string;
 }
 
 export interface RequestParams {

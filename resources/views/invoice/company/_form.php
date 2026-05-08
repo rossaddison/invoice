@@ -26,7 +26,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::encode($title . ' ' . $companyPublic); ?>
 <?= Html::closeTag('h1'); ?>
 
-<?= Form::tag()
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -34,33 +34,32 @@ use Yiisoft\Html\Tag\Form;
     ->open() ?>
 
     <?= Html::openTag('div', ['class' => 'headerbar']); ?>
-        <?= $button::backSave(); ?> 
+        <?= $button::backSave(); ?>
         <?= Html::openTag('div', ['id' => 'content']); ?>
             <?= Html::openTag('div', ['class' => 'row']); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>    
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::errorSummary($form)
                         ->errors($errors)
                         ->header($translator->translate('client.error.summary'))
                         ->onlyCommonErrors()
 ?>
-                <?= Html::closeTag('div'); ?>    
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                    <?= $formFields->companyHiddenField($form, 'id'); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'form-check form-switch']); ?>
-                    <?= $formFields->companyCheckboxField($form, 'current', 'active'); ?>    
-                <?= Html::closeTag('div'); ?>    
+                    <?= $formFields->companyCheckboxField($form, 'current', 'active'); ?>
+                <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                    <?= $formFields->companyTextField($form, 'name', 'name', true); ?>    
+                    <?= $formFields->companyTextField($form, 'name', 'name', true); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= $formFields->companyEmailField($form); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= $formFields->companyTextField($form, 'web', 'web', false); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                    <?= $formFields->companyTextField($form, 'seo_description', 'company.seo', false); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                    <?= $formFields->companyTextField($form, 'address_1', 'street.address', false); ?>    
+                    <?= $formFields->companyTextField($form, 'address_1', 'street.address', false); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= $formFields->companyTextField($form, 'address_2', 'street.address.2', false); ?>
@@ -82,8 +81,8 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= $formFields->companyTelephoneField($form, 'fax', 'fax'); ?>
-                <?= Html::closeTag('div'); ?>                
-            <?= Html::closeTag('div'); ?>        
+                <?= Html::closeTag('div'); ?>
+            <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
-<?= Form::tag()->close() ?>
+<?=  new Form()->close() ?>

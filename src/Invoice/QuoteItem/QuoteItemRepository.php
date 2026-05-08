@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\QuoteItem;
 
-use App\Invoice\Entity\QuoteItem;
+use App\Infrastructure\Persistence\QuoteItem\QuoteItem;
 use Cycle\ORM\Select;
 use Cycle\Database\Injection\Parameter;
 use Throwable;
@@ -86,7 +86,7 @@ final class QuoteItemRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoQuoteItemquery(string $id): ?QuoteItem
+    public function repoQuoteItemquery(int $id): ?QuoteItem
     {
         $query = $this->select()->load(['tax_rate','product','quote'])->where(['id' => $id]);
         return  $query->fetchOne() ?: null;
@@ -97,7 +97,7 @@ final class QuoteItemRepository extends Select\Repository
      *
      * @psalm-return EntityReader
      */
-    public function repoQuoteItemIdquery(string $quote_id): EntityReader
+    public function repoQuoteItemIdquery(int $quote_id): EntityReader
     {
         $query = $this->select()
                       ->load(['tax_rate','product','quote'])
@@ -110,7 +110,7 @@ final class QuoteItemRepository extends Select\Repository
      *
      * @psalm-return EntityReader
      */
-    public function repoQuotequery(string $quote_id): EntityReader
+    public function repoQuotequery(int $quote_id): EntityReader
     {
         $query = $this->select()
                       ->load(['tax_rate','product','quote'])
@@ -118,14 +118,14 @@ final class QuoteItemRepository extends Select\Repository
         return $this->prepareDataReader($query);
     }
 
-    public function repoCount(string $quote_id): int
+    public function repoCount(int $quote_id): int
     {
         return $this->select()
                       ->where(['quote_id' => $quote_id])
                       ->count();
     }
 
-    public function repoQuoteItemCount(string $id): int
+    public function repoQuoteItemCount(int $id): int
     {
         return $this->select()
                       ->where(['id' => $id])

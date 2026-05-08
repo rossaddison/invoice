@@ -30,7 +30,7 @@ cls
 echo ======================================================================================
 echo                               INVOICE SYSTEM MAIN MENU
 echo ======================================================================================
-echo [0]  Installation Menu                         [5a]  Codeception Tests
+echo                                                [5a]  Codeception Tests
 echo [1]  Run PHP Psalm (Full)                      [5aa] Codeception Build
 echo [2]  Psalm on File                             [5b]  Rector See Changes
 echo [2a] Psalm on Directory                        [5c]  Rector Make Changes
@@ -41,32 +41,36 @@ echo [3]  Composer Outdated                         [5g]  Snyk Security Check (F
 echo [3a] Composer why-not                          [5h]  Snyk Security Dependencies
 echo [3b] Composer Cache with Lock                  [5i]  Snyk Security Code File Check
 echo [3c] Composer Validate                         [5j]  Snyk Security Summary (Issues Count)
-echo [3d] Composer Dump Autoload                    [5k]  Snyk Security JSON Output
-echo [4]  Composer Update                           [6]   PHP Built-in 'serve'
-echo [4a] Node Modules Update                       [7]   user/create username password
-echo [4b] nvm-windows Install/Update                [8]   user/assignRole role userId
-echo [4c] Node: Audit, Clean, List                  [9]   router/list
-echo [4d] npm: Check Outdated                       [10]  translator/translate
-echo [4e] npm: Safe Update (patch only)             [11]  invoice/items
-echo [4f] npm: Minor Update (minor versions)        [12]  invoice/setting/truncate
-echo [4g] npm: Major Update (interactive)           [13]  invoice/generator/truncate
-echo [4h] npm: ES2024 Feature Verification          [13]  invoice/generator/truncate
-echo [4i] TypeScript Build (Production)             [14]  invoice/inv/truncate1
-echo [4j] TypeScript Build (Development)            [15]  invoice/quote/truncate2
-echo [4k] TypeScript Watch Mode                     [16]  invoice/salesorder/truncate3
-echo [4l] TypeScript Type Check                     [17]  invoice/nonuserrelated/truncate4
-echo [4m] TypeScript Lint                           [18]  invoice/userrelated/truncate5
-echo [4n] TypeScript Format                         [19]  invoice/autoincrementsettooneafter/truncate6
-echo [4o] npm run build                             [4p]  Angular: Install Dependencies
+echo [3d] Composer Dump Autoload                    [5k]  Snyk Security JSON Output			
+echo [3e] Composer Audit                            [5l]  PHPCS: Check 85-char line length
+echo [4]  Composer Update                           [5m]  PHPCS: Check specific file
+echo [4a] Node Modules Update                       [5n]  PHPCS: Check specific directory
+echo [4b] nvm-windows Install/Update                [5o]  PHPCS: Detailed report
+echo [4c] Node: Audit, Clean, List                  [6]   PHP Built-in 'serve'
+echo [4d] npm: Check Outdated                       [7]   user/create username password
+echo [4e] npm: Safe Update (patch only)             [8]   user/assignRole role userId
+echo [4f] npm: Minor Update (minor versions)        [9]   router/list
+echo [4g] npm: Major Update (interactive)           [10]  translator/translate
+echo [4h] npm: ES2024 Feature Verification          [11]  invoice/items
+echo [4i] TypeScript Build (Production)             [12]  invoice/setting/truncate
+echo [4j] TypeScript Build (Development)            [13]  invoice/generator/truncate
+echo [4k] TypeScript Watch Mode                     [14]  invoice/inv/truncate1
+echo [4l] TypeScript Type Check                     [15]  invoice/quote/truncate2
+echo [4m] TypeScript Lint                           [16]  invoice/salesorder/truncate3
+echo [4n] TypeScript Format                         [17]  invoice/nonuserrelated/truncate4
+echo [4o] npm run build                             [18]  invoice/userrelated/truncate5
+echo [4p] Angular: Install Dependencies             [19]  invoice/autoincrementsettooneafter/truncate6
 echo [4q] Angular: Serve Development                [4r]  Angular: Build Production
 echo [4s] Angular: Generate Component               [4t]  Angular: Lint Check
-echo [5]  Require Checker                           [20]  Exit
-echo [99] System Info / Diagnostics                 [21]  Exit to Current Directory
-echo =================================
-set /p choice="Enter your choice [0-21,99]: "
+echo [5]  Require Checker                           [20]  GitHub CLI: Install
+echo [99] System Info / Diagnostics                 [21]  GitHub CLI: Auth Status
+echo                                                [22]  GitHub CLI: Copilot Version
+echo                                                [23]  Exit
+echo                                                [24]  Exit to Current Directory
+echo =================================                     
+set /p choice="Enter your choice [0-24,99]: "
 
 REM ======== MENU COMMAND ROUTING ========
-if "%choice%"=="0" goto installation_menu 
 if "%choice%"=="1" goto psalm
 if "%choice%"=="2" goto psalm_file
 if "%choice%"=="2a" goto psalm_directory
@@ -78,6 +82,7 @@ if "%choice%"=="3a" goto composer_whynot
 if "%choice%"=="3b" goto composer_clear_cache_and_resolve_lock_conflicts
 if "%choice%"=="3c" goto composer_validate
 if "%choice%"=="3d" goto composer_dumpautoload
+if "%choice%"=="3e" goto composer_audit
 if "%choice%"=="4" goto composer_update
 if "%choice%"=="4a" goto node_modules_update
 if "%choice%"=="4b" goto nvm_install_or_update
@@ -112,6 +117,10 @@ if "%choice%"=="5h" goto security_deps
 if "%choice%"=="5i" goto security_code_file
 if "%choice%"=="5j" goto security_summary
 if "%choice%"=="5k" goto security_json
+if "%choice%"=="5l" goto phpcs_check
+if "%choice%"=="5m" goto phpcs_file
+if "%choice%"=="5n" goto phpcs_dir
+if "%choice%"=="5o" goto phpcs_report
 if "%choice%"=="6" goto serve
 if "%choice%"=="7" goto user_create
 if "%choice%"=="8" goto user_assignRole
@@ -126,10 +135,19 @@ if "%choice%"=="16" goto confirm_warning_16
 if "%choice%"=="17" goto confirm_warning_17
 if "%choice%"=="18" goto confirm_warning_18
 if "%choice%"=="19" goto confirm_warning_19
-if "%choice%"=="20" goto exit
-if "%choice%"=="21" goto exit_to_directory
+if "%choice%"=="20" goto gh_cli_install
+if "%choice%"=="21" goto gh_auth_status
+if "%choice%"=="22" goto gh_copilot_version
+if "%choice%"=="23" goto exit
+if "%choice%"=="24" goto exit_to_directory
 if "%choice%"=="99" goto diagnostics
 echo Invalid choice. Please try again.
+pause
+goto menu
+
+:composer_audit
+echo Validating composer.json and composer.lock...
+composer audit --ansi
 pause
 goto menu
 
@@ -160,7 +178,7 @@ goto menu
 
 :composer_validate
 echo Validating composer.json and composer.lock...
-composer validate
+composer validate --ansi --strict
 pause
 goto menu
 
@@ -185,17 +203,44 @@ npm list --depth=0
 pause
 goto menu
 
-:installation_menu
-echo Installation menu...
-if exist install.bat (
-    call install.bat
-) else (
-    echo [INFO] No install.bat found. Running 'composer install' and 'npm install'.
-    composer install
-    npm install
-)
+:check_extensions
+cls
+echo ======================================================================================
+echo                     PHP EXTENSION CHECKER (Pre-Installation)
+echo ======================================================================================
+echo Checking required PHP extensions for Invoice System...
+echo Based on invoice_build.yml workflow requirements
+echo.
+php scripts\extension-checker.php
+echo.
+echo [INFO] If extensions are missing, follow the instructions above.
+echo [INFO] You may need to restart WAMP/Apache after making changes.
 pause
-goto menu
+goto installation_menu
+
+:check_requirements
+echo Checking system requirements...
+where php >nul 2>nul || echo [ERROR] PHP not found in PATH
+where composer >nul 2>nul || echo [ERROR] Composer not found in PATH  
+where npm >nul 2>nul || echo [ERROR] npm not found in PATH
+php --version
+composer --version
+npm --version
+pause
+goto installation_menu
+
+:install_dependencies
+echo Installing dependencies only...
+composer install --no-dev --optimize-autoloader
+npm install --production
+pause
+goto installation_menu
+
+:shipmonk_dependency_analyser
+echo Running Shipmonk Composer Dependency Analyser (https://github.com/shipmonk-rnd/composer-dependency-analyser)...
+php vendor/bin/composer-dependency-analyser
+pause
+goto installation_menu
 
 :node_audit
 echo Running npm audit...
@@ -255,7 +300,7 @@ goto menu
 
 :psalm
 echo Running PHP Psalm...
-php vendor/bin/psalm
+php vendor/bin/psalm --force-jit
 pause
 goto menu
 
@@ -395,12 +440,6 @@ npm run lint:angular
 pause
 goto menu
 
-:require_checker
-echo Running Composer Require Checker...
-php -d memory_limit=512M vendor/bin/composer-require-checker
-pause
-goto menu
-
 :codeception_tests
 echo Running Codeception Tests...
 php vendor/bin/codecept run
@@ -413,15 +452,21 @@ php vendor/bin/codecept build
 pause
 goto menu
 
-:code_style_suggest_changes
-echo PHP-CS-Fixer Dry Run (see potential changes)...
-php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --diff 
-pause
-goto menu
-
 :code_style_make_changes
 echo PHP-CS-Fixer Fix (apply changes)...
 php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php 
+pause
+goto menu
+
+:code_style_suggest_changes
+echo PHP-CS-Fixer Dry Run (see potential changes)...
+php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --show-progress=bar --verbose
+pause
+goto menu
+
+:require_checker
+echo Running Composer Require Checker...
+php -d memory_limit=512M vendor/bin/composer-require-checker
 pause
 goto menu
 
@@ -551,6 +596,97 @@ echo Cancelled.
 pause
 goto menu
 
+
+:gh_cli_install
+echo Installing GitHub CLI via winget...
+echo Checking if GitHub CLI is already installed...
+where gh >nul 2>nul && (
+    echo [INFO] GitHub CLI is already installed.
+    gh --version
+    echo.
+    set /p reinstall="Reinstall anyway? (Y/N): "
+    if /i not "%reinstall%"=="Y" (
+        echo Installation cancelled.
+        pause
+        goto menu
+    )
+)
+echo.
+echo Installing GitHub CLI using winget...
+winget install --id GitHub.cli
+echo.
+echo Adding GitHub CLI to PATH for current session...
+REM Add common GitHub CLI installation paths to current session PATH
+REM winget creates links in WinGet\Links, also check standard install locations
+set "PATH=%PATH%;%LOCALAPPDATA%\Microsoft\WinGet\Links;%ProgramFiles%\GitHub CLI;%LOCALAPPDATA%\Programs\GitHub CLI"
+echo.
+echo Installation complete!
+echo Verifying installation...
+where gh >nul 2>nul && (
+    echo [SUCCESS] GitHub CLI is now available.
+    gh --version
+    echo.
+    echo You can now run option [21] to authenticate with GitHub.
+) || (
+    echo [WARNING] GitHub CLI installed but not yet available in current session.
+    echo Please restart your terminal and run option [21] to authenticate.
+)
+pause
+goto menu
+
+:gh_auth_status
+echo Checking GitHub CLI authentication status...
+where gh >nul 2>nul || (
+    echo [ERROR] GitHub CLI not found in PATH.
+    echo.
+    echo If you just installed it, please close and reopen this terminal.
+    echo.
+    echo Otherwise, please install it first using option [20].
+    pause
+    goto menu
+)
+echo.
+gh auth status
+echo.
+echo [INFO] If not authenticated, run: gh auth login
+pause
+goto menu
+
+:gh_copilot_version
+echo Checking GitHub Copilot access...
+where gh >nul 2>nul || (
+    echo [ERROR] GitHub CLI not found in PATH.
+    echo.
+    echo If you just installed it, please close and reopen this terminal.
+    echo.
+    echo Otherwise, please install it first using option [20].
+    pause
+    goto menu
+)
+echo.
+echo Checking Copilot seat details...
+gh api user/copilot_seat_details >nul 2>nul && (
+    echo [SUCCESS] You have GitHub Copilot access!
+    echo.
+    echo Manage your subscription: https://github.com/settings/copilot
+) || (
+    echo [INFO] No active Copilot subscription found via API.
+    echo.
+    echo If you have a subscription but it's not detected:
+    echo 1. Check your authenticated account with: gh auth status
+    echo 2. Verify subscription at: https://github.com/settings/copilot
+    echo 3. Try re-authenticating with: gh auth login
+    echo.
+    echo If you need Copilot access:
+    echo - Individual: https://github.com/features/copilot
+    echo - Organization: Contact your GitHub admin
+)
+echo.
+echo Checking GitHub CLI version...
+gh --version
+pause
+goto menu
+
 :invoice_setting_truncate
 php yii invoice/setting/truncate
 pause
@@ -588,6 +724,32 @@ goto menu
 
 :invoice_autoincrementsettooneafter_truncate6
 php yii invoice/autoincrementsettooneafter/truncate6
+pause
+goto
+
+:phpcs_check
+echo PHP CodeSniffer: Checking 85-character line length...
+php vendor/bin/phpcs -d memory_limit=1024M --standard=phpcs.xml.dist
+pause
+goto menu
+
+:phpcs_file
+set /p filepath="Enter file path (e.g., src/Invoice/Invoice.php): "
+echo Checking %filepath% for 85-character line length...
+php vendor/bin/phpcs -d memory_limit=1024M --standard=Generic --sniffs=Generic.Files.LineLength --runtime-set lineLimit 85 --runtime-set absoluteLineLimit 85 %filepath%
+pause
+goto menu
+
+:phpcs_dir
+set /p dirpath="Enter directory path (e.g., src/Invoice/): "
+echo Checking %dirpath% for 85-character line length...
+php vendor/bin/phpcs -d memory_limit=1024M --standard=Generic --sniffs=Generic.Files.LineLength --runtime-set lineLimit 85 --runtime-set absoluteLineLimit 85 %dirpath%
+pause
+goto menu
+
+:phpcs_report
+echo Running detailed PHPCS line length report...
+php vendor/bin/phpcs -d memory_limit=1024M --standard=phpcs.xml.dist --report=full --report-width=120
 pause
 goto menu
 

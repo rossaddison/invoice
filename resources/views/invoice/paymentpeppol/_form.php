@@ -7,7 +7,7 @@ use Yiisoft\Bootstrap5\Alert;
 use Yiisoft\Bootstrap5\AlertVariant;
 
 /**
- * @var Yiisoft\DataResponse\DataResponse $response
+ * @var Yiisoft\DataResponse\DataStream\DataStream $dataStream
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var array $body
@@ -20,7 +20,6 @@ use Yiisoft\Bootstrap5\AlertVariant;
 
 if (!empty($errors)) {
     /**
-     * @var string $field
      * @var string $error
      */
     foreach ($errors as $field => $error) {
@@ -38,21 +37,21 @@ if (!empty($errors)) {
 <input type="hidden" name="_csrf" value="<?= $csrf ?>">
     <div id="headerbar">
     <h1 class="headerbar-title"><?= $translator->translate('paymentpeppols.form'); ?></h1>
-    <?= (string) $response->getBody(); ?>
+    <?= (string) $dataStream->getData(); ?>
     <div id="content">
         <div class = 'row'>
            <div class="mb3 form-group">
-             <input type="hidden" name="id" id="id" class="form-control"
+             <input type="hidden" name="id" id="id" class="form-control form-control-lg"
            value="<?= Html::encode($body['id'] ??  ''); ?>">
            </div>
            <div class="mb3 form-group">
              <label for="auto_reference"><?= $translator->translate('auto.reference'); ?></label>
-             <input type="text" name="auto_reference" id="auto_reference" class="form-control"
+             <input type="text" name="auto_reference" id="auto_reference" class="form-control form-control-lg"
            value="<?= Html::encode($body['auto_reference'] ??  ''); ?>">
            </div>
            <div class="mb3 form-group">
              <label for="provider"><?= $translator->translate('provider'); ?></label>
-             <input type="text" name="provider" id="provider" class="form-control"
+             <input type="text" name="provider" id="provider" class="form-control form-control-lg"
            value="<?= Html::encode($body['provider'] ??  ''); ?>">
            </div>
        </div>

@@ -2,7 +2,6 @@ name: Code Style
 
 on:
   workflow_dispatch:
-
 jobs:
   cs-fix:
     timeout-minutes: 30
@@ -13,7 +12,7 @@ jobs:
       issues: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -37,7 +36,7 @@ jobs:
       - name: Run PHP CS Fixer dry-run and capture output
         id: csfixer
         run: |
-          output=$(php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --diff --verbose)
+          output=$(php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --verbose)
           echo "$output" | tee fixer-output.txt
           # Determine if any files were fixed based on output
           if echo "$output" | grep -qE "Fixed all files in|Fixed [1-9][0-9]* files with"; then
@@ -57,7 +56,7 @@ jobs:
 
       - name: Create Pull Request for style fixes
         if: env.has_changes == 'true'
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore: apply PHP CS Fixer"

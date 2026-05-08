@@ -6,7 +6,7 @@ namespace App\Invoice\Merchant;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\Merchant;
+use App\Infrastructure\Persistence\Merchant\Merchant;
 use App\Invoice\Inv\InvRepository;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
@@ -20,7 +20,7 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class MerchantController extends BaseController
 {
@@ -32,18 +32,18 @@ final class MerchantController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->merchantService = $merchantService;
     }
 
     /**
      * @param MerchantRepository $merchantRepository
      */
-    public function index(MerchantRepository $merchantRepository): \Yiisoft\DataResponse\DataResponse
+    public function index(MerchantRepository $merchantRepository): \Psr\Http\Message\ResponseInterface
     {
         $canEdit = $this->rbac();
         $merchants = $this->merchants($merchantRepository);
@@ -54,7 +54,7 @@ final class MerchantController extends BaseController
             'merchants' => $this->merchants($merchantRepository),
             'alert' => $this->alert(),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -69,7 +69,7 @@ final class MerchantController extends BaseController
         InvRepository $invRepository,
     ): Response {
         $merchant = new Merchant();
-        $form = new MerchantForm($merchant);
+        $form = new MerchantForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'merchant/add',
@@ -90,7 +90,7 @@ final class MerchantController extends BaseController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -110,11 +110,11 @@ final class MerchantController extends BaseController
     ): Response {
         $merchant = $this->merchant($currentRoute, $merchantRepository);
         if ($merchant) {
-            $form = new MerchantForm($merchant);
+            $form = MerchantForm::show($merchant);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'merchant/edit',
-                'actionArguments' => ['id' => $merchant->getId()],
+                'actionArguments' => ['id' => $merchant->reqId()],
                 'errors' => [],
                 'form' => $form,
                 'invs' => $invRepository->findAllPreloaded(),
@@ -130,7 +130,7 @@ final class MerchantController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('merchant/index');
     }
@@ -161,18 +161,18 @@ final class MerchantController extends BaseController
         CurrentRoute $currentRoute,
         InvRepository $invRepository,
         MerchantRepository $merchantRepository,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $merchant = $this->merchant($currentRoute, $merchantRepository);
         if ($merchant) {
-            $form = new MerchantForm($merchant);
+            $form = MerchantForm::show($merchant);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'merchant/view',
-                'actionArguments' => ['id' => $merchant->getId()],
+                'actionArguments' => ['id' => $merchant->reqId()],
                 'form' => $form,
                 'invs' => $invRepository->findAllPreloaded(),
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('merchant/index');
     }
@@ -180,12 +180,12 @@ final class MerchantController extends BaseController
     /**
      * @param MerchantRepository $mR
      */
-    public function online_log(MerchantRepository $mR): \Yiisoft\DataResponse\DataResponse
+    public function onlineLog(MerchantRepository $mR): \Psr\Http\Message\ResponseInterface
     {
         $parameters = [
             'payment_logs' => $mR->findAllPreloaded(),
         ];
-        return $this->viewRenderer->render('_view', $parameters);
+        return $this->webViewRenderer->render('_view', $parameters);
     }
 
     /**
@@ -208,11 +208,8 @@ final class MerchantController extends BaseController
      */
     private function merchant(CurrentRoute $currentRoute, MerchantRepository $merchantRepository): ?Merchant
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $merchantRepository->repoMerchantquery($id);
-        }
-        return null;
+        $id = (int) $currentRoute->getArgument('id');
+        return $merchantRepository->repoMerchantquery($id);
     }
 
     /**

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Related logic: see InvController function view_custom_fields
+ * Related logic: see InvController function viewCustomFields
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH
  * @var App\Invoice\InvCustom\InvCustomForm $invCustomForm
  * @var App\Invoice\Setting\SettingRepository $s
@@ -26,7 +26,7 @@ if ($custom_fields): ?>
                                             <?php $i = 0; ?>
                                             <?php
                                                /**
-                                                * @var App\Invoice\Entity\CustomField $custom_field
+                                                * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
                                                 */
                                                foreach ($custom_fields as $custom_field): ?>
                                                 <?php if ($custom_field->getLocation() != 0) {
@@ -34,7 +34,7 @@ if ($custom_fields): ?>
                                                 } ?>
                                                 <?php $i++; ?>
                                                 <?php if ($i % 2 != 0): ?>
-                                                    <?php $cvH->print_field_for_view($custom_field, $invCustomForm, $inv_custom_values, $custom_values); ?>
+                                                    <?php $cvH->printFieldForView($custom_field, $invCustomForm, $inv_custom_values); ?>
                                                 <?php endif; ?>
                                             <?php endforeach; ?>
                                         </div>
@@ -42,7 +42,7 @@ if ($custom_fields): ?>
                                             <?php $i = 0; ?>
                                             <?php
                                                 /**
-                                                 * @var App\Invoice\Entity\CustomField $custom_field
+                                                 * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
                                                  */
                                                 foreach ($custom_fields as $custom_field): ?>
                                                 <?php if ($custom_field->getLocation() != 0) {
@@ -50,7 +50,7 @@ if ($custom_fields): ?>
                                                 } ?>
                                                 <?php $i++; ?>
                                                 <?php if ($i % 2 == 0): ?>
-                                                    <?php $cvH->print_field_for_view($custom_field, $invCustomForm, $inv_custom_values, $custom_values); ?>
+                                                    <?php $cvH->printFieldForView($custom_field, $invCustomForm, $inv_custom_values); ?>
                                                 <?php endif; ?>
                                             <?php endforeach; ?>
                                         </div>

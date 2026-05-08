@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\UserInv;
 
 use Cycle\ORM\Select;
-use App\Invoice\Entity\UserInv;
+use App\Infrastructure\Persistence\UserInv\UserInv;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
@@ -22,7 +22,8 @@ final class UserInvRepository extends Select\Repository
      *
      * @param EntityWriter $entityWriter
      */
-    public function __construct(Select $select, private readonly EntityWriter $entityWriter)
+    public function __construct(
+                    Select $select, private readonly EntityWriter $entityWriter)
     {
         parent::__construct($select);
     }
@@ -80,28 +81,28 @@ final class UserInvRepository extends Select\Repository
         );
     }
 
-    public function repoUserInvquery(string $id): ?UserInv
+    public function repoUserInvquery(int $id): ?UserInv
     {
         $query = $this->select()
                       ->where(['id' => $id]);
         return  $query->fetchOne() ?: null;
     }
 
-    public function repoUserInvcount(string $id): int
+    public function repoUserInvcount(int $id): int
     {
         $query = $this->select()
                       ->where(['id' => $id]);
         return  $query->count();
     }
 
-    public function repoUserInvUserIdquery(string $user_id): ?UserInv
+    public function repoUserInvUserIdquery(int $user_id): ?UserInv
     {
         $query = $this->select()
                       ->where(['user_id' => $user_id]);
         return  $query->fetchOne() ?: null;
     }
 
-    public function repoUserInvUserIdcount(string $user_id): int
+    public function repoUserInvUserIdcount(int $user_id): int
     {
         return $this->select()
                       ->where(['user_id' => $user_id])

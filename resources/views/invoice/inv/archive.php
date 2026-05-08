@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 /**
+ * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var string $alert
@@ -10,8 +11,8 @@ declare(strict_types=1);
  * @var string $partial_inv_archive
  */
 
-echo $alert;
-?> 
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
+?>
 
 <div id="headerbar">
     <h1 class="headerbar-title"><?= $translator->translate('archive'); ?></h1>
@@ -21,7 +22,7 @@ echo $alert;
             <input type="hidden" name="_csrf" value="<?= $csrf; ?>">
             <div class="input-group" hidden>
                 <label for="invoice_number"><?= $translator->translate('number'); ?></label>
-                <input name="invoice_number" id="invoice_number" type="text" class="form-control" value="<?php $body['invoice_number'] ?? '#'; ?>">
+                <input name="invoice_number" id="invoice_number" type="text" class="form-control form-control-lg" value="<?php $body['invoice_number'] ?? '#'; ?>">
                 <span class="input-group-btn">
                     <button class="btn btn-primary btn-sm" type="submit"><?= $translator->translate('filter.invoices'); ?></button>
                 </span>

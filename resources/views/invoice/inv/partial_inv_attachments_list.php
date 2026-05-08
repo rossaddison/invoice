@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Upload;
+use App\Infrastructure\Persistence\Upload\Upload;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Yii\DataView\GridView\GridView;
@@ -22,12 +22,14 @@ $columns = [
     new DataColumn(
         'file_name_original',
         header: $translator->translate('name'),
-        content: static fn(Upload $model): string => ($model->getFile_name_original()),
+        content: static fn (Upload $model): string =>
+            ($model->getFileNameOriginal()),
     ),
     new DataColumn(
         'uploaded_date',
         header: $translator->translate('date'),
-        content: static fn(Upload $model): string => ($model->getUploaded_date())->format('Y-m-d'),
+        content: static fn (Upload $model): string =>
+            ($model->getUploadedDate())->format('Y-m-d'),
     ),
     new DataColumn(
         header: $translator->translate('download'),
@@ -35,13 +37,14 @@ $columns = [
             return Html::a(
                 Html::tag(
                     'button',
-                    Html::tag('i', '', ['class' => 'fa fa-download fa-margin']),
+                    Html::tag('i', '', ['class' => 'bi bi-download']),
                     [
                         'type' => 'submit',
                         'class' => 'dropdown-button',
                     ],
                 ),
-                $urlGenerator->generate('inv/download_file', ['upload_id' => $model->getId(), '_language' => 'en']),
+                $urlGenerator->generate('inv/downloadFile',
+                        ['upload_id' => $model->reqId(), '_language' => 'en']),
                 [],
             );
         },
@@ -54,13 +57,14 @@ $columns = [
             return Html::a(
                 Html::tag(
                     'button',
-                    Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']),
+                    Html::tag('i', '', ['class' => 'bi bi-pencil']),
                     [
                         'type' => 'submit',
                         'class' => 'dropdown-button',
                     ],
                 ),
-                $urlGenerator->generate('upload/edit', ['id' => $model->getId(), '_language' => 'en']),
+                $urlGenerator->generate('upload/edit',
+                        ['id' => $model->reqId(), '_language' => 'en']),
                 [],
             );
         },
@@ -73,14 +77,18 @@ $columns = [
             return Html::a(
                 Html::tag(
                     'button',
-                    Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
+                    Html::tag('i', '', ['class' => 'bi-trash']),
                     [
                         'type' => 'submit',
                         'class' => 'dropdown-button',
-                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                        'onclick' => "return confirm("
+                            . "'"
+                            . $translator->translate('delete.record.warning')
+                            . "');",
                     ],
                 ),
-                $urlGenerator->generate('upload/delete', ['id' => $model->getId(), '_language' => 'en']),
+                $urlGenerator->generate('upload/delete',
+                        ['id' => $model->reqId(), '_language' => 'en']),
                 [],
             );
         },
@@ -88,7 +96,7 @@ $columns = [
     ),
 ];
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -98,10 +106,11 @@ $grid_summary = $s->grid_summary(
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
-->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' => 'table-inv-attachments-list'])
+->tableAttributes(['class' => 'table table-striped text-center h-75',
+    'id' => 'table-inv-attachments-list'])
 ->columns(...$columns)
 ->dataReader($paginator)
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($grid_summary)
+->summaryTemplate($gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.attachments'));

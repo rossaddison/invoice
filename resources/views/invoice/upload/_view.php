@@ -20,7 +20,7 @@ use Yiisoft\Html\Tag\Form;
  */
 ?>
 
-<?= Form::tag()
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -28,13 +28,13 @@ use Yiisoft\Html\Tag\Form;
     ->open();
 ?>
 
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
-<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
@@ -51,21 +51,21 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'url_key')
     ->label($translator->translate('upload.url.key'))
-    ->value(Html::encode($form->getUrl_key()))
+    ->value(Html::encode($form->getUrlKey()))
     ->disabled(true);
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'file_name_original')
     ->label($translator->translate('upload.filename.original'))
-    ->value(Html::encode($form->getFile_name_original()))
+    ->value(Html::encode($form->getFileNameOriginal()))
     ->disabled(true);
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'file_name_new')
     ->label($translator->translate('upload.filename.new'))
-    ->value(Html::encode($form->getFile_name_new()))
+    ->value(Html::encode($form->getFileNameNew()))
     ->disabled(true);
 ?>
             <?= Html::closeTag('div'); ?>
@@ -80,7 +80,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::date($form, 'uploaded_date')
     ->label($translator->translate('date'))
     ->required(true)
-    ->value($form->getUploaded_date() instanceof \DateTimeImmutable ? ($form->getUploaded_date())->format('Y-m-d') : '')
+    ->value($form->getUploadedDate() instanceof \DateTimeImmutable ? ($form->getUploadedDate())->format('Y-m-d') : '')
     ->disabled(true);
 ?>
             <?= Html::closeTag('div'); ?>
@@ -89,4 +89,4 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?= Form::tag()->close() ?>
+<?=  new Form()->close() ?>

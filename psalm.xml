@@ -2,18 +2,16 @@
 <psalm
     errorLevel="1"
     findUnusedBaselineEntry="true"
-    findUnusedCode="false"    
+    findUnusedCode="true"    
     strictBinaryOperands="false"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
 >
-<plugins><pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin"/></plugins>    
     <projectFiles>
         <directory name="config" />
         <directory name="resources/views" />
         <directory name="src" />
-        <directory name="dev-scripts-psalm-1" />
         <file name="public/index.php"/>
         <file name="yii"/>
         <file name="autoload.php"/>
@@ -22,6 +20,52 @@
         </ignoreFiles>        
     </projectFiles>
     <issueHandlers>
+        <PossiblyUnusedMethod>
+            <errorLevel type="suppress">
+                <directory name="src" />
+                <directory name="resources" />
+            </errorLevel>
+        </PossiblyUnusedMethod>
+        <PossiblyUnusedProperty>
+            <errorLevel type="suppress">
+                <directory name="src" />
+                <directory name="resources" />
+            </errorLevel>
+        </PossiblyUnusedProperty>
+        <PossiblyUnusedReturnValue>
+            <errorLevel type="suppress">
+                <directory name="src" />
+                <directory name="resources" />
+            </errorLevel>
+        </PossiblyUnusedReturnValue>
+        <UnusedMethod>
+            <errorLevel type="suppress">
+                <directory name="src" />
+                <directory name="resources" />
+            </errorLevel>
+        </UnusedMethod>
+        <!-- Data/language files that assign to file-scope variables consumed by require callers -->
+        <UnusedVariable>
+            <errorLevel type="suppress">
+                <file name="src/Invoice/Helpers/Peppol/uncl2005.php" />
+                <file name="src/Invoice/Helpers/Peppol/uncl2005_subset.php" />
+                <file name="src/Invoice/Helpers/Peppol/untdid2005.php" />
+                <file name="src/Invoice/Language/English/app_lang.php" />
+                <file name="src/Invoice/InvoiceController.php" />
+            </errorLevel>
+        </UnusedVariable>
+        <UnusedProperty>
+            <errorLevel type="suppress">
+                <directory name="src" />
+                <directory name="resources" />
+            </errorLevel>
+        </UnusedProperty>
+        <UnusedFunctionCall>
+            <errorLevel type="suppress">
+                <directory name="src" />
+                <directory name="resources" />
+            </errorLevel>
+        </UnusedFunctionCall>   
         <PropertyNotSetInConstructor>
             <errorLevel type="suppress">
                 <directory name="src/Auth/Client" />
@@ -30,6 +74,11 @@
         <!-- Implemented 16/02/2025 psalm version upgrade to 6.6.0.             
              The Cycle/ORM  requires Entity Classes not to be final so that proxies can 
              be created using the ProxyFactory. -->             
-        <ClassMustBeFinal errorLevel="suppress" />
+        <ClassMustBeFinal errorLevel="suppress">
+             <errorLevel type="suppress">
+                <!-- Implemented 06/05/2026 --> 
+                <directory name="src/Infrastructure/Persistence" />
+            </errorLevel>
+        </ClassMustBeFinal>    
     </issueHandlers>    
 </psalm>

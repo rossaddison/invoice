@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Client;
+use App\Infrastructure\Persistence\Client\Client;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -13,8 +13,8 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 
 /**
  * A list of clients that the guest user has
- * @var App\Invoice\Entity\Client $client
- * @var App\Invoice\Entity\UserInv $userInv
+ * @var App\Infrastructure\Persistence\Client\Client $client
+ * @var App\Infrastructure\Persistence\UserInv\UserInv $userInv
  * @var App\Invoice\ClientPeppol\ClientPeppolRepository $cpR
  * @var App\Invoice\Inv\InvRepository $iR
  * @var App\Invoice\InvAmount\InvAmountRepository $iaR
@@ -37,20 +37,20 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
  * @var string $modal_create_client
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $columns = [
     new DataColumn(
         'id',
         header: 'id',
-        content: static fn(Client $model) => (string) $model->getClient_id(),
+        content: static fn (Client $model) => (string) $model->reqId(),
         withSorting: true,
     ),
     new DataColumn(
         'client_active',
         header: $translator->translate('active'),
         content: static function (Client $model) use ($button, $translator): Span {
-            return $model->getClient_active() ? $button::activeLabel($translator) : $button::inactiveLabel($translator);
+            return $model->getClientActive() ? $button::activeLabel($translator) : $button::inactiveLabel($translator);
         },
         encodeContent: false,
     ),
@@ -58,7 +58,7 @@ $columns = [
         'client_email',
         header: $translator->translate('email'),
         content: static function (Client $model): string {
-            return $model->getClient_email() ?: '';
+            return $model->getClientEmail() ?: '';
         },
         encodeContent: true,
         withSorting: false,
@@ -67,7 +67,7 @@ $columns = [
         'client_mobile',
         header: $translator->translate('mobile.number'),
         content: static function (Client $model): string {
-            return $model->getClient_mobile() ?? '';
+            return $model->getClientMobile() ?? '';
         },
         encodeContent: true,
         withSorting: true,
@@ -76,9 +76,9 @@ $columns = [
         property: 'client_name',
         header: $translator->translate('client.name'),
         content: static function (Client $model) use ($urlGenerator): A {
-            return  A::tag()
-                    ->content(Html::encode($model->getClient_name()))
-                    ->href($urlGenerator->generate('client/view', ['id' => $model->getClient_id()]))
+            return   new A()
+                    ->content(Html::encode($model->getClientName()))
+                    ->href($urlGenerator->generate('client/view', ['id' => $model->reqId()]))
                     ->addClass('btn btn-warning ms-2');
         },
         encodeContent: false,
@@ -88,9 +88,9 @@ $columns = [
         property: 'client_surname',
         header: $translator->translate('client.surname'),
         content: static function (Client $model) use ($urlGenerator): A {
-            return  A::tag()
-                    ->content(Html::encode($model->getClient_surname() ?? ''))
-                    ->href($urlGenerator->generate('client/view', ['id' => $model->getClient_id()]))
+            return   new A()
+                    ->content(Html::encode($model->getClientSurname() ?? ''))
+                    ->href($urlGenerator->generate('client/view', ['id' => $model->reqId()]))
                     ->addClass('btn btn-warning ms-2');
         },
         encodeContent: false,
@@ -100,7 +100,7 @@ $columns = [
         'client_phone',
         header: $translator->translate('phone'),
         content: static function (Client $model): string {
-            return $model->getClient_phone() ?? '';
+            return $model->getClientPhone() ?? '';
         },
         encodeContent: true,
         withSorting: true,
@@ -108,78 +108,86 @@ $columns = [
     new DataColumn(
         'invs',
         content: static function (Client $model) use ($iR, $iaR): int {
-            if (null !== ($clientId = $model->getClient_id())) {
-                $invoices = $iR->findAllWithClient($clientId);
-                /**
-                 *  Initialize the ArrayCollection
-                 *  Related logic: see Doctrine\Common\Collections\ArrayCollection
-                 *  Related logic: see src\Invoice\Entity\Client function setInvs()
-                 */
-                $model->setInvs();
-                /**
-                 * @var App\Invoice\Entity\Inv $invoice
-                 */
-                foreach ($invoices as $invoice) {
-                    $invoice_amount = ($iaR->repoInvAmountCount((int) $invoice->getId()) > 0 ? $iaR->repoInvquery((int) $invoice->getId()) : null);
-                    if (null !== $invoice_amount && null !== $invoice_amount->getBalance() && $invoice_amount->getBalance() > 0) {
-                        // Load the ArrayCollection
-                        $model->addInv($invoice);
-                    }
+            $clientId = $model->reqId();
+            $invoices = $iR->findAllWithClient($clientId);
+            /**
+             *  Initialize the ArrayCollection
+             *  Related logic: see Doctrine\Common\Collections\ArrayCollection
+             *  Related logic: see src\Invoice\Entity\Client function setInvs()
+             */
+            $model->setInvs();
+            /**
+             * @var App\Infrastructure\Persistence\Inv\Inv $invoice
+             */
+            foreach ($invoices as $invoice) {
+                $invoice_amount = ($iaR->repoInvAmountCount(
+                        $invoice->reqId()) > 0 ?
+                        $iaR->repoInvquery($invoice->reqId()) : null);
+                if (null !== $invoice_amount
+                        && null !== $invoice_amount->getBalance()
+                        && $invoice_amount->getBalance() > 0) {
+                    // Load the ArrayCollection
+                    $model->addInv($invoice);
                 }
-                /**
-                 * Use the ArrayCollection count method to determine how many invoices there are for this client
-                 * Related logic: see \vendor\doctrine\Common\Collections\ArrayCollection count method;
-                 */
-                return $model->getInvs()->count();
             }
-            return 0;
+            /**
+             * Use the ArrayCollection count method to determine how many
+             * invoices there are for this client
+             * Related logic: see \vendor\doctrine\Common\Collections\ArrayCollection count method;
+             */
+            return $model->getInvs()->count();
         },
         encodeContent: false,
     ),
     new DataColumn(
         'invs',
-        content: static function (Client $model) use ($iR, $iaR, $urlGenerator, $gridComponents): string {
-            if (null !== ($clientId = $model->getClient_id())) {
-                $invoices = $iR->findAllWithClient($clientId);
-                // Initialize a new empty ArrayCollection without the need to create a new entity
-                $model->setInvs();
-                /**
-                 * @var App\Invoice\Entity\Inv $invoice
-                 */
-                foreach ($invoices as $invoice) {
-                    $invoice_amount = ($iaR->repoInvAmountCount((int) $invoice->getId()) > 0 ? $iaR->repoInvquery((int) $invoice->getId()) : null);
-                    if (null !== $invoice_amount && null !== $invoice_amount->getBalance() && $invoice_amount->getBalance() > 0) {
-                        // Load into the ArrayCollection the invoices that make up this balance
-                        $model->addInv($invoice);
-                    }
+        content: static function (Client $model) use ($iR, $iaR,
+        $urlGenerator, $gridComponents): string {
+            $clientId = $model->reqId(); 
+            $invoices = $iR->findAllWithClient($clientId);
+            // Initialize a new empty ArrayCollection without the need to
+            // create a new entity
+            $model->setInvs();
+            /**
+             * @var App\Infrastructure\Persistence\Inv\Inv $invoice
+             */
+            foreach ($invoices as $invoice) {
+                $invoice_amount = ($iaR->repoInvAmountCount(
+                        $invoice->reqId()) > 0 ?
+                        $iaR->repoInvquery($invoice->reqId()) : null);
+                if (null !== $invoice_amount
+                        && null !== $invoice_amount->getBalance()
+                        && $invoice_amount->getBalance() > 0) {
+                    // Load into the ArrayCollection the invoices
+                    // that make up this balance
+                    $model->addInv($invoice);
                 }
-                // Iterate across $model->getInvs()->toArray() to generate a mini table
-                // with invoice number, invoice amount, and date
-                return $gridComponents->gridMiniTableOfInvoicesForClient(
-                    $model,
-                    $min_invoices_per_row = 4,
-                    $urlGenerator,
-                );
-            } else {
-                return '';
             }
+            // Iterate across $model->getInvs()->toArray() to generate a mini
+            // table with invoice number, invoice amount, and date
+            return $gridComponents->gridMiniTableOfInvoicesForClient(
+                $model,
+                $min_invoices_per_row = 4,
+                $urlGenerator,
+            );
         },
         encodeContent: false,
     ),
     new DataColumn(
         'client_id',
-        header: $translator->translate('balance') . ' (' . $s->getSetting('currency_symbol') . ')',
+        header: $translator->translate('balance')
+            . ' ('
+            . $s->getSetting('currency_symbol')
+            . ')',
         content: static function (Client $model) use ($iR, $iaR, $s): string {
-            if (null !== ($clientId = $model->getClient_id())) {
-                return Html::encode($s->format_currency($iR->with_total_balance($clientId, $iaR)));
-            } else {
-                return '';
-            }
+            $clientId = $model->reqId(); 
+            return Html::encode($s->formatCurrency(
+                $iR->withTotalBalance($clientId, $iaR)));
         },
     ),
 ];
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     (int) $userInv->getListLimit(),
@@ -188,32 +196,32 @@ $grid_summary = $s->grid_summary(
 );
 
 $toolbarString
-    = Form::tag()
+    =  new Form()
     ->post($urlGenerator->generate('client/index'))
     ->csrf($csrf)
     ->open()
-    . Div::tag()
+    .  new Div()
         ->addClass('btn-group')
         ->content(
             $gridComponents->toolbarReset($urlGenerator)
-            . A::tag()
+            .  new A()
             ->href($urlGenerator->generate('client/index', ['page' => 1, 'active' => 2]))
             ->addClass('btn ' . ($active == 2 ? 'btn-primary' : 'btn-info'))
             ->content($translator->translate('all'))
             ->render()
-            . A::tag()
+            .  new A()
             ->href($urlGenerator->generate('client/index', ['page' => 1, 'active' => 1]))
             ->addClass('btn ' . ($active == 1 ? 'btn-primary' : 'btn-info'))
             ->content($translator->translate('active'))
             ->render()
-            . A::tag()
+            .  new A()
             ->href($urlGenerator->generate('client/index', ['page' => 1, 'active' => 0]))
             ->addClass('btn ' . ($active == 0 ? 'btn-primary' : 'btn-info'))
             ->content($translator->translate('inactive'))
             ->render(),
         )
         ->encode(false)->render()
-    . Form::tag()->close();
+    .  new Form()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
@@ -235,7 +243,7 @@ echo GridView::widget()
 ->id('w34-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($pageSizeLimiter::buttonsGuest($userInv, $urlGenerator, $translator, 'client', ($userInv->getListLimit() ?? 10)))
+->summaryTemplate($pageSizeLimiter::buttonsGuest($userInv, $urlGenerator, $translator, 'client', ($userInv->getListLimit() ?? 10)) . ' ' . $gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\CustomField;
+use App\Infrastructure\Persistence\CustomField\CustomField;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
@@ -29,14 +29,14 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
  * @var string $page
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
         content: static function (CustomField $model): string {
-            return Html::encode($model->getId());
+            return Html::encode($model->reqId());
         },
     ),
     new DataColumn(
@@ -74,10 +74,11 @@ $columns = [
     new DataColumn(
         'type',
         header: $translator->translate('values'),
-        content: static function (CustomField $model) use ($custom_value_fields, $urlGenerator, $translator): string|A {
+        content: static function (CustomField $model) use ($custom_value_fields,
+                $urlGenerator): string|A {
             if (in_array($model->getType(), $custom_value_fields)) {
-                return A::tag()
-                       ->href($urlGenerator->generate('customvalue/field', ['id' => $model->getId()]))
+                return  new A()
+                       ->href($urlGenerator->generate('customvalue/field', ['id' => $model->reqId()]))
                        ->addClass('btn btn-default')
                        ->addAttributes([
                            'style' => 'text-decoration:none; background:lightblue',
@@ -92,7 +93,7 @@ $columns = [
         new ActionButton(
             content: '🔎',
             url: static function (CustomField $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('customfield/view', ['id' => $model->getId()]);
+                return $urlGenerator->generate('customfield/view', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -102,7 +103,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (CustomField $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('customfield/edit', ['id' => $model->getId()]);
+                return $urlGenerator->generate('customfield/edit', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -112,7 +113,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (CustomField $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('customfield/delete', ['id' => $model->getId()]);
+                return $urlGenerator->generate('customfield/delete', ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),
@@ -123,21 +124,21 @@ $columns = [
 ];
 
 $toolbarString
-    = Form::tag()->post($urlGenerator->generate('customfield/index', ['page' => $page]))
+    =  new Form()->post($urlGenerator->generate('customfield/index', ['page' => $page]))
                ->csrf($csrf)
                ->open()
-                . A::tag()
+                .  new A()
                     ->href($urlGenerator->generate('customfield/add'))
                     ->addClass('btn btn-info')
                     ->content('➕')
                     ->render()
-                . Div::tag()
+                .  new Div()
                     ->addClass('float-end m-3')
                     ->content($gridComponents->toolbarReset($urlGenerator))
                     ->encode(false)->render()
-                . Form::tag()->close();
+                .  new Form()->close();
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -155,7 +156,7 @@ echo GridView::widget()
 ->id('w75-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'customfield') . ' ' . $grid_summary)
+->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'customfield') . ' ' . $gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

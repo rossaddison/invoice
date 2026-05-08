@@ -16,9 +16,17 @@ final class SubMenu
      * @param string $title
      * @param UrlGenerator $urlGenerator
      * @param array $items
+     * @param string $navBarFont
+     * @param string $navBarFontSize
      * @return string
      */
-    public static function generate(string $title, UrlGenerator $urlGenerator, array $items = []): string
+    public static function generate(
+        string $title,
+        UrlGenerator $urlGenerator,
+        array $items = [],
+        string $navBarFont,
+        string $navBarFontSize,
+        ): string
     {
         $finalString = '';
         /**
@@ -46,10 +54,19 @@ final class SubMenu
                         $actionName,
                         $actionArguments,
                     ),
+                    itemAttributes: ['style' => 'font-size: '
+                        . $navBarFontSize . 'px;color: black;']
                 );
             }
             $finalString = Dropdown::widget()
-                           ->togglerContent($title)->items(...$builtItems)->render();
+                           ->togglerContent($title)
+                           ->addCssStyle([
+                              'font-size' =>
+                                $navBarFontSize . 'px',
+                              'font-family' =>
+                                $navBarFont])
+                           ->items(...$builtItems)
+                           ->render();
         }
         return $finalString;
     }

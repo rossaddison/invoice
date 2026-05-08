@@ -1,4 +1,4 @@
-import { getJson, parsedata, querySelector, getInputValue } from './utils.js';
+﻿import { getJson, parsedata, querySelector, getInputValue } from './utils.js';
 import type { ApiResponse, InvoiceFormData } from './types.js';
 
 /**
@@ -34,7 +34,7 @@ export class CreateCreditHandler {
     }
 
     private async processCreateCredit(): Promise<void> {
-        const url = `${location.origin}/invoice/inv/create_credit_confirm`;
+        const url = `${location.origin}/invoice/inv/createCreditConfirm`;
         const btn = querySelector<HTMLElement>(this.confirmButtonSelector);
         const absoluteUrl = new URL(location.href);
 

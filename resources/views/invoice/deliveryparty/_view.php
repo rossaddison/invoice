@@ -18,7 +18,7 @@ use Yiisoft\Html\Tag\Form;
  */
 
 ?>
-<?= Form::tag()
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -30,17 +30,17 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div'); ?>
     <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-        <?= Html::openTag('div', ['class' => 'row']); ?>            
+        <?= Html::openTag('div', ['class' => 'row']); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'party_name')
                     ->addInputAttributes(['style' => 'background:lightblue'])
                     ->label($translator->translate('delivery.party.name'))
-                    ->value(Html::encode($form->getParty_name() ?? ''))
+                    ->value(Html::encode($form->getPartyName() ?? ''))
                     ->readonly(true);
 ?>
             <?= Html::closeTag('div'); ?>
-        <?= Html::closeTag('div'); ?>    
+        <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= $button::backSave(); ?>
-<?= Form::tag()->close() ?>
+<?=  new Form()->close() ?>

@@ -7,7 +7,7 @@ use Yiisoft\Html\Html;
 /**
  * Related logic: see id="inv-to-inv" triggered by <a href="#inv-to-inv" data-bs-toggle="modal"  style="text-decoration:none">
  * Related logic: see InvController view function
- * @var App\Invoice\Entity\Inv $inv
+ * @var App\Infrastructure\Persistence\Inv\Inv $inv
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var array $clients
@@ -15,40 +15,59 @@ use Yiisoft\Html\Html;
  */
 
 ?>
-    
+
 <div id="inv-to-inv" class="modal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-               <h5 class="modal-title"><?php echo $translator->translate('copy.invoice'); ?></h5>
-               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               <h5 class="modal-title">
+                    <?php echo $translator->translate('copy.invoice'); ?>
+               </h5>
+               <button type="button"
+                       class="btn-close"
+                       data-bs-dismiss="modal"
+                       aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form>
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-                    <input type="hidden" name="user_id" id="user_id" value="<?= $inv->getUser_id(); ?>">
+                    <input type="hidden"
+                           name="user_id"
+                           id="user_id"
+                           value="<?= $inv->reqUserId(); ?>">
                     <div class="form-group">
-                        <label for="create_inv_client_id"><?= $translator->translate('client'); ?></label>
-                        <select name="create_inv_client_id" id="create_inv_client_id" class="form-control">
-                            <option value="<?= $inv->getClient()?->getClient_id(); ?>"><?= $inv->getClient()?->getClient_name() ?? '#'; ?></option>
+                        <label for="create_inv_client_id">
+                            <?= $translator->translate('client'); ?>
+                        </label>
+                        <select name="create_inv_client_id"
+                                id="create_inv_client_id"
+                                class="form-control form-control-lg">
+                            <option value="">⏳</option>
                                 <?php
-                                    /**
-                                     * @var App\Invoice\Entity\Client $client
-                                     */
+/**
+* @var App\Infrastructure\Persistence\Client\Client $client
+*/
                                     foreach ($clients as $client) { ?>
-                                    <option value="<?= $client->getClient_id(); ?>">
-                                        <?= Html::encode($client->getClient_name()); ?>
+                                    <option value="<?= $client->reqId(); ?>">
+                                        <?= Html::encode($client->getClientName()); ?>
                                     </option>
                                 <?php } ?>
-                        </select>          
+                        </select>
                     </div>
-                </form>    
+                </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?= $translator->translate('cancel'); ?></button>
-                <!-- inv.js inv_to_inv_confirm, InvController function inv_to_inv_confirm -->
-                <button type="button" class="inv_to_inv_confirm btn btn-success" id="inv_to_inv_confirm">
-                    <i class="fa fa-check"></i> <?= $translator->translate('submit'); ?>
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                                <?= $translator->translate('cancel'); ?>
+                </button>
+                <!-- inv.js inv_to_inv_confirm, InvController function invToInvConfirm -->
+                <button type="button"
+                        class="inv_to_inv_confirm btn btn-success"
+                        id="inv_to_inv_confirm">
+                    <i class="bi bi-check-lg"></i>
+                        <?= $translator->translate('submit'); ?>
                 </button>
             </div>
         </div>

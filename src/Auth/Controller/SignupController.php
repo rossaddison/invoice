@@ -6,12 +6,13 @@ namespace App\Auth\Controller;
 
 use App\Auth\Token;
 use App\Auth\TokenRepository as tR;
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 use App\User\UserRepository as uR;
 use App\Auth\AuthService;
 use App\Auth\Form\SignupForm;
+use App\Auth\Trait\ClassList;
 use App\Auth\Trait\Oauth2;
-use App\Invoice\Entity\UserInv;
+use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Setting\Trait\OpenBankingProviders;
 use App\Invoice\UserInv\UserInvRepository as uiR;
@@ -19,15 +20,13 @@ use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Psr\Log\LogLevel;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Body;
 use Yiisoft\Mailer\MailerInterface;
-use Yiisoft\Rbac\AssignmentsStorageInterface as Assignment;
-use Yiisoft\Rbac\ItemsStorageInterface as ItemStorage;
 use Yiisoft\Rbac\Manager as Manager;
-use Yiisoft\Rbac\RuleFactoryInterface as Rule;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Security\Random;
@@ -37,30 +36,26 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use App\Auth\Client\OpenBanking;
 use Yiisoft\Yii\AuthClient\Widget\AuthChoice;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class SignupController
 {
+    use ClassList;
+
     use Oauth2;
 
     use OpenBankingProviders;
 
     public const string EMAIL_VERIFICATION_TOKEN = 'email-verification';
-    private Manager $manager;
-    private Rule $rule;
     public string $telegramToken;
 
     public function __construct(
-        // load assignments and save assignments to resources/rbac/assignment.php
-        private Assignment $assignment,
+        private readonly Manager $manager,
         private Flash $flash,
-        // add, save, remove, clear, children, parents
-        private ItemStorage $itemstorage,
-        Rule $rule,
         private readonly DataResponseFactoryInterface $factory,
         private readonly WebControllerService $webService,
         private readonly SessionInterface $session,
-        private ViewRenderer $viewRenderer,
+        private WebViewRenderer $webViewRenderer,
         private readonly MailerInterface $mailer,
         private readonly sR $sR,
         private readonly Translator $translator,
@@ -68,10 +63,8 @@ final class SignupController
         private readonly CurrentRoute $currentRoute,
         private readonly LoggerInterface $logger,
     ) {
-        $this->manager = new Manager($this->itemstorage, $this->assignment, $rule);
-        $this->rule = $rule;
         $this->flash = new Flash($this->session);
-        $this->viewRenderer = $viewRenderer->withControllerName('signup');
+        $this->webViewRenderer = $webViewRenderer->withControllerName('signup');
         $this->initializeOauth2IdentityProviderCredentials();
         $this->initializeOauth2IdentityProviderDualUrls();
         $this->telegramToken = $sR->getSetting('telegram_token');
@@ -92,8 +85,9 @@ final class SignupController
         $client = $authChoice->getClient($clientName);
         $codeVerifier = Random::string(128);
         $this->session->set('code_verifier', $codeVerifier);
-        $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
-        $selectedIdentityProviders = $this->selectedIdentityProviders($codeChallenge);
+        $rTrim = rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '=');
+        $codeChallenge = strtr($rTrim, '+/', '-_');
+        $selectedIdentityProviders = $this->idpList($codeChallenge);
         $selectedClient = (array) $selectedIdentityProviders[$clientName];
         $clientParams = (array) $selectedClient['params'];
         $clientAuthUrl = $client->buildAuthUrl($request, $clientParams);
@@ -104,7 +98,8 @@ final class SignupController
 
     /**
      * Related logic: see src\ViewInjection\CommonViewInjection.php
-     * Related logic: see resources\views\site\signupfailed.php and signupsuccess.php
+     * Related logic: see resources\views\site\signupfailed.php and
+     *  signupsuccess.php
      *
      * @param AuthService $authService
      * @param CurrentRoute $currentRoute
@@ -131,20 +126,25 @@ final class SignupController
         }
 
         $openBankingAuthUrl = '';
-        $selectedOpenBankingProvider = $this->sR->getSetting('open_banking_provider');
+        $openBankChoice = $this->sR->getSetting('open_banking_provider');
         // If a provider has been selected, configure the client accordingly
-        if (strlen($selectedOpenBankingProvider) > 0) {
-            $providerConfig = $this->getOpenBankingProviderConfig($selectedOpenBankingProvider);
+        if (strlen($openBankChoice) > 0) {
+            $providerConfig = $this->getOpenBankingProviderConfig($openBankChoice);
             if ($providerConfig !== null) {
                 /** @var OpenBanking $openBanking */
                 $openBanking = (AuthChoice::widget())->getClient('openbanking');
                 $openBanking->setAuthUrl((string) $providerConfig['authUrl']);
                 $openBanking->setTokenUrl((string) $providerConfig['tokenUrl']);
-                $openBanking->setScope(isset($providerConfig['scope']) ? (string) $providerConfig['scope'] : null);
+                $openBanking->setScope(isset($providerConfig['scope']) ?
+                    (string) $providerConfig['scope'] : null);
                 $codeVerifier = Random::string(128);
-                $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
+                $hash = hash('sha256', $codeVerifier, true);
+                $rTrim = rtrim(base64_encode($hash), '=');
+                $codeChallenge = strtr($rTrim, '+/', '-_');
                 $this->session->set('code_verifier', $codeVerifier);
-                $openBankingAuthUrl = $openBanking->getAuthUrl() . '?' . http_build_query([
+                $openBankingAuthUrl = $openBanking->getAuthUrl()
+                        . '?'
+                        . http_build_query([
                     'response_type' => 'code',
                     'scope' => $openBanking->getScope(),
                     'code_challenge' => $codeChallenge,
@@ -155,38 +155,48 @@ final class SignupController
 
         if ($formHydrator->populateFromPostAndValidate($signupForm, $request)) {
             $user = $signupForm->signup();
-            $userId = $user->getId();
+            $userId = $user->reqId();
             if ($userId > 0) {
-                // avoid autoincrement issues and using predefined user id of 1 ... and assign the first signed-up user ... admin rights
-                if ($uR->repoCount() == 1) {
-                    $this->manager->revokeAll($userId);
-                    $this->manager->assign('admin', $userId);
-                } else {
-                    $this->manager->revokeAll($userId);
-                    $this->manager->assign('observer', $userId);
+                // Avoid autoincrement issues and using predefined user id of
+                // 1 ... and assign the first signed-up user ... admin rights.
+                // assignRoleAndVerify guards against silent file permission
+                // failures where assign() succeeds in memory but never writes
+                // to resources/rbac/assignments.php
+                $role = $uR->repoCount() == 1 ? 'admin' : 'observer';
+                if (!$this->assignRoleAndVerify($userId, $role)) {
+                    return $this->webService->getRedirectResponse(
+                        'site/signupfailed');
                 }
                 $to = $user->getEmail();
                 $login = $user->getLogin();
                 /**
-                 * @var array $this->sR->locale_language_array()
+                 * @var array $this->sR->localeLanguageArray()
                  */
-                $languageArray = $this->sR->locale_language_array();
+                $languageArray = $this->sR->localeLanguageArray();
                 $_language = $currentRoute->getArgument('_language');
                 /**
                  * @var string $_language
-                 * @var array $languageArray
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
-                $randomAndTimeToken = $this->getEmailVerificationToken($user, $tR);
+                $randomAndTimeToken = $this->getEmailVerificationToken($user,
+                    $tR);
                 /**
-                 * Related logic: see A new UserInv (extension table of user) for the user is created.
+                 * Related logic: see A new UserInv (extension table of user)
+                 * for the user is created.
                  * For additional headers to strengthen security refer to:
-                 * Related logic: see https://en.wikipedia.org/wiki/Email#Message_format
-                 * Related logic: see https://github.com/yiisoft/mailer/blob/1d3480bc26cbeba47b24e61f9ec0e717c244c0b7/tests/MessageTest.php#L217
+                 * Related logic:
+                 *  see https://en.wikipedia.org/wiki/Email#Message_format
+                 * Related logic:
+                 *  see https://github.com/yiisoft/mailer/blob/1d3480bc26cbeba
+                 *   47b24e61f9ec0e717c244c0b7/tests/MessageTest.php#L217
                  */
-                $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink($user, $uiR, $language, $_language, $randomAndTimeToken);
-                if (($this->sR->getSetting('email_send_method') == 'symfony') || ($this->sR->mailerEnabled() == true)) {
+                $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink(
+                    $user, $uiR, $language, $_language, $randomAndTimeToken);
+                if (($this->sR->getSetting('email_send_method') == 'symfony')
+                        || ($this->sR->mailerEnabled() == true)) {
+                    $configEmail = $this->sR->getConfigAdminEmail();
+                    $tta = $this->translator->translate('administrator');
                     $email = new \Yiisoft\Mailer\Message(
                         charset: 'utf-8',
                         headers: [
@@ -195,17 +205,19 @@ final class SignupController
                         ],
                         subject: $login . ': <' . $to . '>',
                         date: new \DateTimeImmutable('now'),
-                        from: [$this->sR->getConfigAdminEmail() => $this->translator->translate('administrator')],
+                        from: [$configEmail => $tta],
                         to: $to,
                         htmlBody: $htmlBody,
                     );
-                    $email->withAddedHeader('Message-ID', $this->sR->getConfigAdminEmail());
-
+                    $email->withAddedHeader(
+                        'Message-ID', $this->sR->getConfigAdminEmail()
+                    );
+                    $failed = 'site/signupfailed';
                     try {
                         $this->mailer->send($email);
                     } catch (\Exception $e) {
                         $this->logger->error($e->getMessage());
-                        return $this->webService->getRedirectResponse('site/signupfailed');
+                        return $this->webService->getRedirectResponse($failed);
                     }
                 }
             }
@@ -214,19 +226,54 @@ final class SignupController
 
         $codeVerifier = Random::string(128);
         $this->session->set('code_verifier', $codeVerifier);
-        $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
-        return $this->viewRenderer->render('signup', [
+        $rTrim = rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '=');
+        $codeChallenge = strtr($rTrim, '+/', '-_');
+        $nocb = $this->sR->getSetting('no_openbanking_continue_button');
+        return $this->webViewRenderer->render('signup', [
+            'class' => $this->classList(),
             'formModel' => $signupForm,
-            'selectedOpenBankingProvider' => $selectedOpenBankingProvider,
-
-            'noOpenBankingContinueButton' => $this->sR->getSetting('no_openbanking_continue_button') == '1' ? true : false,
+            'selectedOpenBankingProvider' => $openBankChoice,
+            'noOpenBankingContinueButton' => $nocb == '1' ? true : false,
             'openBankingAuthUrl' => $openBankingAuthUrl,
-
             'sessionOtp' => $this->session->get('otp'),
             'telegramToken' => $this->telegramToken,
             'request' => $request,
-            'selectedIdentityProviders' => $this->selectedIdentityProviders($codeChallenge),
+            'idpList' => $this->idpList($codeChallenge),
         ]);
+    }
+
+    /**
+     * Assign a role to a newly signed-up user and verify the assignment
+     * persisted correctly. Silent failures can occur when the RBAC backend
+     * (e.g. PhpManager) cannot write to resources/rbac/assignments.php due to
+     * file permission issues — the assign() call succeeds in memory but never
+     * reaches disk. This guard catches that scenario immediately rather than
+     * allowing the user to proceed with no role assigned, which would result
+     * in a 403 on every subsequent request.
+     *
+     * @param int $userId
+     * @param string $role e.g. 'admin' or 'observer'
+     * @return bool True if assignment persisted, false if it failed silently
+     */
+    private function assignRoleAndVerify(
+        int $userId,
+        string $role,
+    ): bool {
+        $this->manager->revokeAll((string) $userId);
+        $this->manager->assign($role, (string) $userId);
+
+        $roles = $this->manager->getRolesByUserId((string) $userId);
+        if (empty($roles)) {
+            $this->logger->log(
+                LogLevel::ERROR,
+                'RBAC assignment failed to persist for userId: ' . (string) $userId
+                    . ' role: ' . $role
+                    . ' — check file ownership of'
+                    . ' resources/rbac/assignments.php'
+            );
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -237,30 +284,48 @@ final class SignupController
      * @param string $randomAndTimeToken
      * @return string
      */
-    private function htmlBodyWithMaskedRandomAndTimeTokenLink(User $user, uiR $uiR, string $language, string $_language, string $randomAndTimeToken): string
+    private function htmlBodyWithMaskedRandomAndTimeTokenLink(
+        User $user,
+        uiR $uiR,
+        string $language,
+        string $_language,
+        string $randomAndTimeToken): string
     {
         $tokenWithMask = TokenMask::apply($randomAndTimeToken);
         $userInv = new UserInv();
-        if (null !== ($userId = $user->getId())) {
-            $userInv->setUser_id((int) $userId);
-            // if the user is administrator assign 0 => 'Administrator', 1 => Not Administrator
-            $userInv->setType($user->getId() == 1 ? 0 : 1);
-            // when the user clicks on the link click confirm url, make the user active in the userinv extension table. Initially keep the user inactive.
+        if ($user->hasIdentity()) {
+            $userId = $user->reqId();
+            $elcc = $this->translator->translate('email.link.click.confirm');
+            $userInv->setUserId($userId);
+            // if the user is administrator assign 0 => 'Administrator',
+            // 1 => Not Administrator
+            $userInv->setType($userId == 1 ? 0 : 1);
+            // when the user clicks on the link click confirm url, make the
+            // user active in the userinv extension table. Initially keep the
+            // user inactive.
             $userInv->setActive(false);
             $userInv->setLanguage($language);
             $uiR->save($userInv);
-            $content = A::tag()
-                       // When the url is clicked by the user, return to userinv/signup to activate the user and assign a client to the user
-                       // depending on whether 'Assign a client to user on signup' has been chosen under View ... Settings...General. The user will be able to
-                       // edit their userinv details on the client side as well as the client record.
-                       ->href($this->urlGenerator->generateAbsolute(
-                           'userinv/signup',
-                           ['_language' => $_language, 'language' => $language, 'token' => $tokenWithMask, 'tokenType' => 'email-verification'],
-                       ))
-                       ->content($this->translator->translate('email.link.click.confirm'));
-            return Body::tag()
-                       ->content($content)
-                       ->render();
+            $content = new A()
+            // When the url is clicked by the user, return to userinv/signup
+            // to activate the user and assign a client to the user
+            // depending on whether 'Assign a client to user on signup' has
+            // been chosen under View ... Settings...General. The user will
+            // be able to edit their userinv details on the client side as
+            // well as the client record.
+                ->href($this->urlGenerator->generateAbsolute(
+                    'userinv/signup',
+                    [
+                        '_language' => $_language,
+                        'language' => $language,
+                        'token' => $tokenWithMask,
+                        'tokenType' => 'email-verification',
+                    ],
+                ))
+                ->content($elcc);
+            return new Body()
+                ->content($content)
+                ->render();
         }
         return '';
     }
@@ -273,13 +338,15 @@ final class SignupController
     private function getEmailVerificationToken(User $user, tR $tR): string
     {
         $identity = $user->getIdentity();
-        $identityId = (int) $identity->getId();
-        $token = new Token($identityId, self::EMAIL_VERIFICATION_TOKEN);
-        // store the token amongst all the other types of tokens e.g. password_reset_token, email_verification_token etc
+        $identityId = $identity->getId();
+        $token = new Token((int) $identityId, self::EMAIL_VERIFICATION_TOKEN);
+        // store the token amongst all the other types of tokens e.g.
+        // password_reset_token, email_verification_token etc
         $tR->save($token);
         $tokenString = $token->getToken();
-        $timeString = (string) $token->getCreated_at()->getTimestamp();
+        $timeString = (string) $token->getCreatedAt()->getTimestamp();
         // build the token
-        return $emailVerificationToken = null !== $tokenString ? ($tokenString . '_' . $timeString) : '';
+        return null !== $tokenString ?
+            ($tokenString . '_' . $timeString) : '';
     }
 }

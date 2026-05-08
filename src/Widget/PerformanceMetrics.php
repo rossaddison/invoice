@@ -9,7 +9,9 @@ use Yiisoft\Widget\Widget;
 
 final class PerformanceMetrics extends Widget
 {
-    public function __construct(private readonly Timer $timer) {}
+    public function __construct(private readonly Timer $timer)
+    {
+    }
 
     #[\Override]
     public function render(): string
@@ -44,7 +46,8 @@ final class PerformanceMetrics extends Widget
             if ($cacheFull && ($currentWastedPercentage < $maxWastedPercentage)) {
                 $performanceItems[] = 'Opcache: Cache full, wasted memory below threshold ({$currentWastedPercentage}% < {$maxWastedPercentage}%). '
                     . ($opcacheHitRate < 99 ? 'Hit rate dropped below 99% ({$opcacheHitRate}%). ' : '')
-                    . 'Solution: Increase opcache.memory_consumption.';
+                    . 'Solution: Increase opcache.memory_consumption from ' .
+                    $memoryConsumption;
             }
             // Condition 2
             if ($cacheFull && ($numCachedKeys == $maxCachedKeys)) {

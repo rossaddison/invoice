@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Invoice\CategoryPrimary;
 
-use App\Invoice\Entity\CategoryPrimary;
+use App\Infrastructure\Persistence\CategoryPrimary\CategoryPrimary;
 
 final readonly class CategoryPrimaryService
 {
-    public function __construct(private CategoryPrimaryRepository $repository) {}
+    public function __construct(private CategoryPrimaryRepository $repository)
+    {
+    }
 
     public function saveCategoryPrimary(CategoryPrimary $model, array $array): void
     {

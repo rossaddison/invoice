@@ -45,14 +45,13 @@ declare(strict_types=1);
                 <optgroup label="<?= $translator->translate('custom.fields'); ?>">
                     <?php
                         /**
-                        * @var App\Invoice\Entity\CustomField $custom
+                        * @var App\Infrastructure\Persistence\CustomField\CustomField $custom
                         */
                         foreach ($custom_fields_quote_custom as $custom) { ?>
-                        <option value="{{{<?= 'cf_' . $custom->getId(); ?>}}}">
-                            <?= ($custom->getLabel() ?? '') . ' (ID ' . $custom->getId() . ')'; ?>
+                        <option value="{{{<?= 'cf_' . $custom->reqId(); ?>}}}">
+                            <?= ($custom->getLabel() ?? '') . ' (ID ' . $custom->reqId() . ')'; ?>
                         </option>
                     <?php } ?>
                 </optgroup>
             </select>
         </div>
-        

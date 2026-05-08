@@ -23,9 +23,9 @@ use Yiisoft\Html\Tag\Form;
 
 ?>
 
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
@@ -33,7 +33,7 @@ use Yiisoft\Html\Tag\Form;
 <?= $translator->translate('view'); ?>
 <?= Html::closeTag('h1'); ?>
 
-<?= Form::tag()
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -43,12 +43,12 @@ use Yiisoft\Html\Tag\Form;
 <?= $button::back() ?>
 <?= Html::openTag('div', ['class' => 'container']); ?>
     <?= Html::openTag('div', ['class' => 'row']); ?>
-        <?= Html::openTag('div', ['class' => 'col card mb-3']); ?> 
+        <?= Html::openTag('div', ['class' => 'col card mb-3']); ?>
             <?= Html::openTag('div', ['class' => 'card-header']); ?>
                     <?= Html::openTag('h5'); ?>
                         <?= $translator->translate('generator.table'); ?>
                     <?= Html::closeTag('h5'); ?>
-            <?= Html::closeTag('div'); ?> 
+            <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
                 <?= Field::text($form, 'pre_entity_table'); ?>
             <?= Html::closeTag('div'); ?>
@@ -64,10 +64,10 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'col card mb-3']); ?> 
+        <?= Html::openTag('div', ['class' => 'col card mb-3']); ?>
             <?= Html::openTag('div', ['class' => 'card-header']); ?>
                 <?= Html::openTag('h5'); ?><?= $translator->translate('generator.controller.and.repository'); ?><?= Html::closeTag('h5'); ?>
-            <?= Html::closeTag('div'); ?>  
+            <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
                 <?= Field::text($form, 'route_prefix'); ?>
             <?= Html::closeTag('div'); ?>
@@ -114,7 +114,7 @@ use Yiisoft\Html\Tag\Form;
                     ->ariaDescribedBy($translator->translate('generator.deleted.include')); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'col card mb-3']); ?> 
+        <?= Html::openTag('div', ['class' => 'col card mb-3']); ?>
             <?= Html::openTag('div', ['class' => 'card-header']); ?>
                 <?= Html::openTag('h5'); ?><?= $translator->translate('generator.controller.path.layout'); ?><?= Html::closeTag('h5'); ?>
             <?= Html::closeTag('div'); ?>

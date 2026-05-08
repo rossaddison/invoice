@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvTaxRate;
 
-use App\Invoice\Entity\InvTaxRate;
+use App\Infrastructure\Persistence\{
+    InvTaxRate\InvTaxRate
+};
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
@@ -17,30 +19,32 @@ final class InvTaxRateForm extends FormModel
     #[Required]
     private ?float $inv_tax_rate_amount = null;
 
-    public function __construct(InvTaxRate $invTaxRate)
+    public static function show(InvTaxRate $invTaxRate): self
     {
-        $this->inv_id = $invTaxRate->getInv_id();
-        $this->tax_rate_id = $invTaxRate->getTax_rate_id();
-        $this->include_item_tax = $invTaxRate->getInclude_item_tax();
-        $this->inv_tax_rate_amount = $invTaxRate->getInv_tax_rate_amount();
+        $form = new self();
+        $form->inv_id = (string) $invTaxRate->reqInvId();
+        $form->tax_rate_id = (string) $invTaxRate->reqTaxRateId();
+        $form->include_item_tax = $invTaxRate->getIncludeItemTax();
+        $form->inv_tax_rate_amount = $invTaxRate->getInvTaxRateAmount();
+        return $form;
     }
 
-    public function getInv_id(): ?string
+    public function getInvId(): ?string
     {
         return $this->inv_id;
     }
 
-    public function getTax_rate_id(): ?string
+    public function getTaxRateId(): ?string
     {
         return $this->tax_rate_id;
     }
 
-    public function getInclude_item_tax(): ?int
+    public function getIncludeItemTax(): ?int
     {
         return $this->include_item_tax;
     }
 
-    public function getInv_tax_rate_amount(): ?float
+    public function getInvTaxRateAmount(): ?float
     {
         return $this->inv_tax_rate_amount;
     }

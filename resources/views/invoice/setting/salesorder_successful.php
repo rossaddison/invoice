@@ -70,10 +70,12 @@ declare(strict_types=1);
 
     </style>
 </head>
-<body>  
+<body>
 <h1><?php echo $heading; ?></h1>
 <?php echo $message; ?>
-<form method="POST" class="form-inline" action="<?= $urlGenerator->generate($url, $actionArguments = ['id' => $id]); ?>">
+<form method="POST"
+      class="form-inline"
+      action="<?= $urlGenerator->generate($url, $actionArguments = ['id' => $id]); ?>">
        <input type="hidden" name="_csrf" value="<?= $csrf ?>">
        <button type="submit" class="btn btn-xs btn-link">✅</button>
 </form>

@@ -22,20 +22,20 @@ use Yiisoft\Html\Tag\Form;
  */
 ?>
 
-<?= Form::tag()
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('MerchantForm')
     ->open() ?>
 
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
-<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
@@ -50,26 +50,25 @@ use Yiisoft\Html\Tag\Form;
 ?>
             <?= Html::closeTag('div'); ?>
             <?php
-    /**
-     * @var App\Invoice\Entity\Inv $inv
-     */
-    foreach ($invs as $inv) {
-        $invId = $inv->getId();
-        if (null !== $invId) {
-            $optionsDataInv[$invId] = $inv->getNumber() ?? $translator->translate('number.no');
-        }
-    }
-echo Field::select($form, 'inv_id')
-->label($translator->translate('invoice'))
-->optionsData($optionsDataInv)
-->hint($translator->translate('hint.this.field.is.required'));
-?>
+            /**
+             * @var App\Infrastructure\Persistence\Inv\Inv $inv
+             */
+            foreach ($invs as $inv) {
+                $invId = $inv->reqId();
+                $optionsDataInv[$invId] =
+                    $inv->getNumber() ?? $translator->translate('number.no');        
+            }
+            echo Field::select($form, 'inv_id')
+            ->label($translator->translate('invoice'))
+            ->optionsData($optionsDataInv)
+            ->hint($translator->translate('hint.this.field.is.required'));
+            ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::checkbox($form, 'successful')
-    ->inputLabelAttributes(['class' => 'form-check-label'])
-    ->inputClass('form-check-input')
-    ->ariaDescribedBy($translator->translate('successful'))
-?>        
+                ->inputLabelAttributes(['class' => 'form-check-label'])
+                ->inputClass('form-check-input')
+                ->ariaDescribedBy($translator->translate('successful'))
+           ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::date($form, 'date')
@@ -109,4 +108,4 @@ echo Field::select($form, 'inv_id')
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?= Form::tag()->close() ?>
+<?=  new Form()->close() ?>

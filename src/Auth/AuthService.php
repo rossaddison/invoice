@@ -15,7 +15,8 @@ final readonly class AuthService
         private CurrentUser $currentUser,
         private UserRepository $userRepository,
         private IdentityRepository $identityRepository,
-    ) {}
+    ) {
+    }
 
     public function login(string $login, string $password): bool
     {
@@ -43,6 +44,7 @@ final readonly class AuthService
 
     /**
      * @throws Throwable
+     * @psalm-suppress PossiblyUnusedReturnValue
      */
     public function logout(): bool
     {

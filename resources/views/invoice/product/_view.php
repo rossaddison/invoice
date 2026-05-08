@@ -21,28 +21,28 @@ use Yiisoft\Html\Html;
 </div>
 
 <ul id="product-tabs" class="nav nav-tabs nav-tabs-noborder">
-    <li class="active">
-        <a data-bs-toggle="tab" href="#product-details" style="text-decoration: none"><?= $translator->translate('product.view.tab.details'); ?> </a>
+    <li class="nav-item">
+        <a class="nav-link active" data-bs-toggle="tab" href="#product-details" style="text-decoration: none"><?= $translator->translate('product.view.tab.details'); ?> </a>
     </li>
-    <li>
-        <a data-bs-toggle="tab" href="#product-properties" style="text-decoration: none"><?= $translator->translate('product.view.tab.properties'); ?> </a>
+    <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="tab" href="#product-properties" style="text-decoration: none"><?= $translator->translate('product.view.tab.properties'); ?> </a>
     </li>
-    <li>
-        <a data-bs-toggle="tab" href="#product-images" style="text-decoration: none"><?= $translator->translate('product.view.tab.images'); ?> </a>
+    <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="tab" href="#product-images" style="text-decoration: none"><?= $translator->translate('product.view.tab.images'); ?> </a>
     </li>
-    <li>
-        <a data-bs-toggle="tab" href="#product-gallery" style="text-decoration: none"><?= $translator->translate('product.view.tab.gallery'); ?> </a>
+    <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="tab" href="#product-gallery" style="text-decoration: none"><?= $translator->translate('product.view.tab.gallery'); ?> </a>
     </li>
-    <li>
+    <li class="nav-item">
         <?= $button::back(); ?>
-    </li>    
+    </li>
 </ul>
 
 <div class="tabbable tabs-below">
 
     <div class="tab-content">
 
-        <div id="product-details" class="tab-pane active">
+        <div id="product-details" class="tab-pane show active">
             <?= $partial_product_details ?: ''; ?>
         </div>
 
@@ -53,7 +53,7 @@ use Yiisoft\Html\Html;
         <div id="product-images" class="tab-pane">
             <?= $partial_product_images ?: ''; ?>
         </div>
-        
+
         <div id="product-gallery" class="tab-pane">
             <?= $partial_product_gallery ?: ''; ?>
         </div>

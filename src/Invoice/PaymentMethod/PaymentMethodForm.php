@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\PaymentMethod;
 
-use App\Invoice\Entity\PaymentMethod;
+use App\Infrastructure\Persistence\PaymentMethod\PaymentMethod;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
@@ -15,10 +15,12 @@ final class PaymentMethodForm extends FormModel
 
     private ?bool $active = true;
 
-    public function __construct(PaymentMethod $paymentMethod)
+    public static function show(PaymentMethod $paymentMethod): self
     {
-        $this->name = $paymentMethod->getName();
-        $this->active = $paymentMethod->getActive();
+        $form = new self();
+        $form->name = $paymentMethod->getName();
+        $form->active = $paymentMethod->getActive();
+        return $form;
     }
 
     public function getName(): ?string

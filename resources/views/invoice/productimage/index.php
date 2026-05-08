@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\ProductImage;
+use App\Infrastructure\Persistence\ProductImage\ProductImage;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -22,12 +22,12 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $csrf
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$toolbarReset = A::tag()
+$toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'productimage/index'))
     ->id('btn-reset')
     ->render();
@@ -36,38 +36,38 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(ProductImage $model) => Html::encode($model->getId()),
+        content: static fn (ProductImage $model) => Html::encode($model->reqId()),
     ),
     new DataColumn(
         'product_id',
         header: $translator->translate('product'),
-        content: static fn(ProductImage $model): string => Html::encode($model->getProduct()?->getProduct_name() ?? ''),
+        content: static fn (ProductImage $model): string => Html::encode($model->getProduct()?->getProductName() ?? ''),
     ),
     new DataColumn(
         'file_name_original',
         header: $translator->translate('upload.filename.original'),
-        content: static fn(ProductImage $model): string => Html::encode($model->getFile_name_original()),
+        content: static fn (ProductImage $model): string => Html::encode($model->getFileNameOriginal()),
     ),
     new DataColumn(
         'file_name_new',
         header: $translator->translate('upload.filename.new'),
-        content: static fn(ProductImage $model): string => Html::encode($model->getFile_name_new()),
+        content: static fn (ProductImage $model): string => Html::encode($model->getFileNameNew()),
     ),
     new DataColumn(
         'description',
         header: $translator->translate('upload.filename.description'),
-        content: static fn(ProductImage $model): string => Html::encode($model->getDescription()),
+        content: static fn (ProductImage $model): string => Html::encode($model->getDescription()),
     ),
     new DataColumn(
         header: $translator->translate('view'),
         content: static function (ProductImage $model) use ($urlGenerator): string {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('productimage/view', ['id' => $model->getId()]), [])->render();
+            return Html::a(Html::tag('i', '', ['class' => 'bi-eye']), $urlGenerator->generate('productimage/view', ['id' => $model->reqId()]), [])->render();
         },
     ),
     new DataColumn(
         header: $translator->translate('edit'),
         content: static function (ProductImage $model) use ($urlGenerator): string {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('productimage/edit', ['id' => $model->getId()]), [])->render();
+            return Html::a(Html::tag('i', '', ['class' => 'bi-pencil-square']), $urlGenerator->generate('productimage/edit', ['id' => $model->reqId()]), [])->render();
         },
     ),
     new DataColumn(
@@ -76,21 +76,21 @@ $columns = [
             return Html::a(
                 Html::tag(
                     'button',
-                    Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
+                    Html::tag('i', '', ['class' => 'bi-trash']),
                     [
                         'type' => 'submit',
                         'class' => 'dropdown-button',
                         'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                     ],
                 ),
-                $urlGenerator->generate('productimage/delete', ['id' => $model->getId()]),
+                $urlGenerator->generate('productimage/delete', ['id' => $model->reqId()]),
                 [],
             );
         },
     ),
 ];
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -98,9 +98,9 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('upload/index'))->csrf($csrf)->open()
-        . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-        . Form::tag()->close();
+$toolbarString =  new Form()->post($urlGenerator->generate('upload/index'))->csrf($csrf)->open()
+        .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+        .  new Form()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
@@ -112,7 +112,7 @@ echo GridView::widget()
 ->id('w44-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($grid_summary)
+->summaryTemplate($gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

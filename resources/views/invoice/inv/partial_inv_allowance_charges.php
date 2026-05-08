@@ -18,5 +18,5 @@ declare(strict_types=1);
                 <?= $inv_allowance_charges; ?>
             </div>
         </div>
-    </div> 
-</div>    
+    </div>
+</div>

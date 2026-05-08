@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvItemAmount;
 
-use App\Invoice\Entity\InvItemAmount;
+use App\Infrastructure\Persistence\InvItemAmount\InvItemAmount;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -85,7 +85,7 @@ final class InvItemAmountRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoInvItemAmountquery(string $inv_item_id): ?InvItemAmount
+    public function repoInvItemAmountquery(int $inv_item_id): ?InvItemAmount
     {
         $query = $this->select()
                       ->load(['inv_item'])
@@ -94,10 +94,10 @@ final class InvItemAmountRepository extends Select\Repository
     }
 
     /**
-     * @param string $inv_item_id
+     * @param int $inv_item_id
      * @return int
      */
-    public function repoCount(string $inv_item_id): int
+    public function repoCount(int $inv_item_id): int
     {
         $query = $this->select()
                       ->where(['inv_item_id' => $inv_item_id]);

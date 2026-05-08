@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Related logic: see PaymentController function view_custom_fields and function view
+ * Related logic: see PaymentController function viewCustomFields and function view
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH
  * @var App\Invoice\PaymentCustom\PaymentCustomForm $paymentCustomForm
  * @var App\Invoice\Setting\SettingRepository $s
@@ -14,7 +14,7 @@ declare(strict_types=1);
  */
 
 ?>
- 
+
 <?php if ($customFields): ?>
     <div>
         <div class="mb-3 form-group">
@@ -28,7 +28,7 @@ declare(strict_types=1);
                             <?php $i = 0; ?>
                             <?php
                               /**
-                               * @var App\Invoice\Entity\CustomField $customField
+                               * @var App\Infrastructure\Persistence\CustomField\CustomField $customField
                                */
                               foreach ($customFields as $customField): ?>
                                 <?php if ($customField->getLocation() != 0) {
@@ -36,7 +36,7 @@ declare(strict_types=1);
                                 } ?>
                                 <?php $i++; ?>
                                 <?php if ($i % 2 != 0): ?>
-                                    <?php $cvH->print_field_for_view($customField, $paymentCustomForm, $paymentCustomValues, $customValues); ?>
+                                    <?php $cvH->printFieldForView($customField, $paymentCustomForm, $paymentCustomValues); ?>
                                 <?php endif; ?>
                             <?php endforeach; ?>
                         </div>
@@ -44,7 +44,7 @@ declare(strict_types=1);
                             <?php $i = 0; ?>
                             <?php
                                /**
-                                * @var App\Invoice\Entity\CustomField $customField
+                                * @var App\Infrastructure\Persistence\CustomField\CustomField $customField
                                 */
                                 foreach ($customFields as $customField): ?>
                                 <?php if ($customField->getLocation() != 0) {
@@ -52,7 +52,7 @@ declare(strict_types=1);
                                 } ?>
                                 <?php $i++; ?>
                                 <?php if ($i % 2 == 0): ?>
-                                    <?php $cvH->print_field_for_view($customField, $paymentCustomForm, $paymentCustomValues, $customValues); ?>
+                                    <?php $cvH->printFieldForView($customField, $paymentCustomForm, $paymentCustomValues); ?>
                                 <?php endif; ?>
                             <?php endforeach; ?>
                         </div>

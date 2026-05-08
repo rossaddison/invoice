@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Project;
 
-use App\Invoice\Entity\Project;
+use App\Infrastructure\Persistence\Project\Project;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
@@ -16,13 +16,15 @@ final class ProjectForm extends FormModel
     #[Required]
     private ?string $name = '';
 
-    public function __construct(Project $project)
+    public static function show(Project $project): self
     {
-        $this->client_id = (int) $project->getClient_id();
-        $this->name = $project->getName();
+        $form = new self();
+        $form->client_id = (int) $project->getClientId();
+        $form->name = $project->getName() ?? '';
+        return $form;
     }
 
-    public function getClient_id(): ?int
+    public function getClientId(): ?int
     {
         return $this->client_id;
     }

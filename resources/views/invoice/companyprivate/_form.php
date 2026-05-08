@@ -25,16 +25,16 @@ use Yiisoft\Html\Tag\Form;
  */
 
 ?>
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
 <?= $translator->translate('setting.company.private'); ?>
 <?= Html::closeTag('h1'); ?>
 
-<?= Form::tag()
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -53,23 +53,20 @@ use Yiisoft\Html\Tag\Form;
                         ->header($translator->translate('error.summary'))
                         ->onlyCommonErrors()
 ?>
-                <?= Html::closeTag('div'); ?>    
+                <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?php
     $optionsDataCompany = [];
 /**
- * @var App\Invoice\Entity\Company $company
+ * @var App\Infrastructure\Persistence\Company\Company $company
  */
 foreach ($companies as $company) {
-    if (null !== ($companyId = $company->getId()) && null !== ($companyName = $company->getName())) {
-        $optionsDataCompany[(string) $companyId] = $companyName;
+    if (null !== ($companyName = $company->getName())) {
+        $optionsDataCompany[(string) $company->reqId()] = $companyName;
     }
 }
 ?>
                     <?= $formFields->companyPrivateCompanySelect($form, $optionsDataCompany, $company_public); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= $formFields->companyPrivateHiddenField($form, 'id'); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= $formFields->companyPrivateTextField($form, 'tax_code', 'tax.code'); ?>
@@ -81,11 +78,8 @@ foreach ($companies as $company) {
                     <?= $formFields->companyPrivateTextField($form, 'gln', 'gln'); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= $formFields->companyPrivateTextField($form, 'rcc', 'sumex.rcc'); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?> 
                     <?= Html::openTag('label'); ?>
-                        <?= Html::encode($form->getLogo_filename()); ?>
+                        <?= Html::encode($form->getLogoFilename()); ?>
                     <?= Html::closeTag('label'); ?>
                     <?= $formFields->companyPrivateFileField($form, 'logo_filename'); ?>
                 <?= Html::closeTag('div'); ?>
@@ -99,20 +93,20 @@ foreach ($companies as $company) {
                     <?= $formFields->companyPrivateTextField($form, 'logo_margin', 'company.private.logo.margin'); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= Html::openTag('div', ['class' => 'input-group']); ?>               
+                    <?= Html::openTag('div', ['class' => 'input-group']); ?>
                         <?= $formFields->companyPrivateDateField($form, 'start_date', ' (' . $dateHelper->display() . ')'); ?>
-                    <?= Html::closeTag('div'); ?>                                
+                    <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= Html::openTag('div', ['class' => 'input-group']); ?>               
+                    <?= Html::openTag('div', ['class' => 'input-group']); ?>
                         <?= $formFields->companyPrivateDateField($form, 'end_date', ' (' . $dateHelper->display() . ')'); ?>
-                    <?= Html::closeTag('div'); ?>                                
+                    <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
-        <?= Html::closeTag('div'); ?>    
+        <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= $button::backSave(); ?>
-<?= Form::tag()->close() ?>
+<?=  new Form()->close() ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

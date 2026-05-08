@@ -11,7 +11,7 @@ use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Header;
 use Yiisoft\Http\Status;
 use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class ContactController
 {
@@ -19,9 +19,9 @@ final class ContactController
         private readonly ContactMailer $mailer,
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly UrlGeneratorInterface $url,
-        private ViewRenderer $viewRenderer,
+        private WebViewRenderer $webViewRenderer,
     ) {
-        $this->viewRenderer = $viewRenderer
+        $this->webViewRenderer = $webViewRenderer
             ->withControllerName('contact')
             ->withViewPath(__DIR__ . '/views');
     }
@@ -37,7 +37,7 @@ final class ContactController
     ): ResponseInterface {
         $form = new ContactForm();
         if (!$formHydrator->populateFromPostAndValidate($form, $request)) {
-            return $this->viewRenderer->render('form', ['form' => $form]);
+            return $this->webViewRenderer->render('form', ['form' => $form]);
         }
 
         $this->mailer->send($form);

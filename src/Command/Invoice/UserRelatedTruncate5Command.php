@@ -6,9 +6,9 @@ namespace App\Command\Invoice;
 
 use App\Auth\Identity;
 use App\Auth\Token;
-use App\User\User;
-use App\Invoice\Entity\UserInv;
-use App\Invoice\Entity\UserClient;
+use App\Infrastructure\Persistence\User\User;
+use App\Infrastructure\Persistence\UserInv\UserInv;
+use App\Infrastructure\Persistence\UserClient\UserClient;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

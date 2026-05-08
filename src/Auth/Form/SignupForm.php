@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Auth\Form;
 
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 use App\User\UserRepository;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Translator\TranslatorInterface;
@@ -28,7 +28,8 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly UserRepository $userRepository,
-    ) {}
+    ) {
+    }
 
     /**
      * @return string[]

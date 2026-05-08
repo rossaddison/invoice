@@ -67,7 +67,7 @@ export class ClientHandler {
 
     private bindEventListeners(): void {
         document.addEventListener('click', this.handleClick.bind(this), true);
-        
+
         // Instead of global submit listener, target specific forms only
         this.bindSpecificFormHandlers();
     }
@@ -80,12 +80,14 @@ export class ClientHandler {
                 form.addEventListener('submit', handler.bind(this));
             } else {
                 // If form not found immediately, try again after DOM loads
-                document.addEventListener('DOMContentLoaded', () => {
-                    const laterForm = document.getElementById(formId) as HTMLFormElement;
-                    if (laterForm) {
-                        laterForm.addEventListener('submit', handler.bind(this));
-                    }
-                });
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const laterForm = document.getElementById(formId) as HTMLFormElement;
+                        if (laterForm) {
+                            laterForm.addEventListener('submit', handler.bind(this));
+                        }
+                    });
+                }
             }
         };
 
@@ -122,7 +124,7 @@ export class ClientHandler {
 
 
     private async handleClientCreateConfirm(createBtn: HTMLElement): Promise<void> {
-        const url = `${location.origin}/invoice/client/create_confirm`;
+        const url = `${location.origin}/invoice/client/createConfirm`;
         const btn = (document.querySelector('.client_create_confirm') as HTMLElement) || createBtn;
 
         // Set loading state
@@ -162,8 +164,8 @@ export class ClientHandler {
     }
 
     private async handleSaveClientNote(saveNoteBtn: HTMLElement): Promise<void> {
-        const url = `${location.origin}/invoice/client/save_client_note_new`;
-        const loadNotesUrl = `${location.origin}/invoice/client/load_client_notes`;
+        const url = `${location.origin}/invoice/client/saveClientNoteNew`;
+        const loadNotesUrl = `${location.origin}/invoice/client/loadClientNotes`;
         const btn = (document.querySelector('.save_client_note') as HTMLElement) || saveNoteBtn;
         const currentUrl = new URL(location.href);
 
@@ -199,7 +201,7 @@ export class ClientHandler {
                             credentials: 'same-origin',
                         });
                         const html = await notesResponse.text();
-                        
+
                         // Only update if we get valid partial HTML (not a full page)
                         if (html && !html.includes('<!DOCTYPE') && !html.includes('<html')) {
                             // Sanitize HTML content to prevent XSS attacks
@@ -271,7 +273,7 @@ export class ClientHandler {
             return;
         }
 
-        const url = `${location.origin}/invoice/client/delete_client_note`;
+        const url = `${location.origin}/invoice/client/deleteClientNote`;
         const originalHtml = deleteBtn.innerHTML;
 
         try {
@@ -310,7 +312,7 @@ export class ClientHandler {
                     statusText: response.statusText,
                     body: responseText.substring(0, 500)
                 });
-                
+
                 deleteBtn.innerHTML = originalHtml;
                 (deleteBtn as HTMLButtonElement).disabled = false;
                 alert('Failed to delete note. Please try again.');
@@ -341,11 +343,11 @@ export class ClientHandler {
 
     private async handleQuoteFormSubmit(event: SubmitEvent): Promise<void> {
         event.preventDefault(); // Prevent default form submission
-        
+
         const form = event.target as HTMLFormElement;
         const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement;
         const originalHtml = submitButton?.innerHTML;
-        
+
         if (submitButton) {
             setButtonLoading(submitButton, true);
         }
@@ -357,7 +359,7 @@ export class ClientHandler {
             checkIcon.className = 'fa fa-check';
             submitButton.appendChild(checkIcon);
         }
-        
+
         // Close the modal if it exists
         const modal = document.getElementById('modal-add-quote') || document.getElementById('modal-add-client');
         if (modal) {
@@ -376,11 +378,11 @@ export class ClientHandler {
 
     private async handleInvoiceFormSubmit(event: SubmitEvent): Promise<void> {
         event.preventDefault(); // Prevent default form submission
-        
+
         const form = event.target as HTMLFormElement;
         const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement;
         const originalHtml = submitButton?.innerHTML;
-        
+
         if (submitButton) {
             setButtonLoading(submitButton, true);
         }
@@ -392,7 +394,7 @@ export class ClientHandler {
             checkIcon.className = 'fa fa-check';
             submitButton.appendChild(checkIcon);
         }
-        
+
         // Close the modal if it exists
         const modal = document.getElementById('modal-add-inv') || document.getElementById('modal-add-client');
         if (modal) {

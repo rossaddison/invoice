@@ -9,7 +9,7 @@ use Yiisoft\Html\Tag\Form;
 /**
  *
  * @var App\Invoice\Client\ClientRepository $cR
- * @var App\Invoice\Entity\InvAmount $invAmount
+ * @var App\Infrastructure\Persistence\InvAmount\InvAmount $invAmount
  * @var App\Invoice\Helpers\ClientHelper $clientHelper
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
@@ -40,23 +40,23 @@ use Yiisoft\Html\Tag\Form;
  */
 
 // If there are no invoices to make payment against give a warning
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 ?>
 
-<?= Form::tag()
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('PaymentForm')
     ->open() ?>
 
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
-<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
     <?= Html::encode($translator->translate('payment.form')) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
@@ -77,12 +77,12 @@ echo $alert;
                 <?php
     $optionsDataPaymentMethod = [];
 /**
- * @var App\Invoice\Entity\PaymentMethod $paymentMethod
+ * @var App\Infrastructure\Persistence\PaymentMethod\PaymentMethod $paymentMethod
  */
 foreach ($paymentMethods as $paymentMethod) {
-    $paymentMethodId = $paymentMethod->getId();
+    $paymentMethodId = $paymentMethod->reqId();
     $paymentMethodName = $paymentMethod->getName();
-    if ((strlen($paymentMethodId) > 0)
+    if (($paymentMethodId > 0)
         && (strlen(($paymentMethodName ?? '')) > 0) && (null !== $paymentMethodName) && ($paymentMethod->getActive())) {
         $optionsDataPaymentMethod[$paymentMethodId] = $paymentMethodName;
     }
@@ -96,17 +96,17 @@ echo Field::select($form, 'payment_method_id')
     $optionsDataInvId = [];
 if ($openInvsCount > 0) {
     /**
-     * @var App\Invoice\Entity\Inv $inv
+     * @var App\Infrastructure\Persistence\Inv\Inv $inv
      */
     foreach ($openInvs as $inv) {
-        $invAmount = $iaR->repoInvquery((int) $inv->getId());
+        $invAmount = $iaR->repoInvquery($inv->reqId());
         if (null !== $invAmount) {
-            $optionsDataInvId[(int) $inv->getId()]
+            $optionsDataInvId[$inv->reqId()]
                = ($inv->getNumber() ?? $translator->translate('number.no'))
                . ' - '
-               . ($clientHelper->format_client($cR->repoClientquery($inv->getClient_id())))
+               . ($clientHelper->formatClient($cR->repoClientquery($inv->reqClientId())))
                . ' - '
-               . ($numberHelper->format_currency($invAmount->getBalance()));
+               . ($numberHelper->formatCurrency($invAmount->getBalance()));
         }
     }
 } else {
@@ -120,12 +120,12 @@ if ($openInvsCount > 0) {
         ->optionsData($optionsDataInvId)
         ->hint($translator->translate('hint.this.field.is.required'))
 ?>
-                <?= Html::closeTag('div'); ?>    
+                <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::date($form, 'payment_date')
     ->label($translator->translate('date'))
     ->required(true)
-    ->value($form->getPayment_date() instanceof DateTimeImmutable ? $form->getPayment_date()->format('Y-m-d') : '')
+    ->value($form->getPaymentDate() instanceof DateTimeImmutable ? $form->getPaymentDate()->format('Y-m-d') : '')
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>
@@ -135,7 +135,7 @@ if ($openInvsCount > 0) {
     ->addInputAttributes([
         'placeholder' => $translator->translate('note'),
         'value' => Html::encode($form->getNote() ?? ''),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'note',
     ])
     ->hint($translator->translate('hint.this.field.is.required'));
@@ -153,16 +153,16 @@ if ($openInvsCount > 0) {
             <?= Html::openTag('div'); ?>
                 <?php
 /**
- * @var App\Invoice\Entity\CustomField $customField
+ * @var App\Infrastructure\Persistence\CustomField\CustomField $customField
  */
-foreach ($customFields as $customField): ?>  
-                        <?php $cvH->print_field_for_form($customField, $paymentCustomForm, $translator, $paymentCustomValues, $customValues); ?>
+foreach ($customFields as $customField): ?>
+                        <?php $cvH->printFieldForForm($customField, $paymentCustomForm, $translator, $urlGenerator, $paymentCustomValues, $customValues); ?>
                 <?php endforeach; ?>
-            <?= Html::closeTag('div'); ?>    
+            <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?= Form::tag()->close() ?>
+<?=  new Form()->close() ?>

@@ -8,9 +8,9 @@ use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Auth\TokenRepository as tR;
 use App\Invoice\Client\ClientRepository as cR;
-use App\Invoice\Entity\Client;
-use App\Invoice\Entity\UserClient;
-use App\Invoice\Entity\UserInv;
+use App\Infrastructure\Persistence\Client\Client;
+use App\Infrastructure\Persistence\UserClient\UserClient;
+use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\Helpers\CountryHelper;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\UserClient\UserClientRepository as ucR;
@@ -36,7 +36,7 @@ use Yiisoft\Security\TokenMask;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class UserInvController extends BaseController
 {
@@ -55,11 +55,11 @@ final class UserInvController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         // Related logic: see yiisoft/rbac-php
         $this->itemstorage = $itemstorage;
         $this->assignment = $assignment;
@@ -90,7 +90,7 @@ final class UserInvController extends BaseController
             '@language' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Language']);
         $countries = new CountryHelper();
         $userinv = new UserInv();
-        $form = new UserInvForm($userinv);
+        $form = new UserInvForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'userinv/add',
@@ -102,7 +102,7 @@ final class UserInvController extends BaseController
             // Only include newly signed up user ids in user Table in dropdown list i.e exclude those users already added and linked with client(s)
             'selected_country' => $this->sR->getSetting('default_country'),
             'selected_language' => $this->sR->getSetting('default_language'),
-            'countries' => $countries->get_country_list($_language),
+            'countries' => $countries->getCountryList($_language),
             'uR' => $uR,
             'uiR' => $uiR,
         ];
@@ -118,12 +118,12 @@ final class UserInvController extends BaseController
                      * @var string $body['type']
                      */
                     $type = $body['type'];
-                    if (null !== $form->getUser_id()) {
+                    if (null !== $form->getUserId()) {
                         // the user is not admin(1) and the guest dropdown type(1) has been selected
-                        if ($form->getUser_id() != '1' && $type == '1') {
-                            $roles = $this->manager->getRolesByUserId($form->getUser_id());
+                        if ($form->getUserId() != '1' && $type == '1') {
+                            $roles = $this->manager->getRolesByUserId($form->getUserId());
                             if (!array_key_exists('observer', $roles)) {
-                                $this->manager->assign('observer', $form->getUser_id());
+                                $this->manager->assign('observer', $form->getUserId());
                                 $this->flashMessage('info', $this->translator->translate('user.inv.role.all.new'));
                             } else {
                                 $this->flashMessage('info', $this->translator->translate('user.inv.role.observer.assigned.already'));
@@ -131,15 +131,15 @@ final class UserInvController extends BaseController
                             $this->userinvService->saveUserInv($userinv, $body);
                         }
                         // the user is not admin(1) and the type administrator(0) was selected in the dropdown on the form
-                        if ($form->getUser_id() != '1' && $type == '0') {
+                        if ($form->getUserId() != '1' && $type == '0') {
                             $this->flashMessage('warning', $this->translator->translate('user.inv.type.cannot.allocate.administrator.type.to.non.administrator'));
                         }
                         // the user is admin and the type administrator was selected in the dropdown on the form
-                        if ($form->getUser_id() == '1' && $type == '0') {
+                        if ($form->getUserId() == '1' && $type == '0') {
                             // if the admin role has not yet been assigned, assign it now
-                            $roles = $this->manager->getRolesByUserId($form->getUser_id());
+                            $roles = $this->manager->getRolesByUserId($form->getUserId());
                             if (!array_key_exists('admin', $roles)) {
-                                $this->manager->assign('admin', $form->getUser_id());
+                                $this->manager->assign('admin', $form->getUserId());
                                 $this->flashMessage('info', $this->translator->translate('user.inv.role.administrator.assigned'));
                             } else {
                                 $this->flashMessage('info', $this->translator->translate('user.inv.role.administrator.already.assigned'));
@@ -147,17 +147,17 @@ final class UserInvController extends BaseController
                             $this->userinvService->saveUserInv($userinv, $body);
                         }
                         // the user is an admin and the type guest was selected in the dropdown on the form
-                        if ($form->getUser_id() == '1' && $type == '1') {
+                        if ($form->getUserId() == '1' && $type == '1') {
                             $this->flashMessage('warning', $this->translator->translate('user.inv.type.cannot.allocate.guest.type.to.administrator'));
                         }
                         return $this->webService->getRedirectResponse('userinv/index');
-                    } // null!== $form->getUser_id()
+                    } // null!== $form->getUserId()
                 } // is_array
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_form_add', $parameters);
+        return $this->webViewRenderer->render('_form_add', $parameters);
     }
 
     // UserInv  is the extension Table of User
@@ -169,20 +169,18 @@ final class UserInvController extends BaseController
      * @param cR $cR
      * @param uiR $uiR
      * @param ucR $ucR
-     * @param sR $sR
      * @param string $_language
      * @param string $page
      * @param string $active
      * @param string $queryPage
      * @param string $querySort
      * @param string $queryFilterUser
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function index(
         cR $cR,
         uiR $uiR,
         ucR $ucR,
-        sR $sR,
         #[RouteArgument('_language')]
         string $_language,
         #[RouteArgument('page')]
@@ -190,19 +188,19 @@ final class UserInvController extends BaseController
         #[RouteArgument('active')]
         string $active = '2',
         #[Query('page')]
-        string $queryPage = null,
+        ?string $queryPage = null,
         #[Query('sort')]
-        string $querySort = null,
+        ?string $querySort = null,
         #[Query('filterUser')]
-        string $queryFilterUser = null,
-    ): \Yiisoft\DataResponse\DataResponse {
+        ?string $queryFilterUser = null,
+    ): \Psr\Http\Message\ResponseInterface {
         $canEdit = $this->rbac();
         $page = $queryPage ?? $page;
         $activeInt = (int) $active;
         $sortString = $querySort ?? '-user_id';
         $sort = Sort::only(['user_id', 'name'])
             ->withOrderString($sortString);
-        $userinvs = $this->userinvs_active_with_sort($uiR, $activeInt, $sort);
+        $userinvs = $this->userinvsActiveWithSort($uiR, $activeInt, $sort);
         if (isset($queryFilterUser) && !empty($queryFilterUser)) {
             $userinvs = $uiR->filterUserInvs($queryFilterUser);
         }
@@ -222,7 +220,7 @@ final class UserInvController extends BaseController
             'manager' => $this->manager,
             'optionsDataFilterUserInvLoginDropDown' => $this->optionsDataFilterUserInvLogin($uiR),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -239,35 +237,32 @@ final class UserInvController extends BaseController
         $aliases = new Aliases(['@invoice' => dirname(__DIR__),
             '@language' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Language']);
         if (null !== $this->userService->getUser()) {
-            $id = $this->userService->getUser()?->getId();
-            if (null !== $id) {
-                $userinv = $uiR->repoUserInvUserIdquery($id);
-                if ($userinv) {
-                    $form = new UserInvForm($userinv);
-                    $parameters = [
-                        'title' => $this->translator->translate('edit'),
-                        'actionName' => 'userinv/guest',
-                        'actionArguments' => [],
-                        'errors' => [],
-                        'form' => $form,
-                        'aliases' => $aliases,
-                    ];
-                    if ($request->getMethod() === Method::POST) {
-                        $body = $request->getParsedBody() ?? [];
-                        if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                            if (is_array($body)) {
-                                $this->userinvService->saveUserInv($userinv, $body);
-                                return $this->webService->getRedirectResponse('invoice/index');
-                            }
+            $id = $this->userService->getUser()?->reqId();
+            $userinv = $uiR->repoUserInvUserIdquery((int) $id);
+            if ($userinv) {
+                $form = new UserInvForm();
+                $parameters = [
+                    'title' => $this->translator->translate('edit'),
+                    'actionName' => 'userinv/guest',
+                    'actionArguments' => [],
+                    'errors' => [],
+                    'form' => $form,
+                    'aliases' => $aliases,
+                ];
+                if ($request->getMethod() === Method::POST) {
+                    $body = $request->getParsedBody() ?? [];
+                    if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                        if (is_array($body)) {
+                            $this->userinvService->saveUserInv($userinv, $body);
+                            return $this->webService->getRedirectResponse('invoice/index');
                         }
-                        $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-                        $parameters['form'] = $form;
                     }
-                    return $this->viewRenderer->render('_form_guest', $parameters);
+                    $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+                    $parameters['form'] = $form;
                 }
-                return $this->webService->getRedirectResponse('invoice/index');
-            } // nul!== $id
-            return $this->webService->getNotFoundResponse();
+                return $this->webViewRenderer->render('_form_guest', $parameters);
+            }
+            return $this->webService->getRedirectResponse('invoice/index');
         } // null!==$this->userService->getUser()
         return $this->webService->getNotFoundResponse();
     }
@@ -276,7 +271,7 @@ final class UserInvController extends BaseController
      * Related logic: see src\Widget\PageSizeLimiter buttonsGuest function
      * Related logic: see ..\resources\views\invoice\inv\guest.php
      * Related logic: see InvController\guest
-     * @param string $userInvId
+     * @param int $userInvId
      * @param string $origin
      * @param string $limit
      * @param uiR $uiR
@@ -284,14 +279,14 @@ final class UserInvController extends BaseController
      */
     public function guestlimit(
         #[RouteArgument('userinv_id')]
-        string $userInvId,
+        int $userInvId,
         #[RouteArgument('origin')]
         string $origin,
         #[RouteArgument('limit')]
         string $limit,
         uiR $uiR,
     ): Response {
-        if (strlen($userInvId) > 0 && strlen($origin) > 0) {
+        if ($userInvId > 0 && strlen($origin) > 0) {
             $limitInt = (int) $limit;
             $userInv = $uiR->repoUserInvquery($userInvId);
             if (null !== $userInv) {
@@ -347,11 +342,6 @@ final class UserInvController extends BaseController
         return $this->webService->getRedirectResponse('userinv/index');
     }
 
-    private function getRolesByUserId(string $userId): array
-    {
-        return $this->manager->getRolesByUserId($userId);
-    }
-
     /**
      * @param Request $request
      * @param int $id
@@ -372,11 +362,11 @@ final class UserInvController extends BaseController
             '@language' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Language']);
         $userinv = $this->userinv($id, $userinvRepository);
         if ($userinv) {
-            $form = new UserInvForm($userinv);
+            $form = UserInvForm::show($userinv);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'userinv/edit',
-                'actionArguments' => ['id' => $userinv->getId()],
+                'actionArguments' => ['id' => $userinv->reqId()],
                 'errors' => [],
                 'form' => $form,
                 'formFields' => $this->formFields,
@@ -391,12 +381,12 @@ final class UserInvController extends BaseController
                          * @var string $body['type']
                          */
                         $type = $body['type'];
-                        if (null !== $form->getUser_id()) {
+                        if (null !== $form->getUserId()) {
                             // the user is not admin(1) and the guest dropdown type(1) has been selected
-                            if ($form->getUser_id() != '1' && $type == '1') {
-                                $roles = $this->manager->getRolesByUserId($form->getUser_id());
+                            if ($form->getUserId() != '1' && $type == '1') {
+                                $roles = $this->manager->getRolesByUserId($form->getUserId());
                                 if (!array_key_exists('observer', $roles)) {
-                                    $this->manager->assign('observer', $form->getUser_id());
+                                    $this->manager->assign('observer', $form->getUserId());
                                     $this->flashMessage('info', $this->translator->translate('user.inv.role.all.new'));
                                 } else {
                                     $this->flashMessage('warning', $this->translator->translate('user.inv.role.observer.assigned.already'));
@@ -404,15 +394,15 @@ final class UserInvController extends BaseController
                                 $this->userinvService->saveUserInv($userinv, $body);
                             }
                             // the user is not admin(1) and the type administrator(0) was selected in the dropdown on the form
-                            if ($form->getUser_id() != '1' && $type == '0') {
+                            if ($form->getUserId() != '1' && $type == '0') {
                                 $this->flashMessage('warning', $this->translator->translate('user.inv.type.cannot.allocate.administrator.type.to.non.administrator'));
                             }
                             // the user is admin and the type administrator was selected in the dropdown on the form
-                            if ($form->getUser_id() == '1' && $type == '0') {
+                            if ($form->getUserId() == '1' && $type == '0') {
                                 // if the admin role has not yet been assigned, assign it now
-                                $roles = $this->manager->getRolesByUserId($form->getUser_id());
+                                $roles = $this->manager->getRolesByUserId($form->getUserId());
                                 if (!array_key_exists('admin', $roles)) {
-                                    $this->manager->assign('admin', $form->getUser_id());
+                                    $this->manager->assign('admin', $form->getUserId());
                                     $this->flashMessage('info', $this->translator->translate('user.inv.role.administrator.assigned'));
                                 } else {
                                     $this->flashMessage('warning', $this->translator->translate('user.inv.role.administrator.already.assigned'));
@@ -420,7 +410,7 @@ final class UserInvController extends BaseController
                                 $this->userinvService->saveUserInv($userinv, $body);
                             }
                             // the user is an admin and the type guest was selected in the dropdown on the form
-                            if ($form->getUser_id() == '1' && $type == '1') {
+                            if ($form->getUserId() == '1' && $type == '1') {
                                 $this->flashMessage('warning', $this->translator->translate('user.inv.type.cannot.allocate.guest.type.to.administrator'));
                             }
                             return $this->webService->getRedirectResponse('userinv/index');
@@ -430,7 +420,7 @@ final class UserInvController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form_edit', $parameters);
+            return $this->webViewRenderer->render('_form_edit', $parameters);
         }
         return $this->webService->getRedirectResponse('userinv/index');
     }
@@ -439,14 +429,14 @@ final class UserInvController extends BaseController
      * @param int $id
      * @param ucR $ucR
      * @param uiR $uiR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function client(#[RouteArgument('id')] int $id, ucR $ucR, uiR $uiR): \Yiisoft\DataResponse\DataResponse|Response
+    public function client(#[RouteArgument('id')] int $id, ucR $ucR, uiR $uiR): \Psr\Http\Message\ResponseInterface
     {
         // Use the primary key 'id' passed in userinv/index's urlGenerator to retrieve the user_id
         $userinv = $this->userinv($id, $uiR);
         if (null !== $userinv) {
-            $user_id = $userinv->getUser_Id();
+            $user_id = $userinv->reqUserId();
             if ($user_id) {
                 $parameters = [
                     'alert' => $this->alert(),
@@ -454,7 +444,7 @@ final class UserInvController extends BaseController
                     'ucR' => $ucR,
                     'userInv' => $uiR->repoUserInvUserIdquery($user_id),
                 ];
-                return $this->viewRenderer->render('field', $parameters);
+                return $this->webViewRenderer->render('field', $parameters);
             }
             return $this->webService->getRedirectResponse('userinv/index');
         }
@@ -483,11 +473,12 @@ final class UserInvController extends BaseController
     }
 
     /**
-     * After the user has clicked on their received email link in their email account, their hyperlink takes them to this function
-     *
+     * After the user has clicked on their received email link in their
+     * email account, their hyperlink takes them to this function
      * @param string $_language
      * @param string $language
-     * @param string $token
+     * @param string $tokenMasked
+     * @param string $tokenType
      * @param cR $cR
      * @param uiR $uiR
      * @param ucR $ucR
@@ -522,13 +513,13 @@ final class UserInvController extends BaseController
             if ((int) $timestamp + 3600 >= time()) {
                 $identity = $tR->findIdentityByToken($tokenWithoutTimestamp, $tokenType);
                 if (null !== $identity) {
-                    $userId = $identity->getUser()?->getId();
+                    $userId = $identity->getUser()?->reqId();
                     if (null !== $userId) {
                         $userInv = $uiR->repoUserInvUserIdquery($userId);
                         if (null !== $userInv) {
                             $userInv->setActive(true);
                             $uiR->save($userInv);
-                            $userId = $userInv->getUser_id();
+                            $userId = $userInv->reqUserId();
                             // the status is now active i.e. 1, now make sure the token cannot be used again
                             $tokenEntity = $tR->findTokenByTokenAndType($tokenWithoutTimestamp, $tokenType);
                             if (null !== $tokenEntity) {
@@ -547,24 +538,24 @@ final class UserInvController extends BaseController
                                     if ($sR->getSetting('signup_automatically_assign_client') == '1') {
                                         $client = new Client();
                                         // set the client as active so that invoices can be created for the client
-                                        $client->setClient_active(true);
-                                        $client->setClient_email($email);
-                                        $client->setClient_language($language);
-                                        $client->setClient_age($sR->getSetting('signup_default_age_minimum_eighteen') == '1' ? 18 : 0);
+                                        $client->setClientActive(true);
+                                        $client->setClientEmail($email);
+                                        $client->setClientLanguage($language);
+                                        $client->setClientAge($sR->getSetting('signup_default_age_minimum_eighteen') == '1' ? 18 : 0);
                                         $cR->save($client);
                                         $this->flashMessage('info', $this->translator->translate('assign.client.on.signup.done'));
-                                        if (null !== ($clientId = $client->getClient_id())) {
-                                            $userClient = new UserClient();
-                                            $userClient->setUser_id((int) $userInv->getUser_id());
-                                            $userClient->setClient_id($clientId);
-                                            $ucR->save($userClient);
-                                        }
-                                        if (strlen($userId) > 0 && $userId > 1) {
+                                        $clientId = $client->reqId();
+                                        $userClient = new UserClient();
+                                        $userClient->setUserId($userInv->reqUserId());
+                                        $userClient->setClientId($clientId);
+                                        $ucR->save($userClient);
+                                        
+                                        if ($userId > 0 && $userId > 1) {
                                             $this->manager->revokeAll($userId);
                                             $this->manager->assign('observer', $userId);
                                             $this->flashMessage('info', $this->translator->translate('user.inv.role.observer.assigned'));
                                         }
-                                        if (strlen($userId) > 0 && $userId == 1) {
+                                        if ($userId > 0 && $userId == 1) {
                                             $this->manager->revokeAll($userId);
                                             $this->manager->assign('admin', $userId);
                                             $this->flashMessage('info', $this->translator->translate('user.inv.role.admin.assigned'));
@@ -594,25 +585,25 @@ final class UserInvController extends BaseController
     /**
      * @param int $id
      * @param UserInvRepository $userinvRepository
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function view(#[RouteArgument('id')] int $id, uiR $userinvRepository): \Yiisoft\DataResponse\DataResponse|Response
+    public function view(#[RouteArgument('id')] int $id, uiR $userinvRepository): \Psr\Http\Message\ResponseInterface
     {
         $aliases = new Aliases(['@invoice' => dirname(__DIR__),
             '@language' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Language']);
         $userinv = $this->userinv($id, $userinvRepository);
         if ($userinv) {
-            $form = new UserInvForm($userinv);
+            $form = UserInvForm::show($userinv);
             $parameters = [
                 'aliases' => $aliases,
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'userinv/view',
-                'actionArguments' => ['id' => $userinv->getId()],
+                'actionArguments' => ['id' => $userinv->reqId()],
                 'errors' => [],
                 'form' => $form,
-                'userinv' => $userinvRepository->repoUserInvquery((string) $userinv->getId()),
+                'userinv' => $userinvRepository->repoUserInvquery($userinv->reqId()),
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('userinv/index');
     }
@@ -639,7 +630,7 @@ final class UserInvController extends BaseController
      *
      * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface|\Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function userinvs_active_with_sort(uiR $uiR, int $active, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface|\Yiisoft\Data\Cycle\Reader\EntityReader
+    private function userinvsActiveWithSort(uiR $uiR, int $active, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface|\Yiisoft\Data\Cycle\Reader\EntityReader
     {
         return $uiR->findAllWithActive($active)
                         ->withSort($sort);
@@ -653,7 +644,7 @@ final class UserInvController extends BaseController
     private function userinv(int $id, uiR $userinvRepository): ?UserInv
     {
         if ($id) {
-            return $userinvRepository->repoUserInvquery((string) $id);
+            return $userinvRepository->repoUserInvquery($id);
         }
         return null;
     }

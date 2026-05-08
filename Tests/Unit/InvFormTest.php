@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Invoice;
 
-use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\Client;
+use App\Infrastructure\Persistence\Inv\Inv;
+use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\Inv\InvForm;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Validator\Validator;
@@ -40,8 +40,8 @@ final class InvFormTest extends TestCase
         $form = $this->createFormWithData([
             'terms' => $longContent,
             'note' => $longContent,
-            'client_id' => '1',
-            'group_id' => '1'
+            'client_id' => 1,
+            'group_id' => 1
         ]);
         
         $result = $this->validator->validate($form);
@@ -58,8 +58,8 @@ final class InvFormTest extends TestCase
         // Test number field (max 100 chars)
         $form = $this->createFormWithData([
             'number' => str_repeat('1', 101), // 101 chars - should fail
-            'client_id' => '1',
-            'group_id' => '1'
+            'client_id' => 1,
+            'group_id' => 1
         ]);
         
         $result = $this->validator->validate($form);
@@ -68,8 +68,8 @@ final class InvFormTest extends TestCase
         // Test valid number field
         $form = $this->createFormWithData([
             'number' => str_repeat('1', 100), // 100 chars - should pass
-            'client_id' => '1',
-            'group_id' => '1'
+            'client_id' => 1,
+            'group_id' => 1
         ]);
         
         $result = $this->validator->validate($form);
@@ -84,8 +84,8 @@ final class InvFormTest extends TestCase
         // Test with 4 characters (should fail)
         $form = $this->createFormWithData([
             'stand_in_code' => 'ABCD', // 4 chars - should fail
-            'client_id' => '1',
-            'group_id' => '1'
+            'client_id' => 1,
+            'group_id' => 1
         ]);
         
         $result = $this->validator->validate($form);
@@ -94,8 +94,8 @@ final class InvFormTest extends TestCase
         // Test with 3 characters (should pass)
         $form = $this->createFormWithData([
             'stand_in_code' => 'ABC', // 3 chars - should pass
-            'client_id' => '1',
-            'group_id' => '1'
+            'client_id' => 1,
+            'group_id' => 1
         ]);
         
         $result = $this->validator->validate($form);
@@ -110,8 +110,8 @@ final class InvFormTest extends TestCase
         // Test with 33 characters (should fail)
         $form = $this->createFormWithData([
             'url_key' => str_repeat('a', 33), // 33 chars - should fail
-            'client_id' => '1',
-            'group_id' => '1'
+            'client_id' => 1,
+            'group_id' => 1
         ]);
         
         $result = $this->validator->validate($form);
@@ -120,8 +120,8 @@ final class InvFormTest extends TestCase
         // Test with 32 characters (should pass)
         $form = $this->createFormWithData([
             'url_key' => str_repeat('a', 32), // 32 chars - should pass
-            'client_id' => '1',
-            'group_id' => '1'
+            'client_id' => 1,
+            'group_id' => 1
         ]);
         
         $result = $this->validator->validate($form);
@@ -136,8 +136,8 @@ final class InvFormTest extends TestCase
         // Test with 91 characters (should fail)
         $form = $this->createFormWithData([
             'password' => str_repeat('p', 91), // 91 chars - should fail
-            'client_id' => '1',
-            'group_id' => '1'
+            'client_id' => 1,
+            'group_id' => 1
         ]);
         
         $result = $this->validator->validate($form);
@@ -146,8 +146,8 @@ final class InvFormTest extends TestCase
         // Test with 90 characters (should pass)
         $form = $this->createFormWithData([
             'password' => str_repeat('p', 90), // 90 chars - should pass
-            'client_id' => '1',
-            'group_id' => '1'
+            'client_id' => 1,
+            'group_id' => 1
         ]);
         
         $result = $this->validator->validate($form);
@@ -162,8 +162,8 @@ final class InvFormTest extends TestCase
         // Test with 33 characters (should fail)
         $form = $this->createFormWithData([
             'document_description' => str_repeat('d', 33), // 33 chars - should fail
-            'client_id' => '1',
-            'group_id' => '1'
+            'client_id' => 1,
+            'group_id' => 1
         ]);
         
         $result = $this->validator->validate($form);
@@ -172,8 +172,8 @@ final class InvFormTest extends TestCase
         // Test with 32 characters (should pass)
         $form = $this->createFormWithData([
             'document_description' => str_repeat('d', 32), // 32 chars - should pass
-            'client_id' => '1',
-            'group_id' => '1'
+            'client_id' => 1,
+            'group_id' => 1
         ]);
         
         $result = $this->validator->validate($form);
@@ -187,8 +187,8 @@ final class InvFormTest extends TestCase
     {
         // Test without required client_id
         $form = $this->createFormWithData([
-            'group_id' => '1',
-            'client_id' => '' // empty required field
+            'group_id' => 1,
+            'client_id' => null // empty required field
         ]);
         
         $result = $this->validator->validate($form);
@@ -196,8 +196,8 @@ final class InvFormTest extends TestCase
         
         // Test without required group_id
         $form = $this->createFormWithData([
-            'client_id' => '1',
-            'group_id' => '' // empty required field
+            'client_id' => 1,
+            'group_id' => null // empty required field
         ]);
         
         $result = $this->validator->validate($form);
@@ -205,8 +205,8 @@ final class InvFormTest extends TestCase
         
         // Test with both required fields
         $form = $this->createFormWithData([
-            'client_id' => '1',
-            'group_id' => '1'
+            'client_id' => 1,
+            'group_id' => 1
         ]);
         
         $result = $this->validator->validate($form);
@@ -219,8 +219,8 @@ final class InvFormTest extends TestCase
     public function testSkipOnEmptyFields(): void
     {
         $form = $this->createFormWithData([
-            'client_id' => '1',
-            'group_id' => '1',
+            'client_id' => 1,
+            'group_id' => 1,
             'number' => '', // Empty but should be allowed
             'stand_in_code' => '', // Empty but should be allowed
             'url_key' => '', // Empty but should be allowed
@@ -239,14 +239,13 @@ final class InvFormTest extends TestCase
      */
     public function testFormInitializationFromEntity(): void
     {
-        $form = new InvForm($this->inv);
+        $form = InvForm::show($this->inv);
         
-        $this->assertEquals('1', $form->getId());
         $this->assertEquals('INV-001', $form->getNumber());
         $this->assertEquals('Test terms', $form->getTerms());
         $this->assertEquals('Test note', $form->getNote());
-        $this->assertEquals('1', $form->getClient_id());
-        $this->assertEquals('1', $form->getGroup_id());
+        $this->assertEquals(1, $form->getClientId());
+        $this->assertEquals(1, $form->getGroupId());
     }
 
     /**
@@ -258,34 +257,32 @@ final class InvFormTest extends TestCase
         $client = $this->createMock(Client::class);
         $now = new DateTimeImmutable();
         
-        $inv->method('getId')->willReturn('1');
         $inv->method('getNumber')->willReturn('INV-001');
         $inv->method('getTerms')->willReturn('Test terms');
         $inv->method('getNote')->willReturn('Test note');
-        $inv->method('getClient_id')->willReturn('1');
-        $inv->method('getGroup_id')->willReturn('1');
-        $inv->method('getStatus_id')->willReturn(1);
-        $inv->method('getDate_created')->willReturn($now);
-        $inv->method('getDate_modified')->willReturn($now);
-        $inv->method('getDate_supplied')->willReturn($now);
-        $inv->method('getDate_tax_point')->willReturn($now);
-        $inv->method('getDate_due')->willReturn($now);
-        $inv->method('getTime_created')->willReturn($now);
-        $inv->method('getStand_in_code')->willReturn('ABC');
-        $inv->method('getQuote_id')->willReturn('1');
-        $inv->method('getSo_id')->willReturn('1');
-        $inv->method('getCreditinvoice_parent_id')->willReturn('0');
-        $inv->method('getDelivery_id')->willReturn('0');
-        $inv->method('getDelivery_location_id')->willReturn('0');
-        $inv->method('getPostal_address_id')->willReturn('0');
-        $inv->method('getContract_id')->willReturn('0');
-        $inv->method('getDiscount_amount')->willReturn(0.00);
-        $inv->method('getDiscount_percent')->willReturn(0.00);
-        $inv->method('getUrl_key')->willReturn('test-key');
+        $inv->method('reqClientId')->willReturn(1);
+        $inv->method('reqGroupId')->willReturn(1);
+        $inv->method('reqStatusId')->willReturn(1);
+        $inv->method('getContractId')->willReturn(0);
+        $inv->method('getDateCreated')->willReturn($now);
+        $inv->method('getDateModified')->willReturn($now);
+        $inv->method('getDateSupplied')->willReturn($now);
+        $inv->method('getDateTaxPoint')->willReturn($now);
+        $inv->method('getDateDue')->willReturn($now);
+        $inv->method('getTimeCreated')->willReturn($now);
+        $inv->method('getStandInCode')->willReturn('ABC');
+        $inv->method('getQuoteId')->willReturn(1);
+        $inv->method('getSoId')->willReturn(1);
+        $inv->method('getCreditinvoiceParentId')->willReturn(0);
+        $inv->method('getDeliveryId')->willReturn(0);
+        $inv->method('getDeliveryLocationId')->willReturn(0);
+        $inv->method('getPostalAddressId')->willReturn(0);
+        $inv->method('getDiscountAmount')->willReturn(0.00);
+        $inv->method('getUrlKey')->willReturn('test-key');
         $inv->method('getPassword')->willReturn('password');
-        $inv->method('getPayment_method')->willReturn(0);
+        $inv->method('getPaymentMethod')->willReturn(0);
         $inv->method('getDocumentDescription')->willReturn('Test description');
-        $inv->method('getIs_read_only')->willReturn(false);
+        $inv->method('getIsReadOnly')->willReturn(false);
         $inv->method('getClient')->willReturn($client);
         
         return $inv;
@@ -297,7 +294,7 @@ final class InvFormTest extends TestCase
     private function createFormWithData(array $data): InvForm
     {
         $inv = $this->createMockInv();
-        $form = new InvForm($inv);
+        $form = InvForm::show($inv);
         
         // Use reflection to set properties for testing
         $reflection = new \ReflectionClass($form);

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvCustom;
 
-use App\Invoice\Entity\InvCustom;
+use App\Infrastructure\Persistence\InvCustom\InvCustom;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -84,7 +84,7 @@ final class InvCustomRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoInvCustomquery(string $id): ?InvCustom
+    public function repoInvCustomquery(int $id): ?InvCustom
     {
         $query = $this->select()->load('custom_field')
                                 ->load('inv')
@@ -97,21 +97,21 @@ final class InvCustomRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoFormValuequery(string $inv_id, string $custom_field_id): ?InvCustom
+    public function repoFormValuequery(int $inv_id, int $custom_field_id): ?InvCustom
     {
         $query = $this->select()->where(['inv_id' => $inv_id])
                                 ->andWhere(['custom_field_id' => $custom_field_id]);
         return  $query->fetchOne();
     }
 
-    public function repoInvCustomCount(string $inv_id, string $custom_field_id): int
+    public function repoInvCustomCount(int $inv_id, int $custom_field_id): int
     {
         $query = $this->select()->where(['inv_id' => $inv_id])
                                 ->andWhere(['custom_field_id' => $custom_field_id]);
         return $query->count();
     }
 
-    public function repoInvCount(string $inv_id): int
+    public function repoInvCount(int $inv_id): int
     {
         $query = $this->select()->where(['inv_id' => $inv_id]);
         return $query->count();
@@ -122,7 +122,7 @@ final class InvCustomRepository extends Select\Repository
      *
      * @psalm-return EntityReader
      */
-    public function repoFields(string $inv_id): EntityReader
+    public function repoFields(int $inv_id): EntityReader
     {
         $query = $this->select()->where(['inv_id' => $inv_id]);
         return $this->prepareDataReader($query);

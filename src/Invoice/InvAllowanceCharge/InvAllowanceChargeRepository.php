@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvAllowanceCharge;
 
-use App\Invoice\Entity\InvAllowanceCharge;
 use Cycle\ORM\Select;
+use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
@@ -90,11 +90,11 @@ final class InvAllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @psalm-return TEntity|null
      * @return InvAllowanceCharge|null
      */
-    public function repoInvAllowanceChargeLoadedquery(string $id): ?InvAllowanceCharge
+    public function repoInvAllowanceChargeLoadedquery(int $id): ?InvAllowanceCharge
     {
         $query = $this->select()
                       ->load('allowance_charge')
@@ -131,10 +131,10 @@ final class InvAllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @param string $inv_id
+     * @param int $inv_id
      * @psalm-return EntityReader
      */
-    public function repoACIquery(string $inv_id): EntityReader
+    public function repoACIquery(int $inv_id): EntityReader
     {
         $query = $this->select()
                       ->load('allowance_charge')
@@ -142,7 +142,7 @@ final class InvAllowanceChargeRepository extends Select\Repository
         return $this->prepareDataReader($query);
     }
 
-    public function getPackHandleShipTotal(string $inv_id): array
+    public function getPackHandleShipTotal(int $inv_id): array
     {
         $all = $this->repoACIquery($inv_id);
         $totalAmount = 0.00;
@@ -166,17 +166,17 @@ final class InvAllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return int
      */
-    public function repoCount(string $id): int
+    public function repoCount(int $id): int
     {
         $query = $this->select()
                       ->where(['id' => $id]);
         return $query->count();
     }
 
-    public function repoACICount(string $inv_id): int
+    public function repoACICount(int $inv_id): int
     {
         $query = $this->select()
                       ->where(['inv_id' => $inv_id]);

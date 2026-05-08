@@ -5,7 +5,7 @@ declare(strict_types=1);
 /**
  * Related logic: see id="quote-to-pdf" triggered by <a href="#quote-to-pdf" data-bs-toggle="modal"  style="text-decoration:none">
  * Related logic: see views/quote/view.php
- * @var App\Invoice\Entity\Quote $quote
+ * @var App\Infrastructure\Persistence\Quote\Quote $quote
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var string $csrf
  */
@@ -23,21 +23,21 @@ declare(strict_types=1);
                 <form>
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
                     <div class="control-label">
-                        <?= $translator->translate('custom.fields'); ?>?                
+                        <?= $translator->translate('custom.fields'); ?>?
                     </div>
-                    <input type="hidden" name="quote_id" id="quote_id" value="<?php $quote->getId(); ?>">
-                </form>    
+                    <input type="hidden" name="quote_id" id="quote_id" value="<?php $quote->reqId(); ?>">
+                </form>
             </div>
             <div class="modal-footer">
                 <div class="btn-group">
                     <button class="quote_to_pdf_confirm_with_custom_fields btn btn-success" id="quote_to_pdf_confirm_with_custom_fields" type="button">
-                        <i class="fa fa-check"></i> <?= $translator->translate('yes'); ?>
+                        <i class="bi bi-check-lg"></i> <?= $translator->translate('yes'); ?>
                     </button>
                     <button class="quote_to_pdf_confirm_without_custom_fields btn btn-info" id="quote_to_pdf_confirm_without_custom_fields" type="button">
-                        <i class="fa fa-times"></i> <?= $translator->translate('no'); ?>
-                    </button>                
+                        <i class="bi bi-x-lg"></i> <?= $translator->translate('no'); ?>
+                    </button>
                     <button class="btn btn-danger" type="button" data-bs-dismiss="modal">
-                        <i class="fa fa-times"></i> <?= $translator->translate('back'); ?>
+                        <i class="bi bi-x-lg"></i> <?= $translator->translate('back'); ?>
                     </button>
                 </div>
             </div>

@@ -6,11 +6,13 @@ namespace App\Invoice\Contract;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\Contract;
+use App\Infrastructure\Persistence\Contract\Contract;
 use App\Invoice\Contract\ContractRepository as contractR;
 use App\Invoice\Client\ClientRepository as cR;
 use App\Invoice\Inv\InvRepository as iR;
 use App\Invoice\Setting\SettingRepository as sR;
+use App\Invoice\UserClient\UserClientRepository as UCR;
+use App\Invoice\UserInv\UserInvRepository as UIR;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -25,7 +27,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Exception;
 
 final class ContractController extends BaseController
@@ -38,11 +40,11 @@ final class ContractController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->contractService = $contractService;
     }
 
@@ -52,17 +54,18 @@ final class ContractController extends BaseController
      * @param Request $request
      * @param cR $cR
      * @param iR $iR
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function index(CurrentRoute $currentRoute, contractR $contractR, Request $request, cR $cR, iR $iR): \Yiisoft\DataResponse\DataResponse
+    public function index(CurrentRoute $currentRoute, contractR $contractR,
+            Request $request, cR $cR, iR $iR): \Psr\Http\Message\ResponseInterface
     {
         $this->rbac();
         $query_params = $request->getQueryParams();
         /**
          * @var string $query_params['page']
          */
-        $page = (int) ($query_params['page'] ?? $currentRoute->getArgument('page', '1'));
-        /** @psalm-var positive-int $currentPageNeverZero */
+        $page = (int) ($query_params['page'] ??
+                $currentRoute->getArgument('page', '1'));
         $currentPageNeverZero = $page > 0 ? $page : 1;
         /** @var string $query_params['sort'] */
         $sort = Sort::only(['id', 'client_id', 'name', 'reference'])
@@ -70,7 +73,7 @@ final class ContractController extends BaseController
             // - => 'desc'  so -id => default descending on id
             // Show the latest quotes first => -id
             ->withOrderString($query_params['sort'] ?? '-id');
-        $contracts = $this->contracts_with_sort($contractR, $sort);
+        $contracts = $this->contractsWithSort($contractR, $sort);
         $this->flashMessage('info', $this->translator->translate('contract.create'));
         $paginator = (new OffsetPaginator($contracts))
         ->withPageSize($this->sR->positiveListLimit())
@@ -80,10 +83,11 @@ final class ContractController extends BaseController
             'alert' => $this->alert(),
             'paginator' => $paginator,
             'cR' => $cR,
-            // Use the invoice Repository to retrieve all invoices associated with this contract
+// Use the invoice Repository to retrieve all invoices associated with this
+// contract
             'iR' => $iR,
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -91,18 +95,19 @@ final class ContractController extends BaseController
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param cR $cR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function add(CurrentRoute $currentRoute, Request $request, FormHydrator $formHydrator, cR $cR): \Yiisoft\DataResponse\DataResponse|Response
+    public function add(CurrentRoute $currentRoute, Request $request,
+                                            FormHydrator $formHydrator, cR $cR):
+                                    \Psr\Http\Message\ResponseInterface
     {
         $client_id = $currentRoute->getArgument('client_id');
         $contract = new Contract();
         // To pass the client id variable to the form, set it first in the entity
-        $contract->setClient_id((int) $client_id);
-        $title = '';
-        $form = new ContractForm($contract);
+        $contract->setClientId((int) $client_id);
+        $form = ContractForm::show($contract);
         if (null !== $client_id) {
-            $title = $cR->repoClientquery($client_id)->getClient_name();
+            $title = $cR->repoClientquery((int) $client_id)->getClientName();
         } else {
             $title = $this->translator->translate('not.available');
         }
@@ -121,14 +126,14 @@ final class ContractController extends BaseController
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
-                    $this->contractService->saveContract($contract, $body, $this->sR);
+                    $this->contractService->saveContract($contract, $body);
                     return $this->webService->getRedirectResponse('contract/index');
                 }
             }
             $parameters['form'] = $form;
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -146,11 +151,11 @@ final class ContractController extends BaseController
     ): Response {
         $contract = $this->contract($currentRoute, $contractRepository);
         if ($contract) {
-            $form = new ContractForm($contract);
+            $form = ContractForm::show($contract);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'contract/edit',
-                'actionArguments' => ['id' => $contract->getId()],
+                'actionArguments' => ['id' => $contract->reqId()],
                 'errors' => [],
                 'form' => $form,
             ];
@@ -158,14 +163,16 @@ final class ContractController extends BaseController
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     $body = $request->getParsedBody() ?? [];
                     if (is_array($body)) {
-                        $this->contractService->saveContract($contract, $body, $this->sR);
-                        return $this->webService->getRedirectResponse('contract/index');
+                        $this->contractService->saveContract($contract, $body);
+                        return $this->webService->getRedirectResponse(
+                                                                'contract/index');
                     }
                 }
                 $parameters['form'] = $form;
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+                $parameters['errors'] =
+                $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('contract/index');
     }
@@ -173,11 +180,13 @@ final class ContractController extends BaseController
     /**
      * @return Response|true
      */
+    /** @psalm-suppress UnusedReturnValue */
     private function rbac(): bool|Response
     {
         $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('permission'));
+            $this->flashMessage('warning',
+                                    $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('contract/index');
         }
         return $canEdit;
@@ -188,13 +197,15 @@ final class ContractController extends BaseController
      * @param contractR $contractRepository
      * @return Response
      */
-    public function delete(CurrentRoute $currentRoute, contractR $contractRepository): Response
+    public function delete(CurrentRoute $currentRoute,
+                                        contractR $contractRepository): Response
     {
         try {
             $contract = $this->contract($currentRoute, $contractRepository);
             if ($contract) {
                 $this->contractService->deleteContract($contract);
-                $this->flashMessage('success', $this->translator->translate('record.successfully.deleted'));
+                $this->flashMessage('success',
+                    $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('contract/index');
             }
             return $this->webService->getRedirectResponse('contract/index');
@@ -207,23 +218,44 @@ final class ContractController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param contractR $contractRepository
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @param UCR $ucR
+     * @param UIR $uiR
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function view(CurrentRoute $currentRoute, contractR $contractRepository): \Yiisoft\DataResponse\DataResponse|Response
+    public function view(
+        CurrentRoute $currentRoute,
+        contractR $contractRepository,
+        UCR $ucR,
+        UIR $uiR): \Psr\Http\Message\ResponseInterface
     {
         $contract = $this->contract($currentRoute, $contractRepository);
         if ($contract) {
-            $form = new ContractForm($contract);
+            $form = ContractForm::show($contract);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'contract/view',
-                'actionArguments' => ['id' => $contract->getId()],
+                'actionArguments' => ['id' => $contract->reqId()],
                 'errors' => [],
                 'form' => $form,
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            if ($this->rbacObserver($contract->reqClientId(),
+                                                                $ucR, $uiR)) {
+                return $this->webViewRenderer->render('_view', $parameters);
+            }
         }
         return $this->webService->getRedirectResponse('contract/index');
+    }
+
+    private function rbacObserver(int $clientId, UCR $ucR, UIR $uiR): bool {
+        $userClient = $ucR->repoUserquery($clientId);
+        if (null!==$userClient) {
+            $userId = $userClient->reqUserId();
+            $userInv = $uiR->repoUserInvUserIdquery($userId);
+            if (null !== $userInv && $userInv->getActive()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     //For rbac refer to AccessChecker
@@ -231,15 +263,13 @@ final class ContractController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param contractR $contractRepository
-     * @return Contract|null
+     * @return Contract
      */
-    private function contract(CurrentRoute $currentRoute, contractR $contractRepository): ?Contract
+    private function contract(CurrentRoute $currentRoute, contractR $contractRepository):
+        ?Contract
     {
         $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $contractRepository->repoContractquery($id);
-        }
-        return null;
+        return $contractRepository->repoContractquery((int) $id);
     }
 
     /**
@@ -250,7 +280,8 @@ final class ContractController extends BaseController
      *
      * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, Contract>
      */
-    private function contracts_with_sort(contractR $cR, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
+    private function contractsWithSort(contractR $cR, Sort $sort):
+                                    \Yiisoft\Data\Reader\SortableDataInterface
     {
         return $cR->findAllPreloaded()
                   ->withSort($sort);

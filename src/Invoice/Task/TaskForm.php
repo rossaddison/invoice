@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Task;
 
 use DateTimeImmutable;
-use App\Invoice\Entity\Task;
+use App\Infrastructure\Persistence\Task\Task;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
@@ -31,18 +31,20 @@ final class TaskForm extends FormModel
     #[Required]
     private ?int $tax_rate_id = null;
 
-    public function __construct(Task $task)
+    public static function show(Task $task): self
     {
-        $this->project_id = (int) $task->getProject_id();
-        $this->name = $task->getName();
-        $this->description = $task->getDescription();
-        $this->price = $task->getPrice();
-        $this->finish_date = $task->getFinish_date();
-        $this->status = $task->getStatus();
-        $this->tax_rate_id = (int) $task->getTax_rate_id();
+        $form = new self();
+        $form->project_id = $task->reqProjectId();
+        $form->name = $task->getName();
+        $form->description = $task->getDescription();
+        $form->price = $task->getPrice();
+        $form->finish_date = $task->getFinishDate();
+        $form->status = $task->getStatus();
+        $form->tax_rate_id = $task->reqTaxRateId();
+        return $form;
     }
 
-    public function getProject_id(): ?int
+    public function getProjectId(): ?int
     {
         return $this->project_id;
     }
@@ -62,7 +64,7 @@ final class TaskForm extends FormModel
         return $this->price;
     }
 
-    public function getFinish_date(): string|DateTimeImmutable|null
+    public function getFinishDate(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string|null $this->finish_date
@@ -75,7 +77,7 @@ final class TaskForm extends FormModel
         return $this->status;
     }
 
-    public function getTax_rate_id(): ?int
+    public function getTaxRateId(): ?int
     {
         return $this->tax_rate_id;
     }

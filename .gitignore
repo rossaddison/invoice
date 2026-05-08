@@ -18,15 +18,20 @@ phpunit-skelgen.phar
 phpunit.phar
 
 # local config
-/.env
+.env
 /docker-compose.override.yml
 /config/common/params.php
+/resources/views/site/privacypolicy.php
+/resources/views/site/termsofservice.php
 
 # evolving files
 /vendor
 /node_modules
+/resources/rbac/items.php
+/resources/rbac/assignments.php
 
 # Codeception
+# If the .env YII_C3 is set to true, composer will automatically update c3.php
 c3.php
 
 #assets
@@ -34,3 +39,13 @@ c3.php
 
 # Code Style
 php-cs-fixer.cache
+
+# Angular
+.angular/
+
+# VitePress
+/docs/.vitepress/dist
+/docs/.vitepress/cache
+
+# Tests
+/Tests/_output

@@ -18,15 +18,15 @@ use Yiisoft\Html\Tag\Form;
  */
 ?>
 
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
     <?= $translator->translate('group.form'); ?>
 <?= Html::closeTag('h1'); ?>
-<?= Form::tag()
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -36,12 +36,12 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'tabbable tabs-below']); ?>
 
     <?= Html::openTag('div', ['class' => 'tab-content']); ?>
-        
+
         <?= Html::openTag('div'); ?>
             <?= Field::text($form, 'name')
                 ->label($translator->translate('name'))
                 ->addInputAttributes([
-                    'class' => 'form-control',
+                    'class' => 'form-control form-control-lg',
                     'readonly' => 'readonly',
                     'disabled' => 'disabled',
                 ])
@@ -58,37 +58,37 @@ use Yiisoft\Html\Tag\Form;
                     'readonly' => 'readonly',
                     'disabled' => 'disabled',
                 ])
-                ->value(Html::encode($form->getIdentifier_format()))
+                ->value(Html::encode($form->getIdentifierFormat()))
                 ->placeholder('INV-{{{id}}}')
                 ->hint($translator->translate('hint.this.field.is.required')); ?>
             <?= Field::text($form, 'left_pad')
                 ->label($translator->translate('left.pad'))
                 ->addInputAttributes([
-                    'class' => 'form-control',
+                    'class' => 'form-control form-control-lg',
                     'readonly' => 'readonly',
                     'disabled' => 'disabled',
                 ])
-                ->value(Html::encode($form->getLeft_pad()) ?: '0')
+                ->value(Html::encode($form->getLeftPad()) ?: '0')
                 ->placeholder('0')
                 ->hint($translator->translate('hint.this.field.is.required')); ?>
             <?= Html::tag('br'); ?>
             <?= Field::text($form, 'next_id')
                 ->label($translator->translate('next.id'))
                 ->addInputAttributes([
-                    'class' => 'form-control',
+                    'class' => 'form-control form-control-lg',
                     'readonly' => 'readonly',
                     'disabled' => 'disabled',
                 ])
-                ->value(Html::encode($form->getNext_id()) ?: '1')
+                ->value(Html::encode($form->getNextId()) ?: '1')
                 ->placeholder('1')
-                ->hint($translator->translate('hint.this.field.is.required')); ?>    
+                ->hint($translator->translate('hint.this.field.is.required')); ?>
             <?= Html::tag('br'); ?>
-            <?= Html::closeTag('div'); ?>         
+            <?= Html::closeTag('div'); ?>
             <?= $button::back(); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?= Form::tag()->close(); ?>
+<?=  new Form()->close(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Unit;
 
 use App\Invoice\BaseController;
-use App\Invoice\Entity\Unit;
+use App\Infrastructure\Persistence\Unit\Unit;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\UnitPeppol\UnitPeppolRepository;
 use App\Service\WebControllerService;
@@ -20,7 +20,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class UnitController extends BaseController
 {
@@ -32,11 +32,11 @@ final class UnitController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->unitService = $unitService;
     }
 
@@ -45,11 +45,10 @@ final class UnitController extends BaseController
      * @param UnitRepository $unitRepository
      * @param UnitPeppolRepository $upR
      */
-    public function index(CurrentRoute $currentRoute, UnitRepository $unitRepository, UnitPeppolRepository $upR): \Yiisoft\DataResponse\DataResponse
+    public function index(CurrentRoute $currentRoute, UnitRepository $unitRepository, UnitPeppolRepository $upR): \Psr\Http\Message\ResponseInterface
     {
         $units = $this->units($unitRepository);
         $pageNum = (int) $currentRoute->getArgument('page', '1');
-        /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
         $paginator = (new OffsetPaginator($units))
             ->withPageSize($this->sR->positiveListLimit())
@@ -60,7 +59,7 @@ final class UnitController extends BaseController
             'upR' => $upR,
             'units' => $units,
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -71,7 +70,7 @@ final class UnitController extends BaseController
     public function add(Request $request, FormHydrator $formHydrator): Response
     {
         $unit = new Unit();
-        $form = new UnitForm($unit);
+        $form = new UnitForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'unit/add',
@@ -91,7 +90,7 @@ final class UnitController extends BaseController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('__form', $parameters);
+        return $this->webViewRenderer->render('__form', $parameters);
     }
 
     /**
@@ -108,9 +107,9 @@ final class UnitController extends BaseController
         UnitRepository $unitRepository,
         FormHydrator $formHydrator,
     ): Response {
-        $unit = $this->unit($unit_id, $unitRepository);
+        $unit = $this->unit((int) $unit_id, $unitRepository);
         if ($unit) {
-            $form = new UnitForm($unit);
+            $form = UnitForm::show($unit);
             $parameters = [
                 'title' => $this->translator->translate('unit.edit'),
                 'actionName' => 'unit/edit',
@@ -130,7 +129,7 @@ final class UnitController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('__form', $parameters);
+            return $this->webViewRenderer->render('__form', $parameters);
         }
         return $this->webService->getRedirectResponse('unit/index');
     }
@@ -144,7 +143,7 @@ final class UnitController extends BaseController
     {
         try {
             /** @var Unit $unit */
-            $unit = $this->unit($unit_id, $unitRepository);
+            $unit = $this->unit((int) $unit_id, $unitRepository);
             $this->unitService->deleteUnit($unit);
             $this->flashMessage('success', $this->translator->translate('record.successfully.deleted'));
             return $this->webService->getRedirectResponse('unit/index');
@@ -159,33 +158,30 @@ final class UnitController extends BaseController
      * @param string $unit_id
      * @param UnitRepository $unitRepository
      */
-    public function view(#[RouteArgument('unit_id')] string $unit_id, UnitRepository $unitRepository): \Yiisoft\DataResponse\DataResponse|Response
+    public function view(#[RouteArgument('unit_id')] string $unit_id, UnitRepository $unitRepository): \Psr\Http\Message\ResponseInterface
     {
-        $unit = $this->unit($unit_id, $unitRepository);
-        if ($unit) {
-            $form = new UnitForm($unit);
+        $unit = $this->unit((int) $unit_id, $unitRepository);
+        if (null!==$unit) {
+            $form = UnitForm::show($unit);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'unit/view',
                 'actionArguments' => ['unit_id' => $unit_id],
                 'form' => $form,
             ];
-            return $this->viewRenderer->render('__view', $parameters);
+            return $this->webViewRenderer->render('__view', $parameters);
         }
         return $this->webService->getRedirectResponse('unit/index');
     }
 
     /**
-     * @param string $unit_id
+     * @param int $unit_id
      * @param UnitRepository $unitRepository
      * @return Unit|null
      */
-    private function unit(string $unit_id, UnitRepository $unitRepository): ?Unit
+    private function unit(int $unit_id, UnitRepository $unitRepository): ?Unit
     {
-        if ($unit_id) {
-            return $unitRepository->repoUnitquery($unit_id);
-        }
-        return null;
+        return $unitRepository->repoUnitquery($unit_id);
     }
 
     /**

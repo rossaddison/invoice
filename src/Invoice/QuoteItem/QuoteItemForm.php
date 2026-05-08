@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace App\Invoice\QuoteItem;
 
-use App\Invoice\Entity\QuoteItem;
+use App\Infrastructure\Persistence\QuoteItem\QuoteItem;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Rule\GreaterThan;
 
 final class QuoteItemForm extends FormModel
 {
-    private ?string $id = '';
-
     #[Required]
     private ?string $tax_rate_id = '';
 
@@ -34,44 +32,44 @@ final class QuoteItemForm extends FormModel
     private ?int $order = null;
     private ?string $product_unit = '';
     private ?int $product_unit_id = null;
+    private ?int $quote_id = null;
 
-    public function __construct(QuoteItem $quoteItem, private readonly ?string $quote_id)
+    public static function show(QuoteItem $quoteItem, int $quoteId): self
     {
-        $this->id = $quoteItem->getId();
-        $this->tax_rate_id = $quoteItem->getTax_rate_id();
-        $this->product_id = $quoteItem->getProduct_id();
-        $this->task_id = $quoteItem->getTask_id();
-        $this->name = $quoteItem->getName();
-        $this->description = $quoteItem->getDescription();
-        $this->quantity = $quoteItem->getQuantity();
-        $this->price = $quoteItem->getPrice();
-        $this->discount_amount = $quoteItem->getDiscount_amount();
-        $this->order = $quoteItem->getOrder();
-        $this->product_unit = $quoteItem->getProduct_unit();
-        $this->product_unit_id = (int) $quoteItem->getProduct_unit_id();
+        $form = new self();
+        $form->tax_rate_id = (string) $quoteItem->reqTaxRateId();
+        $form->product_id = null !== ($product = $quoteItem->getProduct()) ?
+                (string) $product->reqId() : null;
+        $form->task_id = null !== ($task = $quoteItem->getTask()) ?
+                (string) $task->reqId() : null;
+        $form->name = $quoteItem->getName();
+        $form->description = $quoteItem->getDescription();
+        $form->quantity = $quoteItem->getQuantity();
+        $form->price = $quoteItem->getPrice();
+        $form->discount_amount = $quoteItem->getDiscountAmount();
+        $form->order = $quoteItem->getOrder();
+        $form->product_unit = $quoteItem->getProductUnit();
+        $form->product_unit_id = $quoteItem->getProductUnitId();
+        $form->quote_id = $quoteId;
+        return $form;
     }
-
-    public function getId(): ?string
-    {
-        return $this->id;
-    }
-
-    public function getQuote_id(): ?string
+    
+    public function getQuoteId(): ?int
     {
         return $this->quote_id;
     }
 
-    public function getTax_rate_id(): ?string
+    public function getTaxRateId(): ?string
     {
         return $this->tax_rate_id;
     }
 
-    public function getProduct_id(): ?string
+    public function getProductId(): ?string
     {
         return $this->product_id;
     }
 
-    public function getTask_id(): ?string
+    public function getTaskId(): ?string
     {
         return $this->task_id;
     }
@@ -96,7 +94,7 @@ final class QuoteItemForm extends FormModel
         return $this->price;
     }
 
-    public function getDiscount_amount(): ?float
+    public function getDiscountAmount(): ?float
     {
         return $this->discount_amount;
     }
@@ -106,12 +104,12 @@ final class QuoteItemForm extends FormModel
         return $this->order;
     }
 
-    public function getProduct_unit(): ?string
+    public function getProductUnit(): ?string
     {
         return $this->product_unit;
     }
 
-    public function getProduct_unit_id(): ?int
+    public function getProductUnitId(): ?int
     {
         return $this->product_unit_id;
     }

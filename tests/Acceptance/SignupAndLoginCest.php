@@ -11,15 +11,16 @@ final class SignupAndLoginCest
     public function __construct(
         private readonly string $emptyLogin = '',
         private readonly string $emptyPassword = '',
-        // If failing try the actual login name here    
+        // If failing try the actual login name here
         private readonly string $liveAdminUserLogin = 'admin',
-        // If failing try the actual login password here    
+        // If failing try the actual login password here
         private readonly string $liveAdminUserPassword = 'admin',
         private readonly string $firstUserLogin = 'firstUserLogin',
         private readonly string $firstUserWrongLogin = 'firstUserWrongLogin',
         private readonly string $firstUserPassword = 'firstUserPassword',
         private readonly string $firstUserWrongPassword = 'firstUserWrongPassword',
-    ) {}
+    ) {
+    }
 
     public function testSignupPage(AcceptanceTester $I): void
     {
@@ -63,8 +64,8 @@ final class SignupAndLoginCest
         $I->amGoingTo('go to the log in page.');
         $I->amOnPage('/login');
 
-        $I->fillField('#login-login', $this->liveAdminUserLogin);
-        $I->fillField('#login-password', $this->liveAdminUserPassword);
+        $I->fillField('Login[login]', $this->liveAdminUserLogin);
+        $I->fillField('Login[password]', $this->liveAdminUserPassword);
         $I->checkOption('#login-rememberme');
 
         $I->click('Submit', '#loginForm');
@@ -142,15 +143,15 @@ final class SignupAndLoginCest
 
         $I->expectTo('see log in page.');
         $I->see('Login');
-    }    
+    }
 
     public function testLoginEmptyDataTest(AcceptanceTester $I): void
     {
         $I->amGoingTo('go to the log in page.');
         $I->amOnPage('/login');
 
-        $I->fillField('#login-login', $this->emptyLogin);
-        $I->fillField('#login-password', $this->emptyPassword);
+        $I->fillField('Login[login]', $this->emptyLogin);
+        $I->fillField('Login[password]', $this->emptyPassword);
 
         $I->click('Submit', '#loginForm');
 
@@ -165,8 +166,8 @@ final class SignupAndLoginCest
         $I->amGoingTo('go to the log in page.');
         $I->amOnPage('/login');
 
-        $I->fillField('#login-login', $this->firstUserWrongLogin);
-        $I->fillField('#login-password', $this->firstUserPassword);
+        $I->fillField('Login[login]', $this->firstUserWrongLogin);
+        $I->fillField('Login[password]', $this->firstUserPassword);
         $I->checkOption('#login-rememberme');
 
         $I->click('Submit', '#loginForm');
@@ -181,8 +182,8 @@ final class SignupAndLoginCest
         $I->amGoingTo('go to the login page.');
         $I->amOnPage('/login');
 
-        $I->fillField('#login-login', $this->firstUserLogin);
-        $I->fillField('#login-password', $this->firstUserWrongPassword);
+        $I->fillField('Login[login]', $this->firstUserLogin);
+        $I->fillField('Login[password]', $this->firstUserWrongPassword);
         $I->checkOption('#login-rememberme');
 
         $I->click('Submit', '#loginForm');

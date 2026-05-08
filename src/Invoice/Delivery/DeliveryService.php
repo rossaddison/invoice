@@ -4,34 +4,66 @@ declare(strict_types=1);
 
 namespace App\Invoice\Delivery;
 
-use App\Invoice\Entity\Delivery;
+use App\Infrastructure\Persistence\Delivery\Delivery;
+use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
 use App\Invoice\Setting\SettingRepository;
 
 final readonly class DeliveryService
 {
-    public function __construct(private DeliveryRepository $repository) {}
+    public function __construct(
+        private DeliveryRepository $repository,
+        private DLR $dlR,
+    ) {
+    }
 
-    public function saveDelivery(Delivery $model, array $array, SettingRepository $s): void
-    {
-        $model->setDate_created(new \DateTimeImmutable());
-        $model->setDate_modified(new \DateTimeImmutable());
+    public function saveDelivery(
+        Delivery $model,
+        array $array
+    ): void {
+        $this->persist($model, $array);
+        $model->setDateCreated(new \DateTimeImmutable());
+        $model->setDateModified(new \DateTimeImmutable());
 
         $datetime = new \DateTimeImmutable();
-        $d = $datetime::createFromFormat('Y-m-d', (string) $array['start_date']);
+        $d = $datetime::createFromFormat(
+            'Y-m-d',
+            (string) $array['start_date']);
         $datetime2 = new \DateTimeImmutable();
-        $d2 = $datetime2::createFromFormat('Y-m-d', (string) $array['actual_delivery_date']);
+        $d2 = $datetime2::createFromFormat(
+            'Y-m-d',
+            (string) $array['actual_delivery_date']);
         $datetime3 = new \DateTimeImmutable();
-        $d3 = $datetime3::createFromFormat('Y-m-d', (string) $array['end_date']);
-        $d ? $model->setStart_date($d) : '';
-        $d2 ? $model->setActual_delivery_date($d2) : '';
-        $d3 ? $model->setEnd_Date($d3) : '';
+        $d3 = $datetime3::createFromFormat(
+            'Y-m-d',
+            (string) $array['end_date']);
+        $d ? $model->setStartDate($d) : '';
+        $d2 ? $model->setActualDeliveryDate($d2) : '';
+        $d3 ? $model->setEndDate($d3) : '';
 
-        isset($array['delivery_location_id']) ? $model->setDelivery_location_id((int) $array['delivery_location_id']) : '';
-        isset($array['delivery_party_id']) ? $model->setDelivery_party_id((int) $array['delivery_party_id']) : '';
-        isset($array['inv_id']) ? $model->setInv_id((int) $array['inv_id']) : '';
-        isset($array['inv_item_id']) ? $model->setInv_item_id((int) $array['inv_item_id']) : '';
+        isset($array['delivery_location_id']) ?
+            $model->setDeliveryLocationId(
+                (int) $array['delivery_location_id']) : '';
+        isset($array['delivery_party_id']) ?
+            $model->setDeliveryPartyId(
+                (int) $array['delivery_party_id']) : '';
+        isset($array['inv_id']) ?
+            $model->setInvId((int) $array['inv_id']) : '';
+        isset($array['inv_item_id']) ?
+            $model->setInvItemId((int) $array['inv_item_id']) : '';
 
         $this->repository->save($model);
+    }
+
+    private function persist(
+        Delivery $model,
+        array $array
+    ): void {
+        $delivery_location = 'delivery_location_id';
+        if (isset($array[$delivery_location])) {
+            $model->setDeliveryLocation(
+                $this->dlR->repoDeliveryLocationquery(
+                    (int) $array[$delivery_location]));
+        }
     }
 
     public function deleteDelivery(Delivery $model): void

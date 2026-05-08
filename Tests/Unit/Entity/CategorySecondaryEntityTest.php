@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Entity;
 
-use App\Invoice\Entity\CategorySecondary;
-use App\Invoice\Entity\CategoryPrimary;
+use App\Infrastructure\Persistence\CategorySecondary\CategorySecondary;
+use App\Infrastructure\Persistence\CategoryPrimary\CategoryPrimary;
 use Codeception\Test\Unit;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -22,9 +22,8 @@ class CategorySecondaryEntityTest extends Unit
     public function testConstructorWithDefaults(): void
     {
         $categorySecondary = new CategorySecondary();
-        
-        $this->assertNull($categorySecondary->getId());
-        $this->assertNull($categorySecondary->getCategory_primary_id());
+
+        $this->assertFalse($categorySecondary->hasIdentity());
         $this->assertSame('', $categorySecondary->getName());
         $this->assertNull($categorySecondary->getCategoryPrimary());
     }
@@ -33,8 +32,8 @@ class CategorySecondaryEntityTest extends Unit
     {
         $categorySecondary = new CategorySecondary(1, 2, 'Electronics Accessories');
         
-        $this->assertSame(1, $categorySecondary->getId());
-        $this->assertSame(2, $categorySecondary->getCategory_primary_id());
+        $this->assertSame(1, $categorySecondary->reqId());
+        $this->assertSame(2, $categorySecondary->reqCategoryPrimaryId());
         $this->assertSame('Electronics Accessories', $categorySecondary->getName());
         $this->assertNull($categorySecondary->getCategoryPrimary());
     }
@@ -42,9 +41,8 @@ class CategorySecondaryEntityTest extends Unit
     public function testConstructorWithNullValues(): void
     {
         $categorySecondary = new CategorySecondary(null, null, null);
-        
-        $this->assertNull($categorySecondary->getId());
-        $this->assertNull($categorySecondary->getCategory_primary_id());
+
+        $this->assertFalse($categorySecondary->hasIdentity());
         $this->assertNull($categorySecondary->getName());
         $this->assertNull($categorySecondary->getCategoryPrimary());
     }
@@ -54,21 +52,21 @@ class CategorySecondaryEntityTest extends Unit
         $categorySecondary = new CategorySecondary();
         
         $categorySecondary->setId(5);
-        $this->assertSame(5, $categorySecondary->getId());
+        $this->assertSame(5, $categorySecondary->reqId());
         
         $categorySecondary->setId(100);
-        $this->assertSame(100, $categorySecondary->getId());
+        $this->assertSame(100, $categorySecondary->reqId());
     }
 
     public function testCategoryPrimaryIdSetterAndGetter(): void
     {
         $categorySecondary = new CategorySecondary();
         
-        $categorySecondary->setCategory_primary_id(3);
-        $this->assertSame(3, $categorySecondary->getCategory_primary_id());
+        $categorySecondary->setCategoryPrimaryId(3);
+        $this->assertSame(3, $categorySecondary->reqCategoryPrimaryId());
         
-        $categorySecondary->setCategory_primary_id(25);
-        $this->assertSame(25, $categorySecondary->getCategory_primary_id());
+        $categorySecondary->setCategoryPrimaryId(25);
+        $this->assertSame(25, $categorySecondary->reqCategoryPrimaryId());
     }
 
     public function testNameSetterAndGetter(): void
@@ -149,19 +147,19 @@ class CategorySecondaryEntityTest extends Unit
         
         // Zero ID
         $categorySecondary->setId(0);
-        $this->assertSame(0, $categorySecondary->getId());
+        $this->assertSame(0, $categorySecondary->reqId());
         
         // Large ID
         $categorySecondary->setId(999999999);
-        $this->assertSame(999999999, $categorySecondary->getId());
+        $this->assertSame(999999999, $categorySecondary->reqId());
         
         // Zero category primary ID
-        $categorySecondary->setCategory_primary_id(0);
-        $this->assertSame(0, $categorySecondary->getCategory_primary_id());
+        $categorySecondary->setCategoryPrimaryId(0);
+        $this->assertSame(0, $categorySecondary->reqCategoryPrimaryId());
         
         // Large category primary ID
-        $categorySecondary->setCategory_primary_id(888888888);
-        $this->assertSame(888888888, $categorySecondary->getCategory_primary_id());
+        $categorySecondary->setCategoryPrimaryId(888888888);
+        $this->assertSame(888888888, $categorySecondary->reqCategoryPrimaryId());
     }
 
     public function testNullNameHandling(): void
@@ -185,11 +183,11 @@ class CategorySecondaryEntityTest extends Unit
         
         // Setup a complete secondary category
         $categorySecondary->setId(10);
-        $categorySecondary->setCategory_primary_id(1); // Electronics primary category
+        $categorySecondary->setCategoryPrimaryId(1); // Electronics primary category
         $categorySecondary->setName('Smartphones & Tablets');
         
-        $this->assertSame(10, $categorySecondary->getId());
-        $this->assertSame(1, $categorySecondary->getCategory_primary_id());
+        $this->assertSame(10, $categorySecondary->reqId());
+        $this->assertSame(1, $categorySecondary->reqCategoryPrimaryId());
         $this->assertSame('Smartphones & Tablets', $categorySecondary->getName());
         $this->assertNull($categorySecondary->getCategoryPrimary()); // Relationship would be set by ORM
     }
@@ -207,8 +205,8 @@ class CategorySecondaryEntityTest extends Unit
         foreach ($scenarios as $index => $scenario) {
             $categorySecondary = new CategorySecondary($index + 1, $scenario['parent_id'], $scenario['name']);
             
-            $this->assertSame($index + 1, $categorySecondary->getId());
-            $this->assertSame($scenario['parent_id'], $categorySecondary->getCategory_primary_id());
+            $this->assertSame($index + 1, $categorySecondary->reqId());
+            $this->assertSame($scenario['parent_id'], $categorySecondary->reqCategoryPrimaryId());
             $this->assertSame($scenario['name'], $categorySecondary->getName());
         }
     }
@@ -248,16 +246,16 @@ class CategorySecondaryEntityTest extends Unit
     {
         $categorySecondary = new CategorySecondary(123);
         
-        $this->assertIsInt($categorySecondary->getId());
-        $this->assertSame(123, $categorySecondary->getId());
+        $this->assertIsInt($categorySecondary->reqId());
+        $this->assertSame(123, $categorySecondary->reqId());
     }
 
     public function testCategoryPrimaryIdPropertyType(): void
     {
         $categorySecondary = new CategorySecondary(1, 456);
         
-        $this->assertIsInt($categorySecondary->getCategory_primary_id());
-        $this->assertSame(456, $categorySecondary->getCategory_primary_id());
+        $this->assertIsInt($categorySecondary->reqCategoryPrimaryId());
+        $this->assertSame(456, $categorySecondary->reqCategoryPrimaryId());
     }
 
     public function testNamePropertyNullability(): void
@@ -277,8 +275,8 @@ class CategorySecondaryEntityTest extends Unit
         $categorySecondary = new CategorySecondary(5, 10, 'Test Secondary Category');
         
         // Multiple calls should return same values
-        $this->assertSame($categorySecondary->getId(), $categorySecondary->getId());
-        $this->assertSame($categorySecondary->getCategory_primary_id(), $categorySecondary->getCategory_primary_id());
+        $this->assertSame($categorySecondary->reqId(), $categorySecondary->reqId());
+        $this->assertSame($categorySecondary->reqCategoryPrimaryId(), $categorySecondary->reqCategoryPrimaryId());
         $this->assertSame($categorySecondary->getName(), $categorySecondary->getName());
         $this->assertSame($categorySecondary->getCategoryPrimary(), $categorySecondary->getCategoryPrimary());
     }
@@ -288,8 +286,8 @@ class CategorySecondaryEntityTest extends Unit
         $categorySecondary = new CategorySecondary();
         
         // Set up parent relationship
-        $categorySecondary->setCategory_primary_id(1);
-        $this->assertSame(1, $categorySecondary->getCategory_primary_id());
+        $categorySecondary->setCategoryPrimaryId(1);
+        $this->assertSame(1, $categorySecondary->reqCategoryPrimaryId());
         
         // CategoryPrimary relationship is null until set by ORM
         $this->assertNull($categorySecondary->getCategoryPrimary());
@@ -311,8 +309,8 @@ class CategorySecondaryEntityTest extends Unit
         foreach ($ecommerceCategories as $index => $category) {
             $categorySecondary = new CategorySecondary($index + 1, $category['parent'], $category['name']);
             
-            $this->assertSame($index + 1, $categorySecondary->getId());
-            $this->assertSame($category['parent'], $categorySecondary->getCategory_primary_id());
+            $this->assertSame($index + 1, $categorySecondary->reqId());
+            $this->assertSame($category['parent'], $categorySecondary->reqCategoryPrimaryId());
             $this->assertSame($category['name'], $categorySecondary->getName());
         }
     }
@@ -333,19 +331,19 @@ class CategorySecondaryEntityTest extends Unit
         
         // Initial setup
         $categorySecondary->setId(1);
-        $categorySecondary->setCategory_primary_id(5);
+        $categorySecondary->setCategoryPrimaryId(5);
         $categorySecondary->setName('Initial Category');
         
-        $this->assertSame(1, $categorySecondary->getId());
-        $this->assertSame(5, $categorySecondary->getCategory_primary_id());
+        $this->assertSame(1, $categorySecondary->reqId());
+        $this->assertSame(5, $categorySecondary->reqCategoryPrimaryId());
         $this->assertSame('Initial Category', $categorySecondary->getName());
         
         // Modification
-        $categorySecondary->setCategory_primary_id(10);
+        $categorySecondary->setCategoryPrimaryId(10);
         $categorySecondary->setName('Updated Category Name');
         
-        $this->assertSame(1, $categorySecondary->getId()); // ID unchanged
-        $this->assertSame(10, $categorySecondary->getCategory_primary_id()); // Parent changed
+        $this->assertSame(1, $categorySecondary->reqId()); // ID unchanged
+        $this->assertSame(10, $categorySecondary->reqCategoryPrimaryId()); // Parent changed
         $this->assertSame('Updated Category Name', $categorySecondary->getName()); // Name changed
     }
 
@@ -356,33 +354,31 @@ class CategorySecondaryEntityTest extends Unit
         // Note: The entity accepts int, so negative values are technically possible
         // though they might not be used in practice
         $categorySecondary->setId(-1);
-        $this->assertSame(-1, $categorySecondary->getId());
+        $this->assertSame(-1, $categorySecondary->reqId());
         
-        $categorySecondary->setCategory_primary_id(-5);
-        $this->assertSame(-5, $categorySecondary->getCategory_primary_id());
+        $categorySecondary->setCategoryPrimaryId(-5);
+        $this->assertSame(-5, $categorySecondary->reqCategoryPrimaryId());
     }
 
     public function testEntityStateAfterConstruction(): void
     {
         // Test various constructor states
         $entity1 = new CategorySecondary();
-        $this->assertNull($entity1->getId());
-        $this->assertNull($entity1->getCategory_primary_id());
+        $this->assertFalse($entity1->hasIdentity());
         $this->assertSame('', $entity1->getName());
         
         $entity2 = new CategorySecondary(1);
-        $this->assertSame(1, $entity2->getId());
-        $this->assertNull($entity2->getCategory_primary_id());
+        $this->assertSame(1, $entity2->reqId());
         $this->assertSame('', $entity2->getName());
         
         $entity3 = new CategorySecondary(1, 2);
-        $this->assertSame(1, $entity3->getId());
-        $this->assertSame(2, $entity3->getCategory_primary_id());
+        $this->assertSame(1, $entity3->reqId());
+        $this->assertSame(2, $entity3->reqCategoryPrimaryId());
         $this->assertSame('', $entity3->getName());
         
         $entity4 = new CategorySecondary(1, 2, 'Full Category');
-        $this->assertSame(1, $entity4->getId());
-        $this->assertSame(2, $entity4->getCategory_primary_id());
+        $this->assertSame(1, $entity4->reqId());
+        $this->assertSame(2, $entity4->reqCategoryPrimaryId());
         $this->assertSame('Full Category', $entity4->getName());
     }
 }

@@ -19,21 +19,21 @@ use Yiisoft\Html\Tag\Form;
 
 ?>
 
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
     <?= $translator->translate('group.form'); ?>
 <?= Html::closeTag('h1'); ?>
-<?= Form::tag()
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('GroupForm')
     ->open()
-?> 
+?>
 
 <?= Field::errorSummary($form)
     ->errors($errors)
@@ -44,12 +44,12 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'tabbable tabs-below']); ?>
 
     <?= Html::openTag('div', ['class' => 'tab-content']); ?>
-        
+
         <?= Html::openTag('div'); ?>
             <?= Field::text($form, 'name')
                 ->label($translator->translate('name'))
                 ->addInputAttributes([
-                    'class' => 'form-control',
+                    'class' => 'form-control form-control-lg',
                 ])
                 ->value(Html::encode($form->getName()))
                 ->placeholder($translator->translate('name'))
@@ -62,26 +62,26 @@ use Yiisoft\Html\Tag\Form;
                     'id' => 'identifier_format',
                     'name' => 'identifier_format',
                 ])
-                ->value(Html::encode($form->getIdentifier_format()))
+                ->value(Html::encode($form->getIdentifierFormat()))
                 ->placeholder('INV-{{{id}}}')
                 ->hint($translator->translate('hint.this.field.is.required')); ?>
             <?= Field::text($form, 'left_pad')
                 ->label($translator->translate('left.pad'))
                 ->addInputAttributes([
-                    'class' => 'form-control',
+                    'class' => 'form-control form-control-lg',
                 ])
-                ->value(Html::encode($form->getLeft_pad()) ?: '0')
+                ->value(Html::encode($form->getLeftPad()) ?: '0')
                 ->placeholder('0')
                 ->hint($translator->translate('hint.this.field.is.required')); ?>
             <?= Html::tag('br'); ?>
             <?= Field::text($form, 'next_id')
                 ->label($translator->translate('next.id'))
                 ->addInputAttributes([
-                    'class' => 'form-control',
+                    'class' => 'form-control form-control-lg',
                 ])
-                ->value(Html::encode($form->getNext_id()) ?: '1')
+                ->value(Html::encode($form->getNextId()) ?: '1')
                 ->placeholder('1')
-                ->hint($translator->translate('hint.this.field.is.required')); ?>    
+                ->hint($translator->translate('hint.this.field.is.required')); ?>
             <?= Html::tag('br'); ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'form-group no-margin']); ?>
@@ -92,20 +92,20 @@ use Yiisoft\Html\Tag\Form;
                     <?= $translator->translate('identifier.format.template.tags.instructions'); ?>
                 <?= Html::closeTag('p'); ?>
                 <?= Html::openTag('div', ['class' => 'col-sm-6 col-md-4']); ?>
-                    <?= Html::openTag('select', ['id' => 'tags_client', 'name' => 'tags_client', 'class' => 'tag-select form-control mb-3']); ?>    
-                        <?= Html::openTag('option', ['value' => '{{{id}}}']); ?><?= $translator->translate('id'); ?><?= Html::closeTag('option'); ?>    
+                    <?= Html::openTag('select', ['id' => 'tags_client', 'name' => 'tags_client', 'class' => 'tag-select form-control mb-3']); ?>
+                        <?= Html::openTag('option', ['value' => '{{{id}}}']); ?><?= $translator->translate('id'); ?><?= Html::closeTag('option'); ?>
                         <?= Html::openTag('option', ['value' => '{{{year}}}']); ?><?= $translator->translate('current.year'); ?><?= Html::closeTag('option'); ?>
                         <?= Html::openTag('option', ['value' => '{{{yy}}}']); ?><?= $translator->translate('current.yy'); ?><?= Html::closeTag('option'); ?>
                         <?= Html::openTag('option', ['value' => '{{{month}}}']); ?><?= $translator->translate('current.month'); ?><?= Html::closeTag('option'); ?>
                         <?= Html::openTag('option', ['value' => '{{{day}}}']); ?><?= $translator->translate('current.day'); ?><?= Html::closeTag('option'); ?>
                     <?= Html::closeTag('select'); ?>
-                <?= Html::closeTag('div'); ?>    
-            <?= Html::closeTag('div'); ?>            
+                <?= Html::closeTag('div'); ?>
+            <?= Html::closeTag('div'); ?>
             <?= $button::backSave(); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?= Form::tag()->close(); ?>
+<?=  new Form()->close(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

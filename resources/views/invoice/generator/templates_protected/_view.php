@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /**
  * Related logic: see GeneratorController function form
- * @var App\Invoice\Entity\Gentor $generator
+ * @var App\Infrastructure\Persistence\Gentor\Gentor $generator
  * @var Cycle\Database\Table $orm_schema
  * @var array $relations
  */
@@ -12,7 +12,7 @@ declare(strict_types=1);
 echo "<?php\n";
 ?>
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
@@ -20,7 +20,7 @@ use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var App\Invoice\<?= $generator->getCamelcase_capital_name(); ?>\<?= $generator->getCamelcase_capital_name(); ?>Form $form
+ * @var App\Invoice\<?= $generator->getCamelcaseCapitalName(); ?>\<?= $generator->getCamelcaseCapitalName(); ?>Form $form
  * @var App\Widget\Button $button
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -29,15 +29,15 @@ use Yiisoft\Html\Tag\Form;
  * @var string $title
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  * @psalm-var array<string, list<string>> $errors
- * @psalm-var array<array-key, array<array-key, string>|string> $<?= $generator->getSmall_singular_name(); ?>    
+ * @psalm-var array<array-key, array<array-key, string>|string> $<?= $generator->getSmallSingularName(); ?>
  */
 
 <?php
     echo "?>\n";
 echo '<?= Html::openTag(\'h1\'); ?><?= Html::encode($title) ?><?= Html::closeTag(\'h1\'); ?>' . "\n";
-echo "<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>" . "\n";
-echo "<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>" . "\n";
-echo "<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>" . "\n";
+echo "<?= Html::openTag('div',['class'=>'container-fluid py-3']); ?>" . "\n";
+echo "<?= Html::openTag('div',['class'=>'row justify-content-center']); ?>" . "\n";
+echo "<?= Html::openTag('div',['class'=>'col-12 col-lg-10 col-xl-10']); ?>" . "\n";
 echo "<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>";
 echo "<?= Html::openTag('div',['class'=>'card-header']); ?>" . "\n";
 
@@ -45,11 +45,11 @@ echo "<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>" . "\n";
 echo '     <?= $translator->translate(' . "'i.add'); ?>" . "\n";
 echo "<?= Html::closeTag('h1'); ?>" . "\n";
 
-echo "<?= Form::tag()" . "\n";
+echo "<?=  new Form()" . "\n";
 echo '    ->post($urlGenerator->generate($actionName, $actionArguments))' . "\n";
 echo "    ->enctypeMultipartFormData()" . "\n";
 echo '    ->csrf($csrf)' . "\n";
-echo "    ->id('" . $generator->getCamelcase_capital_name() . "Form')" . "\n";
+echo "    ->id('" . $generator->getCamelcaseCapitalName() . "Form')" . "\n";
 echo "    ->open()" . "\n";
 echo "?>" . "\n";
 echo "\n";
@@ -62,26 +62,23 @@ echo '        <?= Html::encode($title); ?>' . "\n";
 echo "    <?= Html::closeTag('h5'); ?>" . "\n";
 
 /**
- * @var App\Invoice\Entity\GentorRelation $relation
+ * @var App\Infrastructure\Persistence\GentorRelation\GentorRelation $relation
  */
 foreach ($relations as $relation) {
     echo "    <?= Html::openTag('div'); ?>" . "\n";
-    echo '        <?= Field::select($' . 'form, ' . "'" . ($relation->getLowercase_name() ?? '#') . "_id')" . "\n";
+    echo '        <?= Field::select($' . 'form, ' . "'" . ($relation->getLowercaseName() ?? '#') . "_id')" . "\n";
     echo "            ->addInputAttributes([" . "\n";
-    echo "                 'class' => 'form-control'" . "\n";
+    echo "                 'class' => 'form-control form-control-lg'," . "\n";
     echo "            ])" . "\n";
-    echo '            ->value($form->get' . ucfirst($relation->getLowercase_name() ?? '#') . "_id())" . "\n";
+    echo '            ->value($form->get' . ucfirst($relation->getLowercaseName() ?? '#') . "_id())" . "\n";
     echo '            ->prompt($translator->translate(\'i.none\'))' . "\n";
-    echo '            ->optionsData($' . ($relation->getLowercase_name() ?? '#') . 's)' . "\n";
+    echo '            ->optionsData($' . ($relation->getLowercaseName() ?? '#') . 's)' . "\n";
     echo '        ?>' . "\n";
     echo '    <?= Html::closeTag(\'div\'); ?>' . "\n";
 
 }
 
 // exclude relations or fields ending in '_id'
-/**
- * @var Cycle\Database\ColumnInterface $column
- */
 foreach ($orm_schema->getColumns() as $column) {
     /**
      * If the column is not a relation column ending in _id
@@ -128,9 +125,9 @@ foreach ($orm_schema->getColumns() as $column) {
             echo '        <?= Field::text($form,' . "'" . $column->getName() . "')" . "\n";
             echo '            ->label($translator->translate(' . "'" . $column->getName() . "'" . '))' . "\n";
             echo '            ->addInputAttributes([' . "\n";
-            echo "                'class' => 'form-control'" . "\n";
+            echo "                'class' => 'form-control form-control-lg'," . "\n";
             echo '            ])' . "\n";
-            echo '            ->value($s->format_amount((float)($form->get' . ucfirst($column->getName()) . '() ?? 0.00)))' . "\n";
+            echo '            ->value($s->formatAmount((float)($form->get' . ucfirst($column->getName()) . '() ?? 0.00)))' . "\n";
             echo '            ->placeholder($' . 'translator->translate(' . "'" . $column->getName() . "'" . '))' . "\n";
             echo '            ->readonly(true)';
             echo '         ?>' . "\n";
@@ -146,7 +143,7 @@ foreach ($orm_schema->getColumns() as $column) {
             echo '        <?= Field::text($form,' . "'" . $column->getName() . "')" . "\n";
             echo '            ->label($translator->translate(' . $column->getName() . '))' . "\n";
             echo '            ->addInputAttributes([' . "\n";
-            echo "                'class' => 'form-control'" . "\n";
+            echo "                'class' => 'form-control form-control-lg'," . "\n";
             echo '            ])' . "\n";
             echo '            ->value(Html::encode(' . '$' . 'form->get' . ucfirst($column->getName()) . '()))' . "\n";
             echo '            ->readonly(true)';
@@ -160,7 +157,7 @@ foreach ($orm_schema->getColumns() as $column) {
             echo '        <?= Field::text($form,' . "'" . $column->getName() . "')" . "\n";
             echo '            ->label($translator->translate(' . $column->getName() . '))' . "\n";
             echo '            ->addInputAttributes([' . "\n";
-            echo "                'class' => 'form-control'" . "\n";
+            echo "                'class' => 'form-control form-control-lg'," . "\n";
             echo '            ])' . "\n";
             echo '            ->value(Html::encode(' . '$' . 'form->get' . ucfirst($column->getName()) . '()))' . "\n";
             echo '            ->readonly(true)';

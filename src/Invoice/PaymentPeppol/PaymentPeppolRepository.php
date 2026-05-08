@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\PaymentPeppol;
 
-use App\Invoice\Entity\PaymentPeppol;
+use App\Infrastructure\Persistence\PaymentPeppol\PaymentPeppol;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -89,21 +89,21 @@ final class PaymentPeppolRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @psalm-return TEntity|null
      * @return PaymentPeppol|null
      */
-    public function repoPaymentPeppolLoadedquery(string $id): ?PaymentPeppol
+    public function repoPaymentPeppolLoadedquery(int $id): ?PaymentPeppol
     {
         $query = $this->select()->where(['id' => $id]);
         return  $query->fetchOne() ?: null;
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return int
      */
-    public function repoCount(string $id): int
+    public function repoCount(int $id): int
     {
         $query = $this->select()
                       ->where(['id' => $id]);

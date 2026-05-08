@@ -14,13 +14,13 @@ use Yiisoft\Bootstrap5\CarouselItem;
  */
 $tooltipTitle = $translator->translate('home.caption.slides.location.debug.mode');
 $w = 150;
-$h = 75;
+$h = 50;
 $divHeight = (string) 250;
 ?>
 <?php if ($s->getSetting('no_front_site_slider_page') == '0') { ?>
-<?= Html::openTag('div', ['class' => 'container mt-5']); ?>
+<?= Html::openTag('div', ['class' => 'container-fluid']);?>
     <?= Html::openTag('div', ['class' => 'row']); ?>
-        <?= Html::openTag('div', ['class' => 'col-sm-4']); ?>
+        <?= Html::openTag('div', ['class' => 'col-sm-6']); ?>
                 <?= Html::openTag('h3'); ?>
                     OAuth2.0 Client Development
                 <?= Html::closeTag('h3'); ?>
@@ -28,39 +28,35 @@ $divHeight = (string) 250;
                     This is a development website using the Yii3 Framework.
                 <?= Html::closeTag('p'); ?>
                 <?= Html::openTag('p'); ?>
-                    Currently I am assisting with the development of OAuth 2.0 Clients and the repository in question is available at ➡ 
+                    Currently I am assisting with the development of OAuth 2
+                    .0 Clients and the repository in question is available at ➡ 
                 <?= Html::closeTag('p'); ?>
                 <?= Html::openTag('p'); ?>
-                <?= A::tag()->content('https://github.com/rossaddison/yii-auth-client')->href('https://github.com/rossaddison/yii-auth-client')->render(); ?>    
+                <?=  new A()->content(
+                        'https://github.com/rossaddison/yii-auth-client')->href(
+                            'https://github.com/rossaddison/yii-auth-client')
+                                ->render(); ?>
                 <?= Html::closeTag('p'); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'col-sm-4']); ?>
                 <?= Html::openTag('h3'); ?>
-                    Invoicing System Development 
+                    Invoicing System Development
                 <?= Html::closeTag('h3'); ?>
                 <?= Html::openTag('p'); ?>
-                    Currently I am developing a php based invoicing system using the Yii3 Framework and the opensource code is available at ➡️ 
+                    Currently I am developing a php based invoicing system using
+                        the Yii3 Framework and the opensource code is available at ➡️ 
                 <?= Html::closeTag('p'); ?>
                 <?= Html::openTag('p'); ?>
-                <?= A::tag()->content('https://github.com/rossaddison/invoice')->href('https://github.com/rossaddison/invoice')->render(); ?>
+                <?=  new A()->content(
+                    'https://github.com/rossaddison/invoice')->href(
+                        'https://github.com/rossaddison/invoice')->render(); ?>
                 <?= Html::closeTag('p'); ?>
                 <?= Html::openTag('p'); ?>
                     This site will be used to demo quote and invoice creation at a future date.
                 <?= Html::closeTag('p'); ?>
-        <?= Html::closeTag('div'); ?> 
-        <?= Html::openTag('div', ['class' => 'col-sm-4']); ?>
-                <?= Html::openTag('h3'); ?>                    
-                    Yii3 Demo
-                <?= Html::closeTag('h3'); ?>
-                <?= Html::openTag('p'); ?>
-                    The Invoicing System uses a structure similar to the Yii3 Demo available at ➡️
-                <?= Html::closeTag('p'); ?>
-                <?= Html::openTag('p'); ?>
-                <?= A::tag()->content('https://github.com/yiisoft/demo')->href('https://github.com/yiisoft/demo')->render(); ?>
-                <?= Html::closeTag('p'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div'); ?>
-<?= Html::openTag('div'); ?>                        
+<?= Html::openTag('div'); ?>
 
 <?= Html::openTag('header'); ?>
     <?= ($s->getSetting('debug_mode') == '1')
@@ -71,17 +67,13 @@ $divHeight = (string) 250;
         : ''; ?>
 <?= Html::closeTag('header'); ?>
 
-<?= Html::openTag('div', ['class' => 'container-fluid p-5 bg-primary text-white text-center']); ?>
-    <?= Html::openTag('h1'); ?>
-            yiisoft/demo/blog
-    <?= Html::closeTag('h1'); ?>
-<?= Html::closeTag('div'); ?>
-
 <?= Carousel::widget()
     ->items(
         CarouselItem::to(
-            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
-                        . Img::tag()
+            content: '<div class="bg-dark" style="height: '
+                        . $divHeight
+                        . 'px; text-align: center"><br>'
+                        .  new Img()
                         ->src('/img/step1.jpg')
                         ->size($w, $h)
                         ->render()
@@ -92,8 +84,10 @@ $divHeight = (string) 250;
             captionAttributes: ['class' => ['d-none', 'd-md-block']],
         ),
         CarouselItem::to(
-            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
-                        . Img::tag()
+            content: '<div class="bg-dark" style="height: '
+                        . $divHeight
+                        . 'px; text-align: center"><br>'
+                        .  new Img()
                         ->src('/img/step2.jpg')
                         ->size($w, $h)
                         ->render()
@@ -103,8 +97,10 @@ $divHeight = (string) 250;
             captionAttributes: ['class' => ['d-none', 'd-md-block']],
         ),
         CarouselItem::to(
-            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
-                        . Img::tag()
+            content: '<div class="bg-dark" style="height: '
+                        . $divHeight
+                        . 'px; text-align: center"><br>'
+                        .  new Img()
                         ->src('/img/step3.jpg')
                         ->size($w, $h)
                         ->render()
@@ -115,7 +111,5 @@ $divHeight = (string) 250;
         ),
     )
     ->render();
-    ?>    
+    ?>
 <?php } ?>
-
-

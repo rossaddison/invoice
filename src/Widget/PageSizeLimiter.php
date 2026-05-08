@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Widget;
 
-use App\Invoice\Entity\UserInv;
+use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\Setting\SettingRepository as sR;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Router\CurrentRoute;
@@ -17,11 +17,10 @@ final class PageSizeLimiter
     {
         $defaultListLimit = $sR->getSetting('default_list_limit');
         $setting = $sR->withKey('default_list_limit');
-        $setting_id = '';
         $buttons = '';
         // The user can click on the first button showing list limit and it will redirect to the actual setting for the list limit
         // under the general tab
-        $adjustListLimitButton = A::tag()
+        $adjustListLimitButton =  new A()
         ->addAttributes([
             'data-bs-toggle' => 'tooltip',
             'title' => $translator->translate('default.list.limit'),
@@ -29,15 +28,15 @@ final class PageSizeLimiter
         ->addClass('btn btn-success me-1')
         ->content($defaultListLimit)
         ->href(
-            $urlGenerator->generate('setting/tab_index', ['_language' => 'en'], ['active' => 'general'], 'settings[default_list_limit]'),
+            $urlGenerator->generate('setting/tabIndex', ['_language' => 'en'], ['active' => 'general'], 'settings[default_list_limit]'),
         )
         ->id('btn-submit-' . $defaultListLimit)
         ->render();
         if (null !== $setting) {
-            $setting_id = $setting->getSetting_id();
+            $setting_id = $setting->reqSettingId() ?: 0;
             $limits_array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 50, 75, 100, 150, 200, 250, 300];
             foreach ($limits_array as $value) {
-                $buttons .= A::tag()
+                $buttons .=  new A()
                 ->addAttributes(['type' => 'submit'])
                 ->addClass('btn btn-danger me-1')
                 ->content((string) $value)
@@ -72,10 +71,10 @@ final class PageSizeLimiter
         int $listLimit,
     ): string {
         $buttons = '';
-        $userinv_id = $userinv->getId();
+        $userinv_id = $userinv->reqId();
         $limits_array = [$listLimit, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 50, 75, 100, 150, 200, 250, 300];
         foreach ($limits_array as $value) {
-            $buttons .= A::tag()
+            $buttons .=  new A()
             ->addAttributes(['type' => 'submit', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('user.inv.refer.to')])
             ->addClass($value == $listLimit ? 'btn btn-success me-1' : 'btn btn-danger me-1')
             ->content((string) $value)

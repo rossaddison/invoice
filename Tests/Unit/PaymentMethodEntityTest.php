@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Invoice\Entity\PaymentMethod;
+use App\Infrastructure\Persistence\PaymentMethod\PaymentMethod;
 use Codeception\Test\Unit;
 
 final class PaymentMethodEntityTest extends Unit
@@ -17,7 +17,7 @@ final class PaymentMethodEntityTest extends Unit
     {
         $paymentMethod = new PaymentMethod();
         
-        $this->assertSame('', $paymentMethod->getId());
+        $this->assertFalse($paymentMethod->hasIdentity());
         $this->assertSame('', $paymentMethod->getName());
         $this->assertTrue($paymentMethod->getActive());
     }
@@ -26,7 +26,7 @@ final class PaymentMethodEntityTest extends Unit
     {
         $paymentMethod = new PaymentMethod(1, $this->creditCard, false);
         
-        $this->assertSame('1', $paymentMethod->getId());
+        $this->assertSame(1, $paymentMethod->reqId());
         $this->assertSame($this->creditCard, $paymentMethod->getName());
         $this->assertFalse($paymentMethod->getActive());
     }
@@ -36,7 +36,7 @@ final class PaymentMethodEntityTest extends Unit
         $paymentMethod = new PaymentMethod();
         $paymentMethod->setId(42);
         
-        $this->assertSame('42', $paymentMethod->getId());
+        $this->assertSame(42, $paymentMethod->reqId());
     }
 
     public function testNameSetterAndGetter(): void
@@ -102,10 +102,10 @@ final class PaymentMethodEntityTest extends Unit
     public function testZeroAndLargeIds(): void
     {
         $zeroId = new PaymentMethod(0, 'Zero ID', true);
-        $this->assertSame('0', $zeroId->getId());
+        $this->assertSame(0, $zeroId->reqId());
 
         $largeId = new PaymentMethod(999999, 'Large ID', true);
-        $this->assertSame('999999', $largeId->getId());
+        $this->assertSame(999999, $largeId->reqId());
     }
 
     public function testChainedSetterCalls(): void
@@ -115,7 +115,7 @@ final class PaymentMethodEntityTest extends Unit
         $paymentMethod->setName('Chained Payment');
         $paymentMethod->setActive(false);
         
-        $this->assertSame('100', $paymentMethod->getId());
+        $this->assertSame(100, $paymentMethod->reqId());
         $this->assertSame('Chained Payment', $paymentMethod->getName());
         $this->assertFalse($paymentMethod->getActive());
     }
@@ -125,8 +125,8 @@ final class PaymentMethodEntityTest extends Unit
         $paymentMethod = new PaymentMethod(123, 'Test', true);
         
         // Verify ID getter returns string even though setter accepts int
-        $this->assertIsString($paymentMethod->getId());
-        $this->assertSame('123', $paymentMethod->getId());
+        $this->assertIsInt($paymentMethod->reqId());
+        $this->assertSame(123, $paymentMethod->reqId());
     }
 
     public function testActiveStatusToggling(): void
@@ -150,7 +150,7 @@ final class PaymentMethodEntityTest extends Unit
         $paymentMethod->setName('Complete Setup Method');
         $paymentMethod->setActive(true);
         
-        $this->assertSame('999', $paymentMethod->getId());
+        $this->assertSame(999, $paymentMethod->reqId());
         $this->assertSame('Complete Setup Method', $paymentMethod->getName());
         $this->assertTrue($paymentMethod->getActive());
     }

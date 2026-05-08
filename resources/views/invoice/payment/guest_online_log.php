@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Merchant;
+use App\Infrastructure\Persistence\Merchant\Merchant;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -24,13 +24,13 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $csrf
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$toolbarReset = A::tag()
+$toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-    ->href($urlGenerator->generate($currentRoute->getName() ?? 'payment/guest_online_log'))
+    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
+    ->href($urlGenerator->generate($currentRoute->getName() ?? 'payment/guestOnlineLog'))
     ->id('btn-reset')
     ->render();
 
@@ -38,7 +38,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Merchant $model) => $model->getId(),
+        content: static fn (Merchant $model) => $model->reqId(),
     ),
     new DataColumn(
         property: 'filterInvNumber',
@@ -46,7 +46,7 @@ $columns = [
         content: static function (Merchant $model) use ($urlGenerator): A|string {
             $return = '';
             if (null !== $model->getInv()) {
-                $return = Html::a($model->getInv()?->getNumber() ?? '#', $urlGenerator->generate('inv/view', ['id' => $model->getInv_id()]), ['style' => 'text-decoration:none']);
+                $return = Html::a($model->getInv()?->getNumber() ?? '#', $urlGenerator->generate('inv/view', ['id' => $model->reqInvId()]), ['style' => 'text-decoration:none']);
             }
             return $return;
         },
@@ -64,29 +64,29 @@ $columns = [
     new DataColumn(
         'date',
         header: $translator->translate('payment.date'),
-        content: static fn(Merchant $model): string|DateTimeImmutable => !is_string($date = $model->getDate()) ? $date->format('Y-m-d') : '',
+        content: static fn (Merchant $model): string|DateTimeImmutable => !is_string($date = $model->getDate()) ? $date->format('Y-m-d') : '',
     ),
     new DataColumn(
         property: 'filterMerchantProvider',
         header: $translator->translate('payment.provider'),
-        content: static fn(Merchant $model): string => Html::encode($model->getDriver()),
+        content: static fn (Merchant $model): string => Html::encode($model->getDriver()),
         filter: true,
     ),
     new DataColumn(
         'response',
         header: $translator->translate('provider.response'),
-        content: static fn(Merchant $model): string => Html::encode($model->getResponse()),
+        content: static fn (Merchant $model): string => Html::encode($model->getResponse()),
     ),
     new DataColumn(
         'reference',
         header: $translator->translate('transaction.reference'),
-        content: static fn(Merchant $model): string => Html::encode($model->getReference()),
+        content: static fn (Merchant $model): string => Html::encode($model->getReference()),
     ),
 ];
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('payment/index'))->csrf($csrf)->open()
-    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-    . Form::tag()->close();
+$toolbarString =  new Form()->post($urlGenerator->generate('payment/index'))->csrf($csrf)->open()
+    .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    .  new Form()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

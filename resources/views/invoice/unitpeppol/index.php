@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\UnitPeppol;
+use App\Infrastructure\Persistence\UnitPeppol\UnitPeppol;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
 use Yiisoft\Translator\TranslatorInterface;
@@ -16,7 +16,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Router\CurrentRoute;
 
 /**
- * @var App\Invoice\Entity\UnitPeppol $unitpeppol
+ * @var App\Infrastructure\Persistence\UnitPeppol\UnitPeppol $unitpeppol
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
  * @var string $alert
@@ -28,12 +28,12 @@ use Yiisoft\Router\CurrentRoute;
  * @var WebView $this
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$toolbarReset = A::tag()
+$toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'unitpeppol/index'))
     ->id('btn-reset')
     ->render();
@@ -42,44 +42,44 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(UnitPeppol $model) => Html::encode($model->getId()),
+        content: static fn (UnitPeppol $model) => Html::encode($model->reqId()),
     ),
     new DataColumn(
         'unit_id',
         header: $translator->translate('unit.name'),
-        content: static fn(UnitPeppol $model) => Html::encode($model->getUnit()?->getUnit_name()),
+        content: static fn (UnitPeppol $model) => Html::encode($model->getUnit()?->getUnitName()),
     ),
     new DataColumn(
         'unit_id',
         header: $translator->translate('unit.name.plrl'),
-        content: static fn(UnitPeppol $model) => Html::encode($model->getUnit()?->getUnit_name_plrl()),
+        content: static fn (UnitPeppol $model) => Html::encode($model->getUnit()?->getUnitNamePlrl()),
     ),
     new DataColumn(
         'code',
         header: $translator->translate('code'),
-        content: static fn(UnitPeppol $model) => Html::encode($model->getCode()),
+        content: static fn (UnitPeppol $model) => Html::encode($model->getCode()),
     ),
     new DataColumn(
         'name',
         header: $translator->translate('name'),
-        content: static fn(UnitPeppol $model) => Html::encode($model->getName()),
+        content: static fn (UnitPeppol $model) => Html::encode($model->getName()),
     ),
     new DataColumn(
         'description',
         header: $translator->translate('description'),
-        content: static fn(UnitPeppol $model) => Html::encode($model->getDescription()),
+        content: static fn (UnitPeppol $model) => Html::encode($model->getDescription()),
     ),
     new DataColumn(
         header: $translator->translate('view'),
         content: static function (UnitPeppol $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('unitpeppol/view', ['id' => $model->getId()]), []);
+            return Html::a(Html::tag('i', '', ['class' => 'bi-eye']), $urlGenerator->generate('unitpeppol/view', ['id' => $model->reqId()]), []);
         },
         encodeContent: false,
     ),
     new DataColumn(
         header: $translator->translate('edit'),
         content: static function (UnitPeppol $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('unitpeppol/edit', ['id' => $model->getId()]), []);
+            return Html::a(Html::tag('i', '', ['class' => 'bi-pencil-square']), $urlGenerator->generate('unitpeppol/edit', ['id' => $model->reqId()]), []);
         },
         encodeContent: false,
     ),
@@ -89,14 +89,14 @@ $columns = [
             return Html::a(
                 Html::tag(
                     'button',
-                    Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
+                    Html::tag('i', '', ['class' => 'bi-trash']),
                     [
                         'type' => 'submit',
                         'class' => 'dropdown-button',
                         'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                     ],
                 ),
-                $urlGenerator->generate('unitpeppol/delete', ['id' => $model->getId()]),
+                $urlGenerator->generate('unitpeppol/delete', ['id' => $model->reqId()]),
                 [],
             );
         },
@@ -104,7 +104,7 @@ $columns = [
     ),
 ];
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -112,14 +112,14 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('unitpeppol/index'))->csrf($csrf)->open()
-    . A::tag()
+$toolbarString =  new Form()->post($urlGenerator->generate('unitpeppol/index'))->csrf($csrf)->open()
+    .  new A()
     ->href($urlGenerator->generate('unitpeppol/add'))
     ->addClass('btn btn-info')
     ->content('➕')
     ->render()
-    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-    . Form::tag()->close();
+    .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    .  new Form()->close();
 
 echo GridView::widget()
 ->columns(...$columns)
@@ -130,7 +130,7 @@ echo GridView::widget()
 ->id('w44-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($grid_summary)
+->summaryTemplate($gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

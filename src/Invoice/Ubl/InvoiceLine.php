@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-// Note this UBL is not currently being used. Refer to Invoice and PeppolHelper function build_invoice_lines_array
+// Note this UBL is not currently being used. Refer to Invoice and
+//  PeppolHelper function buildInvoiceLinesArray
 
 namespace App\Invoice\Ubl;
 
+use App\Invoice\Setting\SettingRepository;
 use Sabre\Xml\Writer;
 use Sabre\Xml\XmlSerializable;
 
@@ -16,12 +18,27 @@ class InvoiceLine implements XmlSerializable
     // See CreditNoteLine.php
     protected bool $isCreditNoteLine = false;
 
-    public function __construct(private string $id, protected float $invoicedQuantity, private float $lineExtensionAmount, private ?string $unitCodeListId, private ?TaxTotal $taxTotal, private ?InvoicePeriod $invoicePeriod, private ?string $note, private ?Item $item, private ?Price $price, private ?string $accountingCostCode, private ?string $accountingCost) {}
+    public function __construct(
+        private string $id,
+        protected float $invoicedQuantity,
+        private float $lineExtensionAmount,
+        private ?string $unitCodeListId,
+        private ?TaxTotal $taxTotal,
+        private ?InvoicePeriod $invoicePeriod,
+        private ?string $note,
+        private ?Item $item,
+        private ?Price $price,
+        private ?string $accountingCostCode,
+        private ?string $accountingCost,
+        private SettingRepository $s,
+    )
+    {
+    }
 
     /**
      * @return string
      */
-    public function getId(): string
+    public function reqId(): string
     {
         return $this->id;
     }
@@ -235,7 +252,8 @@ class InvoiceLine implements XmlSerializable
     }
 
     /**
-     * Related logic: see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?q=InvoiceLine
+     * Related logic:
+     *  https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?q=InvoiceLine
      * @param Writer $writer
      */
     #[\Override]
@@ -256,21 +274,26 @@ class InvoiceLine implements XmlSerializable
         ];
 
         if ($this->getUnitCodeListId() !== null) {
-            $invoicedQuantityAttributes['unitCodeListID'] = $this->getUnitCodeListId();
+            $invoicedQuantityAttributes['unitCodeListID'] =
+                                                    $this->getUnitCodeListId();
         }
 
         $writer->write([
             [
                 'name' => Schema::CBC
-                    . ($this->isCreditNoteLine ? 'CreditedQuantity' : 'InvoicedQuantity'),
-                'value' => number_format($this->invoicedQuantity, 2, '.', ''),
+                    . ($this->isCreditNoteLine ?
+                        'CreditedQuantity' : 'InvoicedQuantity'),
+                'value' => number_format(
+                        $this->invoicedQuantity ?: 0, 2, '.', ''),
                 'attributes' => $invoicedQuantityAttributes,
             ],
             [
                 'name' => Schema::CBC . 'LineExtensionAmount',
-                'value' => number_format($this->lineExtensionAmount, 2, '.', ''),
+                'value' => $this->s->currencyConverter(
+                 number_format($this->lineExtensionAmount ?: 0.00, 2, '.', '')),
                 'attributes' => [
-                    'currencyID' => Generator::$currencyID,
+                    'currencyID' =>
+                        $this->s->getSetting('peppol_document_currency'),
                 ],
             ],
         ]);

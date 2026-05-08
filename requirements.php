@@ -8,42 +8,145 @@ use Yiisoft\Requirements\RequirementsChecker;
 
 $requirementsChecker = new RequirementsChecker();
 
-// Add here the conditions that must be verified
+// Requirements based on invoice_build.yml workflow configuration
+// Extensions: apcu, fileinfo, pdo, pdo_sqlite, intl, gd, openssl, dom, json, mbstring, curl, uopz, sodium
+// PHP versions: 8.3, 8.4
+// Memory limit: 1024M, Max execution time: 400s
+
 $config = [
+    // Core PHP Requirements
     [
-        'name' => 'Maximum Execution Time of 360 is required.',
-        'mandatory' => true,
-        'condition' => $requirementsChecker->checkMaxExecutionTime('360'),
-        'by' => '<a href="https://www.php.net/manual/en/info.configuration.php#ini.max-execution-time">php.ini setting</a>',
-        'memo' => 'A php.ini max_execution_time minimum of 360 is required for installation. The autoloader will attempt to reset the maximum execution time if currently set to less than 360.',
-    ],
-    [
-        'name' => 'PHP version',
+        'name' => 'PHP version 8.3.0 or higher',
         'mandatory' => true,
         'condition' => version_compare(PHP_VERSION, '8.3.0', '>='),
         'by' => '<a href="https://www.yiiframework.com">Yii Framework</a>',
-        'memo' => 'PHP 8.3.0 or higher is required.',
+        'memo' => 'PHP 8.3.0 or higher is required (8.3-8.4 supported in CI).',
     ],
     [
-        'name' => 'PDO MySQL extension',
+        'name' => 'Maximum Execution Time of 400 seconds',
+        'mandatory' => true,
+        'condition' => $requirementsChecker->checkMaxExecutionTime('400'),
+        'by' => '<a href="https://www.php.net/manual/en/info.configuration.php#ini.max-execution-time">php.ini setting</a>',
+        'memo' => 'A php.ini max_execution_time minimum of 400 seconds is required for installation and complex operations.',
+    ],
+    [
+        'name' => 'Memory limit of 1024M or higher',
+        'mandatory' => true,
+        'condition' => $requirementsChecker->checkPhpIniOn('memory_limit') && 
+                      ($requirementsChecker->getBytes(ini_get('memory_limit')) >= $requirementsChecker->getBytes('1024M') || 
+                       ini_get('memory_limit') === '-1'),
+        'by' => 'Application performance',
+        'memo' => 'Memory limit should be at least 1024M for optimal performance.',
+    ],
+
+    // Core Extensions (Mandatory)
+    [
+        'name' => 'PDO extension',
+        'mandatory' => true,
+        'condition' => extension_loaded('pdo'),
+        'by' => 'Database abstraction layer',
+        'memo' => 'Required for database connectivity (core dependency).',
+    ],
+    [
+        'name' => 'JSON extension',
+        'mandatory' => true,
+        'condition' => extension_loaded('json'),
+        'by' => 'API responses and configuration',
+        'memo' => 'Required for JSON data processing (core dependency).',
+    ],
+    [
+        'name' => 'MBString extension',
+        'mandatory' => true,
+        'condition' => extension_loaded('mbstring'),
+        'by' => 'Multi-byte string handling',
+        'memo' => 'Required for UTF-8 text processing (core dependency).',
+    ],
+    [
+        'name' => 'DOM extension',
+        'mandatory' => true,
+        'condition' => extension_loaded('dom'),
+        'by' => 'XML processing and HTML manipulation',
+        'memo' => 'Required for XML/HTML document processing (core dependency).',
+    ],
+    [
+        'name' => 'OpenSSL extension',
+        'mandatory' => true,
+        'condition' => extension_loaded('openssl'),
+        'by' => 'Security and encryption',
+        'memo' => 'Required for SSL/TLS connections and cryptographic operations (core dependency).',
+    ],
+
+    // Database Extensions
+    [
+        'name' => 'PDO SQLite extension',
+        'mandatory' => false,
+        'condition' => extension_loaded('pdo_sqlite'),
+        'by' => 'SQLite database support',
+        'memo' => 'Required for SQLite database operations and testing.',
+    ],
+    [
+        'name' => 'PDO MySQL extension', 
         'mandatory' => false,
         'condition' => extension_loaded('pdo_mysql'),
-        'by' => 'All DB-related classes',
-        'memo' => 'Required for MySQL database.',
+        'by' => 'MySQL database support',
+        'memo' => 'Required for MySQL database operations in production.',
     ],
+
+    // Functionality Extensions
     [
-        'name' => 'cURL',
+        'name' => 'cURL extension',
         'mandatory' => false,
         'condition' => extension_loaded('curl'),
-        'by' => '<a href="https://github.com/php-http/curl-client">cURL </a>',
-        'memo' => 'Required for the Telegram Bot Api for sending payment notification messages to an admin mobile when clients pay online.',
+        'by' => 'HTTP client functionality',
+        'memo' => 'Required for external API calls, webhooks, and payment notifications.',
+    ],
+    [
+        'name' => 'GD extension',
+        'mandatory' => false,
+        'condition' => extension_loaded('gd'),
+        'by' => 'Image processing',
+        'memo' => 'Required for image generation, logos, and graphics processing.',
+    ],
+    [
+        'name' => 'Fileinfo extension',
+        'mandatory' => false,
+        'condition' => extension_loaded('fileinfo'),
+        'by' => 'File type detection',
+        'memo' => 'Required for secure file upload validation and MIME type detection.',
     ],
     [
         'name' => 'Intl extension',
         'mandatory' => false,
-        'condition' => $requirementsChecker->checkPhpExtensionVersion('intl', '1.0.2', '>='),
+        'condition' => extension_loaded('intl'),
         'by' => '<a href="https://secure.php.net/manual/en/book.intl.php">Internationalization</a> support',
-        'memo' => 'PHP Intl extension 1.0.2 or higher is required.',
+        'memo' => 'Required for locale-aware formatting, currency, and date/time operations.',
+    ],
+    
+    // Performance and Caching Extensions
+    [
+        'name' => 'APCu extension',
+        'mandatory' => false,
+        'condition' => extension_loaded('apcu'),
+        'by' => 'In-memory caching',
+        'memo' => 'Recommended for performance optimization and Prometheus metrics storage.',
+    ],
+    [
+        'name' => 'Sodium extension',
+        'mandatory' => false,
+        'condition' => extension_loaded('sodium'),
+        'by' => 'Modern cryptography',
+        'memo' => 'Required for secure password hashing and encryption operations.',
+    ],
+
+    // Development and Testing Extensions
+    [
+        'name' => 'uopz extension',
+        'mandatory' => false,
+        'condition' => version_compare(PHP_VERSION, '8.4.0', '<') ? extension_loaded('uopz') : true,
+        'by' => 'Testing framework',
+        'memo' => version_compare(PHP_VERSION, '8.4.0', '>=') 
+            ? 'WARNING: uopz extension is not compatible with PHP 8.4+. Tests may be limited.' 
+            : 'Required for advanced testing scenarios and mocking in development.',
     ],
 ];
 

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @var App\Invoice\Entity\Gentor $generator
+ * @var App\Infrastructure\Persistence\Gentor\Gentor $generator
  * @var Cycle\Database\Table $orm_schema
  * @var array $relations
  * @var string $typecast
@@ -12,24 +12,24 @@ declare(strict_types=1);
 echo "<?php\n";
 ?>
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
-namespace <?= $generator->getNamespace_path() . DIRECTORY_SEPARATOR . $generator->getCamelcase_capital_name() . ";\n"; ?>
+namespace <?= $generator->getNamespacePath() . DIRECTORY_SEPARATOR . $generator->getCamelcaseCapitalName() . ";\n"; ?>
 
-use <?= $generator->getNamespace_path() . DIRECTORY_SEPARATOR . 'Entity' . DIRECTORY_SEPARATOR . $generator->getCamelcase_capital_name() . ";\n"; ?>
+use <?= $generator->getNamespacePath() . DIRECTORY_SEPARATOR . 'Entity' . DIRECTORY_SEPARATOR . $generator->getCamelcaseCapitalName() . ";\n"; ?>
 
 
-final class <?= $generator->getCamelcase_capital_name(); ?>Service
+final class <?= $generator->getCamelcaseCapitalName(); ?>Service
 {
 
-    private <?= $generator->getCamelcase_capital_name(); ?>Repository $repository;
+    private <?= $generator->getCamelcaseCapitalName(); ?>Repository $repository;
 
-    public function __construct(<?= $generator->getCamelcase_capital_name(); ?>Repository $repository)
+    public function __construct(<?= $generator->getCamelcaseCapitalName(); ?>Repository $repository)
     {
         $this->repository = $repository;
     }
 
-    public function save<?= $generator->getCamelcase_capital_name(); ?>(<?= $generator->getCamelcase_capital_name(); ?> $model, array $array): void
+    public function save<?= $generator->getCamelcaseCapitalName(); ?>(<?= $generator->getCamelcaseCapitalName(); ?> $model, array $array): void
     {
         <?php
             echo "\n";
@@ -141,11 +141,11 @@ foreach ($orm_schema->getColumns() as $column) {
         }
     }
 }
-?> 
+?>
         $this->repository->save($model);
     }
-    
-    public function delete<?= $generator->getCamelcase_capital_name(); ?>(<?= $generator->getCamelcase_capital_name(); ?> $model): void
+
+    public function delete<?= $generator->getCamelcaseCapitalName(); ?>(<?= $generator->getCamelcaseCapitalName(); ?> $model): void
     {
         $this->repository->delete($model);
     }

@@ -23,13 +23,13 @@ use Yiisoft\Html\Tag\Form;
  */
 ?>
 
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
-<?= Form::tag()
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -44,15 +44,15 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('div'); ?>
 
 <?= Html::openTag('div', ['id' => 'content']); ?>
-    <?= Html::openTag('div', ['class' => 'row']); ?>   
+    <?= Html::openTag('div', ['class' => 'row']); ?>
         <?= Html::openTag('div', ['class' => 'input-group']); ?>
             <?php
                 $optionsDataAllowanceCharge = [];
 /**
- * @var App\Invoice\Entity\AllowanceCharge $allowance_charge
+ * @var App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge $allowance_charge
  */
 foreach ($allowance_charges as $allowance_charge) {
-    $optionsDataAllowanceCharge[$allowance_charge->getId()]
+    $optionsDataAllowanceCharge[$allowance_charge->reqId()]
     = ($allowance_charge->getIdentifier()
     ? $translator->translate('allowance.or.charge.charge')
     : $translator->translate('allowance.or.charge.allowance'))
@@ -63,30 +63,30 @@ foreach ($allowance_charges as $allowance_charge) {
 }
 ?>
             <?= Field::select($form, 'allowance_charge_id')
-    ->label($translator->translate('allowance.or.charge.item'))
+    ->label($translator->translate('allowance.or.charge.item.invoice'))
     ->addInputAttributes([
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'readonly' => 'readonly',
         'disabled' => 'disabled',
     ])
     ->optionsData($optionsDataAllowanceCharge)
-    ->value($form->getAllowance_charge_id())
+    ->value($form->getAllowanceChargeId())
     ->prompt($translator->translate('none'));
 ?>
             <?= Field::text($form, 'amount')
-    ->label($translator->translate('amount') . '(' . $s->getSetting('currency_symbol') . ')')
+    ->label($translator->translate('amount.inv.item') . '(' . $s->getSetting('currency_symbol') . ')')
     ->addInputAttributes([
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'readonly' => 'readonly',
         'disabled' => 'disabled',
     ])
-    ->value($s->format_amount($form->getAmount() ?? 0.00));
-?>    
+    ->value($s->formatAmount($form->getAmount() ?? 0.00));
+?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>         
+<?= Html::closeTag('div'); ?>
 <?= $button::back(); ?>
-<?= Form::tag()->close(); ?>
+<?=  new Form()->close(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

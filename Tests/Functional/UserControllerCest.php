@@ -18,14 +18,14 @@ class UserControllerCest
     public function testIndexWithPagination(FunctionalTester $tester): void
     {
         $tester->wantTo('test user index with pagination');
-        $tester->amOnPage('/user/1/10'); // page 1, pagesize 10
+        $tester->amOnPage('/user?page=1');
         $tester->seeResponseCodeIs(200);
     }
 
     public function testIndexWithDifferentPageSize(FunctionalTester $tester): void
     {
         $tester->wantTo('test user index with different page size');
-        $tester->amOnPage('/user/2/5'); // page 2, pagesize 5
+        $tester->amOnPage('/user');
         $tester->seeResponseCodeIs(200);
     }
 
@@ -56,12 +56,5 @@ class UserControllerCest
         $tester->wantTo('test user index with trailing slash returns 404');
         $tester->amOnPage('/user/');
         $tester->seeResponseCodeIs(404);
-    }
-
-    public function testIndexWithComplexPath(FunctionalTester $tester): void
-    {
-        $tester->wantTo('test user index with complex URL pattern');
-        $tester->amOnPage('/user/3/20'); // page 3, pagesize 20
-        $tester->seeResponseCodeIs(200);
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderItemAmount;
 
-use App\Invoice\Entity\SalesOrderItemAmount;
+use App\Infrastructure\Persistence\SalesOrderItemAmount\SalesOrderItemAmount;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -34,7 +34,7 @@ final class SalesOrderItemAmountRepository extends Select\Repository
     public function findAllPreloaded(): EntityReader
     {
         $query = $this->select()
-                      ->load('so_item');
+                      ->load('sales_order_item');
         return $this->prepareDataReader($query);
     }
 
@@ -85,22 +85,22 @@ final class SalesOrderItemAmountRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoSalesOrderItemAmountquery(string $so_item_id): ?SalesOrderItemAmount
+    public function repoSalesOrderItemAmountquery(int $sales_order_item_id): ?SalesOrderItemAmount
     {
         $query = $this->select()
-                      ->load(['so_item'])
-                      ->where(['so_item_id' => $so_item_id]);
+                      ->load(['sales_order_item'])
+                      ->where(['sales_order_item_id' => $sales_order_item_id]);
         return  $query->fetchOne() ?: null;
     }
 
     /**
-     * @param string $so_item_id
+     * @param int $sales_order_item_id
      * @return int
      */
-    public function repoCount(string $so_item_id): int
+    public function repoCount(int $sales_order_item_id): int
     {
         $query = $this->select()
-                      ->where(['so_item_id' => $so_item_id]);
+                      ->where(['sales_order_item_id' => $sales_order_item_id]);
         return $query->count();
     }
 }

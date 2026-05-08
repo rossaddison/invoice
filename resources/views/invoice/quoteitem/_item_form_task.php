@@ -8,8 +8,8 @@ use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
 
 /**
- * Related logic: see QuoteController function view $parameters['add_quote_task']['actionName' => 'quoteitem/add_task']
- * Related logic: see QuoteItemController function add_task
+ * Related logic: see QuoteController function view $parameters['add_quote_task']['actionName' => 'quoteitem/addTask']
+ * Related logic: see QuoteItemController function addTask
  * @var App\Invoice\QuoteItem\QuoteItemForm $form
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
  * @var App\Invoice\Setting\SettingRepository $s
@@ -30,35 +30,35 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
 ?>
 <?= Html::openTag('div', ['class' => 'panel panel-default']); ?>
     <?= Html::openTag('div', ['class' => 'panel-heading']); ?>
-        <?= I::tag()
+        <?=  new I()
             ->addClass('bi bi-info-circle')
             ->addAttributes([
                 'tooltip' => 'data-bs-toggle',
                 'title' => $s->isDebugMode(13),
             ]);
 ?>
-    <?= Html::closeTag('div'); ?>    
-    <?= Form::tag()
+    <?= Html::closeTag('div'); ?>
+    <?=  new Form()
 ->post($urlGenerator->generate($actionName, $actionArguments))
 ->enctypeMultipartFormData()
 ->csrf($csrf)
 ->id('QuoteItemFormAddTask')
 ->open() ?>
-        
+
         <?= Html::openTag('div', ['class' => 'table-striped table-responsive']); ?>
             <?= Html::openTag('table', ['id' => 'item_table', 'class' => 'items table-primary table table-bordered no-margin']); ?>
                 <?= Html::openTag('tbody', ['id' => 'new_inv_item_row']); ?>
                     <?= Html::openTag('tr'); ?>
                         <?= Html::openTag('td', ['class' => 'td-text']); ?>
-                            <?= Field::hidden($form, 'quote_id')->hideLabel(); ?>                            
-                            <?= Html::openTag('div', ['class' => 'input-group', 'id' => 'product-quote']); ?>    
+                            <?= Field::hidden($form, 'quote_id')->hideLabel(); ?>
+                            <?= Html::openTag('div', ['class' => 'input-group', 'id' => 'product-quote']); ?>
                                 <?php
                                     $optionsDataTask = [];
 /**
- * @var App\Invoice\Entity\Task $task
+ * @var App\Infrastructure\Persistence\Task\Task $task
  */
 foreach ($tasks as $task) {
-    $taskId = $task->getId();
+    $taskId = $task->reqId();
     $taskName = $task->getName();
     if (!empty($taskId) && null !== $taskName) {
         $optionsDataTask[$taskId] = $taskName;
@@ -67,15 +67,15 @@ foreach ($tasks as $task) {
 ?>
                                 <?= Field::select($form, 'task_id')
     ->optionsData($optionsDataTask)
-    ->value(Html::encode($form->getTask_id())); ?>
-                            <?= Html::closeTag('div'); ?>        
+    ->value(Html::encode($form->getTaskId())); ?>
+                            <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount td-quality']); ?>
                             <?= Html::openTag('div', ['class' => 'input-group']); ?>
                                 <?= Field::number($form, 'quantity')
     ->label($translator->translate('quantity'))
     ->addInputAttributes(['class' => 'input-lg form-control amount has-feedback'])
-    ->value($numberHelper->format_amount($form->getQuantity()))
+    ->value($numberHelper->formatAmount($form->getQuantity()))
     ->hint($translator->translate('hint.greater.than.zero.please'));
 ?>
                             <?= Html::closeTag('div'); ?>
@@ -85,7 +85,7 @@ foreach ($tasks as $task) {
                                 <?= Field::text($form, 'price')
      ->label($translator->translate('price'))
      ->addInputAttributes(['class' => 'input-lg form-control amount has-feedback'])
-     ->value($numberHelper->format_amount($form->getPrice() ?? 0.00))
+     ->value($numberHelper->formatAmount($form->getPrice() ?? 0.00))
      ->hint($translator->translate('hint.greater.than.zero.please')); ?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
@@ -99,7 +99,7 @@ foreach ($tasks as $task) {
          'data-placement' => 'bottom',
          'title' => $s->getSetting('currency_symbol') . ' ' . $translator->translate('per.item'),
      ])
-     ->value($numberHelper->format_amount($form->getDiscount_amount() ?? 0.00)); ?>
+     ->value($numberHelper->formatAmount($form->getDiscountAmount() ?? 0.00)); ?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td td-vert-middle']); ?>
@@ -107,26 +107,26 @@ foreach ($tasks as $task) {
                                 <?php
      $optionsDataTaxRate = [];
 /**
- * @var App\Invoice\Entity\TaxRate $taxRate
+ * @var App\Infrastructure\Persistence\TaxRate\TaxRate $taxRate
  */
 foreach ($taxRates as $taxRate) {
-    $taxRateId = $taxRate->getTaxRateId();
+    $taxRateId = $taxRate->reqId();
     $taxRatePercent = $taxRate->getTaxRatePercent();
-    $taxRatePercentNumber = $numberHelper->format_amount($taxRatePercent);
+    $taxRatePercentNumber = $numberHelper->formatAmount($taxRatePercent);
     $taxRateName = $taxRate->getTaxRateName();
     // Only build the drop down item if all values are present
-    if (null !== $taxRatePercentNumber && null !== $taxRateName && null !== $taxRateId) {
+    if (null !== $taxRatePercentNumber && null !== $taxRateName) {
         $optionsDataTaxRate[$taxRateId] =  $taxRatePercentNumber . '% - ' . $taxRateName;
     }
 }
-?>    
+?>
                                 <?= Field::select($form, 'tax_rate_id')
     ->label($vat === false ? $translator->translate('tax.rate') : $translator->translate('vat.rate'))
-    ->addInputAttributes(['class' => 'form-control'])
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
     ->optionsData($optionsDataTaxRate)
-    ->value(Html::encode($form->getTax_rate_id()))
+    ->value(Html::encode($form->getTaxRateId()))
     ->hint($translator->translate('hint.this.field.is.required'));
-?>        
+?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-icon text-right td-vert-middle']); ?>
@@ -135,11 +135,11 @@ foreach ($taxRates as $taxRate) {
                                 'type' => 'submit',
                                 'class' => 'btn btn-info',
                                 'data-bs-toggle' => 'tooltip',
-                                'title' => 'quoteitem/add_task']); ?>
-                                <?= I::tag()->addClass('fa fa-plus'); ?>
+                                'title' => 'quoteitem/addTask']); ?>
+                                <?=  new I()->addClass('bi bi-plus-lg'); ?>
                                 <?= $translator->translate('save'); ?>
                             <?= Html::closeTag('button'); ?>
-                        <?= Html::closeTag('td'); ?>              
+                        <?= Html::closeTag('td'); ?>
                     <?= Html::closeTag('tr'); ?>
                     <?= Html::openTag('tr'); ?>
                         <?= Html::openTag('td', ['class' => 'td-textarea']); ?>
@@ -151,7 +151,7 @@ foreach ($taxRates as $taxRate) {
                                 <?= Field::text($form, 'order')
     ->value(Html::encode($form->getOrder() ?? ''));
 ?>
-                            <?= Html::closeTag('div'); ?> 
+                            <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount']); ?>
                             <?= Html::openTag('div', ['class' => 'input-group']); ?>
@@ -159,34 +159,34 @@ foreach ($taxRates as $taxRate) {
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount td-vert-middle']); ?>
                             <?= Html::openTag('span'); ?><?= $translator->translate('subtotal'); ?><?= Html::closeTag('span'); ?>
-                                <?= Html::tag('br'); ?>    
-                            <?= Html::openTag('span', ['name' => 'subtotal', 'class' => 'amount']); ?><?= Html::closeTag('span'); ?>        
+                                <?= Html::tag('br'); ?>
+                            <?= Html::openTag('span', ['name' => 'subtotal', 'class' => 'amount']); ?><?= Html::closeTag('span'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount td-vert-middle']); ?>
                             <?= Html::openTag('span'); ?><?= $vat === false ? $translator->translate('discount') : $translator->translate('early.settlement.cash.discount') ?><?= Html::closeTag('span'); ?>
-                                <?= Html::tag('br'); ?>    
-                            <?= Html::openTag('span', ['name' => 'discount_total', 'class' => 'amount']); ?><?= Html::closeTag('span'); ?>        
+                                <?= Html::tag('br'); ?>
+                            <?= Html::openTag('span', ['name' => 'discount_total', 'class' => 'amount']); ?><?= Html::closeTag('span'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount td-vert-middle']); ?>
                             <?= Html::openTag('span'); ?><?= $vat === false ? $translator->translate('tax') : $translator->translate('vat.abbreviation')  ?><?= Html::closeTag('span'); ?>
-                                <?= Html::tag('br'); ?>    
-                            <?= Html::openTag('span', ['name' => 'tax_total', 'class' => 'amount']); ?><?= Html::closeTag('span'); ?>        
-                        <?= Html::closeTag('td'); ?>        
+                                <?= Html::tag('br'); ?>
+                            <?= Html::openTag('span', ['name' => 'tax_total', 'class' => 'amount']); ?><?= Html::closeTag('span'); ?>
+                        <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount td-vert-middle']); ?>
                             <?= Html::openTag('span'); ?><?= $translator->translate('total'); ?><?= Html::closeTag('span'); ?>
-                                <?= Html::tag('br'); ?>    
-                            <?= Html::openTag('span', ['name' => 'total', 'class' => 'amount']); ?><?= Html::closeTag('span'); ?>        
+                                <?= Html::tag('br'); ?>
+                            <?= Html::openTag('span', ['name' => 'total', 'class' => 'amount']); ?><?= Html::closeTag('span'); ?>
                         <?= Html::closeTag('td'); ?>
-                    <?= Html::closeTag('tr'); ?>        
+                    <?= Html::closeTag('tr'); ?>
                 <?= Html::closeTag('tbody'); ?>
             <?= Html::closeTag('table'); ?>
         <?= Html::closeTag('div'); ?>
         <?=Html::openTag('div', ['class' => 'col-xs-12 col-md-4']); ?>
             <?= Html::openTag('div', ['class' => 'btn-group']); ?>
                 <?= Html::Tag('button', '', ['hidden' => 'hidden', 'class' => 'btn_quote_task_add_row btn btn-primary btn-md active bi bi-plus'])
-                    ->content($translator->translate('add.new.row')); ?>           
+                    ->content($translator->translate('add.new.row')); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
-    <?= Form::tag()->close(); ?>
+    <?=  new Form()->close(); ?>
     <?= Html::Tag('br'); ?>
 <?= Html::closeTag('div'); ?>

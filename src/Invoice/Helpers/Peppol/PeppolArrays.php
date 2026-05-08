@@ -601,7 +601,7 @@ final class PeppolArrays
      * Related logic: see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/blob/master/structure/codelist/icd.xml
      * @return array
      */
-    public function getIso_6523_icd(): array
+    public function getIso6523Icd(): array
     {
         // 'ISO 6523 ICD list',
         // 'Identifier' => 'ICD',
@@ -2800,14 +2800,14 @@ final class PeppolArrays
      * Related logic: see InvController/edit function;
      * @return string
      */
-    public function getCurrent_stand_in_code_value(SettingRepository $s): string
+    public function getCurrentStandInCodeValue(SettingRepository $s): string
     {
         $uncl2005_subset = $this->getUncl2005subset();
         $current_stand_in_code_value = '';
         /**
          * @var array $value
          */
-        foreach ($uncl2005_subset as $key => $value) {
+        foreach ($uncl2005_subset as $value) {
             /**
              * @var string $value['rdf:value']
              */
@@ -2827,7 +2827,7 @@ final class PeppolArrays
      * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/
      * @return array
      */
-    public static function electronic_address_scheme(): array
+    public static function electronicAddressScheme(): array
     {
         return [
             0 => [

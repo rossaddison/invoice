@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\FromDropDown;
 
-use App\Invoice\Entity\FromDropDown;
+use App\Infrastructure\Persistence\FromDropDown\FromDropDown;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -89,11 +89,11 @@ final class FromDropDownRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @psalm-return TEntity|null
      * @return FromDropDown|null
      */
-    public function repoFromDropDownLoadedquery(string $id): ?FromDropDown
+    public function repoFromDropDownLoadedquery(int $id): ?FromDropDown
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -115,10 +115,10 @@ final class FromDropDownRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return int
      */
-    public function repoCount(string $id): int
+    public function repoCount(int $id): int
     {
         $query = $this->select()
                       ->where(['id' => $id]);

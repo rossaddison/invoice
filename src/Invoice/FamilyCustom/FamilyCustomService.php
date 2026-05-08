@@ -1,0 +1,62 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Invoice\FamilyCustom;
+
+use App\Infrastructure\Persistence\FamilyCustom\FamilyCustom;
+use App\Invoice\Family\FamilyRepository as FR;
+use App\Invoice\CustomField\CustomFieldRepository as CFR;
+
+final readonly class FamilyCustomService
+{
+    public function __construct(
+        private FamilyCustomRepository $repository,
+        private FR $fR,
+        private CFR $cfR,
+    ) {
+    }
+
+    /**
+     * @param FamilyCustom $model
+     * @param array $array
+     */
+    public function saveFamilyCustom(
+        FamilyCustom $model,
+        array $array
+    ): void {
+        $this->persist($model, $array);
+        isset($array['family_id']) ?
+            $model->setFamilyId((int) $array['family_id']) : '';
+        isset($array['custom_field_id']) ?
+            $model->setCustomFieldId(
+                (int) $array['custom_field_id']) : '';
+        isset($array['value']) ?
+            $model->setValue((string) $array['value']) : '';
+        $this->repository->save($model);
+    }
+
+    private function persist(
+        FamilyCustom $model,
+        array $array
+    ): void {
+        $family = 'family_id';
+        if (isset($array[$family])) {
+            $model->setFamily(
+                $this->fR->repoFamilyquery((int) $array[$family]));
+        }
+        $custom_field = 'custom_field_id';
+        if (isset($array[$custom_field])) {
+            $model->setCustomField(
+                $this->cfR->repoCustomFieldquery((int) $array[$custom_field]));
+        }
+    }
+
+    /**
+     * @param FamilyCustom $model
+     */
+    public function deleteFamilyCustom(FamilyCustom $model): void
+    {
+        $this->repository->delete($model);
+    }
+}

@@ -2,20 +2,27 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Asset\InvoiceAsset;
+use App\Invoice\Asset\InvoiceCdnAsset as InvCdn;
+use App\Invoice\Asset\InvoiceNodeModulesAsset as InvNm;
 use App\Invoice\Asset\MonospaceAsset;
 // PCI Compliant Payment Gateway Assets
-use App\Invoice\Asset\pciAsset\stripe_v10_Asset;
-use App\Invoice\Asset\pciAsset\amazon_pay_v2_7_Asset;
-use App\Invoice\Asset\pciAsset\braintree_dropin_1_33_7_Asset;
-use App\Asset\AppAsset;
+use App\Invoice\Asset\pciAsset\StripeVersionTenAsset;
+use App\Invoice\Asset\pciAsset\AmazonPayTwoSevenAsset;
+use App\Invoice\Asset\pciAsset\BraintreeDropInOneThirtyThreeSevenAsset;
+use App\Asset\AppCdnAsset as AppCdn;
+use App\Asset\AppNodeModulesAsset as AppNm;
 use App\Widget\PerformanceMetrics;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Button;
 use Yiisoft\Html\Tag\Form;
+use Yiisoft\Html\Tag\Html as TagHtml;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Label;
 use Yiisoft\Html\Tag\Meta;
+use Yiisoft\Html\Tag\Style;
+use Yiisoft\Html\Tag\Title;
+use Yiisoft\Bootstrap5\Assets\BootstrapCdnAsset as BsCdn;
+use Yiisoft\Bootstrap5\Assets\BootstrapAsset as BsNm;
 use Yiisoft\Bootstrap5\ButtonSize;
 use Yiisoft\Bootstrap5\Dropdown;
 use Yiisoft\Bootstrap5\DropdownItem;
@@ -30,12 +37,19 @@ use Yiisoft\Bootstrap5\NavStyle;
 /**
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Setting\SettingRepository $s
- * @var App\User\User|null $user
+ * @var App\Infrastructure\Persistence\User\User|null $user
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Assets\AssetManager $assetManager
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\View\WebView $this
+ * @var bool $bootstrap5CdnNotNodeModule
+ * @var bool $appCdnNotNodeModule
+ * @var bool $invCdnNotNodeModule
+ * @var string $bootstrap5LayoutGuestNavbarFont
+ * @var string $bootstrap5LayoutGuestNavbarFontSize
+ * @var int $bootstrap5FormInputHeight
+ * @var int $bootstrap5FormFontSize
  * @var string $csrf
  * @var string $content
  * @var string $brandLabel
@@ -43,45 +57,48 @@ use Yiisoft\Bootstrap5\NavStyle;
  * @var string $companyLogoMargin
  * @var string $companyLogoWidth
  * @var string $logoPath
+ * @var DropdownItem $afZA
+ * @var DropdownItem $arBH
+ * @var DropdownItem $az
+ * @var DropdownItem $beBY
+ * @var DropdownItem $bs
+ * @var DropdownItem $zhCN
+ * @var DropdownItem $zhTW
+ * @var DropdownItem $en
+ * @var DropdownItem $fil
+ * @var DropdownItem $fr
+ * @var DropdownItem $gdGB
+ * @var DropdownItem $haNG
+ * @var DropdownItem $heIL
+ * @var DropdownItem $igNG
+ * @var DropdownItem $nl
+ * @var DropdownItem $de
+ * @var DropdownItem $id
+ * @var DropdownItem $it
+ * @var DropdownItem $ja
+ * @var DropdownItem $pl
+ * @var DropdownItem $ptBR
+ * @var DropdownItem $ru
+ * @var DropdownItem $sk
+ * @var DropdownItem $sl
+ * @var DropdownItem $es
+ * @var DropdownItem $uk
+ * @var DropdownItem $uz
+ * @var DropdownItem $vi
+ * @var DropdownItem $yoNG
+ * @var DropdownItem $zuZA
+ * @var string $currentLocaleFlag
+ * @var array<string,string> $localeFlags
  */
-
-$assetManager->register(AppAsset::class);
-$assetManager->register(InvoiceAsset::class);
-$assetManager->register(Yiisoft\Bootstrap5\Assets\BootstrapAsset::class);
-$s->getSetting('monospace_amounts') == 1 ? $assetManager->register(MonospaceAsset::class) : '';
-$assetManager->register(stripe_v10_Asset::class);
-$assetManager->register(amazon_pay_v2_7_Asset::class);
-$assetManager->register(braintree_dropin_1_33_7_Asset::class);
-// The InvoiceController/index receives the $session->get('_language') or 'drop-down' locale user selection and saves it into a setting called 'cldr'
-// The $s value is configured for the layout in config/params.php yii-soft/view Reference::to and NOT by means of the InvoiceController
-
-$locale = match ($currentRoute->getArgument('_language')) {
-    'af-ZA' => 'AfrikaansSouthAfrican',
-    'ar-BH' => 'ArabicBahrainian',
-    'az' => 'Azerbaijani',
-    'bs' => 'Bosnian',
-    'de' => 'German',
-    'en' => 'English',
-    'fil' => 'Filipino',
-    'fr' => 'French',
-    'id' => 'Indonesian',
-    'it' => 'Italian',
-    'ja' => 'Japanese',
-    'pl-PL' => 'Polish',
-    'pt-BR' => 'PortugeseBrazil',
-    'nl' => 'Dutch',
-    'ru' => 'Russian',
-    'sk' => 'Slovakian',
-    'sl' => 'Slovenian',
-    'es' => 'Spanish',
-    'uk' => 'Ukrainian',
-    'uz' => 'Uzbek',
-    'vi' => 'Vietnamese',
-    'zh-CN' => 'ChineseSimplified',
-    'zh-TW' => 'TiawaneseMandarin',
-    'zu-ZA' => 'ZuluSouthAfrican',
-    default   => 'English',
-};
+// Settings ... View ... General
+$assetManager->register($appCdnNotNodeModule ? AppCdn::class : AppNm::class);
+$assetManager->register($invCdnNotNodeModule ? InvCdn::class : InvNm::class);
+$assetManager->register($bootstrap5CdnNotNodeModule ? BsCdn::class : BsNm::class);
+$s->getSetting('monospace_amounts') == 1 ?
+        $assetManager->register(MonospaceAsset::class) : '';
+$assetManager->register(StripeVersionTenAsset::class);
+$assetManager->register(AmazonPayTwoSevenAsset::class);
+$assetManager->register(BraintreeDropInOneThirtyThreeSevenAsset::class);
 
 $this->addCssFiles($assetManager->getCssFiles());
 $this->addCssStrings($assetManager->getCssStrings());
@@ -89,45 +106,52 @@ $this->addJsFiles($assetManager->getJsFiles());
 
 $this->addJsStrings($assetManager->getJsStrings());
 $this->addJsVars($assetManager->getJsVars());
-
-$currentRouteName = $currentRoute->getName() ?? '';
-
-$isGuest = $user === null || $user->getId() === null;
+$t = $translator;
+$isGuest = $user === null || !($user->hasIdentity());
+$itemFontArray = [
+    'style' => 'font-size: ' . $bootstrap5LayoutGuestNavbarFontSize . 'px;'
+    . ' color: black;'];
 $this->beginPage();
 ?>
-
 <!DOCTYPE html>
-<html lang="<?= $currentRoute->getArgument('_language') ?? 'en'; ?>">
-<head>
-    <?= Meta::documentEncoding('utf-8')?>
-    <?= Meta::pragmaDirective('X-UA-Compatible', 'IE=edge,chrome=1') ?>
-    <?= Meta::data('viewport', 'width=device-width, initial-scale=1') ?>
-    <?= Meta::data('robots', 'NOINDEX,NOFOLLOW') ?>
-    <title>
-        <?= $s->getSetting('custom_title') ?: 'Yii-Invoice'; ?>
-    </title>
-    <?php $this->head() ?>
-</head>
-<body>
 <?php
-    Html::tag('Noscript', Html::tag('Div', $translator->translate('please.enable.js'), ['class' => 'alert alert-danger no-margin']));
-?>
-<header>
-<?php
+echo new TagHtml()->lang($currentRoute->getArgument('_language') ?? 'en');
+echo Html::openTag('head');
+echo Meta::documentEncoding('utf-8');
+echo Meta::data('viewport', 'width=device-width, initial-scale=1');
+ echo new Style()->content(
+    ':root {'
+    . ' --guest-nav-fs: ' . $bootstrap5LayoutGuestNavbarFontSize . 'px;'
+    . ' --guest-nav-ff: ' . $bootstrap5LayoutGuestNavbarFont . ';'
+    . ' --guest-input-height: ' . $bootstrap5FormInputHeight . 'px;'
+    . ' --guest-form-fs: ' . $bootstrap5FormFontSize . 'px;'
+    . ' }'
+  )->render();
+echo Meta::data('robots', 'NOINDEX,NOFOLLOW');
+echo new Title()->content($s->getSetting('custom_title') ?: 'Yii-Invoice');
+$this->head();
+echo Html::closeTag('head');
+echo Html::openTag('body');
+echo Html::tag('Noscript', Html::tag('div',
+    $t->translate('please.enable.js'),
+    ['class' => 'alert alert-danger no-margin']));
+echo Html::openTag('header');
 $this->beginBody();
-
 echo NavBar::widget()
     ->addAttributes([])
-    ->addClass('navbar navbar-light bg-light navbar-expand-sm text-white')
+    //->addClass('navbar navbar-light bg-light navbar-expand-sm text-white')
+    ->addClass('navbar bg-body-tertiary')
     ->brandImage($logoPath)
     ->brandImageAttributes(['margin' => $companyLogoMargin,
         'width' => $companyLogoWidth,
         'height' => $companyLogoHeight])
-    //->brandText(str_repeat('&nbsp;', 7).$brandLabel)
     ->brandUrl($urlGenerator->generate('site/index'))
-    ->class()
     ->container(false)
     ->containerAttributes([])
+    ->addCssStyle([
+      'font-size' => $bootstrap5LayoutGuestNavbarFontSize,
+      'font-family' => $bootstrap5LayoutGuestNavbarFont,
+    ])
     ->expand(NavBarExpand::LG)
     ->id('navbar')
     ->innerContainerAttributes(['class' => 'container-md'])
@@ -138,125 +162,139 @@ $currentPath = $currentRoute->getUri()?->getPath();
 if ((null !== $currentPath) && !$isGuest) {
     // Client
     echo Dropdown::widget()
-    ->addClass('navbar fs-4')
-    ->addAttributes([
-        'style' => 'font-size: 1rem; color: cornflowerblue;',
+    ->addClass('navbar')
+    ->addTogglerCssStyle([
+        'font-size' => $bootstrap5LayoutGuestNavbarFontSize . 'px',
+        'font-family' => $bootstrap5LayoutGuestNavbarFont,
     ])
     ->togglerVariant(ButtonVariant::INFO)
-    ->togglerContent($translator->translate('client'))
+    ->togglerContent($t->translate('client'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
-        DropdownItem::link($translator->translate('view'), $urlGenerator->generate('client/guest')),
+        DropdownItem::link($t->translate('view'),
+            $urlGenerator->generate('client/guest'),
+            itemAttributes: $itemFontArray),
     )
     ->render();
 
     // Quote
     echo Dropdown::widget()
-    ->addClass('navbar fs-4')
-    ->addAttributes([
-        'style' => 'font-size: 1rem; color: cornflowerblue;',
+    ->addClass('navbar')
+    ->addTogglerCssStyle([
+        'font-size' => $bootstrap5LayoutGuestNavbarFontSize . 'px',
+        'font-family' => $bootstrap5LayoutGuestNavbarFont,
     ])
     ->togglerVariant(ButtonVariant::INFO)
-    ->togglerContent($translator->translate('quote'))
+    ->togglerContent($t->translate('quote'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
-        DropdownItem::link($translator->translate('view'), $urlGenerator->generate('quote/guest')),
+        DropdownItem::link($t->translate('view'),
+            $urlGenerator->generate('quote/guest'),
+            itemAttributes: $itemFontArray),
     )
     ->render();
 
     // SalesOrder
     echo Dropdown::widget()
-    ->addClass('navbar fs-4')
-    ->addAttributes([
-        'style' => 'font-size: 1rem; color: cornflowerblue;',
+    ->addClass('navbar')
+    ->addTogglerCssStyle([
+        'font-size' => $bootstrap5LayoutGuestNavbarFontSize . 'px',
+        'font-family' => $bootstrap5LayoutGuestNavbarFont,
     ])
     ->togglerVariant(ButtonVariant::INFO)
-    ->togglerContent($translator->translate('salesorder'))
+    ->togglerContent($t->translate('salesorder'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
-        DropdownItem::link($translator->translate('view'), $urlGenerator->generate('salesorder/guest')),
+        DropdownItem::link($t->translate('view'),
+            $urlGenerator->generate('salesorder/guest'),
+            itemAttributes: $itemFontArray)
     )
     ->render();
 
     // Invoice
     echo Dropdown::widget()
-    ->addClass('navbar fs-4')
-    ->addAttributes([
-        'style' => 'font-size: 1rem; color: cornflowerblue;',
+    ->addClass('navbar')
+    ->addTogglerCssStyle([
+        'font-size' => $bootstrap5LayoutGuestNavbarFontSize . 'px',
+        'font-family' => $bootstrap5LayoutGuestNavbarFont,
     ])
     ->togglerVariant(ButtonVariant::INFO)
-    ->togglerContent($translator->translate('invoice'))
+    ->togglerContent($t->translate('invoice'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
-        DropdownItem::link($translator->translate('view'), $urlGenerator->generate('inv/guest')),
+        DropdownItem::link($t->translate('view'),
+            $urlGenerator->generate('inv/guest'),
+            itemAttributes: $itemFontArray),
     )
     ->render();
 
     // Payment
     echo Dropdown::widget()
-    ->addClass('navbar fs-4')
-    ->addAttributes([
-        'style' => 'font-size: 1rem; color: cornflowerblue;',
+    ->addClass('navbar')
+    ->addTogglerCssStyle([
+        'font-size' => $bootstrap5LayoutGuestNavbarFontSize . 'px',
+        'font-family' => $bootstrap5LayoutGuestNavbarFont,
     ])
     ->togglerVariant(ButtonVariant::INFO)
-    ->togglerContent((string) I::tag()->addClass('bi bi-coin') . ' ' . $translator->translate('payment'))
+    ->togglerContent((string)  new I()->addClass('bi bi-coin')
+            . ' ' . $t->translate('payment'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
-        DropdownItem::link($translator->translate('view'), $urlGenerator->generate('payment/guest')),
-        DropdownItem::link($translator->translate('online.log'), $urlGenerator->generate('payment/guest_online_log')),
+        DropdownItem::link($t->translate('view'),
+            $urlGenerator->generate('payment/guest'),
+            itemAttributes: $itemFontArray),
+        DropdownItem::link($t->translate('online.log'),
+            $urlGenerator->generate('payment/guestOnlineLog'),
+            itemAttributes: $itemFontArray),
     )
     ->render();
 
     // Settings
     echo Dropdown::widget()
-    ->addClass('navbar fs-4')
-    ->addAttributes([
-        'style' => 'font-size: 1rem;',
+    ->addClass('navbar')
+    ->addTogglerCssStyle([
+        'font-size' => $bootstrap5LayoutGuestNavbarFontSize . 'px',
+        'font-family' => $bootstrap5LayoutGuestNavbarFont,
     ])
     ->togglerVariant(ButtonVariant::INFO)
-    ->togglerContent((string) I::tag()->addClass('fa fa-cogs') . ' ' . $translator->translate('settings'))
+    ->togglerContent((string)  new I()->addClass('bi bi-gears')
+            . ' ' . $t->translate('settings'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
-        DropdownItem::link($translator->translate('view'), $urlGenerator->generate('userinv/guest')),
-        DropdownItem::link($translator->translate('password.change'), $urlGenerator->generate('auth/change')),
-        DropdownItem::link($translator->translate('email.log'), $urlGenerator->generate('invsentlog/guest')),
+        DropdownItem::link($t->translate('view'),
+            $urlGenerator->generate('userinv/guest'),
+            itemAttributes: $itemFontArray),
+        DropdownItem::link($t->translate('password.change'),
+            $urlGenerator->generate('auth/change'),
+            itemAttributes: $itemFontArray),
+        DropdownItem::link($t->translate('email.log'),
+            $urlGenerator->generate('invsentlog/guest'),
+            itemAttributes: $itemFontArray),
     )
     ->render();
     // Translate
     echo Dropdown::widget()
-    ->addClass('navbar fs4')
+    ->addClass('navbar')
     ->addAttributes([
-        'style' => 'font-size: 1rem; color: cornflowerblue;',
         'data-bs-toggle' => 'tooltip',
-        'title' => $translator->translate('language'),
+        'title' => $t->translate('language'),
         'url' => '#',
     ])
+    ->addTogglerCssStyle([
+        'font-size' => $bootstrap5LayoutGuestNavbarFontSize . 'px',
+        'font-family' => $bootstrap5LayoutGuestNavbarFont,
+    ])
     ->togglerVariant(ButtonVariant::INFO)
-    ->togglerContent(I::tag()->addClass('bi bi-translate'))
+    ->togglerContent($currentLocaleFlag
+            . ' '
+            . new I()->addClass('bi bi-translate'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
-        DropdownItem::link('Afrikaans South African', $urlGenerator->generateFromCurrent(['_language' => 'af-ZA'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Arabic Bahrainian/ عربي', $urlGenerator->generateFromCurrent(['_language' => 'ar-BH'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Azerbaijani / Azərbaycan', $urlGenerator->generateFromCurrent(['_language' => 'az'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Chinese Simplified / 简体中文', $urlGenerator->generateFromCurrent(['_language' => 'zh-CN'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Tiawanese Mandarin / 简体中文', $urlGenerator->generateFromCurrent(['_language' => 'zh-TW'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('English', $urlGenerator->generateFromCurrent(['_language' => 'en'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Filipino / Filipino', $urlGenerator->generateFromCurrent(['_language' => 'fil'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('French / Français', $urlGenerator->generateFromCurrent(['_language' => 'fr'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Dutch / Nederlands', $urlGenerator->generateFromCurrent(['_language' => 'nl'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('German / Deutsch', $urlGenerator->generateFromCurrent(['_language' => 'de'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Indonesian / bahasa Indonesia', $urlGenerator->generateFromCurrent(['_language' => 'id'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Italian / Italiano', $urlGenerator->generateFromCurrent(['_language' => 'it'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Japanese / 日本', $urlGenerator->generateFromCurrent(['_language' => 'ja'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Polish / Polski', $urlGenerator->generateFromCurrent(['_language' => 'pl'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Portugese Brazilian / Português Brasileiro', $urlGenerator->generateFromCurrent(['_language' => 'pt-BR'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Russian / Русский', $urlGenerator->generateFromCurrent(['_language' => 'ru'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Slovakian / Slovenský', $urlGenerator->generateFromCurrent(['_language' => 'sk'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Spanish /  Española x', $urlGenerator->generateFromCurrent(['_language' => 'es'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Ukrainian / українська', $urlGenerator->generateFromCurrent(['_language' => 'uk'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Uzbek / o' . "'" . 'zbek', $urlGenerator->generateFromCurrent(['_language' => 'uz'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Vietnamese / Tiếng Việt', $urlGenerator->generateFromCurrent(['_language' => 'vi'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Zulu South African/ Zulu South African', $urlGenerator->generateFromCurrent(['_language' => 'zu-ZA'], fallbackRouteName: 'site/index')),
+        // Related logic: config/web/params, src/ViewInjection/LayoutViewInjection
+        $afZA, $arBH, $az, $beBY, $bs, $zhCN, $zhTW, $en,
+        $fil, $fr, $gdGB, $haNG, $heIL, $igNG, $nl, $de,
+        $id, $it, $ja, $pl, $ptBR, $ru, $sk, $sl, $es,
+        $uk, $uz, $vi, $yoNG, $zuZA
     )->render();
 }
 
@@ -264,7 +302,7 @@ if (null !== $currentPath && $isGuest) {
     echo Nav::widget()
     ->items(
         NavLink::to(
-            Label::tag()
+             new Label()
             ->attributes([
                 'class' => 'bi bi-door-open-fill text-success',
             ])
@@ -275,12 +313,13 @@ if (null !== $currentPath && $isGuest) {
             false,
         ),
         NavLink::to(
-            Label::tag()
+             new Label()
             ->attributes(
                 [
                     'class' => 'bi bi-person-plus-fill',
                     'data-bs-toggle' => 'tooltip',
-                    'title' => str_repeat(' ', 1) . $translator->translate('setup.create.user'),
+                    'title' => str_repeat(' ', 1)
+                    . $t->translate('setup.create.user'),
                 ],
             ),
             $urlGenerator->generate('auth/signup'),
@@ -293,49 +332,50 @@ if (null !== $currentPath && $isGuest) {
 }
 
 if (!$isGuest) {
-    echo Form::tag()
+    echo  new Form()
     ->post($urlGenerator->generate('auth/logout'))
     ->csrf($csrf)
     ->open()
-    . '<div class="mb-1">'
-    . (string) Button::submit(null !== $user ? (string) preg_replace('/\d+/', '', $user->getLogin() . ' ' . $translator->translate('logout')) : '' . ' '
-        . $translator->translate('logout'))->class('btn btn-primary')
-    . '</div>'
-    . Form::tag()->close();
+    . Html::openTag('div')
+    . Button::submit(null !== $user ?
+        (new I())->addClass('bi bi-box-arrow-right me-1')->render()
+        . Html::encode((preg_replace('/\d+/', '', $user->getLogin()) ?? '')
+        . ' ' . $t->translate('logout')) :
+        (new I())->addClass('bi bi-box-arrow-right me-1')->render()
+        . ' ' . Html::encode($t->translate('logout')))
+        ->encode(false)
+        ->addClass('btn btn-outline-danger')
+        ->addStyle('font-size: '
+                . $bootstrap5LayoutGuestNavbarFontSize
+                . 'px; padding: '
+                . ((int) $bootstrap5LayoutGuestNavbarFontSize * 0.15)
+                . 'px '
+                . ((int) $bootstrap5LayoutGuestNavbarFontSize * 0.4) . 'px;')
+    . Html::closeTag('div')
+    . new Form()->close();
 }
 echo NavBar::end();
-?>    
-</header>
-<div id="main-area">
-    <main class="container py-4">        
-        <?php echo $content; ?>
-        <div id="fullpage-loader" style="display: none">
-            <div class="loader-content">
-                <i id="loader-icon" class="fa fa-cog fa-spin"></i>
-                <div id="loader-error" style="display: none">
-                   <br/>
-                    <a href="" class="btn btn-primary btn-sm" target="_blank">
-                        <i class="fa fa-support"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="text-right">
-                <button type="button" class="fullpage-loader-close btn btn-link tip" aria-label="<?php $translator->translate('close'); ?>"
-                        title="<?= $translator->translate('close'); ?>" data-placement="left">
-                    <span aria-hidden="true"><i class="fa fa-close"></i></span>
-                </button>
-            </div>
-        </div>
-    </main>
-</div>
-<footer class="container py-4">
-    <?= PerformanceMetrics::widget() ?>
-</footer> 
-    <?php
-        $this->endBody();
-?>
-</body>
-</html>
-<?php
-   $this->endPage();
-?>
+echo Html::closeTag('header');
+echo Html::openTag('div', ['id' => 'main-area']);
+  echo Html::openTag('main', ['class' => 'container-fluid py-4']);
+  echo $content;
+  echo Html::openTag('div', [
+    'id' => 'fullpage-loader',
+    'style' => 'display: none'
+   ]); //2
+   echo Html::openTag('div', ['class' => 'loader-content']); //3
+    echo new I()
+          ->addAttributes(['id' => 'loader-icon'])
+          ->addClass('bi bi-gear-fill')
+          ->render(); //4
+   echo Html::CloseTag('div'); //3
+  echo Html::closeTag('div'); //2
+ echo Html::closeTag('main');
+echo Html::closeTag('div');
+  echo Html::openTag('footer', ['class' => 'container-fluid py-4']); //2
+   echo PerformanceMetrics::widget(); //3
+  echo Html::closeTag('footer'); //2
+ $this->endBody();
+ echo Html::closeTag('body'); //1
+echo Html::closeTag('html');
+$this->endPage(true);

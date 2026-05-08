@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Invoice\InvItem;
 
 use App\Invoice\BaseController;
-use App\Invoice\Entity\InvItem;
-use App\Invoice\Entity\InvItemAmount;
-use App\Invoice\Entity\InvItemAllowanceCharge;
+use App\Infrastructure\Persistence\InvItem\InvItem;
+use App\Infrastructure\Persistence\InvItemAmount\InvItemAmount;
+use App\Infrastructure\Persistence\InvItemAllowanceCharge\InvItemAllowanceCharge;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\Product\ProductRepository as PR;
 use App\Invoice\Inv\InvRepository as IR;
@@ -30,7 +30,7 @@ use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 // Yii
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
@@ -39,7 +39,7 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class InvItemController extends BaseController
 {
@@ -52,11 +52,11 @@ final class InvItemController extends BaseController
         SR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->invitemService = $invitemService;
         $this->factory = $factory;
     }
@@ -67,10 +67,12 @@ final class InvItemController extends BaseController
      * @param PR $pR
      * @param UR $uR
      * @param TRR $trR
+     * @param IRR $irR
      * @param IIAR $iiar
-     * @return \Psr\Http\Message\ResponseInterface|\Yiisoft\DataResponse\DataResponse
+     * @param IIR $iiR
+     * @return \Psr\Http\Message\ResponseInterface|\Psr\Http\Message\ResponseInterface
      */
-    public function add_product(
+    public function addProduct(
         Request $request,
         FormHydrator $formHydrator,
         PR $pR,
@@ -78,14 +80,16 @@ final class InvItemController extends BaseController
         TRR $trR,
         IRR $irR,
         IIAR $iiar,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+        IIR $iiR,
+    ): \Psr\Http\Message\ResponseInterface {
         $inv_id = (string) $this->session->get('inv_id');
         $invitem = new InvItem();
-        $is_recurring = ($irR->repoCount((string) $this->session->get('inv_id')) > 0 ? true : false);
-        $form = new InvItemForm($invitem, (int) $inv_id);
+        $is_recurring = ($irR->repoCount((int) $this->session->get('inv_id')) > 0 ?
+            true : false);
+        $form = new InvItemForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
-            'actionName' => 'invitem/add_product',
+            'actionName' => 'invitem/addProduct',
             'errors' => [],
             'form' => $form,
             'inv_id' => $inv_id,
@@ -99,15 +103,20 @@ final class InvItemController extends BaseController
             $body = $request->getParsedBody() ?? [];
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 if (is_array($body)) {
-                    $this->invitemService->addInvItem_product($invitem, $body, $inv_id, $pR, $trR, new IIAS($iiar), $iiar, $this->sR, $uR);
-                    $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
-                    return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
+                    $this->invitemService->addInvItemProduct($invitem,
+                            $body, $inv_id, $pR, $trR,
+                            new IIAS($iiar, $iiR),  $iiar, $this->sR, $uR);
+                    $this->flashMessage('info',
+                        $this->translator->translate('record.successfully.created'));
+                    return $this->webService->getRedirectResponse('inv/view',
+                        ['id' => $inv_id]);
                 }
             }
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+            $parameters['errors'] =
+                $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_item_form_product', $parameters);
+        return $this->webViewRenderer->render('_item_form_product', $parameters);
     }
 
     /**
@@ -119,7 +128,7 @@ final class InvItemController extends BaseController
      * @param IRR $irR
      * @param IIAR $iiar
      */
-    public function add_task(
+    public function addTask(
         Request $request,
         FormHydrator $formHydrator,
         TaskR $taskR,
@@ -127,14 +136,15 @@ final class InvItemController extends BaseController
         TRR $trR,
         IRR $irR,
         IIAR $iiar,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+        IIR $iiR,
+    ): \Psr\Http\Message\ResponseInterface {
         $inv_id = (string) $this->session->get('inv_id');
         $invitem = new InvItem();
-        $is_recurring = ($irR->repoCount((string) $this->session->get('inv_id')) > 0 ? true : false);
-        $form = new InvItemForm($invitem, (int) $inv_id);
+        $is_recurring = ($irR->repoCount((int) $this->session->get('inv_id')) > 0 ? true : false);
+        $form = new InvItemForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
-            'actionName' => 'invitem/add_task',
+            'actionName' => 'invitem/addTask',
             'errors' => [],
             'form' => $form,
             'inv_id' => $inv_id,
@@ -149,7 +159,8 @@ final class InvItemController extends BaseController
             $body = $request->getParsedBody();
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 if (is_array($body)) {
-                    $this->invitemService->addInvItem_task($invitem, $body, $inv_id, $taskR, $trR, new IIAS($iiar), $iiar, $this->sR);
+                    $this->invitemService->addInvItemTask($invitem, $body,
+                            $inv_id, $taskR, $trR, new IIAS($iiar, $iiR), $iiar);
                     $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
                     return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                 }
@@ -157,15 +168,15 @@ final class InvItemController extends BaseController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->renderPartial('_item_form_task', $parameters);
+        return $this->webViewRenderer->renderPartial('_item_form_task', $parameters);
     }
 
     /**
-     * Used with function edit_product
+     * Used with function editProduct
      * @param EntityReader $inv_item_allowances_charges
      * @return float
      */
-    public function accumulative_allowances(EntityReader $inv_item_allowances_charges): float
+    public function accumulativeAllowances(EntityReader $inv_item_allowances_charges): float
     {
         $allowances = 0.00;
         /** @var InvItemAllowanceCharge $acii */
@@ -178,11 +189,11 @@ final class InvItemController extends BaseController
     }
 
     /**
-     * Used with function edit_product
+     * Used with function editProduct
      * @param EntityReader $inv_item_allowances_charges
      * @return float
      */
-    public function accumulative_charges(EntityReader $inv_item_allowances_charges): float
+    public function accumulativeCharges(EntityReader $inv_item_allowances_charges): float
     {
         $charges = 0.00;
         /** @var InvItemAllowanceCharge $acii */
@@ -213,9 +224,9 @@ final class InvItemController extends BaseController
      * @param ITRR $itrR
      * @param ACIR $aciR
      * @param ACIIR $aciiR
-     * @return \Psr\Http\Message\ResponseInterface|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface|\Psr\Http\Message\ResponseInterface
      */
-    public function edit_product(
+    public function editProduct(
         CurrentRoute $currentRoute,
         Request $request,
         FormHydrator $formHydrator,
@@ -232,20 +243,20 @@ final class InvItemController extends BaseController
         ITRR $itrR,
         ACIR $aciR,
         ACIIR $aciiR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
-        $inv_id = (string) $this->session->get('inv_id');
+    ): \Psr\Http\Message\ResponseInterface {
+        $inv_id = (int) $this->session->get('inv_id');
         $inv_item = $this->invitem($currentRoute, $iiR);
-        $is_recurring = ($irR->repoCount((string) $this->session->get('inv_id')) > 0 ? true : false);
+        $is_recurring = ($irR->repoCount($inv_id) > 0 ? true : false);
         if (null !== $inv_item) {
-            $form = new InvItemForm($inv_item, (int) $inv_id);
-            $inv_item_id = $inv_item->getId();
+            $form = InvItemForm::show($inv_item, $inv_id);
+            $inv_item_id = $inv_item->reqId();
             $this->session->set('inv_item_id', $inv_item_id);
             // How many allowances or charges does this specific item have?
-            $inv_item_allowances_charges_count = $aciiR->repoInvItemcount((string) $inv_item_id);
-            $inv_item_allowances_charges = $aciiR->repoInvItemquery((string) $inv_item_id);
+            $inv_item_allowances_charges_count = $aciiR->repoInvItemcount($inv_item_id);
+            $inv_item_allowances_charges = $aciiR->repoInvItemquery($inv_item_id);
             $parameters = [
                 'title' => $this->translator->translate('product.edit'),
-                'actionName' => 'invitem/edit_product',
+                'actionName' => 'invitem/editProduct',
                 'actionArguments' => ['id' => $currentRoute->getArgument('id')],
                 'addItemActionName' => 'invitemallowancecharge/add',
                 'addItemActionArguments' => ['inv_item_id' => $inv_item_id],
@@ -278,18 +289,18 @@ final class InvItemController extends BaseController
                     $discount = (float) ($body['discount_amount'] ?? 0.00);
                     // Goal: Accumulate all charges from invitemallowancecharge
                     // and save in invitemamount->charge
-                    $charge = $this->accumulative_charges($inv_item_allowances_charges) ?: 0.00;
+                    $charge = $this->accumulativeCharges($inv_item_allowances_charges) ?: 0.00;
                     // Goal: Accumulate all allowances from invitemallowancecharge
                     // and save in invitemamount->allowance
-                    $allowance = $this->accumulative_allowances($inv_item_allowances_charges) ?: 0.00;
+                    $allowance = $this->accumulativeAllowances($inv_item_allowances_charges) ?: 0.00;
                     if (is_array($body)) {
-                        $tax_rate_id = $this->invitemService->saveInvItem_product($inv_item, $body, $inv_id, $pR, $this->sR, $uR) ?: 1;
-                        $tax_rate_percentage = $this->taxrate_percentage($tax_rate_id, $trR);
+                        $tax_rate_id = $this->invitemService->saveInvItemProduct($inv_item, $body, (string) $inv_id, $pR, $uR) ?: 1;
+                        $tax_rate_percentage = $this->taxratePercentage($tax_rate_id, $trR);
                         if (null !== $tax_rate_percentage) {
                             /**
                              * @psalm-suppress PossiblyNullReference getId
                              */
-                            $request_inv_item = (int) $this->invitem($currentRoute, $iiR)->getId();
+                            $request_inv_item = $this->invitem($currentRoute, $iiR)->reqId();
                             $this->saveInvItemAmount(
                                 $request_inv_item,
                                 $quantity,
@@ -303,7 +314,7 @@ final class InvItemController extends BaseController
                                 $this->sR,
                             );
                             $numberHelper = new NumberHelper($this->sR);
-                            $numberHelper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
+                            $numberHelper->calculateInv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
                             $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
                             return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                         }
@@ -312,7 +323,7 @@ final class InvItemController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_item_edit_product', $parameters);
+            return $this->webViewRenderer->render('_item_edit_product', $parameters);
         }
         return $this->webService->getNotFoundResponse();
     }
@@ -322,9 +333,9 @@ final class InvItemController extends BaseController
      * @param TRR $trr
      * @return float|null
      */
-    public function taxrate_percentage(int $id, TRR $trr): ?float
+    public function taxratePercentage(int $id, TRR $trr): ?float
     {
-        $taxrate = $trr->repoTaxRatequery((string) $id);
+        $taxrate = $trr->repoTaxRatequery($id);
         if ($taxrate) {
             return $taxrate->getTaxRatePercent();
         }
@@ -375,10 +386,10 @@ final class InvItemController extends BaseController
         $iias_array['subtotal'] = $sub_total - $allowance_total + $charge_total;
         $iias_array['taxtotal'] = $tax_total;
         $iias_array['total'] = ($sub_total - $discount_total + $charge_total - $allowance_total + $tax_total);
-        if ($iiar->repoCount((string) $inv_item_id) === 0) {
+        if ($iiar->repoCount($inv_item_id) === 0) {
             $iias->saveInvItemAmountNoForm(new InvItemAmount(), $iias_array);
         } else {
-            $inv_item_amount = $iiar->repoInvItemAmountquery((string) $inv_item_id);
+            $inv_item_amount = $iiar->repoInvItemAmountquery($inv_item_id);
             if ($inv_item_amount) {
                 $iias->saveInvItemAmountNoForm($inv_item_amount, $iias_array);
             }
@@ -397,15 +408,14 @@ final class InvItemController extends BaseController
      * @param ITRR $itrR
      * @param PYMR $pymR
      * @param TRR $trR
-     * @param PR $pR
      * @param TaskR $taskR
      * @param UR $uR
      * @param IR $iR
      * @param IIAS $iias
      * @param IIAR $iiaR
-     * @return \Psr\Http\Message\ResponseInterface|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface|\Psr\Http\Message\ResponseInterface
      */
-    public function edit_task(
+    public function editTask(
         CurrentRoute $currentRoute,
         Request $request,
         FormHydrator $formHydrator,
@@ -422,15 +432,15 @@ final class InvItemController extends BaseController
         IR $iR,
         IIAS $iias,
         IIAR $iiaR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
-        $inv_id = (string) $this->session->get('inv_id');
+    ): \Psr\Http\Message\ResponseInterface {
+        $inv_id = (int) $this->session->get('inv_id');
         $inv_item = $this->invitem($currentRoute, $iiR);
         if ($inv_item) {
-            $is_recurring = ($irR->repoCount((string) $this->session->get('inv_id')) > 0 ? true : false);
-            $form = new InvItemForm($inv_item, (int) $inv_id);
+            $is_recurring = ($irR->repoCount($inv_id) > 0 ? true : false);
+            $form = InvItemForm::show($inv_item, $inv_id);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
-                'actionName' => 'invitem/edit_task',
+                'actionName' => 'invitem/editTask',
                 'actionArguments' => ['id' => $currentRoute->getArgument('id')],
                 'errors' => [],
                 // if null inv_item, initialize it => prevent psalm PossiblyNullArgument error
@@ -451,19 +461,19 @@ final class InvItemController extends BaseController
                     $discount = (float) ($body['discount_amount'] ?? 0.00);
                     // Goal: Accumulate all charges from invitemallowancecharge
                     // and save in invitemamount->charge
-                    $inv_item_allowances_charges = $aciiR->repoInvItemquery((string) $inv_item->getId());
-                    $charge = $this->accumulative_charges($inv_item_allowances_charges) ?: 0.00;
+                    $inv_item_allowances_charges = $aciiR->repoInvItemquery($inv_item->reqId());
+                    $charge = $this->accumulativeCharges($inv_item_allowances_charges) ?: 0.00;
                     // Goal: Accumulate all allowances from invitemallowancecharge
                     // and save in invitemamount->allowance
-                    $allowance = $this->accumulative_allowances($inv_item_allowances_charges) ?: 0.00;
+                    $allowance = $this->accumulativeAllowances($inv_item_allowances_charges) ?: 0.00;
                     if (is_array($body)) {
-                        $tax_rate_id = $this->invitemService->saveInvItem_task($inv_item, $body, $inv_id, $taskR, $this->sR) ?: 1;
-                        $tax_rate_percentage = $this->taxrate_percentage($tax_rate_id, $trR);
+                        $tax_rate_id = $this->invitemService->saveInvItemTask($inv_item, $body, (string) $inv_id, $taskR) ?: 1;
+                        $tax_rate_percentage = $this->taxratePercentage($tax_rate_id, $trR);
                         if (null !== $tax_rate_percentage) {
-                            $request_inv_item = (int) $inv_item->getId();
+                            $request_inv_item = $inv_item->reqId();
                             $this->saveInvItemAmount($request_inv_item, $quantity, $price, $discount, $charge, $allowance, $tax_rate_percentage, $iias, $iiaR, $this->sR);
                             $numberHelper = new NumberHelper($this->sR);
-                            $numberHelper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
+                            $numberHelper->calculateInv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
                             $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
                             return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                         }
@@ -472,33 +482,26 @@ final class InvItemController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_item_form_task', $parameters);
+            return $this->webViewRenderer->render('_item_form_task', $parameters);
         } // $inv_item
         return $this->webService->getNotFoundResponse();
     }
 
     /**
-     * @param CurrentRoute $currentRoute
+     * @param CurrentRoute $currR
      * @param IIR $iiR
      * @return InvItem|null
      */
-    private function invitem(CurrentRoute $currentRoute, IIR $iiR): ?InvItem
+    private function invitem(CurrentRoute $currR, IIR $iiR): ?InvItem
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            $invitem = $iiR->repoInvItemquery($id);
-            if ($invitem) {
-                return $invitem;
-            }
-        }
-        return null;
+        return $iiR->repoInvItemquery((int) $currR->getArgument('id'));
     }
 
     /**
      * @param Request $request
      * @param IIR $iiR
      */
-    public function multiple(Request $request, IIR $iiR): \Yiisoft\DataResponse\DataResponse
+    public function multiple(Request $request, IIR $iiR): \Psr\Http\Message\ResponseInterface
     {
         $select_items = $request->getQueryParams();
         $result = false;

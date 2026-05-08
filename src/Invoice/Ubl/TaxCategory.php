@@ -21,7 +21,10 @@ class TaxCategory implements XmlSerializable
     private string $taxExemptionReasonCode = '';
     public const string UNCL5305 = 'UNCL5305';
 
-    public function __construct(array $array, private readonly TaxScheme $taxScheme)
+    public function __construct(
+        array $array,
+        private readonly TaxScheme $taxScheme
+    )
     {
         /**
          * @var string $array['TaxCategory']
@@ -34,9 +37,9 @@ class TaxCategory implements XmlSerializable
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getId(): ?string
+    public function reqId(): ?string
     {
         if (null !== $this->id) {
             return $this->id;
@@ -47,8 +50,9 @@ class TaxCategory implements XmlSerializable
         if ($this->percent <= 21 && $this->percent >= 6) {
             return 'AA';
         }
-        return 'Z';
-
+        if ($this->percent == 0) {
+            return 'Z';
+        }
         return null;
     }
 
@@ -57,7 +61,7 @@ class TaxCategory implements XmlSerializable
      */
     public function validate(): void
     {
-        if ($this->getId() === null) {
+        if ($this->reqId() === null) {
             throw new InvalidArgumentException('Missing taxcategory id');
         }
 
@@ -77,14 +81,19 @@ class TaxCategory implements XmlSerializable
         $writer->write([
             [
                 'name' => Schema::CBC . 'ID',
-                'value' => $this->getId(),
+                'value' => $this->reqId(),
                 'attributes' => $this->idAttributes,
             ],
         ]);
-        $writer->write([Schema::CBC . 'Name' => $this->name]);
-        $writer->write([Schema::CBC . 'Percent' => number_format($this->percent, 2, '.', ''),]);
-        $writer->write([Schema::CBC . 'TaxExemptionReasonCode' => $this->taxExemptionReasonCode]);
-        $writer->write([Schema::CBC . 'TaxExemptionReason' => $this->taxExemptionReason]);
-        $writer->write([Schema::CAC . 'TaxScheme' => $this->taxScheme]);
+        $writer->write([Schema::CBC
+                . 'Name' => $this->name]);
+        $writer->write([Schema::CBC
+                . 'Percent' => number_format($this->percent, 2, '.', ''),]);
+        $writer->write([Schema::CBC
+                . 'TaxExemptionReasonCode' => $this->taxExemptionReasonCode]);
+        $writer->write([Schema::CBC
+                . 'TaxExemptionReason' => $this->taxExemptionReason]);
+        $writer->write([Schema::CAC
+                . 'TaxScheme' => $this->taxScheme]);
     }
 }

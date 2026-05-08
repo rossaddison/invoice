@@ -2,8 +2,13 @@
 
 declare(strict_types=1);
 
+/**
+ * @var int $fontSize
+ */
+
 ?>
 
+<div style="font-size: <?= $fontSize + 2 ?: 10; ?>px;">
 <p><b>How can I include https://github.com/rossaddison/yii-auth-client/blob/master/src/StateStorage/SessionStateStorage.php to improve the state management in the `callbackGithub` function?</b></p>
 
 <p>To include <code>SessionStateStorage</code> from the <code>yii-auth-client</code> repository and use it to improve the state management in the <code>callbackGithub</code> function, you should follow these steps:</p>
@@ -30,7 +35,7 @@ declare(strict_types=1);
     <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(
         private readonly AuthService $authService,
         private readonly WebControllerService $webService,
-        private ViewRenderer $viewRenderer,
+        private WebViewRenderer $webViewRenderer,
         private Manager $manager,
         private SessionInterface $session,
         private SettingRepository $sR,
@@ -45,7 +50,7 @@ declare(strict_types=1);
         private UrlGenerator $urlGenerator,
         SessionStateStorage $stateStorage
     )</span> </span>{
-        <span class="hljs-keyword">$this</span>-&gt;viewRenderer = $viewRenderer-&gt;withControllerName(<span class="hljs-string">'auth'</span>);
+        <span class="hljs-keyword">$this</span>-&gt;viewRenderer = $webViewRenderer-&gt;withControllerName(<span class="hljs-string">'auth'</span>);
         <span class="hljs-keyword">$this</span>-&gt;manager = $manager;
         <span class="hljs-keyword">$this</span>-&gt;session = $session;
         <span class="hljs-keyword">$this</span>-&gt;sR = $sR;
@@ -129,7 +134,7 @@ declare(strict_types=1);
             <span class="hljs-keyword">if</span> (<span class="hljs-keyword">$this</span>-&gt;authService-&gt;oauthLogin($login)) {
                 <span class="hljs-comment">// Handle existing user login</span>
                 $identity = <span class="hljs-keyword">$this</span>-&gt;authService-&gt;getIdentity();
-                $userId = $identity-&gt;getId();
+                $userId = $identity-&gt;reqId();
                 <span class="hljs-keyword">if</span> (<span class="hljs-keyword">null</span> !== $userId) {
                     $userInv = $uiR-&gt;repoUserInvUserIdquery($userId);
                     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">null</span> !== $userInv) {
@@ -148,7 +153,7 @@ declare(strict_types=1);
                 <span class="hljs-comment">// Handle new user registration</span>
                 $user = <span class="hljs-keyword">new</span> User($login, $email, $password);
                 $uR-&gt;save($user);
-                $userId = $user-&gt;getId();
+                $userId = $user-&gt;reqId();
                 <span class="hljs-keyword">if</span> ($userId &gt; <span class="hljs-number">0</span>) {
                     <span class="hljs-keyword">if</span> ($uR-&gt;repoCount() == <span class="hljs-number">1</span>) {
                         <span class="hljs-keyword">$this</span>-&gt;manager-&gt;revokeAll($userId);
@@ -187,3 +192,4 @@ declare(strict_types=1);
 <li><strong>Used <code>SessionStateStorage</code></strong> to store and retrieve the OAuth2 state.</li>
 <li><strong>Updated the <code>callbackGithub</code> function</strong> to use <code>SessionStateStorage</code> for state management, ensuring the state is correctly validated to prevent CSRF attacks.</li>
 </ol>
+</div>

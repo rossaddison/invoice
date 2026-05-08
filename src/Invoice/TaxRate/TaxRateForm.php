@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\TaxRate;
 
-use App\Invoice\Entity\TaxRate;
+use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
@@ -29,14 +29,16 @@ final class TaxRateForm extends FormModel
     #[Length(min: 0, max: 30, skipOnEmpty: true)]
     private ?string $storecove_tax_type = '';
 
-    public function __construct(TaxRate $taxRate)
+    public static function show(TaxRate $taxRate): self
     {
-        $this->tax_rate_name = $taxRate->getTaxRateName();
-        $this->tax_rate_percent = $taxRate->getTaxRatePercent();
-        $this->tax_rate_default = $taxRate->getTaxRateDefault();
-        $this->tax_rate_code = $taxRate->getTaxRateCode();
-        $this->peppol_tax_rate_code = $taxRate->getPeppolTaxRateCode();
-        $this->storecove_tax_type = $taxRate->getStorecoveTaxType();
+        $form = new self();
+        $form->tax_rate_name = $taxRate->getTaxRateName();
+        $form->tax_rate_percent = $taxRate->getTaxRatePercent();
+        $form->tax_rate_default = $taxRate->getTaxRateDefault();
+        $form->tax_rate_code = $taxRate->getTaxRateCode();
+        $form->peppol_tax_rate_code = $taxRate->getPeppolTaxRateCode();
+        $form->storecove_tax_type = $taxRate->getStorecoveTaxType();
+        return $form;
     }
 
     public function getTaxRateName(): ?string

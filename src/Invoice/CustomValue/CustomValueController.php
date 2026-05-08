@@ -6,7 +6,7 @@ namespace App\Invoice\CustomValue;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\CustomValue;
+use App\Infrastructure\Persistence\CustomValue\CustomValue;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\CustomField\CustomFieldForm;
 use App\Invoice\CustomField\CustomFieldRepository;
@@ -20,7 +20,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class CustomValueController extends BaseController
 {
@@ -32,11 +32,12 @@ final class CustomValueController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator,
+                $webViewRenderer, $session, $sR, $flash);
         $this->customValueService = $customValueService;
     }
 
@@ -48,41 +49,43 @@ final class CustomValueController extends BaseController
     public function index(CustomValueRepository $customvalueRepository, CustomFieldRepository $customfieldRepository): Response
     {
         $this->rbac();
-        $custom_field_id = (string) $this->session->get('custom_field_id');
-        $custom_values = $customvalueRepository->repoCustomFieldquery((int) $custom_field_id);
+        $custom_field_id = (int) $this->session->get('custom_field_id');
+        $custom_values = $customvalueRepository->repoCustomFieldquery($custom_field_id);
         $parameters = [
             'custom_field' => $customfieldRepository->repoCustomFieldquery($custom_field_id),
             'custom_field_id' => $custom_field_id,
             'custom_values' => $custom_values,
-            'custom_values_types' => array_merge($this->user_input_types(), $this->custom_value_fields()),
+            'custom_values_types' => array_merge($this->userInputTypes(), $this->customValueFields()),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
      * @param CustomFieldRepository $customfieldRepository
      * @param CustomValueRepository $customvalueRepository
      * @param CurrentRoute $currentRoute
-     * @param CustomValueService $service
      * @return Response
      */
-    public function field(CustomFieldRepository $customfieldRepository, CustomValueRepository $customvalueRepository, CurrentRoute $currentRoute, CustomValueService $service): Response
+    public function field(CustomFieldRepository $customfieldRepository,
+            CustomValueRepository $customvalueRepository,
+            CurrentRoute $currentRoute): Response
     {
         $this->rbac();
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            null !== ($this->session->get('custom_field_id')) ?: $this->session->set('custom_field_id', $id);
-            $custom_field = $customfieldRepository->repoCustomFieldquery($id);
+            null !== ($this->session->get('custom_field_id')) ?:
+                $this->session->set('custom_field_id', $id);
+            $custom_field = $customfieldRepository->repoCustomFieldquery((int) $id);
             $customvalues = $customvalueRepository->repoCustomFieldquery((int) $id);
             if ($custom_field) {
-                $field_form = new CustomFieldForm($custom_field);
+                $field_form = new CustomFieldForm();
                 $parameters = [
                     'field_form' => $field_form,
                     'custom_field' => $custom_field,
-                    'custom_values_types' => array_merge($this->user_input_types(), $this->custom_value_fields()),
+                    'custom_values_types' => array_merge($this->userInputTypes(), $this->customValueFields()),
                     'custom_values' => $customvalues,
                 ];
-                return $this->viewRenderer->render('field', $parameters);
+                return $this->webViewRenderer->render('field', $parameters);
             }
         }
         return $this->webService->getRedirectResponse('customvalue/index');
@@ -104,10 +107,11 @@ final class CustomValueController extends BaseController
         $field_id = $currentRoute->getArgument('id');
         if (null !== $field_id) {
             $this->session->set('custom_field_id', $field_id);
-            $custom_field = $custom_fieldRepository->repoCustomFieldquery($field_id);
+            $custom_field = 
+                $custom_fieldRepository->repoCustomFieldquery((int) $field_id);
             $custom_value = new CustomValue();
             if ($custom_field) {
-                $form = new CustomValueForm($custom_value);
+                $form = new CustomValueForm();
                 $parameters = [
                     'actionName' => 'customvalue/new',
                     'actionArguments' => ['id' => $field_id],
@@ -121,14 +125,17 @@ final class CustomValueController extends BaseController
                     $body = $request->getParsedBody() ?? [];
                     if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                         if (is_array($body)) {
-                            $this->customValueService->saveCustomValue($custom_value, $body);
-                            return $this->webService->getRedirectResponse('customvalue/field', ['id' => $field_id]);
+                            $this->customValueService->saveCustomValue(
+                                $custom_value, $body);
+                            return 
+                                $this->webService->getRedirectResponse(
+                                    'customvalue/field', ['id' => $field_id]);
                         }
                     }
                     $parameters['form'] = $form;
                     $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 }
-                return $this->viewRenderer->render('new', $parameters);
+                return $this->webViewRenderer->render('new', $parameters);
             }
         } //if custom_fiedl
         return $this->webService->getRedirectResponse('customvalue/index');
@@ -149,14 +156,14 @@ final class CustomValueController extends BaseController
         CustomValueRepository $customvalueRepository,
         CustomFieldRepository $custom_fieldRepository,
     ): Response {
-        $custom_field_id = (string) $this->session->get('custom_field_id');
+        $custom_field_id = (int) $this->session->get('custom_field_id');
         $custom_field = $custom_fieldRepository->repoCustomFieldquery($custom_field_id);
         $custom_value = $this->customvalue($currentRoute, $customvalueRepository);
         if ($custom_field && $custom_value) {
-            $form = new CustomValueForm($custom_value);
+            $form = new CustomValueForm();
             $parameters = [
                 'actionName' => 'customvalue/edit',
-                'actionArguments' => ['id' => $custom_value->getId()],
+                'actionArguments' => ['id' => $custom_value->reqId()],
                 'errors' => [],
                 'form' => $form,
                 'custom_field' => $custom_field,
@@ -167,13 +174,14 @@ final class CustomValueController extends BaseController
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     if (is_array($body)) {
                         $this->customValueService->saveCustomValue($custom_value, $body);
-                        return $this->webService->getRedirectResponse('customvalue/field', ['id' => $custom_field_id]);
+                        return $this->webService->getRedirectResponse(
+                            'customvalue/field', ['id' => $custom_field_id]);
                     }
                 }
                 $parameters['form'] = $form;
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             }
-            return $this->viewRenderer->render('edit', $parameters);
+            return $this->webViewRenderer->render('edit', $parameters);
         }
         return $this->webService->getRedirectResponse('customvalue/index');
     }
@@ -205,14 +213,14 @@ final class CustomValueController extends BaseController
     {
         $custom_value = $this->customvalue($currentRoute, $customvalueRepository);
         if ($custom_value) {
-            $form = new CustomValueForm($custom_value);
+            $form = new CustomValueForm();
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'customvalue/view',
-                'actionArguments' => ['id' => $custom_value->getId()],
+                'actionArguments' => ['id' => $custom_value->reqId()],
                 'form' => $form,
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('customvalue/index');
     }
@@ -220,6 +228,7 @@ final class CustomValueController extends BaseController
     /**
      * @return Response|true
      */
+    /** @psalm-suppress UnusedReturnValue */
     private function rbac(): bool|Response
     {
         $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
@@ -235,13 +244,12 @@ final class CustomValueController extends BaseController
      * @param CustomValueRepository $customvalueRepository
      * @return CustomValue|null
      */
-    private function customvalue(CurrentRoute $currentRoute, CustomValueRepository $customvalueRepository): ?CustomValue
+    private function customvalue(
+        CurrentRoute $currentRoute,
+        CustomValueRepository $customvalueRepository): ?CustomValue
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $customvalueRepository->repoCustomValuequery($id);
-        }
-        return null;
+        return $customvalueRepository->repoCustomValuequery(
+            (int) $currentRoute->getArgument('id'));
     }
 
     /**
@@ -249,7 +257,7 @@ final class CustomValueController extends BaseController
      *
      * @psalm-return list{'TEXT', 'DATE', 'BOOLEAN'}
      */
-    public function user_input_types(): array
+    public function userInputTypes(): array
     {
         return [
             'TEXT',
@@ -263,7 +271,7 @@ final class CustomValueController extends BaseController
      *
      * @psalm-return list{'SINGLE-CHOICE', 'MULTIPLE-CHOICE'}
      */
-    public function custom_value_fields(): array
+    public function customValueFields(): array
     {
         return [
             'SINGLE-CHOICE',

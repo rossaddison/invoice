@@ -1,116 +1,210 @@
 <?php
+
 declare(strict_types=1);
 
-use Yiisoft\Html\Html;
+use Yiisoft\Html\Html as H;
+use Yiisoft\Html\Tag\Option;
 
 /**
- * @var App\Invoice\Setting\SettingRepository $s
- * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var array $body
- */
-?>
-<?= Html::openTag('div', ['class' => 'row']); ?>
-    <div class="col-xs-12 col-md-8 col-md-offset-2">
+* @var App\Invoice\Setting\SettingRepository $s
+* @var Yiisoft\Translator\TranslatorInterface $translator
+* @var array $body
+*/
 
-        <div class="panel panel-default">
-            <div class="panel-heading" >
-                <h6><?= $translator->translate('mpdf') ?></h6>
-            </div>
-            <div class="panel-body">
+echo H::tag('style', ' label { font-weight: bold; } ');
+echo H::openTag('div', ['class' => 'row']); //1
+ echo H::openTag('div', ['class' => 'col-xs-12 col-md-8 col-md-offset-2']); //2
+  echo H::openTag('div', ['class' => 'panel panel-default']); //3
+   echo H::openTag('div', ['class' => 'panel-heading']); //4
+    echo H::openTag('h6');
+     echo $translator->translate('mpdf');
+    echo H::closeTag('h6');
+   echo H::closeTag('div'); //4
+   echo H::openTag('div', ['class' => 'panel-body']); //4
+    echo H::openTag('div', ['class' => 'row']); //5
+     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
 
-                <?= Html::openTag('div', ['class' => 'row']); ?>
-                    <div class="col-xs-12 col-md-6">
-                        <div class="form-group">
-                            <label for="settings[mpdf_ltr]" <?= $s->where('mpdf_ltr'); ?>>
-                                <?= $translator->translate('mpdf.ltr'); ?>
-                            </label>
-                            <?php $body['settings[mpdf_ltr]'] = $s->getSetting('mpdf_ltr');?>
-                            <select name="settings[mpdf_ltr]" id="settings[mpdf_ltr]"
-                                class="form-control">
-                                <option value="0" <?php $s->check_select($body['settings[mpdf_ltr]'], '0'); ?>><?= $translator->translate('no'); ?></option>
-                                <option value="1" <?php $s->check_select($body['settings[mpdf_ltr]'], '1'); ?>><?= $translator->translate('yes'); ?></option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="settings[mpdf_cjk]">
-                                <?= $translator->translate('mpdf.cjk'); ?>
-                            </label>
-                            <?php $body['settings[mpdf_cjk]'] = $s->getSetting('mpdf_cjk');?>
-                            <select name="settings[mpdf_cjk]" id="settings[mpdf_cjk]"
-                                class="form-control">
-                                <option value="0" <?php $s->check_select($body['settings[mpdf_cjk]'], '0'); ?>><?= $translator->translate('no'); ?></option>
-                                <option value="1" <?php $s->check_select($body['settings[mpdf_cjk]'], '1'); ?>><?= $translator->translate('yes'); ?></option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="settings[mpdf_auto_script_to_lang]">
-                                <?= $translator->translate('mpdf.auto.script.to.lang'); ?>
-                            </label>
-                            <?php $body['settings[mpdf_auto_script_to_lang]'] = $s->getSetting('mpdf_auto_script_to_lang');?>
-                            <select name="settings[mpdf_auto_script_to_lang]" id="settings[mpdf_auto_script_to_lang]"
-                                class="form-control">
-                                <option value="0" <?php $s->check_select($body['settings[mpdf_auto_script_to_lang]'], '0'); ?>><?= $translator->translate('no'); ?></option>
-                                <option value="1" <?php $s->check_select($body['settings[mpdf_auto_script_to_lang]'], '1'); ?>><?= $translator->translate('yes'); ?></option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="settings[mpdf_auto_vietnamese]">
-                                <?= $translator->translate('mpdf.auto.vietnamese'); ?>
-                            </label>
-                            <?php $body['settings[mpdf_auto_vietnamese]'] = $s->getSetting('mpdf_auto_vietnamese');?>
-                            <select name="settings[mpdf_auto_vietnamese]" id="settings[mpdf_auto_vietnamese]"
-                                class="form-control">
-                                <option value="0" <?php $s->check_select($body['settings[mpdf_auto_vietnamese]'], '0'); ?>><?= $translator->translate('no'); ?></option>
-                                <option value="1" <?php $s->check_select($body['settings[mpdf_auto_vietnamese]'], '1'); ?>><?= $translator->translate('yes'); ?></option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="settings[mpdf_allow_charset_conversion]">
-                                <?= $translator->translate('mpdf.allow.charset.conversion'); ?>
-                            </label>
-                            <?php $body['settings[mpdf_allow_charset_conversion]'] = $s->getSetting('mpdf_allow_charset_conversion');?>
-                            <select name="settings[mpdf_allow_charset_conversion]" id="settings[mpdf_allow_charset_conversion]"
-                                class="form-control">
-                                <option value="0" <?php $s->check_select($body['settings[mpdf_allow_charset_conversion]'], '0'); ?>><?= $translator->translate('no'); ?></option>
-                                <option value="1" <?php $s->check_select($body['settings[mpdf_allow_charset_conversion]'], '1'); ?>><?= $translator->translate('yes'); ?></option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="settings[mpdf_auto_arabic]">
-                                <?= $translator->translate('mpdf.auto.arabic'); ?>
-                            </label>
-                            <?php $body['settings[mpdf_auto_arabic]'] = $s->getSetting('mpdf_auto_arabic');?>
-                            <select name="settings[mpdf_auto_arabic]" id="settings[mpdf_auto_arabic]"
-                                class="form-control">
-                                <option value="0" <?php $s->check_select($body['settings[mpdf_auto_arabic]'], '0'); ?>><?= $translator->translate('no'); ?></option>
-                                <option value="1" <?php $s->check_select($body['settings[mpdf_auto_arabic]'], '1'); ?>><?= $translator->translate('yes'); ?></option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="settings[mpdf_auto_language_to_font]">
-                                <?= $translator->translate('mpdf.auto.language.to.font'); ?>
-                            </label>
-                            <?php $body['settings[mpdf_auto_language_to_font]'] = $s->getSetting('mpdf_auto_language_to_font');?>
-                            <select name="settings[mpdf_auto_language_to_font]" id="settings[mpdf_auto_language_to_font]"
-                                class="form-control">
-                                <option value="0" <?php $s->check_select($body['settings[mpdf_auto_language_to_font]'], '0'); ?>><?= $translator->translate('no'); ?></option>
-                                <option value="1" <?php $s->check_select($body['settings[mpdf_auto_language_to_font]'], '1'); ?>><?= $translator->translate('yes'); ?></option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="settings[mpdf_show_image_errors]">
-                                <?= $translator->translate('mpdf.show.image.errors'); ?>
-                            </label>
-                            <?php $body['settings[mpdf_show_image_errors]'] = $s->getSetting('mpdf_show_image_errors');?>
-                            <select name="settings[mpdf_show_image_errors]" id="settings[mpdf_show_image_errors]"
-                                class="form-control">
-                                <option value="0" <?php $s->check_select($body['settings[mpdf_show_image_errors]'], '0'); ?>><?= $translator->translate('no'); ?></option>
-                                <option value="1" <?php $s->check_select($body['settings[mpdf_show_image_errors]'], '1'); ?>><?= $translator->translate('yes'); ?></option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+      echo H::openTag('div', ['class' => 'form-group']); //7
+       $sml = 'settings[mpdf_ltr]';
+       echo H::openTag('label', ['for' => $sml]);
+        echo $translator->translate('mpdf.ltr');
+       echo H::closeTag('label');
+       $body[$sml] = $s->getSetting('mpdf_ltr');
+       echo H::openTag('select', [
+        'name' => $sml,
+        'id' => $sml,
+        'class' => 'form-control form-control-lg',
+       ]);
+        echo  new Option()
+         ->value('0')
+         ->selected($body[$sml] == '0')
+         ->content($translator->translate('no'));
+        echo  new Option()
+         ->value('1')
+         ->selected($body[$sml] == '1')
+         ->content($translator->translate('yes'));
+       echo H::closeTag('select');
+      echo H::closeTag('div'); //7
+
+      echo H::openTag('div', ['class' => 'form-group']); //7
+       $smc = 'settings[mpdf_cjk]';
+       echo H::openTag('label', ['for' => $smc]);
+        echo $translator->translate('mpdf.cjk');
+       echo H::closeTag('label');
+       $body[$smc] = $s->getSetting('mpdf_cjk');
+       echo H::openTag('select', [
+        'name' => $smc,
+        'id' => $smc,
+        'class' => 'form-control form-control-lg',
+       ]);
+        echo  new Option()
+         ->value('0')
+         ->selected($body[$smc] == '0')
+         ->content($translator->translate('no'));
+        echo  new Option()
+         ->value('1')
+         ->selected($body[$smc] == '1')
+         ->content($translator->translate('yes'));
+       echo H::closeTag('select');
+      echo H::closeTag('div'); //7
+
+      echo H::openTag('div', ['class' => 'form-group']); //7
+       $smas = 'settings[mpdf_auto_script_to_lang]';
+       echo H::openTag('label', ['for' => $smas]);
+        echo $translator->translate('mpdf.auto.script.to.lang');
+       echo H::closeTag('label');
+       $body[$smas] = $s->getSetting('mpdf_auto_script_to_lang');
+       echo H::openTag('select', [
+        'name' => $smas,
+        'id' => $smas,
+        'class' => 'form-control form-control-lg',
+       ]);
+        echo  new Option()
+         ->value('0')
+         ->selected($body[$smas] == '0')
+         ->content($translator->translate('no'));
+        echo  new Option()
+         ->value('1')
+         ->selected($body[$smas] == '1')
+         ->content($translator->translate('yes'));
+       echo H::closeTag('select');
+      echo H::closeTag('div'); //7
+
+      echo H::openTag('div', ['class' => 'form-group']); //7
+       $smav = 'settings[mpdf_auto_vietnamese]';
+       echo H::openTag('label', ['for' => $smav]);
+        echo $translator->translate('mpdf.auto.vietnamese');
+       echo H::closeTag('label');
+       $body[$smav] = $s->getSetting('mpdf_auto_vietnamese');
+       echo H::openTag('select', [
+        'name' => $smav,
+        'id' => $smav,
+        'class' => 'form-control form-control-lg',
+       ]);
+        echo  new Option()
+         ->value('0')
+         ->selected($body[$smav] == '0')
+         ->content($translator->translate('no'));
+        echo  new Option()
+         ->value('1')
+         ->selected($body[$smav] == '1')
+         ->content($translator->translate('yes'));
+       echo H::closeTag('select');
+      echo H::closeTag('div'); //7
+
+      echo H::openTag('div', ['class' => 'form-group']); //7
+       $smac = 'settings[mpdf_allow_charset_conversion]';
+       echo H::openTag('label', ['for' => $smac]);
+        echo $translator->translate(
+         'mpdf.allow.charset.conversion'
+        );
+       echo H::closeTag('label');
+       $body[$smac] = $s->getSetting('mpdf_allow_charset_conversion');
+       echo H::openTag('select', [
+        'name' => $smac,
+        'id' => $smac,
+        'class' => 'form-control form-control-lg',
+       ]);
+        echo  new Option()
+         ->value('0')
+         ->selected($body[$smac] == '0')
+         ->content($translator->translate('no'));
+        echo  new Option()
+         ->value('1')
+         ->selected($body[$smac] == '1')
+         ->content($translator->translate('yes'));
+       echo H::closeTag('select');
+      echo H::closeTag('div'); //7
+
+      echo H::openTag('div', ['class' => 'form-group']); //7
+       $smaa = 'settings[mpdf_auto_arabic]';
+       echo H::openTag('label', ['for' => $smaa]);
+        echo $translator->translate('mpdf.auto.arabic');
+       echo H::closeTag('label');
+       $body[$smaa] = $s->getSetting('mpdf_auto_arabic');
+       echo H::openTag('select', [
+        'name' => $smaa,
+        'id' => $smaa,
+        'class' => 'form-control form-control-lg',
+       ]);
+        echo  new Option()
+         ->value('0')
+         ->selected($body[$smaa] == '0')
+         ->content($translator->translate('no'));
+        echo  new Option()
+         ->value('1')
+         ->selected($body[$smaa] == '1')
+         ->content($translator->translate('yes'));
+       echo H::closeTag('select');
+      echo H::closeTag('div'); //7
+
+      echo H::openTag('div', ['class' => 'form-group']); //7
+       $smalf = 'settings[mpdf_auto_language_to_font]';
+       echo H::openTag('label', ['for' => $smalf]);
+        echo $translator->translate('mpdf.auto.language.to.font');
+       echo H::closeTag('label');
+       $body[$smalf] = $s->getSetting('mpdf_auto_language_to_font');
+       echo H::openTag('select', [
+        'name' => $smalf,
+        'id' => $smalf,
+        'class' => 'form-control form-control-lg',
+       ]);
+        echo  new Option()
+         ->value('0')
+         ->selected($body[$smalf] == '0')
+         ->content($translator->translate('no'));
+        echo  new Option()
+         ->value('1')
+         ->selected($body[$smalf] == '1')
+         ->content($translator->translate('yes'));
+       echo H::closeTag('select');
+      echo H::closeTag('div'); //7
+
+      echo H::openTag('div', ['class' => 'form-group']); //7
+       $smsie = 'settings[mpdf_show_image_errors]';
+       echo H::openTag('label', ['for' => $smsie]);
+        echo $translator->translate('mpdf.show.image.errors');
+       echo H::closeTag('label');
+       $body[$smsie] = $s->getSetting('mpdf_show_image_errors');
+       echo H::openTag('select', [
+        'name' => $smsie,
+        'id' => $smsie,
+        'class' => 'form-control form-control-lg',
+       ]);
+        echo  new Option()
+         ->value('0')
+         ->selected($body[$smsie] == '0')
+         ->content($translator->translate('no'));
+        echo  new Option()
+         ->value('1')
+         ->selected($body[$smsie] == '1')
+         ->content($translator->translate('yes'));
+       echo H::closeTag('select');
+      echo H::closeTag('div'); //7
+
+     echo H::closeTag('div'); //6
+    echo H::closeTag('div'); //5
+   echo H::closeTag('div'); //4
+  echo H::closeTag('div'); //3
+ echo H::closeTag('div'); //2
+echo H::closeTag('div'); //1

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\FromDropDown;
 
 use App\Invoice\BaseController;
-use App\Invoice\Entity\FromDropDown;
+use App\Infrastructure\Persistence\FromDropDown\FromDropDown;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
 use App\Service\WebControllerService;
@@ -19,12 +19,12 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Exception;
 
 final class FromDropDownController extends BaseController
 {
-    protected string $controllerName = 'invoice/fromdropdown';
+    protected string $controllerName = 'invoice/from';
 
     public function __construct(
         private FromDropDownService $fromService,
@@ -32,11 +32,11 @@ final class FromDropDownController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->fromService = $fromService;
     }
 
@@ -48,7 +48,7 @@ final class FromDropDownController extends BaseController
     public function add(Request $request, FormHydrator $formHydrator): Response
     {
         $entity = new FromDropDown();
-        $form = new FromDropDownForm($entity);
+        $form = new FromDropDownForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'from/add',
@@ -67,13 +67,12 @@ final class FromDropDownController extends BaseController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     public function index(CurrentRoute $currentRoute, FromDropDownRepository $fromRepository): Response
     {
         $page = (int) $currentRoute->getArgument('page', '1');
-        /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $from = $fromRepository->findAllPreloaded();
         $paginator = (new OffsetPaginator($from))
@@ -86,7 +85,7 @@ final class FromDropDownController extends BaseController
             'alert' => $this->alert(),
             'max' => (int) $this->sR->getSetting('default_list_limit'),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -103,12 +102,12 @@ final class FromDropDownController extends BaseController
             if ($from) {
                 $this->fromService->deleteFromDropDown($from);
                 $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
-                return $this->webService->getRedirectResponse('from/index');
+                return $this->webService->getRedirectResponse('index');
             }
-            return $this->webService->getRedirectResponse('from/index');
+            return $this->webService->getRedirectResponse('index');
         } catch (Exception $e) {
             $this->flashMessage('danger', $e->getMessage());
-            return $this->webService->getRedirectResponse('from/index');
+            return $this->webService->getRedirectResponse('index');
         }
     }
 
@@ -127,11 +126,11 @@ final class FromDropDownController extends BaseController
     ): Response {
         $from = $this->from($currentRoute, $fromRepository);
         if ($from) {
-            $form = new FromDropDownForm($from);
+            $form = FromDropDownForm::show($from);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'from/edit',
-                'actionArguments' => ['id' => $from->getId()],
+                'actionArguments' => ['id' => $from->reqId()],
                 'errors' => [],
                 'form' => $form,
             ];
@@ -140,31 +139,27 @@ final class FromDropDownController extends BaseController
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     if (is_array($body)) {
                         $this->fromService->saveFromDropDown($from, $body);
-                        return $this->webService->getRedirectResponse('from/index');
+                        return $this->webService->getRedirectResponse('index');
                     }
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
-        return $this->webService->getRedirectResponse('from/index');
+        return $this->webService->getRedirectResponse('index');
     }
 
     //For rbac refer to AccessChecker
 
     /**
-     * @param CurrentRoute $currentRoute
-     * @param FromDropDownRepository $fromRepository
+     * @param CurrentRoute $curR
+     * @param FromDropDownRepository $fR
      * @return FromDropDown|null
      */
-    private function from(CurrentRoute $currentRoute, FromDropDownRepository $fromRepository): ?FromDropDown
+    private function from(CurrentRoute $curR, FromDropDownRepository $fR): ?FromDropDown
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $fromRepository->repoFromDropDownLoadedquery($id);
-        }
-        return null;
+        return $fR->repoFromDropDownLoadedquery((int) $curR->getArgument('id'));
     }
 
     /**
@@ -180,23 +175,23 @@ final class FromDropDownController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param FromDropDownRepository $fromRepository
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function view(CurrentRoute $currentRoute, FromDropDownRepository $fromRepository): \Yiisoft\DataResponse\DataResponse|Response
+    public function view(CurrentRoute $currentRoute, FromDropDownRepository $fromRepository): \Psr\Http\Message\ResponseInterface
     {
         $from = $this->from($currentRoute, $fromRepository);
         if ($from) {
-            $form = new FromDropDownForm($from);
+            $form = FromDropDownForm::show($from);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'from/view',
-                'actionArguments' => ['id' => $from->getId()],
+                'actionArguments' => ['id' => $from->reqId()],
                 'errors' => [],
                 'form' => $form,
                 'from' => $from,
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
-        return $this->webService->getRedirectResponse('from/index');
+        return $this->webService->getRedirectResponse('index');
     }
 }

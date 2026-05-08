@@ -13,6 +13,7 @@ return [
             'edit.payment',
             'edit.user.inv',
             'edit.client.peppol',
+            'entry.to.base.controller',
         ],
     ],
     [
@@ -24,6 +25,7 @@ return [
             'view.inv',
             'view.payment',
             'edit.payment',
+            'entry.to.base.controller',
         ],
     ],
     [
@@ -36,6 +38,7 @@ return [
             'view.payment',
             'edit.user.inv',
             'edit.client.peppol',
+            'entry.to.base.controller',
         ],
     ],
     [
@@ -73,12 +76,6 @@ return [
         'type' => 'permission',
         'updated_at' => 1748873425,
         'created_at' => 1748873425,
-    ],
-    [
-        'name' => 'no.entry.to.base.controller',
-        'type' => 'permission',
-        'updated_at' => 1749663993,
-        'created_at' => 1749663993,
     ],
     [
         'name' => 'entry.to.base.controller',

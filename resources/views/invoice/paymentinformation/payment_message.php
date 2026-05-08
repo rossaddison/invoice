@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Yiisoft\Html\Tag\A;
+
 /**
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -15,13 +17,16 @@ declare(strict_types=1);
  * @var string $url_key
  */
 
-?> 
+?>
 
 <!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title><?php echo $heading; ?><?= $translator->translate('invoice'); ?></title>
+    <title>
+        <?php echo $heading; ?>
+        <?= $translator->translate('invoice'); ?>
+    </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
 
@@ -70,14 +75,26 @@ declare(strict_types=1);
 
     </style>
 </head>
-<body  
+<body>
 <h1><?php echo $heading; ?></h1>
 <?php echo $message; ?>
-<form method="POST" class="form-inline" action="<?= $urlGenerator->generate($url, ['url_key' => $url_key, 'gateway' => $gateway]); ?>">
-       <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-       <button type="submit" class="btn btn-lg btn-link"><i class="fa fa-arrow-left"></i></button>
-       <?php if ($s->getSetting('gateway_' . lcfirst($gateway) . '_sandbox') === '1') { ?>
-            <a href="<?= $sandbox_url; ?>"><?= $sandbox_url; ?></a>
-       <?php } ?>     
+<form method="POST"
+      class="form-inline"
+      action="<?= $urlGenerator->generate($url,
+              ['url_key' => $url_key, 'gateway' => $gateway]); ?>">
+       <input type="hidden"
+              name="_csrf"
+              value="<?= $csrf ?>">
+       <button type="submit"
+               class="btn btn-lg btn-link">
+               <i class="bi bi-arrow-left"></i>
+       </button>
+       <?php if ($s->getSetting('gateway_'
+               . lcfirst($gateway)
+               . '_sandbox') === '1') {
+                 new A()
+                ->href($sandbox_url)
+                ->content($sandbox_url)
+                ->render();
+       } ?>
 </form>
-

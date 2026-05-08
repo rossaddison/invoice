@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Group;
 
-use App\Invoice\Entity\Group;
+use App\Infrastructure\Persistence\Group\Group;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -84,17 +84,17 @@ final class GroupRepository extends Select\Repository
      * @param bool $set_next
      * @return mixed
      */
-    public function generate_number(int $id, bool $set_next = false): mixed
+    public function generateNumber(int $id, bool $set_next = false): mixed
     {
         /** @var Group $group */
-        $group = $this->repoGroupquery((string) $id);
-        $my_result = $this->parse_identifier_format(
-            (string) $group->getIdentifier_format(),
-            (int) $group->getNext_id(),
-            (int) $group->getLeft_pad(),
+        $group = $this->repoGroupquery($id);
+        $my_result = $this->parseIdentifierFormat(
+            (string) $group->getIdentifierFormat(),
+            (int) $group->getNextId(),
+            (int) $group->getLeftPad(),
         );
         if ($set_next) {
-            $this->set_next_number($id);
+            $this->setNextNumber($id);
         }
         if (!empty($my_result) && gettype($my_result)) {
             return $my_result;
@@ -108,10 +108,9 @@ final class GroupRepository extends Select\Repository
       * @param int $left_pad
       * @return string
       */
-    private function parse_identifier_format(string $identifier_format = '', int $next_id = 1, int $left_pad = 1): string
+    private function parseIdentifierFormat(string $identifier_format = '', int $next_id = 1, int $left_pad = 1): string
     {
         $template_vars = [];
-        $var = '';
         if (preg_match_all('/{{{([^{|}]*)}}}/', $identifier_format, $template_vars) > 0) {
             foreach ($template_vars[1] as $var) {
                 $replace = match ($var) {
@@ -134,14 +133,14 @@ final class GroupRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoGroupquery(string $id): ?Group
+    public function repoGroupquery(int $id): ?Group
     {
         $query = $this->select()
                       ->where(['id' => $id]);
         return  $query->fetchOne() ?: null;
     }
 
-    public function repoGroupcount(string $id): int
+    public function repoGroupcount(int $id): int
     {
         return $this->select()
                       ->where(['id' => $id])
@@ -156,14 +155,15 @@ final class GroupRepository extends Select\Repository
 
     /**
      * @param $id
+     * @psalm-suppress PossiblyUnusedReturnValue
      */
-    public function set_next_number(int $id): int
+    public function setNextNumber(int $id): int
     {
-        $result = $this->repoGroupquery((string) $id) ?: null;
+        $result = $this->repoGroupquery($id) ?: null;
         if (null !== $result) {
-            $current_id = $result->getNext_id();
-            $incremented_next_id = (int) $result->getNext_id() + 1;
-            $result->setNext_id($incremented_next_id);
+            $current_id = $result->getNextId();
+            $incremented_next_id = (int) $result->getNextId() + 1;
+            $result->setNextId($incremented_next_id);
             $this->save($result);
             return (int) $current_id;
         }
@@ -178,7 +178,7 @@ final class GroupRepository extends Select\Repository
          * @var Group $group
          */
         foreach ($groups as $group) {
-            $optionsData[$group->getId()] = $group->getName();
+            $optionsData[$group->reqId()] = $group->getName();
         }
         return $optionsData;
     }

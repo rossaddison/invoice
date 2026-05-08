@@ -22,7 +22,8 @@ final class RequestPasswordResetTokenForm extends FormModel implements RulesProv
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly UserRepository $userRepository,
-    ) {}
+    ) {
+    }
 
     /**
      * @return string[]

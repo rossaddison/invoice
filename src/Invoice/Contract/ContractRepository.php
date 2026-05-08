@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Contract;
 
-use App\Invoice\Entity\Contract;
+use App\Infrastructure\Persistence\Contract\Contract;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -88,10 +88,10 @@ final class ContractRepository extends Select\Repository
     }
 
     /**
-     * @param string $client_id
+     * @param int $client_id
      * @return int
      */
-    public function repoClientCount(string $client_id): int
+    public function repoClientCount(int $client_id): int
     {
         $query = $this->select()
                       ->where(['client_id' => $client_id]);
@@ -99,11 +99,11 @@ final class ContractRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @psalm-return TEntity|null
      * @return Contract|null
      */
-    public function repoContractquery(string $id): ?Contract
+    public function repoContractquery(int $id): ?Contract
     {
         $query = $this->select()
                       ->load('client')
@@ -112,10 +112,10 @@ final class ContractRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return int
      */
-    public function repoCount(string $id): int
+    public function repoCount(int $id): int
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -123,10 +123,10 @@ final class ContractRepository extends Select\Repository
     }
 
     /**
-     * @param string $client_id
+     * @param int $client_id
      * @return EntityReader
      */
-    public function repoClient(string $client_id): EntityReader
+    public function repoClient(int $client_id): EntityReader
     {
         $query = $this->select()
                       ->where(['client_id' => $client_id]);

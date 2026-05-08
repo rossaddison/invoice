@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\ProductProperty;
 
 use App\Invoice\BaseController;
-use App\Invoice\Entity\ProductProperty;
+use App\Infrastructure\Persistence\ProductProperty\ProductProperty;
 use App\Invoice\Product\ProductRepository;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
@@ -20,7 +20,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Exception;
 
 final class ProductPropertyController extends BaseController
@@ -33,11 +33,11 @@ final class ProductPropertyController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->productpropertyService = $productpropertyService;
     }
 
@@ -56,7 +56,7 @@ final class ProductPropertyController extends BaseController
     ): Response {
         $product_id = $currentRoute->getArgument('product_id');
         $productProperty = new ProductProperty();
-        $form = new ProductPropertyForm($productProperty, (int) $product_id);
+        $form = ProductPropertyForm::show($productProperty, (int) $product_id);
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'productproperty/add',
@@ -77,7 +77,7 @@ final class ProductPropertyController extends BaseController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -88,7 +88,6 @@ final class ProductPropertyController extends BaseController
     public function index(CurrentRoute $currentRoute, ProductPropertyRepository $productpropertyRepository): Response
     {
         $page = (int) $currentRoute->getArgument('page', '1');
-        /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $productproperty = $productpropertyRepository->findAllPreloaded();
         $paginator = (new OffsetPaginator($productproperty))
@@ -101,7 +100,7 @@ final class ProductPropertyController extends BaseController
             'alert' => $this->alert(),
             'max' => (int) $this->sR->getSetting('default_list_limit'),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -131,7 +130,7 @@ final class ProductPropertyController extends BaseController
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
-     * @param ProductPropertyRepository $productpropertyRepository
+     * @param ProductPropertyRepository $ppR
      * @param ProductRepository $productRepository
      * @return Response
      */
@@ -139,16 +138,17 @@ final class ProductPropertyController extends BaseController
         Request $request,
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
-        ProductPropertyRepository $productpropertyRepository,
+        ProductPropertyRepository $ppR,
         ProductRepository $productRepository,
     ): Response {
-        $productProperty = $this->productproperty($currentRoute, $productpropertyRepository);
+        $productProperty = $this->productproperty($currentRoute, $ppR);
         if ($productProperty) {
-            $form = new ProductPropertyForm($productProperty, (int) $productProperty->getProduct_id());
+            $form = ProductPropertyForm::show($productProperty,
+                $productProperty->reqProductId());
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'productproperty/edit',
-                'actionArguments' => ['id' => $productProperty->getProperty_id()],
+                'actionArguments' => ['id' => $productProperty->reqId()],
                 'errors' => [],
                 'form' => $form,
                 'products' => $productRepository->findAllPreloaded(),
@@ -164,7 +164,7 @@ final class ProductPropertyController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('productproperty/index');
     }
@@ -173,16 +173,15 @@ final class ProductPropertyController extends BaseController
 
     /**
      * @param CurrentRoute $currentRoute
-     * @param ProductPropertyRepository $productpropertyRepository
+     * @param ProductPropertyRepository $ppR
      * @return ProductProperty|null
      */
-    private function productproperty(CurrentRoute $currentRoute, ProductPropertyRepository $productpropertyRepository): ?ProductProperty
+    private function productproperty(
+        CurrentRoute $currentRoute,
+        ProductPropertyRepository $ppR): ?ProductProperty
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $productpropertyRepository->repoProductPropertyLoadedquery($id);
-        }
-        return null;
+        return $ppR->repoProductPropertyLoadedquery(
+            (int) $currentRoute->getArgument('id'));
     }
 
     /**
@@ -198,21 +197,23 @@ final class ProductPropertyController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param ProductPropertyRepository $productpropertyRepository
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function view(CurrentRoute $currentRoute, ProductPropertyRepository $productpropertyRepository): \Yiisoft\DataResponse\DataResponse|Response
+    public function view(CurrentRoute $currentRoute, ProductPropertyRepository $productpropertyRepository): \Psr\Http\Message\ResponseInterface
     {
-        $productProperty = $this->productproperty($currentRoute, $productpropertyRepository);
+        $productProperty = $this->productproperty($currentRoute,
+            $productpropertyRepository);
         if ($productProperty) {
-            $form = new ProductPropertyForm($productProperty, (int) $productProperty->getProduct_id());
+            $form = ProductPropertyForm::show($productProperty,
+                $productProperty->reqProductId());
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'productproperty/view',
-                'actionArguments' => ['id' => $productProperty->getProperty_id()],
+                'actionArguments' => ['id' => $productProperty->reqId()],
                 'form' => $form,
                 'productproperty' => $productProperty,
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('productproperty/index');
     }

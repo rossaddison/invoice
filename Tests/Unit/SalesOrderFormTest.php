@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\SalesOrder;
 
-use App\Invoice\Entity\SalesOrder;
-use App\Invoice\Entity\Client;
-use App\Invoice\Entity\Group;
+use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
+use App\Infrastructure\Persistence\Client\Client;
+use App\Infrastructure\Persistence\Group\Group;
 use App\Invoice\SalesOrder\SalesOrderForm;
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Validator\Validator;
 use Yiisoft\Validator\ValidatorInterface;
@@ -221,7 +221,6 @@ final class SalesOrderFormTest extends TestCase
         $form = $this->createFormWithData([
             'status_id' => 5, // Valid range
             'discount_amount' => 999.99, // Valid amount
-            'discount_percent' => 25.5, // Valid percentage
             'client_id' => 1,
             'group_id' => 1,
             'quote_id' => '1'
@@ -240,17 +239,6 @@ final class SalesOrderFormTest extends TestCase
         
         $result = $this->validator->validate($form);
         $this->assertFalse($result->isValid(), 'status_id should fail validation outside range 1-9');
-        
-        // Test invalid discount_percent (over 100)
-        $form = $this->createFormWithData([
-            'discount_percent' => 101.0, // Over 100%
-            'client_id' => 1,
-            'group_id' => 1,
-            'quote_id' => '1'
-        ]);
-        
-        $result = $this->validator->validate($form);
-        $this->assertFalse($result->isValid(), 'discount_percent should fail validation over 100%');
     }
 
     /**
@@ -281,15 +269,15 @@ final class SalesOrderFormTest extends TestCase
      */
     public function testFormInitializationFromEntity(): void
     {
-        $form = new SalesOrderForm($this->salesOrder);
+        $form = SalesOrderForm::show($this->salesOrder);
         
         $this->assertEquals('SO-001', $form->getNumber());
         $this->assertEquals('Test sales order notes', $form->getNotes());
         $this->assertEquals('Net 30 days', $form->getPaymentTerm());
-        $this->assertEquals(1, $form->getClient_id());
-        $this->assertEquals(1, $form->getGroup_id());
-        $this->assertEquals('1', $form->getQuote_id());
-        $this->assertEquals('PO12345', $form->getClient_po_number());
+        $this->assertEquals(1, $form->getClientId());
+        $this->assertEquals(1, $form->getGroupId());
+        $this->assertEquals('1', $form->getQuoteId());
+        $this->assertEquals('PO12345', $form->getClientPoNumber());
     }
 
     /**
@@ -325,18 +313,17 @@ final class SalesOrderFormTest extends TestCase
         $now = new DateTimeImmutable();
         
         $salesOrder->method('getNumber')->willReturn('SO-001');
-        $salesOrder->method('getDate_created')->willReturn($now);
-        $salesOrder->method('getQuote_id')->willReturn('1');
-        $salesOrder->method('getInv_id')->willReturn('1');
-        $salesOrder->method('getGroup_id')->willReturn('1');
-        $salesOrder->method('getClient_id')->willReturn('1');
-        $salesOrder->method('getClient_po_number')->willReturn('PO12345');
-        $salesOrder->method('getClient_po_line_number')->willReturn('LN001');
-        $salesOrder->method('getClient_po_person')->willReturn('John Doe');
-        $salesOrder->method('getStatus_id')->willReturn(1);
-        $salesOrder->method('getDiscount_amount')->willReturn(50.0);
-        $salesOrder->method('getDiscount_percent')->willReturn(5.0);
-        $salesOrder->method('getUrl_key')->willReturn('test-so-key');
+        $salesOrder->method('getDateCreated')->willReturn($now);
+        $salesOrder->method('reqQuoteId')->willReturn(1);
+        $salesOrder->method('reqInvId')->willReturn(1);
+        $salesOrder->method('reqGroupId')->willReturn(1);
+        $salesOrder->method('reqClientId')->willReturn(1);
+        $salesOrder->method('getClientPoNumber')->willReturn('PO12345');
+        $salesOrder->method('getClientPoLineNumber')->willReturn('LN001');
+        $salesOrder->method('getClientPoPerson')->willReturn('John Doe');
+        $salesOrder->method('getStatusId')->willReturn(1);
+        $salesOrder->method('getDiscountAmount')->willReturn(50.0);
+        $salesOrder->method('getUrlKey')->willReturn('test-so-key');
         $salesOrder->method('getPassword')->willReturn('so-password');
         $salesOrder->method('getNotes')->willReturn('Test sales order notes');
         $salesOrder->method('getPaymentTerm')->willReturn('Net 30 days');
@@ -353,7 +340,7 @@ final class SalesOrderFormTest extends TestCase
     private function createFormWithData(array $data): SalesOrderForm
     {
         $salesOrder = $this->createMockSalesOrder();
-        $form = new SalesOrderForm($salesOrder);
+        $form = SalesOrderForm::show($salesOrder);
         
         // Use reflection to set properties for testing
         $reflection = new \ReflectionClass($form);

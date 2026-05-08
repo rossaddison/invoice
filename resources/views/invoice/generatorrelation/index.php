@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\GentorRelation;
+use App\Infrastructure\Persistence\GentorRelation\GentorRelation;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -24,12 +24,12 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $csrf
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$toolbarReset = A::tag()
+$toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'gentorrelation/index'))
     ->id('btn-reset')
     ->render();
@@ -38,23 +38,23 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(GentorRelation $model) => Html::encode($model->getRelation_id()),
+        content: static fn(GentorRelation $model) => Html::encode($model->reqRelationId()),
     ),
     new DataColumn(
         'lowercasename',
         header: $translator->translate('generator.relation.form.lowercase.name'),
-        content: static fn(GentorRelation $model) => Html::encode($model->getLowercase_name()),
+        content: static fn(GentorRelation $model) => Html::encode($model->getLowercaseName()),
     ),
     new DataColumn(
         'camelcasename',
         header: $translator->translate('generator.relation.form.camelcase.name'),
-        content: static fn(GentorRelation $model) => Html::encode($model->getCamelcase_name()),
+        content: static fn(GentorRelation $model) => Html::encode($model->getCamelcaseName()),
     ),
     new ActionColumn(buttons: [
         new ActionButton(
             content: '🔎',
             url: static function (GentorRelation $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('generatorrelation/view', ['id' => $model->getRelation_id()]);
+                return $urlGenerator->generate('generatorrelation/view', ['id' => $model->reqRelationId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -64,7 +64,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (GentorRelation $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('generatorrelation/edit', ['id' => $model->getRelation_id()]);
+                return $urlGenerator->generate('generatorrelation/edit', ['id' => $model->reqRelationId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -74,7 +74,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (GentorRelation $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('generatorrelation/delete', ['id' => $model->getRelation_id()]);
+                return $urlGenerator->generate('generatorrelation/delete', ['id' => $model->reqRelationId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),
@@ -85,16 +85,16 @@ $columns = [
 ];
             
 $toolbarString =
-    Form::tag()->post($urlGenerator->generate('generatorrelation/index'))->csrf($csrf)->open() .
-    A::tag()
+     new Form()->post($urlGenerator->generate('generatorrelation/index'))->csrf($csrf)->open() .
+     new A()
     ->href($urlGenerator->generate('generatorrelation/add'))
     ->addClass('btn btn-info')
     ->content('➕')
     ->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+     new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+     new Form()->close();
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -112,7 +112,7 @@ echo GridView::widget()
 ->id('w73-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($grid_summary)
+->summaryTemplate($gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

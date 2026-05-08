@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Merchant;
+use App\Infrastructure\Persistence\Merchant\Merchant;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -26,12 +26,12 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $csrf
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$toolbarReset = A::tag()
+$toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'merchant/index'))
     ->id('btn-reset')
     ->render();
@@ -40,38 +40,38 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Merchant $model) => Html::encode($model->getId()),
+        content: static fn (Merchant $model) => Html::encode($model->reqId()),
     ),
     new DataColumn(
         'inv',
         header: $translator->translate('invoice'),
-        content: static fn(Merchant $model): string => Html::encode($model->getInv()?->getNumber()),
+        content: static fn (Merchant $model): string => Html::encode($model->getInv()?->getNumber()),
     ),
     new DataColumn(
         'date',
         header: $translator->translate('date'),
-        content: static fn(Merchant $model): string => Html::encode(!is_string($date = $model->getDate()) ? $date->format('Y-m-d') : ''),
+        content: static fn (Merchant $model): string => Html::encode(!is_string($date = $model->getDate()) ? $date->format('Y-m-d') : ''),
     ),
     new DataColumn(
         'driver',
         header: $translator->translate('merchant.driver'),
-        content: static fn(Merchant $model): string => Html::encode($model->getDriver()),
+        content: static fn (Merchant $model): string => Html::encode($model->getDriver()),
     ),
     new DataColumn(
         'response',
         header: $translator->translate('merchant.response'),
-        content: static fn(Merchant $model): string => Html::encode($model->getResponse()),
+        content: static fn (Merchant $model): string => Html::encode($model->getResponse()),
     ),
     new DataColumn(
         'reference',
         header: $translator->translate('merchant.reference'),
-        content: static fn(Merchant $model): string => Html::encode($model->getReference()),
+        content: static fn (Merchant $model): string => Html::encode($model->getReference()),
     ),
     new ActionColumn(buttons: [
         new ActionButton(
             content: '🔎',
             url: static function (Merchant $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('merchant/view', ['id' => $model->getId()]);
+                return $urlGenerator->generate('merchant/view', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -81,7 +81,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (Merchant $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('merchant/edit', ['id' => $model->getId()]);
+                return $urlGenerator->generate('merchant/edit', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -91,7 +91,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (Merchant $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('merchant/delete', ['id' => $model->getId()]);
+                return $urlGenerator->generate('merchant/delete', ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),
@@ -101,7 +101,7 @@ $columns = [
     ]),
 ];
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -109,14 +109,14 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('merchant/index'))->csrf($csrf)->open()
-    . A::tag()
+$toolbarString =  new Form()->post($urlGenerator->generate('merchant/index'))->csrf($csrf)->open()
+    .  new A()
     ->href($urlGenerator->generate('merchant/add'))
     ->addClass('btn btn-info')
     ->content('➕')
     ->render()
-    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-    . Form::tag()->close();
+    .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    .  new Form()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
@@ -128,7 +128,7 @@ echo GridView::widget()
 ->id('w144-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($grid_summary)
+->summaryTemplate($gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

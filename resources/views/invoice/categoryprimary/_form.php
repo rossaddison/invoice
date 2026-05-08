@@ -23,15 +23,15 @@ use Yiisoft\Html\Tag\Form;
 ?><?= Html::openTag('h1'); ?>
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-    <?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-        <?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+    <?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+        <?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
             <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
                 <?= Html::openTag('div', ['class' => 'card-header']); ?>
                     <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
                         <?= $translator->translate('add'); ?>
                     <?= Html::closeTag('h1'); ?>
-                    <?= Form::tag()->post($urlGenerator->generate($actionName, $actionArguments))->enctypeMultipartFormData()->csrf($csrf)->id('CategoryPrimaryForm')->open();?>
+                    <?=  new Form()->post($urlGenerator->generate($actionName, $actionArguments))->enctypeMultipartFormData()->csrf($csrf)->id('CategoryPrimaryForm')->open();?>
                         <?= $button::backSave(); ?>
                         <?= Html::openTag('div', ['class' => 'container']); ?>
                             <?= Html::openTag('div', ['class' => 'row']); ?>
@@ -44,15 +44,15 @@ use Yiisoft\Html\Tag\Form;
                                             <?= Field::text($form, 'name')
                                                 ->label($translator->translate('name'))
                                                 ->addInputAttributes([
-                                                    'class' => 'form-control',
+                                                    'class' => 'form-control form-control-lg',
                                                 ])
                                                 ->value(Html::encode($form->getname()))
                                                 ->placeholder($translator->translate('name')); ?>
                                         <?= Html::closeTag('div'); ?>
-                                   <?= Html::closeTag('div'); ?>     
+                                   <?= Html::closeTag('div'); ?>
                                 <?= Html::closeTag('div'); ?>
                             <?= Html::closeTag('div'); ?>
-                        <?= Html::closeTag('div'); ?>    
+                        <?= Html::closeTag('div'); ?>
                     <?= Html::closeTag('form'); ?>
                <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>

@@ -4,40 +4,36 @@ declare(strict_types=1);
 
 namespace App\Invoice\CustomValue;
 
-use App\Invoice\Entity\CustomField;
-use App\Invoice\Entity\CustomValue;
+use App\Infrastructure\Persistence\{
+    CustomField\CustomField,
+    CustomValue\CustomValue
+};
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class CustomValueForm extends FormModel
 {
     #[Required]
-    private ?int $id = null;
-    #[Required]
     private ?int $custom_field_id = null;
     #[Required]
     private ?string $value = '';
     /**
-     * Related logic: see App\Invoice\Entity\CustomValue
+     * Related logic: see App\Infrastructure\Persistence\CustomValue\CustomValue
             #[BelongsTo(target: CustomField::class, nullable: false, fkAction:'NO ACTION')]
             private ?CustomField $custom_field = null;
      */
     private ?CustomField $customfield = null;
 
-    public function __construct(CustomValue $custom_value)
+    public static function show(CustomValue $custom_value): self
     {
-        $this->id = (int) $custom_value->getId();
-        $this->custom_field_id = $custom_value->getCustom_field_id();
-        $this->value = $custom_value->getValue();
-        $this->customfield = $custom_value->getCustomField();
+        $form = new self();
+        $form->custom_field_id = $custom_value->reqCustomFieldId();
+        $form->value = $custom_value->getValue();
+        $form->customfield = $custom_value->getCustomField();
+        return $form;
     }
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getCustom_field_id(): ?int
+    
+    public function getCustomFieldId(): ?int
     {
         return $this->custom_field_id;
     }

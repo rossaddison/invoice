@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv;
 
-use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\Client;
+use App\Infrastructure\Persistence\{
+    Client\Client, Inv\Inv
+};
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
@@ -13,7 +14,6 @@ use DateTimeImmutable;
 
 final class InvForm extends FormModel
 {
-    private ?string $id = '';
     #[Length(min: 0, max: 100, skipOnEmpty: true)]
     private ?string $number = '';
     private mixed $date_created = '';
@@ -26,16 +26,16 @@ final class InvForm extends FormModel
     // stand_in_code/description_code
     #[Length(min: 0, max: 3, skipOnEmpty: true)]
     private ?string $stand_in_code = '';
-    private ?string $quote_id = '';
+    private ?int $quote_id = null;
     private ?Client $client = null;
 
     #[Required]
-    private ?string $group_id = '';
+    private ?int $group_id = null;
 
     #[Required]
-    private ?string $client_id = '';
+    private ?int $client_id = null;
 
-    private ?string $so_id = '';
+    private ?int $so_id = null;
     private ?int $creditinvoice_parent_id = null;
     private ?int $delivery_id = null;
     private ?int $delivery_location_id = null;
@@ -53,50 +53,45 @@ final class InvForm extends FormModel
     private ?string $note = '';
     #[Length(min: 0, max: 32, skipOnEmpty: true)]
     private ?string $document_description = '';
-    private readonly bool $is_read_only;
+    private bool $is_read_only = false;
     private mixed $time_created = '';
 
-    public function __construct(Inv $inv)
+    public static function show(Inv $inv): self
     {
-        $this->id = $inv->getId();
-        $this->date_created = $inv->getDate_created();
-        $this->date_modified = $inv->getDate_modified();
-        $this->client_id = $inv->getClient_id();
-        $this->group_id = $inv->getGroup_id();
-        $this->status_id = $inv->getStatus_id();
-        $this->contract_id = (int) $inv->getContract_id();
-        $this->delivery_id = (int) $inv->getDelivery_id();
-        $this->delivery_location_id = (int) $inv->getDelivery_location_id();
-        $this->postal_address_id = (int) $inv->getPostal_address_id();
-        $this->so_id = $inv->getSo_id();
-        $this->quote_id = $inv->getQuote_id();
-        $this->is_read_only = $inv->getIs_read_only();
-        $this->password = $inv->getPassword();
-        $this->time_created = $inv->getTime_created();
-        $this->date_tax_point = $inv->getDate_tax_point();
-        $this->stand_in_code = $inv->getStand_in_code();
-        $this->date_supplied = $inv->getDate_supplied();
-        $this->date_due = $inv->getDate_due();
-        $this->number = $inv->getNumber();
-        $this->discount_amount = $inv->getDiscount_amount();
-        $this->discount_percent = $inv->getDiscount_percent();
-        $this->terms = $inv->getTerms();
-        $this->note = $inv->getNote();
-        $this->document_description = $inv->getDocumentDescription();
-        $this->url_key = $inv->getUrl_key();
-        $this->payment_method = $inv->getPayment_method();
-        $this->creditinvoice_parent_id = (int) $inv->getCreditinvoice_parent_id();
+        $form = new self();
+        $form->date_created = $inv->getDateCreated();
+        $form->date_modified = $inv->getDateModified();
+        $form->client_id = $inv->reqClientId();
+        $form->group_id = $inv->reqGroupId();
+        $form->status_id = $inv->reqStatusId();
+        $form->contract_id = $inv->getContractId();
+        $form->delivery_id = (int) $inv->getDeliveryId();
+        $form->delivery_location_id = (int) $inv->getDeliveryLocationId();
+        $form->postal_address_id = (int) $inv->getPostalAddressId();
+        $form->so_id = $inv->getSoId();
+        $form->quote_id = $inv->getQuoteId();
+        $form->is_read_only = $inv->getIsReadOnly();
+        $form->password = $inv->getPassword();
+        $form->time_created = $inv->getTimeCreated();
+        $form->date_tax_point = $inv->getDateTaxPoint();
+        $form->stand_in_code = $inv->getStandInCode();
+        $form->date_supplied = $inv->getDateSupplied();
+        $form->date_due = $inv->getDateDue();
+        $form->number = $inv->getNumber();
+        $form->discount_amount = $inv->getDiscountAmount();
+        $form->terms = $inv->getTerms();
+        $form->note = $inv->getNote();
+        $form->document_description = $inv->getDocumentDescription();
+        $form->url_key = $inv->getUrlKey();
+        $form->payment_method = $inv->getPaymentMethod();
+        $form->creditinvoice_parent_id = (int) $inv->getCreditinvoiceParentId();
         /**
-         * Related logic: see App\Invoice\Entity\Client
+         * Related logic: see 
                 #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
                 private ?Client $client = null;
          */
-        $this->client = $inv->getClient();
-    }
-
-    public function getId(): ?string
-    {
-        return $this->id;
+        $form->client = $inv->getClient();
+        return $form;
     }
 
     public function getClient(): ?Client
@@ -104,7 +99,7 @@ final class InvForm extends FormModel
         return $this->client;
     }
 
-    public function getDate_created(): string|DateTimeImmutable|null
+    public function getDateCreated(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string|null $this->date_created
@@ -112,7 +107,7 @@ final class InvForm extends FormModel
         return $this->date_created;
     }
 
-    public function getDate_modified(): string|DateTimeImmutable|null
+    public function getDateModified(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string $this->date_modified
@@ -120,7 +115,7 @@ final class InvForm extends FormModel
         return $this->date_modified;
     }
 
-    public function getDate_supplied(): string|DateTimeImmutable|null
+    public function getDateSupplied(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string $this->date_supplied
@@ -128,7 +123,7 @@ final class InvForm extends FormModel
         return $this->date_supplied;
     }
 
-    public function getDate_paid_off(): string|DateTimeImmutable|null
+    public function getDatePaidOff(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string $this->date_paid_off
@@ -136,7 +131,7 @@ final class InvForm extends FormModel
         return $this->date_paid_off;
     }
 
-    public function getDate_tax_point(): string|DateTimeImmutable|null
+    public function getDateTaxPoint(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string $this->date_tax_point
@@ -144,7 +139,7 @@ final class InvForm extends FormModel
         return $this->date_tax_point;
     }
 
-    public function getDate_due(): string|DateTimeImmutable|null
+    public function getDateDue(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string $this->date_due
@@ -152,7 +147,7 @@ final class InvForm extends FormModel
         return $this->date_due;
     }
 
-    public function getTime_created(): string|DateTimeImmutable|null
+    public function getTimeCreated(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string $this->time_created
@@ -160,57 +155,57 @@ final class InvForm extends FormModel
         return $this->time_created;
     }
 
-    public function getStand_in_code(): ?string
+    public function getStandInCode(): ?string
     {
         return $this->stand_in_code;
     }
 
-    public function getQuote_id(): ?string
+    public function getQuoteId(): ?int
     {
         return $this->quote_id;
     }
 
-    public function getClient_id(): ?string
+    public function getClientId(): ?int
     {
         return $this->client_id;
     }
 
-    public function getSo_id(): ?string
+    public function getSoId(): ?int
     {
         return $this->so_id;
     }
 
-    public function getGroup_id(): ?string
+    public function getGroupId(): ?int
     {
         return $this->group_id;
     }
 
-    public function getCreditinvoice_parent_id(): ?int
+    public function getCreditinvoiceParentId(): ?int
     {
         return $this->creditinvoice_parent_id;
     }
 
-    public function getDelivery_id(): ?int
+    public function getDeliveryId(): ?int
     {
         return $this->delivery_id;
     }
 
-    public function getDelivery_location_id(): ?int
+    public function getDeliveryLocationId(): ?int
     {
         return $this->delivery_location_id;
     }
 
-    public function getPostal_address_id(): ?int
+    public function getPostalAddressId(): ?int
     {
         return $this->postal_address_id;
     }
 
-    public function getContract_id(): ?int
+    public function getContractId(): ?int
     {
         return $this->contract_id;
     }
 
-    public function getStatus_id(): ?int
+    public function getStatusId(): ?int
     {
         return $this->status_id;
     }
@@ -220,17 +215,12 @@ final class InvForm extends FormModel
         return $this->number;
     }
 
-    public function getDiscount_amount(): ?float
+    public function getDiscountAmount(): ?float
     {
         return $this->discount_amount;
     }
 
-    public function getDiscount_percent(): ?float
-    {
-        return $this->discount_percent;
-    }
-
-    public function getUrl_key(): ?string
+    public function getUrlKey(): ?string
     {
         return $this->url_key;
     }
@@ -240,7 +230,7 @@ final class InvForm extends FormModel
         return $this->password;
     }
 
-    public function getPayment_method(): ?int
+    public function getPaymentMethod(): ?int
     {
         return $this->payment_method;
     }

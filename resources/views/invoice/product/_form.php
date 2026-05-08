@@ -31,21 +31,21 @@ use Yiisoft\Html\Tag\Form;
  */
 ?>
 
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
 <?= $translator->translate('products.form'); ?>
 <?= Html::closeTag('h1'); ?>
-<?= Form::tag()
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('ProductForm')
     ->open()
-?> 
+?>
 
 <?= Field::errorSummary($form)
     ->errors($errors)
@@ -56,7 +56,7 @@ use Yiisoft\Html\Tag\Form;
 
 <?= Html::openTag('ul', ['id' => 'product-tabs', 'class' => 'nav nav-tabs']); ?>
     <?= Html::openTag('li', ['class' => 'nav-item']); ?>
-        <?= A::tag()
+        <?=  new A()
             ->addAttributes([
                 'data-bs-toggle' => 'tab',
                 'data-bs-target' => '#product-required',
@@ -73,7 +73,7 @@ use Yiisoft\Html\Tag\Form;
 ?>
     <?= Html::closeTag('li'); ?>
     <?= Html::openTag('li', ['class' => 'nav-item']); ?>
-        <?= A::tag()
+        <?=  new A()
             ->addAttributes([
                 'data-bs-toggle' => 'tab',
                 'data-bs-target' => '#product-not-required',
@@ -88,36 +88,49 @@ use Yiisoft\Html\Tag\Form;
             ->id('not-required-tab')
             ->render();
 ?>
-    <?= Html::closeTag('li'); ?>    
+    <?= Html::closeTag('li'); ?>
 <?= Html::closeTag('ul'); ?>
 
 <?= Html::openTag('div', ['class' => 'tab-content', 'id' => 'product-tab-content']); ?>
-    
+
     <?= Html::openTag('div', [
         'id' => 'product-required',
         'class' => 'tab-pane active',
         'role' => 'tabpanel',
         'aria-labelledby' => 'required-tab',
     ]); ?>
-        <?= $formFields->productTextField($form, 'product_name', 'product.name', true); ?>
+        <?= $formFields->productTextField(
+            $form, 'product_name', 'product.name', true); ?>
         <?= Html::tag('br'); ?>
-        <?= $formFields->productTextField($form, 'product_description', 'product.description', true); ?>                    
+        <?= $formFields->familySelect(
+            $form, $families, true); ?>
         <?= Html::tag('br'); ?>
-        <?= $formFields->familySelect($form, $families, true); ?>
+        <?= $formFields->unitSelect(
+            $form, $units, true); ?>
         <?= Html::tag('br'); ?>
-        <?= $formFields->unitSelect($form, $units, true); ?>
+        <?= $formFields->taxRateSelect(
+            $form, $taxRates, true); ?>
         <?= Html::tag('br'); ?>
-        <?= $formFields->taxRateSelect($form, $taxRates, true); ?>
+
+        <?= $formFields->productPriceField(
+            $form, 'purchase_price', 'purchase.price', true); ?>
         <?= Html::tag('br'); ?>
-        <?= $formFields->productTextField($form, 'product_sku', 'product.sku', true); ?>
+        <?= $formFields->productPriceField(
+            $form, 'product_price', 'product.price', true); ?>
         <?= Html::tag('br'); ?>
-        <?= $formFields->productPriceField($form, 'purchase_price', 'purchase.price', true); ?>         
+        <?= $formFields->productPriceField(
+            $form, 'product_price_base_quantity', 'product.price.base.quantity', true); ?>
         <?= Html::tag('br'); ?>
-        <?= $formFields->productPriceField($form, 'product_price', 'product.price', true); ?>         
+        <?= $formFields->productPriceField(
+            $form, 'product_tariff', 'product.tariff', true); ?>
+
+        <?= '-----------------------------------------------'; ?>
+        <?= $formFields->productTextField(
+            $form, 'product_description', 'product.description', false); ?>
         <?= Html::tag('br'); ?>
-        <?= $formFields->productPriceField($form, 'product_price_base_quantity', 'product.price.base.quantity', true); ?>
+        <?= $formFields->productTextField(
+            $form, 'product_sku', 'product.sku', false); ?>
         <?= Html::tag('br'); ?>
-        <?= $formFields->productPriceField($form, 'product_tariff', 'product.tariff', true); ?>
         <?= Html::closeTag('div'); ?>
 
         <?= Html::openTag('div', [
@@ -126,28 +139,38 @@ use Yiisoft\Html\Tag\Form;
             'role' => 'tabpanel',
             'aria-labelledby' => 'not-required-tab',
         ]); ?>
-        
-        <?= $formFields->unitPeppolSelect($form, $unitPeppols, false); ?> 
+
+        <?= $formFields->unitPeppolSelect(
+            $form, $unitPeppols, false); ?>
         <?= Html::tag('br'); ?>
-        <?= $formFields->productTextField($form, 'product_sii_id', 'product.sii.id', false); ?> 
+        <?= $formFields->productTextField(
+            $form, 'product_sii_id', 'product.sii.id', false); ?>
         <?= Html::tag('br'); ?>
-        <?= $formFields->productTextField($form, 'product_sii_schemeid', 'product.sii.schemeid', false); ?>
+        <?= $formFields->productTextField(
+            $form, 'product_sii_schemeid', 'product.sii.schemeid', false); ?>
         <?= Html::tag('br'); ?>
-        <?= $formFields->productTextField($form, 'product_icc_listid', 'product.icc.listid', false); ?>
+        <?= $formFields->productTextField(
+            $form, 'product_icc_listid', 'product.icc.listid', false); ?>
         <?= Html::tag('br'); ?>
-        <?= $formFields->productTextField($form, 'product_icc_listversionid', 'product.icc.listversionid', false); ?>
+        <?= $formFields->productTextField(
+            $form, 'product_icc_listversionid', 'product.icc.listversionid', false); ?>
         <?= Html::tag('br'); ?>
-        <?= $formFields->productTextField($form, 'product_icc_id', 'product.icc.id', false); ?>
+        <?= $formFields->productTextField(
+            $form, 'product_icc_id', 'product.icc.id', false); ?>
         <?= Html::tag('br'); ?>
-        <?= $formFields->productTextField($form, 'product_country_of_origin_code', 'product.country.of.origin.code', false); ?>
+        <?= $formFields->productTextField(
+            $form, 'product_country_of_origin_code', 'product.country.of.origin.code', false); ?>
         <?= Html::tag('br'); ?>
-        <?= $formFields->productTextField($form, 'product_additional_item_property_name', 'product.additional.item.property.name', false); ?>
+        <?= $formFields->productTextField(
+            $form, 'product_additional_item_property_name', 'product.additional.item.property.name', false); ?>
         <?= Html::tag('br'); ?>
-        <?= $formFields->productTextField($form, 'product_additional_item_property_value', 'product.additional.item.property.value', false); ?>
+        <?= $formFields->productTextField(
+            $form, 'product_additional_item_property_value', 'product.additional.item.property.value', false); ?>
         <?= Html::tag('br'); ?>
-        <?= $formFields->productTextField($form, 'provider_name', 'provider.name', false); ?>
+        <?= $formFields->productTextField(
+            $form, 'provider_name', 'provider.name', false); ?>
         <?= Html::closeTag('div'); ?>
-    <?= Html::closeTag('div'); ?>     
+    <?= Html::closeTag('div'); ?>
 
 <?= Html::openTag('div', ['class' => 'panel panel-default']); ?>
     <?= Html::openTag('div', ['class' => 'panel-heading']); ?>
@@ -156,16 +179,16 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::openTag('div', ['class' => 'panel-body']); ?>
       <?php
 /**
- * @var App\Invoice\Entity\CustomField $customField
+ * @var App\Infrastructure\Persistence\CustomField\CustomField $customField
  */
 foreach ($customFields as $customField): ?>
-          <?php $cvH->print_field_for_form($customField, $productCustomForm, $translator, $productCustomValues, $customValues); ?>
+          <?php $cvH->printFieldForForm($customField, $productCustomForm, $translator, $urlGenerator, $productCustomValues, $customValues); ?>
       <?php endforeach; ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 
 <?= $button::backSave(); ?>
-<?= Form::tag()->close(); ?>
+<?=  new Form()->close(); ?>
 
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

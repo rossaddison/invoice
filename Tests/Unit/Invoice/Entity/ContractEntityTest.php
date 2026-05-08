@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Invoice\Entity;
 
-use App\Invoice\Entity\Client;
-use App\Invoice\Entity\Contract;
+use App\Infrastructure\Persistence\Client\Client;
+use App\Infrastructure\Persistence\Contract\Contract;
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 
@@ -19,14 +19,13 @@ class ContractEntityTest extends TestCase
     {
         $contract = new Contract();
         
-        $this->assertNull($contract->getId());
+        $this->assertFalse($contract->hasIdentity());
         $this->assertSame('', $contract->getName());
         $this->assertSame('', $contract->getReference());
-        $this->assertSame('', $contract->getClient_id());
         $this->assertNull($contract->getClient());
-        $this->assertInstanceOf(DateTimeImmutable::class, $contract->getPeriod_start());
-        $this->assertInstanceOf(DateTimeImmutable::class, $contract->getPeriod_end());
-        $this->assertTrue($contract->isNewRecord());
+        $this->assertInstanceOf(DateTimeImmutable::class, $contract->getPeriodStart());
+        $this->assertInstanceOf(DateTimeImmutable::class, $contract->getPeriodEnd());
+        $this->assertFalse($contract->hasIdentity());
     }
 
     public function testConstructorWithAllParameters(): void
@@ -37,20 +36,20 @@ class ContractEntityTest extends TestCase
             client_id: 123
         );
         
-        $this->assertNull($contract->getId());
+        $this->assertFalse($contract->hasIdentity());
         $this->assertSame('Annual Service Contract', $contract->getName());
         $this->assertSame('ASC-2024-001', $contract->getReference());
-        $this->assertSame('123', $contract->getClient_id());
-        $this->assertInstanceOf(DateTimeImmutable::class, $contract->getPeriod_start());
-        $this->assertInstanceOf(DateTimeImmutable::class, $contract->getPeriod_end());
+        $this->assertSame(123, $contract->reqClientId());
+        $this->assertInstanceOf(DateTimeImmutable::class, $contract->getPeriodStart());
+        $this->assertInstanceOf(DateTimeImmutable::class, $contract->getPeriodEnd());
     }
 
     public function testClientIdSetterAndGetter(): void
     {
         $contract = new Contract();
-        $contract->setClient_id(456);
+        $contract->setClientId(456);
         
-        $this->assertSame('456', $contract->getClient_id());
+        $this->assertSame(456, $contract->reqClientId());
     }
 
     public function testClientSetterAndGetter(): void
@@ -82,56 +81,39 @@ class ContractEntityTest extends TestCase
     {
         $contract = new Contract();
         $startDate = new DateTimeImmutable($this->beg2024);
-        $contract->setPeriod_start($startDate);
+        $contract->setPeriodStart($startDate);
         
-        $this->assertSame($startDate, $contract->getPeriod_start());
+        $this->assertSame($startDate, $contract->getPeriodStart());
     }
 
     public function testPeriodEndSetterAndGetter(): void
     {
         $contract = new Contract();
         $endDate = new DateTimeImmutable($this->end2024);
-        $contract->setPeriod_end($endDate);
+        $contract->setPeriodEnd($endDate);
         
-        $this->assertSame($endDate, $contract->getPeriod_end());
+        $this->assertSame($endDate, $contract->getPeriodEnd());
     }
 
-    public function testIsNewRecord(): void
+    public function testhasIdentity(): void
     {
         $contract = new Contract();
-        $this->assertTrue($contract->isNewRecord());
+        $this->assertFalse($contract->hasIdentity());
         
         // Contract doesn't have setId method, but id is public
         $contract->id = 1;
-        $this->assertFalse($contract->isNewRecord());
+        $this->assertTrue($contract->hasIdentity());
         
         $contract->id = null;
-        $this->assertTrue($contract->isNewRecord());
-    }
-
-    public function testNullifyRelationOnChange(): void
-    {
-        $contract = new Contract();
-        $client = $this->createMock(Client::class);
-        
-        $contract->setClient_id(123);
-        $contract->setClient($client);
-        
-        // Same client ID - should not nullify relation
-        $contract->nullifyRelationOnChange(123);
-        $this->assertSame($client, $contract->getClient());
-        
-        // Different client ID - should nullify relation
-        $contract->nullifyRelationOnChange(456);
-        $this->assertNull($contract->getClient());
+        $this->assertFalse($contract->hasIdentity());
     }
 
     public function testDateTimeImmutableProperties(): void
     {
         $contract = new Contract();
         
-        $periodStart = $contract->getPeriod_start();
-        $periodEnd = $contract->getPeriod_end();
+        $periodStart = $contract->getPeriodStart();
+        $periodEnd = $contract->getPeriodEnd();
         
         $this->assertInstanceOf(DateTimeImmutable::class, $periodStart);
         $this->assertInstanceOf(DateTimeImmutable::class, $periodEnd);
@@ -144,18 +126,18 @@ class ContractEntityTest extends TestCase
         $contract = new Contract();
         $contract->setName('Monthly Support Contract');
         $contract->setReference('MSC-2024-Q1');
-        $contract->setClient_id(789);
+        $contract->setClientId(789);
         
         $startDate = new DateTimeImmutable($this->beg2024);
         $endDate = new DateTimeImmutable('2024-03-31');
-        $contract->setPeriod_start($startDate);
-        $contract->setPeriod_end($endDate);
+        $contract->setPeriodStart($startDate);
+        $contract->setPeriodEnd($endDate);
         
         $this->assertSame('Monthly Support Contract', $contract->getName());
         $this->assertSame('MSC-2024-Q1', $contract->getReference());
-        $this->assertSame('789', $contract->getClient_id());
-        $this->assertSame($startDate, $contract->getPeriod_start());
-        $this->assertSame($endDate, $contract->getPeriod_end());
+        $this->assertSame(789, $contract->reqClientId());
+        $this->assertSame($startDate, $contract->getPeriodStart());
+        $this->assertSame($endDate, $contract->getPeriodEnd());
     }
 
     public function testMaintenanceContract(): void
@@ -166,13 +148,13 @@ class ContractEntityTest extends TestCase
         
         $startDate = new DateTimeImmutable($this->beg2024);
         $endDate = new DateTimeImmutable($this->end2024);
-        $contract->setPeriod_start($startDate);
-        $contract->setPeriod_end($endDate);
+        $contract->setPeriodStart($startDate);
+        $contract->setPeriodEnd($endDate);
         
         $this->assertSame('Hardware Maintenance', $contract->getName());
         $this->assertSame('HM-2024-ANNUAL', $contract->getReference());
-        $this->assertSame($startDate, $contract->getPeriod_start());
-        $this->assertSame($endDate, $contract->getPeriod_end());
+        $this->assertSame($startDate, $contract->getPeriodStart());
+        $this->assertSame($endDate, $contract->getPeriodEnd());
     }
 
     public function testLicenseContract(): void
@@ -222,14 +204,14 @@ class ContractEntityTest extends TestCase
     {
         $contract = new Contract();
         
-        $contract->setClient_id(0);
-        $this->assertSame('0', $contract->getClient_id());
-        
-        $contract->setClient_id(999999);
-        $this->assertSame('999999', $contract->getClient_id());
-        
-        $contract->setClient_id(-1);
-        $this->assertSame('-1', $contract->getClient_id());
+        $contract->setClientId(0);
+        $this->assertSame(0, $contract->reqClientId());
+
+        $contract->setClientId(999999);
+        $this->assertSame(999999, $contract->reqClientId());
+
+        $contract->setClientId(-1);
+        $this->assertSame(-1, $contract->reqClientId());
     }
 
     public function testCompleteContractSetup(): void
@@ -240,22 +222,22 @@ class ContractEntityTest extends TestCase
         $contract->id = 1;
         $contract->setName('Complete Test Contract');
         $contract->setReference('CTC-2024-001');
-        $contract->setClient_id(100);
+        $contract->setClientId(100);
         $contract->setClient($client);
         
         $startDate = new DateTimeImmutable('2024-06-01');
         $endDate = new DateTimeImmutable($this->end2024);
-        $contract->setPeriod_start($startDate);
-        $contract->setPeriod_end($endDate);
+        $contract->setPeriodStart($startDate);
+        $contract->setPeriodEnd($endDate);
         
-        $this->assertSame(1, $contract->getId());
+        $this->assertSame(1, $contract->reqId());
         $this->assertSame('Complete Test Contract', $contract->getName());
         $this->assertSame('CTC-2024-001', $contract->getReference());
-        $this->assertSame('100', $contract->getClient_id());
+        $this->assertSame(100, $contract->reqClientId());
         $this->assertSame($client, $contract->getClient());
-        $this->assertSame($startDate, $contract->getPeriod_start());
-        $this->assertSame($endDate, $contract->getPeriod_end());
-        $this->assertFalse($contract->isNewRecord());
+        $this->assertSame($startDate, $contract->getPeriodStart());
+        $this->assertSame($endDate, $contract->getPeriodEnd());
+        $this->assertTrue($contract->hasIdentity());
     }
 
     public function testGetterMethodsConsistency(): void
@@ -268,9 +250,9 @@ class ContractEntityTest extends TestCase
         
         $this->assertIsString($contract->getName());
         $this->assertIsString($contract->getReference());
-        $this->assertIsString($contract->getClient_id());
-        $this->assertInstanceOf(DateTimeImmutable::class, $contract->getPeriod_start());
-        $this->assertInstanceOf(DateTimeImmutable::class, $contract->getPeriod_end());
+        $this->assertIsInt($contract->reqClientId());
+        $this->assertInstanceOf(DateTimeImmutable::class, $contract->getPeriodStart());
+        $this->assertInstanceOf(DateTimeImmutable::class, $contract->getPeriodEnd());
     }
 
     public function testContractPeriods(): void
@@ -280,20 +262,20 @@ class ContractEntityTest extends TestCase
         // Monthly contract
         $monthStart = new DateTimeImmutable($this->beg2024);
         $monthEnd = new DateTimeImmutable('2024-01-31');
-        $contract->setPeriod_start($monthStart);
-        $contract->setPeriod_end($monthEnd);
+        $contract->setPeriodStart($monthStart);
+        $contract->setPeriodEnd($monthEnd);
         
-        $this->assertSame($monthStart, $contract->getPeriod_start());
-        $this->assertSame($monthEnd, $contract->getPeriod_end());
+        $this->assertSame($monthStart, $contract->getPeriodStart());
+        $this->assertSame($monthEnd, $contract->getPeriodEnd());
         
         // Yearly contract
         $yearStart = new DateTimeImmutable($this->beg2024);
         $yearEnd = new DateTimeImmutable($this->end2024);
-        $contract->setPeriod_start($yearStart);
-        $contract->setPeriod_end($yearEnd);
+        $contract->setPeriodStart($yearStart);
+        $contract->setPeriodEnd($yearEnd);
         
-        $this->assertSame($yearStart, $contract->getPeriod_start());
-        $this->assertSame($yearEnd, $contract->getPeriod_end());
+        $this->assertSame($yearStart, $contract->getPeriodStart());
+        $this->assertSame($yearEnd, $contract->getPeriodEnd());
     }
 
     public function testPropertyTypes(): void
@@ -306,45 +288,45 @@ class ContractEntityTest extends TestCase
         
         $contract->id = 1;
         
-        $this->assertIsInt($contract->getId());
-        $this->assertIsString($contract->getClient_id());
-        $this->assertInstanceOf(DateTimeImmutable::class, $contract->getPeriod_start());
-        $this->assertInstanceOf(DateTimeImmutable::class, $contract->getPeriod_end());
+        $this->assertIsInt($contract->reqId());
+        $this->assertIsInt($contract->reqClientId());
+        $this->assertInstanceOf(DateTimeImmutable::class, $contract->getPeriodStart());
+        $this->assertInstanceOf(DateTimeImmutable::class, $contract->getPeriodEnd());
     }
 
     public function testNegativeClientIds(): void
     {
         $contract = new Contract();
         
-        $contract->setClient_id(-100);
-        $this->assertSame('-100', $contract->getClient_id());
-        
-        $contract->setClient_id(-1);
-        $this->assertSame('-1', $contract->getClient_id());
+        $contract->setClientId(-100);
+        $this->assertSame(-100, $contract->reqClientId());
+
+        $contract->setClientId(-1);
+        $this->assertSame(-1, $contract->reqClientId());
     }
 
     public function testContractWorkflow(): void
     {
         // Create new contract
         $contract = new Contract();
-        $this->assertTrue($contract->isNewRecord());
+        $this->assertFalse($contract->hasIdentity());
         
         // Set contract details
         $contract->setName('Workflow Test Contract');
         $contract->setReference('WTC-2024-001');
-        $contract->setClient_id(500);
+        $contract->setClientId(500);
         
         // Still new until ID is set
-        $this->assertTrue($contract->isNewRecord());
+        $this->assertFalse($contract->hasIdentity());
         
         // Assign ID (simulating database save)
         $contract->id = 1;
-        $this->assertFalse($contract->isNewRecord());
+        $this->assertTrue($contract->hasIdentity());
         
         // Update contract details
         $contract->setName('Updated Workflow Contract');
         $this->assertSame('Updated Workflow Contract', $contract->getName());
-        $this->assertFalse($contract->isNewRecord());
+        $this->assertTrue($contract->hasIdentity());
     }
 
     public function testClientRelationshipManagement(): void
@@ -354,21 +336,13 @@ class ContractEntityTest extends TestCase
         $client2 = $this->createMock(Client::class);
         
         // Set initial client
-        $contract->setClient_id(100);
+        $contract->setClientId(100);
         $contract->setClient($client1);
         $this->assertSame($client1, $contract->getClient());
-        
-        // Change to different client - relation should be nullified
-        $contract->nullifyRelationOnChange(200);
-        $this->assertNull($contract->getClient());
-        
+                
         // Set new client
-        $contract->setClient_id(200);
+        $contract->setClientId(200);
         $contract->setClient($client2);
-        $this->assertSame($client2, $contract->getClient());
-        
-        // Same client ID - relation should remain
-        $contract->nullifyRelationOnChange(200);
         $this->assertSame($client2, $contract->getClient());
     }
 
@@ -378,8 +352,8 @@ class ContractEntityTest extends TestCase
         $contract = new Contract();
         $afterTime = time();
         
-        $startTime = $contract->getPeriod_start()->getTimestamp();
-        $endTime = $contract->getPeriod_end()->getTimestamp();
+        $startTime = $contract->getPeriodStart()->getTimestamp();
+        $endTime = $contract->getPeriodEnd()->getTimestamp();
         
         $this->assertGreaterThanOrEqual($beforeTime, $startTime);
         $this->assertLessThanOrEqual($afterTime, $startTime);
@@ -391,10 +365,10 @@ class ContractEntityTest extends TestCase
     {
         $contract = new Contract();
         
-        $this->assertTrue($contract->isNewRecord());
+        $this->assertFalse($contract->hasIdentity());
         $this->assertNull($contract->getClient());
-        $this->assertInstanceOf(DateTimeImmutable::class, $contract->getPeriod_start());
-        $this->assertInstanceOf(DateTimeImmutable::class, $contract->getPeriod_end());
+        $this->assertInstanceOf(DateTimeImmutable::class, $contract->getPeriodStart());
+        $this->assertInstanceOf(DateTimeImmutable::class, $contract->getPeriodEnd());
     }
 
     public function testPublicProperties(): void
@@ -417,12 +391,12 @@ class ContractEntityTest extends TestCase
         $startDate = new DateTimeImmutable($this->beg2024);
         $endDate = new DateTimeImmutable($this->end2024);
         
-        $contract->setPeriod_start($startDate);
-        $contract->setPeriod_end($endDate);
+        $contract->setPeriodStart($startDate);
+        $contract->setPeriodEnd($endDate);
         
         $this->assertLessThan(
-            $contract->getPeriod_end()->getTimestamp(),
-            $contract->getPeriod_start()->getTimestamp()
+            $contract->getPeriodEnd()->getTimestamp(),
+            $contract->getPeriodStart()->getTimestamp()
         );
     }
 

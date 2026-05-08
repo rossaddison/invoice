@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Invoice\Company;
 
-use App\Invoice\Entity\Company;
+use App\Infrastructure\Persistence\Company\Company;
 
 final readonly class CompanyService
 {
-    public function __construct(private CompanyRepository $repository) {}
+    public function __construct(private CompanyRepository $repository)
+    {
+    }
 
     /**
      * @param Company $model
@@ -18,8 +20,8 @@ final readonly class CompanyService
     {
         $model->setCurrent($array['current'] === '1' ? 1 : 0);
         isset($array['name']) ? $model->setName((string) $array['name']) : '';
-        isset($array['address_1']) ? $model->setAddress_1((string) $array['address_1']) : '';
-        isset($array['address_2']) ? $model->setAddress_2((string) $array['address_2']) : '';
+        isset($array['address_1']) ? $model->setAddress1((string) $array['address_1']) : '';
+        isset($array['address_2']) ? $model->setAddress2((string) $array['address_2']) : '';
         isset($array['city']) ? $model->setCity((string) $array['city']) : '';
         isset($array['state']) ? $model->setState((string) $array['state']) : '';
         isset($array['zip']) ? $model->setZip((string) $array['zip']) : '';
@@ -28,7 +30,8 @@ final readonly class CompanyService
         isset($array['fax']) ? $model->setFax((string) $array['fax']) : '';
         isset($array['email']) ? $model->setEmail((string) $array['email']) : '';
         isset($array['web']) ? $model->setWeb((string) $array['web']) : '';
-
+        isset($array['seo_description']) ?
+            $model->setSeoDescription((string) $array['seo_description']) : '';
         // Social media fields
         isset($array['slack']) ? $model->setSlack((string) $array['slack']) : '';
         isset($array['facebook']) ? $model->setFacebook((string) $array['facebook']) : '';

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Company;
+use App\Infrastructure\Persistence\Company\Company;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -14,7 +14,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
- * @var App\Invoice\Entity\Company $company
+ * @var App\Infrastructure\Persistence\Company\Company $company
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
@@ -25,12 +25,12 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $csrf
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$toolbarReset = A::tag()
+$toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'company/index'))
     ->id('btn-reset')
     ->render();
@@ -39,33 +39,36 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Company $model) => Html::encode($model->getId()),
+        content: static fn (Company $model) => Html::encode($model->reqId()),
     ),
     new DataColumn(
         'current',
         header: $translator->translate('active'),
-        content: static fn(Company $model) => Html::encode($model->getCurrent() == '1' ? ($translator->translate('active') . ' ' . '✔️') : $translator->translate('inactive') . ' ' . '❌'),
+        content: static fn (Company $model) => Html::encode(
+            $model->getCurrent() == '1' ?
+                ($translator->translate('active') . ' ' . '✔️') :
+                $translator->translate('inactive') . ' ' . '❌'),
     ),
     new DataColumn(
         'name',
         header: $translator->translate('name'),
-        content: static fn(Company $model) => Html::encode($model->getName()),
+        content: static fn (Company $model) => Html::encode($model->getName()),
     ),
     new DataColumn(
         'email',
         header: $translator->translate('email.address'),
-        content: static fn(Company $model) => Html::encode($model->getEmail()),
+        content: static fn (Company $model) => Html::encode($model->getEmail()),
     ),
     new DataColumn(
         'phone',
         header: $translator->translate('phone'),
-        content: static fn(Company $model) => Html::encode($model->getPhone()),
+        content: static fn (Company $model) => Html::encode($model->getPhone()),
     ),
     new ActionColumn(buttons: [
         new ActionButton(
             content: '🔎',
             url: static function (Company $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('company/view', ['id' => $model->getId()]);
+                return $urlGenerator->generate('company/view', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -75,7 +78,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (Company $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('company/edit', ['id' => $model->getId()]);
+                return $urlGenerator->generate('company/edit', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -85,7 +88,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (Company $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('company/delete', ['id' => $model->getId()]);
+                return $urlGenerator->generate('company/delete', ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),
@@ -96,16 +99,16 @@ $columns = [
 ];
 
 $toolbarString
-    = Form::tag()->post($urlGenerator->generate('company/index'))->csrf($csrf)->open()
-    . A::tag()
+    =  new Form()->post($urlGenerator->generate('company/index'))->csrf($csrf)->open()
+    .  new A()
         ->href($urlGenerator->generate('company/add'))
         ->addAttributes(['style' => 'text-decoration:none'])
         ->content('➕')
         ->render()
-    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-    . Form::tag()->close();
+    .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    .  new Form()->close();
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -123,7 +126,7 @@ echo GridView::widget()
 ->id('w163-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($grid_summary)
+->summaryTemplate($gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

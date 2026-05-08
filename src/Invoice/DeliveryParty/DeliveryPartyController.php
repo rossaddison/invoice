@@ -6,7 +6,7 @@ namespace App\Invoice\DeliveryParty;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\DeliveryParty;
+use App\Infrastructure\Persistence\DeliveryParty\DeliveryParty;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
 use App\Service\WebControllerService;
@@ -19,7 +19,7 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Exception;
 
 final class DeliveryPartyController extends BaseController
@@ -32,11 +32,11 @@ final class DeliveryPartyController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->deliveryPartyService = $deliveryPartyService;
     }
 
@@ -49,8 +49,7 @@ final class DeliveryPartyController extends BaseController
         Request $request,
         FormHydrator $formHydrator,
     ): Response {
-        $deliveryParty = new DeliveryParty();
-        $form = new DeliveryPartyForm($deliveryParty);
+        $form = new DeliveryPartyForm();
         $parameters = [
             'canEdit' => $this->rbac(),
             'title' => $this->translator->translate('add'),
@@ -70,12 +69,11 @@ final class DeliveryPartyController extends BaseController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
      * @param DeliveryPartyRepository $deliverypartyRepository
-     * @param DeliveryPartyService $service
      * @return Response
      */
     public function index(DeliveryPartyRepository $deliverypartyRepository): Response
@@ -88,7 +86,7 @@ final class DeliveryPartyController extends BaseController
             'deliveryparties' => $deliveryparties,
             'alert' => $this->alert(),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -129,13 +127,13 @@ final class DeliveryPartyController extends BaseController
     ): Response {
         $deliveryparty = $this->deliveryparty($currentRoute, $deliverypartyRepository);
         if ($deliveryparty) {
-            $form = new DeliveryPartyForm($deliveryparty);
+            $form = DeliveryPartyForm::show($deliveryparty);
             $parameters = [
                 'canEdit' => $this->rbac(),
                 'form' => $form,
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'deliveryparty/edit',
-                'actionArguments' => ['id' => $deliveryparty->getId()],
+                'actionArguments' => ['id' => $deliveryparty->reqId()],
                 'errors' => [],
             ];
             if ($request->getMethod() === Method::POST) {
@@ -149,7 +147,7 @@ final class DeliveryPartyController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('deliveryparty/index');
     }
@@ -157,17 +155,15 @@ final class DeliveryPartyController extends BaseController
     //For rbac refer to AccessChecker
 
     /**
-     * @param CurrentRoute $currentRoute
-     * @param DeliveryPartyRepository $deliverypartyRepository
+     * @param CurrentRoute $curR
+     * @param DeliveryPartyRepository $dpR
      * @return DeliveryParty|null
      */
-    private function deliveryparty(CurrentRoute $currentRoute, DeliveryPartyRepository $deliverypartyRepository): ?DeliveryParty
+    private function deliveryparty(
+        CurrentRoute $curR,
+        DeliveryPartyRepository $dpR): ?DeliveryParty
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $deliverypartyRepository->repoDeliveryPartyquery($id);
-        }
-        return null;
+        return $dpR->repoDeliveryPartyquery((int) $curR->getArgument('id'));
     }
 
     /**
@@ -175,9 +171,9 @@ final class DeliveryPartyController extends BaseController
      *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function deliveryparties(DeliveryPartyRepository $deliverypartyRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
+    private function deliveryparties(DeliveryPartyRepository $dpR): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        return $deliverypartyRepository->findAllPreloaded();
+        return $dpR->findAllPreloaded();
     }
 
     /**
@@ -196,21 +192,21 @@ final class DeliveryPartyController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param DeliveryPartyRepository $deliverypartyRepository
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function view(CurrentRoute $currentRoute, DeliveryPartyRepository $deliverypartyRepository): \Yiisoft\DataResponse\DataResponse|Response
+    public function view(CurrentRoute $currentRoute, DeliveryPartyRepository $deliverypartyRepository): \Psr\Http\Message\ResponseInterface
     {
         $deliveryparty = $this->deliveryparty($currentRoute, $deliverypartyRepository);
         if ($deliveryparty) {
-            $form = new DeliveryPartyForm($deliveryparty);
+            $form = DeliveryPartyForm::show($deliveryparty);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'deliveryparty/view',
-                'actionArguments' => ['id' => $deliveryparty->getId()],
+                'actionArguments' => ['id' => $deliveryparty->reqId()],
                 'form' => $form,
                 'deliveryparty' => $deliveryparty,
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('deliveryparty/index');
     }

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Invoice\Profile;
 
 use App\Auth\Permissions;
+use App\Infrastructure\Persistence\Profile\Profile;
 use App\Invoice\BaseController;
 use App\Invoice\Company\CompanyRepository;
-use App\Invoice\Entity\Profile;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
 use App\Service\WebControllerService;
@@ -20,7 +20,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class ProfileController extends BaseController
 {
@@ -32,21 +32,20 @@ final class ProfileController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->profileService = $profileService;
     }
 
     /**
      * @param ProfileRepository $profileRepository
      */
-    public function index(CurrentRoute $currentRoute, ProfileRepository $profileRepository): \Yiisoft\DataResponse\DataResponse
+    public function index(CurrentRoute $currentRoute, ProfileRepository $profileRepository): \Psr\Http\Message\ResponseInterface
     {
         $page = (int) $currentRoute->getArgument('page', '1');
-        /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $canEdit = $this->rbac();
         $this->flashMessage('info', $this->translator->translate('profile.new'));
@@ -60,7 +59,7 @@ final class ProfileController extends BaseController
             'profiles' => $this->profiles($profileRepository),
             'alert' => $this->alert(),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -74,7 +73,7 @@ final class ProfileController extends BaseController
         FormHydrator $formHydrator,
         CompanyRepository $companyRepository,
     ): Response {
-        $form = new ProfileForm(new Profile(), $this->translator);
+        $form = new ProfileForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'profile/add',
@@ -95,7 +94,7 @@ final class ProfileController extends BaseController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -115,11 +114,11 @@ final class ProfileController extends BaseController
     ): Response {
         $profile = $this->profile($currentRoute, $profileRepository);
         if ($profile) {
-            $form = new ProfileForm($profile, $this->translator);
+            $form = ProfileForm::show($profile);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'profile/edit',
-                'actionArguments' => ['id' => $profile->getId()],
+                'actionArguments' => ['id' => $profile->reqId()],
                 'form' => $form,
                 'errors' => [],
                 'companies' => $companyRepository->findAllPreloaded(),
@@ -135,7 +134,7 @@ final class ProfileController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('profile/index');
     }
@@ -171,21 +170,21 @@ final class ProfileController extends BaseController
      * @param ProfileRepository $profileRepository
      * @param CompanyRepository $companyRepository
      */
-    public function view(CurrentRoute $currentRoute, ProfileRepository $profileRepository, CompanyRepository $companyRepository): \Yiisoft\DataResponse\DataResponse|Response
+    public function view(CurrentRoute $currentRoute, ProfileRepository $profileRepository, CompanyRepository $companyRepository): \Psr\Http\Message\ResponseInterface
     {
         $profile = $this->profile($currentRoute, $profileRepository);
         if ($profile) {
-            $form = new ProfileForm($profile, $this->translator);
+            $form = ProfileForm::show($profile);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'profile/view',
-                'actionArguments' => ['id' => $profile->getId()],
+                'actionArguments' => ['id' => $profile->reqId()],
                 'companies' => $companyRepository->findAllPreloaded(),
                 'form' => $form,
                 'errors' => [],
-                'profile' => $profileRepository->repoProfilequery((string) $profile->getId()),
+                'profile' => $profileRepository->repoProfilequery($profile->reqId()),
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('profile/index');
     }
@@ -208,13 +207,13 @@ final class ProfileController extends BaseController
      * @param ProfileRepository $profileRepository
      * @return Profile|null
      */
-    private function profile(CurrentRoute $currentRoute, ProfileRepository $profileRepository): ?Profile
+    private function profile(
+        CurrentRoute $currentRoute,
+        ProfileRepository $profileRepository): ?Profile
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $profileRepository->repoProfilequery($id);
-        }
-        return null;
+        $id = (int) $currentRoute->getArgument('id');
+        return $profileRepository->repoProfilequery($id);
+        
     }
 
     /**

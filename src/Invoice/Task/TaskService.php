@@ -4,11 +4,38 @@ declare(strict_types=1);
 
 namespace App\Invoice\Task;
 
-use App\Invoice\Entity\Task;
+use App\Infrastructure\Persistence\Task\Task;
+use App\Invoice\Project\ProjectRepository as PR;
+use App\Invoice\TaxRate\TaxRateRepository as TRR;
 
 final readonly class TaskService
 {
-    public function __construct(private TaskRepository $repository) {}
+    public function __construct(
+        private TaskRepository $repository,
+        private PR $pR,
+        private TRR $trR,
+    ) {
+    }
+
+    private function persist(Task $model, array $array): void
+    {
+        if (isset($array['project_id'])) {
+            $project = $this->pR->repoProjectquery(
+                (int) $array['project_id']
+            );
+            if ($project) {
+                $model->setProject($project);
+                $model->setProjectId($project->reqId());
+            }
+        }
+        if (isset($array['tax_rate_id'])) {
+            $tax_rate = $this->trR->repoTaxRatequery((int) $array['tax_rate_id']);
+            if ($tax_rate) {
+                $model->setTaxRate($tax_rate);
+                $model->setTaxRateId($tax_rate->reqId());
+            }
+        }
+    }
 
     /**
      * @param Task $model
@@ -16,20 +43,27 @@ final readonly class TaskService
      */
     public function saveTask(Task $model, array $array): void
     {
-        isset($array['project_id']) ? $model->setProject_id((int) $array['project_id']) : '';
-        isset($array['name']) ? $model->setName((string) $array['name']) : '';
-        isset($array['description']) ? $model->setDescription((string) $array['description']) : '';
-        isset($array['price']) ? $model->setPrice((float) $array['price']) : $model->setPrice(0.00);
-        isset($array['status']) ? $model->setStatus((int) $array['status']) : '';
-        isset($array['tax_rate_id']) ? $model->setTax_rate_id((int) $array['tax_rate_id']) : '';
-
+        $this->persist($model, $array);
+        isset($array['name'])
+            ? $model->setName((string) $array['name'])
+            : '';
+        isset($array['description'])
+            ? $model->setDescription((string) $array['description'])
+            : '';
+        isset($array['price'])
+            ? $model->setPrice((float) $array['price'])
+            : $model->setPrice(0.00);
+        isset($array['status'])
+            ? $model->setStatus((int) $array['status'])
+            : '';
         $datetime = new \DateTime();
         /**
          * @var string $array['finish_date']
          */
         $finish_date = $array['finish_date'] ?? '';
-        $model->setFinish_date($datetime::createFromFormat('Y-m-d', $finish_date));
-
+        $model->setFinishDate(
+            $datetime::createFromFormat('Y-m-d', $finish_date)
+        );
         $this->repository->save($model);
     }
 

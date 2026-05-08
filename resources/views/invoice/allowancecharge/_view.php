@@ -22,7 +22,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
 
-<?= Form::tag()
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -47,7 +47,7 @@ use Yiisoft\Html\Tag\Form;
     ->inputLabelAttributes(['class' => 'form-check-label fs-4'])
     ->inputClass('form-check-input')
 ?>
-            <?= Html::closeTag('div'); ?>  
+            <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'reason_code')
     ->addInputAttributes(['style' => 'background:lightblue'])
@@ -87,9 +87,9 @@ use Yiisoft\Html\Tag\Form;
     ->value(Html::encode($form->getBaseAmount() ?? ''))
     ->readonly(true);
 ?>
-            <?= Html::closeTag('div'); ?>            
-        <?= Html::closeTag('div'); ?>    
+            <?= Html::closeTag('div'); ?>
+        <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= $button::back(); ?>
-<?= Form::tag()->close(); ?>
+<?=  new Form()->close(); ?>

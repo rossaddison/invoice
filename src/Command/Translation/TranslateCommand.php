@@ -26,7 +26,7 @@ final class TranslateCommand extends Command
     }
 
     #[\Override]
-    protected function configure()
+    protected function configure(): void
     {
         $this->addArgument('message', InputArgument::REQUIRED, 'Message that will be translated.');
         $this->addArgument('locale', InputArgument::OPTIONAL, 'Translation locale.');

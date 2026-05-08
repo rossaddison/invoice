@@ -16,6 +16,9 @@ final class ApiDataWrapper implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $response = $handler->handle($request);
+        /**
+         * @psalm-suppress DeprecatedClass DataResponse
+         */
         if ($response instanceof DataResponse) {
             /** @var mixed $data */
             $data = $response->getData();
