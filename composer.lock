@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ae92dcc14b46ea152b1b923a08e4669f",
+    "content-hash": "564220861241c3938bbedcd45a84e8d8",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -8052,6 +8052,67 @@
                 }
             ],
             "time": "2025-12-02T15:19:04+00:00"
+        },
+        {
+            "name": "rossaddison/requirements",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rossaddison/requirements.git",
+                "reference": "ee0242546b7d64122967dc7a1fe4445def07b45a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rossaddison/requirements/zipball/ee0242546b7d64122967dc7a1fe4445def07b45a",
+                "reference": "ee0242546b7d64122967dc7a1fe4445def07b45a",
+                "shasum": ""
+            },
+            "require": {
+                "php": "8.4 - 8.5"
+            },
+            "require-dev": {
+                "maglnet/composer-require-checker": "^3.8 || ^4.24",
+                "phpunit/phpunit": "^9.6.34 || ^12.5.24",
+                "roave/infection-static-analysis-plugin": "^1.43",
+                "spatie/phpunit-watcher": "^1.24.4",
+                "vimeo/psalm": "^4.30 || ^5.26.1 || ^6.16.1"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Yiisoft\\Requirements\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Requirements checker",
+            "homepage": "https://www.yiiframework.com/",
+            "keywords": [
+                "dev",
+                "requirements"
+            ],
+            "support": {
+                "chat": "https://t.me/yii3en",
+                "forum": "https://www.yiiframework.com/forum/",
+                "irc": "ircs://irc.libera.chat:6697/yii",
+                "issues": "https://github.com/yiisoft/requirements/issues?state=open",
+                "source": "https://github.com/yiisoft/requirements",
+                "wiki": "https://www.yiiframework.com/wiki/"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/yiisoft",
+                    "type": "github"
+                },
+                {
+                    "url": "https://opencollective.com/yiisoft",
+                    "type": "opencollective"
+                }
+            ],
+            "time": "2026-05-06T23:40:35+00:00"
         },
         {
             "name": "rossaddison/yii-auth-client",
@@ -16802,67 +16863,6 @@
             "time": "2026-01-29T14:03:21+00:00"
         },
         {
-            "name": "yiisoft/requirements",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/yiisoft/requirements.git",
-                "reference": "e66c731dfc4cbdc078c65ae922eb68596bf95bc9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/requirements/zipball/e66c731dfc4cbdc078c65ae922eb68596bf95bc9",
-                "reference": "e66c731dfc4cbdc078c65ae922eb68596bf95bc9",
-                "shasum": ""
-            },
-            "require": {
-                "php": "7.4.* || 8.0 - 8.4"
-            },
-            "require-dev": {
-                "maglnet/composer-require-checker": "^3.8 || ^4.4",
-                "phpunit/phpunit": "^9.6.22",
-                "roave/infection-static-analysis-plugin": "^1.18",
-                "spatie/phpunit-watcher": "^1.23.6",
-                "vimeo/psalm": "^4.30 || ^5.26.1 || ^6.8.8"
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Yiisoft\\Requirements\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Requirements checker",
-            "homepage": "https://www.yiiframework.com/",
-            "keywords": [
-                "dev",
-                "requirements"
-            ],
-            "support": {
-                "chat": "https://t.me/yii3en",
-                "forum": "https://www.yiiframework.com/forum/",
-                "irc": "ircs://irc.libera.chat:6697/yii",
-                "issues": "https://github.com/yiisoft/requirements/issues?state=open",
-                "source": "https://github.com/yiisoft/requirements",
-                "wiki": "https://www.yiiframework.com/wiki/"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/sponsors/yiisoft",
-                    "type": "github"
-                },
-                {
-                    "url": "https://opencollective.com/yiisoft",
-                    "type": "opencollective"
-                }
-            ],
-            "time": "2025-12-06T22:25:59+00:00"
-        },
-        {
             "name": "yiisoft/router",
             "version": "4.0.2",
             "source": {
@@ -25146,13 +25146,13 @@
     "stability-flags": {
         "cebe/markdown": 20,
         "roave/security-advisories": 20,
+        "rossaddison/requirements": 20,
         "rossaddison/translator-extractor": 20,
         "rossaddison/yii-auth-client": 20,
         "rossaddison/yii-bootstrap5": 20,
         "rossaddison/yii-cycle-1": 20,
         "yiisoft/data-cycle": 20,
-        "yiisoft/rate-limiter": 20,
-        "yiisoft/requirements": 20
+        "yiisoft/rate-limiter": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
