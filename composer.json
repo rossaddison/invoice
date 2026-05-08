@@ -155,12 +155,12 @@
         "phpunit/phpunit": ">=12.5.14",
         "rector/rector": "^2.4.2",
         "roave/better-reflection": "^6.71",
-        "roave/infection-static-analysis-plugin": ">=1.43",
+        "roave/infection-static-analysis-plugin": ">=1.44",
         "roave/security-advisories": "dev-latest",
         "shipmonk/composer-dependency-analyser": "^1.8.4",
         "spatie/phpunit-watcher": ">=1.24.4",
         "squizlabs/php_codesniffer": "^4.0.1",
-        "vimeo/psalm": "^6.16.1||^7.0.0",
+        "vimeo/psalm": ">=6.16.1",
         "rossaddison/translator-extractor": "dev-master"
     },      
     "autoload": {

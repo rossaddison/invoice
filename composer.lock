@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d55446a32f802d130a92a9917e8b1179",
+    "content-hash": "826267e03644734778268b6ef7675a16",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -22189,16 +22189,16 @@
         },
         {
             "name": "roave/infection-static-analysis-plugin",
-            "version": "1.43.0",
+            "version": "1.44.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/infection-static-analysis-plugin.git",
-                "reference": "bcbbfae6f8856a342f08f645e64e7a141bb60f69"
+                "reference": "5e9aaf3db857fe7de2f3630879e16e68e220891d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/infection-static-analysis-plugin/zipball/bcbbfae6f8856a342f08f645e64e7a141bb60f69",
-                "reference": "bcbbfae6f8856a342f08f645e64e7a141bb60f69",
+                "url": "https://api.github.com/repos/Roave/infection-static-analysis-plugin/zipball/5e9aaf3db857fe7de2f3630879e16e68e220891d",
+                "reference": "5e9aaf3db857fe7de2f3630879e16e68e220891d",
                 "shasum": ""
             },
             "require": {
@@ -22217,6 +22217,7 @@
                 "phpunit/phpunit": "^12.5.4",
                 "psalm/plugin-phpunit": "^0.19.5"
             },
+            "default-branch": true,
             "bin": [
                 "bin/roave-infection-static-analysis-plugin"
             ],
@@ -22239,9 +22240,9 @@
             "description": "Static analysis on top of mutation testing - prevents escaped mutants from being invalid according to static analysis",
             "support": {
                 "issues": "https://github.com/Roave/infection-static-analysis-plugin/issues",
-                "source": "https://github.com/Roave/infection-static-analysis-plugin/tree/1.43.0"
+                "source": "https://github.com/Roave/infection-static-analysis-plugin/tree/1.44.x"
             },
-            "time": "2025-12-29T09:46:14+00:00"
+            "time": "2026-05-07T02:11:06+00:00"
         },
         {
             "name": "roave/security-advisories",
