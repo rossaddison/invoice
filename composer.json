@@ -34,8 +34,8 @@
         "ext-zend-opcache": "*",
         "amzn/amazon-pay-api-sdk-php": "^2.7.0",
         "braintree/braintree_php": ">=6.34.0",
-        "brick/math": ">=0.14.8",
-        "brick/money": ">=0.11.2",
+        "brick/math": ">=0.17",
+        "brick/money": ">=0.13",
         "cebe/markdown": "^1.2.1@dev",
         "chillerlan/php-qrcode": "^6.0.1",
         "cycle/annotated": "^4.4.0",
@@ -52,14 +52,13 @@
         "guzzlehttp/psr7": ">=2.9.0",
         "httpsoft/http-message": "^1.1.6",
         "league/iso3166": "^4.4.0",
-        "maglnet/composer-require-checker": ">=4.20",
+        "maglnet/composer-require-checker": ">=4.23",
         "mollie/mollie-api-php": ">=3.11.0",
         "mpdf/mpdf": "^8.3.1",
         "nyholm/psr7": "^1.8.2",
         "php-http/curl-client": "^2.4.0",
         "php-http/guzzle7-adapter": "^1.1",
         "php-standard-library/php-standard-library": ">=5.5",
-        "phpbench/phpbench": ">=84",
         "phpseclib/phpseclib": ">=3.0.52",
         "phptg/bot-api": ">=0.20.0",
         "promphp/prometheus_client_php": ">=2.15.0",
@@ -71,15 +70,15 @@
         "psr/http-server-handler": "^1.0.2",
         "psr/http-server-middleware": "^1.0.2",
         "psr/log": "^3.0.2",
-        "ramsey/uuid": "^4.9.2",
+        "ramsey/uuid": ">=4",
         "rossaddison/yii-auth-client": "dev-invoice",
         "rossaddison/yii-gii": "*",
         "sabre/xml": "^4.1.0",
         "setasign/fpdf": "^1.8.6",
         "spomky-labs/otphp": "^11.4.2",
         "stripe/stripe-php": ">=19",
-        "symfony/console": ">=7.4.9",
-        "symfony/process": ">=7.4.8",
+        "symfony/console": ">=8.0.9",
+        "symfony/process": ">=8.0.8",
         "vlucas/phpdotenv": "^5.6.3",
         "yiisoft/access": "^2.0.1",
         "yiisoft/aliases": "^3.1.1",
@@ -135,7 +134,7 @@
         "yiisoft/view": "^12.2.4",
         "yiisoft/widget": "^2.2.2",
         "yiisoft/yii-console": "^2.4.2",
-        "yiisoft/yii-cycle": ">=2",
+        "rossaddison/yii-cycle-1": "dev-master",
         "yiisoft/yii-dataview": ">=1.1",
         "yiisoft/yii-event": "^2.2",
         "yiisoft/yii-http": "^1.1.1",
@@ -162,7 +161,7 @@
         "spatie/phpunit-watcher": ">=1.24.4",
         "squizlabs/php_codesniffer": "^4.0.1",
         "vimeo/psalm": "^6.16.1||^7.0.0",
-        "yiisoft/translator-extractor": "^2.1.1"
+        "rossaddison/translator-extractor": "dev-master"
     },      
     "autoload": {
         "psr-4": {
@@ -215,6 +214,10 @@
     {
         "type": "vcs",
         "url": "https://github.com/rossaddison/data-cycle"
+    },
+    {
+        "type": "vcs",
+        "url": "https://github.com/rossaddison/translator-extractor"
     },
     {
         "type": "vcs",
