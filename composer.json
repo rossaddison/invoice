@@ -52,13 +52,13 @@
         "guzzlehttp/psr7": ">=2.9.0",
         "httpsoft/http-message": "^1.1.6",
         "league/iso3166": "^4.4.0",
-        "maglnet/composer-require-checker": ">=4.23",
+        "maglnet/composer-require-checker": "^4.24.0",
         "mollie/mollie-api-php": ">=3.11.0",
         "mpdf/mpdf": "^8.3.1",
         "nyholm/psr7": "^1.8.2",
         "php-http/curl-client": "^2.4.0",
         "php-http/guzzle7-adapter": "^1.1",
-        "php-standard-library/php-standard-library": ">=5.5",
+        "php-standard-library/php-standard-library": "^6.1.1",
         "phpseclib/phpseclib": ">=3.0.52",
         "phptg/bot-api": ">=0.20.0",
         "promphp/prometheus_client_php": ">=2.15.0",
@@ -70,9 +70,12 @@
         "psr/http-server-handler": "^1.0.2",
         "psr/http-server-middleware": "^1.0.2",
         "psr/log": "^3.0.2",
-        "ramsey/uuid": ">=4",
+        "ramsey/uuid": ">=4",        
+        "rossaddison/yii-bootstrap5": "dev-bootstrap538",
+        "rossaddison/requirements": "dev-master",
         "rossaddison/yii-auth-client": "dev-invoice",
         "rossaddison/yii-gii": "*",
+        "rossaddison/yii-cycle-1": "dev-master",
         "sabre/xml": "^4.1.0",
         "setasign/fpdf": "^1.8.6",
         "spomky-labs/otphp": "^11.4.2",
@@ -85,7 +88,6 @@
         "yiisoft/arrays": "^3.2.1",
         "yiisoft/assets": "^5.1.2",
         "yiisoft/auth": "^3.2.1",
-        "rossaddison/yii-bootstrap5": "dev-bootstrap538",
         "yiisoft/cache": "^3.2",
         "yiisoft/cache-file": "^3.2",
         "yiisoft/config": "^1.6.2",
@@ -120,7 +122,6 @@
         "yiisoft/rbac-php": ">=2",
         "yiisoft/rbac-rules-container": ">=2.1",
         "yiisoft/request-provider": "^1.3",
-        "rossaddison/requirements": "dev-master",
         "yiisoft/router": "^4.0.2",
         "yiisoft/router-fastroute": "^4.0.3",
         "yiisoft/security": "^1.2.0",
@@ -134,7 +135,6 @@
         "yiisoft/view": "^12.2.4",
         "yiisoft/widget": "^2.2.2",
         "yiisoft/yii-console": "^2.4.2",
-        "rossaddison/yii-cycle-1": "dev-master",
         "yiisoft/yii-dataview": ">=1.1",
         "yiisoft/yii-event": "^2.2",
         "yiisoft/yii-http": "^1.1.1",
@@ -202,9 +202,6 @@
             "yiisoft/config": true,
             "php-http/discovery": false
         }
-    },
-    "replace": {
-       "azjezz/psl": "*"
     },
     "repositories": [
     {
