@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "826267e03644734778268b6ef7675a16",
+    "content-hash": "923c0e4e7892a7386f8a54c340551921",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -511,16 +511,16 @@
         },
         {
             "name": "amphp/pipeline",
-            "version": "v1.2.3",
+            "version": "v1.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/pipeline.git",
-                "reference": "7b52598c2e9105ebcddf247fc523161581930367"
+                "reference": "a044733e080940d1483f56caff0c412ad6982776"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/pipeline/zipball/7b52598c2e9105ebcddf247fc523161581930367",
-                "reference": "7b52598c2e9105ebcddf247fc523161581930367",
+                "url": "https://api.github.com/repos/amphp/pipeline/zipball/a044733e080940d1483f56caff0c412ad6982776",
+                "reference": "a044733e080940d1483f56caff0c412ad6982776",
                 "shasum": ""
             },
             "require": {
@@ -532,7 +532,7 @@
                 "amphp/php-cs-fixer-config": "^2",
                 "amphp/phpunit-util": "^3",
                 "phpunit/phpunit": "^9",
-                "psalm/phar": "^5.18"
+                "psalm/phar": "6.16.1"
             },
             "type": "library",
             "autoload": {
@@ -566,7 +566,7 @@
             ],
             "support": {
                 "issues": "https://github.com/amphp/pipeline/issues",
-                "source": "https://github.com/amphp/pipeline/tree/v1.2.3"
+                "source": "https://github.com/amphp/pipeline/tree/v1.2.4"
             },
             "funding": [
                 {
@@ -574,7 +574,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-03-16T16:33:53+00:00"
+            "time": "2026-05-06T05:37:57+00:00"
         },
         {
             "name": "amphp/process",
@@ -7058,16 +7058,16 @@
         },
         {
             "name": "phptg/bot-api",
-            "version": "0.20",
+            "version": "0.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phptg/bot-api.git",
-                "reference": "c40beb613cbabc0836d92a644fc1ecdb524609e5"
+                "reference": "f9d3448f81374075d7bbd833701725e408738d8f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phptg/bot-api/zipball/c40beb613cbabc0836d92a644fc1ecdb524609e5",
-                "reference": "c40beb613cbabc0836d92a644fc1ecdb524609e5",
+                "url": "https://api.github.com/repos/phptg/bot-api/zipball/f9d3448f81374075d7bbd833701725e408738d8f",
+                "reference": "f9d3448f81374075d7bbd833701725e408738d8f",
                 "shasum": ""
             },
             "require": {
@@ -7130,7 +7130,7 @@
                     "type": "cloudtips"
                 }
             ],
-            "time": "2026-04-26T16:13:26+00:00"
+            "time": "2026-05-09T12:07:27+00:00"
         },
         {
             "name": "promphp/prometheus_client_php",
