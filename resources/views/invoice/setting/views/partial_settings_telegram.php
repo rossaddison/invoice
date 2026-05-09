@@ -11,6 +11,7 @@ use Yiisoft\Html\Tag\Option;
 * @var Yiisoft\Translator\TranslatorInterface $translator
 * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
 * @var array $body
+* @var App\Infrastructure\Persistence\PaymentMethod\PaymentMethod[] $payment_methods
 */
 
 $row = ['class' => 'row'];
@@ -89,9 +90,9 @@ echo H::openTag('div', $row); //1
         echo H::closeTag('b');
         echo H::openTag('a', [
          'href' =>
-         'https://github.com/vjik/telegram-bot-api'
+         'https://github.com/phptg/bot-api'
         ]);
-         echo 'Phptg Bot Api';
+         echo 'phptg/bot-api by Sergei Predvoditelev (vjik)';
         echo H::closeTag('a');
        echo H::closeTag('p');
        echo H::openTag('p');
@@ -277,6 +278,94 @@ echo H::openTag('div', $row); //1
          ->content($translator->translate('yes'));
        echo H::closeTag('select');
        echo H::openTag('br');
+       echo H::openTag('p');
+        echo H::openTag('b');
+         echo '11. ';
+        echo H::closeTag('b');
+        echo 'In @BotFather go to ';
+        echo H::openTag('b');
+         echo 'Payments';
+        echo H::closeTag('b');
+        echo ', connect your Stripe account, and paste the provider token here. ';
+        echo H::openTag('a', [
+         'href' => 'https://core.telegram.org/bots/payments',
+         'target' => '_blank'
+        ]);
+         echo 'Read more...';
+        echo H::closeTag('a');
+       echo H::closeTag('p');
+       $providerToken = 'settings[telegram_provider_token]';
+       echo H::openTag('label', ['for' => $providerToken]);
+        echo $translator->translate(
+         'telegram.bot.api.provider.token'
+        );
+       echo H::closeTag('label');
+       $body[$providerToken] = $s->getSetting('telegram_provider_token');
+       echo H::openTag('div', ['class' => 'input-group']);
+        echo H::openTag('input', [
+         'type'  => 'password',
+         'name'  => $providerToken,
+         'id'    => $providerToken,
+         'class' => 'form-control form-control-lg',
+         'value' => H::encode($body[$providerToken])
+        ]);
+        echo H::openTag('a', [
+         'href'           => '#telegram-providers',
+         'class'          => 'btn btn-outline-secondary',
+         'data-bs-toggle' => 'modal',
+         'style'          => 'text-decoration:none',
+        ]);
+         echo '&#9432; Providers';
+        echo H::closeTag('a');
+       echo H::closeTag('div');
+       echo H::openTag('br');
+       echo H::openTag('p');
+        echo H::openTag('b');
+         echo '12. ';
+        echo H::closeTag('b');
+        echo 'Choose which Payment Method Id (from ';
+        echo H::openTag('a', [
+         'href' => $urlGenerator->generate('paymentmethod/index')
+        ]);
+         echo 'Payment Methods';
+        echo H::closeTag('a');
+        echo ') will be used when a Telegram payment is recorded automatically.';
+       echo H::closeTag('p');
+       $pmId = 'settings[telegram_payment_method_id]';
+       echo H::openTag('label', ['for' => $pmId]);
+        echo $translator->translate(
+         'telegram.bot.api.payment.method.id'
+        );
+       echo H::closeTag('label');
+       $body[$pmId] = $s->getSetting('telegram_payment_method_id');
+       $savedPmId = (int) ($body[$pmId] ?: 0);
+       echo H::openTag('select', [
+        'name'  => $pmId,
+        'id'    => $pmId,
+        'class' => 'form-control form-control-lg',
+       ]);
+        foreach ($payment_methods as $paymentMethod) {
+            $isDefault = $savedPmId === 0
+                && str_contains($paymentMethod->getName() ?? '', 'Card / Direct Debit');
+            echo new Option()
+             ->value((string) $paymentMethod->reqId())
+             ->selected($savedPmId === $paymentMethod->reqId() || $isDefault)
+             ->content(H::encode($paymentMethod->getName()));
+        }
+       echo H::closeTag('select');
+       echo H::openTag('br');
+       echo H::openTag('p');
+        echo H::openTag('b');
+         echo '13. ';
+        echo H::closeTag('b');
+        echo 'Save these settings, then open any invoice and use ';
+        echo H::openTag('b');
+         echo 'Send Telegram Invoice';
+        echo H::closeTag('b');
+        echo ' to deliver a native Telegram payment request to the chat (set in step 7.) . ';
+        echo 'When the customer pays, the webhook auto-records the payment against the invoice.';
+       echo H::closeTag('p');
+       echo H::openTag('br');
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
     echo H::closeTag('div'); //5
@@ -356,3 +445,61 @@ echo H::openTag('div', $row); //1
   echo H::closeTag('div'); //3
  echo H::closeTag('div'); //2
 echo H::closeTag('div'); //1
+
+?>
+<div id="telegram-providers" class="modal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Telegram Payment Providers</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Connect your provider in <strong>@BotFather &rarr; Payments</strong> to obtain a provider token.</p>
+        <table class="table table-sm table-bordered">
+          <thead class="table-light">
+            <tr><th>Provider</th><th>Region(s)</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <?php
+            $f = static fn(string $code, string $label): string
+                => '<img src="https://flagcdn.com/16x12/' . $code . '.png"'
+                   . ' width="16" height="12" alt="' . $code . '"'
+                   . ' style="vertical-align:middle;margin-right:5px;">' . $label;
+            $un = $f('un', 'Global');
+            $uz = $f('uz', 'Uzbekistan');
+            $ru = $f('ru', 'Russia');
+            $ua = $f('ua', 'Ukraine');
+            $ae = $f('ae', 'Middle East (UAE etc.)');
+            $ruCis = $f('ru', 'Russia') . ' / CIS';
+            ?>
+            <tr><td>Stripe</td>      <td><?= $un ?></td>    <td>Most widely supported; test mode available</td></tr>
+            <tr><td>Payme</td>       <td><?= $uz ?></td>    <td></td></tr>
+            <tr><td>YooMoney</td>    <td><?= $ru ?></td>    <td>Formerly Yandex.Money</td></tr>
+            <tr><td>Sberbank</td>    <td><?= $ru ?></td>    <td></td></tr>
+            <tr><td>Tranzzo</td>     <td><?= $ua ?></td>    <td></td></tr>
+            <tr><td>LiqPay</td>      <td><?= $ua ?></td>    <td></td></tr>
+            <tr><td>Portmone</td>    <td><?= $ua ?></td>    <td></td></tr>
+            <tr><td>Click</td>       <td><?= $uz ?></td>    <td></td></tr>
+            <tr><td>Cryptomus</td>   <td><?= $un ?></td>    <td>Crypto payments</td></tr>
+            <tr><td>Telr</td>        <td><?= $ae ?></td>    <td></td></tr>
+            <tr><td>PayMaster</td>   <td><?= $ru ?></td>    <td></td></tr>
+            <tr><td>Smartglocal</td> <td><?= $ruCis ?></td> <td></td></tr>
+            <tr><td>ECOMMPAY</td>    <td><?= $un ?></td>    <td></td></tr>
+          </tbody>
+        </table>
+        <p class="text-muted small">
+          Omit the provider token and use currency <code>XTR</code> for
+          <strong>Telegram Stars</strong> &mdash; no payment provider required.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <a href="https://core.telegram.org/bots/payments" target="_blank"
+           class="btn btn-outline-secondary btn-sm">Telegram Payments docs</a>
+        <button type="button" class="btn btn-secondary btn-sm"
+                data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<?php

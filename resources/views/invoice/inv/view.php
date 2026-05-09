@@ -566,6 +566,44 @@ if ($invEdit) {
       echo ' ' . H::encode($translator->translate('send.email'));
      echo H::closeTag('a');
     echo H::closeTag('li');
+    if ($s->getSetting('enable_telegram') == '1') {
+        echo H::openTag('li');
+         echo H::openTag('a', [
+             'href' => $urlGenerator->generate('telegram/sendInvoice',
+                     ['inv_id' => $inv->reqId()]),
+             'style' => 'text-decoration:none'
+         ]);
+          echo H::openTag('i', ['class' => 'bi bi-telegram']);
+          echo H::closeTag('i');
+// Options ... Send Telegram Invoice
+          echo ' ' . H::encode($translator->translate('send.telegram.invoice'));
+         echo H::closeTag('a');
+        echo H::closeTag('li');
+        echo H::openTag('li');
+         echo H::openTag('a', [
+             'href' => $urlGenerator->generate('telegram/invoiceLink',
+                     ['inv_id' => $inv->reqId()]),
+             'style' => 'text-decoration:none'
+         ]);
+          echo H::openTag('i', ['class' => 'bi bi-link-45deg']);
+          echo H::closeTag('i');
+// Options ... Create Telegram Payment Link
+          echo ' ' . H::encode($translator->translate('telegram.invoice.link.created.menu'));
+         echo H::closeTag('a');
+        echo H::closeTag('li');
+        echo H::openTag('li');
+         echo H::openTag('a', [
+             'href' => $urlGenerator->generate('telegram/sendPdf',
+                     ['inv_id' => $inv->reqId()]),
+             'style' => 'text-decoration:none'
+         ]);
+          echo H::openTag('i', ['class' => 'bi bi-file-earmark-pdf']);
+          echo H::closeTag('i');
+// Options ... Send PDF via Telegram
+          echo ' ' . H::encode($translator->translate('telegram.pdf.send.menu'));
+         echo H::closeTag('a');
+        echo H::closeTag('li');
+    }
     echo H::openTag('li');
      echo H::openTag('a', [
          'href' => '#inv-to-inv',

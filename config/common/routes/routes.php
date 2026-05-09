@@ -970,6 +970,17 @@ return [
                 ->name('family/generateProducts')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([FamilyController::class, 'generateProducts']),
+            // Cleaning run: display drag-and-drop street order page
+            Route::get('/family/street-order')
+                ->name('family/streetOrder')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([FamilyController::class, 'streetOrder']),
+            // Cleaning run: persist new street order (called by TypeScript drag-and-drop)
+            Route::post('/family/reorder')
+                ->name('family/reorder')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->middleware(JsonDataResponseMiddleware::class)
+                ->action([FamilyController::class, 'reorder']),
             Route::get('/qa[/page/{page:\d+}]')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([QaController::class, 'index'])
@@ -2069,10 +2080,31 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([TelegramController::class, 'getUpdates'])
                 ->name('telegram/getUpdates'),
+            // No auth middleware: Telegram's servers must be able to POST here.
+            // Secured by X-Telegram-Bot-Api-Secret-Token header verification only.
             Route::methods([$mG, $mP], '/telegram/webhook')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([TelegramController::class, 'webhook'])
                 ->name('telegram/webhook'),
+            Route::get('/telegram/send-invoice/{inv_id:\d+}')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([TelegramController::class, 'sendInvoice'])
+                ->name('telegram/sendInvoice'),
+            Route::get('/telegram/invoice-link/{inv_id:\d+}')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([TelegramController::class, 'createInvoiceLink'])
+                ->name('telegram/invoiceLink'),
+            Route::get('/telegram/send-pdf/{inv_id:\d+}')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([TelegramController::class, 'sendPdf'])
+                ->name('telegram/sendPdf'),
+            Route::get('/telegram/send-location')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([TelegramController::class, 'sendLocation'])
+                ->name('telegram/sendLocation'),
+            Route::get('/telegram/refund-stars/{payment_id:\d+}')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([TelegramController::class, 'refundStars'])
+                ->name('telegram/refundStars'),
             Route::get('/unit')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([UnitController::class, 'index'])

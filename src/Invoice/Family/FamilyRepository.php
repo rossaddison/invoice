@@ -136,6 +136,17 @@ final class FamilyRepository extends Select\Repository
     }
 
     /**
+     * Returns all families ordered by street_sort_order ASC, then family_name ASC.
+     * Used exclusively by the cleaning-run street order drag-and-drop view.
+     */
+    public function findAllByStreetOrder(): EntityReader
+    {
+        $query = $this->select()
+            ->orderBy(['street_sort_order' => 'asc', 'family_name' => 'asc']);
+        return new EntityReader($query);
+    }
+
+    /**
      * @return int
      */
     public function repoTestDataCount(): int

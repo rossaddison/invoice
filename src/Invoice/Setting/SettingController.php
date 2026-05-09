@@ -240,6 +240,7 @@ final class SettingController extends BaseController
             'qrcode' => $this->webViewRenderer->renderPartialAsString($p . 'qr_code', [
             ]),
             'telegram' => $this->webViewRenderer->renderPartialAsString($p . 'telegram', [
+                'payment_methods' => $pm->findAllPreloaded(),
             ]),
             // two-factor-authentication
             'tfa' => $this->webViewRenderer->renderPartialAsString($p . 'two_factor_authentication'),

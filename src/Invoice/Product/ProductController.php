@@ -664,8 +664,8 @@ final class ProductController extends BaseController
      * Related logic:
         see  ...resources/views/invoice/product/modal-product-lookups-quote.php
      * Related logic:
-        see  ...src\Invoice\Asset\rebuild-1.13\js modal_product_lookups.js $(document).on('click',
-     *      '.select-items-confirm-quote', function () => selection_quote
+        see  ...src\Invoice\Asset\rebuild\js invoice-typescript-iife.js compiled from product.ts
+     *  HandleQuoteConfirm selectionQuote
      * @param FormHydrator $formHydrator
      * @param Request $request
      * @param pR $pR

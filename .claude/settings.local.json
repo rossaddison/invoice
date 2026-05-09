@@ -4,5 +4,20 @@
       "Bash(grep -rn \"App\\\\\\\\\\\\\\\\Invoice\\\\\\\\\\\\\\\\Entity\\\\\\\\\" src/Infrastructure/Persistence/)",
       "Bash(vendor/bin/psalm)"
     ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -ExecutionPolicy Bypass -NonInteractive -File \".claude\\sync-schema.ps1\"",
+            "timeout": 45,
+            "statusMessage": "Syncing Cycle ORM schema..."
+          }
+        ]
+      }
+    ]
   }
 }

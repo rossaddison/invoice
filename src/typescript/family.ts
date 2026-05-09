@@ -176,7 +176,10 @@ export class FamilyHandler {
     }
 
     /**
-     * Handler: when primary category changes, load secondary categories
+     * Handler: when primary category changes, load secondary categories.
+     * Guards against empty value — initializeSelectors fires this on page
+     * load before the user makes a selection, which would produce a URL like
+     * /family/secondaries/ that the {category_primary_id} route cannot match.
      */
     private async onPrimaryChange(): Promise<void> {
         const primarySelect = document.getElementById(
@@ -184,7 +187,22 @@ export class FamilyHandler {
         ) as HTMLSelectElement;
         if (!primarySelect) return;
 
-        const primaryCategoryId = primarySelect.value || '';
+        const primaryCategoryId = primarySelect.value;
+
+        if (!primaryCategoryId) {
+            this.populateSelect(
+                document.getElementById('family-category-secondary-id') as HTMLSelectElement,
+                null,
+                'None'
+            );
+            this.populateSelect(
+                document.getElementById('family-name') as HTMLSelectElement,
+                null,
+                'None'
+            );
+            return;
+        }
+
         const url = `${location.origin}/invoice/family/secondaries/${encodeURIComponent(primaryCategoryId)}`;
 
         try {
@@ -202,42 +220,40 @@ export class FamilyHandler {
                 ) as HTMLSelectElement;
                 this.populateSelect(secondaryDropdown, secondaryCategories, 'None');
 
-                // Trigger change on secondary to cascade populate family names
+                // Cascade: populate family names for the newly loaded secondary
                 if (secondaryDropdown) {
-                    const changeEvent = new Event('change', { bubbles: true });
-                    secondaryDropdown.dispatchEvent(changeEvent);
+                    secondaryDropdown.dispatchEvent(new Event('change', { bubbles: true }));
                 }
             } else {
-                // In failure case, clear secondary and family name selects
                 this.populateSelect(
                     document.getElementById('family-category-secondary-id') as HTMLSelectElement,
-                    {},
+                    null,
                     'None'
                 );
                 this.populateSelect(
                     document.getElementById('family-name') as HTMLSelectElement,
-                    {},
+                    null,
                     'None'
                 );
             }
         } catch (error) {
             console.error('Error loading secondary categories', error);
-            // Clear selects on error
             this.populateSelect(
                 document.getElementById('family-category-secondary-id') as HTMLSelectElement,
-                {},
+                null,
                 'None'
             );
             this.populateSelect(
                 document.getElementById('family-name') as HTMLSelectElement,
-                {},
+                null,
                 'None'
             );
         }
     }
 
     /**
-     * Handler: when secondary category changes, load family names
+     * Handler: when secondary category changes, load family names.
+     * Guards against empty value for the same reason as onPrimaryChange.
      */
     private async onSecondaryChange(): Promise<void> {
         const secondarySelect = document.getElementById(
@@ -245,7 +261,17 @@ export class FamilyHandler {
         ) as HTMLSelectElement;
         if (!secondarySelect) return;
 
-        const secondaryCategoryId = secondarySelect.value || '';
+        const secondaryCategoryId = secondarySelect.value;
+
+        if (!secondaryCategoryId) {
+            this.populateSelect(
+                document.getElementById('family-name') as HTMLSelectElement,
+                null,
+                'None'
+            );
+            return;
+        }
+
         const url = `${location.origin}/invoice/family/names/${encodeURIComponent(secondaryCategoryId)}`;
 
         try {
@@ -258,23 +284,23 @@ export class FamilyHandler {
 
             if (data.success === 1) {
                 const familyNames = data.family_names || {};
-                const familyNameDropdown = document.getElementById(
-                    'family-name'
-                ) as HTMLSelectElement;
-                this.populateSelect(familyNameDropdown, familyNames, 'None');
+                this.populateSelect(
+                    document.getElementById('family-name') as HTMLSelectElement,
+                    familyNames,
+                    'None'
+                );
             } else {
                 this.populateSelect(
                     document.getElementById('family-name') as HTMLSelectElement,
-                    {},
+                    null,
                     'None'
                 );
             }
         } catch (error) {
             console.error('Error loading family names', error);
-            // Clear family names select on error
             this.populateSelect(
                 document.getElementById('family-name') as HTMLSelectElement,
-                {},
+                null,
                 'None'
             );
         }

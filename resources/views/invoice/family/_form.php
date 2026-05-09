@@ -21,6 +21,7 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
  * @var App\Widget\Button $button
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Infrastructure\Persistence\Family\Family|null $family
  * @var array $customValues
  * @var array $customFields
  * @var string $csrf
@@ -75,6 +76,30 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
                     ])
                     ->hint($translator->translate('hint.this.field.is.required'));
                   ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                  <?php
+                  // Street order info — read-only; managed via the drag-and-drop page
+                  $sortOrder = isset($family) ? $family->getStreetSortOrder() : null;
+                  ?>
+                  <?= Html::openTag('div', ['class' => 'alert alert-light border d-flex align-items-center gap-3 py-2']); ?>
+                    <?= Html::tag('i', '', ['class' => 'bi bi-signpost-split fs-5 text-secondary']); ?>
+                    <?= Html::openTag('div'); ?>
+                      <?php if ($sortOrder !== null): ?>
+                        <?= Html::encode($translator->translate('street.order.position')) ?>
+                        <?= Html::openTag('strong'); ?>
+                          <?= Html::encode((string) $sortOrder) ?>
+                        <?= Html::closeTag('strong'); ?>
+                        &nbsp;&mdash;&nbsp;
+                      <?php endif; ?>
+                      <?= Html::openTag('a', [
+                          'href'  => $urlGenerator->generate('family/streetOrder'),
+                          'class' => 'alert-link',
+                      ]); ?>
+                        <?= Html::encode($translator->translate('street.order.manage.link')) ?>
+                      <?= Html::closeTag('a'); ?>
+                    <?= Html::closeTag('div'); ?>
+                  <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::select($form, 'category_primary_id')

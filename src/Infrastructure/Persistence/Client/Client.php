@@ -107,6 +107,8 @@ class Client
         private int $client_gender = 0,
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $postaladdress_id = null,
+        #[Column(type: 'string(20)', nullable: true)]
+        private ?string $client_telegram_chat_id = null,
     ) {
         $this->client_full_name = ltrim(rtrim($this->client_name
                 . ' '
@@ -445,6 +447,16 @@ class Client
     public function getPostaladdressId(): ?int
     {
         return $this->postaladdress_id;
+    }
+
+    public function getClientTelegramChatId(): ?string
+    {
+        return $this->client_telegram_chat_id;
+    }
+
+    public function setClientTelegramChatId(?string $client_telegram_chat_id): void
+    {
+        $this->client_telegram_chat_id = $client_telegram_chat_id === '' ? null : $client_telegram_chat_id;
     }
 
     public function getDeliveryLocations(): ArrayCollection

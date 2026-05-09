@@ -105,12 +105,21 @@ final class FamilyController extends BaseController
     }
 
     /**
-     * Build a 3 tiered dependency drop down search form
-     * @param cpR $cpR
-     * @return Response
+     * Build a 3 tiered dependency drop down search form.
+     * On POST the family_name field value is a family ID (keyed by
+     * optionsDataFamilyNamesWithCategorySecondaryId), so redirect to view.
      */
-    public function search(cpR $cpR): Response
+    public function search(Request $request, cpR $cpR): Response
     {
+        if ($request->getMethod() === Method::POST) {
+            $body = $request->getParsedBody() ?? [];
+            if (is_array($body)) {
+                $familyId = (int) ($body['family_name'] ?? 0);
+                if ($familyId > 0) {
+                    return $this->webService->getRedirectResponse('family/view', ['id' => $familyId]);
+                }
+            }
+        }
         $form = new FamilyForm();
         $parameters = [
             'title' => $this->translator->translate('search.family'),
@@ -288,8 +297,7 @@ final class FamilyController extends BaseController
         $family = $this->family((int) $id, $familyRepository);
         if ($family) {
             $form = FamilyForm::show($family);
-            $familyCustom = new FamilyCustom();
-            $familyCustomForm = FamilyCustomForm::show($familyCustom);
+            $familyCustomForm = new FamilyCustomForm();
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'family/edit',
@@ -433,6 +441,37 @@ final class FamilyController extends BaseController
             return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('family/index');
+    }
+
+    /**
+     * Renders the drag-and-drop street order page for the cleaning run.
+     */
+    public function streetOrder(fR $familyRepository): Response
+    {
+        return $this->webViewRenderer->render('street_order', [
+            'alert'       => $this->alert(),
+            'streets'     => $familyRepository->findAllByStreetOrder(),
+            'reorderUrl'  => $this->urlGenerator->generate('family/reorder'),
+        ]);
+    }
+
+    /**
+     * Accepts a POST with form field order[] (family IDs in new sequence) and
+     * bulk-updates street_sort_order. Returns JSON {success: true|false}.
+     */
+    public function reorder(Request $request): Response
+    {
+        $body = $request->getParsedBody() ?? [];
+        if (!is_array($body) || !isset($body['order']) || !is_array($body['order'])) {
+            return $this->factory->createResponse(['success' => false, 'message' => 'Invalid payload']);
+        }
+        $orderedIds = array_values(array_map('intval', $body['order']));
+        try {
+            $this->familyService->saveStreetOrders($orderedIds);
+            return $this->factory->createResponse(['success' => true]);
+        } catch (\Throwable $e) {
+            return $this->factory->createResponse(['success' => false, 'message' => $e->getMessage()]);
+        }
     }
 
     /**

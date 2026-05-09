@@ -33,4 +33,21 @@ final readonly class FamilyService
     {
         $this->repository->delete($model);
     }
+
+    /**
+     * Bulk-writes street_sort_order for the given family IDs in the supplied order.
+     * Position 1 = first in the cleaning run, 2 = second, etc.
+     *
+     * @param list<int> $orderedIds Family IDs in the desired sequence
+     */
+    public function saveStreetOrders(array $orderedIds): void
+    {
+        foreach ($orderedIds as $position => $familyId) {
+            $family = $this->repository->repoFamilyquery($familyId);
+            if ($family !== null) {
+                $family->setStreetSortOrder($position + 1);
+                $this->repository->save($family);
+            }
+        }
+    }
 }

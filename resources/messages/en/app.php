@@ -282,6 +282,7 @@ return [
   'client.note.view' => 'Client Note View',
   'client.notes' => 'Client Notes',
   'client.number' => 'Client Number',
+  'client.telegram.chat.id' => 'Telegram Chat ID',
   'client.peppol' => 'Client Peppol Details',
   'client.peppol.accounting.cost' => 'Client Accounting'
     . ' Cost Code for Bookkeeping',
@@ -775,6 +776,11 @@ return [
     'Product prefix is required when a comma list is provided.',
   'family.name' => 'Family name',
   'family.search' => 'Family Search',
+  'street.order' => 'Cleaning Run — Street Order',
+  'street.order.drag.hint' => 'Drag the streets into the order you want to clean them. The order is saved automatically when you drop a row.',
+  'street.order.back.to.families' => 'Back to Families',
+  'street.order.position' => 'Cleaning run position:',
+  'street.order.manage.link' => 'Manage street order →',
   'faq' => 'FAQ\'s',
   'faq.ai.callback.session' =>
     'Copilot: How can I include '
@@ -2105,7 +2111,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'record.successfully.created' =>
     'Record successfully created',
   'record.successfully.created.not' =>
-    'Record NOT successfully created', 
+    'Record NOT successfully created',
   'record.successfully.deleted' =>
     'Record successfully deleted',
   'record.successfully.updated' =>
@@ -2249,6 +2255,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'select.unit' => 'Select unit',
   'send' => 'Send',
   'send.email' => 'Send Email',
+  'send.telegram.invoice' => 'Send Telegram Invoice',
   'sent' => 'Sent',
   'select.all' => 'Select All',
   'set.new.password' => 'Set a new password',
@@ -2456,24 +2463,23 @@ prior to importing and no existing documents e.g. Invoices.',
     . ' test message has not been setup.',
   'telegram.bot.api.current.status' =>
     '<b>Current use:</b>'
-    . ' There is no need'
-    . ' for a webhook'
-    . ' because clients do not have chat ids'
-    . ' and are not sending messages to the bot.',
+    . ' The webhook receives pre_checkout_query (auto-approved)'
+    . ' and successful_payment updates,'
+    . ' recording payments automatically against the invoice.',
   'telegram.bot.api.enable' => 'Enable Telegram',
   'telegram.bot.api.enabled.not' => 'Telegram Not Enabled',
   'telegram.bot.api.future.use' =>
-    '<b>Future use:</b>'
-    . ' Clients with chat ids'
-    . ' get sent a telegram invoice'
-    . ' and they confirm receipt'
-    . ' by sending back a confirmation to the webhook',
+    '<b>Live:</b>'
+    . ' Use <em>Send Telegram Invoice</em> on any invoice'
+    . ' to deliver a native Telegram payment request.'
+    . ' Payment is recorded automatically via the webhook.',
   'telegram.bot.api.general.purpose' =>
     '<b>Registered Bot,'
     . ' identified by token,'
-    . ' sends Customer Payment Notifications'
-    . ' to below Registered Chat Id'
-    . ' (usually the admins personal non-bot telegram account).</b>',
+    . ' sends a native Telegram Invoice'
+    . ' (with Stripe provider token)'
+    . ' to the Chat Id below'
+    . ' and auto-records payment on success.</b>',
   'telegram.bot.api.get.updates.failed' =>
     'Your Telegram Updates failed.',
   'telegram.bot.api.get.updates.success' =>
@@ -2490,10 +2496,35 @@ prior to importing and no existing documents e.g. Invoices.',
     'Send a basic test message'
     . ' \'Hello World from Telegram Bot Api\''
     . ' to an external chat id',
+  'telegram.bot.api.payment.method.id' =>
+    'Payment Method Id used when recording an automatic Telegram payment',
   'telegram.bot.api.payment.notification.success' =>
     'Telegram Payment Notification Successful',
   'telegram.bot.api.payment.notifications' =>
     'Telegram Payment Notifications',
+  'telegram.bot.api.provider.token' =>
+    'Telegram Payment Provider Token (from @BotFather → Payments → Stripe)',
+  'telegram.invoice.sent' =>
+    'Telegram invoice sent successfully.',
+  'telegram.invoice.client.chat.id.not.set' =>
+    'Client has no Telegram chat ID. Edit the client and add their Telegram chat ID.',
+  'telegram.invoice.link.created' =>
+    'Telegram payment link created. Copy the link below.',
+  'telegram.invoice.link.created.menu' => 'Create Telegram Payment Link',
+  'telegram.pdf.send.menu' => 'Send PDF via Telegram',
+  'telegram.pdf.sent' =>
+    'Invoice PDF sent to Telegram successfully.',
+  'telegram.pdf.not.found' =>
+    'No archived PDF found for this invoice.'
+    . ' Generate one first via Options → Download PDF.',
+  'telegram.location.sent' =>
+    'Company location sent to Telegram successfully.',
+  'telegram.stars.refunded' =>
+    'Telegram Stars payment refunded successfully.',
+  'telegram.stars.no.charge.id' =>
+    'Cannot refund: payment note does not contain a Telegram charge ID and buyer user ID.',
+  'telegram.location.not.configured' =>
+    'Company latitude and longitude are not configured. Set them in Settings.',
   'telegram.bot.api.token' => 'Telegram Bot Api Token',
   'telegram.bot.api.token.not.set' => 'Telegram Bot Api Token Not Set',
   'telegram.bot.api.webhook.delete' => 'Delete the Webhook',
@@ -2899,7 +2930,6 @@ prior to importing and no existing documents e.g. Invoices.',
 
   // === INVOICE ORIGIN TRACKING ===
   'invoice.origin' => 'Origin',
-  'invoice.created.from.quote' => 'Created from Quote',
 
   // === PROMETHEUS MONITORING ===
   'monitoring.health.database' => 'Database Connection',

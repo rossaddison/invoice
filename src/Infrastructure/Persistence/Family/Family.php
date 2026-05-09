@@ -8,8 +8,10 @@ use App\Infrastructure\Persistence\Trait\RequireId;
 use App\Invoice\Family\FamilyRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Table\Index;
 
 #[Entity(repository: FamilyRepository::class)]
+#[Index(columns: ['street_sort_order'])]
 class Family
 {
     use RequireId;
@@ -28,6 +30,8 @@ class Family
         private ?int $category_primary_id = null,
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $category_secondary_id = null,
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $street_sort_order = null,
     ) {
     }
 
@@ -96,5 +100,15 @@ class Family
         int $category_secondary_id
     ): void {
         $this->category_secondary_id = $category_secondary_id;
+    }
+
+    public function getStreetSortOrder(): ?int
+    {
+        return $this->street_sort_order;
+    }
+
+    public function setStreetSortOrder(int $street_sort_order): void
+    {
+        $this->street_sort_order = $street_sort_order;
     }
 }

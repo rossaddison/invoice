@@ -15,6 +15,8 @@ import './family-commalist-picker.js';
 import { initStripePayment } from './payment-stripe.js';
 import { initAmazonPayment } from './payment-amazon.js';
 import { initBraintreePayment } from './payment-braintree.js';
+import { initTelegramProviderPopup } from './telegram-providers.js';
+import { initStreetOrder } from './family-street-order.js';
 
 /**
  * Initialize Invoice Application
@@ -115,12 +117,16 @@ if (document.readyState === 'loading') {
         initStripePayment();
         initAmazonPayment();
         initBraintreePayment();
+        initTelegramProviderPopup();
+        initStreetOrder();
     });
 } else {
     new InvoiceApp();
     initStripePayment();
     initAmazonPayment();
     initBraintreePayment();
+    initTelegramProviderPopup();
+    initStreetOrder();
 }
 
 // Export for potential external usage

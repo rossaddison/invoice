@@ -186,6 +186,16 @@ use Yiisoft\Html\Tag\Form;
  <?= Html::openTag('div', ['class' => 'tab-pane', 'id' => 'pane-contact', 'role' => 'tabpanel']); ?>
   <?= $formFields->clientTelephoneField($form, 'client_phone', 'phone'); ?>
   <?= $formFields->clientTelephoneField($form, 'client_fax', 'fax'); ?>
+  <?= Field::text($form, 'client_telegram_chat_id')
+      ->label($translator->translate('client.telegram.chat.id'))
+      ->addInputAttributes([
+          'placeholder' => $translator->translate('client.telegram.chat.id'),
+          'value' => Html::encode($form->getClientTelegramChatId() ?? ''),
+          'class' => 'form-control form-control-lg',
+          'id' => 'client_telegram_chat_id',
+      ])
+      ->required(false)
+      ->hint($translator->translate('hint.this.field.is.not.required')); ?>
   <?= $formFields->clientUrlField($form); ?>
   <?= Html::openTag('div', ['class' => 'mb-3']); ?>
    <?= Html::label($translator->translate('client.postaladdress.available') . ': ', 'postaladdress_id'); ?>

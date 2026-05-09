@@ -32,7 +32,7 @@
     "@types/node": "^25.6.2",
     "@typescript-eslint/eslint-plugin": "^8.59.2",
     "@typescript-eslint/parser": "^8.59.2",
-    "@typescript/native-preview": "^7.0.0-dev.20260508.1",
+    "@typescript/native-preview": "^7.0.0-dev.20260509.2",
     "esbuild": "^0.28.0",
     "eslint": "^10.3.0",
     "eslint-plugin-deprecation": "^3.0.0",

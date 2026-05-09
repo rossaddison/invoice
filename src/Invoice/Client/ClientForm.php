@@ -69,6 +69,9 @@ final class ClientForm extends FormModel
     private ?int $client_gender = null;
     private ?int $postaladdress_id = null;
 
+    #[Length(min: 0, max: 20, skipOnEmpty: true)]
+    private ?string $client_telegram_chat_id = null;
+
     public static function show(Client $client): self
     {
         $form = new self();
@@ -101,6 +104,7 @@ final class ClientForm extends FormModel
         $form->client_age = $client->getClientAge();
         $form->client_gender = $client->getClientGender();
         //$form->postaladdress_id = $client->getPostaladdressId();
+        $form->client_telegram_chat_id = $client->getClientTelegramChatId();
         return $form;
     }
 
@@ -237,6 +241,11 @@ final class ClientForm extends FormModel
     public function getPostaladdressId(): ?int
     {
         return $this->postaladdress_id;
+    }
+
+    public function getClientTelegramChatId(): ?string
+    {
+        return $this->client_telegram_chat_id;
     }
 
     /**

@@ -31,6 +31,10 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 **Recent Implementations**
 
+[Family Drag-and-Drop Street Order](src/docs/FAMILY_DRAG_DROP_STREET_ORDER.md) — reorder streets for a cleaning run via native HTML5 drag-and-drop, persisted automatically on drop (May 2026)
+
+[Telegram Payment Providers](docs/TELEGRAM_PAYMENT_PROVIDERS.md) — native Telegram invoicing via [phptg/bot-api](https://github.com/phptg/bot-api) by [Sergei Predvoditelev (vjik)](https://github.com/vjik) (May 2026)
+
 [Adapting forms for DDD](docs/FORMS_DDD_.md) (April 2026)
 
 [Entity to Infrastructure Migration Process](docs/ENTITY_TO_INFRASTRUCTURE_PROCESS.md) (April 2026)
