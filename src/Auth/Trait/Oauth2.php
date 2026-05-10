@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Auth\Trait;
 
-use App\Auth\Token;
+use App\Infrastructure\Persistence\Token\Token;
 use App\Auth\TokenRepository;
 use App\Infrastructure\Persistence\User\User;
 use Yiisoft\Yii\AuthClient\Widget\AuthChoice;

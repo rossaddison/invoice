@@ -70,10 +70,6 @@ final class AssignRoleCommand extends Command
             if (null === $user) {
                 throw new InvalidArgumentException('Can\'t find user');
             }
-            if (!($user->hasIdentity())) {
-                throw new InvalidArgumentException('User Id is NULL');
-            }
-
             $role = $this->itemsStorage->getRole($roleName);
 
             if (null === $role) {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Auth\Controller;
 
-use App\Auth\Token;
+use App\Infrastructure\Persistence\Token\Token;
 use App\Auth\TokenRepository as tR;
 use App\Infrastructure\Persistence\User\User;
 use App\User\UserRepository as uR;
@@ -293,41 +293,38 @@ final class SignupController
     {
         $tokenWithMask = TokenMask::apply($randomAndTimeToken);
         $userInv = new UserInv();
-        if ($user->hasIdentity()) {
-            $userId = $user->reqId();
-            $elcc = $this->translator->translate('email.link.click.confirm');
-            $userInv->setUserId($userId);
-            // if the user is administrator assign 0 => 'Administrator',
-            // 1 => Not Administrator
-            $userInv->setType($userId == 1 ? 0 : 1);
-            // when the user clicks on the link click confirm url, make the
-            // user active in the userinv extension table. Initially keep the
-            // user inactive.
-            $userInv->setActive(false);
-            $userInv->setLanguage($language);
-            $uiR->save($userInv);
-            $content = new A()
-            // When the url is clicked by the user, return to userinv/signup
-            // to activate the user and assign a client to the user
-            // depending on whether 'Assign a client to user on signup' has
-            // been chosen under View ... Settings...General. The user will
-            // be able to edit their userinv details on the client side as
-            // well as the client record.
-                ->href($this->urlGenerator->generateAbsolute(
-                    'userinv/signup',
-                    [
-                        '_language' => $_language,
-                        'language' => $language,
-                        'token' => $tokenWithMask,
-                        'tokenType' => 'email-verification',
-                    ],
-                ))
-                ->content($elcc);
-            return new Body()
-                ->content($content)
-                ->render();
-        }
-        return '';
+        $userId = $user->reqId();
+        $elcc = $this->translator->translate('email.link.click.confirm');
+        $userInv->setUserId($userId);
+        // if the user is administrator assign 0 => 'Administrator',
+        // 1 => Not Administrator
+        $userInv->setType($userId == 1 ? 0 : 1);
+        // when the user clicks on the link click confirm url, make the
+        // user active in the userinv extension table. Initially keep the
+        // user inactive.
+        $userInv->setActive(false);
+        $userInv->setLanguage($language);
+        $uiR->save($userInv);
+        $content = new A()
+        // When the url is clicked by the user, return to userinv/signup
+        // to activate the user and assign a client to the user
+        // depending on whether 'Assign a client to user on signup' has
+        // been chosen under View ... Settings...General. The user will
+        // be able to edit their userinv details on the client side as
+        // well as the client record.
+            ->href($this->urlGenerator->generateAbsolute(
+                'userinv/signup',
+                [
+                    '_language' => $_language,
+                    'language' => $language,
+                    'token' => $tokenWithMask,
+                    'tokenType' => 'email-verification',
+                ],
+            ))
+            ->content($elcc);
+        return new Body()
+            ->content($content)
+            ->render();
     }
 
     /**

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Auth;
 
+use App\Infrastructure\Persistence\Identity\Identity;
+use App\Infrastructure\Persistence\Token\Token;
 use Cycle\ORM\Select;
 use Yiisoft\Auth\IdentityWithTokenRepositoryInterface;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
@@ -37,7 +39,7 @@ final class TokenRepository extends Select\Repository implements IdentityWithTok
     /**
      * @param string $token
      * @param string|null $type
-     * @return Token
+     * @return Token|null
      */
     public function findTokenByTokenAndType(string $token, ?string $type = null): ?Token
     {
