@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\ViewInjection;
 
-use App\Auth\Identity;
+use App\Infrastructure\Persistence\Identity\Identity;
 // Entities
 use App\Infrastructure\Persistence\Company\Company;
 use App\Infrastructure\Persistence\CompanyPrivate\CompanyPrivate;
