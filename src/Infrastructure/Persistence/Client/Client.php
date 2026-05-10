@@ -12,6 +12,7 @@ use App\Infrastructure\Persistence\Trait\RequireId;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\HasMany;
+use Cycle\Annotated\Annotation\Table\Index;
 use Cycle\ORM\Entity\Behavior;
 use Doctrine\Common\Collections\ArrayCollection;
 use DateTimeImmutable;
@@ -19,6 +20,20 @@ use DateTimeImmutable;
 #[Entity(repository: ClientRepository::class)]
 #[Behavior\CreatedAt(field: 'client_date_created', column: 'client_date_created')]
 #[Behavior\UpdatedAt(field: 'client_date_modified', column: 'client_date_modified')]
+#[Behavior\Hook(
+    callable: [self::class, 'syncFullName'],
+    events: [
+        \Cycle\ORM\Entity\Behavior\Event\Mapper\Command\OnCreate::class,
+        \Cycle\ORM\Entity\Behavior\Event\Mapper\Command\OnUpdate::class,
+    ]
+)]
+// Filter toolbar and join targets from inv/quote/salesorder indexes
+#[Index(columns: ['client_active'])]
+#[Index(columns: ['client_name'])]
+#[Index(columns: ['client_surname'])]
+#[Index(columns: ['client_group'])]
+// Nullable FK
+#[Index(columns: ['postaladdress_id'])]
 class Client
 {
     use RequireId;
@@ -203,6 +218,17 @@ class Client
     public function setClientFullName(string $client_full_name): void
     {
         $this->client_full_name = $client_full_name;
+    }
+
+    public static function syncFullName(
+        \Cycle\ORM\Entity\Behavior\Event\Mapper\Command\OnCreate|
+        \Cycle\ORM\Entity\Behavior\Event\Mapper\Command\OnUpdate $event
+    ): void {
+        $client = $event->entity;
+        assert($client instanceof self);
+        $client->setClientFullName(ltrim(rtrim(
+            $client->getClientName() . ' ' . ($client->getClientSurname() ?? '')
+        )));
     }
 
     public function getClientFullName(): string

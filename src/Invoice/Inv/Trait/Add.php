@@ -93,17 +93,28 @@ trait Add
 
 $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
                     if (null !== $user) {
-                        $saved_model = $this->inv_service->saveInv(
-                                $user, $inv, $body, $this->sR, $gR);
+                        $saved_model = null;
+                        $this->inv_service->withTransaction(
+                            function () use (
+                                $user, $inv, $body, $gR, $trR, $formHydrator,
+                                &$saved_model
+                            ): void {
+                                $saved_model = $this->inv_service->saveInv(
+                                    $user, $inv, $body, $this->sR, $gR);
+                                if ($saved_model->hasIdentity()) {
+                                    $this->defaultTaxes(
+                                        $saved_model, $trR, $formHydrator);
+                                }
+                            }
+                        );
                         /**
                          * The InvAmount entity is created automatically during
                          * the above saveInv
                          * Related logic: see src\Invoice\Entity\Inv ...
                          * New InvAmount();
                          */
-                        $model_id = $saved_model->reqId();
+                        $model_id = $saved_model?->reqId() ?? 0;
                         if ($model_id > 0) {
-                            $this->defaultTaxes($inv, $trR, $formHydrator);
                             // Inform the user of generated invoice number for
                             // draft setting
                             $this->flashMessage('info', $this->sR->getSetting(

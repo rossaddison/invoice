@@ -14,9 +14,8 @@ use App\Invoice\Setting\SettingRepository as SR;
 use App\User\UserRepository as UR;
 // Helpers
 use App\Invoice\Helpers\DateHelper;
-// Services
-use App\Invoice\Inv\InvDeletionService as IDS;
 // Ancillary
+use Cycle\Database\DatabaseManager;
 use Yiisoft\Security\Random;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use DateTimeImmutable;
@@ -29,8 +28,14 @@ final readonly class InvService
         private CR $cR,
         private GR $gR,
         private UR $uR,
-        private IDS $deletionService,     
+        private DatabaseManager $dbal,
     ) {
+    }
+
+    public function withTransaction(callable $fn): void
+    {
+        /** @psalm-suppress MixedArgumentTypeCoercion */
+        $this->dbal->database()->transaction($fn);
     }
 
     public function saveInv(
@@ -341,7 +346,12 @@ final readonly class InvService
     
     public function deleteInv(Inv $inv): void
     {
-        $this->deletionService->delete($inv);
         $this->repository->delete($inv);
+    }
+
+    public function restoreInv(Inv $inv): void
+    {
+        $inv->restore();
+        $this->repository->save($inv);
     }
 }

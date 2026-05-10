@@ -551,11 +551,17 @@ return [
     . ' delete any invoices, quotes and payments'
     . ' related to this client. Are you sure you'
     . ' want to permanently delete this client?',
-  'delete.invoice' => 'Delete Invoice',
-  'delete.invoice.warning' => 'If you delete this'
-    . ' invoice you will not be able to recover'
-    . ' it later. Are you sure you want'
-    . ' to permanently delete this invoice?',
+  'delete.invoice.archive' => 'Archive Invoice',
+  'delete.invoice.action' => 'Delete Invoice Action',
+  'delete.invoice.date.soft.deleted' => 'Soft Deleted (Details Restorable)',
+  'delete.invoice.warning' => 'This invoice will be archived (soft-deleted)'
+    . ' and can be recovered by an administrator.'
+    . ' Are you sure you want to archive this invoice?',
+  'delete.invoice.trash' => 'Invoice Trash',
+  'delete.invoice.trash.empty' => 'No archived invoices.',
+  'delete.invoice.restore' => 'Restore',
+  'delete.invoice.restore.warning' => 'Are you sure you want to restore this invoice?',
+  'delete.invoice.restored' => 'Invoice successfully restored.',
   'delete.quote' => 'Delete Quote',
   'delete.quote.warning' => 'If you delete this quote'
     . ' you will not be able to recover it later.'

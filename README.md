@@ -31,6 +31,16 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 **Recent Implementations**
 
+[Cycle ORM Transactions](docs/CYCLE_ORM_TRANSACTIONS.md) — `InvService::withTransaction()` wraps invoice create, credit, copy, and invoice-to-invoice confirm in atomic database transactions; orphaned rows on partial failure are no longer possible (May 2026)
+
+[Invoice Soft Delete & Trash](docs/INVOICE_SOFT_DELETE_TRASH.md) — Trash page listing archived invoices with per-row restore; `restore()` method on `Inv`; explicit `WHERE deleted_at IS NULL` on all 48 `InvRepository` query methods; `InvDeletionService` removed; 17-test PHPUnit suite covering soft-delete and restore lifecycle (May 2026)
+
+[InvForm::show() Pattern](docs/INVFORM_SHOW_PATTERN.md) — Bug fix: `inv/view` status dropdown always showed Draft because `new InvForm()` defaults `status_id = 1`; replaced with `InvForm::show($inv)` which copies all entity fields into the form (May 2026)
+
+[Cycle ORM Entity Behaviors](docs/CYCLE_ORM_BEHAVIORS.md) — SoftDelete on Inv (audit-safe deletion) and Hook on Client (auto-sync client_full_name on create/update) (May 2026)
+
+[Cycle ORM Database Indexing](docs/CYCLE_ORM_INDEXING.md) — #[Index] attributes applied to Inv, Quote, SalesOrder, Product, Client, and Family entities; rules for choosing sort, filter, FK, and unique indexes (May 2026)
+
 [Family Drag-and-Drop Street Order](src/docs/FAMILY_DRAG_DROP_STREET_ORDER.md) — reorder streets for a cleaning run via native HTML5 drag-and-drop, persisted automatically on drop (May 2026)
 
 [Telegram Payment Providers](docs/TELEGRAM_PAYMENT_PROVIDERS.md) — native Telegram invoicing via [phptg/bot-api](https://github.com/phptg/bot-api) by [Sergei Predvoditelev (vjik)](https://github.com/vjik) (May 2026)

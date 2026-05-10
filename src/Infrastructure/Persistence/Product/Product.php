@@ -11,9 +11,16 @@ use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use Cycle\Annotated\Annotation\Relation\HasMany;
+use Cycle\Annotated\Annotation\Table\Index;
 use Doctrine\Common\Collections\ArrayCollection;
 
 #[Entity(repository: PR::class)]
+// Priority 1 — sort targets and filters (FK relations)
+#[Index(columns: ['family_id'])]
+#[Index(columns: ['tax_rate_id'])]
+#[Index(columns: ['unit_id'])]
+// Priority 2 — nullable FK
+#[Index(columns: ['unit_peppol_id'])]
 class Product
 {
     use RequireId;

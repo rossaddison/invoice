@@ -14,6 +14,7 @@ use App\Infrastructure\Persistence\User\User;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
+use Cycle\Annotated\Annotation\Table\Index;
 use Cycle\Annotated\Annotation\Relation\HasMany;
 use Cycle\Annotated\Annotation\Relation\HasOne;
 use Cycle\ORM\Entity\Behavior;
@@ -23,6 +24,21 @@ use DateTimeImmutable;
 #[Entity(repository: QuoteRepository::class)]
 #[Behavior\CreatedAt(field: 'date_created', column: 'date_created')]
 #[Behavior\UpdatedAt(field: 'date_modified', column: 'date_modified')]
+// Priority 1 — sort targets and heavy filters
+#[Index(columns: ['status_id'])]
+#[Index(columns: ['client_id'])]
+#[Index(columns: ['date_created'])]
+#[Index(columns: ['date_expires'])]
+#[Index(columns: ['number'], unique: true)]
+#[Index(columns: ['url_key'], unique: true)]
+// Priority 2 — FK joins
+#[Index(columns: ['user_id'])]
+#[Index(columns: ['group_id'])]
+// Priority 3 — nullable FK lookups
+#[Index(columns: ['so_id'])]
+#[Index(columns: ['inv_id'])]
+#[Index(columns: ['delivery_location_id'])]
+#[Index(columns: ['contract_id'])]
 class Quote
 {
     use RequireId;

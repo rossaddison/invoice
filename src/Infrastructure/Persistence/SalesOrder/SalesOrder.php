@@ -14,6 +14,7 @@ use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use Cycle\Annotated\Annotation\Relation\HasMany;
 use Cycle\Annotated\Annotation\Relation\HasOne;
+use Cycle\Annotated\Annotation\Table\Index;
 use Cycle\ORM\Entity\Behavior;
 use Doctrine\Common\Collections\ArrayCollection;
 use DateTimeImmutable;
@@ -21,6 +22,18 @@ use DateTimeImmutable;
 #[Entity(repository: SOR::class)]
 #[Behavior\CreatedAt(field: 'date_created', column: 'date_created')]
 #[Behavior\UpdatedAt(field: 'date_modified', column: 'date_modified')]
+// Priority 1 — sort targets and heavy filters
+#[Index(columns: ['status_id'])]
+#[Index(columns: ['client_id'])]
+#[Index(columns: ['date_created'])]
+#[Index(columns: ['number'], unique: true)]
+#[Index(columns: ['url_key'], unique: true)]
+// Priority 2 — FK joins
+#[Index(columns: ['user_id'])]
+#[Index(columns: ['group_id'])]
+#[Index(columns: ['quote_id'])]
+// Priority 3 — nullable FK
+#[Index(columns: ['inv_id'])]
 class SalesOrder
 {
     use RequireId;

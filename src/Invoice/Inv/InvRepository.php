@@ -42,7 +42,9 @@ final class InvRepository extends Select\Repository
     public function filterInvNumber(string $invNumber): EntityReader
     {
         $select = $this->select();
-        $query = $select->where(['number' => ltrim(rtrim($invNumber))]);
+        $query = $select
+            ->where(['number' => ltrim(rtrim($invNumber))])
+            ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -52,6 +54,7 @@ final class InvRepository extends Select\Repository
         $trimmed = ltrim(rtrim($creditInvNumber));
         $parentInvs = $this->select()
                            ->where('number', 'like', $trimmed . '%')
+                           ->where('deleted_at', null)
                            ->fetchAll();
         $parentIds = [];
         /** @var Inv $parentInv */
@@ -59,9 +62,9 @@ final class InvRepository extends Select\Repository
             $parentIds[] = (string) $parentInv->reqId();
         }
         $query = $parentIds === []
-            ? $select->where(['id' => '0'])
+            ? $select->where(['id' => '0'])->where('deleted_at', null)
             : $select->where(['creditinvoice_parent_id' =>
-                ['in' => new Parameter($parentIds)]]);
+                ['in' => new Parameter($parentIds)]])->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -79,7 +82,8 @@ final class InvRepository extends Select\Repository
                  *  Also see: Entity Family .. public ?string $family_name = '',
                  */
                 ->load('items')
-                ->where(['items.product.family.family_name' => $invFamilyName]);
+                ->where(['items.product.family.family_name' => $invFamilyName])
+                ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -88,7 +92,8 @@ final class InvRepository extends Select\Repository
         $select = $this->select();
         $query = $select
                  ->load('invAmount')
-                 ->where('invAmount.total', 'like', $invAmountTotal . '%');
+                 ->where('invAmount.total', 'like', $invAmountTotal . '%')
+                 ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -97,7 +102,8 @@ final class InvRepository extends Select\Repository
         $select = $this->select();
         $query = $select
                  ->load('invAmount')
-                 ->where('invAmount.paid', 'like', $invAmountPaid . '%');
+                 ->where('invAmount.paid', 'like', $invAmountPaid . '%')
+                 ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -106,7 +112,8 @@ final class InvRepository extends Select\Repository
         $select = $this->select();
         $query = $select
                  ->load('invAmount')
-                 ->where('invAmount.balance', 'like', $invAmountBalance . '%');
+                 ->where('invAmount.balance', 'like', $invAmountBalance . '%')
+                 ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -117,7 +124,8 @@ final class InvRepository extends Select\Repository
         $query = $select
                  ->load('invAmount')
                  ->where(['number' => $invNumber])
-                 ->andWhere(['invAmount.total' => $invAmountTotal]);
+                 ->andWhere(['invAmount.total' => $invAmountTotal])
+                 ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -130,7 +138,8 @@ final class InvRepository extends Select\Repository
         if ($status_id > 0) {
             $query = $this->select()
                     ->load(['client','group','user'])
-                    ->where(['status_id' => $status_id]);
+                    ->where(['status_id' => $status_id])
+                    ->where('deleted_at', null);
             return $this->prepareDataReader($query);
         }
         return $this->findAllPreloaded();
@@ -146,7 +155,8 @@ final class InvRepository extends Select\Repository
                        ->where(['client.client_name' => $firstName])
                        ->where(['client.client_surname' => $secondName])
                        ->andWhere(['status_id' => ['in' =>
-                            new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]]);
+                            new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
+                       ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -158,7 +168,8 @@ final class InvRepository extends Select\Repository
         $query = $this->select()
                        ->load(['client'])
                        ->where(['client.client_name' => $firstName])
-                       ->where(['client.client_surname' => $secondName]);
+                       ->where(['client.client_surname' => $secondName])
+                       ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -167,7 +178,8 @@ final class InvRepository extends Select\Repository
         $select = $this->select()
                        ->load(['client']);
         $query = $select->where([
-            'client.client_group' => ltrim(rtrim($clientGroup))]);
+            'client.client_group' => ltrim(rtrim($clientGroup))])
+            ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -176,7 +188,8 @@ final class InvRepository extends Select\Repository
         $select = $this->select()
                        ->load(['client']);
         $query = $select->where('client.client_address_1', 'like',
-            ltrim(rtrim($clientAddress1)) . '%');
+            ltrim(rtrim($clientAddress1)) . '%')
+            ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -191,7 +204,7 @@ final class InvRepository extends Select\Repository
             'like',
             $dateTimeImmutable instanceof \DateTimeImmutable
                                 ? $dateTimeImmutable->format('Y-m') . '%' : '',
-        );
+        )->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -202,7 +215,8 @@ final class InvRepository extends Select\Repository
     public function findAllWithClient(int $client_id): EntityReader
     {
         $query = $this->select()
-                ->where(['client_id' => $client_id]);
+                ->where(['client_id' => $client_id])
+                ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -213,7 +227,8 @@ final class InvRepository extends Select\Repository
     public function findAllWithContract(int $contract_id): EntityReader
     {
         $query = $this->select()
-                      ->where(['contract_id' => $contract_id]);
+                      ->where(['contract_id' => $contract_id])
+                      ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -225,7 +240,8 @@ final class InvRepository extends Select\Repository
         EntityReader
     {
         $query = $this->select()
-                      ->where(['delivery_location_id' => $delivery_location_id]);
+                      ->where(['delivery_location_id' => $delivery_location_id])
+                      ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -240,6 +256,7 @@ final class InvRepository extends Select\Repository
                 ->load(['user', 'client'])
                 ->where(['user.id' => $user_id])
                 ->andWhere(['client.id' => $client_id])
+                ->where('deleted_at', null)
                 ->count();
     }
 
@@ -251,7 +268,8 @@ final class InvRepository extends Select\Repository
     public function findAllPreloaded(): EntityReader
     {
         $query = $this->select()
-                ->load(['client','group','user']);
+                ->load(['client','group','user'])
+                ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -260,7 +278,7 @@ final class InvRepository extends Select\Repository
      */
     public function getReader(): EntityReader
     {
-        return (new EntityReader($this->select()))
+        return (new EntityReader($this->select()->where('deleted_at', null)))
             ->withSort($this->getSort());
     }
 
@@ -285,6 +303,24 @@ final class InvRepository extends Select\Repository
         $this->entityWriter->delete([$inv]);
     }
 
+    public function findTrashed(): EntityReader
+    {
+        $query = $this->select()
+            ->scope(null)
+            ->where('deleted_at', '!=', null);
+        return $this->prepareDataReader($query);
+    }
+
+    public function findTrashedById(int $id): ?Inv
+    {
+        /** @var Inv|null */
+        return $this->select()
+            ->scope(null)
+            ->where(['id' => $id])
+            ->where('deleted_at', '!=', null)
+            ->fetchOne();
+    }
+
     /**
      * @param Select $query
      * @return EntityReader
@@ -305,6 +341,7 @@ final class InvRepository extends Select\Repository
     {
         return $this->select()
                 ->where(['id' => $id])
+                ->where('deleted_at', null)
                 ->count();
     }
 
@@ -314,6 +351,7 @@ final class InvRepository extends Select\Repository
     public function repoCountAll(): int
     {
         return $this->select()
+                    ->where('deleted_at', null)
                     ->count();
     }
 
@@ -326,7 +364,8 @@ final class InvRepository extends Select\Repository
     {
         $query = $this->select()
                       ->where(['id' => $invoice_id])
-                      ->where(['status_id' => $status_id]);
+                      ->where(['status_id' => $status_id])
+                      ->where('deleted_at', null);
         return  $query->fetchOne() ?: null;
     }
 
@@ -337,7 +376,8 @@ final class InvRepository extends Select\Repository
     public function repoInvUnLoadedquery(int $id): ?Inv
     {
         $query = $this->select()
-                      ->where(['id' => $id]);
+                      ->where(['id' => $id])
+                      ->where('deleted_at', null);
         return  $query->fetchOne() ?: null;
     }
 
@@ -345,7 +385,8 @@ final class InvRepository extends Select\Repository
     {
         $query = $this->select()
                       ->load('invAmount')
-                      ->where(['id' => $id]);
+                      ->where(['id' => $id])
+                      ->where('deleted_at', null);
         return  $query->fetchOne() ?: null;
     }
 
@@ -357,7 +398,8 @@ final class InvRepository extends Select\Repository
     {
         $query = $this->select()
                       ->load(['client','group','user'])
-                      ->where(['id' => $id]);
+                      ->where(['id' => $id])
+                      ->where('deleted_at', null);
         return  $query->fetchOne() ?: null;
     }
 
@@ -372,7 +414,8 @@ final class InvRepository extends Select\Repository
                        ->load('client')
                        ->where(['url_key' => $url_key])
                        ->andWhere(
-                               ['status_id' => ['in' => new Parameter([2,3,4])]]);
+                               ['status_id' => ['in' => new Parameter([2,3,4])]])
+                       ->where('deleted_at', null);
         return  $query->fetchOne() ?: null;
     }
 
@@ -385,6 +428,7 @@ final class InvRepository extends Select\Repository
         return $this->select()
                       ->where(['url_key' => $url_key])
                       ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
+                      ->where('deleted_at', null)
                       ->count();
     }
 
@@ -399,7 +443,8 @@ final class InvRepository extends Select\Repository
                       // sent = 2, viewed = 3, paid = 4
                       ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
                       ->andWhere(['client_id' => ['in' => new Parameter(
-                              $user_client)]]);
+                              $user_client)]])
+                      ->where('deleted_at', null);
     }
 
     /**
@@ -417,12 +462,14 @@ final class InvRepository extends Select\Repository
             $query = $this->select()
                     ->where(['status_id' => $status_id])
                     ->where(['client_id' => ['in' => new Parameter($user_client)]])
-                    ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]]);
+                    ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
+                    ->where('deleted_at', null);
             return $this->prepareDataReader($query);
         }   // Get all the invoices
         $query = $this->select()
                      ->where(['client_id' => ['in' => new Parameter($user_client)]])
-                     ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]]);
+                     ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
+                     ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -433,7 +480,8 @@ final class InvRepository extends Select\Repository
     {
         // 1 draft, 2 sent, 3 viewed, 4 paid
         $query = $this->select()
-                      ->where(['status_id' => ['in' => new Parameter([2,3])]]);
+                      ->where(['status_id' => ['in' => new Parameter([2,3])]])
+                      ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -443,6 +491,7 @@ final class InvRepository extends Select\Repository
         // 2,3 => There is still a balance available => Not paid
         return $this->select()
                       ->where(['status_id' => ['in' => new Parameter([2,3])]])
+                      ->where('deleted_at', null)
                       ->count();
     }
 
@@ -453,7 +502,8 @@ final class InvRepository extends Select\Repository
     {
         // 1 draft, 2 sent, 3 viewed, 4 paid
         $query = $this->select()
-                      ->where(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]]);
+                      ->where(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
+                      ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -464,7 +514,8 @@ final class InvRepository extends Select\Repository
     {
         // 1 draft, 2 sent, 3 viewed, 4 paid
         $query = $this->select()
-                      ->where(['status_id' => ['in' => new Parameter([1])]]);
+                      ->where(['status_id' => ['in' => new Parameter([1])]])
+                      ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -475,7 +526,8 @@ final class InvRepository extends Select\Repository
     {
         // 1 draft, 2 sent, 3 viewed, 4 paid
         $query = $this->select()
-                      ->where(['status_id' => ['in' => new Parameter([2])]]);
+                      ->where(['status_id' => ['in' => new Parameter([2])]])
+                      ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -486,7 +538,8 @@ final class InvRepository extends Select\Repository
     {
         // 1 draft, 2 sent, 3 viewed, 4 paid
         $query = $this->select()
-                      ->where(['status_id' => ['in' => new Parameter([3])]]);
+                      ->where(['status_id' => ['in' => new Parameter([3])]])
+                      ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -497,7 +550,8 @@ final class InvRepository extends Select\Repository
     {
         // 1 draft, 2 sent, 3 viewed, 4 paid
         $query = $this->select()
-                      ->where(['status_id' => ['in' => new Parameter([4])]]);
+                      ->where(['status_id' => ['in' => new Parameter([4])]])
+                      ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -508,7 +562,8 @@ final class InvRepository extends Select\Repository
     {
         // 1 draft, 2 sent, 3 viewed, 4 paid
         $query = $this->select()
-                      ->where(['status_id' => ['in' => new Parameter([5])]]);
+                      ->where(['status_id' => ['in' => new Parameter([5])]])
+                      ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -519,7 +574,8 @@ final class InvRepository extends Select\Repository
     public function byClient(int $client_id): EntityReader
     {
         $query = $this->select()
-                      ->where(['client_id' => $client_id]);
+                      ->where(['client_id' => $client_id])
+                      ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -534,7 +590,8 @@ final class InvRepository extends Select\Repository
     {
         $query = $this->select()
                       ->where(['client_id' => $client_id])
-                      ->andWhere(['status_id' => $status_id]);
+                      ->andWhere(['status_id' => $status_id])
+                      ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -548,6 +605,7 @@ final class InvRepository extends Select\Repository
         return $this->select()
                       ->where(['client_id' => $client_id])
                       ->andWhere(['status_id' => $status_id])
+                      ->where('deleted_at', null)
                       ->count();
     }
 
@@ -958,6 +1016,7 @@ final class InvRepository extends Select\Repository
     {
         return $this->select()
                       ->where(['client_id' => $client_id])
+                      ->where('deleted_at', null)
                       ->count();
     }
 
@@ -975,6 +1034,7 @@ final class InvRepository extends Select\Repository
                       ->where(['client_id' => $client_id])
                       ->andWhere('date_created', '>=', $from_date)
                       ->andWhere('date_created', '<=', $to_date)
+                      ->where('deleted_at', null)
                       ->count();
     }
 
@@ -991,7 +1051,8 @@ final class InvRepository extends Select\Repository
                       ->load('client')
                       ->where(['client_id' => $client_id])
                       ->andWhere('date_created', '>=', $from_date)
-                      ->andWhere('date_created', '<=', $to_date);
+                      ->andWhere('date_created', '<=', $to_date)
+                      ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -1002,7 +1063,8 @@ final class InvRepository extends Select\Repository
     public function repoClient(?int $client_id): EntityReader
     {
         $query = $this->select()
-                      ->where(['client_id' => $client_id]);
+                      ->where(['client_id' => $client_id])
+                      ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -1016,6 +1078,7 @@ final class InvRepository extends Select\Repository
                       ->distinct()
                       ->with('items')
                       ->where('items.product_id', $product_id)
+                      ->where('deleted_at', null)
                       ->count();
     }
 
@@ -1033,7 +1096,8 @@ final class InvRepository extends Select\Repository
                       ->with('items')
                       ->where('items.product_id', $product_id)
                       ->andWhere('date_created', '>=', $from_date)
-                      ->andWhere('date_created', '<=', $to_date);
+                      ->andWhere('date_created', '<=', $to_date)
+                      ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -1152,6 +1216,7 @@ final class InvRepository extends Select\Repository
                       ->distinct()
                       ->with('items')
                       ->where('items.task_id', $task_id)
+                      ->where('deleted_at', null)
                       ->count();
     }
 
@@ -1169,7 +1234,8 @@ final class InvRepository extends Select\Repository
                       ->with('items')
                       ->where('items.task_id', $task_id)
                       ->andWhere('date_created', '>=', $from_date)
-                      ->andWhere('date_created', '<=', $to_date);
+                      ->andWhere('date_created', '<=', $to_date)
+                      ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 

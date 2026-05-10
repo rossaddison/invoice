@@ -101,13 +101,24 @@ trait Credit
                     // ie. not more than one user is associated with the client.
                     $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
                     if (null !== $user) {
-                        $saved_model = $this->inv_service->saveInv($user,
-                                $inv, $body, $this->sR, $gR);
-                        $model_id = $saved_model->reqId();
+                        $model_id = 0;
+                        $this->inv_service->withTransaction(
+                            function () use (
+                                $user, $inv, $body, $gR, $trR, $formHydrator,
+                                $invAmount, &$model_id
+                            ): void {
+                                $saved_model = $this->inv_service->saveInv(
+                                    $user, $inv, $body, $this->sR, $gR);
+                                $model_id = $saved_model->reqId();
+                                if ($model_id > 0) {
+                                    $this->inv_amount_service->initializeInvAmount(
+                                        $invAmount, $model_id);
+                                    $this->defaultTaxes(
+                                        $saved_model, $trR, $formHydrator);
+                                }
+                            }
+                        );
                         if ($model_id > 0) {
-                            $this->inv_amount_service->initializeInvAmount(
-                                    $invAmount, $model_id);
-                            $this->defaultTaxes($inv, $trR, $formHydrator);
                             $this->flashMessage('info', $this->sR->getSetting(
                                     'generate_invoice_number_for_draft') === '1'
                             ? $this->translator->translate(
@@ -177,30 +188,39 @@ trait Credit
                 $client_id = (int) $ajax_body['client_id'];
                 $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
                 if (null !== $user) {
-                    $saved_inv = $this->inv_service->saveInv($user, $new_inv,
-                        $ajax_body, $this->sR, $gR);
-                    $saved_inv_id = $saved_inv->reqId();
+                    $saved_inv_id = 0;
+                    $this->inv_service->withTransaction(
+                        function () use (
+                            $user, $new_inv, $ajax_body, $gR, $basis_inv_id,
+                            $basis_inv, $iiR, $iiaR, $iR, &$saved_inv_id
+                        ): void {
+                            $saved_inv = $this->inv_service->saveInv(
+                                $user, $new_inv, $ajax_body, $this->sR, $gR);
+                            $saved_inv_id = $saved_inv->reqId();
+                            if ($saved_inv_id > 0) {
+                                $savedInvId = (string) $saved_inv_id;
+                                $this->inv_item_service->initializeCreditInvItems(
+                                    $basis_inv_id, $savedInvId, $iiR, $iiaR);
+                                $this->inv_amount_service->initializeCreditInvAmount(
+                                    new InvAmount(), $basis_inv_id, $savedInvId);
+                                $this->inv_tax_rate_service->initializeCreditInvTaxRate(
+                                    $basis_inv_id, $savedInvId);
+                                // Record the new Credit Note's id in the basis invoice
+                                $basis_inv->setCreditinvoiceParentId($saved_inv_id);
+                                $iR->save($basis_inv);
+                            }
+                        }
+                    );
                     if ($saved_inv_id > 0) {
-                        $savedInvId = (string) $saved_inv_id;
-                        $this->inv_item_service->initializeCreditInvItems(
-                            $basis_inv_id, $savedInvId, $iiR, $iiaR);
-                        $this->inv_amount_service->initializeCreditInvAmount(
-                            new InvAmount(), $basis_inv_id, $savedInvId);
-                        $this->inv_tax_rate_service->initializeCreditInvTaxRate(
-                            $basis_inv_id, $savedInvId);
                         $parameters = [
                             'success' => 1,
                             'flash_message' => $this->translator->translate(
                                 'credit.note.creation.successful'),
                         ];
-                        // Record the new Credit Note's $saved_inv_id in the
-                        // basis invoice
-                        $basis_inv->setCreditinvoiceParentId($saved_inv_id);
-                        $iR->save($basis_inv);
                         //return response to inv.js to reload page at location
                         return $this->factory->createResponse(
                             Json::encode($parameters));
-                    } //null!== $saved_inv
+                    }
                 } //null!==$user
             } // ajax
         } //null!==$basis_inv

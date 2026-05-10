@@ -127,32 +127,41 @@ trait MultipleCopy
                         $client_id = (int) $invoice_body['client_id'];
                         $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
                         if (null !== $user) {
-                            $copied = $this->inv_service->copyInv(
-                                $user, $copy, $invoice_body, $this->sR);
-                            /**
-                             * Note: Reset the immutable date_created
-                             * outside the inv_service
-                             */
-                            $copied->setDateCreated(
-                                (string) $data['modal_created_date']);
-                            $copied_id = $copied->reqId();
-                            $iR->save($copied);
-                            // Transfer each inv_item to inv_item and the
-                            // corresponding inv_item_amount to inv_item_amount
-                            // for each item
-
-                            if ($copied_id > 0) {
-                                $this->invToInvInvItems($invId, $copied_id,
+                            $this->inv_service->withTransaction(
+                                function () use (
+                                    $user, $copy, $invoice_body, $data, $invId,
                                     $iiaR, $iiaS, $pR, $taskR, $iiR, $trR,
-                                    $aciiR, $formHydrator, $unR);
-                                $this->invToInvInvTaxRates($invId,
-                                    $copied_id, $itrR, $formHydrator);
-                                $this->invToInvInvCustom($invId, $copied_id,
-                                    $icR, $formHydrator);
-                                $this->invToInvInvAmount($invId,
-                                    $copied_id, $iaR);
-                                $iR->save($copy);
-                            }
+                                    $aciiR, $formHydrator, $unR, $itrR,
+                                    $icR, $iaR, $iR
+                                ): void {
+                                    $copied = $this->inv_service->copyInv(
+                                        $user, $copy, $invoice_body, $this->sR);
+                                    /**
+                                     * Note: Reset the immutable date_created
+                                     * outside the inv_service
+                                     */
+                                    $copied->setDateCreated(
+                                        (string) $data['modal_created_date']);
+                                    $iR->save($copied);
+                                    $copied_id = $copied->reqId();
+                                    // Transfer each inv_item to inv_item and
+                                    // the corresponding inv_item_amount for
+                                    // each item
+                                    if ($copied_id > 0) {
+                                        $this->invToInvInvItems($invId,
+                                            $copied_id, $iiaR, $iiaS, $pR,
+                                            $taskR, $iiR, $trR, $aciiR,
+                                            $formHydrator, $unR);
+                                        $this->invToInvInvTaxRates($invId,
+                                            $copied_id, $itrR, $formHydrator);
+                                        $this->invToInvInvCustom($invId,
+                                            $copied_id, $icR, $formHydrator);
+                                        $this->invToInvInvAmount($invId,
+                                            $copied_id, $iaR);
+                                        $iR->save($copy);
+                                    }
+                                }
+                            );
                         }
                     }
                 } // original
@@ -263,24 +272,35 @@ trait MultipleCopy
                 $client_id = (int) $ajax_body['client_id'];
                 $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
                 if (null !== $user) {
-                    $this->inv_service->saveInv(
-                        $user, $copy, $ajax_body, $this->sR, $gR);
-                    // Transfer each inv_item to inv_item and the corresponding
-                    // inv_item_amount to inv_item_amount for each item
-                    $copy_id = $copy->reqId();
+                    $copy_id = 0;
+                    $this->inv_service->withTransaction(
+                        function () use (
+                            $user, $copy, $ajax_body, $gR, $inv_id,
+                            $iiaR, $iiaS, $pR, $taskR, $iiR, $trR, $aciiR,
+                            $formHydrator, $unR, $itrR, $icR, $iaR, $aciR,
+                            $iR, &$copy_id
+                        ): void {
+                            $this->inv_service->saveInv(
+                                $user, $copy, $ajax_body, $this->sR, $gR);
+                            $copy_id = $copy->reqId();
+                            // Transfer each inv_item to inv_item and the
+                            // corresponding inv_item_amount for each item
+                            if ($copy_id > 0) {
+                                $this->invToInvInvItems($inv_id, $copy_id,
+                                    $iiaR, $iiaS, $pR, $taskR, $iiR, $trR,
+                                    $aciiR, $formHydrator, $unR);
+                                $this->invToInvInvTaxRates($inv_id, $copy_id,
+                                    $itrR, $formHydrator);
+                                $this->invToInvInvCustom($inv_id, $copy_id,
+                                    $icR, $formHydrator);
+                                $this->invToInvInvAllowanceCharges($inv_id,
+                                    $copy_id, $aciR, $formHydrator);
+                                $this->invToInvInvAmount($inv_id, $copy_id, $iaR);
+                                $iR->save($copy);
+                            }
+                        }
+                    );
                     if ($copy_id > 0) {
-                        $this->invToInvInvItems($inv_id, $copy_id, $iiaR,
-                            $iiaS, $pR, $taskR, $iiR, $trR, $aciiR,
-                                $formHydrator, $unR);
-                        $this->invToInvInvTaxRates($inv_id, $copy_id, $itrR,
-                            $formHydrator);
-                        $this->invToInvInvCustom($inv_id, $copy_id, $icR,
-                            $formHydrator);
-                        $this->invToInvInvAllowanceCharges($inv_id, $copy_id,
-                            $aciR, $formHydrator);
-                        $this->invToInvInvAmount($inv_id,
-                            $copy_id, $iaR);
-                        $iR->save($copy);
                         $parameters = ['success' => 1,
                             'new_invoice_id' => $copy_id];
                         //return response to inv.js to redirect to newly

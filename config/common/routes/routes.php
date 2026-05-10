@@ -1257,6 +1257,14 @@ return [
                 ->name('inv/delete')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvController::class, 'delete']),
+            Route::get('/inv/trash')
+                ->name('inv/trash')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([InvController::class, 'trash']),
+            Route::methods([$mG, $mP], '/inv/restore/{id}')
+                ->name('inv/restore')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([InvController::class, 'restore']),
             Route::methods([$mG, $mP], '/inv/html/{include}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvController::class, 'html'])

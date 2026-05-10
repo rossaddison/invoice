@@ -143,7 +143,7 @@ trait View
                     // invoice in inv_custom.
                     'fields' => $icR->repoFields(
                             (int) $this->session->get('inv_id')),
-                    'form' => new InvForm(),
+                    'form' => InvForm::show($inv),
                     'iaR' => $iaR,
                     'inv' => $inv,
                     // Determine if a 'viewInv' user has 'editInv' permission

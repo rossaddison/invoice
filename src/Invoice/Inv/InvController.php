@@ -39,7 +39,7 @@ use App\Service\WebControllerService;
 use App\Invoice\Helpers\{DateHelper, NumberHelper, PdfHelper};
 use App\Invoice\Inv\Trait\{Add, Archive, Attachment, Credit, Delete, Edit, Email,
     Flush, Guest, HtmlTrait, Index, MultipleCopy, OptionsData, PdfTrait, Peppol,
-    Storecove, Typescript, UrlKey, View};
+    Storecove, Trash, Typescript, UrlKey, View};
 use Yiisoft\{
     DataResponse\ResponseFactory\DataResponseFactoryInterface,
     FormModel\FormHydrator, Html\Html,
@@ -55,8 +55,8 @@ use Psr\{
 final class InvController extends BaseController
 {
     use Add, Archive, Attachment, Credit, Delete, Edit, Email, Flush, Guest,
-        HtmlTrait, Index, MultipleCopy, OptionsData, PdfTrait, Peppol, Storecove,
-        Typescript, UrlKey, View;
+        HtmlTrait, Index, MultipleCopy, OptionsData, PdfTrait, Peppol,
+        Storecove, Trash, Typescript, UrlKey, View;
     
     protected string $controllerName = 'invoice/inv';
 

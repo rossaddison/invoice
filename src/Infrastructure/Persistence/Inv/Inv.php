@@ -11,6 +11,7 @@ use App\Infrastructure\Persistence\{
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
+use Cycle\Annotated\Annotation\Table\Index;
 use Cycle\Annotated\Annotation\Relation\HasMany;
 use Cycle\Annotated\Annotation\Relation\HasOne;
 use Cycle\ORM\Entity\Behavior;
@@ -21,6 +22,22 @@ use DateTimeImmutable;
 #[Entity(repository: \App\Invoice\Inv\InvRepository::class)]
 #[Behavior\CreatedAt(field: 'date_created', column: 'date_created')]
 #[Behavior\UpdatedAt(field: 'date_modified', column: 'date_modified')]
+#[Behavior\SoftDelete(field: 'deleted_at', column: 'deleted_at')]
+// Priority 1 — sort targets and heavy filters
+#[Index(columns: ['status_id'])]
+#[Index(columns: ['client_id'])]
+#[Index(columns: ['date_created'])]
+#[Index(columns: ['date_due'])]
+#[Index(columns: ['number'], unique: true)]
+#[Index(columns: ['url_key'], unique: true)]
+// Priority 2 — FK joins and occasional filters
+#[Index(columns: ['user_id'])]
+#[Index(columns: ['group_id'])]
+#[Index(columns: ['creditinvoice_parent_id'])]
+// Priority 3 — nullable FK lookups
+#[Index(columns: ['contract_id'])]
+#[Index(columns: ['so_id'])]
+#[Index(columns: ['quote_id'])]
 
 class Inv
 {
@@ -66,6 +83,9 @@ class Inv
 
     #[Column(type: 'primary')]
     private ?int $id = null;
+
+    #[Column(type: 'datetime', nullable: true)]
+    private ?DateTimeImmutable $deleted_at = null;
 
     #[Column(type: 'datetime')]
     private DateTimeImmutable $date_created;
@@ -337,6 +357,21 @@ class Inv
     {
         $this->status_id = (!in_array($status_id,
                 [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]) ? 1 : $status_id);
+    }
+
+    public function isDeleted(): bool
+    {
+        return $this->deleted_at !== null;
+    }
+
+    public function getDeletedAt(): ?DateTimeImmutable
+    {
+        return $this->deleted_at;
+    }
+
+    public function restore(): void
+    {
+        $this->deleted_at = null;
     }
 
     public function getIsReadOnly(): bool
