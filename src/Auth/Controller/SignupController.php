@@ -159,9 +159,8 @@ final class SignupController
             if ($userId > 0) {
                 // Avoid autoincrement issues and using predefined user id of
                 // 1 ... and assign the first signed-up user ... admin rights.
-                // assignRoleAndVerify guards against silent file permission
-                // failures where assign() succeeds in memory but never writes
-                // to resources/rbac/assignments.php
+                // assignRoleAndVerify guards against silent failures where
+                // assign() succeeds in memory but never persists to the DB
                 $role = $uR->repoCount() == 1 ? 'admin' : 'observer';
                 if (!$this->assignRoleAndVerify($userId, $role)) {
                     return $this->webService->getRedirectResponse(
@@ -244,12 +243,8 @@ final class SignupController
 
     /**
      * Assign a role to a newly signed-up user and verify the assignment
-     * persisted correctly. Silent failures can occur when the RBAC backend
-     * (e.g. PhpManager) cannot write to resources/rbac/assignments.php due to
-     * file permission issues — the assign() call succeeds in memory but never
-     * reaches disk. This guard catches that scenario immediately rather than
-     * allowing the user to proceed with no role assigned, which would result
-     * in a 403 on every subsequent request.
+     * persisted correctly. Guards against silent failures where assign()
+     * succeeds in memory but never reaches the yii_rbac_assignment DB table.
      *
      * @param int $userId
      * @param string $role e.g. 'admin' or 'observer'
@@ -268,8 +263,7 @@ final class SignupController
                 LogLevel::ERROR,
                 'RBAC assignment failed to persist for userId: ' . (string) $userId
                     . ' role: ' . $role
-                    . ' — check file ownership of'
-                    . ' resources/rbac/assignments.php'
+                    . ' — check yii_rbac_assignment table'
             );
             return false;
         }

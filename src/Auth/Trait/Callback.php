@@ -1533,12 +1533,8 @@ public function tfaCheckBeforeRedirects(
     
     /**
      * Assign a role to a newly created OAuth2 user and verify the assignment
-     * persisted correctly. Silent failures can occur when the RBAC backend
-     * (e.g. PhpManager) cannot write to resources/rbac/assignments.php due to
-     * file permission issues — the assign() call succeeds in memory but never
-     * reaches disk. This guard catches that scenario immediately rather than
-     * allowing the user to proceed into the application with no role assigned,
-     * which would result in a 403 on every subsequent request.
+     * persisted correctly. Guards against silent failures where assign()
+     * succeeds in memory but never reaches the yii_rbac_assignment DB table.
      *
      * @param int $userId
      * @param string $role e.g. 'admin' or 'observer'
@@ -1557,7 +1553,7 @@ public function tfaCheckBeforeRedirects(
                 LogLevel::ERROR,
                 'RBAC assignment failed to persist for userId: ' . (string) $userId
                     . ' role: ' . $role
-                    . ' — check file ownership of resources/rbac/assignments.php'
+                    . ' — check yii_rbac_assignment table'
             );
             return false;
         }
