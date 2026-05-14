@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Auth\Controller;
 
-use App\Auth\Token;
+use App\Infrastructure\Persistence\Token\Token;
 use App\Auth\TokenRepository as tR;
 use App\Infrastructure\Persistence\User\User;
 use App\User\UserRepository as uR;
@@ -159,9 +159,8 @@ final class SignupController
             if ($userId > 0) {
                 // Avoid autoincrement issues and using predefined user id of
                 // 1 ... and assign the first signed-up user ... admin rights.
-                // assignRoleAndVerify guards against silent file permission
-                // failures where assign() succeeds in memory but never writes
-                // to resources/rbac/assignments.php
+                // assignRoleAndVerify guards against silent failures where
+                // assign() succeeds in memory but never persists to the DB
                 $role = $uR->repoCount() == 1 ? 'admin' : 'observer';
                 if (!$this->assignRoleAndVerify($userId, $role)) {
                     return $this->webService->getRedirectResponse(
@@ -244,12 +243,8 @@ final class SignupController
 
     /**
      * Assign a role to a newly signed-up user and verify the assignment
-     * persisted correctly. Silent failures can occur when the RBAC backend
-     * (e.g. PhpManager) cannot write to resources/rbac/assignments.php due to
-     * file permission issues — the assign() call succeeds in memory but never
-     * reaches disk. This guard catches that scenario immediately rather than
-     * allowing the user to proceed with no role assigned, which would result
-     * in a 403 on every subsequent request.
+     * persisted correctly. Guards against silent failures where assign()
+     * succeeds in memory but never reaches the yii_rbac_assignment DB table.
      *
      * @param int $userId
      * @param string $role e.g. 'admin' or 'observer'
@@ -268,8 +263,7 @@ final class SignupController
                 LogLevel::ERROR,
                 'RBAC assignment failed to persist for userId: ' . (string) $userId
                     . ' role: ' . $role
-                    . ' — check file ownership of'
-                    . ' resources/rbac/assignments.php'
+                    . ' — check yii_rbac_assignment table'
             );
             return false;
         }
@@ -293,41 +287,38 @@ final class SignupController
     {
         $tokenWithMask = TokenMask::apply($randomAndTimeToken);
         $userInv = new UserInv();
-        if ($user->hasIdentity()) {
-            $userId = $user->reqId();
-            $elcc = $this->translator->translate('email.link.click.confirm');
-            $userInv->setUserId($userId);
-            // if the user is administrator assign 0 => 'Administrator',
-            // 1 => Not Administrator
-            $userInv->setType($userId == 1 ? 0 : 1);
-            // when the user clicks on the link click confirm url, make the
-            // user active in the userinv extension table. Initially keep the
-            // user inactive.
-            $userInv->setActive(false);
-            $userInv->setLanguage($language);
-            $uiR->save($userInv);
-            $content = new A()
-            // When the url is clicked by the user, return to userinv/signup
-            // to activate the user and assign a client to the user
-            // depending on whether 'Assign a client to user on signup' has
-            // been chosen under View ... Settings...General. The user will
-            // be able to edit their userinv details on the client side as
-            // well as the client record.
-                ->href($this->urlGenerator->generateAbsolute(
-                    'userinv/signup',
-                    [
-                        '_language' => $_language,
-                        'language' => $language,
-                        'token' => $tokenWithMask,
-                        'tokenType' => 'email-verification',
-                    ],
-                ))
-                ->content($elcc);
-            return new Body()
-                ->content($content)
-                ->render();
-        }
-        return '';
+        $userId = $user->reqId();
+        $elcc = $this->translator->translate('email.link.click.confirm');
+        $userInv->setUserId($userId);
+        // if the user is administrator assign 0 => 'Administrator',
+        // 1 => Not Administrator
+        $userInv->setType($userId == 1 ? 0 : 1);
+        // when the user clicks on the link click confirm url, make the
+        // user active in the userinv extension table. Initially keep the
+        // user inactive.
+        $userInv->setActive(false);
+        $userInv->setLanguage($language);
+        $uiR->save($userInv);
+        $content = new A()
+        // When the url is clicked by the user, return to userinv/signup
+        // to activate the user and assign a client to the user
+        // depending on whether 'Assign a client to user on signup' has
+        // been chosen under View ... Settings...General. The user will
+        // be able to edit their userinv details on the client side as
+        // well as the client record.
+            ->href($this->urlGenerator->generateAbsolute(
+                'userinv/signup',
+                [
+                    '_language' => $_language,
+                    'language' => $language,
+                    'token' => $tokenWithMask,
+                    'tokenType' => 'email-verification',
+                ],
+            ))
+            ->content($elcc);
+        return new Body()
+            ->content($content)
+            ->render();
     }
 
     /**

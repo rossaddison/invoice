@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Auth\Controller;
 
-use App\Auth\Token;
+use App\Infrastructure\Persistence\Token\Token;
 use App\Auth\TokenRepository as tR;
 use App\Infrastructure\Persistence\User\User;
 use App\User\UserRepository as uR;
@@ -235,20 +235,17 @@ final class ForgotPasswordController
         string $randomAndTimeToken,
     ): string {
         $tokenWithMask = TokenMask::apply($randomAndTimeToken);
-        if ($user->hasIdentity()) {
-            $content = new A()
-                ->href($this->urlGenerator->generateAbsolute(
-                    'auth/resetpassword',
-                    [
-                        '_language' => $_language,
-                        'token' => $tokenWithMask,
-                    ],
-                ))
-                ->content($this->translator->translate('password.reset.email'));
-            return new Body()
-                ->content($content)
-                ->render();
-        }
-        return '';
+        $content = new A()
+            ->href($this->urlGenerator->generateAbsolute(
+                'auth/resetpassword',
+                [
+                    '_language' => $_language,
+                    'token' => $tokenWithMask,
+                ],
+            ))
+            ->content($this->translator->translate('password.reset.email'));
+        return new Body()
+            ->content($content)
+            ->render();
     }
 }

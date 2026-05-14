@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Auth;
 
+use App\Infrastructure\Persistence\Identity\Identity;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Auth\IdentityRepositoryInterface;

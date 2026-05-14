@@ -6,7 +6,7 @@ namespace App\Infrastructure\Persistence\User;
 
 use App\Infrastructure\Persistence\Trait\RequireId;
 use App\User\UserRepository;
-use App\Auth\Identity;
+use App\Infrastructure\Persistence\Identity\Identity;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\HasOne;
@@ -63,11 +63,6 @@ class User
         return $this->requireId($this->id, 'User');
     }
     
-    public function hasIdentity(): bool
-    {
-        return $this->id !== null;
-    }
-
     public function getLogin(): string
     {
         return $this->login;

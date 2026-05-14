@@ -107,7 +107,7 @@ $this->addJsFiles($assetManager->getJsFiles());
 $this->addJsStrings($assetManager->getJsStrings());
 $this->addJsVars($assetManager->getJsVars());
 $t = $translator;
-$isGuest = $user === null || !($user->hasIdentity());
+$isGuest = $user === null;
 $itemFontArray = [
     'style' => 'font-size: ' . $bootstrap5LayoutGuestNavbarFontSize . 'px;'
     . ' color: black;'];

@@ -13,6 +13,11 @@ try {
     $enc = New-Object System.Text.UTF8Encoding $false
 
     $content = [System.IO.File]::ReadAllText($envFile, $enc)
+    $schemaFile = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\runtime\schema.php'))
+    if ([System.IO.File]::Exists($schemaFile)) {
+        [System.IO.File]::Delete($schemaFile)
+    }
+
     $content = $content -replace '(?m)^BUILD_DATABASE=.*', 'BUILD_DATABASE=true'
     [System.IO.File]::WriteAllText($envFile, $content, $enc)
 

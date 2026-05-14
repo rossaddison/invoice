@@ -31,6 +31,8 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 **Recent Implementations**
 
+[RBAC DB Storage](docs/RBAC_DB_STORAGE.md) — assignments migrated from `resources/rbac/assignments.php` to `yii_rbac_assignment` MySQL table via `yiisoft/rbac-cycle-db`; items remain PHP-file backed (May 2026)
+
 [Cycle ORM Transactions](docs/CYCLE_ORM_TRANSACTIONS.md) — `InvService::withTransaction()` wraps invoice create, credit, copy, and invoice-to-invoice confirm in atomic database transactions; orphaned rows on partial failure are no longer possible (May 2026)
 
 [Invoice Soft Delete & Trash](docs/INVOICE_SOFT_DELETE_TRASH.md) — Trash page listing archived invoices with per-row restore; `restore()` method on `Inv`; explicit `WHERE deleted_at IS NULL` on all 48 `InvRepository` query methods; `InvDeletionService` removed; 17-test PHPUnit suite covering soft-delete and restore lifecycle (May 2026)

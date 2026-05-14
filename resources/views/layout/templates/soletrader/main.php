@@ -124,7 +124,7 @@ $this->addJsFiles($assetManager->getJsFiles());
 $this->addJsStrings($assetManager->getJsStrings());
 $this->addJsVars($assetManager->getJsVars());
 $t = $translator;
-$isGuest = $user === null || !($user->hasIdentity());
+$isGuest = $user === null;
 $session->set('_language', $currentRoute->getArgument('_language'));
 $this->beginPage();
 /**

@@ -80,7 +80,7 @@ When reviewing PHP files, Claude should:
 ## Code Style
 
 - Follows **PSR-1** and **PSR-12**
-- PHP 8.1+ features are acceptable (enums, readonly properties, named arguments)
+- PHP 8.4+ is the minimum (enums, readonly properties, named arguments, property hooks, asymmetric visibility)
 - Yii3 dependency injection patterns should be preserved
 - Do not suggest changes that break UBL 2.1 or Peppol compliance
 
@@ -103,7 +103,6 @@ A migration step is only complete when **all** of the following are true:
 - [ ] Test file uses infrastructure FQCN (not old entity)
 - [ ] `reqId(): int` pattern used — never `getId(): string`; `isPersisted()` tested
 - [ ] Test file passes Psalm at errorLevel 1 (run directly: `vendor/bin/psalm --no-cache Tests/Unit/Invoice/Entity/{Name}EntityTest.php`)
-- [ ] `tests_updated: true` set in `src/Infrastructure/entity_to_infrastructure.php`
 
 ### Key API differences (old entity → new infrastructure class)
 

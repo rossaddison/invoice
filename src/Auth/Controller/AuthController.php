@@ -372,25 +372,23 @@ final class AuthController
     ): ResponseInterface {
         $userId = (int) $this->session->get('pending_2fa_user_id');
         $user = $userRepository->findById($userId);
-        if ($user->hasIdentity()) {
-            $email = $user->getEmail();
-            if (strlen($email) > 0) {
-                $totp = TOTP::create();
-                /** @var non-empty-string $email */
-                $totp->setLabel($email);
-                $secret = $totp->getSecret();
-                $this->session->set('2fa_temp_secret', $secret);
-                $qrContent = $totp->getProvisioningUri();
-                $qrDataUri = $this->generateQrDataUri($qrContent);
-                $form = new TwoFactorAuthenticationSetupForm($translator);
-                return $this->webViewRenderer->render('setup', [
-                    'class' => $this->classList(),
-                    'qrDataUri' => $qrDataUri,
-                    'totpSecret' => $secret,
-                    'error' => '',
-                    'formModel' => $form,
-                ]);
-            }
+        $email = $user->getEmail();
+        if (strlen($email) > 0) {
+            $totp = TOTP::create();
+            /** @var non-empty-string $email */
+            $totp->setLabel($email);
+            $secret = $totp->getSecret();
+            $this->session->set('2fa_temp_secret', $secret);
+            $qrContent = $totp->getProvisioningUri();
+            $qrDataUri = $this->generateQrDataUri($qrContent);
+            $form = new TwoFactorAuthenticationSetupForm($translator);
+            return $this->webViewRenderer->render('setup', [
+                'class' => $this->classList(),
+                'qrDataUri' => $qrDataUri,
+                'totpSecret' => $secret,
+                'error' => '',
+                'formModel' => $form,
+            ]);
         }
         return $this->redirectToOneTimePasswordError();
     }
@@ -449,8 +447,7 @@ final class AuthController
             if ($inputCode !== null) {
                 if ($pendingUserId > 0) {
                     $user = $userRepository->findById($pendingUserId);
-                    if ($user->hasIdentity()) {
-                        /** @var mixed $tempSecretRaw */
+                    /** @var mixed $tempSecretRaw */
                         $tempSecretRaw = $this->session->get('2fa_temp_secret');
                         $tempSecret = (\is_string($tempSecretRaw)
                                 && $tempSecretRaw !== '') ? $tempSecretRaw : null;
@@ -501,7 +498,6 @@ final class AuthController
                             'error' => $error,
                             'formModel' => $tfasf,
                         ]);
-                    }
                 }
             } // null!==$inputCode
         }
@@ -539,18 +535,16 @@ final class AuthController
         $form = new TwoFactorAuthenticationVerifyLoginForm($translator);
         $codes = [];
         $user = $userRepository->findById($vuid);
-        if ($user->hasIdentity()) {
         // Only display the recovery codes once i.e. if the user does not have any
-            if (!$this->recoveryCodeService->userHasBackupCodes($user)) {
-                $codes = $this->generateBackupRecoveryCodes($user);
-                $this->session->set('backup_recovery_codes', $codes);
-            }
-            if ($this->session->get('regenerate_codes')) {
-                $this->removeBackupRecoveryCodes($user);
-                $codes = $this->generateBackupRecoveryCodes($user);
-                $this->session->set('backup_recovery_codes', $codes);
-                $this->session->set('regenerate_codes', false);
-            }
+        if (!$this->recoveryCodeService->userHasBackupCodes($user)) {
+            $codes = $this->generateBackupRecoveryCodes($user);
+            $this->session->set('backup_recovery_codes', $codes);
+        }
+        if ($this->session->get('regenerate_codes')) {
+            $this->removeBackupRecoveryCodes($user);
+            $codes = $this->generateBackupRecoveryCodes($user);
+            $this->session->set('backup_recovery_codes', $codes);
+            $this->session->set('regenerate_codes', false);
         }
         $parameters = [
             'title' => $translator->translate($tfafvl),
@@ -583,55 +577,53 @@ final class AuthController
                 if (null !== $inputCode) {
                     if ($vuid > 0) {
                         $user = $userRepository->findById($vuid);
-                        if ($user->hasIdentity()) {
-                            $totpSecretRaw = $user->getTotpSecret();
-                            $totpSec = (\is_string($totpSecretRaw)
-                                    && $totpSecretRaw !== '')
-                                    ? $totpSecretRaw : null;
-                            if ($totpSec !== null
-                                    && $this->isValidTotpCode($inputCode)) {
-                                $tokenApplySec = TokenMask::apply($totpSec);
-                                $totp = TOTP::create($totpSec);
-                                if ($totp->verify($inputCode)) {
-                                    if ($this->sR->getSetting($etwd) == '1') {
-                                        $user->setTotpSecret('');
-                                        $user->set2FAEnabled(false);
-                                        $userRepository->save($user);
-                                    }
-                                    // Regenerate session ID on successful
-                                    // authentication
-                                    $this->session->regenerateId();
-                                    $this->remSessTempsPermitEntryBase($vuid);
-                                    /**
-                                     * Related logic: HmrcController function
-                                     *  fphValidate
-                                     */
-                                    $this->session->set('otp', $inputCode);
-                                    $this->session->set('otpRef', $tokenApplySec);
-                                    return $this->redirectToInvoiceIndex();
+                        $totpSecretRaw = $user->getTotpSecret();
+                        $totpSec = (\is_string($totpSecretRaw)
+                                && $totpSecretRaw !== '')
+                                ? $totpSecretRaw : null;
+                        if ($totpSec !== null
+                                && $this->isValidTotpCode($inputCode)) {
+                            $tokenApplySec = TokenMask::apply($totpSec);
+                            $totp = TOTP::create($totpSec);
+                            if ($totp->verify($inputCode)) {
+                                if ($this->sR->getSetting($etwd) == '1') {
+                                    $user->setTotpSecret('');
+                                    $user->set2FAEnabled(false);
+                                    $userRepository->save($user);
                                 }
-                                $error = $translator->translate($tfaitc);
-                            } else {
-                                // The user has forgotten their $inputCode so
-                                // try a backup code
-                                if ($totpSec !== null
-                                        && $this->recoveryCodeService
-                                                ->validateAndMarkCodeAsUsed(
-                                                    $user, $inputCode)) {
-                                    $tokenApplySec = TokenMask::apply($totpSec);
-                                    $this->remSessTempsPermitEntryBase($vuid);
-                                    $this->session->set('otp', $inputCode);
-                                    $this->session->set('otpRef', $tokenApplySec);
-                                    return $this->redirectToInvoiceIndex();
-                                }
-                                $error = $translator->translate($tfaibrc);
+                                // Regenerate session ID on successful
+                                // authentication
+                                $this->session->regenerateId();
+                                $this->remSessTempsPermitEntryBase($vuid);
+                                /**
+                                 * Related logic: HmrcController function
+                                 *  fphValidate
+                                 */
+                                $this->session->set('otp', $inputCode);
+                                $this->session->set('otpRef', $tokenApplySec);
+                                return $this->redirectToInvoiceIndex();
                             }
-                            return $this->webViewRenderer->render('verify', [
-                                'error' => $error,
-                                'formModel' => $form,
-                                'codes' => $codes,
-                            ]);
+                            $error = $translator->translate($tfaitc);
+                        } else {
+                            // The user has forgotten their $inputCode so
+                            // try a backup code
+                            if ($totpSec !== null
+                                    && $this->recoveryCodeService
+                                            ->validateAndMarkCodeAsUsed(
+                                                $user, $inputCode)) {
+                                $tokenApplySec = TokenMask::apply($totpSec);
+                                $this->remSessTempsPermitEntryBase($vuid);
+                                $this->session->set('otp', $inputCode);
+                                $this->session->set('otpRef', $tokenApplySec);
+                                return $this->redirectToInvoiceIndex();
+                            }
+                            $error = $translator->translate($tfaibrc);
                         }
+                        return $this->webViewRenderer->render('verify', [
+                            'error' => $error,
+                            'formModel' => $form,
+                            'codes' => $codes,
+                        ]);
                     }
                 } // null!==$inputCode
                 $parameters['error'] = $translator->translate($tfaaf);

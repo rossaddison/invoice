@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Auth;
 
+use App\Infrastructure\Persistence\Identity\Identity;
 use App\User\UserRepository;
 use Throwable;
 use Yiisoft\Auth\IdentityInterface;

@@ -56,10 +56,8 @@ final readonly class SalesOrderService
             $user = $this->userRepository->findById(
                 (int) $array['user_id']
             );
-            if ($user->hasIdentity()) {
-                $model->setUser($user);
-                $model->setUserId($user->reqId());
-            }
+            $model->setUser($user);
+            $model->setUserId($user->reqId());
         }
         if (isset($array['quote_id'])) {
             $quote = $this->quoteRepository->repoQuoteUnLoadedquery((int) $array['quote_id']);

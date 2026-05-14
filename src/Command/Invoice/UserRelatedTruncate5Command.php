@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Command\Invoice;
 
-use App\Auth\Identity;
-use App\Auth\Token;
+use App\Infrastructure\Persistence\Identity\Identity;
+use App\Infrastructure\Persistence\Token\Token;
 use App\Infrastructure\Persistence\User\User;
 use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Infrastructure\Persistence\UserClient\UserClient;

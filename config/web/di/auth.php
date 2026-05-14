@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Auth\Identity;
+use App\Infrastructure\Persistence\Identity\Identity;
 use Cycle\ORM\RepositoryInterface;
 use Cycle\ORM\ORMInterface;
 use Psr\Container\ContainerInterface;

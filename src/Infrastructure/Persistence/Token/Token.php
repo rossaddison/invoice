@@ -2,8 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Auth;
+namespace App\Infrastructure\Persistence\Token;
 
+use App\Auth\TokenRepository;
+use App\Infrastructure\Persistence\Identity\Identity;
+use App\Infrastructure\Persistence\Trait\RequireId;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -11,9 +14,10 @@ use DateTimeImmutable;
 use Yiisoft\Security\Random;
 
 #[Entity(repository: TokenRepository::class)]
-
 class Token
 {
+    use RequireId;
+
     #[Column(type: 'primary')]
     private ?int $id = null;
 
@@ -36,24 +40,24 @@ class Token
         $this->created_at = new DateTimeImmutable();
     }
 
+    public function reqId(): int
+    {
+        return $this->requireId($this->id, 'Token');
+    }
+
+    public function hasIdentity(): bool
+    {
+        return $this->id !== null;
+    }
+
     public function getIdentity(): ?Identity
     {
         return $this->identity;
     }
 
-    public function getId(): string
+    public function getIdentityId(): ?int
     {
-        return (string) $this->id;
-    }
-
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    public function getIdentityId(): string
-    {
-        return (string) $this->identity_id;
+        return $this->identity_id;
     }
 
     public function setIdentityId(int $identity_id): void
@@ -83,12 +87,11 @@ class Token
 
     public function getCreatedAt(): DateTimeImmutable
     {
-        /** @var DateTimeImmutable $this->created_at */
         return $this->created_at;
     }
 
     public function setCreatedAt(string $created_at): void
     {
-        $this->created_at =  new DateTimeImmutable()->createFromFormat('Y-m-d h:i:s', $created_at) ?: new DateTimeImmutable('now');
+        $this->created_at = new DateTimeImmutable()->createFromFormat('Y-m-d h:i:s', $created_at) ?: new DateTimeImmutable('now');
     }
 }

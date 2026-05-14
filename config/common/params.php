@@ -9,7 +9,6 @@ use App\ViewInjection\MetaTagsViewInjection;
 use Psr\Log\LogLevel;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Definitions\Reference;
-use Yiisoft\Form\Field\Text;
 use Yiisoft\Form\Field\SubmitButton;
 use Yiisoft\Form\Field\Checkbox;
 use Yiisoft\Form\Field\ErrorSummary;
@@ -443,19 +442,13 @@ return [
  */
 
 /**
- * To update a table structure and related schema use MODE_WRITE_ONLY
- *  ...then revert back to MODE_READ_AND_WRITE
- * For faster performance use MODE_READ_AND_WRITE
- * Note as at 15/06/2024: If you have adjusted any Entity file you will have
- *  to always make two adjustments to
- * ensure the database is updated with the new changes and relevent fields:
- * 1. Change the mode immediately below
- * 2. Change the BUILD_DATABASE=  in the .env file at the root to
- *  BUILD_DATABASE=true
- * 3. Once the changes have been reflected and you have checked them via
- *  e.g. phpMyAdmin revert back to the original settings
- * Mode: PhpFileSchemaProvider::MODE_WRITE_ONLY or 1 :
- *  PhpFileSchemaProvider::MODE_READ_AND_WRITE or 0 \
+ * Modifying entities
+ * 1. Modify root .env 'BUILD_DATBASE' to true
+ * 2. Change relevant Entity
+ * 3. Delete runtime/schema.php
+ * 4. Page Reload by refreshing browser. schema.php will rebuild
+ * 5. Revert to 'BUILD_DATABASE=' i.e. assigned to nothing
+ * 6. Claude can handle the above 5 steps by running .claude/sync-schema.ps1
  */
         'schema-providers' => [
             PhpFileSchemaProvider::class => [
