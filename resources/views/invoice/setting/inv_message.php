@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Yiisoft\Html\Html;
+
 /**
  * Related logic: see Test by adding an attachment to an invoice
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -71,9 +73,9 @@
         </style>
     </head>
     <body>
-        <h1><?php echo $heading; ?></h1>
+        <h1><?php echo Html::encode($heading); ?></h1>
         <?php
-            echo $message;
+            echo Html::encode($message);
 ?>
         <form method="POST" class="form-inline" action="<?= $urlGenerator->generate($url, $actionName = ['id' => $id, '_language' => 'en']); ?>">
             <input type="hidden" name="_csrf" value="<?= $csrf ?>">

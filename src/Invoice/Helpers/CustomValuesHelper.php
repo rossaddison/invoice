@@ -137,7 +137,7 @@ class CustomValuesHelper
                 $optionsData = [];
                 /** @var CustomValue $choice */
                 foreach ($choices as $choice) {
-                    $optionsData[$choice->reqId()] = Html::encode($choice->getValue());
+                    $optionsData[$choice->reqId()] = $choice->getValue();
                 }
 
                 echo  new Label()
@@ -173,7 +173,7 @@ class CustomValuesHelper
                 $optionsData = [];
                 /** @var CustomValue $choice */
                 foreach ($choices as $choice) {
-                    $optionsData[$choice->reqId()] = Html::encode($choice->getValue());
+                    $optionsData[$choice->reqId()] = $choice->getValue();
                 }
 
                 echo  new Label()

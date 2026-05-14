@@ -123,7 +123,7 @@ final readonly class FormFields
                 ->addInputAttributes([
                     'class' => 'form-control form-control-lg',
                     'id' => 'inv_discount_amount'])
-                ->value(Html::encode($this->settingRepository->formatAmount($form->getDiscountAmount() ?? 0.00)))
+                ->value($this->settingRepository->formatAmount($form->getDiscountAmount() ?? 0.00))
                 ->placeholder($this->translator->translate('discount.amount'))
                 ->render()
             . Html::closeTag('div');
@@ -159,7 +159,7 @@ final readonly class FormFields
                 ->addInputAttributes([
                     'class' => 'form-control form-control-lg',
                     'autocomplete' => 'current-password'])
-                ->value(Html::encode($form->getPassword()))
+                ->value($form->getPassword())
                 ->placeholder($this->translator->translate('password'))
                 ->hint(
                 $this->translator->translate('hint.this.field.is.not.required'))
@@ -180,7 +180,7 @@ final readonly class FormFields
             . Field::textarea($form, $fieldName)
                 ->label($this->translator->translate('note'))
                 ->addInputAttributes(['class' => 'form-control form-control-lg'])
-                ->value(Html::encode($value ?? ''))
+                ->value($value ?? '')
                 ->placeholder($this->translator->translate('note'))
                 ->hint(
                 $this->translator->translate('hint.this.field.is.not.required'))
@@ -303,7 +303,7 @@ final readonly class FormFields
         $field = Field::text($form, $fieldName)
             ->label($this->translator->translate($labelKey))
             ->addInputAttributes(['class' => $cssClass])
-            ->value(Html::encode($value ?? ''))
+            ->value($value ?? '')
             ->placeholder($this->translator->translate($labelKey))
             ->hint($this->translator->translate($hintKey));
 
@@ -339,7 +339,7 @@ final readonly class FormFields
         return Field::select($form, 'unit_peppol_id')
             ->label($this->translator->translate('product.peppol.unit'))
             ->addInputAttributes(['class' => $cssClass])
-            ->value(Html::encode($form->getUnitPeppolId()))
+            ->value($form->getUnitPeppolId())
             ->prompt($this->translator->translate('none'))
             ->optionsData($unitPeppolsData)
             ->hint($this->translator->translate($hintKey))
@@ -381,7 +381,7 @@ final readonly class FormFields
             ->addInputAttributes([
                 'class' => $cssClass,
                 'placeholder' => $this->translator->translate($labelKey),
-                'value' => Html::encode($value ?? ''),
+                'value' => $value ?? '',
             ]);
 
         if ($required) {
@@ -403,7 +403,7 @@ final readonly class FormFields
             ->label($this->translator->translate('email'))
             ->addInputAttributes([
                 'placeholder'  => $this->translator->translate('email'),
-                'value'        => Html::encode($form->getClientEmail() ?? ''),
+                'value'        => $form->getClientEmail() ?? '',
                 'class'        => 'form-control form-control-lg',
                 'id'           => 'client_email',
                 'autocomplete' => 'email',
@@ -429,7 +429,7 @@ final readonly class FormFields
             ->label($this->translator->translate($labelKey))
             ->addInputAttributes([
                 'placeholder' => $this->translator->translate($labelKey),
-                'value' => Html::encode($value ?? ''),
+                'value' => $value ?? '',
                 'class' => 'form-control form-control-lg',
                 'id' => $fieldName,
             ])
@@ -446,7 +446,7 @@ final readonly class FormFields
             ->label($this->translator->translate('web'))
             ->addInputAttributes([
                 'placeholder' => $this->translator->translate('web'),
-                'value' => Html::encode($form->getClientWeb() ?? ''),
+                'value' => $form->getClientWeb() ?? '',
                 'class' => 'form-control form-control-lg',
                 'id' => 'client_web',
             ])
@@ -547,7 +547,7 @@ final readonly class FormFields
             ->addInputAttributes([
                 'class' => $cssClass,
                 'placeholder' => $this->translator->translate($labelKey),
-                'value' => Html::encode($value ?? ''),
+                'value' => $value ?? '',
                 'id' => $fieldName,
             ]);
 
@@ -575,7 +575,7 @@ final readonly class FormFields
                 'id' => 'user_id',
             ])
             ->optionsData($userOptions)
-            ->value(Html::encode($form->getUserId() ?? ''))
+            ->value($form->getUserId() ?? '')
             ->hint($this->translator->translate('hint.this.field.is.required'))
             ->render();
     }
@@ -592,7 +592,7 @@ final readonly class FormFields
                 'id' => 'user_id',
             ])
             ->readonly(true)
-            ->value(Html::encode($form->getUserId() ?? ''))
+            ->value($form->getUserId() ?? '')
             ->hint($this->translator->translate('hint.this.field.is.required'))
             ->render();
     }
@@ -610,7 +610,7 @@ final readonly class FormFields
                 'id' => 'type',
             ])
             ->optionsData($typeOptions)
-            ->value(Html::encode($form->getType() ?? 1))
+            ->value($form->getType() ?? 1)
             ->hint($this->translator->translate('hint.this.field.is.required'))
             ->render();
     }
@@ -628,7 +628,7 @@ final readonly class FormFields
                 'id' => 'language',
             ])
             ->optionsData($languageOptions)
-            ->value(Html::encode($form->getLanguage() ?? ''))
+            ->value($form->getLanguage() ?? '')
             ->hint($this->translator->translate('hint.this.field.is.required'))
             ->render();
     }
@@ -714,7 +714,7 @@ final readonly class FormFields
             ->addInputAttributes([
                 'class' => $cssClass,
                 'placeholder' => $this->translator->translate($labelKey),
-                'value' => Html::encode($value ?? ''),
+                'value' => $value ?? '',
             ]);
 
         if ($required) {
@@ -737,7 +737,7 @@ final readonly class FormFields
             ->addInputAttributes([
                 'placeholder' => $this->translator->translate('email'),
                 'class' => 'form-control form-control-lg',
-                'value' => Html::encode($form->getEmail() ?? ''),
+                'value' => $form->getEmail() ?? '',
             ])
             ->required(true)
             ->hint($this->translator->translate('hint.this.field.is.required'))
@@ -761,7 +761,7 @@ final readonly class FormFields
             ->addInputAttributes([
                 'placeholder' => $this->translator->translate($labelKey),
                 'class' => 'form-control form-control-lg',
-                'value' => Html::encode($value ?? ''),
+                'value' => $value ?? '',
             ])
             ->required(false)
             ->render();
@@ -810,7 +810,7 @@ final readonly class FormFields
             ->label($this->translator->translate($labelKey))
             ->addInputAttributes([
                 'class' => $cssClass,
-                'value' => Html::encode($value ?? ''),
+                'value' => $value ?? '',
             ]);
 
         if ($required) {
@@ -855,7 +855,7 @@ final readonly class FormFields
 
         return Field::file($form, $fieldName)
             ->accept('image/*')
-            ->value(Html::encode($value ?? ''))
+            ->value($value ?? '')
             ->render();
     }
 
@@ -887,7 +887,7 @@ final readonly class FormFields
                 'class' => 'form-control form-control-lg',
                 'placeholder' => $placeholder,
             ])
-            ->value(Html::encode($formattedValue))
+            ->value($formattedValue)
             ->render();
     }
 }

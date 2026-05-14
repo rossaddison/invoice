@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 
 /**
@@ -24,7 +25,7 @@ use Yiisoft\Html\Tag\A;
 <head>
     <meta charset="utf-8">
     <title>
-        <?php echo $heading; ?>
+        <?php echo Html::encode($heading); ?>
         <?= $translator->translate('invoice'); ?>
     </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -76,8 +77,8 @@ use Yiisoft\Html\Tag\A;
     </style>
 </head>
 <body>
-<h1><?php echo $heading; ?></h1>
-<?php echo $message; ?>
+<h1><?php echo Html::encode($heading); ?></h1>
+<?php echo Html::encode($message); ?>
 <form method="POST"
       class="form-inline"
       action="<?= $urlGenerator->generate($url,

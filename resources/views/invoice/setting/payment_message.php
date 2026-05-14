@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Yiisoft\Html\Html;
+
 /**
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -75,8 +77,8 @@ declare(strict_types=1);
 </head>
 <body>
 
-<h1><?php echo $heading; ?></h1>
-<?php echo $message; ?>
+<h1><?php echo Html::encode($heading); ?></h1>
+<?php echo Html::encode($message); ?>
 <form method="POST" class="form-inline" action="<?= $urlGenerator->generate($url, $actionArguments = ['url_key' => $url_key, 'gateway' => $gateway]); ?>">
        <input type="hidden" name="_csrf" value="<?= $csrf ?>">
        <button type="submit" class="btn btn-lg btn-link"><i class="bi bi-arrow-left"></i></button>
