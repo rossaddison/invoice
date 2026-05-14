@@ -70,6 +70,7 @@ jobs:
       - uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           prompt: |
             You are a PHP security reviewer focused exclusively on HTML encoding
             correctness in a Yii3 codebase that uses yiisoft/html and
