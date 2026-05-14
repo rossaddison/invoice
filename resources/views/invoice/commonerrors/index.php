@@ -15,7 +15,7 @@ use Yiisoft\Html\Tag\A;
  */
 ?>
 
-<?= $alert ?>
+<?= Html::encode($alert) ?>
 
 <?= Html::openTag('div', ['class' => 'card mb-4']); ?>
     <?= Html::openTag('div', ['class' => 'card-header bg-dark text-white d-flex justify-content-between align-items-center']); ?>

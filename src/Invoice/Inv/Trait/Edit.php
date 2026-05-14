@@ -181,7 +181,7 @@ trait Edit
         $inputAttributesUrlKey = [
             'class' => 'form-control form-control-lg',
             'readonly' => 'readonly',
-            'value' => Html::encode($form->getUrlKey()),
+            'value' => $form->getUrlKey(),
         ];
         // do not display the url key if it is a draft invoice otherwise
         // display the url key
@@ -204,8 +204,8 @@ trait Edit
         } else {
             $inputAttributesPaymentMethod = [
                 'class' => 'form-control form-control-lg',
-                'value' => Html::encode($form->getPaymentMethod() ??
-                ($this->sR->getSetting('invoice_default_payment_method') ?: 1)),
+                'value' => $form->getPaymentMethod() ??
+                ($this->sR->getSetting('invoice_default_payment_method') ?: 1),
             ];
         }
         return $inputAttributesPaymentMethod;
