@@ -1073,6 +1073,7 @@ return [
   'invoice.created.from.quote' => 'Invoice created from quote',
   'invoice.needs.to.be.sent' => 'To see Pay buttons change'
     . ' status to sent.',
+  'invoice.trash' => 'Invoice Trash',  
   'invoice.validation.errors' => 'Invoice Validation Errors',
   'invoiced' => 'Invoiced',
   'invoiceplane' => 'InvoicePlane',
