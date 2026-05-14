@@ -29,22 +29,23 @@ $formControlHtml = ['class' => 'form-control form-control-lg'];
 $headerbar       = ['id' => 'headerbar'];
 $headerbarTitle  = ['class' => 'headerbar-title'];
 $checkboxLabel   = ['class' => 'form-check-label fs-4'];
+$ac = 'allowance.or.charge.';
 
-?>
-<?= new Form()
+
+echo new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('AllowanceChargeForm')
-    ->open() ?>
- <?= $button::backSave(); ?>
- <?= Html::openTag('div', $headerbar); ?>
-  <?= Html::openTag('h1', $headerbarTitle); ?>
-   <?= $title; ?>
-  <?= Html::closeTag('h1'); ?>
- <?= Html::closeTag('div'); ?>
- <?= Html::openTag('div'); ?>
-  <?= Field::errorSummary($form)
+    ->open();
+ echo $button::backSave();
+ echo Html::openTag('div', $headerbar); //1
+  echo Html::openTag('h1', $headerbarTitle); //2
+   echo $title;
+  echo Html::closeTag('h1'); //2
+ echo Html::closeTag('div'); //1
+ echo Html::openTag('div'); //1
+  echo Field::errorSummary($form)
       ->errors($errors)
       ->header($translator->translate('error.summary'))
       ->onlyProperties(...[
@@ -55,27 +56,28 @@ $checkboxLabel   = ['class' => 'form-check-label fs-4'];
           'base_amount',
           'tax_rate_id'])
       ->onlyCommonErrors();
-  ?>
-  <?= Html::openTag('div', $row); ?>
-   <?= Html::openTag('div', $formSwitch); ?>
-    <?= Field::checkbox($form, 'level')
-        ->inputLabel($translator->translate('allowance.or.charge.level'))
+  echo Html::openTag('div', $row); //2
+   echo Html::openTag('div', $formSwitch); //3
+    echo Field::checkbox($form, 'level')
+        ->inputLabel($translator->translate($ac . 'level'))
         ->inputLabelAttributes($checkboxLabel)
         ->inputClass('form-check-input');
-    ?>
-   <?= Html::closeTag('div'); ?>
-   <?= Html::openTag('div', $formGroup); ?>
-    <?php
+   echo Html::closeTag('div'); //3
+   echo Html::openTag('div', $formGroup); //3
+
     $optionsDataReason = [];
     /**
      * @var string $value
      */
     foreach ($charges as $key => $value) {
-        $optionsDataReason[$value[0]] = Html::encode(ucfirst((string) $key) . '--       ' . $value[0] . '--' . $value[1]);
+        $optionsDataReason[$value[0]] = Html::encode(ucfirst((string) $key) .
+                '--       ' .
+                $value[0] .
+                '--' .
+                $value[1]);
     }
-    ?>
-    <?= Field::select($form, 'reason')
-        ->label($translator->translate('allowance.or.charge.reason'))
+    echo Field::select($form, 'reason')
+        ->label($translator->translate($ac . 'reason'))
         ->addInputAttributes([
             'class' => $formControlHtml['class'],
             'id' => 'reason',
@@ -84,46 +86,42 @@ $checkboxLabel   = ['class' => 'form-check-label fs-4'];
         ->optionsData($optionsDataReason, true)
         ->prompt($translator->translate('none'))
         ->hint($translator->translate('hint.this.field.is.required'));
-    ?>
-   <?= Html::closeTag('div'); ?>
-   <?= Html::openTag('div', $formGroup); ?>
-    <?= Field::text($form, 'multiplier_factor_numeric')
-        ->label($translator->translate('allowance.or.charge.multiplier.factor.numeric'))
+   echo Html::closeTag('div'); //3
+   echo Html::openTag('div', $formGroup); //3
+    echo Field::text($form, 'multiplier_factor_numeric')
+        ->label($translator->translate($ac . 'multiplier.factor.numeric'))
         ->addInputAttributes([
-            'placeholder' => $translator->translate('allowance.or.charge.multiplier.factor.numeric'),
+            'placeholder' => $translator->translate($ac . 'multiplier.factor.numeric'),
             'class' => $formControlHtml['class'],
             'id' => 'multiplier_factor_numeric',
         ])
         ->value(Html::encode($form->getMultiplierFactorNumeric() ?? '20'))
         ->hint($translator->translate('hint.this.field.is.required'));
-    ?>
-   <?= Html::closeTag('div'); ?>
-   <?= Html::openTag('div', $formGroup); ?>
-    <?= Field::text($form, 'amount')
-        ->label($translator->translate('allowance.or.charge.amount'))
+   echo Html::closeTag('div'); //3
+   echo Html::openTag('div', $formGroup); //3
+    echo Field::text($form, 'amount')
+        ->label($translator->translate($ac . 'amount'))
         ->addInputAttributes([
-            'placeholder' => $translator->translate('allowance.or.charge.amount'),
+            'placeholder' => $translator->translate($ac . 'amount'),
             'class' => $formControlHtml['class'],
             'id' => 'amount',
         ])
         ->value(Html::encode($form->getAmount() ?? ''))
         ->hint($translator->translate('hint.this.field.is.required'));
-    ?>
-   <?= Html::closeTag('div'); ?>
-   <?= Html::openTag('div', $formGroup); ?>
-    <?= Field::text($form, 'base_amount')
-        ->label($translator->translate('allowance.or.charge.base.amount'))
+   echo Html::closeTag('div'); //3
+   echo Html::openTag('div', $formGroup); //3
+    echo Field::text($form, 'base_amount')
+        ->label($translator->translate($ac . 'base.amount'))
         ->addInputAttributes([
-            'placeholder' => $translator->translate('allowance.or.charge.base.amount'),
+            'placeholder' => $translator->translate($ac . 'base.amount'),
             'class' => $formControlHtml['class'],
             'id' => 'base_amount',
         ])
         ->value(Html::encode($form->getBaseAmount() ?? '1000'))
         ->hint($translator->translate('hint.this.field.is.required'));
-    ?>
-   <?= Html::closeTag('div'); ?>
-   <?= Html::openTag('div', $formGroup); ?>
-    <?php
+   echo Html::closeTag('div'); //3
+   echo Html::openTag('div', $formGroup); //3
+
     $optionsDataTax = [];
     /**
      * @var App\Infrastructure\Persistence\TaxRate\TaxRate $taxRate
@@ -138,8 +136,7 @@ $checkboxLabel   = ['class' => 'form-check-label fs-4'];
             . (string) $taxRate->getTaxRatePercent()
         );
     }
-    ?>
-    <?= Field::select($form, 'tax_rate_id')
+    echo Field::select($form, 'tax_rate_id')
         ->label($translator->translate('tax.rate'))
         ->addInputAttributes([
             'class' => $formControlHtml['class'],
@@ -149,8 +146,9 @@ $checkboxLabel   = ['class' => 'form-check-label fs-4'];
         ->optionsData($optionsDataTax, true)
         ->prompt($translator->translate('none'))
         ->hint($translator->translate('hint.this.field.is.required'));
-    ?>
-   <?= Html::closeTag('div'); ?>
-  <?= Html::closeTag('div'); ?>
- <?= Html::closeTag('div'); ?>
-<?= new Form()->close() ?>
+   echo Html::closeTag('div'); //3
+  echo Html::closeTag('div'); //2
+ echo Html::closeTag('div'); //1
+echo new Form()->close();
+
+
