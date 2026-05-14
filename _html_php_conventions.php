@@ -29,7 +29,7 @@ use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Option;
 use Yiisoft\Html\Tag\Input\Checkbox;
-use Yiisoft\Html\Tag\TextArea;
+use Yiisoft\Html\Tag\Textarea;
 
 // ─── PHPDoc / injected variables ─────────────────────────────────────────────
 /**
@@ -38,6 +38,9 @@ use Yiisoft\Html\Tag\TextArea;
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var array $body
  * @var array $someList  e.g. languages, countries, currency codes …
+ * @var string $name
+ * @var non-empty-string $id
+ * @var string $label
  */
 
 // ─── CSS shortcut variables (declare once, reuse everywhere) ─────────────────
@@ -125,7 +128,7 @@ echo H::openTag('div', $colMd6); //0
     echo  new Option()
      ->value($key)
      ->selected($body['settings[some_code]'] == $key)
-     ->content($val);
+      ->content(H::encode($val));
    } //3
   echo H::closeTag('select'); //2
  echo H::closeTag('div'); //1
@@ -157,18 +160,17 @@ echo H::openTag('div', $colMd6); //0
   echo H::openTag('label', ['for' => 'some_number']); //2
    echo $translator->translate('some.number'); //3
   echo H::closeTag('label'); //2
-   $body['settings[some_number]'] = $s->getSetting('some_number');
-  echo new Input()
-       ->type('number')
-       ->class('form-control form-control-lg')
-       ->id('settings[some_text]')
-       ->name('settings[some_text]')
-       ->addAttributes([
-          'min' => '1',
-          'minLength' => '1',
-       ])
-       ->required(true)   
-       ->value(H::encode($body['settings[some_text]'])); //2 
+  $body['settings[some_number]'] = $s->getSetting('some_number');
+   echo new Input()
+        ->type('number')
+        ->class('form-control form-control-lg')
+        ->id('settings[some_number]')
+        ->name('settings[some_number]')
+        ->addAttributes([
+            'min' => '1',
+        ])
+        ->required(true)
+        ->value(H::encode($body['settings[some_number]'])); //2 
  echo H::closeTag('div'); //1
 echo H::closeTag('div'); //0
 
@@ -184,8 +186,8 @@ echo H::openTag('div', $colMd6); //0
   echo new TextArea()
        ->name('settings[some_notes]')
        ->id('settings[some_notes]')
-       ->rows('4')
-       ->value($body['settings[some_notes]']); //2
+       ->rows(4)
+       ->value(H::encode($body['settings[some_notes]'])); //2
  echo H::closeTag('div'); //1
 echo H::closeTag('div'); //0
 
@@ -205,7 +207,7 @@ echo H::openTag('div', $colMd6); //0
 echo H::closeTag('div'); //0
 
 // ==================================================================
-// PATTER 8 - Bold
+// PATTERN 8 - Bold
 // ==================================================================
 echo H::openTag('b'); //0
  echo 'This is a statement';

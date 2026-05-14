@@ -73,7 +73,7 @@ use Yiisoft\Html\Tag\Form;
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                <?= Field::text($form, 'base_amount')
+                <?= Field::text($form, 'amount')
     ->addInputAttributes(['style' => 'background:lightblue'])
     ->label($translator->translate('allowance.or.charge.amount'))
     ->value(Html::encode($form->getAmount() ?? ''))
