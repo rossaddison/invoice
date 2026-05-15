@@ -29,8 +29,7 @@ trait ClientNoteTrait
     public function loadClientNotes(Request $request, cnR $cnR): Response
     {
         $body = $request->getQueryParams();
-        /** @var int $body['client_id'] */
-        $cId = $body['client_id'];
+        $cId = (int) ($body['client_id'] ?? 0);
         $data = $cnR->repoClientNoteCount($cId) > 0 ?
             $cnR->repoClientquery($cId) : null;
         $parameters = [
@@ -89,17 +88,25 @@ trait ClientNoteTrait
      */
     public function deleteClientNote(Request $request, cnR $cnR, cnS $cnS): Response
     {
-        $body = $request->getQueryParams();
-        /**
-         * @var string $body['note_id']
-         */
-        $note_id = $body['note_id'] ?? '';
+        try {
+            $body = $request->getQueryParams();
+            /** @var string $body['note_id'] */
+            $note_id = $body['note_id'] ?? '';
 
-        $clientNote = $cnR->repoClientNotequery((int) $note_id);
-        //if ($clientNote) {
-        $cnS->deleteClientNote($clientNote);
+            $clientNote = $cnR->repoClientNotequery((int) $note_id);
+            if ($clientNote) {
+                $cnS->deleteClientNote($clientNote);
+                return $this->factory->createResponse(Json::encode(['success' => 1]));
+            }
             return $this->factory->createResponse(Json::encode([
-            'success' => 1,
-        ]));
+                'success' => 0,
+                'message' => 'Note not found',
+            ]));
+        } catch (\Throwable $e) {
+            return $this->factory->createResponse(Json::encode([
+                'success' => 0,
+                'message' => $e->getMessage(),
+            ]));
+        }
     }
 }

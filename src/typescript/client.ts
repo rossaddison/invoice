@@ -165,9 +165,7 @@ export class ClientHandler {
 
     private async handleSaveClientNote(saveNoteBtn: HTMLElement): Promise<void> {
         const url = `${location.origin}/invoice/client/saveClientNoteNew`;
-        const loadNotesUrl = `${location.origin}/invoice/client/loadClientNotes`;
         const btn = (document.querySelector('.save_client_note') as HTMLElement) || saveNoteBtn;
-        const currentUrl = new URL(location.href);
 
         if (btn) {
             setButtonLoading(btn, true);
@@ -183,65 +181,8 @@ export class ClientHandler {
             const data = parsedata(response);
 
             if (data.success === 1) {
-                if (btn) {
-                    setSecureButtonContent(btn, 'h2', 'text-center', 'fa fa-check');
-                }
-
-                // Clear the client note field
-                const noteEl = document.getElementById('client_note') as HTMLInputElement;
-                if (noteEl) noteEl.value = '';
-
-                // Reload notes list (replacing jQuery .load behavior)
-                const notesList = document.getElementById('notes_list');
-                if (notesList) {
-                    const loadUrl = `${loadNotesUrl}?client_id=${encodeURIComponent(payload.client_id)}`;
-                    try {
-                        const notesResponse = await fetch(loadUrl, {
-                            cache: 'no-store',
-                            credentials: 'same-origin',
-                        });
-                        const html = await notesResponse.text();
-
-                        // Only update if we get valid partial HTML (not a full page)
-                        if (html && !html.includes('<!DOCTYPE') && !html.includes('<html')) {
-                            // Sanitize HTML content to prevent XSS attacks
-                            notesList.textContent = '';
-                            const parser = new DOMParser();
-                            try {
-                                const doc = parser.parseFromString(html, 'text/html');
-                                // Only append if parsing was successful and content is from trusted source
-                                if (doc && doc.body) {
-                                    const fragment = document.createDocumentFragment();
-                                    while (doc.body.firstChild) {
-                                        fragment.appendChild(doc.body.firstChild);
-                                    }
-                                    notesList.appendChild(fragment);
-                                }
-                            } catch (e) {
-                                console.error('HTML parsing error:', e);
-                                notesList.textContent = 'Error loading notes';
-                            }
-                        } else {
-                            console.warn('Received full page HTML instead of notes fragment, reloading page');
-                            window.location.reload();
-                            return;
-                        }
-                    } catch (loadError) {
-                        console.error('load_client_notes failed', loadError);
-                        // Fallback to page reload on error
-                        window.location.reload();
-                        return;
-                    }
-                }
-
-                // Reset button state without reloading
-                setTimeout(() => {
-                    if (btn) {
-                        setButtonLoading(btn, false, '<h6 class="text-center"><i class="fa fa-save"></i></h6>');
-                    }
-                }, 1000);
+                window.location.reload();
             } else {
-                // Handle validation errors
                 this.clearValidationErrors();
 
                 if (data.validation_errors) {
@@ -268,59 +209,33 @@ export class ClientHandler {
             return;
         }
 
-        // Confirm deletion
         if (!confirm('Are you sure you want to delete this note?')) {
             return;
         }
 
         const url = `${location.origin}/invoice/client/deleteClientNote`;
-        const originalHtml = deleteBtn.innerHTML;
+
+        deleteBtn.textContent = '';
+        const spinner = document.createElement('i');
+        spinner.className = 'fa fa-spin fa-spinner';
+        deleteBtn.appendChild(spinner);
+        (deleteBtn as HTMLButtonElement).disabled = true;
 
         try {
-            // Set loading state
-            deleteBtn.textContent = '';
-            const spinner = document.createElement('i');
-            spinner.className = 'fa fa-spin fa-spinner';
-            deleteBtn.appendChild(spinner);
-            (deleteBtn as HTMLButtonElement).disabled = true;
+            const response = await getJson<ApiResponse>(url, { note_id: noteId });
+            const data = parsedata(response);
 
-            // Use the same pattern as other client note operations
-            const response = await fetch(`${url}?note_id=${encodeURIComponent(noteId)}`, {
-                method: 'GET',
-                credentials: 'same-origin',
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                if (data.success === 1) {
-                    // Remove the note panel from the DOM
-                    const notePanel = deleteBtn.closest('.panel');
-                    if (notePanel) {
-                        notePanel.remove();
-                    }
-                } else {
-                    // Server returned error
-                    deleteBtn.innerHTML = originalHtml;
-                    (deleteBtn as HTMLButtonElement).disabled = false;
-                    alert(data.message || 'Failed to delete note. Please try again.');
+            if (data.success === 1) {
+                const notePanel = deleteBtn.closest('.panel');
+                if (notePanel) {
+                    notePanel.remove();
                 }
             } else {
-                // HTTP error
-                const responseText = await response.text();
-                console.error('Delete client note HTTP error:', {
-                    status: response.status,
-                    statusText: response.statusText,
-                    body: responseText.substring(0, 500)
-                });
-
-                deleteBtn.innerHTML = originalHtml;
                 (deleteBtn as HTMLButtonElement).disabled = false;
-                alert('Failed to delete note. Please try again.');
+                alert(data.message || 'Failed to delete note. Please try again.');
             }
         } catch (error) {
             console.error('Delete client note error:', error);
-            // Restore button state on error
-            deleteBtn.innerHTML = originalHtml;
             (deleteBtn as HTMLButtonElement).disabled = false;
             alert('An error occurred while deleting the note. Please try again.');
         }

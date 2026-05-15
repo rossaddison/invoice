@@ -371,19 +371,13 @@ trait View
         try {
             $inv_tax_rate = $this->invtaxrate($id, $invtaxrateRepository);
             $this->inv_tax_rate_service->deleteInvTaxRate($inv_tax_rate);
+            $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
         } catch (\Exception $e) {
             $this->flashMessage('danger', $e->getMessage());
             unset($e);
         }
         $inv_id = (string) $this->session->get('inv_id');
-        return $this->factory->createResponse(
-                $this->webViewRenderer->renderPartialAsString(
-            '//invoice/setting/inv_message',
-            ['heading' => $this->translator->translate('tax.rate'),
-                'message' =>
-                    $this->translator->translate('record.successfully.deleted'),
-                    'url' => 'inv/view', 'id' => $inv_id],
-        ));
+        return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
     }
     
     private function viewCustomFields(

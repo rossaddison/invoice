@@ -418,19 +418,14 @@ trait View
         try {
             $this->quote_tax_rate_service->deleteQuoteTaxRate(
                 $this->quotetaxrate($id, $quotetaxrateRepository));
+            $this->flashMessage('info', $this->translator->translate(
+                'record.successfully.deleted'));
         } catch (\Exception $e) {
             unset($e);
             $this->flashMessage('danger', $this->translator->translate(
                 'quote.tax.rate.cannot.delete'));
         }
         $quote_id = (string) $this->session->get('quote_id');
-        return $this->factory->createResponse(
-            $this->webViewRenderer->renderPartialAsString(
-            '//invoice/setting/inv_message',
-            ['heading' => $this->translator->translate(
-                'quote.tax.rate'),'message' => $this->translator->translate(
-                    'record.successfully.deleted'),'url' =>
-                        'quote/view','id' => $quote_id],
-        ));
+        return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
     }
 }

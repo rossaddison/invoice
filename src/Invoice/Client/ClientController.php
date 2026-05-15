@@ -671,17 +671,17 @@ final class ClientController extends BaseController
         }
         $cId = $client->reqId();
 
-        $clientCustomForm = ClientCustomForm::show(new ClientCustom());
+        $clientCustomForm = new ClientCustomForm();
 
         // Note: client_id is used as the 'origin'
         //  (could be 'quote','main','dashboard')
         $bootstrap5ModalQuote = new Bootstrap5ModalQuote(
             $this->translator, $this->webViewRenderer, $cR, $gR, $this->sR, $ucR,
-            QuoteForm::show(new Quote()),
+            new QuoteForm(),
         );
         $bootstrap5ModalInv = new Bootstrap5ModalInv(
             $this->translator, $this->webViewRenderer, $cR, $gR, $this->sR, $ucR,
-            InvForm::show(new Inv()),
+            new InvForm(),
         );
 
         $parameters = [
