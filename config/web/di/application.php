@@ -6,6 +6,7 @@ use App\Handler\NotFoundHandler;
 use Yiisoft\Definitions\DynamicReference;
 use Yiisoft\Definitions\Reference;
 use Yiisoft\Middleware\Dispatcher\MiddlewareDispatcher;
+use Yiisoft\Yii\Http\Application;
 use Yiisoft\Yii\Middleware\Locale;
 use Yiisoft\Yii\Middleware\Subfolder;
 
@@ -20,7 +21,7 @@ use Yiisoft\Yii\Middleware\Subfolder;
 $construct = '__construct()';
 
 return [
-    Yiisoft\Yii\Http\Application::class => [
+    Application::class => [
         $construct => [
             'dispatcher' => DynamicReference::to([
                 'class' => MiddlewareDispatcher::class,

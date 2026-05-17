@@ -29,7 +29,7 @@ use Yiisoft\Html\Tag\I;
  *
  */
 
-$vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
+$vat = $s->getSetting('enable_vat_registration') === '1';
 ?>
 <?= Html::openTag('div', ['class' => 'panel panel-default']); ?>
     <?= Html::openTag('div', ['class' => 'panel-heading']); ?>
@@ -42,12 +42,22 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
             ->content(' ' . $translator->translate('product'));
 ?>
     <?= Html::closeTag('div'); ?>
-    <?=  new Form()
-->post($urlGenerator->generate($actionName, $actionArguments))
-->enctypeMultipartFormData()
-->csrf($csrf)
-->id('QuoteItemFormAddProduct')
-->open() ?>
+    <?php
+$action = $urlGenerator->generate($actionName, $actionArguments);
+echo (new Form())
+    ->post($action)
+    ->csrf($csrf)
+    ->id('QuoteItemFormAddProduct')
+    ->addAttributes([
+        'hx-post'              => $action,
+        'hx-target'            => '#partial_item_table_parameters',
+        'hx-swap'              => 'innerHTML',
+        'hx-indicator'         => '#quote-item-saving',
+        'hx-disabled-elt'      => '#btn-quote-item-save',
+        'hx-on::after-request' => 'if(event.detail.successful) this.reset()',
+    ])
+    ->open();
+?>
 
         <?= Html::openTag('div', ['class' => 'table-striped table-responsive']); ?>
             <?= Html::openTag('table', ['id' => 'item_table', 'class' => 'items table-primary table table-bordered no-margin']); ?>
@@ -142,13 +152,20 @@ foreach ($taxRates as $taxRate) {
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-icon text-right td-vert-middle']); ?>
                             <?= Html::openTag('button', [
-                                'type' => 'submit',
-                                'class' => 'btn btn-info',
+                                'type'           => 'submit',
+                                'id'             => 'btn-quote-item-save',
+                                'class'          => 'btn btn-info',
                                 'data-bs-toggle' => 'tooltip',
-                                'title' => 'quoteitem/addProduct']); ?>
-                                <?=  new I()->addClass('bi bi-plus-lg'); ?>
+                                'title'          => $translator->translate('add.product')]); ?>
+                                <?= new I()->addClass('bi bi-plus-lg'); ?>
                                 <?= $translator->translate('save'); ?>
                             <?= Html::closeTag('button'); ?>
+                            <?= Html::openTag('span', [
+                                'id'    => 'quote-item-saving',
+                                'class' => 'htmx-indicator ms-2',
+                            ]); ?>
+                                <?= new I()->addClass('bi bi-arrow-repeat spin'); ?>
+                            <?= Html::closeTag('span'); ?>
                         <?= Html::closeTag('td'); ?>
                     <?= Html::closeTag('tr'); ?>
                     <?= Html::openTag('tr'); ?>

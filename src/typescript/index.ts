@@ -1,6 +1,7 @@
 console.log("Invoice TypeScript bundle loaded");
 
 // Main TypeScript entry point for Invoice Application
+import './htmx.js';
 import { CreateCreditHandler } from './create-credit.js';
 import { QuoteHandler } from './quote.js';
 import { ClientHandler } from './client.js';

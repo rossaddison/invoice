@@ -55,6 +55,7 @@ use App\Invoice\{
     Quote\QuoteController,
     QuoteAllowanceCharge\QuoteAllowanceChargeController,
     QuoteItem\QuoteItemController,
+    QuoteItem\QuoteItemHtmxController,
     QuoteItemAllowanceCharge\QuoteItemAllowanceChargeController,
     Report\ReportController,
     SalesOrder\SalesOrderController,
@@ -1811,6 +1812,14 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([QuoteController::class, 'save'])
                 ->name('quote/save'),
+            Route::methods([$mP], '/quoteitemhtmx/addProduct')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([QuoteItemHtmxController::class, 'addProduct'])
+                ->name('quoteitemhtmx/addProduct'),
+            Route::methods([$mP], '/quoteitemhtmx/addTask')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([QuoteItemHtmxController::class, 'addTask'])
+                ->name('quoteitemhtmx/addTask'),
             Route::methods([$mG, $mP], '/quote/delete/{id}')
                 ->name('quote/delete')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
