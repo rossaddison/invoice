@@ -31,6 +31,10 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 **Recent Implementations**
 
+[HTMX User Index](docs/HTMX_USER_INDEX.md) — sort, pagination, and page-size selector on the user list using HTMX 2.x; `UsersListWidget` wraps `GridView` with `hx-boost` on sort and pagination links; partial `outerHTML` swap of `#UsersGridView` (May 2026)
+
+[HTMX Quote Item Entry](docs/HTMX_QUOTE_ITEM_ENTRY.md) — in-place product and task line item addition on the quote view using HTMX 2.x; dedicated `QuoteItemHtmxController` with `quoteitemhtmx/addProduct` and `quoteitemhtmx/addTask` POST-only routes; no full page reload; loading spinner with auto-reset on success; htmx 2.0.10 bundled into the TypeScript iife via npm (May 2026)
+
 [RBAC DB Storage](docs/RBAC_DB_STORAGE.md) — assignments migrated from `resources/rbac/assignments.php` to `yii_rbac_assignment` MySQL table via `yiisoft/rbac-cycle-db`; items remain PHP-file backed (May 2026)
 
 [Cycle ORM Transactions](docs/CYCLE_ORM_TRANSACTIONS.md) — `InvService::withTransaction()` wraps invoice create, credit, copy, and invoice-to-invoice confirm in atomic database transactions; orphaned rows on partial failure are no longer possible (May 2026)
@@ -173,6 +177,25 @@ After a composer update, you'll need to manually:
 * Step 3: Run ````npm i```` in ````c:\wamp64\invoice```` folder. This will install @popperjs, Bootstrap 5, and TypeScript 
           into a new node_modules folder.
 * Step 4: Keep your npm up to date by running, for example, ````npm install -g npm@10.8.1```` or just ````npm install -g````.
+
+**Rebuilding the TypeScript bundle (invoice-typescript-iife.js)**
+
+The compiled bundle at `src/Invoice/Asset/rebuild/js/invoice-typescript-iife.js` must be
+rebuilt whenever TypeScript source files change (including `src/typescript/htmx.ts` which
+bundles htmx 2.x). Run:
+
+````npm run build:typescript````
+
+Then copy the updated bundle to the Yii3-published assets directory so the browser
+receives the new file without a cache clear:
+
+````
+src/Invoice/Asset/rebuild/js/invoice-typescript-iife.js
+  →  public/assets/<hash>/rebuild/js/invoice-typescript-iife.js
+````
+
+The `<hash>` folder name is derived from the asset source path and stays stable between
+builds — check `public/assets/` for the existing folder name (e.g. `7246626a`).
 
 **Recommended php.ini settings**
 * Step 1: Wampserver ... Php {version} ... Php Settings ... xdebug.mode = off

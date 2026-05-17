@@ -60,7 +60,7 @@ use Yiisoft\Html\Tag\I;
 
 <?= Html::openTag('div', ['class' => 'tabbable tabs-below']); ?>
     <?= Html::openTag('div', ['class' => 'tab-content']); ?>
-        <?= Html::openTag('div', ['id' => 'add-product-tab', 'class' => 'tab-pane']); ?>
+        <?= Html::openTag('div', ['id' => 'add-product-tab', 'class' => 'tab-pane active show']); ?>
             <?= Html::openTag('div', ['class' => 'panel-heading']); ?>
                 <?= Html::openTag('div'); ?>
                     <?= Html::openTag(

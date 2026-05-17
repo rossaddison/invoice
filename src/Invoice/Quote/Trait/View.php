@@ -130,7 +130,7 @@ trait View
                             'add_quote_product' =>
                                 $this->webViewRenderer->renderPartialAsString(
                                     '//invoice/quoteitem/_item_form_product', [
-                                'actionName' => 'quoteitem/addProduct',
+                                'actionName' => 'quoteitemhtmx/addProduct',
                                 'actionArguments' => ['_language' => $_language],
                                 'errors' => [],
                                 'form' => new QuoteItemForm(),
@@ -143,7 +143,7 @@ trait View
                             'add_quote_task' =>
                                     $this->webViewRenderer->renderPartialAsString(
                                         '//invoice/quoteitem/_item_form_task', [
-                                'actionName' => 'quoteitem/addTask',
+                                'actionName' => 'quoteitemhtmx/addTask',
                                 'actionArguments' => ['_language' => $_language],
                                 'errors' => [],
                                 'form' => new QuoteItemForm(),

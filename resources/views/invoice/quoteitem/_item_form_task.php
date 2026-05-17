@@ -8,8 +8,6 @@ use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
 
 /**
- * Related logic: see QuoteController function view $parameters['add_quote_task']['actionName' => 'quoteitem/addTask']
- * Related logic: see QuoteItemController function addTask
  * @var App\Invoice\QuoteItem\QuoteItemForm $form
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
  * @var App\Invoice\Setting\SettingRepository $s
@@ -17,7 +15,6 @@ use Yiisoft\Html\Tag\I;
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var array $tasks
  * @var array $taxRates
- * @var int $taxRateId
  * @var string $csrf
  * @var string $actionName
  * @var string $title
@@ -26,7 +23,7 @@ use Yiisoft\Html\Tag\I;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataTaxRate
  */
 
-$vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
+$vat = $s->getSetting('enable_vat_registration') === '1';
 ?>
 <?= Html::openTag('div', ['class' => 'panel panel-default']); ?>
     <?= Html::openTag('div', ['class' => 'panel-heading']); ?>
@@ -38,12 +35,22 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
             ]);
 ?>
     <?= Html::closeTag('div'); ?>
-    <?=  new Form()
-->post($urlGenerator->generate($actionName, $actionArguments))
-->enctypeMultipartFormData()
-->csrf($csrf)
-->id('QuoteItemFormAddTask')
-->open() ?>
+    <?php
+$action = $urlGenerator->generate($actionName, $actionArguments);
+echo (new Form())
+    ->post($action)
+    ->csrf($csrf)
+    ->id('QuoteItemFormAddTask')
+    ->addAttributes([
+        'hx-post'              => $action,
+        'hx-target'            => '#partial_item_table_parameters',
+        'hx-swap'              => 'innerHTML',
+        'hx-indicator'         => '#quote-task-saving',
+        'hx-disabled-elt'      => '#btn-quote-task-save',
+        'hx-on::after-request' => 'if(event.detail.successful) this.reset()',
+    ])
+    ->open();
+?>
 
         <?= Html::openTag('div', ['class' => 'table-striped table-responsive']); ?>
             <?= Html::openTag('table', ['id' => 'item_table', 'class' => 'items table-primary table table-bordered no-margin']); ?>
@@ -114,9 +121,8 @@ foreach ($taxRates as $taxRate) {
     $taxRatePercent = $taxRate->getTaxRatePercent();
     $taxRatePercentNumber = $numberHelper->formatAmount($taxRatePercent);
     $taxRateName = $taxRate->getTaxRateName();
-    // Only build the drop down item if all values are present
     if (null !== $taxRatePercentNumber && null !== $taxRateName) {
-        $optionsDataTaxRate[$taxRateId] =  $taxRatePercentNumber . '% - ' . $taxRateName;
+        $optionsDataTaxRate[$taxRateId] = $taxRatePercentNumber . '% - ' . $taxRateName;
     }
 }
 ?>
@@ -130,15 +136,21 @@ foreach ($taxRates as $taxRate) {
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-icon text-right td-vert-middle']); ?>
-                            <!-- This  button is used to save the details entered here.   -->
                             <?= Html::openTag('button', [
-                                'type' => 'submit',
-                                'class' => 'btn btn-info',
+                                'type'           => 'submit',
+                                'id'             => 'btn-quote-task-save',
+                                'class'          => 'btn btn-info',
                                 'data-bs-toggle' => 'tooltip',
-                                'title' => 'quoteitem/addTask']); ?>
-                                <?=  new I()->addClass('bi bi-plus-lg'); ?>
+                                'title'          => $translator->translate('add.task')]); ?>
+                                <?= new I()->addClass('bi bi-plus-lg'); ?>
                                 <?= $translator->translate('save'); ?>
                             <?= Html::closeTag('button'); ?>
+                            <?= Html::openTag('span', [
+                                'id'    => 'quote-task-saving',
+                                'class' => 'htmx-indicator ms-2',
+                            ]); ?>
+                                <?= new I()->addClass('bi bi-arrow-repeat spin'); ?>
+                            <?= Html::closeTag('span'); ?>
                         <?= Html::closeTag('td'); ?>
                     <?= Html::closeTag('tr'); ?>
                     <?= Html::openTag('tr'); ?>

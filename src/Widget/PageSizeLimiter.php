@@ -8,7 +8,7 @@ use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\Setting\SettingRepository as sR;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Router\FastRoute\UrlGenerator;
+use Yiisoft\Router\UrlGeneratorInterface as UrlGenerator;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 
 final class PageSizeLimiter
