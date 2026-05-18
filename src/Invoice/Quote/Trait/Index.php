@@ -15,6 +15,7 @@ use App\Invoice\{
     Setting\SettingRepository as SR,
     UserClient\UserClientRepository as UCR,
 };
+use App\Invoice\Quote\Widget\QuotesListWidget;
 use App\Widget\Bootstrap5ModalQuote;
 use Yiisoft\{
     Data\Paginator\OffsetPaginator as DataOffsetPaginator,
@@ -176,6 +177,31 @@ trait Index
                         'quote', []),
                 'urlCreator' => $urlCreator,
             ];
+            if ($request->hasHeader('Hx-Request')) {
+                return $this->htmlResponseFactory->createResponse(
+                    QuotesListWidget::widget()
+                        ->withPaginator($paginator)
+                        ->withQR($quoteRepo)
+                        ->withSoR($soR)
+                        ->withSR($sR)
+                        ->withCsrf((string) ($request->getParsedBody()['_csrf'] ?? ''))
+                        ->withDecimalPlaces((int) $sR->getSetting('tax_rate_decimal_places'))
+                        ->withVisible($sR->getSetting('columns_all_visible') === '1')
+                        ->withGroupBy($queryGroupBy ?? 'none')
+                        ->withClientCount($clientRepo->count())
+                        ->withGridSummary($sR->gridSummary(
+                            $paginator,
+                            $this->translator,
+                            (int) $sR->getSetting('default_list_limit'),
+                            $this->translator->translate('quotes'),
+                            $quoteRepo->getSpecificStatusArrayLabel((string) $status),
+                        ))
+                        ->withSortString($sortString)
+                        ->withOptionsDataClientsDropdownFilter($this->optionsDataClients($quoteRepo))
+                        ->withOptionsDataStatusDropDownFilter($this->optionsDataStatuses($quoteRepo))
+                        ->render()
+                );
+            }
             return $this->webViewRenderer->render('index', $parameters);
         }
         $this->flashMessage('info',

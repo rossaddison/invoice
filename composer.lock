@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d4fde76eaf7b1445022eae8eca91c50e",
+    "content-hash": "af705be6db8c507b687ece141f2858ae",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -1682,21 +1682,21 @@
         },
         {
             "name": "cycle/annotated",
-            "version": "v4.4.0",
+            "version": "v4.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cycle/annotated.git",
-                "reference": "7564927e04449eeec22b3cf94af2d406f129d931"
+                "reference": "dde50bd137fc7b01411449b74d24bc48f70fb9ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cycle/annotated/zipball/7564927e04449eeec22b3cf94af2d406f129d931",
-                "reference": "7564927e04449eeec22b3cf94af2d406f129d931",
+                "url": "https://api.github.com/repos/cycle/annotated/zipball/dde50bd137fc7b01411449b74d24bc48f70fb9ea",
+                "reference": "dde50bd137fc7b01411449b74d24bc48f70fb9ea",
                 "shasum": ""
             },
             "require": {
-                "cycle/database": "^2.15",
-                "cycle/orm": "^2.9.2",
+                "cycle/database": "^2.16",
+                "cycle/orm": "^2.15",
                 "cycle/schema-builder": "^2.11.1",
                 "doctrine/inflector": "^2.0",
                 "php": ">=8.1",
@@ -1704,6 +1704,7 @@
                 "spiral/tokenizer": "^2.8|^3.0"
             },
             "require-dev": {
+                "buggregator/trap": "^1.15",
                 "doctrine/annotations": "^1.14.3 || ^2.0.1",
                 "phpunit/phpunit": "^10.1",
                 "spiral/code-style": "^2.2",
@@ -1752,7 +1753,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-11-04T08:20:33+00:00"
+            "time": "2026-05-18T10:40:58+00:00"
         },
         {
             "name": "cycle/database",
@@ -1971,16 +1972,16 @@
         },
         {
             "name": "cycle/orm",
-            "version": "v2.16.0",
+            "version": "v2.16.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cycle/orm.git",
-                "reference": "309610cfc96569225b29a10662b73d2b21a12f67"
+                "reference": "62ded837299beab7a15a9324c6bb9f0a76c4db45"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cycle/orm/zipball/309610cfc96569225b29a10662b73d2b21a12f67",
-                "reference": "309610cfc96569225b29a10662b73d2b21a12f67",
+                "url": "https://api.github.com/repos/cycle/orm/zipball/62ded837299beab7a15a9324c6bb9f0a76c4db45",
+                "reference": "62ded837299beab7a15a9324c6bb9f0a76c4db45",
                 "shasum": ""
             },
             "require": {
@@ -2055,7 +2056,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-05-15T12:34:20+00:00"
+            "time": "2026-05-18T06:36:35+00:00"
         },
         {
             "name": "cycle/schema-builder",
@@ -18963,16 +18964,16 @@
     "packages-dev": [
         {
             "name": "behat/gherkin",
-            "version": "v4.16.1",
+            "version": "v4.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Behat/Gherkin.git",
-                "reference": "e26037937dfd48528746764dd870bc5d0836665f"
+                "reference": "5c8b3149fac39b5a79942b64eeec59a5ee4001c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Behat/Gherkin/zipball/e26037937dfd48528746764dd870bc5d0836665f",
-                "reference": "e26037937dfd48528746764dd870bc5d0836665f",
+                "url": "https://api.github.com/repos/Behat/Gherkin/zipball/5c8b3149fac39b5a79942b64eeec59a5ee4001c0",
+                "reference": "5c8b3149fac39b5a79942b64eeec59a5ee4001c0",
                 "shasum": ""
             },
             "require": {
@@ -18980,7 +18981,7 @@
                 "php": ">=8.1 <8.6"
             },
             "require-dev": {
-                "cucumber/gherkin-monorepo": "dev-gherkin-v37.0.0",
+                "cucumber/gherkin-monorepo": "dev-gherkin-v39.1.0",
                 "friendsofphp/php-cs-fixer": "^3.77",
                 "mikey179/vfsstream": "^1.6",
                 "phpstan/extension-installer": "^1",
@@ -19026,7 +19027,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Behat/Gherkin/issues",
-                "source": "https://github.com/Behat/Gherkin/tree/v4.16.1"
+                "source": "https://github.com/Behat/Gherkin/tree/v4.17.0"
             },
             "funding": [
                 {
@@ -19042,7 +19043,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-12-08T16:12:58+00:00"
+            "time": "2026-05-18T09:33:47+00:00"
         },
         {
             "name": "clue/ndjson-react",
@@ -21073,11 +21074,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.54",
+            "version": "2.1.55",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/8be50c3992107dc837b17da4d140fbbdf9a5c5bd",
-                "reference": "8be50c3992107dc837b17da4d140fbbdf9a5c5bd",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/9eaac3826ed5e9b8427350a43cac825eeca3f566",
+                "reference": "9eaac3826ed5e9b8427350a43cac825eeca3f566",
                 "shasum": ""
             },
             "require": {
@@ -21122,7 +21123,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-04-29T13:31:09+00:00"
+            "time": "2026-05-18T11:57:34+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",

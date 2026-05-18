@@ -50,6 +50,7 @@ use App\Invoice\Helpers\{
 use App\Widget\QuoteToolbar;
 use Yiisoft\{
     DataResponse\ResponseFactory\DataResponseFactoryInterface,
+    DataResponse\ResponseFactory\HtmlResponseFactory,
     Json\Json,
     Mailer\MailerInterface,
     Router\FastRoute\UrlGenerator,
@@ -78,6 +79,7 @@ final class QuoteController extends BaseController
 
     public function __construct(
         private readonly DataResponseFactoryInterface $factory,
+        private readonly HtmlResponseFactory $htmlResponseFactory,
         private readonly FormFields $formFields,
         private readonly InvAllowanceChargeService $inv_allowance_charge_service,
         private readonly InvAmountService $inv_amount_service,

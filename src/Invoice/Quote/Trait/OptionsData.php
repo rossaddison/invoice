@@ -9,6 +9,7 @@ use App\Invoice\Quote\QuoteRepository as QR;
 
 trait OptionsData
 {
+    /** @return array<string, string> */
     public function optionsDataClients(QR $qR): array
     {
         $optionsDataClients = [];
@@ -68,6 +69,7 @@ trait OptionsData
         return $optionsDataQuoteNumbers;
     }
 
+    /** @return array<int, string> */
     public function optionsDataStatuses(QR $qR): array
     {
         $optionsDataStatus = [];

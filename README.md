@@ -31,6 +31,8 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 **Recent Implementations**
 
+[HTMX Quotes List Widget](docs/QUOTES_LIST_WIDGET.md) — sort, filter, pagination, and group-by on the quote list using HTMX 2.x; `QuotesListWidget` wraps `GridView` with `hx-boost`; partial `outerHTML` swap of `#QuotesGridView`; group-by with collapsible headers; SonarQube S138/S3776/S107 refactoring (May 2026)
+
 [HTMX User Index](docs/HTMX_USER_INDEX.md) — sort, pagination, and page-size selector on the user list using HTMX 2.x; `UsersListWidget` wraps `GridView` with `hx-boost` on sort and pagination links; partial `outerHTML` swap of `#UsersGridView` (May 2026)
 
 [HTMX Quote Item Entry](docs/HTMX_QUOTE_ITEM_ENTRY.md) — in-place product and task line item addition on the quote view using HTMX 2.x; dedicated `QuoteItemHtmxController` with `quoteitemhtmx/addProduct` and `quoteitemhtmx/addTask` POST-only routes; no full page reload; loading spinner with auto-reset on success; htmx 2.0.10 bundled into the TypeScript iife via npm (May 2026)
