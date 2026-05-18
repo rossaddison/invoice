@@ -167,11 +167,6 @@ produce identical HTML. There is one source of truth for the grid markup.
 auto-wirable dependencies. Cycle ORM-backed repositories are passed after construction
 via `withX()` setters, which bypass the `WidgetFactory` DI resolution entirely.
 
-**Asset in the view, not the layout** — Keeps htmx.js off pages that don't need it
-(login, signup, public site pages). Any future page under the main layout that uses an
-HTMX widget should follow the same pattern: `$assetManager->register(HtmxAsset::class)`
-at the top of that specific view file.
-
 **422 not applicable here** — Unlike the quote item entry (POST-based), all user-index
 HTMX interactions are GET requests (sort, page, limit redirect). No validation failure
 path exists, so the 422 guard used in `QuoteItemHtmxController` is not needed.
