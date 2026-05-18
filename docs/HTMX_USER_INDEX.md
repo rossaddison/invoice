@@ -142,14 +142,6 @@ The main layout (`resources/views/layout/templates/soletrader/main.php`) does **
 load `HtmxAsset` — only the invoice layout does. Without htmx.js, `hx-boost` attributes
 are inert HTML and every sort/pagination click causes a full page reload.
 
-The asset is registered at the top of the view rather than added to the global layout
-(to avoid loading HTMX on every login/signup/about page):
-
-```php
-// resources/views/user/index.php
-$assetManager->register(HtmxAsset::class);
-```
-
 `$assetManager` is auto-injected into all views via `config/common/params.php`.
 
 ---
