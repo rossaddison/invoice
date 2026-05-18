@@ -155,6 +155,7 @@ trait OptionsData
         ];
     }
     
+    /** @psalm-return array<array-key, string> */
     public function optionsDataClientsFilter(IR $iR): array
     {
         $optionsDataClients = [];
@@ -200,6 +201,7 @@ trait OptionsData
         return $optionsDataClients;
     }
 
+    /** @psalm-return array<array-key, string> */
     public function optionsDataYearMonthFilter(): array
     {
         $ym = [];
@@ -215,6 +217,7 @@ trait OptionsData
         return $ym;
     }
 
+    /** @psalm-return array<array-key, string> */
     public function optionsDataClientGroupFilter(CR $cR): array
     {
         $clientGroup = [];
@@ -236,6 +239,7 @@ trait OptionsData
         return $clientGroup;
     }
 
+    /** @psalm-return array<array-key, string> */
     public function optionsDataInvNumberFilter(IR $iR): array
     {
         $optionsDataInvNumbers = [];
@@ -256,6 +260,7 @@ trait OptionsData
         return $optionsDataInvNumbers;
     }
 
+    /** @psalm-return array<array-key, string> */
     public function optionsDataFamilyNameFilter(IR $iR): array
     {
         $optionsDataFamilyNames = [];
@@ -281,6 +286,7 @@ trait OptionsData
      *         $iR, $status, $user_clients, $sort)
      * has been used to generate
      */
+    /** @psalm-return array<array-key, string> */
     public function optionsDataCreditInvNumberFilter(IR $iR): array
     {
         $optionsData = [];
@@ -346,6 +352,7 @@ trait OptionsData
         return $optionsDataInvNumbers;
     }
 
+    /** @psalm-return array<array-key, string> */
     public function optionsDataStatusFilter(IR $iR): array
     {
         $optionsDataStatus = [];

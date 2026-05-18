@@ -30,10 +30,10 @@
     "@angular/core": "21.2.13",
     "@angular/platform-browser": "21.2.13",
     "@eslint/js": "^10.0.1",
-    "@types/node": "^25.8.0",
-    "@typescript-eslint/eslint-plugin": "^8.59.3",
-    "@typescript-eslint/parser": "^8.59.3",
-    "@typescript/native-preview": "^7.0.0-dev.20260517.1",
+    "@types/node": "^25.9.0",
+    "@typescript-eslint/eslint-plugin": "^8.59.4",
+    "@typescript-eslint/parser": "^8.59.4",
+    "@typescript/native-preview": "^7.0.0-dev.20260518.1",
     "esbuild": "^0.28.0",
     "eslint": "^10.4.0",
     "eslint-plugin-deprecation": "^3.0.0",
@@ -92,6 +92,9 @@
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs"
+  },
+  "overrides": {
+    "webpack-dev-server": "^5.2.4"
   },
   "license": "BSD-3-Clause",
   "engines": {

@@ -42,6 +42,7 @@ use App\Invoice\Inv\Trait\{Add, Archive, Attachment, Credit, Delete, Edit, Email
     Storecove, Trash, Typescript, UrlKey, View};
 use Yiisoft\{
     DataResponse\ResponseFactory\DataResponseFactoryInterface,
+    DataResponse\ResponseFactory\HtmlResponseFactory,
     FormModel\FormHydrator, Html\Html,
     Mailer\MailerInterface, Router\FastRoute\UrlGenerator,
     Router\HydratorAttribute\RouteArgument, Session\Flash\Flash,
@@ -66,6 +67,7 @@ final class InvController extends BaseController
 
     public function __construct(
         private readonly DataResponseFactoryInterface $factory,
+        private readonly HtmlResponseFactory $htmlResponseFactory,
         private readonly FormFields $formFields,
         private readonly ButtonsToolbarFull $buttonsToolbarFull,
         private readonly DelRepo $delRepo,

@@ -40,10 +40,14 @@ use Yiisoft\Translator\TranslatorInterface;
  */
 final class QuotesListWidgetTest extends TestCase
 {
+    /** @psalm-suppress PropertyNotSetInConstructor */
     private CurrentRoute $currentRoute;
+    /** @psalm-suppress PropertyNotSetInConstructor */
     private UrlGeneratorInterface $urlGenerator;
+    /** @psalm-suppress PropertyNotSetInConstructor */
     private TranslatorInterface $translator;
 
+    #[\Override]
     protected function setUp(): void
     {
         // CurrentRoute is final — instantiate directly (no-arg constructor).
@@ -365,6 +369,7 @@ final class QuotesListWidgetTest extends TestCase
     {
         $stringable = new class ('view-csrf-token') implements \Stringable {
             public function __construct(private readonly string $value) {}
+            #[\Override]
             public function __toString(): string { return $this->value; }
         };
 
@@ -492,7 +497,7 @@ final class QuotesListWidgetTest extends TestCase
     public function testComputeGroupTotalsReturnsEmptyArrayWhenPaginatorIsEmpty(): void
     {
         $paginator = $this->makeEmptyPaginator();
-        $getGroupValue = static fn(Quote $q): string => 'unused';
+        $getGroupValue = static fn(Quote $_q): string => 'unused';
 
         /** @var array<string, array{count: int, total: float}> $result */
         $result = $this->callPrivate('computeGroupTotals', $paginator, $getGroupValue);
@@ -505,7 +510,7 @@ final class QuotesListWidgetTest extends TestCase
         $q1 = $this->makeQuoteMock(total: 100.00);
         $q2 = $this->makeQuoteMock(total: 200.00);
         $paginator = new OffsetPaginator(new IterableDataReader([$q1, $q2]));
-        $getGroupValue = static fn(Quote $q): string => 'All';
+        $getGroupValue = static fn(Quote $_q): string => 'All';
 
         /** @var array<string, array{count: int, total: float}> $result */
         $result = $this->callPrivate('computeGroupTotals', $paginator, $getGroupValue);
@@ -546,7 +551,7 @@ final class QuotesListWidgetTest extends TestCase
         $quote->method('reqStatusId')->willReturn(1);
 
         $paginator     = new OffsetPaginator(new IterableDataReader([$quote]));
-        $getGroupValue = static fn(Quote $q): string => 'NullAmounts';
+        $getGroupValue = static fn(Quote $_q): string => 'NullAmounts';
 
         /** @var array<string, array{count: int, total: float}> $result */
         $result = $this->callPrivate('computeGroupTotals', $paginator, $getGroupValue);

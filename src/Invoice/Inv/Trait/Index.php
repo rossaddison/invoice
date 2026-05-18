@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv\Trait;
 
-use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\{
     Client\ClientRepository as CR,
     DeliveryLocation\DeliveryLocationRepository as DLR,
     Group\GroupRepository as GR,
     Inv\InvRepository as IR,
     Inv\InvForm,
+    Inv\Widget\InvsListWidget,
     InvRecurring\InvRecurringRepository as IRR,
     InvSentLog\InvSentLogRepository as ISLR,
     PaymentMethod\PaymentMethodRepository as PMR,
@@ -21,16 +21,22 @@ use App\Invoice\{
 use App\Widget\Bootstrap5ModalInv;
 use Yiisoft\{
     Data\Cycle\Reader\EntityReader,
+    Data\Paginator\OffsetPaginator,
+    Data\Paginator\PageToken,
     Data\Reader\DataReaderInterface as DRI,
+    Data\Reader\Sort,
     Html\Html,
     Input\Http\Attribute\Parameter\Query,
-    Router\HydratorAttribute\RouteArgument};
+    Router\HydratorAttribute\RouteArgument,
+};
 use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 trait Index
 {
- 
+
 public function index(
+        Request $request,
         IR $invRepo,
         IRR $irR,
         ISLR $islR,
@@ -76,7 +82,6 @@ public function index(
         #[Query('groupBy')]
         ?string $queryGroupBy = 'none',
     ): Response {
-        // build the inv and hasOne InvAmount table
         $visible = $this->sR->getSetting('columns_all_visible');
         $visibleToggleInvSentLogColumn =
             $this->sR->getSetting('column_inv_sent_log_visible');
@@ -90,53 +95,47 @@ public function index(
             $ucR,
             $invForm,
         );
-        // If the language dropdown changes
         $this->session->set('_language', $_language);
-        // ensure that admin is aware when read-only functionality ie.
-        // invoice deletion prevention has changed
         $this->disableReadOnlyStatusMessage();
         $active_clients = $ucR->getClientsWithUserAccounts();
         if ($active_clients) {
-            // All, Draft, Sent ... filter governed by routes eg.
-            // invoice.myhost/invoice/inv/page/1/status/1 =>
-            // #[RouteArgument('page')] string $page etc
-            $page = $queryPage ?? $page;
-            //status 0 => 'all';
-            // Use query parameter if provided, otherwise use route parameter
+            $page           = $queryPage ?? $page;
             $effectiveStatus = isset($queryFilterStatus)
-                && !empty($queryFilterStatus) ?
-                    (int) $queryFilterStatus : (int) $status;
+                && !empty($queryFilterStatus)
+                ? (int) $queryFilterStatus : (int) $status;
+            $sortString     = $querySort ?? '-id';
+            $sort           = Sort::only([
+                'id', 'status_id', 'number', 'date_created', 'date_due', 'client_id',
+            ])->withOrderString($sortString);
+
             $invs = $this->invsStatus($invRepo, $effectiveStatus);
+
             if (isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) {
                 $invs = $invRepo->filterInvNumber($queryFilterInvNumber);
             }
             if (isset($queryFilterCreditInvNumber)
                     && !empty($queryFilterCreditInvNumber)) {
-                $invs = $invRepo->filterCreditInvNumber(
-                    $queryFilterCreditInvNumber);
+                $invs = $invRepo->filterCreditInvNumber($queryFilterCreditInvNumber);
             }
             if (isset($queryFilterFamilyName) && !empty($queryFilterFamilyName)) {
-                //$family = $familyRepo->withName($queryFilterFamilyName);
-                // family -> product -> inv
                 $invs = $invRepo->filterFamilyName($queryFilterFamilyName);
             }
             if (isset($queryFilterInvAmountTotal)
                     && !empty($queryFilterInvAmountTotal)) {
                 $invs = $invRepo->filterInvAmountTotal(
-                        (float) $queryFilterInvAmountTotal);
+                    (float) $queryFilterInvAmountTotal);
             }
             if (isset($queryFilterInvAmountPaid)
                     && !empty($queryFilterInvAmountPaid)) {
                 $invs = $invRepo->filterInvAmountPaid(
-                        (float) $queryFilterInvAmountPaid);
+                    (float) $queryFilterInvAmountPaid);
             }
             if (isset($queryFilterInvAmountBalance)
                     && !empty($queryFilterInvAmountBalance)) {
                 $invs = $invRepo->filterInvAmountBalance(
-                        (float)$queryFilterInvAmountBalance);
+                    (float) $queryFilterInvAmountBalance);
             }
-            if ((isset($queryFilterInvNumber)
-                    && !empty($queryFilterInvNumber))
+            if ((isset($queryFilterInvNumber) && !empty($queryFilterInvNumber))
                && (isset($queryFilterInvAmountTotal)
                        && !empty($queryFilterInvAmountTotal))) {
                 $invs = $invRepo->filterInvNumberAndInvAmountTotal(
@@ -154,54 +153,72 @@ public function index(
             }
             if (isset($queryFilterDateCreatedYearMonth)
                     && !empty($queryFilterDateCreatedYearMonth)) {
-                // Use the mySql format 'Y-m'
-                $invs = $invRepo->filterDateCreatedLike('Y-m',
-                    $queryFilterDateCreatedYearMonth);
+                $invs = $invRepo->filterDateCreatedLike(
+                    'Y-m', $queryFilterDateCreatedYearMonth);
             }
+
+            $currentPage = max(1, (int) $page);
+            $pageSize    = max(1, (int) ($this->sR->getSetting('default_list_limit') ?: 1));
+
+            $paginator = (new OffsetPaginator($invs))
+                ->withPageSize($pageSize)
+                ->withCurrentPage($currentPage)
+                ->withSort($sort)
+                ->withToken(PageToken::next((string) $currentPage));
+
             $inv_statuses = $invRepo->getStatuses($this->translator);
-            $label = $invRepo->getSpecificStatusArrayLabel($status);
+            $label        = $invRepo->getSpecificStatusArrayLabel($status);
+
             $this->draftFlash($_language);
             $this->markSentFlash($_language);
+
+            $gridSummary = $this->sR->gridSummary(
+                $paginator,
+                $this->translator,
+                $pageSize,
+                $this->translator->translate('invoices'),
+                $label,
+            );
+
+            $notSet = $this->sR->getSetting('not.set');
+
+            $gRObj = $groupRepo->repoGroupquery(
+                (int) $this->sR->getSetting('default_invoice_group'));
+            $defaultInvoiceGroup = (null !== $gRObj
+                && strlen($gRObj->getName() ?? '') > 0)
+                ? ($gRObj->getName() ?? $notSet)
+                : $notSet;
+
+            $pmRObj = $pmR->repoPaymentMethodquery(
+                (int) $this->sR->getSetting('invoice_default_payment_method'));
+            $defaultInvoicePaymentMethod = (null !== $pmRObj
+                && strlen($pmRObj->getName() ?? '') > 0)
+                ? ($pmRObj->getName() ?? $notSet)
+                : $notSet;
+
             $parameters = [
-                'alert' => $this->alert(),
-                'clientCount' => $clientRepo->count(),
-                'decimalPlaces' =>
+                'alert'              => $this->alert(),
+                'clientCount'        => $clientRepo->count(),
+                'decimalPlaces'      =>
                     (int) $this->sR->getSetting('tax_rate_decimal_places'),
-                'defaultPageSizeOffsetPaginator' =>
-                    $this->sR->getSetting('default_list_limit') ?
-                        (int) $this->sR->getSetting('default_list_limit') : 1,
-                'defaultInvoiceGroup' =>
-                    null !==
-                        ($gR = $groupRepo->repoGroupquery(
-                            (int) $this->sR->getSetting('default_invoice_group'))
-                        )   ? (strlen($groupName = $gR->getName() ?? '') > 0
-                            ? $groupName
-                            : $this->sR->getSetting('not.set'))
-                            : $this->sR->getSetting('not.set'),
-                'defaultInvoicePaymentMethod' =>
-                    null !==
-                        ($pmR = $pmR->repoPaymentMethodquery(
-                        (int) $this->sR->getSetting('invoice_default_payment_method')))
-                        ? (strlen($paymentMethodName = $pmR->getName() ?? '') > 0
-                        ? $paymentMethodName : $this->sR->getSetting('not.set'))
-                        : $this->sR->getSetting('not.set'),
-                // numbered tiles between the arrrows
-                'maxNavLinkCount' => 10,
-                'groupBy' => $queryGroupBy,
-                'invs' => $invs,
-                'inv_statuses' => $inv_statuses,
-                'max' => (int) $this->sR->getSetting('default_list_limit'),
-                'page' => (int) $page > 0 ? (int) $page : 1,
-                'status' => $effectiveStatus,
-                'qR' => $qR,
-                'dlR' => $dlR,
-                'soR' => $soR,
-                // Use the invRepo to retrieve the Invoice Number of the invoice
-                // that a credit note has been generated from
-                'iR' => $invRepo,
-                'irR' => $irR,
-                'islR' => $islR,
-                'label' => $label,
+                'defaultInvoiceGroup'         => $defaultInvoiceGroup,
+                'defaultInvoicePaymentMethod' => $defaultInvoicePaymentMethod,
+                'groupBy'            => $queryGroupBy,
+                'gridSummary'        => $gridSummary,
+                'iR'                 => $invRepo,
+                'irR'                => $irR,
+                'islR'               => $islR,
+                'inv_statuses'       => $inv_statuses,
+                'label'              => $label,
+                'paginator'          => $paginator,
+                'qR'                 => $qR,
+                'dlR'                => $dlR,
+                'soR'                => $soR,
+                'sortString'         => $sortString,
+                'status'             => $effectiveStatus,
+                'visible'            => $visible !== '0',
+                'visibleToggleInvSentLogColumn' =>
+                    $visibleToggleInvSentLogColumn !== '0',
                 'optionsClientsDropDownFilter' =>
                     $this->optionsDataClientsFilter($invRepo),
                 'optionsClientGroupDropDownFilter' =>
@@ -218,37 +235,72 @@ public function index(
                     $this->optionsDataStatusFilter($invRepo),
                 'modal_add_inv' =>
                     $bootstrap5ModalInv->renderPartialLayoutWithFormAsString(
-                            'inv', []),
+                        'inv', []),
                 'modal_create_recurring_multiple' =>
                     $this->indexModalCreateRecurringMultiple($irR),
                 'modal_copy_inv_multiple' =>
                     $this->indexModalCopyInvMultiple(),
-                'sortString' => $querySort ?? '-id',
-                'viewRenderer' => $this->webViewRenderer,
-                'visible' => $visible !== '0',
-                'visibleToggleInvSentLogColumn' =>
-                    $visibleToggleInvSentLogColumn !== '0',
-                'locale' => new \Yiisoft\I18n\Locale($_language),
             ];
+
+            if ($request->hasHeader('Hx-Request')) {
+                return $this->htmlResponseFactory->createResponse(
+                    InvsListWidget::widget()
+                        ->withPaginator($paginator)
+                        ->withIR($invRepo)
+                        ->withIrR($irR)
+                        ->withIslR($islR)
+                        ->withQR($qR)
+                        ->withSoR($soR)
+                        ->withDlR($dlR)
+                        ->withSR($this->sR)
+                        ->withCsrf((string) ($request->getParsedBody()['_csrf'] ?? ''))
+                        ->withDecimalPlaces(
+                            (int) $this->sR->getSetting('tax_rate_decimal_places'))
+                        ->withVisible($visible !== '0')
+                        ->withVisibleInvSentLogColumn(
+                            $visibleToggleInvSentLogColumn !== '0')
+                        ->withGroupBy($queryGroupBy ?? 'none')
+                        ->withClientCount($clientRepo->count())
+                        ->withGridSummary($gridSummary)
+                        ->withSortString($sortString)
+                        ->withLabel($label)
+                        ->withOptionsInvNumberDropDownFilter(
+                            $this->optionsDataInvNumberFilter($invRepo))
+                        ->withOptionsCreditInvNumberDropDownFilter(
+                            $this->optionsDataCreditInvNumberFilter($invRepo))
+                        ->withOptionsFamilyNameDropDownFilter(
+                            $this->optionsDataFamilyNameFilter($invRepo))
+                        ->withOptionsClientsDropDownFilter(
+                            $this->optionsDataClientsFilter($invRepo))
+                        ->withOptionsClientGroupDropDownFilter(
+                            $this->optionsDataClientGroupFilter($clientRepo))
+                        ->withOptionsYearMonthDropDownFilter(
+                            $this->optionsDataYearMonthFilter())
+                        ->withOptionsStatusDropDownFilter(
+                            $this->optionsDataStatusFilter($invRepo))
+                        ->render()
+                );
+            }
+
             return $this->webViewRenderer->render('index', $parameters);
         }
         $this->flashMessage('info',
             $this->translator->translate('user.client.active.no'));
         return $this->webService->getRedirectResponse('client/index');
     }
-    
+
     private function disableReadOnlyStatusMessage(): void
     {
         if ($this->sR->getSetting('disable_read_only') == '') {
             $this->flashMessage('warning', $this->translator->translate(
-                    'security.disable.read.only.empty'));
+                'security.disable.read.only.empty'));
         }
         if ($this->sR->getSetting('disable_read_only') == '1') {
             $this->flashMessage('warning', $this->translator->translate(
-                    'security.disable.read.only.warning'));
+                'security.disable.read.only.warning'));
         }
     }
-    
+
     private function indexModalCreateRecurringMultiple(IRR $irR): string
     {
         return $this->webViewRenderer->renderPartialAsString(
@@ -266,38 +318,33 @@ public function index(
     /**
      * @psalm-return EntityReader<array-key, array<array-key, mixed>|object>
      */
-    private function invsStatus(IR $iR, int $status):
-        DRI
+    private function invsStatus(IR $iR, int $status): DRI
     {
         return $iR->findAllWithStatus($status);
-    }    
-    
-    /**
-     * Use: Toggle Button on Flash message reminder
-     */
+    }
+
     private function draftFlash(string $_language): void
     {
-        // Get the current draft setting
-        $draft = $this->sR->getSetting('generate_invoice_number_for_draft');
-        // Get the setting_id to allow for editing
+        $draft   = $this->sR->getSetting('generate_invoice_number_for_draft');
         $setting = $this->sR->withKey('generate_invoice_number_for_draft');
         $setting_url = '';
         if (null !== $setting) {
-            $setting_id = $setting->reqSettingId();
-            // The route name has been simplified and differs from the action
-            // 'setting/inv_draft_has_number_switch'
+            $setting_id  = $setting->reqSettingId();
             $setting_url = $this->url_generator->generate(
-                'setting/draft', ['_language' => $_language,
-                    'setting_id' => $setting_id]);
+                'setting/draft',
+                ['_language' => $_language, 'setting_id' => $setting_id],
+            );
         }
-        $level = $draft == '0' ? 'warning' : 'info';
+        $level  = $draft == '0' ? 'warning' : 'info';
         $on_off = $draft == '0' ? 'off' : 'on';
-        $message = $this->translator->translate('draft.number.'
-          . $on_off) . str_repeat('&nbsp;', 2)
-          . (!empty($setting_url) ? (string) Html::a(Html::tag('i', '',
-                ['class' => 'bi bi-pencil']), $setting_url,
+        $message = $this->translator->translate('draft.number.' . $on_off)
+            . str_repeat('&nbsp;', 2)
+            . (!empty($setting_url)
+                ? (string) Html::a(
+                    Html::tag('i', '', ['class' => 'bi bi-pencil']),
+                    $setting_url,
                     ['class' => 'btn btn-primary'])
-          : '');
+                : '');
         $this->flashMessage($level, $message);
     }
 }
