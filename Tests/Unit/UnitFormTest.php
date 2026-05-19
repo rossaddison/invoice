@@ -6,9 +6,9 @@ namespace Tests\Unit;
 
 use App\Infrastructure\Persistence\Unit\Unit;
 use App\Invoice\Unit\UnitForm;
-use Codeception\Test\Unit as BaseUnit;
+use PHPUnit\Framework\TestCase;
 
-class UnitFormTest extends BaseUnit
+class UnitFormTest extends TestCase
 {
     private Unit $unitEntity;
     private UnitForm $form;

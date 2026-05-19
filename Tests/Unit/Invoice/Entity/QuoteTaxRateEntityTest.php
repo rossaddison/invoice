@@ -96,7 +96,7 @@ class QuoteTaxRateEntityTest extends TestCase
     public function testQuoteRelationSetterAndGetter(): void
     {
         $qtr = new QuoteTaxRate();
-        $quote = $this->createMock(Quote::class);
+        $quote = $this->createStub(Quote::class);
         $qtr->setQuote($quote);
         $this->assertSame($quote, $qtr->getQuote());
         $qtr->setQuote(null);
@@ -106,7 +106,7 @@ class QuoteTaxRateEntityTest extends TestCase
     public function testTaxRateRelationSetterAndGetter(): void
     {
         $qtr = new QuoteTaxRate();
-        $taxRate = $this->createMock(TaxRate::class);
+        $taxRate = $this->createStub(TaxRate::class);
         $qtr->setTaxRate($taxRate);
         $this->assertSame($taxRate, $qtr->getTaxRate());
         $qtr->setTaxRate(null);

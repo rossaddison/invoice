@@ -6,9 +6,9 @@ namespace Tests\Unit;
 
 use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use App\Invoice\TaxRate\TaxRateForm;
-use Codeception\Test\Unit;
+use PHPUnit\Framework\TestCase;
 
-class TaxRateFormTest extends Unit
+class TaxRateFormTest extends TestCase
 {
     private TaxRate $taxRate;
     private TaxRateForm $form;

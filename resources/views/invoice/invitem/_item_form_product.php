@@ -49,12 +49,23 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
             ->content(' ' . $translator->translate('product'));
 ?>
     <?= Html::closeTag('div'); ?>
-    <?=  new Form()
-->post($urlGenerator->generate($actionName))
-->enctypeMultipartFormData()
-->csrf($csrf)
-->id('InvItemForm')
-->open() ?>
+    <?php
+$action = $urlGenerator->generate($actionName, $actionArguments);
+echo (new Form())
+    ->post($action)
+    ->enctypeMultipartFormData()
+    ->csrf($csrf)
+    ->id('InvItemFormAddProduct')
+    ->addAttributes([
+        'hx-post'              => $action,
+        'hx-target'            => '#partial_item_table_parameters',
+        'hx-swap'              => 'innerHTML',
+        'hx-indicator'         => '#inv-item-saving',
+        'hx-disabled-elt'      => '#btn-inv-item-save',
+        'hx-on::after-request' => 'if(event.detail.successful) this.reset()',
+    ])
+    ->open();
+?>
 
         <?= Html::openTag('div', ['class' => 'table-striped table-responsive']); ?>
             <?= Html::openTag('table', ['id' => 'item_table',
@@ -174,13 +185,20 @@ foreach ($taxRates as $taxRate) {
                                  The below button is used to save the details that are input on this form.
                             -->
                             <?= Html::openTag('button', [
-                                'type' => 'submit',
-                                'class' => 'btn btn-info',
+                                'type'           => 'submit',
+                                'id'             => 'btn-inv-item-save',
+                                'class'          => 'btn btn-info',
                                 'data-bs-toggle' => 'tooltip',
-                                'title' => 'invitem/addProduct']); ?>
-                                <?=  new I()->addClass('bi bi-plus-lg'); ?>
+                                'title'          => 'invitem/addProduct']); ?>
+                                <?= new I()->addClass('bi bi-plus-lg'); ?>
                                 <?= $translator->translate('save'); ?>
                             <?= Html::closeTag('button'); ?>
+                            <?= Html::openTag('span', [
+                                'id'    => 'inv-item-saving',
+                                'class' => 'htmx-indicator ms-2',
+                            ]); ?>
+                                <?= new I()->addClass('bi bi-arrow-repeat spin'); ?>
+                            <?= Html::closeTag('span'); ?>
                         <?= Html::closeTag('td'); ?>
                     <?= Html::closeTag('tr'); ?>
                     <?= Html::openTag('tr'); ?>
@@ -199,6 +217,20 @@ foreach ($taxRates as $taxRate) {
     ->value(Html::encode($form->getOrder() ?? ''));
 ?>
                             <?= Html::closeTag('div'); ?>
+                            <?php if ($s->getSetting('enable_peppol') === '1') : ?>
+                            <?= Html::openTag('div', ['class' => 'input-group']); ?>
+                                <?= Field::text($form, 'peppol_po_itemid')
+    ->label($translator->translate('client.peppol.po.item.id'))
+    ->value(Html::encode($form->getPeppolPoItemid() ?? ''));
+?>
+                            <?= Html::closeTag('div'); ?>
+                            <?= Html::openTag('div', ['class' => 'input-group']); ?>
+                                <?= Field::text($form, 'peppol_po_lineid')
+    ->label($translator->translate('client.peppol.po.line.id'))
+    ->value(Html::encode($form->getPeppolPoLineid() ?? ''));
+?>
+                            <?= Html::closeTag('div'); ?>
+                            <?php endif; ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount']); ?>
                             <?= Html::openTag('div', ['class' => 'input-group']); ?>

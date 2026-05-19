@@ -1217,7 +1217,7 @@ final class SalesOrderController extends BaseController
                 // Recurring date
                 'date' => '',
             ];
-            $form = InvItemForm::show($newInvItem, $new_inv_id);
+            $form = new InvItemForm();
             if ($formHydrator->populateAndValidate($form, $inv_item)) {
                 $savedInvItem = $this->invItemService->addInvItemProductTask(
                     $newInvItem, $inv_item, (string) $new_inv_id, $pR, $taskR, $unR,

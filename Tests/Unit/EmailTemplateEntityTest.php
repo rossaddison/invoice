@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use App\Infrastructure\Persistence\EmailTemplate\EmailTemplate;
-use Codeception\Test\Unit;
+use PHPUnit\Framework\TestCase;
 
-final class EmailTemplateEntityTest extends Unit
+final class EmailTemplateEntityTest extends TestCase
 {
     public string $invoiceTemplate = 'Invoice Template';
     

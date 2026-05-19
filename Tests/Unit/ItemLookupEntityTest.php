@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use App\Infrastructure\Persistence\ItemLookup\ItemLookup;
-use Codeception\Test\Unit;
+use PHPUnit\Framework\TestCase;
 
-final class ItemLookupEntityTest extends Unit
+final class ItemLookupEntityTest extends TestCase
 {
     public function testConstructorWithDefaults(): void
     {

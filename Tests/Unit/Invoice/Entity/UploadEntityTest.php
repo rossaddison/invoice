@@ -105,7 +105,7 @@ class UploadEntityTest extends TestCase
     public function testClientRelationshipSetterAndGetter(): void
     {
         $upload = new Upload();
-        $client = $this->createMock(Client::class);
+        $client = $this->createStub(Client::class);
         
         $upload->setClient($client);
         $this->assertSame($client, $upload->getClient());
@@ -277,7 +277,7 @@ class UploadEntityTest extends TestCase
     public function testCompleteUploadSetup(): void
     {
         $upload = new Upload();
-        $client = $this->createMock(Client::class);
+        $client = $this->createStub(Client::class);
         $uploadDate = new DateTimeImmutable('2024-06-15 10:30:00');
         
         $upload->setId(1);
@@ -380,8 +380,8 @@ class UploadEntityTest extends TestCase
     public function testClientRelationshipWorkflow(): void
     {
         $upload = new Upload();
-        $client1 = $this->createMock(Client::class);
-        $client2 = $this->createMock(Client::class);
+        $client1 = $this->createStub(Client::class);
+        $client2 = $this->createStub(Client::class);
         
         // Initially null
         $this->assertNull($upload->getClient());

@@ -348,6 +348,8 @@ return [
     . ' (OrderLineReference LineID)associated with it.'
     . ' Administrator: Edit the Invoice\'s Sales Order Line Number. ',
   'client.peppol.not.found.sales.order' => 'Sales Order does not exist',
+  'client.peppol.po.item.id' => 'Peppol PO Item Id',
+  'client.peppol.po.line.id' => 'Peppol PO Line Id',
   'client.peppol.payee.financial.account.name' =>
     'Payee Financial Account Name',
   'client.peppol.payee.financial.accountid' =>
@@ -2372,6 +2374,7 @@ prior to importing and no existing documents e.g. Invoices.',
     => '1.1.4. Create a sender - Legal Entity Country',
   'storecove.invoice.json.encoded' =>
     'StoreCove Json Encoded Invoice',
+  'peppol.send.via.oxalis' => 'Send via Peppol (Oxalis)',
   'storecove.legal' => 'Legal',
   'storecove.legal.entity.id.for.json' =>
     '1.1.4. Create a sender '

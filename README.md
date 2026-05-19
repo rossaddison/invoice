@@ -31,7 +31,19 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 **Recent Implementations**
 
+[PHPUnit Entity Test Migration](docs/PHPUNIT_ENTITY_TEST_MIGRATION.md) — 34 new PHPUnit entity tests across 6 batches; 36 Codeception unit tests migrated to `PHPUnit\Framework\TestCase`; 26 `createMock()` calls replaced with `createStub()`; 3 pre-existing `DateTime`/`DateTimeImmutable` entity bugs uncovered (May 2026)
+
+[Peppol SMP Lookup](docs/PEPPOL_SMP_LOOKUP.md) — participant discovery via SML DNS → SMP HTTP → XML parse; `SmpResolver` supports both PEPPOL SMP 1.0 and BDX SMP 1.0 namespaces; `SmpEndpoint` value object; `PEPPOL_SML_ZONE` and `PEPPOL_SMP_BASE_URL` env vars; 10-test PHPUnit suite; completes Phase 1 of the Peppol access point (May 2026)
+
 [HTMX Caching](docs/HTMX_CACHING.md) — `Vary: HX-Request` strategy for CDN/proxy caches; browser cache headers for XHR GET requests; why POST filter forms are exempt; Nginx cache-key configuration; current project status checklist (May 2026)
+
+[Peppol Send via Oxalis](docs/PEPPOL_SEND_OXALIS.md) — end-to-end implementation of "Send via Peppol (Oxalis)" on the invoice view; `PeppolMessage` Cycle ORM entity; `PeppolSendService` PSR-18 HTTP wrapper; QUEUED→SENT→FAILED status lifecycle; WireMock Phase A dev setup; Yii3 DI config auto-loaded from `OXALIS_BASE_URL` env var (May 2026)
+
+[Peppol Oxalis Connect](docs/PEPPOL_OXALIS_CONNECT.md) — Phase B real-Oxalis wiring: `PeppolSendService` switched from JSON to `multipart/form-data`; `iso6523-actorid-upis::` and `cenbii-procid-ubl::` scheme prefixes; `PEPPOL_SENDER_ID` env var; HTTP 4xx/5xx mapped to FAILED; `PeppolInboundController` delivery callback; `DocumentTypeId` busdox caveat; Phase B checklist (May 2026)
+
+[Oxalis Integration Plan](docs/OXALIS_INTEGRATION.md) — phased plan for self-hosted Peppol AS4 transport via Oxalis alongside the existing Storecove connector; cost comparison (managed AP vs. self-hosted); `PeppolMessage` state machine; `PeppolSendService` wrapping Oxalis REST API; inbound callback controller; SMP registration and OpenPeppol certification costs (May 2026)
+
+[Peppol Access Point PHP Guide](docs/PEPPOL_ACCESS_POINT_PHP_GUIDE.md) — architectural overview for building a Peppol access point in PHP; AS4/WS-Security delegation strategy; recommended PHP libraries (`xmlseclibs`, `sabre/xml`); phased delivery from minimal outbound-only AP through full certification (May 2026)
 
 [HTMX Invoices List Widget](docs/INVS_LIST_WIDGET.md) — sort, filter, pagination, and group-by on the invoice list using HTMX 2.x; `InvsListWidget` wraps `GridView` with `hx-boost`; partial `outerHTML` swap of `#InvsGridView`; edit-column read-only/disable-read-only matrix; sent-log columns; group-by with paid/balance totals per group header; 44-test PHPUnit suite (May 2026)
 

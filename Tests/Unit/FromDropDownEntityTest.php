@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use App\Infrastructure\Persistence\FromDropDown\FromDropDown;
-use Codeception\Test\Unit;
+use PHPUnit\Framework\TestCase;
 
-final class FromDropDownEntityTest extends Unit
+final class FromDropDownEntityTest extends TestCase
 {
     public string $testExampleCom = 'test@example.com';
     

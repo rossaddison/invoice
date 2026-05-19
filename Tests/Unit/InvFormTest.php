@@ -253,8 +253,8 @@ final class InvFormTest extends TestCase
      */
     private function createMockInv(): Inv
     {
-        $inv = $this->createMock(Inv::class);
-        $client = $this->createMock(Client::class);
+        $inv = $this->createStub(Inv::class);
+        $client = $this->createStub(Client::class);
         $now = new DateTimeImmutable();
         
         $inv->method('getNumber')->willReturn('INV-001');

@@ -53,8 +53,12 @@ menu: ## Show the Invoice SYSTEM MENU (Make targets)
 	@echo "make al                - Angular: Lint Check"
 	@echo "make crc               - Composer Require Checker"
 	@echo "make sda               - Shipmonk Composer Dependency Analyser"
-	@echo "make ct                - Codeception Tests"
-	@echo "make cb                - Codeception Build"
+	@echo "make ct                - PHPUnit Tests (Tests/Unit/Invoice/Entity/)"
+	@echo "make cta               - PHPUnit Tests (All: Tests/Unit/)"
+	@echo "make ctp               - PHPUnit Tests (Functional/Integration/PHPUnit/)"
+	@echo "make ccf               - Codeception Functional Suite"
+	@echo "make cca               - Codeception Acceptance Suite (needs browser driver)"
+	@echo "make cc                - Codeception All Suites"
 	@echo "make rdr               - Rector Dry Run"
 	@echo "make rmc               - Rector Make Changes"
 	@echo "make csd               - PHP-CS-Fixer Dry Run"
@@ -397,18 +401,41 @@ sda: ## Shipmonk Composer Dependency Analyser
 endif
 
 #
-# Codeception
+# PHPUnit / Codeception
 #
 
 ifeq ($(PRIMARY_GOAL),ct)
-ct: ## Codeception Tests
+ct: ## PHPUnit Tests (Tests/Unit/Invoice/Entity/)
+	php vendor/bin/phpunit Tests/Unit/Invoice/Entity/ --no-coverage --testdox
+endif
+
+ifeq ($(PRIMARY_GOAL),cta)
+cta: ## PHPUnit Tests (All: Tests/Unit/)
+	php vendor/bin/phpunit Tests/Unit/ --no-coverage --testdox
+endif
+
+ifeq ($(PRIMARY_GOAL),ctp)
+ctp: ## PHPUnit Tests (Functional/Integration/PHPUnit/)
+	php vendor/bin/phpunit Tests/Functional/ Tests/Integration/ Tests/PHPUnit/ --no-coverage --testdox
+endif
+
+ifeq ($(PRIMARY_GOAL),ccf)
+ccf: ## Codeception Functional Suite
+	php vendor/bin/codecept run Functional
+endif
+
+ifeq ($(PRIMARY_GOAL),cca)
+cca: ## Codeception Acceptance Suite (requires running server + browser driver)
+	@echo "[INFO] Requires: php yii serve (running) + Selenium/Playwright browser driver"
+	php vendor/bin/codecept run Acceptance
+endif
+
+ifeq ($(PRIMARY_GOAL),cc)
+cc: ## Codeception All Suites
+	@echo "[INFO] Acceptance suite requires: php yii serve (running) + browser driver"
 	php vendor/bin/codecept run
 endif
 
-ifeq ($(PRIMARY_GOAL),cb)
-cb: ## Codeception Build
-	php vendor/bin/codecept build
-endif
 
 #
 # Rector & PHP-CS-Fixer
@@ -426,7 +453,7 @@ endif
 
 ifeq ($(PRIMARY_GOAL),csd)
 csd: ## PHP-CS-Fixer Dry Run
-	php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --diff
+	php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --show-progress=bar --verbose
 endif
 
 ifeq ($(PRIMARY_GOAL),csf)
@@ -679,4 +706,4 @@ pcsr: ## Run PHP CodeSniffer with detailed report
 	php -d memory_limit=1024M vendor/bin/phpcs --standard=phpcs.xml.dist --report=full --report-width=120
 endif
 
-.PHONY: menu help install ext-check ext-json ext-silent p pf pd pc pi cas co cwn ccl cv cda ca cu nu nco nsu nmu nma nes2024 nvm na crc sda ct cb rdr rmc csd csf sq sf sd sc ss sj sh ghi gha ghc serve ucr uar rl tt ii ist igt iit1 iqt2 ist3 int4 iut5 iait6 info tsb tsd tsw tst tsl tsf nb ai as ab ag al pcs pcsf pcsd pcsr
+.PHONY: menu help install ext-check ext-json ext-silent p pf pd pc pi cas co cwn ccl cv cda ca cu nu nco nsu nmu nma nes2024 nvm na crc sda ct cta ctp ccf cca cc rdr rmc csd csf sq sf sd sc ss sj sh ghi gha ghc serve ucr uar rl tt ii ist igt iit1 iqt2 ist3 int4 iut5 iait6 info tsb tsd tsw tst tsl tsf nb ai as ab ag al pcs pcsf pcsd pcsr

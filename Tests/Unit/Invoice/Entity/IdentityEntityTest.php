@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Tests\Unit\Entity;
 
 use App\Infrastructure\Persistence\Identity\Identity;
-use Codeception\Test\Unit;
+use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
 
-class IdentityEntityTest extends Unit
+class IdentityEntityTest extends TestCase
 {
     public function testNotPersistedByDefault(): void
     {

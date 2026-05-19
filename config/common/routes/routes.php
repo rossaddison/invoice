@@ -33,6 +33,7 @@ use App\Invoice\{
     Inv\InvController,
     InvAllowanceCharge\InvAllowanceChargeController,
     InvItem\InvItemController,
+    InvItem\InvItemHtmxController,
     InvItemAllowanceCharge\InvItemAllowanceChargeController,
     InvoiceController as ICLR,
     InvRecurring\InvRecurringController,
@@ -63,6 +64,7 @@ use App\Invoice\{
     Setting\SettingController,
     Task\TaskController,
     TaxRate\TaxRateController,
+    Peppol\PeppolInboundController,
     Telegram\TelegramController,
     Unit\UnitController,
     UnitPeppol\UnitPeppolController,
@@ -1182,6 +1184,10 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvController::class, 'peppolDocCurrencyToggle'])
                 ->name('inv/peppolDocCurrencyToggle'),
+            Route::methods([$mG, $mP], '/inv/peppolSend/{id}')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([InvController::class, 'peppolSend'])
+                ->name('inv/peppolSend'),
             Route::methods([$mG, $mP], '/archive')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvController::class, 'archive'])
@@ -1373,6 +1379,14 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvItemController::class, 'addTask'])
                 ->name('invitem/addTask'),
+            Route::methods([$mP], '/invitemhtmx/addProduct')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([InvItemHtmxController::class, 'addProduct'])
+                ->name('invitemhtmx/addProduct'),
+            Route::methods([$mP], '/invitemhtmx/addTask')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([InvItemHtmxController::class, 'addTask'])
+                ->name('invitemhtmx/addTask'),
             Route::methods([$mG, $mP], '/invitem/editProduct/{id}')
                 ->name('invitem/editProduct')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
@@ -2097,6 +2111,10 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([TelegramController::class, 'getUpdates'])
                 ->name('telegram/getUpdates'),
+            // No auth middleware: Oxalis AS4 access point calls this directly.
+            Route::methods([$mG, $mP], '/peppol/inbound/delivery')
+                ->action([PeppolInboundController::class, 'delivery'])
+                ->name('peppol/inbound/delivery'),
             // No auth middleware: Telegram's servers must be able to POST here.
             // Secured by X-Telegram-Bot-Api-Secret-Token header verification only.
             Route::methods([$mG, $mP], '/telegram/webhook')

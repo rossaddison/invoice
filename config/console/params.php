@@ -14,6 +14,7 @@ use App\Command\Invoice\SalesOrderTruncate3Command;
 use App\Command\Invoice\UserRelatedTruncate5Command;
 use App\Command\Router\ListCommand;
 use App\Command\Translation\TranslateCommand;
+use App\Invoice\Peppol\Console\RetryFailedCommand;
 use App\User\Console\CreateCommand;
 use App\User\Console\AssignRoleCommand;
 use Yiisoft\Yii\Console\Application;
@@ -27,6 +28,7 @@ return [
         'commands' => [
             'serve' => Serve::class,
             'install' => InstallCommand::class,
+            'peppol/retry-failed' => RetryFailedCommand::class,
             'user/create' => CreateCommand::class,
             'user/assignRole' => AssignRoleCommand::class,
             'router/list' => ListCommand::class,

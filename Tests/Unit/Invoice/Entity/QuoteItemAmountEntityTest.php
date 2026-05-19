@@ -123,7 +123,7 @@ class QuoteItemAmountEntityTest extends TestCase
     public function testQuoteItemRelationSetterAndGetter(): void
     {
         $amount = new QuoteItemAmount();
-        $quoteItem = $this->createMock(QuoteItem::class);
+        $quoteItem = $this->createStub(QuoteItem::class);
 
         $amount->setQuoteItem($quoteItem);
         $this->assertSame($quoteItem, $amount->getQuoteItem());

@@ -6,17 +6,17 @@ namespace Tests\Unit\Entity;
 
 use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
 use App\Infrastructure\Persistence\TaxRate\TaxRate;
-use Codeception\Test\Unit;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\Stub;
 
-class AllowanceChargeEntityTest extends Unit
+class AllowanceChargeEntityTest extends TestCase
 {
-    private MockObject $taxRate;
-    
+    private Stub $taxRate;
+
     protected function setUp(): void
     {
         parent::setUp();
-        $this->taxRate = $this->createMock(TaxRate::class);
+        $this->taxRate = $this->createStub(TaxRate::class);
     }
 
     public function testConstructorWithDefaults(): void

@@ -52,7 +52,9 @@ final class InvItemForm extends FormModel
 
     private ?int $belongs_to_vat_invoice = null;
     private ?int $delivery_id = null;
-    
+    private ?string $peppol_po_itemid = '';
+    private ?string $peppol_po_lineid = '';
+
     public static function show(InvItem $invitem, int $inv_id): self
     {
         $form = new self();
@@ -76,6 +78,8 @@ final class InvItemForm extends FormModel
                 $invitem->getDate()->format('Y-m-d') : null;
         $form->belongs_to_vat_invoice = (int) $invitem->getBelongsToVatInvoice();
         $form->delivery_id = $invitem->getDeliveryId();
+        $form->peppol_po_itemid = $invitem->getPeppolPoItemid();
+        $form->peppol_po_lineid = $invitem->getPeppolPoLineid();
         return $form;
     }
 
@@ -162,6 +166,16 @@ final class InvItemForm extends FormModel
     public function getDeliveryId(): ?int
     {
         return $this->delivery_id;
+    }
+
+    public function getPeppolPoItemid(): ?string
+    {
+        return $this->peppol_po_itemid;
+    }
+
+    public function getPeppolPoLineid(): ?string
+    {
+        return $this->peppol_po_lineid;
     }
 
     /**

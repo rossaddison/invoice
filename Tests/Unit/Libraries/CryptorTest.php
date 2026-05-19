@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Unit\Libraries;
 
 use App\Invoice\Libraries\Cryptor;
-use Codeception\Test\Unit;
+use PHPUnit\Framework\TestCase;
 
-class CryptorTest extends Unit
+class CryptorTest extends TestCase
 {
     private Cryptor $cryptor;
     private string $testKey = 'test_encryption_key_12345';

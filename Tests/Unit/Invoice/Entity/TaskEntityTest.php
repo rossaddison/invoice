@@ -137,7 +137,7 @@ class TaskEntityTest extends TestCase
     public function testTaxRateRelationSetterAndGetter(): void
     {
         $task = new Task();
-        $taxRate = $this->createMock(TaxRate::class);
+        $taxRate = $this->createStub(TaxRate::class);
         $task->setTaxRate($taxRate);
         $this->assertSame($taxRate, $task->getTaxRate());
         $task->setTaxRate(null);
@@ -147,7 +147,7 @@ class TaskEntityTest extends TestCase
     public function testProjectRelationSetterAndGetter(): void
     {
         $task = new Task();
-        $project = $this->createMock(Project::class);
+        $project = $this->createStub(Project::class);
         $task->setProject($project);
         $this->assertSame($project, $task->getProject());
         $task->setProject(null);

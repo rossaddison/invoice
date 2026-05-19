@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Tests\Unit\Entity;
 
 use App\Infrastructure\Persistence\Client\Client;
-use Codeception\Test\Unit;
+use PHPUnit\Framework\TestCase;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 
-class ClientEntityTest extends Unit
+class ClientEntityTest extends TestCase
 {
     public function testConstructorWithDefaults(): void
     {

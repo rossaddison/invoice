@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Tests\Unit\Entity;
 
 use App\Infrastructure\Persistence\Inv\Inv;
-use Codeception\Test\Unit;
+use PHPUnit\Framework\TestCase;
 use DateTimeImmutable;
 use ReflectionProperty;
 
-class InvEntityTest extends Unit
+class InvEntityTest extends TestCase
 {
     public function testNotDeletedByDefault(): void
     {

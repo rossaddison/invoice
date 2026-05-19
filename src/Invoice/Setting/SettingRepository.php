@@ -193,12 +193,12 @@ final class SettingRepository extends Select\Repository
         $b = $this->getSetting('peppol_document_currency');
         $one_of_a_converts_to_this_of_b = $this->getSetting('currency_from_to');
         $one_of_b_converts_to_this_of_a = $this->getSetting('currency_to_from');
-        $provider = ConfigurableProvider::builder()
-            ->addExchangeRate($a, $b, $one_of_a_converts_to_this_of_b)
-            ->addExchangeRate($b, $a, $one_of_b_converts_to_this_of_a)
-            ->build();
-        $converter = new CurrencyConverter($provider);
         if ($a !== $b) {
+            $provider = ConfigurableProvider::builder()
+                ->addExchangeRate($a, $b, $one_of_a_converts_to_this_of_b)
+                ->addExchangeRate($b, $a, $one_of_b_converts_to_this_of_a)
+                ->build();
+            $converter = new CurrencyConverter($provider);
             $money = Money::of((string) $from, $a);
             // see https://github.com/brick/money#Using an ORM
             $int = $converter->convert($money, $b, [], new DefaultContext(), RoundingMode::Down)

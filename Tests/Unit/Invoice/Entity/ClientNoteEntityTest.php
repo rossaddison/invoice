@@ -69,7 +69,7 @@ class ClientNoteEntityTest extends TestCase
     public function testClientRelationshipSetterAndGetter(): void
     {
         $clientNote = new ClientNote();
-        $client = $this->createMock(Client::class);
+        $client = $this->createStub(Client::class);
 
         $clientNote->setClient($client);
         $this->assertSame($client, $clientNote->getClient());
@@ -225,7 +225,7 @@ class ClientNoteEntityTest extends TestCase
     public function testCompleteClientNoteSetup(): void
     {
         $clientNote = new ClientNote();
-        $client = $this->createMock(Client::class);
+        $client = $this->createStub(Client::class);
         $dateNote = new DateTimeImmutable('2024-06-15');
 
         $clientNote->setId(1);
@@ -354,8 +354,8 @@ class ClientNoteEntityTest extends TestCase
     public function testClientRelationshipWorkflow(): void
     {
         $clientNote = new ClientNote();
-        $client1 = $this->createMock(Client::class);
-        $client2 = $this->createMock(Client::class);
+        $client1 = $this->createStub(Client::class);
+        $client2 = $this->createStub(Client::class);
 
         $this->assertNull($clientNote->getClient());
 

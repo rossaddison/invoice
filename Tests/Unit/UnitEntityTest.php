@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use App\Infrastructure\Persistence\Unit\Unit;
-use Codeception\Test\Unit as BaseUnit;
+use PHPUnit\Framework\TestCase;
 
-class UnitEntityTest extends BaseUnit
+class UnitEntityTest extends TestCase
 {
     private Unit $unit;
 

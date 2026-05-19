@@ -221,7 +221,7 @@ class ClientPeppolEntityTest extends TestCase
     public function testClientRelationshipSetterAndGetter(): void
     {
         $clientPeppol = new ClientPeppol();
-        $client = $this->createMock(Client::class);
+        $client = $this->createStub(Client::class);
 
         $clientPeppol->setClient($client);
         $this->assertSame($client, $clientPeppol->getClient());
@@ -440,7 +440,7 @@ class ClientPeppolEntityTest extends TestCase
     public function testCompleteClientPeppolSetup(): void
     {
         $clientPeppol = new ClientPeppol();
-        $client = $this->createMock(Client::class);
+        $client = $this->createStub(Client::class);
 
         $clientPeppol->setId(1);
         $clientPeppol->setClientId(100);
@@ -522,8 +522,8 @@ class ClientPeppolEntityTest extends TestCase
     public function testClientRelationshipWorkflow(): void
     {
         $clientPeppol = new ClientPeppol();
-        $client1 = $this->createMock(Client::class);
-        $client2 = $this->createMock(Client::class);
+        $client1 = $this->createStub(Client::class);
+        $client2 = $this->createStub(Client::class);
 
         // Initially null
         $this->assertNull($clientPeppol->getClient());

@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Tests\Unit\Helpers;
 
 use App\Invoice\Helpers\GoogleTranslateJsonFileNotFoundException;
-use Codeception\Test\Unit;
+use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 
-class GoogleTranslateJsonFileNotFoundExceptionTest extends Unit
+class GoogleTranslateJsonFileNotFoundExceptionTest extends TestCase
 {
     public function testExceptionInheritance(): void
     {

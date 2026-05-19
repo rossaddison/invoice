@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use App\Infrastructure\Persistence\PaymentMethod\PaymentMethod;
-use Codeception\Test\Unit;
+use PHPUnit\Framework\TestCase;
 
-final class PaymentMethodEntityTest extends Unit
+final class PaymentMethodEntityTest extends TestCase
 {
     public string $creditCard = 'Credit Card';
     

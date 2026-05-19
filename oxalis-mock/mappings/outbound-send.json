@@ -1,0 +1,20 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/outbound/send"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "messageId": "mock-msg-00000001",
+          "status": "ok"
+        }
+      }
+    }
+  ]
+}

@@ -80,7 +80,7 @@ class ProjectEntityTest extends TestCase
     public function testClientRelationSetterAndGetter(): void
     {
         $project = new Project();
-        $client = $this->createMock(Client::class);
+        $client = $this->createStub(Client::class);
         $project->setClient($client);
         $this->assertSame($client, $project->getClient());
         $project->setClient(null);

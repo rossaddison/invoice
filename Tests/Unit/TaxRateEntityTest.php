@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Unit\Entity;
 
 use App\Infrastructure\Persistence\TaxRate\TaxRate;
-use Codeception\Test\Unit;
+use PHPUnit\Framework\TestCase;
 
-class TaxRateEntityTest extends Unit
+class TaxRateEntityTest extends TestCase
 {
     public function testConstructorWithDefaults(): void
     {

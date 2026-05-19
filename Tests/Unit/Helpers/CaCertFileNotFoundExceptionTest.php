@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Tests\Unit\Helpers;
 
 use App\Invoice\Helpers\CaCertFileNotFoundException;
-use Codeception\Test\Unit;
+use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 
-class CaCertFileNotFoundExceptionTest extends Unit
+class CaCertFileNotFoundExceptionTest extends TestCase
 {
     public function testExceptionInheritance(): void
     {

@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Tests\Unit\Helpers;
 
 use App\Invoice\Helpers\GoogleTranslateNetworkException;
-use Codeception\Test\Unit;
+use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 
-class GoogleTranslateNetworkExceptionTest extends Unit
+class GoogleTranslateNetworkExceptionTest extends TestCase
 {
     public function testExceptionInheritance(): void
     {

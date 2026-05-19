@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use App\Infrastructure\Persistence\Family\Family;
-use Codeception\Test\Unit;
+use PHPUnit\Framework\TestCase;
 
-final class FamilyEntityTest extends Unit
+final class FamilyEntityTest extends TestCase
 {
     public function testConstructorWithDefaults(): void
     {

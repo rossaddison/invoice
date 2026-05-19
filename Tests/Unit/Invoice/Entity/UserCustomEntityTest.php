@@ -80,7 +80,7 @@ class UserCustomEntityTest extends TestCase
     public function testUserRelationSetterAndGetter(): void
     {
         $userCustom = new UserCustom();
-        $user = $this->createMock(User::class);
+        $user = $this->createStub(User::class);
 
         $userCustom->setUser($user);
         $this->assertSame($user, $userCustom->getUser());

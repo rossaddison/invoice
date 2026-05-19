@@ -49,3 +49,10 @@ php-cs-fixer.cache
 
 # Tests
 /Tests/_output
+
+# Oxalis / Peppol certificates and production config — NEVER commit these
+/oxalis-conf/
+*.p12
+*.jks
+*.keystore
+*.pfx

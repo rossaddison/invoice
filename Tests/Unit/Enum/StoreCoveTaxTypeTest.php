@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Unit\Enum;
 
 use App\Invoice\Enum\StoreCoveTaxType;
-use Codeception\Test\Unit;
+use PHPUnit\Framework\TestCase;
 
-class StoreCoveTaxTypeTest extends Unit
+class StoreCoveTaxTypeTest extends TestCase
 {
     public function testEnumCases(): void
     {
@@ -262,9 +262,9 @@ class StoreCoveTaxTypeTest extends Unit
         $standard2 = StoreCoveTaxType::Standard;
         $zeroRated = StoreCoveTaxType::ZeroRated;
         
-        $this->assertTrue($standard1 === $standard2);
-        $this->assertFalse($standard1 === $zeroRated);
-        $this->assertTrue($standard1->value === $standard2->value);
-        $this->assertFalse($standard1->value === $zeroRated->value);
+        $this->assertSame($standard1, $standard2);
+        $this->assertNotSame($standard1, $zeroRated);
+        $this->assertSame($standard1->value, $standard2->value);
+        $this->assertNotSame($standard1->value, $zeroRated->value);
     }
 }

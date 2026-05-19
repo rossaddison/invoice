@@ -39,5 +39,18 @@ services:
     volumes:
       - db_data:/var/lib/mysql
 
+  # -----------------------------------------------------------------------
+  # Oxalis mock — WireMock standing in for the real Oxalis AS4 gateway.
+  # Swap this out for the real oxalis service once certificates arrive.
+  # Phase A only: remove or comment out this service block for Phase B.
+  # -----------------------------------------------------------------------
+  oxalis-mock:
+    image: wiremock/wiremock:3x-alpine
+    ports:
+      - "8181:8080"
+    volumes:
+      - ./oxalis-mock/mappings:/home/wiremock/mappings:ro
+    command: ["--verbose"]
+
 volumes:
   db_data:

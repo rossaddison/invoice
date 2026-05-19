@@ -359,6 +359,19 @@ if ($showButtons
       echo ' ' . H::encode($translator->translate('storecove.invoice.json.encoded'));
      echo H::closeTag('a');
     echo H::closeTag('li');
+// Options ... Send via Peppol (Oxalis) — only available for non-draft invoices
+if ($inv->reqStatusId() !== 1) {
+    echo H::openTag('li');
+     echo H::openTag('a', [
+         'href' => $urlGenerator->generate('inv/peppolSend', ['id' => $inv->reqId()]),
+         'style' => 'text-decoration:none',
+     ]);
+      echo H::openTag('i', ['class' => 'bi bi-send-fill']);
+      echo H::closeTag('i');
+      echo ' ' . H::encode($translator->translate('peppol.send.via.oxalis'));
+     echo H::closeTag('a');
+    echo H::closeTag('li');
+}
     echo H::openTag('li');
      echo H::openTag('a', [
          'href' => $urlGenerator->generate('del/add',

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Unit\Entity;
 
 use App\Infrastructure\Persistence\Gentor\Gentor;
-use Codeception\Test\Unit;
+use PHPUnit\Framework\TestCase;
 
-class GentorEntityTest extends Unit
+class GentorEntityTest extends TestCase
 {
     public string $invoiceViews = 'invoice/views';
     

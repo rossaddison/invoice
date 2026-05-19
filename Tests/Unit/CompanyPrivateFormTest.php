@@ -288,8 +288,8 @@ final class CompanyPrivateFormTest extends TestCase
      */
     private function createMockCompanyPrivate(): CompanyPrivate
     {
-        $companyPrivate = $this->createMock(CompanyPrivate::class);
-        $company = $this->createMock(Company::class);
+        $companyPrivate = $this->createStub(CompanyPrivate::class);
+        $company = $this->createStub(Company::class);
         $now = new DateTimeImmutable();
         
         $company->method('getName')->willReturn('Test Company');

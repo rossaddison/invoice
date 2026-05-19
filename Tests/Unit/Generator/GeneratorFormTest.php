@@ -6,17 +6,17 @@ namespace Tests\Unit\Generator;
 
 use App\Infrastructure\Persistence\Gentor\Gentor;
 use App\Invoice\Generator\GeneratorForm;
-use Codeception\Test\Unit;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\Stub;
 
-class GeneratorFormTest extends Unit
+class GeneratorFormTest extends TestCase
 {
-    private MockObject $gentor;
-    
+    private Stub $gentor;
+
     protected function setUp(): void
     {
         parent::setUp();
-        $this->gentor = $this->createMock(Gentor::class);
+        $this->gentor = $this->createStub(Gentor::class);
     }
 
     public function testFormInitializationFromEntity(): void
