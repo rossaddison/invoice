@@ -33,6 +33,14 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 [HTMX Caching](docs/HTMX_CACHING.md) — `Vary: HX-Request` strategy for CDN/proxy caches; browser cache headers for XHR GET requests; why POST filter forms are exempt; Nginx cache-key configuration; current project status checklist (May 2026)
 
+[Peppol Send via Oxalis](docs/PEPPOL_SEND_OXALIS.md) — end-to-end implementation of "Send via Peppol (Oxalis)" on the invoice view; `PeppolMessage` Cycle ORM entity; `PeppolSendService` PSR-18 HTTP wrapper; QUEUED→SENT→FAILED status lifecycle; WireMock Phase A dev setup; Yii3 DI config auto-loaded from `OXALIS_BASE_URL` env var (May 2026)
+
+[Peppol Oxalis Connect](docs/PEPPOL_OXALIS_CONNECT.md) — Phase B real-Oxalis wiring: `PeppolSendService` switched from JSON to `multipart/form-data`; `iso6523-actorid-upis::` and `cenbii-procid-ubl::` scheme prefixes; `PEPPOL_SENDER_ID` env var; HTTP 4xx/5xx mapped to FAILED; `PeppolInboundController` delivery callback; `DocumentTypeId` busdox caveat; Phase B checklist (May 2026)
+
+[Oxalis Integration Plan](docs/OXALIS_INTEGRATION.md) — phased plan for self-hosted Peppol AS4 transport via Oxalis alongside the existing Storecove connector; cost comparison (managed AP vs. self-hosted); `PeppolMessage` state machine; `PeppolSendService` wrapping Oxalis REST API; inbound callback controller; SMP registration and OpenPeppol certification costs (May 2026)
+
+[Peppol Access Point PHP Guide](docs/PEPPOL_ACCESS_POINT_PHP_GUIDE.md) — architectural overview for building a Peppol access point in PHP; AS4/WS-Security delegation strategy; recommended PHP libraries (`xmlseclibs`, `sabre/xml`); phased delivery from minimal outbound-only AP through full certification (May 2026)
+
 [HTMX Invoices List Widget](docs/INVS_LIST_WIDGET.md) — sort, filter, pagination, and group-by on the invoice list using HTMX 2.x; `InvsListWidget` wraps `GridView` with `hx-boost`; partial `outerHTML` swap of `#InvsGridView`; edit-column read-only/disable-read-only matrix; sent-log columns; group-by with paid/balance totals per group header; 44-test PHPUnit suite (May 2026)
 
 [HTMX Quotes List Widget](docs/QUOTES_LIST_WIDGET.md) — sort, filter, pagination, and group-by on the quote list using HTMX 2.x; `QuotesListWidget` wraps `GridView` with `hx-boost`; partial `outerHTML` swap of `#QuotesGridView`; group-by with collapsible headers; SonarQube S138/S3776/S107 refactoring (May 2026)

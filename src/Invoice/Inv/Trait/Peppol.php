@@ -28,12 +28,15 @@ use App\Invoice\{
 use App\Invoice\Helpers\{
     Peppol\PeppolHelper, Peppol\PeppolValidator
 };
+use App\Invoice\Peppol\PeppolSendService;
 use Yiisoft\{Html\Html, Router\HydratorAttribute\RouteArgument, User\CurrentUser
 };
 use Psr\Http\Message\ResponseInterface as Response;
 
 trait Peppol
 {
+    private const string ROUTE_INV_VIEW = 'inv/view';
+
     /**
      * Purpose: Generate OpenPeppol Ubl Invoice 3.0.15 XML file to 1. screen
      * or 2. file
@@ -149,7 +152,7 @@ trait Peppol
                                     ['target' => '_blank'])
                             );
                             return $this->webService->getRedirectResponse(
-                                'inv/view', ['id' => $id]);
+                                self::ROUTE_INV_VIEW, ['id' => $id]);
                         } // null!== $delivery_location
                         $this->flashMessage('warning',
                             $this->translator->translate(
@@ -221,7 +224,7 @@ trait Peppol
         $this->flashMessage('info',
             $this->translator->translate('peppol.doc.currency.toggle')
                 . ' ' . $documentCurrency);
-        return $this->webService->getRedirectResponse('inv/view', ['id' => $id]);
+        return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $id]);
     } // peppol document currency toggle
 
     /**
@@ -254,7 +257,7 @@ trait Peppol
         } // $this->sR->repoCount
         $this->flashMessage('info',
             $this->translator->translate('peppol.stream.toggle'));
-        return $this->webService->getRedirectResponse('inv/view', ['id' => $id]);
+        return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $id]);
     } // peppol stream toggle
     
     private function peppolClientFullySetup(int $client_id, cpR $cpR): bool
@@ -351,6 +354,123 @@ trait Peppol
         return $passed;
     }
     
+    /**
+     * Generate UBL XML for an invoice and transmit it to the recipient's
+     * Peppol access point via the local Oxalis AS4 gateway.
+     *
+     * The Peppol participant ID is read from ClientPeppol (scheme:endpoint,
+     * e.g. "0088:1234567890123").  A PeppolMessage record is written before
+     * and after the HTTP call so every attempt is auditable regardless of
+     * outcome.
+     */
+    public function peppolSend(
+        #[RouteArgument('id')]
+        int $id,
+        CurrentUser $currentUser,
+        cpR $cpR,
+        IAR $iaR,
+        IIAR $iiaR,
+        IIR $iiR,
+        IR $invRepo,
+        ContractRepo $contractRepo,
+        DelRepo $delRepo,
+        DelPartyRepo $delPartyRepo,
+        DLR $dlR,
+        paR $paR,
+        SOR $soR,
+        unpR $unpR,
+        UPR $upR,
+        ACIR $aciR,
+        ACIIR $aciiR,
+        SOIR $soiR,
+        TRR $trR,
+        PeppolSendService $peppolSendService,
+    ): Response {
+        if ($currentUser->isGuest()) {
+            return $this->webService->getNotFoundResponse();
+        }
+        if (!$id) {
+            return $this->webService->getNotFoundResponse();
+        }
+
+        $invoice = $invRepo->repoInvLoadInvAmountquery($id);
+        if (null === $invoice) {
+            return $this->webService->getNotFoundResponse();
+        }
+
+        $client    = $invoice->getClient();
+        $client_id = $client?->reqId();
+        if ($client_id <= 0) {
+            $this->flashMessage('warning',
+                $this->translator->translate('peppol.client.check'));
+            return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $id]);
+        }
+
+        if (!$this->peppolClientFullySetup($client_id, $cpR)) {
+            return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $id]);
+        }
+
+        $delLocId = $invoice->getDeliveryLocationId();
+        $delloc   = $dlR->repoDeliveryLocationquery((int) $delLocId);
+        if (null === $delloc) {
+            $this->flashMessage('warning',
+                $this->translator->translate('delivery.location.peppol.output'));
+            return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $id]);
+        }
+
+        $peppolhelper = new PeppolHelper(
+            $this->sR,
+            $delRepo,
+            $invoice->getInvAmount(),
+            $delloc,
+            $this->translator,
+        );
+
+        try {
+            $xmlPath = $peppolhelper->generateInvoicePeppolUblXmlTempFile(
+                $soR, $invoice, $iaR, $iiaR, $iiR,
+                $contractRepo, $delRepo, $delPartyRepo, $paR,
+                $cpR, $unpR, $upR, $aciR, $aciiR, $soiR, $trR,
+            );
+        } catch (\RuntimeException $e) {
+            $msg = $e instanceof \Yiisoft\FriendlyException\FriendlyExceptionInterface
+                ? $e->getName()
+                : $e->getMessage();
+            $this->flashMessage('warning', $msg);
+            return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $id]);
+        }
+
+        $ublXml = file_get_contents($xmlPath);
+        if ($ublXml === false || strlen($ublXml) === 0) {
+            $this->flashMessage('warning',
+                $this->translator->translate('peppol.xml.generation.failed'));
+            return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $id]);
+        }
+
+        $cp = $cpR->repoClientPeppolLoadedquery($client_id);
+        if (null === $cp) {
+            $this->flashMessage('warning',
+                $this->translator->translate('peppol.client.check'));
+            return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $id]);
+        }
+        $recipientId = $cp->getEndpointidSchemeid() . ':' . $cp->getEndpointid();
+
+        $message = $peppolSendService->send($id, $ublXml, $recipientId);
+
+        if ($message->getStatus() === 'SENT') {
+            $this->flashMessage('info',
+                '📨 ' . $this->translator->translate('sent')
+                . ' — ' . $this->translator->translate('peppol.message.id')
+                . ': ' . ($message->getMessageId() ?? ''));
+        } else {
+            $this->flashMessage('warning',
+                '⚠️ ' . $this->translator->translate('peppol.send.failed')
+                . ': ' . ($message->getErrorMessage() ?? ''));
+        }
+
+        return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $id]);
+    }
+
     private function peppolOutput(UPR $upR,
         string $uploads_temp_peppol_absolute_path_dot_xml): false|string
     {
@@ -362,7 +482,7 @@ trait Peppol
         $original_file_name = $path_parts['filename'];
         if (file_exists($uploads_temp_peppol_absolute_path_dot_xml)) {
             $file_size = filesize($uploads_temp_peppol_absolute_path_dot_xml);
-            if ($file_size != false) {
+            if ($file_size > 0) {
                 // xml is included in the getContentTypes allowed array
                 $allowed_content_type_array = $upR->getContentTypes();
                 // Check current extension against allowed content file types

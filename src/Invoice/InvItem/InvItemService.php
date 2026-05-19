@@ -109,6 +109,10 @@ final readonly class InvItemService
         $so_item_id =
             ((isset($array['so_item_id'])) ? (int) $array['so_item_id'] : 0);
         $model->setSoItemId($so_item_id);
+        isset($array['peppol_po_itemid']) ?
+            $model->setPeppolPoItemid((string) $array['peppol_po_itemid']) : '';
+        isset($array['peppol_po_lineid']) ?
+            $model->setPeppolPoLineid((string) $array['peppol_po_lineid']) : '';
         $product_id =
             ((isset($array['product_id'])) ? (int) $array['product_id'] : 0);
         $model->setProductId($product_id);
@@ -288,6 +292,10 @@ final readonly class InvItemService
         $so_item_id = ((isset($array['so_item_id'])) ?
                 (int) $array['so_item_id'] : '');
         $model->setSoItemId((int) $so_item_id);
+        isset($array['peppol_po_itemid']) ?
+            $model->setPeppolPoItemid((string) $array['peppol_po_itemid']) : '';
+        isset($array['peppol_po_lineid']) ?
+            $model->setPeppolPoLineid((string) $array['peppol_po_lineid']) : '';
         $product_id = ((isset($array['product_id'])) ?
                 (int) $array['product_id'] : '');
         $model->setProductId((int) $product_id);
@@ -481,6 +489,10 @@ final readonly class InvItemService
         $so_item_id = ((isset($array['so_item_id'])) ?
             (int) $array['so_item_id'] : '');
         $model->setSoItemId((int)$so_item_id);
+        isset($array['peppol_po_itemid']) ?
+            $model->setPeppolPoItemid((string) $array['peppol_po_itemid']) : '';
+        isset($array['peppol_po_lineid']) ?
+            $model->setPeppolPoLineid((string) $array['peppol_po_lineid']) : '';
         $product = $pr->repoProductquery((int) $array['product_id']);
         $name = '';
         if ($product) {

@@ -119,6 +119,40 @@ foreach ($invItems as $item) {
              . (null !== $taskId ? $taskRef : '');
         echo H::closeTag('div');
        echo H::closeTag('b');
+       if ($s->getSetting('enable_peppol') == '1') {
+           echo H::openTag('div', ['class' => 'input-group']);
+            echo H::openTag('input', [
+                'type' => 'text',
+                'disabled' => true,
+                'placeholder' => 'Peppol PO Item Id',
+                'maxlength' => '50',
+                'size' => '8',
+                'name' => 'item_peppol_po_itemid',
+                'value' => $item->getPeppolPoItemid() ?? '',
+                'data-bs-toggle' => 'tooltip',
+                'title' => 'inv_item->peppol_po_itemid — '
+                    . 'https://docs.peppol.eu/poacc/billing/3.0/'
+                    . 'syntax/ubl-invoice/cac-InvoiceLine/'
+                    . 'cac-Item/cac-BuyersItemIdentification/cbc-ID/'
+            ]);
+            echo H::closeTag('input');
+            echo H::openTag('input', [
+                'type' => 'text',
+                'disabled' => true,
+                'placeholder' => 'Peppol PO Line Id',
+                'maxlength' => '50',
+                'size' => '8',
+                'name' => 'item_peppol_po_lineid',
+                'value' => $item->getPeppolPoLineid() ?? '',
+                'data-bs-toggle' => 'tooltip',
+                'title' => 'inv_item->peppol_po_lineid — '
+                    . 'https://docs.peppol.eu/poacc/billing/3.0/'
+                    . 'syntax/ubl-invoice/cac-InvoiceLine/'
+                    . 'cac-OrderLineReference/cbc-LineID/'
+            ]);
+            echo H::closeTag('input');
+           echo H::closeTag('div');
+       }
       echo H::closeTag('td');
       echo H::openTag('td', ['class' => 'td-textarea']);
        echo H::openTag('div', ['class' => 'input-group']);

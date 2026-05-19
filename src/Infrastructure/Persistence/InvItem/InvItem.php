@@ -71,6 +71,10 @@ class InvItem
         private ?int $belongs_to_vat_invoice = null,
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $delivery_id = null,
+        #[Column(type: 'text', nullable: true)]
+        private ?string $peppol_po_itemid = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $peppol_po_lineid = '',
         #[Column(type: 'longText', nullable: true)]
         private ?string $note = null,
     ) {
@@ -331,5 +335,25 @@ class InvItem
     public function setNote(string $note): void
     {
         $this->note = $note;
+    }
+
+    public function getPeppolPoItemid(): ?string
+    {
+        return $this->peppol_po_itemid;
+    }
+
+    public function setPeppolPoItemid(string $peppol_po_itemid): void
+    {
+        $this->peppol_po_itemid = $peppol_po_itemid;
+    }
+
+    public function getPeppolPoLineid(): ?string
+    {
+        return $this->peppol_po_lineid;
+    }
+
+    public function setPeppolPoLineid(string $peppol_po_lineid): void
+    {
+        $this->peppol_po_lineid = $peppol_po_lineid;
     }
 }

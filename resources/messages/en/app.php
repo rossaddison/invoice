@@ -2372,6 +2372,7 @@ prior to importing and no existing documents e.g. Invoices.',
     => '1.1.4. Create a sender - Legal Entity Country',
   'storecove.invoice.json.encoded' =>
     'StoreCove Json Encoded Invoice',
+  'peppol.send.via.oxalis' => 'Send via Peppol (Oxalis)',
   'storecove.legal' => 'Legal',
   'storecove.legal.entity.id.for.json' =>
     '1.1.4. Create a sender '
