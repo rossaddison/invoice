@@ -64,7 +64,7 @@ final class InboundSpyRepository implements PeppolMessageRepositoryInterface
     public function save(PeppolMessage $message): void
     {
         if ($this->throwOnSave) {
-            throw new \RuntimeException('DB unavailable');
+            throw new \RuntimeException('DB unavailable'); // NOSONAR: php:S112 — test spy simulating transient infrastructure failure
         }
         $this->savedStatuses[] = $message->getStatus();
     }

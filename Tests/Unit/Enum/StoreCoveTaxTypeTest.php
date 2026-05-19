@@ -262,9 +262,9 @@ class StoreCoveTaxTypeTest extends TestCase
         $standard2 = StoreCoveTaxType::Standard;
         $zeroRated = StoreCoveTaxType::ZeroRated;
         
-        $this->assertTrue($standard1 === $standard2);
-        $this->assertFalse($standard1 === $zeroRated);
-        $this->assertTrue($standard1->value === $standard2->value);
-        $this->assertFalse($standard1->value === $zeroRated->value);
+        $this->assertSame($standard1, $standard2);
+        $this->assertNotSame($standard1, $zeroRated);
+        $this->assertSame($standard1->value, $standard2->value);
+        $this->assertNotSame($standard1->value, $zeroRated->value);
     }
 }

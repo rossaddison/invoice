@@ -29,10 +29,8 @@ final class SmpResolver implements SmpResolverInterface
 {
     private const string SCHEME        = 'iso6523-actorid-upis';
     private const string AS4_TRANSPORT = 'peppol-as4-2.0';
-    // NOSONAR: php:S5332 — XML namespace URI mandated by the Peppol SMP specification; not a network connection
-    private const string NS_PEPPOL     = 'http://busdox.org/serviceMetadata/publishing/1.0/';
-    // NOSONAR: php:S5332 — XML namespace URI mandated by the OASIS BDX SMP specification; not a network connection
-    private const string NS_BDX        = 'http://docs.oasis-open.org/bdxr/ns/SMP/2016/05';
+    private const string NS_PEPPOL     = 'http://busdox.org/serviceMetadata/publishing/1.0/'; // NOSONAR: php:S5332 — XML namespace URI mandated by the Peppol SMP specification; not a network connection
+    private const string NS_BDX        = 'http://docs.oasis-open.org/bdxr/ns/SMP/2016/05'; // NOSONAR: php:S5332 — XML namespace URI mandated by the OASIS BDX SMP specification; not a network connection
 
     public function __construct(
         private readonly ClientInterface $httpClient,
@@ -64,8 +62,7 @@ final class SmpResolver implements SmpResolverInterface
 
     private function resolveViaDns(string $participantId): string
     {
-        // NOSONAR: php:S4790 — MD5 is mandated by the Peppol SML DNS spec (not a security hash)
-        $hash    = md5(strtolower(self::SCHEME . '::' . $participantId));
+        $hash = md5(strtolower(self::SCHEME . '::' . $participantId)); // NOSONAR: php:S4790 — MD5 is mandated by the Peppol SML DNS spec (not a security hash)
         $cname   = 'B-' . $hash . '.' . self::SCHEME . '.' . $this->smlZone;
         $records = @dns_get_record($cname, DNS_CNAME);
 

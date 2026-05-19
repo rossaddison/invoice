@@ -16,6 +16,8 @@ class PeppolMessage
 {
     use RequireId;
 
+    private const string COL_STR255 = 'string(255)';
+
     #[Column(type: 'datetime', nullable: false)]
     private DateTimeImmutable $created_at;
 
@@ -26,12 +28,12 @@ class PeppolMessage
         private ?int $inv_id = null,
         #[Column(type: 'string(100)', nullable: true)]
         private ?string $message_id = null,
-        #[Column(type: 'string(255)', nullable: false)]
+        #[Column(type: self::COL_STR255, nullable: false)]
         private ?string $recipient_id = null,
-        #[Column(type: 'string(255)', nullable: false)]
+        #[Column(type: self::COL_STR255, nullable: false)]
         private ?string $document_type_id =
             'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2',
-        #[Column(type: 'string(255)', nullable: false)]
+        #[Column(type: self::COL_STR255, nullable: false)]
         private ?string $process_id =
             'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0',
         #[Column(type: 'string(20)', nullable: false)]
