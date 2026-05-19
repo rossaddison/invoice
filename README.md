@@ -31,6 +31,8 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 **Recent Implementations**
 
+[Peppol SMP Lookup](docs/PEPPOL_SMP_LOOKUP.md) — participant discovery via SML DNS → SMP HTTP → XML parse; `SmpResolver` supports both PEPPOL SMP 1.0 and BDX SMP 1.0 namespaces; `SmpEndpoint` value object; `PEPPOL_SML_ZONE` and `PEPPOL_SMP_BASE_URL` env vars; 10-test PHPUnit suite; completes Phase 1 of the Peppol access point (May 2026)
+
 [HTMX Caching](docs/HTMX_CACHING.md) — `Vary: HX-Request` strategy for CDN/proxy caches; browser cache headers for XHR GET requests; why POST filter forms are exempt; Nginx cache-key configuration; current project status checklist (May 2026)
 
 [Peppol Send via Oxalis](docs/PEPPOL_SEND_OXALIS.md) — end-to-end implementation of "Send via Peppol (Oxalis)" on the invoice view; `PeppolMessage` Cycle ORM entity; `PeppolSendService` PSR-18 HTTP wrapper; QUEUED→SENT→FAILED status lifecycle; WireMock Phase A dev setup; Yii3 DI config auto-loaded from `OXALIS_BASE_URL` env var (May 2026)

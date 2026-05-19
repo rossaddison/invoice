@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use App\Invoice\Peppol\PeppolSendService;
+use App\Invoice\Peppol\SmpResolver;
+use App\Invoice\Peppol\SmpResolverInterface;
 
 /**
  * Oxalis base URL — set OXALIS_BASE_URL in .env to override.
@@ -19,7 +21,28 @@ $oxalisBaseUrl = rtrim(
 
 $senderParticipantId = $_ENV['PEPPOL_SENDER_ID'] ?? '';
 
+/**
+ * PEPPOL_SML_ZONE — DNS zone for the SML.
+ * Production : edelivery.tech.ec.europa.eu
+ * Acceptance : acc.edelivery.tech.ec.europa.eu
+ *
+ * PEPPOL_SMP_BASE_URL — set to bypass DNS and point directly at an SMP host,
+ * e.g. http://smp.example.com  (useful in development/test environments).
+ */
+$smlZone    = $_ENV['PEPPOL_SML_ZONE']    ?? 'edelivery.tech.ec.europa.eu';
+$smpBaseUrl = $_ENV['PEPPOL_SMP_BASE_URL'] ?? null;
+
 return [
+    SmpResolverInterface::class => SmpResolver::class,
+
+    SmpResolver::class => [
+        'class' => SmpResolver::class,
+        '__construct()' => [
+            'smlZone'    => $smlZone,
+            'smpBaseUrl' => $smpBaseUrl,
+        ],
+    ],
+
     PeppolSendService::class => [
         'class' => PeppolSendService::class,
         '__construct()' => [
