@@ -77,6 +77,12 @@ final class InboundSpyRepository implements PeppolMessageRepositoryInterface
         }
         return null;
     }
+
+    #[\Override]
+    public function repoByStatus(string $status): iterable
+    {
+        return [];
+    }
 }
 
 class PeppolInboundControllerTest extends TestCase

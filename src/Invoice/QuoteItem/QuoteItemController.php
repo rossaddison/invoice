@@ -79,7 +79,7 @@ final class QuoteItemController extends BaseController
         $form = new QuoteItemForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
-            'actionName' => 'quoteitem/addProduct',
+            'actionName' => 'quoteitemhtmx/addProduct',
             'actionArguments' => [],
             'errors' => [],
             'form' => $form,
@@ -101,7 +101,7 @@ final class QuoteItemController extends BaseController
             $parameters['form'] = $form;
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         }
-        return $this->webViewRenderer->render('_item_form', $parameters);
+        return $this->webViewRenderer->render('_item_form_product', $parameters);
     }
 
     /**
@@ -128,7 +128,7 @@ final class QuoteItemController extends BaseController
         $form = new QuoteItemForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
-            'actionName' => 'quoteitem/addTask',
+            'actionName' => 'quoteitemhtmx/addTask',
             'actionArguments' => [],
             'errors' => [],
             'form' => $form,

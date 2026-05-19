@@ -6,17 +6,17 @@ namespace Tests\Unit\Entity;
 
 use App\Infrastructure\Persistence\GentorRelation\GentorRelation;
 use App\Infrastructure\Persistence\Gentor\Gentor;
-use Codeception\Test\Unit;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\Stub;
 
-class GentorRelationEntityTest extends Unit
+class GentorRelationEntityTest extends TestCase
 {
-    private MockObject $gentor;
-    
+    private Stub $gentor;
+
     protected function setUp(): void
     {
         parent::setUp();
-        $this->gentor = $this->createMock(Gentor::class);
+        $this->gentor = $this->createStub(Gentor::class);
     }
 
     public function testConstructorWithDefaults(): void

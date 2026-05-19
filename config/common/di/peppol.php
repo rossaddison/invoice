@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Invoice\Peppol\PeppolMessageRepository;
+use App\Invoice\Peppol\PeppolMessageRepositoryInterface;
 use App\Invoice\Peppol\PeppolSendService;
 use App\Invoice\Peppol\SmpResolver;
 use App\Invoice\Peppol\SmpResolverInterface;
@@ -33,6 +35,8 @@ $smlZone    = $_ENV['PEPPOL_SML_ZONE']    ?? 'edelivery.tech.ec.europa.eu';
 $smpBaseUrl = $_ENV['PEPPOL_SMP_BASE_URL'] ?? null;
 
 return [
+    PeppolMessageRepositoryInterface::class => PeppolMessageRepository::class,
+
     SmpResolverInterface::class => SmpResolver::class,
 
     SmpResolver::class => [

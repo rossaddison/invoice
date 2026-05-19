@@ -63,7 +63,10 @@ final class PeppolMessageRepository extends Select\Repository implements PeppolM
         );
     }
 
-    /** @psalm-return EntityReader */
+    /**
+     * @psalm-suppress LessSpecificImplementedReturnType
+     */
+    #[\Override]
     public function repoByStatus(string $status): EntityReader
     {
         return $this->prepareDataReader(

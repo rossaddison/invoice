@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use App\Contact\ContactForm;
-use Codeception\Test\Unit;
+use PHPUnit\Framework\TestCase;
 
-class ContactFormTest extends Unit
+class ContactFormTest extends TestCase
 {
     private ContactForm $form;
 

@@ -105,7 +105,7 @@ class ProductCustomEntityTest extends TestCase
     public function testProductRelationSetterAndGetter(): void
     {
         $productCustom = new ProductCustom();
-        $product = $this->createMock(Product::class);
+        $product = $this->createStub(Product::class);
 
         $productCustom->setProduct($product);
         $this->assertSame($product, $productCustom->getProduct());
@@ -117,7 +117,7 @@ class ProductCustomEntityTest extends TestCase
     public function testCustomFieldRelationSetterAndGetter(): void
     {
         $productCustom = new ProductCustom();
-        $customField = $this->createMock(CustomField::class);
+        $customField = $this->createStub(CustomField::class);
 
         $productCustom->setCustomField($customField);
         $this->assertSame($customField, $productCustom->getCustomField());

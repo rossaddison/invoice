@@ -2,7 +2,9 @@
 
 ## Overview
 
-Building a PEPPOL access point in PHP is entirely possible, but it is a serious interoperability and security project rather than a typical web API.
+Building a PEPPOL access point in PHP is entirely possible,
+but it is a serious interoperability and security project rather than a
+typical web API.
 
 At a high level, a PEPPOL access point must implement:
 
@@ -159,7 +161,8 @@ This involves:
 
 ### Recommendation
 
-Do not implement raw AS4 yourself from scratch unless you have deep XML security expertise.
+Do not implement raw AS4 yourself from scratch unless you have deep XML security
+expertise.
 
 ### Better Approach
 

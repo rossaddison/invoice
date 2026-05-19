@@ -63,6 +63,7 @@ final class PeppolSendService
             process_id: $processId,
             status: 'QUEUED',
         );
+        $message->setUblXml($ublXml);
         $this->pmR->save($message);
 
         try {

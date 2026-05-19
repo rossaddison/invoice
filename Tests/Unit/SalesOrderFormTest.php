@@ -306,10 +306,10 @@ final class SalesOrderFormTest extends TestCase
      */
     private function createMockSalesOrder(): SalesOrder
     {
-        $salesOrder = $this->createMock(SalesOrder::class);
-        $client = $this->createMock(Client::class);
-        $group = $this->createMock(Group::class);
-        $user = $this->createMock(User::class);
+        $salesOrder = $this->createStub(SalesOrder::class);
+        $client = $this->createStub(Client::class);
+        $group = $this->createStub(Group::class);
+        $user = $this->createStub(User::class);
         $now = new DateTimeImmutable();
         
         $salesOrder->method('getNumber')->willReturn('SO-001');

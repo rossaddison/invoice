@@ -92,7 +92,7 @@ class CompanyPrivateEntityTest extends TestCase
     public function testCompanySetterAndGetter(): void
     {
         $companyPrivate = new CompanyPrivate();
-        $company = $this->createMock(Company::class);
+        $company = $this->createStub(Company::class);
         $companyPrivate->setCompany($company);
 
         $this->assertSame($company, $companyPrivate->getCompany());
@@ -407,7 +407,7 @@ class CompanyPrivateEntityTest extends TestCase
     public function testCompleteCompanyPrivateSetup(): void
     {
         $companyPrivate = new CompanyPrivate();
-        $company = $this->createMock(Company::class);
+        $company = $this->createStub(Company::class);
 
         $companyPrivate->setId(1);
         $companyPrivate->setCompanyId(100);
@@ -487,8 +487,8 @@ class CompanyPrivateEntityTest extends TestCase
     public function testCompanyRelationshipManagement(): void
     {
         $companyPrivate = new CompanyPrivate();
-        $company1 = $this->createMock(Company::class);
-        $company2 = $this->createMock(Company::class);
+        $company1 = $this->createStub(Company::class);
+        $company2 = $this->createStub(Company::class);
 
         $companyPrivate->setCompanyId(100);
         $companyPrivate->setCompany($company1);

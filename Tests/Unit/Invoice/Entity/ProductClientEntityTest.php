@@ -98,7 +98,7 @@ class ProductClientEntityTest extends TestCase
     public function testProductRelationSetterAndGetter(): void
     {
         $pc = new ProductClient();
-        $product = $this->createMock(Product::class);
+        $product = $this->createStub(Product::class);
         $pc->setProduct($product);
         $this->assertSame($product, $pc->getProduct());
         $pc->setProduct(null);
@@ -114,7 +114,7 @@ class ProductClientEntityTest extends TestCase
     public function testClientRelationSetterAndGetter(): void
     {
         $pc = new ProductClient();
-        $client = $this->createMock(Client::class);
+        $client = $this->createStub(Client::class);
         $pc->setClient($client);
         $this->assertSame($client, $pc->getClient());
         $pc->setClient(null);

@@ -31,6 +31,8 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 **Recent Implementations**
 
+[PHPUnit Entity Test Migration](docs/PHPUNIT_ENTITY_TEST_MIGRATION.md) — 34 new PHPUnit entity tests across 6 batches; 36 Codeception unit tests migrated to `PHPUnit\Framework\TestCase`; 26 `createMock()` calls replaced with `createStub()`; 3 pre-existing `DateTime`/`DateTimeImmutable` entity bugs uncovered (May 2026)
+
 [Peppol SMP Lookup](docs/PEPPOL_SMP_LOOKUP.md) — participant discovery via SML DNS → SMP HTTP → XML parse; `SmpResolver` supports both PEPPOL SMP 1.0 and BDX SMP 1.0 namespaces; `SmpEndpoint` value object; `PEPPOL_SML_ZONE` and `PEPPOL_SMP_BASE_URL` env vars; 10-test PHPUnit suite; completes Phase 1 of the Peppol access point (May 2026)
 
 [HTMX Caching](docs/HTMX_CACHING.md) — `Vary: HX-Request` strategy for CDN/proxy caches; browser cache headers for XHR GET requests; why POST filter forms are exempt; Nginx cache-key configuration; current project status checklist (May 2026)

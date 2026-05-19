@@ -85,7 +85,7 @@ class UnitPeppolEntityTest extends TestCase
     public function testUnitRelationshipSetterAndGetter(): void
     {
         $unitPeppol = new UnitPeppol();
-        $unit = $this->createMock(Unit::class);
+        $unit = $this->createStub(Unit::class);
         
         $unitPeppol->setUnit($unit);
         $this->assertSame($unit, $unitPeppol->getUnit());
@@ -288,7 +288,7 @@ class UnitPeppolEntityTest extends TestCase
     public function testCompleteUnitPeppolSetup(): void
     {
         $unitPeppol = new UnitPeppol();
-        $unit = $this->createMock(Unit::class);
+        $unit = $this->createStub(Unit::class);
         
         $unitPeppol->setId(1);
         $unitPeppol->setUnitId(100);
@@ -326,8 +326,8 @@ class UnitPeppolEntityTest extends TestCase
     public function testUnitRelationshipWorkflow(): void
     {
         $unitPeppol = new UnitPeppol();
-        $unit1 = $this->createMock(Unit::class);
-        $unit2 = $this->createMock(Unit::class);
+        $unit1 = $this->createStub(Unit::class);
+        $unit2 = $this->createStub(Unit::class);
         
         // Initially null
         $this->assertNull($unitPeppol->getUnit());

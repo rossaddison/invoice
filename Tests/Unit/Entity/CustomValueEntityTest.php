@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Unit\Entity;
 
 use App\Infrastructure\Persistence\CustomValue\CustomValue;
-use Codeception\Test\Unit;
+use PHPUnit\Framework\TestCase;
 
-class CustomValueEntityTest extends Unit
+class CustomValueEntityTest extends TestCase
 {
     public string $updatedData = 'Updated data';
 

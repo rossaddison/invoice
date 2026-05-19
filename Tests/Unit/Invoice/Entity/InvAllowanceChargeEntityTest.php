@@ -106,7 +106,7 @@ class InvAllowanceChargeEntityTest extends TestCase
     public function testAllowanceChargeRelationSetterAndGetter(): void
     {
         $iac = new InvAllowanceCharge();
-        $allowanceCharge = $this->createMock(AllowanceCharge::class);
+        $allowanceCharge = $this->createStub(AllowanceCharge::class);
 
         $iac->setAllowanceCharge($allowanceCharge);
         $this->assertSame($allowanceCharge, $iac->getAllowanceCharge());

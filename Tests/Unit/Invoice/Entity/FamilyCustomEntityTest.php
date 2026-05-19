@@ -90,7 +90,7 @@ class FamilyCustomEntityTest extends TestCase
     public function testFamilyRelationSetterAndGetter(): void
     {
         $fc = new FamilyCustom();
-        $family = $this->createMock(Family::class);
+        $family = $this->createStub(Family::class);
         $fc->setFamily($family);
         $this->assertSame($family, $fc->getFamily());
         $fc->setFamily(null);
@@ -100,7 +100,7 @@ class FamilyCustomEntityTest extends TestCase
     public function testCustomFieldRelationSetterAndGetter(): void
     {
         $fc = new FamilyCustom();
-        $field = $this->createMock(CustomField::class);
+        $field = $this->createStub(CustomField::class);
         $fc->setCustomField($field);
         $this->assertSame($field, $fc->getCustomField());
         $fc->setCustomField(null);

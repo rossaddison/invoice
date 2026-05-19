@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Tests\Unit\Helpers;
 
 use App\Invoice\Helpers\CurrencyHelper;
-use Codeception\Test\Unit;
+use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
-class CurrencyHelperTest extends Unit
+class CurrencyHelperTest extends TestCase
 {
     private function createCurrencyHelper(): CurrencyHelper
     {

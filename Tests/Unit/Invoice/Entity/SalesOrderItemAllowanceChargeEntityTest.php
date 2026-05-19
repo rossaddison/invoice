@@ -108,7 +108,7 @@ class SalesOrderItemAllowanceChargeEntityTest extends TestCase
     public function testAllowanceChargeRelationSetterAndGetter(): void
     {
         $soiac = new SalesOrderItemAllowanceCharge();
-        $ac = $this->createMock(AllowanceCharge::class);
+        $ac = $this->createStub(AllowanceCharge::class);
         $soiac->setAllowanceCharge($ac);
         $this->assertSame($ac, $soiac->getAllowanceCharge());
         $soiac->setAllowanceCharge(null);
@@ -118,7 +118,7 @@ class SalesOrderItemAllowanceChargeEntityTest extends TestCase
     public function testSalesOrderRelationSetterAndGetter(): void
     {
         $soiac = new SalesOrderItemAllowanceCharge();
-        $so = $this->createMock(SalesOrder::class);
+        $so = $this->createStub(SalesOrder::class);
         $soiac->setSalesOrder($so);
         $this->assertSame($so, $soiac->getSalesOrder());
         $soiac->setSalesOrder(null);
@@ -128,7 +128,7 @@ class SalesOrderItemAllowanceChargeEntityTest extends TestCase
     public function testSalesOrderItemRelationSetterAndGetter(): void
     {
         $soiac = new SalesOrderItemAllowanceCharge();
-        $item = $this->createMock(SalesOrderItem::class);
+        $item = $this->createStub(SalesOrderItem::class);
         $soiac->setSalesOrderItem($item);
         $this->assertSame($item, $soiac->getSalesOrderItem());
         $soiac->setSalesOrderItem(null);

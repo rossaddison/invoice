@@ -194,10 +194,10 @@ final class QuoteFormTest extends TestCase
      */
     private function createMockQuote(): Quote
     {
-        $quote = $this->createMock(Quote::class);
-        $client = $this->createMock(Client::class);
-        $group = $this->createMock(Group::class);
-        $user = $this->createMock(User::class);
+        $quote = $this->createStub(Quote::class);
+        $client = $this->createStub(Client::class);
+        $group = $this->createStub(Group::class);
+        $user = $this->createStub(User::class);
         $now = new DateTimeImmutable();
         
         $quote->method('getNumber')->willReturn('QUOTE-001');

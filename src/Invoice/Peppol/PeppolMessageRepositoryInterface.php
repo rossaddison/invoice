@@ -11,4 +11,7 @@ interface PeppolMessageRepositoryInterface
     public function save(PeppolMessage $message): void;
 
     public function repoByMessageId(string $message_id): ?PeppolMessage;
+
+    /** @return iterable<PeppolMessage> */
+    public function repoByStatus(string $status): iterable;
 }

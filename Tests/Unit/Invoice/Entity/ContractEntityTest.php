@@ -55,7 +55,7 @@ class ContractEntityTest extends TestCase
     public function testClientSetterAndGetter(): void
     {
         $contract = new Contract();
-        $client = $this->createMock(Client::class);
+        $client = $this->createStub(Client::class);
         $contract->setClient($client);
         
         $this->assertSame($client, $contract->getClient());
@@ -217,7 +217,7 @@ class ContractEntityTest extends TestCase
     public function testCompleteContractSetup(): void
     {
         $contract = new Contract();
-        $client = $this->createMock(Client::class);
+        $client = $this->createStub(Client::class);
         
         $contract->id = 1;
         $contract->setName('Complete Test Contract');
@@ -332,8 +332,8 @@ class ContractEntityTest extends TestCase
     public function testClientRelationshipManagement(): void
     {
         $contract = new Contract();
-        $client1 = $this->createMock(Client::class);
-        $client2 = $this->createMock(Client::class);
+        $client1 = $this->createStub(Client::class);
+        $client2 = $this->createStub(Client::class);
         
         // Set initial client
         $contract->setClientId(100);
@@ -403,7 +403,7 @@ class ContractEntityTest extends TestCase
     public function testNullClientHandling(): void
     {
         $contract = new Contract();
-        $client = $this->createMock(Client::class);
+        $client = $this->createStub(Client::class);
         
         // Set client then set to null
         $contract->setClient($client);

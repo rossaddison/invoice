@@ -83,7 +83,7 @@ class QuoteCustomEntityTest extends TestCase
     public function testQuoteRelationSetterAndGetter(): void
     {
         $qc = new QuoteCustom();
-        $quote = $this->createMock(Quote::class);
+        $quote = $this->createStub(Quote::class);
         $qc->setQuote($quote);
         $this->assertSame($quote, $qc->getQuote());
         $qc->setQuote(null);
@@ -93,7 +93,7 @@ class QuoteCustomEntityTest extends TestCase
     public function testCustomFieldRelationSetterAndGetter(): void
     {
         $qc = new QuoteCustom();
-        $field = $this->createMock(CustomField::class);
+        $field = $this->createStub(CustomField::class);
         $qc->setCustomField($field);
         $this->assertSame($field, $qc->getCustomField());
         $qc->setCustomField(null);

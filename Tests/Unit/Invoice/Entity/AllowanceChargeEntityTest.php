@@ -144,7 +144,7 @@ class AllowanceChargeEntityTest extends TestCase
     public function testTaxRateRelationshipSetterAndGetter(): void
     {
         $allowanceCharge = new AllowanceCharge();
-        $taxRate = $this->createMock(TaxRate::class);
+        $taxRate = $this->createStub(TaxRate::class);
         
         $allowanceCharge->setTaxrate($taxRate);
         $this->assertSame($taxRate, $allowanceCharge->getTaxRate());
@@ -445,8 +445,8 @@ class AllowanceChargeEntityTest extends TestCase
     public function testTaxRateRelationshipWorkflow(): void
     {
         $allowanceCharge = new AllowanceCharge();
-        $taxRate1 = $this->createMock(TaxRate::class);
-        $taxRate2 = $this->createMock(TaxRate::class);
+        $taxRate1 = $this->createStub(TaxRate::class);
+        $taxRate2 = $this->createStub(TaxRate::class);
         
         // Initially null
         $this->assertNull($allowanceCharge->getTaxRate());
@@ -471,7 +471,7 @@ class AllowanceChargeEntityTest extends TestCase
     public function testCompleteAllowanceChargeSetup(): void
     {
         $allowanceCharge = new AllowanceCharge();
-        $taxRate = $this->createMock(TaxRate::class);
+        $taxRate = $this->createStub(TaxRate::class);
         
         $allowanceCharge->setId(1);
         $allowanceCharge->setIdentifier(false);

@@ -30,281 +30,166 @@ cls
 echo ======================================================================================
 echo                               INVOICE SYSTEM MAIN MENU
 echo ======================================================================================
-echo                                                [5a]  Codeception Tests
-echo [1]  Run PHP Psalm (Full)                      [5aa] Codeception Build
-echo [2]  Psalm on File                             [5b]  Rector See Changes
-echo [2a] Psalm on Directory                        [5c]  Rector Make Changes
-echo [2b] Clear Psalm's Cache                       [5d]  PHP-CS-Fixer Dry Run
-echo [2c] Psalm: Show Config/Plugins                [5e]  PHP-CS-Fixer Fix
-echo [2d] Public Assets Clear (Safe)                [5f]  Snyk Security Check (Quick)
-echo [3]  Composer Outdated                         [5g]  Snyk Security Check (Full)
-echo [3a] Composer why-not                          [5h]  Snyk Security Dependencies
-echo [3b] Composer Cache with Lock                  [5i]  Snyk Security Code File Check
-echo [3c] Composer Validate                         [5j]  Snyk Security Summary (Issues Count)
-echo [3d] Composer Dump Autoload                    [5k]  Snyk Security JSON Output			
-echo [3e] Composer Audit                            [5l]  PHPCS: Check 85-char line length
-echo [4]  Composer Update                           [5m]  PHPCS: Check specific file
-echo [4a] Node Modules Update                       [5n]  PHPCS: Check specific directory
-echo [4b] nvm-windows Install/Update                [5o]  PHPCS: Detailed report
-echo [4c] Node: Audit, Clean, List                  [6]   PHP Built-in 'serve'
-echo [4d] npm: Check Outdated                       [7]   user/create username password
-echo [4e] npm: Safe Update (patch only)             [8]   user/assignRole role userId
-echo [4f] npm: Minor Update (minor versions)        [9]   router/list
-echo [4g] npm: Major Update (interactive)           [10]  translator/translate
-echo [4h] npm: ES2024 Feature Verification          [11]  invoice/items
-echo [4i] TypeScript Build (Production)             [12]  invoice/setting/truncate
-echo [4j] TypeScript Build (Development)            [13]  invoice/generator/truncate
-echo [4k] TypeScript Watch Mode                     [14]  invoice/inv/truncate1
-echo [4l] TypeScript Type Check                     [15]  invoice/quote/truncate2
-echo [4m] TypeScript Lint                           [16]  invoice/salesorder/truncate3
-echo [4n] TypeScript Format                         [17]  invoice/nonuserrelated/truncate4
-echo [4o] npm run build                             [18]  invoice/userrelated/truncate5
-echo [4p] Angular: Install Dependencies             [19]  invoice/autoincrementsettooneafter/truncate6
+echo [1]  Run PHP Psalm (Full)                      [5a]  PHPUnit Tests (Entity)
+echo [2]  Psalm on File                             [5aa] PHPUnit Tests (All Unit)
+echo [2a] Psalm on Directory                        [5b]  Rector See Changes
+echo [2b] Clear Psalm's Cache                       [5c]  Rector Make Changes
+echo [2c] Psalm: Show Config/Plugins                [5d]  PHP-CS-Fixer Dry Run
+echo [2d] Public Assets Clear (Safe)                [5e]  PHP-CS-Fixer Fix
+echo [3]  Composer Outdated                         [5f]  Snyk Security Check (Quick)
+echo [3a] Composer why-not                          [5g]  Snyk Security Check (Full)
+echo [3b] Composer Cache with Lock                  [5h]  Snyk Security Dependencies
+echo [3c] Composer Validate                         [5i]  Snyk Security Code File Check
+echo [3d] Composer Dump Autoload                    [5j]  Snyk Security Summary (Issues Count)
+echo [3e] Composer Audit                            [5k]  Snyk Security JSON Output
+echo [4]  Composer Update                           [5l]  PHPCS: Check 85-char line length
+echo [4a] Node Modules Update                       [5m]  PHPCS: Check specific file
+echo [4b] nvm-windows Install/Update                [5n]  PHPCS: Check specific directory
+echo [4c] Node: Audit, Clean, List                  [5o]  PHPCS: Detailed report
+echo [4d] npm: Check Outdated                       [5p]  PHPUnit: Functional/Integration
+echo [4e] npm: Safe Update (patch only)             [5q]  Codeception: Functional Suite
+echo [4f] npm: Minor Update (minor versions)        [5r]  Codeception: Acceptance Suite
+echo [4g] npm: Major Update (interactive)           [5s]  Codeception: All Suites
+echo [4h] npm: ES2024 Feature Verification          [6]   PHP Built-in 'serve'
+echo [4i] TypeScript Build (Production)             [7]   user/create username password
+echo [4j] TypeScript Build (Development)            [8]   user/assignRole role userId
+echo [4k] TypeScript Watch Mode                     [9]   router/list
+echo [4l] TypeScript Type Check                     [10]  translator/translate
+echo [4m] TypeScript Lint                           [11]  invoice/items
+echo [4n] TypeScript Format                         [12]  invoice/setting/truncate
+echo [4o] npm run build                             [13]  invoice/generator/truncate
+echo [4p] Angular: Install Dependencies             [14]  invoice/inv/truncate1
 echo [4q] Angular: Serve Development                [4r]  Angular: Build Production
 echo [4s] Angular: Generate Component               [4t]  Angular: Lint Check
-echo [5]  Require Checker                           [20]  GitHub CLI: Install
-echo [99] System Info / Diagnostics                 [21]  GitHub CLI: Auth Status
+echo [5]  Require Checker                           [15]  invoice/quote/truncate2
+echo [99] System Info / Diagnostics                 [16]  invoice/salesorder/truncate3
+echo                                                [17]  invoice/nonuserrelated/truncate4
+echo                                                [18]  invoice/userrelated/truncate5
+echo                                                [19]  invoice/autoincrementsettooneafter/truncate6
+echo                                                [20]  GitHub CLI: Install
+echo                                                [21]  GitHub CLI: Auth Status
 echo                                                [22]  GitHub CLI: Copilot Version
 echo                                                [23]  Exit
 echo                                                [24]  Exit to Current Directory
-echo =================================                     
+echo =================================
 set /p choice="Enter your choice [0-24,99]: "
 
 REM ======== MENU COMMAND ROUTING ========
-if "%choice%"=="1" goto psalm
-if "%choice%"=="2" goto psalm_file
-if "%choice%"=="2a" goto psalm_directory
-if "%choice%"=="2b" goto psalm_clear_cache
-if "%choice%"=="2c" goto psalm_config
-if "%choice%"=="2d" goto public_assets_clear
-if "%choice%"=="3" goto composer_outdated
-if "%choice%"=="3a" goto composer_whynot
-if "%choice%"=="3b" goto composer_clear_cache_and_resolve_lock_conflicts
-if "%choice%"=="3c" goto composer_validate
-if "%choice%"=="3d" goto composer_dumpautoload
-if "%choice%"=="3e" goto composer_audit
-if "%choice%"=="4" goto composer_update
-if "%choice%"=="4a" goto node_modules_update
-if "%choice%"=="4b" goto nvm_install_or_update
-if "%choice%"=="4c" goto node_audit
-if "%choice%"=="4d" goto npm_check_outdated
-if "%choice%"=="4e" goto npm_safe_update
-if "%choice%"=="4f" goto npm_minor_update
-if "%choice%"=="4g" goto npm_major_update
-if "%choice%"=="4h" goto npm_es2024_verify
-if "%choice%"=="4i" goto typescript_build_prod
-if "%choice%"=="4j" goto typescript_build_dev
-if "%choice%"=="4k" goto typescript_watch
-if "%choice%"=="4l" goto typescript_type_check
-if "%choice%"=="4m" goto typescript_lint
-if "%choice%"=="4n" goto typescript_format
-if "%choice%"=="4o" goto npm_run_build
-if "%choice%"=="4p" goto angular_install_deps
-if "%choice%"=="4q" goto angular_serve
-if "%choice%"=="4r" goto angular_build
-if "%choice%"=="4s" goto angular_generate_component
-if "%choice%"=="4t" goto angular_lint
-if "%choice%"=="5" goto require_checker
-if "%choice%"=="5a" goto codeception_tests
-if "%choice%"=="5aa" goto codeception_build
-if "%choice%"=="5b" goto rector_see_changes
-if "%choice%"=="5c" goto rector_make_changes
-if "%choice%"=="5d" goto code_style_suggest_changes
-if "%choice%"=="5e" goto code_style_make_changes
-if "%choice%"=="5f" goto security_quick
-if "%choice%"=="5g" goto security_full
-if "%choice%"=="5h" goto security_deps
-if "%choice%"=="5i" goto security_code_file
-if "%choice%"=="5j" goto security_summary
-if "%choice%"=="5k" goto security_json
-if "%choice%"=="5l" goto phpcs_check
-if "%choice%"=="5m" goto phpcs_file
-if "%choice%"=="5n" goto phpcs_dir
-if "%choice%"=="5o" goto phpcs_report
-if "%choice%"=="6" goto serve
-if "%choice%"=="7" goto user_create
-if "%choice%"=="8" goto user_assignRole
-if "%choice%"=="9" goto router_list
-if "%choice%"=="10" goto translator_translate
-if "%choice%"=="11" goto invoice_items
-if "%choice%"=="12" goto confirm_warning_12
-if "%choice%"=="13" goto confirm_warning_13
-if "%choice%"=="14" goto confirm_warning_14
-if "%choice%"=="15" goto confirm_warning_15
-if "%choice%"=="16" goto confirm_warning_16
-if "%choice%"=="17" goto confirm_warning_17
-if "%choice%"=="18" goto confirm_warning_18
-if "%choice%"=="19" goto confirm_warning_19
-if "%choice%"=="20" goto gh_cli_install
-if "%choice%"=="21" goto gh_auth_status
-if "%choice%"=="22" goto gh_copilot_version
-if "%choice%"=="23" goto exit
-if "%choice%"=="24" goto exit_to_directory
-if "%choice%"=="99" goto diagnostics
+if "%choice%"=="1" goto c01
+if "%choice%"=="2" goto c02
+if "%choice%"=="2a" goto c02a
+if "%choice%"=="2b" goto c02b
+if "%choice%"=="2c" goto c02c
+if "%choice%"=="2d" goto c02d
+if "%choice%"=="3" goto c03
+if "%choice%"=="3a" goto c03a
+if "%choice%"=="3b" goto c03b
+if "%choice%"=="3c" goto c03c
+if "%choice%"=="3d" goto c03d
+if "%choice%"=="3e" goto c03e
+if "%choice%"=="4" goto c04
+if "%choice%"=="4a" goto c04a
+if "%choice%"=="4b" goto c04b
+if "%choice%"=="4c" goto c04c
+if "%choice%"=="4d" goto c04d
+if "%choice%"=="4e" goto c04e
+if "%choice%"=="4f" goto c04f
+if "%choice%"=="4g" goto c04g
+if "%choice%"=="4h" goto c04h
+if "%choice%"=="4i" goto c04i
+if "%choice%"=="4j" goto c04j
+if "%choice%"=="4k" goto c04k
+if "%choice%"=="4l" goto c04l
+if "%choice%"=="4m" goto c04m
+if "%choice%"=="4n" goto c04n
+if "%choice%"=="4o" goto c04o
+if "%choice%"=="4p" goto c04p
+if "%choice%"=="4q" goto c04q
+if "%choice%"=="4r" goto c04r
+if "%choice%"=="4s" goto c04s
+if "%choice%"=="4t" goto c04t
+if "%choice%"=="5" goto c05
+if "%choice%"=="5a" goto c05a
+if "%choice%"=="5aa" goto c05aa
+if "%choice%"=="5b" goto c05b
+if "%choice%"=="5c" goto c05c
+if "%choice%"=="5d" goto c05d
+if "%choice%"=="5e" goto c05e
+if "%choice%"=="5f" goto c05f
+if "%choice%"=="5g" goto c05g
+if "%choice%"=="5h" goto c05h
+if "%choice%"=="5i" goto c05i
+if "%choice%"=="5j" goto c05j
+if "%choice%"=="5k" goto c05k
+if "%choice%"=="5l" goto c05l
+if "%choice%"=="5m" goto c05m
+if "%choice%"=="5n" goto c05n
+if "%choice%"=="5o" goto c05o
+if "%choice%"=="5p" goto c05p
+if "%choice%"=="5q" goto c05q
+if "%choice%"=="5r" goto c05r
+if "%choice%"=="5s" goto c05s
+if "%choice%"=="6" goto c06
+if "%choice%"=="7" goto c07
+if "%choice%"=="8" goto c08
+if "%choice%"=="9" goto c09
+if "%choice%"=="10" goto c10
+if "%choice%"=="11" goto c11
+if "%choice%"=="12" goto c12
+if "%choice%"=="13" goto c13
+if "%choice%"=="14" goto c14
+if "%choice%"=="15" goto c15
+if "%choice%"=="16" goto c16
+if "%choice%"=="17" goto c17
+if "%choice%"=="18" goto c18
+if "%choice%"=="19" goto c19
+if "%choice%"=="20" goto c20
+if "%choice%"=="21" goto c21
+if "%choice%"=="22" goto c22
+if "%choice%"=="23" goto c23
+if "%choice%"=="24" goto c24
+if "%choice%"=="99" goto c99
 echo Invalid choice. Please try again.
 pause
 goto menu
 
-:composer_audit
-echo Validating composer.json and composer.lock...
-composer audit --ansi
-pause
-goto menu
+REM ======== HANDLERS (alphabetical by label: c01..c99, then check_*, confirm_*, install_*, shipmonk_*) ========
 
-:composer_clear_cache_and_resolve_lock_conflicts
-echo Clearing Composer cache and resolving lock file conflicts...
-composer clear-cache
-composer update --lock
-pause
-goto menu
-
-:composer_dumpautoload
-echo Regenerating Composer autoload files...
-composer dump-autoload -o
-pause
-goto menu
-
-:composer_outdated
-echo Checking Composer Outdated...
-composer outdated
-pause
-goto menu
-
-:composer_update
-echo Updating Composer...
-composer update
-pause
-goto menu
-
-:composer_validate
-echo Validating composer.json and composer.lock...
-composer validate --ansi --strict
-pause
-goto menu
-
-:composer_whynot
-set /p repo="Package name (e.g. vendor/package): "
-set /p version="Version (e.g. 1.0.0): "
-composer why-not %repo% %version%
-pause
-goto menu
-
-:diagnostics
-echo .......... VERSIONS - PHP, COMPOSER, NODE, TYPESCRIPT ..........
-php -v
-composer --version
-npm -v
-node -v
-npx tsc --version
-echo ------------ Composer Platform Check ------------
-composer check-platform-reqs
-echo ------------ Node List ------------
-npm list --depth=0
-pause
-goto menu
-
-:check_extensions
-cls
-echo ======================================================================================
-echo                     PHP EXTENSION CHECKER (Pre-Installation)
-echo ======================================================================================
-echo Checking required PHP extensions for Invoice System...
-echo Based on invoice_build.yml workflow requirements
-echo.
-php scripts\extension-checker.php
-echo.
-echo [INFO] If extensions are missing, follow the instructions above.
-echo [INFO] You may need to restart WAMP/Apache after making changes.
-pause
-goto installation_menu
-
-:check_requirements
-echo Checking system requirements...
-where php >nul 2>nul || echo [ERROR] PHP not found in PATH
-where composer >nul 2>nul || echo [ERROR] Composer not found in PATH  
-where npm >nul 2>nul || echo [ERROR] npm not found in PATH
-php --version
-composer --version
-npm --version
-pause
-goto installation_menu
-
-:install_dependencies
-echo Installing dependencies only...
-composer install --no-dev --optimize-autoloader
-npm install --production
-pause
-goto installation_menu
-
-:shipmonk_dependency_analyser
-echo Running Shipmonk Composer Dependency Analyser (https://github.com/shipmonk-rnd/composer-dependency-analyser)...
-php vendor/bin/composer-dependency-analyser
-pause
-goto installation_menu
-
-:node_audit
-echo Running npm audit...
-npm audit
-echo Running npm cache clean...
-npm cache clean --force
-echo Listing top-level npm packages...
-npm list --depth=0
-pause
-goto menu
-
-:node_modules_update
-echo Updating Node modules...
-npx npm-check-updates -u
-npm install
-pause
-goto menu
-
-:nvm_install_or_update
-echo Downloading latest nvm-windows installer...
-powershell -Command "Invoke-WebRequest -Uri https://github.com/coreybutler/nvm-windows/releases/latest/download/nvm-setup.exe -OutFile nvm-setup.exe"
-start /wait nvm-setup.exe /SILENT
-del nvm-setup.exe
-echo nvm-windows install/update complete.
-pause
-goto menu
-
-:npm_check_outdated
-echo Checking npm packages for updates (like 'composer outdated')...
-npm run upgrade:check
-pause
-goto menu
-
-:npm_safe_update
-echo Running safe npm update (patch versions only)...
-npm run upgrade:safe
-pause
-goto menu
-
-:npm_minor_update
-echo Running npm minor version updates...
-npm run upgrade:minor
-pause
-goto menu
-
-:npm_major_update
-echo Running npm major version updates (interactive)...
-npm run upgrade:major
-pause
-goto menu
-
-:npm_es2024_verify
-echo Verifying ES2024 features are available...
-npm run es2024:verify
-pause
-goto menu
-
-:psalm
+:c01
 echo Running PHP Psalm...
 php vendor/bin/psalm --force-jit
 pause
 goto menu
 
-:public_assets_clear
+:c02
+echo Running PHP Psalm on a specific file...
+set /p file="File path (relative to root): "
+if "%file%"=="" (echo No file specified.& pause& goto menu)
+php vendor/bin/psalm "%file%"
+pause
+goto menu
+
+:c02a
+echo Running PHP Psalm on a directory...
+set /p DIR="Directory path (relative to root): "
+if "%DIR%"=="" (echo No directory specified.& pause& goto menu)
+php vendor/bin/psalm "%DIR%"
+pause
+goto menu
+
+:c02b
+echo Clearing Psalm's cache...
+php vendor/bin/psalm --clear-cache
+pause
+goto menu
+
+:c02c
+echo Psalm Config & Plugins:
+php vendor/bin/psalm --show-info || echo Psalm version does not support --show-info
+pause
+goto menu
+
+:c02d
 echo Clearing Assets Cache (Safe - preserves .gitignore)...
 if exist "public\assets" (
     echo Clearing assets cache while preserving .gitignore...
@@ -316,66 +201,138 @@ if exist "public\assets" (
 pause
 goto menu
 
-:psalm_clear_cache
-echo Clearing Psalm's cache...
-php vendor/bin/psalm --clear-cache
+:c03
+echo Checking Composer Outdated...
+composer outdated
 pause
 goto menu
 
-:psalm_config
-echo Psalm Config & Plugins:
-php vendor/bin/psalm --show-info || echo Psalm version does not support --show-info
+:c03a
+set /p repo="Package name (e.g. vendor/package): "
+set /p version="Version (e.g. 1.0.0): "
+composer why-not %repo% %version%
 pause
 goto menu
 
-:psalm_directory
-echo Running PHP Psalm on a directory...
-set /p DIR="Directory path (relative to root): "
-if "%DIR%"=="" (echo No directory specified.& pause& goto menu)
-php vendor/bin/psalm "%DIR%"
+:c03b
+echo Clearing Composer cache and resolving lock file conflicts...
+composer clear-cache
+composer update --lock
 pause
 goto menu
 
-:psalm_file
-echo Running PHP Psalm on a specific file...
-set /p file="File path (relative to root): "
-if "%file%"=="" (echo No file specified.& pause& goto menu)
-php vendor/bin/psalm "%file%"
+:c03c
+echo Validating composer.json and composer.lock...
+composer validate --ansi --strict
 pause
 goto menu
 
-:typescript_build_prod
+:c03d
+echo Regenerating Composer autoload files...
+composer dump-autoload -o
+pause
+goto menu
+
+:c03e
+echo Validating composer.json and composer.lock...
+composer audit --ansi
+pause
+goto menu
+
+:c04
+echo Updating Composer...
+composer update
+pause
+goto menu
+
+:c04a
+echo Updating Node modules...
+npx npm-check-updates -u
+npm install
+pause
+goto menu
+
+:c04b
+echo Downloading latest nvm-windows installer...
+powershell -Command "Invoke-WebRequest -Uri https://github.com/coreybutler/nvm-windows/releases/latest/download/nvm-setup.exe -OutFile nvm-setup.exe"
+start /wait nvm-setup.exe /SILENT
+del nvm-setup.exe
+echo nvm-windows install/update complete.
+pause
+goto menu
+
+:c04c
+echo Running npm audit...
+npm audit
+echo Running npm cache clean...
+npm cache clean --force
+echo Listing top-level npm packages...
+npm list --depth=0
+pause
+goto menu
+
+:c04d
+echo Checking npm packages for updates (like 'composer outdated')...
+npm run upgrade:check
+pause
+goto menu
+
+:c04e
+echo Running safe npm update (patch versions only)...
+npm run upgrade:safe
+pause
+goto menu
+
+:c04f
+echo Running npm minor version updates...
+npm run upgrade:minor
+pause
+goto menu
+
+:c04g
+echo Running npm major version updates (interactive)...
+npm run upgrade:major
+pause
+goto menu
+
+:c04h
+echo Verifying ES2024 features are available...
+npm run es2024:verify
+pause
+goto menu
+
+:c04i
 echo Building TypeScript (Production - Minified)...
 npm run build:prod
 pause
 goto menu
 
-:typescript_build_dev
+:c04j
 echo Building TypeScript (Development - with Source Maps)...
 npm run build:dev
 pause
 goto menu
 
-:typescript_watch
+:c04k
 echo Starting TypeScript Watch Mode (Development)...
 echo Press Ctrl+C to stop watching...
 npm run build:watch
 pause
 goto menu
 
-:typescript_type_check
+:c04l
 echo Running TypeScript Type Check...
 npm run type-check
 pause
 goto menu
 
-:typescript_lint
+:c04m
 echo Running TypeScript Lint Check...
 npm run lint
 pause
 goto menu
 
-:typescript_format
+:c04n
 echo Running TypeScript Format Check...
 npm run format:check
 echo.
@@ -384,18 +341,18 @@ npm run format
 pause
 goto menu
 
-:npm_run_build
+:c04o
 echo Running npm run build...
 npm run build
 pause
 goto menu
 
-:angular_install_deps
+:c04p
 echo ======== ANGULAR DEPENDENCY INSTALLATION WARNING ========
-echo ⚠️  WARNING: This will install Angular dependencies!
-echo 📝 This may modify existing TypeScript/ESLint configuration
-echo 🔄 Ensure you have reviewed package.json and tsconfig files
-echo 🚨 BACKUP your current setup before proceeding!
+echo WARNING: This will install Angular dependencies!
+echo This may modify existing TypeScript/ESLint configuration
+echo Ensure you have reviewed package.json and tsconfig files
+echo BACKUP your current setup before proceeding!
 echo ==========================================================
 set /p confirm="Continue with Angular dependency installation? (Y/N): "
 if /i "%confirm%"=="Y" (
@@ -408,23 +365,23 @@ if /i "%confirm%"=="Y" (
 pause
 goto menu
 
-:angular_serve
+:c04q
 echo Starting Angular development server...
-echo ⚠️  This runs Angular in development mode
-echo 📝 Angular components will be available at http://localhost:4200
-echo 🔄 In production, Angular integrates with Yii3 PHP layout
+echo This runs Angular in development mode
+echo Angular components will be available at http://localhost:4200
+echo In production, Angular integrates with Yii3 PHP layout
 npm run ng:serve
 pause
 goto menu
 
-:angular_build
+:c04r
 echo Building Angular for production...
-echo 📝 This builds Angular components for integration with Yii3
+echo This builds Angular components for integration with Yii3
 npm run ng:build
 pause
 goto menu
 
-:angular_generate_component
+:c04s
 echo Generating Angular component...
 set /p componentName="Component name (e.g. dashboard, user-profile): "
 if "%componentName%"=="" (echo No component name specified.& pause& goto menu)
@@ -433,74 +390,74 @@ npm run angular:generate-component %componentName%
 pause
 goto menu
 
-:angular_lint
+:c04t
 echo Running Angular-specific linting...
-echo 📝 This checks Angular components and templates
+echo This checks Angular components and templates
 npm run lint:angular
 pause
 goto menu
 
-:codeception_tests
-echo Running Codeception Tests...
-php vendor/bin/codecept run
-pause
-goto menu
-
-:codeception_build
-echo Running Codeception Build...
-php vendor/bin/codecept build
-pause
-goto menu
-
-:code_style_make_changes
-echo PHP-CS-Fixer Fix (apply changes)...
-php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php 
-pause
-goto menu
-
-:code_style_suggest_changes
-echo PHP-CS-Fixer Dry Run (see potential changes)...
-php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --show-progress=bar --verbose
-pause
-goto menu
-
-:require_checker
+:c05
 echo Running Composer Require Checker...
 php -d memory_limit=512M vendor/bin/composer-require-checker
 pause
 goto menu
 
-:rector_see_changes
+:c05a
+echo Running PHPUnit Tests (Tests/Unit/Invoice/Entity/)...
+php vendor/bin/phpunit Tests/Unit/Invoice/Entity/ --no-coverage --testdox
+pause
+goto menu
+
+:c05aa
+echo Running PHPUnit Tests (Tests/Unit/)...
+php vendor/bin/phpunit Tests/Unit/ --no-coverage --testdox
+pause
+goto menu
+
+:c05b
 echo Rector Dry Run (see proposed changes)...
 php vendor/bin/rector process --dry-run --output-format=console
 pause
 goto menu
 
-:rector_make_changes
+:c05c
 echo Rector Make Changes (apply changes)...
 php vendor/bin/rector
 pause
 goto menu
 
-:security_quick
+:c05d
+echo PHP-CS-Fixer Dry Run (see potential changes)...
+php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --show-progress=bar --verbose
+pause
+goto menu
+
+:c05e
+echo PHP-CS-Fixer Fix (apply changes)...
+php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php
+pause
+goto menu
+
+:c05f
 echo Running Snyk Security Check (High Severity Issues Only)...
 npm run security:quick
 pause
 goto menu
 
-:security_full
+:c05g
 echo Running Snyk Full Security Analysis (Code + Dependencies)...
 npm run security:full
 pause
 goto menu
 
-:security_deps
+:c05h
 echo Running Snyk Security Check on Dependencies...
 npm run security:deps
 pause
 goto menu
 
-:security_code_file
+:c05i
 echo Running Snyk Code Security Check on Specific File...
 set /p file="File path (relative to root, e.g. src/Invoice/Inv/InvController.php): "
 if "%file%"=="" (echo No file specified.& pause& goto menu)
@@ -508,25 +465,77 @@ snyk code test --file="%file%"
 pause
 goto menu
 
-:security_summary
+:c05j
 echo Running Snyk Security Summary (Total Issues Count Only)...
 snyk code test | findstr /C:"Total issues"
 pause
 goto menu
 
-:security_json
+:c05k
 echo Running Snyk Security Analysis with JSON Output...
 snyk code test --json
 pause
 goto menu
 
-:serve
+:c05l
+echo PHP CodeSniffer: Checking 85-character line length...
+php vendor/bin/phpcs -d memory_limit=1024M --standard=phpcs.xml.dist
+pause
+goto menu
+
+:c05m
+set /p filepath="Enter file path (e.g., src/Invoice/Invoice.php): "
+echo Checking %filepath% for 85-character line length...
+php vendor/bin/phpcs -d memory_limit=1024M --standard=Generic --sniffs=Generic.Files.LineLength --runtime-set lineLimit 85 --runtime-set absoluteLineLimit 85 %filepath%
+pause
+goto menu
+
+:c05n
+set /p dirpath="Enter directory path (e.g., src/Invoice/): "
+echo Checking %dirpath% for 85-character line length...
+php vendor/bin/phpcs -d memory_limit=1024M --standard=Generic --sniffs=Generic.Files.LineLength --runtime-set lineLimit 85 --runtime-set absoluteLineLimit 85 %dirpath%
+pause
+goto menu
+
+:c05o
+echo Running detailed PHPCS line length report...
+php vendor/bin/phpcs -d memory_limit=1024M --standard=phpcs.xml.dist --report=full --report-width=120
+pause
+goto menu
+
+:c05p
+echo Running PHPUnit Tests (Tests/Functional/ Tests/Integration/ Tests/PHPUnit/)...
+php vendor/bin/phpunit Tests/Functional/ Tests/Integration/ Tests/PHPUnit/ --no-coverage --testdox
+pause
+goto menu
+
+:c05q
+echo Running Codeception Functional Suite...
+php vendor/bin/codecept run Functional
+pause
+goto menu
+
+:c05r
+echo Running Codeception Acceptance Suite...
+echo [INFO] Requires: php yii serve (running) and a browser driver (Selenium/Playwright)
+php vendor/bin/codecept run Acceptance
+pause
+goto menu
+
+:c05s
+echo Running all Codeception Suites...
+echo [INFO] Acceptance suite requires a running server and browser driver
+php vendor/bin/codecept run
+pause
+goto menu
+
+:c06
 echo Running PHP built-in server via Yii...
 php yii serve
 pause
 goto menu
 
-:user_create
+:c07
 set /p username="Username (e.g. admin): "
 set /p password="Password (e.g. admin): "
 if "%username%"=="" (echo No username specified.& pause& goto menu)
@@ -535,7 +544,7 @@ php yii user/create "%username%" "%password%"
 pause
 goto menu
 
-:user_assignRole
+:c08
 set /p role="Role (e.g. admin): "
 set /p userId="User ID (e.g. 1): "
 if "%role%"=="" (echo No role specified.& pause& goto menu)
@@ -544,12 +553,12 @@ php yii user/assignRole "%role%" "%userId%"
 pause
 goto menu
 
-:router_list
+:c09
 php yii router/list
 pause
 goto menu
 
-:translator_translate
+:c10
 set /p sourceText="Source text: "
 set /p targetLanguage="Target language code (e.g. fr): "
 if "%sourceText%"=="" (echo No source text specified.& pause& goto menu)
@@ -558,46 +567,84 @@ php yii translator/translate "%sourceText%" "%targetLanguage%"
 pause
 goto menu
 
-:invoice_items
+:c11
 php yii invoice/items
 pause
 goto menu
 
-:confirm_warning_12
-call :confirm_delete "invoice_setting_truncate"
-goto menu
-:confirm_warning_13
-call :confirm_delete "invoice_generator_truncate"
-goto menu
-:confirm_warning_14
-call :confirm_delete "invoice_inv_truncate1"
-goto menu
-:confirm_warning_15
-call :confirm_delete "invoice_quote_truncate2"
-goto menu
-:confirm_warning_16
-call :confirm_delete "invoice_salesorder_truncate3"
-goto menu
-:confirm_warning_17
-call :confirm_delete "invoice_nonuserrelated_truncate4"
-goto menu
-:confirm_warning_18
-call :confirm_delete "invoice_userrelated_truncate5"
-goto menu
-:confirm_warning_19
-call :confirm_delete "invoice_autoincrementsettooneafter_truncate6"
+:c12
+call :confirm_delete "c12x"
 goto menu
 
-:confirm_delete
-echo You are about to delete sensitive data! Are you sure? (Y/N)
-set /p confirm=""
-if /i "%confirm%"=="Y" goto %1
-echo Cancelled.
+:c12x
+php yii invoice/setting/truncate
 pause
 goto menu
 
+:c13
+call :confirm_delete "c13x"
+goto menu
 
-:gh_cli_install
+:c13x
+php yii invoice/generator/truncate
+pause
+goto menu
+
+:c14
+call :confirm_delete "c14x"
+goto menu
+
+:c14x
+php yii invoice/inv/truncate1
+pause
+goto menu
+
+:c15
+call :confirm_delete "c15x"
+goto menu
+
+:c15x
+php yii invoice/quote/truncate2
+pause
+goto menu
+
+:c16
+call :confirm_delete "c16x"
+goto menu
+
+:c16x
+php yii invoice/salesorder/truncate3
+pause
+goto menu
+
+:c17
+call :confirm_delete "c17x"
+goto menu
+
+:c17x
+php yii invoice/nonuserrelated/truncate4
+pause
+goto menu
+
+:c18
+call :confirm_delete "c18x"
+goto menu
+
+:c18x
+php yii invoice/userrelated/truncate5
+pause
+goto menu
+
+:c19
+call :confirm_delete "c19x"
+goto menu
+
+:c19x
+php yii invoice/autoincrementsettooneafter/truncate6
+pause
+goto menu
+
+:c20
 echo Installing GitHub CLI via winget...
 echo Checking if GitHub CLI is already installed...
 where gh >nul 2>nul && (
@@ -616,8 +663,6 @@ echo Installing GitHub CLI using winget...
 winget install --id GitHub.cli
 echo.
 echo Adding GitHub CLI to PATH for current session...
-REM Add common GitHub CLI installation paths to current session PATH
-REM winget creates links in WinGet\Links, also check standard install locations
 set "PATH=%PATH%;%LOCALAPPDATA%\Microsoft\WinGet\Links;%ProgramFiles%\GitHub CLI;%LOCALAPPDATA%\Programs\GitHub CLI"
 echo.
 echo Installation complete!
@@ -634,7 +679,7 @@ where gh >nul 2>nul && (
 pause
 goto menu
 
-:gh_auth_status
+:c21
 echo Checking GitHub CLI authentication status...
 where gh >nul 2>nul || (
     echo [ERROR] GitHub CLI not found in PATH.
@@ -652,7 +697,7 @@ echo [INFO] If not authenticated, run: gh auth login
 pause
 goto menu
 
-:gh_copilot_version
+:c22
 echo Checking GitHub Copilot access...
 where gh >nul 2>nul || (
     echo [ERROR] GitHub CLI not found in PATH.
@@ -687,77 +732,74 @@ gh --version
 pause
 goto menu
 
-:invoice_setting_truncate
-php yii invoice/setting/truncate
-pause
-goto menu
-
-:invoice_generator_truncate
-php yii invoice/generator/truncate
-pause
-goto menu
-
-:invoice_inv_truncate1
-php yii invoice/inv/truncate1
-pause
-goto menu
-
-:invoice_quote_truncate2
-php yii invoice/quote/truncate2
-pause
-goto menu
-
-:invoice_salesorder_truncate3
-php yii invoice/salesorder/truncate3
-pause
-goto menu
-
-:invoice_nonuserrelated_truncate4
-php yii invoice/nonuserrelated/truncate4
-pause
-goto menu
-
-:invoice_userrelated_truncate5
-php yii invoice/userrelated/truncate5
-pause
-goto menu
-
-:invoice_autoincrementsettooneafter_truncate6
-php yii invoice/autoincrementsettooneafter/truncate6
-pause
-goto
-
-:phpcs_check
-echo PHP CodeSniffer: Checking 85-character line length...
-php vendor/bin/phpcs -d memory_limit=1024M --standard=phpcs.xml.dist
-pause
-goto menu
-
-:phpcs_file
-set /p filepath="Enter file path (e.g., src/Invoice/Invoice.php): "
-echo Checking %filepath% for 85-character line length...
-php vendor/bin/phpcs -d memory_limit=1024M --standard=Generic --sniffs=Generic.Files.LineLength --runtime-set lineLimit 85 --runtime-set absoluteLineLimit 85 %filepath%
-pause
-goto menu
-
-:phpcs_dir
-set /p dirpath="Enter directory path (e.g., src/Invoice/): "
-echo Checking %dirpath% for 85-character line length...
-php vendor/bin/phpcs -d memory_limit=1024M --standard=Generic --sniffs=Generic.Files.LineLength --runtime-set lineLimit 85 --runtime-set absoluteLineLimit 85 %dirpath%
-pause
-goto menu
-
-:phpcs_report
-echo Running detailed PHPCS line length report...
-php vendor/bin/phpcs -d memory_limit=1024M --standard=phpcs.xml.dist --report=full --report-width=120
-pause
-goto menu
-
-:exit_to_directory
-echo Returning to the current directory. Goodbye!
-cmd
-
-:exit
+:c23
 echo Exiting. Goodbye!
 pause
 exit
+
+:c24
+echo Returning to the current directory. Goodbye!
+cmd
+
+:c99
+echo .......... VERSIONS - PHP, COMPOSER, NODE, TYPESCRIPT ..........
+php -v
+composer --version
+npm -v
+node -v
+npx tsc --version
+echo ------------ Composer Platform Check ------------
+composer check-platform-reqs
+echo ------------ Node List ------------
+npm list --depth=0
+pause
+goto menu
+
+REM ======== INSTALLATION / LEGACY HANDLERS ========
+
+:check_extensions
+cls
+echo ======================================================================================
+echo                     PHP EXTENSION CHECKER (Pre-Installation)
+echo ======================================================================================
+echo Checking required PHP extensions for Invoice System...
+echo Based on invoice_build.yml workflow requirements
+echo.
+php scripts\extension-checker.php
+echo.
+echo [INFO] If extensions are missing, follow the instructions above.
+echo [INFO] You may need to restart WAMP/Apache after making changes.
+pause
+goto menu
+
+:check_requirements
+echo Checking system requirements...
+where php >nul 2>nul || echo [ERROR] PHP not found in PATH
+where composer >nul 2>nul || echo [ERROR] Composer not found in PATH
+where npm >nul 2>nul || echo [ERROR] npm not found in PATH
+php --version
+composer --version
+npm --version
+pause
+goto menu
+
+:confirm_delete
+echo You are about to delete sensitive data! Are you sure? (Y/N)
+set /p confirm=""
+if /i "%confirm%"=="Y" goto %1
+echo Cancelled.
+pause
+goto menu
+
+:install_dependencies
+echo Installing dependencies only...
+composer install --no-dev --optimize-autoloader
+npm install --production
+pause
+goto menu
+
+:shipmonk_dependency_analyser
+echo Running Shipmonk Composer Dependency Analyser...
+php vendor/bin/composer-dependency-analyser
+pause
+goto menu

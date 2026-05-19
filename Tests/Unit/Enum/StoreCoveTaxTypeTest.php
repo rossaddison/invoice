@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Unit\Enum;
 
 use App\Invoice\Enum\StoreCoveTaxType;
-use Codeception\Test\Unit;
+use PHPUnit\Framework\TestCase;
 
-class StoreCoveTaxTypeTest extends Unit
+class StoreCoveTaxTypeTest extends TestCase
 {
     public function testEnumCases(): void
     {

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use App\Infrastructure\Persistence\Setting\Setting;
-use Codeception\Test\Unit;
+use PHPUnit\Framework\TestCase;
 
-final class SettingEntityTest extends Unit
+final class SettingEntityTest extends TestCase
 {
     public function testConstructorWithDefaults(): void
     {

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use App\Infrastructure\Persistence\PostalAddress\PostalAddress;
-use Codeception\Test\Unit;
+use PHPUnit\Framework\TestCase;
 
-final class PostalAddressEntityTest extends Unit
+final class PostalAddressEntityTest extends TestCase
 {
     public string $mainStreet = 'Main Street';
     

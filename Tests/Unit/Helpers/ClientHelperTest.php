@@ -7,22 +7,17 @@ namespace Tests\Unit\Helpers;
 use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\Helpers\ClientHelper;
 use App\Invoice\Setting\SettingRepository;
-use Codeception\Test\Unit;
+use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Yiisoft\Translator\TranslatorInterface;
 
-class ClientHelperTest extends Unit
+class ClientHelperTest extends TestCase
 {
     private ClientHelper $clientHelper;
-    private TranslatorInterface $translator;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->translator = $this->createMock(TranslatorInterface::class);
-        
-        // Create ClientHelper using reflection to bypass the final
-        // SettingRepository dependencies
         $settingRepo = $this->createSettingRepository();
         $this->clientHelper = new ClientHelper($settingRepo);
     }
@@ -198,62 +193,57 @@ class ClientHelperTest extends Unit
 
     public function testFormatGenderMale(): void
     {
-        $this->translator->expects($this->once())
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator->expects($this->once())
             ->method('translate')
             ->with('gender.male')
             ->willReturn('Male');
-        
-        $result = $this->clientHelper->formatGender(0, $this->translator);
-        
-        $this->assertSame('Male', $result);
+
+        $this->assertSame('Male', $this->clientHelper->formatGender(0, $translator));
     }
 
     public function testFormatGenderFemale(): void
     {
-        $this->translator->expects($this->once())
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator->expects($this->once())
             ->method('translate')
             ->with('gender.female')
             ->willReturn('Female');
-        
-        $result = $this->clientHelper->formatGender(1, $this->translator);
-        
-        $this->assertSame('Female', $result);
+
+        $this->assertSame('Female', $this->clientHelper->formatGender(1, $translator));
     }
 
     public function testFormatGenderOther(): void
     {
-        $this->translator->expects($this->once())
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator->expects($this->once())
             ->method('translate')
             ->with('gender.other')
             ->willReturn('Other');
-        
-        $result = $this->clientHelper->formatGender(2, $this->translator);
-        
-        $this->assertSame('Other', $result);
+
+        $this->assertSame('Other', $this->clientHelper->formatGender(2, $translator));
     }
 
     public function testFormatGenderWithNegativeValue(): void
     {
-        $this->translator->expects($this->once())
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator->expects($this->once())
             ->method('translate')
             ->with('gender.other')
             ->willReturn('Other');
-        
-        $result = $this->clientHelper->formatGender(-1, $this->translator);
-        
-        $this->assertSame('Other', $result);
+
+        $this->assertSame('Other', $this->clientHelper->formatGender(-1, $translator));
     }
 
     public function testFormatGenderWithLargeValue(): void
     {
-        $this->translator->expects($this->once())
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator->expects($this->once())
             ->method('translate')
             ->with('gender.other')
             ->willReturn('Other');
-        
-        $result = $this->clientHelper->formatGender(999, $this->translator);
-        
-        $this->assertSame('Other', $result);
+
+        $this->assertSame('Other', $this->clientHelper->formatGender(999, $translator));
     }
 
     public function testFormatGenderAllValues(): void

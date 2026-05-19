@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Unit\Entity;
 
 use App\Infrastructure\Persistence\RbacAssignment\RbacAssignment;
-use Codeception\Test\Unit;
+use PHPUnit\Framework\TestCase;
 
-class RbacAssignmentEntityTest extends Unit
+class RbacAssignmentEntityTest extends TestCase
 {
     public function testGetItemNameReturnsConstructorValue(): void
     {

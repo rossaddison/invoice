@@ -105,7 +105,7 @@ class SalesOrderCustomEntityTest extends TestCase
     public function testSalesOrderRelationSetterAndGetter(): void
     {
         $soCustom = new SalesOrderCustom();
-        $salesOrder = $this->createMock(SalesOrder::class);
+        $salesOrder = $this->createStub(SalesOrder::class);
 
         $soCustom->setSalesOrder($salesOrder);
         $this->assertSame($salesOrder, $soCustom->getSalesOrder());
@@ -117,7 +117,7 @@ class SalesOrderCustomEntityTest extends TestCase
     public function testCustomFieldRelationSetterAndGetter(): void
     {
         $soCustom = new SalesOrderCustom();
-        $customField = $this->createMock(CustomField::class);
+        $customField = $this->createStub(CustomField::class);
 
         $soCustom->setCustomField($customField);
         $this->assertSame($customField, $soCustom->getCustomField());

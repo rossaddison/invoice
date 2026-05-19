@@ -173,7 +173,7 @@ class DeliveryLocationEntityTest extends TestCase
     public function testClientSetterAndGetter(): void
     {
         $deliveryLocation = new DeliveryLocation();
-        $client = $this->createMock(Client::class);
+        $client = $this->createStub(Client::class);
         $deliveryLocation->setClient($client);
         
         $this->assertSame($client, $deliveryLocation->getClient());
@@ -308,7 +308,7 @@ class DeliveryLocationEntityTest extends TestCase
     public function testCompleteDeliveryLocationSetup(): void
     {
         $deliveryLocation = new DeliveryLocation();
-        $client = $this->createMock(Client::class);
+        $client = $this->createStub(Client::class);
         
         $deliveryLocation->setId(1);
         $deliveryLocation->setClientId(123);

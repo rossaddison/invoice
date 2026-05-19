@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use App\Timer;
-use Codeception\Test\Unit;
+use PHPUnit\Framework\TestCase;
 use InvalidArgumentException;
 
-final class TimerTest extends Unit
+final class TimerTest extends TestCase
 {
     private Timer $timer;
 

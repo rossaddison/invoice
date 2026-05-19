@@ -6,17 +6,17 @@ namespace Tests\Unit\Entity;
 
 use App\Infrastructure\Persistence\CategorySecondary\CategorySecondary;
 use App\Infrastructure\Persistence\CategoryPrimary\CategoryPrimary;
-use Codeception\Test\Unit;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\Stub;
 
-class CategorySecondaryEntityTest extends Unit
+class CategorySecondaryEntityTest extends TestCase
 {
-    private MockObject $categoryPrimary;
-    
+    private Stub $categoryPrimary;
+
     protected function setUp(): void
     {
         parent::setUp();
-        $this->categoryPrimary = $this->createMock(CategoryPrimary::class);
+        $this->categoryPrimary = $this->createStub(CategoryPrimary::class);
     }
 
     public function testConstructorWithDefaults(): void

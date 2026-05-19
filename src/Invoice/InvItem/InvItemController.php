@@ -89,7 +89,8 @@ final class InvItemController extends BaseController
         $form = new InvItemForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
-            'actionName' => 'invitem/addProduct',
+            'actionName' => 'invitemhtmx/addProduct',
+            'actionArguments' => [],
             'errors' => [],
             'form' => $form,
             'inv_id' => $inv_id,
@@ -144,12 +145,13 @@ final class InvItemController extends BaseController
         $form = new InvItemForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
-            'actionName' => 'invitem/addTask',
+            'actionName' => 'invitemhtmx/addTask',
+            'actionArguments' => [],
             'errors' => [],
             'form' => $form,
             'inv_id' => $inv_id,
             'isRecurring' => $is_recurring,
-            'taxRrates' => $trR->findAllPreloaded(),
+            'taxRates' => $trR->findAllPreloaded(),
             // Only tasks that are complete are put on the invoice
             'tasks' => $taskR->repoTaskStatusquery(3),
             'units' => $uR->findAllPreloaded(),

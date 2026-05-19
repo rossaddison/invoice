@@ -6,20 +6,20 @@ namespace Tests\Unit\Entity;
 
 use App\Infrastructure\Persistence\Delivery\Delivery;
 use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
-use Codeception\Test\Unit;
+use PHPUnit\Framework\TestCase;
 use DateTimeImmutable;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 
-class DeliveryEntityTest extends Unit
+class DeliveryEntityTest extends TestCase
 {
-    private MockObject $deliveryLocation;
+    private Stub $deliveryLocation;
     
     public string $ymdHis = 'Y-m-d H:i:s';
     
     protected function setUp(): void
     {
         parent::setUp();
-        $this->deliveryLocation = $this->createMock(DeliveryLocation::class);
+        $this->deliveryLocation = $this->createStub(DeliveryLocation::class);
     }
 
     public function testConstructorWithDefaults(): void

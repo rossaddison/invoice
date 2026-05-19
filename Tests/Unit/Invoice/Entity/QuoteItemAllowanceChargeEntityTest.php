@@ -111,7 +111,7 @@ class QuoteItemAllowanceChargeEntityTest extends TestCase
     public function testQuoteRelationSetterAndGetter(): void
     {
         $qiac = new QuoteItemAllowanceCharge();
-        $quote = $this->createMock(Quote::class);
+        $quote = $this->createStub(Quote::class);
         $qiac->setQuote($quote);
         $this->assertSame($quote, $qiac->getQuote());
         $qiac->setQuote(null);
@@ -121,7 +121,7 @@ class QuoteItemAllowanceChargeEntityTest extends TestCase
     public function testQuoteItemRelationSetterAndGetter(): void
     {
         $qiac = new QuoteItemAllowanceCharge();
-        $quoteItem = $this->createMock(QuoteItem::class);
+        $quoteItem = $this->createStub(QuoteItem::class);
         $qiac->setQuoteItem($quoteItem);
         $this->assertSame($quoteItem, $qiac->getQuoteItem());
         $qiac->setQuoteItem(null);
@@ -131,7 +131,7 @@ class QuoteItemAllowanceChargeEntityTest extends TestCase
     public function testAllowanceChargeRelationSetterAndGetter(): void
     {
         $qiac = new QuoteItemAllowanceCharge();
-        $ac = $this->createMock(AllowanceCharge::class);
+        $ac = $this->createStub(AllowanceCharge::class);
         $qiac->setAllowanceCharge($ac);
         $this->assertSame($ac, $qiac->getAllowanceCharge());
         $qiac->setAllowanceCharge(null);

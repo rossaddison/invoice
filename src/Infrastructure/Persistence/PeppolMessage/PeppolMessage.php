@@ -48,6 +48,9 @@ class PeppolMessage
         $this->created_at = new DateTimeImmutable();
     }
 
+    #[Column(type: 'text', nullable: true)]
+    private ?string $ubl_xml = null;
+
     public function reqId(): int
     {
         return $this->requireId($this->id, 'PeppolMessage');
@@ -161,6 +164,16 @@ class PeppolMessage
     public function incrementRetryCount(): void
     {
         $this->retry_count++;
+    }
+
+    public function getUblXml(): ?string
+    {
+        return $this->ubl_xml;
+    }
+
+    public function setUblXml(string $ubl_xml): void
+    {
+        $this->ubl_xml = $ubl_xml;
     }
 
     public function getCreatedAt(): DateTimeImmutable

@@ -103,7 +103,7 @@ class SalesOrderAmountEntityTest extends TestCase
     public function testSalesOrderRelationSetterAndGetter(): void
     {
         $sa = new SalesOrderAmount();
-        $so = $this->createMock(SalesOrder::class);
+        $so = $this->createStub(SalesOrder::class);
         $sa->setSalesOrder($so);
         $this->assertSame($so, $sa->getSalesOrder());
         $sa->setSalesOrder(null);

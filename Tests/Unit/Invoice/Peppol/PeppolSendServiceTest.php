@@ -34,6 +34,12 @@ final class SpyPeppolMessageRepository implements PeppolMessageRepositoryInterfa
     {
         return null;
     }
+
+    #[\Override]
+    public function repoByStatus(string $status): iterable
+    {
+        return [];
+    }
 }
 
 class PeppolSendServiceTest extends TestCase
