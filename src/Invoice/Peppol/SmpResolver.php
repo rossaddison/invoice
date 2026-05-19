@@ -62,6 +62,7 @@ final class SmpResolver implements SmpResolverInterface
 
     private function resolveViaDns(string $participantId): string
     {
+        // NOSONAR: php:S4790 — MD5 is mandated by the Peppol SML DNS spec (not a security hash)
         $hash    = md5(strtolower(self::SCHEME . '::' . $participantId));
         $cname   = 'B-' . $hash . '.' . self::SCHEME . '.' . $this->smlZone;
         $records = @dns_get_record($cname, DNS_CNAME);
