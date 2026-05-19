@@ -29,7 +29,9 @@ final class SmpResolver implements SmpResolverInterface
 {
     private const string SCHEME        = 'iso6523-actorid-upis';
     private const string AS4_TRANSPORT = 'peppol-as4-2.0';
+    // NOSONAR: php:S5332 — XML namespace URI mandated by the Peppol SMP specification; not a network connection
     private const string NS_PEPPOL     = 'http://busdox.org/serviceMetadata/publishing/1.0/';
+    // NOSONAR: php:S5332 — XML namespace URI mandated by the OASIS BDX SMP specification; not a network connection
     private const string NS_BDX        = 'http://docs.oasis-open.org/bdxr/ns/SMP/2016/05';
 
     public function __construct(
@@ -75,7 +77,7 @@ final class SmpResolver implements SmpResolverInterface
 
         $host = rtrim($records[0]['target'], '.');
 
-        return 'http://' . $host;
+        return 'https://' . $host;
     }
 
     private function buildServiceUrl(
