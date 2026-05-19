@@ -233,6 +233,20 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                         $form->getOrder() ?? ''));
                                 ?>
                             <?= Html::closeTag('div'); ?>
+                            <?php if ($s->getSetting('enable_peppol') === '1') : ?>
+                            <?= Html::openTag('div', ['class' => 'input-group']); ?>
+                                <?= Field::text($form, 'peppol_po_itemid')
+                                    ->label($translator->translate('client.peppol.po.item.id'))
+                                    ->value(Html::encode($form->getPeppolPoItemid() ?? ''));
+                                ?>
+                            <?= Html::closeTag('div'); ?>
+                            <?= Html::openTag('div', ['class' => 'input-group']); ?>
+                                <?= Field::text($form, 'peppol_po_lineid')
+                                    ->label($translator->translate('client.peppol.po.line.id'))
+                                    ->value(Html::encode($form->getPeppolPoLineid() ?? ''));
+                                ?>
+                            <?= Html::closeTag('div'); ?>
+                            <?php endif; ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount']); ?>
                             <?= Html::openTag('div',

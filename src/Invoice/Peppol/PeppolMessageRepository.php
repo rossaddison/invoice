@@ -15,7 +15,7 @@ use Yiisoft\Data\Reader\Sort;
  * @template TEntity of PeppolMessage
  * @extends Select\Repository<TEntity>
  */
-final class PeppolMessageRepository extends Select\Repository
+final class PeppolMessageRepository extends Select\Repository implements PeppolMessageRepositoryInterface
 {
     /**
      * @param Select<TEntity> $select
@@ -36,6 +36,7 @@ final class PeppolMessageRepository extends Select\Repository
     /**
      * @throws Throwable
      */
+    #[\Override]
     public function save(PeppolMessage $message): void
     {
         $this->entityWriter->write([$message]);
@@ -70,6 +71,7 @@ final class PeppolMessageRepository extends Select\Repository
         );
     }
 
+    #[\Override]
     public function repoByMessageId(string $message_id): ?PeppolMessage
     {
         return $this->select()->where(['message_id' => $message_id])->fetchOne() ?: null;

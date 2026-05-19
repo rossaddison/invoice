@@ -33,6 +33,7 @@ use App\Invoice\{
     Inv\InvController,
     InvAllowanceCharge\InvAllowanceChargeController,
     InvItem\InvItemController,
+    InvItem\InvItemHtmxController,
     InvItemAllowanceCharge\InvItemAllowanceChargeController,
     InvoiceController as ICLR,
     InvRecurring\InvRecurringController,
@@ -1378,6 +1379,14 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvItemController::class, 'addTask'])
                 ->name('invitem/addTask'),
+            Route::methods([$mP], '/invitemhtmx/addProduct')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([InvItemHtmxController::class, 'addProduct'])
+                ->name('invitemhtmx/addProduct'),
+            Route::methods([$mP], '/invitemhtmx/addTask')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([InvItemHtmxController::class, 'addTask'])
+                ->name('invitemhtmx/addTask'),
             Route::methods([$mG, $mP], '/invitem/editProduct/{id}')
                 ->name('invitem/editProduct')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))

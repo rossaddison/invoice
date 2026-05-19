@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Peppol;
 
+use App\Infrastructure\Persistence\PeppolMessage\PeppolMessage;
 use DateTimeImmutable;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -20,31 +21,21 @@ use Yiisoft\Json\Json;
  *
  * Expected JSON body: { "messageId": "<uuid-or-opaque-id>" }
  * Response: HTTP 200 { "status": "ok" }  on success
- *           HTTP 404 { "status": "not_found" }  when messageId is unknown
+ *           HTTP 200 { "status": "not_found" }  when messageId is unknown
+ *           HTTP 200 { "status": "bad_request" }  when body is malformed
  */
 final class PeppolInboundController
 {
     public function __construct(
         private readonly DataResponseFactoryInterface $factory,
         private readonly Logger $logger,
-        private readonly PeppolMessageRepository $peppolMessageRepository,
+        private readonly PeppolMessageRepositoryInterface $peppolMessageRepository,
     ) {}
 
     public function delivery(Request $request): Response
     {
-        $body = $request->getBody()->getContents();
-
-        try {
-            /** @var array{messageId?: string} $payload */
-            $payload = Json::decode($body);
-        } catch (\Throwable $e) {
-            $this->logger->warning('PeppolInbound: invalid JSON body — ' . $e->getMessage());
-            return $this->factory->createResponse(['status' => 'bad_request']);
-        }
-
-        $messageId = $payload['messageId'] ?? '';
+        $messageId = $this->extractMessageId($request->getBody()->getContents());
         if ($messageId === '') {
-            $this->logger->warning('PeppolInbound: missing messageId in delivery callback.');
             return $this->factory->createResponse(['status' => 'bad_request']);
         }
 
@@ -54,16 +45,38 @@ final class PeppolInboundController
             return $this->factory->createResponse(['status' => 'not_found']);
         }
 
+        return $this->factory->createResponse(['status' => $this->markDelivered($message, $messageId)]);
+    }
+
+    private function extractMessageId(string $body): string
+    {
+        try {
+            /** @var array{messageId?: string} $payload */
+            $payload = Json::decode($body);
+        } catch (Throwable $e) {
+            $this->logger->warning('PeppolInbound: invalid JSON body — ' . $e->getMessage());
+            return '';
+        }
+
+        $messageId = $payload['messageId'] ?? '';
+        if ($messageId === '') {
+            $this->logger->warning('PeppolInbound: missing messageId in delivery callback.');
+        }
+        return $messageId;
+    }
+
+    private function markDelivered(PeppolMessage $message, string $messageId): string
+    {
         try {
             $message->setStatus('DELIVERED');
             $message->setDeliveredAt(new DateTimeImmutable());
             $this->peppolMessageRepository->save($message);
         } catch (Throwable $e) {
             $this->logger->error('PeppolInbound: failed to update message ' . $messageId . ' — ' . $e->getMessage());
-            return $this->factory->createResponse(['status' => 'error']);
+            return 'error';
         }
 
         $this->logger->info('PeppolInbound: delivered — ' . $messageId);
-        return $this->factory->createResponse(['status' => 'ok']);
+        return 'ok';
     }
 }

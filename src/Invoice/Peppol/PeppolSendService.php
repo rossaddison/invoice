@@ -33,7 +33,7 @@ final class PeppolSendService
     public function __construct(
         private readonly ClientInterface $httpClient,
         private readonly RequestFactoryInterface $requestFactory,
-        private readonly PeppolMessageRepository $pmR,
+        private readonly PeppolMessageRepositoryInterface $pmR,
         private readonly string $oxalisBaseUrl,
         private readonly string $senderParticipantId = '',
     ) {}

@@ -42,12 +42,23 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
             ->content(' ' . $translator->translate('task'));
 ?>
     <?= Html::closeTag('div'); ?>
-    <?=  new Form()
-->post($urlGenerator->generate($actionName, $actionArguments))
-->enctypeMultipartFormData()
-->csrf($csrf)
-->id('InvItemForm')
-->open() ?>
+    <?php
+$action = $urlGenerator->generate($actionName, $actionArguments);
+echo (new Form())
+    ->post($action)
+    ->enctypeMultipartFormData()
+    ->csrf($csrf)
+    ->id('InvItemFormAddTask')
+    ->addAttributes([
+        'hx-post'              => $action,
+        'hx-target'            => '#partial_item_table_parameters',
+        'hx-swap'              => 'innerHTML',
+        'hx-indicator'         => '#inv-task-saving',
+        'hx-disabled-elt'      => '#btn-inv-task-save',
+        'hx-on::after-request' => 'if(event.detail.successful) this.reset()',
+    ])
+    ->open();
+?>
 
         <?= Html::openTag('div', ['class' => 'table-striped table-responsive']); ?>
             <?= Html::openTag('table', ['id' => 'item_table', 'class' => 'items table-primary table table-bordered no-margin']); ?>
@@ -153,13 +164,20 @@ foreach ($taxRates as $taxRate) {
                         <!-- see line 896 InvController: id modal-choose-items lies on views/product/modal_product_lookups_inv.php-->
                         <?= Html::openTag('td', ['class' => 'td td-vert-middle']); ?>
                             <?= Html::openTag('button', [
-                                'type' => 'submit',
-                                'class' => 'btn btn-info bi bi-plus-lg',
+                                'type'           => 'submit',
+                                'id'             => 'btn-inv-task-save',
+                                'class'          => 'btn btn-info',
                                 'data-bs-toggle' => 'tooltip',
-                                'title' => 'invitem/editTask']);
-?>
+                                'title'          => 'invitem/addTask']); ?>
+                                <?= new I()->addClass('bi bi-plus-lg'); ?>
                                 <?= $translator->translate('save'); ?>
                             <?= Html::closeTag('button'); ?>
+                            <?= Html::openTag('span', [
+                                'id'    => 'inv-task-saving',
+                                'class' => 'htmx-indicator ms-2',
+                            ]); ?>
+                                <?= new I()->addClass('bi bi-arrow-repeat spin'); ?>
+                            <?= Html::closeTag('span'); ?>
                         <?= Html::closeTag('td'); ?>
                     <?= Html::closeTag('tr'); ?>
                     <?= Html::openTag('tr'); ?>

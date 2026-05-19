@@ -178,7 +178,7 @@ trait View
                     'add_inv_item_product' =>
                         $this->webViewRenderer->renderPartialAsString(
                             '//invoice/invitem/_item_form_product', [
-                        'actionName' => 'invitem/addProduct',
+                        'actionName' => 'invitemhtmx/addProduct',
                         'actionArguments' => ['_language' => $_language],
                         'errors' => [],
                         'form' => new InvItemForm(),
@@ -197,7 +197,7 @@ trait View
                     'add_inv_item_task' =>
                         $this->webViewRenderer->renderPartialAsString(
                             '//invoice/invitem/_item_form_task', [
-                        'actionName' => 'invitem/addTask',
+                        'actionName' => 'invitemhtmx/addTask',
                         'actionArguments' => ['_language' => $_language],
                         'errors' => [],
                         'form' => new InvItemForm(),
