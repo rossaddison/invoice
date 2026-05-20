@@ -79,7 +79,7 @@ $columns = [
             if (in_array($model->getType(), $custom_value_fields)) {
                 return  new A()
                        ->href($urlGenerator->generate('customvalue/field', ['id' => $model->reqId()]))
-                       ->addClass('btn btn-default')
+                       ->addClass('btn btn-secondary')
                        ->addAttributes([
                            'style' => 'text-decoration:none; background:lightblue',
                        ])

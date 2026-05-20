@@ -156,7 +156,7 @@ echo GridView::widget()
                 ['page' => 1, 'active' => 2]
             ))
             ->addClass(
-                'btn ' . ($active == 2 ? 'btn-primary' : 'btn-default')
+                'btn ' . ($active == 2 ? 'btn-primary' : 'btn-secondary')
             )
             ->addAttributes(['style' => $textDecorationNone])
             ->content($translator->translate('all'))
@@ -167,7 +167,7 @@ echo GridView::widget()
                 ['page' => 1, 'active' => 1]
             ))
             ->addClass(
-                'btn ' . ($active == 1 ? 'btn-primary' : 'btn-default')
+                'btn ' . ($active == 1 ? 'btn-primary' : 'btn-secondary')
             )
             ->addAttributes(['style' => $textDecorationNone])
             ->content($translator->translate('active'))
@@ -178,7 +178,7 @@ echo GridView::widget()
                 ['page' => 1, 'active' => 0]
             ))
             ->addClass(
-                'btn ' . ($active == 0 ? 'btn-primary' : 'btn-default')
+                'btn ' . ($active == 0 ? 'btn-primary' : 'btn-secondary')
             )
             ->addAttributes(['style' => $textDecorationNone])
             ->content($translator->translate('inactive'))

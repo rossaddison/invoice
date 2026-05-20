@@ -26,8 +26,8 @@ if ($invEdit && $invView) {
 }
 ?>
 
-<div class="panel panel-default no-margin">
-    <div class="panel-heading">
+<div class="card no-margin">
+    <div class="card-header">
         <b>
             <?=  new I()
                ->addClass('bi bi-info-circle')
@@ -39,7 +39,7 @@ if ($invEdit && $invView) {
 ?>
         </b>
     </div>
-    <div class="panel-body clearfix">
+    <div class="card-body clearfix">
         <div class="container">
             <?php if ($invView && $invEdit) { ?>
             <?= Html::openTag('div', ['class' => 'row']); ?>

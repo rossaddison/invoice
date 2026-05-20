@@ -53,14 +53,14 @@ $statusBar =   new Div()
             $translator->translate('all'),
             $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 0]),
             [
-                'class' => 'btn ' . ($status == 0 ? 'btn-primary' : 'btn-default'),
+                'class' => 'btn ' . ($status == 0 ? 'btn-primary' : 'btn-secondary'),
             ],
         )
         . Html::a(
             $translator->translate('sent'),
             $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 2]),
             [
-                'class' => 'btn ' . ($status == 2 ? 'btn-primary' : 'btn-default'),
+                'class' => 'btn ' . ($status == 2 ? 'btn-primary' : 'btn-secondary'),
                 'style' => 'text-decoration:none',
             ],
         )
@@ -68,7 +68,7 @@ $statusBar =   new Div()
             $translator->translate('viewed'),
             $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 3]),
             [
-                'class' => 'btn ' . ($status == 3 ? 'btn-primary' : 'btn-default'),
+                'class' => 'btn ' . ($status == 3 ? 'btn-primary' : 'btn-secondary'),
                 'style' => 'text-decoration:none',
             ],
         )
@@ -76,7 +76,7 @@ $statusBar =   new Div()
             $translator->translate('approved'),
             $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 4]),
             [
-                'class' => 'btn ' . ($status == 4 ? 'btn-primary' : 'btn-default'),
+                'class' => 'btn ' . ($status == 4 ? 'btn-primary' : 'btn-secondary'),
                 'style' => 'text-decoration:none',
             ],
         )
@@ -84,7 +84,7 @@ $statusBar =   new Div()
             $translator->translate('rejected'),
             $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 5]),
             [
-                'class' => 'btn ' . ($status == 5 ? 'btn-primary' : 'btn-default'),
+                'class' => 'btn ' . ($status == 5 ? 'btn-primary' : 'btn-secondary'),
                 'style' => 'text-decoration:none',
             ],
         )
@@ -92,7 +92,7 @@ $statusBar =   new Div()
             $translator->translate('canceled'),
             $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 6]),
             [
-                'class' => 'btn ' . ($status == 6 ? 'btn-primary' : 'btn-default'),
+                'class' => 'btn ' . ($status == 6 ? 'btn-primary' : 'btn-secondary'),
                 'style' => 'text-decoration:none',
             ],
         ),

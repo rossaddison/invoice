@@ -225,8 +225,8 @@ echo H::openTag('div', [
 echo H::tag('style', '
  h1, h2, h3, h4, h5, h6,
  select, input, textarea, button, .form-control,
- .panel-heading, .panel-body, .panel-title, .panel-footer { font: inherit; }
- .panel-heading, .panel-heading h6 { font-weight: bold; }
+ .card-header, .card-body, .card-title, .card-footer { font: inherit; }
+ .card-header, .card-header h6 { font-weight: bold; }
  #settings-tabs .nav-link {
   display: flex; flex-direction: column; align-items: center; gap: 4px;
   padding: 6px 10px;

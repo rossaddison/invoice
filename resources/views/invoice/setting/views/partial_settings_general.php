@@ -20,11 +20,11 @@ use Yiisoft\Html\Tag\Option;
 */
 
 $row = ['class' => 'row'];
-$colMd6 = ['class' => 'col-xs-12 col-md-6'];
-$colMd8 = ['class' => 'col-xs-12 col-md-8 col-md-offset-2'];
-$panel = ['class' => 'panel panel-default'];
-$panelHead = ['class' => 'panel-heading'];
-$panelBody = ['class' => 'panel-body'];
+$colMd6 = ['class' => 'col-12 col-md-6'];
+$colMd8 = ['class' => 'col-12 col-md-8 offset-md-2'];
+$panel = ['class' => 'card'];
+$panelHead = ['class' => 'card-header'];
+$panelBody = ['class' => 'card-body'];
 $formGroup = ['class' => 'form-group'];
 $kStopLoggingIn = 'settings[stop_logging_in]';
 $kStopSigningUp = 'settings[stop_signing_up]';
@@ -809,7 +809,7 @@ echo H::openTag('div', $row); //1
          )
          ->content($translator->translate('yes'));
        echo H::closeTag('select');
-       echo H::openTag('p', ['class' => 'help-block']);
+       echo H::openTag('p', ['class' => 'form-text']);
         echo $translator->translate('example') . ': ';
         echo H::openTag('span', [
          'style' => 'font-family: Monaco, Lucida Console, ' .

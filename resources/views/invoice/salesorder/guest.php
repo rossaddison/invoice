@@ -54,7 +54,7 @@ $statusBar =   new Div()
                 'status' => 0]),
             [
                 'class' => 'btn ' . ($status == 0 ? 'btn-primary' :
-                'btn-default'),
+                'btn-secondary'),
             ],
         )
         . Html::a(

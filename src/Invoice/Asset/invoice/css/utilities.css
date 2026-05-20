@@ -173,78 +173,7 @@
   display: none !important;
 }
 
-/* Responsive Display Utilities */
-@media (max-width: 767px) {
-  .hidden-xs {
-    display: none !important;
-  }
-
-  .visible-xs {
-    display: block !important;
-  }
-
-  .visible-xs-inline {
-    display: inline !important;
-  }
-
-  .visible-xs-inline-block {
-    display: inline-block !important;
-  }
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  .hidden-sm {
-    display: none !important;
-  }
-
-  .visible-sm {
-    display: block !important;
-  }
-
-  .visible-sm-inline {
-    display: inline !important;
-  }
-
-  .visible-sm-inline-block {
-    display: inline-block !important;
-  }
-}
-
-@media (min-width: 992px) and (max-width: 1199px) {
-  .hidden-md {
-    display: none !important;
-  }
-
-  .visible-md {
-    display: block !important;
-  }
-
-  .visible-md-inline {
-    display: inline !important;
-  }
-
-  .visible-md-inline-block {
-    display: inline-block !important;
-  }
-}
-
-@media (min-width: 1200px) {
-  .hidden-lg {
-    display: none !important;
-  }
-
-  .visible-lg {
-    display: block !important;
-  }
-
-  .visible-lg-inline {
-    display: inline !important;
-  }
-
-  .visible-lg-inline-block {
-    display: inline-block !important;
-  }
-}
+/* Responsive display — use Bootstrap 5 classes: d-none, d-sm-block, d-lg-inline-block, etc. */
 
 /* Responsive Text Alignment - From style.css */
 @media (max-width: 991px) {
@@ -287,14 +216,7 @@
   float: none !important;
 }
 
-/* Legacy Float Classes - From style.css */
-.pull-left {
-  float: left !important;
-}
-
-.pull-right {
-  float: right !important;
-}
+/* Float — use Bootstrap 5 classes: float-start, float-end, float-none */
 
 /* Clearfix Utilities */
 .clearfix:before,

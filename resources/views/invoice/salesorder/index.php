@@ -103,7 +103,7 @@ $statusBar
                         ['page' => 1, 'status' => 0]),
                 [
                     'class' => 'btn ' . ($status == 0 ?
-                        'btn-primary' : 'btn-default'),
+                        'btn-primary' : 'btn-secondary'),
                 ],
             )
             . Html::a(

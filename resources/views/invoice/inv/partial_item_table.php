@@ -719,16 +719,16 @@ foreach ($invItems as $item) {
   echo H::openTag('div', ['class' => 'row']);
    $invTaxRates;
    echo H::openTag('div', [
-       'class' => 'col-xs-12 col-md-4',
+       'class' => 'col-12 col-md-4',
        'inv_tax_rates' => ''
    ]);
    echo H::closeTag('div');
-   echo H::openTag('div', ['class' => 'col-xs-12 visible-xs visible-sm']);
+   echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none visible-sm']);
     echo H::openTag('br');
     echo H::closeTag('br');
    echo H::closeTag('div');
    echo H::openTag('div', [
-       'class' => 'col-xs-12 col-md-6 col-md-offset-2 col-lg-4 col-lg-offset-4'
+       'class' => 'col-12 col-md-6 offset-md-2 col-lg-4 offset-lg-4'
    ]);
     echo H::openTag('table', ['class' => 'table table-bordered text-right']);
      echo H::openTag('thead');

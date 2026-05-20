@@ -71,7 +71,7 @@ echo H::openTag('div', [
          }
         echo H::closeTag('select');
        echo H::closeTag('div'); //7
-       echo H::openTag('div', ['class' => 'form-group panel panel-primary']); //7
+       echo H::openTag('div', ['class' => 'form-group card border-primary']); //7
         echo H::openTag('label', ['for' => 'filter_product_inv']);
          echo H::encode($translator->translate('product.name'));
         echo H::closeTag('label');

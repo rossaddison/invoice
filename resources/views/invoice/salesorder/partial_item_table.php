@@ -559,13 +559,13 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->reqId()) as $acsoi) { ?>
         /***********************/
 ?>
     <?= Html::openTag('div', ['class' => 'row']); ?>
-        <div class="col-xs-12 col-md-4"
+        <div class="col-12 col-md-4"
              sales_order_tax_rates="<?php $soTaxRates; ?>">
         </div>
-        <div class="col-xs-12 visible-xs visible-sm">
+        <div class="col-12 d-block d-sm-none visible-sm">
         <br>
         </div>
-        <div class="col-xs-12 col-md-6 col-md-offset-2 col-lg-4 col-lg-offset-4">
+        <div class="col-12 col-md-6 offset-md-2 col-lg-4 offset-lg-4">
             <table class="table table-bordered text-right">
                 <tr>
                     <i class="bi bi-info-circle"

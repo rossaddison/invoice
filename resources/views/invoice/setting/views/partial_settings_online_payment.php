@@ -15,15 +15,15 @@ use Yiisoft\Html\Tag\Option;
 */
 
 $row = ['class' => 'row'];
-$colMd8 = ['class' => 'col-xs-12 col-md-8 col-md-offset-2'];
-$panel = ['class' => 'panel panel-default'];
-$panelHead = ['class' => 'panel-heading'];
-$panelBody = ['class' => 'panel-body'];
+$colMd8 = ['class' => 'col-12 col-md-8 offset-md-2'];
+$panel = ['class' => 'card'];
+$panelHead = ['class' => 'card-header'];
+$panelBody = ['class' => 'card-body'];
 $formGroup = ['class' => 'form-group'];
 $checkbox = ['class' => 'checkbox'];
-$pullRight = ['class' => 'pull-right'];
+$pullRight = ['class' => 'float-end'];
 $noMargin = ['class' => 'checkbox no-margin'];
-$panelBodySmall = ['class' => 'panel-body small'];
+$panelBodySmall = ['class' => 'card-body small'];
 $pfxGateway = 'settings[gateway_';
 $sfxEnabled = '_enabled]';
 $sfxRegion = '_region]';
@@ -99,7 +99,7 @@ echo H::openTag('div', $row); //1
   */
   foreach ($gateway_drivers as $driver => $fields) {
   $d = strtolower($driver);
-  $gatewayClass = 'gateway-settings panel panel-default ' .
+  $gatewayClass = 'gateway-settings card ' .
   ($s->getSetting('gateway_' . $d . '_enabled')
    ? 'active-gateway'
    : 'hidden');

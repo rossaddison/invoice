@@ -16,16 +16,16 @@ use Yiisoft\Html\Tag\I;
 echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', ['class' => 'row']); //1
  echo H::openTag('div', [ //2
-  'class' => 'col-xs-12 col-md-8 col-md-offset-2'
+  'class' => 'col-12 col-md-8 offset-md-2'
  ]);
-  echo H::openTag('div', ['class' => 'panel panel-default']); //3
-   echo H::openTag('div', ['class' => 'panel-heading']); //4
+  echo H::openTag('div', ['class' => 'card']); //3
+   echo H::openTag('div', ['class' => 'card-header']); //4
     echo H::openTag('label');
      echo  new I()->addClass('bi bi-info-circle')->render();
      echo ' ' . $translator->translate('front.page') . ' ' . '⛔';
     echo H::closeTag('label');
    echo H::closeTag('div'); //4
-   echo H::openTag('div', ['class' => 'panel-body']); //4
+   echo H::openTag('div', ['class' => 'card-body']); //4
     echo H::openTag('div', ['class' => 'checkbox border-bottom mb-2 pb-2']); //select-all
      echo H::openTag('label', ['class' => 'fw-bold text-secondary']);
       echo H::openTag('input', [

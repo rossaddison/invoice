@@ -153,12 +153,12 @@ trait SettingsTabBootstrap5
 
         return
             H::openTag('div', ['class' => 'row'])
-            . H::openTag('div', ['class' => 'col-xs-12 col-md-8 col-md-offset-2'])
-            . H::openTag('div', ['class' => 'panel panel-default'])
-            . H::openTag('div', ['class' => 'panel-heading'])
+            . H::openTag('div', ['class' => 'col-12 col-md-8 offset-md-2'])
+            . H::openTag('div', ['class' => 'card'])
+            . H::openTag('div', ['class' => 'card-header'])
             .  new I()->addClass('bi bi-bootstrap')->render()
             . H::closeTag('div')
-            . H::openTag('div', ['class' => 'panel-body'])
+            . H::openTag('div', ['class' => 'card-body'])
             . H::openTag('div', ['class' => 'row'])
             . $offcanvas
             . $sep
@@ -173,8 +173,8 @@ trait SettingsTabBootstrap5
             . $sep
             . $forms
             . H::closeTag('div')   // row (inner)
-            . H::closeTag('div')   // panel-body
-            . H::closeTag('div')   // panel panel-default
+            . H::closeTag('div')   // card-body
+            . H::closeTag('div')   // card
             . H::closeTag('div')   // col-md-8
             . H::closeTag('div');  // row (outer)
     }

@@ -39,7 +39,7 @@ echo H::tag('style', '
  .sidebar-guest li a i { font-size: 1.4em; }
 ');
 
-echo H::openTag('div', ['class' => 'sidebar-guest hidden-xs']); //1
+echo H::openTag('div', ['class' => 'sidebar-guest d-none d-sm-block']); //1
  echo H::openTag('ul'); //2
   foreach ($items as $item) {
    echo H::openTag('li'); //3

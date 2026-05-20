@@ -29,7 +29,7 @@ use Yiisoft\Html\Tag\Form;
 
 <?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['class' => 'row']); ?>
-    <?= Html::openTag('div', ['class' => 'col-xs-12 col-md-6 col-md-offset-3']); ?>
+    <?= Html::openTag('div', ['class' => 'col-12 col-md-6 offset-md-3']); ?>
         <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                 <?= Field::text($form, 'value')
                     ->label($translator->translate('value'))

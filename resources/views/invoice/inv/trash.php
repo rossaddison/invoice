@@ -115,7 +115,7 @@ echo Html::openTag('div', ['class' => 'container-fluid']);
                   );
                   echo New A()
                     ->addAttributes(['href' => '#', 'data-bs-dismiss' => 'modal'])
-                    ->addClass('btn btn-default bi bi-x-lg')
+                    ->addClass('btn btn-secondary bi bi-x-lg')
                     ->content(' ' . $translator->translate('cancel'))
                     ->render();
                  echo Html::closeTag('div');

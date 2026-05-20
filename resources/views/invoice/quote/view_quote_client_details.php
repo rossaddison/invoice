@@ -18,7 +18,7 @@ use App\Widget\LabelSwitch;
 
 ?>
 
-<div class="col-xs-12 col-sm-6 col-md-5">
+<div class="col-12 col-sm-6 col-md-5">
     <h3>
         <a href="<?= $urlGenerator->generate('client/view', ['_language' => $_language, 'id' => (int) $quote->getClient()?->reqId()]); ?>">
         <?= Html::encode($clientHelper->formatClient($quote->getClient())); ?>

@@ -63,7 +63,7 @@ $vat = $s->getSetting('enable_vat_registration');
         <div class="webpreview-header">
             <div class='row'>
                 <h1><?= $translator->translate('term'); ?></h1>
-                <div class="col-xs-12 col-sm-6 badge text-bg-info">
+                <div class="col-12 col-sm-6 badge text-bg-info">
                     <div>
                         <textarea  class="form-control form-control-lg" rows="20" cols="20">
                             <?= $terms_and_conditions_file; ?></textarea>
@@ -151,7 +151,7 @@ $vat = $s->getSetting('enable_vat_registration');
 ?>
 
             <div class='row'>
-                <div class="col-xs-12 col-md-6 col-lg-5">
+                <div class="col-12 col-md-6 col-lg-5">
                     <h4><?= Html::encode($userInv->getName()); ?></h4>
                     <p><?php if (strlen($userInv->getVatId() ?: '') > 0) {
                         echo $translator->translate('vat.id.short')
@@ -186,7 +186,7 @@ $vat = $s->getSetting('enable_vat_registration');
                     </p>
                 </div>
                 <div class="col-lg-2"></div>
-                <div class="col-xs-12 col-md-6 col-lg-5 text-right">
+                <div class="col-12 col-md-6 col-lg-5 text-right">
 
                     <h4>
                      <?= Html::encode($clientHelper->formatClient($client)); ?>
@@ -569,7 +569,7 @@ $vat = $s->getSetting('enable_vat_registration');
 
             <?= Html::openTag('div', ['class' => 'row']); ?>
                 <?php if (strlen($salesorder->getNotes() ?? '') > 0) { ?>
-                    <div class="col-xs-12 col-md-6">
+                    <div class="col-12 col-md-6">
                         <h4><?= $translator->translate('notes'); ?></h4>
                         <p>
                             <?= nl2br(Html::encode($salesorder->getNotes())); ?>

@@ -38,7 +38,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::openTag('div', ['id' => 'content']); ?>
 
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'col-xs-12 col-md-6 col-md-offset-3']); ?>
+            <?= Html::openTag('div', ['class' => 'col-12 col-md-6 offset-md-3']); ?>
                 <?=
                     Field::errorSummary($form)
                     ->errors($errors)

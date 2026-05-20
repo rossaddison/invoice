@@ -160,8 +160,8 @@ echo Html::script($js3)->type('module');
     $alert;
 // The below panel is hidden but necessary for the emailtemplate.js to work with the quote dropdown
 ?>
-                    <div class="panel panel-default" hidden>
-                        <?= Html::tag('Label', $translator->translate('type'), ['for' => 'email_template_type', 'class' => 'control-label']) ?>
+                    <div class="card" hidden>
+                        <?= Html::tag('Label', $translator->translate('type'), ['for' => 'email_template_type', 'class' => 'form-label']) ?>
                         <?= Html::tag(
                             'Div',
                             Html::tag(
@@ -242,45 +242,45 @@ echo Html::script($js3)->type('module');
 ?>
 
                     <div class="html-tags btn-group btn-group-sm">
-                        <span class="html-tag btn btn-default" data-tag-type="text-paragraph">
+                        <span class="html-tag btn btn-secondary" data-tag-type="text-paragraph">
                             <i class="bi bi-text-paragraph"></i>
                         </span>
-                        <span class="html-tag btn btn-default" data-tag-type="text-linebreak">
+                        <span class="html-tag btn btn-secondary" data-tag-type="text-linebreak">
                             &lt;br&gt;
                         </span>
-                        <span class="html-tag btn btn-default" data-tag-type="text-bold">
+                        <span class="html-tag btn btn-secondary" data-tag-type="text-bold">
                             <i class="bi bi-type-bold"></i>
                         </span>
-                        <span class="html-tag btn btn-default" data-tag-type="text-italic">
+                        <span class="html-tag btn btn-secondary" data-tag-type="text-italic">
                             <i class="bi bi-type-italic"></i>
                         </span>
                     </div>
                     <div class="html-tags btn-group btn-group-sm">
-                        <span class="html-tag btn btn-default" data-tag-type="text-h1">H1</span>
-                        <span class="html-tag btn btn-default" data-tag-type="text-h2">H2</span>
-                        <span class="html-tag btn btn-default" data-tag-type="text-h3">H3</span>
-                        <span class="html-tag btn btn-default" data-tag-type="text-h4">H4</span>
+                        <span class="html-tag btn btn-secondary" data-tag-type="text-h1">H1</span>
+                        <span class="html-tag btn btn-secondary" data-tag-type="text-h2">H2</span>
+                        <span class="html-tag btn btn-secondary" data-tag-type="text-h3">H3</span>
+                        <span class="html-tag btn btn-secondary" data-tag-type="text-h4">H4</span>
                     </div>
                     <div class="html-tags btn-group btn-group-sm">
-                        <span class="html-tag btn btn-default" data-tag-type="text-code">
+                        <span class="html-tag btn btn-secondary" data-tag-type="text-code">
                             <i class="bi bi-code-slash"></i>
                         </span>
-                        <span class="html-tag btn btn-default" data-tag-type="text-hr">
+                        <span class="html-tag btn btn-secondary" data-tag-type="text-hr">
                             &lt;hr/&gt;
                         </span>
-                        <span class="html-tag btn btn-default" data-tag-type="text-css">
+                        <span class="html-tag btn btn-secondary" data-tag-type="text-css">
                             CSS
                         </span>
                     </div>
 
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
+                    <div class="card">
+                        <div class="card-header">
                             <?= $translator->translate('preview'); ?>
-                            <div id="email-template-preview-reload" class="pull-right cursor-pointer">
+                            <div id="email-template-preview-reload" class="float-end cursor-pointer">
                                 <i class="bi bi-arrow-clockwise"></i>
                             </div>
                         </div>
-                        <div class="panel-body">
+                        <div class="card-body">
                             <iframe id="email-template-preview"></iframe>
                         </div>
                     </div>

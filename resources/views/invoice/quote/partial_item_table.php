@@ -671,16 +671,16 @@ echo H::closeTag('br');
  echo H::openTag('div', ['class' => 'row']); //1
 
   echo H::openTag('div', [
-      'class' => 'col-xs-12 col-md-4',
+      'class' => 'col-12 col-md-4',
       'quote_tax_rates' => '',
   ]); //2
   echo H::closeTag('div'); //2
-  echo H::openTag('div', ['class' => 'col-xs-12 visible-xs visible-sm']); //2
+  echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none visible-sm']); //2
   echo H::openTag('br');
   echo H::closeTag('br');
   echo H::closeTag('div'); //2
   echo H::openTag('div', [
-      'class' => 'col-xs-12 col-md-6 col-md-offset-2 col-lg-4 col-lg-offset-4',
+      'class' => 'col-12 col-md-6 offset-md-2 col-lg-4 offset-lg-4',
   ]); //2
    echo H::openTag('table', ['class' => 'table table-bordered text-right']); //3
     echo H::openTag('thead'); //4

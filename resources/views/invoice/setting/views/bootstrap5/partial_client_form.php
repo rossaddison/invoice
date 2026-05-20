@@ -13,7 +13,7 @@ use Yiisoft\Html\Tag\Option;
 
 echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', ['class' => 'border border-line-1 border-secondary']); //1
- echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //2
+ echo H::openTag('div', ['class' => 'col-12 col-md-6']); //2
   echo H::openTag('div', ['class' => 'form-group']); //3
    echo H::openTag('label', ['for' => 'settings[bootstrap5_client_form_font_size]']);
     echo $translator->translate('bootstrap5.client.form.font.size');

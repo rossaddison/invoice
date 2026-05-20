@@ -12,7 +12,7 @@ use Yiisoft\Html\Tag\Option;
  */
 
 echo H::openTag('div', ['class' => 'border border-1 border-info']); //1
- echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //2
+ echo H::openTag('div', ['class' => 'col-12 col-md-6']); //2
   echo H::openTag('div', ['class' => 'form-group']); //3
    echo H::openTag('label', [
     'for' => 'settings[bootstrap5_cdn_not_node_module]'

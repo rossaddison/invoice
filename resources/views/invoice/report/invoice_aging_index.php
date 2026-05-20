@@ -22,18 +22,18 @@ declare(strict_types=1);
 <div id="content">
 
     <div class='row'>
-        <div class="col-xs-12 col-md-6 col-md-offset-3">
+        <div class="col-12 col-md-6 offset-md-3">
 
             <?= $alert; ?>
 
-            <div id="report_options" class="panel panel-default">
+            <div id="report_options" class="card">
 
-                <div class="panel-heading">
+                <div class="card-header">
                     <i class="bi bi-printer"></i>
                     <?= $translator->translate('report.options'); ?>
                 </div>
 
-                <div class="panel-body">
+                <div class="card-body">
                     <form method="post"
                           action="<?= $urlGenerator->generate($actionName,
                                   $actionArguments); ?>"

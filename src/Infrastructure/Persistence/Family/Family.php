@@ -81,9 +81,9 @@ class Family
         $this->family_productprefix = $family_productprefix;
     }
 
-    public function reqCategoryPrimaryId(): int
+    public function getCategoryPrimaryId(): ?int
     {
-        return $this->requireId($this->category_primary_id, 'CategoryPrimary');
+        return $this->category_primary_id;
     }
 
     public function setCategoryPrimaryId(int $category_primary_id): void
@@ -91,9 +91,9 @@ class Family
         $this->category_primary_id = $category_primary_id;
     }
 
-    public function reqCategorySecondaryId(): int
+    public function getCategorySecondaryId(): ?int
     {
-        return $this->requireId($this->category_secondary_id, 'CategorySecondary');
+        return $this->category_secondary_id;
     }
 
     public function setCategorySecondaryId(

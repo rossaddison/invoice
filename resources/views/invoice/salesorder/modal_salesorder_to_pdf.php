@@ -19,7 +19,7 @@ declare(strict_types=1);
             <div class="modal-body">
                 <form>
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-                    <div class="control-label">
+                    <div class="form-label">
                         <?= $translator->translate('custom.fields'); ?>?
                     </div>
                     <input type="hidden" name="salesorder_id" id="salesorder_id" value="<?php echo $so->reqId(); ?>">

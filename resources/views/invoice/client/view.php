@@ -59,7 +59,7 @@ echo H::tag('h1', H::encode($title));
 
 echo H::openTag('div', ['id' => 'headerbar']); //0
  echo H::tag('h1', H::encode($clientHelper->formatClient($client)), ['class' => 'headerbar-title']);
- echo H::openTag('div', ['class' => 'headerbar-item pull-right']); //1
+ echo H::openTag('div', ['class' => 'headerbar-item float-end']); //1
   echo H::openTag('div', ['class' => 'btn-group btn-group-sm']); //2
    echo (new A())
     ->content(H::tag('i', '', ['class' => 'bi bi-file-earmark-text']) . $translator->translate('create.quote'))
@@ -195,7 +195,7 @@ echo H::openTag('div', ['id' => 'content', 'class' => 'tabbable tabs-below no-pa
   echo H::openTag('div', ['id' => 'clientDetails', 'class' => 'tab-pane tab-rich-content active']); //2
    echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
    echo H::openTag('div', ['class' => 'row']); //3
-    echo H::openTag('div', ['class' => 'col-xs-12 col-sm-6 col-md-6']); //4
+    echo H::openTag('div', ['class' => 'col-12 col-sm-6 col-md-6']); //4
      echo H::tag('h3', H::encode($clientHelper->formatClient($client)));
      echo H::openTag('p'); //5
       echo $partial_client_address;
@@ -221,7 +221,7 @@ echo H::openTag('div', ['id' => 'content', 'class' => 'tabbable tabs-below no-pa
       echo H::closeTag('table'); //6
      echo H::closeTag('p'); //5
     echo H::closeTag('div'); //4
-    echo H::openTag('div', ['class' => 'col-xs-12 col-sm-6 col-md-6']); //4
+    echo H::openTag('div', ['class' => 'col-12 col-sm-6 col-md-6']); //4
      echo H::openTag('table', ['class' => 'table table-bordered no-margin']); //5
       echo H::openTag('tr'); //6
        echo H::tag('th', $translator->translate('language'), ['id' => 'language']);
@@ -255,10 +255,10 @@ echo H::openTag('div', ['id' => 'content', 'class' => 'tabbable tabs-below no-pa
    echo H::tag('hr', '');
 
    echo H::openTag('div', ['class' => 'row']); //3
-    echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //4
-     echo H::openTag('div', ['class' => 'panel panel-default no-margin']); //5
-      echo H::tag('div', $translator->translate('delivery.location.client'), ['class' => 'panel-heading']);
-      echo H::openTag('div', ['class' => 'panel-body table-content']); //6
+    echo H::openTag('div', ['class' => 'col-12 col-md-6']); //4
+     echo H::openTag('div', ['class' => 'card no-margin']); //5
+      echo H::tag('div', $translator->translate('delivery.location.client'), ['class' => 'card-header']);
+      echo H::openTag('div', ['class' => 'card-body table-content']); //6
        echo $delivery_locations;
       echo H::closeTag('div'); //6
      echo H::closeTag('div'); //5
@@ -268,10 +268,10 @@ echo H::openTag('div', ['id' => 'content', 'class' => 'tabbable tabs-below no-pa
    echo H::tag('hr', '');
 
    echo H::openTag('div', ['class' => 'row']); //3
-    echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //4
-     echo H::openTag('div', ['class' => 'panel panel-default no-margin']); //5
-      echo H::tag('div', $translator->translate('contact.information'), ['class' => 'panel-heading']);
-      echo H::openTag('div', ['class' => 'panel-body table-content']); //6
+    echo H::openTag('div', ['class' => 'col-12 col-md-6']); //4
+     echo H::openTag('div', ['class' => 'card no-margin']); //5
+      echo H::tag('div', $translator->translate('contact.information'), ['class' => 'card-header']);
+      echo H::openTag('div', ['class' => 'card-body table-content']); //6
        echo H::openTag('table', ['class' => 'table no-margin']); //7
         if ($client->getClientEmail()) {
          echo H::openTag('tr'); //8
@@ -325,10 +325,10 @@ echo H::openTag('div', ['id' => 'content', 'class' => 'tabbable tabs-below no-pa
      echo H::closeTag('div'); //5
     echo H::closeTag('div'); //4
 
-    echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //4
-     echo H::openTag('div', ['class' => 'panel panel-default no-margin']); //5
-      echo H::tag('div', $translator->translate('tax.information'), ['class' => 'panel-heading']);
-      echo H::openTag('div', ['class' => 'panel-body table-content']); //6
+    echo H::openTag('div', ['class' => 'col-12 col-md-6']); //4
+     echo H::openTag('div', ['class' => 'card no-margin']); //5
+      echo H::tag('div', $translator->translate('tax.information'), ['class' => 'card-header']);
+      echo H::openTag('div', ['class' => 'card-body table-content']); //6
        echo H::openTag('table', ['class' => 'table no-margin']); //7
         if ($client->getClientVatId()) {
          echo H::openTag('tr'); //8
@@ -366,10 +366,10 @@ echo H::openTag('div', ['id' => 'content', 'class' => 'tabbable tabs-below no-pa
    if ($client->getClientSurname() !== '') {
     echo H::tag('hr', '');
     echo H::openTag('div', ['class' => 'row']); //3
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //4
-      echo H::openTag('div', ['class' => 'panel panel-default']); //5
-       echo H::tag('div', $translator->translate('personal.information'), ['class' => 'panel-heading']);
-       echo H::openTag('div', ['class' => 'panel-body table-content']); //6
+     echo H::openTag('div', ['class' => 'col-12 col-md-6']); //4
+      echo H::openTag('div', ['class' => 'card']); //5
+       echo H::tag('div', $translator->translate('personal.information'), ['class' => 'card-header']);
+       echo H::openTag('div', ['class' => 'card-body table-content']); //6
         echo H::openTag('table', ['class' => 'table no-margin']); //7
          echo H::openTag('tr'); //8
           echo H::tag('th', $translator->translate('birthdate'));
@@ -403,10 +403,10 @@ echo H::openTag('div', ['id' => 'content', 'class' => 'tabbable tabs-below no-pa
    if ($custom_fields) {
     echo H::tag('hr', '');
     echo H::openTag('div', ['class' => 'row']); //3
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //4
-      echo H::openTag('div', ['class' => 'panel panel-default no-margin']); //5
-       echo H::tag('div', $translator->translate('custom.fields'), ['class' => 'panel-heading']);
-       echo H::openTag('div', ['class' => 'panel-body table-content']); //6
+     echo H::openTag('div', ['class' => 'col-12 col-md-6']); //4
+      echo H::openTag('div', ['class' => 'card no-margin']); //5
+       echo H::tag('div', $translator->translate('custom.fields'), ['class' => 'card-header']);
+       echo H::openTag('div', ['class' => 'card-body table-content']); //6
         echo H::openTag('table', ['class' => 'table no-margin']); //7
          $i = 1;
          /**
@@ -435,10 +435,10 @@ echo H::openTag('div', ['id' => 'content', 'class' => 'tabbable tabs-below no-pa
    echo H::tag('hr', '');
 
    echo H::openTag('div', ['class' => 'row']); //3
-    echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //4
-     echo H::openTag('div', ['class' => 'panel panel-default no-margin']); //5
-      echo H::tag('div', $translator->translate('notes'), ['class' => 'panel-heading']);
-      echo H::openTag('div', ['class' => 'panel-body']); //6
+    echo H::openTag('div', ['class' => 'col-12 col-md-6']); //4
+     echo H::openTag('div', ['class' => 'card no-margin']); //5
+      echo H::tag('div', $translator->translate('notes'), ['class' => 'card-header']);
+      echo H::openTag('div', ['class' => 'card-body']); //6
        echo H::openTag('div', ['id' => 'notes_list']); //7
         echo $partial_notes;
        echo H::closeTag('div'); //7

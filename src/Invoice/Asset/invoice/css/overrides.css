@@ -21,7 +21,7 @@
   .form-control { background-color: var(--background-alt); color: var(--text-color); }
   .form-control:focus { color: #fff; }
   select option { color: var(--text-color); }
-  .help-block { color: var(--text-muted); }
+  .form-text { color: var(--text-muted); }
   .sidebar li a:hover { color: #fff; background-color: #000; }
 }
 
@@ -47,6 +47,6 @@
   .form-control { background-color: var(--background-alt); color: var(--text-color); }
   .form-control:focus { color: #fff; }
   select option { color: var(--text-color); }
-  .help-block { color: var(--text-muted); }
+  .form-text { color: var(--text-muted); }
   .sidebar li a:hover { color: #fff; background-color: #000; }
 }

@@ -14,15 +14,15 @@ use Yiisoft\Html\Tag\Option;
 echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', ['class' => 'row']); //1
  echo H::openTag('div', [ //2
-  'class' => 'col-xs-12 col-md-8 col-md-offset-2'
+  'class' => 'col-12 col-md-8 offset-md-2'
  ]);
-  echo H::openTag('div', ['class' => 'panel panel-default']); //3
-   echo H::openTag('div', ['class' => 'panel-heading']); //4
+  echo H::openTag('div', ['class' => 'card']); //3
+   echo H::openTag('div', ['class' => 'card-header']); //4
     echo $translator->translate('projects');
    echo H::closeTag('div'); //4
-   echo H::openTag('div', ['class' => 'panel-body']); //4
+   echo H::openTag('div', ['class' => 'card-body']); //4
     echo H::openTag('div', ['class' => 'row']); //5
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
+     echo H::openTag('div', ['class' => 'col-12 col-md-6']); //6
       echo H::openTag('div', ['class' => 'form-group']); //7
        echo H::openTag('label', ['for' => 'settings[projects_enabled]']);
         echo $translator->translate('enable.projects');
@@ -53,7 +53,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
+     echo H::openTag('div', ['class' => 'col-12 col-md-6']); //6
       echo H::openTag('div', ['class' => 'form-group']); //7
        $dhr = 'settings[default_hourly_rate]';
        echo H::openTag('label', ['for' => $dhr]);

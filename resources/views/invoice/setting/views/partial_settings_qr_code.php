@@ -21,10 +21,10 @@ use chillerlan\QRCode\QRCode;
 echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', ['class' => 'row']); //1
  echo H::openTag('div', [ //2
-  'class' => 'col-xs-12 col-md-8 col-md-offset-2'
+  'class' => 'col-12 col-md-8 offset-md-2'
  ]);
-  echo H::openTag('div', ['class' => 'panel panel-default']); //3
-   echo H::openTag('div', ['class' => 'panel-heading']); //4
+  echo H::openTag('div', ['class' => 'card']); //3
+   echo H::openTag('div', ['class' => 'card-header']); //4
     echo  new H6()->content(
       new A()
      ->attributes(['style' => 'text-decoration:none'])
@@ -33,8 +33,8 @@ echo H::openTag('div', ['class' => 'row']); //1
     );
    echo H::closeTag('div'); //4
    echo H::openTag('div', ['class' => 'row']); //4
-    echo H::openTag('div', ['class' => 'panel-body']); //5
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
+    echo H::openTag('div', ['class' => 'card-body']); //5
+     echo H::openTag('div', ['class' => 'col-12 col-md-6']); //6
       echo H::openTag('div', ['class' => 'form-group']); //7
        $qrVer = 'settings[qr_version]';
        echo H::openTag('label', ['for' => $qrVer]);
@@ -87,7 +87,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         'class' => 'form-control form-control-lg',
        ]);
       echo H::closeTag('div'); //7
-      echo H::openTag('div', ['class' => 'panel-heading']); //7
+      echo H::openTag('div', ['class' => 'card-header']); //7
        echo  new H6()
         ->attributes(['class' => 'badge text-bg-info'])
         ->content($translator->translate('qr.code.1'));
@@ -108,7 +108,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::closeTag('pre');
       echo H::closeTag('div'); //7
       echo H::openTag('div', ['class' => 'row']); //7
-       echo H::openTag('div', ['class' => 'panel-body']); //8
+       echo H::openTag('div', ['class' => 'card-body']); //8
         $pixels = (isset($body[$qrHw]) && ($body[$qrHw])) ? (int) $body[$qrHw] : 60;
          printf(new Img()
          ->width($pixels)

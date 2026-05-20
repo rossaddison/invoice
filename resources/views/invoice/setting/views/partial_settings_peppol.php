@@ -30,11 +30,11 @@ $kIncludeDelivery = 'settings[include_delivery_period]';
 $inputSmFormControl = 'input-sm form-control';
 
 $row = ['class' => 'row'];
-$colMd6 = ['class' => 'col-xs-12 col-md-6'];
-$colMd8 = ['class' => 'col-xs-12 col-md-8 col-md-offset-2'];
-$panel = ['class' => 'panel panel-default'];
-$panelHead = ['class' => 'panel-heading'];
-$panelBody = ['class' => 'panel-body'];
+$colMd6 = ['class' => 'col-12 col-md-6'];
+$colMd8 = ['class' => 'col-12 col-md-8 offset-md-2'];
+$panel = ['class' => 'card'];
+$panelHead = ['class' => 'card-header'];
+$panelBody = ['class' => 'card-body'];
 $formGroup = ['class' => 'form-group'];
 $checkbox = ['class' => 'checkbox'];
 $inputGroup = ['class' => 'input-group'];

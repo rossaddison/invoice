@@ -47,7 +47,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::tag('br'); ?>
     <?= Html::tag('br'); ?>
     <?= Html::openTag('div'); ?>    
-        <?= Html::openTag('div', ['class' => 'col-xs-12 col-md-6 col-md-offset-3']); ?>    
+        <?= Html::openTag('div', ['class' => 'col-12 col-md-6 offset-md-3']); ?>    
             <?= Html::openTag('div', ['class' => 'form-group']); ?>
                 <?=
                 Field::errorSummary($form)

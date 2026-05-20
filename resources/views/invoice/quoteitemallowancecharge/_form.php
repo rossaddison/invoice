@@ -32,7 +32,7 @@ use Yiisoft\Html\Tag\Form;
 ?>
 
 <?= Html::openTag('div', ['class' => 'row']); ?>
-    <?= Html::openTag('div', ['class' => 'col-xs-12 col-md-8 col-lg-6 mx-auto']); ?>
+    <?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 mx-auto']); ?>
         <?= Html::openTag('div', ['class' => 'card border border-secondary']); ?>
             <?= Html::openTag('div', ['class' => 'card-header']); ?>
                 <?= Html::openTag('h4');?>

@@ -18,8 +18,8 @@ use Yiisoft\Html\Html;
      * @var App\Infrastructure\Persistence\ClientNote\ClientNote
      */
     foreach ($client_notes as $client_note) : ?>
-    <div class="panel panel-default small">
-        <div class="panel-body position-relative" style="padding-right: 35px;">
+    <div class="card small">
+        <div class="card-body position-relative" style="padding-right: 35px;">
             <?= nl2br(Html::encode($client_note->getNote())); ?>
             <button type="button"
                     class="btn btn-danger btn-sm position-absolute client-note-delete-btn"
@@ -37,7 +37,7 @@ use Yiisoft\Html\Html;
                    style="font-size: 10px;"></i>
             </button>
         </div>
-        <div class="panel-footer text-muted">
+        <div class="card-footer text-muted">
             <?= (!is_string($dateNote = $client_note->getDateNote())
                     && null!==$dateNote) ?
                             $dateNote->format('Y-m-d') : ''; ?>

@@ -38,8 +38,8 @@ use Yiisoft\Html\Tag\I;
 
 $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
 ?>
-<?= Html::openTag('div', ['class' => 'panel panel-default']); ?>
-    <?= Html::openTag('div', ['class' => 'panel-heading']); ?>
+<?= Html::openTag('div', ['class' => 'card']); ?>
+    <?= Html::openTag('div', ['class' => 'card-header']); ?>
         <?=  new I()
             ->addClass('bi bi-info-circle')
             ->addAttributes([
@@ -281,7 +281,7 @@ foreach ($units as $unit) {
                 <?= Html::closeTag('tbody'); ?>
             <?= Html::closeTag('table'); ?>
         <?= Html::closeTag('div'); ?>
-        <?=Html::openTag('div', ['class' => 'col-xs-12 col-md-4']); ?>
+        <?=Html::openTag('div', ['class' => 'col-12 col-md-4']); ?>
             <?= Html::openTag('div', ['class' => 'btn-group']); ?>
                 <?= Html::Tag('button', '', ['hidden' => 'hidden', 'class' => 'btn_inv_item_add_row btn btn-primary btn-md active bi bi-plus'])
                     ->content($translator->translate('add.new.row')); ?>

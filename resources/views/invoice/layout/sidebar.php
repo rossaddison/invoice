@@ -55,7 +55,7 @@ echo H::tag('style', '
  .sidebar li a i { font-size: 1.4em; }
 ');
 
-echo H::openTag('div', ['class' => 'sidebar hidden-xs']); //1
+echo H::openTag('div', ['class' => 'sidebar d-none d-sm-block']); //1
  echo H::openTag('ul'); //2
   foreach ($items as $item) {
    if (!$item['show']) {

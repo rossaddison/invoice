@@ -40,16 +40,16 @@ $kNoYandex = 'settings[no_yandex_continue_button]';
 
 echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', ['class' => 'row']); //1
- echo H::openTag('div', ['class' => 'col-xs-12 col-md-8 col-md-offset-2']); //2
-  echo H::openTag('div', ['class' => 'panel panel-default']); //3
-   echo H::openTag('div', ['class' => 'panel-heading']); //4
+ echo H::openTag('div', ['class' => 'col-12 col-md-8 offset-md-2']); //2
+  echo H::openTag('div', ['class' => 'card']); //3
+   echo H::openTag('div', ['class' => 'card-header']); //4
     echo H::openTag('label');
      echo H::openTag('i', ['class' => 'bi bi-info-circle']);
      echo H::closeTag('i');
      echo $translator->translate('oauth2') . ' ' . '⛔';
     echo H::closeTag('label');
    echo H::closeTag('div'); //4
-   echo H::openTag('div', ['class' => 'panel-body']); //4
+   echo H::openTag('div', ['class' => 'card-body']); //4
     echo H::openTag('div', ['class' => 'form-group']); //5
 
      echo H::openTag('div', ['class' => 'checkbox']); //6

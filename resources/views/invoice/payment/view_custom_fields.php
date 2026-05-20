@@ -18,8 +18,8 @@ declare(strict_types=1);
 <?php if ($customFields): ?>
     <div>
         <div class="mb-3 form-group">
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="card">
+                <div class="card-header">
                     <i tooltip="data-toggle" title="<?= $s->isDebugMode(4)?>"><?= $translator->translate('custom.fields'); ?></i>
                 </div>
                 <div>

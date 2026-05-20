@@ -10,9 +10,9 @@ declare(strict_types=1);
  */
 ?>
 
-<div class="panel panel-default">
-    <div class="panel-heading"><?= $translator->translate('email.template.tags'); ?></div>
-    <div class="panel-body">
+<div class="card">
+    <div class="card-header"><?= $translator->translate('email.template.tags'); ?></div>
+    <div class="card-body">
         <p class="small"><?= $translator->translate('email.template.tags.instructions'); ?></p>
         <div class="form-group">
             <label for="tags_client"><?= $translator->translate('client'); ?></label>

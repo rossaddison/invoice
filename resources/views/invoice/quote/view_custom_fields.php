@@ -16,8 +16,8 @@ declare(strict_types=1);
 <?php if ($custom_fields): ?>
     <div>
         <div class="mb-3 form-group">
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="card">
+                <div class="card-header">
                     <?= $translator->translate('custom.fields'); ?>
                 </div>
                 <div>

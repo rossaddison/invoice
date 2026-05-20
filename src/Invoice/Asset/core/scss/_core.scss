@@ -275,8 +275,7 @@ textarea {
     &:focus {
       text-decoration: none;
       background-color: transparent;
-      background-image: none; // Remove CSS gradient
-      @include reset-filter;
+      background-image: none;
       cursor: $cursor-disabled;
     }
   }
@@ -385,7 +384,7 @@ textarea {
   border-bottom: 1px solid #ddd;
   @include clearfix();
 
-  .headerbar-item.pull-right {
+  .headerbar-item.float-end {
     margin-left: 10px;
   }
 
@@ -693,7 +692,7 @@ div.table-content {
 #panel-overdue-invoices,
 #panel-recent-quotes,
 #panel-recent-invoices {
-  .panel-body {
+  .card-body {
     padding: 0;
   }
 
@@ -755,7 +754,7 @@ div.table-content {
 }
 
 .fa-read-only {
-  @extend .fa-ban;
+  @extend .fa-ban !optional;
 }
 
 .cursor-pointer {
@@ -788,9 +787,9 @@ div.table-content {
 }
 
 .details-box {
-  @extend .panel;
-  @extend .panel-default;
-  @extend .panel-body;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, .125);
+  border-radius: $border-radius;
   padding: 10px;
 
   label {
@@ -959,9 +958,10 @@ legend, .install-step h2 {
 */
 
 #login {
-  @extend .panel;
-  @extend .panel-default;
-  @extend .panel-body;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, .125);
+  border-radius: $border-radius;
+  padding: 15px;
 
   .form-horizontal {
     margin-bottom: 15px;
@@ -1070,7 +1070,7 @@ body.error {
 
   // put icons on same line as text
   .navbar-nav {
-    .visible-xs {
+    .d-inline-block {
       display: inline-block !important;
     }
   }
@@ -1101,7 +1101,7 @@ body.error {
     padding: 8px !important;
   }
 
-  .pull-right {
+  .float-end {
     margin-left: 5px !important;
   }
 

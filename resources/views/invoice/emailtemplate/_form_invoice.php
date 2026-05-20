@@ -106,8 +106,8 @@ use Yiisoft\Html\Tag\Span;
             ->hint($translator->translate('hint.this.field.is.required')); ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-        <?= Html::openTag('div', ['class' => 'panel panel-default']); ?>
-            <?= Html::openTag('div', ['class' => 'panel-heading']); ?>
+        <?= Html::openTag('div', ['class' => 'card']); ?>
+            <?= Html::openTag('div', ['class' => 'card-header']); ?>
                 <?= Html::openTag('fieldset'); ?>
                     <?= Html::openTag('h5'); ?>
                         <?= $translator->translate('email.template.from.source'); ?>
@@ -218,25 +218,25 @@ use Yiisoft\Html\Tag\Span;
     <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
         <?= Html::openTag('div', ['class' => 'html-tags btn-group btn-group-sm']); ?>
             <?=  new Span()
-        ->addClass('html-tag btn btn-default')
+        ->addClass('html-tag btn btn-secondary')
         ->addAttributes(['data-tag-type' => 'text-paragraph'])
         ->content( new I()->addClass('bi bi-text-paragraph'))
         ->render();
 ?>
             <?=  new Span()
-    ->addClass('html-tag btn btn-default')
+    ->addClass('html-tag btn btn-secondary')
     ->addAttributes(['data-tag-type' => 'text-linebreak'])
     ->content(Html::b(NoEncode::string('&lt;br&gt;')))
     ->render();
 ?>
             <?=  new Span()
-    ->addClass('html-tag btn btn-default')
+    ->addClass('html-tag btn btn-secondary')
     ->addAttributes(['data-tag-type' => 'text-bold'])
     ->content( new I()->addClass('bi bi-type-bold')->content('b'))
     ->render();
 ?>
             <?=  new Span()
-    ->addClass('html-tag btn btn-default')
+    ->addClass('html-tag btn btn-secondary')
     ->addAttributes(['data-tag-type' => 'text-italic'])
     ->content( new I()->addClass('bi bi-type-italic'))
     ->render();
@@ -244,25 +244,25 @@ use Yiisoft\Html\Tag\Span;
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'html-tags btn-group btn-group-sm']); ?>
             <?=  new Span()
-    ->addClass('html-tag btn btn-default')
+    ->addClass('html-tag btn btn-secondary')
     ->addAttributes(['data-tag-type' => 'text-h1'])
     ->content('H1')
     ->render();
 ?>
             <?=  new Span()
-    ->addClass('html-tag btn btn-default')
+    ->addClass('html-tag btn btn-secondary')
     ->addAttributes(['data-tag-type' => 'text-h2'])
     ->content('H2')
     ->render();
 ?>
             <?=  new Span()
-    ->addClass('html-tag btn btn-default')
+    ->addClass('html-tag btn btn-secondary')
     ->addAttributes(['data-tag-type' => 'text-h3'])
     ->content('H3')
     ->render();
 ?>
             <?=  new Span()
-    ->addClass('html-tag btn btn-default')
+    ->addClass('html-tag btn btn-secondary')
     ->addAttributes(['data-tag-type' => 'text-h4'])
     ->content('H4')
     ->render();
@@ -270,19 +270,19 @@ use Yiisoft\Html\Tag\Span;
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'html-tags btn-group btn-group-sm']); ?>
             <?=  new Span()
-    ->addClass('html-tag btn btn-default')
+    ->addClass('html-tag btn btn-secondary')
     ->addAttributes(['data-tag-type' => 'text-code'])
     ->content( new I()->addClass('bi bi-code-slash'))
     ->render();
 ?>
             <?=  new Span()
-    ->addClass('html-tag btn btn-default')
+    ->addClass('html-tag btn btn-secondary')
     ->addAttributes(['data-tag-type' => 'text-hr'])
     ->content(Html::b(NoEncode::string('&lt;hr&gt;')))
     ->render();
 ?>
             <?=  new Span()
-    ->addClass('html-tag btn btn-default')
+    ->addClass('html-tag btn btn-secondary')
     ->addAttributes(['data-tag-type' => 'text-css'])
     ->content('CSS')
     ->render();

@@ -20,7 +20,7 @@ use Yiisoft\Html\Tag\Option;
  */
 
 $row         = ['class' => 'row'];
-$colMd6Off3  = ['class' => 'col-xs-12 col-md-6 col-md-offset-3'];
+$colMd6Off3  = ['class' => 'col-12 col-md-6 offset-md-3'];
 $formGroup   = ['class' => 'form-group'];
 $formControlLg = 'form-control form-control-lg';
 
@@ -29,14 +29,14 @@ echo H::openTag('form', ['method' => 'post']); //0
  echo H::openTag('div', ['id' => 'headerbar']); //1
   echo H::tag('h1', $translator->translate('custom.values'),
           ['class' => 'headerbar-title']);
-  echo H::openTag('div', ['class' => 'headerbar-item pull-right']); //2
+  echo H::openTag('div', ['class' => 'headerbar-item float-end']); //2
    echo H::openTag('div', ['class' => 'btn-group btn-group-sm']); //3
     echo H::a(
      H::tag('i', '', ['class' => 'bi bi-arrow-left']) .
             ' '
             . $translator->translate('back'),
      $urlGenerator->generate('customfield/index'),
-     ['class' => 'btn btn-default']
+     ['class' => 'btn btn-secondary']
     );
     echo H::a(
      H::tag('i', '', ['class' => 'bi bi-plus-lg'])
@@ -111,7 +111,7 @@ echo H::openTag('form', ['method' => 'post']); //0
                     . ' '
                     . $translator->translate('options'),
              '#',
-             ['class' => 'btn btn-default btn-sm dropdown-toggle',
+             ['class' => 'btn btn-secondary btn-sm dropdown-toggle',
                  'data-bs-toggle' => 'dropdown']
             );
             echo H::openTag('ul', ['class' => 'dropdown-menu']); //10

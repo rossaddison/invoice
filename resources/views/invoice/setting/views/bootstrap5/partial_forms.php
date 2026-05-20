@@ -12,7 +12,7 @@ use Yiisoft\Html\Html as H;
 echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', ['class' => 'border border-line-1 border-secondary']); //1
  echo H::openTag('div', ['class' => 'row g-3 p-2']); //2
-  echo H::openTag('div', ['class' => 'col-xs-12 col-md-4']); //3
+  echo H::openTag('div', ['class' => 'col-12 col-md-4']); //3
    echo H::openTag('label', ['for' => 'settings[bootstrap5_form_font_size]', 'class' => 'form-label']);
     echo $translator->translate('bootstrap5.form.font.size');
    echo H::closeTag('label');
@@ -24,7 +24,7 @@ echo H::openTag('div', ['class' => 'border border-line-1 border-secondary']); //
     'step'  => '1',
    ]);
   echo H::closeTag('div'); //3
-  echo H::openTag('div', ['class' => 'col-xs-12 col-md-4']); //3
+  echo H::openTag('div', ['class' => 'col-12 col-md-4']); //3
    echo H::openTag('label', ['for' => 'settings[bootstrap5_form_input_height]', 'class' => 'form-label']);
     echo $translator->translate('bootstrap5.form.input.height');
    echo H::closeTag('label');

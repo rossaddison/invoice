@@ -46,7 +46,7 @@ use Yiisoft\Html\Tag\Button;
                                     <?php } ?>
                                 </select>
                             </div>
-                            <div class="form-group panel panel-primary">
+                            <div class="form-group card border-primary">
                                 <label for="filter_product_quote"><?= $translator->translate('product.name'); ?></label>
                                 <input type="text" class="form-control form-control-lg" name="filter_product_quote" id="filter_product_quote"
                                        placeholder="<?= $translator->translate('product.name'); ?>"

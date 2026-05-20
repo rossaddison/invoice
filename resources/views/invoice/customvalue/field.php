@@ -31,10 +31,10 @@ echo H::openTag('form', ['method' => 'post']);
        echo H::openTag('h1', ['class' => 'headerbar-title']);
         echo $translator->translate('custom.values');
        echo H::closeTag('h1');
-       echo H::openTag('div', ['class' => 'headerbar-item pull-right']); //7
+       echo H::openTag('div', ['class' => 'headerbar-item float-end']); //7
         echo H::openTag('div', ['class' => 'btn-group btn-group-sm']); //8
          echo H::openTag('a', [
-          'class' => 'btn btn-default',
+          'class' => 'btn btn-secondary',
           'href' => $urlGenerator->generate('customfield/index'),
           ]); //9
           echo H::openTag('i', ['class' => 'bi bi-arrow-left']); //10
@@ -54,7 +54,7 @@ echo H::openTag('form', ['method' => 'post']);
        echo H::openTag('div', ['id' => 'content']); //7
         echo H::openTag('div', ['class' => 'row']); //8
          echo H::openTag('div', ['class' =>
-           'col-xs-12 col-md-6 col-md-offset-3']); //9
+           'col-12 col-md-6 offset-md-3']); //9
           echo H::openTag('div', ['class' => 'form-group']); //10
            echo Field::text($field_form, 'label')
              ->label($translator->translate('field'))

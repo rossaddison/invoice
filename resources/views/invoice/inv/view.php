@@ -89,7 +89,7 @@ echo $modal_pdf;
 if (!empty($payments)) {
     echo '<br>';
     echo '<br>';
-    echo H::openTag('div', ['class' => 'panel-heading']);
+    echo H::openTag('div', ['class' => 'card-header']);
      echo H::openTag('b');
       echo H::openTag('h2');
        echo H::encode($translator->translate('payments'));
@@ -180,7 +180,7 @@ if ($readOnly === false && $invEdit && $inv->reqStatusId() === 1) {
     echo H::openTag('div', ['class' => 'tabbable tabs-below']);
      echo H::openTag('div', ['class' => 'tab-content']);
       echo H::openTag('div', ['id' => 'add-product-tab', 'class' => 'tab-pane']);
-       echo H::openTag('div', ['class' => 'panel-heading']);
+       echo H::openTag('div', ['class' => 'card-header']);
         echo H::openTag('div');
          echo H::openTag('button',
             [
@@ -203,7 +203,7 @@ if ($readOnly === false && $invEdit && $inv->reqStatusId() === 1) {
        echo H::closeTag('div');
       echo H::closeTag('div');
       echo H::openTag('div', ['id' => 'add-task-tab', 'class' => 'tab-pane']);
-       echo H::openTag('div', ['class' => 'panel-heading']);
+       echo H::openTag('div', ['class' => 'card-header']);
         echo H::openTag('div');
          echo H::openTag('button', [
             'class' => 'btn btn-primary bi bi-ui-checks w-100',
@@ -232,7 +232,7 @@ echo H::tag('input', '', [
  echo H::closeTag('div');
 // Toolbar
 echo $buttonsToolbarFull;
- echo H::openTag('div', ['class' => 'headerbar-item pull-left' .
+ echo H::openTag('div', ['class' => 'headerbar-item float-start' .
     ($inv->getIsReadOnly() === false || $inv->reqStatusId() !== 4 ? ' btn-group' : '')]);
   echo H::openTag('div', ['class' => 'dropdown']);
    echo H::openTag('button', [
@@ -698,7 +698,7 @@ if ($inv->reqStatusId() === 1
 }
    echo H::closeTag('ul');
   echo H::closeTag('div');
-  echo H::openTag('div', ['class' => 'headerbar-item invoice-labels pull-right']);
+  echo H::openTag('div', ['class' => 'headerbar-item invoice-labels float-end']);
    if ($isRecurring) {
        echo H::openTag('span', ['class' => 'badge text-bg-info']);
         echo H::openTag('i', ['class' => 'bi bi-arrow-clockwise']);
@@ -719,7 +719,7 @@ if ($inv->reqStatusId() === 1
  echo H::openTag('div', ['id' => 'inv_form']);
   echo H::openTag('div', ['class' => 'inv']);
    echo H::openTag('div', ['class' => 'row']);
-    echo H::openTag('div', ['class' => 'col-xs-12 col-sm-6 col-md-5']);
+    echo H::openTag('div', ['class' => 'col-12 col-sm-6 col-md-5']);
      echo H::openTag('h3');
       echo H::openTag('a', ['href' => $urlGenerator->generate('client/view',
               ['id' => $inv->getClient()?->reqId()])]);
@@ -785,15 +785,15 @@ if ($inv->reqStatusId() === 1
      echo '<br>';
     echo H::closeTag('div');
 
-    echo H::openTag('div', ['class' => 'col-xs-12 visible-xs']);
+    echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none']);
      echo '<br>';
     echo H::closeTag('div');
 
-    echo H::openTag('div', ['class' => 'col-xs-12 col-sm-6 col-md-7']);
+    echo H::openTag('div', ['class' => 'col-12 col-sm-6 col-md-7']);
      echo H::openTag('div', ['class' => 'details-box']);
       echo H::openTag('div', ['class' => 'row']);
 
-       echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']);
+       echo H::openTag('div', ['class' => 'col-12 col-md-6']);
 
         echo H::openTag('div', ['class' => 'invoice-properties']);
          echo H::openTag('label', ['for' => 'inv_number']);
@@ -905,7 +905,7 @@ if ($vat === '1') {
         }
         echo H::closeTag('div');
        echo H::closeTag('div');
-       echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']);
+       echo H::openTag('div', ['class' => 'col-12 col-md-6']);
         echo H::openTag('div', ['class' => 'invoice-properties']);
          echo H::openTag('label', ['for' => 'inv_status_id']);
           echo H::openTag('b');
@@ -1091,9 +1091,9 @@ if (null !== $inv->getSoId()) {
   echo H::closeTag('div');
 
   echo H::openTag('div', ['class' => 'row']);
-   echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']);
-    echo H::openTag('div', ['class' => 'panel panel-default no-margin']);
-     echo H::openTag('div', ['class' => 'panel-heading']);
+   echo H::openTag('div', ['class' => 'col-12 col-md-6']);
+    echo H::openTag('div', ['class' => 'card no-margin']);
+     echo H::openTag('div', ['class' => 'card-header']);
       echo H::openTag('b');
        echo H::encode($translator->translate('terms'));
         $paymentTermArray = $s->getPaymentTermArray($translator);
@@ -1101,7 +1101,7 @@ if (null !== $inv->getSoId()) {
         $terms = (string) $paymentTermArray[$termsKey];
       echo H::closeTag('b');
      echo H::closeTag('div');
-     echo H::openTag('div', ['class' => 'panel-body']);
+     echo H::openTag('div', ['class' => 'card-body']);
       echo H::openTag('textarea', [
           'name' => 'terms',
           'id' => 'terms',
@@ -1114,17 +1114,17 @@ if (null !== $inv->getSoId()) {
      echo H::closeTag('div');
     echo H::closeTag('div');
 
-    echo H::openTag('div', ['class' => 'col-xs-12 visible-xs visible-sm']);
+    echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none visible-sm']);
      echo '<br>';
     echo H::closeTag('div');
 
    echo H::closeTag('div');
    echo H::openTag('div', ['id' => 'view_custom_fields',
-       'class' => 'col-xs-12 col-md-6']);
+       'class' => 'col-12 col-md-6']);
     echo $view_custom_fields;
    echo H::closeTag('div');
    echo H::openTag('div', ['id' => 'view_partial_inv_delivery_location',
-       'class' => 'col-xs-12 col-md-6']);
+       'class' => 'col-12 col-md-6']);
     echo $partial_inv_delivery_location;
    echo H::closeTag('div');
    echo H::openTag('div', ['id' => 'view_partial_inv_attachments']);

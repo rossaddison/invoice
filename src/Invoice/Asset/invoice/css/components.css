@@ -79,8 +79,8 @@ fieldset[disabled] .btn {
   color: #fff;
 }
 
-.btn-default:hover,
-.btn-default:focus {
+.btn-secondary:hover,
+.btn-secondary:focus {
   color: #fff;
 }
 
@@ -235,8 +235,8 @@ fieldset[disabled] .btn {
   overflow-y: auto;
 }
 
-/* Panels and Cards - TODO: Extract from style.css */
-.panel {
+/* Cards */
+.card {
   margin-bottom: var(--spacing-xl);
   background-color: var(--background-color);
   border: 1px solid transparent;

@@ -120,7 +120,7 @@
   clear: both;
 }
 
-#headerbar .headerbar-item.pull-right {
+#headerbar .headerbar-item.float-end {
   margin-left: var(--spacing-md);
 }
 
@@ -208,9 +208,6 @@ div.table-content .table-responsive {
 
 /* Responsive Layout - From style.css media queries */
 @media (min-width: 1200px) {
-  .navbar-nav .visible-lg {
-    display: inline-block !important;
-  }
 
   #submenu .submenu-row {
     float: left;
@@ -246,9 +243,6 @@ div.table-content .table-responsive {
     margin-top: 7px;
   }
 
-  .navbar-nav .visible-xs {
-    display: inline-block !important;
-  }
 }
 
 @media (max-width: 767px) {
@@ -273,19 +267,12 @@ div.table-content .table-responsive {
     padding: 8px !important;
   }
 
-  .pull-right {
+  .float-end {
     margin-left: 5px !important;
   }
 }
 
-/* Utility Layout Classes */
-.pull-left {
-  float: left !important;
-}
-
-.pull-right {
-  float: right !important;
-}
+/* Float layout — use Bootstrap 5: float-start, float-end */
 
 .clearfix:before,
 .clearfix:after {

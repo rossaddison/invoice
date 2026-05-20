@@ -14,12 +14,12 @@ use Yiisoft\Html\Html;
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
 ?>
-<div class="panel panel-default no-margin">
-    <div class="panel-heading">
+<div class="card no-margin">
+    <div class="card-header">
       <i tooltip="data-bs-toggle" title="<?= $s->isDebugMode(6);?>">
               <?= Html::a($title, $urlGenerator->generate($actionName, $actionArguments), ['style' => 'text-decoration:none']); ?></i>
     </div>
-    <div class="panel-body clearfix">
+    <div class="card-body clearfix">
         <div class="container">
           <?= Html::openTag('div', ['class' => 'row']); ?>
               <div class="row mb3 form-group">
