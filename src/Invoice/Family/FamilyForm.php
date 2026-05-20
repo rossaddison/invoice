@@ -27,8 +27,8 @@ final class FamilyForm extends FormModel
         $form->family_name = $family->getFamilyName();
         $form->family_commalist = $family->getFamilyCommalist();
         $form->family_productprefix = $family->getFamilyProductprefix();
-        $form->category_primary_id = $family->reqCategoryPrimaryId();
-        $form->category_secondary_id = $family->reqCategorySecondaryId();
+        $form->category_primary_id = $family->getCategoryPrimaryId();
+        $form->category_secondary_id = $family->getCategorySecondaryId();
         return $form;
     }
 

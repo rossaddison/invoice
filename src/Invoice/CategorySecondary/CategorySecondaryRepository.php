@@ -88,7 +88,7 @@ final class CategorySecondaryRepository extends Select\Repository
         );
     }
 
-    public function repoCategoryPrimaryIdQuery(int $category_primary_id): EntityReader
+    public function repoCategoryPrimaryIdQuery(?int $category_primary_id): EntityReader
     {
         $select = $this->select();
         $query = $select
@@ -97,11 +97,11 @@ final class CategorySecondaryRepository extends Select\Repository
     }
 
     /**
-     * @param int $id
+     * @param int|null $id
      * @psalm-return TEntity|null
      * @return CategorySecondary|null
      */
-    public function repoCategorySecondaryQuery(int $id): ?CategorySecondary
+    public function repoCategorySecondaryQuery(?int $id): ?CategorySecondary
     {
         $query = $this->select()
                       ->where(['id' => $id]);
