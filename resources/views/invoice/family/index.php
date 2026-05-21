@@ -134,7 +134,7 @@ $columns = [
         'category_primary_id',
         header: $translator->translate('category.primary'),
         content: static function (Family $model) use ($cpR, $translator): string {
-            $categoryPrimaryId = $model->reqCategoryPrimaryId();
+            $categoryPrimaryId = $model->getCategoryPrimaryId();
             $categoryPrimary = $cpR->repoCategoryPrimaryQuery($categoryPrimaryId);
             return null !== $categoryPrimary ?
                     $categoryPrimary->getName() ?? $translator->translate('not.set')
@@ -145,7 +145,7 @@ $columns = [
         'category_secondary_id',
         header: $translator->translate('category.secondary'),
         content: static function (Family $model) use ($csR, $translator): string {
-            $categorySecondaryId = $model->reqCategorySecondaryId();
+            $categorySecondaryId = $model->getCategorySecondaryId();
             $categorySecondary = $csR->repoCategorySecondaryQuery($categorySecondaryId);
             return null !== $categorySecondary ?
                     $categorySecondary->getName() ?? $translator->translate('not.set')

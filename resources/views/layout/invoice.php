@@ -15,8 +15,8 @@ use App\Asset\AppCdnAsset;
 use App\Asset\AppNodeModulesAsset;
 
 use App\Widget\PerformanceMetrics;
-use Yiisoft\Bootstrap5\Assets\BootstrapCdnAsset as BsCdn;
-use Yiisoft\Bootstrap5\Assets\BootstrapAsset as BsNm;
+use App\Invoice\Asset\BootstrapCdnJsOnlyAsset as BsCdn;
+use App\Invoice\Asset\BootstrapJsOnlyAsset as BsNm;
 use Yiisoft\Bootstrap5\ButtonSize;
 use Yiisoft\Bootstrap5\Dropdown;
 use Yiisoft\Bootstrap5\DropdownItem;

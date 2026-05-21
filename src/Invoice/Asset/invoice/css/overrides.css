@@ -20,7 +20,9 @@
   }
   .form-control { background-color: var(--background-alt); color: var(--text-color); }
   .form-control:focus { color: #fff; }
-  select option { color: var(--text-color); }
+  .form-select { background-color: var(--input-background); color: var(--text-color); }
+  select { background-color: var(--input-background); color: var(--text-color); }
+  select option { color: var(--text-color); background-color: var(--input-background); }
   .form-text { color: var(--text-muted); }
   .sidebar li a:hover { color: #fff; background-color: #000; }
 }
@@ -46,7 +48,9 @@
   }
   .form-control { background-color: var(--background-alt); color: var(--text-color); }
   .form-control:focus { color: #fff; }
-  select option { color: var(--text-color); }
+  .form-select { background-color: var(--input-background); color: var(--text-color); }
+  select { background-color: var(--input-background); color: var(--text-color); }
+  select option { color: var(--text-color); background-color: var(--input-background); }
   .form-text { color: var(--text-muted); }
   .sidebar li a:hover { color: #fff; background-color: #000; }
 }
