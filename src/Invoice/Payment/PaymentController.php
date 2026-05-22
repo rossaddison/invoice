@@ -610,8 +610,9 @@ final class PaymentController extends BaseController
             $merchants = $this->merchantWithSortGuest($merchR,
                 $client_id_array, $sort_by);
             if (!empty($client_id_array)) {
+                $olLimit = $userinv?->getListLimit();
                 $paginator = (new OffsetPaginator($merchants))
-                 ->withPageSize(10)
+                 ->withPageSize($olLimit !== null && $olLimit > 0 ? $olLimit : 10)
                  ->withCurrentPage($currentPageNeverZero)
                  ->withToken(PageToken::next((string) $page));
     // No need for rbac here since the route accessChecker for payment/online_log

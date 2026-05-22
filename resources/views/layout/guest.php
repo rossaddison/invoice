@@ -89,6 +89,8 @@ use Yiisoft\Bootstrap5\NavStyle;
  * @var DropdownItem $zuZA
  * @var string $currentLocaleFlag
  * @var array<string,string> $localeFlags
+ * @var string $guestPageSizeUrlTemplate
+ * @var int $guestCurrentPageSize
  */
 // Settings ... View ... General
 $assetManager->register($appCdnNotNodeModule ? AppCdn::class : AppNm::class);
@@ -270,6 +272,32 @@ if ((null !== $currentPath) && !$isGuest) {
         DropdownItem::link($t->translate('email.log'),
             $urlGenerator->generate('invsentlog/guest'),
             itemAttributes: $itemFontArray),
+        DropdownItem::divider(),
+        DropdownItem::listContent(
+            '<h6 class="dropdown-header"'
+            . ' style="font-size:' . $bootstrap5LayoutGuestNavbarFontSize . 'px;"'
+            . ' data-bs-toggle="tooltip" data-bs-placement="right"'
+            . ' title="' . Html::encode($t->translate('default.list.limit.hint')) . '">'
+            . (new I())->addClass('bi bi-list-ol')->render()
+            . ' ' . Html::encode($t->translate('default.list.limit'))
+            . '</h6>'
+        ),
+        DropdownItem::listContent(
+            '<div class="px-3 py-1">'
+            . '<div id="page-size-btn-group" class="btn-group btn-group-sm" role="group" aria-label="'
+            . Html::encode($t->translate('default.list.limit')) . '">'
+            . implode('', array_map(
+                static fn(int $size): string =>
+                    '<a hx-get="' . Html::encode(str_replace('__SIZE__', (string) $size, $guestPageSizeUrlTemplate)) . '"'
+                    . ' hx-swap="none"'
+                    . ' hx-on::after-request="iPageSizeRefresh(this);"'
+                    . ' href="' . Html::encode(str_replace('__SIZE__', (string) $size, $guestPageSizeUrlTemplate)) . '"'
+                    . ' class="btn btn-outline-secondary' . ($size === $guestCurrentPageSize ? ' active' : '') . '">'
+                    . $size . '</a>',
+                [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 25, 50, 100, 200]
+            ))
+            . '</div></div>'
+        ),
     )
     ->render();
     // Translate
@@ -355,6 +383,22 @@ if (!$isGuest) {
     . new Form()->close();
 }
 echo NavBar::end();
+echo Html::script(<<<'JS'
+function iPageSizeRefresh(btn) {
+    document.querySelectorAll('#page-size-btn-group .btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    fetch(window.location.href)
+        .then(r => r.text())
+        .then(html => {
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            const fresh = doc.getElementById('main-area');
+            if (fresh) {
+                document.getElementById('main-area').replaceWith(fresh);
+                htmx.process(fresh);
+            }
+        });
+}
+JS);
 echo Html::closeTag('header');
 echo Html::openTag('div', ['id' => 'main-area']);
   echo Html::openTag('main', ['class' => 'container-fluid py-4']);
