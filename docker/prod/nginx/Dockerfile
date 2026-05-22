@@ -1,4 +1,4 @@
-FROM nginx:1.31.0-alpine
+FROM nginx:1.31.1-alpine
 
 RUN apk add --no-cache curl
 
