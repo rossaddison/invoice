@@ -25,7 +25,6 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @var App\Invoice\UserClient\UserClientRepository $ucR
  * @var App\Widget\Button $button
  * @var App\Widget\GridComponents $gridComponents
- * @var App\Widget\PageSizeLimiter $pageSizeLimiter
  * @var string $active
  * @var string $alert
  * @var string $csrf
@@ -595,15 +594,7 @@ echo GridView::widget()
         'class' => 'card-header bg-info text-black',
     ])
     ->id('w5-grid')
-    ->summaryTemplate(
-        $pageSizeLimiter::buttons(
-            $currentRoute,
-            $s,
-            $translator,
-            $urlGenerator,
-            'userinv'
-        ) . ' ' . $gridSummary
-    )
+    ->summaryTemplate($gridSummary)
     ->summaryAttributes([
         'class' => 'mt-3 me-3 summary text-end',
     ])

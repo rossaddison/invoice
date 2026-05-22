@@ -73,7 +73,7 @@ echo (new Form())
                             <?= Field::hidden($form, 'task_id')
                                 ->value('0')
                                 ->hideLabel(); ?>
-                            <?= Html::openTag('div', ['class' => 'input-group', 'id' => 'product-no-task']); ?>
+                            <?= Html::openTag('div', ['id' => 'product-no-task']); ?>
                                 <?php
                                     $optionsDataProduct = [];
 /**
@@ -93,30 +93,30 @@ foreach ($products as $product) {
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount td-quality']); ?>
-                            <?= Html::openTag('div', ['class' => 'input-group']); ?>
+                            <?= Html::openTag('div'); ?>
                                 <?= Field::number($form, 'quantity')
     ->label($translator->translate('quantity'))
-    ->addInputAttributes(['class' => 'input-lg form-control amount has-feedback'])
+    ->addInputAttributes(['class' => 'form-control amount'])
     ->value($numberHelper->formatAmount($form->getQuantity()))
     ->hint($translator->translate('hint.greater.than.zero.please'));
 ?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount']); ?>
-                            <?= Html::openTag('div', ['class' => 'input-group']); ?>
+                            <?= Html::openTag('div'); ?>
                                 <?= Field::text($form, 'price')
      ->label($translator->translate('price'))
-     ->addInputAttributes(['class' => 'input-lg form-control amount has-feedback'])
+     ->addInputAttributes(['class' => 'form-control amount'])
      ->value($numberHelper->formatAmount($form->getPrice() ?? 0.00))
      ->hint($translator->translate('hint.greater.than.zero.please')); ?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount']); ?>
-                            <?= Html::openTag('div', ['class' => 'input-group']); ?>
+                            <?= Html::openTag('div'); ?>
                                 <?= Field::text($form, 'discount_amount')
      ->label($translator->translate('item.discount'))
      ->addInputAttributes([
-         'class' => 'input-lg form-control amount has-feedback',
+         'class' => 'form-control amount',
          'data-bs-toggle' => 'tooltip',
          'data-placement' => 'bottom',
          'title' => $s->getSetting('currency_symbol') . ' ' . $translator->translate('per.item'),
@@ -125,7 +125,7 @@ foreach ($products as $product) {
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td td-vert-middle']); ?>
-                            <?= Html::openTag('div', ['class' => 'input-group']); ?>
+                            <?= Html::openTag('div'); ?>
                                 <?php
      $optionsDataTaxRate = [];
 /**
@@ -143,7 +143,7 @@ foreach ($taxRates as $taxRate) {
 ?>
                                 <?= Field::select($form, 'tax_rate_id')
     ->label($vat === false ? $translator->translate('tax.rate') : $translator->translate('vat.rate'))
-    ->addInputAttributes(['class' => 'form-control form-control-lg',])
+    ->addInputAttributes(['class' => 'form-select',])
     ->optionsData($optionsDataTaxRate)
     ->value(Html::encode($form->getTaxRateId()))
     ->hint($translator->translate('hint.this.field.is.required'));
@@ -170,18 +170,18 @@ foreach ($taxRates as $taxRate) {
                     <?= Html::closeTag('tr'); ?>
                     <?= Html::openTag('tr'); ?>
                         <?= Html::openTag('td', ['class' => 'td-textarea']); ?>
-                            <?= Html::openTag('div', ['class' => 'input-group']); ?>
+                            <?= Html::openTag('div'); ?>
                                 <?= Field::textarea($form, 'description')
     ->value(Html::encode($form->getDescription() ?? '')); ?>
                             <?= Html::closeTag('div'); ?>
-                            <?= Html::openTag('div', ['class' => 'input-group']); ?>
+                            <?= Html::openTag('div'); ?>
                                 <?= Field::text($form, 'order')
     ->value(Html::encode($form->getOrder() ?? ''));
 ?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount']); ?>
-                            <?= Html::openTag('div', ['class' => 'input-group']); ?>
+                            <?= Html::openTag('div'); ?>
                                 <?php
     $optionsDataProductUnit = [];
 /**
@@ -198,7 +198,7 @@ foreach ($units as $unit) {
 ?>
                                 <?= Field::select($form, 'product_unit_id')
     ->label($translator->translate('product.unit'))
-    ->addInputAttributes(['class' => 'form-control form-control-lg',])
+    ->addInputAttributes(['class' => 'form-select',])
     ->optionsData($optionsDataProductUnit)
     ->value(Html::encode($form->getProductUnitId() ?? ''))
     ->hint($translator->translate('hint.this.field.is.required'));

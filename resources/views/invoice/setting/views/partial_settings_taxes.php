@@ -18,11 +18,10 @@ $colMd8 = ['class' => 'col-12 col-md-8 offset-md-2'];
 $panel = ['class' => 'card'];
 $panelHead = ['class' => 'card-header'];
 $panelBody = ['class' => 'card-body'];
-$formGroup = ['class' => 'form-group'];
-$formControl = ['class' => 'form-control form-control-lg',];
+$formGroup = ['class' => 'mb-3'];
+$formSelect = ['class' => 'form-select'];
 $minSearch = ['data-minimum-results-for-search' => 'Infinity'];
 
-echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', $row) . "\n"; //1
  echo H::openTag('div', $colMd8) . "\n"; //2
 
@@ -49,7 +48,7 @@ echo H::openTag('div', $row) . "\n"; //1
        echo H::openTag('select', [
         'name' => $sditr,
         'id' => $sditr,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]) . "\n";
         echo  new Option()
          ->value('')
@@ -89,7 +88,7 @@ echo H::openTag('div', $row) . "\n"; //1
        echo H::openTag('select', [
         'name' => $sdtr,
         'id' => $sdtr,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]) . "\n";
         echo  new Option()
          ->value('')
@@ -129,7 +128,7 @@ echo H::openTag('div', $row) . "\n"; //1
        echo H::closeTag('label') . "\n";
        $body[$include] =
        $s->getSetting('default_include_item_tax');
-       echo H::openTag('select', array_merge($formControl,
+       echo H::openTag('select', array_merge($formSelect,
         $minSearch, [
         'name' => $include,
         'id' => $include
@@ -174,7 +173,7 @@ echo H::openTag('div', $row) . "\n"; //1
        echo H::openTag('select', [
         'name' => $tyf,
         'id' => $tyf,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]) . "\n";
         echo  new Option()
          ->value('')
@@ -212,7 +211,7 @@ echo H::openTag('div', $row) . "\n"; //1
        echo H::openTag('select', [
         'name' => $tym,
         'id' => $tym,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]) . "\n";
         echo  new Option()
          ->value('')
@@ -249,7 +248,7 @@ echo H::openTag('div', $row) . "\n"; //1
        echo H::openTag('select', [
         'name' => $tyd,
         'id' => $tyd,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]) . "\n";
         echo  new Option()
          ->value('')

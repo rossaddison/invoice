@@ -7,18 +7,22 @@
  * Bootstrap sm breakpoint without switching to a test device.
  *
  * Press Esc or click 🖥️ Desktop View to dismiss.
+ * Click ‹ on the button to collapse it to a left-margin tab; click the tab to restore.
  * Guard: button is suppressed when running inside the preview iframe itself.
  */
 
 class MobilePreviewToggle {
     private isActive = false;
+    private isDismissed = false;
     private toggleBtn!: HTMLButtonElement;
+    private dismissBtn!: HTMLButtonElement;
+    private sideTab!: HTMLButtonElement;
 
     constructor() {
-        // Do not activate when running inside the preview iframe itself
         if (window.self !== window.top) return;
         this.injectStyles();
         this.createButton();
+        this.createSideTab();
         document.addEventListener('keydown', (e: KeyboardEvent) => {
             if (e.key === 'Escape' && this.isActive) this.deactivate();
         });
@@ -31,14 +35,38 @@ class MobilePreviewToggle {
         s.textContent = `
             .mp-btn {
                 position: fixed; bottom: 72px; right: 20px; z-index: 10001;
-                padding: 9px 18px; background: #212529; color: #fff;
+                display: flex; align-items: center; gap: 6px;
+                padding: 9px 14px 9px 18px; background: #212529; color: #fff;
                 border: 2px solid #495057; border-radius: 22px; cursor: pointer;
                 font-size: 13px; font-weight: 600;
                 box-shadow: 0 4px 14px rgba(0,0,0,.35);
-                transition: background .2s, transform .15s;
+                transition: background .2s, transform .15s, opacity .2s;
             }
             .mp-btn:hover { background: #495057; transform: translateY(-2px); }
             .mp-btn.mp-on { background: #0d6efd; border-color: #0d6efd; }
+            .mp-dismiss {
+                display: inline-flex; align-items: center; justify-content: center;
+                width: 20px; height: 20px; margin-left: 2px;
+                background: rgba(255,255,255,.15); border: none; border-radius: 50%;
+                color: #fff; font-size: 14px; line-height: 1; cursor: pointer;
+                flex-shrink: 0; padding: 0;
+                transition: background .15s;
+            }
+            .mp-dismiss:hover { background: rgba(255,255,255,.35); }
+            .mp-side-tab {
+                position: fixed; top: 50%; left: 0; z-index: 10001;
+                transform: translateY(-50%);
+                writing-mode: vertical-lr; text-orientation: mixed;
+                padding: 12px 6px; background: #212529; color: #fff;
+                border: 2px solid #495057; border-left: none;
+                border-radius: 0 10px 10px 0; cursor: pointer;
+                font-size: 12px; font-weight: 600;
+                box-shadow: 3px 0 10px rgba(0,0,0,.3);
+                transition: background .2s;
+                display: none;
+            }
+            .mp-side-tab:hover { background: #495057; }
+            .mp-side-tab.mp-visible { display: block; }
             #mp-overlay {
                 display: none; position: fixed; inset: 0; z-index: 10000;
                 background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
@@ -82,10 +110,46 @@ class MobilePreviewToggle {
     private createButton(): void {
         this.toggleBtn = document.createElement('button');
         this.toggleBtn.className = 'mp-btn';
-        this.toggleBtn.textContent = '📱 Mobile Preview';
         this.toggleBtn.title = 'Preview at Android 390 px width';
+
+        const label = document.createElement('span');
+        label.textContent = '📱 Mobile Preview';
+        this.toggleBtn.appendChild(label);
+
+        this.dismissBtn = document.createElement('button');
+        this.dismissBtn.className = 'mp-dismiss';
+        this.dismissBtn.title = 'Collapse to left margin';
+        this.dismissBtn.textContent = '‹';
+        this.dismissBtn.addEventListener('click', (e: MouseEvent) => {
+            e.stopPropagation();
+            this.collapse();
+        });
+        this.toggleBtn.appendChild(this.dismissBtn);
+
         this.toggleBtn.addEventListener('click', () => this.toggle());
         document.body.appendChild(this.toggleBtn);
+    }
+
+    private createSideTab(): void {
+        this.sideTab = document.createElement('button');
+        this.sideTab.className = 'mp-side-tab';
+        this.sideTab.title = 'Restore Mobile Preview button';
+        this.sideTab.textContent = '📱 Preview';
+        this.sideTab.addEventListener('click', () => this.restore());
+        document.body.appendChild(this.sideTab);
+    }
+
+    private collapse(): void {
+        this.isDismissed = true;
+        if (this.isActive) this.deactivate();
+        this.toggleBtn.style.display = 'none';
+        this.sideTab.classList.add('mp-visible');
+    }
+
+    private restore(): void {
+        this.isDismissed = false;
+        this.sideTab.classList.remove('mp-visible');
+        this.toggleBtn.style.display = '';
     }
 
     private buildOverlay(): void {
@@ -135,14 +199,16 @@ class MobilePreviewToggle {
         this.isActive = true;
         this.buildOverlay();
         document.getElementById('mp-overlay')?.classList.add('mp-show');
-        this.toggleBtn.textContent = '🖥️ Desktop View';
+        const label = this.toggleBtn.querySelector('span');
+        if (label) label.textContent = '🖥️ Desktop View';
         this.toggleBtn.classList.add('mp-on');
     }
 
     private deactivate(): void {
         this.isActive = false;
         document.getElementById('mp-overlay')?.classList.remove('mp-show');
-        this.toggleBtn.textContent = '📱 Mobile Preview';
+        const label = this.toggleBtn.querySelector('span');
+        if (label) label.textContent = '📱 Mobile Preview';
         this.toggleBtn.classList.remove('mp-on');
     }
 

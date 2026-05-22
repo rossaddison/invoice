@@ -8,7 +8,6 @@ use App\Infrastructure\Persistence\Quote\Quote;
 use App\Invoice\Quote\QuoteRepository as QR;
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
 use App\Invoice\Setting\SettingRepository as SR;
-use App\Widget\PageSizeLimiter;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Html\Html;
@@ -252,10 +251,7 @@ final class QuotesListWidget extends Widget
             ])
             ->summaryTemplate(
                 '<div class="d-flex align-items-center">'
-                . PageSizeLimiter::buttons(
-                    $this->currentRoute, $sR, $translator, $urlGenerator, 'quote'
-                )
-                . ' ' . $this->gridSummary . '</div>'
+                . $this->gridSummary . '</div>'
             )
             ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
             ->noResultsText($translator->translate('no.records'))
@@ -545,8 +541,8 @@ final class QuotesListWidget extends Widget
                 return (new Label())
                     ->attributes([
                         'class' => ($model->getQuoteAmount()?->getTotal() ?? 0.0) > 0.0
-                            ? 'label label-success'
-                            : 'label label-warning',
+                            ? 'badge bg-success'
+                            : 'badge bg-warning text-dark',
                     ])
                     ->content(Html::encode(
                         null !== $quoteTotal

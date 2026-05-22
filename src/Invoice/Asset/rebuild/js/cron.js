@@ -58,11 +58,11 @@
             }
             button.setAttribute('aria-busy', 'true');
             button.setAttribute('disabled', 'true');
-            button.innerHTML = '<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>';
+            button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
         } else {
             var original = button.getAttribute('data-original-html');
             if (original) {
-                button.textContent = original;
+                button.innerHTML = original;
                 button.removeAttribute('data-original-html');
             }
             button.removeAttribute('aria-busy');
@@ -163,7 +163,7 @@
             tryCopyToClipboard(newKey, input, function onSuccess() {
                 // show check icon briefly
                 try {
-                    button.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
+                    button.innerHTML = '<i class="bi bi-check-lg" aria-hidden="true"></i>';
                 } catch (e) {
                     // ignore
                 }
@@ -173,7 +173,7 @@
             }, function onFail() {
                 // copy failed; show recycle icon briefly then restore
                 try {
-                    button.innerHTML = '<i class="fa fa-recycle fa-margin" aria-hidden="true"></i>';
+                    button.innerHTML = '<i class="bi bi-recycle" aria-hidden="true"></i>';
                 } catch (e) {
                     // ignore
                 }

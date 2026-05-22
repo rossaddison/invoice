@@ -2,13 +2,11 @@
 // Converted from scripts.js - Global UI utilities
 
 export function initTooltips(): void {
-    const bootstrap = (window as any).bootstrap;
-    if (typeof bootstrap === 'undefined' || !bootstrap.Tooltip) return;
-
-    const tooltipElements = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-    tooltipElements.forEach((el) => {
+    const bs = (window as any).bootstrap;
+    if (!bs?.Tooltip) return;
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
         try {
-            new bootstrap.Tooltip(el);
+            bs.Tooltip.getOrCreateInstance(el);
         } catch (e) {
             // ignore init errors
         }

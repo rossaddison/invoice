@@ -205,9 +205,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         attachMagnifiersToAmounts() {
             const amountSelectors = [
-                '.label.label-success',
-                '.label.label-warning',
-                '.label.label-danger'
+                '.badge.bg-success',
+                '.badge.bg-warning',
+                '.badge.bg-danger'
             ];
 
             amountSelectors.forEach(selector => {
@@ -232,13 +232,13 @@ document.addEventListener('DOMContentLoaded', function() {
             let borderColor = '#007bff';
             let bgColor = 'rgba(255, 255, 255, 0.95)';
 
-            if (element.classList.contains('label-success')) {
+            if (element.classList.contains('bg-success')) {
                 borderColor = '#28a745';
                 bgColor = '#d4edda';
-            } else if (element.classList.contains('label-warning')) {
+            } else if (element.classList.contains('bg-warning')) {
                 borderColor = '#ffc107';
                 bgColor = '#fff3cd';
-            } else if (element.classList.contains('label-danger')) {
+            } else if (element.classList.contains('bg-danger')) {
                 borderColor = '#dc3545';
                 bgColor = '#f8d7da';
             }
@@ -640,19 +640,26 @@ CSS;
 endif;
 
 $mobilePreviewScript = <<<JS
-// Mobile/Desktop Preview Toggle
-// Renders the current page inside a 390 px phone-frame overlay (Android standard).
-// Suppressed when running inside the preview iframe itself.
+// Mobile Preview Toggle
+// Opens the current page in a 390 px popup window — a real browser viewport at phone
+// width so Bootstrap breakpoints trigger correctly. No iframe embedding required.
+// Click ‹ to collapse the button to a left-margin tab; click the tab to restore.
 class MobilePreviewToggle {
     constructor() {
-        if (window.self !== window.top) return;
         this.isActive = false;
-        this.toggleBtn = null;
+        this.previewWin = null;
+        this.sideTab = null;
         this.injectStyles();
         this.createButton();
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && this.isActive) this.deactivate();
-        });
+        this.createSideTab();
+        // Detect if the preview window was closed externally
+        setInterval(() => {
+            if (this.isActive && this.previewWin && this.previewWin.closed) {
+                this.isActive = false;
+                this.toggleBtn.querySelector('span').textContent = '📱 Mobile Preview';
+                this.toggleBtn.classList.remove('mp-on');
+            }
+        }, 800);
     }
 
     injectStyles() {
@@ -661,96 +668,89 @@ class MobilePreviewToggle {
         s.id = 'mp-styles';
         s.textContent =
             '.mp-btn{position:fixed;bottom:72px;right:20px;z-index:10001;' +
-            'padding:9px 18px;background:#212529;color:#fff;' +
+            'display:flex;align-items:center;gap:6px;' +
+            'padding:9px 14px 9px 18px;background:#212529;color:#fff;' +
             'border:2px solid #495057;border-radius:22px;cursor:pointer;' +
             'font-size:13px;font-weight:600;' +
             'box-shadow:0 4px 14px rgba(0,0,0,.35);' +
             'transition:background .2s,transform .15s;}' +
             '.mp-btn:hover{background:#495057;transform:translateY(-2px);}' +
             '.mp-btn.mp-on{background:#0d6efd;border-color:#0d6efd;}' +
-            '#mp-overlay{display:none;position:fixed;inset:0;z-index:10000;' +
-            'background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);' +
-            'overflow-y:auto;justify-content:center;' +
-            'align-items:flex-start;padding:30px 0 60px;}' +
-            '#mp-overlay.mp-show{display:flex;}' +
-            '#mp-phone{width:390px;background:#fff;border-radius:48px;' +
-            'box-shadow:inset 0 0 0 2px #555,0 0 0 10px #1c1c1e,' +
-            '0 0 0 12px #3a3a3c,0 40px 100px rgba(0,0,0,.6);' +
-            'overflow:hidden;position:relative;flex-shrink:0;}' +
-            '#mp-badge{position:absolute;top:-28px;left:50%;' +
-            'transform:translateX(-50%);background:rgba(0,0,0,.6);' +
-            'color:#a0cfff;font-size:11px;padding:2px 10px;' +
-            'border-radius:10px;white-space:nowrap;}' +
-            '#mp-notch-bar{background:#1c1c1e;height:34px;' +
-            'display:flex;align-items:center;justify-content:center;}' +
-            '#mp-notch{width:110px;height:24px;background:#1c1c1e;' +
-            'border-radius:0 0 16px 16px;}' +
-            '#mp-iframe{width:390px;height:800px;border:none;display:block;}' +
-            '#mp-home-bar{background:#1c1c1e;height:28px;' +
-            'display:flex;align-items:center;justify-content:center;}' +
-            '#mp-home-ind{width:120px;height:5px;background:#555;border-radius:3px;}' +
-            '#mp-hint{position:fixed;bottom:18px;left:50%;' +
-            'transform:translateX(-50%);z-index:10002;' +
-            'color:rgba(255,255,255,.45);font-size:12px;' +
-            'pointer-events:none;white-space:nowrap;}';
+            '.mp-dismiss{display:inline-flex;align-items:center;justify-content:center;' +
+            'width:20px;height:20px;margin-left:2px;' +
+            'background:rgba(255,255,255,.15);border:none;border-radius:50%;' +
+            'color:#fff;font-size:14px;line-height:1;cursor:pointer;' +
+            'flex-shrink:0;padding:0;transition:background .15s;}' +
+            '.mp-dismiss:hover{background:rgba(255,255,255,.35);}' +
+            '.mp-side-tab{position:fixed;top:50%;left:0;z-index:10001;' +
+            'transform:translateY(-50%);' +
+            'width:28px;height:28px;padding:0;' +
+            'background:#212529;color:#fff;' +
+            'border:2px solid #495057;border-left:none;' +
+            'border-radius:0 8px 8px 0;cursor:pointer;' +
+            'font-size:15px;line-height:28px;text-align:center;' +
+            'box-shadow:3px 0 10px rgba(0,0,0,.3);' +
+            'transition:background .2s;display:none;}' +
+            '.mp-side-tab:hover{background:#495057;}' +
+            '.mp-side-tab.mp-visible{display:block;}';
         document.head.appendChild(s);
     }
 
     createButton() {
         this.toggleBtn = document.createElement('button');
         this.toggleBtn.className = 'mp-btn';
-        this.toggleBtn.textContent = '📱 Mobile Preview';
         this.toggleBtn.title = 'Preview at Android 390 px width';
+
+        const label = document.createElement('span');
+        label.textContent = '📱 Mobile Preview';
+        this.toggleBtn.appendChild(label);
+
+        const dismiss = document.createElement('button');
+        dismiss.className = 'mp-dismiss';
+        dismiss.title = 'Collapse to left margin';
+        dismiss.textContent = '‹';
+        dismiss.addEventListener('click', (e) => { e.stopPropagation(); this.collapse(); });
+        this.toggleBtn.appendChild(dismiss);
+
         this.toggleBtn.addEventListener('click', () => this.toggle());
         document.body.appendChild(this.toggleBtn);
     }
 
-    buildOverlay() {
-        if (document.getElementById('mp-overlay')) return;
-        const overlay = document.createElement('div');
-        overlay.id = 'mp-overlay';
-        const phone = document.createElement('div');
-        phone.id = 'mp-phone';
-        const badge = document.createElement('div');
-        badge.id = 'mp-badge';
-        badge.textContent = '📱 Android — 390 × 844 px';
-        phone.appendChild(badge);
-        const notchBar = document.createElement('div');
-        notchBar.id = 'mp-notch-bar';
-        const notch = document.createElement('div');
-        notch.id = 'mp-notch';
-        notchBar.appendChild(notch);
-        phone.appendChild(notchBar);
-        const iframe = document.createElement('iframe');
-        iframe.id = 'mp-iframe';
-        iframe.src = window.location.href;
-        phone.appendChild(iframe);
-        const homeBar = document.createElement('div');
-        homeBar.id = 'mp-home-bar';
-        const homeInd = document.createElement('div');
-        homeInd.id = 'mp-home-ind';
-        homeBar.appendChild(homeInd);
-        phone.appendChild(homeBar);
-        overlay.appendChild(phone);
-        const hint = document.createElement('div');
-        hint.id = 'mp-hint';
-        hint.textContent = 'Press Esc or click 🖥️ Desktop View to exit';
-        overlay.appendChild(hint);
-        document.body.appendChild(overlay);
+    createSideTab() {
+        this.sideTab = document.createElement('button');
+        this.sideTab.className = 'mp-side-tab';
+        this.sideTab.title = 'Restore Mobile Preview button';
+        this.sideTab.textContent = '📱';
+        this.sideTab.addEventListener('click', () => this.restore());
+        document.body.appendChild(this.sideTab);
+    }
+
+    collapse() {
+        if (this.isActive) this.deactivate();
+        this.toggleBtn.style.display = 'none';
+        this.sideTab.classList.add('mp-visible');
+    }
+
+    restore() {
+        this.sideTab.classList.remove('mp-visible');
+        this.toggleBtn.style.display = '';
     }
 
     activate() {
         this.isActive = true;
-        this.buildOverlay();
-        document.getElementById('mp-overlay')?.classList.add('mp-show');
-        this.toggleBtn.textContent = '🖥️ Desktop View';
+        const features = 'width=390,height=844,resizable=yes,scrollbars=yes,location=no,menubar=no,toolbar=no,status=no';
+        this.previewWin = window.open(window.location.href, 'mp-preview', features);
+        this.toggleBtn.querySelector('span').textContent = '🖥️ Close Preview';
         this.toggleBtn.classList.add('mp-on');
     }
 
     deactivate() {
         this.isActive = false;
-        document.getElementById('mp-overlay')?.classList.remove('mp-show');
-        this.toggleBtn.textContent = '📱 Mobile Preview';
+        if (this.previewWin && !this.previewWin.closed) {
+            this.previewWin.close();
+        }
+        this.previewWin = null;
+        this.toggleBtn.querySelector('span').textContent = '📱 Mobile Preview';
         this.toggleBtn.classList.remove('mp-on');
     }
 

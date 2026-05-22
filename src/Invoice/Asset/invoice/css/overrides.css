@@ -1,56 +1,63 @@
-/* Dark Theme Datepicker Overrides - From _custom_styles.scss */
-@media (prefers-color-scheme: dark) {
-  .datepicker table { background: var(--background-alt); }
-  .datepicker thead tr th,
-  .datepicker tfoot tr th {
-    background: var(--background-color);
-    color: var(--text-color);
-    border-radius: 0;
-  }
-  .datepicker .prev:hover, 
-  .datepicker .datepicker-switch:hover, 
-  .datepicker .next:hover, 
-  .datepicker thead tr th.dow:hover,
-  .datepicker table tr td.day:hover,
-  .datepicker table tr td span.month:hover,
-  .datepicker table tr td span.year:hover,
-  .datepicker tfoot tr th:hover {
-    background: var(--text-color);
-    color: #fff;
-  }
-  .form-control { background-color: var(--background-alt); color: var(--text-color); }
-  .form-control:focus { color: #fff; }
-  .form-select { background-color: var(--input-background); color: var(--text-color); }
-  select { background-color: var(--input-background); color: var(--text-color); }
-  select option { color: var(--text-color); background-color: var(--input-background); }
-  .form-text { color: var(--text-muted); }
-  .sidebar li a:hover { color: #fff; background-color: #000; }
+/* Settings labels — bold throughout all setting tab partials */
+.card-body label { font-weight: bold; }
+
+/* Checkbox spacing — default gap (0.5em) is too narrow; widen to 1em */
+.form-check {
+    padding-left: 2em;
+}
+.form-check .form-check-input {
+    margin-left: -2em;
 }
 
-[data-theme="dark"] {
-  .datepicker table { background: var(--background-alt); }
-  .datepicker thead tr th,
-  .datepicker tfoot tr th {
-    background: var(--background-color);
-    color: var(--text-color);
-    border-radius: 0;
-  }
-  .datepicker .prev:hover, 
-  .datepicker .datepicker-switch:hover, 
-  .datepicker .next:hover, 
-  .datepicker thead tr th.dow:hover,
-  .datepicker table tr td.day:hover,
-  .datepicker table tr td span.month:hover,
-  .datepicker table tr td span.year:hover,
-  .datepicker tfoot tr th:hover {
-    background: var(--text-color);
-    color: #fff;
-  }
-  .form-control { background-color: var(--background-alt); color: var(--text-color); }
-  .form-control:focus { color: #fff; }
-  .form-select { background-color: var(--input-background); color: var(--text-color); }
-  select { background-color: var(--input-background); color: var(--text-color); }
-  select option { color: var(--text-color); background-color: var(--input-background); }
-  .form-text { color: var(--text-muted); }
-  .sidebar li a:hover { color: #fff; background-color: #000; }
+/* Datepicker hover overrides */
+.datepicker .prev:hover,
+.datepicker .datepicker-switch:hover,
+.datepicker .next:hover,
+.datepicker thead tr th.dow:hover,
+.datepicker table tr td.day:hover,
+.datepicker table tr td span.month:hover,
+.datepicker table tr td span.year:hover,
+.datepicker tfoot tr th:hover {
+  background: #333;
+  color: #fff;
+}
+
+.sidebar li a:hover { color: #fff; background-color: #000; }
+
+/* form-floating fix — base.css sets html { font-size: 10px } which shrinks
+   Bootstrap 5 rem values (3.5rem → 35px instead of 56px, label transforms too short).
+   Uses --inv-input-height and --inv-form-fs CSS vars emitted by LayoutViewInjection
+   from the bootstrap5_form_input_height and bootstrap5_form_font_size settings. */
+.form-floating > .form-control,
+.form-floating > .form-control-plaintext,
+.form-floating > .form-select {
+    height: var(--inv-input-height, 56px);
+    min-height: var(--inv-input-height, 56px);
+    font-size: var(--inv-form-fs, 14px);
+    padding: 16px 12px;
+    line-height: 1.25;
+}
+
+.form-floating > label {
+    padding: 16px 12px;
+    font-size: var(--inv-form-fs, 14px);
+}
+
+.form-floating > .form-control:focus,
+.form-floating > .form-control:not(:placeholder-shown) {
+    padding-top: 26px;
+    padding-bottom: 10px;
+}
+
+.form-floating > .form-control:-webkit-autofill {
+    padding-top: 26px;
+    padding-bottom: 10px;
+}
+
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label,
+.form-floating > .form-control-plaintext ~ label,
+.form-floating > .form-select ~ label {
+    opacity: 0.65;
+    transform: scale(0.85) translateY(-8px) translateX(2.4px);
 }

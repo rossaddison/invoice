@@ -62,7 +62,7 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
    echo H::openTag('div', [
        'class' => $class[17],
        'style' => 'max-width:400px;']);
-    echo H::openTag('div', ['class' => 'input-group']);
+    echo H::openTag('div');
      echo H::input('password', 'secret', H::encode($totpSecret), [
         'class' => 'form-control form-control-lg',
         'id' => 'secretInput',

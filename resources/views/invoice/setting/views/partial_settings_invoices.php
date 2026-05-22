@@ -26,10 +26,9 @@ $colMd8 = ['class' => 'col-12 col-md-8 offset-md-2'];
 $panel = ['class' => 'card'];
 $panelHead = ['class' => 'card-header'];
 $panelBody = ['class' => 'card-body'];
-$formGroup = ['class' => 'form-group'];
+$formGroup = ['class' => 'mb-3'];
 $helpBlock = ['class' => 'form-text'];
 
-echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', $row); //1
  echo H::openTag('div', $colMd8); //2
 
@@ -56,7 +55,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $sdig,
         'id' => $sdig,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('')
@@ -89,7 +88,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('textarea', [
         'name' => $sdit,
         'id' => $sdit,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-control',
         'rows' => '4'
        ]);
         echo $body[$sdit];
@@ -116,7 +115,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' =>
         $sdpm,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
         'id' =>
         $sdpm
        ]);
@@ -154,7 +153,7 @@ echo H::openTag('div', $row); //1
         'type' => 'number',
         'name' => $sda,
         'id' => $sda,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-control',
         'value' => $body[$sda]
        ]);
       echo H::closeTag('div'); //7
@@ -175,7 +174,7 @@ echo H::openTag('div', $row); //1
 
        echo H::openTag('select', [
         'name' => $snd,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
         'id' => $snd
        ]);
         echo  new Option()
@@ -219,7 +218,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $smsp,
         'id' => $smsp,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -252,7 +251,7 @@ echo H::openTag('div', $row); //1
         'type' => 'text',
         'name' => $sipp,
         'id' => $sipp,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-control',
         'value' =>
         $body[$sipp]
        ]);
@@ -274,7 +273,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $siz,
         'id' => $siz,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -312,7 +311,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $spw,
         'id' => $spw,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -344,7 +343,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $spsi,
         'id' => $spsi,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -377,7 +376,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $spai,
         'id' => $spai,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -409,7 +408,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $sphi,
         'id' => $sphi,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -456,7 +455,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $spit,
         'id' => $spit,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('')
@@ -498,7 +497,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $spitp,
         'id' => $spitp,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('')
@@ -540,7 +539,7 @@ echo H::openTag('div', $row); //1
 
        echo H::openTag('select', [
         'name' => $spito,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
         'id' => $spito
        ]);
         echo  new Option()
@@ -583,7 +582,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $spubt,
         'id' => $spubt,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('')
@@ -628,7 +627,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $seit,
         'id' => $seit,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('')
@@ -664,7 +663,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $seitp,
         'id' => $seitp,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('')
@@ -710,7 +709,7 @@ echo H::openTag('div', $row); //1
 
        echo H::openTag('select', [
         'name' => $seito,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
         'id' => $seito
        ]);
         echo  new Option()
@@ -807,7 +806,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $saer,
         'id' => $saer,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -856,7 +855,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $srot,
         'id' => $srot,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('2')
@@ -901,7 +900,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $smisc,
         'id' => $smisc,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')

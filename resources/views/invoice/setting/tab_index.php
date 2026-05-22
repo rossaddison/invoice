@@ -245,24 +245,25 @@ echo H::tag('style', '
  }
 ');
 echo H::openTag('div', ['id' => 'headerbar']); //0
- echo H::openTag('h1', ['class' => 'headerbar-title']); //1
-  echo $translator->translate('settings');
- echo H::closeTag('h1'); //1
  echo $button::backSave();
 echo H::closeTag('div'); //0
 
 // https://getbootstrap.com/docs/5.0/components/navs-tabs/#using-data-attributes
 echo H::openTag('ul', ['id' => 'settings-tabs',
-    'class' => 'nav nav-tabs nav-tabs-noborder']); //0
+    'class' => 'nav nav-tabs',
+    'role'  => 'tablist']); //0
  foreach ($tabs as $key => $tab) {
   $isActive = $active == $key;
-  echo H::openTag('li', ['class' => 'nav-item'
-      . ($isActive ? ' active' : ''),
-      'role' => 'presentation']); //2
+  echo H::openTag('li', ['class' => 'nav-item']); //2
    echo H::openTag('button', [
+    'id'             => 'tab-' . $key,
+    'type'           => 'button',
+    'role'           => 'tab',
     'class'          => 'nav-link' . ($isActive ? ' active' : ''),
     'data-bs-toggle' => 'tab',
     'data-bs-target' => '#settings-' . $key,
+    'aria-controls'  => 'settings-' . $key,
+    'aria-selected'  => $isActive ? 'true' : 'false',
     'style'          => 'text-decoration: none; font: inherit; --tab-color: ' . $tab['color'],
    ]); //3
     echo H::openTag('i', ['class' => $tab['icon']]); //4
@@ -282,18 +283,17 @@ echo H::openTag('form', [
  'enctype' => 'multipart/form-data',
 ]); //0
  echo H::hiddenInput('_csrf', $csrf, ['id' => '_csrf']);
- echo H::openTag('div', ['class' => 'tabbable tabs-below']); //1
+ echo H::openTag('div', []); //1
   echo H::openTag('div', ['class' => 'tab-content']); //2
    foreach ($tabs as $key => $tab) {
     $isActive   = $active == $key;
-    $paneAttrs  = ['id' => 'settings-' . $key,
-        'class' => 'tab-pane' . ($isActive ? ' active' : '')];
-    if ($tab['role']) {
-     $paneAttrs['role'] = 'tabpanel';
-    }
-    if ($tab['aria'] !== '') {
-     $paneAttrs['aria-labelledby'] = $tab['aria'];
-    }
+    $paneAttrs  = [
+        'id'               => 'settings-' . $key,
+        'class'            => 'tab-pane' . ($isActive ? ' active' : ''),
+        'role'             => 'tabpanel',
+        'tabindex'         => '0',
+        'aria-labelledby'  => 'tab-' . $key,
+    ];
     echo H::openTag('div', $paneAttrs); //4
      echo $tab['content'];
     echo H::closeTag('div'); //4

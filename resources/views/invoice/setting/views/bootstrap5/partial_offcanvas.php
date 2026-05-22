@@ -13,35 +13,37 @@ use Yiisoft\Html\Tag\Option;
 
 echo H::openTag('div', ['class' => 'border border-1 border-primary']); //1
  echo H::openTag('div', ['class' => 'col-12 col-md-6']); //2
-  echo H::openTag('div', ['class' => 'form-group']); //3
-   echo H::openTag('div', ['class' => 'checkbox']); //4
+  echo H::openTag('div', ['class' => 'mb-3']); //3
+   echo H::openTag('div', ['class' => 'form-check']); //4
     $checked = $body['settings[bootstrap5_offcanvas_enable]'] == 1;
-    echo H::openTag('label');
-     echo H::openTag('input', [
+    echo H::openTag('input', [
       'type' => 'hidden',
       'name' => 'settings[bootstrap5_offcanvas_enable]',
       'value' => '0',
      ]);
      echo H::openTag('input', [
       'type' => 'checkbox',
+      'class' => 'form-check-input',
+      'id' => 'bootstrap5_offcanvas_enable',
       'name' => 'settings[bootstrap5_offcanvas_enable]',
       'value' => '1',
       'checked' => $checked ? 'checked' : null,
      ]);
-     echo $translator->translate('bootstrap5.offcanvas.enable');
-    echo H::closeTag('label');
+     echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'bootstrap5_offcanvas_enable']);
+      echo $translator->translate('bootstrap5.offcanvas.enable');
+     echo H::closeTag('label');
    echo H::closeTag('div'); //4
   echo H::closeTag('div'); //3
  echo H::closeTag('div'); //2
  echo H::openTag('div', ['class' => 'col-12 col-md-6']); //2
-  echo H::openTag('div', ['class' => 'form-group']); //3
+  echo H::openTag('div', ['class' => 'mb-3']); //3
    echo H::openTag('label', ['for' => 'settings[bootstrap5_offcanvas_placement]']);
     echo $translator->translate('bootstrap5.offcanvas.placement');
    echo H::closeTag('label');
    echo H::openTag('select', [
     'name' => 'settings[bootstrap5_offcanvas_placement]',
     'id' => 'settings[bootstrap5_offcanvas_placement]',
-    'class' => 'form-control form-control-lg',
+    'class' => 'form-select',
    ]);
     echo  new Option()
      ->value('0')

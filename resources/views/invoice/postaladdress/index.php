@@ -16,7 +16,6 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var App\Invoice\Client\ClientRepository $cR
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
- * @var App\Widget\PageSizeLimiter $pageSizeLimiter
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\CurrentRoute $routeCurrent
@@ -151,6 +150,6 @@ echo GridView::widget()
 ->header($translator->translate('client.postaladdress'))
 ->id('w3-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
-->summaryTemplate($pageSizeLimiter::buttons($routeCurrent, $s, $translator, $urlFastRouteGenerator, 'postaladdress') . ' ' . $gridSummary)
+->summaryTemplate($gridSummary)
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
 ->toolbar($toolbarString);

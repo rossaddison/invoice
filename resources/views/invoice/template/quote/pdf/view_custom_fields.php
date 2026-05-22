@@ -23,7 +23,7 @@ declare(strict_types=1);
         continue;
     } ?>
     <div>
-          <?php $cvH->printFieldForPdf($translator, $quote_custom_values, $custom_field, $cvR); ?>
+          <?php $cvH->printFieldForPdf($translator, $quote_custom_values, $custom_field); ?>
     </div>
     <?php endforeach; ?>
 </div>

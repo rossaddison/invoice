@@ -14,14 +14,14 @@ use Yiisoft\Html\Tag\Option;
 
 echo H::openTag('div', ['class' => 'border border-line-1 border-danger']); //1
  echo H::openTag('div', ['class' => 'col-12 col-md-6']); //2
-  echo H::openTag('div', ['class' => 'form-group']); //3
+  echo H::openTag('div', ['class' => 'mb-3']); //3
    echo H::openTag('label', ['for' => 'settings[bootstrap5_layout_invoice_navbar_font]']);
     echo $translator->translate('bootstrap5.layout.invoice.navbar.font');
    echo H::closeTag('label');
    echo H::openTag('select', [
     'name' => 'settings[bootstrap5_layout_invoice_navbar_font]',
     'id' => 'settings[bootstrap5_layout_invoice_navbar_font]',
-    'class' => 'form-control form-control-lg',
+    'class' => 'form-select',
    ]);
     echo  new Option()->value('0')->content('Arial');
    /**
@@ -37,14 +37,14 @@ echo H::openTag('div', ['class' => 'border border-line-1 border-danger']); //1
   echo H::closeTag('div'); //3
  echo H::closeTag('div'); //2
  echo H::openTag('div', ['class' => 'col-12 col-md-6']); //2
-  echo H::openTag('div', ['class' => 'form-group']); //3
+  echo H::openTag('div', ['class' => 'mb-3']); //3
    echo H::openTag('label', ['for' => 'settings[bootstrap5_layout_invoice_navbar_font_size]']);
     echo $translator->translate('bootstrap5.layout.invoice.navbar.font.size');
    echo H::closeTag('label');
    echo H::openTag('select', [
     'name' => 'settings[bootstrap5_layout_invoice_navbar_font_size]',
     'id' => 'settings[bootstrap5_layout_invoice_navbar_font_size]',
-    'class' => 'form-control form-control-lg',
+    'class' => 'form-select',
    ]);
     echo  new Option()->value('0')->content('10');
    /**

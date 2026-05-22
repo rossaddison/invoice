@@ -128,7 +128,7 @@ echo H::openTag('div', ['id' => 'content']);
          'id' => 'notes',
          'rows' => '3',
          'disabled' => true,
-         'class' => 'input-sm form-control'
+         'class' => 'form-control'
      ]);
       echo H::encode($body['notes'] ?? '');
      echo H::closeTag('textarea');

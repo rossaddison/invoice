@@ -575,26 +575,13 @@
   margin-left: var(--spacing-md);
 }
 
-.discount-field .input-sm,
-.discount-field .input-group-sm > .form-control,
-.discount-field .input-group-sm > .input-group-addon,
-.discount-field .input-group-sm > .input-group-btn > .btn {
-  height: auto;
+.discount-field .form-control-sm,
+.discount-field .input-group-sm > .form-control {
   padding: var(--spacing-xs) var(--spacing-sm);
 }
 
-.discount-field .input-group-addon {
+.discount-field .input-group-text {
   min-width: var(--spacing-xl);
-}
-
-/* FontAwesome Utilities - From style.css */
-.fa {
-  min-width: var(--spacing-lg);
-  text-align: center;
-}
-
-.fa.fa-margin {
-  margin-right: 7px;
 }
 
 .fa-credit-invoice:before {

@@ -84,27 +84,21 @@ fieldset[disabled] .btn {
   color: #fff;
 }
 
-/* Forms - From style.css and _custom_styles.scss */
+/* Forms */
+/* Bootstrap 5 uses rem units; html{font-size:10px} scales them down to 62.5% of intended.
+   Use px-based variables to preserve the designed 6px/12px padding and 34px min-height. */
 .form-control {
-  display: block;
-  width: 100%;
-  height: var(--input-height);
-  padding: var(--input-padding-vertical) var(--input-padding-horizontal);
   font-size: var(--font-size-base);
-  line-height: var(--line-height-base);
   color: var(--text-color);
-  background-color: var(--input-background);
-  background-image: none;
-  border: 1px solid var(--input-border-color);
-  border-radius: var(--border-radius-base);
-  box-shadow: none;
-  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  border-color: var(--input-border-color);
+  padding: var(--input-padding-vertical) var(--input-padding-horizontal);
+  min-height: var(--input-height);
 }
 
-.form-control:focus {
-  border-color: var(--input-border-focus);
-  outline: 0;
-  box-shadow: none;
+/* Textareas must not be height-clamped — let rows attribute determine height */
+textarea.form-control {
+  min-height: 0;
+  height: auto;
 }
 
 .form-control::-moz-placeholder {
@@ -224,7 +218,7 @@ fieldset[disabled] .btn {
   height: 13.5rem;
 }
 
-.table .input-group-addon {
+.table .input-group-text {
   font-size: var(--font-size-small);
   padding: 4px 8px;
 }
@@ -409,16 +403,11 @@ fieldset[disabled] .btn {
   border-collapse: separate;
 }
 
-.input-group-addon {
-  padding: var(--input-padding-vertical) var(--input-padding-horizontal);
+.input-group-text {
   font-size: var(--font-size-base);
-  font-weight: normal;
-  line-height: 1;
   color: var(--text-color);
-  text-align: center;
   background-color: #eee;
-  border: 1px solid var(--input-border-color);
-  border-radius: var(--border-radius-base);
+  border-color: var(--input-border-color);
 }
 
 /* Progress Components - TODO: Extract from style.css */

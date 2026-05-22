@@ -11,7 +11,6 @@ use Yiisoft\Html\Tag\Option;
 * @var array $body
 */
 
-echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', ['class' => 'row']); //1
  echo H::openTag('div', ['class' => 'col-12 col-md-8 offset-md-2']); //2
   echo H::openTag('div', ['class' => 'card']); //3
@@ -21,11 +20,10 @@ echo H::openTag('div', ['class' => 'row']); //1
    echo H::openTag('div', ['class' => 'card-body']); //4
     echo H::openTag('div', ['class' => 'row']); //5
      echo H::openTag('div', ['class' => 'col-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
-       echo H::openTag('div', ['class' => 'checkbox']); //8
+      echo H::openTag('div', ['class' => 'mb-3']); //7
+       echo H::openTag('div', ['class' => 'form-check']); //8
         $body['settings[enable_tfa]'] = $s->getSetting('enable_tfa');
-        echo H::openTag('label');
-         echo H::hiddenInput(
+        echo H::hiddenInput(
           'settings[enable_tfa]',
           '0'
          );
@@ -33,18 +31,21 @@ echo H::openTag('div', ['class' => 'row']); //1
           'settings[enable_tfa]',
           '1',
           [
+          'class' => 'form-check-input',
+          'id' => 'enable_tfa',
           'checked' => ($body['settings[enable_tfa]'] == 1)
           ? 'checked'
           : null
          ]
          );
-         echo $translator->translate(
-          'two.factor.authentication.enable'
-         );
-        echo H::closeTag('label');
+         echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'enable_tfa']);
+          echo $translator->translate(
+           'two.factor.authentication.enable'
+          );
+         echo H::closeTag('label');
        echo H::closeTag('div'); //8
       echo H::closeTag('div'); //7
-      echo H::openTag('div', ['class' => 'form-group']); //7
+      echo H::openTag('div', ['class' => 'mb-3']); //7
       $tfaDisabling = 'settings[enable_tfa_with_disabling]';
        echo H::openTag(
         'label',
@@ -68,7 +69,7 @@ echo H::openTag('div', ['class' => 'row']); //1
       echo H::openTag('select', [
        'name' => $tfaDisabling,
        'id' => $tfaDisabling,
-       'class' => 'form-control form-control-lg',
+       'class' => 'form-select',
       ]);
        echo  new Option()
         ->value('0')

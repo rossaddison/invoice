@@ -11,7 +11,6 @@ use Yiisoft\Html\Tag\Option;
 * @var array $body
 */
 
-echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', ['class' => 'row']); //1
  echo H::openTag('div', [ //2
   'class' => 'col-12 col-md-8 offset-md-2'
@@ -23,7 +22,7 @@ echo H::openTag('div', ['class' => 'row']); //1
    echo H::openTag('div', ['class' => 'card-body']); //4
     echo H::openTag('div', ['class' => 'row']); //5
      echo H::openTag('div', ['class' => 'col-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+      echo H::openTag('div', ['class' => 'mb-3']); //7
        echo H::openTag('label', ['for' => 'settings[projects_enabled]']);
         echo $translator->translate('enable.projects');
        echo H::closeTag('label');
@@ -32,7 +31,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        $s->getSetting('projects_enabled');
        echo H::openTag('select', [
         'name' => $pe,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
         'id' => $pe
        ]);
         $options = [
@@ -54,7 +53,7 @@ echo H::openTag('div', ['class' => 'row']); //1
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
      echo H::openTag('div', ['class' => 'col-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+      echo H::openTag('div', ['class' => 'mb-3']); //7
        $dhr = 'settings[default_hourly_rate]';
        echo H::openTag('label', ['for' => $dhr]);
         echo $translator->translate('default.hourly.rate');
@@ -62,22 +61,18 @@ echo H::openTag('div', ['class' => 'row']); //1
        $body[$dhr] = $s->getSetting('default_hourly_rate');
        $formatted_rate = $body[$dhr] ? $s->formatAmount((float) $body[$dhr])
         : $body[$dhr];
-       echo H::openTag('div', ['class' => 'input-group']); //8
-        echo H::input('text', $dhr,
+       echo H::input('text', $dhr,
          $formatted_rate, [
          'id' => 'settings[default_hourly_rate]',
          'class' => 'form-control amount'
         ]);
-        echo H::openTag('span', ['class' => 'input-group-addon']);
-         echo $s->getSetting('currency_symbol');
-        echo H::closeTag('span');
+        echo H::tag('small', $s->getSetting('currency_symbol'), ['class' => 'text-muted ms-1']);
         echo H::input('hidden',
          'settings[default_hourly_rate_field_is_amount]', '1');
-         echo H::closeTag('div'); //10
-         echo H::closeTag('div'); //10
-         echo H::closeTag('div'); //10
-         echo H::closeTag('div'); //10
-         echo H::closeTag('div'); //10
-         echo H::closeTag('div'); //10
-         echo H::closeTag('div'); //10
-         echo H::closeTag('div'); //10
+      echo H::closeTag('div'); //7
+     echo H::closeTag('div'); //6
+    echo H::closeTag('div'); //5
+   echo H::closeTag('div'); //4
+  echo H::closeTag('div'); //3
+ echo H::closeTag('div'); //2
+echo H::closeTag('div'); //1

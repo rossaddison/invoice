@@ -166,11 +166,7 @@ echo GridView::widget()
   ->multiSort(true)
   ->id('w<?= $random; ?>-grid')
   ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-  ->summaryTemplate('<div class="d-flex align-items-center">'
-    . $pageSizeLimiter::buttons(
-        $currentRoute, $s, $translator, $urlGenerator,
-        '<?= $generator->getSmallSingularName(); ?>')
-    . ' ' . $gridSummary . '</div>')
+  ->summaryTemplate('<div class="d-flex align-items-center">' . $gridSummary . '</div>')
   ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
   ->noResultsText($translator->translate('no.records'))
   ->toolbar($toolbarString);

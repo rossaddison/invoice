@@ -65,6 +65,7 @@ use Yiisoft\Html\Tag\Form;
                             'class' => 'form-control form-control-lg',
                             'id' => 'family_name',
                         ])
+                        ->disabled()
                         ->readonly(true);
                   ?>
                 <?= Html::closeTag('div'); ?>

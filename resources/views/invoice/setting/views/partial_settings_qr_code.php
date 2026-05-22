@@ -18,7 +18,6 @@ use chillerlan\QRCode\QRCode;
 * @var array $body
 */
 
-echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', ['class' => 'row']); //1
  echo H::openTag('div', [ //2
   'class' => 'col-12 col-md-8 offset-md-2'
@@ -35,7 +34,7 @@ echo H::openTag('div', ['class' => 'row']); //1
    echo H::openTag('div', ['class' => 'row']); //4
     echo H::openTag('div', ['class' => 'card-body']); //5
      echo H::openTag('div', ['class' => 'col-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+      echo H::openTag('div', ['class' => 'mb-3']); //7
        $qrVer = 'settings[qr_version]';
        echo H::openTag('label', ['for' => $qrVer]);
         echo $translator->translate('qr.version');
@@ -44,10 +43,10 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::input('text', $qrVer,
         $body[$qrVer] ?? (string) Version::AUTO, [
             'id' => $qrVer,
-            'class' => 'form-control form-control-lg',
+            'class' => 'form-control',
        ]);
       echo H::closeTag('div'); //7
-      echo H::openTag('div', ['class' => 'form-group']); //7
+      echo H::openTag('div', ['class' => 'mb-3']); //7
        $qrEcc = 'settings[qr_ecc_level]';
        echo H::openTag('label', ['for' => $qrEcc]);
         echo $translator->translate('qr.ecc.level');
@@ -56,7 +55,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::openTag('select', [
         'name' => $qrEcc,
         'id' => $qrEcc,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         $ecc_levels = ['0' => 'L', '1' => 'M', '2' => 'Q', '3' => 'H'];
         /**
@@ -71,7 +70,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         }
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
-      echo H::openTag('div', ['class' => 'form-group']); //7
+      echo H::openTag('div', ['class' => 'mb-3']); //7
        $qrHw = 'settings[qr_height_and_width]';
        echo H::openTag('label', [
         'for' => $qrHw
@@ -84,7 +83,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::input('text', $qrHw,
         (string) $qr_size, [
         'id' => $qrHw,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-control',
        ]);
       echo H::closeTag('div'); //7
       echo H::openTag('div', ['class' => 'card-header']); //7

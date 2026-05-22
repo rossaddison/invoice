@@ -79,7 +79,7 @@ final class InvoiceController extends BaseController
             'bootstrap5_sidebar_guest_background' => '#1a1a2e',
             'bootstrap5_client_form_font_size' => '14',
             'bootstrap5_form_font_size' => '14',
-            'bootstrap5_form_input_height' => '38',
+            'bootstrap5_form_input_height' => '56',
             'cron_key' => Random::string(32),
             'currency_symbol' => 'Ã‚Â£',
             'currency_symbol_placement' => 'before',

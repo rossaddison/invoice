@@ -31,6 +31,16 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 **Recent Implementations**
 
+[Bootstrap 5 Table Mobile Stacking Fix](docs/BOOTSTRAP5_TABLE_MOBILE_STACKING.md) — `table, thead, tbody, th, td, tr { display: block }` ported back into `layout.css` at `@media (max-width: 767px)`; restores the vertical cell stacking that existed in the Bootstrap 3 era and was removed when BS3 CSS was stripped; `td[data-label]` scoping prevents 50 % padding gap on GridView cells that do not emit `data-label` attributes (May 2026)
+
+[Bootstrap 5 Tooltip Initialisation Fix](docs/BOOTSTRAP5_TOOLTIP_INIT_FIX.md) — `BootstrapJsOnlyAsset` registered before `InvoiceNodeModulesAsset` so `window.bootstrap` is defined when the IIFE runs; dead `DOMContentLoaded` wrapper removed from `initializeTooltips()`; bare `bootstrap` identifier replaced with `(window as any).bootstrap`; `new Tooltip()` replaced with `Tooltip.getOrCreateInstance()` to prevent duplicate instances (May 2026)
+
+[Bootstrap 5 Settings Tabs & HTMX Page-Size Selector](docs/BOOTSTRAP5_SETTINGS_HTMX_PAGE_SIZE.md) — BS5 tab accessibility pass on all settings partials (`role="tablist/tab/tabpanel"`, `aria-*`); `form-select` applied to 16 partial files; 19 inline label style tags consolidated to `overrides.css`; page-size navbar buttons save via `hx-get` + `hx-swap="none"` then refresh `#main-area` via `fetch`+`DOMParser`+`replaceWith` without redirect or full reload (May 2026)
+
+[Global Page Size Navbar Selector](docs/GLOBAL_PAGE_SIZE_NAVBAR.md) — `PageSizeLimiter` widget removed from 27 views and 3 widget classes; replaced by a single `<select>` in the invoice layout navbar backed by a TypeScript `PageSizeHandler`; `BootstrapJsOnlyAsset` hash-collision fix; dark mode removed; `CustomFieldRepository` PSR-4 path fix (May 2026)
+
+[Onboarding](docs/ONBOARDING.md) — `Stacking Rule layout fix in layout.css (May 2026)
+
 [PHPUnit Entity Test Migration](docs/PHPUNIT_ENTITY_TEST_MIGRATION.md) — 34 new PHPUnit entity tests across 6 batches; 36 Codeception unit tests migrated to `PHPUnit\Framework\TestCase`; 26 `createMock()` calls replaced with `createStub()`; 3 pre-existing `DateTime`/`DateTimeImmutable` entity bugs uncovered (May 2026)
 
 [Peppol SMP Lookup](docs/PEPPOL_SMP_LOOKUP.md) — participant discovery via SML DNS → SMP HTTP → XML parse; `SmpResolver` supports both PEPPOL SMP 1.0 and BDX SMP 1.0 namespaces; `SmpEndpoint` value object; `PEPPOL_SML_ZONE` and `PEPPOL_SMP_BASE_URL` env vars; 10-test PHPUnit suite; completes Phase 1 of the Peppol access point (May 2026)

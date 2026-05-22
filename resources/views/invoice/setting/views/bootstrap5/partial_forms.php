@@ -9,16 +9,26 @@ use Yiisoft\Html\Html as H;
  * @var array $body
  */
 
-echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', ['class' => 'border border-line-1 border-secondary']); //1
  echo H::openTag('div', ['class' => 'row g-3 p-2']); //2
   echo H::openTag('div', ['class' => 'col-12 col-md-4']); //3
    echo H::openTag('label', ['for' => 'settings[bootstrap5_form_font_size]', 'class' => 'form-label']);
     echo $translator->translate('bootstrap5.form.font.size');
+    echo ' ';
+    echo H::tag('i', '', [
+     'class'          => 'bi bi-info-circle',
+     'data-bs-toggle' => 'tooltip',
+     'data-bs-placement' => 'right',
+     'title'          => '1. Saved via the Bootstrap 5 settings tab (partial_forms.php). '
+                       . '2. Defaulted to 14 in InvoiceController.php. '
+                       . '3. Read in LayoutViewInjection.php → $bootstrap5FormFontSize view variable. '
+                       . '4. Emitted as --inv-form-fs CSS custom property in layout/invoice.php, applied to .container-fluid wrappers via overrides.css. '
+                       . '5. Read directly in InvoiceController::faq() for the FAQ page font size.',
+    ]);
    echo H::closeTag('label');
    echo H::input('number', 'settings[bootstrap5_form_font_size]', (string)$body['settings[bootstrap5_form_font_size]'], [
     'id'    => 'settings[bootstrap5_form_font_size]',
-    'class' => 'form-control form-control-lg',
+    'class' => 'form-control',
     'min'   => '8',
     'max'   => '32',
     'step'  => '1',
@@ -30,7 +40,7 @@ echo H::openTag('div', ['class' => 'border border-line-1 border-secondary']); //
    echo H::closeTag('label');
    echo H::input('number', 'settings[bootstrap5_form_input_height]', (string)$body['settings[bootstrap5_form_input_height]'], [
     'id'    => 'settings[bootstrap5_form_input_height]',
-    'class' => 'form-control form-control-lg',
+    'class' => 'form-control',
     'min'   => '24',
     'max'   => '80',
     'step'  => '1',

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Yiisoft\Html\Html as H;
+use Yiisoft\Bootstrap5\Button;
 use Yiisoft\Html\Tag\Option;
 
 /**
@@ -25,7 +26,7 @@ $colMd8 = ['class' => 'col-12 col-md-8 offset-md-2'];
 $panel = ['class' => 'card'];
 $panelHead = ['class' => 'card-header'];
 $panelBody = ['class' => 'card-body'];
-$formGroup = ['class' => 'form-group'];
+$formGroup = ['class' => 'mb-3'];
 $kStopLoggingIn = 'settings[stop_logging_in]';
 $kStopSigningUp = 'settings[stop_signing_up]';
 $kAppCdn = 'settings[app_cdn_not_node_module]';
@@ -74,7 +75,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $kStopLoggingIn,
         'id' => $kStopLoggingIn,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -98,7 +99,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $kStopSigningUp,
         'id' => $kStopSigningUp,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -122,7 +123,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $kAppCdn,
         'id' => $kAppCdn,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -146,7 +147,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $kInvCdn,
         'id' => $kInvCdn,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -170,7 +171,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $kInstallTest,
         'id' => $kInstallTest,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -194,7 +195,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $kUseTest,
         'id' => $kUseTest,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -218,7 +219,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $kDefaultLanguage,
         'id' => $kDefaultLanguage,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -248,7 +249,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $kTimeZone,
         'id' => $kTimeZone,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -279,7 +280,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $kDefaultCountry,
         'id' => $kDefaultCountry,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -315,7 +316,7 @@ echo H::openTag('div', $row); //1
         'type' => 'number',
         'name' => $kDefaultListLimit,
         'id' => 'default_list_limit',
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-control',
         'minlength' => '1',
         'min' => '1',
         'required' => true,
@@ -335,7 +336,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $kDisableFlash,
         'id' => $kDisableFlash,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -361,7 +362,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $kSignupAssignClient,
         'id' => $kSignupAssignClient,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -389,7 +390,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $kSignupAgeMin,
         'id' => $kSignupAgeMin,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -425,7 +426,7 @@ echo H::openTag('div', $row); //1
         'type' => 'text',
         'name' => $kCurrencySymbol,
         'id' => $kCurrencySymbol,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-control',
         'value' => $body[$kCurrencySymbol]
        ]);
       echo H::closeTag('div'); //7
@@ -444,7 +445,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $kCurrencySymbolPlacement,
         'id' => $kCurrencySymbolPlacement,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
         'data-minimum-results-for-search' => 'Infinity'
        ]);
         echo  new Option()
@@ -484,7 +485,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $kCurrencyCode,
         'id' => $kCurrencyCode,
-        'class' => 'input-sm form-control'
+        'class' => 'form-select form-select-sm'
        ]);
         echo  new Option()
          ->value('0')
@@ -518,7 +519,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $kTaxDecimal,
         'id' => $kTaxDecimal,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -552,7 +553,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $kNumberFormat,
         'id' => $kNumberFormat,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -597,7 +598,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $kQuotePeriod,
         'id' => $kQuotePeriod,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
         'data-minimum-results-for-search' => 'Infinity'
        ]);
         echo  new Option()
@@ -654,7 +655,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $kInvoicePeriod,
         'id' => $kInvoicePeriod,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
         'data-minimum-results-for-search' => 'Infinity'
        ]);
         echo  new Option()
@@ -712,7 +713,7 @@ echo H::openTag('div', $row); //1
        $s->getSetting('disable_quickactions');
        echo H::openTag('select', [
         'name' => $kDisableQuickactions,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
         'id' => 'disable_quickactions',
         'data-minimum-results-for-search' => 'Infinity'
        ]);
@@ -749,7 +750,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $kDisableSidebar,
         'id' => $kDisableSidebar,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -776,7 +777,7 @@ echo H::openTag('div', $row); //1
         'type' => 'text',
         'name' => $kCustomTitle,
         'id' => $kCustomTitle,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-control',
         'value' => $body[$kCustomTitle]
        ]);
       echo H::closeTag('div'); //7
@@ -796,7 +797,7 @@ echo H::openTag('div', $row); //1
        $s->getSetting('monospace_amounts');
        echo H::openTag('select', [
         'name' => $kMonospaceAmounts,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
         'id' => 'monospace_amounts'
        ]);
         echo  new Option()
@@ -834,7 +835,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $kOpenReports,
         'id' => $kOpenReports,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -869,7 +870,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $kBccMails,
         'id' => $kBccMails,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -890,7 +891,7 @@ echo H::openTag('div', $row); //1
        ]);
         echo $translator->translate('cron.key');
        echo H::closeTag('label');
-       echo H::openTag('div', ['class' => 'input-group']); //8
+       echo H::openTag('div'); //8
         echo H::openTag('input', [
          'type' => 'text',
          'name' => $kCronKey,
@@ -899,29 +900,14 @@ echo H::openTag('div', $row); //1
          'value' => (string) ($body[$kCronKey] ??
          $s->getSetting('cron_key'))
         ]);
-        echo H::openTag('div', [ //9
-         'class' => 'input-group-text'
-        ]);
-         /**
-         * Related logic: see
-         * ..\src\Invoice\Asset\rebuild-1.13
-         * \js\setting.js
-         * Related logic: see
-         * $(document).on('click',
-          * '#btn_generate_cron_key', function ()
-          */
-          echo H::openTag('button', [
-          'id' => 'btn_generate_cron_key',
-          'type' => 'button',
-          'class' =>
-          'btn_generate_cron_key btn btn-primary btn-block'
-         ]);
-          echo H::openTag('i', [
-           'class' => 'bi bi-recycle'
-          ]);
-          echo H::closeTag('i');
-         echo H::closeTag('button');
-        echo H::closeTag('div'); //9
+        echo H::openTag('span'); //9
+         echo Button::widget()
+              ->label('<i class="bi bi-recycle" aria-hidden="true"></i>', false)
+              ->class('btn', 'btn-primary')
+              ->attribute('type', 'button')
+              ->id('btn_generate_cron_key')
+              ->render();
+        echo H::closeTag('span'); //9
        echo H::closeTag('div'); //8
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6

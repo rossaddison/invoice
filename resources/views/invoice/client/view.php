@@ -443,7 +443,7 @@ echo H::openTag('div', ['id' => 'content', 'class' => 'tabbable tabs-below no-pa
         echo $partial_notes;
        echo H::closeTag('div'); //7
        echo new Input()->type('hidden')->name('client_id')->id('client_id')->value((string) $clientId);
-       echo H::openTag('div', ['class' => 'input-group']); //7
+       echo H::openTag('div'); //7
         echo H::openTag('textarea', [
          'id' => 'client_note',
          'class' => 'form-control form-control-lg',

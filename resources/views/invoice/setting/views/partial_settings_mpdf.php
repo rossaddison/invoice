@@ -11,7 +11,6 @@ use Yiisoft\Html\Tag\Option;
 * @var array $body
 */
 
-echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', ['class' => 'row']); //1
  echo H::openTag('div', ['class' => 'col-12 col-md-8 offset-md-2']); //2
   echo H::openTag('div', ['class' => 'card']); //3
@@ -24,7 +23,7 @@ echo H::openTag('div', ['class' => 'row']); //1
     echo H::openTag('div', ['class' => 'row']); //5
      echo H::openTag('div', ['class' => 'col-12 col-md-6']); //6
 
-      echo H::openTag('div', ['class' => 'form-group']); //7
+      echo H::openTag('div', ['class' => 'mb-3']); //7
        $sml = 'settings[mpdf_ltr]';
        echo H::openTag('label', ['for' => $sml]);
         echo $translator->translate('mpdf.ltr');
@@ -33,7 +32,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::openTag('select', [
         'name' => $sml,
         'id' => $sml,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -46,7 +45,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
 
-      echo H::openTag('div', ['class' => 'form-group']); //7
+      echo H::openTag('div', ['class' => 'mb-3']); //7
        $smc = 'settings[mpdf_cjk]';
        echo H::openTag('label', ['for' => $smc]);
         echo $translator->translate('mpdf.cjk');
@@ -55,7 +54,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::openTag('select', [
         'name' => $smc,
         'id' => $smc,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -68,7 +67,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
 
-      echo H::openTag('div', ['class' => 'form-group']); //7
+      echo H::openTag('div', ['class' => 'mb-3']); //7
        $smas = 'settings[mpdf_auto_script_to_lang]';
        echo H::openTag('label', ['for' => $smas]);
         echo $translator->translate('mpdf.auto.script.to.lang');
@@ -77,7 +76,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::openTag('select', [
         'name' => $smas,
         'id' => $smas,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -90,7 +89,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
 
-      echo H::openTag('div', ['class' => 'form-group']); //7
+      echo H::openTag('div', ['class' => 'mb-3']); //7
        $smav = 'settings[mpdf_auto_vietnamese]';
        echo H::openTag('label', ['for' => $smav]);
         echo $translator->translate('mpdf.auto.vietnamese');
@@ -99,7 +98,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::openTag('select', [
         'name' => $smav,
         'id' => $smav,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -112,7 +111,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
 
-      echo H::openTag('div', ['class' => 'form-group']); //7
+      echo H::openTag('div', ['class' => 'mb-3']); //7
        $smac = 'settings[mpdf_allow_charset_conversion]';
        echo H::openTag('label', ['for' => $smac]);
         echo $translator->translate(
@@ -123,7 +122,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::openTag('select', [
         'name' => $smac,
         'id' => $smac,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -136,7 +135,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
 
-      echo H::openTag('div', ['class' => 'form-group']); //7
+      echo H::openTag('div', ['class' => 'mb-3']); //7
        $smaa = 'settings[mpdf_auto_arabic]';
        echo H::openTag('label', ['for' => $smaa]);
         echo $translator->translate('mpdf.auto.arabic');
@@ -145,7 +144,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::openTag('select', [
         'name' => $smaa,
         'id' => $smaa,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -158,7 +157,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
 
-      echo H::openTag('div', ['class' => 'form-group']); //7
+      echo H::openTag('div', ['class' => 'mb-3']); //7
        $smalf = 'settings[mpdf_auto_language_to_font]';
        echo H::openTag('label', ['for' => $smalf]);
         echo $translator->translate('mpdf.auto.language.to.font');
@@ -167,7 +166,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::openTag('select', [
         'name' => $smalf,
         'id' => $smalf,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -180,7 +179,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
 
-      echo H::openTag('div', ['class' => 'form-group']); //7
+      echo H::openTag('div', ['class' => 'mb-3']); //7
        $smsie = 'settings[mpdf_show_image_errors]';
        echo H::openTag('label', ['for' => $smsie]);
         echo $translator->translate('mpdf.show.image.errors');
@@ -189,7 +188,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::openTag('select', [
         'name' => $smsie,
         'id' => $smsie,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')

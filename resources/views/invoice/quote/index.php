@@ -177,9 +177,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         attachMagnifiersToAmounts() {
             const amountSelectors = [
-                '.label.label-success',
-                '.label.label-warning',
-                '.label.label-danger'
+                '.badge.bg-success',
+                '.badge.bg-warning',
+                '.badge.bg-danger'
             ];
 
             amountSelectors.forEach(selector => {
@@ -204,13 +204,13 @@ document.addEventListener('DOMContentLoaded', function() {
             let borderColor = '#007bff';
             let bgColor = 'rgba(255, 255, 255, 0.95)';
 
-            if (element.classList.contains('label-success')) {
+            if (element.classList.contains('bg-success')) {
                 borderColor = '#28a745';
                 bgColor = '#d4edda';
-            } else if (element.classList.contains('label-warning')) {
+            } else if (element.classList.contains('bg-warning')) {
                 borderColor = '#ffc107';
                 bgColor = '#fff3cd';
-            } else if (element.classList.contains('label-danger')) {
+            } else if (element.classList.contains('bg-danger')) {
                 borderColor = '#dc3545';
                 bgColor = '#f8d7da';
             }

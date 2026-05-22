@@ -20,10 +20,9 @@ $colMd8 = ['class' => 'col-12 col-md-8 offset-md-2'];
 $panel = ['class' => 'card'];
 $panelHead = ['class' => 'card-header'];
 $panelBody = ['class' => 'card-body'];
-$formGroup = ['class' => 'form-group'];
-$checkbox = ['class' => 'checkbox'];
+$formGroup = ['class' => 'mb-3'];
+$checkbox = ['class' => 'form-check'];
 
-echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', $row); //1
  echo H::openTag('div', $colMd8); //2
   echo H::openTag('div', $panel); //3
@@ -40,32 +39,34 @@ echo H::openTag('div', $row); //1
        echo H::openTag('div', $checkbox); //8
         $body[$telegram] =
         $s->getSetting('enable_telegram');
-        echo H::openTag('label');
-         echo H::openTag('input', [
+        echo H::openTag('input', [
           'type' => 'hidden',
           'name' => $telegram,
           'value' => '0'
          ]);
          echo H::openTag('input', [
           'type' => 'checkbox',
+          'class' => 'form-check-input',
+          'id' => 'enable_telegram',
           'name' => $telegram,
           'value' => '1',
           'checked' => (
           $body[$telegram]
           == '1') ? 'checked' : null
          ]);
-         echo H::a(
-          $translator->translate(
-          'telegram.bot.api.enable'
-         ),
-         'https://core.telegram.org/bots/api',
-         [
-          'style' => 'text-decoration:none',
-          'data-bs-toggle' => 'tooltip',
-          'title' => ''
-         ]
-         );
-        echo H::closeTag('label');
+         echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'enable_telegram']);
+          echo H::a(
+           $translator->translate(
+           'telegram.bot.api.enable'
+          ),
+          'https://core.telegram.org/bots/api',
+          [
+           'style' => 'text-decoration:none',
+           'data-bs-toggle' => 'tooltip',
+           'title' => ''
+          ]
+          );
+         echo H::closeTag('label');
        echo H::closeTag('div'); //8
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
@@ -129,7 +130,7 @@ echo H::openTag('div', $row); //1
          'type' => 'password',
          'name' => $token,
          'id' => $token,
-         'class' => 'form-control form-control-lg',
+         'class' => 'form-select',
          'value' => H::encode(
          $body[$token]
         )
@@ -204,7 +205,7 @@ echo H::openTag('div', $row); //1
          'type' => 'password',
          'name' => $chat,
          'id' => $chat,
-         'class' => 'form-control form-control-lg',
+         'class' => 'form-select',
          'value' => H::encode($body[$chat])
         ]);
        echo H::closeTag('p');
@@ -224,7 +225,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $testMsg,
         'id' => $testMsg,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -266,7 +267,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $telegramPayment,
         'id' => $telegramPayment,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         echo  new Option()
          ->value('0')
@@ -301,12 +302,12 @@ echo H::openTag('div', $row); //1
         );
        echo H::closeTag('label');
        $body[$providerToken] = $s->getSetting('telegram_provider_token');
-       echo H::openTag('div', ['class' => 'input-group']);
+       echo H::openTag('div');
         echo H::openTag('input', [
          'type'  => 'password',
          'name'  => $providerToken,
          'id'    => $providerToken,
-         'class' => 'form-control form-control-lg',
+         'class' => 'form-select',
          'value' => H::encode($body[$providerToken])
         ]);
         echo H::openTag('a', [
@@ -342,7 +343,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name'  => $pmId,
         'id'    => $pmId,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         foreach ($payment_methods as $paymentMethod) {
             $isDefault = $savedPmId === 0
@@ -415,7 +416,7 @@ echo H::openTag('div', $row); //1
         'type' => 'password',
         'name' => $telegramToken,
         'id' => $telegramToken,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
         'value' => H::encode($body[$telegramToken])
        ]);
       echo H::closeTag('div'); //7

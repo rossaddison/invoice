@@ -24,7 +24,6 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Invoice\ProductClient\ProductClientRepository $productClientR
  * @var App\Widget\GridComponents $gridComponents
- * @var App\Widget\PageSizeLimiter $pageSizeLimiter
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Data\Cycle\Reader\EntityReader $products
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
@@ -334,7 +333,7 @@ echo GridView::widget()
 ->id('w4-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($sortedAndPagedPaginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlFastRouteGenerator, 'product') . ' ' . $gridSummary)
+->summaryTemplate($gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'));
 

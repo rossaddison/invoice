@@ -18,11 +18,11 @@ $colMd8 = ['class' => 'col-12 col-md-8 offset-md-2'];
 $panel = ['class' => 'card'];
 $panelHead = ['class' => 'card-header'];
 $panelBody = ['class' => 'card-body'];
-$formGroup = ['class' => 'form-group'];
+$formGroup = ['class' => 'mb-3'];
 $kJsonFilename = 'settings[google_translate_json_filename]';
 $kLocale = 'settings[google_translate_locale]';
 $biLink = 'bi bi-link';
-$inputSmFc = 'input-sm form-control';
+$inputSmFc = 'form-control form-control-sm';
 $curlPemUrl = 'https://curl.haxx.se/ca/cacert.pem';
 $googleConsoleUrl = 'https://console.cloud.google.com/projectselector2/';
 $googleConsolePath = 'iam-admin/serviceaccounts?supportedpurview=project';
@@ -71,7 +71,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', [
         'name' => $kLocale,
         'id' => $kLocale,
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-control',
        ]);
         echo  new Option()
          ->value('')
