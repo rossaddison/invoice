@@ -45,18 +45,25 @@
         return hex.join('');
     }
 
-    function setButtonWorkingState(button, working, originalHtml) {
+    function setButtonWorkingState(button, working) {
         if (!button) {
             return;
         }
         if (working) {
+            try {
+                // store original markup so we can restore
+                button.setAttribute('data-original-html', button.innerHTML);
+            } catch (e) {
+                // ignore
+            }
             button.setAttribute('aria-busy', 'true');
             button.setAttribute('disabled', 'true');
             button.innerHTML = '<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>';
         } else {
-            if (typeof originalHtml === 'string') {
-                // safe: restoring from an in-memory variable, not from a DOM attribute
-                button.innerHTML = originalHtml;
+            var original = button.getAttribute('data-original-html');
+            if (original) {
+                button.textContent = original;
+                button.removeAttribute('data-original-html');
             }
             button.removeAttribute('aria-busy');
             button.removeAttribute('disabled');
@@ -135,11 +142,8 @@
     }
 
     function handleGenerateClick(button) {
-        // capture original markup before any changes so we can restore via closure
-        var originalHtml = button.innerHTML;
-
         try {
-            setButtonWorkingState(button, true, originalHtml);
+            setButtonWorkingState(button, true);
 
             var newKey = generateSecureHex(24);
 
@@ -147,9 +151,10 @@
             if (input && typeof input.value !== 'undefined') {
                 input.value = newKey;
             } else {
-                // input not found; restore button after short delay
+                // input not found; still generate and bail
+                // restore button after short delay
                 window.setTimeout(function () {
-                    setButtonWorkingState(button, false, originalHtml);
+                    setButtonWorkingState(button, false);
                 }, 600);
                 return;
             }
@@ -163,7 +168,7 @@
                     // ignore
                 }
                 window.setTimeout(function () {
-                    setButtonWorkingState(button, false, originalHtml);
+                    setButtonWorkingState(button, false);
                 }, 700);
             }, function onFail() {
                 // copy failed; show recycle icon briefly then restore
@@ -173,13 +178,13 @@
                     // ignore
                 }
                 window.setTimeout(function () {
-                    setButtonWorkingState(button, false, originalHtml);
+                    setButtonWorkingState(button, false);
                 }, 700);
             });
         } catch (err) {
             // ensure we restore button state
             window.setTimeout(function () {
-                setButtonWorkingState(button, false, originalHtml);
+                setButtonWorkingState(button, false);
             }, 700);
         }
     }
