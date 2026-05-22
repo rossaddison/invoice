@@ -39,7 +39,7 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 [Global Page Size Navbar Selector](docs/GLOBAL_PAGE_SIZE_NAVBAR.md) — `PageSizeLimiter` widget removed from 27 views and 3 widget classes; replaced by a single `<select>` in the invoice layout navbar backed by a TypeScript `PageSizeHandler`; `BootstrapJsOnlyAsset` hash-collision fix; dark mode removed; `CustomFieldRepository` PSR-4 path fix (May 2026)
 
-[Onboarding](docs/ONBOARDING.md) — `Stacking Rule layout fix in layout.css (May 2026)
+[Onboarding](docs/ONBOARDING.md) — `Stacking Rule layout fix in src/Invoice/Asset/invoice/css/layout.css (May 2026)
 
 [PHPUnit Entity Test Migration](docs/PHPUNIT_ENTITY_TEST_MIGRATION.md) — 34 new PHPUnit entity tests across 6 batches; 36 Codeception unit tests migrated to `PHPUnit\Framework\TestCase`; 26 `createMock()` calls replaced with `createStub()`; 3 pre-existing `DateTime`/`DateTimeImmutable` entity bugs uncovered (May 2026)
 
