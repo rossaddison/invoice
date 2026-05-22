@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3ed2cf31a04ac3744f9bddf568c469b9",
+    "content-hash": "31860a1c0f87ea1a09e4bb329b23244b",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -22398,12 +22398,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "89aea44a53fbe571a89140af23654bd1c4d85bf6"
+                "reference": "0ba35c097e0975ea9a9d7d36c1824c33516b0ebf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/89aea44a53fbe571a89140af23654bd1c4d85bf6",
-                "reference": "89aea44a53fbe571a89140af23654bd1c4d85bf6",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/0ba35c097e0975ea9a9d7d36c1824c33516b0ebf",
+                "reference": "0ba35c097e0975ea9a9d7d36c1824c33516b0ebf",
                 "shasum": ""
             },
             "conflict": {
@@ -23284,9 +23284,9 @@
                 "truckersmp/phpwhois": "<=4.3.1",
                 "ttskch/pagination-service-provider": "<1",
                 "twbs/bootstrap": "<3.4.1|>=4,<4.3.1",
-                "twig/cssinliner-extra": "<3.26",
-                "twig/intl-extra": "<3.26",
-                "twig/markdown-extra": "<3.26",
+                "twig/cssinliner-extra": ">=2.12,<3.26",
+                "twig/intl-extra": ">=2.12,<3.26",
+                "twig/markdown-extra": ">=2.12,<3.26",
                 "twig/twig": "<3.26",
                 "typicms/core": "<16.1.7",
                 "typo3/cms": "<9.5.29|>=10,<10.4.35|>=11,<11.5.23|>=12,<12.2",
@@ -23472,7 +23472,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-22T16:47:49+00:00"
+            "time": "2026-05-20T17:08:43+00:00"
         },
         {
             "name": "rossaddison/translator-extractor",
@@ -23916,16 +23916,16 @@
         },
         {
             "name": "sebastian/comparator",
-            "version": "8.2.1",
+            "version": "8.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/comparator.git",
-                "reference": "ce999bf08b2c387a5423fe56961c32eed3f88089"
+                "reference": "ddacb462216a4f6d97e84bf08165b9074ddbafeb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/ce999bf08b2c387a5423fe56961c32eed3f88089",
-                "reference": "ce999bf08b2c387a5423fe56961c32eed3f88089",
+                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/ddacb462216a4f6d97e84bf08165b9074ddbafeb",
+                "reference": "ddacb462216a4f6d97e84bf08165b9074ddbafeb",
                 "shasum": ""
             },
             "require": {
@@ -23984,7 +23984,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/comparator/issues",
                 "security": "https://github.com/sebastianbergmann/comparator/security/policy",
-                "source": "https://github.com/sebastianbergmann/comparator/tree/8.2.1"
+                "source": "https://github.com/sebastianbergmann/comparator/tree/8.2.0"
             },
             "funding": [
                 {
@@ -24004,7 +24004,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-21T04:46:40+00:00"
+            "time": "2026-05-20T11:55:37+00:00"
         },
         {
             "name": "sebastian/complexity",

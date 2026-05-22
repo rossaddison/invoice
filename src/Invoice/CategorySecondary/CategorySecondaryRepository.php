@@ -88,7 +88,7 @@ final class CategorySecondaryRepository extends Select\Repository
         );
     }
 
-    public function repoCategoryPrimaryIdQuery(int $category_primary_id): EntityReader
+    public function repoCategoryPrimaryIdQuery(?int $category_primary_id): EntityReader
     {
         $select = $this->select();
         $query = $select

@@ -86,11 +86,6 @@ class Family
         return $this->category_primary_id;
     }
 
-    public function reqCategoryPrimaryId(): int
-    {
-        return $this->requireId($this->category_primary_id, 'Family category_primary_id');
-    }
-
     public function setCategoryPrimaryId(int $category_primary_id): void
     {
         $this->category_primary_id = $category_primary_id;
@@ -99,11 +94,6 @@ class Family
     public function getCategorySecondaryId(): ?int
     {
         return $this->category_secondary_id;
-    }
-
-    public function reqCategorySecondaryId(): int
-    {
-        return $this->requireId($this->category_secondary_id, 'Family category_secondary_id');
     }
 
     public function setCategorySecondaryId(
