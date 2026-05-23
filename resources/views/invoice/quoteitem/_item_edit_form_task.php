@@ -24,6 +24,7 @@ use Yiisoft\Html\Tag\I;
  */
 
 $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
+$fmCtlAmt = 'form-control amount';
 ?>
 <?= Html::openTag('div', ['class' => 'card']); ?>
     <?= Html::openTag('div', ['class' => 'card-header']); ?>
@@ -75,7 +76,7 @@ foreach ($tasks as $task) {
                             <?= Html::openTag('div'); ?>
                                 <?= Field::number($form, 'quantity')
     ->label($translator->translate('quantity'))
-    ->addInputAttributes(['class' => 'form-control amount'])
+    ->addInputAttributes(['class' => $frmCtlAmt])
     ->value($numberHelper->formatAmount($form->getQuantity()))
     ->hint($translator->translate('hint.greater.than.zero.please'));
 ?>
@@ -85,7 +86,7 @@ foreach ($tasks as $task) {
                             <?= Html::openTag('div'); ?>
                                 <?= Field::text($form, 'price')
     ->label($translator->translate('price'))
-    ->addInputAttributes(['class' => 'form-control amount'])
+    ->addInputAttributes(['class' => $frmCtlAmt])
     ->value($numberHelper->formatAmount($form->getPrice() ?? 0.00))
     ->hint($translator->translate('hint.greater.than.zero.please'));
 ?>
@@ -96,7 +97,7 @@ foreach ($tasks as $task) {
                                 <?= Field::text($form, 'discount_amount')
     ->label($translator->translate('item.discount'))
     ->addInputAttributes([
-        'class' => 'form-control amount',
+        'class' => $frmCtlAmt,
         'data-bs-toggle' => 'tooltip',
         'data-placement' => 'bottom',
         'title' => $s->getSetting('currency_symbol') . ' ' . $translator->translate('per.item'),

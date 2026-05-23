@@ -42,7 +42,7 @@ use Yiisoft\Html\Tag\Form;
     <?= $button::back(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
                     ->header($translator->translate('error.summary'))
@@ -69,7 +69,7 @@ echo Field::select($form, 'payment_method_id')
     'disabled' => 'disabled',
 ])
 ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?=
         Field::text($form, 'inv')
         ->label($translator->translate('invoice'))
@@ -80,7 +80,7 @@ echo Field::select($form, 'payment_method_id')
         ->value(Html::encode($form->getInv()?->getNumber() ?? $translator->translate('number.no')))
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::date($form, 'payment_date')
     ->label($translator->translate('date'))
     ->addInputAttributes([
@@ -90,7 +90,7 @@ echo Field::select($form, 'payment_method_id')
     ->value(Html::encode($form->getPaymentDate() instanceof DateTimeImmutable ? $form->getPaymentDate()->format('Y-m-d') : ''))
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::textarea($form, 'note')
     ->label($translator->translate('note'))
     ->addInputAttributes([
@@ -103,7 +103,7 @@ echo Field::select($form, 'payment_method_id')
     ])
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'amount')
     ->label($translator->translate('amount'))
     ->placeholder($translator->translate('amount'))

@@ -29,9 +29,9 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div'); ?>
-    <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+    <?= Html::openTag('div', ['class' => 'mb-3']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::text($form, 'party_name')
                     ->addInputAttributes(['style' => 'background:lightblue'])
                     ->label($translator->translate('delivery.party.name'))

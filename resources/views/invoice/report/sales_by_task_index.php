@@ -52,7 +52,7 @@ use Yiisoft\Html\Html;
                                name="_csrf"
                                value="<?= $csrf ?>">
 
-                        <div class="mb-3 form-group has-feedback">
+                        <div class="mb-3 has-feedback">
                             <label for="from_date">
                                 <?= $translator->translate('from.date')
                                        . ' ('
@@ -76,7 +76,7 @@ use Yiisoft\Html\Html;
                             </div>
                         </div>
 
-                        <div class="mb-3 form-group has-feedback">
+                        <div class="mb-3 has-feedback">
                             <label for="to_date">
                                 <?= $translator->translate('to.date')
                                         . ' ('

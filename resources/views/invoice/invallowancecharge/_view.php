@@ -41,7 +41,7 @@ echo  new Form()
     <?= $button::back(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::select($form, 'allowance_charge_id')
                     ->label($translator->translate('allowance.or.charge'))
                     ->addInputAttributes([
@@ -52,7 +52,7 @@ echo  new Form()
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'amount')
     ->label($translator->translate('allowance.or.charge.amount'))
     ->addInputAttributes([
@@ -64,7 +64,7 @@ echo  new Form()
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'vat_or_tax')
     ->label($translator->translate('vat.abbreviation'))
     ->addInputAttributes([

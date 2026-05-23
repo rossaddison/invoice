@@ -53,7 +53,9 @@ final class InvsListWidget extends Widget
     private const string AMOUNT_FILTER_CLASS = 'native-reset inv-amount-filter';
     private const string AMOUNT_FILTER_STYLE =
         'text-align: right; display: block; width: 100%;';
-
+    private const string BDG_TXT_DARK = 'badge bg-warning text-dark';
+    private const string BDG_BG_SCS = 'badge bg-success';
+    
     private ?OffsetPaginator $paginator = null;
     private ?IR $iR = null;
     private ?IRR $irR = null;
@@ -1041,7 +1043,7 @@ final class InvsListWidget extends Widget
                 $total = $model->getInvAmount()->getTotal();
                 return (new Label())
                     ->attributes(['class' => $total > 0.00
-                        ? 'badge bg-success' : 'badge bg-warning text-dark'])
+                        ? self::BDG_BG_SCS : self::BDG_TXT_DARK])
                     ->content(Html::encode(null !== $total
                         ? number_format($total, $dp)
                         : number_format(0, $dp)));
@@ -1075,7 +1077,7 @@ final class InvsListWidget extends Widget
                 $value = (null !== $paid && $paid > 0.00) ? $paid : 0.00;
                 $class = ($model->getInvAmount()->getPaid()
                     < $model->getInvAmount()->getTotal())
-                    ? 'badge bg-danger' : 'badge bg-success';
+                    ? 'badge bg-danger' : self::BDG_BG_SCS;
                 return (new Label())
                     ->attributes(['class' => $class])
                     ->content(Html::encode(number_format($value, $dp)));
@@ -1109,7 +1111,7 @@ final class InvsListWidget extends Widget
                 $value = (null !== $bal && $bal > 0.00) ? $bal : 0.00;
                 return (new Label())
                     ->attributes(['class' => $bal > 0.00
-                        ? 'badge bg-success' : 'badge bg-warning text-dark'])
+                        ? self::BDG_BG_SCS : self::BDG_TXT_DARK])
                     ->content(Html::encode(number_format($value, $dp)));
             },
             encodeContent: false,
@@ -1290,7 +1292,7 @@ final class InvsListWidget extends Widget
                 header: $t->translate('datetime.immutable.date.modified'),
                 content: static function (Inv $m): Label {
                     $cls = $m->getDateModified() <> $m->getDateCreated()
-                        ? 'badge bg-danger' : 'badge bg-success';
+                        ? 'badge bg-danger' : self::BDG_BG_SCS;
                     return (new Label())
                         ->attributes(['class' => $cls])
                         ->content(Html::encode($m->getDateModified()->format('Y-m-d')));
@@ -1304,7 +1306,7 @@ final class InvsListWidget extends Widget
                     $due = $m->getDateDue();
                     return (new Label())
                         ->attributes(['class' => $due > $now
-                            ? 'badge bg-success' : 'badge bg-warning text-dark'])
+                            ? self::BDG_BG_SCS : self::BDG_TXT_DARK])
                         ->content(Html::encode($due->format('Y-m-d')));
                 },
                 encodeContent: false,

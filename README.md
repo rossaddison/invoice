@@ -31,6 +31,8 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 **Recent Implementations**
 
+[Bootstrap 3 CSS Removal](docs/BOOTSTRAP3_CSS_REMOVAL.md) — incremental removal of InvoicePlane's legacy Bootstrap 3 styles from `style.css` (custom section reduced 32 %, 966 → 653 lines); 484 `form-group` → `mb-3`, 23 `dropdown-button` → `dropdown-item`, 12 `input-sm` → `form-control-sm` replacements across 120 view files; SonarCloud duplicate-selector warnings eliminated by excluding `src/Invoice/Asset/**`; `.table { font-size: 0.25rem }` bug fix (4 px invisible text); `body *:focus { outline: none !important }` removed (WCAG 2.1 accessibility) (May 2026)
+
 [Bootstrap 5 Table Mobile Stacking Fix](docs/BOOTSTRAP5_TABLE_MOBILE_STACKING.md) — `table, thead, tbody, th, td, tr { display: block }` ported back into `layout.css` at `@media (max-width: 767px)`; restores the vertical cell stacking that existed in the Bootstrap 3 era and was removed when BS3 CSS was stripped; `td[data-label]` scoping prevents 50 % padding gap on GridView cells that do not emit `data-label` attributes (May 2026)
 
 [Bootstrap 5 Tooltip Initialisation Fix](docs/BOOTSTRAP5_TOOLTIP_INIT_FIX.md) — `BootstrapJsOnlyAsset` registered before `InvoiceNodeModulesAsset` so `window.bootstrap` is defined when the IIFE runs; dead `DOMContentLoaded` wrapper removed from `initializeTooltips()`; bare `bootstrap` identifier replaced with `(window as any).bootstrap`; `new Tooltip()` replaced with `Tooltip.getOrCreateInstance()` to prevent duplicate instances (May 2026)

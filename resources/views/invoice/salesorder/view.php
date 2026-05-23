@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Yiisoft\Html\Html as H;
-use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Option;
 use App\Invoice\Helpers\ClientHelper;
 use App\Invoice\Helpers\CountryHelper;
@@ -44,7 +43,7 @@ use App\Invoice\Helpers\CountryHelper;
  */
 
 $this->setTitle($translator->translate('salesorder'));
-
+$col = 'col-12 col-md-6';
 $vat           = $s->getSetting('enable_vat_registration');
 $clienthelper  = new ClientHelper($s);
 $countryhelper = new CountryHelper();
@@ -221,7 +220,7 @@ echo H::openTag('div', ['class' => 'card']); //0
      echo H::openTag('div', ['class' => 'col-12 col-sm-6 col-md-7']); //5
       echo H::openTag('div', ['class' => 'details-box']); //6
        echo H::openTag('div', ['class' => 'row']); //7
-        echo H::openTag('div', ['class' => 'col-12 col-md-6']); //8
+        echo H::openTag('div', ['class' => $col]); //8
          echo H::openTag('div'); //9
           echo H::openTag('label', ['for' => 'salesorder_number']); //10
            echo $translator->translate('salesorder') . ' #';
@@ -300,7 +299,7 @@ echo H::openTag('div', ['class' => 'card']); //0
          echo H::closeTag('div'); //9
         echo H::closeTag('div'); //8
 
-        echo H::openTag('div', ['class' => 'col-12 col-md-6']); //8
+        echo H::openTag('div', ['class' => $col]); //8
          echo H::openTag('div'); //9
           echo H::openTag('label', ['for' => 'status_id']); //10
            echo $translator->translate('status');
@@ -396,7 +395,7 @@ echo H::openTag('div', ['class' => 'card']); //0
   echo H::closeTag('div'); //2
 
   echo H::openTag('div', ['class' => 'row']); //2
-   echo H::openTag('div', ['class' => 'col-12 col-md-6']); //3
+   echo H::openTag('div', ['class' => $col]); //3
     echo H::openTag('div', ['class' => 'card no-margin']); //4
      echo H::openTag('div', ['class' => 'card-header']); //5
       echo $translator->translate('notes');
@@ -407,7 +406,7 @@ echo H::openTag('div', ['class' => 'card']); //0
        'id' => 'notes',
        'rows' => '3',
        'disabled' => true,
-       'class' => 'input-sm form-control',
+       'class' => 'form-control form-control-sm',
       ]); //6
        echo H::encode($so->getNotes() ?? '');
       echo H::closeTag('textarea'); //6
@@ -418,10 +417,10 @@ echo H::openTag('div', ['class' => 'card']); //0
      echo H::tag('br', '');
     echo H::closeTag('div'); //4
    echo H::closeTag('div'); //3
-   echo H::openTag('div', ['id' => 'view_partial_inv_delivery_location', 'class' => 'col-12 col-md-6']); //3
+   echo H::openTag('div', ['id' => 'view_partial_inv_delivery_location', 'class' => $col]); //3
     echo $partial_quote_delivery_location;
    echo H::closeTag('div'); //3
-   echo H::openTag('div', ['id' => 'view_custom_fields', 'class' => 'col-12 col-md-6']); //3
+   echo H::openTag('div', ['id' => 'view_custom_fields', 'class' => $col]); //3
     echo $view_custom_fields;
    echo H::closeTag('div'); //3
   echo H::closeTag('div'); //2

@@ -33,6 +33,7 @@ use Yiisoft\Html\Tag\Option;
  */
 
 $vat = $s->getSetting('enable_vat_registration');
+$frmCtlAmt = 'form-control amount';
 
  echo H::openTag('div', ['class' => 'table-responsive']); //1
   echo H::openTag('table', [
@@ -175,7 +176,7 @@ foreach ($quoteItems as $item) {
            'type' => 'text',
            'maxlength' => '4',
            'name' => 'item_quantity',
-           'class' => 'form-control amount',
+           'class' => $frmCtlAmt,
            'data-bs-toggle' => 'tooltip',
            'title' => 'quote_item->quantity',
            'value' => $numberHelper->formatAmount($item->getQuantity()),
@@ -195,7 +196,7 @@ foreach ($quoteItems as $item) {
            'type' => 'text',
            'maxlength' => '4',
            'name' => 'item_price',
-           'class' => 'form-control amount',
+           'class' => $frmCtlAmt,
            'data-bs-toggle' => 'tooltip',
            'title' => 'quote_item->price',
            'value' => $numberHelper->formatAmount($item->getPrice()),
@@ -216,7 +217,7 @@ foreach ($quoteItems as $item) {
            'type' => 'text',
            'maxlength' => '4',
            'name' => 'item_discount_amount',
-           'class' => 'form-control amount',
+           'class' => $frmCtlAmt,
            'data-bs-toggle' => 'tooltip',
            'title' => $s->getSetting('currency_symbol') . ' ' .
                $translator->translate('per.item'),
@@ -307,7 +308,7 @@ foreach ($quoteItems as $item) {
                echo H::closeTag('div'); //9
                echo H::openTag('div', ['class' => 'modal-body']); //9
                 echo H::openTag('form'); //10
-                 echo H::openTag('div', ['class' => 'form-group']); //11
+                 echo H::openTag('div', ['class' => 'mb-3']); //11
                  echo H::openTag('input', [
                      'type' => 'hidden',
                      'name' => '_csrf',

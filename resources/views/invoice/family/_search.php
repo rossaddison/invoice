@@ -42,7 +42,7 @@ use Yiisoft\Html\Tag\Form;
             <?= $button::back(); ?>
             <?= Html::openTag('div', ['id' => 'content']); ?>
               <?= Html::openTag('div', ['class' => 'row']); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::select($form, 'category_primary_id')
                       ->label($translator->translate('category.primary'))
                       ->addInputAttributes([
@@ -54,7 +54,7 @@ use Yiisoft\Html\Tag\Form;
                       ->optionsData($categoryPrimaries);
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::select($form, 'category_secondary_id')
     ->label($translator->translate('category.secondary'))
     ->addInputAttributes([
@@ -65,7 +65,7 @@ use Yiisoft\Html\Tag\Form;
     ->optionsData($categorySecondaries);
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::select($form, 'family_name')
   ->label($translator->translate('family.name'))
   ->addInputAttributes([

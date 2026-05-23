@@ -110,7 +110,7 @@ $columns = [
                     Html::tag('i', '', ['class' => 'bi-trash']),
                     [
                         'type' => 'submit',
-                        'class' => 'dropdown-button',
+                        'class' => 'dropdown-item',
                         'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                     ],
                 ),

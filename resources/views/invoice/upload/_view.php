@@ -41,42 +41,42 @@ use Yiisoft\Html\Tag\Form;
     <?= $button::back(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::select($form, 'client_id')
                     ->label($translator->translate('clients'))
                     ->optionsData($optionsDataClients)
                     ->disabled(true);
 ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::text($form, 'url_key')
     ->label($translator->translate('upload.url.key'))
     ->value(Html::encode($form->getUrlKey()))
     ->disabled(true);
 ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::text($form, 'file_name_original')
     ->label($translator->translate('upload.filename.original'))
     ->value(Html::encode($form->getFileNameOriginal()))
     ->disabled(true);
 ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::text($form, 'file_name_new')
     ->label($translator->translate('upload.filename.new'))
     ->value(Html::encode($form->getFileNameNew()))
     ->disabled(true);
 ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::text($form, 'description')
     ->label($translator->translate('upload.description'))
     ->value(Html::encode($form->getDescription()))
     ->disabled(true);
 ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::date($form, 'uploaded_date')
     ->label($translator->translate('date'))
     ->required(true)

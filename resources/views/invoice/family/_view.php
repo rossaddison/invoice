@@ -48,7 +48,7 @@ use Yiisoft\Html\Tag\Form;
             <?= $button::back(); ?>
             <?= Html::openTag('div', ['id' => 'content']); ?>
               <?= Html::openTag('div', ['class' => 'row']); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::errorSummary($form)
                     ->errors($errors)
                     ->header($translator->translate('error.summary'))
@@ -56,7 +56,7 @@ use Yiisoft\Html\Tag\Form;
                     ->onlyCommonErrors()
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::text($form, 'family_name')
                         ->label($translator->translate('family.name'))
                         ->addInputAttributes([
@@ -69,7 +69,7 @@ use Yiisoft\Html\Tag\Form;
                         ->readonly(true);
                   ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::select($form, 'category_primary_id')
                         ->label($translator->translate('category.primary'))
                         ->addInputAttributes([
@@ -81,7 +81,7 @@ use Yiisoft\Html\Tag\Form;
                         ->disabled(true);
                     ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::select($form, 'category_secondary_id')
                         ->label($translator->translate('category.secondary'))
                         ->addInputAttributes([
@@ -93,7 +93,7 @@ use Yiisoft\Html\Tag\Form;
                         ->disabled(true)
                     ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::text($form, 'family_commalist')
                         ->label($translator->translate('family.comma.list'))
                         ->addInputAttributes([
@@ -105,7 +105,7 @@ use Yiisoft\Html\Tag\Form;
                         ->disabled(true);
                   ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::text($form, 'family_productprefix')
                         ->label($translator->translate('family.product.prefix'))
                         ->addInputAttributes([

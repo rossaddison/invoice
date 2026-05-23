@@ -337,7 +337,7 @@ echo Html::script($js5)->type('module');
     ->hideLabel()
 ?>
                     <div>
-                    <div class="form-group">
+                    <div class="mb-3">
 
                         <div class="input-group">
                         <?=

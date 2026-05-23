@@ -57,7 +57,7 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
             <?= $button::backSave(); ?>
             <?= Html::openTag('div', ['id' => 'content']); ?>
               <?= Html::openTag('div', ['class' => 'row']); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::errorSummary($form)
                     ->errors($errors)
                     ->header($translator->translate('error.summary'))
@@ -65,7 +65,7 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
                     ->onlyCommonErrors()
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::text($form, 'family_name')
                     ->label($translator->translate('family.name'))
                     ->addInputAttributes([
@@ -77,7 +77,7 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
                     ->hint($translator->translate('hint.this.field.is.required'));
                   ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?php
                   // Street order info — read-only; managed via the drag-and-drop page
                   $sortOrder = isset($family) ? $family->getStreetSortOrder() : null;
@@ -101,7 +101,7 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
                     <?= Html::closeTag('div'); ?>
                   <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::select($form, 'category_primary_id')
     ->label($translator->translate('category.primary'))
     ->addInputAttributes([
@@ -112,7 +112,7 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
     ->optionsData($categoryPrimaries);
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::select($form, 'category_secondary_id')
     ->label($translator->translate('category.secondary'))
     ->addInputAttributes([
@@ -123,7 +123,7 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
     ->optionsData($categorySecondaries);
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::textarea($form, 'family_commalist')
                     ->label($translator->translate('family.comma.list'))
                     ->addInputAttributes([
@@ -151,7 +151,7 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
                     <!-- Angular app will be mounted here -->
                   </div>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::text($form, 'family_productprefix')
                     ->label($translator->translate('family.product.prefix'))
                     ->addInputAttributes([
@@ -163,7 +163,7 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
                     ->hint($translator->translate('hint.this.field.is.not.required'));
                   ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?php
                     /**
                      * @var App\Infrastructure\Persistence\CustomField\CustomField $customField

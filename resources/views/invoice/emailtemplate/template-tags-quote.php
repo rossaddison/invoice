@@ -7,7 +7,7 @@ declare(strict_types=1);
  * @var array $custom_fields_quote_custom
  */
 ?>
-        <div class="form-group">
+        <div class="mb-3">
             <label for="tags_quote"><?= $translator->translate('quotes'); ?></label>
             <select id="tags_quote" class="taginv-select form-control">
                 <option value="{{{quote_number}}}">

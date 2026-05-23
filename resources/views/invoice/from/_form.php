@@ -40,7 +40,7 @@ use Yiisoft\Html\Tag\Form;
     <?= $button::backSave(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
                     ->header($translator->translate('error.summary'))
@@ -48,7 +48,7 @@ use Yiisoft\Html\Tag\Form;
                     ->onlyCommonErrors()
 ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::checkbox($form, 'include')
     ->inputLabelAttributes(['class' => 'form-check-label'])
     ->inputClass('form-check-input')
@@ -56,14 +56,14 @@ use Yiisoft\Html\Tag\Form;
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::checkbox($form, 'default_email')
     ->inputLabelAttributes(['class' => 'form-check-label'])
     ->inputClass('form-check-input')
     ->ariaDescribedBy($translator->translate('from.default.in.dropdown'))
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::email($form, 'email')
     ->label($translator->translate('from.email.address'))
     ->addInputAttributes([

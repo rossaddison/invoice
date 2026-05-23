@@ -15,6 +15,8 @@ use Yiisoft\Html\Tag\Option;
 * @var string $country
 */
 
+$col = 'col-12 col-md-6';
+
 echo H::openTag('div', ['class' => 'row']); //1
  echo H::openTag('div', ['class' => 'col-12 col-md-8 offset-md-2']); //2
   echo H::openTag('div', ['class' => 'card']); //3
@@ -23,7 +25,7 @@ echo H::openTag('div', ['class' => 'row']); //1
    echo H::closeTag('div'); //4
    echo H::openTag('div', ['class' => 'card-body']); //4
     echo H::openTag('div', ['class' => 'row']); //5
-     echo H::openTag('div', ['class' => 'col-12 col-md-6']); //6
+     echo H::openTag('div', ['class' => $col]); //6
       echo H::openTag('div', ['class' => 'mb-3']); //7
        echo H::openTag('label', [
         'for' => 'settings[storecove_country]'
@@ -68,7 +70,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     echo H::openTag('div', ['class' => 'col-12 col-md-6']); //6
+     echo H::openTag('div', ['class' => $col]); //6
       echo H::openTag('div', ['class' => 'mb-3']); //7
        echo H::openTag('label', [
         'for' => 'storecove_legal_entity_id'
@@ -89,7 +91,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        ]);
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     echo H::openTag('div', ['class' => 'col-12 col-md-6']); //6
+     echo H::openTag('div', ['class' => $col]); //6
       echo H::openTag('div', ['class' => 'mb-3']); //7
        echo H::openTag('label', [
         'for' => 'settings[storecove_sender_identifier]'

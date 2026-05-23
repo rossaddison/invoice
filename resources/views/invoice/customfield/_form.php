@@ -48,7 +48,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::tag('br'); ?>
     <?= Html::openTag('div'); ?>    
         <?= Html::openTag('div', ['class' => 'col-12 col-md-6 offset-md-3']); ?>    
-            <?= Html::openTag('div', ['class' => 'form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?=
                 Field::errorSummary($form)
                 ->errors($errors)
@@ -65,7 +65,7 @@ use Yiisoft\Html\Tag\Form;
                 ->render();
 ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::select($form, 'table')
         ->label($translator->translate('table'))
         ->addInputAttributes([
@@ -77,7 +77,7 @@ use Yiisoft\Html\Tag\Form;
 ?>
             <?= Html::closeTag('div'); ?>
 
-            <?= Html::openTag('div', ['class' => 'form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::text($form, 'label')
         ->label($translator->translate('label'))
         ->addInputAttributes([
@@ -106,7 +106,7 @@ foreach ($types as $type) {
     $optionsDataType[$type] = ucFirst($translated);
 }
 ?>   
-            <?= Html::openTag('div', ['class' => 'form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::select($form, 'type')
                     ->label($translator->translate('type'))
                     ->addInputAttributes([
@@ -119,7 +119,7 @@ foreach ($types as $type) {
                     ->render();
 ?>
             <?= Html::closeTag('div'); ?>   
-            <?= Html::openTag('div', ['class' => 'form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::checkbox($form, 'required')
     ->label($translator->translate('custom.field.required'))
     ->inputLabelAttributes(['class' => 'form-check-label'])
@@ -129,7 +129,7 @@ foreach ($types as $type) {
 ?>
             <?= Html::closeTag('div'); ?>    
 
-            <?= Html::openTag('div', ['class' => 'form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::range($form, 'order')
     ->label($translator->translate('order'))
     ->addInputAttributes([
@@ -308,7 +308,7 @@ foreach ($types as $type) {
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
 
-            <?= Html::openTag('div', ['class' => 'form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <label for="location"><?= $translator->translate('position'); ?></label> 
                 <?php $valueSelected = Html::encode($form->getLocation() ??  ''); ?>
                 <select name="location" id="location" class="form-control form-control-lg"></select>

@@ -6,7 +6,10 @@
       "Bash(vendor/bin/phpunit Tests/Unit/Invoice/Entity/ --no-coverage)",
       "Bash(php c:/wamp64/www/invoice/vendor/bin/phpunit c:/wamp64/www/invoice/Tests/Unit/ --no-coverage)",
       "Bash(c:/wamp64/www/invoice/node_modules/.bin/sass --version)",
-      "Bash(npx sass *)"
+      "Bash(npx sass *)",
+      "Bash(powershell -Command \"Get-Content 'c:\\\\wamp64\\\\www\\\\invoice\\\\src\\\\Invoice\\\\Asset\\\\invoice\\\\css\\\\style.css' | Measure-Object -Line\")",
+      "Bash(grep -nP \"^\\\\s*\\\\{$\" \"c:/wamp64/www/invoice/src/Invoice/Asset/invoice/css/style.css\")",
+      "Bash(awk 'NR>=8430 && NR<=8460' \"c:/wamp64/www/invoice/src/Invoice/Asset/invoice/css/style.css\")"
     ]
   },
   "hooks": {

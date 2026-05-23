@@ -287,7 +287,7 @@ $columns = [
                             ),
                             [
                                 'type' => 'submit',
-                                'class' => 'dropdown-button',
+                                'class' => 'dropdown-item',
                                 'onclick' => "return confirm("
                                     . "'"
                                     . $translator->translate(
@@ -337,7 +337,7 @@ $columns = [
                             ),
                             [
                                 'type' => 'submit',
-                                'class' => 'dropdown-button',
+                                'class' => 'dropdown-item',
                                 'onclick' => "return confirm("
                                     . "'"
                                     . $translator->translate(
@@ -387,7 +387,7 @@ $columns = [
                             ),
                             [
                                 'type' => 'submit',
-                                'class' => 'dropdown-button',
+                                'class' => 'dropdown-item',
                                 'onclick' => "return confirm("
                                     . "'"
                                     . $translator->translate(
@@ -435,7 +435,7 @@ $columns = [
                         ),
                         [
                             'type' => 'submit',
-                            'class' => 'dropdown-button',
+                            'class' => 'dropdown-item',
                             'onclick' => "return confirm("
                                 . "'"
                                 . $translator->translate(
@@ -529,7 +529,7 @@ $columns = [
                         '❌',
                         [
                             'type' => 'submit',
-                            'class' => 'dropdown-button',
+                            'class' => 'dropdown-item',
                             'onclick' => "return confirm("
                                 . "'"
                                 . $translator->translate(

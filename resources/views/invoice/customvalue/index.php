@@ -21,7 +21,7 @@ use Yiisoft\Html\Tag\Option;
 
 $row         = ['class' => 'row'];
 $colMd6Off3  = ['class' => 'col-12 col-md-6 offset-md-3'];
-$formGroup   = ['class' => 'form-group'];
+$formGroup   = ['class' => 'mb-3'];
 $formControlLg = 'form-control form-control-lg';
 
 echo H::openTag('form', ['method' => 'post']); //0

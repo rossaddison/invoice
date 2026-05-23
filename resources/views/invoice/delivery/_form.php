@@ -45,7 +45,7 @@ use Yiisoft\Html\Tag\Form;
 
      <?= $button::backSave(); ?>
 
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group has-feedback']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 has-feedback']); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
                     ->header($translator->translate('error.summary'))
@@ -53,7 +53,7 @@ use Yiisoft\Html\Tag\Form;
                     ->onlyCommonErrors()
             ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?php
              Field::hidden($form, 'date_created')
              ->label($translator->translate('delivery.date.created')
@@ -70,7 +70,7 @@ use Yiisoft\Html\Tag\Form;
              ->hint($translator->translate('hint.this.field.is.not.required'));
              ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?php
         Field::hidden($form, 'date_modified')
         ->label($translator->translate('delivery.date.modified')
@@ -89,7 +89,7 @@ use Yiisoft\Html\Tag\Form;
 ?>
             <?= Html::closeTag('div'); ?>
 
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
 <?php
     echo Field::date($form, 'start_date')
     ->label($translator->translate('delivery.start.date')
@@ -102,7 +102,7 @@ use Yiisoft\Html\Tag\Form;
 ?>
             <?= Html::closeTag('div'); ?>
 
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
 <?php
     echo Field::date($form, 'actual_delivery_date')
     ->label($translator->translate('delivery.actual.delivery.date')
@@ -115,7 +115,7 @@ use Yiisoft\Html\Tag\Form;
 ?>
             <?= Html::closeTag('div'); ?>
 
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
 <?php
     echo Field::date($form, 'end_date')
     ->label($translator->translate('delivery.end.date')
@@ -127,7 +127,7 @@ use Yiisoft\Html\Tag\Form;
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?php
     if ($del_count > 0) {
         $optionsDataDel = [];

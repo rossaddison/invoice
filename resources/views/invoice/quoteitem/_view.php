@@ -18,7 +18,7 @@ use Yiisoft\Html\Html;
 ?>
 <?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 
- <div class="mb3 form-group">
+ <div class="mb-3">
    <label for="tax_rate_id" class="form-label" style="background:lightblue"><?= $translator->translate('tax.rate'); ?></label>
    <?php  $actionNameTax = 'taxrate/view';
 $actionArgumentsTax = ['tax_rate_id' => $quoteitem->getTaxRate()?->reqId()];
@@ -28,7 +28,7 @@ if (null !== $taxRateName) {
 }
 ?>
  </div>
- <div class="mb3 form-group">
+ <div class="mb-3">
    <label for="product_id" class="form-label" style="background:lightblue"><?= $translator->translate('product'); ?></label>
    <?php  $actionNameProduct = 'product/view';
 $actionArgumentsProduct = ['id' => $quoteitem->getProduct()?->reqId()];
@@ -38,7 +38,7 @@ if (null !== $productName) {
 }
 ?>
  </div>
- <div class="mb3 form-group">
+ <div class="mb-3">
    <label for="quote_id" class="form-label" style="background:lightblue"><?= $translator->translate('quote'); ?></label>
    <?php  $actionNameQuote = 'quote/view';
 $actionArgumentsQuote = ['id' => $quoteitem->getQuote()?->reqId()];

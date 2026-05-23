@@ -35,7 +35,7 @@ use Yiisoft\Html\Tag\A;
  */
 
 $vat = $s->getSetting('enable_vat_registration');
-
+$formControlAmount = 'form-control amount';
 echo H::openTag('div', ['class' => 'table-responsive']);
  echo H::openTag('table', [
      'id' => 'item_table',
@@ -209,7 +209,7 @@ foreach ($invItems as $item) {
         echo H::openTag('input', [
             'disabled' => true,
             'type' => 'text',
-            'class' => 'form-control amount',
+            'class' => $formControlAmount,
             'name' => 'item_quantity',
             'data-bs-toggle' => 'tooltip',
             'title' => 'inv_item->quantity',
@@ -229,7 +229,7 @@ foreach ($invItems as $item) {
         echo H::openTag('input', [
             'disabled' => true,
             'type' => 'text',
-            'class' => 'form-control amount',
+            'class' => $formControlAmount,
             'name' => 'item_price',
             'data-bs-toggle' => 'tooltip',
             'title' => 'inv_item->price',
@@ -249,7 +249,7 @@ foreach ($invItems as $item) {
         echo H::openTag('input', [
             'disabled' => true,
             'type' => 'text',
-            'class' => 'form-control amount',
+            'class' => $formControlAmount,
             'name' => 'item_discount_amount',
             'data-bs-toggle' => 'tooltip',
             'title' => $s->getSetting('currency_symbol') . ' ' .
@@ -345,7 +345,7 @@ foreach ($invItems as $item) {
                   echo H::closeTag('div');
                   echo H::openTag('div', ['class' => 'modal-body']);
                    echo H::openTag('form');
-                    echo H::openTag('div', ['class' => 'form-group']);
+                    echo H::openTag('div', ['class' => 'mb-3']);
                      echo H::openTag('input', [
                          'type' => 'hidden',
                          'name' => '_csrf',

@@ -27,7 +27,7 @@ use Yiisoft\Html\Html;
                 <form>
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
                     <input type="hidden" name="user_id" id="user_id" value="<?= $quote->reqUserId(); ?>">
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="create_quote_client_id"><?= $translator->translate('client'); ?></label>
                         <select name="create_quote_client_id" id="create_quote_client_id" class="form-control form-control-lg">
                             <option value="">⏳</option>

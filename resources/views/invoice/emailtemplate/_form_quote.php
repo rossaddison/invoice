@@ -27,6 +27,8 @@ use Yiisoft\Html\Tag\Span;
  * @psalm-var array<string,list<string>> $errors
  * @psalm-var array<array-key, array<array-key, string>|string> $quoteTemplates
  */
+
+$htmlTagBtnSec = 'html-tag btn btn-secondary';
 ?>
 
 <?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
@@ -77,13 +79,13 @@ use Yiisoft\Html\Tag\Span;
 ?>
 
 <?= Html::openTag('div', ['class' => 'row']); ?>
-    <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+    <?= Html::openTag('div', ['class' => 'mb-3']); ?>
         <?= Field::text($form, 'email_template_type', theme: 'A')
             ->value(Html::encode('Quote'))
             ->readonly(true)
             ->render(); ?>
     <?= Html::closeTag('div'); ?>
-    <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+    <?= Html::openTag('div', ['class' => 'mb-3']); ?>
         <?= Field::text($form, 'email_template_title', theme: 'A')
             ->label($translator->translate('title'))
             ->required(true)
@@ -94,7 +96,7 @@ use Yiisoft\Html\Tag\Span;
             ->placeholder($translator->translate('title'))
             ->hint($translator->translate('hint.this.field.is.required')); ?>
     <?= Html::closeTag('div'); ?>
-    <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+    <?= Html::openTag('div', ['class' => 'mb-3']); ?>
         <?= Field::text($form, 'email_template_from_name', theme: 'A')
             ->label($translator->translate('from.name'))
             ->required(true)
@@ -105,7 +107,7 @@ use Yiisoft\Html\Tag\Span;
             ->placeholder($translator->translate('from.name'))
             ->hint($translator->translate('hint.this.field.is.required')); ?>
     <?= Html::closeTag('div'); ?>
-    <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+    <?= Html::openTag('div', ['class' => 'mb-3']); ?>
         <?= Html::openTag('div', ['class' => 'card']); ?>
             <?= Html::openTag('div', ['class' => 'card-header']); ?>
                 <?= Html::openTag('fieldset'); ?>
@@ -117,7 +119,7 @@ use Yiisoft\Html\Tag\Span;
                     <?= Html::closeTag('h6'); ?>
                 <?= Html::closeTag('fieldset'); ?>
                 <?= Html::openTag('div', ['id' => 'email_option']); ?>
-                    <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                    <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                         <?= Html::tag('input', '', [
                             'type' => 'radio',
                             'id' => 'adminEmail',
@@ -166,7 +168,7 @@ use Yiisoft\Html\Tag\Span;
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::tag('br'); ?>
-    <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+    <?= Html::openTag('div', ['class' => 'mb-3']); ?>
         <?= Field::text($form, 'email_template_cc', theme: 'A')
             ->label($translator->translate('cc'))
             ->required(false)
@@ -177,7 +179,7 @@ use Yiisoft\Html\Tag\Span;
             ->placeholder($translator->translate('cc'))
             ->hint($translator->translate('hint.this.field.is.not.required')); ?>
     <?= Html::closeTag('div'); ?>
-    <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+    <?= Html::openTag('div', ['class' => 'mb-3']); ?>
         <?= Field::text($form, 'email_template_bcc', theme: 'A')
             ->label($translator->translate('bcc'))
             ->required(false)
@@ -188,7 +190,7 @@ use Yiisoft\Html\Tag\Span;
             ->placeholder($translator->translate('bcc'))
             ->hint($translator->translate('hint.this.field.is.not.required')); ?>
     <?= Html::closeTag('div'); ?>
-    <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+    <?= Html::openTag('div', ['class' => 'mb-3']); ?>
         <?= Field::text($form, 'email_template_subject', theme: 'A')
             ->label($translator->translate('subject'))
             ->required(true)
@@ -214,28 +216,28 @@ use Yiisoft\Html\Tag\Span;
             ->multiple(false);
 ?>
     <?= Html::closeTag('div'); ?>
-    <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+    <?= Html::openTag('div', ['class' => 'mb-3']); ?>
         <?= Html::openTag('div', ['class' => 'html-tags btn-group btn-group-sm']); ?>
             <?=  new Span()
-        ->addClass('html-tag btn btn-secondary')
+        ->addClass($htmlTagBtnSec)
         ->addAttributes(['data-tag-type' => 'text-paragraph'])
         ->content( new I()->addClass('bi bi-text-paragraph'))
         ->render();
 ?>
             <?=  new Span()
-    ->addClass('html-tag btn btn-secondary')
+    ->addClass($htmlTagBtnSec)
     ->addAttributes(['data-tag-type' => 'text-linebreak'])
     ->content(Html::b(NoEncode::string('&lt;br&gt;')))
     ->render();
 ?>
             <?=  new Span()
-    ->addClass('html-tag btn btn-secondary')
+    ->addClass($htmlTagBtnSec)
     ->addAttributes(['data-tag-type' => 'text-bold'])
     ->content( new I()->addClass('bi bi-type-bold')->content('b'))
     ->render();
 ?>
             <?=  new Span()
-    ->addClass('html-tag btn btn-secondary')
+    ->addClass($htmlTagBtnSec)
     ->addAttributes(['data-tag-type' => 'text-italic'])
     ->content( new I()->addClass('bi bi-type-italic'))
     ->render();
@@ -243,25 +245,25 @@ use Yiisoft\Html\Tag\Span;
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'html-tags btn-group btn-group-sm']); ?>
             <?=  new Span()
-    ->addClass('html-tag btn btn-secondary')
+    ->addClass($htmlTagBtnSec)
     ->addAttributes(['data-tag-type' => 'text-h1'])
     ->content('H1')
     ->render();
 ?>
             <?=  new Span()
-    ->addClass('html-tag btn btn-secondary')
+    ->addClass($htmlTagBtnSec)
     ->addAttributes(['data-tag-type' => 'text-h2'])
     ->content('H2')
     ->render();
 ?>
             <?=  new Span()
-    ->addClass('html-tag btn btn-secondary')
+    ->addClass($htmlTagBtnSec)
     ->addAttributes(['data-tag-type' => 'text-h3'])
     ->content('H3')
     ->render();
 ?>
             <?=  new Span()
-    ->addClass('html-tag btn btn-secondary')
+    ->addClass($htmlTagBtnSec)
     ->addAttributes(['data-tag-type' => 'text-h4'])
     ->content('H4')
     ->render();
@@ -269,26 +271,26 @@ use Yiisoft\Html\Tag\Span;
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'html-tags btn-group btn-group-sm']); ?>
             <?=  new Span()
-    ->addClass('html-tag btn btn-secondary')
+    ->addClass($htmlTagBtnSec)
     ->addAttributes(['data-tag-type' => 'text-code'])
     ->content( new I()->addClass('bi bi-code-slash'))
     ->render();
 ?>
             <?=  new Span()
-    ->addClass('html-tag btn btn-secondary')
+    ->addClass($htmlTagBtnSec)
     ->addAttributes(['data-tag-type' => 'text-hr'])
     ->content(Html::b(NoEncode::string('&lt;hr&gt;')))
     ->render();
 ?>
             <?=  new Span()
-    ->addClass('html-tag btn btn-secondary')
+    ->addClass($htmlTagBtnSec)
     ->addAttributes(['data-tag-type' => 'text-css'])
     ->content('CSS')
     ->render();
 ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
-    <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+    <?= Html::openTag('div', ['class' => 'mb-3']); ?>
         <?= Field::textarea($form, 'email_template_body', theme: 'A')
 ->required(true)
 ->addInputAttributes([
@@ -304,7 +306,7 @@ use Yiisoft\Html\Tag\Span;
          * Related logic: see https://github.com/rossaddison/invoice/issues/12
          */
 ?>
-    <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+    <?= Html::openTag('div', ['class' => 'mb-3']); ?>
        <?=
         $email_template_tags;
 ?>

@@ -47,14 +47,14 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::closeTag('h1'); ?>
         <?= Html::openTag('div', ['id' => 'content']); ?>
             <?= Html::openTag('div', ['class' => 'row']); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::errorSummary($form)
                         ->errors($errors)
                         ->header($translator->translate('error.summary'))
                         ->onlyCommonErrors()
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?php
     $optionsDataCompany = [];
 /**
@@ -68,36 +68,36 @@ foreach ($companies as $company) {
 ?>
                     <?= $formFields->companyPrivateCompanySelect($form, $optionsDataCompany, $company_public); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= $formFields->companyPrivateTextField($form, 'tax_code', 'tax.code'); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= $formFields->companyPrivateTextField($form, 'iban', 'user.iban'); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= $formFields->companyPrivateTextField($form, 'gln', 'gln'); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Html::openTag('label'); ?>
                         <?= Html::encode($form->getLogoFilename()); ?>
                     <?= Html::closeTag('label'); ?>
                     <?= $formFields->companyPrivateFileField($form, 'logo_filename'); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= $formFields->companyPrivateTextField($form, 'logo_width', 'company.private.logo.width'); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= $formFields->companyPrivateTextField($form, 'logo_height', 'company.private.logo.height'); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= $formFields->companyPrivateTextField($form, 'logo_margin', 'company.private.logo.margin'); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Html::openTag('div', ['class' => 'input-group']); ?>
                         <?= $formFields->companyPrivateDateField($form, 'start_date', ' (' . $dateHelper->display() . ')'); ?>
                     <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Html::openTag('div', ['class' => 'input-group']); ?>
                         <?= $formFields->companyPrivateDateField($form, 'end_date', ' (' . $dateHelper->display() . ')'); ?>
                     <?= Html::closeTag('div'); ?>

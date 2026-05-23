@@ -47,14 +47,14 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('div'); ?>
 <?= Html::openTag('div', ['id' => 'content']); ?>
     <?= Html::openTag('div', ['class' => 'row']); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group has-feedback']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3 has-feedback']); ?>
             <?= Field::errorSummary($form)
                 ->errors($errors)
                 ->header($translator->translate('error.summary'))
                 ->onlyCommonErrors()
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group no-margin']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3 no-margin']); ?>
             <?php
     echo Field::text($form, 'user_id')
     ->label($translator->translate('users'))
@@ -67,7 +67,7 @@ use Yiisoft\Html\Tag\Form;
     ->value(Html::encode($form->getUserId() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?php
   $types = [
       0 => $translator->translate('administrator'),
@@ -91,7 +91,7 @@ echo Field::select($form, 'type')
 ->value(Html::encode($form->getType() ?? 1));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Html::openTag('div', ['class' => 'p-2']); ?>
                 <?= Field::hidden($form, 'active')
         ->hideLabel(true)
@@ -99,13 +99,13 @@ echo Field::select($form, 'type')
 ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?><?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::hidden($form, 'all_clients')
 ->hideLabel(true)
 ->value(Html::encode($form->getAllClients()));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group no-margin']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3 no-margin']); ?>
             <?php
     $optionsDataLanguage = [];
 /**
@@ -129,7 +129,7 @@ echo Field::select($form, 'language')
 ->hint($translator->translate('hint.this.field.is.required'));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'name')
     ->label($translator->translate('name'))
     ->addInputAttributes([
@@ -141,7 +141,7 @@ echo Field::select($form, 'language')
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'company')
     ->label($translator->translate('company'))
     ->addInputAttributes([
@@ -153,7 +153,7 @@ echo Field::select($form, 'language')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'address_1')
     ->label($translator->translate('street.address'))
     ->addInputAttributes([
@@ -165,7 +165,7 @@ echo Field::select($form, 'language')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'address_2')
     ->label($translator->translate('street.address.2'))
     ->addInputAttributes([
@@ -177,7 +177,7 @@ echo Field::select($form, 'language')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'city')
     ->label($translator->translate('city'))
     ->addInputAttributes([
@@ -189,7 +189,7 @@ echo Field::select($form, 'language')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'state')
     ->label($translator->translate('state'))
     ->addInputAttributes([
@@ -201,7 +201,7 @@ echo Field::select($form, 'language')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'zip')
     ->label($translator->translate('zip'))
     ->addInputAttributes([
@@ -213,7 +213,7 @@ echo Field::select($form, 'language')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'country')
     ->label($translator->translate('country'))
     ->addInputAttributes([
@@ -225,7 +225,7 @@ echo Field::select($form, 'language')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::telephone($form, 'phone')
     ->label($translator->translate('phone'))
     ->addInputAttributes([
@@ -237,7 +237,7 @@ echo Field::select($form, 'language')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::telephone($form, 'fax')
     ->label($translator->translate('fax'))
     ->addInputAttributes([
@@ -249,7 +249,7 @@ echo Field::select($form, 'language')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
            <?= Field::telephone($form, 'mobile')
     ->label($translator->translate('mobile'))
     ->addInputAttributes([
@@ -261,7 +261,7 @@ echo Field::select($form, 'language')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::email($form, 'email')
     ->label($translator->translate('email'))
     ->addInputAttributes([
@@ -274,7 +274,7 @@ echo Field::select($form, 'language')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'web')
     ->label($translator->translate('web.address'))
     ->addInputAttributes([
@@ -286,7 +286,7 @@ echo Field::select($form, 'language')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'tax_code')
     ->label($translator->translate('tax.code'))
     ->addInputAttributes([
@@ -298,7 +298,7 @@ echo Field::select($form, 'language')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'subscribernumber')
     ->label($translator->translate('user.subscriber.number'))
     ->addInputAttributes([
@@ -310,7 +310,7 @@ echo Field::select($form, 'language')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'iban')
     ->label($translator->translate('user.iban'))
     ->addInputAttributes([
@@ -322,7 +322,7 @@ echo Field::select($form, 'language')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
          <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'gln')
     ->label($translator->translate('delivery.location.global.location.number'))
     ->addInputAttributes([
@@ -334,7 +334,7 @@ echo Field::select($form, 'language')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'listLimit')
     ->label($translator->translate('user.inv.list.limit'))
     ->addInputAttributes([

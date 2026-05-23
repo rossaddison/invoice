@@ -50,7 +50,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('div'); ?>
 <?= Html::openTag('div', ['id' => 'content']); ?>
     <?= Html::openTag('div', ['class' => 'row']); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group has-feedback']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3 has-feedback']); ?>
             <?= Field::errorSummary($form)
                 ->errors($errors)
                 ->header($translator->translate('error.summary'))
@@ -58,7 +58,7 @@ use Yiisoft\Html\Tag\Form;
                 ->onlyCommonErrors()
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group no-margin']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3 no-margin']); ?>
             <?php
                 // build an array of userinv ids
                 $userInvIds = [];
@@ -83,7 +83,7 @@ foreach ($uR->findAllPreloaded() as $user) {
 ?>
             <?= $formFields->userInvUserSelect($form, $optionsDataSignedUpUsersNotInUserInv); ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?php
     $typeOptions = [
         0 => $translator->translate('administrator'),
@@ -92,15 +92,15 @@ foreach ($uR->findAllPreloaded() as $user) {
 ?>
             <?= $formFields->userInvTypeSelect($form, $typeOptions); ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Html::openTag('div', ['class' => 'p-2']); ?>
                 <?= $formFields->userInvCheckboxField($form, 'active', 'active'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?><?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= $formFields->userInvCheckboxField($form, 'all_clients', 'user.all.clients'); ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group no-margin']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3 no-margin']); ?>
             <?php
     $languageOptions = [];
 /** @var string $language */
@@ -110,31 +110,31 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
 ?>
             <?= $formFields->userInvLanguageSelect($form, $languageOptions); ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= $formFields->userInvTextField($form, 'name', 'name', true); ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= $formFields->userInvTextField($form, 'company', 'company', false); ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= $formFields->userInvTextField($form, 'address_1', 'street.address', false); ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= $formFields->userInvTextField($form, 'address_2', 'street.address.2', false); ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= $formFields->userInvTextField($form, 'city', 'city', false); ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= $formFields->userInvTextField($form, 'state', 'state', false); ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= $formFields->userInvTextField($form, 'zip', 'zip', false); ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= $formFields->userInvTextField($form, 'country', 'country', false); ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::telephone($form, 'phone')
     ->label($translator->translate('phone'))
     ->addInputAttributes([
@@ -145,7 +145,7 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
     ->value(Html::encode($form->getPhone() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::telephone($form, 'fax')
     ->label($translator->translate('fax'))
     ->addInputAttributes([
@@ -156,7 +156,7 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
     ->value(Html::encode($form->getFax() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
            <?= Field::telephone($form, 'mobile')
     ->label($translator->translate('mobile'))
     ->addInputAttributes([
@@ -167,7 +167,7 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
     ->value(Html::encode($form->getMobile() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::email($form, 'user')
     ->label($translator->translate('email'))
     ->addInputAttributes([
@@ -179,7 +179,7 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
     ->value(Html::encode($form->getUser()?->getEmail() ?? '#'));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'web')
     ->label($translator->translate('web.address'))
     ->addInputAttributes([
@@ -190,7 +190,7 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
     ->value(Html::encode($form->getWeb() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'tax_code')
     ->label($translator->translate('tax.code'))
     ->addInputAttributes([
@@ -201,7 +201,7 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
     ->value(Html::encode($form->getTaxCode() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'subscribernumber')
     ->label($translator->translate('user.subscriber.number'))
     ->addInputAttributes([
@@ -212,7 +212,7 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
     ->value(Html::encode($form->getSubscribernumber() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'iban')
     ->label($translator->translate('user.iban'))
     ->addInputAttributes([
@@ -223,7 +223,7 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
     ->value(Html::encode($form->getSubscribernumber() ?? ''));
 ?>
          <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'gln')
     ->label($translator->translate('delivery.location.global.location.number'))
     ->addInputAttributes([
@@ -234,7 +234,7 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
     ->value(Html::encode($form->getGln() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'listLimit')
     ->label($translator->translate('user.inv.list.limit'))
     ->addInputAttributes([

@@ -101,7 +101,7 @@ echo H::openTag('div', ['class' => 'card-header']); //4
         ['class' => 'btn btn-danger btn-lg mt-3']
        );
       } else {
-       echo H::openTag('div', ['class' => 'form-group']); //9
+       echo H::openTag('div', ['class' => 'mb-3']); //9
         echo H::openTag('label', ['for' => 'delivery_location_id']); //10
          echo $translator->translate('delivery.location') . ': ';
         echo H::closeTag('label'); //10

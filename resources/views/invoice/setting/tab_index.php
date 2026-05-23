@@ -250,7 +250,7 @@ echo H::closeTag('div'); //0
 
 // https://getbootstrap.com/docs/5.0/components/navs-tabs/#using-data-attributes
 echo H::openTag('ul', ['id' => 'settings-tabs',
-    'class' => 'nav nav-tabs',
+    'class' => 'nav nav-tabs justify-content-center',
     'role'  => 'tablist']); //0
  foreach ($tabs as $key => $tab) {
   $isActive = $active == $key;

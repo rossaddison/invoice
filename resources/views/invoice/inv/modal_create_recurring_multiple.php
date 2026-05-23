@@ -33,7 +33,7 @@ declare(strict_types=1);
             <div class="modal-body">
                 <form>
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="recur_frequency">
                             <?= $translator->translate('every'); ?>
                         </label>
@@ -51,7 +51,7 @@ declare(strict_types=1);
                             <?php } ?>
                         </select>
                     </div>
-                    <div class="form-group has-feedback">
+                    <div class="mb-3 has-feedback">
                         <label for="recur_start_date">
                             <?= $translator->translate('start.date'); ?>
                         </label>
@@ -63,7 +63,7 @@ declare(strict_types=1);
                                    autocomplete="off">
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label
                             for="recur_next_date"
                             class="label-info">
@@ -74,7 +74,7 @@ declare(strict_types=1);
                                     . $translator->translate('next'); ?>
                         </label>
                     </div>
-                    <div class="form-group has-feedback">
+                    <div class="mb-3 has-feedback">
                         <label for="recur_end_date">
                             <?= $translator->translate('end.date'); ?>
                             (<?= $translator->translate('optional'); ?>)

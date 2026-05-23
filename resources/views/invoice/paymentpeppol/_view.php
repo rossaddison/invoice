@@ -33,7 +33,7 @@ if (!empty($errors)) {
 ?>
 <h1><?= Html::encode($title) ?></h1>
 <div class='row'>
-    <div class="row mb3 form-group">
+    <div class="row mb-3">
         <label for="auto_reference" class="text-bg col-sm-2 col-form-label " style="background:lightblue">
             <?= $translator->translate('auto.reference'); ?>
         </label>
@@ -41,7 +41,7 @@ if (!empty($errors)) {
             <?= Html::encode($body['auto_reference'] ?? ''); ?>
         </label>
     </div>
-    <div class="row mb3 form-group">
+    <div class="row mb-3">
         <label for="provider" class="text-bg col-sm-2 col-form-label " style="background:lightblue">
             <?= $translator->translate('provider'); ?>
         </label>

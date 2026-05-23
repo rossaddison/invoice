@@ -39,7 +39,7 @@ use Yiisoft\Html\Tag\Form;
             ->onlyCommonErrors();
 ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-        <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'party_name')
         ->addInputAttributes([
             'class' => 'form-control form-control-lg',

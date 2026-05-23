@@ -196,7 +196,7 @@ foreach ($soItems as $item) {
                                    maxlength="4"
                                    size="4"
                                    name="item_quantity"
-                                   class="input-sm form-control amount"
+                                   class="form-control form-control-sm amount"
                                    data-bs-toggle = "tooltip"
                                    title="sales_order_item->quantity"
                                    value="
@@ -214,7 +214,7 @@ foreach ($soItems as $item) {
                                  maxlength="4"
                                  size="4"
                                  name="item_price"
-                                 class="input-sm form-control amount"
+                                 class="form-control form-control-sm amount"
                                  data-bs-toggle = "tooltip"
                                  title="sales_order_item->price"
                                  value="
@@ -233,7 +233,7 @@ foreach ($soItems as $item) {
                                    maxlength="4"
                                    size="4"
                                    name="item_discount_amount"
-                                   class="input-sm form-control amount"
+                                   class="form-control form-control-sm amount"
                                    data-bs-toggle = "tooltip"
                                    title="sales_order_item->discount_amount"
                                    value="
@@ -313,7 +313,7 @@ foreach ($soItems as $item) {
                                         </div>
                                         <div class="modal-body">
                                             <form>
-                                                <div class="form-group">
+                                                <div class="mb-3">
                                                     <input type="hidden"
                                                            name="_csrf"
                                                            value="<?= $csrf ?>">

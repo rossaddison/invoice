@@ -65,6 +65,8 @@ use Yiisoft\Html\Tag\Option;
  */
 
 $vat = $s->getSetting('enable_vat_registration');
+$biBiPlus = 'bi bi-plus';
+$col = 'col-12 col-md-6';
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 echo $modal_delete_inv;
 if ($vat === '0') {
@@ -268,7 +270,7 @@ if ($showButtons
              'data-bs-toggle' => 'modal',
              'class' => 'dropdown-item'
          ]);
-          echo H::openTag('i', ['class' => 'bi bi-plus']);
+          echo H::openTag('i', ['class' => $biBiPlus]);
           echo H::closeTag('i');
           echo ' ' . H::encode($translator->translate('add.invoice.tax'));
          echo H::closeTag('a');
@@ -280,7 +282,7 @@ if ($showButtons
          'data-bs-toggle' => 'modal',
          'class' => 'dropdown-item'
      ]);
-      echo H::openTag('i', ['class' => 'bi bi-plus']);
+      echo H::openTag('i', ['class' => $biBiPlus]);
       echo H::closeTag('i');
       echo ' ' . $translator->translate('allowance.or.charge.inv.add');
      echo H::closeTag('a');
@@ -380,7 +382,7 @@ if ($inv->reqStatusId() !== 1) {
                      'origin_id' => $inv->reqId(), 'action' => 'view'],''),
          'class' => 'dropdown-item'
      ]);
-      echo H::openTag('i', ['class' => 'bi bi-plus']);
+      echo H::openTag('i', ['class' => $biBiPlus]);
       echo H::closeTag('i');
 // Options ... Delivery Location Add
       echo ' ' . H::encode($translator->translate('delivery.location.add'));
@@ -792,7 +794,7 @@ if ($inv->reqStatusId() === 1
      echo H::openTag('div', ['class' => 'details-box']);
       echo H::openTag('div', ['class' => 'row']);
 
-       echo H::openTag('div', ['class' => 'col-12 col-md-6']);
+       echo H::openTag('div', ['class' => $col]);
 
         echo H::openTag('div', ['class' => 'invoice-properties']);
          echo H::openTag('label', ['for' => 'inv_number']);
@@ -887,7 +889,7 @@ if ($vat === '1') {
         }
         echo H::closeTag('div');
        echo H::closeTag('div');
-       echo H::openTag('div', ['class' => 'col-12 col-md-6']);
+       echo H::openTag('div', ['class' => $col]);
         echo H::openTag('div', ['class' => 'invoice-properties']);
          echo H::openTag('label', ['for' => 'inv_status_id']);
           echo H::openTag('b');
@@ -991,7 +993,7 @@ if (($inv->reqStatusId() !== 1) && ($invEdit)) {
      ]);
     echo H::closeTag('div');
     echo H::openTag('div', ['class' => 'invoice-properties']);
-     echo H::openTag('div', ['class' => 'form-group']);
+     echo H::openTag('div', ['class' => 'mb-3']);
       echo H::openTag('label', ['for' => 'guest-url']);
        echo H::openTag('b');
         echo H::encode($translator->translate('guest.url'));
@@ -1073,7 +1075,7 @@ if (null !== $inv->getSoId()) {
   echo H::closeTag('div');
 
   echo H::openTag('div', ['class' => 'row']);
-   echo H::openTag('div', ['class' => 'col-12 col-md-6']);
+   echo H::openTag('div', ['class' => $col]);
     echo H::openTag('div', ['class' => 'card no-margin']);
      echo H::openTag('div', ['class' => 'card-header']);
       echo H::openTag('b');
@@ -1089,7 +1091,7 @@ if (null !== $inv->getSoId()) {
           'id' => 'terms',
           'rows' => '3',
           'disabled' => true,
-          'class' => 'input-sm form-control'
+          'class' => 'form-control form-control-sm'
       ]);
        echo H::encode($terms);
       echo H::closeTag('textarea');
@@ -1102,11 +1104,11 @@ if (null !== $inv->getSoId()) {
 
    echo H::closeTag('div');
    echo H::openTag('div', ['id' => 'view_custom_fields',
-       'class' => 'col-12 col-md-6']);
+       'class' => $col]);
     echo $view_custom_fields;
    echo H::closeTag('div');
    echo H::openTag('div', ['id' => 'view_partial_inv_delivery_location',
-       'class' => 'col-12 col-md-6']);
+       'class' => $col]);
     echo $partial_inv_delivery_location;
    echo H::closeTag('div');
    echo H::openTag('div', ['id' => 'view_partial_inv_attachments']);

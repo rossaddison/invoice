@@ -59,25 +59,25 @@ $vat = $s->getSetting('enable_vat_registration');
 
                     <div class="input-group">
                         <span class="input-group-text"><?= $translator->translate('item'); ?></span>
-                        <input type="text" name="item_name" class="input-sm form-control" value="" disabled>
+                        <input type="text" name="item_name" class="form-control form-control-sm" value="" disabled>
                     </div>
                 </td>
                 <td class="td-amount td-quantity">
                     <div class="input-group">
                         <span class="input-group-text"><?= $translator->translate('quantity'); ?></span>
-                        <input type="text" name="item_quantity" class="input-sm form-control amount" value="1.00">
+                        <input type="text" name="item_quantity" class="form-control form-control-sm amount" value="1.00">
                     </div>
                 </td>
                 <td class="td-amount">
                     <div class="input-group">
                         <span class="input-group-text"><?= $translator->translate('price'); ?></span>
-                        <input type="text" name="item_price" class="input-sm form-control amount" value="0.00">
+                        <input type="text" name="item_price" class="form-control form-control-sm amount" value="0.00">
                     </div>
                 </td>
                 <td class="td-amount td-vert-middle">
                     <div class="input-group">
                         <span class="input-group-text"><?= $translator->translate('item.discount'); ?></span>
-                        <input type="text" name="item_discount_amount" class="input-sm form-control amount"
+                        <input type="text" name="item_discount_amount" class="form-control form-control-sm amount"
                                data-bs-toggle = "tooltip" data-placement="bottom"
                                title="<?= $s->getSetting('currency_symbol') . ' ' . $translator->translate('per.item'); ?>" value="0.00">
                     </div>
@@ -201,21 +201,21 @@ foreach ($soItems as $item) {
                     <td class="td-amount td-quantity">
                         <div class="input-group">
                             <span class="input-group-text"><?= $translator->translate('quantity'); ?></span>
-                            <input disabled type="text" name="item_quantity" class="input-sm form-control amount" data-bs-toggle = "tooltip" title="salesorder_item->quantity"
+                            <input disabled type="text" name="item_quantity" class="form-control form-control-sm amount" data-bs-toggle = "tooltip" title="salesorder_item->quantity"
                                    value="<?= $numberHelper->formatAmount($item->getQuantity()); ?>">
                         </div>
                     </td>
                     <td class="td-amount">
                         <div class="input-group">
                             <span class="input-group-text"><?= $translator->translate('price'); ?></span>
-                            <input disabled type="text" name="item_price" class="input-sm form-control amount" data-bs-toggle = "tooltip" title="salesorder_item->price"
+                            <input disabled type="text" name="item_price" class="form-control form-control-sm amount" data-bs-toggle = "tooltip" title="salesorder_item->price"
                                    value="<?= $numberHelper->formatAmount($item->getPrice()); ?>">
                         </div>
                     </td>
                     <td class="td-amount ">
                         <div class="input-group">
                             <span class="input-group-text"><?= $translator->translate('item.discount'); ?></span>
-                            <input disabled type="text" name="item_discount_amount" class="input-sm form-control amount" data-bs-toggle = "tooltip" title="salesorder_item->discount_amount"
+                            <input disabled type="text" name="item_discount_amount" class="form-control form-control-sm amount" data-bs-toggle = "tooltip" title="salesorder_item->discount_amount"
                                    value="<?= $numberHelper->formatAmount($item->getDiscountAmount()); ?>"
                                    data-bs-toggle = "tooltip" data-placement="bottom"
                                    title="<?= $s->getSetting('currency_symbol') . ' ' . $translator->translate('per.item'); ?>">

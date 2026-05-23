@@ -214,7 +214,7 @@ $columns = [
         header: $translator->translate('product.property.add'),
         content: static function (Product $model) use ($urlGenerator): A {
             return Html::a(
-                Html::tag('i', '', ['class' => 'bi-plus dropdown-button text-decoration-none']),
+                Html::tag('i', '', ['class' => 'bi-plus dropdown-item text-decoration-none']),
                 $urlGenerator->generate('productproperty/add', ['product_id' => $model->reqId()]),
                 [],
             );

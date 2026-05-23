@@ -59,7 +59,7 @@ use Yiisoft\Html\Tag\Form;
                         <?= $translator->translate('generator.namespace'); ?>
                     <?= Html::closeTag('h5'); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group has-feedback']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 has-feedback']); ?>
                     <?= Field::text($form, 'namespace_path'); ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>

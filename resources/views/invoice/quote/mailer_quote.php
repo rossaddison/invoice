@@ -295,7 +295,7 @@ echo Html::script($js3)->type('module');
     ->hideLabel()
 ?>
                     <div>
-                    <div class="form-group"><?= Html::tag('Label', $translator->translate('guest.url'), ['for' => 'quote-guest-url']); ?></label>
+                    <div class="mb-3"><?= Html::tag('Label', $translator->translate('guest.url'), ['for' => 'quote-guest-url']); ?></label>
                         <div class="input-group">
                         <?=
         Field::text($form, 'guest_url')->readonly(true)

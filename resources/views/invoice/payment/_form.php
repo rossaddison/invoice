@@ -63,7 +63,7 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
     <?= $button::backSave(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
                     ->header($translator->translate('error.summary'))
@@ -113,7 +113,7 @@ if ($openInvsCount > 0) {
     $optionsDataInvId[0] = $translator->translate('none');
 }
 ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?=
         Field::select($form, 'inv_id')
         ->label($translator->translate('invoice'))
@@ -121,7 +121,7 @@ if ($openInvsCount > 0) {
         ->hint($translator->translate('hint.this.field.is.required'))
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::date($form, 'payment_date')
     ->label($translator->translate('date'))
     ->required(true)
@@ -129,7 +129,7 @@ if ($openInvsCount > 0) {
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::textarea($form, 'note')
     ->label($translator->translate('note'))
     ->addInputAttributes([
@@ -141,7 +141,7 @@ if ($openInvsCount > 0) {
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'amount')
     ->label($translator->translate('amount'))
     ->placeholder($translator->translate('amount'))

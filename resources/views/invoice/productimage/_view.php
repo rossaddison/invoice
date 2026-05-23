@@ -39,7 +39,7 @@ use Yiisoft\Html\Tag\Form;
     <?= $button::back(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                <?= Html::closeTag('div'); ?>
                     <?= Html::openTag('div'); ?>
                         <?= Field::hidden($form, 'product_id')
@@ -47,7 +47,7 @@ use Yiisoft\Html\Tag\Form;
 ?>
                     <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::date($form, 'uploaded_date')
 ->addInputAttributes([
     'readonly' => 'readonly',
@@ -58,15 +58,15 @@ use Yiisoft\Html\Tag\Form;
 ->value($form->getUploadedDate() instanceof DateTimeImmutable ? ($form->getUploadedDate())->format('Y-m-d') : '')
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'file_name_original')
     ->disabled(true); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'file_name_new')
     ->disabled(true); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'description')
     ->disabled(true); ?>
                 <?= Html::closeTag('div'); ?>

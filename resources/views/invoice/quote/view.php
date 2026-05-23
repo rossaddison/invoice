@@ -48,6 +48,7 @@ use Yiisoft\Html\Tag\I;
 $this->setTitle($translator->translate('quote'));
 
 $vat = $s->getSetting('enable_vat_registration');
+$col = 'col-12 col-md-6';
 
 echo H::openTag('div', ['class' => 'card']);
  echo H::openTag('div', ['class' => 'card-header']);
@@ -99,7 +100,7 @@ echo H::openTag('div', ['id' => 'content']);
      echo H::openTag('div', ['class' => 'details-box']);
       echo H::openTag('div', ['class' => 'row']);
        echo $view_details_box_with_custom_field;
-       echo H::openTag('div', ['class' => 'col-12 col-md-6']);
+       echo H::openTag('div', ['class' => $col]);
         echo $view_quote_approve_reject;
        echo H::closeTag('div');
       echo H::closeTag('div');
@@ -117,7 +118,7 @@ echo H::openTag('div', ['id' => 'content']);
  echo H::closeTag('div');
 
  echo H::openTag('div', ['class' => 'row']);
-  echo H::openTag('div', ['class' => 'col-12 col-md-6']);
+  echo H::openTag('div', ['class' => $col]);
    echo H::openTag('div', ['class' => 'card no-margin']);
     echo H::openTag('div', ['class' => 'card-header']);
      echo $translator->translate('notes');
@@ -140,13 +141,13 @@ echo H::openTag('div', ['id' => 'content']);
   echo H::closeTag('div');
   echo H::openTag('div', [
       'id' => 'view_partial_inv_delivery_location',
-      'class' => 'col-12 col-md-6'
+      'class' => $col
   ]);
    echo $partial_quote_delivery_location;
   echo H::closeTag('div');
   echo H::openTag('div', [
       'id' => 'view_custom_fields',
-      'class' => 'col-12 col-md-6'
+      'class' => $col
   ]);
    echo $view_custom_fields;
   echo H::closeTag('div');

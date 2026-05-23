@@ -14,7 +14,7 @@ declare(strict_types=1);
     <div class="card-header"><?= $translator->translate('email.template.tags'); ?></div>
     <div class="card-body">
         <p class="small"><?= $translator->translate('email.template.tags.instructions'); ?></p>
-        <div class="form-group">
+        <div class="mb-3">
             <label for="tags_client"><?= $translator->translate('client'); ?></label>
             <select id="tags_client" class="taginv-select form-control">
                 <option value="{{{client_name}}}">
@@ -81,7 +81,7 @@ declare(strict_types=1);
                 </optgroup>
             </select>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
             <label for="tags_user"><?= $translator->translate('user'); ?></label>
             <select id="tags_user" class="taginv-select form-control">
                 <option value="{{{user_name}}}">

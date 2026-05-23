@@ -39,7 +39,7 @@ use Yiisoft\Html\Html;
                            $credit_date = (new DateTimeImmutable('now'))->format('Y-m-d');
 echo $credit_date; ?>">
 
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="inv_password"><?= $translator->translate('password'); ?></label>
                         <input type="text" name="inv_password" id="inv_password" class="form-control form-control-lg"
                                value="<?= $s->getSetting('invoice_pre_password') == '' ? '' : $s->getSetting('invoice_pre_password'); ?>"

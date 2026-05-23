@@ -55,7 +55,7 @@ echo H::openTag('form', ['method' => 'post']);
         echo H::openTag('div', ['class' => 'row']); //8
          echo H::openTag('div', ['class' =>
            'col-12 col-md-6 offset-md-3']); //9
-          echo H::openTag('div', ['class' => 'form-group']); //10
+          echo H::openTag('div', ['class' => 'mb-3']); //10
            echo Field::text($field_form, 'label')
              ->label($translator->translate('field'))
              ->addInputAttributes([
@@ -74,7 +74,7 @@ echo H::openTag('form', ['method' => 'post']);
               $alpha = str_replace('-', '.', strtolower($type));
               $optionsDataType[$type] = $translator->translate('' . $alpha . '');
           }
-          echo H::openTag('div', ['class' => 'form-group']); //10
+          echo H::openTag('div', ['class' => 'mb-3']); //10
            echo Field::select($field_form, 'type')
            ->label($translator->translate('type'))
            ->addInputAttributes([
@@ -85,7 +85,7 @@ echo H::openTag('form', ['method' => 'post']);
            ->optionsData($optionsDataType)
            ->render(); //11
           echo H::closeTag('div'); //10
-          echo H::openTag('div', ['class' => 'form-group']); //10
+          echo H::openTag('div', ['class' => 'mb-3']); //10
            echo H::openTag('table', ['class' => 'table table-bordered']); //11
             echo H::openTag('thead');
              echo H::openTag('tr');
