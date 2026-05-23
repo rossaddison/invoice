@@ -40,7 +40,7 @@ echo  new Form()
     <?= $button::backSave(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
                     ->header($translator->translate('error.summary'))
@@ -54,7 +54,7 @@ echo  new Form()
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'amount')
     ->label($translator->translate('allowance.or.charge.amount'))
     ->value(Html::encode($form->getAmount() ?? ''))

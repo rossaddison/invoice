@@ -26,9 +26,10 @@ use Yiisoft\Html\Tag\I;
  */
 
 $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
+$frmCtlAmt = 'form-control amount';
 ?>
-<?= Html::openTag('div', ['class' => 'panel panel-default']); ?>
-    <?= Html::openTag('div', ['class' => 'panel-heading']); ?>
+<?= Html::openTag('div', ['class' => 'card']); ?>
+    <?= Html::openTag('div', ['class' => 'card-header']); ?>
         <?=  new I()
             ->addClass('bi bi-info-circle')
             ->addAttributes([
@@ -53,7 +54,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                         <?= Html::openTag('td', ['class' => 'td-text']); ?>
                             <?= Field::hidden($form, 'quote_id')
                         ->hideLabel(); ?>
-                            <?= Html::openTag('div', ['class' => 'input-group', 'id' => 'product']); ?>
+                            <?= Html::openTag('div', ['id' => 'product']); ?>
                                 <?php
                             $optionsDataProduct = [];
 /**
@@ -73,30 +74,30 @@ foreach ($products as $product) {
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount td-quality']); ?>
-                            <?= Html::openTag('div', ['class' => 'input-group']); ?>
+                            <?= Html::openTag('div'); ?>
                                 <?= Field::number($form, 'quantity')
     ->label($translator->translate('quantity'))
-    ->addInputAttributes(['class' => 'input-lg form-control amount has-feedback'])
+    ->addInputAttributes(['class' => $frmCtlAmt])
     ->value($numberHelper->formatAmount($form->getQuantity()))
     ->hint($translator->translate('hint.greater.than.zero.please'));
 ?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount']); ?>
-                            <?= Html::openTag('div', ['class' => 'input-group']); ?>
+                            <?= Html::openTag('div'); ?>
                                 <?= Field::text($form, 'price')
      ->label($translator->translate('price'))
-     ->addInputAttributes(['class' => 'input-lg form-control amount has-feedback'])
+     ->addInputAttributes(['class' => $frmCtlAmt])
      ->value($numberHelper->formatAmount($form->getPrice() ?? 0.00))
      ->hint($translator->translate('hint.greater.than.zero.please')); ?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount']); ?>
-                            <?= Html::openTag('div', ['class' => 'input-group']); ?>
+                            <?= Html::openTag('div'); ?>
                                 <?= Field::text($form, 'discount_amount')
      ->label($translator->translate('item.discount'))
      ->addInputAttributes([
-         'class' => 'input-lg form-control amount has-feedback',
+         'class' => $frmCtlAmt,
          'data-bs-toggle' => 'tooltip',
          'data-placement' => 'bottom',
          'title' => $s->getSetting('currency_symbol') . ' ' . $translator->translate('per.item'),
@@ -105,7 +106,7 @@ foreach ($products as $product) {
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td td-vert-middle']); ?>
-                            <?= Html::openTag('div', ['class' => 'input-group']); ?>
+                            <?= Html::openTag('div'); ?>
                                 <?php
      $optionsDataTaxRate = [];
 /**
@@ -124,7 +125,7 @@ foreach ($taxRates as $taxRate) {
 ?>
                                 <?= Field::select($form, 'tax_rate_id')
     ->label($vat === false ? $translator->translate('tax.rate') : $translator->translate('vat.rate'))
-    ->addInputAttributes(['class' => 'form-control form-control-lg',])
+    ->addInputAttributes(['class' => 'form-select',])
     ->optionsData($optionsDataTaxRate)
     ->value(Html::encode($form->getTaxRateId()))
     ->hint($translator->translate('hint.this.field.is.required'));
@@ -147,18 +148,18 @@ foreach ($taxRates as $taxRate) {
                     <?= Html::closeTag('tr'); ?>
                     <?= Html::openTag('tr'); ?>
                         <?= Html::openTag('td', ['class' => 'td-textarea']); ?>
-                            <?= Html::openTag('div', ['class' => 'input-group']); ?>
+                            <?= Html::openTag('div'); ?>
                                 <?= Field::textarea($form, 'description')
     ->value(Html::encode($form->getDescription() ?? '')); ?>
                             <?= Html::closeTag('div'); ?>
-                            <?= Html::openTag('div', ['class' => 'input-group']); ?>
+                            <?= Html::openTag('div'); ?>
                                 <?= Field::text($form, 'order')
     ->value(Html::encode($form->getOrder() ?? ''));
 ?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount']); ?>
-                            <?= Html::openTag('div', ['class' => 'input-group']); ?>
+                            <?= Html::openTag('div'); ?>
                                 <?php
     $optionsDataProductUnit = [];
 /**
@@ -175,7 +176,7 @@ foreach ($units as $unit) {
 ?>
                                 <?= Field::select($form, 'product_unit_id')
     ->label($translator->translate('product.unit'))
-    ->addInputAttributes(['class' => 'form-control form-control-lg',])
+    ->addInputAttributes(['class' => 'form-select',])
     ->optionsData($optionsDataProductUnit)
     ->value(Html::encode($form->getProductUnitId() ?? ''))
     ->hint($translator->translate('hint.this.field.is.required'));
@@ -211,7 +212,7 @@ foreach ($units as $unit) {
                 <?= Html::closeTag('tbody'); ?>
             <?= Html::closeTag('table'); ?>
         <?= Html::closeTag('div'); ?>
-        <?=Html::openTag('div', ['class' => 'col-xs-12 col-md-4']); ?>
+        <?=Html::openTag('div', ['class' => 'col-12 col-md-4']); ?>
             <?= Html::openTag('div', ['class' => 'btn-group']); ?>
                 <?= Html::Tag('button', '', ['hidden' => 'hidden', 'class' => 'btn_quote_item_add_row btn btn-primary btn-md active bi bi-plus'])
                     ->content($translator->translate('add.new.row')); ?>

@@ -273,11 +273,11 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 
-<?= Html::openTag('div', ['class' => 'panel panel-default']); ?>
-    <?= Html::openTag('div', ['class' => 'panel-heading']); ?>
+<?= Html::openTag('div', ['class' => 'card']); ?>
+    <?= Html::openTag('div', ['class' => 'card-header']); ?>
         <?= $translator->translate('product.custom.fields'); ?>
     <?= Html::closeTag('div'); ?>
-    <?= Html::openTag('div', ['class' => 'panel-body']); ?>
+    <?= Html::openTag('div', ['class' => 'card-body']); ?>
       <?php
         /**
          * @var App\Infrastructure\Persistence\CustomField\CustomField $customField

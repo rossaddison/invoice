@@ -20,7 +20,7 @@ use Yiisoft\Html\Html as H;
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 echo H::openTag('div', ['class' => 'row']);
- echo H::openTag('div', ['class' => 'col-xs-12 col-md-8 col-md-offset-2']);
+ echo H::openTag('div', ['class' => 'col-12 col-md-8 offset-md-2']);
   echo H::openTag('div', ['class' => 'card']);
    echo H::openTag('div', ['class' => 'card-header bg-info text-black']);
     echo H::openTag('h4', ['class' => 'mb-0']);

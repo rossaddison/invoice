@@ -28,7 +28,7 @@ declare(strict_types=1);
             <div class="modal-body">
                 <form>
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-                    <div class="mb3 form-group">
+                    <div class="mb-3">
                         <label for="inv_tax_rate_id">
                             <?= $translator->translate('tax.rate'); ?>
                         </label>
@@ -54,7 +54,7 @@ declare(strict_types=1);
                         </div>
                     </div>
 
-                    <div class="mb3 form-group">
+                    <div class="mb-3">
                         <label for="include_inv_item_tax">
                             <?= $translator->translate('tax.rate.placement'); ?>
                         </label>

@@ -40,7 +40,7 @@ declare(strict_types=1);
                 <?= $translator->translate('delete.invoice.restore') ?>
                         </button>
                         <a href="#"
-                           class="btn btn-default"
+                           class="btn btn-secondary"
                            data-bs-dismiss="modal">
                             <i class="bi bi-x-lg"></i>
                             <?= $translator->translate('delete.invoice.cancel'); ?>

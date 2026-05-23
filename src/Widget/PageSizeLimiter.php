@@ -11,6 +11,11 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface as UrlGenerator;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 
+/**
+ * This class has been superceded by a pagesizelimiter in the settings menu
+ * which, when clicked, starts htmx on the current page (without page reloads)
+ * @psalm-suppress UnusedClass
+ */
 final class PageSizeLimiter
 {
     public static function buttons(CurrentRoute $currentRoute, sR $sR, Translator $translator, UrlGenerator $urlGenerator, string $origin): string

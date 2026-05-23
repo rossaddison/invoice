@@ -44,12 +44,12 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <?= Html::openTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::hidden($form, 'id')
                         ->hideLabel(true)
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::select($form, 'unit_id')
     ->label($translator->translate('id'))
     ->optionsData($optionsDataUnits)
@@ -57,14 +57,14 @@ use Yiisoft\Html\Tag\Form;
     ->disabled(true)
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'name')
     ->label($translator->translate('name'))
     ->value(Html::encode($form->getName() ?? ''))
     ->disabled(true);
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::select($form, 'code')
     ->label($translator->translate('unit.peppol.code'))
     ->optionsData($optionsDataEneces)
@@ -72,14 +72,14 @@ use Yiisoft\Html\Tag\Form;
     ->disabled(true);
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'description')
     ->label($translator->translate('description'))
     ->value(Html::encode($form->getDescription() ?? ''))
     ->disabled(true);
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <!-- https://dev.to/dcodeyt/creating-beautiful-html-tables-with-css-428l
                     class styled-table found at C:\wamp64\www\yii3-i\src\Invoice\Asset\invoice\css\yii3i.css
                     -->

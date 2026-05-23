@@ -49,7 +49,7 @@ echo  new Form()
     <?= $button::save(); ?>
     <?= Html::openTag('div', ['class' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group' ]); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3' ]); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
                     ->header($translator->translate('error.summary'))

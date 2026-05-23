@@ -15,8 +15,8 @@ use App\Asset\AppCdnAsset;
 use App\Asset\AppNodeModulesAsset;
 
 use App\Widget\PerformanceMetrics;
-use Yiisoft\Bootstrap5\Assets\BootstrapCdnAsset as BsCdn;
-use Yiisoft\Bootstrap5\Assets\BootstrapAsset as BsNm;
+use App\Invoice\Asset\BootstrapCdnJsOnlyAsset as BsCdn;
+use App\Invoice\Asset\BootstrapJsOnlyAsset as BsNm;
 use Yiisoft\Bootstrap5\ButtonSize;
 use Yiisoft\Bootstrap5\Dropdown;
 use Yiisoft\Bootstrap5\DropdownItem;
@@ -112,9 +112,11 @@ use Yiisoft\Html\Tag\Meta;
 // Settings ... View ... General
 $assetManager->register($appCdnNotNodeModule ? AppCdnAsset::class
                                              : AppNodeModulesAsset::class);
+// Bootstrap must be registered before InvoiceNodeModulesAsset so bootstrap.bundle.js
+// executes first and window.bootstrap is defined when the IIFE tooltip-init runs.
+$assetManager->register($bootstrap5CdnNotNodeModule ? BsCdn::class : BsNm::class);
 $assetManager->register($invCdnNotNodeModule ? InvCdn::class : InvNm::class);
 $assetManager->register(NProgressAsset::class);
-$assetManager->register($bootstrap5CdnNotNodeModule ? BsCdn::class : BsNm::class);
 $s->getSetting('monospace_amounts') == 1 ?
     $assetManager->register(MonospaceAsset::class) : '';
 $assetManager->register(StripeVersionTenAsset::class);
@@ -204,7 +206,7 @@ echo  new Form()
 ->csrf($csrf)
 ->open()
 . Button::submit(
-    (new I())->addClass('bi bi-box-arrow-right me-1')->render()
+    new I()->addClass('bi bi-box-arrow-right me-1')->render()
     . Html::encode($t->translate('menu.logout',
         ['login' => Html::encode(preg_replace('/\d+/', '', $userLogin))])),
 )->encode(false)
@@ -216,6 +218,22 @@ echo  new Form()
                 . 'px '
                 . ((int) $bootstrap5LayoutInvoiceNavbarFontSize * 0.4) . 'px;')
 .  new Form()->close();
+
+// Page-size variables — rendered in the Settings dropdown as a button group
+$pageSizeUrlTemplate = '';
+$currentPageSize = 10;
+if (!$isGuest) {
+    $pageSizeSetting = $s->withKey('default_list_limit');
+    if ($pageSizeSetting !== null) {
+        $pageSizeUrlTemplate = $urlGenerator->generate('setting/listlimit', [
+            '_language' => $currentRoute->getArgument('_language') ?? 'en',
+            'setting_id' => $pageSizeSetting->reqSettingId(),
+            'limit' => '__SIZE__',
+            'origin' => 'inv',
+        ]);
+        $currentPageSize = (int) ($s->getSetting('default_list_limit') ?: 10);
+    }
+}
 
 $ifaq = 'invoice/faq';
 $sel = 'selection';
@@ -900,7 +918,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ),
         NavLink::to(
             //label
-             new I()->class('bi bi-speedometer'),
+             new I()->class('navbar bi bi-speedometer'),
             // url
             $urlGenerator->generate('invoice/dashboard'),
             // active
@@ -912,7 +930,10 @@ if ((null !== $currentPath) && !$isGuest) {
             // attributes
             [],
             // url attributes
-            [],
+            ['class' => 'btn btn-lg',
+             'style' => 'font-size:' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;'
+                . 'font-family:' . $bootstrap5LayoutInvoiceNavbarFont . ';'
+                . 'color:#adb5bd;'],
             // visible
             true,
         ),
@@ -943,6 +964,33 @@ if ((null !== $currentPath) && !$isGuest) {
                     false, !$debugMode,
                         $itemFontArray + ['style' => 'background-color: #ffcccb; font-size: ' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;',
                          'hidden' => !$debugMode]),
+            DropdownItem::divider(),
+            DropdownItem::listContent(
+                '<h6 class="dropdown-header"'
+                . ' style="font-size:' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;"'
+                . ' data-bs-toggle="tooltip" data-bs-placement="right"'
+                . ' title="' . Html::encode($t->translate('default.list.limit.hint')) . '">'
+                . (new I())->addClass('bi bi-list-ol')->render()
+                . ' ' . Html::encode($t->translate('default.list.limit'))
+                . '</h6>'
+            ),
+            DropdownItem::listContent(
+                '<div class="px-3 py-1">'
+                . '<div id="page-size-btn-group" class="btn-group btn-group-sm" role="group" aria-label="'
+                . Html::encode($t->translate('default.list.limit')) . '">'
+                . implode('', array_map(
+                    static fn(int $size): string =>
+                        '<a hx-get="' . Html::encode(str_replace('__SIZE__', (string) $size, $pageSizeUrlTemplate)) . '"'
+                        . ' hx-swap="none"'
+                        . ' hx-on::after-request="iPageSizeRefresh(this);"'
+                        . ' href="' . Html::encode(str_replace('__SIZE__', (string) $size, $pageSizeUrlTemplate)) . '"'
+                        . ' class="btn btn-outline-secondary' . ($size === $currentPageSize ? ' active' : '') . '">'
+                        . $size . '</a>',
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 25, 50, 100, 200]
+                ))
+                . '</div></div>'
+            ),
+            DropdownItem::divider(),    
             DropdownItem::link($t->translate('view'),
                 $urlGenerator->generate('setting/tabIndex'),
                 itemAttributes: $itemFontArray),
@@ -1262,6 +1310,22 @@ if ((null !== $currentPath) && !$isGuest) {
     ->styles(NavStyle::NAVBAR);
 } //null!== currentPath && !isGuest
 echo NavBar::end();
+echo Html::script(<<<'JS'
+function iPageSizeRefresh(btn) {
+    document.querySelectorAll('#page-size-btn-group .btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    fetch(window.location.href)
+        .then(r => r.text())
+        .then(html => {
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            const fresh = doc.getElementById('main-area');
+            if (fresh) {
+                document.getElementById('main-area').replaceWith(fresh);
+                htmx.process(fresh);
+            }
+        });
+}
+JS);
 echo $bootstrap5OffcanvasEnable ? Offcanvas::end() : '';
 echo Html::openTag('div', ['id' => 'main-area']);
  // Display the sidebar if enabled

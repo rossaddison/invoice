@@ -170,6 +170,9 @@ table.customTable thead {
 }
 
 /** https://stackoverflow.com/questions/65658376/multi-level-dropdown-menu-in-bootstrap-5 */
-.dropdown:hover >.dropdown-menu{
+.dropdown:hover > .dropdown-menu {
   display: block !important;
+  top: 100%;
+  left: 0;
+  margin-top: var(--bs-dropdown-spacer, 0.125rem);
 }

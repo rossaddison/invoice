@@ -100,4 +100,57 @@ class FamilyEntityTest extends TestCase
         $f->setCategorySecondaryId(5);
         $this->assertSame(5, $f->reqCategorySecondaryId());
     }
+
+    public function testConstructorDefaultsForCategoryIds(): void
+    {
+        $f = new Family();
+        $this->assertNull($f->getCategoryPrimaryId());
+        $this->assertNull($f->getCategorySecondaryId());
+    }
+
+    public function testSetAndGetCategoryPrimaryId(): void
+    {
+        $f = new Family();
+        $f->setCategoryPrimaryId(2);
+        $this->assertSame(2, $f->getCategoryPrimaryId());
+    }
+
+    public function testSetAndGetCategorySecondaryId(): void
+    {
+        $f = new Family();
+        $f->setCategorySecondaryId(5);
+        $this->assertSame(5, $f->getCategorySecondaryId());
+    }
+
+    public function testReqIdExceptionMessage(): void
+    {
+        $f = new Family();
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Family not persisted');
+        $f->reqId();
+    }
+
+    public function testReqCategoryPrimaryIdExceptionMessage(): void
+    {
+        $f = new Family();
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Family category_primary_id not persisted');
+        $f->reqCategoryPrimaryId();
+    }
+
+    public function testReqCategorySecondaryIdExceptionMessage(): void
+    {
+        $f = new Family();
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Family category_secondary_id not persisted');
+        $f->reqCategorySecondaryId();
+    }
+
+    public function testHasIdentityTrueForZeroId(): void
+    {
+        $f = new Family();
+        $f->setId(0);
+        $this->assertTrue($f->hasIdentity());
+        $this->assertSame(0, $f->reqId());
+    }
 }

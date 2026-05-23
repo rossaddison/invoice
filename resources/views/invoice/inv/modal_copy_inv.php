@@ -35,7 +35,7 @@ use Yiisoft\Html\Html;
                            name="user_id"
                            id="user_id"
                            value="<?= $inv->reqUserId(); ?>">
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="create_inv_client_id">
                             <?= $translator->translate('client'); ?>
                         </label>

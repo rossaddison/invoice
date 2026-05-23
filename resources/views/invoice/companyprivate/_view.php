@@ -47,38 +47,38 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::closeTag('h1'); ?>
         <?= Html::openTag('div', ['id' => 'content']); ?>
             <?= Html::openTag('div', ['class' => 'row']); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'company_public_name')
                         ->readonly(true); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'tax_code')
                         ->readonly(true); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'iban')
                         ->readonly(true); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'gln')
                         ->addInputAttributes(['class' => 'form-control form-control-lg',])
                         ->label($translator->translate('gln'))
                         ->readonly(true)
                         ->value(Html::encode($form->getGln() ??  '')); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'rcc')
                         ->readonly(true); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'container-fluid px-1']); ?>
                     <?= Html::openTag('div', ['class' => 'p-3 border bg-light']); ?>
-                        <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                             <?= Field::text($form, 'logo_filename')
                                 ->readonly(true)
                                 ->value($form->getLogoFilename()); ?>
                         <?= Html::closeTag('div'); ?>
-                        <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                             <?= Field::image()
                                ->src('/logo/' . ($form->getLogoFilename() ?? '#'))
                                ->height($form->getLogoHeight())
@@ -86,19 +86,19 @@ use Yiisoft\Html\Tag\Form;
                         <?= Html::closeTag('div'); ?>
                     <?= Html::closeTag('div'); ?>
                 <?= Html::Tag('br'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'logo_width')
                         ->readonly(true); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'logo_height')
                         ->readonly(true); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'logo_margin')
                         ->readonly(true); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Html::openTag('div', ['class' => 'input-group']); ?>
                         <?= Field::date($form, 'start_date')
                             ->addInputAttributes(
@@ -115,7 +115,7 @@ use Yiisoft\Html\Tag\Form;
 ?>
                     <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Html::openTag('div', ['class' => 'input-group']); ?>
                         <?= Field::date($form, 'end_date')
     ->addInputAttributes(

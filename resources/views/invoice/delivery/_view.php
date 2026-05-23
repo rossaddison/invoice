@@ -50,7 +50,7 @@ use Yiisoft\Html\Tag\Form;
         <?= $button::back(); ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group has-feedback']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3 has-feedback']); ?>
             <?php
             Field::hidden($form, 'date_created')
             ->label($translator->translate('delivery.date.created') . ' (' . $dateHelper->display() . ')')

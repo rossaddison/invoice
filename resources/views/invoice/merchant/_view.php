@@ -41,14 +41,14 @@ use Yiisoft\Html\Tag\Form;
     <?= $button::back(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
                     ->header($translator->translate('error.summary'))
                     ->onlyCommonErrors()
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::text($form, 'inv')
     ->label($translator->translate('number'))
     ->addInputAttributes([
@@ -59,7 +59,7 @@ use Yiisoft\Html\Tag\Form;
     ->value(Html::encode($form->getInv()?->getNumber() ?? $translator->translate('reason.uknown')))
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::checkbox($form, 'successful')
     ->inputLabelAttributes(['class' => 'form-check-label'])
     ->addInputAttributes([
@@ -70,7 +70,7 @@ use Yiisoft\Html\Tag\Form;
     ->ariaDescribedBy($translator->translate('successful'))
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::date($form, 'date')
     ->label($translator->translate('date'))
     ->addInputAttributes([
@@ -80,7 +80,7 @@ use Yiisoft\Html\Tag\Form;
     ->value(!is_string($form->getDate()) ? ($form->getDate())->format('Y-m-d') : '')
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::text($form, 'driver')
     ->label($translator->translate('merchant.driver'))
     ->placeholder($translator->translate('merchant.driver'))
@@ -91,7 +91,7 @@ use Yiisoft\Html\Tag\Form;
     ->value(Html::encode($form->getDriver() ?? ''))
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::text($form, 'response')
     ->label($translator->translate('merchant.response'))
     ->placeholder($translator->translate('merchant.response'))
@@ -102,7 +102,7 @@ use Yiisoft\Html\Tag\Form;
     ->value(Html::encode($form->getResponse() ?? ''))
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::text($form, 'reference')
     ->label($translator->translate('merchant.reference'))
     ->placeholder($translator->translate('merchant.reference'))

@@ -17,7 +17,6 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var App\Invoice\GeneratorRelation\GeneratorRelationRepository $grR
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
- * @var App\Widget\PageSizeLimiter $pageSizeLimiter
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var Yiisoft\Translator\TranslatorInterface $translator

@@ -12,16 +12,18 @@ use Yiisoft\Html\Tag\Option;
  * @var array $fontSizes
  */
 
+$col = 'col-12 col-md-6';
+
 echo H::openTag('div', ['class' => 'border border-1 border-warning']); //1
- echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //2
-  echo H::openTag('div', ['class' => 'form-group']); //3
+ echo H::openTag('div', ['class' => $col]); //2
+  echo H::openTag('div', ['class' => 'mb-3']); //3
    echo H::openTag('label', ['for' => 'settings[bootstrap5_alert_message_font]']);
     echo $translator->translate('bootstrap5.alert.message.font');
    echo H::closeTag('label');
    echo H::openTag('select', [
     'name' => 'settings[bootstrap5_alert_message_font]',
     'id' => 'settings[bootstrap5_alert_message_font]',
-    'class' => 'form-control form-control-lg',
+    'class' => 'form-select',
    ]);
     echo  new Option()->value('0')->content('Arial');
    /**
@@ -36,15 +38,15 @@ echo H::openTag('div', ['class' => 'border border-1 border-warning']); //1
    echo H::closeTag('select');
   echo H::closeTag('div'); //3
  echo H::closeTag('div'); //2
- echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //2
-  echo H::openTag('div', ['class' => 'form-group']); //3
+ echo H::openTag('div', ['class' => $col]); //2
+  echo H::openTag('div', ['class' => 'mb-3']); //3
    echo H::openTag('label', ['for' => 'settings[bootstrap5_alert_message_font_size]']);
     echo $translator->translate('bootstrap5.alert.message.font.size');
    echo H::closeTag('label');
    echo H::openTag('select', [
     'name' => 'settings[bootstrap5_alert_message_font_size]',
     'id' => 'settings[bootstrap5_alert_message_font_size]',
-    'class' => 'form-control form-control-lg',
+    'class' => 'form-select',
    ]);
     echo  new Option()->value('0')->content('10');
    /**
@@ -59,15 +61,15 @@ echo H::openTag('div', ['class' => 'border border-1 border-warning']); //1
    echo H::closeTag('select');
   echo H::closeTag('div'); //3
  echo H::closeTag('div'); //2
- echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //2
-  echo H::openTag('div', ['class' => 'form-group']); //3
+ echo H::openTag('div', ['class' => $col]); //2
+  echo H::openTag('div', ['class' => 'mb-3']); //3
    echo H::openTag('label', ['for' => 'settings[bootstrap5_alert_close_button_font_size]']);
     echo $translator->translate('bootstrap5.alert.close.button.font.size');
    echo H::closeTag('label');
    echo H::openTag('select', [
     'name' => 'settings[bootstrap5_alert_close_button_font_size]',
     'id' => 'settings[bootstrap5_alert_close_button_font_size]',
-    'class' => 'form-control form-control-lg',
+    'class' => 'form-select',
    ]);
     echo  new Option()->value('0')->content('10');
    /**

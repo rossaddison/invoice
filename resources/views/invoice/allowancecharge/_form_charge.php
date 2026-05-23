@@ -23,7 +23,7 @@ use Yiisoft\Html\Tag\Form;
  */
 
 $row             = ['class' => 'row'];
-$formGroup       = ['class' => 'mb-3 form-group'];
+$formGroup       = ['class' => 'mb-3'];
 $formSwitch      = ['class' => 'form-check form-switch'];
 $formControlHtml = ['class' => 'form-control form-control-lg'];
 $headerbar       = ['id' => 'headerbar'];

@@ -101,7 +101,7 @@ echo H::openTag('div', ['class' => 'card-header']); //4
         ['class' => 'btn btn-danger btn-lg mt-3']
        );
       } else {
-       echo H::openTag('div', ['class' => 'form-group']); //9
+       echo H::openTag('div', ['class' => 'mb-3']); //9
         echo H::openTag('label', ['for' => 'delivery_location_id']); //10
          echo $translator->translate('delivery.location') . ': ';
         echo H::closeTag('label'); //10
@@ -194,7 +194,7 @@ echo H::openTag('div', ['class' => 'card-header']); //4
       }
       echo H::openTag('div'); //9
        echo H::openTag('div', ['class' => 'row']); //10
-        echo H::openTag('label', ['for' => 'terms_and_conditions_file', 'class' => 'control-label']); //11
+        echo H::openTag('label', ['for' => 'terms_and_conditions_file', 'class' => 'form-label']); //11
          echo $translator->translate('term');
         echo H::closeTag('label'); //11
         echo H::openTag('textarea', [
@@ -207,8 +207,8 @@ echo H::openTag('div', ['class' => 'card-header']); //4
         echo H::closeTag('textarea'); //11
        echo H::closeTag('div'); //10
        echo H::openTag('div', ['class' => 'row']); //10
-        echo H::openTag('div', ['class' => 'col-xs-12 col-sm-2']); //11
-         echo H::openTag('label', ['for' => 'inv_number', 'class' => 'control-label']); //12
+        echo H::openTag('div', ['class' => 'col-12 col-sm-2']); //11
+         echo H::openTag('label', ['for' => 'inv_number', 'class' => 'form-label']); //12
           echo $translator->translate('salesorder.invoice.number');
          echo H::closeTag('label'); //12
          echo H::tag('input', '', [

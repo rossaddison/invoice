@@ -42,7 +42,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
                             Html::tag('i', '', ['class' => 'bi bi-download']),
                             [
                                 'type' => 'submit',
-                                'class' => 'dropdown-button',
+                                'class' => 'dropdown-item',
                             ],
                         ),
                         // route action => product/download_image_file
@@ -62,7 +62,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
                             Html::tag('i', '', ['class' => 'bi bi-pencil']),
                             [
                                 'type' => 'submit',
-                                'class' => 'dropdown-button',
+                                'class' => 'dropdown-item',
                             ],
                         ),
                         $urlGenerator->generate('productimage/edit', ['id' => $model->reqId(), '_language' => 'en']),
@@ -80,7 +80,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
                             Html::tag('i', '', ['class' => 'bi-trash']),
                             [
                                 'type' => 'submit',
-                                'class' => 'dropdown-button',
+                                'class' => 'dropdown-item',
                                 'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                             ],
                         ),

@@ -45,25 +45,18 @@
         return hex.join('');
     }
 
-    function setButtonWorkingState(button, working) {
+    function setButtonWorkingState(button, working, originalHtml) {
         if (!button) {
             return;
         }
         if (working) {
-            try {
-                // store original markup so we can restore
-                button.setAttribute('data-original-html', button.innerHTML);
-            } catch (e) {
-                // ignore
-            }
             button.setAttribute('aria-busy', 'true');
             button.setAttribute('disabled', 'true');
-            button.innerHTML = '<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>';
+            button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
         } else {
-            var original = button.getAttribute('data-original-html');
-            if (original) {
-                button.textContent = original;
-                button.removeAttribute('data-original-html');
+            if (typeof originalHtml === 'string') {
+                // safe: restoring from an in-memory variable, not from a DOM attribute
+                button.innerHTML = originalHtml;
             }
             button.removeAttribute('aria-busy');
             button.removeAttribute('disabled');
@@ -142,8 +135,11 @@
     }
 
     function handleGenerateClick(button) {
+        // capture original markup before any changes so we can restore via closure
+        var originalHtml = button.innerHTML;
+
         try {
-            setButtonWorkingState(button, true);
+            setButtonWorkingState(button, true, originalHtml);
 
             var newKey = generateSecureHex(24);
 
@@ -151,10 +147,9 @@
             if (input && typeof input.value !== 'undefined') {
                 input.value = newKey;
             } else {
-                // input not found; still generate and bail
-                // restore button after short delay
+                // input not found; restore button after short delay
                 window.setTimeout(function () {
-                    setButtonWorkingState(button, false);
+                    setButtonWorkingState(button, false, originalHtml);
                 }, 600);
                 return;
             }
@@ -163,28 +158,28 @@
             tryCopyToClipboard(newKey, input, function onSuccess() {
                 // show check icon briefly
                 try {
-                    button.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
+                    button.innerHTML = '<i class="bi bi-check-lg" aria-hidden="true"></i>';
                 } catch (e) {
                     // ignore
                 }
                 window.setTimeout(function () {
-                    setButtonWorkingState(button, false);
+                    setButtonWorkingState(button, false, originalHtml);
                 }, 700);
             }, function onFail() {
                 // copy failed; show recycle icon briefly then restore
                 try {
-                    button.innerHTML = '<i class="fa fa-recycle fa-margin" aria-hidden="true"></i>';
+                    button.innerHTML = '<i class="bi bi-recycle" aria-hidden="true"></i>';
                 } catch (e) {
                     // ignore
                 }
                 window.setTimeout(function () {
-                    setButtonWorkingState(button, false);
+                    setButtonWorkingState(button, false, originalHtml);
                 }, 700);
             });
         } catch (err) {
             // ensure we restore button state
             window.setTimeout(function () {
-                setButtonWorkingState(button, false);
+                setButtonWorkingState(button, false, originalHtml);
             }, 700);
         }
     }

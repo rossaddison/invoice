@@ -42,7 +42,7 @@ use Yiisoft\Html\Tag\Form;
     <?= $button::backSave(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
                     ->header($translator->translate('error.summary'))
@@ -63,14 +63,14 @@ use Yiisoft\Html\Tag\Form;
             ->optionsData($optionsDataInv)
             ->hint($translator->translate('hint.this.field.is.required'));
             ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::checkbox($form, 'successful')
                 ->inputLabelAttributes(['class' => 'form-check-label'])
                 ->inputClass('form-check-input')
                 ->ariaDescribedBy($translator->translate('successful'))
            ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::date($form, 'date')
     ->label($translator->translate('date'))
     ->required(true)
@@ -78,7 +78,7 @@ use Yiisoft\Html\Tag\Form;
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'driver')
     ->label($translator->translate('merchant.driver'))
     ->placeholder($translator->translate('merchant.driver'))
@@ -86,7 +86,7 @@ use Yiisoft\Html\Tag\Form;
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'response')
     ->label($translator->translate('merchant.response'))
     ->placeholder($translator->translate('merchant.response'))
@@ -94,7 +94,7 @@ use Yiisoft\Html\Tag\Form;
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'reference')
     ->label($translator->translate('merchant.reference'))
     ->placeholder($translator->translate('merchant.reference'))

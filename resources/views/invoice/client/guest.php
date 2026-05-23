@@ -22,7 +22,6 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
  * @var App\Invoice\UserClient\UserClientRepository $ucR
  * @var App\Widget\Button $button
  * @var App\Widget\GridComponents $gridComponents
- * @var App\Widget\PageSizeLimiter $pageSizeLimiter
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
@@ -243,7 +242,7 @@ echo GridView::widget()
 ->id('w34-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($pageSizeLimiter::buttonsGuest($userInv, $urlGenerator, $translator, 'client', ($userInv->getListLimit() ?? 10)) . ' ' . $gridSummary)
+->summaryTemplate($gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

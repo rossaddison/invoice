@@ -33,11 +33,12 @@ use Yiisoft\Html\Tag\Option;
  */
 
 $vat = $s->getSetting('enable_vat_registration');
+$frmCtlAmt = 'form-control amount';
 
- echo H::openTag('div'); //1
+ echo H::openTag('div', ['class' => 'table-responsive']); //1
   echo H::openTag('table', [
       'id' => 'item_table',
-      'class' => 'items table table-responsive table-bordered no-margin',
+      'class' => 'items table table-bordered no-margin',
   ]); //2
    echo H::openTag('thead'); //3
     echo H::openTag('tr'); //4
@@ -109,7 +110,7 @@ foreach ($quoteItems as $item) {
          'style' => 'background-color: lightgreen',
      ]); //5
       echo H::openTag('b'); //6
-       echo H::openTag('div', ['class' => 'input-group']); //7
+       echo H::openTag('div'); //7
        echo (string) $count
            . '-' . $item->reqQuoteId() . '-'
            . $item->reqId() . '-'
@@ -119,8 +120,8 @@ foreach ($quoteItems as $item) {
       echo H::closeTag('b'); //6
      echo H::closeTag('td'); //5
      echo H::openTag('td', ['class' => 'td-textarea']); //5
-      echo H::openTag('div', ['class' => 'input-group']); //6
-       echo H::openTag('span', ['class' => 'input-group-text']); //7
+      echo H::openTag('div'); //6
+       echo H::openTag('span'); //7
         echo H::openTag('b'); //8
         echo($productId > 0 ?
             $translator->translate('item') :
@@ -129,7 +130,7 @@ foreach ($quoteItems as $item) {
        echo H::closeTag('span'); //7
        echo H::openTag('select', [
            'name' => 'item_name',
-           'class' => 'form-control form-control-lg',
+           'class' => 'form-select',
            'disabled' => true,
        ]); //7
        if ($productId > 0) {
@@ -164,8 +165,8 @@ foreach ($quoteItems as $item) {
       echo H::closeTag('div'); //6
      echo H::closeTag('td'); //5
      echo H::openTag('td', ['class' => 'td-amount td-quantity']); //5
-      echo H::openTag('div', ['class' => 'input-group']); //6
-       echo H::openTag('span', ['class' => 'input-group-text']); //7
+      echo H::openTag('div'); //6
+       echo H::openTag('span'); //7
         echo H::openTag('b'); //8
         echo $translator->translate('quantity');
         echo H::closeTag('b'); //8
@@ -174,9 +175,8 @@ foreach ($quoteItems as $item) {
            'disabled' => true,
            'type' => 'text',
            'maxlength' => '4',
-           'size' => '4',
            'name' => 'item_quantity',
-           'class' => 'input-sm form-control amount',
+           'class' => $frmCtlAmt,
            'data-bs-toggle' => 'tooltip',
            'title' => 'quote_item->quantity',
            'value' => $numberHelper->formatAmount($item->getQuantity()),
@@ -185,8 +185,8 @@ foreach ($quoteItems as $item) {
       echo H::closeTag('div'); //6
      echo H::closeTag('td'); //5
      echo H::openTag('td', ['class' => 'td-amount']); //5
-      echo H::openTag('div', ['class' => 'input-group']); //6
-       echo H::openTag('span', ['class' => 'input-group-text']); //7
+      echo H::openTag('div'); //6
+       echo H::openTag('span'); //7
         echo H::openTag('b'); //8
         echo $translator->translate('price');
         echo H::closeTag('b'); //8
@@ -195,9 +195,8 @@ foreach ($quoteItems as $item) {
            'disabled' => true,
            'type' => 'text',
            'maxlength' => '4',
-           'size' => '4',
            'name' => 'item_price',
-           'class' => 'input-sm form-control amount',
+           'class' => $frmCtlAmt,
            'data-bs-toggle' => 'tooltip',
            'title' => 'quote_item->price',
            'value' => $numberHelper->formatAmount($item->getPrice()),
@@ -206,8 +205,8 @@ foreach ($quoteItems as $item) {
       echo H::closeTag('div'); //6
      echo H::closeTag('td'); //5
      echo H::openTag('td', ['class' => 'td-amount']); //5
-      echo H::openTag('div', ['class' => 'input-group']); //6
-       echo H::openTag('span', ['class' => 'input-group-text']); //7
+      echo H::openTag('div'); //6
+       echo H::openTag('span'); //7
         echo H::openTag('b'); //8
         echo $vat === '0' ? $translator->translate('item.discount') :
             $translator->translate('cash.discount');
@@ -217,9 +216,8 @@ foreach ($quoteItems as $item) {
            'disabled' => true,
            'type' => 'text',
            'maxlength' => '4',
-           'size' => '4',
            'name' => 'item_discount_amount',
-           'class' => 'input-sm form-control amount',
+           'class' => $frmCtlAmt,
            'data-bs-toggle' => 'tooltip',
            'title' => $s->getSetting('currency_symbol') . ' ' .
                $translator->translate('per.item'),
@@ -230,8 +228,8 @@ foreach ($quoteItems as $item) {
       echo H::closeTag('div'); //6
      echo H::closeTag('td'); //5
      echo H::openTag('td'); //5
-      echo H::openTag('div', ['class' => 'input-group']); //6
-       echo H::openTag('span', ['class' => 'input-group-text']); //7
+      echo H::openTag('div'); //6
+       echo H::openTag('span'); //7
         echo H::openTag('b'); //8
         echo $vat === '0' ?
             $translator->translate('tax.rate') :
@@ -241,7 +239,7 @@ foreach ($quoteItems as $item) {
        echo H::openTag('select', [
            'disabled' => true,
            'name' => 'item_tax_rate_id',
-           'class' => 'form-control form-control-lg',
+           'class' => 'form-select',
            'data-bs-toggle' => 'tooltip',
            'title' => 'quote_item->tax_rate_id',
        ]); //7
@@ -310,7 +308,7 @@ foreach ($quoteItems as $item) {
                echo H::closeTag('div'); //9
                echo H::openTag('div', ['class' => 'modal-body']); //9
                 echo H::openTag('form'); //10
-                 echo H::openTag('div', ['class' => 'form-group']); //11
+                 echo H::openTag('div', ['class' => 'mb-3']); //11
                  echo H::openTag('input', [
                      'type' => 'hidden',
                      'name' => '_csrf',
@@ -423,7 +421,7 @@ foreach ($quoteItems as $item) {
      echo H::openTag('td'); //5
      echo H::closeTag('td'); //5
      echo H::openTag('td'); //5
-      echo H::openTag('div', ['class' => 'input-group']); //6
+      echo H::openTag('div'); //6
        echo H::openTag('span', [
            'class' => 'input-group-text',
            'data-bs-toggle' => 'tooltip',
@@ -436,17 +434,17 @@ foreach ($quoteItems as $item) {
        echo H::openTag('textarea', [
            'disabled' => true,
            'name' => 'item_description',
-           'class' => 'form-control form-control-lg',
-           'rows' => '1',
+           'class' => 'form-control',
+           'rows' => '2',
        ]); //7
        echo H::encode($item->getDescription());
        echo H::closeTag('textarea'); //7
       echo H::closeTag('div'); //6
      echo H::closeTag('td'); //5
      echo H::openTag('td', ['class' => 'td-amount']); //5
-      echo H::openTag('div', ['class' => 'input-group']); //6
+      echo H::openTag('div'); //6
       if ($productId > 0) {
-          echo H::openTag('span', ['class' => 'input-group-text']); //7
+          echo H::openTag('span'); //7
            echo H::openTag('b'); //8
            echo $translator->translate('product.unit');
            echo H::closeTag('b'); //8
@@ -459,7 +457,7 @@ foreach ($quoteItems as $item) {
           echo H::closeTag('span'); //7
       }
       if ($taskId > 0) {
-          echo H::openTag('span', ['class' => 'input-group-text']); //7
+          echo H::openTag('span'); //7
            echo H::openTag('b'); //8
            echo $item->getTask()?->getName();
            echo H::closeTag('b'); //8
@@ -671,16 +669,16 @@ echo H::closeTag('br');
  echo H::openTag('div', ['class' => 'row']); //1
 
   echo H::openTag('div', [
-      'class' => 'col-xs-12 col-md-4',
+      'class' => 'col-12 col-md-4',
       'quote_tax_rates' => '',
   ]); //2
   echo H::closeTag('div'); //2
-  echo H::openTag('div', ['class' => 'col-xs-12 visible-xs visible-sm']); //2
+  echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none visible-sm']); //2
   echo H::openTag('br');
   echo H::closeTag('br');
   echo H::closeTag('div'); //2
   echo H::openTag('div', [
-      'class' => 'col-xs-12 col-md-6 col-md-offset-2 col-lg-4 col-lg-offset-4',
+      'class' => 'col-12 col-md-6 offset-md-2 col-lg-4 offset-lg-4',
   ]); //2
    echo H::openTag('table', ['class' => 'table table-bordered text-right']); //3
     echo H::openTag('thead'); //4

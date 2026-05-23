@@ -40,16 +40,16 @@ if (!empty($errors)) {
     <?= (string) $dataStream->getData(); ?>
     <div id="content">
         <div class = 'row'>
-           <div class="mb3 form-group">
+           <div class="mb-3">
              <input type="hidden" name="id" id="id" class="form-control form-control-lg"
            value="<?= Html::encode($body['id'] ??  ''); ?>">
            </div>
-           <div class="mb3 form-group">
+           <div class="mb-3">
              <label for="auto_reference"><?= $translator->translate('auto.reference'); ?></label>
              <input type="text" name="auto_reference" id="auto_reference" class="form-control form-control-lg"
            value="<?= Html::encode($body['auto_reference'] ??  ''); ?>">
            </div>
-           <div class="mb3 form-group">
+           <div class="mb-3">
              <label for="provider"><?= $translator->translate('provider'); ?></label>
              <input type="text" name="provider" id="provider" class="form-control form-control-lg"
            value="<?= Html::encode($body['provider'] ??  ''); ?>">

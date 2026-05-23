@@ -15,14 +15,14 @@ declare(strict_types=1);
 
 if ($custom_fields): ?>
                     <div>
-                        <div class="mb-3 form-group">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
+                        <div class="mb-3">
+                            <div class="card">
+                                <div class="card-header">
                                     <i tooltip="data-toggle" title="<?= $s->isDebugMode(4)?>"><b><?= $translator->translate('custom.fields'); ?></b></i>
                                 </div>
                                 <div>
                                     <div class="row">
-                                        <div class="form-group">
+                                        <div class="mb-3">
                                             <?php $i = 0; ?>
                                             <?php
                                                /**
@@ -38,7 +38,7 @@ if ($custom_fields): ?>
                                                 <?php endif; ?>
                                             <?php endforeach; ?>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="mb-3">
                                             <?php $i = 0; ?>
                                             <?php
                                                 /**

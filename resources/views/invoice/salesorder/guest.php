@@ -21,7 +21,6 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\Button $button
  * @var App\Widget\GridComponents $gridComponents
- * @var App\Widget\PageSizeLimiter $pageSizeLimiter
  * @var CurrentRoute $currentRoute
  * @var OffsetPaginator $paginator
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
@@ -54,7 +53,7 @@ $statusBar =   new Div()
                 'status' => 0]),
             [
                 'class' => 'btn ' . ($status == 0 ? 'btn-primary' :
-                'btn-default'),
+                'btn-secondary'),
             ],
         )
         . Html::a(
@@ -258,9 +257,7 @@ echo GridView::widget()
 ->id('w12-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($pageSizeLimiter::buttons(
-        $currentRoute, $s, $translator, $urlGenerator, 'salesorder')
-        . ' ' . $gridSummary)
+->summaryTemplate($gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

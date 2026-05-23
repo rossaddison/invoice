@@ -19,7 +19,6 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\Button $button
  * @var App\Widget\GridComponents $gridComponents
- * @var App\Widget\PageSizeLimiter $pageSizeLimiter
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -53,14 +52,14 @@ $statusBar =   new Div()
             $translator->translate('all'),
             $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 0]),
             [
-                'class' => 'btn ' . ($status == 0 ? 'btn-primary' : 'btn-default'),
+                'class' => 'btn ' . ($status == 0 ? 'btn-primary' : 'btn-secondary'),
             ],
         )
         . Html::a(
             $translator->translate('sent'),
             $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 2]),
             [
-                'class' => 'btn ' . ($status == 2 ? 'btn-primary' : 'btn-default'),
+                'class' => 'btn ' . ($status == 2 ? 'btn-primary' : 'btn-secondary'),
                 'style' => 'text-decoration:none',
             ],
         )
@@ -68,7 +67,7 @@ $statusBar =   new Div()
             $translator->translate('viewed'),
             $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 3]),
             [
-                'class' => 'btn ' . ($status == 3 ? 'btn-primary' : 'btn-default'),
+                'class' => 'btn ' . ($status == 3 ? 'btn-primary' : 'btn-secondary'),
                 'style' => 'text-decoration:none',
             ],
         )
@@ -76,7 +75,7 @@ $statusBar =   new Div()
             $translator->translate('approved'),
             $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 4]),
             [
-                'class' => 'btn ' . ($status == 4 ? 'btn-primary' : 'btn-default'),
+                'class' => 'btn ' . ($status == 4 ? 'btn-primary' : 'btn-secondary'),
                 'style' => 'text-decoration:none',
             ],
         )
@@ -84,7 +83,7 @@ $statusBar =   new Div()
             $translator->translate('rejected'),
             $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 5]),
             [
-                'class' => 'btn ' . ($status == 5 ? 'btn-primary' : 'btn-default'),
+                'class' => 'btn ' . ($status == 5 ? 'btn-primary' : 'btn-secondary'),
                 'style' => 'text-decoration:none',
             ],
         )
@@ -92,7 +91,7 @@ $statusBar =   new Div()
             $translator->translate('canceled'),
             $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 6]),
             [
-                'class' => 'btn ' . ($status == 6 ? 'btn-primary' : 'btn-default'),
+                'class' => 'btn ' . ($status == 6 ? 'btn-primary' : 'btn-secondary'),
                 'style' => 'text-decoration:none',
             ],
         ),
@@ -195,7 +194,7 @@ echo GridView::widget()
 ->id('w7-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate(($editInv ? $pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'quote') : '') . ' ' . $gridSummary)
+->summaryTemplate($gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

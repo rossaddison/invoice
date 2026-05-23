@@ -8,7 +8,7 @@ declare(strict_types=1);
  */
 ?>
 
-        <div class="form-group">
+        <div class="mb-3">
             <label for="tags_invoice"><?= $translator->translate('invoices'); ?></label>
             <select id="tags_invoice" class="taginv-select form-control">
                 <option value="{{{invoice_number}}}">

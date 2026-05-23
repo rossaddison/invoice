@@ -16,7 +16,7 @@ use Yiisoft\Html\Tag\Option;
  * @var string $csrf
  */
 
-$formGroup = ['class' => 'form-group'];
+$formGroup = ['class' => 'mb-3'];
 
 echo H::openTag('div', ['id' => 'quote-to-so', 'class' => 'modal', 'tabindex' => '-1']); //0
  echo H::openTag('div', ['class' => 'modal-dialog']); //1

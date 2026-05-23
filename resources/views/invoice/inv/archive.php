@@ -16,7 +16,7 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 <div id="headerbar">
     <h1 class="headerbar-title"><?= $translator->translate('archive'); ?></h1>
-    <div class="headerbar-item pull-right">
+    <div class="headerbar-item float-end">
        <!-- No Url Generator here. Just post -->
        <form method="post">
             <input type="hidden" name="_csrf" value="<?= $csrf; ?>">

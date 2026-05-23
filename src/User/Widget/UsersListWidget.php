@@ -6,7 +6,6 @@ namespace App\User\Widget;
 
 use App\Infrastructure\Persistence\User\User;
 use App\Invoice\Setting\SettingRepository as SR;
-use App\Widget\PageSizeLimiter;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
@@ -113,11 +112,6 @@ final class UsersListWidget extends Widget
                 ),
             );
 
-        if ($this->sR !== null) {
-            $gridView = $gridView->summaryTemplate(
-                PageSizeLimiter::buttons($this->currentRoute, $this->sR, $this->translator, $this->urlGenerator, 'user')
-            );
-        }
 
         return $gridView->render();
     }

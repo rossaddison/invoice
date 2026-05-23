@@ -18,7 +18,7 @@ use Yiisoft\Html\Tag\Option;
  * @var string $csrf
  */
 
-$formGroup   = ['class' => 'form-group'];
+$formGroup   = ['class' => 'mb-3'];
 $formControlLg = 'form-control form-control-lg';
 
 echo H::openTag('div', ['id' => 'quote-to-invoice',

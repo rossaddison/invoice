@@ -27,11 +27,11 @@ if ($invEdit && $invView) {
 }
 ?>
 
-<div class="panel panel-default no-margin">
-    <div class="panel-heading">
+<div class="card no-margin">
+    <div class="card-header">
         <i tooltip="data-bs-toggle" title="<?= $s->isDebugMode(8);?>"><?= $translator->translate('productimage.upload'); ?></i>
     </div>
-    <div class="panel-body clearfix">
+    <div class="card-body clearfix">
         <div class="container">
             <?php if ($invView && $invEdit) { ?>
             <?php echo $partial_product_image_info; ?>

@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Yiisoft\Html\Html as H;
-use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Option;
 use App\Invoice\Helpers\ClientHelper;
 use App\Invoice\Helpers\CountryHelper;
@@ -44,7 +43,7 @@ use App\Invoice\Helpers\CountryHelper;
  */
 
 $this->setTitle($translator->translate('salesorder'));
-
+$col = 'col-12 col-md-6';
 $vat           = $s->getSetting('enable_vat_registration');
 $clienthelper  = new ClientHelper($s);
 $countryhelper = new CountryHelper();
@@ -52,8 +51,8 @@ $countryhelper = new CountryHelper();
 echo $modal_salesorder_to_pdf;
 echo $modal_so_to_invoice;
 
-echo H::openTag('div', ['class' => 'panel panel-default']); //0
- echo H::openTag('div', ['class' => 'panel-heading']); //1
+echo H::openTag('div', ['class' => 'card']); //0
+ echo H::openTag('div', ['class' => 'card-header']); //1
   echo H::encode($this->getTitle());
  echo H::closeTag('div'); //1
  echo H::tag('br', '');
@@ -71,7 +70,7 @@ echo H::openTag('div', ['class' => 'panel panel-default']); //0
    echo null !== $soNumber ? ' #' . $soNumber : $so->reqId();
   echo H::closeTag('h1'); //2
   echo H::tag('br', '');
-  echo H::openTag('div', ['class' => 'headerbar-item pull-left btn-group']); //2
+  echo H::openTag('div', ['class' => 'headerbar-item float-start btn-group']); //2
    echo H::openTag('div', ['class' => 'dropdown']); //3
     echo H::openTag('button', [
      'class' => 'btn btn-primary dropdown-toggle',
@@ -81,14 +80,14 @@ echo H::openTag('div', ['class' => 'panel panel-default']); //0
     ]); //4
      echo $translator->translate('options');
     echo H::closeTag('button'); //4
-    echo H::openTag('ul', ['class' => 'dropdown-menu dropdown-menu']); //4
+    echo H::openTag('ul', ['class' => 'dropdown-menu']); //4
      if ($invEdit) {
       echo H::openTag('li'); //5
        echo H::openTag('a', [
         'href' => $urlGenerator->generate('salesorder/edit', ['id' => $so->reqId()]),
-        'style' => 'text-decoration:none',
+        'class' => 'dropdown-item',
        ]); //6
-        echo H::openTag('i', ['class' => 'bi-pencil-square']); //7
+        echo H::openTag('i', ['class' => 'bi bi-pencil-square']); //7
         echo H::closeTag('i'); //7
         echo ' ' . $translator->translate('edit');
        echo H::closeTag('a'); //6
@@ -98,9 +97,9 @@ echo H::openTag('div', ['class' => 'panel panel-default']); //0
       echo H::openTag('a', [
        'href' => $urlGenerator->generate('salesorder/pdf', ['include' => 1]),
        'target' => '_blank',
-       'style' => 'text-decoration:none',
+       'class' => 'dropdown-item',
       ]); //6
-       echo H::openTag('i', ['class' => 'fa bi-file-pdf']); //7
+       echo H::openTag('i', ['class' => 'bi bi-file-pdf']); //7
        echo H::closeTag('i'); //7
        echo ' ' . H::encode(
         $translator->translate('download.pdf') . ': '
@@ -112,9 +111,9 @@ echo H::openTag('div', ['class' => 'panel panel-default']); //0
       echo H::openTag('a', [
        'href' => $urlGenerator->generate('salesorder/pdf', ['include' => 0]),
        'target' => '_blank',
-       'style' => 'text-decoration:none',
+       'class' => 'dropdown-item',
       ]); //6
-       echo H::openTag('i', ['class' => 'fa bi-file-pdf']); //7
+       echo H::openTag('i', ['class' => 'bi bi-file-pdf']); //7
        echo H::closeTag('i'); //7
        echo ' ' . H::encode(
         $translator->translate('download.pdf') . ': '
@@ -129,7 +128,7 @@ echo H::openTag('div', ['class' => 'panel panel-default']); //0
         echo H::openTag('a', [
          'href' => '#so-to-invoice',
          'data-bs-toggle' => 'modal',
-         'style' => 'text-decoration:none',
+         'class' => 'dropdown-item',
         ]); //6
          echo H::openTag('i', ['class' => 'bi bi-arrow-clockwise']); //7
          echo H::closeTag('i'); //7
@@ -148,7 +147,7 @@ echo H::openTag('div', ['class' => 'panel panel-default']); //0
   echo H::openTag('div', ['id' => 'salesorder_form']); //2
    echo H::openTag('div', ['class' => 'salesorder']); //3
     echo H::openTag('div', ['class' => 'row']); //4
-     echo H::openTag('div', ['class' => 'col-xs-12 col-sm-6 col-md-5']); //5
+     echo H::openTag('div', ['class' => 'col-12 col-sm-6 col-md-5']); //5
       echo H::openTag('h3'); //6
        echo H::openTag('a', ['href' => $urlGenerator->generate('client/view',
         ['id' => $so->getClient()?->reqId()])]); //7
@@ -214,14 +213,14 @@ echo H::openTag('div', ['class' => 'panel panel-default']); //0
       echo H::tag('br', '');
      echo H::closeTag('div'); //5
 
-     echo H::openTag('div', ['class' => 'col-xs-12 visible-xs']); //5
+     echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none']); //5
       echo H::tag('br', '');
      echo H::closeTag('div'); //5
 
-     echo H::openTag('div', ['class' => 'col-xs-12 col-sm-6 col-md-7']); //5
+     echo H::openTag('div', ['class' => 'col-12 col-sm-6 col-md-7']); //5
       echo H::openTag('div', ['class' => 'details-box']); //6
        echo H::openTag('div', ['class' => 'row']); //7
-        echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //8
+        echo H::openTag('div', ['class' => $col]); //8
          echo H::openTag('div'); //9
           echo H::openTag('label', ['for' => 'salesorder_number']); //10
            echo $translator->translate('salesorder') . ' #';
@@ -241,7 +240,7 @@ echo H::openTag('div', ['class' => 'panel panel-default']); //0
             ? $translator->translate('date.issued')
             : $translator->translate('salesorder.date.created');
           echo H::closeTag('label'); //10
-          echo H::openTag('div', ['class' => 'input-group']); //10
+          echo H::openTag('div'); //10
            echo H::tag('input', '', [
             'name' => 'salesorder_date_created',
             'id' => 'salesorder_date_created',
@@ -264,7 +263,7 @@ echo H::openTag('div', ['class' => 'panel panel-default']); //0
            echo H::openTag('label', ['for' => 'salesorder_to_quote']); //10
             echo $translator->translate('salesorder.quote');
            echo H::closeTag('label'); //10
-           echo H::openTag('div', ['class' => 'input-group']); //10
+           echo H::openTag('div'); //10
             echo H::a(
              $quoteNumber,
              $urlGenerator->generate('quote/view', ['id' => $so->reqQuoteId()]),
@@ -278,7 +277,7 @@ echo H::openTag('div', ['class' => 'panel panel-default']); //0
            echo H::openTag('label', ['for' => 'salesorder_to_url']); //10
             echo $translator->translate('salesorder.invoice');
            echo H::closeTag('label'); //10
-           echo H::openTag('div', ['class' => 'input-group']); //10
+           echo H::openTag('div'); //10
             echo H::a(
              $invNumber,
              $urlGenerator->generate('inv/view', ['id' => $so->reqInvId()]),
@@ -300,7 +299,7 @@ echo H::openTag('div', ['class' => 'panel panel-default']); //0
          echo H::closeTag('div'); //9
         echo H::closeTag('div'); //8
 
-        echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //8
+        echo H::openTag('div', ['class' => $col]); //8
          echo H::openTag('div'); //9
           echo H::openTag('label', ['for' => 'status_id']); //10
            echo $translator->translate('status');
@@ -396,32 +395,32 @@ echo H::openTag('div', ['class' => 'panel panel-default']); //0
   echo H::closeTag('div'); //2
 
   echo H::openTag('div', ['class' => 'row']); //2
-   echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //3
-    echo H::openTag('div', ['class' => 'panel panel-default no-margin']); //4
-     echo H::openTag('div', ['class' => 'panel-heading']); //5
+   echo H::openTag('div', ['class' => $col]); //3
+    echo H::openTag('div', ['class' => 'card no-margin']); //4
+     echo H::openTag('div', ['class' => 'card-header']); //5
       echo $translator->translate('notes');
      echo H::closeTag('div'); //5
-     echo H::openTag('div', ['class' => 'panel-body']); //5
+     echo H::openTag('div', ['class' => 'card-body']); //5
       echo H::openTag('textarea', [
        'name' => 'notes',
        'id' => 'notes',
        'rows' => '3',
        'disabled' => true,
-       'class' => 'input-sm form-control',
+       'class' => 'form-control form-control-sm',
       ]); //6
        echo H::encode($so->getNotes() ?? '');
       echo H::closeTag('textarea'); //6
      echo H::closeTag('div'); //5
     echo H::closeTag('div'); //4
     echo H::tag('br', '');
-    echo H::openTag('div', ['class' => 'col-xs-12 visible-xs visible-sm']); //4
+    echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none visible-sm']); //4
      echo H::tag('br', '');
     echo H::closeTag('div'); //4
    echo H::closeTag('div'); //3
-   echo H::openTag('div', ['id' => 'view_partial_inv_delivery_location', 'class' => 'col-xs-12 col-md-6']); //3
+   echo H::openTag('div', ['id' => 'view_partial_inv_delivery_location', 'class' => $col]); //3
     echo $partial_quote_delivery_location;
    echo H::closeTag('div'); //3
-   echo H::openTag('div', ['id' => 'view_custom_fields', 'class' => 'col-xs-12 col-md-6']); //3
+   echo H::openTag('div', ['id' => 'view_custom_fields', 'class' => $col]); //3
     echo $view_custom_fields;
    echo H::closeTag('div'); //3
   echo H::closeTag('div'); //2

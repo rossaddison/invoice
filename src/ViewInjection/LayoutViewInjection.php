@@ -10,8 +10,9 @@ use App\Infrastructure\Persistence\Company\Company;
 use App\Infrastructure\Persistence\CompanyPrivate\CompanyPrivate;
 // Repositories
 use App\Invoice\Company\CompanyRepository;
-use App\Invoice\Setting\SettingRepository;
 use App\Invoice\CompanyPrivate\CompanyPrivateRepository;
+use App\Invoice\Setting\SettingRepository;
+use App\Invoice\UserInv\UserInvRepository;
 // Yiisoft
 use Yiisoft\Bootstrap5\DropdownItem;
 use Yiisoft\Html\NoEncode;
@@ -39,6 +40,7 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
         private UrlGenerator $urlGenerator,
         private CurrentRoute $currentRoute,
         private Manager $manager,
+        private UserInvRepository $userInvRepository,
     ) {
     }
 
@@ -252,6 +254,24 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
             . ' color: black;'
         ];
         
+        $guestPageSizeUrlTemplate = '';
+        $guestCurrentPageSize = 10;
+        if (!$isGuest && $user !== null) {
+            $userInv = $this->userInvRepository->repoUserInvUserIdquery($user->reqId());
+            if ($userInv !== null) {
+                // Derive origin from the current route name, e.g. 'quote/guest' → 'quote'
+                $routeName = $this->currentRoute->getName() ?? '';
+                $slashPos = strpos($routeName, '/');
+                $guestOrigin = $slashPos !== false ? substr($routeName, 0, $slashPos) : 'inv';
+                $guestPageSizeUrlTemplate = $this->urlGenerator->generate('userinv/guestlimit', [
+                    'userinv_id' => $userInv->reqId(),
+                    'limit' => '__SIZE__',
+                    'origin' => $guestOrigin,
+                ]);
+                $guestCurrentPageSize = $userInv->getListLimit() ?? 10;
+            }
+        }
+
         $flags = $this->settingRepository->getLocaleFlags();
         $flagImg = static fn(string $code): string
             => new Img()
@@ -277,6 +297,8 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
          */
         $currentLocaleFlag = $flagImg($flags[$currentLocaleCode] ?? 'un');
         return [
+            'guestPageSizeUrlTemplate' => $guestPageSizeUrlTemplate,
+            'guestCurrentPageSize' => $guestCurrentPageSize,
             'bootstrap5OffcanvasEnable' => $bootstrap5OffcanvasEnable,
             'bootstrap5OffcanvasPlacement' => $bootstrap5OffcanvasPlacement,
             'bootstrap5LayoutInvoiceNavbarFont' => $bootstrap5LayoutInvoiceNavbarFont,

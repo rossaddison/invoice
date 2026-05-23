@@ -27,7 +27,6 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @var App\Invoice\CategoryPrimary\CategoryPrimaryRepository $cpR
  * @var App\Invoice\CategorySecondary\CategorySecondaryRepository $csR
  * @var App\Widget\GridComponents $gridComponents
- * @var App\Widget\PageSizeLimiter $pageSizeLimiter
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Data\Cycle\Reader\EntityReader $families
  * @var Yiisoft\Data\Paginator\OffsetPaginator $sortedAndPagedPaginator
@@ -247,10 +246,7 @@ echo GridView::widget()
 ->multiSort(true)
 ->id('w4-grid')
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate('<div class="d-flex align-items-center">'
-        . $pageSizeLimiter::buttons(
-            $currentRoute, $s, $translator, $urlGenerator, 'family')
-        . ' ' . $gridSummary . '</div>')
+->summaryTemplate('<div class="d-flex align-items-center">' . $gridSummary . '</div>')
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

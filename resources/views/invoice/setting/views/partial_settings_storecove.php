@@ -15,17 +15,18 @@ use Yiisoft\Html\Tag\Option;
 * @var string $country
 */
 
-echo H::tag('style', ' label { font-weight: bold; } ');
+$col = 'col-12 col-md-6';
+
 echo H::openTag('div', ['class' => 'row']); //1
- echo H::openTag('div', ['class' => 'col-xs-12 col-md-8 col-md-offset-2']); //2
-  echo H::openTag('div', ['class' => 'panel panel-default']); //3
-   echo H::openTag('div', ['class' => 'panel-heading']); //4
+ echo H::openTag('div', ['class' => 'col-12 col-md-8 offset-md-2']); //2
+  echo H::openTag('div', ['class' => 'card']); //3
+   echo H::openTag('div', ['class' => 'card-header']); //4
     echo $translator->translate('storecove');
    echo H::closeTag('div'); //4
-   echo H::openTag('div', ['class' => 'panel-body']); //4
+   echo H::openTag('div', ['class' => 'card-body']); //4
     echo H::openTag('div', ['class' => 'row']); //5
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+     echo H::openTag('div', ['class' => $col]); //6
+      echo H::openTag('div', ['class' => 'mb-3']); //7
        echo H::openTag('label', [
         'for' => 'settings[storecove_country]'
        ]);
@@ -44,7 +45,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::openTag('select', [
         'name' => 'settings[storecove_country]',
         'id' => 'settings[storecove_country]',
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         /**
         * @var string $cldr
@@ -69,8 +70,8 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+     echo H::openTag('div', ['class' => $col]); //6
+      echo H::openTag('div', ['class' => 'mb-3']); //7
        echo H::openTag('label', [
         'for' => 'storecove_legal_entity_id'
        ]);
@@ -84,14 +85,14 @@ echo H::openTag('div', ['class' => 'row']); //1
         'type' => 'text',
         'name' => 'settings[storecove_legal_entity_id]',
         'id' => 'storecove_legal_entity_id',
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-control',
         'value' =>
         $body['settings[storecove_legal_entity_id]']
        ]);
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+     echo H::openTag('div', ['class' => $col]); //6
+      echo H::openTag('div', ['class' => 'mb-3']); //7
        echo H::openTag('label', [
         'for' => 'settings[storecove_sender_identifier]'
        ]);
@@ -106,7 +107,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         'settings[storecove_sender_identifier]',
         'id' =>
         'settings[storecove_sender_identifier]',
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
        ]);
         /**
         * @var string $key
@@ -174,7 +175,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         'name' =>
         'settings[storecove_sender_identifier' .
         '_basis]',
-        'class' => 'form-control form-control-lg',
+        'class' => 'form-select',
         'id' => 'storecove_sender_identifier_basis',
         'data-minimum-results-for-search' =>
         'Infinity'

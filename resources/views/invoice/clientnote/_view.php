@@ -65,8 +65,8 @@ use Yiisoft\Html\Tag\Form;
                 ])
                 ->optionsData($optionsDataClient);
                 ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                    <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
+                    <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::date($form, 'date_note')
                       ->label($translator->translate('date'))
                       ->addInputAttributes([
@@ -78,7 +78,7 @@ use Yiisoft\Html\Tag\Form;
                       ->hint($translator->translate(
                             'hint.this.field.is.required')); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::textarea($form, 'note')
                     ->label($translator->translate('note'))
                     ->addInputAttributes([

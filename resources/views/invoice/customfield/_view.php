@@ -34,9 +34,9 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div'); ?>
-    <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+    <?= Html::openTag('div', ['class' => 'mb-3']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::text($form, 'table')
     ->addInputAttributes(['style' => 'background:lightblue'])
     ->label($translator->translate('table'))
@@ -45,7 +45,7 @@ use Yiisoft\Html\Tag\Form;
 ?>
             <?= Html::closeTag('div'); ?>
 
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::text($form, 'label')
     ->addInputAttributes(['style' => 'background:lightblue'])
     ->label($translator->translate('label'))
@@ -54,7 +54,7 @@ use Yiisoft\Html\Tag\Form;
 ?>
             <?= Html::closeTag('div'); ?>
 
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::text($form, 'type')
     ->addInputAttributes(['style' => 'background:lightblue'])
     ->label($translator->translate('type'))
@@ -63,7 +63,7 @@ use Yiisoft\Html\Tag\Form;
 ?>
             <?= Html::closeTag('div'); ?>
 
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::text($form, 'location')
     ->addInputAttributes(['style' => 'background:lightblue'])
     ->label($translator->translate('custom.field.location'))
@@ -72,7 +72,7 @@ use Yiisoft\Html\Tag\Form;
 ?>
             <?= Html::closeTag('div'); ?>
 
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::text($form, 'order')
     ->addInputAttributes(['style' => 'background:lightblue'])
     ->label($translator->translate('order'))

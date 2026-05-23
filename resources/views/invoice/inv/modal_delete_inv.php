@@ -29,7 +29,7 @@ declare(strict_types=1);
                         <button type="submit" class="btn btn-warning">
                             <i class="fa bi-archive fa-margin"></i> <?= $translator->translate('confirm.deletion') ?>
                         </button>
-                        <a href="#" class="btn btn-default" data-bs-dismiss="modal">
+                        <a href="#" class="btn btn-secondary" data-bs-dismiss="modal">
                             <i class="bi bi-x-lg"></i> <?= $translator->translate('cancel'); ?>
                         </a>
                     </div>

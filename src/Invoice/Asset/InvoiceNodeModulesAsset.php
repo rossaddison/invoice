@@ -18,18 +18,38 @@ class InvoiceNodeModulesAsset extends AssetBundle
 
     /** @psalm-suppress NonInvariantDocblockPropertyType */
     public array $css = [
+        // 1. CSS custom properties — must load first (used by all files below)
+        'invoice/css/variables.css',
+
+        // 2. Normalize / base typography
+        'invoice/css/base.css',
+
+        // 3. Bootstrap 5 + InvoicePlane core (compiled from SCSS)
         'invoice/css/style.css',
-        'invoice/css/overrides.css',
+
+        // 4. Layout rules
+        'invoice/css/layout.css',
+
+        // 5. Component styles (cards, buttons, status labels)
+        'invoice/css/components.css',
+
+        // 6. Utility classes
+        'invoice/css/utilities.css',
+
+        // 7. Yii3i supplementary styles
         'yii3i/yii3i.css',
 
-        // Automatic asterisk * for required form fields
+        // 8. Required form field asterisk styles
         'rebuild/css/form.css',
 
-        // ButtonsToolbar Widget styles
+        // 9. ButtonsToolbar Widget styles
         'rebuild/css/buttons-toolbar.css',
 
-        // QuoteToolbar Widget styles
+        // 10. QuoteToolbar Widget styles
         'rebuild/css/quote-toolbar.css',
+
+        // 11. Dark-mode / theme overrides — must be last
+        'invoice/css/overrides.css',
     ];
 
     public bool $cdn = false;

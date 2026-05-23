@@ -62,19 +62,18 @@ class InvoiceApp {
     }
 
     /**
-     * Initialize Bootstrap tooltips
+     * Initialize Bootstrap tooltips — Bootstrap must be loaded before this runs.
+     * Registration order in layout/invoice.php ensures bootstrap.bundle.js
+     * executes before the IIFE, so (window as any).bootstrap is available here.
      */
     private initializeTooltips(): void {
-        document.addEventListener('DOMContentLoaded', () => {
-            if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
-                const tooltipElements = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-                tooltipElements.forEach(element => {
-                    try {
-                        new bootstrap.Tooltip(element as Element);
-                    } catch (error) {
-                        console.warn('Tooltip initialization failed:', error);
-                    }
-                });
+        const bs = (window as any).bootstrap;
+        if (!bs?.Tooltip) return;
+        document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(element => {
+            try {
+                bs.Tooltip.getOrCreateInstance(element as Element);
+            } catch (error) {
+                console.warn('Tooltip initialization failed:', error);
             }
         });
     }

@@ -16,6 +16,8 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
 
 final readonly class Button
 {
+    private const string HDRBAR_ITEM_FLTEND = 'headerbar-item float-end';
+    
     public function __construct(private readonly Translator $translator,
         private readonly UrlGenerator $generator)
     {
@@ -55,7 +57,7 @@ final readonly class Button
                 'value' => '1',
             ],
         ];
-        return Html::openTag('div', ['class' => 'headerbar-item pull-right'])
+        return Html::openTag('div', ['class' => self::HDRBAR_ITEM_FLTEND])
                 . (string) Field::buttongroup()
                         ->buttonsData($buttonsDataArray)
                 .  Html::closeTag('div');
@@ -95,11 +97,11 @@ final readonly class Button
                 //$translator->translate('save'),
                 '',
                 'type' => 'submit',
-                'class' => 'btn btn-success bi bi-save pull-right',
+                'class' => 'btn btn-success bi bi-save float-end',
                 'value' => '1',
             ],
         ];
-        return Html::openTag('div', ['class' => 'headerbar-item pull-right'])
+        return Html::openTag('div', ['class' => self::HDRBAR_ITEM_FLTEND])
             . (string) Field::buttongroup()
                 ->buttonsData($buttonsDataArray)
             .  Html::closeTag('div');
@@ -111,17 +113,17 @@ final readonly class Button
             [
                 '',
                 'type' => 'submit',
-                'class' => 'btn btn-success bi bi-save pull-right',
+                'class' => 'btn btn-success bi bi-save float-end',
                 'value' => '1',
             ],
             [
                 $this->translator->translate('cancel'),
                 'type' => 'cancel',
-                'class' => 'btn btn-secondary pull-right',
+                'class' => 'btn btn-secondary float-end',
                 'href' => $this->generator->generate('family/index')
             ],
         ];
-        return Html::openTag('div', ['class' => 'headerbar-item pull-right'])
+        return Html::openTag('div', ['class' => self::HDRBAR_ITEM_FLTEND])
             . (string) Field::buttongroup()
                 ->buttonsData($buttonsDataArray)
             .  Html::closeTag('div');

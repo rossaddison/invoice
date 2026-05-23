@@ -15,14 +15,14 @@ declare(strict_types=1);
 
 <?php if ($customFields): ?>
         <div>
-            <div class="mb-3 form-group">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+            <div class="mb-3">
+                <div class="card">
+                    <div class="card-header">
                         <?= $translator->translate('custom.fields'); ?>
                     </div>
                     <div>
                         <div class='row'>
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <?php $i = 0; ?>
                                 <?php
                                     /**
@@ -38,7 +38,7 @@ declare(strict_types=1);
                                     <?php endif; ?>
                                 <?php endforeach; ?>
                             </div>
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <?php $i = 0; ?>
                                 <?php
                                     /**

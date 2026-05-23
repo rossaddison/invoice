@@ -117,7 +117,7 @@ $vat = $s->getSetting('enable_vat_registration');
             <br>
             <br>
             <div class='row'>
-                <div class="col-xs-12 col-md-6 col-lg-5">
+                <div class="col-12 col-md-6 col-lg-5">
                     <h4><?= Html::encode($userInv->getName()); ?></h4>
                     <p><?php if (strlen($userInv->getVatId() ?: '') > 0) {
                         echo $translator->translate('vat.id.short') . ": " . ($userInv->getVatId() ?: '') . '<br>';
@@ -146,7 +146,7 @@ $vat = $s->getSetting('enable_vat_registration');
                     </p>
                 </div>
                 <div class="col-lg-2"></div>
-                <div class="col-xs-12 col-md-6 col-lg-5 text-right">
+                <div class="col-12 col-md-6 col-lg-5 text-right">
 
                     <h4><?= Html::encode($clientHelper->formatClient($client)); ?></h4>
                         <p><?php if (strlen($client->getClientVatId()) > 0) {
@@ -427,7 +427,7 @@ $vat = $s->getSetting('enable_vat_registration');
             <hr>
             <div class="row">
                 <?php if (strlen($quote->getNotes() ?? '') > 0) { ?>
-                    <div class="col-xs-12 col-md-6">
+                    <div class="col-12 col-md-6">
                         <h4><?= $translator->translate('notes'); ?></h4>
                         <p><?= nl2br(Html::encode($quote->getNotes())); ?></p>
                     </div>

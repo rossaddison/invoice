@@ -41,20 +41,20 @@ use Yiisoft\Html\Tag\Form;
     <?= $button::backSave(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
                     ->header($translator->translate('error.summary'))
                     ->onlyCommonErrors()
                 ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::checkbox($form, 'current')
                             ->label($translator->translate('profile.property.label.current'))                             ->inputLabelAttributes(['class' => 'form-check-label'])
                             ->inputClass('form-check-input')
                             ->ariaDescribedBy($translator->translate('active'))
                     ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?php
                         $optionsDataCompany = [];
                     /**
@@ -75,18 +75,18 @@ use Yiisoft\Html\Tag\Form;
                         ->optionsData($optionsDataCompany);
                     ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::telephone($form, 'mobile')
                         ->label($translator->translate('profile.property.label.mobile'))
                         ->required();
                     ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::email($form, 'email')
                         ->label($translator->translate('profile.property.label.email'))
                         ->required(); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'description')
                         ->label($translator->translate('profile.property.label.'
                                 . 'description'))

@@ -42,21 +42,21 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <?= Html::openTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'tax_rate_name')
                         ->label($translator->translate('tax.rate.name'))
                         ->value(Html::encode($form->getTaxRateName() ?? ''))
                         ->disabled(true);
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'tax_rate_percent')
     ->label($translator->translate('tax.rate.percent'))
     ->value(Html::encode($form->getTaxRatePercent() ?? ''))
     ->disabled(true);
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::checkbox($form, 'tax_rate_default')
     ->inputLabelAttributes(['class' => 'form-check-label'])
     ->inputClass('form-check-input')
@@ -64,21 +64,21 @@ use Yiisoft\Html\Tag\Form;
     ->disabled(true);
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'tax_rate_code')
     ->label($translator->translate('tax.rate.code'))
     ->value(Html::encode($form->getTaxRateCode() ?? ''))
     ->disabled(true);
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::select($form, 'peppol_tax_rate_code')
     ->label($translator->translate('peppol.tax.rate.code'))
     ->optionsData($optionsDataPeppolTaxRateCode)
     ->value(Html::encode($form->getPeppolTaxRateCode() ?? ''))->disabled(true);
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::select($form, 'storecove_tax_type')
     ->label($translator->translate('storecove.tax.rate.code'))
     ->optionsData($optionsDataStoreCoveTaxType)

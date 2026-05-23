@@ -10,8 +10,8 @@ use Yiisoft\Html\Html;
  */
 
 ?>
-<?= Html::openTag('div', ['class' => 'headerbar-item pull-right']); ?>
-    <?= Html::openTag('div', ['class' => 'headerbar-item pull-right']); ?>
+<?= Html::openTag('div', ['class' => 'headerbar-item float-end']); ?>
+    <?= Html::openTag('div', ['class' => 'headerbar-item float-end']); ?>
     <?php $buttonsDataArray = [
         [
             $translator->translate('back'),

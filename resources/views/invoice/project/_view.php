@@ -40,7 +40,7 @@ use Yiisoft\Html\Tag\Form;
     <?= $button::back(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?php
                     $optionsDataClient = [];
 /**
@@ -67,7 +67,7 @@ echo Field::select($form, 'client_id')
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::text($form, 'name')
     ->label($translator->translate('project.name'))
     ->addInputAttributes([

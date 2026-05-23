@@ -43,14 +43,14 @@ use Yiisoft\Html\Tag\Form;
     <?= $button::backSave(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
                     ->header($translator->translate('error.summary'))
                     ->onlyCommonErrors()
 ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::select($form, 'client_id')
     ->label($translator->translate('clients'))
     ->addInputAttributes(['readonly' => 'readonly'])
@@ -58,35 +58,35 @@ use Yiisoft\Html\Tag\Form;
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::text($form, 'url_key')
     ->label($translator->translate('upload.url.key'))
     ->value(Html::encode($form->getUrlKey()))
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::text($form, 'file_name_original')
     ->label($translator->translate('upload.filename.original'))
     ->value(Html::encode($form->getFileNameOriginal()))
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::text($form, 'file_name_new')
     ->label($translator->translate('upload.filename.new'))
     ->value(Html::encode($form->getFileNameNew()))
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::text($form, 'description')
     ->label($translator->translate('upload.description'))
     ->value(Html::encode($form->getDescription()))
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::date($form, 'uploaded_date')
     ->label($translator->translate('date'))
     ->required(true)

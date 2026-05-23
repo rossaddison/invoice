@@ -37,7 +37,7 @@ use Yiisoft\Html\Tag\Form;
         <?= $button::backSave(); ?>
         <?= Html::openTag('div', ['id' => 'content']); ?>
             <?= Html::openTag('div', ['class' => 'row']); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::errorSummary($form)
                         ->errors($errors)
                         ->header($translator->translate('client.error.summary'))
@@ -47,39 +47,39 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::openTag('div', ['class' => 'form-check form-switch']); ?>
                     <?= $formFields->companyCheckboxField($form, 'current', 'active'); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= $formFields->companyTextField($form, 'name', 'name', true); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= $formFields->companyEmailField($form); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= $formFields->companyTextField($form, 'web', 'web', false); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= $formFields->companyTextField($form, 'seo_description', 'company.seo', false); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= $formFields->companyTextField($form, 'address_1', 'street.address', false); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= $formFields->companyTextField($form, 'address_2', 'street.address.2', false); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= $formFields->companyTextField($form, 'city', 'city', false); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= $formFields->companyTextField($form, 'state', 'state', false); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= $formFields->companyTextField($form, 'zip', 'zip', false); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= $formFields->companyTextField($form, 'country', 'country', false); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= $formFields->companyTelephoneField($form, 'phone', 'phone'); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= $formFields->companyTelephoneField($form, 'fax', 'fax'); ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>

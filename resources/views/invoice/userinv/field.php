@@ -26,9 +26,9 @@ $client_helper = new ClientHelper($s);
     <h1 class="headerbar-title">
         <?= $translator->translate('assigned.clients'); ?>
     </h1>
-    <div class="headerbar-item pull-right">
+    <div class="headerbar-item float-end">
         <div class="btn-group btn-group-sm">
-            <a class="btn btn-default" href="<?= $urlGenerator->generate(
+            <a class="btn btn-secondary" href="<?= $urlGenerator->generate(
                                                             'userinv/index'); ?>">
                 <i class="bi bi-arrow-left"></i> <?= $translator->translate(
                                                                      'back'); ?>
@@ -43,14 +43,14 @@ $client_helper = new ClientHelper($s);
 
 <div id="content">
     <?= Html::openTag('div', ['class' => 'row']); ?>
-    <div class="col-xs-12 col-md-6 col-md-offset-3">
-        <div class="panel panel-default">
-            <div class="panel-heading">
+    <div class="col-12 col-md-6 offset-md-3">
+        <div class="card">
+            <div class="card-header">
                 <?= $translator->translate('user')
                     . ': '
                     . Html::encode($userInv->getName()); ?>
             </div>
-            <div class="panel-body table-content">
+            <div class="card-body table-content">
                 <div class="table-responsive no-margin">
                     <table class="table table-hover table-striped no-margin">
                         <thead>
@@ -93,7 +93,7 @@ $client_helper = new ClientHelper($s);
                                                name="_csrf"
                                                value="<?= $csrf ?>">
                                         <button type="submit"
-                                                class="btn btn-default btn-sm"
+                                                class="btn btn-secondary btn-sm"
                                                 onclick="return confirm('<?=
                                                 $translator->translate(
                                                 'delete.user.client.warning'); ?>');">

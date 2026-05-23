@@ -75,7 +75,7 @@ echo Field::select($form, 'pre_entity_table')
                         <?= $translator->translate('generator.namespace'); ?>
                     <?= Html::closeTag('h5'); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group has-feedback']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 has-feedback']); ?>
                     <?= Field::text($form, 'namespace_path')
         ->label($translator->translate('generator.namespace.before.entity'))
         ->addInputAttributes([

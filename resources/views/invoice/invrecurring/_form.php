@@ -44,7 +44,7 @@ use DateTimeImmutable;
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
                     ->header($translator->translate('error.summary'))
@@ -56,12 +56,12 @@ use DateTimeImmutable;
                     <?= $translator->translate('recurring.original.invoice.date'); ?>
                     <?= $invDateCreated->format('Y-m-d'); ?>
                 <?= Html::closeTag('p'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::hidden($form, 'inv_id')
         ->hideLabel();
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?php
     $optionsDataFrequency = [];
 /**
@@ -85,14 +85,14 @@ foreach ($numberHelper->recurFrequencies() as $key => $value) {
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?=  new A()->href('https://wiki.invoiceplane.com/en/1.6/modules/recurring-invoices')->content('❔')?>
                     <?= Field::date($form, 'start')
         ->label($translator->translate('start.date'))
         ->value(!is_string($start = $form->getStart()) ? $start?->format('Y-m-d') : '');
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::date($form, 'next')
     ->label($translator->translate('next') . " (" . $dateHelper->display() . ") ")
     ->value(!is_string($next = $form->getNext()) ? $next?->format('Y-m-d') : '')
@@ -104,7 +104,7 @@ foreach ($numberHelper->recurFrequencies() as $key => $value) {
     ])
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::date($form, 'end')
         ->label($translator->translate('end.date') . "(" . $translator->translate('optional'))
         ->value(!is_string($end = $form->getEnd()) ? $end?->format('Y-m-d') : '')

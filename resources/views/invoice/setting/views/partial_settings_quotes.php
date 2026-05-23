@@ -15,18 +15,18 @@ use Yiisoft\Html\Tag\Option;
 */
 
 $row = ['class' => 'row'];
-$colMd6 = ['class' => 'col-xs-12 col-md-6'];
-$colMd8 = ['class' => 'col-xs-12 col-md-8 col-md-offset-2'];
-$panel = ['class' => 'panel panel-default'];
-$panelHead = ['class' => 'panel-heading'];
-$panelBody = ['class' => 'panel-body'];
-$formGroup = ['class' => 'form-group'];
-$formControl = ['class' => 'form-control form-control-lg',];
-$helpBlock = ['class' => 'help-block'];
+$colMd6 = ['class' => 'col-12 col-md-6'];
+$colMd8 = ['class' => 'col-12 col-md-8 offset-md-2'];
+$panel = ['class' => 'card'];
+$panelHead = ['class' => 'card-header'];
+$panelBody = ['class' => 'card-body'];
+$formGroup = ['class' => 'mb-3'];
+$formControl = ['class' => 'form-control',];
+$formSelect  = ['class' => 'form-select'];
+$helpBlock = ['class' => 'form-text'];
 $noMargin = ['class' => 'form-control no-margin'];
 $minSearch = ['data-minimum-results-for-search' => 'Infinity'];
 
-echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', $row); //1
  echo H::openTag('div', $colMd8); //2
   echo H::openTag('div', $panel); //3
@@ -49,7 +49,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', array_merge([
         'name' => $dqg,
         'id' => $dqg
-       ], $formControl, $minSearch));
+       ], $formSelect, $minSearch));
         echo  new Option()
          ->value('')
          ->content($translator->translate('none'));
@@ -124,7 +124,7 @@ echo H::openTag('div', $row); //1
        echo H::closeTag('label');
        $body[$gqn] = $s->getSetting('generate_quote_number_for_draft');
        echo H::openTag('select', array_merge(['name' => $gqn, 'id' => $gqn],
-        $formControl, $minSearch));
+        $formSelect, $minSearch));
         echo  new Option()
          ->value('0')
          ->content(
@@ -163,7 +163,7 @@ echo H::openTag('div', $row); //1
        $body[$qsp] = $s->getSetting('mark_quotes_sent_pdf');
        echo H::openTag('select', array_merge([
         'name' => $qsp,
-        'id' => $qsp], $formControl, $minSearch));
+        'id' => $qsp], $formSelect, $minSearch));
         echo  new Option()
          ->value('0')
          ->content(
@@ -212,7 +212,7 @@ echo H::openTag('div', $row); //1
        echo H::closeTag('label');
        $body[$pqt] = $s->getSetting('pdf_quote_template');
        echo H::openTag('select', array_merge(['name' => $pqt, 'id' => $pqt],
-        $formControl, $minSearch));
+        $formSelect, $minSearch));
         echo  new Option()
          ->value('')
          ->content($translator->translate('none'));
@@ -241,7 +241,7 @@ echo H::openTag('div', $row); //1
 
        $body[$pubQt] = $s->getSetting('public_quote_template');
        echo H::openTag('select', array_merge(['name' => $pubQt, 'id' => $pubQt],
-        $formControl, $minSearch));
+        $formSelect, $minSearch));
         echo  new Option()
          ->value('')
          ->content($translator->translate('none'));
@@ -271,7 +271,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('select', array_merge([
         'name' => $eqt,
         'id' => $eqt
-       ], $formControl, $minSearch));
+       ], $formSelect, $minSearch));
         echo  new Option()
          ->value('')
          ->content($translator->translate('none'));

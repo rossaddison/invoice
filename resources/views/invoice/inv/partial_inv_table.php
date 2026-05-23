@@ -25,7 +25,6 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var App\Invoice\InvRecurring\InvRecurringRepository $irR
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
- * @var App\Widget\PageSizeLimiter $pageSizeLimiter
  * @var Yiisoft\Data\Cycle\Reader\EntityReader $invoices
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
@@ -252,6 +251,4 @@ echo GridView::widget()
  ->noResultsText($translator->translate('no.records'))
  ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
  ->summaryAttributes(['class' => 'mt-3 me-3 summary d-flex justify-content-between align-items-center'])
- ->summaryTemplate('<div class="d-flex align-items-center">'
-  . $pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'inv')
-  . ' ' . $gridSummary . '</div>');
+ ->summaryTemplate('<div class="d-flex align-items-center">' . $gridSummary . '</div>');
