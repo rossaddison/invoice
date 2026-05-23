@@ -35,15 +35,15 @@ use Yiisoft\Security\Random;
 
 <?= Html::openTag('div', ['id' => 'content']); ?>
     <?= Html::openTag('div', ['class' => 'row']); ?>
-        <?= Html::openTag('div', ['class' => 'col-xs-12 col-md-6 col-md-offset-3']); ?>
+        <?= Html::openTag('div', ['class' => 'col-12 col-md-6 offset-md-3']); ?>
             <?= Field::hidden($form, 'user_id')
                     ->inputId('user_id-' . Random::string(10))
                     ->value($userinv->reqUserId()); ?>
-                <?= Html::openTag('div', ['class' => 'panel panel-default']); ?>
-                    <?= Html::openTag('div', ['class' => 'panel-heading']); ?>
+                <?= Html::openTag('div', ['class' => 'card']); ?>
+                    <?= Html::openTag('div', ['class' => 'card-header']); ?>
                         <?= Html::encode($userinv->getName()); ?>
                     <?= Html::closeTag('div'); ?>
-                    <?= Html::openTag('div', ['class' => 'panel-body']); ?>
+                    <?= Html::openTag('div', ['class' => 'card-body']); ?>
                         <?= Html::openTag('div', ['class' => 'alert alert-info']); ?>
                             <?= Field::errorSummary($form)
                                 ->errors($errors)

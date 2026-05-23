@@ -19,22 +19,21 @@ use Yiisoft\Html\Tag\A;
 $kIpDbName = 'settings[invoiceplane_database_name]';
 $kIpDbUsername = 'settings[invoiceplane_database_username]';
 $kIpDbPassword = 'settings[invoiceplane_database_password]';
-$colXs8Md4 = 'col-xs-8 col-md-4';
-$formControlLg = 'form-control form-control-lg';
+$colXs8Md4 = 'col-8 col-md-4';
+$formControlLg = 'form-control';
 
-echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', ['class' => 'row']); //1
  echo H::openTag('div', [ //2
-  'class' => 'col-xs-12 col-md-8 col-md-offset-2'
+  'class' => 'col-12 col-md-8 offset-md-2'
  ]);
-  echo H::openTag('div', ['class' => 'panel panel-default']); //3
-   echo H::openTag('div', ['class' => 'panel-heading']); //4
+  echo H::openTag('div', ['class' => 'card']); //3
+   echo H::openTag('div', ['class' => 'card-header']); //4
     echo $translator->translate('invoiceplane.tables');
    echo H::closeTag('div'); //4
-   echo H::openTag('div', ['class' => 'panel-body']); //4
+   echo H::openTag('div', ['class' => 'card-body']); //4
     echo H::openTag('div', ['class' => 'row']); //5
      echo H::openTag('div', ['class' => $colXs8Md4]); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+      echo H::openTag('div', ['class' => 'mb-3']); //7
        echo H::openTag('label', ['for' => $kIpDbName]);
         echo $translator->translate('invoiceplane.database.name');
        echo H::closeTag('label');
@@ -50,7 +49,7 @@ echo H::openTag('div', ['class' => 'row']); //1
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
      echo H::openTag('div', ['class' => $colXs8Md4]); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+      echo H::openTag('div', ['class' => 'mb-3']); //7
        echo H::openTag('label', ['for' => $kIpDbUsername]);
         echo $translator->translate('invoiceplane.database.username');
        echo H::closeTag('label');
@@ -66,7 +65,7 @@ echo H::openTag('div', ['class' => 'row']); //1
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
      echo H::openTag('div', ['class' => $colXs8Md4]); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+      echo H::openTag('div', ['class' => 'mb-3']); //7
        echo H::openTag('label', ['for' => $kIpDbPassword]);
         echo $translator->translate('invoiceplane.database.password');
        echo H::closeTag('label');

@@ -538,6 +538,7 @@ return [
     'Default Invoice Tax Rate Placement',
   'default.item.tax.rate' => 'Default Item Tax Rate',
   'default.list.limit' => 'Number of Items in Lists',
+  'default.list.limit.hint' => 'Sets how many rows appear on list pages. Saved immediately — effect visible when you visit a list.',
   'default.notes' => 'Default Notes',
   'default.payment.method' => 'Default Payment Method',
   'default.pdf.template' => 'Default PDF Template',

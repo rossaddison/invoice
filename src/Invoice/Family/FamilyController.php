@@ -416,13 +416,13 @@ final class FamilyController extends BaseController
      * @param cpR $cpR
      * @param csR $csR
      */
-    public function view(#[RouteArgument('id')] string $id, fR $familyRepository, fcR $fcR, cfR $cfR, cvR $cvR, cpR $cpR, csR $csR): Response
+    public function view(#[RouteArgument('id')] string $id, fR $familyRepository,
+        fcR $fcR, cfR $cfR, cvR $cvR, cpR $cpR, csR $csR): Response
     {
         $family = $this->family((int) $id, $familyRepository);
         if ($family) {
             $form = FamilyForm::show($family);
-            $familyCustom = new FamilyCustom();
-            $familyCustomForm = FamilyCustomForm::show($familyCustom);
+            $familyCustomForm = new FamilyCustomForm();
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'familyCustomForm' => $familyCustomForm,
@@ -515,9 +515,9 @@ final class FamilyController extends BaseController
             $newProductIds  = [];
 
             try {
-                /** @var int $familyId */
+                /** @var string $familyId */
                 foreach ($familyIds as $familyId) {
-                    $family = $familyRepository->repoFamilyquery($familyId);
+                    $family = $familyRepository->repoFamilyquery((int) $familyId);
                     if (!$family) {
                         $errors[] = "Family with ID $familyId not found";
                         continue;
@@ -533,7 +533,7 @@ final class FamilyController extends BaseController
                     foreach (array_filter(array_map('trim', explode(',', $cl))) as $item) {
                         $productName = $pp . ' ' . $item;
 
-                        if ($productRepository->repoProductWithFamilyIdQuery($productName, $familyId)->count() > 0) {
+                        if ($productRepository->repoProductWithFamilyIdQuery($productName, (int) $familyId)->count() > 0) {
                             $errors[] = "Product '$productName' already exists";
                             continue;
                         }

@@ -17,41 +17,31 @@ use Yiisoft\Html\Html;
 
 ?>
 
-<div class="col-xs-12 col-md-6">
+<div class="col-12 col-md-6">
     <div class="quote-properties">
         <label for="quote_number">
         	<?= $translator->translate('quote'); ?> #
         </label>
-            <input type="text" id="quote_number" class="form-control form-control-lg" readonly
+            <input type="text" id="quote_number" class="form-control" readonly
                 <?php if (null !== ($quote->getNumber())) : ?> value="<?= $quote->getNumber(); ?>"
                 <?php else : ?> placeholder="<?= $translator->translate('not.set'); ?>"
                 <?php endif; ?>>
     </div>
-<div class="quote-properties has-feedback">
+<div class="quote-properties">
     <label for="quote_date_created">
         <?= $vat == '0' ? $translator->translate('date.issued') : $translator->translate('quote.date'); ?>
     </label>
-    <div class="input-group">
-        <input name="quote_date_created" id="quote_date_created" disabled
-               class="form-control form-control-lg"
-               value="<?= Html::encode($quote->getDateCreated()->format('Y-m-d')); ?>"/>
-        <span class="input-group-text">
-            <i class="bi bi-calendar"></i>
-        </span>
-    </div>
+    <input name="quote_date_created" id="quote_date_created" disabled
+           class="form-control"
+           value="<?= Html::encode($quote->getDateCreated()->format('Y-m-d')); ?>"/>
 </div>
-<div class="quote-properties has-feedback">
+<div class="quote-properties">
     <label for="quote_date_expires">
         <?= $translator->translate('expires'); ?>
     </label>
-    <div class="input-group">
-        <input name="quote_date_expires" id="quote_date_expires" readonly
-               class="form-control form-control-lg"
-               value="<?= Html::encode($quote->getDateExpires()->format('Y-m-d')); ?>">
-        <span class="input-group-text">
-            <i class="bi bi-calendar"></i>
-        </span>
-    </div>
+    <input name="quote_date_expires" id="quote_date_expires" readonly
+           class="form-control"
+           value="<?= Html::encode($quote->getDateExpires()->format('Y-m-d')); ?>">
 </div>
 <div>
     <?php

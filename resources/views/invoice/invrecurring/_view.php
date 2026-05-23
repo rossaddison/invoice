@@ -45,12 +45,12 @@ use Yiisoft\Html\Tag\Form;
                     <?= $translator->translate('recurring.original.invoice.date') . '(' . $dateHelper->display() . ')'; ?>
                     <?= $invDateCreated->format('Y-m-d'); ?>
                 <?= Html::closeTag('p'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::hidden($form, 'inv_id')
                         ->hideLabel();
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?php
     $optionsDataFrequency = [];
 /**
@@ -74,14 +74,14 @@ foreach ($numberHelper->recurFrequencies() as $key => $value) {
     ->optionsData($optionsDataFrequency);
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?php echo Field::hidden($form, 'start')
         ->hideLabel(true)
         ->label($translator->translate('start') . " (" . $dateHelper->display() . ") ")
         ->value(!is_string($start = $form->getStart()) ? $start?->format('Y-m-d') : '');
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::date($form, 'next')
     ->label($translator->translate('next') . " (" . $dateHelper->display() . ") ")
     ->value(!is_string($next = $form->getNext()) ? $next?->format('Y-m-d') : '')
@@ -92,7 +92,7 @@ foreach ($numberHelper->recurFrequencies() as $key => $value) {
     ->readonly(true);
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::date($form, 'end')
         ->label($translator->translate('end') . " (" . $dateHelper->display() . ") ")
         ->value(!is_string($end = $form->getEnd()) ? $end?->format('Y-m-d') : '')

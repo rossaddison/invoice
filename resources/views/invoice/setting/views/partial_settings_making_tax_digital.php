@@ -15,12 +15,12 @@ use Yiisoft\Html\Tag\Button;
 */
 
 $row = ['class' => 'row'];
-$colMd8 = ['class' => 'col-xs-12 col-md-8 col-md-offset-2'];
-$panel = ['class' => 'panel panel-default'];
-$panelHead = ['class' => 'panel-heading'];
-$panelBody = ['class' => 'panel-body'];
-$formGroup = ['class' => 'form-group'];
-$formControl = 'form-control form-control-lg';
+$colMd8 = ['class' => 'col-12 col-md-8 offset-md-2'];
+$panel = ['class' => 'card'];
+$panelHead = ['class' => 'card-header'];
+$panelBody = ['class' => 'card-body'];
+$formGroup = ['class' => 'mb-3'];
+$formControl = 'form-control';
 $kFphConnectionMethod = 'settings[fph_connection_method]';
 $kFphClientBrowserJsUserAgent = 'settings[fph_client_browser_js_user_agent]';
 $kFphClientDeviceId = 'settings[fph_client_device_id]';
@@ -32,7 +32,6 @@ $kFphTimestamp = 'settings[fph_timestamp]';
 $kFphWindowSize = 'settings[fph_window_size]';
 $kFphGovClientUserId = 'settings[fph_gov_client_user_id]';
 
-echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', $row); //1
  echo H::openTag('div', $colMd8); //2
   echo H::openTag('div', $panel); //3

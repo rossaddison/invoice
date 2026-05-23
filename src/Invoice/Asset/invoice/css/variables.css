@@ -124,19 +124,6 @@
   --transition-slow: all 0.3s ease-in-out;
 }
 
-/* Dark Mode Variables - Based on invoiceDark theme */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text-color: #f8f9fa;
-    --text-muted: #adb5bd;
-    --background-color: #212529;
-    --background-alt: #343a40;
-    --border-color: #495057;
-    --input-background: #495057;
-    --input-border-color: #6c757d;
-  }
-}
-
 /* TODO: Additional variables to extract from style.css:
  * - Datepicker specific colors and sizes
  * - Modal specific dimensions

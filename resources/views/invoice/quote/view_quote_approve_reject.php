@@ -25,7 +25,7 @@ echo H::openTag('div', ['class' => 'quote-properties']); //0
   'name' => 'status_id',
   'id' => 'status_id',
   'disabled' => true,
-  'class' => 'form-control form-control-lg',
+  'class' => 'form-select',
  ]); //1
   /**
    * @var string $key
@@ -48,7 +48,7 @@ echo H::openTag('div', ['class' => 'quote-properties']); //0
  echo H::tag('input', '', [
   'type' => 'text',
   'id' => 'quote_password',
-  'class' => 'form-control form-control-lg',
+  'class' => 'form-control',
   'disabled' => true,
   'value' => H::encode($body['password'] ?? ''),
   'hidden' => true,
@@ -66,7 +66,7 @@ if ($quote->reqStatusId() == 1) {
     'type' => 'text',
     'id' => 'quote_guest_url',
     'disabled' => true,
-    'class' => 'form-control form-control-lg',
+    'class' => 'form-control',
     'value' => $quote->getUrlKey(),
    ]);
    echo H::openTag('span', [
@@ -115,7 +115,7 @@ echo H::tag('input', '', [
  'id' => 'dropzone_client_id',
  'readonly' => true,
  'hidden' => true,
- 'class' => 'form-control form-control-lg',
+ 'class' => 'form-control',
  'value' => $quote->getClient()?->reqId(),
 ]);
 
@@ -125,7 +125,7 @@ if ($quote->getSoId() > 0) {
   echo H::openTag('label', ['for' => 'salesorder_to_url']); //1
    echo $translator->translate('salesorder');
   echo H::closeTag('label'); //1
-  echo H::openTag('div', ['class' => 'input-group']); //1
+  echo H::openTag('div'); //1
    echo H::a(
     $sales_order_number,
     $urlGenerator->generate('salesorder/view', ['id' => $quote->getSoId()]),

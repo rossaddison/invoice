@@ -43,11 +43,11 @@ echo H::openTag('div', [
          'value' => $csrf
      ]);
      echo H::openTag('div', ['class' => 'modal-body']); //5
-      echo H::openTag('div', ['class' => 'form-group']); //6
+      echo H::openTag('div', ['class' => 'mb-3']); //6
        echo H::openTag('label', ['for' => 'filter_family_inv']);
         echo H::encode($translator->translate('any.family'));
        echo H::closeTag('label');
-       echo H::openTag('div', ['class' => 'form-group']); //7
+       echo H::openTag('div', ['class' => 'mb-3']); //7
         echo H::openTag('select', [
             'name' => 'filter_family_inv',
             'id' => 'filter_family_inv',
@@ -71,7 +71,7 @@ echo H::openTag('div', [
          }
         echo H::closeTag('select');
        echo H::closeTag('div'); //7
-       echo H::openTag('div', ['class' => 'form-group panel panel-primary']); //7
+       echo H::openTag('div', ['class' => 'mb-3 card border-primary']); //7
         echo H::openTag('label', ['for' => 'filter_product_inv']);
          echo H::encode($translator->translate('product.name'));
         echo H::closeTag('label');

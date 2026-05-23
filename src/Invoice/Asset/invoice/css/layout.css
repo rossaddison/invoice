@@ -32,24 +32,30 @@
   padding: 0;
 }
 
-#main-content {
-  width: 100%;
-  border-left: 1px solid var(--border-color);
+/* Sidebar Layout */
+/* Hidden on mobile, flex column on sm+ — controlled here, not via Bootstrap d-none/d-sm-block */
+.sidebar,
+.sidebar-guest {
+  display: none;
+  width: var(--sidebar-width);
+  padding: 0;
 }
 
-@media screen and (min-width: 992px) {
-  #main-content {
-    width: calc(100% - var(--sidebar-width));
+@media (min-width: 576px) {
+  .sidebar,
+  .sidebar-guest {
+    display: flex;
+    flex: 0 0 var(--sidebar-width);
+    flex-direction: column;
+    align-self: stretch;
   }
 }
 
-/* Sidebar Layout - From style.css lines ~8257-8279 */
-.sidebar {
-  display: table-cell;
-  vertical-align: top;
-  width: var(--sidebar-width);
-  height: 100%;
-  padding: 0;
+/* Main content fills remaining flex space; min-width:0 allows shrink below content width */
+#main-area > main {
+  flex: 1;
+  min-width: 0;
+  border-left: 1px solid var(--border-color);
 }
 
 .sidebar ul {
@@ -76,8 +82,8 @@
   display: block !important;
 }
 
-.hidden-sidebar #main-content {
-  width: 100%;
+.hidden-sidebar #main-area > main {
+  border-left: none;
 }
 
 /* Content Areas - From style.css lines ~8295-8312 */
@@ -120,7 +126,7 @@
   clear: both;
 }
 
-#headerbar .headerbar-item.pull-right {
+#headerbar .headerbar-item.float-end {
   margin-left: var(--spacing-md);
 }
 
@@ -208,9 +214,6 @@ div.table-content .table-responsive {
 
 /* Responsive Layout - From style.css media queries */
 @media (min-width: 1200px) {
-  .navbar-nav .visible-lg {
-    display: inline-block !important;
-  }
 
   #submenu .submenu-row {
     float: left;
@@ -246,12 +249,27 @@ div.table-content .table-responsive {
     margin-top: 7px;
   }
 
-  .navbar-nav .visible-xs {
-    display: inline-block !important;
-  }
 }
 
 @media (max-width: 767px) {
+  /* Table stacking — matches Bootstrap 3 era behaviour removed when BS3 CSS was stripped */
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+
+  /* Only apply the label-column layout where data-label is populated */
+  td[data-label] {
+    position: relative;
+    padding-left: 50%;
+  }
+
+  td[data-label]:before {
+    position: absolute;
+    left: 10px;
+    content: attr(data-label);
+    font-weight: bold;
+  }
+
   .navbar-nav {
     margin: 7px 0;
   }
@@ -273,19 +291,12 @@ div.table-content .table-responsive {
     padding: 8px !important;
   }
 
-  .pull-right {
+  .float-end {
     margin-left: 5px !important;
   }
 }
 
-/* Utility Layout Classes */
-.pull-left {
-  float: left !important;
-}
-
-.pull-right {
-  float: right !important;
-}
+/* Float layout — use Bootstrap 5: float-start, float-end */
 
 .clearfix:before,
 .clearfix:after {

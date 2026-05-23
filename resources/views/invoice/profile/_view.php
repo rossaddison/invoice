@@ -39,8 +39,8 @@ use Yiisoft\Html\Tag\Form;
     <?= $button::back(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::checkbox($form, 'current')
                         ->label($translator->translate('profile.property.label.current'))
                         ->inputLabelAttributes(['class' => 'form-check-label'])
@@ -49,7 +49,7 @@ use Yiisoft\Html\Tag\Form;
                         ->ariaDescribedBy($translator->translate('active'))
                 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                      <?php
                         $optionsDataCompany = [];
                         /**
@@ -69,17 +69,17 @@ use Yiisoft\Html\Tag\Form;
                         ->disabled(true);
                     ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::telephone($form, 'mobile')
                         ->label($translator->translate('profile.property.label.mobile'))                               ->disabled(true);
                     ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::email($form, 'email')
                         ->label($translator->translate('profile.property.label.email'))                                ->disabled(true);
                     ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'description')
                         ->label($translator->translate('profile.property.label.description'))                    
                         ->disabled(true);

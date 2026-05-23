@@ -92,7 +92,7 @@ use Yiisoft\VarDumper\VarDumper;
                                     ->value($form->getClientId() ?? $client_id)
                                 ?>
 
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::email($form, 'endpointid')
                     ->label($translator->translate('client.peppol.endpointid'))
                     ->addInputAttributes([
@@ -111,7 +111,7 @@ use Yiisoft\VarDumper\VarDumper;
                   ?>
                 <?= Html::closeTag('div'); ?>
 
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::select($form, 'endpointid_schemeid')
                     ->label($translator->translate(
                             'client.peppol.endpointid.schemeid')
@@ -139,7 +139,7 @@ use Yiisoft\VarDumper\VarDumper;
                   ?>
                 <?= Html::closeTag('div'); ?>
 
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::text($form, 'identificationid')
                     ->label($translator->translate(
                             'client.peppol.identificationid'))
@@ -157,7 +157,7 @@ use Yiisoft\VarDumper\VarDumper;
                   ?>
                 <?= Html::closeTag('div'); ?>
 
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::text($form, 'identificationid_schemeid')
                     ->label($translator->translate(
                             'client.peppol.identificationid.schemeid')
@@ -177,7 +177,7 @@ use Yiisoft\VarDumper\VarDumper;
                   ?>
                 <?= Html::closeTag('div'); ?>
 
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::text($form, 'taxschemecompanyid')
                     ->label($translator->translate(
                             'client.peppol.taxschemecompanyid'))
@@ -195,7 +195,7 @@ use Yiisoft\VarDumper\VarDumper;
                   ?>
                 <?= Html::closeTag('div'); ?>
 
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::select($form, 'taxschemeid')
                     ->label($translator->translate('client.peppol.taxschemeid'))
                     ->addInputAttributes([
@@ -233,7 +233,7 @@ use Yiisoft\VarDumper\VarDumper;
                   ?>
                 <?= Html::closeTag('div'); ?>
 
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::text($form, 'legal_entity_registration_name')
                     ->label($translator->translate(
                             'client.peppol.legal.entity.registration.name'))
@@ -251,7 +251,7 @@ use Yiisoft\VarDumper\VarDumper;
                   ?>
                 <?= Html::closeTag('div'); ?>
 
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::select($form, 'legal_entity_companyid')
                     ->label($translator->translate(
                                         'client.peppol.legal.entity.companyid'))
@@ -286,7 +286,7 @@ use Yiisoft\VarDumper\VarDumper;
                   ?>
                 <?= Html::closeTag('div'); ?>
 
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::select($form, 'legal_entity_companyid_schemeid')
                     ->label($translator->translate(
                             'client.peppol.legal.entity.companyid.schemeid')
@@ -322,7 +322,7 @@ use Yiisoft\VarDumper\VarDumper;
                   ?>
                 <?= Html::closeTag('div'); ?>
 
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::text($form, 'legal_entity_company_legal_form')
                     ->label($translator->translate(
                             'client.peppol.legal.entity.company.legal.form'))
@@ -341,7 +341,7 @@ use Yiisoft\VarDumper\VarDumper;
                   ?>
                 <?= Html::closeTag('div'); ?>
 
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::text($form, 'financial_institution_branchid')
                     ->label($translator->translate(
                                 'client.peppol.financial.institution.branchid'))
@@ -360,7 +360,7 @@ use Yiisoft\VarDumper\VarDumper;
                   ?>
                 <?= Html::closeTag('div'); ?>
 
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::text($form, 'accounting_cost')
                     ->label($translator->translate(
                                                 'client.peppol.accounting.cost'))
@@ -378,7 +378,7 @@ use Yiisoft\VarDumper\VarDumper;
                   ?>
                 <?= Html::closeTag('div'); ?>
 
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::text($form, 'buyer_reference')
                     ->label($translator->translate(
                             'client.peppol.buyer.reference.default')
@@ -398,7 +398,7 @@ use Yiisoft\VarDumper\VarDumper;
                   ?>
                 <?= Html::closeTag('div'); ?>
 
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::text($form, 'supplier_assigned_accountid')
                     ->label($translator->translate(
                             'client.peppol.supplier.assigned.account.id')

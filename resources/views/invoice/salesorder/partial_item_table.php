@@ -196,7 +196,7 @@ foreach ($soItems as $item) {
                                    maxlength="4"
                                    size="4"
                                    name="item_quantity"
-                                   class="input-sm form-control amount"
+                                   class="form-control form-control-sm amount"
                                    data-bs-toggle = "tooltip"
                                    title="sales_order_item->quantity"
                                    value="
@@ -214,7 +214,7 @@ foreach ($soItems as $item) {
                                  maxlength="4"
                                  size="4"
                                  name="item_price"
-                                 class="input-sm form-control amount"
+                                 class="form-control form-control-sm amount"
                                  data-bs-toggle = "tooltip"
                                  title="sales_order_item->price"
                                  value="
@@ -233,7 +233,7 @@ foreach ($soItems as $item) {
                                    maxlength="4"
                                    size="4"
                                    name="item_discount_amount"
-                                   class="input-sm form-control amount"
+                                   class="form-control form-control-sm amount"
                                    data-bs-toggle = "tooltip"
                                    title="sales_order_item->discount_amount"
                                    value="
@@ -313,7 +313,7 @@ foreach ($soItems as $item) {
                                         </div>
                                         <div class="modal-body">
                                             <form>
-                                                <div class="form-group">
+                                                <div class="mb-3">
                                                     <input type="hidden"
                                                            name="_csrf"
                                                            value="<?= $csrf ?>">
@@ -559,13 +559,13 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->reqId()) as $acsoi) { ?>
         /***********************/
 ?>
     <?= Html::openTag('div', ['class' => 'row']); ?>
-        <div class="col-xs-12 col-md-4"
+        <div class="col-12 col-md-4"
              sales_order_tax_rates="<?php $soTaxRates; ?>">
         </div>
-        <div class="col-xs-12 visible-xs visible-sm">
+        <div class="col-12 d-block d-sm-none visible-sm">
         <br>
         </div>
-        <div class="col-xs-12 col-md-6 col-md-offset-2 col-lg-4 col-lg-offset-4">
+        <div class="col-12 col-md-6 offset-md-2 col-lg-4 offset-lg-4">
             <table class="table table-bordered text-right">
                 <tr>
                     <i class="bi bi-info-circle"

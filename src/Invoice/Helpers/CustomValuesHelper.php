@@ -26,10 +26,10 @@ class CustomValuesHelper
     private readonly DHelp $d;
 
     public function __construct(
-        private readonly SRepo $s,
+        SRepo $s,
         private readonly cvR $cvR,
     ) {
-        $this->d = new DHelp($this->s);
+        $this->d = new DHelp($s);
     }
 
     public function formatDate(mixed $txt): string
@@ -74,7 +74,7 @@ class CustomValuesHelper
      * @param $txt
      * @return string
      */
-    public function formatAvs(string $txt)
+    public function formatAvs(string $txt): string
     {
         $matches = [];
         if (!preg_match('/(\d{3})(\d{4})(\d{4})(\d{2})/', $txt, $matches)) {
@@ -122,7 +122,7 @@ class CustomValuesHelper
                     'name' => $customBracketCustomField,
                     'id' => $customFieldId,
                 ])
-                ->required($custom_field->getRequired() == 1 ? true : false)
+                ->required($custom_field->getRequired())
                 ->hint($custom_field->getRequired() == 1
                        ? $translator->translate('hint.this.field.is.required')
                        : $translator->translate('hint.this.field.is.not.required'))
@@ -149,13 +149,13 @@ class CustomValuesHelper
                     [
                         'id' => $customFieldId,
                         'name' => $customBracketCustomField,
-                        'class' => 'form-control form-control-lg',
+                        'class' => 'form-select form-select-lg',
                     ],
                 )
                 ->disabled(false)
                 ->optionsData($optionsData)
                 ->multiple(false)
-                ->required($custom_field->getRequired() == 1 ? true : false)
+                ->required($custom_field->getRequired())
                 ->value($fieldValue ?: '');
                 break;
 
@@ -185,14 +185,14 @@ class CustomValuesHelper
                  */
                 echo  new Select()
                 ->addAttributes([
-                    'class' => 'form-control form-control-lg',
+                    'class' => 'form-select form-select-lg',
                     'id' => $customFieldId,
                     'name' => $customBracketCustomField,
                 ])
                 ->disabled(false)
                 ->multiple(true)
                 ->optionsData($optionsData)
-                ->required($custom_field->getRequired() == 1 ? true : false)
+                ->required($custom_field->getRequired())
                 ->values($selChoices);
                 break;
 
@@ -215,10 +215,11 @@ class CustomValuesHelper
                 ->radioWrapClass('d-flex align-items-center mb-2')
                 ->separator(' ')
                 ->template("{input}\n{label}\n{hint}\n{error}")
-                ->labelAttributes(['class' => 'd-block text-center mt-2'])
+                ->labelAttributes(['class' => 'd-block text-start mt-2'])
                 ->hideLabel(false)
                 ->disabled(false)
                 ->items($items, true)
+                ->containerClass('mb-3')
                 ->value($fieldValue ?: '') . $upArrowCfEditableAt;
                 break;
 
@@ -245,7 +246,7 @@ class CustomValuesHelper
                 ->minlength($custom_field->getEmailMinLength() ?? 0)
                 ->maxlength($custom_field->getEmailMaxLength() ?? 100)
                 ->multiple($custom_field->getEmailMultiple() ?: false)
-                ->required($custom_field->getRequired() == 1 ? true : false)
+                ->required($custom_field->getRequired())
                 ->hint($custom_field->getRequired() == 1
                    ? $translator->translate('hint.this.field.is.required')
                    : $translator->translate('hint.this.field.is.not.required'))
@@ -267,7 +268,7 @@ class CustomValuesHelper
                 ])
                 ->min($custom_field->getNumberMin() ?? 0)
                 ->max($custom_field->getNumberMax() ?? 100)
-                ->required($custom_field->getRequired() == 1 ? true : false)
+                ->required($custom_field->getRequired())
                 ->hint($custom_field->getRequired() == 1
                     ? $translator->translate('hint.this.field.is.required')
                     : $translator->translate('hint.this.field.is.not.required'))
@@ -287,7 +288,7 @@ class CustomValuesHelper
                 ->rows($custom_field->getTextAreaRows() ?? 10)
                 ->wrap($custom_field->getTextAreaWrap() ?? 'hard')
                 ->disabled(false)
-                ->required($custom_field->getRequired() == 1 ? true : false)
+                ->required($custom_field->getRequired())
                 ->hint($custom_field->getRequired() == 1
                    ? $translator->translate('hint.this.field.is.required')
                    : $translator->translate('hint.this.field.is.not.required'))
@@ -305,7 +306,7 @@ class CustomValuesHelper
                 ])
                 ->minlength($minLength)
                 ->maxlength($maxLength)
-                ->required($custom_field->getRequired() == 1 ? true : false)
+                ->required($custom_field->getRequired())
                 ->hint($custom_field->getRequired() == 1
                    ? $translator->translate('hint.this.field.is.required')
                    : $translator->translate('hint.this.field.is.not.required'))
@@ -324,7 +325,7 @@ class CustomValuesHelper
                 ])
                 ->minlength($minLength)
                 ->maxlength($maxLength)
-                ->required($custom_field->getRequired() == 1 ? true : false)
+                ->required($custom_field->getRequired())
                 ->hint($custom_field->getRequired() == 1
                    ? $translator->translate('hint.this.field.is.required')
                    : $translator->translate('hint.this.field.is.not.required'))
@@ -417,10 +418,11 @@ class CustomValuesHelper
                 ->radioWrapClass('d-flex align-items-center mb-2')
                 ->separator(' ')
                 ->template("{input}\n{label}\n{hint}\n{error}")
-                ->labelAttributes(['class' => 'd-block text-center mt-2'])
+                ->labelAttributes(['class' => 'd-block text-start mt-2'])
                 ->hideLabel(false)
                 ->disabled(true)
                 ->items($items, true)
+                ->containerClass('mb-3')
                 ->value($fieldValue ?: '');
 
                 break;
@@ -497,9 +499,8 @@ class CustomValuesHelper
      * @param Translator $translator
      * @param array $entity_custom_values
      * @param CustomField $custom_field
-     * @param cvR $cvR
      */
-    public function printFieldForPdf(Translator $translator, array $entity_custom_values, CustomField $custom_field, cvR $cvR): void
+    public function printFieldForPdf(Translator $translator, array $entity_custom_values, CustomField $custom_field): void
     {
         $customFieldId = $custom_field->reqId();
         echo  new Br();
@@ -521,7 +522,7 @@ class CustomValuesHelper
                 break;
             case 'SINGLE-CHOICE':
                 echo  new Label()
-                ->content((string) $this->selectedValue($entity_custom_values, $customFieldId, $cvR));
+                ->content((string) $this->selectedValue($entity_custom_values, $customFieldId, $this->cvR));
                 echo  new Br();
                 break;
             case 'MULTIPLE-CHOICE':
@@ -532,7 +533,7 @@ class CustomValuesHelper
                      * @var string $value
                      */
                     foreach ($array as $value) {
-                        $custom_value = $cvR->repoCustomValuequery((int) $value);
+                        $custom_value = $this->cvR->repoCustomValuequery((int) $value);
                         if (null !== $custom_value) {
                             $customValue = $custom_value->getValue();
                             echo  new Label()
@@ -544,7 +545,7 @@ class CustomValuesHelper
                 break;
             case 'RADIOLIST-CHOICE':
                 echo  new Label()
-                ->content((string) $this->selectedValue($entity_custom_values, $customFieldId, $cvR));
+                ->content((string) $this->selectedValue($entity_custom_values, $customFieldId, $this->cvR));
                 echo  new Br();
                 break;
             case 'BOOLEAN':
@@ -646,7 +647,7 @@ class CustomValuesHelper
     {
         /** @var CustomValue $entity_custom_value */
         foreach ($entity_custom_values as $entity_custom_value) {
-            if ($entity_custom_value->reqCustomFieldId() == $custom_field_id) {
+            if ($entity_custom_value->reqCustomFieldId() === $custom_field_id) {
                 return $entity_custom_value->getValue();
             }
         }
@@ -662,7 +663,7 @@ class CustomValuesHelper
     public function selectedValue(array $entity_custom_values, int $custom_field_id, cvR $cvR): string|int|null
     {
         $form_custom_value = $this->formValue($entity_custom_values, $custom_field_id);
-        if (($form_custom_value !== '') && ($form_custom_value > 0)) {
+        if (($form_custom_value !== '') && ((int) $form_custom_value > 0)) {
             $custom_value = $cvR->repoCustomValuequery((int) $form_custom_value);
             /** @var CustomValue $custom_value */
             return $custom_value->getValue();

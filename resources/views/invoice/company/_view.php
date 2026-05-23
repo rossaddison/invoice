@@ -41,7 +41,7 @@ echo new Form()
          ->ariaDescribedBy($translator->translate('active'))
          ->disabled(true);
    echo Html::closeTag('div'); //3
-   echo Html::openTag('div', ['class' => 'mb-3 form-group']); //3
+   echo Html::openTag('div', ['class' => 'mb-3']); //3
     echo Field::text($form, 'name')
          ->label($translator->translate('name'))
          ->addInputAttributes([
@@ -52,7 +52,7 @@ echo new Form()
          ->value(Html::encode($form->getName() ?? ''))
          ->disabled(true);
    echo Html::closeTag('div'); //3
-   echo Html::openTag('div', ['class' => 'mb-3 form-group']); //3
+   echo Html::openTag('div', ['class' => 'mb-3']); //3
     echo Field::email($form, 'email')
          ->label($translator->translate('email'))
          ->addInputAttributes([
@@ -63,7 +63,7 @@ echo new Form()
          ->value(Html::encode($form->getEmail() ?? ''))
          ->disabled(true);
    echo Html::closeTag('div'); //3
-   echo Html::openTag('div', ['class' => 'mb-3 form-group']); //3
+   echo Html::openTag('div', ['class' => 'mb-3']); //3
     echo Field::text($form, 'web')
          ->label($translator->translate('web'))
          ->addInputAttributes([
@@ -73,7 +73,7 @@ echo new Form()
          ->value(Html::encode($form->getWeb() ?? ''))
          ->disabled(true);
    echo Html::closeTag('div'); //3
-   echo Html::openTag('div', ['class' => 'mb-3 form-group']); //3
+   echo Html::openTag('div', ['class' => 'mb-3']); //3
     echo Field::text($form, 'address_1')
          ->label($translator->translate('street.address'))
          ->addInputAttributes([
@@ -83,7 +83,7 @@ echo new Form()
          ->value(Html::encode($form->getAddress1() ?? ''))
          ->disabled(true);
    echo Html::closeTag('div'); //3
-   echo Html::openTag('div', ['class' => 'mb-3 form-group']); //3
+   echo Html::openTag('div', ['class' => 'mb-3']); //3
     echo Field::text($form, 'address_2')
          ->label($translator->translate('street.address.2'))
          ->addInputAttributes([
@@ -93,7 +93,7 @@ echo new Form()
          ->value(Html::encode($form->getAddress2() ?? ''))
          ->disabled(true);
    echo Html::closeTag('div'); //3
-   echo Html::openTag('div', ['class' => 'mb-3 form-group']); //3
+   echo Html::openTag('div', ['class' => 'mb-3']); //3
     echo Field::text($form, 'city')
          ->label($translator->translate('city'))
          ->addInputAttributes([
@@ -103,7 +103,7 @@ echo new Form()
          ->value(Html::encode($form->getCity() ?? ''))
          ->disabled(true);
    echo Html::closeTag('div'); //3
-   echo Html::openTag('div', ['class' => 'mb-3 form-group']);
+   echo Html::openTag('div', ['class' => 'mb-3']);
     echo Field::text($form, 'state')
          ->label($translator->translate('state'))
          ->addInputAttributes([
@@ -113,7 +113,7 @@ echo new Form()
          ->value(Html::encode($form->getState() ?? ''))
          ->disabled(true);
    echo Html::closeTag('div'); //3
-   echo Html::openTag('div', ['class' => 'mb-3 form-group']); //3
+   echo Html::openTag('div', ['class' => 'mb-3']); //3
     echo Field::text($form, 'zip')
          ->label($translator->translate('zip'))
          ->addInputAttributes([
@@ -123,7 +123,7 @@ echo new Form()
          ->value(Html::encode($form->getZip() ?? ''))
          ->disabled(true);
    echo Html::closeTag('div'); //3
-   echo Html::openTag('div', ['class' => 'mb-3 form-group']); //3
+   echo Html::openTag('div', ['class' => 'mb-3']); //3
     echo Field::text($form, 'country')
          ->label($translator->translate('country'))
          ->addInputAttributes([
@@ -133,7 +133,7 @@ echo new Form()
          ->value(Html::encode($form->getCountry() ?? ''))
          ->disabled(true);
    echo Html::closeTag('div'); //3
-   echo Html::openTag('div', ['class' => 'mb-3 form-group']);
+   echo Html::openTag('div', ['class' => 'mb-3']);
     echo Field::telephone($form, 'phone')
          ->label($translator->translate('phone'))
          ->addInputAttributes([
@@ -143,7 +143,7 @@ echo new Form()
          ->value(Html::encode($form->getPhone() ?? ''))
          ->disabled(true);
    echo Html::closeTag('div'); //3
-   echo Html::openTag('div', ['class' => 'mb-3 form-group']); //3
+   echo Html::openTag('div', ['class' => 'mb-3']); //3
     echo Field::telephone($form, 'fax')
          ->label($translator->translate('fax'))
          ->addInputAttributes([

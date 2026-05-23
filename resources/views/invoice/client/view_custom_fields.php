@@ -17,14 +17,14 @@ use Yiisoft\Html\Html;
 
 <?php if ($custom_fields): ?>
     <div>
-        <div class="mb-3 form-group">
-            <div class="panel panel-default">
-                <div class="panel-heading">
+        <div class="mb-3">
+            <div class="card">
+                <div class="card-header">
                     <?= $translator->translate('custom.fields'); ?>
                 </div>
                 <div>
                     <?= Html::openTag('div', ['class' => 'row']); ?>
-                        <div class="form-group">
+                        <div class="mb-3">
                             <?php $i = 0; ?>
                             <?php
                                /** @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field */
@@ -38,7 +38,7 @@ use Yiisoft\Html\Html;
                                 <?php endif; ?>
                             <?php endforeach; ?>
                         </div>
-                        <div class="form-group">
+                        <div class="mb-3">
                             <?php $i = 0; ?>
                             <?php
                                /** @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field */

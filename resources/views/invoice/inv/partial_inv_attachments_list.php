@@ -40,7 +40,7 @@ $columns = [
                     Html::tag('i', '', ['class' => 'bi bi-download']),
                     [
                         'type' => 'submit',
-                        'class' => 'dropdown-button',
+                        'class' => 'dropdown-item',
                     ],
                 ),
                 $urlGenerator->generate('inv/downloadFile',
@@ -60,7 +60,7 @@ $columns = [
                     Html::tag('i', '', ['class' => 'bi bi-pencil']),
                     [
                         'type' => 'submit',
-                        'class' => 'dropdown-button',
+                        'class' => 'dropdown-item',
                     ],
                 ),
                 $urlGenerator->generate('upload/edit',
@@ -80,7 +80,7 @@ $columns = [
                     Html::tag('i', '', ['class' => 'bi-trash']),
                     [
                         'type' => 'submit',
-                        'class' => 'dropdown-button',
+                        'class' => 'dropdown-item',
                         'onclick' => "return confirm("
                             . "'"
                             . $translator->translate('delete.record.warning')

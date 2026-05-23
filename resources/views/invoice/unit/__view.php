@@ -40,14 +40,14 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <?= Html::openTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'unit_name')
     ->label($translator->translate('unit.name'))
     ->value(Html::encode($form->getUnitName() ?? ''))
     ->disabled(true);
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'unit_name_plrl')
     ->label($translator->translate('unit.name.plrl'))
     ->value(Html::encode($form->getUnitNamePlrl() ?? ''))

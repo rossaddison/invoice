@@ -29,16 +29,16 @@ use Yiisoft\Html\Html;
 <div id="content">
 
     <div class='row'>
-        <div class="col-xs-12 col-md-6 col-md-offset-3">
+        <div class="col-12 col-md-6 offset-md-3">
 
-            <div id="report_options" class="panel panel-default">
+            <div id="report_options" class="card">
 
-                <div class="panel-heading">
+                <div class="card-header">
                     <i class="bi bi-print"></i>
                     <?= $translator->translate('report.options'); ?>
                 </div>
 
-                <div class="panel-body">
+                <div class="card-body">
 
                     <form method="POST"
                           action="<?= $urlGenerator->generate($actionName,
@@ -52,7 +52,7 @@ use Yiisoft\Html\Html;
                                name="_csrf"
                                value="<?= $csrf ?>">
 
-                        <div class="mb-3 form-group has-feedback">
+                        <div class="mb-3 has-feedback">
                             <label for="from_date">
                                 <?= $translator->translate('from.date')
                                        . ' ('
@@ -76,7 +76,7 @@ use Yiisoft\Html\Html;
                             </div>
                         </div>
 
-                        <div class="mb-3 form-group has-feedback">
+                        <div class="mb-3 has-feedback">
                             <label for="to_date">
                                 <?= $translator->translate('to.date')
                                         . ' ('

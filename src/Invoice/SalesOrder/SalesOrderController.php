@@ -178,8 +178,11 @@ final class SalesOrderController extends BaseController
                 if (!empty($user_clients)) {
                     $salesOrders = $this->salesordersStatusWithSortGuest(
                         $soR, $status, $user_clients, $sort);
+                    $soLimit = $userinv->getListLimit();
                     $paginator = (new OffsetPaginator($salesOrders))
-                    ->withPageSize($this->sR->positiveListLimit())
+                    ->withPageSize($soLimit !== null && $soLimit > 0
+                        ? $soLimit
+                        : $this->sR->positiveListLimit())
                     ->withCurrentPage($currentPageNeverZero);
                     $so_statuses = $soR->getStatuses($this->translator);
                     $parameters = [

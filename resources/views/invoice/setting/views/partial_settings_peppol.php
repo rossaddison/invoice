@@ -27,16 +27,16 @@ $kCurrencyToFrom = 'settings[currency_to_from]';
 $kStandInCode = 'settings[stand_in_code]';
 $kEnableClientPeppol = 'settings[enable_client_peppol_defaults]';
 $kIncludeDelivery = 'settings[include_delivery_period]';
-$inputSmFormControl = 'input-sm form-control';
+$inputSmFormControl = 'form-select form-select-sm';
 
 $row = ['class' => 'row'];
-$colMd6 = ['class' => 'col-xs-12 col-md-6'];
-$colMd8 = ['class' => 'col-xs-12 col-md-8 col-md-offset-2'];
-$panel = ['class' => 'panel panel-default'];
-$panelHead = ['class' => 'panel-heading'];
-$panelBody = ['class' => 'panel-body'];
-$formGroup = ['class' => 'form-group'];
-$checkbox = ['class' => 'checkbox'];
+$colMd6 = ['class' => 'col-12 col-md-6'];
+$colMd8 = ['class' => 'col-12 col-md-8 offset-md-2'];
+$panel = ['class' => 'card'];
+$panelHead = ['class' => 'card-header'];
+$panelBody = ['class' => 'card-body'];
+$formGroup = ['class' => 'mb-3'];
+$checkbox = ['class' => 'form-check'];
 $inputGroup = ['class' => 'input-group'];
 $inputGroupText = ['class' => 'input-group-text'];
 $iP = 'https://docs.peppol.eu/poacc/billing/3.0/'
@@ -56,30 +56,32 @@ echo H::openTag('div', $row); //1
        echo H::openTag('div', $checkbox); //8
         $body[$kEnablePeppol] =
         $s->getSetting('enable_peppol');
-        echo H::openTag('label');
-         echo H::openTag('input', [
+        echo H::openTag('input', [
           'type' => 'hidden',
           'name' => $kEnablePeppol,
           'value' => '0'
          ]);
          echo H::openTag('input', [
           'type' => 'checkbox',
+          'class' => 'form-check-input',
+          'id' => 'enable_peppol',
           'name' => $kEnablePeppol,
           'value' => '1',
           'checked' => ($body[
           $kEnablePeppol
          ] == '1') ? 'checked' : null
          ]);
-         echo H::a(
-          $translator->translate('peppol.enable'),
-          'https://www.datypic.com/sc/ubl21/ss.html',
-          [
-          'style' => 'text-decoration:none',
-          'data-bs-toggle' => 'tooltip',
-          'title' => ''
-         ]
-         );
-        echo H::closeTag('label');
+         echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'enable_peppol']);
+          echo H::a(
+           $translator->translate('peppol.enable'),
+           'https://www.datypic.com/sc/ubl21/ss.html',
+           [
+           'style' => 'text-decoration:none',
+           'data-bs-toggle' => 'tooltip',
+           'title' => ''
+          ]
+          );
+         echo H::closeTag('label');
        echo H::closeTag('div'); //8
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
@@ -98,7 +100,7 @@ echo H::openTag('div', $row); //1
       echo H::openTag('select', [
        'name' => $kPeppolDebugEmojis,
        'id' => $kPeppolDebugEmojis,
-       'class' => 'form-control form-control-lg',
+       'class' => 'form-select',
       ]);
        echo  new Option()
         ->value('0')
@@ -134,7 +136,7 @@ echo H::openTag('div', $row); //1
        $kPeppolDebugValidator,
        'id' =>
        $kPeppolDebugValidator,
-       'class' => 'form-control form-control-lg',
+       'class' => 'form-select',
       ]);
        echo  new Option()
         ->value('0')
@@ -157,8 +159,7 @@ echo H::openTag('div', $row); //1
         = $s->getSetting(
          'enable_client_peppol_defaults'
         );
-        echo H::openTag('label');
-         echo H::openTag('input', [
+        echo H::openTag('input', [
           'type' => 'hidden',
           'name' =>
           $kEnableClientPeppol,
@@ -166,6 +167,8 @@ echo H::openTag('div', $row); //1
          ]);
          echo H::openTag('input', [
           'type' => 'checkbox',
+          'class' => 'form-check-input',
+          'id' => 'enable_client_peppol_defaults',
           'name' =>
           $kEnableClientPeppol,
           'value' => '1',
@@ -173,10 +176,11 @@ echo H::openTag('div', $row); //1
           $kEnableClientPeppol
          ] == '1') ? 'checked' : null
          ]);
-         echo $translator->translate(
-          'peppol.client.defaults'
-         );
-        echo H::closeTag('label');
+         echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'enable_client_peppol_defaults']);
+          echo $translator->translate(
+           'peppol.client.defaults'
+          );
+         echo H::closeTag('label');
        echo H::closeTag('div'); //8
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
@@ -301,7 +305,7 @@ echo H::openTag('div', $row); //1
        'type' => 'text',
        'name' => $kCurrencyFromTo,
        'id' => $kCurrencyFromTo,
-       'class' => 'form-control form-control-lg',
+       'class' => 'form-select',
        'value' => $body[$kCurrencyFromTo]
       ]);
 
@@ -322,7 +326,7 @@ echo H::openTag('div', $row); //1
        'type' => 'text',
        'name' => $kCurrencyToFrom,
        'id' => $kCurrencyToFrom,
-       'class' => 'form-control form-control-lg',
+       'class' => 'form-select',
        'value' => $body[$kCurrencyToFrom]
       ]);
 
@@ -335,8 +339,7 @@ echo H::openTag('div', $row); //1
         ] = ($s->getSetting(
          'include_delivery_period'
         ) ?: '0');
-        echo H::openTag('label');
-         echo H::openTag('input', [
+        echo H::openTag('input', [
           'type' => 'hidden',
           'name' =>
           $kIncludeDelivery,
@@ -344,6 +347,8 @@ echo H::openTag('div', $row); //1
          ]);
          echo H::openTag('input', [
           'type' => 'checkbox',
+          'class' => 'form-check-input',
+          'id' => 'include_delivery_period',
           'name' =>
           $kIncludeDelivery,
           'value' => '1',
@@ -351,11 +356,12 @@ echo H::openTag('div', $row); //1
           $kIncludeDelivery
          ] == '1') ? 'checked' : null
          ]);
-         echo H::a(
-          $translator->translate('peppol.include.delivery.period'), $iP,
-          ['style' => 'text-decoration:none']
-         );
-        echo H::closeTag('label');
+         echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'include_delivery_period']);
+          echo H::a(
+           $translator->translate('peppol.include.delivery.period'), $iP,
+           ['style' => 'text-decoration:none']
+          );
+         echo H::closeTag('label');
        echo H::closeTag('div'); //8
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
@@ -421,7 +427,7 @@ echo H::openTag('div', $row); //1
       echo H::openTag('select', [
        'name' => $kPeppolXmlStream,
        'id' => $kPeppolXmlStream,
-       'class' => 'form-control form-control-lg',
+       'class' => 'form-select',
       ]);
        echo  new Option()
         ->value('0')

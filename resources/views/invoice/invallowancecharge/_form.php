@@ -42,7 +42,7 @@ echo  new Form()
     <?= $button::backSave(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?php
                     echo Field::select($form, 'allowance_charge_id')
                     ->label($translator->translate('allowance.or.charge'))
@@ -50,7 +50,7 @@ echo  new Form()
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'amount')
     ->label($translator->translate('allowance.or.charge.amount'))
     ->value(Html::encode($form->getAmount() ?? ''))

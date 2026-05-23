@@ -42,7 +42,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::openTag('div', ['id' => 'content']); ?>
 
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'col-xs-12 col-md-6 col-md-offset-3']); ?>
+            <?= Html::openTag('div', ['class' => 'col-12 col-md-6 offset-md-3']); ?>
                 <?=
                     Field::errorSummary($form)
                     ->errors($errors)
@@ -55,7 +55,7 @@ use Yiisoft\Html\Tag\Form;
                 <?php $alpha = str_replace("-", "_", strtolower($custom_field->getType())); ?>
                 <?php  // Type eg. Boolean, Single Choice, Multiple Choice and Label eg. My new Field,
        //belong to the Field Entity?>
-                <?= Html::openTag('div', ['class' => 'form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Html::openTag('label', ['for' => 'label']); ?>
                         <?= $translator->translate('field'); ?>
                     <?= Html::closeTag('label'); ?>
@@ -68,7 +68,7 @@ use Yiisoft\Html\Tag\Form;
 ?>
                 <?= Html::closeTag('div'); ?>
 
-                <?= Html::openTag('div', ['class' => 'form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Html::openTag('label', ['for' => 'label']); ?>
                         <?= $translator->translate('type'); ?>
                     <?= Html::closeTag('label'); ?>
@@ -83,7 +83,7 @@ use Yiisoft\Html\Tag\Form;
 
                 <?php // Custom Value Form: (1) The two hidden fields
   //                    (2) The value field where new data will be entered?>
-                <?= Html::openTag('div', ['class' => 'form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::hidden($form, 'custom_field_id')
                         ->addInputAttributes([
                             'class' => 'form-control form-control-lg',
@@ -92,7 +92,7 @@ use Yiisoft\Html\Tag\Form;
                         ->hideLabel();
                     ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'value')
     ->addInputAttributes([
         'class' => 'form-control form-control-lg',

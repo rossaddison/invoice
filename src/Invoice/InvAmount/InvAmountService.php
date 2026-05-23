@@ -53,19 +53,20 @@ final readonly class InvAmountService
         string $new_inv_id
     ): void {
         $this->persist($model, ['inv_id' => $new_inv_id]);
-        $basis_invoice = $this->repository->repoInvquery(
-            $basis_inv_id);
-        $new_inv_id ? $model->setInvId((int) $new_inv_id) : '';
-        $model->setSign(1);
-        null !== $basis_invoice ? $model->setItemSubtotal(($basis_invoice->getItemSubtotal() ?: 0.00) * -1.00) : '';
-        null !== $basis_invoice ? $model->setItemTaxTotal(($basis_invoice->getItemTaxTotal() ?: 0.00) * -1.00) : '';
-        null !== $basis_invoice ? $model->setPackhandleshipTotal(($basis_invoice->getPackhandleshipTotal() ?: 0.00) * -1.00) : '';
-        null !== $basis_invoice ? $model->setPackhandleshipTax(($basis_invoice->getPackhandleshipTax() ?: 0.00) * -1.00) : '';
-        null !== $basis_invoice ? $model->setTaxTotal(($basis_invoice->getTaxTotal() ?? 0.00) * -1.00) : '';
-        null !== $basis_invoice ? $model->setTotal(($basis_invoice->getTotal() ?? 0.00) * -1.00) : '';
-        $model->setPaid(0.00);
-        null !== $basis_invoice ? $model->setBalance(($basis_invoice->getBalance() ?? 0.00) * -1.00) : '';
-        $this->repository->save($model);
+        $basis_invoice = $this->repository->repoInvquery($basis_inv_id);
+        if (null !== $basis_invoice) {
+            $new_inv_id ? $model->setInvId((int) $new_inv_id) : '';
+            $model->setItemSubtotal(($basis_invoice->getItemSubtotal() ?: 0.00) * -1.00);
+            $model->setItemTaxTotal(($basis_invoice->getItemTaxTotal() ?: 0.00) * -1.00);
+            $model->setPackhandleshipTotal(($basis_invoice->getPackhandleshipTotal() ?: 0.00) * -1.00);
+            $model->setPackhandleshipTax(($basis_invoice->getPackhandleshipTax() ?: 0.00) * -1.00);
+            $model->setTaxTotal(($basis_invoice->getTaxTotal() ?? 0.00) * -1.00);
+            $model->setTotal(($basis_invoice->getTotal() ?? 0.00) * -1.00);
+            $model->setPaid(0.00);
+            $model->setSign(1);
+            $model->setBalance(($basis_invoice->getBalance() ?? 0.00) * -1.00);
+            $this->repository->save($model);
+        }
     }
 
     /**

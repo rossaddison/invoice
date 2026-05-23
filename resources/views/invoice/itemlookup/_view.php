@@ -43,7 +43,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <?= Html::openTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::text($form, 'name')
                     ->label($translator->translate('name'))
                     ->addInputAttributes([
@@ -54,7 +54,7 @@ use Yiisoft\Html\Tag\Form;
                     ->value(Html::encode($form->getName() ?? ''));
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::textarea($form, 'description')
     ->label($translator->translate('description'))
     ->addInputAttributes([
@@ -65,7 +65,7 @@ use Yiisoft\Html\Tag\Form;
     ->value(Html::encode($form->getDescription() ?? ''));
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::text($form, 'price')
     ->label($translator->translate('price'))
     ->addInputAttributes([

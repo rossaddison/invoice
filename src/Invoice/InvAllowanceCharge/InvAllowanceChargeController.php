@@ -28,6 +28,8 @@ use Exception;
 final class InvAllowanceChargeController extends BaseController
 {
     protected string $controllerName = 'invoice/invallowancecharge';
+    private const ROUTE_INDEX = 'invallowancecharge/index';
+    private const PARAM_OPTIONS_DATA_ALLOWANCE_CHARGES = 'optionsDataAllowanceCharges';
 
     public function __construct(
         private InvAllowanceChargeService $invallowancechargeService,
@@ -65,7 +67,7 @@ final class InvAllowanceChargeController extends BaseController
             'actionArguments' => ['inv_id' => $inv_id],
             'errors' => [],
             'form' => $form,
-            'optionsDataAllowanceCharges' => $allowanceChargeRepository->optionsDataAllowanceCharges(),
+            self::PARAM_OPTIONS_DATA_ALLOWANCE_CHARGES => $allowanceChargeRepository->optionsDataAllowanceCharges(),
         ];
 
         if ($request->getMethod() === Method::POST) {
@@ -168,10 +170,10 @@ final class InvAllowanceChargeController extends BaseController
                 $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('inv/view', ['id' => $invId]);
             }
-            return $this->webService->getRedirectResponse('invallowancecharge/index');
+            return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
         } catch (Exception $e) {
             $this->flashMessage('danger', $e->getMessage());
-            return $this->webService->getRedirectResponse('invallowancecharge/index');
+            return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
         }
     }
 
@@ -192,14 +194,14 @@ final class InvAllowanceChargeController extends BaseController
                 'actionArguments' => ['id' => $invAllowanceCharge->reqId()],
                 'errors' => [],
                 'form' => $form,
-                'optionsDataAllowanceCharges' => $allowanceChargeRepository->optionsDataAllowanceCharges(),
+                self::PARAM_OPTIONS_DATA_ALLOWANCE_CHARGES => $allowanceChargeRepository->optionsDataAllowanceCharges(),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     if (is_array($body)) {
                         $this->invallowancechargeService->saveInvAllowanceCharge($invAllowanceCharge, $body);
-                        return $this->webService->getRedirectResponse('invallowancecharge/index');
+                        return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
                     }
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -207,7 +209,7 @@ final class InvAllowanceChargeController extends BaseController
             }
             return $this->webViewRenderer->render('_form', $parameters);
         }
-        return $this->webService->getRedirectResponse('invallowancecharge/index');
+        return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
     }
 
     //For rbac refer to AccessChecker
@@ -255,10 +257,10 @@ final class InvAllowanceChargeController extends BaseController
                 'actionName' => 'invallowancecharge/view',
                 'actionArguments' => ['id' => $invAllowanceCharge->reqId()],
                 'form' => $form,
-                'optionsDataAllowanceCharges' => $allowanceChargeRepository->optionsDataAllowanceCharges(),
+                self::PARAM_OPTIONS_DATA_ALLOWANCE_CHARGES => $allowanceChargeRepository->optionsDataAllowanceCharges(),
             ];
             return $this->webViewRenderer->render('_view', $parameters);
         }
-        return $this->webService->getRedirectResponse('invallowancecharge/index');
+        return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
     }
 }

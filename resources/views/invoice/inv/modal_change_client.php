@@ -29,7 +29,7 @@ declare(strict_types=1);
             <div class="modal-body">
                 <form>
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="change_client_id">
                             <?= $translator->translate('client'); ?>
                         </label>

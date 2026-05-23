@@ -150,7 +150,7 @@ if ($disable_form === false) {
           echo H::closeTag('table');
          echo H::closeTag('div');
          if (!empty($invoice->getTerms())) {
-             echo H::openTag('div', ['class' => 'col-xs-12 text-muted']);
+             echo H::openTag('div', ['class' => 'col-12 text-muted']);
               echo H::tag('br');
               echo H::openTag('h4');
                echo $translator->translate('terms');

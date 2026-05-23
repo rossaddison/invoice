@@ -30,9 +30,10 @@ use Yiisoft\Html\Tag\I;
  */
 
 $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
+$frmCtlAmt = 'form-control amount';
 ?>
-<?= Html::openTag('div', ['class' => 'panel panel-default']); ?>
-    <?= Html::openTag('div', ['class' => 'panel-heading']); ?>
+<?= Html::openTag('div', ['class' => 'card']); ?>
+    <?= Html::openTag('div', ['class' => 'card-header']); ?>
         <?=  new I()
             ->addClass('bi bi-info-circle')
             ->addAttributes([
@@ -61,21 +62,31 @@ echo (new Form())
 ?>
 
         <?= Html::openTag('div', ['class' => 'table-striped table-responsive']); ?>
-            <?= Html::openTag('table', ['id' => 'item_table', 'class' => 'items table-primary table table-bordered no-margin']); ?>
+            <?= Html::openTag('table', [
+                'id' => 'item_table',
+                'class' => 'items table-primary table table-bordered no-margin']); ?>
                 <?= Html::openTag('tbody', ['id' => 'new_inv_item_row']); ?>
                     <?= Html::openTag('tr'); ?>
-                        <?= Html::openTag('td', ['rowspan' => '2', 'class' => 'td-icon']); ?>
+                        <?= Html::openTag('td',
+                                ['rowspan' => '2', 'class' => 'td-icon']); ?>
                             <?=  new I()
                         ->addClass('bi bi-grip-vertical cursor-move'); ?>
                                 <?php if ($isRecurring) : ?>
                                     <?= Html::tag('br'); ?>
                                         <?=  new I()
-                                    ->addAttributes([
+                                    ->addAttributes(
+                                    [
                                         'title' => $translator->translate('recurring'),
-                                        'class' => 'js-item-recurrence-toggler cursor-pointer bi bi-calendar text-muted',
+                                        'class' => 'js-item-recurrence-toggler'
+                                        . ' cursor-pointer'
+                                        . ' bi bi-calendar'
+                                        . ' text-muted',
                                     ]);
                                     ?>
-                                        <?= Html::openTag('input', ['type' => 'hidden', 'name' => 'is_recurring', 'value' => '/']); ?>
+                                        <?= Html::openTag('input', [
+                                            'type' => 'hidden',
+                                            'name' => 'is_recurring',
+                                            'value' => '/']); ?>
                                 <?php endif; ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-text']); ?>
@@ -84,7 +95,7 @@ echo (new Form())
                             <?= Field::hidden($form, 'product_id')
                                 ->value('0')
                                 ->hideLabel(); ?>
-                            <?= Html::openTag('div', ['class' => 'input-group', 'id' => 'task-no-product']); ?>
+                            <?= Html::openTag('div', ['id' => 'task-no-product']); ?>
                                 <?php
                                     $optionsDataTask = [];
 /**
@@ -104,30 +115,30 @@ foreach ($tasks as $task) {
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount td-quality']); ?>
-                            <?= Html::openTag('div', ['class' => 'input-group']); ?>
+                            <?= Html::openTag('div'); ?>
                                 <?= Field::number($form, 'quantity')
     ->label($translator->translate('quantity'))
-    ->addInputAttributes(['class' => 'input-lg form-control amount has-feedback'])
+    ->addInputAttributes(['class' => $frmCtlAmt])
     ->value($numberHelper->formatAmount($form->getQuantity()))
     ->hint($translator->translate('hint.greater.than.zero.please'));
 ?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount']); ?>
-                            <?= Html::openTag('div', ['class' => 'input-group']); ?>
+                            <?= Html::openTag('div'); ?>
                                 <?= Field::text($form, 'price')
      ->label($translator->translate('price'))
-     ->addInputAttributes(['class' => 'input-lg form-control amount has-feedback'])
+     ->addInputAttributes(['class' => $frmCtlAmt])
      ->value($numberHelper->formatAmount($form->getPrice() ?? 0.00))
      ->hint($translator->translate('hint.greater.than.zero.please')); ?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount']); ?>
-                            <?= Html::openTag('div', ['class' => 'input-group']); ?>
+                            <?= Html::openTag('div'); ?>
                                 <?= Field::text($form, 'discount_amount')
      ->label($translator->translate('item.discount'))
      ->addInputAttributes([
-         'class' => 'input-lg form-control amount has-feedback',
+         'class' => $frmCtlAmt,
          'data-bs-toggle' => 'tooltip',
          'data-placement' => 'bottom',
          'title' => $s->getSetting('currency_symbol') . ' ' . $translator->translate('per.item'),
@@ -136,7 +147,7 @@ foreach ($tasks as $task) {
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td td-vert-middle']); ?>
-                            <?= Html::openTag('div', ['class' => 'input-group']); ?>
+                            <?= Html::openTag('div'); ?>
                                 <?php
      $optionsDataTaxRate = [];
 /**
@@ -147,14 +158,18 @@ foreach ($taxRates as $taxRate) {
     $taxRatePercent = $taxRate->getTaxRatePercent() ?? 0.00;
     $taxRateName = $taxRate->getTaxRateName() ?? '';
     $formattedNumber = $numberHelper->formatAmount($taxRatePercent);
-    if (($taxRatePercent >= 0.00) && (strlen($taxRateName) > 0) && $formattedNumber >= 0.00) {
-        $optionsDataTaxRate[$taxRateId] = (string) $formattedNumber . '% - ' . $taxRateName;
+    if (($taxRatePercent >= 0.00) && (strlen($taxRateName) > 0)
+            && $formattedNumber >= 0.00) {
+        $optionsDataTaxRate[$taxRateId] = (string) $formattedNumber
+                . '% - '
+                . $taxRateName;
     }
 }
 ?>
                                 <?= Field::select($form, 'tax_rate_id')
-    ->label($vat === false ? $translator->translate('tax.rate') : $translator->translate('vat.rate'))
-    ->addInputAttributes(['class' => 'form-control form-control-lg',])
+    ->label($vat === false ? $translator->translate('tax.rate') :
+        $translator->translate('vat.rate'))
+    ->addInputAttributes(['class' => 'form-select',])
     ->optionsData($optionsDataTaxRate)
     ->value(Html::encode($form->getTaxRateId()))
     ->hint($translator->translate('hint.this.field.is.required'));
@@ -182,16 +197,16 @@ foreach ($taxRates as $taxRate) {
                     <?= Html::closeTag('tr'); ?>
                     <?= Html::openTag('tr'); ?>
                         <?= Html::openTag('td', ['class' => 'td-textarea']); ?>
-                            <?= Html::openTag('div', ['class' => 'input-group']); ?>
+                            <?= Html::openTag('div'); ?>
                                 <?= Field::textarea($form, 'description')
         ->value(Html::encode($form->getDescription() ?? '')); ?>
                             <?= Html::closeTag('div'); ?>
-                            <?= Html::openTag('div', ['class' => 'input-group']); ?>
+                            <?= Html::openTag('div'); ?>
                                 <?= Field::textarea($form, 'note')
         ->value(Html::encode($form->getNote() ?? ''));
 ?>
                             <?= Html::closeTag('div'); ?>
-                            <?= Html::openTag('div', ['class' => 'input-group']); ?>
+                            <?= Html::openTag('div'); ?>
                                 <?= Field::text($form, 'order')
         ->value(Html::encode($form->getOrder() ?? ''));
 ?>
@@ -224,7 +239,7 @@ foreach ($taxRates as $taxRate) {
                 <?= Html::closeTag('tbody'); ?>
             <?= Html::closeTag('table'); ?>
         <?= Html::closeTag('div'); ?>
-        <?=Html::openTag('div', ['class' => 'col-xs-12 col-md-4']); ?>
+        <?=Html::openTag('div', ['class' => 'col-12 col-md-4']); ?>
             <?= Html::openTag('div', ['class' => 'btn-group']); ?>
                 <?= Html::Tag('button', '', ['hidden' => 'hidden', 'class' => 'btn_inv_item_add_row btn btn-primary btn-md active bi bi-plus'])
                     ->content($translator->translate('add.new.row')); ?>

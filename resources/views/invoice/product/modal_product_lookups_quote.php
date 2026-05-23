@@ -27,9 +27,9 @@ use Yiisoft\Html\Tag\Button;
                 <form>
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
                     <div class="modal-body">
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="filter_family_inv"><?= $translator->translate('any.family'); ?></label>
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <select name="filter_family_quote" id="filter_family_quote" class="form-control form-control-lg">
                                     <option value="0"><?= $translator->translate('any.family'); ?></option>
                                     <?php
@@ -46,7 +46,7 @@ use Yiisoft\Html\Tag\Button;
                                     <?php } ?>
                                 </select>
                             </div>
-                            <div class="form-group panel panel-primary">
+                            <div class="mb-3 card border-primary">
                                 <label for="filter_product_quote"><?= $translator->translate('product.name'); ?></label>
                                 <input type="text" class="form-control form-control-lg" name="filter_product_quote" id="filter_product_quote"
                                        placeholder="<?= $translator->translate('product.name'); ?>"

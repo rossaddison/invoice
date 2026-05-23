@@ -11,6 +11,7 @@ use Yiisoft\Assets\AssetManager;
 use Yiisoft\Definitions\Reference;
 use Yiisoft\Form\Field\SubmitButton;
 use Yiisoft\Form\Field\Checkbox;
+use Yiisoft\Form\Field\CheckboxLabelPlacement;
 use Yiisoft\Form\Field\ErrorSummary;
 use Yiisoft\FormModel\ValidationRulesEnricher;
 use Yiisoft\Router\CurrentRoute;
@@ -39,7 +40,6 @@ use App\Invoice\QuoteAmount\QuoteAmountRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Widget\Button;
 use App\Widget\GridComponents;
-use App\Widget\PageSizeLimiter;
 use App\Widget\SubMenu;
 
 $env = $_ENV['APP_ENV'] ?? 'local';
@@ -65,7 +65,7 @@ $containerClass = 'containerClass()';
 $submitButtonConfigs = [
     'default' => [
         $buttonClass => ['btn btn-primary btn-sm mt-3'],
-        $containerClass => ['d-grid gap-2 form-floating'],
+        $containerClass => ['d-grid gap-2'],
     ],
     'bootstrap5-vertical' => [
         $buttonClass => ['btn btn-primary'],
@@ -252,28 +252,26 @@ return [
             // some of these settings
             'default' => [
                 'containerClass' => 'form-floating mb-3',
-                'inputClass' => 'form-control form-control-lg',
+                'inputClass' => 'form-control',
                 'invalidClass' => 'is-invalid',
                 'validClass' => 'is-valid',
                 'template' => '{input}{label}{hint}{error}',
                 'labelClass' => 'floatingInput h6',
-                'errorClass' => 'fw-bold fst-italic badge bg-danger text-wrap',
-               /**
-                * Related logic: resources/views/invoice/
-                * product/_form.php and adjust the h6 below to h1 and see the
-                * effect
-                */
-                'hintClass' => 'text-danger h6',
+                'errorClass' => 'invalid-feedback',
+                'hintClass' => 'form-text text-muted',
                 'fieldConfigs' => [
                     $submitButtonConfigs['default'],
                     // if this Checkbox class is not used then the checkbox ends
                     // up floating because of the default containerClass above;
                     // refer to client form with active client checkbox
                     Checkbox::class => [
-                        $containerClass => ['form-group'],
+                        $containerClass => ['form-check mb-3'],
+                        'inputClass()' => ['form-check-input'],
+                        'inputLabelClass()' => ['form-check-label'],
+                        'labelPlacement()' => [CheckboxLabelPlacement::SIDE],
                     ],
                     DataColumn::class => [
-                        $containerClass => ['form-group'],
+                        $containerClass => ['mb-3'],
                     ],
                     OffsetPagination::class => [
                         'listTag()' => ['ul'],
@@ -290,7 +288,7 @@ return [
                 'template' => "{label}\n{input}\n{hint}\n{error}",
                 'containerClass' => 'mb-3',
                 'labelClass' => 'form-label',
-                'inputClass' => 'form-control form-control-lg',
+                'inputClass' => 'form-control',
                 'hintClass' => 'form-text',
                 'errorClass' => 'invalid-feedback',
                 'inputValidClass' => 'is-valid',
@@ -311,7 +309,7 @@ return [
              "{label}\n<div class=\"col-sm-10\">{input}\n{hint}\n{error}</div>",
                 'containerClass' => 'row mb-3',
                 'labelClass' => 'col-sm-2 col-form-label',
-                'inputClass' => 'form-control form-control-lg',
+                'inputClass' => 'form-control',
                 'hintClass' => 'form-text',
                 'errorClass' => 'invalid-feedback',
                 'inputValidClass' => 'is-valid',
@@ -359,7 +357,6 @@ return [
             'datehelper' => Reference::to(DateHelper::class),
             'dateHelper' => Reference::to(DateHelper::class),
             'numberHelper' => Reference::to(NumberHelper::class),
-            'pageSizeLimiter' => Reference::to(PageSizeLimiter::class),
             'peppolUNECERec2011e' => Reference::to(Peppol_UNECERec20_11e::class),
             'gridComponents' => Reference::to(GridComponents::class),
             'subMenu' => Reference::to(SubMenu::class),
@@ -552,6 +549,13 @@ return [
             'convertHtmlToText' => true,
         ],
     ],
+    /**
+     * ALL keys READ by SettingRepository::getConfigCompanyDetails() (primary)
+     * and SettingRepository::getPrivateCompanyDetails() (DB override, falls back here).
+     * Consumed by: PeppolHelper (supplier name), PdfHelper (invoice/quote/sales-order PDFs),
+     *   PeppolUblXml, ZugferdXml, and SettingController (Peppol settings view).
+     * Override these defaults via the Company entity in the database.
+     */
     'company' => [
         'logopublicsource' => 'site',
         'logofilenamewithsuffix' => 'logo.png',
@@ -584,19 +588,33 @@ return [
     //        GBP, namely Related logic: see TaxCurrencyCode on the invoice
     'peppol' => [
         'invoice' => [
+            // NOT READ from params — hardcoded in src/Invoice/Ubl/Invoice.php
             'CustomizationID' =>
    'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0',
+            // NOT READ from params — hardcoded in PeppolHelper.php line 388
             'ProfileID' => 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0',
+            // NOT READ from params — resolved by src/Invoice/Ubl/InvoiceTypeCode.php
             'InvoiceTypeCode' => '380',
+            // NOT READ from params — sourced from $invoice->getNote() on the entity
             'Note' => 'Please use our latest telephone number',
       /**
+       * READ by SettingRepository::getConfigPeppol() =>
+       *  getDocumentCurrencyCodeFromPeppolDetails()
        * Related logic: see $settingRepository->getSetting('currency_code_to')
        */
             'DocumentCurrencyCode' => 'EUR',
       /**
+       * READ by SettingRepository::getConfigPeppol() => getTaxCurrencyFromConfigDetails()
        * Related logic: see $settingRepository->getSetting('currency_code_from')
        */
             'TaxCurrencyCode' => 'GBP',
+            /**
+             * READ by SettingRepository::getConfigPeppol() which extracts:
+             *   EndPointID, PartyIdentification, PostalAddress, Contact,
+             *   PartyTaxScheme, PartyLegalEntity
+             * Consumed by PeppolHelper (supplier party building) and
+             *   StoreCoveHelper
+             */
             'AccountingSupplierParty' => [
                 'Party' => [
                     'EndPointID' => [
@@ -680,6 +698,8 @@ return [
                     ],
                 ],
             ],
+            // NOT READ anywhere — no consumer found in codebase.
+            // Retained as a placeholder for future PayeeParty UBL support.
             'PayeeParty' => [
                 'PartyIdentification' => [
                     'ID' => 'FR932874294',
@@ -693,6 +713,11 @@ return [
                     'schemeID' => '',
                 ],
             ],
+            /**
+             * READ by SettingRepository::getConfigPeppol()['PaymentMeans']
+             * Consumed by PeppolHelper::buildPeppolPaymentMeansArray() and
+             *   StoreCoveHelper
+             */
             'PaymentMeans' => [
                 'PaymentMeansCode' => '30',
                 'PaymentID' => '432948234234234',

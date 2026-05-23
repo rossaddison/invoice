@@ -106,8 +106,11 @@ trait Guest
                             (string) $query_params['filterQuoteNumber'],
                                 (float) $query_params['filterQuoteAmountTotal']);
                     }
+                    $userInvLimit = $userinv->getListLimit();
                     $paginator = (new DataOffsetPaginator($quotes))
-                    ->withPageSize($this->sR->positiveListLimit())
+                    ->withPageSize($userInvLimit !== null && $userInvLimit > 0
+                        ? $userInvLimit
+                        : $this->sR->positiveListLimit())
                     ->withCurrentPage($currentPageNeverZero)
                     ->withSort($sort)
                     ->withToken(PageToken::next((string) $pageMixed));

@@ -11,15 +11,14 @@ use Yiisoft\Html\Html as H;
 */
 
 $row = ['class' => 'row'];
-$colMd6 = ['class' => 'col-xs-12 col-md-6'];
-$colMd8 = ['class' => 'col-xs-12 col-md-8 col-md-offset-2'];
-$panel = ['class' => 'panel panel-default'];
-$panelHead = ['class' => 'panel-heading'];
-$panelBody = ['class' => 'panel-body'];
-$formGroup = ['class' => 'form-group'];
-$checkbox = ['class' => 'checkbox'];
+$colMd6 = ['class' => 'col-12 col-md-6'];
+$colMd8 = ['class' => 'col-12 col-md-8 offset-md-2'];
+$panel = ['class' => 'card'];
+$panelHead = ['class' => 'card-header'];
+$panelBody = ['class' => 'card-body'];
+$formGroup = ['class' => 'mb-3'];
+$checkbox = ['class' => 'form-check'];
 
-echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', $row); //1
  echo H::openTag('div', $colMd8); //2
   echo H::openTag('div', $panel); //3
@@ -34,28 +33,29 @@ echo H::openTag('div', $row); //1
         $enableVat = 'settings[enable_vat_registration]';
         $body[$enableVat] =
         $s->getSetting('enable_vat_registration');
-        echo H::openTag('label');
-         echo H::openTag('input', [
+        echo H::openTag('input', [
           'type' => 'hidden',
           'name' => $enableVat,
           'value' => '0'
          ]);
          echo H::openTag('input', [
           'type' => 'checkbox',
+          'class' => 'form-check-input',
+          'id' => 'enable_vat_registration',
           'name' => $enableVat,
           'value' => '1',
           'checked' => ($body[$enableVat] == 1)
           ? 'checked' : null
          ]);
-         echo $translator->translate('enable.vat');
-        echo H::closeTag('label');
+         echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'enable_vat_registration']);
+          echo $translator->translate('enable.vat');
+         echo H::closeTag('label');
        echo H::closeTag('div'); //8
        echo H::openTag('div', $checkbox); //8
         $displayMsg = 'settings[display_vat_enabled_message]';
         $body[$displayMsg] =
         $s->getSetting('display_vat_enabled_message');
-        echo H::openTag('label');
-         echo H::openTag('input', [
+        echo H::openTag('input', [
           'type' => 'hidden',
           'name' => $displayMsg,
           'id' => 'dvem_hidden',
@@ -63,14 +63,16 @@ echo H::openTag('div', $row); //1
          ]);
          echo H::openTag('input', [
           'type' => 'checkbox',
+          'class' => 'form-check-input',
           'name' =>  $displayMsg,
           'id' => 'dvem_checkbox',
           'value' => '1',
           'checked' => ($body[$displayMsg] == 1)
           ? 'checked' : null
          ]);
-         echo $translator->translate('enable.vat.message');
-        echo H::closeTag('label');
+         echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'dvem_checkbox']);
+          echo $translator->translate('enable.vat.message');
+         echo H::closeTag('label');
         echo H::openTag('br');
         echo H::openTag('br');
         $vW = 'enable.vat.warning.line.';
