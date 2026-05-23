@@ -145,7 +145,7 @@ $columns = [
                 ->addAttributes([
                     'id'          => 'filter-amount-paid',
                     'class'       => NATIVE_RESET_INV_AMOUNT_FILTER,
-                    'aria-label'  => 'Filter by paid amount',
+                    'aria-label'  => 'Filter by paid text-end',
                     'title'       => $translator->translate('paid'),
                     'placeholder' => $translator->translate('paid'),
                 ]),
@@ -363,7 +363,7 @@ $columns = [
                 ->addAttributes([
                     'id'          => 'filter-amount-total',
                     'class'       => NATIVE_RESET_INV_AMOUNT_FILTER,
-                    'aria-label'  => 'Filter by total amount',
+                    'aria-label'  => 'Filter by total text-end',
                     'title'       => $translator->translate('total'),
                     'placeholder' => $translator->translate('total'),
                 ]),
@@ -386,7 +386,7 @@ $columns = [
                 ->addAttributes([
                     'id'          => 'filter-amount-balance',
                     'class'       => NATIVE_RESET_INV_AMOUNT_FILTER,
-                    'aria-label'  => 'Filter by balance amount',
+                    'aria-label'  => 'Filter by balance text-end',
                     'title'       => $translator->translate('balance'),
                     'placeholder' => $translator->translate('balance'),
                 ]),
@@ -468,7 +468,7 @@ echo GridView::widget()
 $invScript = <<<JS
 // Initialize Angular Amount Magnifier when page loads
 document.addEventListener('DOMContentLoaded', function() {
-    // Import and initialize the amount magnifier service
+    // Import and initialize the text-end magnifier service
     class InvoiceAmountMagnifier {
         constructor() {
             this.magnificationFactor = 1.4;
@@ -627,7 +627,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Initialize the amount magnifier
+    // Initialize the text-end magnifier
     new InvoiceAmountMagnifier();
     
     // Group collapsible functionality

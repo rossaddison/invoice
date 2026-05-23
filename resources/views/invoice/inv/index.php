@@ -190,7 +190,7 @@ echo $modal_copy_inv_multiple;
 $magnifierScript = <<<JS
 // Initialize Angular Amount Magnifier when page loads
 document.addEventListener('DOMContentLoaded', function() {
-    // Import and initialize the amount magnifier service
+    // Import and initialize the text-end magnifier service
     class InvoiceAmountMagnifier {
         constructor() {
             this.magnificationFactor = 1.4;
@@ -417,7 +417,7 @@ $magnifierStyle = <<<CSS
         padding: 0;
         border: none;
     }
-    /* Lay out the three amount cells as a flex row */
+    /* Lay out the three text-end cells as a flex row */
     tfoot tr {
         display: flex;
         flex-wrap: wrap;
@@ -443,7 +443,7 @@ $magnifierStyle = <<<CSS
 
 /* ── Amount text input filter ── */
 .inv-amount-filter {
-    border-left: 4px solid #20c997; /* teal – amount */
+    border-left: 4px solid #20c997; /* teal – text-end */
     border-radius: 4px;
     padding: 4px 8px;
     font-size: 1rem;

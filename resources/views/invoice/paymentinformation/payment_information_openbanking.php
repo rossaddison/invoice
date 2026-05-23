@@ -75,7 +75,7 @@ echo H::openTag('div', ['class' => 'container py-4']);
     echo H::openTag('div', ['class' => 'col-md-6']);
      echo H::openTag('p', ['class' => 'fs-4 mb-0']);
       echo H::openTag('strong');
-       echo H::encode($translator->translate('amount.payment'));
+       echo H::encode($translator->translate('text-end.payment'));
       echo H::closeTag('strong');
       echo ': ';
       echo H::openTag('span',

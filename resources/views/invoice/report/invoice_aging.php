@@ -31,10 +31,10 @@ $this->beginPage();
 <table>
     <tr>
         <th><?= H::encode($translator->translate('client')); ?></th>
-        <th class="amount"><?= H::encode($translator->translate('aging.1.15')); ?></th>
-        <th class="amount"><?= H::encode($translator->translate('aging.16.30')); ?></th>
-        <th class="amount"><?= H::encode($translator->translate('aging.above.30')); ?></th>
-        <th class="amount"><?= H::encode($translator->translate('total')); ?></th>
+        <th class="text-end"><?= H::encode($translator->translate('aging.1.15')); ?></th>
+        <th class="text-end"><?= H::encode($translator->translate('aging.16.30')); ?></th>
+        <th class="text-end"><?= H::encode($translator->translate('aging.above.30')); ?></th>
+        <th class="text-end"><?= H::encode($translator->translate('total')); ?></th>
     </tr>
     <?php
         /**

@@ -8,7 +8,7 @@ declare(strict_types=1);
  * @var string $quote_allowance_charges
  */
 ?>
-<div class="card no-margin">
+<div class="card m-0">
     <div class="card-header"><?= $title;?></div>
     <div class="card-body clearfix">
         <div class="container">

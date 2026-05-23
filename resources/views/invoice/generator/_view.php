@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
@@ -20,6 +19,11 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  * @psalm-var array<string,list<string>> $errors
  */
+
+$colCard  = 'col card mb-3';
+$colMb3   = 'col mb-3';
+$chkLabel = ['class' => 'form-check-label'];
+$chkInput = 'form-check-input';
 
 ?>
 
@@ -43,85 +47,85 @@ use Yiisoft\Html\Tag\Form;
 <?= $button::back() ?>
 <?= Html::openTag('div', ['class' => 'container']); ?>
     <?= Html::openTag('div', ['class' => 'row']); ?>
-        <?= Html::openTag('div', ['class' => 'col card mb-3']); ?>
+        <?= Html::openTag('div', ['class' => $colCard]); ?>
             <?= Html::openTag('div', ['class' => 'card-header']); ?>
                     <?= Html::openTag('h5'); ?>
                         <?= $translator->translate('generator.table'); ?>
                     <?= Html::closeTag('h5'); ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
+            <?= Html::openTag('div', ['class' => $colMb3]); ?>
                 <?= Field::text($form, 'pre_entity_table'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'col card mb-3']); ?>
+        <?= Html::openTag('div', ['class' => $colCard]); ?>
             <?= Html::openTag('div', ['class' => 'card-header']); ?>
                     <?= Html::openTag('h5'); ?>
                         <?= $translator->translate('generator.namespace'); ?>
                     <?= Html::closeTag('h5'); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 has-feedback']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'namespace_path'); ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'col card mb-3']); ?>
+        <?= Html::openTag('div', ['class' => $colCard]); ?>
             <?= Html::openTag('div', ['class' => 'card-header']); ?>
                 <?= Html::openTag('h5'); ?><?= $translator->translate('generator.controller.and.repository'); ?><?= Html::closeTag('h5'); ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
+            <?= Html::openTag('div', ['class' => $colMb3]); ?>
                 <?= Field::text($form, 'route_prefix'); ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
+            <?= Html::openTag('div', ['class' => $colMb3]); ?>
                 <?= Field::text($form, 'route_suffix'); ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
+            <?= Html::openTag('div', ['class' => $colMb3]); ?>
                 <?= Field::text($form, 'camelcase_capital_name'); ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
+            <?= Html::openTag('div', ['class' => $colMb3]); ?>
                 <?= Field::text($form, 'small_singular_name'); ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
+            <?= Html::openTag('div', ['class' => $colMb3]); ?>
                 <?= Field::text($form, 'small_plural_name'); ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
+            <?= Html::openTag('div', ['class' => $colMb3]); ?>
                 <?= Field::checkbox($form, 'flash_include')
-                    ->inputLabelAttributes(['class' => 'form-check-label'])
-                    ->inputClass('form-check-input')
+                    ->inputLabelAttributes($chkLabel)
+                    ->inputClass($chkInput)
                     ->ariaDescribedBy($translator->translate('generator.flash.include')); ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
+            <?= Html::openTag('div', ['class' => $colMb3]); ?>
                 <?= Field::checkbox($form, 'created_include')
-                    ->inputLabelAttributes(['class' => 'form-check-label'])
-                    ->inputClass('form-check-input')
+                    ->inputLabelAttributes($chkLabel)
+                    ->inputClass($chkInput)
                     ->ariaDescribedBy($translator->translate('generator.created.include')); ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
+            <?= Html::openTag('div', ['class' => $colMb3]); ?>
                 <?= Field::checkbox($form, 'modified_include')
-                    ->inputLabelAttributes(['class' => 'form-check-label'])
-                    ->inputClass('form-check-input')
+                    ->inputLabelAttributes($chkLabel)
+                    ->inputClass($chkInput)
                     ->ariaDescribedBy($translator->translate('generator.modified.include')); ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
+            <?= Html::openTag('div', ['class' => $colMb3]); ?>
                 <?= Field::checkbox($form, 'updated_include')
-                    ->inputLabelAttributes(['class' => 'form-check-label'])
-                    ->inputClass('form-check-input')
+                    ->inputLabelAttributes($chkLabel)
+                    ->inputClass($chkInput)
                     ->ariaDescribedBy($translator->translate('generator.updated.include')); ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
+            <?= Html::openTag('div', ['class' => $colMb3]); ?>
                 <?= Field::checkbox($form, 'deleted_include')
-                    ->inputLabelAttributes(['class' => 'form-check-label'])
-                    ->inputClass('form-check-input')
+                    ->inputLabelAttributes($chkLabel)
+                    ->inputClass($chkInput)
                     ->ariaDescribedBy($translator->translate('generator.deleted.include')); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'col card mb-3']); ?>
+        <?= Html::openTag('div', ['class' => $colCard]); ?>
             <?= Html::openTag('div', ['class' => 'card-header']); ?>
                 <?= Html::openTag('h5'); ?><?= $translator->translate('generator.controller.path.layout'); ?><?= Html::closeTag('h5'); ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
+            <?= Html::openTag('div', ['class' => $colMb3]); ?>
                 <?= Field::text($form, 'controller_layout_dir'); ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
+            <?= Html::openTag('div', ['class' => $colMb3]); ?>
                 <?= Field::text($form, 'controller_layout_dir_dot_path'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>

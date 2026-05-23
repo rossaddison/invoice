@@ -104,13 +104,13 @@ if ($disable_form === false) {
          echo $partial_client_address;
          echo H::tag('br');
          echo H::openTag('div', ['class' => 'table-responsive']);
-          echo H::openTag('table', ['class' => 'table table-bordered table-condensed no-margin']);
+          echo H::openTag('table', ['class' => 'table table-bordered table-condensed m-0']);
            echo H::openTag('tbody');
             echo H::openTag('tr');
              echo H::openTag('td');
               echo $translator->translate('date');
              echo H::closeTag('td');
-             echo H::openTag('td', ['class' => 'text-right']);
+             echo H::openTag('td', ['class' => 'text-end']);
               echo H::encode($invoice->getDateCreated()->format('Y-m-d'));
              echo H::closeTag('td');
             echo H::closeTag('tr');
@@ -118,7 +118,7 @@ if ($disable_form === false) {
              echo H::openTag('td');
               echo $translator->translate('due.date');
              echo H::closeTag('td');
-             echo H::openTag('td', ['class' => 'text-right']);
+             echo H::openTag('td', ['class' => 'text-end']);
               echo H::encode($invoice->getDateDue()->format('Y-m-d'));
              echo H::closeTag('td');
             echo H::closeTag('tr');
@@ -126,7 +126,7 @@ if ($disable_form === false) {
              echo H::openTag('td');
               echo $translator->translate('total');
              echo H::closeTag('td');
-             echo H::openTag('td', ['class' => 'text-right']);
+             echo H::openTag('td', ['class' => 'text-end']);
               echo H::encode($numberHelper->formatCurrency($total));
              echo H::closeTag('td');
             echo H::closeTag('tr');
@@ -134,7 +134,7 @@ if ($disable_form === false) {
              echo H::openTag('td');
               echo $translator->translate('balance');
              echo H::closeTag('td');
-             echo H::openTag('td', ['class' => 'text-right']);
+             echo H::openTag('td', ['class' => 'text-end']);
               echo H::encode($numberHelper->formatCurrency($balance));
              echo H::closeTag('td');
             echo H::closeTag('tr');
@@ -142,7 +142,7 @@ if ($disable_form === false) {
              echo H::openTag('td');
               echo $translator->translate('payment.method') . ': ';
              echo H::closeTag('td');
-             echo H::openTag('td', ['class' => 'text-right']);
+             echo H::openTag('td', ['class' => 'text-end']);
               echo 'Card / Direct Debit - Customer Ready for Payment';
              echo H::closeTag('td');
             echo H::closeTag('tr');

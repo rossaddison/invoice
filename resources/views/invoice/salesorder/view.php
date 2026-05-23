@@ -43,8 +43,11 @@ use App\Invoice\Helpers\CountryHelper;
  */
 
 $this->setTitle($translator->translate('salesorder'));
-$col = 'col-12 col-md-6';
-$vat           = $s->getSetting('enable_vat_registration');
+$col          = 'col-12 col-md-6';
+$vat          = $s->getSetting('enable_vat_registration');
+$fc           = 'form-control form-control-lg';
+$dropdownItem = 'dropdown-item';
+$row          = 'row';
 $clienthelper  = new ClientHelper($s);
 $countryhelper = new CountryHelper();
 
@@ -85,7 +88,7 @@ echo H::openTag('div', ['class' => 'card']); //0
       echo H::openTag('li'); //5
        echo H::openTag('a', [
         'href' => $urlGenerator->generate('salesorder/edit', ['id' => $so->reqId()]),
-        'class' => 'dropdown-item',
+        'class' => $dropdownItem,
        ]); //6
         echo H::openTag('i', ['class' => 'bi bi-pencil-square']); //7
         echo H::closeTag('i'); //7
@@ -97,7 +100,7 @@ echo H::openTag('div', ['class' => 'card']); //0
       echo H::openTag('a', [
        'href' => $urlGenerator->generate('salesorder/pdf', ['include' => 1]),
        'target' => '_blank',
-       'class' => 'dropdown-item',
+       'class' => $dropdownItem,
       ]); //6
        echo H::openTag('i', ['class' => 'bi bi-file-pdf']); //7
        echo H::closeTag('i'); //7
@@ -111,7 +114,7 @@ echo H::openTag('div', ['class' => 'card']); //0
       echo H::openTag('a', [
        'href' => $urlGenerator->generate('salesorder/pdf', ['include' => 0]),
        'target' => '_blank',
-       'class' => 'dropdown-item',
+       'class' => $dropdownItem,
       ]); //6
        echo H::openTag('i', ['class' => 'bi bi-file-pdf']); //7
        echo H::closeTag('i'); //7
@@ -128,7 +131,7 @@ echo H::openTag('div', ['class' => 'card']); //0
         echo H::openTag('a', [
          'href' => '#so-to-invoice',
          'data-bs-toggle' => 'modal',
-         'class' => 'dropdown-item',
+         'class' => $dropdownItem,
         ]); //6
          echo H::openTag('i', ['class' => 'bi bi-arrow-clockwise']); //7
          echo H::closeTag('i'); //7
@@ -146,7 +149,7 @@ echo H::openTag('div', ['class' => 'card']); //0
   echo $alert;
   echo H::openTag('div', ['id' => 'salesorder_form']); //2
    echo H::openTag('div', ['class' => 'salesorder']); //3
-    echo H::openTag('div', ['class' => 'row']); //4
+    echo H::openTag('div', ['class' => $row]); //4
      echo H::openTag('div', ['class' => 'col-12 col-sm-6 col-md-5']); //5
       echo H::openTag('h3'); //6
        echo H::openTag('a', ['href' => $urlGenerator->generate('client/view',
@@ -219,7 +222,7 @@ echo H::openTag('div', ['class' => 'card']); //0
 
      echo H::openTag('div', ['class' => 'col-12 col-sm-6 col-md-7']); //5
       echo H::openTag('div', ['class' => 'details-box']); //6
-       echo H::openTag('div', ['class' => 'row']); //7
+       echo H::openTag('div', ['class' => $row]); //7
         echo H::openTag('div', ['class' => $col]); //8
          echo H::openTag('div'); //9
           echo H::openTag('label', ['for' => 'salesorder_number']); //10
@@ -228,7 +231,7 @@ echo H::openTag('div', ['class' => 'card']); //0
           echo H::tag('input', '', [
            'type' => 'text',
            'id' => 'salesorder_number',
-           'class' => 'form-control form-control-lg',
+           'class' => $fc,
            'readonly' => true,
            'value' => null !== $so->getNumber() ? $so->getNumber() : null,
            'placeholder' => null === $so->getNumber() ? $translator->translate('not.set') : null,
@@ -245,7 +248,7 @@ echo H::openTag('div', ['class' => 'card']); //0
             'name' => 'salesorder_date_created',
             'id' => 'salesorder_date_created',
             'disabled' => true,
-            'class' => 'form-control form-control-lg',
+            'class' => $fc,
             'value' => H::encode(
              $so->getDateCreated() instanceof \DateTimeImmutable
               ? $so->getDateCreated()->format('Y-m-d')
@@ -308,7 +311,7 @@ echo H::openTag('div', ['class' => 'card']); //0
            'name' => 'status_id',
            'id' => 'status_id',
            'disabled' => true,
-           'class' => 'form-control form-control-lg',
+           'class' => $fc,
           ]); //10
            /**
             * @var string $key
@@ -330,7 +333,7 @@ echo H::openTag('div', ['class' => 'card']); //0
           echo H::tag('input', '', [
            'type' => 'text',
            'id' => 'salesorder_password',
-           'class' => 'form-control form-control-lg',
+           'class' => $fc,
            'disabled' => true,
            'value' => H::encode($so->getPassword() ?? ''),
            'hidden' => true,
@@ -343,7 +346,7 @@ echo H::openTag('div', ['class' => 'card']); //0
           echo H::tag('input', '', [
            'type' => 'text',
            'id' => 'salesorder_client_purchase_order_number',
-           'class' => 'form-control form-control-lg',
+           'class' => $fc,
            'disabled' => true,
            'value' => H::encode($so->getClientPoNumber() ?? ''),
           ]);
@@ -355,7 +358,7 @@ echo H::openTag('div', ['class' => 'card']); //0
           echo H::tag('input', '', [
            'type' => 'text',
            'id' => 'salesorder_client_purchase_order_person',
-           'class' => 'form-control form-control-lg',
+           'class' => $fc,
            'disabled' => true,
            'value' => H::encode($so->getClientPoPerson() ?? ''),
           ]);
@@ -379,7 +382,7 @@ echo H::openTag('div', ['class' => 'card']); //0
           'id' => 'dropzone_client_id',
           'readonly' => true,
           'hidden' => true,
-          'class' => 'form-control form-control-lg',
+          'class' => $fc,
           'value' => $so->getClient()?->reqId(),
          ]);
         echo H::closeTag('div'); //8
@@ -394,9 +397,9 @@ echo H::openTag('div', ['class' => 'card']); //0
    echo $partial_item_table;
   echo H::closeTag('div'); //2
 
-  echo H::openTag('div', ['class' => 'row']); //2
+  echo H::openTag('div', ['class' => $row]); //2
    echo H::openTag('div', ['class' => $col]); //3
-    echo H::openTag('div', ['class' => 'card no-margin']); //4
+    echo H::openTag('div', ['class' => 'card m-0']); //4
      echo H::openTag('div', ['class' => 'card-header']); //5
       echo $translator->translate('notes');
      echo H::closeTag('div'); //5

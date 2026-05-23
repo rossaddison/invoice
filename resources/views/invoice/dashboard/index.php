@@ -48,7 +48,7 @@ use Yiisoft\Html\Html;
                 <div class="card-header">
                     <b><?= $translator->translate('quick.actions'); ?></b>
                 </div>
-                <div class="btn-group btn-group-justified no-margin">
+                <div class="btn-group btn-group-justified m-0">
                     <?php
                         echo $modal_create_client;
 ?>
@@ -137,7 +137,7 @@ use Yiisoft\Html\Html;
                     </span>
                 </div>
                 <table class="table table-hover table-bordered
-                       table-condensed no-margin">
+                       table-condensed m-0">
                     <thead>
                         <tr>
                             <th style="min-width: 1%;">
@@ -162,7 +162,7 @@ use Yiisoft\Html\Html;
                                     <?php echo (string) $total['label']; ?>
                                 </a>
                             </td>
-                            <td class="amount">
+                            <td class="text-end">
                             <span class="<?= (string) $total['class']; ?>">
                                 <?= $s->formatCurrency($total['sum_total']); ?>
                             </span>
@@ -192,7 +192,7 @@ use Yiisoft\Html\Html;
                 </div>
 
                 <table class="table table-hover table-bordered
-                       table-condensed no-margin">
+                       table-condensed m-0">
                     <thead>
                         <tr>
                             <th style="min-width: 1%;">
@@ -217,7 +217,7 @@ use Yiisoft\Html\Html;
                                     <?= (string) $total['label']; ?>
                                 </a>
                             </td>
-                            <td class="amount">
+                            <td class="text-end">
                                 <span class="<?= (string) $total['class']; ?>">
                                     <?= $s->formatCurrency($total['sum_total']); ?>
                                 </span>
@@ -241,7 +241,7 @@ use Yiisoft\Html\Html;
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover table-striped
-                           table-condensed no-margin">
+                           table-condensed m-0">
                         <thead>
                         <tr>
                             <th>
@@ -303,7 +303,7 @@ use Yiisoft\Html\Html;
             <?= Html::encode($clientHelper->formatClient($quote->getClient())); ?>
                                     </a>
                                 </td>
-                                <td class="amount">
+                                <td class="text-end">
 <?php $quote_amount = (($qaR->repoQuoteAmountCount($quote->reqId()) > 0) ?
         $qaR->repoQuotequery($quote->reqId()) : null) ?>
 <?= $s->formatCurrency(null !== $quote_amount ? $quote_amount->getTotal() : 0.00) ?>
@@ -353,7 +353,7 @@ use Yiisoft\Html\Html;
 
                 <div class="table-responsive">
                     <table class="table table-hover table-striped
-                           table-condensed no-margin">
+                           table-condensed m-0">
                         <thead>
                         <tr>
                             <th>
@@ -428,7 +428,7 @@ use Yiisoft\Html\Html;
      <?= (Html::encode($clientHelper->formatClient($invoice->getClient()))); ?>
                                     </a>
                                 </td>
-                                <td class="amount">
+                                <td class="text-end">
     <?php $inv_amount = (($iaR->repoInvAmountCount($invoice->reqId()) > 0)
                         ? $iaR->repoInvquery($invoice->reqId()) : null) ?>
 <?= $s->formatCurrency(null !== $inv_amount ? $inv_amount->getBalance() : 0.00) ?>
@@ -478,7 +478,7 @@ use Yiisoft\Html\Html;
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover table-striped
-                               table-condensed no-margin">
+                               table-condensed m-0">
                             <thead>
                             <tr>
                                 <th>
@@ -515,7 +515,7 @@ use Yiisoft\Html\Html;
                             <?php } ?>
                                 <tr>
                                     <td colspan="6"
-                                        class="text-right small">
+                                        class="text-end small">
                                         <a href="<?= $urlGenerator->generate(
                                                 'project/index'); ?>">
                                       <?= $translator->translate('view.all'); ?>
@@ -540,7 +540,7 @@ use Yiisoft\Html\Html;
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover table-striped
-                               table-condensed no-margin">
+                               table-condensed m-0">
                             <thead>
                             <tr>
                                 <th>
@@ -597,7 +597,7 @@ use Yiisoft\Html\Html;
                             <?php } ?>
                                     <tr>
                                     <td colspan="6"
-                                        class="text-right small">
+                                        class="text-end small">
                                         <a href="<?= $urlGenerator->generate(
                                                 'task/index'); ?>">
                         <?= Html::encode($translator->translate('view.all')); ?>

@@ -35,11 +35,11 @@ use Yiisoft\Html\Tag\A;
  */
 
 $vat = $s->getSetting('enable_vat_registration');
-$formControlAmount = 'form-control amount';
+$formControlAmount = 'form-control text-end';
 echo H::openTag('div', ['class' => 'table-responsive']);
  echo H::openTag('table', [
      'id' => 'item_table',
-     'class' => 'items table table-bordered no-margin'
+     'class' => 'items table table-bordered m-0'
  ]);
   echo H::openTag('thead');
    echo H::openTag('tr');
@@ -608,7 +608,7 @@ foreach ($invItems as $item) {
        echo H::closeTag('br');
        echo H::openTag('span', [
            'name' => 'subtotal',
-           'class' => 'amount',
+           'class' => 'text-end',
            'data-bs-toggle' => 'tooltip',
            'title' =>
 'inv_item_amount->subtotal using InvItemController/edit_product->saveInvItemAmount'
@@ -631,7 +631,7 @@ foreach ($invItems as $item) {
        echo H::closeTag('br');
        echo H::openTag('span', [
            'name' => 'item_discount_total',
-           'class' => 'amount',
+           'class' => 'text-end',
            'data-bs-toggle' => 'tooltip',
            'title' => 'inv_item_amount->discount'
        ]);
@@ -654,7 +654,7 @@ foreach ($invItems as $item) {
        echo H::closeTag('br');
        echo H::openTag('span', [
            'name' => 'item_tax_total',
-           'class' => 'amount',
+           'class' => 'text-end',
            'data-bs-toggle' => 'tooltip',
            'title' => 'inv_item_amount->tax_total'
        ]);
@@ -676,7 +676,7 @@ foreach ($invItems as $item) {
        echo H::closeTag('br');
        echo H::openTag('span', [
            'name' => 'item_total',
-           'class' => 'amount',
+           'class' => 'text-end',
            'data-bs-toggle' => 'tooltip',
            'title' => 'inv_item_amount->total'
        ]);
@@ -713,7 +713,7 @@ foreach ($invItems as $item) {
    echo H::openTag('div', [
        'class' => 'col-12 col-md-6 offset-md-2 col-lg-4 offset-lg-4'
    ]);
-    echo H::openTag('table', ['class' => 'table table-bordered text-right']);
+    echo H::openTag('table', ['class' => 'table table-bordered text-end']);
      echo H::openTag('thead');
       echo H::openTag('tr', ['hidden' => true]);
        echo H::openTag('th');
@@ -741,7 +741,7 @@ foreach ($invItems as $item) {
        echo H::closeTag('td');
        echo H::openTag('td', [
            'style' => 'width: 60%;background-color: lightblue',
-           'class' => 'amount',
+           'class' => 'text-end',
            'id' => 'amount_subtotal',
            'data-bs-toggle' => 'tooltip',
            'title' => 'inv_amount->item_subtotal=inv_item(s)->
@@ -760,7 +760,7 @@ foreach ($invItems as $item) {
         echo H::closeTag('span');
        echo H::closeTag('td');
        echo H::openTag('td', [
-           'class' => 'amount',
+           'class' => 'text-end',
            'style' => 'background-color: lightpink',
            'data-bs-toggle' => 'tooltip',
            'id' => 'amount_item_tax_total',
@@ -776,7 +776,7 @@ foreach ($invItems as $item) {
         echo H::closeTag('b');
        echo H::closeTag('td');
        echo H::openTag('td', [
-           'class' => 'amount',
+           'class' => 'text-end',
            'id' => 'amount_inv_allowance_charge_total',
            'data-bs-toggle' => 'tooltip',
            'title' => 'inv_amount->packhandleship_total'
@@ -801,7 +801,7 @@ foreach ($invItems as $item) {
         echo H::closeTag('b');
        echo H::closeTag('td');
        echo H::openTag('td', [
-           'class' => 'amount',
+           'class' => 'text-end',
            'id' => 'amount_inv_allowance_charge_tax',
            'data-bs-toggle' => 'tooltip',
            'title' => 'inv_amount->packhandleship_tax'
@@ -886,7 +886,7 @@ foreach ($invItems as $item) {
                       }
                      echo H::closeTag('span');
                      echo H::openTag('span', [
-                         'class' => 'amount',
+                         'class' => 'text-end',
                          'data-bs-toggle' => 'tooltip',
                          'title' => 'inv_tax_rate->inv_tax_rate_amount'
                      ]);
@@ -925,7 +925,7 @@ foreach ($invItems as $item) {
         echo H::closeTag('b');
        echo H::closeTag('td');
        echo H::openTag('td', [
-           'class' => 'amount',
+           'class' => 'text-end',
            'style' => 'background-color:lightyellow',
            'id' => 'amount_inv_total',
            'data-bs-toggle' => 'tooltip',

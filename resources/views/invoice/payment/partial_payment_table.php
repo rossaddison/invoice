@@ -86,7 +86,7 @@ echo H::openTag('div', ['class' => 'table-responsive']);
                       $payment->getInv()?->getClient()));
              echo H::closeTag('a');
             echo H::closeTag('td');
-            echo H::openTag('td', ['class' => 'amount']);
+            echo H::openTag('td', ['class' => 'text-end']);
              echo $s->formatCurrency($payment->getAmount() ?? 0.00);
             echo H::closeTag('td');
             echo H::openTag('td');

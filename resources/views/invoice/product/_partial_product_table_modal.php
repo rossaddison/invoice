@@ -28,7 +28,7 @@ echo H::openTag('div', ['class' => 'table-responsive']); //1
    echo H::openTag('th'); //4
     echo H::encode($translator->translate('product.description'));
    echo H::closeTag('th'); //4
-   echo H::openTag('th', ['class' => 'text-right']); //4
+   echo H::openTag('th', ['class' => 'text-end']); //4
     echo H::encode($translator->translate('product.price') . '> 0.00');
    echo H::closeTag('th'); //4
   echo H::closeTag('tr'); //3
@@ -37,14 +37,14 @@ echo H::openTag('div', ['class' => 'table-responsive']); //1
    */
   foreach ($products as $product) {
    echo H::openTag('tr', ['class' => 'product']); //3
-    echo H::openTag('td', ['class' => 'text-left']); //4
+    echo H::openTag('td', ['class' => 'text-start']); //4
      echo H::openTag('input', [
          'type' => 'checkbox',
          'name' => 'product_ids[]',
          'value' => $product->reqId()
      ]);
     echo H::closeTag('td'); //4
-    echo H::openTag('td', ['nowrap' => true, 'class' => 'text-left']); //4
+    echo H::openTag('td', ['nowrap' => true, 'class' => 'text-start']); //4
      echo H::openTag('b'); //5
       echo H::encode($product->getProductSku());
      echo H::closeTag('b'); //5
@@ -62,7 +62,7 @@ echo H::openTag('div', ['class' => 'table-responsive']); //1
     echo H::openTag('td'); //4
      echo nl2br(H::encode($product->getProductDescription()));
     echo H::closeTag('td'); //4
-    echo H::openTag('td', ['class' => 'text-right']); //4
+    echo H::openTag('td', ['class' => 'text-end']); //4
      echo $numberHelper->formatCurrency($product->getProductPrice());
     echo H::closeTag('td'); //4
    echo H::closeTag('tr'); //3

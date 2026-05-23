@@ -38,7 +38,7 @@ $this->beginPage();
         <th><?= $translator->translate('client'); ?></th>
         <th><?= $translator->translate('payment.method'); ?></th>
         <th><?= $translator->translate('note'); ?></th>
-        <th class="amount"><?= $translator->translate('amount'); ?></th>
+        <th class="text-end"><?= $translator->translate('amount'); ?></th>
     </tr>
     <?php
     $sum = 0.00;

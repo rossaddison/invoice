@@ -41,7 +41,7 @@ use Yiisoft\Html\Tag\Form;
     ->onlyCommonErrors()
 ?>
 
-<?= Html::openTag('div', ['class' => 'tabbable tabs-below']); ?>
+<?= Html::openTag('div', ['class' => 'tabs-below']); ?>
 
     <?= Html::openTag('div', ['class' => 'tab-content']); ?>
 
@@ -84,7 +84,7 @@ use Yiisoft\Html\Tag\Form;
                 ->hint($translator->translate('hint.this.field.is.required')); ?>
             <?= Html::tag('br'); ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 no-margin']); ?>
+            <?= Html::openTag('div', ['class' => 'm-0']); ?>
                 <?= Html::openTag('label', ['for' => 'tags_client']);?>
                     <?= $translator->translate('identifier.format.template.tags'); ?>
                 <?= Html::closeTag('label'); ?>

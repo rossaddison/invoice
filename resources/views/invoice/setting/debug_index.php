@@ -151,7 +151,7 @@ $toolbarString =  new Form()->post($urlGenerator->generate('setting/debugIndex')
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
-->tableAttributes(['class' => 'table table-striped text-left h-75','id' => 'table-setting'])
+->tableAttributes(['class' => 'table table-striped text-start h-75','id' => 'table-setting'])
 /** @psalm-suppress InvalidArgument */
 ->columns(...$columns)
 ->dataReader($sortedAndPagedPaginator)

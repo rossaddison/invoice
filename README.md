@@ -31,6 +31,8 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 **Recent Implementations**
 
+[Lighthouse Performance Audit](docs/LIGHTHOUSE_CHROME.md) — How to run a Lighthouse audit from Chrome DevTools or the CLI against an authenticated page; performance score 68 → 95 via Apache compression modules, asset deduplication, CSS deferral, Amazon Pay JS conditionalisation, image resizing, and N+1 settings-query fix (May 2026)
+
 [Bootstrap 3 CSS Removal](docs/BOOTSTRAP3_CSS_REMOVAL.md) — incremental removal of InvoicePlane's legacy Bootstrap 3 styles from `style.css` (custom section reduced 32 %, 966 → 653 lines); 484 `form-group` → `mb-3`, 23 `dropdown-button` → `dropdown-item`, 12 `input-sm` → `form-control-sm` replacements across 120 view files; SonarCloud duplicate-selector warnings eliminated by excluding `src/Invoice/Asset/**`; `.table { font-size: 0.25rem }` bug fix (4 px invisible text); `body *:focus { outline: none !important }` removed (WCAG 2.1 accessibility) (May 2026)
 
 [Bootstrap 5 Table Mobile Stacking Fix](docs/BOOTSTRAP5_TABLE_MOBILE_STACKING.md) — `table, thead, tbody, th, td, tr { display: block }` ported back into `layout.css` at `@media (max-width: 767px)`; restores the vertical cell stacking that existed in the Bootstrap 3 era and was removed when BS3 CSS was stripped; `td[data-label]` scoping prevents 50 % padding gap on GridView cells that do not emit `data-label` attributes (May 2026)

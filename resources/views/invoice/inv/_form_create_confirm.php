@@ -143,7 +143,7 @@ use Yiisoft\Html\Tag\Form;
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::hidden($form, 'discount_amount')
     ->hideLabel(true)
-    ->label($translator->translate('discount.amount'))
+    ->label($translator->translate('discount.text-end'))
     ->addInputAttributes(['class' => 'form-control form-control-lg',])
     ->value(Html::encode($s->formatAmount(($form->getDiscountAmount() ?? 0.00))))
 ?>

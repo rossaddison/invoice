@@ -14,4 +14,9 @@ final class AppCdnAsset extends AssetBundle
     public array $css = [
         '//cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css',
     ];
+
+    public array $cssOptions = [
+        'media' => 'print',
+        'onload' => "this.media='all'",
+    ];
 }

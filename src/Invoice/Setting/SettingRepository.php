@@ -509,6 +509,9 @@ final class SettingRepository extends Select\Repository
      */
     public function loadSettings(): void
     {
+        if ($this->settingsArray !== []) {
+            return;
+        }
         $all_settings = $this->findAllPreloaded();
         /** @var Setting $setting */
         foreach ($all_settings as $setting) {
@@ -524,14 +527,8 @@ final class SettingRepository extends Select\Repository
      */
     public function getSetting(string $key): string
     {
-        // Build settings array
         $this->loadSettings();
-        $setting = '';
-        /** @var string $this->settingsArray[$key] */
-        if (array_key_exists($key, $this->settingsArray)) {
-            $setting = $this->settingsArray[$key];
-        }
-        return $setting;
+        return (string) ($this->settingsArray[$key] ?? '');
     }
 
     /**

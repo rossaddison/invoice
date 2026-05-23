@@ -14,6 +14,11 @@ class StripeVersionTenAsset extends Asset
         'stripe/css/checkout.css',
     ];
 
+    public array $cssOptions = [
+        'media' => 'print',
+        'onload' => "this.media='all'",
+    ];
+
     /** @psalm-suppress NonInvariantDocblockPropertyType */
     public array $js = [
         // stripe v10 2025-06-30.basil

@@ -64,7 +64,7 @@ foreach ($allowance_charges as $allowance_charge) {
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
         <?= Field::text($form, 'amount')
-    ->label($translator->translate('amount.inv.item')
+    ->label($translator->translate('text-end.inv.item')
             . '(' . $s->getSetting('currency_symbol') . ')')
     ->addInputAttributes(['class' => 'form-control form-control-lg',])
     ->value($s->formatAmount($form->getAmount() ?? 0.00))

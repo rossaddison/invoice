@@ -64,7 +64,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::input('text', $dhr,
          $formatted_rate, [
          'id' => 'settings[default_hourly_rate]',
-         'class' => 'form-control amount'
+         'class' => 'form-control text-end'
         ]);
         echo H::tag('small', $s->getSetting('currency_symbol'), ['class' => 'text-muted ms-1']);
         echo H::input('hidden',

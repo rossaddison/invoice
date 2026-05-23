@@ -58,7 +58,7 @@ use Yiisoft\Html\Tag\I;
     <?= Html::closeTag('li'); ?>
 <?= Html::closeTag('ul'); ?>
 
-<?= Html::openTag('div', ['class' => 'tabbable tabs-below']); ?>
+<?= Html::openTag('div', ['class' => 'tabs-below']); ?>
     <?= Html::openTag('div', ['class' => 'tab-content']); ?>
         <?= Html::openTag('div', ['id' => 'add-product-tab', 'class' => 'tab-pane active show']); ?>
             <?= Html::openTag('div', ['class' => 'card-header']); ?>

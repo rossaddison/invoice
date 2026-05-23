@@ -61,7 +61,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
             <?= Html::openTag('table',
                     ['id' => 'item_table',
                      'class' =>
-                     'items table-primary table table-bordered no-margin']); ?>
+                     'items table-primary table table-bordered m-0']); ?>
                 <?= Html::openTag('tbody', ['id' => 'new_inv_item_row']); ?>
                     <?= Html::openTag('tr'); ?>
                         <?= Html::openTag('td',
@@ -189,7 +189,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' =>
-                                    'td-icon text-right td-vert-middle']); ?>
+                                    'td-icon text-end td-vert-middle']); ?>
                             <!-- see line 896 InvController: id
                                 modal-choose-items lies on
                                 views/product/modal_product_lookups_inv.php-->
@@ -274,7 +274,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                 ['class' => 'td-amount td-vert-middle']); ?>
                                 <?= Html::tag('br'); ?>
                             <?= Html::openTag('span',
-                                ['name' => 'subtotal', 'class' => 'amount']); ?>
+                                ['name' => 'subtotal', 'class' => 'text-end']); ?>
                             <?= Html::closeTag('span'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td',
@@ -282,7 +282,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                 <?= Html::tag('br'); ?>
                             <?= Html::openTag('span',
                                 ['name' => 'discount_total',
-                                    'class' => 'amount']); ?>
+                                    'class' => 'text-end']); ?>
                             <?= Html::closeTag('span'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td',

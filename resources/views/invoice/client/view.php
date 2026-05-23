@@ -59,8 +59,8 @@ $cssStyleNoDecoration = 'text-decoration:none';
 $cssCardHeader = 'card-header';
 $cssColMd6 = 'col-12 col-md-6';
 $cssCardBodyTableContent = 'card-body table-content';
-$cssCardNoMargin = 'card no-margin';
-$cssTableNoMargin = 'table no-margin';
+$cssCardNoMargin = 'card m-0';
+$cssTableNoMargin = 'table m-0';
 $cssBtnSuccess = 'btn btn-outline-success';
 $cssTdAmount = 'td-amount';
 $cssBiPlus = 'bi bi-plus';
@@ -208,7 +208,7 @@ echo H::openTag('div', ['id' => 'content', 'class' => 'tabs-below p-0']); //0
       echo $partial_client_address;
      echo H::closeTag('p'); //5
      echo H::openTag('p'); //5
-      echo H::openTag('table', ['class' => 'table table-bordered no-margin']); //6
+      echo H::openTag('table', ['class' => 'table table-bordered m-0']); //6
        $i = 1;
        /**
         * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
@@ -229,7 +229,7 @@ echo H::openTag('div', ['id' => 'content', 'class' => 'tabs-below p-0']); //0
      echo H::closeTag('p'); //5
     echo H::closeTag('div'); //4
     echo H::openTag('div', ['class' => 'col-12 col-sm-6 col-md-6']); //4
-     echo H::openTag('table', ['class' => 'table table-bordered no-margin']); //5
+     echo H::openTag('table', ['class' => 'table table-bordered m-0']); //5
       echo H::openTag('tr'); //6
        echo H::tag('th', $translator->translate('language'), ['id' => 'language']);
        echo H::tag('td', ucfirst($client->getClientLanguage() ?? ''), ['class' => $cssTdAmount]);

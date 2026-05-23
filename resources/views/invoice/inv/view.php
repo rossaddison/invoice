@@ -64,9 +64,13 @@ use Yiisoft\Html\Tag\Option;
  * @var string $view_custom_fields
  */
 
-$vat = $s->getSetting('enable_vat_registration');
-$biBiPlus = 'bi bi-plus';
-$col = 'col-12 col-md-6';
+$vat          = $s->getSetting('enable_vat_registration');
+$biBiPlus     = 'bi bi-plus';
+$col          = 'col-12 col-md-6';
+$fc           = 'form-control form-control-lg';
+$invProp      = 'invoice-properties';
+$dropdownItem = 'dropdown-item';
+$biDash       = 'bi bi-dash-lg';
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 echo $modal_delete_inv;
 if ($vat === '0') {
@@ -179,7 +183,7 @@ if ($readOnly === false && $invEdit && $inv->reqStatusId() === 1) {
             ->render();
         echo H::closeTag('li');
     echo H::closeTag('ul');
-    echo H::openTag('div', ['class' => 'tabbable tabs-below']);
+    echo H::openTag('div', ['class' => 'tabs-below']);
      echo H::openTag('div', ['class' => 'tab-content']);
       echo H::openTag('div', ['id' => 'add-product-tab', 'class' => 'tab-pane']);
        echo H::openTag('div', ['class' => 'card-header']);
@@ -255,7 +259,7 @@ if ($showButtons
     echo H::openTag('li');
      echo H::openTag('a', [
          'href' => $urlGenerator->generate('inv/edit', ['id' => $inv->reqId()]),
-         'class' => 'dropdown-item'
+         'class' => $dropdownItem
      ]);
       echo H::openTag('i', ['class' => 'bi bi-pencil-square']);
       echo H::closeTag('i');
@@ -268,7 +272,7 @@ if ($showButtons
          echo H::openTag('a', [
              'href' => '#add-inv-tax',
              'data-bs-toggle' => 'modal',
-             'class' => 'dropdown-item'
+             'class' => $dropdownItem
          ]);
           echo H::openTag('i', ['class' => $biBiPlus]);
           echo H::closeTag('i');
@@ -280,7 +284,7 @@ if ($showButtons
      echo H::openTag('a', [
          'href' => '#add-inv-allowance-charge',
          'data-bs-toggle' => 'modal',
-         'class' => 'dropdown-item'
+         'class' => $dropdownItem
      ]);
       echo H::openTag('i', ['class' => $biBiPlus]);
       echo H::closeTag('i');
@@ -293,7 +297,7 @@ if ($showButtons
     echo H::openTag('li');
      echo H::openTag('a', [
          'href' => $urlGenerator->generate('inv/peppol', ['id' => $inv->reqId()]),
-         'class' => 'dropdown-item'
+         'class' => $dropdownItem
      ]);
       echo H::openTag('i', ['class' => 'bi bi-window-stack']);
       echo H::closeTag('i');
@@ -304,7 +308,7 @@ if ($showButtons
      echo H::openTag('a', [
          'href' => $urlGenerator->generate('inv/peppolStreamToggle',
                  ['id' => $inv->reqId()]),
-         'class' => 'dropdown-item'
+         'class' => $dropdownItem
      ]);
       echo H::openTag('i', [
           'class' => 'bi ' . ($peppol_stream_toggle === '1' ?
@@ -320,7 +324,7 @@ if ($showButtons
      echo H::openTag('a', [
          'href' => $urlGenerator->generate('inv/peppolDocCurrencyToggle',
                  ['id' => $inv->reqId()]),
-         'class' => 'dropdown-item'
+         'class' => $dropdownItem
      ]);
       echo H::openTag('i', [
           'class' => 'bi ' . ($peppol_doc_currency_toggle === '1' ?
@@ -339,7 +343,7 @@ if ($showButtons
          'href' => 'https',
          'onclick' =>
  "window.open('https://ecosio.com/en/peppol-e-invoice-xml-document-validator/')",
-         'class' => 'dropdown-item'
+         'class' => $dropdownItem
      ]);
       echo H::openTag('i', [
           'class' => 'bi bi-check-lg',
@@ -352,7 +356,7 @@ if ($showButtons
     echo H::openTag('li');
      echo H::openTag('a', [
          'href' => $urlGenerator->generate('inv/storecove', ['id' => $inv->reqId()]),
-         'class' => 'dropdown-item',
+         'class' => $dropdownItem,
          'target' => '_blank'
      ]);
       echo H::openTag('i', ['class' => 'bi bi-eye']);
@@ -366,7 +370,7 @@ if ($inv->reqStatusId() !== 1) {
     echo H::openTag('li');
      echo H::openTag('a', [
          'href' => $urlGenerator->generate('inv/peppolSend', ['id' => $inv->reqId()]),
-         'class' => 'dropdown-item',
+         'class' => $dropdownItem,
      ]);
       echo H::openTag('i', ['class' => 'bi bi-send-fill']);
       echo H::closeTag('i');
@@ -380,7 +384,7 @@ if ($inv->reqStatusId() !== 1) {
             ['client_id' => $inv->reqClientId()],
                  ['origin' => 'inv',
                      'origin_id' => $inv->reqId(), 'action' => 'view'],''),
-         'class' => 'dropdown-item'
+         'class' => $dropdownItem
      ]);
       echo H::openTag('i', ['class' => $biBiPlus]);
       echo H::closeTag('i');
@@ -407,9 +411,9 @@ if ($inv->reqStatusId() !== 1) {
              'href' => '#create-credit-inv',
              'data-bs-toggle' => 'modal',
              'data-invoice-id' => $inv->reqId(),
-             'class' => 'dropdown-item'
+             'class' => $dropdownItem
          ]);
-          echo H::openTag('i', ['class' => 'bi bi-dash-lg']);
+          echo H::openTag('i', ['class' => $biDash]);
           echo H::closeTag('i');
           echo ' ' . H::encode($translator->translate('create.credit.invoice'));
          echo H::closeTag('a');
@@ -458,9 +462,9 @@ if ((in_array($inv->reqStatusId(), [2, 3])
                 'href' => $urlGenerator->generate('inv/urlKey',
                         ['url_key' => $inv->getUrlKey(),
                             'gateway' => $gateway]),
-                'class' => 'dropdown-item'
+                'class' => $dropdownItem
             ]);
-             echo H::openTag('i', ['class' => 'bi bi-dash-lg']);
+             echo H::openTag('i', ['class' => $biDash]);
              echo H::closeTag('i');
              echo $translator->translate('pay.now')
                 . '➡️'
@@ -479,9 +483,9 @@ if ((in_array($inv->reqStatusId(), [2, 3])
             echo H::openTag('a', [
                 'href' => '#modal-message-inv',
                 'data-bs-toggle' => 'modal',
-                'class' => 'dropdown-item'
+                'class' => $dropdownItem
             ]);
-             echo H::openTag('i', ['class' => 'bi bi-dash-lg']);
+             echo H::openTag('i', ['class' => $biDash]);
              echo H::closeTag('i');
              echo ' ' . H::encode($translator->translate('pay.now') . '-'
                      . ucfirst($gateway));
@@ -495,9 +499,9 @@ if ((in_array($inv->reqStatusId(), [1]))) {
         echo H::openTag('a', [
                 'href' => '#modal-message-inv',
                 'data-bs-toggle' => 'modal',
-                'class' => 'dropdown-item'
+                'class' => $dropdownItem
             ]);
-             echo H::openTag('i', ['class' => 'bi bi-dash-lg']);
+             echo H::openTag('i', ['class' => $biDash]);
              echo H::closeTag('i');
              echo ' ' . H::encode($translator->translate('pay.now') . '-'
                      . $translator->translate('invoice.needs.to.be.sent'));
@@ -509,7 +513,7 @@ echo H::openTag('li');
  echo H::openTag('a', [
      'href' => '#inv-to-pdf',
      'data-bs-toggle' => 'modal',
-     'class' => 'dropdown-item'
+     'class' => $dropdownItem
  ]);
   echo H::openTag('i', ['class' => 'bi bi-printer']);
   echo H::closeTag('i');
@@ -520,7 +524,7 @@ if ($s->getSetting('pdf_stream_inv') == '1') {
     echo H::openTag('a', [
         'href' => '#inv-to-modal-pdf',
         'data-bs-toggle' => 'modal',
-        'class' => 'dropdown-item'
+        'class' => $dropdownItem
     ]);
      echo H::openTag('i', ['class' => 'bi bi-display']);
      echo H::closeTag('i');
@@ -531,7 +535,7 @@ if ($s->getSetting('pdf_stream_inv') == '1') {
         'href' => $urlGenerator->generate('setting/tabIndex',
                 [],
                 ['active' => 'invoices'], 'settings[pdf_stream_inv]'),
-        'class' => 'dropdown-item'
+        'class' => $dropdownItem
     ]);
      echo H::openTag('i', ['class' => 'bi bi-display']);
      echo H::closeTag('i');
@@ -559,7 +563,7 @@ if ($invEdit) {
      echo H::openTag('a', [
          'href' => $urlGenerator->generate('invrecurring/add',
                  ['inv_id' => $inv->reqId()]),
-         'class' => 'dropdown-item'
+         'class' => $dropdownItem
      ]);
       echo H::openTag('i', ['class' => 'bi bi-arrow-clockwise']);
       echo H::closeTag('i');
@@ -572,7 +576,7 @@ if ($invEdit) {
      echo H::openTag('a', [
          'href' => $urlGenerator->generate('inv/emailStage0',
                  ['id' => $inv->reqId()]),
-         'class' => 'dropdown-item'
+         'class' => $dropdownItem
      ]);
       echo H::openTag('i', ['class' => 'bi bi-send']);
       echo H::closeTag('i');
@@ -585,7 +589,7 @@ if ($invEdit) {
          echo H::openTag('a', [
              'href' => $urlGenerator->generate('telegram/sendInvoice',
                      ['inv_id' => $inv->reqId()]),
-             'class' => 'dropdown-item'
+             'class' => $dropdownItem
          ]);
           echo H::openTag('i', ['class' => 'bi bi-telegram']);
           echo H::closeTag('i');
@@ -597,7 +601,7 @@ if ($invEdit) {
          echo H::openTag('a', [
              'href' => $urlGenerator->generate('telegram/invoiceLink',
                      ['inv_id' => $inv->reqId()]),
-             'class' => 'dropdown-item'
+             'class' => $dropdownItem
          ]);
           echo H::openTag('i', ['class' => 'bi bi-link-45deg']);
           echo H::closeTag('i');
@@ -609,7 +613,7 @@ if ($invEdit) {
          echo H::openTag('a', [
              'href' => $urlGenerator->generate('telegram/sendPdf',
                      ['inv_id' => $inv->reqId()]),
-             'class' => 'dropdown-item'
+             'class' => $dropdownItem
          ]);
           echo H::openTag('i', ['class' => 'bi bi-file-earmark-pdf']);
           echo H::closeTag('i');
@@ -622,7 +626,7 @@ if ($invEdit) {
      echo H::openTag('a', [
          'href' => '#inv-to-inv',
          'data-bs-toggle' => 'modal',
-         'class' => 'dropdown-item'
+         'class' => $dropdownItem
      ]);
       echo H::openTag('i', ['class' => 'bi bi-copy']);
       echo H::closeTag('i');
@@ -637,7 +641,7 @@ if ($invEdit) {
     echo H::openTag('a', [
         'href' => '#inv-to-html',
         'data-bs-toggle' => 'modal',
-        'class' => 'dropdown-item'
+        'class' => $dropdownItem
     ]);
      echo H::openTag('i', ['class' => 'bi bi-printer']);
      echo H::closeTag('i');
@@ -677,7 +681,7 @@ if ($inv->reqStatusId() === 1
      echo H::openTag('a', [
          'href' => '#delete-inv',
          'data-bs-toggle' => 'modal',
-         'class' => 'dropdown-item'
+         'class' => $dropdownItem
      ]);
       echo H::openTag('i', ['class' => 'bi bi-trash']);
       echo H::closeTag('i');
@@ -688,7 +692,7 @@ if ($inv->reqStatusId() === 1
      echo H::openTag('a', [
          'href' => '#delete-items',
          'data-bs-toggle' => 'modal',
-         'class' => 'dropdown-item'
+         'class' => $dropdownItem
      ]);
       echo H::openTag('i', ['class' => 'bi bi-trash']);
       echo H::closeTag('i');
@@ -796,7 +800,7 @@ if ($inv->reqStatusId() === 1
 
        echo H::openTag('div', ['class' => $col]);
 
-        echo H::openTag('div', ['class' => 'invoice-properties']);
+        echo H::openTag('div', ['class' => $invProp]);
          echo H::openTag('label', ['for' => 'inv_number']);
           echo H::openTag('b');
            echo $translator->translate('invoice') . ' #';
@@ -805,7 +809,7 @@ if ($inv->reqStatusId() === 1
          echo H::tag('input', '', [
              'type' => 'text',
              'id' => 'inv_number',
-             'class' => 'form-control form-control-lg',
+             'class' => $fc,
              'readonly' => true,
              'value' => (strlen($inv->getNumber() ?? '') > 0 ?
                 $inv->getNumber() : null),
@@ -823,12 +827,12 @@ if ($inv->reqStatusId() === 1
           echo H::tag('input', '', [
               'id' => 'date_created',
               'disabled' => true,
-              'class' => 'form-control form-control-lg',
+              'class' => $fc,
               'value' => $inv->getDateCreated()->format('Y-m-d')
           ]);
          echo H::closeTag('div');
         echo H::closeTag('div');
-        echo H::openTag('div', ['class' => 'invoice-properties has-feedback']);
+        echo H::openTag('div', ['class' => $invProp]);
          echo H::openTag('label', ['for' => 'date_supplied']);
           echo H::openTag('b');
            echo $translator->translate('date.supplied');
@@ -838,7 +842,7 @@ if ($inv->reqStatusId() === 1
           echo H::tag('input', '', [
               'id' => 'date_supplied',
               'disabled' => true,
-              'class' => 'form-control form-control-lg',
+              'class' => $fc,
               'value' => $inv->getDateSupplied()->format('Y-m-d')
           ]);
          echo H::closeTag('div');
@@ -854,7 +858,7 @@ if ($vat === '1') {
       echo H::tag('input', '', [
           'id' => 'date_tax_point',
           'disabled' => true,
-          'class' => 'form-control form-control-lg',
+          'class' => $fc,
           'value' => $inv->getDateTaxPoint()->format('Y-m-d')
       ]);
      echo H::closeTag('div');
@@ -871,7 +875,7 @@ if ($vat === '1') {
               'name' => 'inv_date_due',
               'id' => 'inv_date_due',
               'disabled' => true,
-              'class' => 'form-control form-control-lg',
+              'class' => $fc,
               'value' => !is_string($dateDue = $inv->getDateDue()) ?
               $dateDue->format('Y-m-d') : ''
           ]);
@@ -890,7 +894,7 @@ if ($vat === '1') {
         echo H::closeTag('div');
        echo H::closeTag('div');
        echo H::openTag('div', ['class' => $col]);
-        echo H::openTag('div', ['class' => 'invoice-properties']);
+        echo H::openTag('div', ['class' => $invProp]);
          echo H::openTag('label', ['for' => 'inv_status_id']);
           echo H::openTag('b');
            echo $translator->translate('status');
@@ -900,7 +904,7 @@ if ($vat === '1') {
              'name' => 'inv_status_id',
              'id' => 'inv_status_id',
              'disabled' => true,
-             'class' => 'form-control form-control-lg',
+             'class' => $fc,
          ]);
          /**
           * @var string $key
@@ -914,7 +918,7 @@ if ($vat === '1') {
          }
          echo H::closeTag('select');
         echo H::closeTag('div');
-        echo H::openTag('div', ['class' => 'invoice-properties']);
+        echo H::openTag('div', ['class' => $invProp]);
          echo H::openTag('label', ['for' => 'payment_method']);
           echo H::openTag('b');
            echo $translator->translate('payment.method');
@@ -924,7 +928,7 @@ if ($inv->getPaymentMethod() !== 0) {
     echo H::openTag('select', [
         'name' => 'payment_method',
         'id' => 'payment_method_1',
-        'class' => 'form-control form-control-lg',
+        'class' => $fc,
         'disabled' => 'disabled'
     ]);
      echo new Option()
@@ -944,7 +948,7 @@ if ($inv->getPaymentMethod() !== 0) {
     echo H::openTag('select', [
         'name' => 'payment_method_2',
         'id' => 'payment_method',
-        'class' => 'form-control form-control-lg',
+        'class' => $fc,
         'disabled' => true
     ]);
      echo new Option()
@@ -955,7 +959,7 @@ if ($inv->getPaymentMethod() !== 0) {
         echo H::closeTag('div');
 // Show originating quote button if invoice was created from a quote
 if (null !== $inv->getQuoteId()) {
-    echo H::openTag('div', ['class' => 'invoice-properties']);
+    echo H::openTag('div', ['class' => $invProp]);
      echo H::openTag('label', ['for' => 'quote-view-url']);
       echo H::openTag('b');
        echo $translator->translate('invoice.origin');
@@ -978,7 +982,7 @@ if (null !== $inv->getQuoteId()) {
     echo H::closeTag('div');
 }
 if (($inv->reqStatusId() !== 1) && ($invEdit)) {
-    echo H::openTag('div', ['class' => 'invoice-properties']);
+    echo H::openTag('div', ['class' => $invProp]);
      echo H::openTag('label', ['for' => 'inv_password']);
       echo H::openTag('b');
        echo H::encode($translator->translate('password'));
@@ -987,12 +991,12 @@ if (($inv->reqStatusId() !== 1) && ($invEdit)) {
      echo H::tag('input', '', [
          'type' => 'text',
          'id' => 'inv_password',
-         'class' => 'form-control form-control-lg',
+         'class' => $fc,
          'disabled' => true,
          'value' => H::encode($form->getPassword() ?? '')
      ]);
     echo H::closeTag('div');
-    echo H::openTag('div', ['class' => 'invoice-properties']);
+    echo H::openTag('div', ['class' => $invProp]);
      echo H::openTag('div', ['class' => 'mb-3']);
       echo H::openTag('label', ['for' => 'guest-url']);
        echo H::openTag('b');
@@ -1005,7 +1009,7 @@ if (($inv->reqStatusId() !== 1) && ($invEdit)) {
            'id' => 'guest-url',
            'name' => 'guest-url',
            'readonly' => true,
-           'class' => 'form-control form-control-lg',
+           'class' => $fc,
            'value' => 'inv/url_key/' . $inv->getUrlKey()
        ]);
        echo H::openTag('span', [
@@ -1059,7 +1063,7 @@ if (null !== $inv->getSoId()) {
             'type' => 'text',
             'id' => 'dropzone_client_id',
             'readonly' => true,
-            'class' => 'form-control form-control-lg',
+            'class' => $fc,
             'value' => $inv->getClient()?->reqId(),
             'hidden' => true
         ]);
@@ -1076,7 +1080,7 @@ if (null !== $inv->getSoId()) {
 
   echo H::openTag('div', ['class' => 'row']);
    echo H::openTag('div', ['class' => $col]);
-    echo H::openTag('div', ['class' => 'card no-margin']);
+    echo H::openTag('div', ['class' => 'card m-0']);
      echo H::openTag('div', ['class' => 'card-header']);
       echo H::openTag('b');
        echo H::encode($translator->translate('terms'));
