@@ -14,7 +14,8 @@ declare(strict_types=1);
 
 namespace <?= $generator->getNamespacePath() . DIRECTORY_SEPARATOR . $generator->getCamelcaseCapitalName() . ';' . "\n"; ?>
 
-use <?= $generator->getNamespacePath() . DIRECTORY_SEPARATOR . 'Entity' . DIRECTORY_SEPARATOR . $generator->getCamelcaseCapitalName() . ';' . "\n"; ?>
+use App\Infrastructure\Persistence\<?= $generator->getCamelcaseCapitalName(); ?>\<?= $generator->getCamelcaseCapitalName(); ?>;
+
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -27,14 +28,11 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class <?= $generator->getCamelcaseCapitalName(); ?>Repository extends Select\Repository
 {
-private EntityWriter $entityWriter;
     /**
      * @param Select<TEntity> $select
-     * @param EntityWriter $entityWriter
      */
-    public function __construct(Select $select, EntityWriter $entityWriter)
+    public function __construct(Select $select, private EntityWriter $entityWriter)
     {
-        $this->entityWriter = $entityWriter;
         parent::__construct($select);
     }
 
@@ -118,7 +116,7 @@ private EntityWriter $entityWriter;
      * @psalm-return TEntity|null
      * @return <?= $generator->getCamelcaseCapitalName(); ?>|null
      */
-    public function repo<?= $generator->getCamelcaseCapitalName(); ?><?= !empty($relations) ? 'Loaded' : 'Unloaded' ?>query(string $id): <?= $generator->getCamelcaseCapitalName(); ?>|null
+    public function repo<?= $generator->getCamelcaseCapitalName(); ?><?= !empty($relations) ? 'Loaded' : 'Unloaded' ?>query(int $id): <?= $generator->getCamelcaseCapitalName(); ?>|null
     {
         <?php if (!empty($relations)) {
             echo '$query = $this->select()';
@@ -138,10 +136,10 @@ private EntityWriter $entityWriter;
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return int
      */
-    public function repoCount(string $id) : int {
+    public function repoCount(int $id) : int {
         $query = $this->select()
                       ->where(['id' => $id]);
         return $query->count();
