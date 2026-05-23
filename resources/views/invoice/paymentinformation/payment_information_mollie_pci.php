@@ -125,7 +125,7 @@ if ($disable_form === false) {
              echo H::openTag('td');
               echo $translator->translate('date');
              echo H::closeTag('td');
-             echo H::openTag('td', ['class' => 'text-right']);
+             echo H::openTag('td', ['class' => 'text-end']);
               echo H::encode($invoice->getDateCreated()->format('Y-m-d'));
              echo H::closeTag('td');
             echo H::closeTag('tr');
@@ -133,7 +133,7 @@ if ($disable_form === false) {
              echo H::openTag('td');
               echo $translator->translate('due.date');
              echo H::closeTag('td');
-             echo H::openTag('td', ['class' => 'text-right']);
+             echo H::openTag('td', ['class' => 'text-end']);
               echo H::encode($invoice->getDateDue()->format('Y-m-d'));
              echo H::closeTag('td');
             echo H::closeTag('tr');
@@ -141,7 +141,7 @@ if ($disable_form === false) {
              echo H::openTag('td');
               echo $translator->translate('total');
              echo H::closeTag('td');
-             echo H::openTag('td', ['class' => 'text-right']);
+             echo H::openTag('td', ['class' => 'text-end']);
               echo H::encode($numberHelper->formatCurrency($total));
              echo H::closeTag('td');
             echo H::closeTag('tr');
@@ -149,7 +149,7 @@ if ($disable_form === false) {
              echo H::openTag('td');
               echo $translator->translate('balance');
              echo H::closeTag('td');
-             echo H::openTag('td', ['class' => 'text-right']);
+             echo H::openTag('td', ['class' => 'text-end']);
               echo H::encode($numberHelper->formatCurrency($balance));
              echo H::closeTag('td');
             echo H::closeTag('tr');
@@ -157,7 +157,7 @@ if ($disable_form === false) {
              echo H::openTag('td');
               echo $translator->translate('payment.method') . ': ';
              echo H::closeTag('td');
-             echo H::openTag('td', ['class' => 'text-right']);
+             echo H::openTag('td', ['class' => 'text-end']);
               echo 'Card / Direct Debit - Customer Ready for Payment';
              echo H::closeTag('td');
             echo H::closeTag('tr');

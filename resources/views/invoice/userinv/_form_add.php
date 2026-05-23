@@ -27,6 +27,18 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataSignedUpUsersNotInUserInv
  */
 
+$fc     = 'form-control form-control-lg';
+$lPhone = $translator->translate('phone');
+$lFax   = $translator->translate('fax');
+$lMob   = $translator->translate('mobile');
+$lEmail = $translator->translate('email');
+$lWeb   = $translator->translate('web.address');
+$lTax   = $translator->translate('tax.code');
+$lSub   = $translator->translate('user.subscriber.number');
+$lIban  = $translator->translate('user.iban');
+$lGln   = $translator->translate('delivery.location.global.location.number');
+$lLimit = $translator->translate('user.inv.list.limit');
+
 ?>
 
 <?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
@@ -136,112 +148,72 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::telephone($form, 'phone')
-    ->label($translator->translate('phone'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('phone'),
-        'class' => 'form-control form-control-lg',
-        'id' => 'phone',
-    ])
+    ->label($lPhone)
+    ->addInputAttributes(['placeholder' => $lPhone, 'class' => $fc, 'id' => 'phone'])
     ->value(Html::encode($form->getPhone() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::telephone($form, 'fax')
-    ->label($translator->translate('fax'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('fax'),
-        'class' => 'form-control form-control-lg',
-        'id' => 'fax',
-    ])
+    ->label($lFax)
+    ->addInputAttributes(['placeholder' => $lFax, 'class' => $fc, 'id' => 'fax'])
     ->value(Html::encode($form->getFax() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
            <?= Field::telephone($form, 'mobile')
-    ->label($translator->translate('mobile'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('mobile'),
-        'class' => 'form-control form-control-lg',
-        'id' => 'mobile',
-    ])
+    ->label($lMob)
+    ->addInputAttributes(['placeholder' => $lMob, 'class' => $fc, 'id' => 'mobile'])
     ->value(Html::encode($form->getMobile() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::email($form, 'user')
-    ->label($translator->translate('email'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('email'),
-        'class' => 'form-control form-control-lg',
-        'id' => 'email',
-    ])
+    ->label($lEmail)
+    ->addInputAttributes(['placeholder' => $lEmail, 'class' => $fc, 'id' => 'email'])
     ->disabled(true)
     ->value(Html::encode($form->getUser()?->getEmail() ?? '#'));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'web')
-    ->label($translator->translate('web.address'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('web.address'),
-        'class' => 'form-control form-control-lg',
-        'id' => 'web',
-    ])
+    ->label($lWeb)
+    ->addInputAttributes(['placeholder' => $lWeb, 'class' => $fc, 'id' => 'web'])
     ->value(Html::encode($form->getWeb() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'tax_code')
-    ->label($translator->translate('tax.code'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('tax.code'),
-        'class' => 'form-control form-control-lg',
-        'id' => 'tax_code',
-    ])
+    ->label($lTax)
+    ->addInputAttributes(['placeholder' => $lTax, 'class' => $fc, 'id' => 'tax_code'])
     ->value(Html::encode($form->getTaxCode() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'subscribernumber')
-    ->label($translator->translate('user.subscriber.number'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('user.subscriber.number'),
-        'class' => 'form-control form-control-lg',
-        'id' => 'subscribernumber',
-    ])
+    ->label($lSub)
+    ->addInputAttributes(['placeholder' => $lSub, 'class' => $fc, 'id' => 'subscribernumber'])
     ->value(Html::encode($form->getSubscribernumber() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'iban')
-    ->label($translator->translate('user.iban'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('user.iban'),
-        'class' => 'form-control form-control-lg',
-        'id' => 'iban',
-    ])
+    ->label($lIban)
+    ->addInputAttributes(['placeholder' => $lIban, 'class' => $fc, 'id' => 'iban'])
     ->value(Html::encode($form->getSubscribernumber() ?? ''));
 ?>
          <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'gln')
-    ->label($translator->translate('delivery.location.global.location.number'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('delivery.location.global.location.number'),
-        'class' => 'form-control form-control-lg',
-        'id' => 'gln',
-    ])
+    ->label($lGln)
+    ->addInputAttributes(['placeholder' => $lGln, 'class' => $fc, 'id' => 'gln'])
     ->value(Html::encode($form->getGln() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'listLimit')
-    ->label($translator->translate('user.inv.list.limit'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('user.inv.list.limit'),
-        'class' => 'form-control form-control-lg',
-        'id' => 'listLimit',
-    ])
+    ->label($lLimit)
+    ->addInputAttributes(['placeholder' => $lLimit, 'class' => $fc, 'id' => 'listLimit'])
     ->value(Html::encode($form->getListLimit() ?? 10));
 ?>
         <?= Html::closeTag('div'); ?>

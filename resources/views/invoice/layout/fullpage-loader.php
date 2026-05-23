@@ -19,7 +19,7 @@ declare(strict_types=1);
             </a>
         </div>
     </div>
-    <div class="text-right">
+    <div class="text-end">
         <button type="button" class="fullpage-loader-close btn btn-link tip" aria-label="<?php echo $translator->translate('close'); ?>"
                 title="<?= $translator->translate('close'); ?>" data-placement="left">
             <span aria-hidden="true"><i class="bi bi-x-lg"></i></span>

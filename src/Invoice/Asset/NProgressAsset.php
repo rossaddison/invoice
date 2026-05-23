@@ -22,6 +22,11 @@ class NProgressAsset extends AssetBundle
         'invoice/css/0.2.0/nprogress.min.css',
     ];
 
+    public array $cssOptions = [
+        'media' => 'print',
+        'onload' => "this.media='all'",
+    ];
+
     /** Related logic: https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js */
 
     /** @psalm-suppress NonInvariantDocblockPropertyType */

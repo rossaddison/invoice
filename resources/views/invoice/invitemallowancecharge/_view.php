@@ -74,7 +74,7 @@ foreach ($allowance_charges as $allowance_charge) {
     ->prompt($translator->translate('none'));
 ?>
             <?= Field::text($form, 'amount')
-    ->label($translator->translate('amount.inv.item') . '(' . $s->getSetting('currency_symbol') . ')')
+    ->label($translator->translate('text-end.inv.item') . '(' . $s->getSetting('currency_symbol') . ')')
     ->addInputAttributes([
         'class' => 'form-control form-control-lg',
         'readonly' => 'readonly',

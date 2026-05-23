@@ -65,19 +65,19 @@ $vat = $s->getSetting('enable_vat_registration');
                 <td class="td-amount td-quantity">
                     <div class="input-group">
                         <span class="input-group-text"><?= $translator->translate('quantity'); ?></span>
-                        <input type="text" name="item_quantity" class="form-control form-control-sm amount" value="1.00">
+                        <input type="text" name="item_quantity" class="form-control form-control-sm text-end" value="1.00">
                     </div>
                 </td>
                 <td class="td-amount">
                     <div class="input-group">
                         <span class="input-group-text"><?= $translator->translate('price'); ?></span>
-                        <input type="text" name="item_price" class="form-control form-control-sm amount" value="0.00">
+                        <input type="text" name="item_price" class="form-control form-control-sm text-end" value="0.00">
                     </div>
                 </td>
                 <td class="td-amount td-vert-middle">
                     <div class="input-group">
                         <span class="input-group-text"><?= $translator->translate('item.discount'); ?></span>
-                        <input type="text" name="item_discount_amount" class="form-control form-control-sm amount"
+                        <input type="text" name="item_discount_amount" class="form-control form-control-sm text-end"
                                data-bs-toggle = "tooltip" data-placement="bottom"
                                title="<?= $s->getSetting('currency_symbol') . ' ' . $translator->translate('per.item'); ?>" value="0.00">
                     </div>
@@ -104,7 +104,7 @@ $vat = $s->getSetting('enable_vat_registration');
                         </select>
                     </div>
                 </td>
-                <td class="td-icon text-right td-vert-middle">
+                <td class="td-icon text-end td-vert-middle">
                     <form method="POST" class="form-inline">
                             <input type="hidden" name="_csrf" value="<?= $csrf ?>">
                             <button type="submit" class="btn_delete_item btn-xl btn-primary" onclick="return confirm('<?= $translator->translate('delete.record.warning'); ?>');">
@@ -139,19 +139,19 @@ $vat = $s->getSetting('enable_vat_registration');
                 </td>
                 <td class="td-amount td-vert-middle">
                     <span><?= $translator->translate('subtotal'); ?></span><br/>
-                    <span name="subtotal" class="amount"></span>
+                    <span name="subtotal" class="text-end"></span>
                 </td>
                 <td class="td-amount td-vert-middle">
                     <span><?= $translator->translate('discount'); ?></span><br/>
-                    <span name="item_discount_total" class="amount"></span>
+                    <span name="item_discount_total" class="text-end"></span>
                 </td>
                 <td class="td-amount td-vert-middle">
                     <span><?= $translator->translate('tax'); ?></span><br/>
-                    <span name="item_tax_total" class="amount"></span>
+                    <span name="item_tax_total" class="text-end"></span>
                 </td>
                 <td class="td-amount td-vert-middle">
                     <span><?= $translator->translate('total'); ?></span><br/>
-                    <span name="item_total" class="amount"></span>
+                    <span name="item_total" class="text-end"></span>
                 </td>
             </tr>
             </tbody>
@@ -201,21 +201,21 @@ foreach ($soItems as $item) {
                     <td class="td-amount td-quantity">
                         <div class="input-group">
                             <span class="input-group-text"><?= $translator->translate('quantity'); ?></span>
-                            <input disabled type="text" name="item_quantity" class="form-control form-control-sm amount" data-bs-toggle = "tooltip" title="salesorder_item->quantity"
+                            <input disabled type="text" name="item_quantity" class="form-control form-control-sm text-end" data-bs-toggle = "tooltip" title="salesorder_item->quantity"
                                    value="<?= $numberHelper->formatAmount($item->getQuantity()); ?>">
                         </div>
                     </td>
                     <td class="td-amount">
                         <div class="input-group">
                             <span class="input-group-text"><?= $translator->translate('price'); ?></span>
-                            <input disabled type="text" name="item_price" class="form-control form-control-sm amount" data-bs-toggle = "tooltip" title="salesorder_item->price"
+                            <input disabled type="text" name="item_price" class="form-control form-control-sm text-end" data-bs-toggle = "tooltip" title="salesorder_item->price"
                                    value="<?= $numberHelper->formatAmount($item->getPrice()); ?>">
                         </div>
                     </td>
                     <td class="td-amount ">
                         <div class="input-group">
                             <span class="input-group-text"><?= $translator->translate('item.discount'); ?></span>
-                            <input disabled type="text" name="item_discount_amount" class="form-control form-control-sm amount" data-bs-toggle = "tooltip" title="salesorder_item->discount_amount"
+                            <input disabled type="text" name="item_discount_amount" class="form-control form-control-sm text-end" data-bs-toggle = "tooltip" title="salesorder_item->discount_amount"
                                    value="<?= $numberHelper->formatAmount($item->getDiscountAmount()); ?>"
                                    data-bs-toggle = "tooltip" data-placement="bottom"
                                    title="<?= $s->getSetting('currency_symbol') . ' ' . $translator->translate('per.item'); ?>">
@@ -246,7 +246,7 @@ foreach ($soItems as $item) {
                             </select>
                         </div>
                     </td>
-                    <td class="td-icon text-right td-vert-middle">
+                    <td class="td-icon text-end td-vert-middle">
                     <?php if ($invEdit || $invView) { ?>
                         <a href="<?= $urlGenerator->generate('salesorderitem/edit', ['id' => (string) $item->reqId()]) ?>" class="btn btn-md btn-link"><i class="bi bi-pencil"></i></a>
                     </td>
@@ -267,25 +267,25 @@ foreach ($soItems as $item) {
                     </td>
                     <td class="td-amount td-vert-middle">
                         <span><?= $translator->translate('subtotal'); ?></span><br/>
-                        <span name="subtotal" class="amount" data-bs-toggle = "tooltip" title="salesorder_item_amount->subtotal">
+                        <span name="subtotal" class="text-end" data-bs-toggle = "tooltip" title="salesorder_item_amount->subtotal">
                             <?= $numberHelper->formatCurrency($soiaR->repoSalesOrderItemAmountquery($item->reqId())?->getSubtotal() ?? 0.00); ?>
                         </span>
                     </td>
                     <td class="td-amount td-vert-middle">
                         <span class="input-group-text"><?= $vat === '0' ? $translator->translate('item.discount') : $translator->translate('cash.discount'); ?></span>
-                        <span name="item_discount_total" class="amount" data-bs-toggle = "tooltip" title="salesorder_item_amount->discount">
+                        <span name="item_discount_total" class="text-end" data-bs-toggle = "tooltip" title="salesorder_item_amount->discount">
                             <?= $numberHelper->formatCurrency($soiaR->repoSalesOrderItemAmountquery($item->reqId())?->getDiscount() ?? 0.00); ?>
                         </span>
                     </td>
                     <td class="td-amount td-vert-middle">
                         <span><?= $vat === '0' ? $translator->translate('tax') : $translator->translate('vat.abbreviation') ?></span><br/>
-                        <span name="item_tax_total" class="amount" data-bs-toggle = "tooltip" title="salesorder_item_amount->tax_total">
+                        <span name="item_tax_total" class="text-end" data-bs-toggle = "tooltip" title="salesorder_item_amount->tax_total">
                             <?= $numberHelper->formatCurrency($soiaR->repoSalesOrderItemAmountquery($item->reqId())?->getTaxTotal() ?? 0.00); ?>
                         </span>
                     </td>
                     <td class="td-amount td-vert-middle">
                         <span><?= $translator->translate('total'); ?></span><br/>
-                        <span name="item_total" class="amount" data-bs-toggle = "tooltip" title="salesorder_item_amount->total">
+                        <span name="item_total" class="text-end" data-bs-toggle = "tooltip" title="salesorder_item_amount->total">
                             <?= $numberHelper->formatCurrency($soiaR->repoSalesOrderItemAmountquery($item->reqId())?->getTotal() ?? 0.00); ?>
                         </span>
                     </td>
@@ -304,17 +304,17 @@ foreach ($soItems as $item) {
         <div class="col-12 d-block d-sm-none visible-sm"><br></div>
 
         <div class="col-12 col-md-6 offset-md-2 col-lg-4 offset-lg-4">
-            <table class="table table-bordered text-right">
+            <table class="table table-bordered text-end">
                 <tr>
                     <td style="width: 40%;"><?= $translator->translate('subtotal'); ?></td>
-                    <td style="width: 60%;" class="amount" id="amount_subtotal" data-bs-toggle = "tooltip" title="salesorder_amount->item_subtotal =  salesorder_item(s)->subtotal - salesorder_item(s)->discount"><?php echo $numberHelper->formatCurrency($so_amount->getItemSubtotal() ?? 0.00); ?></td>
+                    <td style="width: 60%;" class="text-end" id="amount_subtotal" data-bs-toggle = "tooltip" title="salesorder_amount->item_subtotal =  salesorder_item(s)->subtotal - salesorder_item(s)->discount"><?php echo $numberHelper->formatCurrency($so_amount->getItemSubtotal() ?? 0.00); ?></td>
                 </tr>
                 <tr>
                     <td>
                     <span><?= $vat === '1' ? $translator->translate('vat.break.down') : $translator->translate('item.tax'); ?>
                     </span>
                     </td>
-                    <td class="amount" data-bs-toggle = "tooltip" id="amount_item_tax_total" title="quote_amount->item_tax_total"><?php echo $numberHelper->formatCurrency($so_amount->getItemTaxTotal() ?? 0.00); ?></td>
+                    <td class="text-end" data-bs-toggle = "tooltip" id="amount_item_tax_total" title="quote_amount->item_tax_total"><?php echo $numberHelper->formatCurrency($so_amount->getItemTaxTotal() ?? 0.00); ?></td>
                 </tr>
                 <?php if ($vat === '0') { ?>
                 <tr>
@@ -333,7 +333,7 @@ foreach ($soItems as $item) {
                         <div class="discount-field">
                             <div class="input-group input-group-sm">
                                 <input id="quote_discount_amount" name="quote_discount_amount"
-                                       class="discount-option form-control amount" data-bs-toggle = "tooltip" title="quote->discount_amount" disabled
+                                       class="discount-option form-control text-end" data-bs-toggle = "tooltip" title="quote->discount_amount" disabled
                                        value="<?= $numberHelper->formatAmount($so->getDiscountAmount() != 0 ? $so->getDiscountAmount() : 0.00); ?>">
                                 <div
                                     class="input-group-text"><?= $s->getSetting('currency_symbol'); ?>
@@ -345,7 +345,7 @@ foreach ($soItems as $item) {
                 <?php } ?>
                 <tr>
                     <td><b><?= $translator->translate('total'); ?></b></td>
-                    <td class="amount" id="amount_quote_total" data-bs-toggle = "tooltip" title="quote_amount->total"><b><?php echo $numberHelper->formatCurrency($so_amount->getTotal() ?? 0.00); ?></b></td>
+                    <td class="text-end" id="amount_quote_total" data-bs-toggle = "tooltip" title="quote_amount->total"><b><?php echo $numberHelper->formatCurrency($so_amount->getTotal() ?? 0.00); ?></b></td>
                 </tr>
             </table>
         </div>

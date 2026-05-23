@@ -17,8 +17,10 @@ use Yiisoft\Html\Tag\Label;
 use Yiisoft\Html\Tag\Link;
 use Yiisoft\Html\Tag\Meta;
 use Yiisoft\Html\Tag\Title;
-use Yiisoft\Bootstrap5\Assets\BootstrapCdnAsset as BsCdn;
-use Yiisoft\Bootstrap5\Assets\BootstrapAsset as BsNm;
+use App\Invoice\Asset\BootstrapCdnCssOnlyAsset as BsCdnCss;
+use App\Invoice\Asset\BootstrapCssOnlyAsset as BsNmCss;
+use App\Invoice\Asset\BootstrapCdnJsOnlyAsset as BsCdnJs;
+use App\Invoice\Asset\BootstrapJsOnlyAsset as BsNmJs;
 use Yiisoft\Bootstrap5\ButtonSize;
 use Yiisoft\Bootstrap5\ButtonVariant;
 use Yiisoft\Bootstrap5\Dropdown;
@@ -113,7 +115,8 @@ use Yiisoft\Yii\AuthClient\Asset\AuthChoiceAsset;
  * @var DropdownItem $yoNG
  * @var DropdownItem $zuZA
  */
-$assetManager->register($bootstrap5CdnNotNodeModule ? BsCdn::class : BsNm::class);
+$assetManager->register($bootstrap5CdnNotNodeModule ? BsCdnCss::class : BsNmCss::class);
+$assetManager->register($bootstrap5CdnNotNodeModule ? BsCdnJs::class : BsNmJs::class);
 $assetManager->register($appCdnNotNodeModule ? AppCdn::class : AppNm::class);
 $assetManager->register(AuthAegisTotpKeypadAsset::class);
 $assetManager->register(AuthChoiceAsset::class);
@@ -149,6 +152,10 @@ echo new TagHtml()
   // Related logic: src\ViewInjection\CommonViewInjection.php
   echo new Link()->rel('canonical')->href($companyWeb ?:
     'https://yiiframework.com');
+  if ($bootstrap5CdnNotNodeModule || $appCdnNotNodeModule) {
+      echo new Link()->rel('preconnect')->href('https://cdn.jsdelivr.net');
+      echo new Link()->rel('dns-prefetch')->href('//cdn.jsdelivr.net');
+  }
    echo new Title()
        ->content($this->getTitle() ? Html::encode($this->getTitle()) : ''); //3
  $this->head();

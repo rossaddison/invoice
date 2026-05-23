@@ -33,9 +33,9 @@ $this->beginPage();
 <table>
     <tr>
         <th><?= $translator->translate('product'); ?></th>
-        <th class="amount"><?= $translator->translate('count'); ?></th>
-        <th class="amount"><?= $translator->translate('sales'); ?></th>
-        <th class="amount"><?= $translator->translate('item.tax'); ?></th>
+        <th class="text-end"><?= $translator->translate('count'); ?></th>
+        <th class="text-end"><?= $translator->translate('sales'); ?></th>
+        <th class="text-end"><?= $translator->translate('item.tax'); ?></th>
     </tr>
     <?php
         /**

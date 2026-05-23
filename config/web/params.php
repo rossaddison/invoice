@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Yiisoft\Bootstrap5\Assets\BootstrapAsset;
+use Yiisoft\Bootstrap5\Assets\BootstrapCdnAsset;
 use Yiisoft\Cookies\CookieMiddleware;
 use Yiisoft\Csrf\CsrfTokenMiddleware;
 use Yiisoft\ErrorHandler\Middleware\ErrorCatcher;
@@ -68,5 +70,20 @@ return [
     ],
     'yiisoft/widget' => [
         'defaultTheme' => 'bootstrap5',
+    ],
+    'yiisoft/assets' => [
+        'assetManager' => [
+            'customizedBundles' => [
+                // Bootstrap CSS is already compiled into style.css — suppress the
+                // duplicate load that yii-bootstrap5 widgets auto-register.
+                // main.php uses BootstrapCssOnlyAsset / BootstrapCdnCssOnlyAsset instead.
+                BootstrapAsset::class => [
+                    'css' => [],
+                ],
+                BootstrapCdnAsset::class => [
+                    'css' => [],
+                ],
+            ],
+        ],
     ],
 ];

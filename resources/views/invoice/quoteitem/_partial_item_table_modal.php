@@ -21,8 +21,8 @@ use Yiisoft\Html\Html;
             <th><?= $translator->translate('product.sku') . ' / ' . $translator->translate('task') . ' ' . $translator->translate('status'); ?></th>
             <th><?= $translator->translate('product.name') . ' / ' . $translator->translate('task.name'); ?></th>
             <th><?= $translator->translate('product.description') . ' / ' . $translator->translate('task.description'); ?></th>
-            <th class="text-right"><?= $translator->translate('product.price'); ?></th>
-            <th class="text-right"><?= $translator->translate('quantity'); ?></th>
+            <th class="text-end"><?= $translator->translate('product.price'); ?></th>
+            <th class="text-end"><?= $translator->translate('quantity'); ?></th>
         </tr>
         <?php
             /**
@@ -30,14 +30,14 @@ use Yiisoft\Html\Html;
              */
             foreach ($quoteItems as $quoteItem) { ?>
             <tr class="product">
-                <td class="text-left">
+                <td class="text-start">
                     <input type="checkbox" name="item_ids[]" value="<?php echo $quoteItem->reqId();?>">
                 </td>
-                <td nowrap class="text-left">
+                <td class="text-start text-nowrap">
                     <b><?= Html::encode($quoteItem->reqId()); ?></b>
                 </td>
                 <?php if ($quoteItem->getProduct() !== null) { ?>
-                    <td nowrap class="text-left">
+                    <td class="text-start text-nowrap">
                         <b><?= Html::encode($quoteItem->getProduct()?->getProductSku()); ?></b>
                     </td>
                     <td>
@@ -46,7 +46,7 @@ use Yiisoft\Html\Html;
                     <td>
                         <?= nl2br(Html::encode($quoteItem->getProduct()?->getProductDescription())); ?>
                     </td>
-                    <td class="text-right">
+                    <td class="text-end">
                         <?= $numberHelper->formatCurrency($quoteItem->getProduct()?->getProductPrice()); ?>
                     </td>
                 <?php } ?>
@@ -55,7 +55,7 @@ use Yiisoft\Html\Html;
                     $taskStatus = (array) $taskStatuses[(string) $quoteItem->getTask()?->getStatus()];
                     $taskStatusLabel = (string) $taskStatus['label'];
                     ?>
-                    <td nowrap class="text-left">
+                    <td class="text-start text-nowrap">
                         <b><?= Html::encode($taskStatusLabel); ?></b>
                     </td>
                     <td>
@@ -64,11 +64,11 @@ use Yiisoft\Html\Html;
                     <td>
                         <?= nl2br(Html::encode($quoteItem->getTask()?->getDescription())); ?>
                     </td>
-                    <td class="text-right">
+                    <td class="text-end">
                         <?= $numberHelper->formatCurrency($quoteItem->getTask()?->getPrice()); ?>
                     </td>
                 <?php } ?>
-                <td class="text-right">
+                <td class="text-end">
                     <?= $quoteItem->getQuantity(); ?>
                 </td>
             </tr>

@@ -20,4 +20,9 @@ class NodeModulesBootstrapIconsAsset extends AssetBundle
     public array $css = [
         'bootstrap-icons.min.css',
     ];
+
+    public array $cssOptions = [
+        'media' => 'print',
+        'onload' => "this.media='all'",
+    ];
 }

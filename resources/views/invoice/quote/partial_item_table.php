@@ -33,7 +33,7 @@ use Yiisoft\Html\Tag\Option;
  */
 
 $vat = $s->getSetting('enable_vat_registration');
-$frmCtlAmt = 'form-control amount';
+$frmCtlAmt = 'form-control text-end';
 
  echo H::openTag('div', ['class' => 'table-responsive']); //1
   echo H::openTag('table', [
@@ -568,7 +568,7 @@ foreach ($quoteItems as $item) {
       echo H::closeTag('br');
       echo H::openTag('span', [
           'name' => 'subtotal',
-          'class' => 'amount',
+          'class' => 'text-end',
           'data-bs-toggle' => 'tooltip',
           'title' =>
 'quote_item_amount->subtotal using QuoteItemController/edit_product->saveQuoteItemAmount',
@@ -592,7 +592,7 @@ foreach ($quoteItems as $item) {
       echo H::closeTag('br');
       echo H::openTag('span', [
           'name' => 'item_discount_total',
-          'class' => 'amount',
+          'class' => 'text-end',
           'data-bs-toggle' => 'tooltip',
           'title' => 'quote_item_amount->discount',
       ]); //6
@@ -617,7 +617,7 @@ foreach ($quoteItems as $item) {
       echo H::closeTag('br');
       echo H::openTag('span', [
           'name' => 'item_tax_total',
-          'class' => 'amount',
+          'class' => 'text-end',
           'data-bs-toggle' => 'tooltip',
           'title' => 'quote_item_amount->tax_total',
       ]); //6
@@ -641,7 +641,7 @@ foreach ($quoteItems as $item) {
       echo H::closeTag('br');
       echo H::openTag('span', [
           'name' => 'item_total',
-          'class' => 'amount',
+          'class' => 'text-end',
           'data-bs-toggle' => 'tooltip',
           'title' => 'quote_item_amount->total',
       ]); //6
@@ -680,7 +680,7 @@ echo H::closeTag('br');
   echo H::openTag('div', [
       'class' => 'col-12 col-md-6 offset-md-2 col-lg-4 offset-lg-4',
   ]); //2
-   echo H::openTag('table', ['class' => 'table table-bordered text-right']); //3
+   echo H::openTag('table', ['class' => 'table table-bordered text-end']); //3
     echo H::openTag('thead'); //4
      echo H::openTag('tr', ['hidden' => true]); //5
       echo H::openTag('th'); //6
@@ -708,7 +708,7 @@ echo H::closeTag('br');
       echo H::closeTag('td'); //6
       echo H::openTag('td', [
           'style' => 'width: 60%;background-color: lightblue',
-          'class' => 'amount',
+          'class' => 'text-end',
           'id' => 'amount_subtotal',
           'data-bs-toggle' => 'tooltip',
           'title' => 'quote_amount->item_subtotal=quote_item(s)->
@@ -727,7 +727,7 @@ echo H::closeTag('br');
        echo H::closeTag('span'); //7
       echo H::closeTag('td'); //6
       echo H::openTag('td', [
-          'class' => 'amount',
+          'class' => 'text-end',
           'style' => 'background-color: lightpink',
           'data-bs-toggle' => 'tooltip',
           'id' => 'amount_item_tax_total',
@@ -743,7 +743,7 @@ echo H::closeTag('br');
        echo H::closeTag('b'); //7
       echo H::closeTag('td'); //6
       echo H::openTag('td', [
-          'class' => 'amount',
+          'class' => 'text-end',
           'id' => 'amount_quote_allowance_charge_total',
           'data-bs-toggle' => 'tooltip',
           'title' => 'quote_amount->packhandleship_total',
@@ -772,7 +772,7 @@ echo H::closeTag('br');
        echo H::closeTag('b'); //7
       echo H::closeTag('td'); //6
       echo H::openTag('td', [
-          'class' => 'amount',
+          'class' => 'text-end',
           'id' => 'amount_quote_allowance_charge_tax',
           'data-bs-toggle' => 'tooltip',
           'title' => 'quote_amount->packhandleship_tax',
@@ -850,7 +850,7 @@ if ($vat === '0') {
              }
              echo H::closeTag('span'); //8
              echo H::openTag('span', [
-                 'class' => 'amount',
+                 'class' => 'text-end',
                  'data-bs-toggle' => 'tooltip',
                  'title' => 'quote_tax_rate->quote_tax_rate_amount',
              ]); //8
@@ -889,7 +889,7 @@ if (($quote->getDiscountAmount() ?? 0.00) !== 0.00) {
        echo H::closeTag('b'); //7
       echo H::closeTag('td'); //6
       echo H::openTag('td', [
-          'class' => 'amount',
+          'class' => 'text-end',
           'style' => 'background-color:lightyellow',
           'id' => 'amount_quote_total',
           'data-bs-toggle' => 'tooltip',

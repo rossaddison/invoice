@@ -23,7 +23,7 @@ use Yiisoft\Html\Html;
             <th><?= $translator->translate('task.name'); ?></th>
             <th><?= $translator->translate('task.finish.date'); ?></th>
             <th><?= $translator->translate('task.description'); ?></th>
-            <th class="text-right">
+            <th class="text-end">
                 <?= $translator->translate('task.price'); ?></th>
         </tr>
 
@@ -33,14 +33,14 @@ use Yiisoft\Html\Html;
              */
             foreach ($tasks as $task) { ?>
             <tr class="task-row">
-                <td class="text-left">
+                <td class="text-start">
                     <input type="checkbox"
                            class="modal-task-id"
                            name="task_ids[]"
                            id="task-id-<?= $task->reqId() ?>"
                            value="<?= $task->reqId(); ?>">
                 </td>
-                <td nowrap class="text-left">
+                <td nowrap class="text-start">
                     <b><?php echo ($p = $task->getProject()) !== null
                         && $projectR->count($p->reqId()) > 0 ?
                         $projectR->repoProjectquery(
@@ -68,7 +68,7 @@ use Yiisoft\Html\Html;
                 <td>
                     <?= nl2br(Html::encode($task->getDescription())); ?>
                 </td>
-                <td class="amount">
+                <td class="text-end">
                     <?= $numberHelper->formatCurrency($task->getPrice()); ?>
                 </td>
             </tr>

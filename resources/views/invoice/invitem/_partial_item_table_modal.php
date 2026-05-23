@@ -21,8 +21,8 @@ use Yiisoft\Html\Html;
             <th><?= $translator->translate('product.sku'); ?></th>
             <th><?= $translator->translate('product.name'); ?></th>
             <th><?= $translator->translate('product.description'); ?></th>
-            <th class="text-right"><?= $translator->translate('product.price'); ?></th>
-            <th class="text-right"><?= $translator->translate('quantity'); ?></th>
+            <th class="text-end"><?= $translator->translate('product.price'); ?></th>
+            <th class="text-end"><?= $translator->translate('quantity'); ?></th>
         </tr>
         <?php
             /**
@@ -30,13 +30,13 @@ use Yiisoft\Html\Html;
              */
             foreach ($invItems as $invItem) { ?>
             <tr class="product">
-                <td class="text-left">
+                <td class="text-start">
                     <input type="checkbox" name="item_ids[]" value="<?php echo $invItem->reqId();?>">
                 </td>
-                <td nowrap class="text-left">
+                <td nowrap class="text-start">
                     <b><?= Html::encode($invItem->reqId()); ?></b>
                 </td>
-                <td nowrap class="text-left">
+                <td nowrap class="text-start">
                     <b><?= Html::encode($invItem->getProduct() ? $invItem->getProduct()?->getProductSku() : ''); ?></b>
                 </td>
                 <td>
@@ -47,11 +47,11 @@ use Yiisoft\Html\Html;
                     <?= nl2br(Html::encode($invItem->getProduct() ? $invItem->getProduct()?->getProductDescription()
                                         : ($invItem->getTask() ? $invItem->getTask()?->getDescription() : ''))); ?>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <?= $numberHelper->formatCurrency($invItem->getProduct() ? ($invItem->getProduct()?->getProductPrice() ?? 999.99)
                                                     : ($invItem->getTask() ? ($invItem->getTask()?->getPrice() ?? 999.99) : '')); ?>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <?= $invItem->getQuantity(); ?>
                 </td>
             </tr>

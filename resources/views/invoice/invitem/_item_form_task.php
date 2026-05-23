@@ -30,7 +30,7 @@ use Yiisoft\Html\Tag\I;
  */
 
 $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
-$frmCtlAmt = 'form-control amount';
+$frmCtlAmt = 'form-control text-end';
 ?>
 <?= Html::openTag('div', ['class' => 'card']); ?>
     <?= Html::openTag('div', ['class' => 'card-header']); ?>
@@ -215,12 +215,12 @@ foreach ($taxRates as $taxRate) {
                         <?= Html::openTag('td', ['class' => 'td-amount td-vert-middle']); ?>
                             <?= Html::openTag('span'); ?><?= $translator->translate('subtotal'); ?><?= Html::closeTag('span'); ?>
                                 <?= Html::tag('br'); ?>
-                            <?= Html::openTag('span', ['name' => 'subtotal', 'class' => 'amount']); ?><?= Html::closeTag('span'); ?>
+                            <?= Html::openTag('span', ['name' => 'subtotal', 'class' => 'text-end']); ?><?= Html::closeTag('span'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount td-vert-middle']); ?>
                             <?= Html::openTag('span'); ?><?= $vat === false ? $translator->translate('discount') : $translator->translate('early.settlement.cash.discount') ?><?= Html::closeTag('span'); ?>
                                 <?= Html::tag('br'); ?>
-                            <?= Html::openTag('span', ['name' => 'discount_total', 'class' => 'amount']); ?><?= Html::closeTag('span'); ?>
+                            <?= Html::openTag('span', ['name' => 'discount_total', 'class' => 'text-end']); ?><?= Html::closeTag('span'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount td-vert-middle']); ?>
                             <?= Html::openTag('span', ['name' => 'charge_total']); ?><?= $translator->translate('item.charge') ?><?= Html::closeTag('span'); ?>
@@ -228,12 +228,12 @@ foreach ($taxRates as $taxRate) {
                         <?= Html::openTag('td', ['class' => 'td-amount td-vert-middle']); ?>
                             <?= Html::openTag('span'); ?><?= $vat === false ? $translator->translate('tax') : $translator->translate('vat.abbreviation')  ?><?= Html::closeTag('span'); ?>
                                 <?= Html::tag('br'); ?>
-                            <?= Html::openTag('span', ['name' => 'tax_total', 'class' => 'amount']); ?><?= Html::closeTag('span'); ?>
+                            <?= Html::openTag('span', ['name' => 'tax_total', 'class' => 'text-end']); ?><?= Html::closeTag('span'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount td-vert-middle']); ?>
                             <?= Html::openTag('span'); ?><?= $translator->translate('total'); ?><?= Html::closeTag('span'); ?>
                                 <?= Html::tag('br'); ?>
-                            <?= Html::openTag('span', ['name' => 'total', 'class' => 'amount']); ?><?= Html::closeTag('span'); ?>
+                            <?= Html::openTag('span', ['name' => 'total', 'class' => 'text-end']); ?><?= Html::closeTag('span'); ?>
                         <?= Html::closeTag('td'); ?>
                     <?= Html::closeTag('tr'); ?>
                 <?= Html::closeTag('tbody'); ?>

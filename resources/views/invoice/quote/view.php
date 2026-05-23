@@ -49,6 +49,7 @@ $this->setTitle($translator->translate('quote'));
 
 $vat = $s->getSetting('enable_vat_registration');
 $col = 'col-12 col-md-6';
+$row = 'row';
 
 echo H::openTag('div', ['class' => 'card']);
  echo H::openTag('div', ['class' => 'card-header']);
@@ -91,14 +92,14 @@ echo H::openTag('div', ['id' => 'content']);
  echo $alert;
  echo H::openTag('div', ['id' => 'quote_form']);
   echo H::openTag('div', ['class' => 'quote']);
-   echo H::openTag('div', ['class' => 'row']);
+   echo H::openTag('div', ['class' => $row]);
     echo $view_quote_client_details;
     echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none']);
      echo '<br>';
     echo H::closeTag('div');
     echo H::openTag('div', ['class' => 'col-12 col-sm-6 col-md-7']);
      echo H::openTag('div', ['class' => 'details-box']);
-      echo H::openTag('div', ['class' => 'row']);
+      echo H::openTag('div', ['class' => $row]);
        echo $view_details_box_with_custom_field;
        echo H::openTag('div', ['class' => $col]);
         echo $view_quote_approve_reject;
@@ -117,7 +118,7 @@ echo H::openTag('div', ['id' => 'content']);
   echo $partial_item_table;
  echo H::closeTag('div');
 
- echo H::openTag('div', ['class' => 'row']);
+ echo H::openTag('div', ['class' => $row]);
   echo H::openTag('div', ['class' => $col]);
    echo H::openTag('div', ['class' => 'card m-0']);
     echo H::openTag('div', ['class' => 'card-header']);

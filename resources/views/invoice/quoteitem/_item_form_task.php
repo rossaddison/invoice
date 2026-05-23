@@ -23,8 +23,10 @@ use Yiisoft\Html\Tag\I;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataTaxRate
  */
 
-$vat = $s->getSetting('enable_vat_registration') === '1';
-$frmCtlAmt = 'form-control amount';
+$vat       = $s->getSetting('enable_vat_registration') === '1';
+$frmCtlAmt = 'form-control text-end';
+$tdAmtMid  = 'td-amount td-vert-middle';
+$clsAmt    = 'text-end';
 ?>
 <?= Html::openTag('div', ['class' => 'card']); ?>
     <?= Html::openTag('div', ['class' => 'card-header']); ?>
@@ -136,7 +138,7 @@ foreach ($taxRates as $taxRate) {
 ?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
-                        <?= Html::openTag('td', ['class' => 'td-icon text-right td-vert-middle']); ?>
+                        <?= Html::openTag('td', ['class' => 'td-icon text-end td-vert-middle']); ?>
                             <?= Html::openTag('button', [
                                 'type'           => 'submit',
                                 'id'             => 'btn-quote-task-save',
@@ -170,25 +172,25 @@ foreach ($taxRates as $taxRate) {
                             <?= Html::openTag('div'); ?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
-                        <?= Html::openTag('td', ['class' => 'td-amount td-vert-middle']); ?>
+                        <?= Html::openTag('td', ['class' => $tdAmtMid]); ?>
                             <?= Html::openTag('span'); ?><?= $translator->translate('subtotal'); ?><?= Html::closeTag('span'); ?>
                                 <?= Html::tag('br'); ?>
-                            <?= Html::openTag('span', ['name' => 'subtotal', 'class' => 'amount']); ?><?= Html::closeTag('span'); ?>
+                            <?= Html::openTag('span', ['name' => 'subtotal', 'class' => $clsAmt]); ?><?= Html::closeTag('span'); ?>
                         <?= Html::closeTag('td'); ?>
-                        <?= Html::openTag('td', ['class' => 'td-amount td-vert-middle']); ?>
+                        <?= Html::openTag('td', ['class' => $tdAmtMid]); ?>
                             <?= Html::openTag('span'); ?><?= $vat === false ? $translator->translate('discount') : $translator->translate('early.settlement.cash.discount') ?><?= Html::closeTag('span'); ?>
                                 <?= Html::tag('br'); ?>
-                            <?= Html::openTag('span', ['name' => 'discount_total', 'class' => 'amount']); ?><?= Html::closeTag('span'); ?>
+                            <?= Html::openTag('span', ['name' => 'discount_total', 'class' => $clsAmt]); ?><?= Html::closeTag('span'); ?>
                         <?= Html::closeTag('td'); ?>
-                        <?= Html::openTag('td', ['class' => 'td-amount td-vert-middle']); ?>
+                        <?= Html::openTag('td', ['class' => $tdAmtMid]); ?>
                             <?= Html::openTag('span'); ?><?= $vat === false ? $translator->translate('tax') : $translator->translate('vat.abbreviation')  ?><?= Html::closeTag('span'); ?>
                                 <?= Html::tag('br'); ?>
-                            <?= Html::openTag('span', ['name' => 'tax_total', 'class' => 'amount']); ?><?= Html::closeTag('span'); ?>
+                            <?= Html::openTag('span', ['name' => 'tax_total', 'class' => $clsAmt]); ?><?= Html::closeTag('span'); ?>
                         <?= Html::closeTag('td'); ?>
-                        <?= Html::openTag('td', ['class' => 'td-amount td-vert-middle']); ?>
+                        <?= Html::openTag('td', ['class' => $tdAmtMid]); ?>
                             <?= Html::openTag('span'); ?><?= $translator->translate('total'); ?><?= Html::closeTag('span'); ?>
                                 <?= Html::tag('br'); ?>
-                            <?= Html::openTag('span', ['name' => 'total', 'class' => 'amount']); ?><?= Html::closeTag('span'); ?>
+                            <?= Html::openTag('span', ['name' => 'total', 'class' => $clsAmt]); ?><?= Html::closeTag('span'); ?>
                         <?= Html::closeTag('td'); ?>
                     <?= Html::closeTag('tr'); ?>
                 <?= Html::closeTag('tbody'); ?>

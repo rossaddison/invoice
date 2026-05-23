@@ -126,7 +126,7 @@ $columns = [
    $inv_amount = $iaR->repoInvAmountCount($invoiceId) > 0 ?
            $iaR->repoInvquery($invoiceId) : null;
    $class = (null !== $inv_amount && $inv_amount->getSign() === -1)
-           ? 'amount text-danger' : 'amount';
+           ? 'text-end text-danger' : 'text-end';
    return (string) Html::span(
     $s->formatCurrency(null !== $inv_amount ? $inv_amount->getTotal() : 0.00),
     ['class' => $class, 'style' => 'float:right'],
@@ -143,7 +143,7 @@ $columns = [
            $iaR->repoInvquery($invoiceId) : null;
    return (string) Html::span(
     $s->formatCurrency(null !== $inv_amount ? $inv_amount->getBalance() : 0.00),
-    ['class' => 'amount', 'style' => 'float:right'],
+    ['class' => 'text-end', 'style' => 'float:right'],
    );
   },
   encodeContent: false,

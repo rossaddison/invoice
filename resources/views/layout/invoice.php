@@ -8,7 +8,6 @@ use App\Invoice\Asset\MonospaceAsset;
 use App\Invoice\Asset\NProgressAsset;
 // PCI Compliant Payment Gateway Assets
 use App\Invoice\Asset\pciAsset\StripeVersionTenAsset;
-use App\Invoice\Asset\pciAsset\AmazonPayTwoSevenAsset;
 use App\Invoice\Asset\pciAsset\BraintreeDropInOneThirtyThreeSevenAsset;
 
 use App\Asset\AppCdnAsset;
@@ -120,7 +119,6 @@ $assetManager->register(NProgressAsset::class);
 $s->getSetting('monospace_amounts') == 1 ?
     $assetManager->register(MonospaceAsset::class) : '';
 $assetManager->register(StripeVersionTenAsset::class);
-$assetManager->register(AmazonPayTwoSevenAsset::class);
 $assetManager->register(BraintreeDropInOneThirtyThreeSevenAsset::class);
 $vat = ($s->getSetting('enable_vat_registration') == '0');
 $this->addCssFiles($assetManager->getCssFiles());

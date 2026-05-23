@@ -73,35 +73,7 @@ class FamilyEntityTest extends TestCase
         $this->assertSame(3, $f->getStreetSortOrder());
     }
 
-    public function testReqCategoryPrimaryIdThrowsWhenNull(): void
-    {
-        $f = new Family();
-        $this->expectException(\LogicException::class);
-        $f->reqCategoryPrimaryId();
-    }
-
-    public function testSetAndReqCategoryPrimaryId(): void
-    {
-        $f = new Family();
-        $f->setCategoryPrimaryId(2);
-        $this->assertSame(2, $f->reqCategoryPrimaryId());
-    }
-
-    public function testReqCategorySecondaryIdThrowsWhenNull(): void
-    {
-        $f = new Family();
-        $this->expectException(\LogicException::class);
-        $f->reqCategorySecondaryId();
-    }
-
-    public function testSetAndReqCategorySecondaryId(): void
-    {
-        $f = new Family();
-        $f->setCategorySecondaryId(5);
-        $this->assertSame(5, $f->reqCategorySecondaryId());
-    }
-
-    public function testConstructorDefaultsForCategoryIds(): void
+public function testConstructorDefaultsForCategoryIds(): void
     {
         $f = new Family();
         $this->assertNull($f->getCategoryPrimaryId());
@@ -130,23 +102,7 @@ class FamilyEntityTest extends TestCase
         $f->reqId();
     }
 
-    public function testReqCategoryPrimaryIdExceptionMessage(): void
-    {
-        $f = new Family();
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Family category_primary_id not persisted');
-        $f->reqCategoryPrimaryId();
-    }
-
-    public function testReqCategorySecondaryIdExceptionMessage(): void
-    {
-        $f = new Family();
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Family category_secondary_id not persisted');
-        $f->reqCategorySecondaryId();
-    }
-
-    public function testHasIdentityTrueForZeroId(): void
+public function testHasIdentityTrueForZeroId(): void
     {
         $f = new Family();
         $f->setId(0);

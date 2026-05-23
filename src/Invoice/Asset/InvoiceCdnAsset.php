@@ -42,10 +42,10 @@ class InvoiceCdnAsset extends AssetBundle
         // 8. Required form field asterisk styles
         'rebuild/css/form.css',
 
-        // 9. ButtonsToolbar Widget styles
+        // 9. Toolbar widget styles
         'rebuild/css/buttons-toolbar.css',
 
-        // 10. QuoteToolbar Widget styles
+        // 10. Quote page toolbar styles
         'rebuild/css/quote-toolbar.css',
 
         // 11. Dark-mode / theme overrides — must be last

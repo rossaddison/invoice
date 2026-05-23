@@ -86,7 +86,7 @@ $columns = [
     ),
     new DataColumn(
         'base_amount',
-        header: $translator->translate('allowance.or.charge.base.amount'),
+        header: $translator->translate('allowance.or.charge.base.text-end'),
         content: static fn (AllowanceCharge $model) => $model->getBaseAmount(),
     ),
     new DataColumn(

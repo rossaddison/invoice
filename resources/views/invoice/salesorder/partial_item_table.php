@@ -196,7 +196,7 @@ foreach ($soItems as $item) {
                                    maxlength="4"
                                    size="4"
                                    name="item_quantity"
-                                   class="form-control form-control-sm amount"
+                                   class="form-control form-control-sm text-end"
                                    data-bs-toggle = "tooltip"
                                    title="sales_order_item->quantity"
                                    value="
@@ -214,7 +214,7 @@ foreach ($soItems as $item) {
                                  maxlength="4"
                                  size="4"
                                  name="item_price"
-                                 class="form-control form-control-sm amount"
+                                 class="form-control form-control-sm text-end"
                                  data-bs-toggle = "tooltip"
                                  title="sales_order_item->price"
                                  value="
@@ -233,7 +233,7 @@ foreach ($soItems as $item) {
                                    maxlength="4"
                                    size="4"
                                    name="item_discount_amount"
-                                   class="form-control form-control-sm amount"
+                                   class="form-control form-control-sm text-end"
                                    data-bs-toggle = "tooltip"
                                    title="sales_order_item->discount_amount"
                                    value="
@@ -483,7 +483,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->reqId()) as $acsoi) { ?>
                         </span>
                         <br/>
                         <span name="subtotal"
-                              class="amount"
+                              class="text-end"
                               data-bs-toggle = "tooltip"
                               title="sales_order_item_amount">
                         <?= $numberHelper->formatCurrency(
@@ -500,7 +500,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->reqId()) as $acsoi) { ?>
                         </span>
                         <br/>
                         <span name="item_discount_total"
-                              class="amount"
+                              class="text-end"
                               data-bs-toggle = "tooltip"
                               title="sales_order_item_amount->discount">
                         (<?= $numberHelper->formatCurrency(
@@ -518,7 +518,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->reqId()) as $acsoi) { ?>
                         </span>
                         <br/>
                         <span name="item_tax_total"
-                              class="amount"
+                              class="text-end"
                               data-bs-toggle = "tooltip"
                               title="sales_order_item_amount->tax_total">
                             <?= $numberHelper->formatCurrency(
@@ -534,7 +534,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->reqId()) as $acsoi) { ?>
                         </span>
                         <br/>
                         <span name="item_total"
-                              class="amount"
+                              class="text-end"
                               data-bs-toggle = "tooltip"
                               title="sales_order_item_amount->total">
                             <?= $numberHelper->formatCurrency(
@@ -566,7 +566,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->reqId()) as $acsoi) { ?>
         <br>
         </div>
         <div class="col-12 col-md-6 offset-md-2 col-lg-4 offset-lg-4">
-            <table class="table table-bordered text-right">
+            <table class="table table-bordered text-end">
                 <tr>
                     <i class="bi bi-info-circle"
                        data-bs-toggle="tooltip"
@@ -580,7 +580,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->reqId()) as $acsoi) { ?>
                         </b>
                     </td>
                     <td style="width: 60%;background-color: lightblue"
-                        class="amount"
+                        class="text-end"
                         id="amount_subtotal"
                         data-bs-toggle = "tooltip"
                         title="<?= $subtotalTooltip; ?>">
@@ -599,7 +599,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->reqId()) as $acsoi) { ?>
                             </b>
                         </span>
                     </td>
-                    <td class="amount"
+                    <td class="text-end"
                         style="background-color: lightpink"
                         data-bs-toggle = "tooltip"
                         id="amount_item_tax_total"
@@ -615,7 +615,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->reqId()) as $acsoi) { ?>
 <?= $translator->translate('allowance.or.charge.shipping.handling.packaging'); ?>
                         </b>
                     </td>
-                    <td class="amount"
+                    <td class="text-end"
                         id="amount_sales_order_allowance_charge_total"
                         data-bs-toggle = "tooltip"
                         title="sales_order_amount->packhandleship_total">
@@ -633,7 +633,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->reqId()) as $acsoi) { ?>
                         'allowance.or.charge.shipping.handling.packaging.tax'); ?>
                         </b>
                     </td>
-                    <td class="amount"
+                    <td class="text-end"
                         id="amount_sales_order_allowance_charge_tax"
                         data-bs-toggle = "tooltip"
                         title="sales_order_amount->packhandleship_tax">
@@ -677,7 +677,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->reqId()) as $acsoi) { ?>
             }
         ?>
                                     </span>
-                                    <span class="amount"
+                                    <span class="text-end"
                                           data-bs-toggle = "tooltip"
                                           title=
                             "sales_order_tax_rate->sales_order_tax_rate_amount">
@@ -710,7 +710,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->reqId()) as $acsoi) { ?>
                     <td>
                         <b><?= $translator->translate('total'); ?></b>
                     </td>
-                    <td class="amount"
+                    <td class="text-end"
                         style="background-color:lightyellow"
                         id="amount_sales_order_total"
                         data-bs-toggle = "tooltip"

@@ -16,6 +16,9 @@ use Yiisoft\Html\Html;
  * @var string $csrf
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
+
+$dateFmt   = $dateHelper->display();
+$dateRange = ' (' . $dateFmt . ')';
 ?>
 
 <?= $alert; ?>
@@ -44,8 +47,8 @@ use Yiisoft\Html\Html;
                           action="<?= $urlGenerator->generate($actionName,
                                   $actionArguments); ?>"
                           enctype="multipart/form-data"
-                       <?php echo($s->getSetting('open_reports_in_new_tab')
-                               === '1' ? 'target="_blank"' : ''); ?>>
+                       <?php echo $s->getSetting('open_reports_in_new_tab')
+                               === '1' ? 'target="_blank"' : ''; ?>>
 
                         <input type="hidden"
                                id="_csrf"
@@ -54,18 +57,13 @@ use Yiisoft\Html\Html;
 
                         <div class="mb-3">
                             <label for="from_date">
-                                <?= $translator->translate('from.date')
-                                       . ' ('
-                                       . $dateHelper->display()
-                                       . ')'; ?>
+                                <?= $translator->translate('from.date') . $dateRange; ?>
                             </label>
                             <div class="input-group">
                                 <input type="date"
                                        name="from_date"
                                        id="from_date"
-                                       placeholder="<?= ' ('
-                                            . $dateHelper->display()
-                                            . ')';?>"
+                                       placeholder="<?= $dateRange;?>"
                                        class="form-control form-control-lg"
                                        value="<?= $body['from_date'] =
                                             $startTaxYear; ?>"
@@ -78,18 +76,13 @@ use Yiisoft\Html\Html;
 
                         <div class="mb-3">
                             <label for="to_date">
-                                <?= $translator->translate('to.date')
-                                        . ' ('
-                                        . $dateHelper->display()
-                                        . ')'; ?>
+                                <?= $translator->translate('to.date') . $dateRange; ?>
                             </label>
                             <div class="input-group">
                                 <input type="date"
                                        name="to_date"
                                        id="to_date"
-                                       placeholder="<?= ' ('
-                                            . $dateHelper->display()
-                                            . ')';?>"
+                                       placeholder="<?= $dateRange;?>"
                                        class="form-control form-control-lg"
                                        value="<?= $body['to_date'] =
                                             (new \DateTimeImmutable('now'))

@@ -409,7 +409,7 @@ echo H::openTag('div', $row); //1
   echo H::closeTag('div'); //3
   echo H::openTag('div', $panel); //3
    echo H::openTag('div', $panelHead); //4
-    echo $translator->translate('amount.settings');
+    echo $translator->translate('text-end.settings');
    echo H::closeTag('div'); //4
    echo H::openTag('div', $panelBody); //4
     echo H::openTag('div', $row); //5
@@ -453,20 +453,20 @@ echo H::openTag('div', $row); //1
          ->selected(
           $body[$kCurrencySymbolPlacement] == 'before'
         )
-         ->content($translator->translate('before.amount'));
+         ->content($translator->translate('before.text-end'));
         echo  new Option()
          ->value('after')
          ->selected(
           $body[$kCurrencySymbolPlacement] == 'after'
         )
-         ->content($translator->translate('after.amount'));
+         ->content($translator->translate('after.text-end'));
         echo  new Option()
          ->value('afterspace')
          ->selected(
           $body[$kCurrencySymbolPlacement] == 'afterspace'
         )
          ->content(
-          $translator->translate('after.amount.space')
+          $translator->translate('after.text-end.space')
          );
        echo H::closeTag('select');
       echo H::closeTag('div'); //7

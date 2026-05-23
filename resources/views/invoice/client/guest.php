@@ -163,7 +163,7 @@ $columns = [
                 }
             }
             // Iterate across $model->getInvs()->toArray() to generate a mini
-            // table with invoice number, invoice amount, and date
+            // table with invoice number, invoice text-end, and date
             return $gridComponents->gridMiniTableOfInvoicesForClient(
                 $model,
                 $min_invoices_per_row = 4,

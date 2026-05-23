@@ -100,7 +100,7 @@ $columns = [
            ? $qaR->repoQuotequery($quoteId) : null;
    return (string) Html::span(
     $s->formatCurrency(null !== $quote_amount ? $quote_amount->getTotal() : 0.00),
-    ['class' => 'amount', 'style' => 'float:right'],
+    ['class' => 'text-end', 'style' => 'float:right'],
    );
   },
   encodeContent: false,
