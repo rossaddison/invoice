@@ -10,23 +10,25 @@ declare(strict_types=1);
  */
 
 echo "<?php\n";
+$TYPE_DATE = 'date';
+$TYPECAST_INT = '(int)';
+$TYPECAST_STRING = '(string)';
+$MODEL_SET = '$model->set';
 ?>
 
 declare(strict_types=1);
 
 namespace <?= $generator->getNamespacePath() . DIRECTORY_SEPARATOR . $generator->getCamelcaseCapitalName() . ";\n"; ?>
 
-use <?= $generator->getNamespacePath() . DIRECTORY_SEPARATOR . 'Entity' . DIRECTORY_SEPARATOR . $generator->getCamelcaseCapitalName() . ";\n"; ?>
+use App\Infrastructure\Persistence\<?= $generator->getCamelcaseCapitalName(); ?>\<?= $generator->getCamelcaseCapitalName(); ?>;
+
 
 
 final class <?= $generator->getCamelcaseCapitalName(); ?>Service
 {
 
-    private <?= $generator->getCamelcaseCapitalName(); ?>Repository $repository;
-
-    public function __construct(<?= $generator->getCamelcaseCapitalName(); ?>Repository $repository)
+    public function __construct(private <?= $generator->getCamelcaseCapitalName(); ?>Repository $repository)
     {
-        $this->repository = $repository;
     }
 
     public function save<?= $generator->getCamelcaseCapitalName(); ?>(<?= $generator->getCamelcaseCapitalName(); ?> $model, array $array): void
@@ -37,7 +39,7 @@ final class <?= $generator->getCamelcaseCapitalName(); ?>Service
  * @var Cycle\Database\Schema\AbstractColumn $column
  */
 foreach ($orm_schema->getColumns() as $column) {
-    if (($column->getAbstractType() <> 'primary')) {
+    if ($column->getAbstractType() <> 'primary') {
         switch ($column->getAbstractType()) {
             //case 'primary':
             //
@@ -52,31 +54,31 @@ foreach ($orm_schema->getColumns() as $column) {
                 break;
                 //Database specific integer (usually 32 bits).
             case 'integer':
-                $typecast = '(int)';
+                $typecast = $TYPECAST_INT;
                 break;
                 //Small/tiny integer, check your DBMS to check its size.
             case 'tinyInteger':
-                $typecast = '(int)';
+                $typecast = $TYPECAST_INT;
                 break;
                 //Big/long integer (usually 64 bits), check your DBMS to check its size.
             case 'bigInteger':
-                $typecast = '(int)';
+                $typecast = $TYPECAST_INT;
                 break;
                 //length:255] String with specified length, a perfect type for emails and usernames as it can be indexed.
             case 'string':
-                $typecast = '(string)';
+                $typecast = $TYPECAST_STRING;
                 break;
                 //Database specific type to store text data. Check DBMS to find size limitations.
             case 'text':
-                $typecast = '(string)';
+                $typecast = $TYPECAST_STRING;
                 break;
                 //Tiny text, same as "text" for most of the databases. Differs only in MySQL.
             case 'tinyText':
-                $typecast = '(string)';
+                $typecast = $TYPECAST_STRING;
                 break;
                 //Long text, same as "text" for most of the databases. Differs only in MySQL.
             case 'longText':
-                $typecast = '(string)';
+                $typecast = $TYPECAST_STRING;
                 break;
                 //[Double precision number.] (https://en.wikipedia.org/wiki/Double-precision_floating-point_format)
             case 'double':
@@ -95,7 +97,7 @@ foreach ($orm_schema->getColumns() as $column) {
                 $typecast = '';
                 break;
                 //To store date only, DBAL will automatically force UTC timezone for such columns.
-            case 'date':
+            case $TYPE_DATE:
                 $typecast = '';
                 break;
                 //To store time only.
@@ -126,18 +128,20 @@ foreach ($orm_schema->getColumns() as $column) {
             case 'enum':
                 $typecast = '';
                 break;
+            default:
+                break;
         }
-        if ($column->getAbstractType() <> 'date') {
-            echo '   isset($array[' . "'" . $column->getName() . "']) ? " . '$model->set' . ucfirst($column->getName()) . '(' . $typecast . '$array[' . "'" . $column->getName() . "']) : '';" . "\n";
+        if ($column->getAbstractType() <> $TYPE_DATE) {
+            echo '   isset($array[' . "'" . $column->getName() . "']) ? " . $MODEL_SET . ucfirst($column->getName()) . '(' . $typecast . '$array[' . "'" . $column->getName() . "']) : '';" . "\n";
         }
-        if ($column->getAbstractType() === 'date') {
-            echo '   isset($array[' . "'" . $column->getName() . "']) ? " . '$model->set' . ucfirst($column->getName()) . '(' . $typecast . '$array[' . "'" . $column->getName() . "']) : '';" . "\n";
+        if ($column->getAbstractType() === $TYPE_DATE) {
+            echo '   isset($array[' . "'" . $column->getName() . "']) ? " . $MODEL_SET . ucfirst($column->getName()) . '(' . $typecast . '$array[' . "'" . $column->getName() . "']) : '';" . "\n";
             echo '$datetime = new \DateTime();';
             echo '/**';
             echo ' * @var string $array[' . "'" . $column->getName() . "'" . ']';
             echo ' */';
             echo '$date = $array' . "['" . $column->getName() . "'] ?? '';";
-            echo '$model->set' . ucfirst($column->getName()) . '($datetime::createFromFormat(' . "'" . "Y-m-d" . "'," . '$date));';
+            echo $MODEL_SET . ucfirst($column->getName()) . '($datetime::createFromFormat(' . "'" . "Y-m-d" . "'," . '$date));';
         }
     }
 }

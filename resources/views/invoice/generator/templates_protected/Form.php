@@ -14,6 +14,10 @@ declare(strict_types=1);
 
 
 echo "<?php\n";
+$TYPE_PRIMARY = 'primary';
+$TYPE_DATE = 'date';
+$TYPE_DATETIME = 'datetime';
+$TYPE_TIME = 'time';
 ?>
 
 declare(strict_types=1);
@@ -26,7 +30,7 @@ use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 <?php
 foreach ($orm_schema->getColumns() as $column) {
-    if ($column->getAbstractType() === 'date' || $column->getAbstractType() === 'datetime' || $column->getAbstractType() === 'time') {
+    if ($column->getAbstractType() === $TYPE_DATE || $column->getAbstractType() === $TYPE_DATETIME || $column->getAbstractType() === $TYPE_TIME) {
         echo 'use DateTime;' . "\n";
         echo 'use DateTimeImmutable;' . "\n";
         break;
@@ -69,8 +73,8 @@ foreach ($orm_schema->getColumns() as $column) {
             break;
     }
     // Ignore the id field
-    if ($column->getAbstractType() <> 'primary') {
-        if (($column->getAbstractType() === 'date') || ($column->getAbstractType() === 'datetime')) {
+    if ($column->getAbstractType() <> $TYPE_PRIMARY) {
+        if (($column->getAbstractType() === $TYPE_DATE) || ($column->getAbstractType() === $TYPE_DATETIME)) {
             // mixed => null, or string, or DateTimeImmutable
             echo '    private mixed' . " $" . $column->getName() . ' = ' . (string) $init . ';' . "\n";
         } else {
@@ -80,8 +84,9 @@ foreach ($orm_schema->getColumns() as $column) {
 }
 ?>
 
-    public function __construct(<?= $generator->getCamelcaseCapitalName();?> $<?= $generator->getSmallSingularName();?>)
+    public static function show(<?= $generator->getCamelcaseCapitalName();?> $<?= $generator->getSmallSingularName();?>): self
     {
+        $form = new self();
     <?php
     echo "\n";
 $bo = '';
@@ -90,12 +95,13 @@ $bo = '';
  */
 foreach ($orm_schema->getColumns() as $column) {
     // Ignore the id field
-    if ($column->getAbstractType() <> 'primary') {
-        $bo .= '        $this->' . $column->getName() . " = $" . $generator->getSmallSingularName() . "->get" . ucfirst($column->getName()) . "();\n";
+    if ($column->getAbstractType() <> $TYPE_PRIMARY) {
+        $bo .= '        $form->' . $column->getName() . " = $" . $generator->getSmallSingularName() . "->get" . ucfirst($column->getName()) . "();\n";
     }
 }
 echo rtrim($bo, ",\n") . "\n";
 ?>
+        return $form;
     }
 
     <?php
@@ -103,24 +109,24 @@ echo rtrim($bo, ",\n") . "\n";
  * @var Cycle\Database\Schema\AbstractColumn $column
  */
 foreach ($orm_schema->getColumns() as $column) {
-    if (($column->getAbstractType() <> 'primary') && ($column->getAbstractType() <> 'date') && ($column->getAbstractType() <> 'time')) {
+    if (($column->getAbstractType() <> $TYPE_PRIMARY) && ($column->getAbstractType() <> $TYPE_DATE) && ($column->getAbstractType() <> $TYPE_TIME)) {
         echo "\n";
         echo '    public function get' . ucfirst($column->getName()) . '() : ' . $column->getType() . '|null' . "\n";
         echo '    {' . "\n";
         echo '      return $this->' . $column->getName() . ';' . "\n";
         echo '    }' . "\n";
     }
-    if (($column->getAbstractType() === 'date') || ($column->getAbstractType() === 'datetime')) {
+    if (($column->getAbstractType() === $TYPE_DATE) || ($column->getAbstractType() === $TYPE_DATETIME)) {
         echo "\n";
         echo '    public function get' . ucfirst($column->getName()) . '() : ' . ($column->isNullable() ? 'null|' : '') . 'string|DateTimeImmutable' . "\n";
         echo '    {' . "\n";
-        echo '           **' . "\n";
-        echo '           * @var string|' . ($column->isNullable() ? 'null|' : '') . 'DateTimeImmutable $this->' . $column->getName() . '' . "\n";
-        echo '           */' . "\n";
-        echo '          return $this->' . $column->getName() . ';' . "\n";
+        echo '           /**' . "\n";
+        echo '            * @var string|' . ($column->isNullable() ? 'null|' : '') . 'DateTimeImmutable $this->' . $column->getName() . "\n";
+        echo '            */' . "\n";
+        echo '           return $this->' . $column->getName() . ';' . "\n";
         echo '    }' . "\n";
     }
-    if ($column->getAbstractType() === 'time') {
+    if ($column->getAbstractType() === $TYPE_TIME) {
         echo "\n";
         echo '    public function get' . ucfirst($column->getName()) . '() : ?\DateTime' . "\n";
         echo '    {' . "\n";
@@ -132,9 +138,8 @@ echo "\n";
 echo '    /**' . "\n";
 echo '     * @return string' . "\n";
 echo "     * @psalm-return ''" . "\n";
-echo '     */';
-echo '#[\Override]';
-echo "\n";
+echo '     */' . "\n";
+echo '#[\Override]' . "\n";
 echo '    public function getFormName(): string' . "\n";
 echo '    {' . "\n";
 echo '      return ' . "''" . ';' . "\n";
