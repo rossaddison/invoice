@@ -26,7 +26,7 @@ use Yiisoft\Html\Tag\I;
  */
 
 $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
-$fmCtlAmt = 'form-control amount';
+$frmCtlAmt = 'form-control amount';
 ?>
 <?= Html::openTag('div', ['class' => 'card']); ?>
     <?= Html::openTag('div', ['class' => 'card-header']); ?>
