@@ -38,7 +38,7 @@ $frmCtlAmt = 'form-control amount';
  echo H::openTag('div', ['class' => 'table-responsive']); //1
   echo H::openTag('table', [
       'id' => 'item_table',
-      'class' => 'items table table-bordered no-margin',
+      'class' => 'items table table-bordered m-0',
   ]); //2
    echo H::openTag('thead'); //3
     echo H::openTag('tr'); //4

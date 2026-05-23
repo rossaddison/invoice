@@ -14,7 +14,7 @@ use Yiisoft\Html\Html;
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
 ?>
-<div class="card no-margin">
+<div class="card m-0">
     <div class="card-header">
       <i tooltip="data-bs-toggle" title="<?= $s->isDebugMode(6);?>">
               <?= Html::a($title, $urlGenerator->generate($actionName, $actionArguments), ['style' => 'text-decoration:none']); ?></i>

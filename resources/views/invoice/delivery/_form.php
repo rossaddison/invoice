@@ -45,7 +45,7 @@ use Yiisoft\Html\Tag\Form;
 
      <?= $button::backSave(); ?>
 
-            <?= Html::openTag('div', ['class' => 'mb-3 has-feedback']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
                     ->header($translator->translate('error.summary'))

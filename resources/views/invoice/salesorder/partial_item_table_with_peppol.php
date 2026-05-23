@@ -27,7 +27,7 @@ $vat = $s->getSetting('enable_vat_registration');
 ?>
 
 <div class="table-striped table-responsive">
-        <table id="item_table" class="items table-primary table table-bordered no-margin">
+        <table id="item_table" class="items table-primary table table-bordered m-0">
             <thead style="display: none">
             <tr>
                 <th></th>

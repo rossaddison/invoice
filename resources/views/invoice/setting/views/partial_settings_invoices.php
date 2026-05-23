@@ -764,7 +764,7 @@ echo H::openTag('div', $row); //1
        echo H::openTag('textarea', [
         'name' => $spif,
         'id' => $spif,
-        'class' => 'form-control no-margin'
+        'class' => 'form-control m-0'
        ]);
         echo $body[$spif];
        echo H::closeTag('textarea');

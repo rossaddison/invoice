@@ -38,7 +38,7 @@ use Yiisoft\Html\Html;
     </li>
 </ul>
 
-<div class="tabbable tabs-below">
+<div class="tabs-below">
 
     <div class="tab-content">
 

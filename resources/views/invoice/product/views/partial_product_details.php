@@ -71,7 +71,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::closeTag('li'); ?>
 <?= Html::closeTag('ul'); ?>
 
-<?= Html::openTag('div', ['class' => 'tabbable tabs-below']); ?>
+<?= Html::openTag('div', ['class' => 'tabs-below']); ?>
 
     <?= Html::openTag('div', ['class' => 'tab-content']); ?>
 

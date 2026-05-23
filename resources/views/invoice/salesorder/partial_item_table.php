@@ -41,7 +41,7 @@ $subtotalTooltip = 'sales_order_amount->item_subtotal ='
 
 <div>
         <table id="item_table"
-               class="items table table-responsive table-bordered no-margin">
+               class="items table table-responsive table-bordered m-0">
             <thead>
             <tr><i class="bi bi-info-circle"
                    data-bs-toggle="tooltip"

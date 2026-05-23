@@ -119,7 +119,7 @@ echo H::openTag('div', ['id' => 'content']);
 
  echo H::openTag('div', ['class' => 'row']);
   echo H::openTag('div', ['class' => $col]);
-   echo H::openTag('div', ['class' => 'card no-margin']);
+   echo H::openTag('div', ['class' => 'card m-0']);
     echo H::openTag('div', ['class' => 'card-header']);
      echo $translator->translate('notes');
     echo H::closeTag('div');

@@ -39,7 +39,7 @@ $formControlAmount = 'form-control amount';
 echo H::openTag('div', ['class' => 'table-responsive']);
  echo H::openTag('table', [
      'id' => 'item_table',
-     'class' => 'items table table-bordered no-margin'
+     'class' => 'items table table-bordered m-0'
  ]);
   echo H::openTag('thead');
    echo H::openTag('tr');

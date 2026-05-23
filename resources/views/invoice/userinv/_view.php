@@ -46,7 +46,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('div'); ?>
 <?= Html::openTag('div', ['id' => 'content']); ?>
     <?= Html::openTag('div', ['class' => 'row']); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 no-margin']); ?>
+        <?= Html::openTag('div', ['class' => 'm-0']); ?>
             <?php
                 $optionsDataUser = [];
 /**
@@ -108,7 +108,7 @@ echo Field::select($form, 'type')
     ->ariaDescribedBy($translator->translate('user.all.clients'));
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 no-margin']); ?>
+        <?= Html::openTag('div', ['class' => 'm-0']); ?>
             <?php
     $optionsDataLanguage = [];
 /**

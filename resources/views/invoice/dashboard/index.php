@@ -48,7 +48,7 @@ use Yiisoft\Html\Html;
                 <div class="card-header">
                     <b><?= $translator->translate('quick.actions'); ?></b>
                 </div>
-                <div class="btn-group btn-group-justified no-margin">
+                <div class="btn-group btn-group-justified m-0">
                     <?php
                         echo $modal_create_client;
 ?>
@@ -137,7 +137,7 @@ use Yiisoft\Html\Html;
                     </span>
                 </div>
                 <table class="table table-hover table-bordered
-                       table-condensed no-margin">
+                       table-condensed m-0">
                     <thead>
                         <tr>
                             <th style="min-width: 1%;">
@@ -192,7 +192,7 @@ use Yiisoft\Html\Html;
                 </div>
 
                 <table class="table table-hover table-bordered
-                       table-condensed no-margin">
+                       table-condensed m-0">
                     <thead>
                         <tr>
                             <th style="min-width: 1%;">
@@ -241,7 +241,7 @@ use Yiisoft\Html\Html;
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover table-striped
-                           table-condensed no-margin">
+                           table-condensed m-0">
                         <thead>
                         <tr>
                             <th>
@@ -353,7 +353,7 @@ use Yiisoft\Html\Html;
 
                 <div class="table-responsive">
                     <table class="table table-hover table-striped
-                           table-condensed no-margin">
+                           table-condensed m-0">
                         <thead>
                         <tr>
                             <th>
@@ -478,7 +478,7 @@ use Yiisoft\Html\Html;
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover table-striped
-                               table-condensed no-margin">
+                               table-condensed m-0">
                             <thead>
                             <tr>
                                 <th>
@@ -540,7 +540,7 @@ use Yiisoft\Html\Html;
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover table-striped
-                               table-condensed no-margin">
+                               table-condensed m-0">
                             <thead>
                             <tr>
                                 <th>

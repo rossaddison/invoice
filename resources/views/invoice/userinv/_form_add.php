@@ -50,7 +50,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('div'); ?>
 <?= Html::openTag('div', ['id' => 'content']); ?>
     <?= Html::openTag('div', ['class' => 'row']); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 has-feedback']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::errorSummary($form)
                 ->errors($errors)
                 ->header($translator->translate('error.summary'))
@@ -58,7 +58,7 @@ use Yiisoft\Html\Tag\Form;
                 ->onlyCommonErrors()
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 no-margin']); ?>
+        <?= Html::openTag('div', ['class' => 'm-0']); ?>
             <?php
                 // build an array of userinv ids
                 $userInvIds = [];
@@ -100,7 +100,7 @@ foreach ($uR->findAllPreloaded() as $user) {
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= $formFields->userInvCheckboxField($form, 'all_clients', 'user.all.clients'); ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 no-margin']); ?>
+        <?= Html::openTag('div', ['class' => 'm-0']); ?>
             <?php
     $languageOptions = [];
 /** @var string $language */

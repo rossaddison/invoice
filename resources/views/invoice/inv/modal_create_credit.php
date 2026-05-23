@@ -77,7 +77,7 @@ echo $credit_date; ?>">
                         <li><?= $translator->translate('group') . ': ' . (!empty($credit_invoice_group) ? $credit_invoice_group : ''); ?></li>
                     </ul>
 
-                    <div class="alert alert-danger no-margin">
+                    <div class="alert alert-danger m-0">
                         <?= $translator->translate('create.credit.invoice.alert'); ?>
                     </div>
                 </form>

@@ -396,7 +396,7 @@ echo H::openTag('div', ['class' => 'card']); //0
 
   echo H::openTag('div', ['class' => 'row']); //2
    echo H::openTag('div', ['class' => $col]); //3
-    echo H::openTag('div', ['class' => 'card no-margin']); //4
+    echo H::openTag('div', ['class' => 'card m-0']); //4
      echo H::openTag('div', ['class' => 'card-header']); //5
       echo $translator->translate('notes');
      echo H::closeTag('div'); //5

@@ -118,7 +118,7 @@ if ($disable_form === false) {
           echo H::tag('br');
           echo H::openTag('div', ['class' => 'table-responsive']);
            echo H::openTag('table',
-                   ['class' => 'table table-bordered table-condensed no-margin']);
+                   ['class' => 'table table-bordered table-condensed m-0']);
             echo H::openTag('tbody');
              echo H::openTag('tr');
               echo H::openTag('th', ['scope' => 'col']);

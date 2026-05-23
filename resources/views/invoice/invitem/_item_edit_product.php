@@ -61,7 +61,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
             <?= Html::openTag('table',
                     ['id' => 'item_table',
                      'class' =>
-                     'items table-primary table table-bordered no-margin']); ?>
+                     'items table-primary table table-bordered m-0']); ?>
                 <?= Html::openTag('tbody', ['id' => 'new_inv_item_row']); ?>
                     <?= Html::openTag('tr'); ?>
                         <?= Html::openTag('td',

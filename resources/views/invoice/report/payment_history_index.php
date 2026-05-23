@@ -47,7 +47,7 @@ declare(strict_types=1);
                                name="_csrf"
                                value="<?= $csrf ?>">
 
-                        <div class="mb-3 has-feedback">
+                        <div class="mb-3">
                             <label for="from_date">
                                 <?= $translator->translate('from.date')
                                     . ' ('
@@ -71,7 +71,7 @@ declare(strict_types=1);
                             </div>
                         </div>
 
-                        <div class="mb-3 has-feedback">
+                        <div class="mb-3">
                             <label for="to_date">
                                 <?= $translator->translate('to.date')
                                         . ' ('

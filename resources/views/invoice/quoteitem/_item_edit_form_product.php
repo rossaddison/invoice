@@ -46,7 +46,7 @@ $frmCtlAmt = 'form-control amount';
 ->open() ?>
 
         <?= Html::openTag('div', ['class' => 'table-striped table-responsive']); ?>
-            <?= Html::openTag('table', ['id' => 'item_table', 'class' => 'items table-primary table table-bordered no-margin']); ?>
+            <?= Html::openTag('table', ['id' => 'item_table', 'class' => 'items table-primary table table-bordered m-0']); ?>
                 <?= Html::openTag('tbody', ['id' => 'edit_quote_item_row']); ?>
                     <?= Html::openTag('tr'); ?>
                         <?= Html::openTag('td', ['rowspan' => '2', 'class' => 'td-icon']); ?>

@@ -16,7 +16,7 @@ use Yiisoft\Html\Html;
 ?>
 
 <div class="table-responsive">
-    <table id="tasks_table" class="table table-hover table-bordered table-striped no-margin">
+    <table id="tasks_table" class="table table-hover table-bordered table-striped m-0">
         <tr>
             <th>&nbsp;</th>
             <th><?= $translator->translate('project.name'); ?></th>

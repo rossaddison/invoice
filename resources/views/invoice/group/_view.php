@@ -33,7 +33,7 @@ use Yiisoft\Html\Tag\Form;
     ->id('GroupForm')
     ->open()
 ?>
-<?= Html::openTag('div', ['class' => 'tabbable tabs-below']); ?>
+<?= Html::openTag('div', ['class' => 'tabs-below']); ?>
 
     <?= Html::openTag('div', ['class' => 'tab-content']); ?>
 

@@ -51,7 +51,7 @@ declare(strict_types=1);
                             <?php } ?>
                         </select>
                     </div>
-                    <div class="mb-3 has-feedback">
+                    <div class="mb-3">
                         <label for="recur_start_date">
                             <?= $translator->translate('start.date'); ?>
                         </label>
@@ -74,7 +74,7 @@ declare(strict_types=1);
                                     . $translator->translate('next'); ?>
                         </label>
                     </div>
-                    <div class="mb-3 has-feedback">
+                    <div class="mb-3">
                         <label for="recur_end_date">
                             <?= $translator->translate('end.date'); ?>
                             (<?= $translator->translate('optional'); ?>)

@@ -51,8 +51,8 @@ $client_helper = new ClientHelper($s);
                     . Html::encode($userInv->getName()); ?>
             </div>
             <div class="card-body table-content">
-                <div class="table-responsive no-margin">
-                    <table class="table table-hover table-striped no-margin">
+                <div class="table-responsive m-0">
+                    <table class="table table-hover table-striped m-0">
                         <thead>
                         <tr>
                             <th><?= $translator->translate('client'); ?></th>

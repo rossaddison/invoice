@@ -24,7 +24,7 @@ $formGroup = ['class' => 'mb-3'];
 $formControl = ['class' => 'form-control',];
 $formSelect  = ['class' => 'form-select'];
 $helpBlock = ['class' => 'form-text'];
-$noMargin = ['class' => 'form-control no-margin'];
+$noMargin = ['class' => 'form-control m-0'];
 $minSearch = ['data-minimum-results-for-search' => 'Infinity'];
 
 echo H::openTag('div', $row); //1

@@ -104,7 +104,7 @@ if ($disable_form === false) {
          echo $partial_client_address;
          echo H::tag('br');
          echo H::openTag('div', ['class' => 'table-responsive']);
-          echo H::openTag('table', ['class' => 'table table-bordered table-condensed no-margin']);
+          echo H::openTag('table', ['class' => 'table table-bordered table-condensed m-0']);
            echo H::openTag('tbody');
             echo H::openTag('tr');
              echo H::openTag('td');

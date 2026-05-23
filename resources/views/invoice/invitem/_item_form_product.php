@@ -70,7 +70,7 @@ echo (new Form())
 
         <?= Html::openTag('div', ['class' => 'table-striped table-responsive']); ?>
             <?= Html::openTag('table', ['id' => 'item_table',
-                'class' => 'items table-primary table table-bordered no-margin']); ?>
+                'class' => 'items table-primary table table-bordered m-0']); ?>
                 <?= Html::openTag('tbody', ['id' => 'new_inv_item_row']); ?>
                     <?= Html::openTag('tr'); ?>
                         <?= Html::openTag('td', ['rowspan' => '2', 'class' => 'td-icon']); ?>

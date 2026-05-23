@@ -179,7 +179,7 @@ if ($readOnly === false && $invEdit && $inv->reqStatusId() === 1) {
             ->render();
         echo H::closeTag('li');
     echo H::closeTag('ul');
-    echo H::openTag('div', ['class' => 'tabbable tabs-below']);
+    echo H::openTag('div', ['class' => 'tabs-below']);
      echo H::openTag('div', ['class' => 'tab-content']);
       echo H::openTag('div', ['id' => 'add-product-tab', 'class' => 'tab-pane']);
        echo H::openTag('div', ['class' => 'card-header']);
@@ -828,7 +828,7 @@ if ($inv->reqStatusId() === 1
           ]);
          echo H::closeTag('div');
         echo H::closeTag('div');
-        echo H::openTag('div', ['class' => 'invoice-properties has-feedback']);
+        echo H::openTag('div', ['class' => 'invoice-properties']);
          echo H::openTag('label', ['for' => 'date_supplied']);
           echo H::openTag('b');
            echo $translator->translate('date.supplied');
@@ -1076,7 +1076,7 @@ if (null !== $inv->getSoId()) {
 
   echo H::openTag('div', ['class' => 'row']);
    echo H::openTag('div', ['class' => $col]);
-    echo H::openTag('div', ['class' => 'card no-margin']);
+    echo H::openTag('div', ['class' => 'card m-0']);
      echo H::openTag('div', ['class' => 'card-header']);
       echo H::openTag('b');
        echo H::encode($translator->translate('terms'));

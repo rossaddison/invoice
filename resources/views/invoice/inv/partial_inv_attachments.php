@@ -26,7 +26,7 @@ if ($invEdit && $invView) {
 }
 ?>
 
-<div class="card no-margin">
+<div class="card m-0">
     <div class="card-header">
         <b>
             <?=  new I()

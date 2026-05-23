@@ -13649,7 +13649,7 @@ label {
 }
 
 #submenu {
-  max-width: 100% !important;
+  max-width: 100%;
 }
 #submenu .submenu-row {
   padding: 5px;
@@ -14187,7 +14187,7 @@ legend {
     padding: 8px !important;
   }
   .float-end {
-    margin-left: 5px !important;
+    margin-left: 5px;
   }
   #fullpage-loader .loader-content {
     font-size: 150px;
