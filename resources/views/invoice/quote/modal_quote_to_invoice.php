@@ -9,7 +9,7 @@ use Yiisoft\Html\Tag\Option;
 /**
  * Related logic: see id="quote-to-invoice" triggered by
  *  <a href="#quote-to-invoice" data-bs-toggle="modal"
- *   style="text-decoration:none">
+ *  >
  * Related logic: see views/quote/view.php
  * @var App\Infrastructure\Persistence\Quote\Quote $quote
  * @var App\Invoice\Setting\SettingRepository $s

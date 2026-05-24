@@ -339,7 +339,7 @@ echo Html::script($js5)->type('module');
                     <div>
                     <div class="mb-3">
 
-                        <div class="input-group">
+                        <div>
                         <?=
         Field::text($form, 'guest_url')
         ->readonly(true)
@@ -351,7 +351,7 @@ echo Html::script($js5)->type('module');
 echo Html::tag(
     'Div',
     Html::tag('i', '', ['class' => 'bi bi-clipboard']),
-    ['class' => 'input-group-text to-clipboard cursor-pointer',
+    ['class' => 'btn btn-outline-secondary to-clipboard cursor-pointer',
         'data-clipboard-target' => '#invoice-guest-url','style' => 'height : 38px'],
 );
 ?>

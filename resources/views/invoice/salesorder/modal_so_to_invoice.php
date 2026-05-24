@@ -7,7 +7,7 @@ use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Option;
 
 /**
- * Related logic: see id="so-to-invoice" triggered by <a href="#so-to-invoice" data-bs-toggle="modal"  style="text-decoration:none"> on views/salesorder/view.php line 86
+ * Related logic: see id="so-to-invoice" triggered by <a href="#so-to-invoice" data-bs-toggle="modal" > on views/salesorder/view.php line 86
  * @var App\Invoice\Group\GroupRepository $gR
  * @var App\Infrastructure\Persistence\SalesOrder\SalesOrder $so
  * @var App\Invoice\Setting\SettingRepository $s

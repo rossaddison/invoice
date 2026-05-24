@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * Related logic: see id="create-client" triggered by <a href="#create-client" class="btn btn-success" data-bs-toggle="modal"  style="text-decoration:none"> on
+ * Related logic: see id="create-client" triggered by <a href="#create-client" class="btn btn-success" data-bs-toggle="modal" > on
  * Related logic: see views/client/index.php
  * @var Yiisoft\Translator\TranslatorInterface $translator
  */
@@ -22,7 +22,7 @@ use Yiisoft\Html\Html;
             <br>
         </div>
         <div class="mb-3">
-            <label for="client_name" class="form-label"><?= $translator->translate('client.name'); ?><span style="color:red">*</span></label>
+            <label for="client_name" class="form-label"><?= $translator->translate('client.name'); ?><span class="text-danger">*</span></label>
             <input type="text" class="form-control form-control-lg" name="client_name" id="client_name" placeholder="<?= $translator->translate('client.name'); ?>" value="<?= Html::encode($body['client_name'] ?? '') ?>" required>
         </div>
         <div class="mb-3">
@@ -30,7 +30,7 @@ use Yiisoft\Html\Html;
             <input type="text" class="form-control form-control-lg" name="client_surname" id="client_surname" placeholder="<?= $translator->translate('client.surname'); ?>" value="<?= Html::encode($body['client_surname'] ?? '') ?>">
         </div>
         <div class="mb-3">
-            <label for="client_email" class="form-label"><?= $translator->translate('email'); ?><span style="color:red">*</span></label>
+            <label for="client_email" class="form-label"><?= $translator->translate('email'); ?><span class="text-danger">*</span></label>
             <input type="text" class="form-control form-control-lg" name="client_email" id="client_email" placeholder="<?= $translator->translate('email'); ?>" value="<?= Html::encode($body['client_email'] ?? '') ?>" required>
         </div>
         <div class="modal-header">

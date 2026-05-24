@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Related logic: see id="so-to-pdf" triggered by <a href="#so-to-pdf" data-bs-toggle="modal"  style="text-decoration:none"> on views/salesorder/view.php
+ * Related logic: see id="so-to-pdf" triggered by <a href="#so-to-pdf" data-bs-toggle="modal" > on views/salesorder/view.php
  * @var App\Infrastructure\Persistence\SalesOrder\SalesOrder $so
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var string $csrf

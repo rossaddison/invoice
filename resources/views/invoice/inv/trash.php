@@ -71,7 +71,6 @@ echo Html::openTag('div', ['class' => 'container-fluid']);
                 ->addAttributes([
                     'data-bs-toggle' => 'modal',
                     'href'           => '#' . $modalId,
-                    'style'          => 'text-decoration:none',
                 ])
                 ->addClass('btn btn-success btn-sm bi bi-arrow-counterclockwise me-1')
                 ->content($translator->translate('delete.invoice.restore'))

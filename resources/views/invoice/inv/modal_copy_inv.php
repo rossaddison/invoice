@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * Related logic: see id="inv-to-inv" triggered by <a href="#inv-to-inv" data-bs-toggle="modal"  style="text-decoration:none">
+ * Related logic: see id="inv-to-inv" triggered by <a href="#inv-to-inv" data-bs-toggle="modal" >
  * Related logic: see InvController view function
  * @var App\Infrastructure\Persistence\Inv\Inv $inv
  * @var Yiisoft\Translator\TranslatorInterface $translator

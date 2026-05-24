@@ -31,7 +31,7 @@ if ($invEdit && $invView) {
     <div class="card-header">
         <i tooltip="data-bs-toggle" title="<?= $s->isDebugMode(8);?>"><?= $translator->translate('productimage.upload'); ?></i>
     </div>
-    <div class="card-body clearfix">
+    <div class="card-body">
         <div class="container">
             <?php if ($invView && $invEdit) { ?>
             <?php echo $partial_product_image_info; ?>

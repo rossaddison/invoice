@@ -55,7 +55,6 @@ use Yiisoft\Html\Tag\Input;
 
 $clientId = $client->reqId();
 
-$cssStyleNoDecoration = 'text-decoration:none';
 $cssCardHeader = 'card-header';
 $cssColMd6 = 'col-12 col-md-6';
 $cssCardBodyTableContent = 'card-body table-content';
@@ -75,20 +74,20 @@ echo H::openTag('div', ['id' => 'headerbar']); //0
     ->content(H::tag('i', '', ['class' => 'bi bi-file-earmark-text']) . $translator->translate('create.quote'))
     ->href('#modal-add-quote')
     ->encode(false)
-    ->addAttributes(['class' => $cssBtnSuccess, 'data-bs-toggle' => 'modal', 'style' => $cssStyleNoDecoration])
+    ->addAttributes(['class' => $cssBtnSuccess, 'data-bs-toggle' => 'modal'])
     ->render();
    echo (new A())
     ->content(H::tag('i', '', ['class' => 'bi bi-file-earmark-text']) . $translator->translate('create.invoice'))
     ->href('#modal-add-inv')
     ->encode(false)
-    ->addAttributes(['class' => $cssBtnSuccess, 'data-bs-toggle' => 'modal', 'style' => $cssStyleNoDecoration])
+    ->addAttributes(['class' => $cssBtnSuccess, 'data-bs-toggle' => 'modal'])
     ->render();
    if ($cpR->repoClientCount($clientId) === 0 && ($clientId > 0)) {
     echo (new A())
      ->content(H::tag('i', '', ['class' => $cssBiPlus]) . ' ' . $translator->translate('client.peppol.add'))
      ->href($urlGenerator->generate('clientpeppol/add', ['_language' => 'en', 'client_id' => $clientId]))
      ->encode(false)
-     ->addAttributes(['class' => 'btn btn-outline-info', 'style' => $cssStyleNoDecoration])
+     ->addAttributes(['class' => 'btn btn-outline-info'])
      ->render();
    }
    if ($cpR->repoClientCount($clientId) > 0 && ($clientId > 0)) {
@@ -96,14 +95,14 @@ echo H::openTag('div', ['id' => 'headerbar']); //0
      ->content(H::tag('i', '', ['class' => 'bi bi-pencil-square']) . ' ' . $translator->translate('client.peppol.edit'))
      ->href($urlGenerator->generate('clientpeppol/edit', ['client_id' => $clientId]))
      ->encode(false)
-     ->addAttributes(['class' => 'btn btn-outline-warning', 'style' => $cssStyleNoDecoration])
+     ->addAttributes(['class' => 'btn btn-outline-warning'])
      ->render();
    }
    echo (new A())
     ->content(H::tag('i', '', ['class' => 'bi bi-pencil-square']) . $translator->translate('edit'))
     ->href($urlGenerator->generate('client/edit', ['id' => $clientId, 'origin' => 'edit']))
     ->encode(false)
-    ->addAttributes(['class' => 'btn btn-outline-warning', 'style' => $cssStyleNoDecoration])
+    ->addAttributes(['class' => 'btn btn-outline-warning'])
     ->render();
    echo (new A())
     ->content(H::tag('i', '', ['class' => $cssBiPlus]) . $translator->translate('client.postaladdress.add'))
@@ -124,7 +123,7 @@ echo H::openTag('div', ['id' => 'headerbar']); //0
       )
     )
     ->encode(false)
-    ->addAttributes(['class' => 'btn btn-outline-primary', 'style' => $cssStyleNoDecoration])
+    ->addAttributes(['class' => 'btn btn-outline-primary'])
     ->render();
    echo (new A())
     ->content(H::tag('i', '', ['class' => $cssBiPlus]) . $translator->translate('delivery.location.add'))
@@ -135,7 +134,7 @@ echo H::openTag('div', ['id' => 'headerbar']); //0
       )
     )
     ->encode(false)
-    ->addAttributes(['class' => $cssBtnSuccess, 'style' => $cssStyleNoDecoration])
+    ->addAttributes(['class' => $cssBtnSuccess])
     ->render();
    echo (new A())
     ->content(H::tag('i', '', ['class' => 'bi bi-trash']) . ' ' . $translator->translate('delete'))
@@ -144,7 +143,6 @@ echo H::openTag('div', ['id' => 'headerbar']); //0
     ->addAttributes([
      'class' => 'btn btn-outline-danger',
      'onclick' => 'return confirm(' . H::encode("'" . $translator->translate('delete.client.warning') . "'") . ')',
-     'style' => $cssStyleNoDecoration,
     ])
     ->render();
   echo H::closeTag('div'); //2
@@ -188,7 +186,6 @@ foreach ($tabs as $tab) {
    'id' => $tab['id'],
    'data-bs-toggle' => 'tab',
    'data-bs-target' => $tab['target'],
-   'style' => $cssStyleNoDecoration,
   ]);
  echo H::closeTag('li'); //1
 }

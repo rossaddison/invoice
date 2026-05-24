@@ -156,7 +156,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::a(
                     $translator->translate('delivery.location.global.location.number'),
                     'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-Delivery/cac-DeliveryLocation/cbc-ID/',
-                    ['style' => 'text-decoration:none'],
+                    ['class' => 'text-decoration-none'],
                 ); ?>
                 <?= Field::text($form, 'global_location_number')
                                                                                                                                                                     ->label($translator->translate('delivery.location.global.location.number'))

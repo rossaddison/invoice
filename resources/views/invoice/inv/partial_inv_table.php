@@ -79,7 +79,7 @@ $columns = [
             ? $model->getNumber()
             : (string) $model->reqId()),
     $urlGenerator->generate('inv/view', $args),
-    ['title' => $translator->translate('edit'), 'style' => 'text-decoration:none'],
+    ['title' => $translator->translate('edit'), 'class' => 'text-decoration-none'],
    );
   },
   encodeContent: false,
@@ -113,7 +113,7 @@ $columns = [
     Html::encode($clientHelper->formatClient($model->getClient())),
     $urlGenerator->generate('client/view', $args),
     ['title' => $translator->translate('view.client'),
-        'style' => 'text-decoration:none'],
+        'class' => 'text-decoration-none'],
    );
   },
   encodeContent: false,

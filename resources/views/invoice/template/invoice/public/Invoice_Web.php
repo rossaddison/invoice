@@ -74,7 +74,7 @@ $vat = $s->getSetting('enable_vat_registration');
                         <a href="<?= $urlGenerator->generate(
                                 'inv/pdfDownloadIncludeCf',
                                 ['url_key' => $inv_url_key]); ?>"
-                           class="btn btn-primary" style="text-decoration:none">
+                           class="btn btn-primary">
                            <i class="fa bi-file-pdf"></i>
                              <?= $translator->translate('download.pdf')
                                         . '=>'
@@ -86,7 +86,7 @@ $vat = $s->getSetting('enable_vat_registration');
                         <a href="<?= $urlGenerator->generate(
                                 'inv/pdfDownloadExcludeCf',
                                 ['url_key' => $inv_url_key]); ?>"
-                           class="btn btn-danger" style="text-decoration:none">
+                           class="btn btn-danger">
                             <i class="fa bi-file-pdf"></i>
                              <?= $translator->translate('download.pdf')
                                         . '=>'

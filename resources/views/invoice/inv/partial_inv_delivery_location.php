@@ -20,9 +20,9 @@ $sep = ':  ';
 <div class="card m-0">
     <div class="card-header">
       <i tooltip="data-bs-toggle" title="<?= $s->isDebugMode(6);?>">
-              <?= Html::a($title, $urlGenerator->generate($actionName, $actionArguments), ['style' => 'text-decoration:none']); ?></i>
+              <?= Html::a($title, $urlGenerator->generate($actionName, $actionArguments), ['class' => 'text-decoration-none']); ?></i>
     </div>
-    <div class="card-body clearfix">
+    <div class="card-body">
         <div class="container">
           <?= Html::openTag('div', ['class' => 'row']); ?>
               <div class="row mb-3">

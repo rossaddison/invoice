@@ -288,7 +288,6 @@ foreach ($soItems as $item) {
         ->class('btn btn-info')
         ->addAttributes([
          'data-bs-toggle' => 'modal',
-         'style'          => 'text-decoration:none',
         ])
         ->render();
       echo H::closeTag('span'); //5
@@ -347,7 +346,7 @@ foreach ($soItems as $item) {
        ->href($urlGenerator->generate('salesorderitem/edit', ['id' => $item->reqId()]))
        ->content('🖉')
        ->class('btn btn-primary')
-       ->addAttributes(['style' => 'text-decoration:none'])
+       ->addClass('text-decoration-none')
        ->render();
      echo H::closeTag('span'); //5
     }
@@ -563,7 +562,7 @@ echo H::tag('br');
 echo H::openTag('div', ['class' => 'row']); //0
  echo H::openTag('div', ['class' => 'col-12 col-md-4']); //1
  echo H::closeTag('div'); //1
- echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none visible-sm']); //1
+ echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none']); //1
   echo H::tag('br');
  echo H::closeTag('div'); //1
  echo H::openTag('div', ['class' =>
@@ -705,7 +704,7 @@ echo H::openTag('div', ['class' => 'row']); //0
        echo '(' . $translator->translate('discount') . ')';
       echo H::closeTag('b'); //5
      echo H::closeTag('td'); //4
-     echo H::openTag('td', ['class' => 'clearfix']); //4
+     echo H::openTag('td'); //4
       echo H::openTag('div', ['class' => 'discount-field']); //5
        echo $numberHelper->formatCurrency($so->getDiscountAmount() ?? 0.00);
       echo H::closeTag('div'); //5

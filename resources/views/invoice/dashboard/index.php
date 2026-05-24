@@ -58,7 +58,7 @@ use Yiisoft\Html\Html;
                        data-bs-toggle="modal"
                        disabled data-bs-toggle = "tooltip"
                        title="<?= $translator->translate('add.client'); ?>"
-                       style="text-decoration:none">
+                      >
                         <i class="bi bi-plus-lg"></i>
                         <?= $translator->translate('client'); ?>
                     </a>
@@ -66,7 +66,7 @@ use Yiisoft\Html\Html;
                     <a href="<?= $urlGenerator->generate('client/add',
                             ['origin' => 'dashboard']); ?>"
                         class="btn btn-success"
-                        style="text-decoration:none">
+                       >
                         <i class="bi bi-plus-lg"></i>
                         <?= $translator->translate('client'); ?>
                     </a>
@@ -77,7 +77,7 @@ use Yiisoft\Html\Html;
                        data-bs-toggle="modal"
                        disabled data-bs-toggle = "tooltip"
                        title="<?= $translator->translate('add.client'); ?>"
-                       style="text-decoration:none">
+                      >
                        <i class="bi bi-plus-lg"></i>
                        <?= $translator->translate('quote'); ?>
                     </a>
@@ -85,7 +85,7 @@ use Yiisoft\Html\Html;
                     <a href="<?= $urlGenerator->generate('quote/add',
                             ['origin' => 'dashboard']);?>"
                        class="btn btn-success"
-                       style="text-decoration:none">
+                      >
                        <i class="bi bi-plus-lg"></i>
                        <?= $translator->translate('quote'); ?>
                     </a>
@@ -96,7 +96,7 @@ use Yiisoft\Html\Html;
                        data-bs-toggle="modal"
                        disabled data-bs-toggle = "tooltip"
                        title="<?= $translator->translate('add.client'); ?>"
-                       style="text-decoration:none">
+                      >
                        <i class="bi bi-plus-lg"></i>
                        <?= $translator->translate('invoice'); ?>
                     </a>
@@ -104,13 +104,13 @@ use Yiisoft\Html\Html;
                     <a href="<?= $urlGenerator->generate('inv/add',
                             ['origin' => 'dashboard']);?>"
                        class="btn btn-success"
-                       style="text-decoration:none">
+                      >
                        <i class="bi bi-plus-lg"></i>
                        <?= $translator->translate('invoice'); ?>
                     </a>
                     <?php } ?>
                     <a href="<?= $urlGenerator->generate('payment/add') ; ?>"
-                       class="btn btn-secondary" style="text-decoration:none">
+                       class="btn btn-secondary">
                        <i class="bi bi-credit-card"></i>
                        <span class="d-none d-sm-block">
                             <?= $translator->translate('enter.payment'); ?>
@@ -256,10 +256,10 @@ use Yiisoft\Html\Html;
                             <th style="min-width: 35%;">
                                 <?= $translator->translate('client'); ?>
                             </th>
-                            <th style="text-align: right;">
+                            <th class="text-end">
                                 <?= $translator->translate('balance'); ?>
                             </th>
-                            <th style="text-align: right;">
+                            <th class="text-end">
                                 <?= $translator->translate('custom.fields'); ?>
                             </th>
                             <th></th>
@@ -289,7 +289,7 @@ use Yiisoft\Html\Html;
                                        title="<?=  (($quote->getNumber() ?? '#') ?:
                                                     ($quote->reqId() ?: '#')); ?>"
                                        class="btn btn-secondary"
-                                       style="text-decoration:none">
+                                      >
                                             <?= $quote->getNumber() ?? (string) $quote->reqId(); ?>
                                     </a>
                                 </td>
@@ -299,7 +299,7 @@ use Yiisoft\Html\Html;
                                        title="<?=  (($quote->getNumber() ?? '#') ?:
                                             ($quote->reqId() ?: '#')); ?>"
                                        class="btn btn-secondary"
-                                       style="text-decoration:none">
+                                      >
             <?= Html::encode($clientHelper->formatClient($quote->getClient())); ?>
                                     </a>
                                 </td>
@@ -308,24 +308,24 @@ use Yiisoft\Html\Html;
         $qaR->repoQuotequery($quote->reqId()) : null) ?>
 <?= $s->formatCurrency(null !== $quote_amount ? $quote_amount->getTotal() : 0.00) ?>
                                 </td>
-                                <td style="text-align: center;">
+                                <td class="text-center">
                                     <a href="<?= $urlGenerator->generate(
                                             'quote/pdfDashboardIncludeCf',
                                             ['id' => $quote->reqId()]); ?>"
                                        title="<?= $translator->translate('download.pdf'); ?>"
                                        class="btn btn-secondary"
-                                       style="text-decoration:none">
+                                      >
                                        <i class="fa bi-file-pdf"></i>
                                     </a>
                                 </td>
-                                <td style="text-align: center;">
+                                <td class="text-center">
                                     <a href="<?= $urlGenerator->generate(
                                             'quote/pdfDashboardExcludeCf',
                                             ['id' => $quote->reqId()]); ?>"
                                        title="<?= $translator->translate(
                                                'download.pdf'); ?>"
                                        class="btn btn-secondary"
-                                       style="text-decoration:none">
+                                      >
                                        <i class="fa bi-file-pdf"></i>
                                     </a>
                                 </td>
@@ -368,10 +368,10 @@ use Yiisoft\Html\Html;
                             <th style="min-width: 35%;">
                                 <?= $translator->translate('client'); ?>
                             </th>
-                            <th style="text-align: right;">
+                            <th class="text-end">
                                 <?= $translator->translate('balance'); ?>
                             </th>
-                            <th style="text-align: right;">
+                            <th class="text-end">
                                 <?= $translator->translate('custom.fields'); ?>
                             </th>
                             <th></th>
@@ -414,7 +414,7 @@ use Yiisoft\Html\Html;
                                     <a href="<?= $urlGenerator->generate('inv/view',
                                             ['id' => $invoice->reqId()]); ?>"
                                        class="btn btn-secondary"
-                                       style="text-decoration:none">
+                                      >
                                         <?= ($invoice->getNumber() ?? '#'
                                                . ($invoice->reqId() ?: '#')); ?>
                                     </a>
@@ -424,7 +424,7 @@ use Yiisoft\Html\Html;
                                             'client/view',
                                             ['id' => $invoice->reqClientId()]); ?>"
                                         class="btn btn-secondary"
-                                        style="text-decoration:none">
+                                       >
      <?= (Html::encode($clientHelper->formatClient($invoice->getClient()))); ?>
                                     </a>
                                 </td>
@@ -433,25 +433,25 @@ use Yiisoft\Html\Html;
                         ? $iaR->repoInvquery($invoice->reqId()) : null) ?>
 <?= $s->formatCurrency(null !== $inv_amount ? $inv_amount->getBalance() : 0.00) ?>
                                 </td>
-                                <td style="text-align: center;">
+                                <td class="text-center">
                                     <a href="<?= $urlGenerator->generate(
                                             'inv/pdfDashboardIncludeCf',
                                             ['id' => $invoice->reqId()]); ?>"
                                        title="<?= $translator->translate(
                                                'download.pdf'); ?>"
                                        class="btn btn-secondary"
-                                       style="text-decoration:none">
+                                      >
                                        <i class="fa bi-file-pdf"></i>
                                     </a>
                                 </td>
-                                <td style="text-align: center;">
+                                <td class="text-center">
                                     <a href="<?= $urlGenerator->generate(
                                             'quote/pdfDashboardExcludeCf',
                                             ['id' => $invoice->reqId()]); ?>"
                                        title="<?= $translator->translate(
                                                'download.pdf'); ?>"
                                        class="btn btn-secondary"
-                                       style="text-decoration:none">
+                                      >
                                        <i class="fa bi-file-pdf"></i>
                                     </a>
                                 </td>

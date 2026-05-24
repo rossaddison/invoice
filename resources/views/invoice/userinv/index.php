@@ -58,7 +58,6 @@ $toolbarReset = new A()
     ->id('btn-reset')
     ->render();
 
-$textDecorationNone = 'text-decoration:none';
 $unAssignedClientIds = $ucR->getNotAssignedToAnyUser($cR);
 
 /** @var Client[] $unAssignedClients */
@@ -157,7 +156,6 @@ echo GridView::widget()
             ->addClass(
                 'btn ' . ($active == 2 ? 'btn-primary' : 'btn-secondary')
             )
-            ->addAttributes(['style' => $textDecorationNone])
             ->content($translator->translate('all'))
             ->render(); ?>
         <?= new A()
@@ -168,7 +166,6 @@ echo GridView::widget()
             ->addClass(
                 'btn ' . ($active == 1 ? 'btn-primary' : 'btn-secondary')
             )
-            ->addAttributes(['style' => $textDecorationNone])
             ->content($translator->translate('active'))
             ->render(); ?>
         <?= new A()
@@ -179,7 +176,6 @@ echo GridView::widget()
             ->addClass(
                 'btn ' . ($active == 0 ? 'btn-primary' : 'btn-secondary')
             )
-            ->addAttributes(['style' => $textDecorationNone])
             ->content($translator->translate('inactive'))
             ->render(); ?>
         <?= Html::a(
@@ -497,7 +493,6 @@ $columns = [
         ) use (
             $urlGenerator,
             $canEdit,
-            $textDecorationNone
         ): string|A {
             return $canEdit
                 ? Html::a(
@@ -506,7 +501,7 @@ $columns = [
                         'userinv/edit',
                         ['id' => $model->reqId()]
                     ),
-                    ['style' => $textDecorationNone],
+                    ['class' => 'text-decoration-none'],
                 )
                 : '';
         },
@@ -520,7 +515,6 @@ $columns = [
         ) use (
             $translator,
             $urlGenerator,
-            $textDecorationNone
         ): string|A {
             return $model->getType() == 1
                 ? Html::a(
@@ -542,7 +536,7 @@ $columns = [
                         'userinv/delete',
                         ['id' => $model->reqId()]
                     ),
-                    ['style' => $textDecorationNone],
+                    ['class' => 'text-decoration-none'],
                 )
                 : '';
         },

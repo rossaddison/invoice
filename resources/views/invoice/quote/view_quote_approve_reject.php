@@ -61,7 +61,7 @@ if ($quote->reqStatusId() == 1) {
   echo H::openTag('label', ['for' => 'quote_guest_url', 'hidden' => true]); //1
    echo $translator->translate('guest.url');
   echo H::closeTag('label'); //1
-  echo H::openTag('div', ['class' => 'input-group', 'hidden' => true]); //1
+  echo H::openTag('div', ['hidden' => true]); //1
    echo H::tag('input', '', [
     'type' => 'text',
     'id' => 'quote_guest_url',
@@ -70,7 +70,7 @@ if ($quote->reqStatusId() == 1) {
     'value' => $quote->getUrlKey(),
    ]);
    echo H::openTag('span', [
-    'class' => 'input-group-text to-clipboard cursor-pointer',
+    'class' => 'btn btn-outline-secondary to-clipboard cursor-pointer',
     'data-clipboard-target' => '#quote_guest_url',
    ]); //2
     echo H::openTag('i', ['class' => 'bi bi-clipboard']); //3

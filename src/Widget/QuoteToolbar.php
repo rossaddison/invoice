@@ -229,7 +229,7 @@ final readonly class QuoteToolbar
 
     private function renderButton(array $button): string
     {
-        $baseClasses = 'btn ' . (string) $button['class'];
+        $baseClasses = 'btn btn-lg ' . (string) $button['class'];
         $iconHtml = Html::openTag('i', ['class' => 'bi ' . (string) $button['icon']]) . Html::closeTag('i');
 
         if ((string) $button['type'] === 'link') {

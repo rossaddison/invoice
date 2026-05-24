@@ -63,7 +63,7 @@ $statusBar =   new Div()
             [
                 'class' => 'btn ' . ($status == 2 ? 'btn-primary' : 'label '
                 . $soR->getSpecificStatusArrayClass(2)),
-                'style' => 'text-decoration:none',
+
                 'data-bs-toggle' => 'tooltip',
                 'title' => $s->getSetting('debug_mode') === '1'
                     ? $translator->translate(
@@ -78,7 +78,7 @@ $statusBar =   new Div()
             [
                 'class' => 'btn ' . ($status == 3 ? 'btn-primary' : 'label '
                 . $soR->getSpecificStatusArrayClass(3)),
-                'style' => 'text-decoration:none',
+
             ],
         )
         . Html::a(
@@ -88,7 +88,7 @@ $statusBar =   new Div()
             [
                 'class' => 'btn ' . ($status == 4 ? 'btn-primary' : 'label '
                 . $soR->getSpecificStatusArrayClass(4)),
-                'style' => 'text-decoration:none',
+
             ],
         )
         . Html::a(
@@ -98,7 +98,7 @@ $statusBar =   new Div()
             [
                 'class' => 'btn ' . ($status == 5 ? 'btn-primary' : 'label '
                 . $soR->getSpecificStatusArrayClass(5)),
-                'style' => 'text-decoration:none',
+
             ],
         )
         . Html::a(
@@ -108,7 +108,7 @@ $statusBar =   new Div()
             [
                 'class' => 'btn ' . ($status == 6 ? 'btn-primary' : 'label '
                 . $soR->getSpecificStatusArrayClass(6)),
-                'style' => 'text-decoration:none',
+
             ],
         )
         . Html::a(
@@ -118,7 +118,7 @@ $statusBar =   new Div()
             [
                 'class' => 'btn ' . ($status == 7 ? 'btn-primary' : 'label '
                 . $soR->getSpecificStatusArrayClass(7)),
-                'style' => 'text-decoration:none',
+
             ],
         )
         . Html::a(
@@ -128,7 +128,7 @@ $statusBar =   new Div()
             [
                 'class' => 'btn ' . ($status == 8 ? 'btn-primary' : 'label '
                 . $soR->getSpecificStatusArrayClass(8)),
-                'style' => 'text-decoration:none',
+
             ],
         )
         . Html::a(
@@ -138,7 +138,7 @@ $statusBar =   new Div()
             [
                 'class' => 'btn ' . ($status == 9 ? 'btn-primary' : 'label '
                 . $soR->getSpecificStatusArrayClass(9)),
-                'style' => 'text-decoration:none',
+
             ],
         ),
     )
@@ -179,7 +179,7 @@ $columns = [
             return Html::a($model->getQuote()?->getNumber() ?? '#',
                 $urlGenerator->generate('quote/view', [
                     'id' => $model->reqQuoteId()]), [
-                        'style' => 'text-decoration:none']);
+                        'class' => 'text-decoration-none']);
         },
         encodeContent: false,
     ),

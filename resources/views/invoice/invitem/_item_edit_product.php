@@ -196,7 +196,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                             <?= Html::openTag('button', [
                                 'type' => 'submit',
                                 'class' => 'btn btn-info',
-                                'data-toggle' => 'tooltip',
+                                'data-bs-toggle' => 'tooltip',
                                 'title' => 'invitem/addProduct']); ?>
                                 <?=  new I()->addClass('bi bi-plus-lg'); ?>
                                 <?= $translator->translate('save'); ?>

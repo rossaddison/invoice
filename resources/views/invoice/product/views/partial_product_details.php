@@ -47,7 +47,7 @@ use Yiisoft\Html\Tag\Form;
         <?=  new A()
             ->addAttributes([
                 'data-bs-toggle' => 'tab',
-                'style' => 'text-decoration:none',
+                'class' => 'text-decoration-none',
             ])
             ->addClass('btn btn-danger me-1')
             ->content($translator->translate('product.form.tab.required'))
@@ -60,7 +60,7 @@ use Yiisoft\Html\Tag\Form;
         <?=  new A()
     ->addAttributes([
         'data-bs-toggle' => 'tab',
-        'style' => 'text-decoration:none',
+        'class' => 'text-decoration-none',
     ])
     ->addClass('btn btn-danger me-1')
     ->content($translator->translate('product.form.tab.not.required'))

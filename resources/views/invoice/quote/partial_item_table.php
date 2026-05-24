@@ -284,7 +284,7 @@ foreach ($quoteItems as $item) {
                  'class' => 'btn btn-info',
                  'data-bs-toggle' => 'modal',
                  'href' => '#view-product-' . $item->reqId(),
-                 'style' => 'text-decoration:none',
+
              ]); //7
               echo H::openTag('i', ['class' => 'bi bi-eye']); //8
               echo H::closeTag('i'); //8
@@ -673,7 +673,7 @@ echo H::closeTag('br');
       'quote_tax_rates' => '',
   ]); //2
   echo H::closeTag('div'); //2
-  echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none visible-sm']); //2
+  echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none']); //2
   echo H::openTag('br');
   echo H::closeTag('br');
   echo H::closeTag('div'); //2
@@ -792,8 +792,7 @@ if ($vat === '0') {
          echo H::openTag('a', [
              'href' => '#add-quote-tax',
              'data-bs-toggle' => 'modal',
-             'class' => 'btn-xs',
-             'style' => 'text-decoration:none',
+             'class' => 'btn-xs text-decoration-none',
          ]); //8
          echo '➕';
          echo H::closeTag('a'); //8
@@ -823,8 +822,7 @@ if ($vat === '0') {
                  echo H::openTag('span'); //8
                  echo  new A()
                      ->addAttributes([
-                         'class' => 'btn btn-secondary',
-                         'style' => 'text-decoration:none',
+                         'class' => 'btn btn-secondary text-decoration-none',
                          'data-bs-toggle' => 'tooltip',
                          'title' => $translator->translate('delete'),
                      ])
@@ -873,7 +871,7 @@ if (($quote->getDiscountAmount() ?? 0.00) !== 0.00) {
        echo '(' . $translator->translate('discount') . ')';
        echo H::closeTag('b'); //7
       echo H::closeTag('td'); //6
-      echo H::openTag('td', ['class' => 'clearfix']); //6
+      echo H::openTag('td'); //6
        echo H::openTag('div', ['class' => 'discount-field']); //7
         echo $numberHelper->formatCurrency($quote->getDiscountAmount() ?? 0.00);
        echo H::closeTag('div'); //7

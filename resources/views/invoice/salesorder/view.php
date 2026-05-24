@@ -412,7 +412,7 @@ echo H::openTag('div', ['class' => 'card']); //0
      echo H::closeTag('div'); //5
     echo H::closeTag('div'); //4
     echo H::tag('br', '');
-    echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none visible-sm']); //4
+    echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none']); //4
      echo H::tag('br', '');
     echo H::closeTag('div'); //4
    echo H::closeTag('div'); //3

@@ -65,7 +65,7 @@ $columns = [
             return Html::a($translator->translate('back'),
                     $urlGenerator->generate('inv/edit',
                             ['id' => $model->getInvId()]),
-                    ['style' => 'text-decoration:none'])->render();
+                    ['class' => 'text-decoration-none'])->render();
         },
         encodeContent: false
     ),

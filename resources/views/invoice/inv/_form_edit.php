@@ -102,13 +102,13 @@ if ($vat) {
                                 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?php if (($deliveryId = $inv->getDeliveryId()) > 0) { ?>
-                                <span class="input-group-text">
+                                <span class="btn btn-sm btn-outline-secondary mt-1">
                                     <a href="<?= $urlGenerator->generate('delivery/edit', ['id' => $deliveryId]); ?>"><i class="bi bi-pencil"></i>
                                         <?= $translator->translate('delivery'); ?>
                                     </a>
                                 </span>
                                 <?php } ?>
-                                <span class="input-group-text">
+                                <span class="btn btn-sm btn-outline-secondary mt-1">
                                     <a href="<?= $s->href('stand_in_code'); ?>" <?= $s->where('stand_in_code'); ?>><i class="bi bi-question-circle"></i></a>
                                 </span>
                                 <?php
@@ -132,7 +132,7 @@ if ($vat) {
                                 <?= Html::closeTag('div'); ?>
                                 <?php if (null !== $form->getDeliveryLocationId() && $form->getDeliveryLocationId() <> '0') { ?>
 
-                                    <span class="input-group-text">
+                                    <span class="btn btn-sm btn-outline-secondary mt-1">
                                     <a href="<?= $urlGenerator->generate(
                                         'del/edit',
                                         [
@@ -206,7 +206,7 @@ if ($vat) {
                             ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?php if (null !== $form->getPostalAddressId() && $form->getPostalAddressId() <> '0') { ?>
-                                    <span class="input-group-text">
+                                    <span class="btn btn-sm btn-outline-secondary mt-1">
                                     <a href="<?= $urlGenerator->generate(
                                         'postaladdress/edit',
                                         [

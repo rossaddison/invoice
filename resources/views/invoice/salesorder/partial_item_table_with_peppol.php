@@ -51,7 +51,7 @@ $vat = $s->getSetting('enable_vat_registration');
 
             <tbody id="new_row" style="display: none;">
             <tr>
-                <td rowspan="2" class="td-icon" style="text-align: center; vertical-align: middle;"><i class="bi bi-arrows-move"></i></td>
+                <td rowspan="2" class="td-icon text-center align-middle"><i class="bi bi-arrows-move"></i></td>
                 <td class="td-text">
                     <input type="hidden" name="quote_id" maxlength="7" size="7" value="<?php echo $so->reqId(); ?>">
                     <input type="hidden" name="item_id" maxlength="7" size="7" value="">
@@ -170,7 +170,7 @@ foreach ($soItems as $item) {
     ?>
                 <tbody class="item">
                 <tr>
-                    <td rowspan="2" class="td-icon" style="text-align: center; vertical-align: middle;">
+                    <td rowspan="2" class="td-icon text-center align-middle">
                         <i class="bi bi-arrows-move"></i>
                         <h5><bold><?= " " . (string) $count; ?></bold></h5>
                     </td>
@@ -301,7 +301,7 @@ foreach ($soItems as $item) {
         <div class="col-12 col-md-4" quote_tax_rates="<?php $soTaxRates; ?>">
 
         </div>
-        <div class="col-12 d-block d-sm-none visible-sm"><br></div>
+        <div class="col-12 d-block d-sm-none"><br></div>
 
         <div class="col-12 col-md-6 offset-md-2 col-lg-4 offset-lg-4">
             <table class="table table-bordered text-end">
@@ -329,7 +329,7 @@ foreach ($soItems as $item) {
                 <?php if (($so->getDiscountAmount() ?? 0.00) != 0.00) { ?>
                 <tr>
                     <td class="td-vert-middle"><?= $translator->translate('discount'); ?></td>
-                    <td class="clearfix">
+                    <td>
                         <div class="discount-field">
                             <div>
                                 <input id="quote_discount_amount" name="quote_discount_amount"

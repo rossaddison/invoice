@@ -149,7 +149,7 @@ if ($readOnly === false && $invEdit && $inv->reqStatusId() === 1) {
         echo  new A()
             ->addAttributes([
                 'data-bs-toggle' => 'tab',
-                'style' => 'text-decoration:none',
+                'class' => 'text-decoration-none',
             ])
             ->addClass('btn btn-info me-1')
             ->content(H::b($translator->translate('add.product')))
@@ -161,7 +161,7 @@ if ($readOnly === false && $invEdit && $inv->reqStatusId() === 1) {
         echo  new A()
             ->addAttributes([
                 'data-bs-toggle' => 'tab',
-                'style' => 'text-decoration:none',
+                'class' => 'text-decoration-none',
             ])
             ->addClass('btn btn-info me-1')
             ->content(H::b($translator->translate('add.task')))
@@ -176,7 +176,7 @@ if ($readOnly === false && $invEdit && $inv->reqStatusId() === 1) {
                 'onclick' => 'window.history.back()',
                 'value' => '1',
                 'data-bs-toggle' => 'tab',
-                'style' => 'text-decoration:none',
+                'class' => 'text-decoration-none',
             ])
             ->addClass('btn btn-danger bi bi-arrow-left')
             ->id('back')
@@ -1013,7 +1013,7 @@ if (($inv->reqStatusId() !== 1) && ($invEdit)) {
            'value' => 'inv/url_key/' . $inv->getUrlKey()
        ]);
        echo H::openTag('span', [
-           'class' => 'input-group-text to-clipboard cursor-pointer',
+           'class' => 'btn btn-outline-secondary to-clipboard cursor-pointer',
            'data-clipboard-target' => '#guest-url'
        ]);
         echo H::openTag('i', ['class' => 'bi bi-clipboard']);
@@ -1102,7 +1102,7 @@ if (null !== $inv->getSoId()) {
      echo H::closeTag('div');
     echo H::closeTag('div');
 
-    echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none visible-sm']);
+    echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none']);
      echo '<br>';
     echo H::closeTag('div');
 

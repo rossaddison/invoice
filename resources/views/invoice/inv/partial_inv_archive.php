@@ -33,7 +33,7 @@ declare(strict_types=1);
             <tr>
                 <td>
                     <a href="<?= $urlGenerator->generate('inv/download', ['invoice' => basename($invoice)]); ?>"
-                       title="<?= $translator->translate('invoice'); ?>" style="text-decoration: none">
+                       title="<?= $translator->translate('invoice'); ?>">
                         <?= basename($invoice); ?>
                     </a>
                 </td>

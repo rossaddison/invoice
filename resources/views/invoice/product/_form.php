@@ -60,7 +60,7 @@ use Yiisoft\Html\Tag\Form;
             ->addAttributes([
                 'data-bs-toggle' => 'tab',
                 'data-bs-target' => '#product-required',
-                'style' => 'text-decoration:none',
+                'class' => 'text-decoration-none',
                 'role' => 'tab',
                 'aria-controls' => 'product-required',
                 'aria-selected' => 'true',
@@ -77,7 +77,7 @@ use Yiisoft\Html\Tag\Form;
             ->addAttributes([
                 'data-bs-toggle' => 'tab',
                 'data-bs-target' => '#product-not-required',
-                'style' => 'text-decoration:none',
+                'class' => 'text-decoration-none',
                 'role' => 'tab',
                 'aria-controls' => 'product-not-required',
                 'aria-selected' => 'false',

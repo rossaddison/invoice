@@ -37,8 +37,8 @@ $panelHead = ['class' => 'card-header'];
 $panelBody = ['class' => 'card-body'];
 $formGroup = ['class' => 'mb-3'];
 $checkbox = ['class' => 'form-check'];
-$inputGroup = ['class' => 'input-group'];
-$inputGroupText = ['class' => 'input-group-text'];
+$inputGroup = ['class' => 'mb-3'];
+$inputGroupText = ['class' => 'btn btn-sm btn-outline-secondary ms-1'];
 $iP = 'https://docs.peppol.eu/poacc/billing/3.0/'
         . 'syntax/ubl-invoice/cac-InvoicePeriod/';
 echo H::openTag('div', $row); //1
@@ -76,7 +76,7 @@ echo H::openTag('div', $row); //1
            $translator->translate('peppol.enable'),
            'https://www.datypic.com/sc/ubl21/ss.html',
            [
-           'style' => 'text-decoration:none',
+           'class' => 'text-decoration-none',
            'data-bs-toggle' => 'tooltip',
            'title' => ''
           ]
@@ -359,7 +359,7 @@ echo H::openTag('div', $row); //1
          echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'include_delivery_period']);
           echo H::a(
            $translator->translate('peppol.include.delivery.period'), $iP,
-           ['style' => 'text-decoration:none']
+           ['class' => 'text-decoration-none']
           );
          echo H::closeTag('label');
        echo H::closeTag('div'); //8
@@ -371,7 +371,7 @@ echo H::openTag('div', $row); //1
       ]);
        echo H::a(
         $translator->translate('peppol.stand.in.code'), $iP,
-        ['style' => 'text-decoration:none']
+        ['class' => 'text-decoration-none']
        );
       echo H::closeTag('label');
       echo H::openTag('div', $inputGroup); //7

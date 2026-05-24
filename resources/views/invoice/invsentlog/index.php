@@ -50,7 +50,7 @@ $columns = [
             return Html::a(($model->getInv()?->getNumber() ?? '#') . ' 🔍', $urlGenerator->generate(
                 'inv/view',
                 ['id' => $model->reqId()],
-            ), ['style' => 'text-decoration:none']);
+            ), ['class' => 'text-decoration-none']);
         },
         filter: $optionsDataInvNumberDropDownFilter,
         withSorting: false,

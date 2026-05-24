@@ -69,7 +69,7 @@ $columns = [
         'inv_id',
         header: $translator->translate('invoice'),
         content: static function (Payment $model) use ($urlGenerator): A {
-            return Html::a($model->getInv()?->getNumber() ?? '', $urlGenerator->generate('inv/view', ['id' => $model->reqInvId()]), ['style' => 'text-decoration:none']);
+            return Html::a($model->getInv()?->getNumber() ?? '', $urlGenerator->generate('inv/view', ['id' => $model->reqInvId()]), ['class' => 'text-decoration-none']);
         },
         encodeContent: false,
     ),

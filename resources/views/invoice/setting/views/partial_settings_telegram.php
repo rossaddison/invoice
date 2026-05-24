@@ -61,7 +61,7 @@ echo H::openTag('div', $row); //1
           ),
           'https://core.telegram.org/bots/api',
           [
-           'style' => 'text-decoration:none',
+           'class' => 'text-decoration-none',
            'data-bs-toggle' => 'tooltip',
            'title' => ''
           ]
@@ -314,7 +314,6 @@ echo H::openTag('div', $row); //1
          'href'           => '#telegram-providers',
          'class'          => 'btn btn-outline-secondary',
          'data-bs-toggle' => 'modal',
-         'style'          => 'text-decoration:none',
         ]);
          echo '&#9432; Providers';
         echo H::closeTag('a');

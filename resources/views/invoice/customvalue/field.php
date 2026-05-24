@@ -140,7 +140,6 @@ echo H::openTag('form', ['method' => 'post']);
                         'href' => $urlGenerator->generate('customvalue/view',
                         [
                             'id' => $custom_value->reqId()]),
-                            'style' => 'text-decoration:none',
                         ],
                      );
                   echo H::closeTag('li');
@@ -152,7 +151,6 @@ echo H::openTag('form', ['method' => 'post']);
                         'class' => 'dropdown-item',
                         'href' => $urlGenerator->generate('customvalue/edit',
                             ['id' => $custom_value->reqId()]),
-                        'style' => 'text-decoration:none',
                        ],
                       );
                   echo H::closeTag('li');
@@ -163,7 +161,6 @@ echo H::openTag('form', ['method' => 'post']);
                         [
                          'class' => 'dropdown-item text-danger',
                          'href' => $urlGenerator->generate('customvalue/delete', ['id' => $custom_value->reqId()]),
-                         'style' => 'text-decoration:none',
                          'onclick' => "return confirm('"
                             . addslashes(
                                 $translator->translate('delete.record.warning'))

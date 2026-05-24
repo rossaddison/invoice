@@ -83,7 +83,7 @@ $columns = [
         header: $translator->translate('number'),
         content: static function (Inv $model) use ($urlGenerator): A {
             return   new A()
-                    ->addAttributes(['style' => 'text-decoration:none'])
+                    ->addClass('text-decoration-none')
                     ->content(($model->getNumber() ?? '#') . ' 🔍')
                     ->href($urlGenerator->generate(
                                         'inv/view', ['id' => $model->reqId()]));
@@ -158,7 +158,7 @@ $columns = [
                 'class' => 'btn btn-info dropdown-toggle',
                 'type' => 'button',
                 'id' => 'dropdownMenuButton',
-                'data-toggle' => 'dropdown',
+                'data-bs-toggle' => 'dropdown',
                 'aria-haspopup' => 'true',
                 'aria-expanded' => 'false',
             ])
@@ -279,7 +279,7 @@ $columns = [
                 if (null !== $visible) {
                     $url = ($visible->getNumber() ?? '#') . '💳';
                     return   new A()
-                            ->addAttributes(['style' => 'text-decoration:none'])
+                            ->addClass('text-decoration-none')
                             ->content($url)
                             ->href($urlGenerator->generate('inv/view',
                                     ['id' => $cipId]));

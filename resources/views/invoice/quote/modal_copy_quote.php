@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * Related logic: see id="quote-to-quote" triggered by <a href="#quote-to-quote" data-bs-toggle="modal"  style="text-decoration:none">
+ * Related logic: see id="quote-to-quote" triggered by <a href="#quote-to-quote" data-bs-toggle="modal" >
  * Related logic: see views/quote/view.php
  *
  * @var App\Infrastructure\Persistence\Quote\Quote $quote

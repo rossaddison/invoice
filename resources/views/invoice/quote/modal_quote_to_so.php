@@ -7,7 +7,7 @@ use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Option;
 
 /**
- * Related logic: see id="quote-to-so" triggered by <a href="#quote-to-so" data-bs-toggle="modal"  style="text-decoration:none">
+ * Related logic: see id="quote-to-so" triggered by <a href="#quote-to-so" data-bs-toggle="modal" >
  * Related logic: see views/quote/view.php
  * @var App\Infrastructure\Persistence\Quote\Quote $quote
  * @var App\Invoice\Setting\SettingRepository $s

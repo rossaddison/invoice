@@ -134,7 +134,7 @@ $toolbarString
     =  new Form()->post($urlGenerator->generate('invitemallowancecharge/index'))->csrf($csrf)->open()
     .  new A()
     ->href($urlGenerator->generate('invitemallowancecharge/add', ['inv_item_id' => $inv_item_id]))
-    ->addAttributes(['style' => 'text-decoration:none'])
+    ->addClass('text-decoration-none')
     ->content('➕ ' . $translator->translate('allowance.or.charge.item.add'))
     ->render()
     .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()

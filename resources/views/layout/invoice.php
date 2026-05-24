@@ -240,7 +240,6 @@ $tpc = 'topic';
 $subMenuPrometheus = [
     0 => [
         'items' => [
-            'Dashboard' => ['prometheus/dashboard', []],
             'Raw Metrics' => ['prometheus/metrics', []],
             'Health Check' => ['prometheus/health', []],
         ],
@@ -662,6 +661,8 @@ if ((null !== $currentPath) && !$isGuest) {
                     itemAttributes: $itemFontArray),
                 DropdownItem::divider(),
                 // Prometheus Monitoring Section
+                DropdownItem::text(PerformanceMetrics::prometheusStatus(),
+                    itemAttributes: $itemFontArray),
                 DropdownItem::text($subMenu->generate('Prometheus Monitoring',
                     $urlGenerator, $subMenuPrometheus,
                     $bootstrap5LayoutInvoiceNavbarFont,

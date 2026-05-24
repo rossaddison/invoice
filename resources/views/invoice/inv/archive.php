@@ -20,12 +20,10 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
        <!-- No Url Generator here. Just post -->
        <form method="post">
             <input type="hidden" name="_csrf" value="<?= $csrf; ?>">
-            <div class="input-group" hidden>
+            <div hidden>
                 <label for="invoice_number"><?= $translator->translate('number'); ?></label>
                 <input name="invoice_number" id="invoice_number" type="text" class="form-control form-control-lg" value="<?php $body['invoice_number'] ?? '#'; ?>">
-                <span class="input-group-btn">
-                    <button class="btn btn-primary btn-sm" type="submit"><?= $translator->translate('filter.invoices'); ?></button>
-                </span>
+                <button class="btn btn-primary btn-sm" type="submit"><?= $translator->translate('filter.invoices'); ?></button>
             </div>
         </form>
     </div>

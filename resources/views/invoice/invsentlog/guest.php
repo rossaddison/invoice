@@ -55,7 +55,7 @@ $columns = [
             return Html::a(($model->getInv()?->getNumber() ?? '#') . ' 🔍', $urlGenerator->generate(
                 'inv/view',
                 ['id' => $model->reqId()],
-            ), ['style' => 'text-decoration:none']);
+            ), ['class' => 'text-decoration-none']);
         },
         encodeContent: false,
         filter: $optionsDataGuestInvNumberDropDownFilter,

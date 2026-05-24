@@ -60,7 +60,7 @@ $statusBar =   new Div()
             $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 2]),
             [
                 'class' => 'btn ' . ($status == 2 ? 'btn-primary' : 'btn-secondary'),
-                'style' => 'text-decoration:none',
+
             ],
         )
         . Html::a(
@@ -68,7 +68,7 @@ $statusBar =   new Div()
             $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 3]),
             [
                 'class' => 'btn ' . ($status == 3 ? 'btn-primary' : 'btn-secondary'),
-                'style' => 'text-decoration:none',
+
             ],
         )
         . Html::a(
@@ -76,7 +76,7 @@ $statusBar =   new Div()
             $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 4]),
             [
                 'class' => 'btn ' . ($status == 4 ? 'btn-primary' : 'btn-secondary'),
-                'style' => 'text-decoration:none',
+
             ],
         )
         . Html::a(
@@ -84,7 +84,7 @@ $statusBar =   new Div()
             $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 5]),
             [
                 'class' => 'btn ' . ($status == 5 ? 'btn-primary' : 'btn-secondary'),
-                'style' => 'text-decoration:none',
+
             ],
         )
         . Html::a(
@@ -92,7 +92,7 @@ $statusBar =   new Div()
             $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 6]),
             [
                 'class' => 'btn ' . ($status == 6 ? 'btn-primary' : 'btn-secondary'),
-                'style' => 'text-decoration:none',
+
             ],
         ),
     )
@@ -123,7 +123,7 @@ $columns = [
         property: 'filterQuoteNumber',
         header: $translator->translate('quote.number'),
         content: static function (Quote $model) use ($urlGenerator): A {
-            return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('quote/view', ['id' => $model->reqId()]), ['style' => 'text-decoration:none']);
+            return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('quote/view', ['id' => $model->reqId()]), ['class' => 'text-decoration-none']);
         },
         encodeContent: false,
         filter: \Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()

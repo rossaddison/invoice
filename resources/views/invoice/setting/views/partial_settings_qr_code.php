@@ -26,7 +26,7 @@ echo H::openTag('div', ['class' => 'row']); //1
    echo H::openTag('div', ['class' => 'card-header']); //4
     echo  new H6()->content(
       new A()
-     ->attributes(['style' => 'text-decoration:none'])
+     ->attributes(['class' => 'text-decoration-none'])
      ->href('https://php-qrcode.readthedocs.io/en/main/')
      ->content($translator->translate('qr.code'))
     );
