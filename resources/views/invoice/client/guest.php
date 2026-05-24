@@ -49,7 +49,9 @@ $columns = [
         'client_active',
         header: $translator->translate('active'),
         content: static function (Client $model) use ($button, $translator): Span {
-            return $model->getClientActive() ? $button::activeLabel($translator) : $button::inactiveLabel($translator);
+            return $model->getClientActive() ?
+                $button::activeLabel($translator) :
+                $button::inactiveLabel($translator);
         },
         encodeContent: false,
     ),
@@ -77,7 +79,8 @@ $columns = [
         content: static function (Client $model) use ($urlGenerator): A {
             return   new A()
                     ->content(Html::encode($model->getClientName()))
-                    ->href($urlGenerator->generate('client/view', ['id' => $model->reqId()]))
+                    ->href($urlGenerator->generate('client/view',
+                        ['id' => $model->reqId()]))
                     ->addClass('btn btn-warning ms-2');
         },
         encodeContent: false,
@@ -89,7 +92,8 @@ $columns = [
         content: static function (Client $model) use ($urlGenerator): A {
             return   new A()
                     ->content(Html::encode($model->getClientSurname() ?? ''))
-                    ->href($urlGenerator->generate('client/view', ['id' => $model->reqId()]))
+                    ->href($urlGenerator->generate('client/view',
+                        ['id' => $model->reqId()]))
                     ->addClass('btn btn-warning ms-2');
         },
         encodeContent: false,
@@ -108,7 +112,7 @@ $columns = [
         'invs',
         content: static function (Client $model) use ($iR, $iaR): int {
             $clientId = $model->reqId();
-            $invoices = $iR->findAllWithClient($clientId);
+            $invoices = $iR->filterGuestClientIdNotDraft($clientId);
             /**
              *  Initialize the ArrayCollection
              *  Related logic: see Doctrine\Common\Collections\ArrayCollection
@@ -143,7 +147,7 @@ $columns = [
         content: static function (Client $model) use ($iR, $iaR,
         $urlGenerator, $gridComponents): string {
             $clientId = $model->reqId(); 
-            $invoices = $iR->findAllWithClient($clientId);
+            $invoices = $iR->filterGuestClientIdNotDraft($clientId);
             // Initialize a new empty ArrayCollection without the need to
             // create a new entity
             $model->setInvs();

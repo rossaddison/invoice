@@ -59,38 +59,32 @@ $dateRange = ' (' . $dateFmt . ')';
                                <?= $translator->translate('from.date')
                                . $dateRange; ?>
                             </label>
-                            <div class="input-group">
-                                <input type="date"
-                                       name="from_date"
-                                       id="from_date"
-                                       placeholder="<?= $dateRange;?>"
-                                       class="form-control form-control-lg"
-                                       value="<?= $body['from_date']
-                                                 = $startTaxYear; ?>"
-                                       role="presentation"
-                                       autocomplete="off">
-                                <span class="input-group-text">
-                            </span>
-                            </div>
+                            <input type="date"
+                                   name="from_date"
+                                   id="from_date"
+                                   placeholder="<?= $dateRange;?>"
+                                   class="form-control form-control-lg"
+                                   value="<?= $body['from_date']
+                                             = $startTaxYear; ?>"
+                                   role="presentation"
+                                   autocomplete="off"
+                                   onclick="this.showPicker()">
                         </div>
 
                         <div class="mb-3">
                             <label for="to_date">
                                 <?= $translator->translate('to.date') . $dateRange; ?></label>
-                            <div class="input-group">
-                                <input type="date"
-                                       name="to_date"
-                                       id="to_date"
-                                       placeholder="<?= $dateRange;?>"
-                                       class="form-control form-control-lg"
-                                       value="<?= $body['to_date']
-                                            = (new \DateTimeImmutable('now'))
-                                                ->format('Y-m-d'); ?>"
-                                       role="presentation"
-                                       autocomplete="off">
-                                <span class="input-group-text">
-                            </span>
-                            </div>
+                            <input type="date"
+                                   name="to_date"
+                                   id="to_date"
+                                   placeholder="<?= $dateRange;?>"
+                                   class="form-control form-control-lg"
+                                   value="<?= $body['to_date']
+                                        = (new \DateTimeImmutable('now'))
+                                            ->format('Y-m-d'); ?>"
+                                   role="presentation"
+                                   autocomplete="off"
+                                   onclick="this.showPicker()">
                         </div>
                         <input type="submit"
                                class="btn btn-success"

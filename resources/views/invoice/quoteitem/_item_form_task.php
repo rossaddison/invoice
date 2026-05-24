@@ -61,7 +61,7 @@ echo (new Form())
                     <?= Html::openTag('tr'); ?>
                         <?= Html::openTag('td', ['class' => 'td-text']); ?>
                             <?= Field::hidden($form, 'quote_id')->hideLabel(); ?>
-                            <?= Html::openTag('div', ['class' => 'input-group', 'id' => 'product-quote']); ?>
+                            <?= Html::openTag('div', ['id' => 'product-quote']); ?>
                                 <?php
                                     $optionsDataTask = [];
 /**

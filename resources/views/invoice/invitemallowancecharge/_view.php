@@ -45,7 +45,7 @@ use Yiisoft\Html\Tag\Form;
 
 <?= Html::openTag('div', ['id' => 'content']); ?>
     <?= Html::openTag('div', ['class' => 'row']); ?>
-        <?= Html::openTag('div', ['class' => 'input-group']); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?php
                 $optionsDataAllowanceCharge = [];
 /**

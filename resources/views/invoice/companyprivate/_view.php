@@ -99,25 +99,22 @@ use Yiisoft\Html\Tag\Form;
                         ->readonly(true); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Html::openTag('div', ['class' => 'input-group']); ?>
-                        <?= Field::date($form, 'start_date')
-                            ->addInputAttributes(
-                                [
-                                    'class' => 'form-control form-control-lg',
-                                    'placeholder' => ' (' . $dateHelper->display() . ')',
-                                    'readonly' => 'readonly',
-                                    'disabled' => 'disabled',
-                                ],
-                            )
-                            ->value(Html::encode(!is_string($startdate = $form->getStartDate()) && null !== $startdate
-                                                ? $startdate->format('Y-m-d')
-                                                : (new \DateTimeImmutable('now'))->format('Y-m-d')));
+                    <?= Field::date($form, 'start_date')
+                        ->addInputAttributes(
+                            [
+                                'class' => 'form-control form-control-lg',
+                                'placeholder' => ' (' . $dateHelper->display() . ')',
+                                'readonly' => 'readonly',
+                                'disabled' => 'disabled',
+                            ],
+                        )
+                        ->value(Html::encode(!is_string($startdate = $form->getStartDate()) && null !== $startdate
+                                            ? $startdate->format('Y-m-d')
+                                            : (new \DateTimeImmutable('now'))->format('Y-m-d')));
 ?>
-                    <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Html::openTag('div', ['class' => 'input-group']); ?>
-                        <?= Field::date($form, 'end_date')
+                    <?= Field::date($form, 'end_date')
     ->addInputAttributes(
         [
             'class' => 'form-control form-control-lg',
@@ -130,7 +127,6 @@ use Yiisoft\Html\Tag\Form;
                         ? $enddate->format('Y-m-d')
                         : (new \DateTimeImmutable('now'))->format('Y-m-d')));
 ?>
-                    <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>

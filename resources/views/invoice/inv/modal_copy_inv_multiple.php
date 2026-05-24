@@ -45,7 +45,8 @@ declare(strict_types=1);
                                    id="modal_created_date"
                                    class="form-control form-control-lg"
                                    type="date"
-                                   autocomplete="off">
+                                   autocomplete="off"
+                                   onclick="this.showPicker()">
 
                     </div>
                 </form>

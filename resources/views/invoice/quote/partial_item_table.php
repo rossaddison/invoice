@@ -423,7 +423,7 @@ foreach ($quoteItems as $item) {
      echo H::openTag('td'); //5
       echo H::openTag('div'); //6
        echo H::openTag('span', [
-           'class' => 'input-group-text',
+           'class' => 'text-muted',
            'data-bs-toggle' => 'tooltip',
            'title' => 'quote_item->description',
        ]); //7
@@ -450,7 +450,7 @@ foreach ($quoteItems as $item) {
            echo H::closeTag('b'); //8
           echo H::closeTag('span'); //7
           echo H::openTag('span', [
-              'class' => 'input-group-text',
+              'class' => 'text-muted',
               'name' => 'item_product_unit',
           ]); //7
           echo $item->getProductUnit();
@@ -463,7 +463,7 @@ foreach ($quoteItems as $item) {
            echo H::closeTag('b'); //8
           echo H::closeTag('span'); //7
           echo H::openTag('span', [
-              'class' => 'input-group-text',
+              'class' => 'text-muted',
               'name' => 'item_task_unit',
           ]); //7
           echo !is_string(
@@ -875,9 +875,7 @@ if (($quote->getDiscountAmount() ?? 0.00) !== 0.00) {
       echo H::closeTag('td'); //6
       echo H::openTag('td', ['class' => 'clearfix']); //6
        echo H::openTag('div', ['class' => 'discount-field']); //7
-        echo H::openTag('div', ['class' => 'input-group input-group']); //8
         echo $numberHelper->formatCurrency($quote->getDiscountAmount() ?? 0.00);
-        echo H::closeTag('div'); //8
        echo H::closeTag('div'); //7
       echo H::closeTag('td'); //6
      echo H::closeTag('tr'); //5

@@ -55,13 +55,12 @@ declare(strict_types=1);
                         <label for="recur_start_date">
                             <?= $translator->translate('start.date'); ?>
                         </label>
-                        <div class="input-group">
-                            <input name="recur_start_date"
-                                   id="recur_start_date"
-                                   class="form-control form-control-lg"
-                                   type="date"
-                                   autocomplete="off">
-                        </div>
+                        <input name="recur_start_date"
+                               id="recur_start_date"
+                               class="form-control form-control-lg"
+                               type="date"
+                               autocomplete="off"
+                               onclick="this.showPicker()">
                     </div>
                     <div class="mb-3">
                         <label
@@ -79,13 +78,12 @@ declare(strict_types=1);
                             <?= $translator->translate('end.date'); ?>
                             (<?= $translator->translate('optional'); ?>)
                         </label>
-                        <div class="input-group">
-                            <input name="recur_end_date"
-                                   id="recur_end_date"
-                                   class="form-control form-control-lg"
-                                   type="date"
-                                   autocomplete="off">
-                        </div>
+                        <input name="recur_end_date"
+                               id="recur_end_date"
+                               class="form-control form-control-lg"
+                               type="date"
+                               autocomplete="off"
+                               onclick="this.showPicker()">
                     </div>
                 </form>
             </div>
