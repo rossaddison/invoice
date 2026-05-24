@@ -224,8 +224,8 @@ use Yiisoft\Html\Tag\Li;
                                                     [
                                                         'class' => 'btn btn-link',
                                                         'type' => 'button',
-                                                        'data-toggle' => 'collapse',
-                                                        'data-target' => '#collapse' . (string) $index,
+                                                        'data-bs-toggle' => 'collapse',
+                                                        'data-bs-target' => '#collapse' . (string) $index,
                                                         'aria-expanded' => 'false',
                                                         'aria-controls' => 'collapse' . (string) $index
                                                     ]

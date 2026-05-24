@@ -125,7 +125,7 @@ $toolbarString =
         ->open() .
     new A()
         ->href($urlGenerator->generate('qa/add'))
-        ->addStyle('text-decoration:none')
+        ->addClass('text-decoration-none')
         ->content('➕')
         ->render() .
     new Div()

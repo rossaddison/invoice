@@ -87,7 +87,7 @@ echo  new Form()
             <?= Html::openTag('div'); ?>
                 <?= Field::date($form, 'date_created')
     ->label($translator->translate('date.created'))
-    ->addInputAttributes(['class' => 'form-control form-control-lg',])
+    ->addInputAttributes(['class' => 'form-control form-control-lg', 'onclick' => 'this.showPicker()'])
     ->value(Html::encode(!is_string($form->getDateCreated())
             && null !== $form->getDateCreated()
                                     ? $form->getDateCreated()->format('Y-m-d') : ''))

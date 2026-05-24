@@ -122,7 +122,7 @@ echo H::openTag('form', ['method' => 'post']); //0
                       . $translator->translate('edit'),
                $urlGenerator->generate('customvalue/edit',
                     ['id' => $custom_value->reqId()]),
-               ['style' => 'text-decoration:none']
+               ['class' => 'text-decoration-none']
               );
              echo H::closeTag('li'); //11
              echo H::openTag('li'); //11
@@ -132,7 +132,7 @@ echo H::openTag('form', ['method' => 'post']); //0
                $urlGenerator->generate('customvalue/delete',
                     ['id' => $custom_value->reqId()]),
                [
-                'style'   => 'text-decoration:none',
+                'class'   => 'text-decoration-none',
                 'onclick' => 'return confirm('
                    . H::encode("'"
                    . $translator->translate('delete.record.warning')

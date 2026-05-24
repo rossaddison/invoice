@@ -24,7 +24,7 @@ if ($invEdit && $invView) {
         <?= $translator->translate('productimage.gallery'); ?>
         <?= $product->getProductName(); ?></i>
   </div>
-  <div class="card-body clearfix">
+  <div class="card-body">
     <div class="container">
         <?php if ($invView && $invEdit) { ?>
         <div class='row'>

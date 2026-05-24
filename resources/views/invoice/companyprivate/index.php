@@ -84,7 +84,7 @@ $toolbarString
     =  new Form()->post($urlGenerator->generate('companyprivate/index'))->csrf($csrf)->open()
     .  new A()
         ->href($urlGenerator->generate('companyprivate/add'))
-        ->addAttributes(['style' => 'text-decoration:none'])
+        ->addClass('text-decoration-none')
         ->content('➕')
         ->render()
     .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()

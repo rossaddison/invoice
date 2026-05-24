@@ -9,9 +9,9 @@ use App\Invoice\Prometheus\PrometheusService;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use App\Invoice\Setting\SettingRepository as sR;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
-use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
@@ -25,11 +25,12 @@ use Yiisoft\Yii\View\Renderer\WebViewRenderer;
  */
 final class PrometheusController extends BaseController
 {
-    protected string $controllerName = 'prometheus';
+    protected string $controllerName = 'invoice/prometheus';
 
     public function __construct(
-        private DataResponseFactoryInterface $responseFactory,
         private PrometheusService $prometheusService,
+        private ResponseFactoryInterface $psr17ResponseFactory,
+        private StreamFactoryInterface $streamFactory,
         SessionInterface $session,
         sR $sR,
         TranslatorInterface $translator,
@@ -51,29 +52,28 @@ final class PrometheusController extends BaseController
      */
     public function metrics(): Response
     {
-        try {
-            // Update system metrics before rendering
-            $this->updateSystemMetrics();
+        // Suppress display_errors so vendor deprecation warnings (e.g. PHP 8.5
+        // $http_response_header in digitalbazaar/json-ld) don't corrupt the
+        // Prometheus text format that scrapers parse line-by-line.
+        $prev = ini_set('display_errors', '0');
 
-            // Get metrics in Prometheus text format
+        try {
+            $this->updateSystemMetrics();
             $metricsOutput = $this->prometheusService->renderMetrics();
 
-            // Create response with proper Prometheus content type
-            $response = $this->responseFactory->createResponse($metricsOutput);
+            return $this->rawTextResponse($metricsOutput, $this->prometheusService->getContentType())
+                ->withHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
+                ->withHeader('Pragma', 'no-cache')
+                ->withHeader('Expires', '0');
 
-            return $response->withHeader('Content-Type', $this->prometheusService->getContentType())
-                           ->withHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
-                           ->withHeader('Pragma', 'no-cache')
-                           ->withHeader('Expires', '0');
-
-        } catch (\Throwable $e) {
-            // Set application as unhealthy and return error
+        } catch (\Throwable) {
             $this->prometheusService->setApplicationHealth(false);
 
-            $errorMetrics = $this->getErrorMetrics();
-
-            return $this->responseFactory->createResponse($errorMetrics, 500)
-                                         ->withHeader('Content-Type', $this->prometheusService->getContentType());
+            return $this->rawTextResponse($this->getErrorMetrics(), $this->prometheusService->getContentType(), 500);
+        } finally {
+            if ($prev !== false) {
+                ini_set('display_errors', $prev);
+            }
         }
     }
 
@@ -88,61 +88,82 @@ final class PrometheusController extends BaseController
         try {
             $healthData = $this->prometheusService->performHealthCheck();
 
-            // Add additional application-specific health checks
             if (isset($healthData['checks']) && is_array($healthData['checks'])) {
                 $healthData['checks']['database'] = $this->checkDatabaseHealth();
                 $healthData['checks']['file_permissions'] = $this->checkFilePermissions();
             }
 
             $statusCode = match ($healthData['status']) {
-                'healthy' => 200,
-                'warning' => 200,
-                'error' => 503,
-                default => 503
+                'healthy', 'warning' => 200,
+                default => 503,
             };
 
-            return $this->responseFactory->createResponse(json_encode($healthData, JSON_PRETTY_PRINT), $statusCode)
-                                        ->withHeader('Content-Type', 'application/json');
+            return $this->rawTextResponse(
+                (string) json_encode($healthData, JSON_PRETTY_PRINT),
+                'application/json',
+                $statusCode,
+            );
 
         } catch (\Throwable $e) {
             $errorHealth = [
                 'status' => 'error',
                 'timestamp' => time(),
                 'error' => $e->getMessage(),
-                'checks' => []
+                'checks' => [],
             ];
 
-            return $this->responseFactory->createResponse(json_encode($errorHealth), 503)
-                                        ->withHeader('Content-Type', 'application/json');
+            return $this->rawTextResponse(
+                (string) json_encode($errorHealth),
+                'application/json',
+                503,
+            );
         }
     }
 
+    private function rawTextResponse(string $body, string $contentType, int $status = 200): Response
+    {
+        return $this->psr17ResponseFactory
+            ->createResponse($status)
+            ->withHeader('Content-Type', $contentType)
+            ->withBody($this->streamFactory->createStream($body));
+    }
+
     /**
-     * Metrics dashboard endpoint (optional)
-     *
-     * Provides a simple web interface to view current metrics.
-     * Useful for development and debugging.
+     * Prometheus dashboard — returns combined health + system info as JSON.
+     * Displayed via the Performance dropdown in the invoice layout.
      * @return Response
      */
     public function dashboard(): Response
     {
-        $healthData = $this->prometheusService->performHealthCheck();
-        $metricsOutput = $this->prometheusService->renderMetrics();
+        try {
+            $healthData = $this->prometheusService->performHealthCheck();
 
-        // Parse metrics for display
-        $parsedMetrics = $this->parseMetricsForDisplay($metricsOutput);
+            if (isset($healthData['checks']) && is_array($healthData['checks'])) {
+                $healthData['checks']['database'] = $this->checkDatabaseHealth();
+                $healthData['checks']['file_permissions'] = $this->checkFilePermissions();
+            }
 
-        $parameters = [
-            'title' => 'Prometheus Metrics Dashboard',
-            'health' => $healthData,
-            'metrics' => $parsedMetrics,
-            'system_info' => $this->getSystemInfo(),
-            'refresh_url' => '/prometheus/dashboard',
-            'metrics_url' => '/prometheus/metrics',
-            'health_url' => '/prometheus/health',
-        ];
+            $healthData['system'] = $this->getSystemInfo();
+            $healthData['metrics_url'] = '/metrics';
+            $healthData['health_url'] = '/prometheus/health';
 
-        return $this->webViewRenderer->render('dashboard', $parameters);
+            $statusCode = match ($healthData['status']) {
+                'healthy', 'warning' => 200,
+                default => 503,
+            };
+
+            return $this->rawTextResponse(
+                (string) json_encode($healthData, JSON_PRETTY_PRINT),
+                'application/json',
+                $statusCode,
+            );
+        } catch (\Throwable $e) {
+            return $this->rawTextResponse(
+                (string) json_encode(['status' => 'error', 'error' => $e->getMessage()]),
+                'application/json',
+                503,
+            );
+        }
     }
 
     private function updateSystemMetrics(): void
@@ -193,13 +214,7 @@ final class PrometheusController extends BaseController
         return rand(5, 25);
     }
 
-    /**
-     *
-     * @param string $serviceName
-     * @return bool
-     * @psalm-suppress UnusedParam $serviceName
-     */
-    private function checkWindowsService(string $serviceName): bool
+    private function checkWindowsService(string $_serviceName): bool
     {
         // Mock implementation - replace with actual Windows service checking
         // You might use `sc query` command or Windows API

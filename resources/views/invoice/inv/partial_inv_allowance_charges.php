@@ -12,7 +12,7 @@ declare(strict_types=1);
     <div class="card-header">
         <?= $title; ?>
     </div>
-    <div class="card-body clearfix">
+    <div class="card-body">
         <div class="container">
             <div>
                 <?= $inv_allowance_charges; ?>

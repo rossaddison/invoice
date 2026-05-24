@@ -55,7 +55,7 @@ $columns = [
         header: $translator->translate('base.invoice'),
         content: static function (InvRecurring $model) use ($urlGenerator): A {
             return  new A()
-                    ->addClass('style', 'text-decoration:none')
+                    ->addClass('text-decoration-none')
                     ->content($model->getInv()?->getNumber() ?? '#')
                     ->href($urlGenerator->generate('inv/view', ['id' => (string) 
                         $model->reqInvId()]));

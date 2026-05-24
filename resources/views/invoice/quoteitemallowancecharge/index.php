@@ -158,7 +158,7 @@ $toolbarString
     .  new A()
     ->href($urlGenerator->generate('quoteitemallowancecharge/add',
         ['quote_item_id' => $quote_item_id]))
-    ->addAttributes(['style' => 'text-decoration:none'])
+    ->addClass('text-decoration-none')
     ->content('➕ ' . $translator->translate('allowance.or.charge.item.add'))
     ->render()
     .  new Div()->addClass('float-end m-3')

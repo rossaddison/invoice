@@ -80,7 +80,7 @@ $columns = [
             return Html::a($model->getInv()?->getNumber() ?? '',
                     $urlGenerator->generate('inv/view',
                             ['id' => $model->reqInvId()]),
-                    ['style' => 'text-decoration:none']);
+                    ['class' => 'text-decoration-none']);
         },
         encodeContent: false,
     ),

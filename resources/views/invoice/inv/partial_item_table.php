@@ -150,7 +150,7 @@ foreach ($invItems as $item) {
       echo H::closeTag('td');
       echo H::openTag('td', ['class' => 'td-textarea']);
        echo H::openTag('div');
-        echo H::openTag('span', ['class' => 'input-group-text']);
+        echo H::openTag('span', ['class' => 'text-muted']);
          echo H::openTag('b');
          echo null !== $item->getProductId() ?
               $translator->translate('item') :
@@ -201,7 +201,7 @@ foreach ($invItems as $item) {
       echo H::closeTag('td');
       echo H::openTag('td', ['class' => 'td-amount td-quantity']);
        echo H::openTag('div');
-        echo H::openTag('span', ['class' => 'input-group-text']);
+        echo H::openTag('span', ['class' => 'text-muted']);
          echo H::openTag('b');
           echo $translator->translate('quantity');
          echo H::closeTag('b');
@@ -221,7 +221,7 @@ foreach ($invItems as $item) {
       echo H::closeTag('td');
       echo H::openTag('td', ['class' => 'td-amount']);
        echo H::openTag('div');
-        echo H::openTag('span', ['class' => 'input-group-text']);
+        echo H::openTag('span', ['class' => 'text-muted']);
          echo H::openTag('b');
           echo $translator->translate('price');
          echo H::closeTag('b');
@@ -240,7 +240,7 @@ foreach ($invItems as $item) {
       echo H::closeTag('td');
       echo H::openTag('td', ['class' => 'td-amount']);
        echo H::openTag('div');
-        echo H::openTag('span', ['class' => 'input-group-text']);
+        echo H::openTag('span', ['class' => 'text-muted']);
          echo H::openTag('b');
           echo $vat === '0' ? $translator->translate('item.discount') :
               $translator->translate('cash.discount');
@@ -263,7 +263,7 @@ foreach ($invItems as $item) {
 
       echo H::openTag('td');
        echo H::openTag('div');
-        echo H::openTag('span', ['class' => 'input-group-text']);
+        echo H::openTag('span', ['class' => 'text-muted']);
          echo H::openTag('b');
           echo $vat === '0' ?
               $translator->translate('tax.rate') :
@@ -321,7 +321,7 @@ foreach ($invItems as $item) {
                     'class' => 'btn btn-info',
                     'data-bs-toggle' => 'modal',
                     'href' => '#view-product-' . (string) $item->reqId(),
-                    'style' => 'text-decoration:none'
+
                 ]);
                  echo H::openTag('i', ['class' => 'bi bi-eye']);
                  echo H::closeTag('i');
@@ -447,7 +447,7 @@ foreach ($invItems as $item) {
       echo H::openTag('td');
        echo H::openTag('div');
         echo H::openTag('span', [
-            'class' => 'input-group-text',
+            'class' => 'text-muted',
             'data-bs-toggle' => 'tooltip',
             'title' => 'inv_item->note'
         ]);
@@ -466,7 +466,7 @@ foreach ($invItems as $item) {
       echo H::openTag('td');
        echo H::openTag('div');
         echo H::openTag('span', [
-            'class' => 'input-group-text',
+            'class' => 'text-muted',
             'data-bs-toggle' => 'tooltip',
             'title' => 'inv_item->description'
         ]);
@@ -485,26 +485,26 @@ foreach ($invItems as $item) {
       echo H::openTag('td', ['class' => 'td-amount']);
        echo H::openTag('div');
         if (null !== $item->getProductId()) {
-            echo H::openTag('span', ['class' => 'input-group-text']);
+            echo H::openTag('span', ['class' => 'text-muted']);
              echo H::openTag('b');
               echo $translator->translate('product.unit');
              echo H::closeTag('b');
             echo H::closeTag('span');
             echo H::openTag('span', [
-                'class' => 'input-group-text',
+                'class' => 'text-muted',
                 'name' => 'item_product_unit'
             ]);
              echo $item->getProductUnit();
             echo H::closeTag('span');
         }
         if (null !== $item->getTaskId()) {
-            echo H::openTag('span', ['class' => 'input-group-text']);
+            echo H::openTag('span', ['class' => 'text-muted']);
              echo H::openTag('b');
               echo $item->getTask()?->getName();
              echo H::closeTag('b');
             echo H::closeTag('span');
             echo H::openTag('span', [
-                'class' => 'input-group-text',
+                'class' => 'text-muted',
                 'name' => 'item_task_unit'
             ]);
              echo !is_string(
@@ -706,7 +706,7 @@ foreach ($invItems as $item) {
        'inv_tax_rates' => ''
    ]);
    echo H::closeTag('div');
-   echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none visible-sm']);
+   echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none']);
     echo H::openTag('br');
     echo H::closeTag('br');
    echo H::closeTag('div');
@@ -824,8 +824,7 @@ foreach ($invItems as $item) {
                  echo H::openTag('a', [
                      'href' => '#add-inv-tax',
                      'data-bs-toggle' => 'modal',
-                     'class' => 'btn-xs',
-                     'style' => 'text-decoration:none'
+                     'class' => 'btn-xs text-decoration-none',
                  ]);
                   echo '➕';
                  echo H::closeTag('a');
@@ -859,8 +858,7 @@ foreach ($invItems as $item) {
                          echo H::openTag('span');
                           echo  new A()
                               ->addAttributes([
-                                  'class' => 'btn btn-secondary',
-                                  'style' => 'text-decoration:none',
+                                  'class' => 'btn btn-secondary text-decoration-none',
                                   'data-bs-toggle' => 'tooltip',
                                   'title' => $translator->translate('delete'),
                               ])
@@ -909,11 +907,9 @@ foreach ($invItems as $item) {
              echo '(' . $translator->translate('discount') . ')';
             echo H::closeTag('b');
            echo H::closeTag('td');
-           echo H::openTag('td', ['class' => 'clearfix']);
+           echo H::openTag('td');
             echo H::openTag('div', ['class' => 'discount-field']);
-             echo H::openTag('div', ['class' => 'input-group input-group']);
               echo $numberHelper->formatCurrency($inv->getDiscountAmount() ?? 0.00);
-             echo H::closeTag('div');
             echo H::closeTag('div');
            echo H::closeTag('td');
           echo H::closeTag('tr');

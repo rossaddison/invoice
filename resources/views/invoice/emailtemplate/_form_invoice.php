@@ -201,7 +201,7 @@ $htmlTagBtnSec = 'html-tag btn btn-secondary';
             ->placeholder($translator->translate('subject'))
             ->hint($translator->translate('hint.this.field.is.required')); ?>
     <?= Html::closeTag('div'); ?>
-    <?= Html::openTag('div', ['class' => 'mb-3 input-group']); ?>
+    <?= Html::openTag('div', ['class' => 'mb-3']); ?>
         <?php echo  new Select()
             ->addAttributes([
                 'class' => 'form-control form-control-lg',

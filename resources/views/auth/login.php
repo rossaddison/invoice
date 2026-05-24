@@ -132,7 +132,8 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
     echo  new Form()->close();
     echo H::br();
     echo  new A()
-    ->attribute('style', 'color:#999;text-decoration:none')
+    ->attribute('style', 'color:#999')
+    ->addClass('text-decoration-none')
     ->addClass((string) $class[16])
     ->href($urlGenerator->generate('auth/forgotpassword'))
     ->content($translator->translate('forgot.your.password'))

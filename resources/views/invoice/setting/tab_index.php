@@ -259,12 +259,12 @@ echo H::openTag('ul', ['id' => 'settings-tabs',
     'id'             => 'tab-' . $key,
     'type'           => 'button',
     'role'           => 'tab',
-    'class'          => 'nav-link' . ($isActive ? ' active' : ''),
+    'class'          => 'nav-link text-decoration-none' . ($isActive ? ' active' : ''),
     'data-bs-toggle' => 'tab',
     'data-bs-target' => '#settings-' . $key,
     'aria-controls'  => 'settings-' . $key,
     'aria-selected'  => $isActive ? 'true' : 'false',
-    'style'          => 'text-decoration: none; font: inherit; --tab-color: ' . $tab['color'],
+    'style'          => 'font: inherit; --tab-color: ' . $tab['color'],
    ]); //3
     echo H::openTag('i', ['class' => $tab['icon']]); //4
     echo H::closeTag('i'); //4

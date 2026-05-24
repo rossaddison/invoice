@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * Related logic: see id="add-inv-allowance-charge" triggered by <a href="#add-inv-allowance-charge" data-bs-toggle="modal"  style="text-decoration:none"> on views/inv/view.php
+ * Related logic: see id="add-inv-allowance-charge" triggered by <a href="#add-inv-allowance-charge" data-bs-toggle="modal" > on views/inv/view.php
  * Related logic: see InvController/save_inv_allowance_charge
  * Related logic: see echo $modal_add_allowance_charge; at BOTTOM resources/views/invoice/inv/view.php
  * @var string $modal_add_allowance_charge_form

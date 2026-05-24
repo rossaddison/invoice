@@ -86,7 +86,7 @@ $columns = [
 $toolbarString =  new Form()->post($urlGenerator->generate('categoryprimary/index'))->csrf($csrf)->open()
     .  new A()
         ->href($urlGenerator->generate('categoryprimary/add'))
-        ->addAttributes(['style' => 'text-decoration:none'])
+        ->addClass('text-decoration-none')
         ->content('➕')
         ->render()
     .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()

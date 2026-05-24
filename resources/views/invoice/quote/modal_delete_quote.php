@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Related logic: see id="delete-quote" triggered by <a href="#delete-quote" data-bs-toggle="modal"  style="text-decoration:none"> on views/quote/view.php
+ * Related logic: see id="delete-quote" triggered by <a href="#delete-quote" data-bs-toggle="modal" > on views/quote/view.php
  * Related logic: see App\Invoice\Quote\QuoteController function view  'modal_delete_quote'
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator

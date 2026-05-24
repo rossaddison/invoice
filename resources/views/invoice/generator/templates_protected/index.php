@@ -127,7 +127,7 @@ $toolbarString =
         ->href($urlGenerator->generate(
             '<?= $generator->getSmallSingularName(); ?>/add')
         )
-        ->addStyle('text-decoration:none')
+        ->addClass('text-decoration-none')
         ->content('➕')
         ->render() .
     new Div()

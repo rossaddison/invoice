@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Yiisoft\Bootstrap5\Assets\BootstrapAsset;
 use Yiisoft\Bootstrap5\Assets\BootstrapCdnAsset;
+use App\Invoice\Prometheus\PrometheusMiddleware;
 use Yiisoft\Cookies\CookieMiddleware;
 use Yiisoft\Csrf\CsrfTokenMiddleware;
 use Yiisoft\ErrorHandler\Middleware\ErrorCatcher;
@@ -61,6 +62,7 @@ return [
     'middlewares' => [
         RequestCatcherMiddleware::class,
         ErrorCatcher::class,
+        PrometheusMiddleware::class,
         SessionMiddleware::class,
         CsrfTokenMiddleware::class,
         CookieMiddleware::class,

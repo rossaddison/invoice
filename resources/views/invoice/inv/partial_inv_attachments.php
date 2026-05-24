@@ -39,7 +39,7 @@ if ($invEdit && $invView) {
 ?>
         </b>
     </div>
-    <div class="card-body clearfix">
+    <div class="card-body">
         <div class="container">
             <?php if ($invView && $invEdit) { ?>
             <?= Html::openTag('div', ['class' => 'row']); ?>

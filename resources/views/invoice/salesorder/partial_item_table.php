@@ -2,8 +2,11 @@
 
 declare(strict_types=1);
 
-use Yiisoft\Html\Html;
+use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\A;
+use Yiisoft\Html\Tag\Input;
+use Yiisoft\Html\Tag\Option;
+use Yiisoft\Html\Tag\Textarea;
 
 /**
  * @var App\Infrastructure\Persistence\SalesOrder\SalesOrder $so
@@ -35,691 +38,698 @@ use Yiisoft\Html\Tag\A;
 
 $vat = $s->getSetting('enable_vat_registration');
 $subtotalTooltip = 'sales_order_amount->item_subtotal ='
-    .   'sales_order_item(s)->subtotal - sales_order_item(s)->discount'
-    .   '+ sales_order_item(s)->charge"';
-?>
+    . 'sales_order_item(s)->subtotal - sales_order_item(s)->discount'
+    . '+ sales_order_item(s)->charge"';
 
-<div>
-        <table id="item_table"
-               class="items table table-responsive table-bordered m-0">
-            <thead>
-            <tr><i class="bi bi-info-circle"
-                   data-bs-toggle="tooltip"
-                   title="<?= $s->isDebugMode(20); ?>"></i></tr>
-            <tr>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-            </tr>
-            </thead>
+$tdText       = ['class' => 'td-text', 'style' => 'background-color: lightgreen'];
+$tdTextarea   = ['class' => 'td-textarea'];
+$tdAmount     = ['class' => 'td-amount'];
+$tdAmountQty  = ['class' => 'td-amount td-quantity'];
+$tdVertMiddle = ['class' => 'td-amount td-vert-middle'];
+$textMuted    = ['class' => 'text-muted'];
 
-<?php
-//*********
-// Current
-// ********
+echo H::openTag('div'); //0
+ echo H::openTag('table', ['id' => 'item_table',
+    'class' => 'items table table-responsive table-bordered m-0']); //1
+  echo H::openTag('thead'); //2
+   echo H::openTag('tr'); //3
+    echo H::tag('i', '', [
+     'class'          => 'bi bi-info-circle',
+     'data-bs-toggle' => 'tooltip',
+     'title'          => $s->isDebugMode(20),
+    ]); //4
+   echo H::closeTag('tr'); //3
+   echo H::openTag('tr'); //3
+    echo H::tag('th', ''); //4
+    echo H::tag('th', ''); //4
+    echo H::tag('th', ''); //4
+    echo H::tag('th', ''); //4
+    echo H::tag('th', ''); //4
+    echo H::tag('th', ''); //4
+    echo H::tag('th', ''); //4
+   echo H::closeTag('tr'); //3
+  echo H::closeTag('thead'); //2
+
 $count = 1;
 /**
  * @var App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem $item
  */
 foreach ($soItems as $item) {
-    $productId = $item->getProduct()?->reqId();
-    $taskId = $item->getTask()?->reqId();
-    $productRef = '';
-    $taskRef = '';
+ $productId  = $item->getProduct()?->reqId();
+ $taskId     = $item->getTask()?->reqId();
+ $productRef = '';
+ $taskRef    = '';
+ if ($productId !== null) {
+  $productRef = (new A())
+   ->href($urlGenerator->generate('product/view', [
+    '_language' => (string) $session->get('_language'),
+    'id'        => $productId,
+   ]))
+   ->content((string) $productId)
+   ->render();
+ }
+ if ($taskId !== null) {
+  $taskRef = (new A())
+   ->href($urlGenerator->generate('task/view', [
+    '_language' => (string) $session->get('_language'),
+    'id'        => $taskId,
+   ]))
+   ->content((string) $taskId)
+   ->render();
+ }
+
+ echo H::openTag('tbody', ['class' => 'item']); //2
+  echo H::openTag('tr'); //3
+   echo H::openTag('td', $tdText); //4
+    echo H::openTag('b'); //5
+     echo $count
+      . '-'
+      . (string) $item->reqSalesOrderId()
+      . '-'
+      . (string) $item->reqId()
+      . '-'
+      . ($productId !== null ? $productRef : '')
+      . ($taskId !== null ? $taskRef : '');
+     echo H::tag('br');
+     echo new Input()
+      ->type('text')
+      ->disabled(true)
+      ->addAttributes([
+       'placeholder'    => 'Item Id',
+       'name'           => 'item_peppol_po_itemid',
+       'value'          => H::encode((string) $item->getPeppolPoItemid()),
+       'data-bs-toggle' => 'tooltip',
+       'title'          => 'salesorder_item->peppol_po_itemid',
+      ]);
+     echo new Input()
+      ->type('text')
+      ->disabled(true)
+      ->addAttributes([
+       'placeholder'    => 'Line Id',
+       'name'           => 'item_peppol_po_lineid',
+       'value'          => H::encode((string) $item->getPeppolPoLineid()),
+       'data-bs-toggle' => 'tooltip',
+       'title'          => 'salesorder_item->peppol_po_lineid',
+      ]);
+    echo H::closeTag('b'); //5
+   echo H::closeTag('td'); //4
+   echo H::openTag('td', $tdTextarea); //4
+    echo H::openTag('div'); //5
+     echo H::openTag('span', $textMuted); //6
+      echo H::openTag('b'); //7
+       echo $productId !== null
+        ? $translator->translate('item')
+        : $translator->translate('tasks');
+      echo H::closeTag('b'); //7
+     echo H::closeTag('span'); //6
+     echo H::openTag('select', [
+      'name'     => 'item_name',
+      'class'    => 'form-control form-control-lg',
+      'disabled' => true,
+     ]); //6
+      if ($productId !== null) {
+       echo new Option()->value('0')->content($translator->translate('none'));
+       /**
+        * @var App\Infrastructure\Persistence\Product\Product $product
+        */
+       foreach ($products as $product) {
+        echo new Option()
+         ->value((string) $product->reqId())
+         ->selected($productId == $product->reqId())
+         ->content(H::encode((string) $product->getProductName()));
+       }
+      }
+      if ($taskId !== null) {
+       echo new Option()->value('0')->content($translator->translate('none'));
+       /**
+        * @var App\Infrastructure\Persistence\Task\Task $task
+        */
+       foreach ($tasks as $task) {
+        echo new Option()
+         ->value((string) $task->reqId())
+         ->selected($taskId == $task->reqId())
+         ->content(H::encode((string) $task->getName()));
+       }
+      }
+     echo H::closeTag('select'); //6
+    echo H::closeTag('div'); //5
+   echo H::closeTag('td'); //4
+   echo H::openTag('td', $tdAmountQty); //4
+    echo H::openTag('div'); //5
+     echo H::openTag('span', $textMuted); //6
+      echo H::openTag('b'); //7
+       echo $translator->translate('quantity');
+      echo H::closeTag('b'); //7
+     echo H::closeTag('span'); //6
+     echo new Input()
+      ->type('text')
+      ->disabled(true)
+      ->name('item_quantity')
+      ->class('form-control form-control-sm text-end')
+      ->addAttributes([
+       'data-bs-toggle' => 'tooltip',
+       'title'          => 'sales_order_item->quantity',
+       'value'          => $numberHelper->formatAmount($item->getQuantity()),
+      ]);
+    echo H::closeTag('div'); //5
+   echo H::closeTag('td'); //4
+   echo H::openTag('td', $tdAmount); //4
+    echo H::openTag('div'); //5
+     echo H::openTag('span', $textMuted); //6
+      echo H::openTag('b'); //7
+       echo $translator->translate('price');
+      echo H::closeTag('b'); //7
+     echo H::closeTag('span'); //6
+     echo new Input()
+      ->type('text')
+      ->disabled(true)
+      ->name('item_price')
+      ->class('form-control form-control-sm text-end')
+      ->addAttributes([
+       'maxlength'      => '4',
+       'size'           => '4',
+       'data-bs-toggle' => 'tooltip',
+       'title'          => 'sales_order_item->price',
+       'value'          => $numberHelper->formatAmount($item->getPrice()),
+      ]);
+    echo H::closeTag('div'); //5
+   echo H::closeTag('td'); //4
+   echo H::openTag('td', $tdAmount); //4
+    echo H::openTag('div'); //5
+     echo H::openTag('span', $textMuted); //6
+      echo H::openTag('b'); //7
+       echo $vat === '0'
+        ? $translator->translate('item.discount')
+        : $translator->translate('cash.discount');
+      echo H::closeTag('b'); //7
+     echo H::closeTag('span'); //6
+     echo new Input()
+      ->type('text')
+      ->disabled(true)
+      ->name('item_discount_amount')
+      ->class('form-control form-control-sm text-end')
+      ->addAttributes([
+       'maxlength'      => '4',
+       'size'           => '4',
+       'data-bs-toggle' => 'tooltip',
+       'data-placement' => 'bottom',
+       'title'          => $s->getSetting('currency_symbol') .
+          ' ' . $translator->translate('per.item'),
+       'value'          => $numberHelper->formatAmount($item->getDiscountAmount()),
+      ]);
+    echo H::closeTag('div'); //5
+   echo H::closeTag('td'); //4
+   echo H::openTag('td'); //4
+    echo H::openTag('div'); //5
+     echo H::openTag('span', $textMuted); //6
+      echo H::openTag('b'); //7
+       echo $vat === '0'
+        ? $translator->translate('tax.rate')
+        : $translator->translate('vat.rate');
+      echo H::closeTag('b'); //7
+     echo H::closeTag('span'); //6
+     echo H::openTag('select', [
+      'disabled'       => true,
+      'name'           => 'item_tax_rate_id',
+      'class'          => 'form-control form-control-lg',
+      'data-bs-toggle' => 'tooltip',
+      'title'          => 'quote_item->tax_rate_id',
+     ]); //6
+      echo new Option()->value('0')->content($translator->translate('none'));
+      /**
+       * @var App\Infrastructure\Persistence\TaxRate\TaxRate $taxRate
+       */
+      foreach ($taxRates as $taxRate) {
+       $taxRatePercent = $numberHelper->formatAmount($taxRate->getTaxRatePercent());
+       $taxRateName    = $taxRate->getTaxRateName();
+       $label = ($taxRatePercent >= 0.00 &&
+            null !== $taxRatePercent && null !== $taxRateName)
+        ? $taxRatePercent . '% - ' . $taxRateName
+        : '';
+       echo new Option()
+        ->value((string) $taxRate->reqId())
+        ->selected($item->getTaxRateId() == $taxRate->reqId())
+        ->content(H::encode($label));
+      }
+     echo H::closeTag('select'); //6
+    echo H::closeTag('div'); //5
+   echo H::closeTag('td'); //4
+   echo H::openTag('td', ['class' => 'td-vert-middle btn-group']); //4
+    if ($invEdit === true) {
+     if ($productId !== null && $piR->repoCount($productId) > 0) {
+      echo H::openTag('span', [
+       'data-bs-toggle' => 'tooltip',
+       'title'          => $translator->translate('productimage.gallery')
+            . ($item->getProduct()?->getProductName() ?? ''),
+      ]); //5
+       echo (new A())
+        ->href('#view-product-' . $item->reqId())
+        ->content(H::tag('i', '', ['class' => 'bi bi-eye']))
+        ->class('btn btn-info')
+        ->addAttributes([
+         'data-bs-toggle' => 'modal',
+        ])
+        ->render();
+      echo H::closeTag('span'); //5
+      echo H::openTag('div', [
+       'id'       => 'view-product-' . $item->reqId(),
+       'class'    => 'modal modal-lg',
+       'tabindex' => '-1',
+      ]); //5
+       echo H::openTag('div', ['class' => 'modal-dialog']); //6
+        echo H::openTag('div', ['class' => 'modal-content']); //7
+         echo H::openTag('div', ['class' => 'modal-header']); //8
+          echo H::tag('button', '', [
+           'type'            => 'button',
+           'class'           => 'btn-close',
+           'data-bs-dismiss' => 'modal',
+           'aria-label'      => 'Close',
+          ]); //9
+         echo H::closeTag('div'); //8
+         echo H::openTag('div', ['class' => 'modal-body']); //8
+          echo H::openTag('form'); //9
+           echo H::openTag('div', ['class' => 'mb-3']); //10
+            echo new Input()->type('hidden')->name('_csrf')->value($csrf);
+            $productImages = $piR->repoProductImageProductquery($productId);
+/**
+ * @var App\Infrastructure\Persistence\ProductImage\ProductImage $productImage
+ */
+            foreach ($productImages as $productImage) {
+             if (!empty($productImage->getFileNameOriginal())) {
+              echo H::openTag('a', ['data-bs-toggle' => 'modal',
+                'class' => 'col-sm-4']); //11
+               echo H::tag('img', '', [
+                'src'   => '/products/' . $productImage->getFileNameOriginal(),
+                'class' => 'img-fluid',
+               ]); //12
+              echo H::closeTag('a'); //11
+             }
+            }
+           echo H::closeTag('div'); //10
+          echo H::closeTag('form'); //9
+         echo H::closeTag('div'); //8
+         echo H::openTag('div', ['class' => 'modal-footer']); //8
+          echo H::tag('button', $translator->translate('cancel'), [
+           'type'            => 'button',
+           'class'           => 'btn btn-secondary',
+           'data-bs-dismiss' => 'modal',
+          ]); //9
+         echo H::closeTag('div'); //8
+        echo H::closeTag('div'); //7
+       echo H::closeTag('div'); //6
+      echo H::closeTag('div'); //5
+     }
+    }
+    if ($editClientPeppol === true) {
+     echo H::openTag('span'); //5
+      echo (new A())
+       ->href($urlGenerator->generate('salesorderitem/edit', ['id' => $item->reqId()]))
+       ->content('🖉')
+       ->class('btn btn-primary')
+       ->addClass('text-decoration-none')
+       ->render();
+     echo H::closeTag('span'); //5
+    }
+   echo H::closeTag('td'); //4
+  echo H::closeTag('tr'); //3
+
+  echo H::openTag('tr'); //3
+   echo H::tag('td', ''); //4
+   echo H::openTag('td', $tdTextarea); //4
+    echo H::openTag('div'); //5
+     echo H::openTag('span', array_merge($textMuted, [
+      'data-bs-toggle' => 'tooltip',
+      'title'          => 'quote_item->description',
+     ])); //6
+      echo H::openTag('b'); //7
+       echo $translator->translate('description');
+      echo H::closeTag('b'); //7
+     echo H::closeTag('span'); //6
+     echo new Textarea()
+      ->addAttributes(['disabled' => true])
+      ->name('item_description')
+      ->class('form-control form-control-lg')
+      ->rows(1)
+      ->value(H::encode((string) $item->getDescription()));
+    echo H::closeTag('div'); //5
+   echo H::closeTag('td'); //4
+   echo H::openTag('td', $tdAmount); //4
+    echo H::openTag('div'); //5
+     if ($productId !== null) {
+      echo H::openTag('span', $textMuted); //6
+       echo H::openTag('b'); //7
+        echo $translator->translate('product.unit');
+       echo H::closeTag('b'); //7
+      echo H::closeTag('span'); //6
+      echo H::tag('br');
+      echo H::tag('span', H::encode((string) $item->getProductUnit()),
+        array_merge($textMuted, ['name' => 'item_product_unit']));
+     }
+     if ($taskId !== null) {
+      echo H::openTag('span', $textMuted); //6
+       echo H::openTag('b'); //7
+        echo $item->getTask()?->getName();
+       echo H::closeTag('b'); //7
+      echo H::closeTag('span'); //6
+      echo H::tag('br');
+      $finishDate = $item->getTask()?->getFinishDate();
+      echo H::tag('span', !is_string($finishDate) ?
+            ($finishDate?->format('Y-m-d') ?? '') :
+            '', array_merge($textMuted, ['name' => 'item_task_unit']));
+     }
+    echo H::closeTag('div'); //5
+   echo H::closeTag('td'); //4
+   echo H::openTag('td', $tdAmount); //4
     if ($productId !== null) {
-        $productRef =  new A()
-           ->href($urlGenerator->generate('product/view',
-                [
-                    '_language' => (string) $session->get('_language'),
-                    'id' => $productId,
-                ])
-           )
-           ->content((string) $productId)
-           ->render();
+     echo H::openTag('b'); //5
+      echo $numberHelper->formatAmount(($item->getQuantity() ?? 0.00) *
+        ($item->getPrice() ?? 0.00));
+     echo H::closeTag('b'); //5
     }
-    if ($taskId !== null) {
-        $taskRef =  new A()
-           ->href($urlGenerator->generate('task/view',
-                   [
-                       '_language' => (string) $session->get('_language'),
-                       'id' => $taskId,
-                   ])
-           )
-           ->content((string) $taskId)
-           ->render();
-    }
-    ?>
-                <tbody class="item">
-                <tr>
-                    <td class="td-text" style="background-color: lightgreen">
-                        <b>
-                            <div class="input-group">
-<?php echo $count
-        . '-'
-        . (string) $item->reqSalesOrderId()
-        . '-'
-        . (string) $item->reqId()
-        . '-'
-        . ($productId !== null ? $productRef : '')
-        . ($taskId !== null ? $taskRef : ''); ?>
+   echo H::closeTag('td'); //4
+   echo H::tag('td', '', $tdAmount); //4
+   echo H::openTag('td', $tdAmount); //4
+    echo H::openTag('b'); //5
+     echo $numberHelper->formatAmount(
+      ($item->getQuantity() ?? 0.00)
+      * ($item->getPrice() ?? 0.00)
+      * ($item->getTaxRate()?->getTaxRatePercent() ?? 0.00)
+      / 100
+     );
+    echo H::closeTag('b'); //5
+   echo H::closeTag('td'); //4
+   echo H::tag('td', '', $tdAmount); //4
+  echo H::closeTag('tr'); //3
 
-                            </div>
-                            <div class="input-group">
-<!--  This value is editable on our quote if the client or customer is going
-      to pay by Peppol. They have to supply their corresponding Purchase Order
-      Item Id here.
-      https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/
-              cac-InvoiceLine/cac-Item/cac-BuyersItemIdentification/cbc-ID/" -->
-                                <input type="text"
-                                       disabled="true"
-                                       placeholder="Item Id"
-                                       maxlength="8"
-                                       size="8"
-                                       name="item_peppol_po_itemid"
-                                       value="<?= $item->getPeppolPoItemid();?>"
-                                       data-bs-toggle = "tooltip"
-                                       title="salesorder_item->peppol_po_itemid">
-
-<!-- This value is editable on our quote if the client or customer is going to
-     pay by Peppol. They have to supply their corresponding Purchase Order Line
-     Number here. https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/
-     cac-InvoiceLine/cac-OrderLineReference/cbc-LineID/" -->
-                                <input type="text"
-                                       disabled="true"
-                                       placeholder="Line Id"
-                                       maxlength="8"
-                                       size="8"
-                                       name="item_peppol_po_lineid"
-                                       value="<?= $item->getPeppolPoLineid();?>"
-                                       data-bs-toggle = "tooltip"
-                                       title="salesorder_item->peppol_po_lineid">
-                            </div>
-                        </b>
-                    </td>
-                    <td class="td-textarea">
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <b>
-<?= $productId !== null ? $translator->translate('item') :
-        $translator->translate('tasks') ; ?>
-                                </b>
-                            </span>
-                            <select name="item_name"
-                                    class="form-control form-control-lg"
-                                    disabled>
-                            <?php if ($productId !== null) { ?>
-                                <option value="0">
-                                    <?= $translator->translate('none'); ?>
-                                </option>
-                                <?php
-                                /**
-                                 * @var App\Infrastructure\Persistence\Product\Product $product
-                                 */
-                                foreach ($products as $product) { ?>
-                                    <option value="
-                                        <?php echo $product->reqId(); ?>"
-    <?php if ($productId == $product->reqId()) { ?>
-                                        selected="selected"<?php } ?>>
-<?php echo $product->getProductName(); ?>
-                                    </option>
-                                <?php } ?>
-                            <?php } ?>
-                            <?php if ($taskId !== null) { ?>
-                                <option value="0">
-                                <?= $translator->translate('none'); ?></option>
-                                <?php
-                                /**
-                                 * @var App\Infrastructure\Persistence\Task\Task $task
-                                 */
-                                foreach ($tasks as $task) { ?>
-                                    <option value="<?php echo $task->reqId(); ?>"
-    <?php if ($taskId == $task->reqId()) { ?>
-                                            selected="selected"<?php } ?>>
-                                        <?php echo $task->getName(); ?>
-                                    </option>
-                                <?php } ?>
-                            <?php } ?>
-                            </select>
-                        </div>
-                    </td>
-                    <td class="td-amount td-quantity">
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <b><?= $translator->translate('quantity'); ?></b>
-                            </span>
-                            <input disabled
-                                   type="text"
-                                   maxlength="4"
-                                   size="4"
-                                   name="item_quantity"
-                                   class="form-control form-control-sm text-end"
-                                   data-bs-toggle = "tooltip"
-                                   title="sales_order_item->quantity"
-                                   value="
-    <?= $numberHelper->formatAmount($item->getQuantity()); ?>">
-                        </div>
-                    </td>
-                    <td class="td-amount">
-                      <div class="input-group">
-                          <span class="input-group-text">
-                              <b>
-                                <?= $translator->translate('price'); ?>
-                              </b>
-                          </span>
-                          <input disabled type="text"
-                                 maxlength="4"
-                                 size="4"
-                                 name="item_price"
-                                 class="form-control form-control-sm text-end"
-                                 data-bs-toggle = "tooltip"
-                                 title="sales_order_item->price"
-                                 value="
-    <?= $numberHelper->formatAmount($item->getPrice()); ?>">
-                      </div>
-                    </td>
-                    <td class="td-amount ">
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <b>
-    <?= $vat === '0' ? $translator->translate('item.discount') :
-        $translator->translate('cash.discount'); ?>
-                                </b>
-                            </span>
-                            <input disabled type="text"
-                                   maxlength="4"
-                                   size="4"
-                                   name="item_discount_amount"
-                                   class="form-control form-control-sm text-end"
-                                   data-bs-toggle = "tooltip"
-                                   title="sales_order_item->discount_amount"
-                                   value="
-    <?= $numberHelper->formatAmount($item->getDiscountAmount()); ?>"
-                                   data-bs-toggle = "tooltip"
-                                   data-placement="bottom"
-                                   title="
-    <?= $s->getSetting('currency_symbol') . ' ' .
-            $translator->translate('per.item'); ?>">
-                        </div>
-                    </td>
-
-                    <td>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <b>
-    <?= $vat === '0' ? $translator->translate('tax.rate') :
-                $translator->translate('vat.rate') ?></b>
-                            </span>
-                            <select disabled
-                                    name="item_tax_rate_id"
-                                    class="form-control form-control-lg"
-                                    data-bs-toggle = "tooltip"
-                                    title="quote_item->tax_rate_id">
-                                <option value="0">
-                    <?= $translator->translate('none'); ?>
-                                </option>
-                                <?php
-                                /**
-                                 * @var App\Infrastructure\Persistence\TaxRate\TaxRate $taxRate
-                                 */
-    foreach ($taxRates as $taxRate) { ?>
-                                    <option value="
-    <?php echo $taxRate->reqId(); ?>"
-        <?php if ($item->getTaxRateId() == $taxRate->reqId()) { ?>
-                                        selected="selected"<?php } ?>>
-                <?php
-                    $taxRatePercent = $numberHelper->formatAmount(
-                            $taxRate->getTaxRatePercent());
-                                $taxRateName = $taxRate->getTaxRateName();
-                                if ($taxRatePercent >= 0.00
-                                        && null !== $taxRatePercent
-                                        && null !== $taxRateName) {
-                                    echo $taxRatePercent . '% - ' . $taxRateName;
-                                }
-                                ?>
-                                    </option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                    </td>
-<?php // Buttons for line item start here?>
-                    <td class="td-vert-middle btn-group">
-                        <?php if ($invEdit === true) { ?>
-<?php if ($productId !== null && $piR->repoCount($productId) > 0) { ?>
-                            <span data-bs-toggle="tooltip"
-                                  title="
-    <?= $translator->translate('productimage.gallery') .
-            ($item->getProduct()?->getProductName() ?? ''); ?>">
-                                <a class="btn btn-info"
-                                   data-bs-toggle="modal"
-                                   href="#view-product-<?= $item->reqId(); ?>"
-                                   style="text-decoration:none">
-                                    <i class="bi bi-eye"></i>
-                                </a>
-                            </span>
-                            <div id="view-product-<?= $item->reqId(); ?>"
-                                 class="modal modal-lg" tabindex="-1">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button"
-                                                    class="btn-close"
-                                                    data-bs-dismiss="modal"
-                                                aria-label="Close">
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form>
-                                                <div class="mb-3">
-                                                    <input type="hidden"
-                                                           name="_csrf"
-                                                           value="<?= $csrf ?>">
-    <?php $productImages =
-        $piR->repoProductImageProductquery($productId); ?>
-    <?php
-    /**
-     * @var App\Infrastructure\Persistence\ProductImage\ProductImage $productImage
-     */
-    foreach ($productImages as $productImage) { ?>
-        <?php if (!empty($productImage->getFileNameOriginal())) { ?>
-                                                    <a data-bs-toggle="modal"
-                                                       class="col-sm-4">
-                                                    <img src="
-                <?= '/products/' . $productImage->getFileNameOriginal(); ?>"
-                                                            class="img-fluid">
-                                                    </a>
-        <?php } ?>
-    <?php } ?>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button"
-                                                    class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">
-                                    <?= $translator->translate('cancel'); ?>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                             </div>
-                            <?php } ?>
-                        <?php } ?>
-                        <?php if ($editClientPeppol === true) { ?>
-                            <span>
-                                <a class="btn btn-primary"
-                                   href="
-<?= $urlGenerator->generate('salesorderitem/edit', ['id' => $item->reqId()]); ?>"
-                                   style="text-decoration:none"><?= '🖉'; ?></a>
-                            </span>
-                        <?php } ?>
-                    </td>
-                </tr>
-<?php // Buttons for line item end here?>
-                <tr>
-                    <td></td>
-                    <td>
-                        <div class="input-group">
-                            <span class="input-group-text"
-                                  data-bs-toggle = "tooltip"
-                                  title="quote_item->description">
-                                <b>
-                                    <?= $translator->translate('description'); ?>
-                                </b>
-                            </span>
-                            <textarea disabled
-                                      name="item_description"
-                                      class="form-control form-control-lg"
-                                      rows="1">
-                                <?= Html::encode($item->getDescription()); ?>
-                            </textarea>
-                        </div>
-                    </td>
-                    <td class="td-amount">
-                        <div class="input-group">
-                        <?php if ($productId !== null) { ?>
-                            <span class="input-group-text">
-                                <b>
-                                <?= $translator->translate('product.unit');?>
-                                </b>
-                            </span>
-                            <span class="input-group-text"
-                                  name="item_product_unit">
-                                    <?= $item->getProductUnit();?>
-                            </span>
-                        <?php } ?>
-                        <?php if ($taskId !== null) { ?>
-                            <span class="input-group-text">
-                                <b>
-                                    <?= $item->getTask()?->getName(); ?>
-                                </b>
-                            </span>
-                            <span class="input-group-text"
-                                  name="item_task_unit">
-                        <?= !is_string(
-                            $finishDate = $item->getTask()?->getFinishDate()) ?
-                                $finishDate?->format('Y-m-d') : '';?>
-                            </span>
-                        <?php } ?>
-                        </div>
-                    </td>
-                    <td class="td-amount">
-                        <?php if ($productId !== null) { ?>
-                        <b>
-  <?= $numberHelper->formatAmount(($item->getQuantity() ?? 0.00)
-                                  * ($item->getPrice() ?? 0.00)); ?>
-                        </b>
-                        <?php } ?>
-                    </td>
-                    <td class="td-amount"></td>
-                    <td class="td-amount">
-                        <b>
-  <?= $numberHelper->formatAmount(($item->getQuantity() ?? 0.00)
-                                 * ($item->getPrice() ?? 0.00)
-                                 * ($item->getTaxRate()?->getTaxRatePercent()
-                                                                        ?? 0.00)
-                                 / 100); ?>
-                        </b>
-                    </td>
-                    <td class="td-amount"></td>
-                </tr>
-<?php
-    if ($s->getSetting('enable_peppol') == '1') {
+  if ($s->getSetting('enable_peppol') == '1') {
 /**
  * @var App\Infrastructure\Persistence\SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceCharge $acsoi
  */
-foreach ($acsoiR->repoSalesOrderItemquery($item->reqId()) as $acsoi) { ?>
-    <?php $isCharge =
-        ($acsoi->getAllowanceCharge()?->getIdentifier() == 1 ? true : false); ?>
-                        <tr>
-                            <td class="td-amount">
-                                <b>
-        <?= $acsoi->getAllowanceCharge()?->getIdentifier() == '1'
-                ? $translator->translate('allowance.or.charge.charge')
-                : '(' . $translator->translate('allowance.or.charge.allowance')
-                    . ')'; ?>
-                                </b>
-                            </td>
-                            <td class="td-amount">
-                                <b>
-        <?= $translator->translate('allowance.or.charge.reason.code') . ': ' .
-                    ($acsoi->getAllowanceCharge()?->getReasonCode() ?? '#'); ?>
-                                </b>
-                            </td>
-                            <td class="td-amount">
-                                <b>
-                <?= $translator->translate('allowance.or.charge.reason') . ': '
-                    . ($acsoi->getAllowanceCharge()?->getReason() ?? '#'); ?>
-                                </b>
-                            </td>
-                            <td class="td-amount">
-                                <b>
-                <?= ($isCharge ? '' : '(') . $numberHelper->formatCurrency(
-                    $acsoi->getAmount()) . ($isCharge ? '' : ')') ; ?>
-                                </b>
-                            </td>
-                            <td class="td-amount"></td>
-                            <td class="td-amount">
-                                <b>
-                    <?= ($isCharge ? '' : '(') . $numberHelper->formatCurrency(
-                        $acsoi->getVatOrTax()) . ($isCharge ? '' : ')'); ?>
-                                </b>
-                            </td>
-                            <td class="td-amount"></td>
-                        </tr>
-                    <?php } ?>
-                <?php } ?>
-                <tr>
-                    <td class="td-amount"></td>
-                    <td class="td-amount"></td>
-                    <td class="td-amount"></td>
-                    <td class="td-amount td-vert-middle"
-                        style="background-color: lightblue">
-                        <span>
-                            <b><?= $translator->translate('subtotal'); ?></b>
-                        </span>
-                        <br/>
-                        <span name="subtotal"
-                              class="text-end"
-                              data-bs-toggle = "tooltip"
-                              title="sales_order_item_amount">
-                        <?= $numberHelper->formatCurrency(
-                                $soiaR->repoSalesOrderItemAmountquery(
-                                        $item->reqId())?->getSubtotal()); ?>
-                        </span>
-                    </td>
-                    <td class="td-amount td-vert-middle">
-                        <span>
-                            <b>(
-    <?= $vat === '0' ? $translator->translate('discount') :
-            $translator->translate('early.settlement.cash.discount') ?>)
-                            </b>
-                        </span>
-                        <br/>
-                        <span name="item_discount_total"
-                              class="text-end"
-                              data-bs-toggle = "tooltip"
-                              title="sales_order_item_amount->discount">
-                        (<?= $numberHelper->formatCurrency(
-                                $soiaR->repoSalesOrderItemAmountquery(
-                                        $item->reqId())?->getDiscount()); ?>)
-                        </span>
-                    </td>
-                    <td class="td-amount td-vert-middle"
-                        style ="background-color: lightpink">
-                        <span>
-                            <b>
-                        <?= $vat === '0' ? $translator->translate('tax') :
-                                $translator->translate('vat.abbreviation') ?>
-                            </b>
-                        </span>
-                        <br/>
-                        <span name="item_tax_total"
-                              class="text-end"
-                              data-bs-toggle = "tooltip"
-                              title="sales_order_item_amount->tax_total">
-                            <?= $numberHelper->formatCurrency(
-    $soiaR->repoSalesOrderItemAmountquery($item->reqId())?->getTaxTotal()); ?>
-                        </span>
-                    </td>
-                    <td class="td-amount td-vert-middle"
-                        style="background-color: lightyellow">
-                        <span>
-                            <b>
-                                <?= $translator->translate('total'); ?>
-                            </b>
-                        </span>
-                        <br/>
-                        <span name="item_total"
-                              class="text-end"
-                              data-bs-toggle = "tooltip"
-                              title="sales_order_item_amount->total">
-                            <?= $numberHelper->formatCurrency(
-    $soiaR->repoSalesOrderItemAmountquery($item->reqId())?->getTotal()); ?>
-                        </span>
-                    </td>
-                </tr>
-                </tbody>
-            <?php
-                 $count = $count + 1;
+   foreach ($acsoiR->repoSalesOrderItemquery($item->reqId()) as $acsoi) {
+    $isCharge = ($acsoi->getAllowanceCharge()?->getIdentifier() == 1);
+    echo H::openTag('tr'); //3
+     echo H::openTag('td', $tdAmount); //4
+      echo H::openTag('b'); //5
+       echo $acsoi->getAllowanceCharge()?->getIdentifier() == '1'
+        ? $translator->translate('allowance.or.charge.charge')
+        : '(' . $translator->translate('allowance.or.charge.allowance') . ')';
+      echo H::closeTag('b'); //5
+     echo H::closeTag('td'); //4
+     echo H::openTag('td', $tdAmount); //4
+      echo H::openTag('b'); //5
+       echo $translator->translate('allowance.or.charge.reason.code') . ': '
+        . ($acsoi->getAllowanceCharge()?->getReasonCode() ?? '#');
+      echo H::closeTag('b'); //5
+     echo H::closeTag('td'); //4
+     echo H::openTag('td', $tdAmount); //4
+      echo H::openTag('b'); //5
+       echo $translator->translate('allowance.or.charge.reason') . ': '
+        . ($acsoi->getAllowanceCharge()?->getReason() ?? '#');
+      echo H::closeTag('b'); //5
+     echo H::closeTag('td'); //4
+     echo H::openTag('td', $tdAmount); //4
+      echo H::openTag('b'); //5
+       echo ($isCharge ? '' : '(') .
+        $numberHelper->formatCurrency($acsoi->getAmount()) .
+            ($isCharge ? '' : ')');
+      echo H::closeTag('b'); //5
+     echo H::closeTag('td'); //4
+     echo H::tag('td', '', $tdAmount); //4
+     echo H::openTag('td', $tdAmount); //4
+      echo H::openTag('b'); //5
+       echo ($isCharge ? '' : '(') .
+        $numberHelper->formatCurrency($acsoi->getVatOrTax()) .
+            ($isCharge ? '' : ')');
+      echo H::closeTag('b'); //5
+     echo H::closeTag('td'); //4
+     echo H::tag('td', '', $tdAmount); //4
+    echo H::closeTag('tr'); //3
+   }
+  }
+
+  echo H::openTag('tr'); //3
+   echo H::tag('td', '', $tdAmount); //4
+   echo H::tag('td', '', $tdAmount); //4
+   echo H::tag('td', '', $tdAmount); //4
+   echo H::openTag('td', array_merge($tdVertMiddle,
+        ['style' => 'background-color: lightblue'])); //4
+    echo H::openTag('span'); //5
+     echo H::openTag('b'); //6
+      echo $translator->translate('subtotal');
+     echo H::closeTag('b'); //6
+    echo H::closeTag('span'); //5
+    echo H::tag('br');
+    echo H::openTag('span', [
+     'name'           => 'subtotal',
+     'class'          => 'text-end',
+     'data-bs-toggle' => 'tooltip',
+     'title'          => 'sales_order_item_amount',
+    ]); //5
+     echo $numberHelper->formatCurrency(
+      $soiaR->repoSalesOrderItemAmountquery($item->reqId())?->getSubtotal()
+     );
+    echo H::closeTag('span'); //5
+   echo H::closeTag('td'); //4
+   echo H::openTag('td', $tdVertMiddle); //4
+    echo H::openTag('span'); //5
+     echo H::openTag('b'); //6
+      echo '(' . ($vat === '0'
+       ? $translator->translate('discount')
+       : $translator->translate('early.settlement.cash.discount')) . ')';
+     echo H::closeTag('b'); //6
+    echo H::closeTag('span'); //5
+    echo H::tag('br');
+    echo H::openTag('span', [
+     'name'           => 'item_discount_total',
+     'class'          => 'text-end',
+     'data-bs-toggle' => 'tooltip',
+     'title'          => 'sales_order_item_amount->discount',
+    ]); //5
+     echo '(' . $numberHelper->formatCurrency(
+      $soiaR->repoSalesOrderItemAmountquery($item->reqId())?->getDiscount()
+     ) . ')';
+    echo H::closeTag('span'); //5
+   echo H::closeTag('td'); //4
+   echo H::openTag('td', array_merge($tdVertMiddle,
+        ['style' => 'background-color: lightpink'])); //4
+    echo H::openTag('span'); //5
+     echo H::openTag('b'); //6
+      echo $vat === '0'
+       ? $translator->translate('tax')
+       : $translator->translate('vat.abbreviation');
+     echo H::closeTag('b'); //6
+    echo H::closeTag('span'); //5
+    echo H::tag('br');
+    echo H::openTag('span', [
+     'name'           => 'item_tax_total',
+     'class'          => 'text-end',
+     'data-bs-toggle' => 'tooltip',
+     'title'          => 'sales_order_item_amount->tax_total',
+    ]); //5
+     echo $numberHelper->formatCurrency(
+      $soiaR->repoSalesOrderItemAmountquery($item->reqId())?->getTaxTotal()
+     );
+    echo H::closeTag('span'); //5
+   echo H::closeTag('td'); //4
+   echo H::openTag('td', array_merge($tdVertMiddle,
+        ['style' => 'background-color: lightyellow'])); //4
+    echo H::openTag('span'); //5
+     echo H::openTag('b'); //6
+      echo $translator->translate('total');
+     echo H::closeTag('b'); //6
+    echo H::closeTag('span'); //5
+    echo H::tag('br');
+    echo H::openTag('span', [
+     'name'           => 'item_total',
+     'class'          => 'text-end',
+     'data-bs-toggle' => 'tooltip',
+     'title'          => 'sales_order_item_amount->total',
+    ]); //5
+     echo $numberHelper->formatCurrency(
+      $soiaR->repoSalesOrderItemAmountquery($item->reqId())?->getTotal()
+     );
+    echo H::closeTag('span'); //5
+   echo H::closeTag('td'); //4
+  echo H::closeTag('tr'); //3
+ echo H::closeTag('tbody'); //2
+ $count++;
 }
-/**************************/
-/* Sales order items end here */
-/**************************/
-?>
-        </table>
-    </div>
-     <br>
-    <?php
-        /***********************/
-        /*   Totals start here */
-        /***********************/
-?>
-    <?= Html::openTag('div', ['class' => 'row']); ?>
-        <div class="col-12 col-md-4"
-             sales_order_tax_rates="<?php $soTaxRates; ?>">
-        </div>
-        <div class="col-12 d-block d-sm-none visible-sm">
-        <br>
-        </div>
-        <div class="col-12 col-md-6 offset-md-2 col-lg-4 offset-lg-4">
-            <table class="table table-bordered text-end">
-                <tr>
-                    <i class="bi bi-info-circle"
-                       data-bs-toggle="tooltip"
-                       title="<?= $s->isDebugMode(20); ?>">
-                    </i>
-                </tr>
-                <tr>
-                    <td style="width: 40%;">
-                        <b>
-             <?= $translator->translate('subtotal'); ?>
-                        </b>
-                    </td>
-                    <td style="width: 60%;background-color: lightblue"
-                        class="text-end"
-                        id="amount_subtotal"
-                        data-bs-toggle = "tooltip"
-                        title="<?= $subtotalTooltip; ?>">
-                            <?php echo $numberHelper->formatCurrency(
-                                    $soAmount->getItemSubtotal() > 0.00 ?
-                                    $soAmount->getItemSubtotal() : 0.00); ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span>
-                            <b>
-                                <?= $vat == '1' ?
-                                    $translator->translate('vat.break.down') :
-                                    $translator->translate('item.tax'); ?>
-                            </b>
-                        </span>
-                    </td>
-                    <td class="text-end"
-                        style="background-color: lightpink"
-                        data-bs-toggle = "tooltip"
-                        id="amount_item_tax_total"
-                        title="sales_order_amount->item_tax_total">
-                            <?php echo $numberHelper->formatCurrency(
-                                    $soAmount->getItemTaxTotal() > 0 ?
-                                    $soAmount->getItemTaxTotal() : 0.00); ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <b>
-<?= $translator->translate('allowance.or.charge.shipping.handling.packaging'); ?>
-                        </b>
-                    </td>
-                    <td class="text-end"
-                        id="amount_sales_order_allowance_charge_total"
-                        data-bs-toggle = "tooltip"
-                        title="sales_order_amount->packhandleship_total">
-                        <b><?php echo $numberHelper->formatCurrency(
-                            $packHandleShipTotal['totalAmount'] ?? 0.00); ?>
-                        </b>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <b>
-<?= $vat == '1' ? $translator->translate(
-                    'allowance.or.charge.shipping.handling.packaging.vat') :
-                        $translator->translate(
-                        'allowance.or.charge.shipping.handling.packaging.tax'); ?>
-                        </b>
-                    </td>
-                    <td class="text-end"
-                        id="amount_sales_order_allowance_charge_tax"
-                        data-bs-toggle = "tooltip"
-                        title="sales_order_amount->packhandleship_tax">
-                        <b><?php echo $numberHelper->formatCurrency(
-                            $packHandleShipTotal['totalTax'] ?? 0.00); ?>
-                        </b>
-                    </td>
-                </tr>
-                <?php if ($vat === '0') { ?>
-                <tr>
-                    <td>
-                        <b>
-                            <?= $translator->translate('tax'); ?>
-                        </b>
-                    </td>
-                    <td>
-                    <?php if ($soTaxRates) {
-                        /**
-                         * @var App\Infrastructure\Persistence\SalesOrderTaxRate\SalesOrderTaxRate $soTaxRate
-                         */
-                        foreach ($soTaxRates as $soTaxRate) { ?>
-                            <div data-bs-toggle="tooltip"
-                                 title="
-    <?= $soTaxRate->getIncludeItemTax() == '1' ? $included : $excluded; ?>">
-                                    <input type="hidden"
-                                           name="_csrf"
-                                           value="<?= $csrf ?>">
-                                    <span class="text-muted">
-        <?php
-            $taxRatePercent = $soTaxRate->getTaxRate()?->getTaxRatePercent();
-            $numberPercent = $numberHelper->formatAmount($taxRatePercent);
-            $taxRateName = $soTaxRate->getTaxRate()?->getTaxRateName();
-            if ($taxRatePercent >= 0.00 && null !== $taxRateName
-                    && $numberPercent >= 0.00 &&
-                    null !== $numberPercent) {
-                echo Html::encode(' '
-                        . $taxRateName
-                        . ' '
-                        . $numberPercent
-                        . ' ');
-            }
-        ?>
-                                    </span>
-                                    <span class="text-end"
-                                          data-bs-toggle = "tooltip"
-                                          title=
-                            "sales_order_tax_rate->sales_order_tax_rate_amount">
-<?= $numberHelper->formatCurrency($soTaxRate->getSalesOrderTaxRateAmount()); ?>
-                                    </span>
-                                    <br>
-                            </div>
-                            <?php }
-                            } else {
-                                echo $numberHelper->formatCurrency('0');
-                            } ?>
-                    </td>
-                </tr>
-                <?php } ?>
-                <?php if (($so->getDiscountAmount() ?? 0.00) != 0.00) { ?>
-                <tr>
-                    <td class="td-vert-middle">
-                        <b>(<?= $translator->translate('discount'); ?>)</b>
-                    </td>
-                    <td class="clearfix">
-                        <div class="discount-field">
-                            <div class="input-group input-group">
-      <?= $numberHelper->formatCurrency($so->getDiscountAmount() ?? 0.00); ?>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <?php } ?>
-                <tr>
-                    <td>
-                        <b><?= $translator->translate('total'); ?></b>
-                    </td>
-                    <td class="text-end"
-                        style="background-color:lightyellow"
-                        id="amount_sales_order_total"
-                        data-bs-toggle = "tooltip"
-                        title="sales_order_amount->total">
-                        <b>
-        <?= $numberHelper->formatCurrency($soAmount->getTotal() ?? 0.00); ?>
-                        </b>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    <hr>
+echo H::closeTag('table'); //1
+echo H::closeTag('div'); //0
+
+echo H::tag('br');
+
+echo H::openTag('div', ['class' => 'row']); //0
+ echo H::openTag('div', ['class' => 'col-12 col-md-4']); //1
+ echo H::closeTag('div'); //1
+ echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none']); //1
+  echo H::tag('br');
+ echo H::closeTag('div'); //1
+ echo H::openTag('div', ['class' =>
+     'col-12 col-md-6 offset-md-2 col-lg-4 offset-lg-4']); //1
+  echo H::openTag('table', ['class' =>
+     'table table-bordered text-end']); //2
+   echo H::openTag('tr'); //3
+    echo H::tag('i', '', [
+     'class'          => 'bi bi-info-circle',
+     'data-bs-toggle' => 'tooltip',
+     'title'          => $s->isDebugMode(20),
+    ]); //4
+   echo H::closeTag('tr'); //3
+   echo H::openTag('tr'); //3
+    echo H::openTag('td', ['style' => 'width: 40%;']); //4
+     echo H::openTag('b'); //5
+      echo $translator->translate('subtotal');
+     echo H::closeTag('b'); //5
+    echo H::closeTag('td'); //4
+    echo H::openTag('td', [
+     'style'          => 'width: 60%;background-color: lightblue',
+     'class'          => 'text-end',
+     'id'             => 'amount_subtotal',
+     'data-bs-toggle' => 'tooltip',
+     'title'          => $subtotalTooltip,
+    ]); //4
+     echo $numberHelper->formatCurrency(
+      $soAmount->getItemSubtotal() > 0.00 ? $soAmount->getItemSubtotal() : 0.00
+     );
+    echo H::closeTag('td'); //4
+   echo H::closeTag('tr'); //3
+   echo H::openTag('tr'); //3
+    echo H::openTag('td'); //4
+     echo H::openTag('span'); //5
+      echo H::openTag('b'); //6
+       echo $vat == '1'
+        ? $translator->translate('vat.break.down')
+        : $translator->translate('item.tax');
+      echo H::closeTag('b'); //6
+     echo H::closeTag('span'); //5
+    echo H::closeTag('td'); //4
+    echo H::openTag('td', [
+     'class'          => 'text-end',
+     'style'          => 'background-color: lightpink',
+     'data-bs-toggle' => 'tooltip',
+     'id'             => 'amount_item_tax_total',
+     'title'          => 'sales_order_amount->item_tax_total',
+    ]); //4
+     echo $numberHelper->formatCurrency(
+      $soAmount->getItemTaxTotal() > 0 ? $soAmount->getItemTaxTotal() : 0.00
+     );
+    echo H::closeTag('td'); //4
+   echo H::closeTag('tr'); //3
+   echo H::openTag('tr'); //3
+    echo H::openTag('td'); //4
+     echo H::openTag('b'); //5
+      echo $translator->translate('allowance.or.charge.shipping.handling.packaging');
+     echo H::closeTag('b'); //5
+    echo H::closeTag('td'); //4
+    echo H::openTag('td', [
+     'class'          => 'text-end',
+     'id'             => 'amount_sales_order_allowance_charge_total',
+     'data-bs-toggle' => 'tooltip',
+     'title'          => 'sales_order_amount->packhandleship_total',
+    ]); //4
+     echo H::openTag('b'); //5
+      echo $numberHelper->formatCurrency($packHandleShipTotal['totalAmount'] ?? 0.00);
+     echo H::closeTag('b'); //5
+    echo H::closeTag('td'); //4
+   echo H::closeTag('tr'); //3
+   echo H::openTag('tr'); //3
+    echo H::openTag('td'); //4
+     echo H::openTag('b'); //5
+      echo $vat == '1'
+       ? $translator->translate('allowance.or.charge.shipping.handling.packaging.vat')
+       : $translator->translate('allowance.or.charge.shipping.handling.packaging.tax');
+     echo H::closeTag('b'); //5
+    echo H::closeTag('td'); //4
+    echo H::openTag('td', [
+     'class'          => 'text-end',
+     'id'             => 'amount_sales_order_allowance_charge_tax',
+     'data-bs-toggle' => 'tooltip',
+     'title'          => 'sales_order_amount->packhandleship_tax',
+    ]); //4
+     echo H::openTag('b'); //5
+      echo $numberHelper->formatCurrency($packHandleShipTotal['totalTax'] ?? 0.00);
+     echo H::closeTag('b'); //5
+    echo H::closeTag('td'); //4
+   echo H::closeTag('tr'); //3
+   if ($vat === '0') {
+    echo H::openTag('tr'); //3
+     echo H::openTag('td'); //4
+      echo H::openTag('b'); //5
+       echo $translator->translate('tax');
+      echo H::closeTag('b'); //5
+     echo H::closeTag('td'); //4
+     echo H::openTag('td'); //4
+      if ($soTaxRates) {
+       /**
+        * @var App\Infrastructure\Persistence\SalesOrderTaxRate\SalesOrderTaxRate $soTaxRate
+        */
+       foreach ($soTaxRates as $soTaxRate) {
+        echo H::openTag('div', [
+         'data-bs-toggle' => 'tooltip',
+         'title'          => $soTaxRate->getIncludeItemTax() == '1' ? $included : $excluded,
+        ]); //5
+         echo new Input()->type('hidden')->name('_csrf')->value($csrf);
+         $taxRatePercent = $soTaxRate->getTaxRate()?->getTaxRatePercent();
+         $numberPercent  = $numberHelper->formatAmount($taxRatePercent);
+         $taxRateName    = $soTaxRate->getTaxRate()?->getTaxRateName();
+         if ($taxRatePercent >= 0.00 && null !== $taxRateName
+          && $numberPercent >= 0.00 && null !== $numberPercent) {
+          echo H::tag('span', H::encode(' '
+                . $taxRateName
+                . ' '
+                . $numberPercent
+                . ' '), $textMuted);
+         }
+         echo H::openTag('span', [
+          'class'          => 'text-end',
+          'data-bs-toggle' => 'tooltip',
+          'title'          => 'sales_order_tax_rate->sales_order_tax_rate_amount',
+         ]); //5
+          echo $numberHelper->formatCurrency($soTaxRate->getSalesOrderTaxRateAmount());
+         echo H::closeTag('span'); //5
+         echo H::tag('br');
+        echo H::closeTag('div'); //5
+       }
+      } else {
+       echo $numberHelper->formatCurrency('0');
+      }
+     echo H::closeTag('td'); //4
+    echo H::closeTag('tr'); //3
+   }
+   if (($so->getDiscountAmount() ?? 0.00) != 0.00) {
+    echo H::openTag('tr'); //3
+     echo H::openTag('td', ['class' => 'td-vert-middle']); //4
+      echo H::openTag('b'); //5
+       echo '(' . $translator->translate('discount') . ')';
+      echo H::closeTag('b'); //5
+     echo H::closeTag('td'); //4
+     echo H::openTag('td'); //4
+      echo H::openTag('div', ['class' => 'discount-field']); //5
+       echo $numberHelper->formatCurrency($so->getDiscountAmount() ?? 0.00);
+      echo H::closeTag('div'); //5
+     echo H::closeTag('td'); //4
+    echo H::closeTag('tr'); //3
+   }
+   echo H::openTag('tr'); //3
+    echo H::openTag('td'); //4
+     echo H::openTag('b'); //5
+      echo $translator->translate('total');
+     echo H::closeTag('b'); //5
+    echo H::closeTag('td'); //4
+    echo H::openTag('td', [
+     'class'          => 'text-end',
+     'style'          => 'background-color:lightyellow',
+     'id'             => 'amount_sales_order_total',
+     'data-bs-toggle' => 'tooltip',
+     'title'          => 'sales_order_amount->total',
+    ]); //4
+     echo H::openTag('b'); //5
+      echo $numberHelper->formatCurrency($soAmount->getTotal() ?? 0.00);
+     echo H::closeTag('b'); //5
+    echo H::closeTag('td'); //4
+   echo H::closeTag('tr'); //3
+  echo H::closeTag('table'); //2
+ echo H::closeTag('div'); //1
+echo H::closeTag('div'); //0
+echo H::tag('hr');

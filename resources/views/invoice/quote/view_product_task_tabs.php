@@ -21,7 +21,7 @@ use Yiisoft\Html\Tag\I;
         <?=  new A()
         ->addAttributes([
             'data-bs-toggle' => 'tab',
-            'style' => 'text-decoration:none',
+            'class' => 'text-decoration-none',
         ])
         ->addClass('btn btn-info me-1')
         ->content(Html::b($translator->translate('add.product')))
@@ -34,7 +34,7 @@ use Yiisoft\Html\Tag\I;
         <?=  new A()
         ->addAttributes([
             'data-bs-toggle' => 'tab',
-            'style' => 'text-decoration:none',
+            'class' => 'text-decoration-none',
         ])
         ->addClass('btn btn-info me-1')
         ->content(Html::b($translator->translate('add.task')))
@@ -50,7 +50,7 @@ use Yiisoft\Html\Tag\I;
             'onclick' => 'window.history.back()',
             'value' => '1',
             'data-bs-toggle' => 'tab',
-            'style' => 'text-decoration:none',
+            'class' => 'text-decoration-none',
         ])
         ->addClass('btn btn-danger bi bi-arrow-left')
         ->id('back')

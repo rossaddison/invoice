@@ -25,7 +25,7 @@ $productPropertyArguments = ['product_id' => $product->reqId(), '_language' => $
             'productproperty/index',
             $languageArgument,
         ),
-        ['style' => 'text-decoration:none'],
+        ['class' => 'text-decoration-none'],
     ); ?>
 </label>
     <?= Html::a(

@@ -296,7 +296,7 @@ echo Html::script($js3)->type('module');
 ?>
                     <div>
                     <div class="mb-3"><?= Html::tag('Label', $translator->translate('guest.url'), ['for' => 'quote-guest-url']); ?></label>
-                        <div class="input-group">
+                        <div>
                         <?=
         Field::text($form, 'guest_url')->readonly(true)
                                       ->addInputAttributes(['id' => 'quote-guest-url','readonly' => 'true',
@@ -308,7 +308,7 @@ echo Html::script($js3)->type('module');
 echo Html::tag(
     'Div',
     Html::tag('i', '', ['class' => 'bi bi-clipboard']),
-    ['class' => 'input-group-text to-clipboard cursor-pointer',
+    ['class' => 'btn btn-outline-secondary to-clipboard cursor-pointer',
         'data-clipboard-target' => '#quote-guest-url','style' => 'height : 38px'],
 );
 ?>

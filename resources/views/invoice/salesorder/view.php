@@ -255,12 +255,8 @@ echo H::openTag('div', ['class' => 'card']); //0
               : (is_string($so->getDateCreated()) ? $so->getDateCreated() : '')
             ),
            ]);
-           echo H::openTag('span', ['class' => 'input-group-text']); //11
-            echo H::openTag('i', ['class' => 'bi bi-calendar']); //12
-            echo H::closeTag('i'); //12
-           echo H::closeTag('span'); //11
-          echo H::closeTag('div'); //10
-         echo H::closeTag('div'); //9
+           echo H::closeTag('div'); //10
+          echo H::closeTag('div'); //9
          if ($quoteNumber) {
           echo H::openTag('div'); //9
            echo H::openTag('label', ['for' => 'salesorder_to_quote']); //10
@@ -416,7 +412,7 @@ echo H::openTag('div', ['class' => 'card']); //0
      echo H::closeTag('div'); //5
     echo H::closeTag('div'); //4
     echo H::tag('br', '');
-    echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none visible-sm']); //4
+    echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none']); //4
      echo H::tag('br', '');
     echo H::closeTag('div'); //4
    echo H::closeTag('div'); //3

@@ -22,16 +22,16 @@ use Yiisoft\Html\Html;
 
 <ul id="product-tabs" class="nav nav-tabs nav-tabs-noborder">
     <li class="nav-item">
-        <a class="nav-link active" data-bs-toggle="tab" href="#product-details" style="text-decoration: none"><?= $translator->translate('product.view.tab.details'); ?> </a>
+        <a class="nav-link active" data-bs-toggle="tab" href="#product-details"><?= $translator->translate('product.view.tab.details'); ?> </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="tab" href="#product-properties" style="text-decoration: none"><?= $translator->translate('product.view.tab.properties'); ?> </a>
+        <a class="nav-link" data-bs-toggle="tab" href="#product-properties"><?= $translator->translate('product.view.tab.properties'); ?> </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="tab" href="#product-images" style="text-decoration: none"><?= $translator->translate('product.view.tab.images'); ?> </a>
+        <a class="nav-link" data-bs-toggle="tab" href="#product-images"><?= $translator->translate('product.view.tab.images'); ?> </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="tab" href="#product-gallery" style="text-decoration: none"><?= $translator->translate('product.view.tab.gallery'); ?> </a>
+        <a class="nav-link" data-bs-toggle="tab" href="#product-gallery"><?= $translator->translate('product.view.tab.gallery'); ?> </a>
     </li>
     <li class="nav-item">
         <?= $button::back(); ?>

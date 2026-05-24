@@ -305,7 +305,7 @@ $columns = [
                                 'title' => $heading,
                             ]),
                     $equal ? $addUrl : $editUrl, [
-                        'style' => 'text-decoration:none']);
+                        'class' => 'text-decoration-none']);
         },
         encodeContent: false,
     ),

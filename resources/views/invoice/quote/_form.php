@@ -84,7 +84,7 @@ $formControlLg = 'form-control form-control-lg';
                                 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?php if (null !== $form->getDeliveryLocationId() && !empty($form->getDeliveryLocationId())) { ?>
-                                <span class="input-group-text">
+                                <span class="btn btn-sm btn-outline-secondary mt-1">
                                     <!-- Remember second set of square brackets in urlGenerator are query Parameters NOT currentRoute arguments -->
                                     <a href="<?= $urlGenerator->generate(
                                         'del/edit',

@@ -5,7 +5,7 @@ declare(strict_types=1);
 /**
  * Related logic: see id="modal-copy-inv-multiple" triggered by
  *  <a href="#modal-copy-inv-multiple" data-bs-toggle="modal"
- *   style="text-decoration:none">
+ *  >
  * Related logic: see InvController index function
  *
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -45,7 +45,8 @@ declare(strict_types=1);
                                    id="modal_created_date"
                                    class="form-control form-control-lg"
                                    type="date"
-                                   autocomplete="off">
+                                   autocomplete="off"
+                                   onclick="this.showPicker()">
 
                     </div>
                 </form>

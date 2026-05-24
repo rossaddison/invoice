@@ -136,7 +136,7 @@ echo H::openTag('div', ['id' => 'content']);
      echo H::closeTag('textarea');
     echo H::closeTag('div');
    echo H::closeTag('div');
-   echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none visible-sm']);
+   echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none']);
     echo '<br>';
    echo H::closeTag('div');
   echo H::closeTag('div');

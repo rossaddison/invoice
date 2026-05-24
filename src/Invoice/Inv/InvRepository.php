@@ -159,6 +159,18 @@ final class InvRepository extends Select\Repository
                        ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
+    
+    public function filterGuestClientIdNotDraft(int $clientId): EntityReader
+    {
+        $query = $this->select()
+                       ->load(['client'])
+                       ->where(['client.id' => $clientId])
+                       ->andWhere(['status_id' => ['in' =>
+                            new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
+                       ->where('deleted_at', null);
+        return $this->prepareDataReader($query);
+    }
+
 
     public function filterClient(string $fullName): EntityReader
     {

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Related logic: see id="add-inv-tax" triggered by <a href="#add-inv-tax" data-bs-toggle="modal"  style="text-decoration:none"> on views/inv/view.php line 67
+ * Related logic: see id="add-inv-tax" triggered by <a href="#add-inv-tax" data-bs-toggle="modal" > on views/inv/view.php line 67
  * Related logic: see Invoice/Asset/rebuild/js/invoice-typescript-iife.js
  *  built from src\typescript\invoice.ts function 
  * Related logic: see Inv\Trait function saveInvTaxRate and

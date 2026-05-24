@@ -329,8 +329,10 @@ final class PrometheusService
 
         return match ($storageType) {
             'redis' => new CollectorRegistry(new Redis($configStorageRedis ?: [])),
-            'apcu' => new CollectorRegistry(new APC()),
-            default => new CollectorRegistry(new InMemory())
+            'apcu' => extension_loaded('apcu') && class_exists(APC::class) && apcu_enabled()
+                ? new CollectorRegistry(new APC())
+                : new CollectorRegistry(new InMemory()),
+            default => new CollectorRegistry(new InMemory()),
         };
     }
 

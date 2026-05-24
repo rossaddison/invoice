@@ -71,7 +71,7 @@ $client_helper = new ClientHelper($s);
                                         $urlGenerator->generate(
                                         'client/view',
                                         ['id' => $userClient->reqClientId()]); ?>"
-                                       style="text-decoration:none">
+                                      >
                                         <?php
                                             $client = $cR->repoClientquery( 
                                                     $userClient->reqClientId());

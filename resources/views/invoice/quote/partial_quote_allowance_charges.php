@@ -10,7 +10,7 @@ declare(strict_types=1);
 ?>
 <div class="card m-0">
     <div class="card-header"><?= $title;?></div>
-    <div class="card-body clearfix">
+    <div class="card-body">
         <div class="container">
             <div><?= $quote_allowance_charges; ?></div>
         </div>

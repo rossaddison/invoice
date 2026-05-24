@@ -89,6 +89,7 @@ foreach ($numberHelper->recurFrequencies() as $key => $value) {
                     <?=  new A()->href('https://wiki.invoiceplane.com/en/1.6/modules/recurring-invoices')->content('❔')?>
                     <?= Field::date($form, 'start')
         ->label($translator->translate('start.date'))
+        ->addInputAttributes(['onclick' => 'this.showPicker()'])
         ->value(!is_string($start = $form->getStart()) ? $start?->format('Y-m-d') : '');
 ?>
                 <?= Html::closeTag('div'); ?>
@@ -107,6 +108,7 @@ foreach ($numberHelper->recurFrequencies() as $key => $value) {
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::date($form, 'end')
         ->label($translator->translate('end.date') . "(" . $translator->translate('optional'))
+        ->addInputAttributes(['onclick' => 'this.showPicker()'])
         ->value(!is_string($end = $form->getEnd()) ? $end?->format('Y-m-d') : '')
 ?>
                 <?= Html::closeTag('div'); ?>

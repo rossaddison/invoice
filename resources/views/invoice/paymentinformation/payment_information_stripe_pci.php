@@ -68,8 +68,7 @@ if ($disable_form === false) {
          echo H::openTag('a', [
              'href' => $urlGenerator->generate('inv/pdfDownloadIncludeCf',
                      ['url_key' => $inv_url_key]),
-             'class' => 'btn btn-sm btn-primary fw-normal h3 text-center',
-             'style' => 'text-decoration:none'
+             'class' => 'btn btn-sm btn-primary fw-normal h3 text-center text-decoration-none',
          ]);
           echo H::openTag('i', ['class' => 'bi bi-file-pdf']);
           echo H::closeTag('i');
@@ -80,8 +79,7 @@ if ($disable_form === false) {
          echo H::openTag('a', [
              'href' => $urlGenerator->generate('inv/pdfDownloadExcludeCf',
                      ['url_key' => $inv_url_key]),
-             'class' => 'btn btn-sm btn-danger fw-normal h3 text-center',
-             'style' => 'text-decoration:none'
+             'class' => 'btn btn-sm btn-danger fw-normal h3 text-center text-decoration-none',
          ]);
           echo H::openTag('i', ['class' => 'bi bi-file-pdf']);
           echo H::closeTag('i');
@@ -201,5 +199,5 @@ echo H::tag('div', '', [
         'paymentinformation/stripeComplete',
         ['url_key' => $inv_url_key],
     ),
-    'style' => 'display:none',
+    'class' => 'd-none',
 ]);

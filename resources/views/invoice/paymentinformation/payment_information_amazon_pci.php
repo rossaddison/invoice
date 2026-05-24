@@ -74,8 +74,7 @@ if ($disable_form === false) {
          echo H::closeTag('h2');         
          echo  new A()
               ->addAttributes([
-                    'class' => 'btn btn-sm btn-primary fw-normal h3 text-center',
-                    'style' => 'text-decoration:none',
+                    'class' => 'btn btn-sm btn-primary fw-normal h3 text-center text-decoration-none',
               ])
               ->href($urlGenerator->generate('inv/pdfDownloadIncludeCf',
                     [
@@ -91,8 +90,7 @@ if ($disable_form === false) {
               ->render();
          echo  new A()
               ->addAttributes([
-                    'class' => 'btn btn-sm btn-danger fw-normal h3 text-center',
-                    'style' => 'text-decoration:none',
+                    'class' => 'btn btn-sm btn-danger fw-normal h3 text-center text-decoration-none',
               ])
               ->href($urlGenerator->generate('inv/pdfDownloadExcludeCf',
                     [
@@ -213,5 +211,5 @@ echo H::tag('div', '', [
     'data-amount'            => (string) $amazonPayButton['amount'],
     'data-payload-json'      => (string) $amazonPayButton['payloadJSON'],
     'data-signature'         => (string) $amazonPayButton['signature'],
-    'style'                  => 'display:none',
+    'class'                  => 'd-none',
 ]);

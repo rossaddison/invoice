@@ -37,7 +37,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         ),
         'https://www.storecove.com/docs/' .
         '#_create_a_sender',
-        ['style' => 'text-decoration:none']
+        ['class' => 'text-decoration-none']
         );
        echo H::closeTag('label');
        $body['settings[storecove_country]'] =

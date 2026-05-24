@@ -59,8 +59,7 @@ if ($disable_form === false) {
          echo H::closeTag('h2');
          echo H::openTag('a', [
              'href' => $urlGenerator->generate('inv/pdfDownloadIncludeCf', ['url_key' => $inv_url_key]),
-             'class' => 'btn btn-sm btn-primary fw-normal h3 text-center',
-             'style' => 'text-decoration:none'
+             'class' => 'btn btn-sm btn-primary fw-normal h3 text-center text-decoration-none',
          ]);
           echo H::openTag('i', ['class' => 'bi bi-file-pdf']);
           echo H::closeTag('i');
@@ -68,8 +67,7 @@ if ($disable_form === false) {
          echo H::closeTag('a');
          echo H::openTag('a', [
              'href' => $urlGenerator->generate('inv/pdfDownloadExcludeCf', ['url_key' => $inv_url_key]),
-             'class' => 'btn btn-sm btn-danger fw-normal h3 text-center',
-             'style' => 'text-decoration:none'
+             'class' => 'btn btn-sm btn-danger fw-normal h3 text-center text-decoration-none',
          ]);
           echo H::openTag('i', ['class' => 'bi bi-file-pdf']);
           echo H::closeTag('i');
@@ -77,7 +75,7 @@ if ($disable_form === false) {
          echo H::closeTag('a');
         echo H::closeTag('div');
         echo H::tag('br');
-        echo H::tag('Div', H::tag('H4', $title, ['data-toggle' => 'tooltip','title' => 'Test card: 4111 1111 1111 1111 Expiry-date: 06/34']));
+        echo H::tag('Div', H::tag('H4', $title, ['data-bs-toggle' => 'tooltip','title' => 'Test card: 4111 1111 1111 1111 Expiry-date: 06/34']));
         echo H::tag('br');
         echo H::openTag('div', ['class' => 'card-body p-5 text-center']);
          echo $alert;
@@ -172,6 +170,6 @@ if ($disable_form === false) {
 echo H::tag('div', '', [
     'id'                => 'braintree-config',
     'data-client-token' => $client_token,
-    'style'             => 'display:none',
+    'class'             => 'd-none',
 ]);
 
