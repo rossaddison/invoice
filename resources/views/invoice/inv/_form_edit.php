@@ -260,6 +260,7 @@ if ($vat) {
                         <?= Html::openTag('div'); ?>
                             <?= Field::date($form, 'date_supplied')
     ->label($translator->translate('date.supplied'))
+    ->addInputAttributes(['onclick' => 'this.showPicker()'])
     ->value(!is_string($form->getDateSupplied()) ? $form->getDateSupplied()?->format('Y-m-d') : '')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
@@ -267,6 +268,7 @@ if ($vat) {
                         <?= Html::openTag('div'); ?>
                             <?= Field::date($form, 'date_tax_point')
     ->label($translator->translate('tax.point'))
+    ->addInputAttributes(['onclick' => 'this.showPicker()'])
     ->value(!is_string($form->getDateTaxPoint()) ? $form->getDateTaxPoint()?->format('Y-m-d') : '')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>

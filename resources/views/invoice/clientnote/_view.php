@@ -72,7 +72,8 @@ use Yiisoft\Html\Tag\Form;
                       ->addInputAttributes([
                           'placeholder'  => $translator->translate('date'),
                           'class'        => 'form-control form-control-lg',
-                          'id'           => 'date_note'
+                          'id'           => 'date_note',
+                          'onclick'      => 'this.showPicker()',
                       ])
                       ->value(Html::encode($form->getDateNote() ?? ''))
                       ->hint($translator->translate(

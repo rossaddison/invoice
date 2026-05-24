@@ -1008,17 +1008,11 @@ if (($inv->reqStatusId() !== 1) && ($invEdit)) {
            'type' => 'text',
            'id' => 'guest-url',
            'name' => 'guest-url',
+           'disabled' => true,
            'readonly' => true,
            'class' => $fc,
            'value' => 'inv/url_key/' . $inv->getUrlKey()
        ]);
-       echo H::openTag('span', [
-           'class' => 'btn btn-outline-secondary to-clipboard cursor-pointer',
-           'data-clipboard-target' => '#guest-url'
-       ]);
-        echo H::openTag('i', ['class' => 'bi bi-clipboard']);
-        echo H::closeTag('i');
-       echo H::closeTag('span');
       echo H::closeTag('div');
      echo H::closeTag('div');
     echo H::closeTag('div');
