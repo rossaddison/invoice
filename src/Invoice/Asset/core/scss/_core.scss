@@ -426,16 +426,6 @@ div.table-content {
 
 /*
 |   =========================================================
-|   Tabs
-|   =========================================================
-*/
-
-.tabbable .table {
-  margin-bottom: 15px;
-}
-
-/*
-|   =========================================================
 |   Invoices and Quotes
 |   =========================================================
 */
@@ -731,30 +721,6 @@ div.table-content {
 .alert.alert-default {
   background: lighten($gray-lighter, 5%);
   border: 1px solid $gray-lighter;
-}
-
-.fa {
-  min-width: 15px;
-  text-align: center;
-}
-
-.fa.fa-margin {
-  margin-right: 7px;
-}
-
-.fa-credit-invoice {
-  &:before {
-    content: '-';
-  }
-
-  &:after {
-    font-family: FontAwesome;
-    content: '\f155';
-  }
-}
-
-.fa-read-only {
-  @extend .fa-ban !optional;
 }
 
 .cursor-pointer {

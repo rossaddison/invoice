@@ -41,6 +41,7 @@ $lSub     = $translator->translate('user.subscriber.number');
 $lIban    = $translator->translate('user.iban');
 $lGln     = $translator->translate('delivery.location.global.location.number');
 $lLimit   = $translator->translate('user.inv.list.limit');
+$lChatId  = $translator->translate('consent.telegram.chat.id');
 
 ?>
 
@@ -220,6 +221,25 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
     ->label($lLimit)
     ->addInputAttributes(['placeholder' => $lLimit, 'class' => $fc, 'id' => 'listLimit'])
     ->value(Html::encode($form->getListLimit() ?? 10));
+?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3 border-top pt-3']); ?>
+            <?= Field::checkbox($form, 'consent_periodic_invoice')
+    ->label($translator->translate('consent.periodic.invoice'))
+    ->addInputAttributes(['id' => 'consent_periodic_invoice']);
+?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
+            <?= Field::checkbox($form, 'consent_telegram_outstanding')
+    ->label($translator->translate('consent.telegram.outstanding'))
+    ->addInputAttributes(['id' => 'consent_telegram_outstanding']);
+?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
+            <?= Field::text($form, 'telegram_chat_id')
+    ->label($lChatId)
+    ->addInputAttributes(['placeholder' => $lChatId, 'class' => $fc, 'id' => 'telegram_chat_id'])
+    ->value(Html::encode($form->getTelegramChatId() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>

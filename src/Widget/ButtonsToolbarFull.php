@@ -259,7 +259,7 @@ final readonly class ButtonsToolbarFull
             $buttons[] = $this->createWindowButton(
                 'ecosio-validator',
                 'https://ecosio.com/en/peppol-e-invoice-xml-document-validator/',
-                'fa-check',
+                'bi-check-circle',
                 'btn-outline-success',
                 $this->translator->translate('peppol.ecosio.validator'),
             );
@@ -456,7 +456,7 @@ final readonly class ButtonsToolbarFull
             ->id('toolbar-full-' . (string) $button['id'])
             ->addClass('btn', (string) $button['class'], 'btn-sm')
             ->attribute('title', (string) $button['title'])
-            ->content('<i class="fa ' . Html::encode((string) $button['icon'])
+            ->content('<i class="bi ' . Html::encode((string) $button['icon'])
                     . '"></i> ' . Html::encode($button['title']));
 
         // Add additional attributes

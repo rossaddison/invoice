@@ -61,9 +61,7 @@ echo H::openTag('div', $row); //1
           ),
           'https://core.telegram.org/bots/api',
           [
-           'class' => 'text-decoration-none',
-           'data-bs-toggle' => 'tooltip',
-           'title' => ''
+           'class' => 'text-decoration-none'
           ]
           );
          echo H::closeTag('label');

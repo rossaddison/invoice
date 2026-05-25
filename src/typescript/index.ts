@@ -18,6 +18,7 @@ import { initAmazonPayment } from './payment-amazon.js';
 import { initBraintreePayment } from './payment-braintree.js';
 import { initTelegramProviderPopup } from './telegram-providers.js';
 import { initStreetOrder } from './family-street-order.js';
+import { initStepPopovers } from './google-translate-popover.js';
 
 /**
  * Initialize Invoice Application
@@ -119,6 +120,7 @@ if (document.readyState === 'loading') {
         initBraintreePayment();
         initTelegramProviderPopup();
         initStreetOrder();
+        initStepPopovers();
     });
 } else {
     new InvoiceApp();
@@ -127,6 +129,7 @@ if (document.readyState === 'loading') {
     initBraintreePayment();
     initTelegramProviderPopup();
     initStreetOrder();
+    initStepPopovers();
 }
 
 // Export for potential external usage

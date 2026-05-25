@@ -75,7 +75,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                 'inv/pdfDownloadIncludeCf',
                                 ['url_key' => $inv_url_key]); ?>"
                            class="btn btn-primary">
-                           <i class="fa bi-file-pdf"></i>
+                           <i class="bi bi-file-pdf"></i>
                              <?= $translator->translate('download.pdf')
                                         . '=>'
                                         . $translator->translate('yes')
@@ -87,7 +87,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                 'inv/pdfDownloadExcludeCf',
                                 ['url_key' => $inv_url_key]); ?>"
                            class="btn btn-danger">
-                            <i class="fa bi-file-pdf"></i>
+                            <i class="bi bi-file-pdf"></i>
                              <?= $translator->translate('download.pdf')
                                         . '=>'
                                         . $translator->translate('no')

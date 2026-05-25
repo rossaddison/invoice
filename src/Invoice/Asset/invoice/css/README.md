@@ -129,7 +129,7 @@ Each file contains TODO comments indicating areas that need further work:
 
 ## Original Source Mapping
 
-- **Variables**: `src/Invoice/Asset/invoice/scss/_ip_variables.scss`
+- **Variables**: `src/Invoice/Asset/invoice/scss/_yii3i_variables.scss`
 - **Base styles**: `src/Invoice/Asset/invoice/css/style.css` (lines 1-300, normalize section)
 - **Layout**: `src/Invoice/Asset/invoice/css/style.css` (layout sections ~8280-8340)
 - **Components**: `src/Invoice/Asset/invoice/css/style.css` (component sections throughout)

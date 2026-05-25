@@ -48,7 +48,7 @@
             var btns = Array.from(document.querySelectorAll('.inv_to_inv_confirm'));
             // show spinner state on all matching buttons (mirrors original btn.html(...))
             btns.forEach(function (b) {
-                b.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+                b.innerHTML = '<h6 class="text-center"><span class="spinner-border spinner-border-sm" role="status"></span></h6>';
             });
 
             var absolute_url = new URL(location.href);
@@ -86,7 +86,7 @@
                     if (response.success === 1) {
                         // set check UI and redirect to newly created invoice
                         btns.forEach(function (b) {
-                            b.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                            b.innerHTML = '<h2 class="text-center"><i class="bi bi-check-circle-fill text-success"></i></h2>';
                         });
                         // Redirect to the newly created invoice
                         if (response.new_invoice_id) {
@@ -97,13 +97,13 @@
                         }
                     } else if (response.success === 0) {
                         btns.forEach(function (b) {
-                            b.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+                            b.innerHTML = '<h2 class="text-center"><i class="bi bi-x-circle-fill text-danger"></i></h2>';
                         });
                         secureReload();
                     } else {
                         // Unexpected response shape — restore button UI and log
                         btns.forEach(function (b) {
-                            b.innerHTML = '<h6 class="text-center"><i class="fa fa-spinner"></i></h6>';
+                            b.innerHTML = '<h6 class="text-center"><span class="spinner-border spinner-border-sm" role="status"></span></h6>';
                         });
                         console.warn('inv_to_inv_confirm: unexpected response', response);
                     }
@@ -112,7 +112,7 @@
                     console.warn(err && err.message ? err.message : err);
                     // restore button UI on error
                     btns.forEach(function (b) {
-                        b.innerHTML = '<h6 class="text-center"><i class="fa fa-spinner"></i></h6>';
+                        b.innerHTML = '<h6 class="text-center"><span class="spinner-border spinner-border-sm" role="status"></span></h6>';
                     });
                     alert('Status: error An error occurred: ' + (err && err.message ? err.message : err));
                 });

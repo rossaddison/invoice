@@ -82,6 +82,12 @@ echo H::openTag('div', ['id' => 'headerbar']); //0
     ->encode(false)
     ->addAttributes(['class' => $cssBtnSuccess, 'data-bs-toggle' => 'modal'])
     ->render();
+   echo (new A())
+    ->content(H::tag('i', '', ['class' => 'bi bi-arrow-repeat']) . ' ' . $translator->translate('recurring.setup'))
+    ->href($urlGenerator->generate('invrecurring/create-from-productclient', ['client_id' => $clientId]))
+    ->encode(false)
+    ->addAttributes(['class' => 'btn btn-outline-secondary'])
+    ->render();
    if ($cpR->repoClientCount($clientId) === 0 && ($clientId > 0)) {
     echo (new A())
      ->content(H::tag('i', '', ['class' => $cssBiPlus]) . ' ' . $translator->translate('client.peppol.add'))

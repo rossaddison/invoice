@@ -175,7 +175,7 @@ export class SalesOrderHandler {
     private async handleSoToInvoiceConversion(): Promise<void> {
         const btn = document.querySelector('.so_to_invoice_confirm') as HTMLElement;
         if (btn) {
-            btn.innerHTML = '<i class="fa fa-spin fa-spinner fa-margin"></i>';
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status"></span>';
         }
 
         // Get required form data
@@ -203,7 +203,7 @@ export class SalesOrderHandler {
 
             if (response && response.success === 1) {
                 if (btn) {
-                    btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                    btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
                 }
                 // Navigate to the new invoice if inv_id is provided, otherwise reload
                 if (response.inv_id) {
@@ -225,13 +225,13 @@ export class SalesOrderHandler {
                     });
                 }
                 if (btn) {
-                    btn.innerHTML = '<h6 class="text-center"><i class="fa fa-check"></i></h6>';
+                    btn.innerHTML = '<h6 class="text-center"><i class="bi bi-check-lg"></i></h6>';
                 }
             }
         } catch (error) {
             console.error('SO to Invoice conversion failed:', error);
             if (btn) {
-                btn.innerHTML = '<h6 class="text-center"><i class="fa fa-check"></i></h6>';
+                btn.innerHTML = '<h6 class="text-center"><i class="bi bi-check-lg"></i></h6>';
             }
             alert('An error occurred during conversion. Please try again.');
         }

@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yii3-i · Performance Dashboard</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+  :root {
+    --suite-di:       #3b82f6;
+    --suite-injector: #22c55e;
+    --suite-router:   #f97316;
+    --suite-strings:  #a855f7;
+  }
+  body { background: #0d1117; color: #e6edf3; font-family: system-ui, sans-serif; }
+  .navbar-brand { font-weight: 700; letter-spacing: -.5px; font-size: 1.25rem; }
+  .logo-dot { color: #3b82f6; }
+
+  /* Summary cards */
+  .stat-card {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: .75rem;
+    padding: 1.25rem 1.5rem;
+    transition: border-color .2s;
+  }
+  .stat-card:hover { border-color: #58a6ff; }
+  .stat-card .label { font-size: .75rem; color: #8b949e; text-transform: uppercase; letter-spacing: .08em; }
+  .stat-card .value { font-size: 1.75rem; font-weight: 700; line-height: 1.2; margin: .25rem 0; }
+  .stat-card .sub   { font-size: .8rem; color: #8b949e; }
+
+  /* Suite badges */
+  .badge-di       { background: var(--suite-di);       color: #fff; }
+  .badge-injector { background: var(--suite-injector);  color: #fff; }
+  .badge-router   { background: var(--suite-router);   color: #fff; }
+  .badge-strings  { background: var(--suite-strings);  color: #fff; }
+
+  /* Chart panels */
+  .chart-panel {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: .75rem;
+    padding: 1.25rem;
+  }
+  .chart-panel h6 { font-size: .85rem; color: #8b949e; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 1rem; }
+
+  /* Suite divider */
+  .suite-label {
+    display: flex; align-items: center; gap: .75rem;
+    font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em;
+    color: #8b949e; margin: 1.5rem 0 .5rem;
+  }
+  .suite-label::after { content: ''; flex: 1; height: 1px; background: #30363d; }
+
+  /* Results table */
+  .results-table th { color: #8b949e; font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; border-color: #21262d !important; }
+  .results-table td { border-color: #21262d !important; font-size: .85rem; vertical-align: middle; }
+  .results-table tbody tr:hover td { background: #1c2128; }
+  .mono { font-family: 'SFMono-Regular', Consolas, monospace; }
+  .trend-up   { color: #f85149; }
+  .trend-down { color: #3fb950; }
+  .trend-flat { color: #8b949e; }
+
+  /* Ops/sec bar */
+  .ops-bar { position: relative; height: 6px; background: #21262d; border-radius: 3px; overflow: hidden; min-width: 80px; }
+  .ops-fill { height: 100%; border-radius: 3px; transition: width .4s ease; }
+
+  /* No data state */
+  .no-data { text-align: center; padding: 4rem 1rem; color: #8b949e; }
+  .no-data .bi { font-size: 3rem; display: block; margin-bottom: 1rem; opacity: .4; }
+
+  /* Run selector */
+  #run-selector { max-height: 220px; overflow-y: auto; }
+  #run-selector .run-btn { font-size: .78rem; border-radius: .4rem; }
+  #run-selector .run-btn.active { background: #1f6feb; border-color: #1f6feb; }
+
+  .spinner-overlay {
+    position: fixed; inset: 0; background: rgba(13,17,23,.7);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 9999;
+  }
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-dark px-4 py-3" style="background:#161b22;border-bottom:1px solid #30363d;">
+  <span class="navbar-brand">
+    <i class="bi bi-speedometer2 me-2" style="color:#3b82f6"></i>
+    Yii3-i<span class="logo-dot">.</span>Performance
+  </span>
+  <div class="d-flex align-items-center gap-3">
+    <span id="last-updated" class="text-muted" style="font-size:.8rem"></span>
+    <button class="btn btn-sm btn-outline-secondary" onclick="toggleTheme()">
+      <i class="bi bi-circle-half"></i>
+    </button>
+    <a href="https://github.com/rossaddison/invoice" target="_blank" class="btn btn-sm btn-outline-secondary">
+      <i class="bi bi-github"></i>
+    </a>
+  </div>
+</nav>
+
+<div class="container-fluid px-4 py-4" style="max-width:1400px">
+
+  <!-- Spinner -->
+  <div id="spinner" class="spinner-overlay">
+    <div class="text-center">
+      <div class="spinner-border text-primary mb-3" role="status"></div>
+      <div class="text-muted small">Loading benchmark data…</div>
+    </div>
+  </div>
+
+  <!-- No data -->
+  <div id="no-data" class="no-data d-none">
+    <i class="bi bi-bar-chart-line"></i>
+    <h5>No benchmark runs yet</h5>
+    <p class="small">Run <code>php benchmarks/run.php</code> to record the first data point.</p>
+  </div>
+
+  <div id="dashboard" class="d-none">
+
+    <!-- ── Summary cards ──────────────────────────────────────────────────── -->
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <div class="label">Latest Run</div>
+          <div class="value mono" id="c-latest-date">—</div>
+          <div class="sub" id="c-latest-commit">—</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <div class="label">PHP Version</div>
+          <div class="value mono" id="c-php">—</div>
+          <div class="sub" id="c-os">—</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <div class="label">Total Runs</div>
+          <div class="value" id="c-runs">—</div>
+          <div class="sub" id="c-span">—</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <div class="label">Fastest Op</div>
+          <div class="value text-primary" id="c-fastest">—</div>
+          <div class="sub" id="c-fastest-label">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Run selector ───────────────────────────────────────────────────── -->
+    <div class="chart-panel mb-4">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h6 class="mb-0">Run History</h6>
+        <div class="d-flex gap-2">
+          <button class="btn btn-sm btn-outline-secondary" onclick="selectAllRuns()">All</button>
+          <button class="btn btn-sm btn-outline-secondary" onclick="selectLastN(10)">Last 10</button>
+          <button class="btn btn-sm btn-outline-secondary" onclick="selectLastN(30)">Last 30</button>
+        </div>
+      </div>
+      <div id="run-selector" class="d-flex flex-wrap gap-1 py-1"></div>
+    </div>
+
+    <!-- ── Main trend chart ───────────────────────────────────────────────── -->
+    <div class="chart-panel mb-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="mb-0">Mean Execution Time — All Suites (μs, lower is better)</h6>
+        <div class="d-flex gap-2" id="suite-toggles"></div>
+      </div>
+      <div style="position:relative;height:340px">
+        <canvas id="mainChart"></canvas>
+      </div>
+    </div>
+
+    <!-- ── Per-suite charts ───────────────────────────────────────────────── -->
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-lg-6">
+        <div class="chart-panel h-100">
+          <h6><span class="badge badge-di me-2">DI</span>Container Resolution</h6>
+          <div style="position:relative;height:220px"><canvas id="diChart"></canvas></div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6">
+        <div class="chart-panel h-100">
+          <h6><span class="badge badge-injector me-2">Injector</span>Auto-wire</h6>
+          <div style="position:relative;height:220px"><canvas id="injectorChart"></canvas></div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6">
+        <div class="chart-panel h-100">
+          <h6><span class="badge badge-router me-2">Router</span>URL Matching</h6>
+          <div style="position:relative;height:220px"><canvas id="routerChart"></canvas></div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6">
+        <div class="chart-panel h-100">
+          <h6><span class="badge badge-strings me-2">Strings</span>Helpers &amp; Inflector</h6>
+          <div style="position:relative;height:220px"><canvas id="stringsChart"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Latest results table ───────────────────────────────────────────── -->
+    <div class="chart-panel mb-4">
+      <h6>Latest Results — <span id="table-run-label" class="text-muted fw-normal"></span></h6>
+      <div class="table-responsive">
+        <table class="table results-table mb-0">
+          <thead>
+            <tr>
+              <th>Suite</th>
+              <th>Benchmark</th>
+              <th class="text-end">Mean (μs)</th>
+              <th class="text-end">±Stdev</th>
+              <th class="text-end">Ops/sec</th>
+              <th>Throughput</th>
+              <th class="text-center">vs prev</th>
+            </tr>
+          </thead>
+          <tbody id="results-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── Footer ─────────────────────────────────────────────────────────── -->
+    <div class="text-center text-muted mb-5" style="font-size:.75rem">
+      Benchmarks run via <code>php benchmarks/run.php</code> · Timed with <code>hrtime()</code> ·
+      Yii3-i uses <a href="https://github.com/yiisoft/di" class="text-secondary" target="_blank">yiisoft/di</a>,
+      <a href="https://github.com/yiisoft/injector" class="text-secondary" target="_blank">yiisoft/injector</a>,
+      <a href="https://github.com/yiisoft/router-fastroute" class="text-secondary" target="_blank">yiisoft/router-fastroute</a>,
+      <a href="https://github.com/yiisoft/strings" class="text-secondary" target="_blank">yiisoft/strings</a>
+    </div>
+  </div><!-- /#dashboard -->
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+// ── Palette ─────────────────────────────────────────────────────────────────
+const SUITE_COLOR = {
+  di:       '#3b82f6',
+  injector: '#22c55e',
+  router:   '#f97316',
+  strings:  '#a855f7',
+};
+
+// ── Chart.js global defaults ─────────────────────────────────────────────────
+Chart.defaults.color          = '#8b949e';
+Chart.defaults.borderColor    = '#21262d';
+Chart.defaults.font.family    = 'system-ui, sans-serif';
+Chart.defaults.font.size      = 11;
+Chart.defaults.plugins.legend.labels.usePointStyle = true;
+Chart.defaults.plugins.legend.labels.pointStyle    = 'circle';
+Chart.defaults.plugins.legend.labels.boxWidth      = 8;
+Chart.defaults.plugins.tooltip.mode                = 'index';
+Chart.defaults.plugins.tooltip.intersect           = false;
+Chart.defaults.plugins.tooltip.backgroundColor     = '#161b22';
+Chart.defaults.plugins.tooltip.borderColor         = '#30363d';
+Chart.defaults.plugins.tooltip.borderWidth         = 1;
+
+// ── State ────────────────────────────────────────────────────────────────────
+let historyData = null;
+let activeRunIds = new Set();
+let charts = {};
+let visibleSuites = new Set(['di','injector','router','strings']);
+
+// ── Utilities ────────────────────────────────────────────────────────────────
+function hex2rgba(hex, alpha) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+function suiteOf(key) {
+  return key.split('::')[0];
+}
+
+function subjectLabel(key) {
+  return key.split('::').slice(1).join('::');
+}
+
+function trendArrow(curr, prev) {
+  if (prev === undefined || prev === null) return '<span class="trend-flat">—</span>';
+  const pct = ((curr - prev) / prev) * 100;
+  if (Math.abs(pct) < 2) return '<span class="trend-flat">≈ 0%</span>';
+  const cls = pct > 0 ? 'trend-up' : 'trend-down';
+  const ico = pct > 0 ? '↑' : '↓';
+  return `<span class="${cls}">${ico} ${Math.abs(pct).toFixed(1)}%</span>`;
+}
+
+function fmtMicro(v) {
+  return v == null ? '—' : v.toFixed(4);
+}
+
+function fmtOps(v) {
+  if (v == null) return '—';
+  if (v >= 1_000_000) return (v/1_000_000).toFixed(2) + 'M';
+  if (v >= 1_000)     return (v/1_000).toFixed(1)     + 'K';
+  return v.toString();
+}
+
+// ── Run selector ─────────────────────────────────────────────────────────────
+function buildRunSelector(runs) {
+  const el = document.getElementById('run-selector');
+  el.innerHTML = '';
+  runs.forEach(run => {
+    const btn = document.createElement('button');
+    btn.className = 'btn btn-sm btn-outline-secondary run-btn' + (activeRunIds.has(run.id) ? ' active' : '');
+    btn.textContent = run.date + (run.commit && run.commit !== 'unknown' ? ` (${run.commit})` : '');
+    btn.title = run.commit_message || '';
+    btn.onclick = () => toggleRun(run.id, btn);
+    el.appendChild(btn);
+  });
+}
+
+function toggleRun(id, btn) {
+  if (activeRunIds.has(id)) {
+    if (activeRunIds.size === 1) return; // keep at least one
+    activeRunIds.delete(id);
+    btn.classList.remove('active');
+  } else {
+    activeRunIds.add(id);
+    btn.classList.add('active');
+  }
+  renderCharts();
+  renderTable();
+}
+
+function selectAllRuns() {
+  historyData.runs.forEach(r => activeRunIds.add(r.id));
+  document.querySelectorAll('.run-btn').forEach(b => b.classList.add('active'));
+  renderCharts(); renderTable();
+}
+
+function selectLastN(n) {
+  const runs = historyData.runs;
+  const tail = runs.slice(-n);
+  activeRunIds = new Set(tail.map(r => r.id));
+  document.querySelectorAll('.run-btn').forEach((b, i) => {
+    b.classList.toggle('active', activeRunIds.has(runs[i].id));
+  });
+  renderCharts(); renderTable();
+}
+
+// ── Suite toggle buttons ──────────────────────────────────────────────────────
+function buildSuiteToggles() {
+  const el = document.getElementById('suite-toggles');
+  el.innerHTML = '';
+  Object.keys(SUITE_COLOR).forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'btn btn-sm';
+    btn.style.cssText = `background:${SUITE_COLOR[s]};color:#fff;opacity:${visibleSuites.has(s)?1:.4}`;
+    btn.textContent = s;
+    btn.onclick = () => {
+      if (visibleSuites.has(s)) { visibleSuites.delete(s); btn.style.opacity='.4'; }
+      else                       { visibleSuites.add(s);    btn.style.opacity='1'; }
+      renderMainChart();
+    };
+    el.appendChild(btn);
+  });
+}
+
+// ── Chart builders ────────────────────────────────────────────────────────────
+function activeRuns() {
+  return historyData.runs.filter(r => activeRunIds.has(r.id));
+}
+
+function buildDatasets(subjects) {
+  const runs = activeRuns();
+  const labels = runs.map(r => r.date + (r.commit && r.commit !== 'unknown' ? `\n${r.commit}` : ''));
+  const datasets = subjects.map(key => {
+    const suite = suiteOf(key);
+    const color = SUITE_COLOR[suite] || '#999';
+    return {
+      label: subjectLabel(key),
+      data: runs.map(r => r.results?.[key]?.mean_μs ?? null),
+      borderColor: color,
+      backgroundColor: hex2rgba(color, .12),
+      borderWidth: 2,
+      pointRadius: runs.length > 30 ? 2 : 4,
+      pointHoverRadius: 6,
+      fill: false,
+      tension: .3,
+      spanGaps: true,
+    };
+  });
+  return { labels, datasets };
+}
+
+function makeLineChart(canvasId, subjects, opts = {}) {
+  const ctx = document.getElementById(canvasId).getContext('2d');
+  if (charts[canvasId]) charts[canvasId].destroy();
+  const { labels, datasets } = buildDatasets(subjects);
+  charts[canvasId] = new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 400 },
+      scales: {
+        x: {
+          grid: { color: '#21262d' },
+          ticks: { maxRotation: 45, font: { size: 10 } },
+        },
+        y: {
+          grid: { color: '#21262d' },
+          title: { display: true, text: 'μs (lower = faster)', font: { size: 10 } },
+          ...( opts.yMin !== undefined ? { min: opts.yMin } : {} ),
+        },
+      },
+      plugins: {
+        legend: { position: opts.legendPos || 'bottom', labels: { font: { size: 10 } } },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y?.toFixed(5) ?? '—'} μs`,
+          },
+        },
+      },
+    },
+  });
+}
+
+function renderMainChart() {
+  const allKeys = Object.keys((historyData.runs.at(-1) || {}).results || {});
+  const visible = allKeys.filter(k => visibleSuites.has(suiteOf(k)));
+  makeLineChart('mainChart', visible, { legendPos: 'bottom' });
+}
+
+function renderSuiteChart(canvasId, suite) {
+  const allKeys = Object.keys((historyData.runs.at(-1) || {}).results || {});
+  const keys = allKeys.filter(k => suiteOf(k) === suite);
+  makeLineChart(canvasId, keys);
+}
+
+function renderCharts() {
+  renderMainChart();
+  renderSuiteChart('diChart',       'di');
+  renderSuiteChart('injectorChart', 'injector');
+  renderSuiteChart('routerChart',   'router');
+  renderSuiteChart('stringsChart',  'strings');
+}
+
+// ── Results table ─────────────────────────────────────────────────────────────
+function renderTable() {
+  const runs  = historyData.runs;
+  const last  = runs.filter(r => activeRunIds.has(r.id)).at(-1);
+  const prev  = runs.filter(r => activeRunIds.has(r.id)).at(-2);
+  if (!last) return;
+
+  document.getElementById('table-run-label').textContent =
+    `${last.date} · PHP ${last.php_version} · ${last.commit ?? ''}`;
+
+  const results = last.results || {};
+  const prevRes = prev?.results || {};
+
+  // Find max ops/sec for the normalised bar
+  const allOps = Object.values(results).map(r => r.ops_per_sec || 0);
+  const maxOps = Math.max(...allOps, 1);
+
+  const suiteOrder = ['di','injector','router','strings'];
+  const byKey = Object.keys(results).sort((a,b) => {
+    const sa = suiteOrder.indexOf(suiteOf(a));
+    const sb = suiteOrder.indexOf(suiteOf(b));
+    return sa !== sb ? sa - sb : a.localeCompare(b);
+  });
+
+  const tbody = document.getElementById('results-tbody');
+  tbody.innerHTML = '';
+  let lastSuite = '';
+
+  byKey.forEach(key => {
+    const suite = suiteOf(key);
+    const r     = results[key];
+    const p     = prevRes[key];
+
+    if (suite !== lastSuite) {
+      lastSuite = suite;
+      const sep = document.createElement('tr');
+      sep.innerHTML = `<td colspan="7" class="pt-3 pb-1" style="border:none">
+        <span class="suite-label" style="color:${SUITE_COLOR[suite]}">
+          <span class="badge" style="background:${SUITE_COLOR[suite]}">${suite}</span>
+        </span></td>`;
+      tbody.appendChild(sep);
+    }
+
+    const barPct = ((r.ops_per_sec || 0) / maxOps * 100).toFixed(1);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td></td>
+      <td class="mono">${subjectLabel(key)}</td>
+      <td class="text-end mono">${fmtMicro(r.mean_μs)}</td>
+      <td class="text-end mono text-muted">±${fmtMicro(r.stdev_μs)}</td>
+      <td class="text-end mono">${fmtOps(r.ops_per_sec)}</td>
+      <td style="min-width:100px">
+        <div class="ops-bar">
+          <div class="ops-fill" style="width:${barPct}%;background:${SUITE_COLOR[suite]}"></div>
+        </div>
+      </td>
+      <td class="text-center">${trendArrow(r.mean_μs, p?.mean_μs)}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// ── Summary cards ─────────────────────────────────────────────────────────────
+function renderSummary() {
+  const runs = historyData.runs;
+  if (!runs.length) return;
+
+  const last  = runs.at(-1);
+  const first = runs.at(0);
+
+  document.getElementById('c-latest-date').textContent   = last.date;
+  document.getElementById('c-latest-commit').textContent  = last.commit && last.commit !== 'unknown'
+    ? `${last.commit} · ${(last.commit_message||'').slice(0,32)}`
+    : last.branch || '';
+  document.getElementById('c-php').textContent            = `PHP ${last.php_version}`;
+  document.getElementById('c-os').textContent             = last.os || '';
+  document.getElementById('c-runs').textContent           = runs.length;
+  document.getElementById('c-span').textContent           = runs.length > 1
+    ? `${first.date} → ${last.date}`
+    : 'First run';
+
+  // Fastest op by ops_per_sec
+  const allPairs = Object.entries(last.results || {});
+  if (allPairs.length) {
+    allPairs.sort((a,b) => (b[1].ops_per_sec||0) - (a[1].ops_per_sec||0));
+    const [topKey, topVal] = allPairs[0];
+    document.getElementById('c-fastest').textContent       = fmtOps(topVal.ops_per_sec) + '/s';
+    document.getElementById('c-fastest-label').textContent = subjectLabel(topKey);
+  }
+
+  document.getElementById('last-updated').textContent = `Updated ${last.date}`;
+}
+
+// ── Bootstrap ─────────────────────────────────────────────────────────────────
+function toggleTheme() {
+  const html = document.documentElement;
+  html.dataset.bsTheme = html.dataset.bsTheme === 'dark' ? 'light' : 'dark';
+  document.body.style.background = html.dataset.bsTheme === 'dark' ? '#0d1117' : '#f6f8fa';
+}
+
+async function boot() {
+  try {
+    const resp = await fetch('../results/history.json?' + Date.now());
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    historyData = await resp.json();
+  } catch (e) {
+    document.getElementById('spinner').classList.add('d-none');
+    document.getElementById('no-data').classList.remove('d-none');
+    console.warn('Failed to load history.json:', e);
+    return;
+  }
+
+  document.getElementById('spinner').classList.add('d-none');
+
+  const runs = historyData.runs || [];
+  if (!runs.length) {
+    document.getElementById('no-data').classList.remove('d-none');
+    return;
+  }
+
+  document.getElementById('dashboard').classList.remove('d-none');
+
+  // Default: all runs active
+  activeRunIds = new Set(runs.map(r => r.id));
+
+  buildRunSelector(runs);
+  buildSuiteToggles();
+  renderSummary();
+  renderCharts();
+  renderTable();
+}
+
+boot();
+</script>
+</body>
+</html>

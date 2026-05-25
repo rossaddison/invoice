@@ -408,6 +408,12 @@ return [
   'complete' => 'Complete',
   'confirm' => 'Confirm',
   'confirm.deletion' => 'Confirm deletion',
+  'consent.periodic.invoice' => 'Monthly/Weekly Subscription Invoicing via Telegram'
+    . ' ',
+  'consent.telegram.outstanding' => 'I agree to be notified via Telegram when'
+    . ' a payment is outstanding.',
+  'consent.telegram.chat.id' => 'Telegram Chat ID (required for payment'
+    . ' notifications — message @userinfobot on Telegram to find yours)',
   'contact.information' => 'Contact Information',
   'continue' => 'Continue',
   'continue.with.developersandboxhmrc' => 'Continue'
@@ -2129,6 +2135,11 @@ prior to importing and no existing documents e.g. Invoices.',
   'records.no' => 'No Records',
   'recurring' => 'Recurring',
   'recurring.add' => 'Recurring Add',
+  'recurring.client' => 'Client',
+  'recurring.create' => 'Create Recurring Invoice',
+  'recurring.create.from.productclient' => 'Set Up Recurring Invoice from Product List',
+  'recurring.setup' => 'Set Up Recurring',
+  'recurring.no.products.associated' => 'No products are associated with this client. Please use the Generate Products function first.',
   'recurring.deleted' => 'Deleted',
   'recurring.frequency' => 'Frequency',
   'recurring.invoices' => 'Recurring Invoices',

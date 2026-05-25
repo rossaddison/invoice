@@ -76,6 +76,10 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
     echo F::password($formModel, 'passwordVerify')
     ->addInputAttributes(['autocomplete' => 'current-password'])
     ->label($translator->translate('layout.password-verify.new'));
+    echo F::checkbox($formModel, 'consentPeriodicInvoice')
+    ->label($translator->translate('consent.periodic.invoice'));
+    echo F::checkbox($formModel, 'consentTelegramOutstanding')
+    ->label($translator->translate('consent.telegram.outstanding'));
     echo F::submitButton()
     ->buttonId('register-button')
     ->buttonClass((string) $class[15])

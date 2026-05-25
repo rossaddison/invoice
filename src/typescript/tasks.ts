@@ -247,7 +247,7 @@ export class TaskHandler {
         console.log('Processing tasks in sorted order:', sortedTaskIds);
 
         const originalHtml = btn.innerHTML;
-        btn.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+        btn.innerHTML = '<h2 class="text-center"><span class="spinner-border spinner-border-sm" role="status"></span></h2>';
         (btn as HTMLButtonElement).disabled = true;
 
         const params = new URLSearchParams();
@@ -287,7 +287,7 @@ export class TaskHandler {
             const tasks = parsedata(data) as TaskSelectionResponse;
             this.processTasks(tasks);
 
-            btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+            btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
 
             // Reload as original code does to sync state
             location.reload();
@@ -358,7 +358,7 @@ export class TaskHandler {
         if (!tasksTable) return;
 
         const lookupUrl = `${location.origin}/invoice/task/lookup?rt=true`;
-        tasksTable.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+        tasksTable.innerHTML = '<h2 class="text-center"><span class="spinner-border spinner-border-sm" role="status"></span></h2>';
 
         // ES2024: Use Promise.withResolvers for better async control
         const { promise, resolve, reject } = Promise.withResolvers<void>();

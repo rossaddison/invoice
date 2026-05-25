@@ -584,15 +584,6 @@
   min-width: var(--spacing-xl);
 }
 
-.fa-credit-invoice:before {
-  content: '-';
-}
-
-.fa-credit-invoice:after {
-  font-family: FontAwesome;
-  content: '\f155';
-}
-
 /* Personal Logo - From style.css */
 .personal_logo {
   max-width: 100%;

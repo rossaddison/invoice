@@ -346,6 +346,30 @@ echo Field::select($form, 'language')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3 border-top pt-3']); ?>
+            <?= Field::checkbox($form, 'consent_periodic_invoice')
+    ->label($translator->translate('consent.periodic.invoice'))
+    ->addInputAttributes(['id' => 'consent_periodic_invoice']);
+?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
+            <?= Field::checkbox($form, 'consent_telegram_outstanding')
+    ->label($translator->translate('consent.telegram.outstanding'))
+    ->addInputAttributes(['id' => 'consent_telegram_outstanding']);
+?>
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
+            <?= Field::text($form, 'telegram_chat_id')
+    ->label($translator->translate('consent.telegram.chat.id'))
+    ->addInputAttributes([
+        'placeholder' => $translator->translate('consent.telegram.chat.id'),
+        'class' => 'form-control form-control-lg',
+        'id' => 'telegram_chat_id',
+    ])
+    ->value(Html::encode($form->getTelegramChatId() ?? ''))
+    ->hint($translator->translate('hint.this.field.is.not.required'));
+?>
+        <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>

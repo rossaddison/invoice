@@ -25,7 +25,7 @@ function secureReload(): void {
 }
 
 // Helper function to safely create loading/success UI elements to prevent XSS
-function createSecureUIElement(type: string = 'h6', className: string = 'text-center', iconClass: string = 'fa fa-spin fa-spinner'): HTMLElement {
+function createSecureUIElement(type: string = 'h6', className: string = 'text-center', iconClass: string = 'spinner-border spinner-border-sm'): HTMLElement {
     const element = document.createElement(type);
     element.className = className;
     const icon = document.createElement('i');
@@ -38,22 +38,22 @@ function createSecureUIElement(type: string = 'h6', className: string = 'text-ce
 function setButtonLoading(button: HTMLElement, isLoading: boolean, originalHtml?: string): void {
     if (isLoading) {
         button.textContent = '';
-        button.appendChild(createSecureUIElement('h6', 'text-center', 'fa fa-spin fa-spinner'));
+        button.appendChild(createSecureUIElement('h6', 'text-center', 'spinner-border spinner-border-sm'));
         (button as HTMLButtonElement).disabled = true;
     } else {
         if (originalHtml) {
             button.textContent = '';
-            button.appendChild(createSecureUIElement('h6', 'text-center', 'fa fa-check'));
+            button.appendChild(createSecureUIElement('h6', 'text-center', 'bi bi-check-lg'));
         } else {
             button.textContent = '';
-            button.appendChild(createSecureUIElement('h6', 'text-center', 'fa fa-check'));
+            button.appendChild(createSecureUIElement('h6', 'text-center', 'bi bi-check-lg'));
         }
         (button as HTMLButtonElement).disabled = false;
     }
 }
 
 // Helper function to safely set button content
-function setSecureButtonContent(btn: HTMLElement | null, type: string = 'h6', className: string = 'text-center', iconClass: string = 'fa fa-spin fa-spinner'): void {
+function setSecureButtonContent(btn: HTMLElement | null, type: string = 'h6', className: string = 'text-center', iconClass: string = 'spinner-border spinner-border-sm'): void {
     if (!btn) return;
     btn.textContent = '';
     btn.appendChild(createSecureUIElement(type, className, iconClass));
@@ -144,7 +144,7 @@ export class ClientHandler {
 
             if (data.success === 1) {
                 if (btn) {
-                    setSecureButtonContent(btn, 'h2', 'text-center', 'fa fa-check');
+                    setSecureButtonContent(btn, 'h2', 'text-center', 'bi bi-check-lg');
                 }
                 // Secure reload without potentially manipulable URL
                 secureReload();
@@ -217,7 +217,7 @@ export class ClientHandler {
 
         deleteBtn.textContent = '';
         const spinner = document.createElement('i');
-        spinner.className = 'fa fa-spin fa-spinner';
+        spinner.className = 'spinner-border spinner-border-sm';
         deleteBtn.appendChild(spinner);
         (deleteBtn as HTMLButtonElement).disabled = true;
 
@@ -271,7 +271,7 @@ export class ClientHandler {
         if (submitButton) {
             submitButton.textContent = '';
             const checkIcon = document.createElement('i');
-            checkIcon.className = 'fa fa-check';
+            checkIcon.className = 'bi bi-check-lg';
             submitButton.appendChild(checkIcon);
         }
 
@@ -306,7 +306,7 @@ export class ClientHandler {
         if (submitButton) {
             submitButton.textContent = '';
             const checkIcon = document.createElement('i');
-            checkIcon.className = 'fa fa-check';
+            checkIcon.className = 'bi bi-check-lg';
             submitButton.appendChild(checkIcon);
         }
 

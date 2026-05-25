@@ -62,8 +62,8 @@ echo [4p] Angular: Install Dependencies             [14]  invoice/inv/truncate1
 echo [4q] Angular: Serve Development                [4r]  Angular: Build Production
 echo [4s] Angular: Generate Component               [4t]  Angular: Lint Check
 echo [5]  Require Checker                           [15]  invoice/quote/truncate2
-echo [99] System Info / Diagnostics                 [16]  invoice/salesorder/truncate3
-echo                                                [17]  invoice/nonuserrelated/truncate4
+echo [25] Performance Benchmarks                    [16]  invoice/salesorder/truncate3
+echo [99] System Info / Diagnostics                 [17]  invoice/nonuserrelated/truncate4
 echo                                                [18]  invoice/userrelated/truncate5
 echo                                                [19]  invoice/autoincrementsettooneafter/truncate6
 echo                                                [20]  GitHub CLI: Install
@@ -72,7 +72,7 @@ echo                                                [22]  GitHub CLI: Copilot Ve
 echo                                                [23]  Exit
 echo                                                [24]  Exit to Current Directory
 echo =================================
-set /p choice="Enter your choice [0-24,99]: "
+set /p choice="Enter your choice [0-25,99]: "
 
 REM ======== MENU COMMAND ROUTING ========
 if "%choice%"=="1" goto c01
@@ -148,6 +148,7 @@ if "%choice%"=="21" goto c21
 if "%choice%"=="22" goto c22
 if "%choice%"=="23" goto c23
 if "%choice%"=="24" goto c24
+if "%choice%"=="25" goto c25
 if "%choice%"=="99" goto c99
 echo Invalid choice. Please try again.
 pause
@@ -740,6 +741,91 @@ exit
 :c24
 echo Returning to the current directory. Goodbye!
 cmd
+
+:c25
+cls
+echo ======================================================================================
+echo                         PERFORMANCE BENCHMARKS  (Yii3-i)
+echo ======================================================================================
+echo  Results accumulate in: benchmarks/results/history.json
+echo  Dashboard served at:   http://localhost:8080  (option 7)
+echo ======================================================================================
+echo  [1]  Run All Suites          - DI + Injector + Router + Strings (saves result)
+echo  [2]  DI Container Suite      - singleton cache, dependency chains, container build
+echo  [3]  Injector Suite          - auto-wire (cached vs uncached reflection), make()
+echo  [4]  Router Suite            - FastRoute: static, parametrised, worst-case, 404
+echo  [5]  String Helpers Suite    - StringHelper, Inflector, WildcardPattern, Regexp
+echo  [6]  Dry Run (All Suites)    - print table but do NOT write to history.json
+echo  [7]  Serve Dashboard         - start PHP server + open browser at localhost:8080
+echo  [0]  Back to Main Menu
+echo ======================================================================================
+set /p bench_choice="Benchmark choice [0-7]: "
+
+if "%bench_choice%"=="0" goto menu
+if "%bench_choice%"=="1" goto bench_all
+if "%bench_choice%"=="2" goto bench_di
+if "%bench_choice%"=="3" goto bench_injector
+if "%bench_choice%"=="4" goto bench_router
+if "%bench_choice%"=="5" goto bench_strings
+if "%bench_choice%"=="6" goto bench_dry
+if "%bench_choice%"=="7" goto bench_dashboard
+echo Invalid choice.
+pause
+goto c25
+
+:bench_all
+echo.
+echo Running all benchmark suites...
+php benchmarks/run.php
+pause
+goto c25
+
+:bench_di
+echo.
+echo Running DI Container suite...
+php benchmarks/run.php --suite=di
+pause
+goto c25
+
+:bench_injector
+echo.
+echo Running Injector suite...
+php benchmarks/run.php --suite=injector
+pause
+goto c25
+
+:bench_router
+echo.
+echo Running Router suite...
+php benchmarks/run.php --suite=router
+pause
+goto c25
+
+:bench_strings
+echo.
+echo Running String Helpers suite...
+php benchmarks/run.php --suite=strings
+pause
+goto c25
+
+:bench_dry
+echo.
+echo Running all suites (dry run - result NOT saved to history.json)...
+php benchmarks/run.php --dry-run
+pause
+goto c25
+
+:bench_dashboard
+echo.
+echo Starting PHP dashboard server at http://localhost:8080 ...
+start "Yii3-i Benchmark Dashboard" cmd /c "php -S localhost:8080 -t benchmarks"
+timeout /t 2 /nobreak >nul
+start http://localhost:8080/dashboard/
+echo.
+echo Dashboard running in background window.
+echo Close the "Yii3-i Benchmark Dashboard" window to stop the server.
+pause
+goto c25
 
 :c99
 echo .......... VERSIONS - PHP, COMPOSER, NODE, TYPESCRIPT ..........

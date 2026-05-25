@@ -1868,7 +1868,7 @@ final class SettingRepository extends Select\Repository
                 . ' outputting it to'
                 . ' resources/views/generator/output_overwrite' . "\r\n"
                 . '---Step--1: Download https://curl.haxx.se/ca/cacert.pem'
-                . ' into active c:\wamp64\bin\php\php8.1.12 folder' . "\r\n"
+                . ' into active c:\wamp64\bin\php\php8.5.0 folder' . "\r\n"
                 . '---Step--2: Select your project that you created under'
                 . ' https://console.cloud.google.com/projectselector2/iam-admin/'
                 . 'serviceaccounts?supportedpurview=project' . "\r\n"
@@ -1884,13 +1884,21 @@ final class SettingRepository extends Select\Repository
                 . ' the wampserver icon or by clicking on the symlink in the'
                 . ' directory.' . "\r\n"
                 . '---Step--8: Edit this symlink file manually at [curl] with'
-                . ' eg. "c:/wamp64/bin/php/php8.1.13/cacert.pem'
+                . ' eg. "c:/wamp64/bin/php/php8.5.0/cacert.pem'
                 . '   Note the forward slashes.' . "\r\n"
                 . '---Step--9: Reboot your server' . "\r\n"
                 . '---Step--10: After generating the file, move the file from'
                 . ' views/generator/output_overwrite to eg.'
                 . ' resources/messages/{de}/app.php.',
                 'where' => 'GeneratorController/google_translate_lang',
+            ],
+            'google_translate_diff' => [
+                'why' => 'Translates src/Invoice/Language/English/diff_lang.php,'
+                . ' which holds translation keys that are present in the English'
+                . ' source but missing from resources/messages/en/app.php.'
+                . ' Run this after adding new keys to the English source to find'
+                . ' and fill translation gaps in other locales.',
+                'where' => 'GeneratorController/googleTranslateLang (type=diff)',
             ],
             'google_translate_en_app_php' => [
                 'why' => 'To translate resources/messages/en/app.php, make sure'
@@ -2212,6 +2220,48 @@ final class SettingRepository extends Select\Repository
         $information = 'data-bs-toggle = "tooltip" data-bs-placement= "bottom" '
                 . ' ' . 'title = "' . $why . ' and is used in ' . $where . '"';
         return $debug_mode ? $information : '';
+    }
+
+    /**
+     * Returns only the plain-text tooltip content (why + where) suitable for
+     * use as a PHP array 'title' attribute value, e.g. in DropdownItem itemAttributes.
+     * Unlike where(), this does NOT return HTML attribute markup.
+     */
+    public function tooltipTitle(string $setting): string
+    {
+        return $this->tooltipWhy($setting) . ' | ' . $this->tooltipWhere($setting);
+    }
+
+    /**
+     * Returns only the 'why' text for a tooltip key — use as data-bs-content
+     * on a popover so the body can be formatted independently of the header.
+     */
+    public function tooltipWhy(string $setting): string
+    {
+        $tooltip = $this->tooltipArray();
+        /** @var array $value */
+        foreach ($tooltip as $key => $value) {
+            if ($key === $setting) {
+                return (string) ($value['why'] ?? '');
+            }
+        }
+        return '';
+    }
+
+    /**
+     * Returns only the 'where' text for a tooltip key — use as data-bs-title
+     * on a popover so the header shows the file/controller location.
+     */
+    public function tooltipWhere(string $setting): string
+    {
+        $tooltip = $this->tooltipArray();
+        /** @var array $value */
+        foreach ($tooltip as $key => $value) {
+            if ($key === $setting) {
+                return (string) ($value['where'] ?? '');
+            }
+        }
+        return '';
     }
 
     /**

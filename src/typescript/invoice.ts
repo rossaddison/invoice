@@ -43,11 +43,11 @@ interface DeleteItemData extends RequestParams {
 // Helper to set button loading state
 function setButtonLoading(button: HTMLElement, isLoading: boolean, originalHtml?: string): void {
     if (isLoading) {
-        button.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+        button.innerHTML = '<h2 class="text-center"><span class="spinner-border spinner-border-sm" role="status"></span></h2>';
         (button as HTMLButtonElement).disabled = true;
     } else {
         button.innerHTML =
-            originalHtml || '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+            originalHtml || '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
         (button as HTMLButtonElement).disabled = false;
     }
 }
@@ -255,10 +255,10 @@ export class InvoiceHandler {
             const data = parsedata(response);
 
             if (data.success === 1) {
-                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
                 window.location.reload();
             } else {
-                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-x-lg"></i></h2>';
                 window.location.reload();
             }
         } catch (error) {
@@ -286,10 +286,10 @@ export class InvoiceHandler {
             const data = parsedata(response);
 
             if (data.success === 1) {
-                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
                 window.location.reload();
             } else {
-                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-x-lg"></i></h2>';
                 window.location.reload();
             }
         } catch (error) {
@@ -308,7 +308,7 @@ export class InvoiceHandler {
         const originalHtml = btn?.innerHTML;
 
         if (btn) {
-            btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+            btn.innerHTML = '<h6 class="text-center"><span class="spinner-border spinner-border-sm" role="status"></span></h6>';
             (btn as HTMLButtonElement).disabled = true;
         }
 
@@ -347,7 +347,7 @@ export class InvoiceHandler {
             const data = parsedata(response);
 
             if (data.success === 1) {
-                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
 
                 // Close modal if using Bootstrap
                 this.closeModal('create-recurring-multiple');
@@ -356,7 +356,7 @@ export class InvoiceHandler {
                     window.location.reload();
                 }, 500);
             } else {
-                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-x-lg"></i></h2>';
                 // Use the server's error message if available, otherwise fall back to generic message
                 const errorMessage = data.message || 'Failed to create recurring invoices. Please try again.';
                 alert(errorMessage);
@@ -382,7 +382,7 @@ export class InvoiceHandler {
         const originalHtml = btn?.innerHTML;
 
         if (btn) {
-            btn.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+            btn.innerHTML = '<h2 class="text-center"><span class="spinner-border spinner-border-sm" role="status"></span></h2>';
             (btn as HTMLButtonElement).disabled = true;
         }
 
@@ -409,10 +409,10 @@ export class InvoiceHandler {
             const data = parsedata(response);
 
             if (data.success === 1) {
-                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
                 window.location.reload();
             } else {
-                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-x-lg"></i></h2>';
                 window.location.reload();
             }
         } catch (error) {
@@ -430,7 +430,7 @@ export class InvoiceHandler {
         const originalHtml = btn?.innerHTML;
 
         if (btn) {
-            btn.innerHTML = '<i class="fa fa-spin fa-spinner"></i>';
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>';
             btn.disabled = true;
         }
 
@@ -450,7 +450,7 @@ export class InvoiceHandler {
             const data = parsedata(response);
 
             if (data.success === 1) {
-                if (btn) btn.innerHTML = '<i class="fa fa-check"></i>';
+                if (btn) btn.innerHTML = '<i class="bi bi-check-lg"></i>';
 
                 // Close modal and reload page
                 this.closeModal('add-inv-tax');
@@ -459,7 +459,7 @@ export class InvoiceHandler {
                     window.location.reload();
                 }, 500);
             } else {
-                if (btn) btn.innerHTML = '<i class="fa fa-times"></i>';
+                if (btn) btn.innerHTML = '<i class="bi bi-x-lg"></i>';
                 alert('Failed to add invoice tax. Please try again.');
                 if (btn && originalHtml) {
                     btn.innerHTML = originalHtml;
@@ -482,7 +482,7 @@ export class InvoiceHandler {
         const originalHtml = btn?.innerHTML;
 
         if (btn) {
-            btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+            btn.innerHTML = '<h6 class="text-center"><span class="spinner-border spinner-border-sm" role="status"></span></h6>';
             (btn as HTMLButtonElement).disabled = true;
         }
 
@@ -501,7 +501,7 @@ export class InvoiceHandler {
             const data = parsedata(response);
 
             if (data.success === 1) {
-                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
 
                 // Redirect to the newly created invoice
                 if (data.new_invoice_id) {
@@ -511,7 +511,7 @@ export class InvoiceHandler {
                     window.location.reload();
                 }
             } else {
-                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-x-lg"></i></h2>';
                 window.location.reload();
             }
         } catch (error) {
@@ -531,7 +531,7 @@ export class InvoiceHandler {
         const originalHtml = btn?.innerHTML;
 
         if (btn) {
-            btn.innerHTML = '<i class="fa fa-spin fa-spinner"></i>';
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>';
             (btn as HTMLButtonElement).disabled = true;
         }
 
@@ -573,7 +573,7 @@ export class InvoiceHandler {
             const data = parsedata(response);
 
             if (data.success === 1) {
-                if (btn) btn.innerHTML = '<i class="fa fa-check"></i>';
+                if (btn) btn.innerHTML = '<i class="bi bi-check-lg"></i>';
 
                 // Close modal and reload page
                 this.closeModal('delete-items');
@@ -582,7 +582,7 @@ export class InvoiceHandler {
                     window.location.reload();
                 }, 500);
             } else {
-                if (btn) btn.innerHTML = '<i class="fa fa-times"></i>';
+                if (btn) btn.innerHTML = '<i class="bi bi-x-lg"></i>';
                 alert('Failed to delete items. Please try again.');
                 if (btn && originalHtml) {
                     btn.innerHTML = originalHtml;
@@ -641,7 +641,7 @@ export class InvoiceHandler {
         const originalHtml = btn?.innerHTML;
 
         if (btn) {
-            btn.innerHTML = '<i class="fa fa-spin fa-spinner"></i>';
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>';
             btn.disabled = true;
         }
 
@@ -660,7 +660,7 @@ export class InvoiceHandler {
             const data = parsedata(response);
 
             if (data.success === 1) {
-                if (btn) btn.innerHTML = '<i class="fa fa-check"></i>';
+                if (btn) btn.innerHTML = '<i class="bi bi-check-lg"></i>';
                 // Close payment modal and reload
                 this.closeModal('payment-modal'); // Adjust modal ID as needed
                 setTimeout(() => {

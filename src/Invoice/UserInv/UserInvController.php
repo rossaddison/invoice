@@ -240,7 +240,7 @@ final class UserInvController extends BaseController
             $id = $this->userService->getUser()?->reqId();
             $userinv = $uiR->repoUserInvUserIdquery((int) $id);
             if ($userinv) {
-                $form = new UserInvForm();
+                $form = UserInvForm::show($userinv);
                 $parameters = [
                     'title' => $this->translator->translate('edit'),
                     'actionName' => 'userinv/guest',

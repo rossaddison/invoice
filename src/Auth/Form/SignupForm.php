@@ -24,6 +24,8 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
     private string $email = '';
     private string $password = '';
     private string $passwordVerify = '';
+    private bool $consentPeriodicInvoice = false;
+    private bool $consentTelegramOutstanding = false;
 
     public function __construct(
         private readonly TranslatorInterface $translator,
@@ -34,7 +36,7 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
     /**
      * @return string[]
      *
-     * @psalm-return array{login: string, email: string, password: string, passwordVerify: string}
+     * @psalm-return array{login: string, email: string, password: string, passwordVerify: string, consentPeriodicInvoice: string, consentTelegramOutstanding: string}
      */
     public function getAttributeLabels(): array
     {
@@ -43,6 +45,8 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
             'email' => $this->translator->translate('email'),
             'password' => $this->translator->translate('layout.password'),
             'passwordVerify' => $this->translator->translate('layout.password-verify'),
+            'consentPeriodicInvoice' => $this->translator->translate('consent.periodic.invoice'),
+            'consentTelegramOutstanding' => $this->translator->translate('consent.telegram.outstanding'),
         ];
     }
 
@@ -84,6 +88,16 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
     public function getEmail(): string
     {
         return $this->email;
+    }
+
+    public function getConsentPeriodicInvoice(): bool
+    {
+        return $this->consentPeriodicInvoice;
+    }
+
+    public function getConsentTelegramOutstanding(): bool
+    {
+        return $this->consentTelegramOutstanding;
     }
 
     public function signup(): User

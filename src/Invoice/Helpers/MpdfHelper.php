@@ -349,8 +349,12 @@ class MpdfHelper
      */
     private function getCssFile(Aliases $aliases): string|false
     {
-        $cssFile = $aliases->get('@invoice/Asset/kartik-v/kv-mpdf-bootstrap.min.css');
-        return file_get_contents($cssFile);
+        $templates = file_get_contents($aliases->get('@invoice/Asset/invoice/css/templates.css'));
+        $custom    = file_get_contents($aliases->get('@invoice/Asset/core/css/custom-pdf.css'));
+        if ($templates === false || $custom === false) {
+            return false;
+        }
+        return $templates . "\n" . $custom;
     }
 
     /**
@@ -368,15 +372,6 @@ class MpdfHelper
         return $mpdf;
     }
 
-    /**
-     * Acknowledgement to yii2-mpdf
-     *
-     * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2020
-     *
-     * @package yii2-mpdf
-     *
-     * @version 1.0.6
-     */
     private function options(): array
     {
         $aliases = $this->ensureTmpFolderExists();

@@ -1,0 +1,133 @@
+name: Performance Benchmarks
+
+on:
+  schedule:
+    # Every Monday at 02:00 UTC — matches the weekly cadence of the main CI run
+    - cron: '0 2 * * 1'
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: 'Benchmark suite to run (leave blank for all)'
+        required: false
+        default: ''
+        type: choice
+        options: ['', 'di', 'injector', 'router', 'strings']
+      commit_results:
+        description: 'Commit results back to the repository'
+        required: false
+        default: 'true'
+        type: boolean
+      dry_run:
+        description: 'Dry run — benchmark without writing history.json'
+        required: false
+        default: 'false'
+        type: boolean
+
+concurrency:
+  group: benchmark
+  cancel-in-progress: false  # never cancel a running benchmark mid-write
+
+jobs:
+  benchmark:
+    name: Yii3-i Benchmarks · PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.4']   # extend to ['8.4','8.5'] when 8.5 is stable
+
+    steps:
+      # ── Checkout ────────────────────────────────────────────────────────────
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Full history so `git log` in run.php can read the commit message
+          fetch-depth: 5
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # ── PHP setup (OPcache JIT matches production tuning) ──────────────────
+      - name: Setup PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: opcache, intl, mbstring, json
+          ini-values: >
+            opcache.enable_cli=1,
+            opcache.jit=tracing,
+            opcache.jit_buffer_size=64M,
+            opcache.memory_consumption=128,
+            memory_limit=512M
+          coverage: none
+
+      # ── Composer ────────────────────────────────────────────────────────────
+      - name: Install Composer dependencies
+        uses: ramsey/composer-install@v3
+        with:
+          composer-options: '--prefer-dist --no-interaction --no-scripts'
+
+      # ── Sanity-check PHP environment ─────────────────────────────────────
+      - name: PHP info
+        run: |
+          php -r "
+            echo 'PHP  : ' . PHP_VERSION . PHP_EOL;
+            echo 'OPC  : ' . (function_exists('opcache_get_status') ? 'enabled' : 'disabled') . PHP_EOL;
+            echo 'JIT  : ' . (opcache_get_status(false)['jit']['enabled'] ?? false ? 'yes' : 'no') . PHP_EOL;
+          "
+
+      # ── Run benchmarks ───────────────────────────────────────────────────
+      - name: Run benchmarks
+        env:
+          SUITE: ${{ inputs.suite || '' }}
+          DRY:   ${{ inputs.dry_run || 'false' }}
+        run: |
+          ARGS=""
+          [ -n "$SUITE" ] && ARGS="$ARGS --suite=$SUITE"
+          [ "$DRY" = "true" ] && ARGS="$ARGS --dry-run"
+          php benchmarks/run.php $ARGS
+
+      # ── Upload results as CI artifact ────────────────────────────────────
+      - name: Upload history.json artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results-php${{ matrix.php }}-${{ github.run_number }}
+          path: benchmarks/results/history.json
+          retention-days: 90
+
+      # ── Commit updated history.json back to the repo ────────────────────
+      # Only runs on the primary PHP version to avoid duplicate commits.
+      - name: Commit results
+        if: |
+          matrix.php == '8.4' &&
+          inputs.commit_results != 'false' &&
+          inputs.dry_run != 'true' &&
+          github.event_name != 'pull_request'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add benchmarks/results/history.json
+          if git diff --staged --quiet; then
+            echo "Nothing to commit — history.json unchanged."
+          else
+            git commit -m "perf: benchmark results $(date -u +%Y-%m-%d) · PHP ${{ matrix.php }}"
+            git push
+          fi
+
+      # ── Summary in GitHub job report ────────────────────────────────────
+      - name: Write job summary
+        if: always()
+        run: |
+          echo "## Benchmark Results — PHP ${{ matrix.php }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Benchmark | Mean (μs) | Ops/sec |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----------|----------:|--------:|" >> $GITHUB_STEP_SUMMARY
+          php -r "
+            \$h = json_decode(file_get_contents('benchmarks/results/history.json'), true);
+            \$last = end(\$h['runs'] ?? []);
+            if (!\$last) { echo '| No results | — | — |' . PHP_EOL; exit; }
+            foreach (\$last['results'] as \$k => \$v) {
+              \$ops = number_format(\$v['ops_per_sec'] ?? 0);
+              echo \"| \$k | {\$v['mean_μs']} | \$ops |\" . PHP_EOL;
+            }
+          " >> $GITHUB_STEP_SUMMARY

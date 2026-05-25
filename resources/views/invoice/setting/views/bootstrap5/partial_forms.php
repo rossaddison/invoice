@@ -16,14 +16,16 @@ echo H::openTag('div', ['class' => 'border border-line-1 border-secondary']); //
     echo $translator->translate('bootstrap5.form.font.size');
     echo ' ';
     echo H::tag('i', '', [
-     'class'          => 'bi bi-info-circle',
-     'data-bs-toggle' => 'tooltip',
-     'data-bs-placement' => 'right',
-     'title'          => '1. Saved via the Bootstrap 5 settings tab (partial_forms.php). '
-                       . '2. Defaulted to 14 in InvoiceController.php. '
-                       . '3. Read in LayoutViewInjection.php → $bootstrap5FormFontSize view variable. '
-                       . '4. Emitted as --inv-form-fs CSS custom property in layout/invoice.php, applied to .container-fluid wrappers via overrides.css. '
-                       . '5. Read directly in InvoiceController::faq() for the FAQ page font size.',
+     'class'              => 'bi bi-info-circle',
+     'data-bs-toggle'     => 'popover',
+     'data-bs-placement'  => 'right',
+     'data-bs-title'      => $translator->translate('bootstrap5.form.font.size'),
+     'data-bs-content'    => "---Step--1: Saved via the Bootstrap 5 settings tab (partial_forms.php).\r\n"
+                           . "---Step--2: Defaulted to 14 in InvoiceController.php.\r\n"
+                           . "---Step--3: Read in LayoutViewInjection.php → \$bootstrap5FormFontSize view variable.\r\n"
+                           . "---Step--4: Emitted as --inv-form-fs CSS custom property in layout/invoice.php, applied via overrides.css.\r\n"
+                           . "---Step--5: Read directly in InvoiceController::faq() for the FAQ page font size.",
+     'data-popover-steps' => '',
     ]);
    echo H::closeTag('label');
    echo H::input('number', 'settings[bootstrap5_form_font_size]', (string)$body['settings[bootstrap5_form_font_size]'], [

@@ -175,7 +175,13 @@
             "./yii serve"
         ],
         "test": "codecept run",
-        "test-watch": "phpunit-watcher watch"
+        "test-watch": "phpunit-watcher watch",
+        "bench": "php benchmarks/run.php",
+        "bench:di": "php benchmarks/run.php --suite=di",
+        "bench:injector": "php benchmarks/run.php --suite=injector",
+        "bench:router": "php benchmarks/run.php --suite=router",
+        "bench:strings": "php benchmarks/run.php --suite=strings",
+        "bench:dry": "php benchmarks/run.php --dry-run"
     },
     "extra": {
         "branch-alias": {
