@@ -47,7 +47,7 @@ if ($token === '') {
 }
 
 // ── Fetch ─────────────────────────────────────────────────────────────────────
-function sonar_get(string $path, array $query, string $token): array
+function sonarGet(string $path, array $query, string $token): array
 {
     $url = SONAR_HOST . $path . '?' . http_build_query($query);
     $ch  = curl_init($url);
@@ -60,7 +60,6 @@ function sonar_get(string $path, array $query, string $token): array
     $raw  = curl_exec($ch);
     $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $err  = curl_error($ch);
-    curl_close($ch);
     if ($raw === false || $err !== '') {
         fwrite(STDERR, "ERROR: Could not reach $url\n$err\n");
         exit(1);
@@ -78,7 +77,7 @@ function sonar_get(string $path, array $query, string $token): array
 }
 
 // ── Collect all pages ─────────────────────────────────────────────────────────
-function fetch_all_issues(string $token, ?string $pr, ?string $type, ?string $severity): array
+function fetchAllIssues(string $token, ?string $pr, ?string $type, ?string $severity): array
 {
     $issues = [];
     $page   = 1;
@@ -94,7 +93,7 @@ function fetch_all_issues(string $token, ?string $pr, ?string $type, ?string $se
         if ($type !== null)     { $query['types']       = $type; }
         if ($severity !== null) { $query['severities']  = $severity; }
 
-        $data    = sonar_get('/api/issues/search', $query, $token);
+        $data    = sonarGet('/api/issues/search', $query, $token);
         $batch   = $data['issues'] ?? [];
         $issues  = array_merge($issues, $batch);
         $total   = $data['paging']['total'] ?? 0;
@@ -104,7 +103,7 @@ function fetch_all_issues(string $token, ?string $pr, ?string $type, ?string $se
     return $issues;
 }
 
-function fetch_all_hotspots(string $token, ?string $pr): array
+function fetchAllHotspots(string $token, ?string $pr): array
 {
     $hotspots = [];
     $page     = 1;
@@ -118,7 +117,7 @@ function fetch_all_hotspots(string $token, ?string $pr): array
         ];
         if ($pr !== null) { $query['pullRequest'] = $pr; }
 
-        $data     = sonar_get('/api/hotspots/search', $query, $token);
+        $data     = sonarGet('/api/hotspots/search', $query, $token);
         $batch    = $data['hotspots'] ?? [];
         $hotspots = array_merge($hotspots, $batch);
         $total    = $data['paging']['total'] ?? 0;
@@ -138,7 +137,7 @@ $severityLabel = [
 ];
 
 if ($hotspots) {
-    $items = fetch_all_hotspots($token, $pr);
+    $items = fetchAllHotspots($token, $pr);
     foreach ($items as $h) {
         $file    = $h['component'] ?? '';
         $file    = preg_replace('/^' . preg_quote(PROJECT_KEY, '/') . ':/', '', $file);
@@ -149,7 +148,7 @@ if ($hotspots) {
     }
     echo "\n" . count($items) . " hotspot(s)\n";
 } else {
-    $items = fetch_all_issues($token, $pr, $type, $severity);
+    $items = fetchAllIssues($token, $pr, $type, $severity);
     foreach ($items as $issue) {
         $sev     = $issue['severity'] ?? 'MAJOR';
         $label   = $severityLabel[$sev] ?? $sev;

@@ -78,7 +78,7 @@ function bench(callable $fn, int $revs = 500, int $iterations = 7, int $warmup =
 /** @return array<string, array{fn:callable, revs:int, warmup:int, its:int}> */
 function loadSuite(string $file): array
 {
-    $factory = require $file;
+    $factory = require $file; // NOSONAR — require (not require_once) is intentional: each call returns the factory fresh
     return $factory();
 }
 

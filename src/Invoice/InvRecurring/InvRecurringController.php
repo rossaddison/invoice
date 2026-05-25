@@ -314,42 +314,45 @@ final class InvRecurringController extends BaseController
     public function multiple(Request $request, FormHydrator $formHydrator, IR $iR): \Psr\Http\Message\ResponseInterface
     {
         $data = $request->getQueryParams();
-        /**
-         * Purpose: Provide a list of ids from inv/index checkbox column as an array
-         * @var array $data['keylist']
-         */
+        /** @var array<int|string, string> $keyList */
         $keyList = $data['keylist'] ?? [];
-        if (!empty($keyList)) {
-            /**
-             * @var string $value
-             */
-            foreach ($keyList as $value) {
-                $baseInvoice = $iR->repoInvUnloadedquery((int) $value);
-                if (null !== $baseInvoice) {
-                    if ($baseInvoice->reqStatusId() == 2) {
-                        $invRecurring = new InvRecurring();
-                        $form = new InvRecurringForm();
-                        $body_array = [
-                            'inv_id' => $value,
-                            'start' => $data['recur_start_date'] ?? null,
-                            'end' => $data['recur_end_date'] ?? null,
-                            'frequency' => $data['recur_frequency'],
-                            'next' => $data['recur_start_date'] ?? null,
-                        ];
-                        if ($formHydrator->populateAndValidate($form, $body_array)) {
-                            $this->invrecurringService->saveInvRecurring($invRecurring, $body_array);
-                        }
-                    } else {
-                        return $this->factory->createResponse(Json::encode(['success' => 0,
-                            'message' => $this->translator->translate('recurring.status.sent.only')]));
-                    }
-                } else {
-                    return $this->factory->createResponse(Json::encode(['success' => 0, 'message' => '']));
-                }
-            }
-            return $this->factory->createResponse(Json::encode(['success' => 1]));
+        if (empty($keyList)) {
+            return $this->factory->createResponse(Json::encode(['success' => 0, 'message' => $this->translator->translate('recurring.no.invoices.selected')]));
         }
-        return $this->factory->createResponse(Json::encode(['success' => 0, 'message' => $this->translator->translate('recurring.no.invoices.selected')]));
+        foreach ($keyList as $value) {
+            $error = $this->processRecurringKey((string) $value, $data, $formHydrator, $iR);
+            if (null !== $error) {
+                return $error;
+            }
+        }
+        return $this->factory->createResponse(Json::encode(['success' => 1]));
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    private function processRecurringKey(string $value, array $data, FormHydrator $formHydrator, IR $iR): ?\Psr\Http\Message\ResponseInterface
+    {
+        $baseInvoice = $iR->repoInvUnloadedquery((int) $value);
+        if (null === $baseInvoice) {
+            return $this->factory->createResponse(Json::encode(['success' => 0, 'message' => '']));
+        }
+        if ($baseInvoice->reqStatusId() != 2) {
+            return $this->factory->createResponse(Json::encode(['success' => 0, 'message' => $this->translator->translate('recurring.status.sent.only')]));
+        }
+        $invRecurring = new InvRecurring();
+        $form = new InvRecurringForm();
+        $body_array = [
+            'inv_id' => $value,
+            'start'     => $data['recur_start_date'] ?? null,
+            'end'       => $data['recur_end_date'] ?? null,
+            'frequency' => $data['recur_frequency'],
+            'next'      => $data['recur_start_date'] ?? null,
+        ];
+        if ($formHydrator->populateAndValidate($form, $body_array)) {
+            $this->invrecurringService->saveInvRecurring($invRecurring, $body_array);
+        }
+        return null;
     }
 
     /**

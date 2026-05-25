@@ -248,7 +248,7 @@
     integrity="sha384-NrKB+u6Ts6AtkIhwPixiKTzgSKNblyhlk0Sohlgar9UHUBzai/sgnNNWWd291xqt"
 >
 </script>
-<script>
+<script type="module">
 // ── Palette ─────────────────────────────────────────────────────────────────
 const SUITE_COLOR = {
   di:       '#3b82f6',
@@ -554,37 +554,37 @@ function toggleTheme() {
   document.body.style.background = html.dataset.bsTheme === 'dark' ? '#0d1117' : '#f6f8fa';
 }
 
-(async function boot() {
-  try {
-    const resp = await fetch('../results/history.json?' + Date.now());
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-    historyData = await resp.json();
-  } catch (e) {
-    document.getElementById('spinner').classList.add('d-none');
-    document.getElementById('no-data').classList.remove('d-none');
-    console.warn('Failed to load history.json:', e);
-    return;
-  }
+globalThis.toggleTheme   = toggleTheme;
+globalThis.selectAllRuns = selectAllRuns;
+globalThis.selectLastN   = selectLastN;
+
+try {
+  const resp = await fetch('../results/history.json?' + Date.now());
+  if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+  historyData = await resp.json();
 
   document.getElementById('spinner').classList.add('d-none');
 
   const runs = historyData.runs || [];
   if (!runs.length) {
     document.getElementById('no-data').classList.remove('d-none');
-    return;
+  } else {
+    document.getElementById('dashboard').classList.remove('d-none');
+
+    // Default: all runs active
+    activeRunIds = new Set(runs.map(r => r.id));
+
+    buildRunSelector(runs);
+    buildSuiteToggles();
+    renderSummary();
+    renderCharts();
+    renderTable();
   }
-
-  document.getElementById('dashboard').classList.remove('d-none');
-
-  // Default: all runs active
-  activeRunIds = new Set(runs.map(r => r.id));
-
-  buildRunSelector(runs);
-  buildSuiteToggles();
-  renderSummary();
-  renderCharts();
-  renderTable();
-}());
+} catch (e) {
+  document.getElementById('spinner').classList.add('d-none');
+  document.getElementById('no-data').classList.remove('d-none');
+  console.warn('Failed to load history.json:', e);
+}
 </script>
 </body>
 </html>

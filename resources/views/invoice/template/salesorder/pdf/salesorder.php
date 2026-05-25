@@ -252,16 +252,17 @@ if ($items) {
     }?>
 
         </tbody>
+        <?php $colSpan = $show_item_discounts ? 'colspan="6"' : 'colspan="5"'; ?>
         <tbody class="invoice-sums">
 
         <tr>
             <?php if ($vat === '0') { ?>
-            <td <?php echo $show_item_discounts ? 'colspan="6"' : 'colspan="5"'; ?>
+            <td <?php echo $colSpan; ?>
                     class="text-end"><?= Html::encode(
                         $translator->translate('subtotal'),
                     ) . " (" . Html::encode($translator->translate('price')) . "-" . Html::encode($translator->translate('discount')) . ") x " . Html::encode($translator->translate('qty')); ?></td>
             <?php } else { ?>
-            <td <?php echo $show_item_discounts ? 'colspan="6"' : 'colspan="5"'; ?>
+            <td <?php echo $colSpan; ?>
                     class="text-end"><?= Html::encode(
                         $translator->translate('subtotal'),
                     ); ?></td>
@@ -271,7 +272,7 @@ if ($items) {
 
         <?php if ($so_amount->getItemTaxTotal() > 0) { ?>
             <tr>
-                <td <?php echo $show_item_discounts ? 'colspan="6"' : 'colspan="5"'; ?> class="text-end">
+                <td <?php echo $colSpan; ?> class="text-end">
                     <?= Html::encode($vat === '1' ? $translator->translate('vat.break.down') : $translator->translate('item.tax')); ?>
                 </td>
                 <td class="text-end">
@@ -284,10 +285,7 @@ if ($items) {
         if ($s->getSetting('enable_peppol') == '1') {
             if ($so_amount->getPackhandleshipTotal() != 0.00) { ?>
             <tr>
-                <td <?php
-                    echo($show_item_discounts
-                        ? 'colspan="6"' : 'colspan="5"');
-                    ?> class="text-end">
+                <td <?php echo $colSpan; ?> class="text-end">
                     <?= Html::encode($translator->translate(
                         'allowance.or.charge.shipping.handling.packaging'
                     )); ?>
@@ -302,10 +300,7 @@ if ($items) {
         <?php }
             if ($so_amount->getPackhandleshipTax() != 0.00) { ?>
             <tr>
-                <td <?php
-                    echo($show_item_discounts
-                        ? 'colspan="6"' : 'colspan="5"');
-                    ?> class="text-end">
+                <td <?php echo $colSpan; ?> class="text-end">
                     <?= Html::encode($vat == '1'
                         ? $translator->translate(
                             'allowance.or.charge.shipping.handling.packaging.vat'
@@ -332,7 +327,7 @@ if ($items) {
                          */
                         foreach ($so_tax_rates as $salesorder_tax_rate) : ?>
             <tr>
-                <td <?php echo $show_item_discounts ? 'colspan="6"' : 'colspan="5"'; ?> class="text-end">
+                <td <?php echo $colSpan; ?> class="text-end">
                     <?php echo Html::encode($salesorder_tax_rate->getTaxRate()?->getTaxRateName()) . ' (' . Html::encode($s->formatAmount($salesorder_tax_rate->getTaxRate()?->getTaxRatePercent())) . '%)'; ?>
                 </td>
                 <td class="text-end">
@@ -344,7 +339,7 @@ if ($items) {
         <?php if ($vat == '0') { ?>
         <?php if ($salesorder->getDiscountAmount() !== 0.00) : ?>
             <tr>
-                <td <?php echo $show_item_discounts ? 'colspan="6"' : 'colspan="5"'; ?> class="text-end">
+                <td <?php echo $colSpan; ?> class="text-end">
                     <?= Html::encode($translator->translate('discount')); ?>
                 </td>
                 <td class="text-end">
@@ -354,7 +349,7 @@ if ($items) {
         <?php endif; ?>
         <?php } ?>
         <tr>
-            <td <?php echo $show_item_discounts ? 'colspan="6"' : 'colspan="5"'; ?> class="text-end">
+            <td <?php echo $colSpan; ?> class="text-end">
                 <b><?= Html::encode($translator->translate('total')); ?></b>
             </td>
             <td class="text-end">
