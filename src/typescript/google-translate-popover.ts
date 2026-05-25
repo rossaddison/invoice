@@ -16,7 +16,7 @@ function formatStepContent(raw: string): string {
         const trimmed = line.trim();
         if (!trimmed) continue;
 
-        const stepMatch = trimmed.match(/^---Step--(\d+):\s*(.*)/);
+        const stepMatch = /^---Step--(\d+):\s*(.*)/.exec(trimmed);
         if (stepMatch) {
             if (!inList) {
                 html += '<ol class="mb-1 ps-3 small">';
@@ -40,15 +40,15 @@ function formatStepContent(raw: string): string {
 }
 
 export function initStepPopovers(): void {
-    const bs = (window as any).bootstrap;
+    const bs = (globalThis as any).bootstrap;
     if (!bs?.Popover) return;
 
     document.querySelectorAll<HTMLElement>('[data-popover-steps]').forEach(el => {
         const rawContent = el.dataset.bsContent ?? '';
         // Remove the data attribute so Bootstrap doesn't try to use it as-is
-        el.removeAttribute('data-bs-content');
+        delete el.dataset.bsContent;
         // Remove data-bs-trigger so the JS option below is the sole source of truth
-        el.removeAttribute('data-bs-trigger');
+        delete el.dataset.bsTrigger;
 
         try {
             bs.Popover.getOrCreateInstance(el, {

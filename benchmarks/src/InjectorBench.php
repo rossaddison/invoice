@@ -37,7 +37,7 @@ function injBenchCallableOne(InjBenchDepA $a): string
 
 function injBenchCallableThree(InjBenchDepA $a, InjBenchDepB $b, InjBenchDepC $c): string
 {
-    return $c::class;
+    return $a::class . $b::class . $c::class;
 }
 
 // ── Suite factory ─────────────────────────────────────────────────────────────
@@ -55,7 +55,7 @@ return static function (): array {
     $injectorUncached = new Injector($container);
 
     // Closure with three typed params — avoids function-name lookup overhead.
-    $closureThree = static fn(InjBenchDepA $a, InjBenchDepB $b, InjBenchDepC $c): string => $c::class;
+    $closureThree = static fn(InjBenchDepA $a, InjBenchDepB $b, InjBenchDepC $c): string => $a::class . $b::class . $c::class;
 
     return [
         // ── invoke() with 1 dependency, reflection cached ────────────────

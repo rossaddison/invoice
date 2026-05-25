@@ -92,7 +92,8 @@ return static function (): array {
         // This shows DI bootstrap overhead and is slower by design.
         'benchContainerBuild' => [
             'fn'     => static function () use ($definitions): void {
-                new Container(ContainerConfig::create()->withDefinitions($definitions));
+                $built = new Container(ContainerConfig::create()->withDefinitions($definitions));
+                unset($built);
             },
             'revs'   => 200,
             'warmup' => 2,

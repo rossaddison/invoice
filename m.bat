@@ -63,8 +63,8 @@ echo [4q] Angular: Serve Development                [4r]  Angular: Build Product
 echo [4s] Angular: Generate Component               [4t]  Angular: Lint Check
 echo [5]  Require Checker                           [15]  invoice/quote/truncate2
 echo [25] Performance Benchmarks                    [16]  invoice/salesorder/truncate3
-echo [99] System Info / Diagnostics                 [17]  invoice/nonuserrelated/truncate4
-echo                                                [18]  invoice/userrelated/truncate5
+echo [26] SonarCloud Issues                         [17]  invoice/nonuserrelated/truncate4
+echo [99] System Info / Diagnostics                 [18]  invoice/userrelated/truncate5
 echo                                                [19]  invoice/autoincrementsettooneafter/truncate6
 echo                                                [20]  GitHub CLI: Install
 echo                                                [21]  GitHub CLI: Auth Status
@@ -72,7 +72,7 @@ echo                                                [22]  GitHub CLI: Copilot Ve
 echo                                                [23]  Exit
 echo                                                [24]  Exit to Current Directory
 echo =================================
-set /p choice="Enter your choice [0-25,99]: "
+set /p choice="Enter your choice [0-26,99]: "
 
 REM ======== MENU COMMAND ROUTING ========
 if "%choice%"=="1" goto c01
@@ -149,6 +149,7 @@ if "%choice%"=="22" goto c22
 if "%choice%"=="23" goto c23
 if "%choice%"=="24" goto c24
 if "%choice%"=="25" goto c25
+if "%choice%"=="26" goto c26
 if "%choice%"=="99" goto c99
 echo Invalid choice. Please try again.
 pause
@@ -826,6 +827,98 @@ echo Dashboard running in background window.
 echo Close the "Yii3-i Benchmark Dashboard" window to stop the server.
 pause
 goto c25
+
+:c26
+cls
+echo ======================================================================================
+echo                         SONARCLOUD ISSUES  (Yii3-i)
+echo ======================================================================================
+echo  Project: rossaddison_invoice  /  https://sonarcloud.io
+echo  Token is remembered for the rest of this session.
+echo ======================================================================================
+set /p sonar_token_input="SonarCloud token (press Enter to reuse session token): "
+if not "%sonar_token_input%"=="" set SONAR_TOKEN=%sonar_token_input%
+if "%SONAR_TOKEN%"=="" (
+    echo [ERROR] No token available. Please enter a SonarCloud token.
+    pause
+    goto menu
+)
+
+:sonar_menu
+echo.
+echo  [1]  All open issues
+echo  [2]  Issues on a specific PR
+echo  [3]  Filter by type        (BUG / VULNERABILITY / CODE_SMELL)
+echo  [4]  Filter by severity    (BLOCKER / CRITICAL / MAJOR / MINOR / INFO)
+echo  [5]  Security hotspots
+echo  [6]  Combine type + severity filters
+echo  [0]  Back to Main Menu
+echo.
+set /p sonar_choice="SonarCloud choice [0-6]: "
+
+if "%sonar_choice%"=="0" goto menu
+if "%sonar_choice%"=="1" goto sonar_all
+if "%sonar_choice%"=="2" goto sonar_pr
+if "%sonar_choice%"=="3" goto sonar_type
+if "%sonar_choice%"=="4" goto sonar_severity
+if "%sonar_choice%"=="5" goto sonar_hotspots
+if "%sonar_choice%"=="6" goto sonar_combined
+echo Invalid choice.
+pause
+goto sonar_menu
+
+:sonar_all
+echo.
+echo Fetching all open SonarCloud issues...
+php sonar-issues.php
+pause
+goto sonar_menu
+
+:sonar_pr
+set /p sonar_pr_num="PR number: "
+if "%sonar_pr_num%"=="" (echo No PR number entered.& pause& goto sonar_menu)
+echo.
+echo Fetching SonarCloud issues for PR #%sonar_pr_num%...
+php sonar-issues.php --pr=%sonar_pr_num%
+pause
+goto sonar_menu
+
+:sonar_type
+echo Type options: BUG  VULNERABILITY  CODE_SMELL
+set /p sonar_type_val="Type: "
+if "%sonar_type_val%"=="" (echo No type entered.& pause& goto sonar_menu)
+echo.
+php sonar-issues.php --type=%sonar_type_val%
+pause
+goto sonar_menu
+
+:sonar_severity
+echo Severity options: BLOCKER  CRITICAL  MAJOR  MINOR  INFO
+set /p sonar_sev_val="Severity: "
+if "%sonar_sev_val%"=="" (echo No severity entered.& pause& goto sonar_menu)
+echo.
+php sonar-issues.php --severity=%sonar_sev_val%
+pause
+goto sonar_menu
+
+:sonar_hotspots
+echo.
+echo Fetching SonarCloud security hotspots...
+php sonar-issues.php --hotspots
+pause
+goto sonar_menu
+
+:sonar_combined
+echo Type options: BUG  VULNERABILITY  CODE_SMELL
+set /p sonar_comb_type="Type: "
+if "%sonar_comb_type%"=="" (echo No type entered.& pause& goto sonar_menu)
+echo Severity options: BLOCKER  CRITICAL  MAJOR  MINOR  INFO
+set /p sonar_comb_sev="Severity: "
+if "%sonar_comb_sev%"=="" (echo No severity entered.& pause& goto sonar_menu)
+echo.
+php sonar-issues.php --type=%sonar_comb_type% --severity=%sonar_comb_sev%
+pause
+goto sonar_menu
 
 :c99
 echo .......... VERSIONS - PHP, COMPOSER, NODE, TYPESCRIPT ..........

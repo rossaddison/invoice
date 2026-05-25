@@ -15,7 +15,7 @@ declare(strict_types=1);
  *   php benchmarks/run.php --suite=di # run only one suite (di|injector|router|strings)
  */
 
-require __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 // ── CLI flags ──────────────────────────────────────────────────────────────────
 $dryRun  = in_array('--dry-run', $argv, true);
@@ -161,7 +161,7 @@ if (!empty($errors)) {
 
 if (empty($allResults)) {
     echo "No results to record.\n";
-    exit(count($errors) > 0 ? 1 : 0);
+    exit(!empty($errors) ? 1 : 0);
 }
 
 // ── Append to history.json ─────────────────────────────────────────────────────

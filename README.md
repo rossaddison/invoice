@@ -167,6 +167,10 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 [Sonar Cloud Setup.](docs/SONARCLOUD_SETUP.md) (Nov 2025)
 
+[SonarQube for IDE Setup](docs/SONARQUBE_IDE_SETUP.md) — VS Code Connected Mode setup; Windows startup timeout fix; JVM heap tuning; token generation explained in plain English; connectionId mismatch pitfall; Windows Defender exclusions (May 2026)
+
+[SonarCloud CLI](docs/SONARCLOUD_CLI.md) — `sonar-issues.php` queries the SonarCloud API and prints all 4000+ issues in Psalm-style format with copyable file paths; filters by type, severity, PR, and hotspots; curl-based to bypass WAMP `allow_url_fopen` restriction; composer shortcuts included (May 2026)
+
 [Netbeans ↔️ Vs Code: Sync Guide.](docs/NETBEANS_SYNC_GUIDE.md) (Dec 2025)
  
 [Php Product Selection Workflow.](docs/PHP_PRODUCT_SELECTION_WORKFLOW.md) (Dec 2025)

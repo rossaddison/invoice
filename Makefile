@@ -91,6 +91,13 @@ menu: ## Show the Invoice SYSTEM MENU (Make targets)
 	@echo "make int4              - invoice/nonuserrelated/truncate4"
 	@echo "make iut5              - invoice/userrelated/truncate5"
 	@echo "make iait6             - invoice/autoincrementsettooneafter/truncate6"
+	@echo "make sonar SONAR_TOKEN=xxx               - SonarCloud: All open issues"
+	@echo "make sonar-pr PR=862 SONAR_TOKEN=xxx     - SonarCloud: Issues on a PR"
+	@echo "make sonar-type TYPE=BUG SONAR_TOKEN=xxx - SonarCloud: Filter by type (BUG/VULNERABILITY/CODE_SMELL)"
+	@echo "make sonar-sev SEV=MAJOR SONAR_TOKEN=xxx - SonarCloud: Filter by severity (BLOCKER/CRITICAL/MAJOR/MINOR/INFO)"
+	@echo "make sonar-hot SONAR_TOKEN=xxx           - SonarCloud: Security hotspots"
+	@echo "make sonar-both TYPE=BUG SEV=MAJOR SONAR_TOKEN=xxx - SonarCloud: Type + severity"
+	@echo "(Tip: 'export SONAR_TOKEN=xxx' in your shell once to avoid repeating it)"
 	@echo "make info              - System Info/Diagnostics"
 	@echo ""
 	@echo "make help              - Show summary of commands"
@@ -653,6 +660,73 @@ iait6: ## invoice/autoincrementsettooneafter/truncate6
 endif
 
 #
+# SonarCloud Issues
+#
+
+ifeq ($(PRIMARY_GOAL),sonar)
+sonar: ## SonarCloud: All open issues (export SONAR_TOKEN first, or pass as make var)
+ifndef SONAR_TOKEN
+	$(error Please provide SONAR_TOKEN, e.g. 'make sonar SONAR_TOKEN=your-token' or 'export SONAR_TOKEN=your-token')
+endif
+	SONAR_TOKEN=$(SONAR_TOKEN) php sonar-issues.php
+endif
+
+ifeq ($(PRIMARY_GOAL),sonar-pr)
+sonar-pr: ## SonarCloud: Issues on a specific PR (usage: make sonar-pr PR=862 SONAR_TOKEN=xxx)
+ifndef SONAR_TOKEN
+	$(error Please provide SONAR_TOKEN, e.g. 'make sonar-pr PR=862 SONAR_TOKEN=your-token')
+endif
+ifndef PR
+	$(error Please provide PR, e.g. 'make sonar-pr PR=862 SONAR_TOKEN=your-token')
+endif
+	SONAR_TOKEN=$(SONAR_TOKEN) php sonar-issues.php --pr=$(PR)
+endif
+
+ifeq ($(PRIMARY_GOAL),sonar-type)
+sonar-type: ## SonarCloud: Filter by type (TYPE=BUG|VULNERABILITY|CODE_SMELL)
+ifndef SONAR_TOKEN
+	$(error Please provide SONAR_TOKEN)
+endif
+ifndef TYPE
+	$(error Please provide TYPE=BUG, TYPE=VULNERABILITY, or TYPE=CODE_SMELL)
+endif
+	SONAR_TOKEN=$(SONAR_TOKEN) php sonar-issues.php --type=$(TYPE)
+endif
+
+ifeq ($(PRIMARY_GOAL),sonar-sev)
+sonar-sev: ## SonarCloud: Filter by severity (SEV=BLOCKER|CRITICAL|MAJOR|MINOR|INFO)
+ifndef SONAR_TOKEN
+	$(error Please provide SONAR_TOKEN)
+endif
+ifndef SEV
+	$(error Please provide SEV=BLOCKER, SEV=CRITICAL, SEV=MAJOR, SEV=MINOR, or SEV=INFO)
+endif
+	SONAR_TOKEN=$(SONAR_TOKEN) php sonar-issues.php --severity=$(SEV)
+endif
+
+ifeq ($(PRIMARY_GOAL),sonar-hot)
+sonar-hot: ## SonarCloud: Security hotspots
+ifndef SONAR_TOKEN
+	$(error Please provide SONAR_TOKEN)
+endif
+	SONAR_TOKEN=$(SONAR_TOKEN) php sonar-issues.php --hotspots
+endif
+
+ifeq ($(PRIMARY_GOAL),sonar-both)
+sonar-both: ## SonarCloud: Filter by type + severity (TYPE=... SEV=...)
+ifndef SONAR_TOKEN
+	$(error Please provide SONAR_TOKEN)
+endif
+ifndef TYPE
+	$(error Please provide TYPE=BUG, TYPE=VULNERABILITY, or TYPE=CODE_SMELL)
+endif
+ifndef SEV
+	$(error Please provide SEV=BLOCKER, SEV=CRITICAL, SEV=MAJOR, SEV=MINOR, or SEV=INFO)
+endif
+	SONAR_TOKEN=$(SONAR_TOKEN) php sonar-issues.php --type=$(TYPE) --severity=$(SEV)
+endif
+
+#
 # Diagnostics
 #
 
@@ -706,4 +780,4 @@ pcsr: ## Run PHP CodeSniffer with detailed report
 	php -d memory_limit=1024M vendor/bin/phpcs --standard=phpcs.xml.dist --report=full --report-width=120
 endif
 
-.PHONY: menu help install ext-check ext-json ext-silent p pf pd pc pi cas co cwn ccl cv cda ca cu nu nco nsu nmu nma nes2024 nvm na crc sda ct cta ctp ccf cca cc rdr rmc csd csf sq sf sd sc ss sj sh ghi gha ghc serve ucr uar rl tt ii ist igt iit1 iqt2 ist3 int4 iut5 iait6 info tsb tsd tsw tst tsl tsf nb ai as ab ag al pcs pcsf pcsd pcsr
+.PHONY: menu help install ext-check ext-json ext-silent p pf pd pc pi cas co cwn ccl cv cda ca cu nu nco nsu nmu nma nes2024 nvm na crc sda ct cta ctp ccf cca cc rdr rmc csd csf sq sf sd sc ss sj sh ghi gha ghc serve ucr uar rl tt ii ist igt iit1 iqt2 ist3 int4 iut5 iait6 info tsb tsd tsw tst tsl tsf nb ai as ab ag al pcs pcsf pcsd pcsr sonar sonar-pr sonar-type sonar-sev sonar-hot sonar-both

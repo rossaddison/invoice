@@ -10,26 +10,18 @@ use App\Invoice\BaseController;
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\InvItem\InvItem;
 use App\Infrastructure\Persistence\InvRecurring\InvRecurring;
+use App\Infrastructure\Persistence\UserInv\UserInv;
 // Repositories
 use App\Invoice\Client\ClientRepository as CR;
 use App\Invoice\Group\GroupRepository as GR;
 use App\Invoice\Inv\InvService as IS;
 use App\Invoice\Inv\InvRepository as IR;
-use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
-use App\Invoice\InvItemAmount\InvItemAmountService as IIAS;
 use App\Invoice\InvRecurring\InvRecurringRepository as IRR;
-use App\Invoice\Product\ProductRepository as PR;
 use App\Invoice\ProductClient\ProductClientRepository as PCR;
 use App\Invoice\Setting\SettingRepository as SR;
-use App\Invoice\TaxRate\TaxRateRepository as TRR;
-use App\Invoice\Unit\UnitRepository as UNR;
-use App\Invoice\UserInv\UserInvRepository as UIR;
-use App\Invoice\InvAmount\InvAmountRepository as IAR;
-use App\Invoice\UserClient\UserClientRepository as UCLR;
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\Helpers\Telegram\TelegramHelper;
-use App\User\UserRepository as UR;
 use App\User\UserService;
 use App\Invoice\InvItem\InvItemService;
 use App\Invoice\InvAmount\InvAmountService;
@@ -114,7 +106,7 @@ final class InvRecurringController extends BaseController
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
-     * @param iR $iR
+     * @param IR $iR
      * @return Response
      */
     public function add(
@@ -171,12 +163,8 @@ final class InvRecurringController extends BaseController
      * @param CurrentRoute $currentRoute
      * @param CR $cR
      * @param GR $gR
-     * @param IIAR $iiar
-     * @param IIAS $iias
      * @param PCR $pcR
-     * @param PR $pR
-     * @param TRR $trR
-     * @param UNR $unR
+     * @param InvItemDeps $itemDeps
      * @return Response
      */
     public function createFromProductClient(
@@ -184,12 +172,8 @@ final class InvRecurringController extends BaseController
         CurrentRoute $currentRoute,
         CR $cR,
         GR $gR,
-        IIAR $iiar,
-        IIAS $iias,
         PCR $pcR,
-        PR $pR,
-        TRR $trR,
-        UNR $unR,
+        InvItemDeps $itemDeps,
     ): Response {
         $clientId = (int) $currentRoute->getArgument('client_id');
         $client = $cR->repoClientquery($clientId);
@@ -206,7 +190,6 @@ final class InvRecurringController extends BaseController
                     return $this->webService->getNotFoundResponse();
                 }
 
-                // Create a draft invoice for the client
                 $savedInv = $this->iS->saveInv($user, new Inv(), [
                     'client_id'      => $clientId,
                     'group_id'       => 1,
@@ -215,40 +198,10 @@ final class InvRecurringController extends BaseController
                     'date_supplied'  => (new \DateTimeImmutable())->format('Y-m-d'),
                 ], $this->sR, $gR);
 
-                $invId = (string) $savedInv->reqId();
+                $this->addProductItemsToInv($productClients, (string) $savedInv->reqId(), $itemDeps);
 
-                // Insert one InvItem per associated product
-                foreach ($productClients as $productClient) {
-                    $productId = $productClient->getProductId();
-                    if (null === $productId) {
-                        continue;
-                    }
-                    $product = $pR->repoProductquery($productId);
-                    if (null !== $product) {
-                        $this->invItemService->addInvItemProduct(
-                            new InvItem(),
-                            [
-                                'product_id'      => $product->reqId(),
-                                'tax_rate_id'     => $product->reqTaxRateId(),
-                                'quantity'        => 1.00,
-                                'price'           => $product->getProductPrice() ?? 0.00,
-                                'discount_amount' => 0.00,
-                                'product_unit_id' => $product->reqUnitId(),
-                            ],
-                            $invId,
-                            $pR,
-                            $trR,
-                            $iias,
-                            $iiar,
-                            $this->sR,
-                            $unR,
-                        );
-                    }
-                }
-
-                // Attach a recurring schedule to the new invoice
                 $this->invrecurringService->saveInvRecurring(new InvRecurring(), [
-                    'inv_id'    => (int) $invId,
+                    'inv_id'    => $savedInv->reqId(),
                     'frequency' => $frequency,
                     'start'     => (new \DateTimeImmutable())->format('Y-m-d'),
                 ]);
@@ -274,16 +227,9 @@ final class InvRecurringController extends BaseController
      * @param IRR $irR
      * @param IR $iR
      * @param GR $gR
-     * @param IAR $iaR
-     * @param IIAR $iiar
-     * @param IIAS $iias
      * @param PCR $pcR
-     * @param PR $pR
-     * @param TRR $trR
-     * @param UNR $unR
-     * @param UCLR $uclR
-     * @param UIR $uiR
-     * @param UR $userRepository
+     * @param InvItemDeps $itemDeps
+     * @param InvCronUserDeps $cronDeps
      * @return Response
      */
     public function cron(
@@ -291,16 +237,9 @@ final class InvRecurringController extends BaseController
         IRR $irR,
         IR $iR,
         GR $gR,
-        IAR $iaR,
-        IIAR $iiar,
-        IIAS $iias,
         PCR $pcR,
-        PR $pR,
-        TRR $trR,
-        UNR $unR,
-        UCLR $uclR,
-        UIR $uiR,
-        UR $userRepository,
+        InvItemDeps $itemDeps,
+        InvCronUserDeps $cronDeps,
     ): Response {
         $params = $request->getQueryParams();
         $cronKey = (string) ($params['cron_key'] ?? '');
@@ -308,26 +247,13 @@ final class InvRecurringController extends BaseController
             return $this->factory->createResponse(Json::encode(['success' => false, 'error' => 'Forbidden']));
         }
 
-        $user = $this->userService->getUser();
+        $user = $this->userService->getUser() ?? $this->resolveAdminUser($cronDeps);
         if (null === $user) {
-            // Cron called without a session — find the first admin-type UserInv
-            $adminUserInv = null;
-            /** @var \App\Infrastructure\Persistence\UserInv\UserInv $ui */
-            foreach ($uiR->findAllPreloaded() as $ui) {
-                if ($ui->getType() === 0) {
-                    $adminUserInv = $ui;
-                    break;
-                }
-            }
-            if (null === $adminUserInv) {
-                return $this->factory->createResponse(Json::encode(['success' => false, 'error' => 'No admin user found']));
-            }
-            $user = $userRepository->findById($adminUserInv->reqUserId());
+            return $this->factory->createResponse(Json::encode(['success' => false, 'error' => 'No admin user found']));
         }
 
         $created = 0;
         $reminded = 0;
-        $dateHelper = new DateHelper($this->sR);
         $token = $this->sR->getSetting('telegram_token');
         $telegramEnabled = $this->sR->getSetting('enable_telegram') === '1';
 
@@ -340,11 +266,11 @@ final class InvRecurringController extends BaseController
             }
             $clientId = $baseInv->reqClientId();
 
-            $userClient = $uclR->repoUserquery($clientId);
+            $userClient = $cronDeps->uclR->repoUserquery($clientId);
             if (null === $userClient) {
                 continue;
             }
-            $userInv = $uiR->repoUserInvUserIdquery($userClient->reqUserId());
+            $userInv = $cronDeps->uiR->repoUserInvUserIdquery($userClient->reqUserId());
             if (null === $userInv) {
                 continue;
             }
@@ -360,64 +286,15 @@ final class InvRecurringController extends BaseController
                         'date_created'  => (new \DateTimeImmutable())->format('Y-m-d'),
                         'date_supplied' => (new \DateTimeImmutable())->format('Y-m-d'),
                     ], $this->sR, $gR);
-                    $newInvId = (string) $savedInv->reqId();
-                    foreach ($productClients as $productClient) {
-                        $productId = $productClient->getProductId();
-                        if (null === $productId) {
-                            continue;
-                        }
-                        $product = $pR->repoProductquery($productId);
-                        if (null !== $product) {
-                            $this->invItemService->addInvItemProduct(
-                                new InvItem(),
-                                [
-                                    'product_id'      => $product->reqId(),
-                                    'tax_rate_id'     => $product->reqTaxRateId(),
-                                    'quantity'        => 1.00,
-                                    'price'           => $product->getProductPrice() ?? 0.00,
-                                    'discount_amount' => 0.00,
-                                    'product_unit_id' => $product->reqUnitId(),
-                                ],
-                                $newInvId,
-                                $pR,
-                                $trR,
-                                $iias,
-                                $iiar,
-                                $this->sR,
-                                $unR,
-                            );
-                        }
-                    }
+                    $this->addProductItemsToInv($productClients, (string) $savedInv->reqId(), $itemDeps);
                     ++$created;
                 }
             }
 
-            // Advance the next-due date by the recurring frequency
-            $nextRaw = $invRecurring->getNext();
-            $nextString = match (true) {
-                $nextRaw instanceof \DateTimeImmutable => $nextRaw->format('Y-m-d'),
-                is_string($nextRaw) && $nextRaw !== '' => $nextRaw,
-                default                                => date('Y-m-d'),
-            };
-            $invRecurring->setNext($dateHelper->incrementDateStringToDateTime($nextString, $invRecurring->getFrequency()));
-            $irR->save($invRecurring);
+            $this->advanceRecurringDate($invRecurring, $irR);
 
-            // Send Telegram reminder if the previous invoice still has an outstanding balance
             if ($telegramEnabled && strlen($token) > 1) {
-                $invAmount = $iaR->repoInvquery($prevInvId);
-                $balance = $invAmount?->getBalance() ?? 0.0;
-                if ($balance > 0.0 && $userInv->getConsentTelegramOutstanding()) {
-                    $chatId = $userInv->getTelegramChatId();
-                    if (null !== $chatId && $chatId !== '') {
-                        $telegramHelper = new TelegramHelper($token, $this->_logger);
-                        $telegramHelper->getBotApi()->sendMessage(
-                            $chatId,
-                            'Invoice #' . $prevInvId . ' has an outstanding balance of '
-                                . number_format($balance, 2) . '. Please log in to make a payment.',
-                        );
-                        ++$reminded;
-                    }
-                }
+                $reminded += $this->sendTelegramReminderIfNeeded($prevInvId, $userInv, $cronDeps, $token);
             }
         }
 
@@ -567,44 +444,6 @@ final class InvRecurringController extends BaseController
     }
 
     /**
-     * @param CurrentRoute $currentRoute
-     * @param IRR $invrecurringRepository
-     * @return InvRecurring|null
-     */
-    private function invrecurring(CurrentRoute $currentRoute, IRR $invrecurringRepository): ?InvRecurring
-    {
-        $invrecurring = new InvRecurring();
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $invrecurringRepository->repoInvRecurringquery((int) $id);
-            // InvRecurring/null can be returned here
-        }
-        return $invrecurring;
-    }
-
-    /**
-     * @param IRR $invrecurringRepository
-     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
-     */
-    private function invrecurrings(IRR $invrecurringRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
-    {
-        return $invrecurringRepository->findAllPreloaded();
-    }
-
-    /**
-     * @return Response|true
-     */
-    private function rbac(): bool|Response
-    {
-        $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
-        if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('permission'));
-            return $this->webService->getRedirectResponse('invrecurring/index');
-        }
-        return $canEdit;
-    }
-
-    /**
      * @param Request $request
      * @param IR $iR
      * @return \Psr\Http\Message\ResponseInterface
@@ -662,5 +501,126 @@ final class InvRecurringController extends BaseController
             }
         }
         return $this->webService->getNotFoundResponse();
+    }
+
+    // ── Private helpers ────────────────────────────────────────────────────────
+
+    /**
+     * @param array<int,\App\Infrastructure\Persistence\ProductClient\ProductClient> $productClients
+     */
+    private function addProductItemsToInv(array $productClients, string $invId, InvItemDeps $d): void
+    {
+        foreach ($productClients as $productClient) {
+            $productId = $productClient->getProductId();
+            if (null === $productId) {
+                continue;
+            }
+            $product = $d->pR->repoProductquery($productId);
+            if (null !== $product) {
+                $this->invItemService->addInvItemProduct(
+                    new InvItem(),
+                    [
+                        'product_id'      => $product->reqId(),
+                        'tax_rate_id'     => $product->reqTaxRateId(),
+                        'quantity'        => 1.00,
+                        'price'           => $product->getProductPrice() ?? 0.00,
+                        'discount_amount' => 0.00,
+                        'product_unit_id' => $product->reqUnitId(),
+                    ],
+                    $invId,
+                    $d->pR,
+                    $d->trR,
+                    $d->iias,
+                    $d->iiar,
+                    $this->sR,
+                    $d->unR,
+                );
+            }
+        }
+    }
+
+    private function resolveAdminUser(InvCronUserDeps $d): ?\App\Infrastructure\Persistence\User\User
+    {
+        /** @var UserInv $ui */
+        foreach ($d->uiR->findAllPreloaded() as $ui) {
+            if ($ui->getType() === 0) {
+                return $d->userRepository->findById($ui->reqUserId());
+            }
+        }
+        return null;
+    }
+
+    private function advanceRecurringDate(InvRecurring $invRecurring, IRR $irR): void
+    {
+        $dateHelper = new DateHelper($this->sR);
+        $nextRaw = $invRecurring->getNext();
+        $nextString = match (true) {
+            $nextRaw instanceof \DateTimeImmutable => $nextRaw->format('Y-m-d'),
+            is_string($nextRaw) && $nextRaw !== '' => $nextRaw,
+            default                                => date('Y-m-d'),
+        };
+        $invRecurring->setNext($dateHelper->incrementDateStringToDateTime($nextString, $invRecurring->getFrequency()));
+        $irR->save($invRecurring);
+    }
+
+    private function sendTelegramReminderIfNeeded(
+        int $prevInvId,
+        UserInv $userInv,
+        InvCronUserDeps $d,
+        string $token,
+    ): int {
+        $invAmount = $d->iaR->repoInvquery($prevInvId);
+        $balance = $invAmount?->getBalance() ?? 0.0;
+        if ($balance > 0.0 && $userInv->getConsentTelegramOutstanding()) {
+            $chatId = $userInv->getTelegramChatId();
+            if (null !== $chatId && $chatId !== '') {
+                $telegramHelper = new TelegramHelper($token, $this->_logger);
+                $telegramHelper->getBotApi()->sendMessage(
+                    $chatId,
+                    'Invoice #' . $prevInvId . ' has an outstanding balance of '
+                        . number_format($balance, 2) . '. Please log in to make a payment.',
+                );
+                return 1;
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * @param CurrentRoute $currentRoute
+     * @param IRR $invrecurringRepository
+     * @return InvRecurring|null
+     */
+    private function invrecurring(CurrentRoute $currentRoute, IRR $invrecurringRepository): ?InvRecurring
+    {
+        $invrecurring = new InvRecurring();
+        $id = $currentRoute->getArgument('id');
+        if (null !== $id) {
+            return $invrecurringRepository->repoInvRecurringquery((int) $id);
+            // InvRecurring/null can be returned here
+        }
+        return $invrecurring;
+    }
+
+    /**
+     * @param IRR $invrecurringRepository
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
+     */
+    private function invrecurrings(IRR $invrecurringRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
+    {
+        return $invrecurringRepository->findAllPreloaded();
+    }
+
+    /**
+     * @return Response|true
+     */
+    private function rbac(): bool|Response
+    {
+        $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
+        if (!$canEdit) {
+            $this->flashMessage('warning', $this->translator->translate('permission'));
+            return $this->webService->getRedirectResponse('invrecurring/index');
+        }
+        return $canEdit;
     }
 }

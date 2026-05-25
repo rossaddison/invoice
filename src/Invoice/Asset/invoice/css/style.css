@@ -1,6 +1,11 @@
 @charset "UTF-8";
 /*
 |   =========================================================
+|   Yii3-i Variables
+|   =========================================================
+*/
+/*
+|   =========================================================
 |   Import Bootstrap 5 and local assets
 |   =========================================================
 */
@@ -3420,7 +3425,7 @@ textarea.form-control-lg {
   --bs-dropdown-link-hover-color: rgb(38.25, 38.25, 38.25);
   --bs-dropdown-link-hover-bg: #f5f5f5;
   --bs-dropdown-link-active-color: #fff;
-  --bs-dropdown-link-active-bg: #2C8EDD;
+  --bs-dropdown-link-active-bg: #1565c0;
   --bs-dropdown-link-disabled-color: rgb(119.085, 119.085, 119.085);
   --bs-dropdown-item-padding-x: 1rem;
   --bs-dropdown-item-padding-y: 0.25rem;
@@ -3686,7 +3691,7 @@ textarea.form-control-lg {
   --bs-dropdown-divider-bg: var(--bs-border-color-translucent);
   --bs-dropdown-link-hover-bg: rgba(255, 255, 255, 0.15);
   --bs-dropdown-link-active-color: #fff;
-  --bs-dropdown-link-active-bg: #2C8EDD;
+  --bs-dropdown-link-active-bg: #1565c0;
   --bs-dropdown-link-disabled-color: #adb5bd;
   --bs-dropdown-header-color: #adb5bd;
 }
@@ -12183,7 +12188,7 @@ textarea.form-control-lg {
    */
 }
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
-  background-color: #2C8EDD;
+  background-color: #1565c0;
   color: #fff;
 }
 .select2-container--default .select2-results__option .select2-results__option {
@@ -13563,10 +13568,6 @@ label {
   font-weight: normal;
 }
 
-textarea {
-  resize: vertical;
-}
-
 .discount-field {
   float: right;
   max-width: 40%;
@@ -13677,6 +13678,11 @@ textarea {
   margin-left: 0;
   margin-right: 0;
 }
+.navbar .navbar-nav .fa {
+  font-size: 2.25rem;
+  line-height: 1rem;
+}
+
 .navbar-inner {
   border-radius: 0;
   padding: 0;
@@ -13718,7 +13724,7 @@ textarea {
   color: #fff;
   text-decoration: none;
   outline: 0;
-  background-color: #2C8EDD;
+  background-color: #1565c0;
 }
 .disabled > .dropdown-button, .disabled > .dropdown-button:hover, .disabled > .dropdown-button:focus {
   color: rgb(119.085, 119.085, 119.085);
@@ -13892,7 +13898,6 @@ div.table-content .table-responsive {
 
 #actions {
   margin: 15px 0 0;
-  /* Mimic table appearance */
 }
 #actions div.table {
   display: table;
@@ -13909,22 +13914,13 @@ div.table-content .table-responsive {
 #actions div.table .file-row:nth-child(odd) {
   background: rgba(0, 0, 0, 0.075);
 }
-#actions {
-  /* The total progress gets shown by event listeners */
-}
 #actions #total-progress {
   opacity: 0;
   transition: opacity 0.3s linear;
 }
-#actions {
-  /* Hide the progress bar when finished */
-}
 #actions #previews .file-row.dz-success .progress {
   opacity: 0;
   transition: opacity 0.3s linear;
-}
-#actions {
-  /* Hide the delete button initially */
 }
 #actions #previews .file-row .delete {
   display: none;
@@ -13932,9 +13928,6 @@ div.table-content .table-responsive {
 #actions #previews img {
   width: 80px;
   height: 80px;
-}
-#actions {
-  /* Hide the start and cancel buttons and show the delete button */
 }
 #actions #previews .file-row.dz-success .start,
 #actions #previews .file-row.dz-success .cancel {
@@ -14135,11 +14128,6 @@ div.table-content .table-responsive {
 
 .no-padding {
   padding: 0 !important;
-}
-
-.modal {
-  margin: 30px auto;
-  overflow-y: auto;
 }
 
 .details-box {
