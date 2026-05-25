@@ -40,7 +40,7 @@ jobs:
     steps:
       # ── Checkout ────────────────────────────────────────────────────────────
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           # Full history so `git log` in run.php can read the commit message
           fetch-depth: 5
@@ -48,7 +48,7 @@ jobs:
 
       # ── PHP setup (OPcache JIT matches production tuning) ──────────────────
       - name: Setup PHP ${{ matrix.php }}
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # v2
         with:
           php-version: ${{ matrix.php }}
           extensions: opcache, intl, mbstring, json
@@ -62,7 +62,7 @@ jobs:
 
       # ── Composer ────────────────────────────────────────────────────────────
       - name: Install Composer dependencies
-        uses: ramsey/composer-install@v3
+        uses: ramsey/composer-install@a8d0d959dab41457692a5e2041bd9b757a119e3f # 3.2.1
         with:
           composer-options: '--prefer-dist --no-interaction --no-scripts'
 
@@ -89,7 +89,7 @@ jobs:
       # ── Upload results as CI artifact ────────────────────────────────────
       - name: Upload history.json artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: benchmark-results-php${{ matrix.php }}-${{ github.run_number }}
           path: benchmarks/results/history.json
