@@ -33,6 +33,10 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 [Sonarcloud CLI](docs/SONARCLOUD_CLI.md) — Setup local SonarCloud integration in VS Code (May 2026)
 
+[Sonarcloud Setup](docs/SONARCLOUD_SETUP.md) — Setup local SonarCloud integration (May 2026)
+
+[Sonarqube IDE with m.bat/Makefile](docs/SONARQUBE_IDE_SETUP.md) — Sonarqube IDE Setup (May 2026) 
+
 [SCSS Architecture](docs/SCSS_ARCHITECTURE.md) — two independent SCSS trees (light and dark); full import chain from `_yii3i_variables.scss` through Bootstrap 5 source to `_core.scss` and `_custom_styles.scss`; how Bootstrap `!default` variable overrides work; file roles; when and how to rebuild compiled CSS (May 2026)
 
 [FontAwesome to Bootstrap Icons](docs/FONT_AWESOME_TO_BOOTSTRAP_ICONS.md) — complete removal of FontAwesome from the asset pipeline: ~1.1 MB of font files deleted, dead SCSS rules removed from `_core.scss` and `_welcome.scss`, compiled FA rules removed from `style.css` and `utilities.css`, `$fa-font-path` removed from `_yii3i_variables.scss`; Bootstrap Icons (`bi bi-*`) confirmed as sole icon library; outstanding dark-theme SCSS import noted (May 2026)
