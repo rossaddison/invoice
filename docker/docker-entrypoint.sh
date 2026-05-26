@@ -8,11 +8,9 @@ if [ "${1#-}" != "$1" ]; then
 fi
 set -e
 
-if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'yii' ]; then
-	if [ "$(id -u)" = '0' ]; then
-		setfacl -R -m u:www-data:rwX -m u:"$(whoami)":rwX runtime public
-		setfacl -dR -m u:www-data:rwX -m u:"$(whoami)":rwX runtime public
-	fi
+if { [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'yii' ]; } && [ "$(id -u)" = '0' ]; then
+	setfacl -R -m u:www-data:rwX -m u:"$(whoami)":rwX runtime public
+	setfacl -dR -m u:www-data:rwX -m u:"$(whoami)":rwX runtime public
 fi
 
 exec "$@"
