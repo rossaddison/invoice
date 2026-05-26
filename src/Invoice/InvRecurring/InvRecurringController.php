@@ -320,7 +320,7 @@ final class InvRecurringController extends BaseController
             return $this->factory->createResponse(Json::encode(['success' => 0, 'message' => $this->translator->translate('recurring.no.invoices.selected')]));
         }
         foreach ($keyList as $value) {
-            $error = $this->processRecurringKey((string) $value, $data, $formHydrator, $iR);
+            $error = $this->processRecurringKey($value, $data, $formHydrator, $iR);
             if (null !== $error) {
                 return $error;
             }
@@ -329,7 +329,7 @@ final class InvRecurringController extends BaseController
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param array<array-key, mixed> $data
      */
     private function processRecurringKey(string $value, array $data, FormHydrator $formHydrator, IR $iR): ?\Psr\Http\Message\ResponseInterface
     {
