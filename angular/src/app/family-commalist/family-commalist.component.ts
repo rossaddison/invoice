@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './family-commalist.component.html',
   styleUrl: './family-commalist.component.scss'
 })
-export class FamilyCommalistComponent implements OnInit, OnDestroy {
+export class FamilyCommalistComponent implements OnInit {
   @Input() initialValue: string = '';
   @Output() valueChange = new EventEmitter<string>();
 
@@ -120,8 +120,5 @@ export class FamilyCommalistComponent implements OnInit, OnDestroy {
 
   get selectedNumbersArray(): number[] {
     return Array.from(this.selectedNumbers).sort((a, b) => a - b);
-  }
-  ngOnDestroy(): void {
-    // No subscriptions or timers to clean up
   }
 }

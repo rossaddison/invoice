@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FamilyCommalistComponent } from './family-commalist/family-commalist.component';
 import { InvoiceAmountsComponent } from './invoice-amounts.component';
 import { FlashMessageControlsComponent } from './flash-message-controls/flash-message-controls.component';
@@ -26,7 +26,7 @@ import { FlashMessageControlsComponent } from './flash-message-controls/flash-me
     }
   `]
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit {
   initialValue: string = '';
   private targetTextarea: HTMLTextAreaElement | null = null;
 
@@ -38,10 +38,6 @@ export class AppComponent implements OnInit, OnDestroy {
     if (this.targetTextarea) {
       this.initialValue = this.targetTextarea.value || '';
     }
-  }
-
-  ngOnDestroy() {
-    // Cleanup
   }
 
   onValueChange(newValue: string) {
