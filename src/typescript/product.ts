@@ -10,9 +10,9 @@ declare global {
 type ButtonState = 'loading' | 'success' | 'error';
 
 const BUTTON_ICONS: Record<ButtonState, string> = {
-    loading: 'fa fa-spin fa-spinner',
-    success: 'fa fa-check',
-    error: 'fa fa-times',
+    loading: 'spinner-border spinner-border-sm',
+    success: 'bi bi-check-lg',
+    error: 'bi bi-x-lg',
 };
 
 // Product-specific interfaces
@@ -294,7 +294,7 @@ export class ProductHandler {
     private async handleQuoteConfirm(): Promise<void> {
         const absoluteUrl = new URL(window.location.href);
         const btn = document.querySelector('.select-items-confirm-quote') as HTMLElement;
-        this.setSecureButtonContent(btn, 'h2', 'text-center', 'fa fa-spin fa-spinner');
+        this.setSecureButtonContent(btn, 'h2', 'text-center', 'spinner-border spinner-border-sm');
         
         const productIds: number[] = [];
         const quoteId = (absoluteUrl.pathname.split('/').at(-1) || '').replace(/[^0-9]/g, '');
@@ -323,18 +323,18 @@ export class ProductHandler {
             
             const data = await response.json() as ProductSelectionResponse;
             this.processProducts(data);
-            this.setSecureButtonContent(btn, 'h2', 'text-center', 'fa fa-check');
+            this.setSecureButtonContent(btn, 'h2', 'text-center', 'bi bi-check-lg');
             window.location.reload();
         } catch (error) {
             console.error('Error:', error);
-            this.setSecureButtonContent(btn, 'h2', 'text-center', 'fa fa-times');
+            this.setSecureButtonContent(btn, 'h2', 'text-center', 'bi bi-x-lg');
         }
     }
 
     private async handleInvoiceConfirm(): Promise<void> {
         const absoluteUrl = new URL(window.location.href);
         const btn = document.querySelector('.select-items-confirm-inv') as HTMLElement;
-        this.setSecureButtonContent(btn, 'h2', 'text-center', 'fa fa-spin fa-spinner');
+        this.setSecureButtonContent(btn, 'h2', 'text-center', 'spinner-border spinner-border-sm');
         
         const productIds: number[] = [];
         const invId = absoluteUrl.pathname.split('/').at(-1) || '';
@@ -363,11 +363,11 @@ export class ProductHandler {
             
             const data = await response.json() as ProductSelectionResponse;
             this.processProducts(data);
-            this.setSecureButtonContent(btn, 'h2', 'text-center', 'fa fa-check');
+            this.setSecureButtonContent(btn, 'h2', 'text-center', 'bi bi-check-lg');
             window.location.reload();
         } catch (error) {
             console.error('Error:', error);
-            this.setSecureButtonContent(btn, 'h2', 'text-center', 'fa fa-times');
+            this.setSecureButtonContent(btn, 'h2', 'text-center', 'bi bi-x-lg');
         }
     }
 
@@ -544,7 +544,7 @@ export class ProductHandler {
         const h2 = document.createElement('h2');
         h2.className = 'text-center';
         const i = document.createElement('i');
-        i.className = 'fa fa-spin fa-spinner';
+        i.className = 'spinner-border spinner-border-sm';
         h2.appendChild(i);
         container.appendChild(h2);
     }

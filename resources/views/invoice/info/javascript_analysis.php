@@ -261,7 +261,7 @@ $this->setTitle('JavaScript Analysis - FAQ');
                             <div class="col-md-6">
                                 <div class="card mb-3">
                                     <div class="card-header bg-info text-white">
-                                        <h5><i class="fa bi-file-pdf"></i> PDF Operations</h5>
+                                        <h5><i class="bi bi-file-pdf"></i> PDF Operations</h5>
                                     </div>
                                     <div class="card-body">
                                         <ul>

@@ -1,6 +1,409 @@
 /* =============================================================================
-   InvoicePlane
-   Custom Stylesheet
+   Yii3-i
+   Custom Stylesheet — Bootstrap 5 utility shim for mPDF
 
-   All changes made in this file will override the default styles in PDFs.
+   mPDF supports a CSS 2.1 subset: box model, margins, padding, borders,
+   text properties, floats, basic positioning, tables, and colours.
+   It does NOT support CSS custom properties (var()), flexbox, or CSS Grid.
+
+   This file maps Bootstrap 5 utility class names to mPDF-compatible
+   declarations, so PDF templates can share class names with web views.
    ========================================================================== */
+
+
+/* ===========================================================================
+   TYPOGRAPHY — alignment
+   =========================================================================== */
+
+.text-start   { text-align: left; }
+.text-end     { text-align: right; }
+.text-center  { text-align: center; }
+.text-justify { text-align: justify; }
+
+/* Bootstrap 3 aliases — PDF templates still use these */
+.text-right { text-align: right; }
+.text-left  { text-align: left; }
+
+.text-nowrap   { white-space: nowrap; }
+.text-wrap     { white-space: normal; }
+.text-truncate { overflow: hidden; white-space: nowrap; }
+.text-break    { word-break: break-word; }
+
+
+/* ===========================================================================
+   TYPOGRAPHY — colour
+   =========================================================================== */
+
+.text-primary   { color: #0d6efd; }
+.text-secondary { color: #6c757d; }
+.text-success   { color: #198754; }
+.text-danger    { color: #dc3545; }
+.text-warning   { color: #664d03; }   /* darkened for legibility on white */
+.text-info      { color: #055160; }   /* darkened for legibility on white */
+.text-dark      { color: #212529; }
+.text-light     { color: #6c757d; }   /* re-mapped: #f8f9fa is invisible on white */
+.text-white     { color: #ffffff; }
+.text-muted     { color: #6c757d; }
+.text-black     { color: #000000; }
+.text-body      { color: #212529; }
+
+.text-decoration-none         { text-decoration: none; }
+.text-decoration-underline    { text-decoration: underline; }
+.text-decoration-line-through { text-decoration: line-through; }
+
+
+/* ===========================================================================
+   TYPOGRAPHY — font weight & style
+   =========================================================================== */
+
+.fw-bold     { font-weight: bold; }
+.fw-bolder   { font-weight: bolder; }
+.fw-semibold { font-weight: 600; }
+.fw-normal   { font-weight: normal; }
+.fw-light    { font-weight: 300; }
+.fw-lighter  { font-weight: lighter; }
+
+.fst-italic { font-style: italic; }
+.fst-normal { font-style: normal; }
+
+
+/* ===========================================================================
+   TYPOGRAPHY — font size
+   BS5 scale (2.5rem → 1rem); using pt because mPDF handles pt reliably.
+   Base: 1rem = 12pt (mPDF default body font).
+   =========================================================================== */
+
+.fs-1 { font-size: 30pt; }
+.fs-2 { font-size: 24pt; }
+.fs-3 { font-size: 21pt; }
+.fs-4 { font-size: 18pt; }
+.fs-5 { font-size: 15pt; }
+.fs-6 { font-size: 12pt; }
+
+
+/* ===========================================================================
+   TYPOGRAPHY — line height
+   =========================================================================== */
+
+.lh-1    { line-height: 1; }
+.lh-sm   { line-height: 1.25; }
+.lh-base { line-height: 1.5; }
+.lh-lg   { line-height: 2; }
+
+
+/* ===========================================================================
+   SPACING — margins
+   BS5 spacer scale: 0=0  1=4px  2=8px  3=16px  4=24px  5=48px
+   =========================================================================== */
+
+.m-0 { margin: 0; }
+.m-1 { margin: 4px; }
+.m-2 { margin: 8px; }
+.m-3 { margin: 16px; }
+.m-4 { margin: 24px; }
+.m-5 { margin: 48px; }
+.m-auto { margin: auto; }
+
+.mt-0 { margin-top: 0; }    .mt-1 { margin-top: 4px; }    .mt-2 { margin-top: 8px; }
+.mt-3 { margin-top: 16px; } .mt-4 { margin-top: 24px; }   .mt-5 { margin-top: 48px; }
+
+.mb-0 { margin-bottom: 0; }    .mb-1 { margin-bottom: 4px; }    .mb-2 { margin-bottom: 8px; }
+.mb-3 { margin-bottom: 16px; } .mb-4 { margin-bottom: 24px; }   .mb-5 { margin-bottom: 48px; }
+
+.ms-0 { margin-left: 0; }    .ms-1 { margin-left: 4px; }    .ms-2 { margin-left: 8px; }
+.ms-3 { margin-left: 16px; } .ms-4 { margin-left: 24px; }   .ms-5 { margin-left: 48px; }
+.ms-auto { margin-left: auto; }
+
+.me-0 { margin-right: 0; }    .me-1 { margin-right: 4px; }    .me-2 { margin-right: 8px; }
+.me-3 { margin-right: 16px; } .me-4 { margin-right: 24px; }   .me-5 { margin-right: 48px; }
+.me-auto { margin-right: auto; }
+
+.mx-0 { margin-left: 0;    margin-right: 0; }
+.mx-1 { margin-left: 4px;  margin-right: 4px; }
+.mx-2 { margin-left: 8px;  margin-right: 8px; }
+.mx-3 { margin-left: 16px; margin-right: 16px; }
+.mx-4 { margin-left: 24px; margin-right: 24px; }
+.mx-5 { margin-left: 48px; margin-right: 48px; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+
+.my-0 { margin-top: 0;    margin-bottom: 0; }
+.my-1 { margin-top: 4px;  margin-bottom: 4px; }
+.my-2 { margin-top: 8px;  margin-bottom: 8px; }
+.my-3 { margin-top: 16px; margin-bottom: 16px; }
+.my-4 { margin-top: 24px; margin-bottom: 24px; }
+.my-5 { margin-top: 48px; margin-bottom: 48px; }
+
+
+/* ===========================================================================
+   SPACING — padding
+   =========================================================================== */
+
+.p-0 { padding: 0; }
+.p-1 { padding: 4px; }
+.p-2 { padding: 8px; }
+.p-3 { padding: 16px; }
+.p-4 { padding: 24px; }
+.p-5 { padding: 48px; }
+
+.pt-0 { padding-top: 0; }    .pt-1 { padding-top: 4px; }    .pt-2 { padding-top: 8px; }
+.pt-3 { padding-top: 16px; } .pt-4 { padding-top: 24px; }   .pt-5 { padding-top: 48px; }
+
+.pb-0 { padding-bottom: 0; }    .pb-1 { padding-bottom: 4px; }    .pb-2 { padding-bottom: 8px; }
+.pb-3 { padding-bottom: 16px; } .pb-4 { padding-bottom: 24px; }   .pb-5 { padding-bottom: 48px; }
+
+.ps-0 { padding-left: 0; }    .ps-1 { padding-left: 4px; }    .ps-2 { padding-left: 8px; }
+.ps-3 { padding-left: 16px; } .ps-4 { padding-left: 24px; }   .ps-5 { padding-left: 48px; }
+
+.pe-0 { padding-right: 0; }    .pe-1 { padding-right: 4px; }    .pe-2 { padding-right: 8px; }
+.pe-3 { padding-right: 16px; } .pe-4 { padding-right: 24px; }   .pe-5 { padding-right: 48px; }
+
+.px-0 { padding-left: 0;    padding-right: 0; }
+.px-1 { padding-left: 4px;  padding-right: 4px; }
+.px-2 { padding-left: 8px;  padding-right: 8px; }
+.px-3 { padding-left: 16px; padding-right: 16px; }
+.px-4 { padding-left: 24px; padding-right: 24px; }
+.px-5 { padding-left: 48px; padding-right: 48px; }
+
+.py-0 { padding-top: 0;    padding-bottom: 0; }
+.py-1 { padding-top: 4px;  padding-bottom: 4px; }
+.py-2 { padding-top: 8px;  padding-bottom: 8px; }
+.py-3 { padding-top: 16px; padding-bottom: 16px; }
+.py-4 { padding-top: 24px; padding-bottom: 24px; }
+.py-5 { padding-top: 48px; padding-bottom: 48px; }
+
+
+/* ===========================================================================
+   SIZING
+   =========================================================================== */
+
+.w-25   { width: 25%; }
+.w-50   { width: 50%; }
+.w-75   { width: 75%; }
+.w-100  { width: 100%; }
+.w-auto { width: auto; }
+
+.h-25   { height: 25%; }
+.h-50   { height: 50%; }
+.h-75   { height: 75%; }
+.h-100  { height: 100%; }
+.h-auto { height: auto; }
+
+
+/* ===========================================================================
+   DISPLAY
+   mPDF supports: block, inline, inline-block, none, table, table-cell.
+   d-flex is approximated as block — layout logic won't transfer to PDF.
+   =========================================================================== */
+
+.d-none         { display: none; }
+.d-block        { display: block; }
+.d-inline       { display: inline; }
+.d-inline-block { display: inline-block; }
+.d-table        { display: table; }
+.d-table-cell   { display: table-cell; }
+.d-flex         { display: block; }
+.d-inline-flex  { display: inline-block; }
+
+
+/* ===========================================================================
+   FLOAT & CLEARFIX
+   =========================================================================== */
+
+.float-start { float: left; }
+.float-end   { float: right; }
+.float-none  { float: none; }
+.float-left  { float: left; }   /* BS3 alias */
+.float-right { float: right; }  /* BS3 alias */
+
+.clearfix { overflow: hidden; }
+
+
+/* ===========================================================================
+   BORDERS
+   =========================================================================== */
+
+.border        { border: 1px solid #dee2e6; }
+.border-top    { border-top: 1px solid #dee2e6; }
+.border-bottom { border-bottom: 1px solid #dee2e6; }
+.border-start  { border-left: 1px solid #dee2e6; }
+.border-end    { border-right: 1px solid #dee2e6; }
+.border-0      { border: 0; }
+.border-top-0  { border-top: 0; }
+.border-bottom-0 { border-bottom: 0; }
+
+.border-primary   { border-color: #0d6efd; }
+.border-secondary { border-color: #6c757d; }
+.border-success   { border-color: #198754; }
+.border-danger    { border-color: #dc3545; }
+.border-warning   { border-color: #ffc107; }
+.border-info      { border-color: #0dcaf0; }
+.border-light     { border-color: #dee2e6; }
+.border-dark      { border-color: #212529; }
+.border-white     { border-color: #ffffff; }
+
+.border-1 { border-width: 1px; }
+.border-2 { border-width: 2px; }
+.border-3 { border-width: 3px; }
+.border-4 { border-width: 4px; }
+.border-5 { border-width: 5px; }
+
+
+/* ===========================================================================
+   BORDER RADIUS
+   =========================================================================== */
+
+.rounded        { border-radius: 6px; }
+.rounded-0      { border-radius: 0; }
+.rounded-1      { border-radius: 4px; }
+.rounded-2      { border-radius: 6px; }
+.rounded-3      { border-radius: 8px; }
+.rounded-4      { border-radius: 16px; }
+.rounded-5      { border-radius: 32px; }
+.rounded-circle { border-radius: 50%; }
+.rounded-pill   { border-radius: 800px; }
+
+
+/* ===========================================================================
+   BACKGROUNDS
+   Contextual colours use light tints (not saturated button colours) so they
+   are legible on printed paper.
+   =========================================================================== */
+
+.bg-primary     { background-color: #cfe2ff; color: #052c65; }
+.bg-secondary   { background-color: #e2e3e5; color: #41464b; }
+.bg-success     { background-color: #d1e7dd; color: #0a3622; }
+.bg-danger      { background-color: #f8d7da; color: #58151c; }
+.bg-warning     { background-color: #fff3cd; color: #664d03; }
+.bg-info        { background-color: #cff4fc; color: #055160; }
+.bg-light       { background-color: #f8f9fa; color: #212529; }
+.bg-dark        { background-color: #212529; color: #ffffff; }
+.bg-white       { background-color: #ffffff; color: #212529; }
+.bg-transparent { background-color: transparent; }
+
+
+/* ===========================================================================
+   TABLES
+   =========================================================================== */
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+    font-size: 10pt;
+    color: #212529;
+}
+
+.table th,
+.table td {
+    padding: 8px 10px;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #adb5bd;
+    font-weight: bold;
+    background-color: #f8f9fa;
+    color: #212529;
+}
+
+.table tfoot td {
+    border-top: 2px solid #adb5bd;
+    font-weight: bold;
+}
+
+/* Small table */
+.table-sm th,
+.table-sm td {
+    padding: 4px 6px;
+    font-size: 9pt;
+}
+
+/* Bordered */
+.table-bordered,
+.table-bordered th,
+.table-bordered td {
+    border: 1px solid #dee2e6;
+}
+
+.table-bordered thead th,
+.table-bordered thead td {
+    border-bottom-width: 2px;
+}
+
+/* Borderless */
+.table-borderless th,
+.table-borderless td {
+    border: 0;
+}
+
+/* Hover — not interactive in PDF, but applying a light shade reads well */
+.table-hover tbody tr {
+    background-color: #f5f5f5;
+}
+
+/* Contextual row/cell colours */
+.table-primary   { background-color: #cfe2ff; }
+.table-secondary { background-color: #e2e3e5; }
+.table-success   { background-color: #d1e7dd; }
+.table-danger    { background-color: #f8d7da; }
+.table-warning   { background-color: #fff3cd; }
+.table-info      { background-color: #cff4fc; }
+.table-light     { background-color: #f8f9fa; }
+.table-dark      { background-color: #212529; color: #ffffff; }
+.table-active    { background-color: rgba(0,0,0,.075); }
+
+/* Striped rows — mPDF does not support :nth-child, so add .odd / .even
+   directly to <tr> elements in the template when using table-striped. */
+.table-striped tr.odd  { background-color: rgba(0,0,0,.05); }
+.table-striped tr.even { background-color: #ffffff; }
+
+
+/* ===========================================================================
+   VERTICAL ALIGNMENT
+   =========================================================================== */
+
+.align-top    { vertical-align: top; }
+.align-middle { vertical-align: middle; }
+.align-bottom { vertical-align: bottom; }
+
+
+/* ===========================================================================
+   OVERFLOW & VISIBILITY
+   =========================================================================== */
+
+.overflow-hidden { overflow: hidden; }
+.overflow-auto   { overflow: auto; }
+
+.visible   { visibility: visible; }
+.invisible { visibility: hidden; }
+
+
+/* ===========================================================================
+   POSITION (mPDF has limited support; absolute/fixed work within mpdf context)
+   =========================================================================== */
+
+.position-relative { position: relative; }
+.position-absolute { position: absolute; }
+.position-fixed    { position: fixed; }
+
+
+/* ===========================================================================
+   LEGACY CUSTOM CLASSES
+   Kept for backward compat with existing PDF templates.
+   =========================================================================== */
+
+.no-margin        { margin: 0; }
+.no-padding       { padding: 0; }
+.no-bottom-border { border-bottom: 0; }
+.amount           { text-align: right; }   /* Invoice_Web.php public template */
+.item-amount      { text-align: right; }
+.item-price       { text-align: right; }
+.item-total       { text-align: right; }
+.item-discount    { text-align: right; }
+.invoice-title    { font-size: 18pt; font-weight: bold; margin-bottom: 12px; }
+.invoice-details  { margin-bottom: 16px; }
+
+.page-break { page-break-before: always; }
+.no-break   { page-break-inside: avoid; }

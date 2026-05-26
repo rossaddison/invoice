@@ -10,21 +10,21 @@
 |   - Border radius and shadows
 |
 |   Original sources:
-|   - src/Invoice/Asset/invoice/scss/_ip_variables.scss
+|   - src/Invoice/Asset/invoice/scss/_yii3i_variables.scss
 |   - Various color definitions throughout style.css
 |
 |   TODO: Migrate remaining hard-coded values from existing CSS files
 */
 
 :root {
-  /* Color Palette - From _ip_variables.scss */
+  /* Color Palette - From _yii3i_variables.scss */
   --color-grey: #999999;
   --color-blue: #3A87AD;
   --color-yellow: #F89406;
   --color-green: #468847;
   --color-red: #B94A48;
 
-  /* Status Colors - From _ip_variables.scss */
+  /* Status Colors - From _yii3i_variables.scss */
   --color-status-draft: #999999;
   --color-status-sent: #3A87AD;
   --color-status-viewed: #F89406;
@@ -47,7 +47,7 @@
   --border-light: #eee;
   --border-dark: #333;
 
-  /* Typography - From _ip_variables.scss */
+  /* Typography - From _yii3i_variables.scss */
   --font-family-sans-serif: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-family-serif: Georgia, "Times New Roman", Times, serif;
   --font-family-monospace: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;

@@ -1367,6 +1367,10 @@ return [
                 ->name('invrecurring/view')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvRecurringController::class, 'view']),
+            Route::methods([$mG, $mP], '/invrecurring/create-from-productclient/{client_id}')
+                ->name('invrecurring/create-from-productclient')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([InvRecurringController::class, 'createFromProductClient']),
             Route::get('/invsentlog')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvSentLogController::class, 'index'])
@@ -2120,6 +2124,11 @@ return [
             Route::methods([$mG, $mP], '/telegram/webhook')
                 ->action([TelegramController::class, 'webhook'])
                 ->name('telegram/webhook'),
+            // No auth middleware: called by a scheduled cron job.
+            // Secured by cron_key query parameter matched against the stored setting.
+            Route::get('/invrecurring/cron')
+                ->action([InvRecurringController::class, 'cron'])
+                ->name('invrecurring/cron'),
             Route::get('/telegram/send-invoice/{inv_id:\d+}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([TelegramController::class, 'sendInvoice'])

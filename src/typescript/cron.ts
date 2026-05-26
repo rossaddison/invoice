@@ -9,7 +9,7 @@
  * - Compile to JS via your normal build pipeline (tsc, webpack, etc.).
  * - Include the resulting bundle on pages that contain the button and input:
  *     <button id="btn_generate_cron_key" type="button" class="btn_generate_cron_key btn btn-primary btn-block">
- *         <i class="fa fa-recycle fa-margin"></i>
+ *         <i class="bi bi-arrow-repeat me-1"></i>
  *     </button>
  *
  * - The input the script updates is expected to exist with id exactly "settings[cron_key]":
@@ -46,7 +46,7 @@ function setButtonWorkingState(button: HTMLElement, working: boolean) {
         (button as any).__originalHTML = button.innerHTML;
         button.setAttribute('aria-busy', 'true');
         button.setAttribute('disabled', 'true');
-        button.innerHTML = '<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>';
+        button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
     } else {
         const original = (button as any).__originalHTML;
         if (original) {
@@ -76,22 +76,22 @@ async function handleGenerateClick(button: HTMLElement) {
                 if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
                     await navigator.clipboard.writeText(newKey);
                     // show a success checkmark briefly
-                    button.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
+                    button.innerHTML = '<i class="bi bi-check-lg" aria-hidden="true"></i>';
                 } else {
                     // fallback: select the input text and attempt execCommand (legacy)
                     input.select();
                     const ok = document.execCommand && document.execCommand('copy');
                     if (ok) {
-                        button.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
+                        button.innerHTML = '<i class="bi bi-check-lg" aria-hidden="true"></i>';
                     } else {
                         // keep the spinner for a moment, then restore
-                        button.innerHTML = '<i class="fa fa-recycle fa-margin" aria-hidden="true"></i>';
+                        button.innerHTML = '<i class="bi bi-arrow-repeat me-1" aria-hidden="true"></i>';
                     }
                 }
             } catch (e) {
                 // Clipboard copy failed; leave the key in the field and restore button
                 console.warn('Copy to clipboard failed', e);
-                button.innerHTML = '<i class="fa fa-recycle fa-margin" aria-hidden="true"></i>';
+                button.innerHTML = '<i class="bi bi-arrow-repeat me-1" aria-hidden="true"></i>';
             }
         } else {
             console.warn('Cron key input not found: #settings[cron_key]');

@@ -76,9 +76,7 @@ echo H::openTag('div', $row); //1
            $translator->translate('peppol.enable'),
            'https://www.datypic.com/sc/ubl21/ss.html',
            [
-           'class' => 'text-decoration-none',
-           'data-bs-toggle' => 'tooltip',
-           'title' => ''
+           'class' => 'text-decoration-none'
           ]
           );
          echo H::closeTag('label');

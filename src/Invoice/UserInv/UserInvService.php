@@ -102,6 +102,17 @@ final readonly class UserInvService
         isset($array['listLimit'])
             ? $model->setListLimit((int) $array['listLimit'])
             : '';
+        $model->setConsentPeriodicInvoice(
+            isset($array['consent_periodic_invoice']) && $array['consent_periodic_invoice'] === '1'
+        );
+        $model->setConsentTelegramOutstanding(
+            isset($array['consent_telegram_outstanding']) && $array['consent_telegram_outstanding'] === '1'
+        );
+        $model->setTelegramChatId(
+            isset($array['telegram_chat_id']) && $array['telegram_chat_id'] !== ''
+                ? (string) $array['telegram_chat_id']
+                : null
+        );
         $this->repository->save($model);
     }
 

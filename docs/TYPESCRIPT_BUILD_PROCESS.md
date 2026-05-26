@@ -1,368 +1,334 @@
-# TypeScript Build Process Documentation
-
-This document explains the complete sequence of events to generate the `invoice-typescript-iife.js` file from TypeScript sources in the Invoice application.
+# TypeScript IIFE Bundle — Yii3-i
 
 ## Overview
 
-The Invoice application uses a modern TypeScript-based build system that compiles multiple TypeScript modules into a single, optimized JavaScript IIFE (Immediately Invoked Function Expression) file. This approach provides better maintainability, type safety, and performance compared to loading individual JavaScript files.
-
-## Project Structure
-
-### TypeScript Source Files (`src/typescript/`)
+All client-side TypeScript is compiled by **esbuild** into a single minified IIFE:
 
 ```
-src/typescript/
-├── index.ts          # Main entry point & application initialization
-├── utils.ts          # Utility functions & API helpers
-├── types.ts          # TypeScript type definitions
-├── scripts.ts        # Common UI scripts (tooltips, selects, etc.)
-├── create-credit.ts  # Create credit functionality
-├── quote.ts          # Quote handling & operations
-├── client.ts         # Client management & forms
-├── invoice.ts        # Invoice operations & workflows
-├── product.ts        # Product management + product lookup modals
-├── tasks.ts          # Task lookup functionality
-├── salesorder.ts     # Sales order handling
-├── family.ts         # Family category management
-├── settings.ts       # Settings configuration
-└── cron.ts          # Cron functionality (standalone, not bundled)
+src/Invoice/Asset/rebuild/js/invoice-typescript-iife.js   134.6 KB
+src/Invoice/Asset/rebuild/js/invoice-typescript-iife.min.js   134.6 KB
 ```
 
-### Build Configuration Files
+The bundle is registered in `InvoiceAsset` and loaded once per page. It exposes
+the global `InvoiceApp` object and pins `window.htmx`.
 
-- **`package.json`** - Contains build scripts and dependencies
-- **`tsconfig.json`** - TypeScript compiler configuration
-- **`esbuild`** - Fast JavaScript bundler (used instead of webpack)
-
-## Build Process Sequence
-
-### 1. Entry Point Resolution
-
-**Command Execution:**
-```bash
-npm run build:prod
-# Executes: esbuild src/typescript/index.ts --bundle --outfile=src/Invoice/Asset/rebuild/js/invoice-typescript-iife.js --target=es2020 --format=iife --global-name=InvoiceApp --minify
-```
-
-**Entry Point:** `src/typescript/index.ts`
-
-### 2. Dependency Graph Construction
-
-The build system analyzes `index.ts` and recursively resolves all imports:
-
-```typescript
-// Main imports in index.ts
-import { CreateCreditHandler } from './create-credit.js';
-import { QuoteHandler } from './quote.js';
-import { ClientHandler } from './client.js';
-import { InvoiceHandler } from './invoice.js';
-import { ProductHandler } from './product.js';      // includes product lookups
-import { TaskHandler } from './tasks.js';           // includes task lookups
-import { SalesOrderHandler } from './salesorder.js';
-import { FamilyHandler } from './family.js';
-import { SettingsHandler } from './settings.js';
-import { initTooltips, initSimpleSelects, showFullpageLoader, 
-         hideFullpageLoader, initPasswordMeter } from './scripts.js';
-```
-
-**Dependency Chain:**
-- Each handler imports utilities from `utils.ts`
-- Type definitions are imported from `types.ts`
-- Cross-dependencies are resolved automatically
-
-### 3. Module Resolution & Bundling
-
-**esbuild Process:**
-- Traverses all imports recursively
-- Resolves TypeScript files (`.ts` → `.js` extensions in imports)
-- Bundles all dependencies into a single file
-- Performs tree-shaking to eliminate unused code
-- Resolves circular dependencies
-
-### 4. TypeScript Compilation
-
-**Compilation Settings (tsconfig.json):**
-```json
-{
-  "compilerOptions": {
-    "target": "ES2020",           // Modern JavaScript features
-    "module": "ESNext",           # Latest module system
-    "moduleResolution": "node",   # Node.js-style resolution
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "strict": true,               # Strict type checking
-    "esModuleInterop": true,
-    "skipLibCheck": true
-  }
-}
-```
-
-**Compilation Steps:**
-1. Type checking across all files
-2. Transform TypeScript features to JavaScript
-3. Convert to ES2020 target
-4. Maintain source location mapping
-
-### 5. IIFE Format Generation
-
-**Output Structure:**
-```javascript
-var InvoiceApp = (function() {
-    'use strict';
-    
-    // Bundled utility functions
-    function parsedata(data) { /* ... */ }
-    function getJson(url, params) { /* ... */ }
-    
-    // Handler classes
-    var CreateCreditHandler = class { /* ... */ };
-    var QuoteHandler = class { /* ... */ };
-    var ClientHandler = class { /* ... */ };
-    var InvoiceHandler = class { /* ... */ };
-    var ProductHandler = class { /* ... */ };
-    var TaskHandler = class { /* ... */ };
-    // ... other handlers
-    
-    // Main application class
-    var InvoiceApp = class {
-        constructor() {
-            this._createCreditHandler = new CreateCreditHandler();
-            this._quoteHandler = new QuoteHandler();
-            this._clientHandler = new ClientHandler();
-            this._invoiceHandler = new InvoiceHandler();
-            this._productHandler = new ProductHandler();
-            this._taskHandler = new TaskHandler();
-            // ... initialize all handlers
-            
-            console.log('Invoice TypeScript App initialized with all core handlers');
-        }
-    };
-    
-    // Auto-initialization
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => new InvoiceApp());
-    } else {
-        new InvoiceApp();
-    }
-    
-    return { InvoiceApp: InvoiceApp };
-})();
-```
-
-### 6. Minification (Production Build)
-
-**Production Optimizations:**
-- Code minification and compression
-- Variable name mangling (`longVariableName` → `a`)
-- Dead code elimination
-- Comment removal
-- Whitespace removal
-
-**Development vs Production:**
-- **Development:** `npm run build:dev` - Includes source maps, no minification
-- **Production:** `npm run build:prod` - Minified, optimized for size
-- **Watch Mode:** `npm run build:watch` - Rebuilds on file changes
-
-### 7. Output Generation
-
-**Final Output:**
-- **File:** `src/Invoice/Asset/rebuild/js/invoice-typescript-iife.js`
-- **Current Size:** ~53KB (minified)
-- **Format:** Self-executing function
-- **Global Variable:** `InvoiceApp`
-- **Browser Compatibility:** ES2020+ (modern browsers)
-
-## Integration with PHP Application
-
-### Asset Loading (InvoiceAsset.php)
-
-```php
-public array $js = [
-    // Single TypeScript compiled bundle
-    'rebuild/js/invoice-typescript-iife.js',
-    
-    // Disabled individual JS files (now in TypeScript bundle):
-    //'rebuild/js/quote.js',
-    //'rebuild/js/inv.js',
-    //'rebuild/js/salesorder.js',
-    //'rebuild/js/client.js',
-    //'rebuild/js/family.js',
-    //'rebuild/js/product.js',
-    //'rebuild/js/setting.js',
-    //'rebuild/js/scripts.js',
-    //'rebuild/js/modal-product-lookups.js',
-    //'rebuild/js/modal-task-lookups-inv.js',
-    
-    // Standalone files (not in TypeScript bundle):
-    'rebuild/js/cron.js',                        // Intentionally separate
-    'rebuild/js/emailtemplate.js',               // No TypeScript equivalent
-    'rebuild/js/mailer_ajax_email_addresses.js', // No TypeScript equivalent
-];
-```
-
-### Runtime Initialization
-
-The IIFE executes immediately when the script loads:
-
-1. **Page Load:** Browser loads `invoice-typescript-iife.js`
-2. **IIFE Execution:** Function executes immediately
-3. **DOM Ready Check:** Waits for DOM if still loading
-4. **App Initialization:** Creates `InvoiceApp` instance
-5. **Handler Setup:** All event listeners are bound
-6. **Global Access:** `InvoiceApp` available globally
-
-## Build Commands
-
-### NPM Scripts
+**Rebuild command:**
 
 ```bash
-# Production build (minified)
-npm run build:prod
-
-# Development build (with source maps)
-npm run build:dev
-
-# Watch mode (rebuilds on file changes)
-npm run build:watch
-
-# Type checking only (no compilation)
-npm run type-check
-
-# Linting
-npm run lint
-
-# Formatting
-npm run format
+npm run build:typescript
 ```
 
-### Menu System Integration
-
-**Makefile Commands:**
-```bash
-make tsb    # TypeScript Build (Production)
-make tsd    # TypeScript Development Build  
-make tsw    # TypeScript Watch Mode
-make tst    # TypeScript Type Check
-make tsl    # TypeScript Lint
-make tsf    # TypeScript Format
-```
-
-**Windows Batch (m.bat) Commands:**
-```
-[4d] TypeScript Build (Production)
-[4e] TypeScript Development Build
-[4f] TypeScript Watch Mode  
-[4g] TypeScript Type Check
-[4h] TypeScript Lint
-[4i] TypeScript Format
-```
-
-## Functionality Included in Bundle
-
-### Core Handlers
-- **Quote Handler:** Quote creation, editing, PDF generation, email sending
-- **Invoice Handler:** Invoice operations, payments, status management
-- **Client Handler:** Client management, notes, form handling
-- **Product Handler:** Product management + product lookup modals
-- **Task Handler:** Task lookup functionality for invoices
-- **Sales Order Handler:** Sales order operations and conversions
-- **Family Handler:** Product family/category management
-- **Settings Handler:** Application configuration
-- **Create Credit Handler:** Credit note functionality
-
-### Modal Functionality
-- **Product Lookups:** Select products for quotes/invoices
-- **Task Lookups:** Select tasks for invoices
-- **Form Handling:** Secure form submission and validation
-- **AJAX Operations:** API communication with backend
-
-### UI Components
-- **Tooltips:** Bootstrap tooltip initialization
-- **Select Components:** TomSelect initialization
-- **Password Meter:** Password strength validation
-- **Fullpage Loader:** Loading state management
-
-## Excluded Functionality
-
-### Standalone Files (Not in Bundle)
-- **Cron (`cron.js`):** Cron key generation (intentionally separate)
-- **Email Templates (`emailtemplate.js`):** Email template functionality
-- **Mailer AJAX (`mailer_ajax_email_addresses.js`):** Email address handling
-
-### TypeScript Files Not Bundled
-- **`cron.ts`:** Exists but not imported (standalone JS version used)
-
-## Development Workflow
-
-### Making Changes
-
-1. **Edit TypeScript Files:** Modify files in `src/typescript/`
-2. **Type Check:** Run `npm run type-check` to verify types
-3. **Build:** Run `npm run build:prod` to generate new bundle
-4. **Test:** Verify functionality in browser
-5. **Deploy:** The generated IIFE file is ready for production
-
-### Debugging
-
-1. **Development Build:** Use `npm run build:dev` for source maps
-2. **Watch Mode:** Use `npm run build:watch` for automatic rebuilds
-3. **Browser DevTools:** Source maps allow debugging original TypeScript
-4. **Console Logging:** All handlers log initialization messages
-
-## Performance Benefits
-
-### Before (Individual Files)
-- **Files:** 10+ separate JavaScript files
-- **HTTP Requests:** Multiple requests per page
-- **Caching:** Individual file caching
-- **Load Time:** Slower due to multiple requests
-
-### After (Single IIFE Bundle)
-- **Files:** 1 optimized JavaScript file
-- **HTTP Requests:** Single request
-- **Caching:** Single file caching
-- **Load Time:** Faster initial load
-- **Size:** ~53KB minified (tree-shaken)
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Build Errors:** Check TypeScript syntax and imports
-2. **Missing Functionality:** Verify handler is imported in `index.ts`
-3. **Runtime Errors:** Check browser console for initialization issues
-4. **Type Errors:** Run `npm run type-check` before building
-
-### Build Diagnostics
-
-```bash
-# Check build output size and timing
-npm run build:prod
-
-# Verify TypeScript compilation
-npm run type-check
-
-# Check for linting issues
-npm run lint
-
-# View file timestamps
-Get-Item "src\Invoice\Asset\rebuild\js\invoice-typescript-iife.js" | Select-Object Name, Length, LastWriteTime
-```
-
-## Future Enhancements
-
-### Planned Improvements
-- **Code Splitting:** Split bundle for better caching
-- **Lazy Loading:** Load handlers on demand
-- **Source Maps:** Production source maps for debugging
-
-### Migration Path
-- **Cron Integration:** Consider moving `cron.js` to TypeScript bundle
-- **Email Templates:** Migrate `emailtemplate.js` to TypeScript
-- **Additional Modals:** Add more modal functionality to TypeScript
+**Build target:** ES2024 · **Format:** IIFE · **Global:** `InvoiceApp`
 
 ---
 
-**Last Updated:** November 5, 2025  
-**Bundle Version:** invoice-typescript-iife.js (53KB)  
-**TypeScript Version:** 5.9.3  
-**Build Tool:** esbuild 0.25.0
+## Entry Point — `index.ts`
+
+`InvoiceApp` class instantiated immediately on DOM-ready. Constructor:
+
+| Step | What happens |
+|------|-------------|
+| Instantiates all handler classes | Keeps references so event listeners stay active |
+| `initializeTooltips()` | Calls `bootstrap.Tooltip.getOrCreateInstance()` on every `[data-bs-toggle="tooltip"]` element |
+| `initializeTaggableFocus()` | Global `focus` listener that stores the last `.taggable` element in `window.lastTaggableClicked` |
+| `initializeFullpageLoader()` | Wires `.ajax-loader` → `showFullpageLoader()` and `.fullpage-loader-close` → `hideFullpageLoader()` |
+| `initTooltips()` / `initSimpleSelects()` / `initPasswordMeter()` | Re-runs the `scripts.ts` helpers to catch elements added after initial render |
+
+After `InvoiceApp` is created, these standalone init functions run:
+`initStripePayment`, `initAmazonPayment`, `initBraintreePayment`,
+`initTelegramProviderPopup`, `initStreetOrder`, `initStepPopovers`.
+
+---
+
+## Module Reference
+
+### `htmx.ts`
+Imports htmx 2.x from the npm package and assigns it to `window.htmx` so that
+inline `hx-on::` event handlers in PHP views can reach it.
+
+---
+
+### `utils.ts` — Shared helpers
+
+| Function | Purpose |
+|----------|---------|
+| `parsedata(data)` | Safe JSON parser — accepts string, object, or anything; always returns an object. Used by every handler to normalise fetch responses. |
+| `getJson(url, params?, options?)` | HTTP GET via `fetch`. Arrays in `params` are serialised as `key[]=v1&key[]=v2` to match PHP's `$_GET` array parsing. Throws on non-2xx. |
+| `closestSafe(element, selector)` | `element.closest(selector)` with a manual parent-walk fallback for edge cases. |
+| `getElementById(id)` | Typed wrapper for `document.getElementById`. |
+| `querySelector(selector)` | Typed wrapper for `document.querySelector`. |
+| `querySelectorAll(selector)` | Typed wrapper for `document.querySelectorAll`. |
+| `getInputValue(id)` | Gets `.value` from a form input by id; returns `''` if not found. |
+| `processBatchWithProgress(items, processor, options)` | ES2024 `Promise.withResolvers`-based batch processor. Runs `processor` on items in configurable batches with per-item timeout, exponential-backoff retry, and an `onProgress` callback. |
+
+---
+
+### `scripts.ts` — Global UI utilities
+
+| Function | Purpose |
+|----------|---------|
+| `initTooltips()` | Initialises Bootstrap 5 tooltips on all `[data-bs-toggle="tooltip"]` elements. Guards against missing `window.bootstrap`. |
+| `initSimpleSelects(root?)` | Wraps every `.simple-select` element with TomSelect. Skips elements already initialised (`_tomselect` flag). Accepts an optional root to scope the search. |
+| `showFullpageLoader()` | Shows `#fullpage-loader`, adds `.icon-spin` to `#loader-icon` (`bi bi-gear-fill`), hides the error panel. After 10 s reveals `#loader-error` and marks the icon `.text-danger`. |
+| `hideFullpageLoader()` | Hides `#fullpage-loader`, resets icon state. |
+| `initPasswordMeter()` | Binds `input` on `.passwordmeter-input`; scores strength 0–5 (length, lower, upper, digit, special); shows `.passmeter-2` at ≥ 3 and `.passmeter-3` at ≥ 4. |
+| `calculatePasswordStrength(password)` | Internal scorer used by `initPasswordMeter`. Returns 0–5. |
+| `initializeScripts()` | Auto-init wrapper called on module load; wires DOM-ready listeners. |
+
+> **Icon note:** `.icon-spin` is defined in `overrides.css` (`@keyframes icon-spin`). It
+> replaced the removed FontAwesome `fa-spin` class.
+
+---
+
+### `settings.ts` — `SettingsHandler`
+
+Handles the Settings page form.
+
+| Method | Purpose |
+|--------|---------|
+| `toggleSmtpSettings()` | Shows `#div-smtp-settings` when `#email_send_method` is `'smtp'`; hides it otherwise. |
+| `handleFphGenerateClick()` | Async. Collects device fingerprint metrics (`userAgent`, `screen.width/height`, `devicePixelRatio`, `colorDepth`, `innerWidth/Height`) → GET `/setting/fphgenerate` → populates all `settings[fph_*]` input fields. |
+| `updateSettingField(fieldId, value?)` | Sets `element.value` for a settings input by id. |
+| `handleSettingsSubmitClick()` | Before submitting the settings form, temporarily sets all `.tab-pane` to `display:block` and enables disabled inputs so hidden-tab fields are included in the POST. Uses ES2024 `Array.toReversed()`. |
+| `restoreFormState(tabPanes)` | Reverses the display/disabled changes made by `handleSettingsSubmitClick`. |
+| `handleOnlinePaymentSelectChange()` | Reads `#online-payment-select` value; hides all `.gateway-settings`, then reveals `#gateway-settings-{driver}`. |
+
+---
+
+### `invoice.ts` — `InvoiceHandler`
+
+Handles all operations on the invoice view page via a single delegated `click`
+listener.
+
+| Method | Trigger | Purpose |
+|--------|---------|---------|
+| `setButtonLoading(btn, isLoading, original?)` | Internal helper | Shows Bootstrap spinner on load; restores `original` HTML or a `bi-check-lg` on completion. |
+| `handleMarkAsSent()` | `#btn-mark-as-sent` | GET `/inv/markAsSent` → updates status; reloads on success. |
+| `handleInvToInvConfirm()` | `.inv_to_inv_confirm` | GET `/inv/inv_to_inv_confirm` with `inv_id`, `client_id`, `user_id` → navigates to new invoice on success. |
+| `handleDeleteItem()` | `.btn_delete_item` | Deletes an invoice line item via fetch. |
+| `handleEmailSend()` | email send button | Sends invoice email via fetch. |
+| `handleAllClientsCheck()` | `#user_all_clients` | Fetches and populates clients dropdown based on "all clients" toggle. |
+| `handleSelectAllCheckboxes(checked)` | `[name="checkbox-selection-all"]` | Checks/unchecks all product/task selection checkboxes. |
+| `initializeAllClientsCheck()` | Constructor | Runs initial all-clients state check on page load. |
+
+---
+
+### `quote.ts` — `QuoteHandler`
+
+Mirrors `InvoiceHandler` for the quote view. Delegated `click` listener.
+
+| Method | Trigger | Purpose |
+|--------|---------|---------|
+| `setButtonLoading(btn, isLoading, original?)` | Internal helper | Bootstrap spinner / `bi-check-lg` restore. |
+| `handleQuoteConfirm()` | `.select-items-confirm-quote` | Collects checked product IDs → GET `/quoteitem/addProduct` → adds products to quote. |
+| `handleDeleteMultiple()` | delete-multiple button | Deletes multiple selected items. |
+| `handleDeleteItem()` | `.btn_delete_item` | Deletes a single quote line item. |
+| `handleEmailSend()` | email send button | Sends quote email. |
+| Additional workflow methods | Various buttons | Copy, convert-to-invoice, PDF generation. |
+
+---
+
+### `client.ts` — `ClientHandler`
+
+Manages client-related actions including note management and form flows.
+
+| Function / Method | Purpose |
+|-------------------|---------|
+| `createSecureUIElement(type, className, iconClass)` | Creates `<type class="className"><i class="iconClass"></i></type>` via DOM APIs (no `innerHTML`) to avoid XSS. |
+| `setButtonLoading(btn, isLoading, original?)` | Uses `createSecureUIElement` with `'spinner-border spinner-border-sm'` or `'bi bi-check-lg'`. |
+| `setSecureButtonContent(btn, type, className, iconClass)` | Clears `btn` text and appends a secure UI element. |
+| `handleDeleteClientNote()` | Async. DELETE to `/client/deleteClientNote` with `note_id`; removes the `.panel` from DOM on success. |
+| `handleClientFormSubmit()` | Intercepts specific client form submissions; delegates to fetch. |
+| Various RBAC/assignment handlers | Handles client-to-user assignment workflows. |
+
+---
+
+### `product.ts` — `ProductHandler`
+
+Manages product lookup modals and product-related actions.
+
+| Item | Purpose |
+|------|---------|
+| `BUTTON_ICONS` | Constant map: `loading → 'spinner-border spinner-border-sm'`, `success → 'bi bi-check-lg'`, `error → 'bi bi-x-lg'`. |
+| `setSecureButtonContent(btn, type, className, iconClass)` | Shared safe DOM builder. |
+| `handleQuoteConfirm()` | Collects selected product IDs → posts to `/quoteitem/addProduct`. |
+| `handleProductSearch()` | Searches products by SKU/name via fetch; populates results table. |
+| `handleProductSelect()` | Adds a selected product from the lookup modal into the active form. |
+| `handleInvoiceProductAdd()` | Adds a product directly to an invoice line. |
+
+---
+
+### `create-credit.ts` — `CreateCreditHandler`
+
+| Method | Purpose |
+|--------|---------|
+| `processCreateCredit()` | Async. Shows spinner; collects `inv_id`, `client_id`, `inv_date_created`, `group_id`, `password`, `user_id` from form → GET `/inv/createCreditConfirm` → shows `bi-check2-square` on success or `bi-x-lg` on failure; reloads page. |
+
+---
+
+### `salesorder.ts` — `SalesOrderHandler`
+
+| Method | Trigger | Purpose |
+|--------|---------|---------|
+| `handleSoToInvoiceConversion()` | `.so_to_invoice_confirm` | Async. Shows Bootstrap spinner; collects `so_id`, `client_id`, `group_id`, `password` → GET `/salesorder/soToInvoiceConfirm` → navigates to the new invoice URL on success, shows `bi-check-lg` on partial success. |
+| Additional order methods | Various buttons | Status updates, PDF, email actions on the sales order view. |
+
+---
+
+### `tasks.ts` — `TaskHandler`
+
+| Method | Purpose |
+|--------|---------|
+| `selectTasksForEntity()` | Async. Sorts checked task IDs (`Array.toSorted` — ES2024); shows spinner on the confirm button; GET `/task/selection_inv` or `/task/selection_quote` with `task_ids[]` and entity id → calls `processTasks()` → shows `bi-check-lg`; reloads. |
+| `processTasks(tasks)` | Processes the server response and updates the task table rows. |
+
+---
+
+### `family.ts` — `FamilyHandler`
+
+| Method | Purpose |
+|--------|---------|
+| `getFamilyDataFromCheckedBoxes()` | Reads all checked family checkboxes and returns `{ family_id }` array. |
+| `handleGenerateBatchProducts()` | Async. Shows spinner; collects family IDs, `tax_rate_id`, `unit_id`, CSRF token → POST `/family/generateProducts` (URL-encoded, `family_ids[]` repeated keys) → calls `handleGenerationSuccess`. |
+| `handleGenerationSuccess(data, btn)` | Shows `bi-check-lg` on the button; alerts with count of generated products; closes the generate-products modal. |
+
+---
+
+### `cron.ts` — Standalone (NOT in the main bundle)
+
+`cron.ts` is compiled separately and not imported by `index.ts`. It is used as a
+standalone script on the settings page.
+
+| Function | Purpose |
+|----------|---------|
+| `generateSecureHex(bytes)` | Generates a cryptographically random hex string of `bytes` length using `crypto.getRandomValues()`. |
+| `escapeIdForQuerySelector(id)` | Escapes CSS selector special characters using `CSS.escape` with a bracket-escape fallback, so ids containing `[` and `]` (e.g. `settings[cron_key]`) can be used in `querySelector`. |
+| `setButtonWorkingState(button, working)` | Stores original `innerHTML` in `button.__originalHTML`, sets `aria-busy`, shows Bootstrap spinner; restores on `working=false`. |
+| `handleGenerateClick(button)` | Async. Generates a 48-char hex key → sets `settings[cron_key]` input value → tries `navigator.clipboard.writeText()` → shows `bi-check-lg` on copy success, `bi-arrow-repeat` on fallback or error. |
+| `initGenerateCronKey()` | Attaches a `click` handler to `#btn_generate_cron_key`. Guards against double-binding. |
+
+---
+
+### Payment modules
+
+| Module | Init function | Purpose |
+|--------|--------------|---------|
+| `payment-stripe.ts` | `initStripePayment()` | Reads `data-*` config from `#stripe-payment-config`; initialises Stripe.js v3 Elements and wires the payment form. |
+| `payment-amazon.ts` | `initAmazonPayment()` | Reads config from hidden div; initialises the Amazon Pay button SDK. |
+| `payment-braintree.ts` | `initBraintreePayment()` | Reads config from hidden div; initialises Braintree Drop-in UI. |
+
+All three are no-ops if their config element is absent — safe to include on all pages.
+
+---
+
+### `telegram-providers.ts`
+
+| Function | Purpose |
+|----------|---------|
+| `initTelegramProviderPopup()` | Moves `#telegram-providers` modal to `document.body` so Bootstrap can render it correctly when the triggering element sits inside an `overflow:hidden` ancestor (e.g. a tab pane). |
+
+---
+
+### `family-street-order.ts`
+
+| Function | Purpose |
+|----------|---------|
+| `collectIds(list)` | Returns ordered array of `data-id` integers from `li[data-id]` children. |
+| `refreshPositionBadges(list)` | Renumbers `.street-position` badge text to match the current DOM order. |
+| `setStatus(el, message, type)` | Updates a status `<div>` with `alert-{type}` class and message text. |
+| `initStreetOrder()` | Wires native HTML5 drag-and-drop (`dragstart`, `dragover`, `drop`) on `#street-order-list`; on drop, POSTs the new id order to `data-reorder-url` and calls `refreshPositionBadges`. |
+
+---
+
+### `google-translate-popover.ts`
+
+| Function | Purpose |
+|----------|---------|
+| `formatStepContent(raw)` | Converts `---Step--N: description` lines (as stored in `data-bs-content`) into a Bootstrap `<ol class="mb-1 ps-3 small">` HTML string. |
+| `initStepPopovers()` | Initialises Bootstrap popovers on every `[data-popover-steps]` element, passing the formatted HTML as the popover body. |
+
+---
+
+### `family-commalist-picker.ts`
+
+Auto-initialised on import. Wires the comma-list picker widget that lets users
+select family members and build a comma-separated value string in an input field.
+Used on the family edit view.
+
+---
+
+## Icons Used in the Bundle
+
+All dynamic icons are Bootstrap Icons (`bi bi-*`). FontAwesome has been fully
+removed. Spinner states use Bootstrap 5's native `.spinner-border` component.
+
+| State | Class / element |
+|-------|----------------|
+| Loading / working | `<span class="spinner-border spinner-border-sm" role="status"></span>` |
+| Success | `<i class="bi bi-check-lg"></i>` |
+| Error / cancel | `<i class="bi bi-x-lg"></i>` |
+| Gear (fullpage loader) | `<i class="bi bi-gear-fill icon-spin"></i>` — animated via `@keyframes icon-spin` in `overrides.css` |
+| Recycle / refresh | `<i class="bi bi-arrow-repeat me-1"></i>` |
+
+---
+
+## Build Commands
+
+```bash
+# Production build (minified, ES2024 target)
+npm run build:typescript
+
+# TypeScript type check only
+npm run type-check
+
+# Lint
+npm run lint
+```
+
+**Output path:** `src/Invoice/Asset/rebuild/js/invoice-typescript-iife.js`
+
+After rebuilding, copy the updated bundle to the published assets directory so
+the browser receives the new file:
+
+```
+src/Invoice/Asset/rebuild/js/invoice-typescript-iife.js
+  →  public/assets/<hash>/rebuild/js/invoice-typescript-iife.js
+```
+
+The `<hash>` folder is stable between builds — check `public/assets/` for the
+existing folder name (e.g. `7246626a`).
+
+---
+
+## Source File Index
+
+| File | Bundled | Purpose |
+|------|---------|---------|
+| `index.ts` | ✓ | Entry point; `InvoiceApp` class |
+| `utils.ts` | ✓ | Shared fetch/DOM helpers |
+| `types.ts` | ✓ | TypeScript type definitions |
+| `scripts.ts` | ✓ | Tooltip, TomSelect, loader, password meter |
+| `htmx.ts` | ✓ | Bundles htmx 2.x; pins `window.htmx` |
+| `invoice.ts` | ✓ | `InvoiceHandler` |
+| `quote.ts` | ✓ | `QuoteHandler` |
+| `client.ts` | ✓ | `ClientHandler` |
+| `product.ts` | ✓ | `ProductHandler` |
+| `tasks.ts` | ✓ | `TaskHandler` |
+| `salesorder.ts` | ✓ | `SalesOrderHandler` |
+| `family.ts` | ✓ | `FamilyHandler` |
+| `settings.ts` | ✓ | `SettingsHandler` |
+| `create-credit.ts` | ✓ | `CreateCreditHandler` |
+| `payment-stripe.ts` | ✓ | Stripe Elements init |
+| `payment-amazon.ts` | ✓ | Amazon Pay init |
+| `payment-braintree.ts` | ✓ | Braintree Drop-in init |
+| `telegram-providers.ts` | ✓ | Modal DOM relocation |
+| `family-street-order.ts` | ✓ | Drag-and-drop street reorder |
+| `google-translate-popover.ts` | ✓ | Bootstrap popover step formatting |
+| `family-commalist-picker.ts` | ✓ | Comma-list picker widget |
+| `cron.ts` | ✗ | Standalone; loaded separately on settings page |
+| `mobile-preview.ts` | ✗ | Dead code; mobile preview is inline in view files |
+| `page-size.ts` | ✗ | Superseded by `PageSizeHandler` in navbar |
+
+---
+
+*Last updated: May 2026 — bundle 134.6 KB, esbuild ES2024 target, Bootstrap Icons, no FontAwesome*

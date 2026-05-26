@@ -31,9 +31,19 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 **Recent Implementations**
 
+[SCSS Architecture](docs/SCSS_ARCHITECTURE.md) — two independent SCSS trees (light and dark); full import chain from `_yii3i_variables.scss` through Bootstrap 5 source to `_core.scss` and `_custom_styles.scss`; how Bootstrap `!default` variable overrides work; file roles; when and how to rebuild compiled CSS (May 2026)
+
+[FontAwesome to Bootstrap Icons](docs/FONT_AWESOME_TO_BOOTSTRAP_ICONS.md) — complete removal of FontAwesome from the asset pipeline: ~1.1 MB of font files deleted, dead SCSS rules removed from `_core.scss` and `_welcome.scss`, compiled FA rules removed from `style.css` and `utilities.css`, `$fa-font-path` removed from `_yii3i_variables.scss`; Bootstrap Icons (`bi bi-*`) confirmed as sole icon library; outstanding dark-theme SCSS import noted (May 2026)
+
+[CSS Variables Reorganization](docs/CSS_VARIABLES_REORGANIZATION.md) — plan to break monolithic `style.css` into six purpose-specific files (`variables.css`, `base.css`, `layout.css`, `components.css`, `utilities.css`, `overrides.css`); current live vs. planning-stage status; remaining migration items; original source line-range mapping (May 2026)
+
+[PDF Bootstrap 5 Shim](docs/PDF_BOOTSTRAP5_SHIM.md) — `custom-pdf.css` Bootstrap 5 utility shim for mPDF replacing `kv-mpdf-bootstrap.min.css`; full BS5 class inventory (typography, spacing, tables, colour, borders); `templates.css` fixed (`clearfix::after` removed, `:nth-child` → `.odd`/`.even`, `th.text-end`); all five PDF templates updated (`text-end`, `m-0`, `item-table`, visible `<thead>`, odd/even row shading); watermark src bug fixed in `overdue.php`; stray `}` removed from `quote.php` and `salesorder.php` (May 2026)
+
 [Lighthouse Performance Audit](docs/LIGHTHOUSE_CHROME.md) — How to run a Lighthouse audit from Chrome DevTools or the CLI against an authenticated page; performance score 68 → 95 via Apache compression modules, asset deduplication, CSS deferral, Amazon Pay JS conditionalisation, image resizing, and N+1 settings-query fix (May 2026)
 
 [Bootstrap 3 CSS Removal](docs/BOOTSTRAP3_CSS_REMOVAL.md) — incremental removal of InvoicePlane's legacy Bootstrap 3 styles from `style.css` (custom section reduced 32 %, 966 → 653 lines); 484 `form-group` → `mb-3`, 23 `dropdown-button` → `dropdown-item`, 12 `input-sm` → `form-control-sm` replacements across 120 view files; SonarCloud duplicate-selector warnings eliminated by excluding `src/Invoice/Asset/**`; `.table { font-size: 0.25rem }` bug fix (4 px invisible text); `body *:focus { outline: none !important }` removed (WCAG 2.1 accessibility) (May 2026)
+
+[Bootstrap 3 → Bootstrap 5 Migration Guide](docs/BS3_TO_BS5_MIGRATION_GUIDE.md) — PHP-community field guide documenting 16 categories of migration difficulty: class renames (grid, typography, buttons, forms, panels→cards, navbar, labels→badges, tables), data-attribute prefix change (`data-` → `data-bs-`), JS API (`$(el).modal()` → `bootstrap.Modal.getOrCreateInstance(el)`), mPDF CSS 2.1 limitations (no `var()`, no flexbox, no `:nth-child`), FontAwesome → Bootstrap Icons, Yii3 widget-layer BS3 class output, SCSS `!default` override order, `input-group` pitfall, SonarCloud false-positive suppression, and 10 things that surprised Claude most during the migration (May 2026)
 
 [Bootstrap 5 Table Mobile Stacking Fix](docs/BOOTSTRAP5_TABLE_MOBILE_STACKING.md) — `table, thead, tbody, th, td, tr { display: block }` ported back into `layout.css` at `@media (max-width: 767px)`; restores the vertical cell stacking that existed in the Bootstrap 3 era and was removed when BS3 CSS was stripped; `td[data-label]` scoping prevents 50 % padding gap on GridView cells that do not emit `data-label` attributes (May 2026)
 
@@ -44,6 +54,10 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 [Global Page Size Navbar Selector](docs/GLOBAL_PAGE_SIZE_NAVBAR.md) — `PageSizeLimiter` widget removed from 27 views and 3 widget classes; replaced by a single `<select>` in the invoice layout navbar backed by a TypeScript `PageSizeHandler`; `BootstrapJsOnlyAsset` hash-collision fix; dark mode removed; `CustomFieldRepository` PSR-4 path fix (May 2026)
 
 [Onboarding](docs/ONBOARDING.md) — `Stacking Rule layout fix in src/Invoice/Asset/invoice/css/layout.css (May 2026)
+
+[Performance Benchmarks](docs/PERFORMANCE_BENCHMARKS.md) — custom `hrtime()` benchmark suite tracking Yii3's four core speed-critical components over the repo's lifespan: DI container (singleton cache, 5-level dependency chain), injector auto-wire (reflection-cache vs uncached), FastRoute URL matcher (50-route table, parametrised, worst-case, 404), and string helpers (StringHelper, Inflector, WildcardPattern, CombinedRegexp); results accumulate in `benchmarks/results/history.json`; interactive Chart.js dashboard with trend arrows, suite filters, run selector, and ops/sec bars; GitHub Actions records a run every Monday at 02:00 UTC with OPcache JIT enabled (May 2026)
+
+[FastRoute Dispatch Cache](docs/ROUTER_CACHE.md) — `UrlMatcher` PSR-16 cache wiring: `CacheInterface` → `FileCache` → `runtime/cache/routes-cache`; cache disabled in `dev` via `common/params.php`, enabled in `prod` via `environments/prod/params.php`; `YII_ENV` environment variable drives which params file is loaded; deployment rule to clear `runtime/cache/routes-cache*` on every route change; benchmark context explaining why the Windows dev figures include compilation overhead that disappears in production (May 2026)
 
 [PHPUnit Entity Test Migration](docs/PHPUNIT_ENTITY_TEST_MIGRATION.md) — 34 new PHPUnit entity tests across 6 batches; 36 Codeception unit tests migrated to `PHPUnit\Framework\TestCase`; 26 `createMock()` calls replaced with `createStub()`; 3 pre-existing `DateTime`/`DateTimeImmutable` entity bugs uncovered (May 2026)
 
@@ -123,6 +137,10 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 [Vultr Alpine Security](docs/VULTR_ALPINE_SECURITY.md) (March 2026)
 
+[WSL to Alpine Deployment](docs/WSL_TO_ALPINE_DEPLOYMENT.md) — step-by-step guide for pulling updates from GitHub to a live Alpine/Apache2 server via WSL; git stash/pop workflow; file ownership (`chown apache:apache`); session save-path configuration; Psalm on server; SCP file transfer; deploy script; OAuth2 and RBAC debugging commands (May 2026)
+
+[Alpine Linux CVE-2026-31431 Remediation](docs/ALPINE_LINUX_CVE_2026_31431.md) — local privilege escalation via `algif_aead` kernel interface; immediate mitigation (`/etc/modprobe.d/disable-algif.conf`); kernel upgrade from 6.12.49 to 6.18.29 via `apk`; OpenRC Apache restart commands; post-reboot verification (May 2026)
+
 [phpMyAdmin Vulnerabilities on Alpine](docs/PHPMYADMIN_VULNERABILITIES_ON_ALPINE.md) (March 2026)
 
 [AuthController Production Environment Fix](docs/AUTHCONTROLLER_PROD_ENV_FIX.md) (March 2026)
@@ -149,13 +167,17 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 [Sonar Cloud Setup.](docs/SONARCLOUD_SETUP.md) (Nov 2025)
 
+[SonarQube for IDE Setup](docs/SONARQUBE_IDE_SETUP.md) — VS Code Connected Mode setup; Windows startup timeout fix; JVM heap tuning; token generation explained in plain English; connectionId mismatch pitfall; Windows Defender exclusions (May 2026)
+
+[SonarCloud CLI](docs/SONARCLOUD_CLI.md) — `sonar-issues.php` queries the SonarCloud API and prints all 4000+ issues in Psalm-style format with copyable file paths; filters by type, severity, PR, and hotspots; curl-based to bypass WAMP `allow_url_fopen` restriction; composer shortcuts included (May 2026)
+
 [Netbeans ↔️ Vs Code: Sync Guide.](docs/NETBEANS_SYNC_GUIDE.md) (Dec 2025)
  
 [Php Product Selection Workflow.](docs/PHP_PRODUCT_SELECTION_WORKFLOW.md) (Dec 2025)
 
 [Security Commands.](docs/SECURITY_COMMANDS.md) (Dec 2025)
 
-[Typescript Build Process.](docs/TYPESCRIPT_BUILD_PROCESS.md) (Dec 2025)
+[Typescript Build Process.](docs/TYPESCRIPT_BUILD_PROCESS.md) — IIFE bundle 134.6 KB (ES2024, esbuild); full function-by-function reference for all 21 source modules; Bootstrap Icons migration; `icon-spin` CSS animation replacing `fa-spin` (May 2026)
 
 [Typescript ES2023 Modernization.](docs/TYPESCRIPT_ES2023_MODERNIZATION.md) (Dec 2025)
 

@@ -62,9 +62,6 @@ label {
   font-weight: normal;
 }
 
-textarea {
-  resize: vertical;
-}
 
 .discount-field {
   float: right;
@@ -426,16 +423,6 @@ div.table-content {
 
 /*
 |   =========================================================
-|   Tabs
-|   =========================================================
-*/
-
-.tabbable .table {
-  margin-bottom: 15px;
-}
-
-/*
-|   =========================================================
 |   Invoices and Quotes
 |   =========================================================
 */
@@ -477,7 +464,7 @@ div.table-content {
 #actions {
   margin: 15px 0 0;
 
-  /* Mimic table appearance */
+  // Mimic table appearance
   div.table {
     display: table;
   }
@@ -497,19 +484,19 @@ div.table-content {
     background: $table-bg-hover;
   }
 
-  /* The total progress gets shown by event listeners */
+  // The total progress gets shown by event listeners
   #total-progress {
     opacity: 0;
     transition: opacity 0.3s linear;
   }
 
-  /* Hide the progress bar when finished */
+  // Hide the progress bar when finished
   #previews .file-row.dz-success .progress {
     opacity: 0;
     transition: opacity 0.3s linear;
   }
 
-  /* Hide the delete button initially */
+  // Hide the delete button initially
   #previews .file-row .delete {
     display: none;
   }
@@ -518,8 +505,8 @@ div.table-content {
     width: 80px;
     height: 80px;
   }
-  /* Hide the start and cancel buttons and show the delete button */
 
+  // Hide the start and cancel buttons; show the delete button
   #previews .file-row.dz-success .start,
   #previews .file-row.dz-success .cancel {
     display: none;
@@ -733,30 +720,6 @@ div.table-content {
   border: 1px solid $gray-lighter;
 }
 
-.fa {
-  min-width: 15px;
-  text-align: center;
-}
-
-.fa.fa-margin {
-  margin-right: 7px;
-}
-
-.fa-credit-invoice {
-  &:before {
-    content: '-';
-  }
-
-  &:after {
-    font-family: FontAwesome;
-    content: '\f155';
-  }
-}
-
-.fa-read-only {
-  @extend .fa-ban !optional;
-}
-
 .cursor-pointer {
   cursor: pointer;
 }
@@ -781,10 +744,6 @@ div.table-content {
   padding: 0 !important;
 }
 
-.modal {
-  margin: 30px auto;
-  overflow-y: auto;
-}
 
 .details-box {
   background-color: #fff;

@@ -191,7 +191,9 @@ final class SignupController
                  *   47b24e61f9ec0e717c244c0b7/tests/MessageTest.php#L217
                  */
                 $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink(
-                    $user, $uiR, $language, $_language, $randomAndTimeToken);
+                    $user, $uiR, $language, $_language, $randomAndTimeToken,
+                    $signupForm->getConsentPeriodicInvoice(),
+                    $signupForm->getConsentTelegramOutstanding());
                 if (($this->sR->getSetting('email_send_method') == 'symfony')
                         || ($this->sR->mailerEnabled() == true)) {
                     $configEmail = $this->sR->getConfigAdminEmail();
@@ -283,7 +285,9 @@ final class SignupController
         uiR $uiR,
         string $language,
         string $_language,
-        string $randomAndTimeToken): string
+        string $randomAndTimeToken,
+        bool $consentPeriodicInvoice = false,
+        bool $consentTelegramOutstanding = false): string
     {
         $tokenWithMask = TokenMask::apply($randomAndTimeToken);
         $userInv = new UserInv();
@@ -298,6 +302,8 @@ final class SignupController
         // user inactive.
         $userInv->setActive(false);
         $userInv->setLanguage($language);
+        $userInv->setConsentPeriodicInvoice($consentPeriodicInvoice);
+        $userInv->setConsentTelegramOutstanding($consentTelegramOutstanding);
         $uiR->save($userInv);
         $content = new A()
         // When the url is clicked by the user, return to userinv/signup

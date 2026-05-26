@@ -360,7 +360,7 @@ export class FamilyHandler {
 
         // Show loading state
         const originalText = processBtn.innerHTML;
-        processBtn.innerHTML = '<i class="fa fa-spin fa-spinner"></i> Generating...';
+        processBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span> Generating...';
         processBtn.disabled = true;
 
         try {
@@ -416,7 +416,7 @@ export class FamilyHandler {
     }
 
     private handleGenerationSuccess(data: FamilyGenerateResponse, processBtn: HTMLButtonElement): void {
-        processBtn.innerHTML = '<i class="fa fa-check"></i> Success!';
+        processBtn.innerHTML = '<i class="bi bi-check-lg"></i> Success!';
         alert(data.message || `Successfully generated ${data.count || 0} products!`);
         if (data.warnings?.length) {
             console.warn('Warnings during product generation:', data.warnings);

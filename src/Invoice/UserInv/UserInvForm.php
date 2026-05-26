@@ -66,6 +66,11 @@ final class UserInvForm extends FormModel
     private ?string $rcc = '';
     private ?int $list_limit = 10;
 
+    private bool $consent_periodic_invoice = false;
+    private bool $consent_telegram_outstanding = false;
+    #[Length(min: 0, max: 100, skipOnEmpty: true)]
+    private ?string $telegram_chat_id = null;
+
     private ?User $user = null;
 
     public static function show(UserInv $userinv): self
@@ -95,6 +100,9 @@ final class UserInvForm extends FormModel
         $form->gln = $userinv->getGln();
         $form->rcc = $userinv->getRcc();
         $form->list_limit = $userinv->getListLimit();
+        $form->consent_periodic_invoice = $userinv->getConsentPeriodicInvoice();
+        $form->consent_telegram_outstanding = $userinv->getConsentTelegramOutstanding();
+        $form->telegram_chat_id = $userinv->getTelegramChatId();
         $form->user = $userinv->getUser();
         return $form;
     }
@@ -222,6 +230,21 @@ final class UserInvForm extends FormModel
     public function getListLimit(): ?int
     {
         return $this->list_limit;
+    }
+
+    public function getConsentPeriodicInvoice(): bool
+    {
+        return $this->consent_periodic_invoice;
+    }
+
+    public function getConsentTelegramOutstanding(): bool
+    {
+        return $this->consent_telegram_outstanding;
+    }
+
+    public function getTelegramChatId(): ?string
+    {
+        return $this->telegram_chat_id;
     }
 
     /**

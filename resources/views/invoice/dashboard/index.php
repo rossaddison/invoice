@@ -315,7 +315,7 @@ use Yiisoft\Html\Html;
                                        title="<?= $translator->translate('download.pdf'); ?>"
                                        class="btn btn-secondary"
                                       >
-                                       <i class="fa bi-file-pdf"></i>
+                                       <i class="bi bi-file-pdf"></i>
                                     </a>
                                 </td>
                                 <td class="text-center">
@@ -326,7 +326,7 @@ use Yiisoft\Html\Html;
                                                'download.pdf'); ?>"
                                        class="btn btn-secondary"
                                       >
-                                       <i class="fa bi-file-pdf"></i>
+                                       <i class="bi bi-file-pdf"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -441,7 +441,7 @@ use Yiisoft\Html\Html;
                                                'download.pdf'); ?>"
                                        class="btn btn-secondary"
                                       >
-                                       <i class="fa bi-file-pdf"></i>
+                                       <i class="bi bi-file-pdf"></i>
                                     </a>
                                 </td>
                                 <td class="text-center">
@@ -452,7 +452,7 @@ use Yiisoft\Html\Html;
                                                'download.pdf'); ?>"
                                        class="btn btn-secondary"
                                       >
-                                       <i class="fa bi-file-pdf"></i>
+                                       <i class="bi bi-file-pdf"></i>
                                     </a>
                                 </td>
                             </tr>

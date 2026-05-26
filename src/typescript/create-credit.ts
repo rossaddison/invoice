@@ -40,7 +40,7 @@ export class CreateCreditHandler {
 
         // Show loading spinner
         if (btn) {
-            btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+            btn.innerHTML = '<h6 class="text-center"><span class="spinner-border spinner-border-sm" role="status"></span></h6>';
         }
 
         // Extract invoice ID from URL
@@ -76,7 +76,7 @@ export class CreateCreditHandler {
         } else {
             // Failure
             if (btn) {
-                btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+                btn.innerHTML = '<h2 class="text-center"><i class="bi bi-x-lg"></i></h2>';
             }
 
             if (response.flash_message) {

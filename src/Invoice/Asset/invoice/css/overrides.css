@@ -1,3 +1,10 @@
+/* Spin animation — replaces fa-spin for the fullpage loader gear icon */
+@keyframes icon-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.icon-spin { animation: icon-spin 1s linear infinite; }
+
 /* Settings labels — bold throughout all setting tab partials */
 .card-body label { font-weight: bold; }
 
@@ -60,4 +67,24 @@
 .form-floating > .form-select ~ label {
     opacity: 0.65;
     transform: scale(0.85) translateY(-8px) translateX(2.4px);
+}
+
+/* Step-formatted popovers (Google Translate menu items) */
+.popover-steps {
+    max-width: 420px;
+}
+.popover-steps .popover-body ol {
+    counter-reset: step-counter;
+    list-style: none;
+    padding-left: 0;
+}
+.popover-steps .popover-body ol li {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 0.5em;
+    margin-bottom: 0.25em;
+}
+.popover-steps .popover-body ol li strong {
+    white-space: nowrap;
+    color: var(--bs-primary);
 }

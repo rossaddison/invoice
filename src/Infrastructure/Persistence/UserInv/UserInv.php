@@ -84,6 +84,12 @@ class UserInv
         private ?string $rcc = '',
         #[Column(type: 'integer(3)', nullable: true, default: 10)]
         private ?int $listLimit = 10,
+        #[Column(type: 'bool', typecast: 'bool', default: false)]
+        private ?bool $consent_periodic_invoice = false,
+        #[Column(type: 'bool', typecast: 'bool', default: false)]
+        private ?bool $consent_telegram_outstanding = false,
+        #[Column(type: 'string(100)', nullable: true)]
+        private ?string $telegram_chat_id = null,
     ) {
         $this->date_created = new DateTimeImmutable();
         $this->date_modified = new DateTimeImmutable();
@@ -371,5 +377,35 @@ class UserInv
     public function setListLimit(int $listLimit): void
     {
         $this->listLimit = $listLimit;
+    }
+
+    public function getConsentPeriodicInvoice(): bool
+    {
+        return (bool) $this->consent_periodic_invoice;
+    }
+
+    public function setConsentPeriodicInvoice(bool $consent): void
+    {
+        $this->consent_periodic_invoice = $consent;
+    }
+
+    public function getConsentTelegramOutstanding(): bool
+    {
+        return (bool) $this->consent_telegram_outstanding;
+    }
+
+    public function setConsentTelegramOutstanding(bool $consent): void
+    {
+        $this->consent_telegram_outstanding = $consent;
+    }
+
+    public function getTelegramChatId(): ?string
+    {
+        return $this->telegram_chat_id;
+    }
+
+    public function setTelegramChatId(?string $telegram_chat_id): void
+    {
+        $this->telegram_chat_id = $telegram_chat_id;
     }
 }

@@ -56,11 +56,11 @@ function getFieldValue(id: string): string {
 // Helper to set button loading state
 function setButtonLoading(button: HTMLElement, isLoading: boolean, originalHtml?: string): void {
     if (isLoading) {
-        button.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+        button.innerHTML = '<h6 class="text-center"><span class="spinner-border spinner-border-sm" role="status"></span></h6>';
         (button as HTMLButtonElement).disabled = true;
     } else {
         button.innerHTML =
-            originalHtml || '<h6 class="text-center"><i class="fa fa-check"></i></h6>';
+            originalHtml || '<h6 class="text-center"><i class="bi bi-check-lg"></i></h6>';
         (button as HTMLButtonElement).disabled = false;
     }
 }
@@ -237,7 +237,7 @@ export class QuoteHandler {
             const data = parsedata(response);
 
             if (data.success === 1) {
-                delMulti.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                delMulti.innerHTML = '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
                 location.reload();
             } else {
                 console.warn('quoteitem/multiple failed', data);
@@ -259,7 +259,7 @@ export class QuoteHandler {
 
         try {
             placeholder.innerHTML =
-                '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+                '<h2 class="text-center"><span class="spinner-border spinner-border-sm" role="status"></span></h2>';
             const response = await fetch(url, { cache: 'no-store', credentials: 'same-origin' });
             const html = await response.text();
             // Secure HTML insertion to prevent XSS
@@ -303,7 +303,7 @@ export class QuoteHandler {
 
         try {
             placeholder.innerHTML =
-                '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+                '<h2 class="text-center"><span class="spinner-border spinner-border-sm" role="status"></span></h2>';
             const response = await fetch(url, { cache: 'no-store', credentials: 'same-origin' });
             const html = await response.text();
             // Secure HTML insertion to prevent XSS
@@ -333,10 +333,10 @@ export class QuoteHandler {
             const data = parsedata(response);
 
             if (data.success === 1) {
-                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
                 secureReload();
             } else if (data.success === 0) {
-                if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-check"></i></h6>';
+                if (btn) btn.innerHTML = '<h6 class="text-center"><i class="bi bi-check-lg"></i></h6>';
                 secureReload();
                 if (data.message) alert(data.message);
             }
@@ -370,7 +370,7 @@ export class QuoteHandler {
             const data = parsedata(response);
 
             if (data.success === 1) {
-                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
                 secureReload();
             }
         } catch (error) {
@@ -404,7 +404,7 @@ export class QuoteHandler {
             const response = await getJson<ApiResponse>(url, payload);
             const data = parsedata(response);
 
-            if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+            if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
 
             // Redirect to the created invoice if successful
             if (data.success && data.redirect_url) {
@@ -450,7 +450,7 @@ export class QuoteHandler {
             const response = await getJson<ApiResponse>(url, payload);
             const data = parsedata(response);
 
-            if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+            if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
 
             // Redirect to the created sales order if successful
             if (data.success && data.redirect_url) {
@@ -491,7 +491,7 @@ export class QuoteHandler {
             const data = parsedata(response);
 
             if (data.success === 1) {
-                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
                 secureReload();
                 if (data.flash_message) alert(data.flash_message);
             }

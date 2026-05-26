@@ -27,7 +27,7 @@ declare(strict_types=1);
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
                     <div class="btn-group">
                         <button type="submit" class="btn btn-danger">
-                            <i class="fa bi-trash-o fa-margin"></i> <?= $translator->translate('confirm.deletion') ?>
+                            <i class="bi bi-trash me-1"></i> <?= $translator->translate('confirm.deletion') ?>
                         </button>
                         <a href="#" class="btn btn-secondary" data-bs-dismiss="modal">
                             <i class="bi bi-x-lg"></i> <?= $translator->translate('cancel'); ?>

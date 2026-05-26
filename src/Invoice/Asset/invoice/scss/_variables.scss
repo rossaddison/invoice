@@ -117,5 +117,5 @@ $dropdown-link-color:          #333;
 $dropdown-link-hover-color:    darken(#333, 5%);
 $dropdown-link-hover-bg:       #f5f5f5;
 $dropdown-link-active-color:   #fff;
-$dropdown-link-active-bg:      $primary;
+$dropdown-link-active-bg:      #1565c0; // darker than $primary — passes WCAG AA (≥4.5:1) with white text
 $dropdown-link-disabled-color: $gray-light;

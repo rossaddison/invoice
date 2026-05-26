@@ -37,7 +37,7 @@ export function showFullpageLoader(): void {
     if (loader) loader.style.display = 'block';
     if (loaderError) loaderError.style.display = 'none';
     if (loaderIcon) {
-        loaderIcon.classList.add('fa-spin');
+        loaderIcon.classList.add('icon-spin');
         loaderIcon.classList.remove('text-danger');
     }
 
@@ -45,7 +45,7 @@ export function showFullpageLoader(): void {
     setTimeout(() => {
         if (loaderError) loaderError.style.display = 'block';
         if (loaderIcon) {
-            loaderIcon.classList.remove('fa-spin');
+            loaderIcon.classList.remove('icon-spin');
             loaderIcon.classList.add('text-danger');
         }
     }, 10000);
@@ -59,7 +59,7 @@ export function hideFullpageLoader(): void {
     if (loader) loader.style.display = 'none';
     if (loaderError) loaderError.style.display = 'none';
     if (loaderIcon) {
-        loaderIcon.classList.add('fa-spin');
+        loaderIcon.classList.add('icon-spin');
         loaderIcon.classList.remove('text-danger');
     }
 }
