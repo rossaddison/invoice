@@ -204,14 +204,14 @@ final class PrometheusController extends BaseController
     {
         // Mock implementation - replace with actual database connection counting
         // You might query INFORMATION_SCHEMA.PROCESSLIST or use your DB abstraction layer
-        return rand(3, 8); // NOSONAR — mock placeholder, not a security-sensitive value
+        return random_int(3, 8);
     }
 
     private function getActiveUserCount(): int
     {
         // Mock implementation - replace with actual session counting
         // You might count active sessions from your session storage
-        return rand(5, 25); // NOSONAR — mock placeholder, not a security-sensitive value
+        return random_int(5, 25);
     }
 
     private function checkWindowsService(string $_serviceName): bool
@@ -230,7 +230,7 @@ final class PrometheusController extends BaseController
             return [
                 'status' => 'ok',
                 'connections' => $this->getActiveConnectionCount(),
-                'response_time_ms' => rand(5, 25) // NOSONAR — mock placeholder, not a security-sensitive value
+                'response_time_ms' => random_int(5, 25)
             ];
         } catch (\Throwable $e) {
             return [

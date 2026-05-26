@@ -149,11 +149,11 @@ final class PrometheusExporterIntegrationTest extends TestCase
 
         foreach ($endpoints as [$method, $status, $endpoint]) {
             $httpRequestsCounter->inc([$method, $status, $endpoint]);
-            $duration = match($status) { // NOSONAR — rand() used for non-security test fixture data
-                '200' => rand(10, 500) / 1000,
-                '404' => rand(5, 50) / 1000,
-                '422' => rand(100, 1000) / 1000,
-                default => rand(10, 100) / 1000
+            $duration = match($status) {
+                '200' => random_int(10, 500) / 1000,
+                '404' => random_int(5, 50) / 1000,
+                '422' => random_int(100, 1000) / 1000,
+                default => random_int(10, 100) / 1000
             };
             $httpDurationHistogram->observe($duration, [$method, $status, $endpoint]);
         }
