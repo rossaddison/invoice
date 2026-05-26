@@ -99,7 +99,6 @@ class MailerHelper
                     $body = sprintf(
                         nl2br($this->translator->translate('quote.status.email.body')),
                         $quote->getClient()?->getClientName() ?? '',
-                        // TODO: Hyperlink for base url in Html
                         $quote->getNumber() ?? '',
                         $url,
                     );
