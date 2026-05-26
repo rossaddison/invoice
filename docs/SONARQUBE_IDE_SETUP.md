@@ -59,6 +59,7 @@ After the token step the SonarCloud sub-menu appears:
   [4]  Filter by severity    (BLOCKER / CRITICAL / MAJOR / MINOR / INFO)
   [5]  Security hotspots
   [6]  Combine type + severity filters
+  [7]  Filter by rule key    (e.g. php:S1192 / javascript:S7647 / typescript:S7785)
   [0]  Back to Main Menu
 ```
 
@@ -116,6 +117,38 @@ HOTSPOT: xss - src/Invoice/Inv/InvController.php:123 - Make sure content is sani
 
 Prompts for both a type and a severity, then fetches issues matching both.
 Example: `CODE_SMELL` + `MAJOR` shows only major code-smell issues.
+
+### [7] Filter by rule key
+
+Displays a numbered reference list of rules seen in this project, grouped by
+language.  Enter a number to select a rule, or type a full rule key directly
+for anything not in the list.  Press Enter with no input to cancel.
+
+```
+PHP
+[1]  php:S1192   String literals duplicated 3+ times
+[2]  php:S3776   Cognitive complexity too high
+[3]  php:S107    Too many parameters in function/method
+[4]  php:S116    Field name does not follow naming convention
+[5]  php:S100    Function name does not follow naming convention
+[6]  php:S1155   Use empty() instead of count() == 0 comparison
+[7]  php:S6600   Remove unnecessary parentheses around echo argument
+[8]  php:S2003   Use require_once instead of require
+[9]  php:S7735   Negated conditions should be avoided
+[10] php:S1848   Objects should not be created to be dropped immediately
+[11] php:S1172   Unused function parameter
+[12] php:S3358   Ternary operators should not be nested
+TypeScript / JavaScript
+[13] typescript:S7785  Replace async IIFE with top-level await
+[14] typescript:S7647  Lifecycle methods should not be empty
+[15] typescript:S7764  Use globalThis instead of window
+[16] javascript:S7647  Lifecycle methods should not be empty (JS)
+Shell
+[17] shelldre:S1066    Merge this if statement with the enclosing one
+```
+
+Useful when fixing a specific rule across the whole project — shows every
+occurrence so none are missed.
 
 ---
 

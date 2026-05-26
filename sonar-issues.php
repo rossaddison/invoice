@@ -11,6 +11,7 @@
  *   php sonar-issues.php --pr=862           # issues on a pull request
  *   php sonar-issues.php --type=BUG         # filter by type (BUG, VULNERABILITY, CODE_SMELL)
  *   php sonar-issues.php --severity=MAJOR   # filter by severity
+ *   php sonar-issues.php --rule=php:S1192   # filter by rule key (language prefix required)
  *   php sonar-issues.php --hotspots         # security hotspots instead of issues
  *
  * Set SONAR_TOKEN in your environment or .env before running:
@@ -29,12 +30,14 @@ $args     = array_slice($argv, 1);
 $pr       = null;
 $type     = null;
 $severity = null;
+$rule     = null;
 $hotspots = false;
 
 foreach ($args as $arg) {
     if (str_starts_with($arg, '--pr='))       { $pr       = substr($arg, 5); }
     if (str_starts_with($arg, '--type='))     { $type     = strtoupper(substr($arg, 7)); }
     if (str_starts_with($arg, '--severity=')) { $severity = strtoupper(substr($arg, 11)); }
+    if (str_starts_with($arg, '--rule='))     { $rule     = substr($arg, 7); }
     if ($arg === '--hotspots')                { $hotspots = true; }
 }
 
@@ -77,7 +80,7 @@ function sonarGet(string $path, array $query, string $token): array
 }
 
 // ── Collect all pages ─────────────────────────────────────────────────────────
-function fetchAllIssues(string $token, ?string $pr, ?string $type, ?string $severity): array
+function fetchAllIssues(string $token, ?string $pr, ?string $type, ?string $severity, ?string $rule): array
 {
     $issues = [];
     $page   = 1;
@@ -92,6 +95,7 @@ function fetchAllIssues(string $token, ?string $pr, ?string $type, ?string $seve
         if ($pr !== null)       { $query['pullRequest'] = $pr; }
         if ($type !== null)     { $query['types']       = $type; }
         if ($severity !== null) { $query['severities']  = $severity; }
+        if ($rule !== null)     { $query['rules']       = $rule; }
 
         $data    = sonarGet('/api/issues/search', $query, $token);
         $batch   = $data['issues'] ?? [];
@@ -148,7 +152,7 @@ if ($hotspots) {
     }
     echo "\n" . count($items) . " hotspot(s)\n";
 } else {
-    $items = fetchAllIssues($token, $pr, $type, $severity);
+    $items = fetchAllIssues($token, $pr, $type, $severity, $rule);
     foreach ($items as $issue) {
         $sev     = $issue['severity'] ?? 'MAJOR';
         $label   = $severityLabel[$sev] ?? $sev;

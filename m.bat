@@ -852,9 +852,10 @@ echo  [3]  Filter by type        (BUG / VULNERABILITY / CODE_SMELL)
 echo  [4]  Filter by severity    (BLOCKER / CRITICAL / MAJOR / MINOR / INFO)
 echo  [5]  Security hotspots
 echo  [6]  Combine type + severity filters
+echo  [7]  Filter by rule key    (e.g. php:S1192 / javascript:S7647 / typescript:S7785)
 echo  [0]  Back to Main Menu
 echo.
-set /p sonar_choice="SonarCloud choice [0-6]: "
+set /p sonar_choice="SonarCloud choice [0-7]: "
 
 if "%sonar_choice%"=="0" goto menu
 if "%sonar_choice%"=="1" goto sonar_all
@@ -863,6 +864,7 @@ if "%sonar_choice%"=="3" goto sonar_type
 if "%sonar_choice%"=="4" goto sonar_severity
 if "%sonar_choice%"=="5" goto sonar_hotspots
 if "%sonar_choice%"=="6" goto sonar_combined
+if "%sonar_choice%"=="7" goto sonar_rule
 echo Invalid choice.
 pause
 goto sonar_menu
@@ -917,6 +919,60 @@ set /p sonar_comb_sev="Severity: "
 if "%sonar_comb_sev%"=="" (echo No severity entered.& pause& goto sonar_menu)
 echo.
 php sonar-issues.php --type=%sonar_comb_type% --severity=%sonar_comb_sev%
+pause
+goto sonar_menu
+
+:sonar_rule
+cls
+echo ======================================================================================
+echo                         SONARCLOUD — FILTER BY RULE
+echo ======================================================================================
+echo  PHP
+echo  [1]  php:S1192   String literals duplicated 3+ times
+echo  [2]  php:S3776   Cognitive complexity too high
+echo  [3]  php:S107    Too many parameters in function/method
+echo  [4]  php:S116    Field name does not follow naming convention
+echo  [5]  php:S100    Function name does not follow naming convention
+echo  [6]  php:S1155   Use empty() instead of count() == 0 comparison
+echo  [7]  php:S6600   Remove unnecessary parentheses around echo argument
+echo  [8]  php:S2003   Use require_once instead of require
+echo  [9]  php:S7735   Negated conditions should be avoided
+echo  [10] php:S1848   Objects should not be created to be dropped immediately
+echo  [11] php:S1172   Unused function parameter
+echo  [12] php:S3358   Ternary operators should not be nested
+echo  TypeScript / JavaScript
+echo  [13] typescript:S7785  Replace async IIFE with top-level await
+echo  [14] typescript:S7647  Lifecycle methods should not be empty
+echo  [15] typescript:S7764  Use globalThis instead of window
+echo  [16] javascript:S7647  Lifecycle methods should not be empty (JS)
+echo  Shell
+echo  [17] shelldre:S1066    Merge this if statement with the enclosing one
+echo ======================================================================================
+echo  Enter a number above, or type a full rule key (e.g. php:S1848), or press Enter to cancel.
+echo ======================================================================================
+set /p sonar_rule_val="Rule [1-17 or custom key]: "
+if "%sonar_rule_val%"=="" (goto sonar_menu)
+if "%sonar_rule_val%"=="1"  set sonar_rule_val=php:S1192
+if "%sonar_rule_val%"=="2"  set sonar_rule_val=php:S3776
+if "%sonar_rule_val%"=="3"  set sonar_rule_val=php:S107
+if "%sonar_rule_val%"=="4"  set sonar_rule_val=php:S116
+if "%sonar_rule_val%"=="5"  set sonar_rule_val=php:S100
+if "%sonar_rule_val%"=="6"  set sonar_rule_val=php:S1155
+if "%sonar_rule_val%"=="7"  set sonar_rule_val=php:S6600
+if "%sonar_rule_val%"=="8"  set sonar_rule_val=php:S2003
+if "%sonar_rule_val%"=="9"  set sonar_rule_val=php:S7735
+if "%sonar_rule_val%"=="10" set sonar_rule_val=php:S1848
+if "%sonar_rule_val%"=="11" set sonar_rule_val=php:S1172
+if "%sonar_rule_val%"=="12" set sonar_rule_val=php:S3358
+if "%sonar_rule_val%"=="13" set sonar_rule_val=typescript:S7785
+if "%sonar_rule_val%"=="14" set sonar_rule_val=typescript:S7647
+if "%sonar_rule_val%"=="15" set sonar_rule_val=typescript:S7764
+if "%sonar_rule_val%"=="16" set sonar_rule_val=javascript:S7647
+if "%sonar_rule_val%"=="17" set sonar_rule_val=shelldre:S1066
+echo.
+echo Fetching issues for rule: %sonar_rule_val%
+echo.
+php sonar-issues.php --rule=%sonar_rule_val%
 pause
 goto sonar_menu
 
