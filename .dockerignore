@@ -1,3 +1,10 @@
 runtime/
 !runtime/.gitignore
 vendor/
+.env
+.env.*
+!.env.example
+*.bat
+sonar-project.properties
+sonar-issues.php
+.git/

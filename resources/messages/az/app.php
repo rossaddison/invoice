@@ -885,11 +885,11 @@ return [
 'number.format' => 'Nömrə formatı',
 'number.format.compact.comma' => '1000000,00 (Onluq vergüllə yığcam format)',
 'number.format.compact.point' => '1000000.00 (Onluq nöqtəsi olan kompakt format)',
-'number.format.european' => '1.000.000.00 (Avropa formatı)',
+'number.format.european' => '1.000.000.00 (Avropa formatı)', // NOSONAR — number format example, not an IP address
 'number.format.iso.80k.1' => '1 000 000.00 (ISO 80000-1)',
 'number.format.iso80k1.comma' => '1 000 000,00 (onluq vergüllə ISO 80000-1)',
 'number.format.iso80k1.point' => '1 000 000.00 (onluq nöqtə ilə ISO 80000-1)',
-'number.format.us.uk' => '1.000.000.00 (ABŞ/Böyük Britaniya formatı)',
+'number.format.us.uk' => '1.000.000.00 (ABŞ/Böyük Britaniya formatı)', // NOSONAR — number format example, not an IP address
 'number.missing.therefore.use.invoice.id' => 'faktura-nömrə-çatışmaz-buna görə-faktura-id-',
 'number.no' => 'Faktura nömrəsi yoxdur',
 'oauth2' => 'OAuth 2.0',

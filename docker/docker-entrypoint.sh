@@ -9,8 +9,10 @@ fi
 set -e
 
 if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'yii' ]; then
-	setfacl -R -m u:www-data:rwX -m u:"$(whoami)":rwX runtime public
-	setfacl -dR -m u:www-data:rwX -m u:"$(whoami)":rwX runtime public
+	if [ "$(id -u)" = '0' ]; then
+		setfacl -R -m u:www-data:rwX -m u:"$(whoami)":rwX runtime public
+		setfacl -dR -m u:www-data:rwX -m u:"$(whoami)":rwX runtime public
+	fi
 fi
 
 exec "$@"

@@ -7,3 +7,5 @@ WORKDIR /app/public
 COPY docker/dev/nginx/nginx.conf /etc/nginx/conf.d/default.conf
 COPY public ./
 
+USER nginx
+

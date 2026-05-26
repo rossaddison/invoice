@@ -133,6 +133,29 @@ File paths are fully copyable and clickable in VS Code's integrated terminal.
 
 ---
 
+## Why issues persist after fixing them
+
+Option 26 queries SonarCloud's **stored analysis results**, not your local files.
+SonarCloud only re-analyzes when you push to GitHub and CI runs.
+
+Until the branch is pushed:
+- Fixed issues and resolved hotspots will **still appear** in option 26 output
+- `// NOSONAR` suppressions have **no effect** locally
+- New exclusions in `sonar-project.properties` are **not yet active**
+
+After pushing:
+1. The CI workflow triggers a new SonarCloud scan
+2. Fixed issues disappear from the next `php sonar-issues.php` run
+3. Files covered by `sonar.exclusions` drop out of the results entirely
+
+To check what is actually uncommitted before pushing:
+
+```powershell
+git status --short
+```
+
+---
+
 ## Saving output to a file
 
 Option 26 runs interactively so output cannot be redirected from inside the

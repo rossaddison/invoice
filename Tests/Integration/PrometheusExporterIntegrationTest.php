@@ -7,8 +7,6 @@ namespace App\Tests\Integration;
 use PHPUnit\Framework\TestCase;
 use Prometheus\CollectorRegistry;
 use Prometheus\Storage\InMemory;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
 
 /**
  * Test Prometheus integration with node_exporter and windows_exporter
@@ -151,10 +149,10 @@ final class PrometheusExporterIntegrationTest extends TestCase
 
         foreach ($endpoints as [$method, $status, $endpoint]) {
             $httpRequestsCounter->inc([$method, $status, $endpoint]);
-            $duration = match($status) {
-                '200' => rand(10, 500) / 1000,  // 0.01 to 0.5 seconds
-                '404' => rand(5, 50) / 1000,    // 0.005 to 0.05 seconds
-                '422' => rand(100, 1000) / 1000, // 0.1 to 1 second
+            $duration = match($status) { // NOSONAR — rand() used for non-security test fixture data
+                '200' => rand(10, 500) / 1000,
+                '404' => rand(5, 50) / 1000,
+                '422' => rand(100, 1000) / 1000,
                 default => rand(10, 100) / 1000
             };
             $httpDurationHistogram->observe($duration, [$method, $status, $endpoint]);
