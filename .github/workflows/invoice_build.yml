@@ -54,6 +54,7 @@ jobs:
       - name: Set up Composer GitHub auth
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
         run: composer config --global --auth github-oauth.github.com "$GITHUB_TOKEN"
       
       - name: Install PHP with extensions
