@@ -566,9 +566,7 @@ try {
   document.getElementById('spinner').classList.add('d-none');
 
   const runs = historyData.runs || [];
-  if (!runs.length) {
-    document.getElementById('no-data').classList.remove('d-none');
-  } else {
+  if (runs.length) {
     document.getElementById('dashboard').classList.remove('d-none');
 
     // Default: all runs active
@@ -579,6 +577,8 @@ try {
     renderSummary();
     renderCharts();
     renderTable();
+  } else {
+    document.getElementById('no-data').classList.remove('d-none');
   }
 } catch (e) {
   document.getElementById('spinner').classList.add('d-none');
