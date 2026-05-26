@@ -204,14 +204,14 @@ final class PrometheusController extends BaseController
     {
         // Mock implementation - replace with actual database connection counting
         // You might query INFORMATION_SCHEMA.PROCESSLIST or use your DB abstraction layer
-        return rand(3, 8);
+        return random_int(3, 8);
     }
 
     private function getActiveUserCount(): int
     {
         // Mock implementation - replace with actual session counting
         // You might count active sessions from your session storage
-        return rand(5, 25);
+        return random_int(5, 25);
     }
 
     private function checkWindowsService(string $_serviceName): bool
@@ -230,7 +230,7 @@ final class PrometheusController extends BaseController
             return [
                 'status' => 'ok',
                 'connections' => $this->getActiveConnectionCount(),
-                'response_time_ms' => rand(5, 25)
+                'response_time_ms' => random_int(5, 25)
             ];
         } catch (\Throwable $e) {
             return [
@@ -281,45 +281,6 @@ final class PrometheusController extends BaseController
                "# HELP yii3_invoice_errors_total Total application errors\n" .
                "# TYPE yii3_invoice_errors_total counter\n" .
                "yii3_invoice_errors_total{type=\"metrics_collection\"} 1\n";
-    }
-
-    private function parseMetricsForDisplay(string $metricsOutput): array
-    {
-        $lines = explode("\n", $metricsOutput);
-        $metrics = [];
-        $currentMetric = null;
-
-        foreach ($lines as $line) {
-            $line = trim($line);
-            if (empty($line)) continue;
-
-            if (str_starts_with($line, '# HELP ')) {
-                $parts = explode(' ', $line, 4);
-                $metricName = $parts[2] ?? 'unknown';
-                $help = $parts[3] ?? '';
-                $currentMetric = $metricName;
-                $metrics[$currentMetric] = [
-                    'name' => $metricName,
-                    'help' => $help,
-                    'type' => 'unknown',
-                    'values' => []
-                ];
-            } elseif (str_starts_with($line, '# TYPE ')) {
-                $parts = explode(' ', $line, 4);
-                $metricName = $parts[2] ?? 'unknown';
-                $type = $parts[3] ?? 'unknown';
-                if (isset($metrics[$metricName])) {
-                    $metrics[$metricName]['type'] = $type;
-                }
-            } elseif (!str_starts_with($line, '#')) {
-                // Metric value line
-                if ($currentMetric !== null && isset($metrics[$currentMetric])) {
-                    $metrics[$currentMetric]['values'][] = $line;
-                }
-            }
-        }
-
-        return $metrics;
     }
 
     private function getSystemInfo(): array

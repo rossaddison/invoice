@@ -66,7 +66,10 @@ RUN set -eux \
 HEALTHCHECK --interval=30s --timeout=5s --start-period=1s \
     CMD REQUEST_METHOD=GET SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping cgi-fcgi -bind -connect 127.0.0.1:9000
 
-RUN chmod 0555 ./docker/docker-entrypoint.sh
+RUN chown -R www-data:www-data /app \
+    && chmod 0555 ./docker/docker-entrypoint.sh
+
+USER www-data
 ENTRYPOINT ["docker/docker-entrypoint.sh"]
 
 CMD ["php-fpm"]

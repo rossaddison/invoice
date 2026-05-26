@@ -70,7 +70,7 @@ export class InvoiceAmountMagnifierService implements OnDestroy {
   private isAmountElement(element: HTMLElement): boolean {
     const text = element.textContent?.trim() || '';
     // Check if content contains numbers with optional decimals and commas
-    const amountPattern = /^[\d,]+\.?\d*$/;
+    const amountPattern = /^[\d,]+(\.\d+)?$/;
     return amountPattern.test(text) && text.length > 0;
   }
 
