@@ -31,6 +31,10 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 **Recent Implementations**
 
+[BACS Quick Pay](docs/BACS_QUICK_PAY.md) — One-off bank-transfer modal on the invoice guest page: bank details card, per-invoice QR codes, copy-to-clipboard buttons, `BacsPaymentService`, 38 new PHPUnit tests; fixed gateway CDN script ordering, CSP `https://` violations, and missing `$bacsUnpaidInvs` parameter bug (May 2026)
+
+[PCI Gateway Asset Loading](docs/PCI_GATEWAY_ASSET_LOADING.md) — Stripe/Braintree/Amazon Pay CDN scripts moved to `<head>` (`jsPosition = POSITION_HEAD`) to guarantee they execute before the IIFE; protocol-relative `//` URLs replaced with explicit `https://` to satisfy CSP on localhost (May 2026)
+
 [Sonarcloud CLI](docs/SONARCLOUD_CLI.md) — Setup local SonarCloud integration in VS Code (May 2026)
 
 [Sonarcloud Setup](docs/SONARCLOUD_SETUP.md) — Setup local SonarCloud integration (May 2026)

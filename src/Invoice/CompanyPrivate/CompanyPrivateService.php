@@ -30,6 +30,10 @@ final readonly class CompanyPrivateService
             $model->setTaxCode((string) $array['tax_code']) : '';
         isset($array['iban']) ?
             $model->setIban((string) $array['iban']) : '';
+        isset($array['bacs_sort_code']) ?
+            $model->setBacsSortCode((string) $array['bacs_sort_code']) : '';
+        isset($array['bacs_account_number']) ?
+            $model->setBacsAccountNumber((string) $array['bacs_account_number']) : '';
         isset($array['gln']) ?
             $model->setGln((string) $array['gln']) : '';
         isset($array['rcc']) ?

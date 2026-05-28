@@ -486,6 +486,26 @@ final class InvRepository extends Select\Repository
     }
 
     /**
+     * Returns sent/viewed (unpaid) invoices for a set of client IDs.
+     * Used by the BACS quick-pay modal to show outstanding balances.
+     *
+     * @param array $clientIds
+     * @return Inv[]
+     */
+    public function repoUnpaidByClientIds(array $clientIds): array
+    {
+        if (empty($clientIds)) {
+            return [];
+        }
+        return $this->select()
+                    ->load('invAmount')
+                    ->where(['client_id' => ['in' => new Parameter($clientIds)]])
+                    ->andWhere(['status_id' => ['in' => new Parameter([2, 3])]])
+                    ->where('deleted_at', null)
+                    ->fetchAll();
+    }
+
+    /**
      * @psalm-return EntityReader
      */
     public function open(): EntityReader

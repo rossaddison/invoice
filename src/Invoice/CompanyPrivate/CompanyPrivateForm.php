@@ -24,6 +24,10 @@ final class CompanyPrivateForm extends FormModel
     private ?string $tax_code = '';
     #[Length(min: 0, max: 34, skipOnEmpty: true)]
     private ?string $iban = '';
+    #[Length(min: 0, max: 8, skipOnEmpty: true)]
+    private ?string $bacs_sort_code = '';
+    #[Length(min: 0, max: 8, skipOnEmpty: true)]
+    private ?string $bacs_account_number = '';
     #[Length(min: 0, max: 14, skipOnEmpty: true)]
     private ?string $gln = '';
     #[Length(min: 0, max: 7, skipOnEmpty: true)]
@@ -48,6 +52,8 @@ final class CompanyPrivateForm extends FormModel
         $form->vat_id = $company_private->getVatId();
         $form->tax_code = $company_private->getTaxCode();
         $form->iban = $company_private->getIban();
+        $form->bacs_sort_code = $company_private->getBacsSortCode();
+        $form->bacs_account_number = $company_private->getBacsAccountNumber();
         $form->gln = $company_private->getGln();
         $form->rcc = $company_private->getRcc();
         $form->logo_filename = $company_private->getLogoFilename();
@@ -77,6 +83,16 @@ final class CompanyPrivateForm extends FormModel
     public function getIban(): ?string
     {
         return $this->iban;
+    }
+
+    public function getBacsSortCode(): ?string
+    {
+        return $this->bacs_sort_code;
+    }
+
+    public function getBacsAccountNumber(): ?string
+    {
+        return $this->bacs_account_number;
     }
 
     public function getGln(): ?string

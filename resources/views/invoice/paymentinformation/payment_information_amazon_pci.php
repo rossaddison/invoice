@@ -87,6 +87,7 @@ if ($disable_form === false) {
               ]) . ' ' . $translator->translate('download.pdf')
                  . '=>' . $translator->translate('yes')
                  . ' ' . $translator->translate('custom.fields'))
+              ->encode(false)   
               ->render();
          echo  new A()
               ->addAttributes([
@@ -100,9 +101,10 @@ if ($disable_form === false) {
               )
               ->content( new I()->addAttributes([
                   'class' => 'bi bi-file-pdf'
-              ]) . ' ' . $translator->translate('download.pdf')
+              ])->render() . ' ' . $translator->translate('download.pdf')
                  . '=>' . $translator->translate('no')
                  . ' ' . $translator->translate('custom.fields'))
+              ->encode(false)   
               ->render();
         echo H::closeTag('div');
         include 'vendor/autoload.php';

@@ -39,6 +39,10 @@ class CompanyPrivate
         private ?string $tax_code = '',
         #[Column(type: 'string(34)', nullable: true)]
         private ?string $iban = '',
+        #[Column(type: 'string(8)', nullable: true)]
+        private ?string $bacs_sort_code = '',
+        #[Column(type: 'string(8)', nullable: true)]
+        private ?string $bacs_account_number = '',
         #[Column(type: 'string(14)', nullable: true)]
         private ?string $gln = '',
         #[Column(type: 'string(7)', nullable: true)]
@@ -138,6 +142,26 @@ class CompanyPrivate
     public function setIban(string $iban): void
     {
         $this->iban = $iban;
+    }
+
+    public function getBacsSortCode(): ?string
+    {
+        return $this->bacs_sort_code;
+    }
+
+    public function setBacsSortCode(string $bacs_sort_code): void
+    {
+        $this->bacs_sort_code = $bacs_sort_code;
+    }
+
+    public function getBacsAccountNumber(): ?string
+    {
+        return $this->bacs_account_number;
+    }
+
+    public function setBacsAccountNumber(string $bacs_account_number): void
+    {
+        $this->bacs_account_number = $bacs_account_number;
     }
 
     public function getGln(): ?string

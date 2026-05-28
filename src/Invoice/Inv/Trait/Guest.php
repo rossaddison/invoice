@@ -11,6 +11,7 @@ use App\Invoice\{
     Inv\InvRepository as IR,
     InvAmount\InvAmountRepository as IAR,
     InvRecurring\InvRecurringRepository as IRR,
+    PaymentInformation\Service\BacsPaymentService,
     UserClient\UserClientRepository as UCR,
     UserInv\UserInvRepository as UIR
 };
@@ -37,6 +38,7 @@ trait Guest
         IR $iR,
         UCR $ucR,
         UIR $uiR,
+        BacsPaymentService $bacsPaymentService,
         #[RouteArgument('page')]
         string $page = '1',
         #[RouteArgument('status')]
@@ -128,10 +130,20 @@ trait Guest
                     }
                     $inv_statuses = $iR->getStatuses($this->translator);
                     $label = $iR->getSpecificStatusArrayLabel($status);
+                    $bacsUnpaidInvs = $iR->repoUnpaidByClientIds($user_clients);
+                    $dp = (int) $this->sR->getSetting('tax_rate_decimal_places');
                     $parameters = [
                         'alert' => $this->alert(),
-                        'decimalPlaces' => (int) $this->sR->getSetting(
-                            'tax_rate_decimal_places'),
+                        'bacsPaymentService' => $bacsPaymentService,
+                        'bacsUnpaidInvs' => $bacsUnpaidInvs,
+                        'decimalPlaces' => $dp,
+                        'modalBacsQuickPay' =>
+                            $this->webViewRenderer->renderPartialAsString(
+                                '_modal_bacs_quickpay', [
+                                    'bacsPaymentService' => $bacsPaymentService,
+                                    'bacsUnpaidInvs'     => $bacsUnpaidInvs,
+                                    'decimalPlaces'      => $dp,
+                        ]),
                         'optionsClientsDropDownFilter' =>
                         $this->optionsDataUserClientsFilter($ucR, $user_id),
                         'optionsInvNumberDropDownFilter' => $this->                                                         optionsDataInvNumberGuestFilter($preFilterInvs),

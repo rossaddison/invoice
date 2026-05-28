@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\Asset\pciAsset;
 
+use Yiisoft\View\WebView;
+
 class StripeVersionTenAsset extends Asset
 {
     /** @psalm-suppress NonInvariantDocblockPropertyType */
@@ -22,6 +24,9 @@ class StripeVersionTenAsset extends Asset
     /** @psalm-suppress NonInvariantDocblockPropertyType */
     public array $js = [
         // stripe v10 2025-06-30.basil
-        '//js.stripe.com/v3/',
+        'https://js.stripe.com/v3/',
     ];
+
+    // Load in <head> so the Stripe global is defined before the end-of-body IIFE runs.
+    public ?int $jsPosition = WebView::POSITION_HEAD;
 }

@@ -33,6 +33,7 @@ const NATIVE_RESET_INV_AMOUNT_FILTER = 'native-reset inv-amount-filter';
  * @var App\Invoice\Inv\InvRepository $iR
  * @var App\Invoice\InvAmount\InvAmountRepository $iaR
  * @var App\Invoice\InvRecurring\InvRecurringRepository $irR
+ * @var App\Invoice\PaymentInformation\Service\BacsPaymentService $bacsPaymentService
  * @var App\Invoice\SalesOrder\SalesOrderRepository $soR
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\Button $button
@@ -51,7 +52,8 @@ const NATIVE_RESET_INV_AMOUNT_FILTER = 'native-reset inv-amount-filter';
  * @var string $alert
  * @var string $csrf
  * @var string $label
- * @var string $modal_add_quote
+ * @var string $modal_add_quote 
+ * @var string $modalBacsQuickPay
  * @var string $sortString
  * @var string $status
  * @psalm-var positive-int $page
@@ -405,6 +407,13 @@ $sortedAndPagedPaginator = (new OffsetPaginator($invs))
                     ->withToken(PageToken::next((string) $page));
 
 
+$bacsButton = $bacsPaymentService->isCompanyPrivateActive()
+    ? '<button type="button" class="btn btn-outline-success ms-2"'
+      . ' data-bs-toggle="modal" data-bs-target="#bacsQuickPayModal">'
+      . '🏦 ' . Html::encode($translator->translate('bacs.pay.by.bank.transfer'))
+      . '</button>'
+    : '';
+
 $toolbarString =  new Form()->post(
                 $urlGenerator->generate('inv/guest'))->csrf($csrf)->open()
         .  new Div()->addClass('float-start m-3')->content(
@@ -416,6 +425,7 @@ $toolbarString =  new Form()->post(
             .   Button::ascDesc(
                 $urlGenerator, 'client_id', 'warning',
                 $translator->translate('client'), true)
+            .   $bacsButton
                 )->encode(false)->render()
         .  new Form()->close();
 
@@ -970,3 +980,7 @@ document.addEventListener('DOMContentLoaded', () => {
 JS;
 
 echo Html::script($mobilePreviewScript)->type('module');
+
+if ($bacsPaymentService->isCompanyPrivateActive()) {
+   echo $modalBacsQuickPay;
+}

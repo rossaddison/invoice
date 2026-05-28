@@ -89,6 +89,31 @@ final class CompanyPrivateRepository extends Select\Repository
     }
 
     /**
+     * Returns the CompanyPrivate record whose start_date/end_date range covers today.
+     * Used by BacsPaymentService to read the current bank details.
+     *
+     * @return CompanyPrivate|null
+     *
+     * @psalm-return TEntity|null
+     */
+    public function repoCompanyPrivateActive(): ?CompanyPrivate
+    {
+        $today = (new \DateTimeImmutable('today'))->format('Y-m-d');
+        $dated = $this->select()
+                      ->load('company')
+                      ->where('start_date', '<=', $today)
+                      ->andWhere('end_date', '>=', $today)
+                      ->fetchOne();
+        if ($dated !== null) {
+            return $dated;
+        }
+        return $this->select()
+                    ->load('company')
+                    ->orderBy('id', 'DESC')
+                    ->fetchOne() ?: null;
+    }
+
+    /**
      * @return CompanyPrivate|null
      *
      * @psalm-return TEntity|null

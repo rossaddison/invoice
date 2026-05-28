@@ -72,10 +72,16 @@ foreach ($companies as $company) {
                     <?= $formFields->companyPrivateTextField($form, 'tax_code', 'tax.code'); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= $formFields->companyPrivateTextField($form, 'iban', 'user.iban'); ?>
+                    <?= $formFields->companyPrivateTextField($form, 'iban', 'user.iban', false, 34); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= $formFields->companyPrivateTextField($form, 'gln', 'gln'); ?>
+                    <?= $formFields->companyPrivateBacsSortCodeField($form); ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
+                    <?= $formFields->companyPrivateBacsAccountNumberField($form); ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
+                    <?= $formFields->companyPrivateTextField($form, 'gln', 'gln', false, 14); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Html::openTag('label'); ?>
