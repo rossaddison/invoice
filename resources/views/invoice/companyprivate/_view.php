@@ -61,6 +61,20 @@ use Yiisoft\Html\Tag\Form;
                         ->readonly(true); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
+                    <?= Field::text($form, 'bacs_sort_code')
+                        ->addInputAttributes(['class' => 'form-control form-control-lg font-monospace'])
+                        ->label($translator->translate('bacs.sort.code'))
+                        ->readonly(true)
+                        ->value(Html::encode($form->getBacsSortCode() ?? '')); ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
+                    <?= Field::text($form, 'bacs_account_number')
+                        ->addInputAttributes(['class' => 'form-control form-control-lg font-monospace'])
+                        ->label($translator->translate('bacs.account.number'))
+                        ->readonly(true)
+                        ->value(Html::encode($form->getBacsAccountNumber() ?? '')); ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'gln')
                         ->addInputAttributes(['class' => 'form-control form-control-lg',])
                         ->label($translator->translate('gln'))

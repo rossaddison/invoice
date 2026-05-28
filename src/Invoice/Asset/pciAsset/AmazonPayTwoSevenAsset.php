@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\Asset\pciAsset;
 
+use Yiisoft\View\WebView;
+
 class AmazonPayTwoSevenAsset extends Asset
 {
     /** @psalm-suppress NonInvariantDocblockPropertyType */
@@ -12,4 +14,7 @@ class AmazonPayTwoSevenAsset extends Asset
         // see https://developer.amazon.com/docs/amazon-pay-checkout/get-set-up-for-integration.html
         'https://static-eu.payments-amazon.com/checkout.js',
     ];
+
+    // Load in <head> so the Amazon Pay global is defined before the end-of-body IIFE runs.
+    public ?int $jsPosition = WebView::POSITION_HEAD;
 }

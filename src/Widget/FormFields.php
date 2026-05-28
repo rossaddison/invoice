@@ -788,6 +788,7 @@ final readonly class FormFields
         string $fieldName,
         string $labelKey,
         bool $required = false,
+        ?int $maxlength = null,
     ): string {
         $hintKey = $required ? 'hint.this.field.is.required' :
                 'hint.this.field.is.not.required';
@@ -806,12 +807,14 @@ final readonly class FormFields
             default => null,
         };
 
+        $inputAttributes = ['class' => $cssClass, 'value' => $value ?? ''];
+        if ($maxlength !== null) {
+            $inputAttributes['maxlength'] = (string) $maxlength;
+        }
+
         $field = Field::text($form, $fieldName)
             ->label($this->translator->translate($labelKey))
-            ->addInputAttributes([
-                'class' => $cssClass,
-                'value' => $value ?? '',
-            ]);
+            ->addInputAttributes($inputAttributes);
 
         if ($required) {
             $field =
@@ -821,6 +824,63 @@ final readonly class FormFields
         }
 
         return $field->render();
+    }
+
+    /**
+     * Three 2-digit inputs for a UK sort code, combined into a hidden bacs_sort_code field.
+     * Stored format: XX-XX-XX (8 chars max).
+     */
+    public function companyPrivateBacsSortCodeField(CompanyPrivateForm $form): string
+    {
+        $sortRaw   = $form->getBacsSortCode() ?? '';
+        $parts     = array_pad(explode('-', $sortRaw), 3, '');
+        $label     = Html::encode($this->translator->translate('bacs.sort.code'));
+        $boxClass  = 'form-control form-control-lg font-monospace text-center';
+        $boxStyle  = 'width:4rem';
+
+        $box = static function (string $id, string $value, string $ariaLabel) use ($boxClass, $boxStyle): string {
+            return '<input type="text" id="' . $id . '"'
+                . ' class="' . $boxClass . '"'
+                . ' maxlength="2" pattern="[0-9]{2}" inputmode="numeric"'
+                . ' style="' . $boxStyle . '"'
+                . ' value="' . Html::encode($value) . '"'
+                . ' aria-label="' . Html::encode($ariaLabel) . '">';
+        };
+
+        return '<label class="form-label" for="bacs_sort_code_1">' . $label . '</label>'
+            . '<input type="hidden" name="bacs_sort_code" id="bacs_sort_code"'
+            . ' value="' . Html::encode($sortRaw) . '">'
+            . '<div class="d-flex align-items-center gap-2">'
+            . $box('bacs_sort_code_1', $parts[0], 'Sort code first two digits')
+            . '<span class="fw-bold">-</span>'
+            . $box('bacs_sort_code_2', $parts[1], 'Sort code middle two digits')
+            . '<span class="fw-bold">-</span>'
+            . $box('bacs_sort_code_3', $parts[2], 'Sort code last two digits')
+            . '</div>'
+            . '<script>(function(){'
+            . 'var b1=document.getElementById("bacs_sort_code_1");'
+            . 'var b2=document.getElementById("bacs_sort_code_2");'
+            . 'var b3=document.getElementById("bacs_sort_code_3");'
+            . 'var h=document.getElementById("bacs_sort_code");'
+            . 'function c(){h.value=b1.value+"-"+b2.value+"-"+b3.value;}'
+            . 'function a(cur,nxt){cur.addEventListener("input",function(){c();if(cur.value.length===2&&nxt){nxt.focus();}});}'
+            . 'a(b1,b2);a(b2,b3);a(b3,null);'
+            . '}());</script>';
+    }
+
+    /**
+     * Single 8-digit numeric input for a UK bank account number.
+     */
+    public function companyPrivateBacsAccountNumberField(CompanyPrivateForm $form): string
+    {
+        $label = Html::encode($this->translator->translate('bacs.account.number'));
+        $value = Html::encode($form->getBacsAccountNumber() ?? '');
+
+        return '<label class="form-label" for="bacs_account_number">' . $label . '</label>'
+            . '<input type="text" name="bacs_account_number" id="bacs_account_number"'
+            . ' class="form-control form-control-lg font-monospace"'
+            . ' maxlength="8" pattern="[0-9]{8}" inputmode="numeric"'
+            . ' value="' . $value . '" placeholder="12345678">';
     }
 
     /**

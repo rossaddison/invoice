@@ -2953,6 +2953,24 @@ prior to importing and no existing documents e.g. Invoices.',
   // === INVOICE ORIGIN TRACKING ===
   'invoice.origin' => 'Origin',
 
+  // === BACS QUICK-PAY ===
+  'bacs.pay.by.bank.transfer' => 'Pay by Bank Transfer',
+  'bacs.quick.pay' => 'Pay by Bank Transfer (BACS / Faster Payments)',
+  'bacs.bank.details' => 'Bank Details',
+  'bacs.payee' => 'Payee',
+  'bacs.sort.code' => 'Sort Code',
+  'bacs.account.number' => 'Account Number',
+  'bacs.reference' => 'Your Reference',
+  'bacs.outstanding.invoices' => 'Outstanding Invoices',
+  'bacs.no.outstanding.invoices' => 'No outstanding invoices at this time.',
+  'bacs.no.outstanding.invoices.hint' => 'Your balance is clear — nothing to pay right now.',
+  'bacs.scan.to.pay' => 'Scan for payment details',
+  'bacs.scan.qr.hint' => 'Your banking app will open with payee name, sort code, account number and amount pre-filled — no typing needed.',
+  'bacs.copy' => 'Copy to clipboard',
+  'bacs.payment.instructions' => 'Use the sort code, account number, and reference shown above when making a bank transfer. The reference helps us match your payment to your account.',
+  'bacs.not.yet.configured' => 'Bank transfer details not yet available.',
+  'bacs.not.yet.configured.hint' => 'Please contact us directly for payment details.',
+
   // === PROMETHEUS MONITORING ===
   'monitoring.health.database' => 'Database Connection',
   'monitoring.health.cache' => 'Cache System',

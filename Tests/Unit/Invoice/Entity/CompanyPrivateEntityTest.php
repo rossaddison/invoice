@@ -543,4 +543,64 @@ class CompanyPrivateEntityTest extends TestCase
 
         $this->assertSame(-1, $companyPrivate->reqCompanyId());
     }
+
+    // ── BACS fields ──────────────────────────────────────────────────────────
+
+    public function testBacsSortCodeDefaultsToEmpty(): void
+    {
+        $companyPrivate = new CompanyPrivate();
+        $this->assertSame('', $companyPrivate->getBacsSortCode());
+    }
+
+    public function testBacsAccountNumberDefaultsToEmpty(): void
+    {
+        $companyPrivate = new CompanyPrivate();
+        $this->assertSame('', $companyPrivate->getBacsAccountNumber());
+    }
+
+    public function testBacsSortCodeSetterAndGetter(): void
+    {
+        $companyPrivate = new CompanyPrivate();
+        $companyPrivate->setBacsSortCode('12-34-56');
+        $this->assertSame('12-34-56', $companyPrivate->getBacsSortCode());
+    }
+
+    public function testBacsAccountNumberSetterAndGetter(): void
+    {
+        $companyPrivate = new CompanyPrivate();
+        $companyPrivate->setBacsAccountNumber('87654321');
+        $this->assertSame('87654321', $companyPrivate->getBacsAccountNumber());
+    }
+
+    public function testBacsSortCodeAcceptsDigitsOnly(): void
+    {
+        $companyPrivate = new CompanyPrivate();
+        $companyPrivate->setBacsSortCode('123456');
+        $this->assertSame('123456', $companyPrivate->getBacsSortCode());
+    }
+
+    public function testBacsFieldsCanBeCleared(): void
+    {
+        $companyPrivate = new CompanyPrivate();
+        $companyPrivate->setBacsSortCode('12-34-56');
+        $companyPrivate->setBacsAccountNumber('12345678');
+
+        $companyPrivate->setBacsSortCode('');
+        $companyPrivate->setBacsAccountNumber('');
+
+        $this->assertSame('', $companyPrivate->getBacsSortCode());
+        $this->assertSame('', $companyPrivate->getBacsAccountNumber());
+    }
+
+    public function testBacsAndExistingFieldsCoexist(): void
+    {
+        $companyPrivate = new CompanyPrivate();
+        $companyPrivate->setIban('GB82WEST12345698765432');
+        $companyPrivate->setBacsSortCode('11-22-33');
+        $companyPrivate->setBacsAccountNumber('00112233');
+
+        $this->assertSame('GB82WEST12345698765432', $companyPrivate->getIban());
+        $this->assertSame('11-22-33', $companyPrivate->getBacsSortCode());
+        $this->assertSame('00112233', $companyPrivate->getBacsAccountNumber());
+    }
 }
