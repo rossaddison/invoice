@@ -839,11 +839,12 @@ final readonly class FormFields
         $boxStyle  = 'width:4rem';
 
         $box = static function (string $id, string $value, string $ariaLabel) use ($boxClass, $boxStyle): string {
-            return '<input type="text" id="' . $id . '"'
-                . ' class="' . $boxClass . '"'
+            $cQ = '"';
+            return '<input type="text" id="' . $id . $cQ
+                . ' class="' . $boxClass . $cQ
                 . ' maxlength="2" pattern="[0-9]{2}" inputmode="numeric"'
-                . ' style="' . $boxStyle . '"'
-                . ' value="' . Html::encode($value) . '"'
+                . ' style="' . $boxStyle . $cQ
+                . ' value="' . Html::encode($value) . $cQ
                 . ' aria-label="' . Html::encode($ariaLabel) . '">';
         };
 
