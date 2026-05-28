@@ -19,6 +19,8 @@ use Yiisoft\Translator\TranslatorInterface;
 
 final readonly class FormFields
 {
+    public const string VL = ' value="';
+ 
     public function __construct(
         private TranslatorInterface $translator,
         private SettingRepository $settingRepository,
@@ -844,13 +846,13 @@ final readonly class FormFields
                 . ' class="' . $boxClass . $cQ
                 . ' maxlength="2" pattern="[0-9]{2}" inputmode="numeric"'
                 . ' style="' . $boxStyle . $cQ
-                . ' value="' . Html::encode($value) . $cQ
+                . self::VL . Html::encode($value) . $cQ
                 . ' aria-label="' . Html::encode($ariaLabel) . '">';
         };
 
         return '<label class="form-label" for="bacs_sort_code_1">' . $label . '</label>'
             . '<input type="hidden" name="bacs_sort_code" id="bacs_sort_code"'
-            . ' value="' . Html::encode($sortRaw) . '">'
+            . self::VL . Html::encode($sortRaw) . '">'
             . '<div class="d-flex align-items-center gap-2">'
             . $box('bacs_sort_code_1', $parts[0], 'Sort code first two digits')
             . '<span class="fw-bold">-</span>'
@@ -881,7 +883,7 @@ final readonly class FormFields
             . '<input type="text" name="bacs_account_number" id="bacs_account_number"'
             . ' class="form-control form-control-lg font-monospace"'
             . ' maxlength="8" pattern="[0-9]{8}" inputmode="numeric"'
-            . ' value="' . $value . '" placeholder="12345678">';
+            . self::VL . $value . '" placeholder="12345678">';
     }
 
     /**
