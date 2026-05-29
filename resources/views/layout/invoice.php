@@ -63,7 +63,6 @@ use Yiisoft\Html\Tag\Meta;
  * @var string $companyLogoMargin
  * @var string $companyLogoWidth
  * @var string $content
- * @var string $javascriptJqueryDateHelper
  * @var string $logoPath
  * @var string $read_write
  * @var string $scrutinizerRepository

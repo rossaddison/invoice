@@ -19,6 +19,8 @@ import { initBraintreePayment } from './payment-braintree.js';
 import { initTelegramProviderPopup } from './telegram-providers.js';
 import { initStreetOrder } from './family-street-order.js';
 import { initStepPopovers } from './google-translate-popover.js';
+import { initInvIndex } from './inv-index.js';
+import { initQuoteIndex } from './quote-index.js';
 
 /**
  * Initialize Invoice Application
@@ -133,4 +135,4 @@ if (document.readyState === 'loading') {
 }
 
 // Export for potential external usage
-export { InvoiceApp };
+export { InvoiceApp, initInvIndex, initQuoteIndex };

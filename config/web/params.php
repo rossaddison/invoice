@@ -12,6 +12,7 @@ use Yiisoft\RequestProvider\RequestCatcherMiddleware;
 use Yiisoft\Router\Middleware\Router;
 use Yiisoft\Session\SessionMiddleware;
 use Yiisoft\User\Login\Cookie\CookieLoginMiddleware;
+use App\Middleware\PageOutOfRangeMiddleware;
 use Yiisoft\Yii\Middleware\Locale;
 
 // yii3-i
@@ -68,6 +69,7 @@ return [
         CookieMiddleware::class,
         CookieLoginMiddleware::class,
         Locale::class,
+        PageOutOfRangeMiddleware::class,
         Router::class,
     ],
     'yiisoft/widget' => [

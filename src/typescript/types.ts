@@ -54,6 +54,19 @@ export interface InvoiceFormData extends RequestParams {
     user_id?: string;
 }
 
+export interface OriginalStyles {
+    readonly fontSize: string;
+    readonly fontWeight: string;
+    readonly backgroundColor: string;
+    readonly border: string;
+    readonly borderRadius: string;
+    readonly padding: string;
+    readonly zIndex: string;
+    readonly position: string;
+    readonly transform: string;
+    readonly boxShadow: string;
+}
+
 export interface FetchOptions {
     method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
     credentials?: RequestCredentials;

@@ -678,41 +678,9 @@ export class QuoteHandler {
     private handleFocus(event: Event): void {
         const target = event.target as HTMLElement;
 
-        // Datepicker initialization
-        if (target.id === 'datepicker') {
-            this.initializeDatepicker(target);
-        }
-
-        if (target.classList?.contains('datepicker')) {
-            this.initializeDatepicker(target);
-        }
-
         // Taggable focus tracking
         if (target.classList?.contains('taggable')) {
             (window as any).lastTaggableClicked = target;
-        }
-    }
-
-    private initializeDatepicker(element: HTMLElement): void {
-        if ((window as any).jQuery?.fn?.datepicker) {
-            if (element.id === 'datepicker') {
-                (window as any).jQuery(element).datepicker({
-                    changeMonth: true,
-                    changeYear: true,
-                    showButtonPanel: true,
-                    dateFormat: 'dd-mm-yy',
-                });
-            } else {
-                (window as any).jQuery(element).datepicker({
-                    beforeShow: () => {
-                        setTimeout(() => {
-                            document.querySelectorAll('.datepicker').forEach(d => {
-                                (d as HTMLElement).style.zIndex = '9999';
-                            });
-                        }, 0);
-                    },
-                });
-            }
         }
     }
 
