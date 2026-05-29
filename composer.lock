@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eaa5707bde561f071a222ab560421704",
+    "content-hash": "d42e26d03752de68f6f84e57c3d60ecd",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -1757,16 +1757,16 @@
         },
         {
             "name": "cycle/database",
-            "version": "2.18.0",
+            "version": "2.19.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cycle/database.git",
-                "reference": "f63c166623529e1478da3ecd7f9fa7e72a594fdb"
+                "reference": "c4d40ce8870a44fe6f12ea1a5a07e9ca3b79a66c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cycle/database/zipball/f63c166623529e1478da3ecd7f9fa7e72a594fdb",
-                "reference": "f63c166623529e1478da3ecd7f9fa7e72a594fdb",
+                "url": "https://api.github.com/repos/cycle/database/zipball/c4d40ce8870a44fe6f12ea1a5a07e9ca3b79a66c",
+                "reference": "c4d40ce8870a44fe6f12ea1a5a07e9ca3b79a66c",
                 "shasum": ""
             },
             "require": {
@@ -1847,7 +1847,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-05-28T11:20:20+00:00"
+            "time": "2026-05-28T20:05:49+00:00"
         },
         {
             "name": "cycle/entity-behavior",
@@ -25632,5 +25632,5 @@
         "ext-zend-opcache": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
