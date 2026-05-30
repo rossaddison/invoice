@@ -46,7 +46,10 @@ final readonly class ClientService
         isset($body['client_language']) ? $model->setClientLanguage((string) $body['client_language']) : '';
         $model->setClientActive($body['client_active'] === '1' ? true : false);
         $datetime = new \DateTimeImmutable();
-        isset($body['client_birthdate']) ? $model->setClientBirthdate(\DateTimeImmutable::createFromFormat('Y-m-d', (string) $body['client_birthdate']) ?: $datetime) : '';
+        if (isset($body['client_birthdate'])) {
+            $birthdate = \DateTimeImmutable::createFromFormat('Y-m-d', (string) $body['client_birthdate']) ?: $datetime;
+            $model->setClientBirthdate($birthdate);
+        }
 
         isset($body['client_age']) ? $model->setClientAge((int) $body['client_age']) : '';
         isset($body['client_gender']) ? $model->setClientGender((int) $body['client_gender']) : '';

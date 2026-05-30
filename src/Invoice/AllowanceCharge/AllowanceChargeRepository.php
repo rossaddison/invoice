@@ -123,12 +123,15 @@ final class AllowanceChargeRepository extends Select\Repository
          */
         foreach ($allowanceCharges as $allowanceCharge) {
             $key = $allowanceCharge->reqId();
-            $key ? ($optionsDataAllowanceCharges[$key] = ($allowanceCharge->getIdentifier()
-            ? $this->translator->translate('allowance.or.charge.charge')
-            : $this->translator->translate('allowance.or.charge.allowance'))
-            . '  ' . $allowanceCharge->getReasonCode()
-            . ' '
-            . $allowanceCharge->getReason()) : '';
+            if ($key) {
+                $label = $allowanceCharge->getIdentifier()
+                    ? $this->translator->translate('allowance.or.charge.charge')
+                    : $this->translator->translate('allowance.or.charge.allowance');
+                $optionsDataAllowanceCharges[$key] = $label
+                    . '  ' . $allowanceCharge->getReasonCode()
+                    . ' '
+                    . $allowanceCharge->getReason();
+            }
         }
         return $optionsDataAllowanceCharges;
     }

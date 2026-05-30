@@ -513,22 +513,28 @@ final readonly class TemplateHelper
                                                 $invoice->reqId(),
                                                     (int) $cf_id[1]);
                                     }
-                                    break;
+                                    break;                                    
                                 case 'client_custom':
-// Client custom fields can be included on either an invoice or a quote
-                                    $entity = $isInvoice ? ($iR->repoCount($pk) > 0 ?
-                                        $iR->repoInvLoadedquery($pk) : null)
-                                                         : ($qR->repoCount($pk) > 0 ?
-                                        $qR->repoQuoteLoadedquery($pk) : null);
+                                   // Client custom fields can be included on
+                                   // either an invoice or a quote
 
-                                    if ($entity) {
-/**
- * @var \App\Infrastructure\Persistence\ClientCustom\ClientCustom $replace_custom
- */
-                                        $replace_custom = $this->ccR->repoFormValuequery(
-                                            $entity instanceof Inv ? $entity->reqClientId() : $entity->reqClientId(), (int) $cf_id[1]);
-                                    }
-                                    break;
+                                   $entity = null;
+
+                                   if ($isInvoice && $iR->repoCount($pk) > 0) {
+                                       $entity = $iR->repoInvLoadedquery($pk);
+                                   } elseif (!$isInvoice && $qR->repoCount($pk) > 0) {
+                                       $entity = $qR->repoQuoteLoadedquery($pk);
+                                   }
+
+                                   if ($entity) {
+/** @var \App\Infrastructure\Persistence\ClientCustom\ClientCustom $replace_custom */
+                                       $replace_custom = $this->ccR->repoFormValuequery(
+                                           $entity->reqClientId(),
+                                           (int) $cf_id[1]
+                                       );
+                                   }
+
+                                   break;
                             }
                             // All the different entities are represented by $replace_custom
 

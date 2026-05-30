@@ -160,13 +160,7 @@ trait Index
                 'defaultPageSizeOffsetPaginator' =>
                     $this->sR->getSetting('default_list_limit')
                     ? (int) $this->sR->getSetting('default_list_limit') : 1,
-                'defaultQuoteGroup' => null !==
-                    ($gR = $groupRepo->repoGroupquery((int)
-                        $this->sR->getSetting('default_quote_group')))
-                        ? (strlen(
-                            $groupName = $gR->getName() ?? '') > 0 ? $groupName
-                                : $this->sR->getSetting('not_set'))
-                                    : $this->sR->getSetting('not_set'),
+                'defaultQuoteGroup' => $this->indexDefaultQuoteGroup($groupRepo),
                 'quoteStatuses' => $quote_statuses,
                 'max' => (int) $sR->getSetting('default_list_limit'),
                 'qR' => $quoteRepo,
@@ -207,6 +201,21 @@ trait Index
         $this->flashMessage('info',
             $this->translator->translate('user.client.active.no'));
         return $this->webService->getRedirectResponse('client/index');
+    }
+    
+    public function indexDefaultQuoteGroup(GR $groupRepo): string
+    {
+        $group = $groupRepo->repoGroupquery(
+            (int) $this->sR->getSetting('default_quote_group')
+        );
+        $defaultQuoteGroup = $this->sR->getSetting('not_set');
+        if ($group !== null) {
+            $groupName = $group->getName() ?? '';
+            if ($groupName !== '') {
+                $defaultQuoteGroup = $groupName;
+            }
+        }
+        return $defaultQuoteGroup;
     }
 
     // jquery function currently not used

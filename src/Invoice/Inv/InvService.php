@@ -138,9 +138,9 @@ final readonly class InvService
         isset($array['document_description']) ?
             $model->setDocumentDescription(
                 (string) $array['document_description']) : '';
-        isset($array['creditinvoice_parent_id']) ?
-            $model->setCreditinvoiceParentId(
-                (int) $array['creditinvoice_parent_id'] ?: 0) : '';
+        if (isset($array['creditinvoice_parent_id'])) {
+            $model->setCreditinvoiceParentId((int) $array['creditinvoice_parent_id'] ?: 0);
+        }
         isset($array['contract_id']) ?
             $model->setContractId((int) $array['contract_id']) : '';
 

@@ -119,7 +119,7 @@ class GeneratorController extends BaseController
         $lang = [];
         if (($foundEnAppPath = file_exists($fileEnAppPath)) === true) {
             // $lang is a full array inside the file designated by $fileEnAppPath
-            $lang = include($fileEnAppPath);
+            $lang = include $fileEnAppPath;
         }
         $arrayEnAppDotPhp = $lang;
         $messages = $this->aliases->get('@messages');
@@ -131,7 +131,7 @@ class GeneratorController extends BaseController
         $lang = [];
         if (($foundTargetLangFileAppPath = file_exists($targetLangFileAppPath)) === true) {
             // $lang is a full array inside the file designated by $targetLangFileAppPath
-            $lang = include($targetLangFileAppPath);
+            $lang = include $targetLangFileAppPath;
         }
 
         $arrayTargetLocaleDotPhp = $lang ?? [];
@@ -491,7 +491,7 @@ class GeneratorController extends BaseController
         }
 
         /** @var array<string, string> $app */
-        $app = include($source);
+        $app = include $source;
 
         $export = var_export($app, true);
 

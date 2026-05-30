@@ -523,13 +523,17 @@ class PdfHelper
                 $amount = $inv_allowance_charge->getAmount();
                 $vatOrTax = $inv_allowance_charge->getVatOrTax();
                 $amountTitle = $this->translator->translate($aOrC . 'amount');
-                $vatOrHeadingTitle = $identifier ? ($vat ?
-                    $this->translator->translate($aOrC . 'allowance.vat') :
-                    $this->translator->translate($aOrC . 'tax')) : ($vat ?
-                    $this->translator->translate($aOrC . 'charge.vat') :
-                    $this->translator->translate($aOrC . 'charge.tax'));
-                $print .=  "{$allowanceOrCharge}: " 
-                . "{$amountTitle} {$amount}, " 
+                $key = match (true) {
+                    $identifier && $vat  => $aOrC . 'allowance.vat',
+                    $identifier          => $aOrC . 'tax',
+                    !$identifier && $vat => $aOrC . 'charge.vat',
+                    default              => $aOrC . 'charge.tax',
+                };
+
+                $vatOrHeadingTitle = $this->translator->translate($key);
+                
+                $print .=  "{$allowanceOrCharge}: "
+                . "{$amountTitle} {$amount}, "
                 . "$vatOrHeadingTitle}: {$vatOrTax}<br>";
             }
             return $webViewRenderer->renderPartialAsString(

@@ -20,36 +20,52 @@ final readonly class ClientNoteService
         array $array
     ): void {
         $this->persist($model, $array);
-        isset($array['client_id']) ?
-            $model->setClientId((int) $array['client_id']) : '';
+
+        if (isset($array['client_id'])) {
+            $model->setClientId((int) $array['client_id']);
+        }
+
         $datetime = new \DateTimeImmutable();
-        isset($array['date_note']) ?
-            $model->setDateNote(\DateTimeImmutable::createFromFormat('Y-m-d',
-                    (string) $array['date_note']) ?: $datetime) : '';
-        isset($array['note']) ?
-            $model->setNote((string) $array['note']) : '';
+
+        if (isset($array['date_note'])) {
+            $model->setDateNote(
+                \DateTimeImmutable::createFromFormat(
+                    'Y-m-d',
+                    (string) $array['date_note']
+                ) ?: $datetime
+            );
+        }
+
+        if (isset($array['note'])) {
+            $model->setNote((string) $array['note']);
+        }
+
         $this->repository->save($model);
     }
 
-    /**
-     * @param ClientNote $model
-     * @param array $array
-     */
     public function saveClientNote(
         ClientNote $model,
         array $array
     ): void {
         $this->persist($model, $array);
-        isset($array['client_id']) ?
-            $model->setClientId((int) $array['client_id']) : '';
-        
-        $datetime = new \DateTimeImmutable();
-        isset($array['date_note']) ?
-            $model->setDateNote(\DateTimeImmutable::createFromFormat('Y-m-d',
-                    (string) $array['date_note']) ?: $datetime) : '';
-        
-        isset($array['note']) ?
-            $model->setNote((string) $array['note']) : '';
+
+        if (isset($array['client_id'])) {
+            $model->setClientId((int) $array['client_id']);
+        }
+
+        if (isset($array['date_note'])) {
+            $model->setDateNote(
+                \DateTimeImmutable::createFromFormat(
+                    'Y-m-d',
+                    (string) $array['date_note']
+                ) ?: new \DateTimeImmutable()
+            );
+        }
+
+        if (isset($array['note'])) {
+            $model->setNote((string) $array['note']);
+        }
+
         $this->repository->save($model);
     }
 

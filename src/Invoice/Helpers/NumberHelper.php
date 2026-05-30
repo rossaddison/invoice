@@ -907,20 +907,19 @@ final readonly class NumberHelper
                 /** @var InvTaxRate  $inv_tax_rate */
                 foreach ($inv_tax_rates as $inv_tax_rate) {
 // If the include item tax has been checked ie. value is 1
-                    $inv_tax_rate_amount = (
-                        (null !== $inv_tax_rate->getIncludeItemTax()
-                            && $inv_tax_rate->getIncludeItemTax() === 1)
+                    $item_subtotal = $inv_amount->getItemSubtotal() ?: 0.00;
+                    $tax_rate_percent = $inv_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00;
 // 'Apply after item tax' => The inv tax rate should include the applied item tax
-                            ? ((($inv_amount->getItemSubtotal() ?: 0.00)
-                            + ($inv_amount->getItemTaxTotal() ?: 0.00))
-                            * ($inv_tax_rate->getTaxRate()?->getTaxRatePercent()
-                                    ?? 0.00) / 100.00)
+                    if (null !== $inv_tax_rate->getIncludeItemTax()
+                        && $inv_tax_rate->getIncludeItemTax() === 1) {
+                        $item_tax_total = $inv_amount->getItemTaxTotal() ?: 0.00;
+                        $inv_tax_rate_amount = ($item_subtotal + $item_tax_total)
+                            * $tax_rate_percent / 100.00;
+                    } else {
 // The invoice tax rate should not include the applied item tax so get the
 // general tax rate from Tax Rate table
-                            : (($inv_amount->getItemSubtotal() ?: 0.00)
-                            * (($inv_tax_rate->getTaxRate()?->getTaxRatePercent()
-                                    ?? 0.00) / 100.00))
-                    );
+                        $inv_tax_rate_amount = $item_subtotal * ($tax_rate_percent / 100.00);
+                    }
                     // Update the invoice tax rate amount
                     $inv_tax_rate->setInvTaxRateAmount($inv_tax_rate_amount);
                     $itrR->save($inv_tax_rate);

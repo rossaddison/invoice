@@ -412,21 +412,20 @@ final readonly class QuoteItemService
         // This function is used in quoteitem/edit when editing
         // a product item on the quote view
         // see https://github.com/cycle/orm/issues/348
-        isset($array['tax_rate_id']) ?
+        if (isset($array['tax_rate_id'])) {
+            $currentTaxRate = $model->getTaxRate();
             $model->setTaxRate(
-                $model->getTaxRate()?->reqId() ==
-                    (int) $array['tax_rate_id'] ?
-                    $model->getTaxRate() : null
-            ) : '';
-        $tax_rate_id = ((isset($array['tax_rate_id'])) ?
-            (int) $array['tax_rate_id'] : '');
+                $currentTaxRate?->reqId() == (int) $array['tax_rate_id'] ? $currentTaxRate : null
+            );
+        }
+        $tax_rate_id = isset($array['tax_rate_id']) ? (int) $array['tax_rate_id'] : '';
         $model->setTaxRateId((int) $tax_rate_id);
-        isset($array['product_id']) ?
+        if (isset($array['product_id'])) {
+            $currentProduct = $model->getProduct();
             $model->setProduct(
-                $model->getProduct()?->reqId() ==
-                    (int) $array['product_id'] ?
-                    $model->getProduct() : null
-            ) : '';
+                $currentProduct?->reqId() == (int) $array['product_id'] ? $currentProduct : null
+            );
+        }
         $product_id = (isset($array['product_id']) ?
             (int) $array['product_id'] : '');
         $model->setProductId((int) $product_id);
@@ -498,24 +497,22 @@ final readonly class QuoteItemService
         // This function is used in quoteitem/edit_task when
         // editing a task item on the quote view
         // see https://github.com/cycle/orm/issues/348
-        isset($array['tax_rate_id']) ?
+        if (isset($array['tax_rate_id'])) {
+            $currentTaxRate = $model->getTaxRate();
             $model->setTaxRate(
-                $model->getTaxRate()?->reqId() ==
-                    (int) $array['tax_rate_id'] ?
-                    $model->getTaxRate() : null
-            ) : '';
-        $tax_rate_id = ((isset($array['tax_rate_id'])) ?
-            (int) $array['tax_rate_id'] : '');
+                $currentTaxRate?->reqId() == (int) $array['tax_rate_id'] ? $currentTaxRate : null
+            );
+        }
+        $tax_rate_id = isset($array['tax_rate_id']) ? (int) $array['tax_rate_id'] : '';
         $model->setTaxRateId((int) $tax_rate_id);
 
-        isset($array['task_id']) ?
+        if (isset($array['task_id'])) {
+            $currentTask = $model->getTask();
             $model->setTask(
-                $model->getTask()?->reqId() ==
-                    (int) $array['task_id'] ?
-                    $model->getTask() : null
-            ) : '';
-        $task_id = ((isset($array['task_id'])) ?
-            (int) $array['task_id'] : '');
+                $currentTask?->reqId() == (int) $array['task_id'] ? $currentTask : null
+            );
+        }
+        $task_id = isset($array['task_id']) ? (int) $array['task_id'] : '';
 
         $model->setTaskId((int) $task_id);
 

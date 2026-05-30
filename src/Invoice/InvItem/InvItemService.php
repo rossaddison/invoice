@@ -416,18 +416,22 @@ final readonly class InvItemService
     {
         // This function is used in invitem/edit_task when editing an item on
         // the inv view. Related logic: https://github.com/cycle/orm/issues/348
-        isset($array['tax_rate_id']) ?
-            $model->setTaxRate($model->getTaxRate()?->reqId() ==
-                (int) $array['tax_rate_id'] ? $model->getTaxRate() : null) : '';
-        $tax_rate_id = ((isset($array['tax_rate_id'])) ?
-            (int) $array['tax_rate_id'] : '');
+        if (isset($array['tax_rate_id'])) {
+            $currentTaxRate = $model->getTaxRate();
+            $model->setTaxRate(
+                $currentTaxRate?->reqId() == (int) $array['tax_rate_id'] ? $currentTaxRate : null
+            );
+        }
+        $tax_rate_id = isset($array['tax_rate_id']) ? (int) $array['tax_rate_id'] : '';
         $model->setTaxRateId((int) $tax_rate_id);
 
-        isset($array['task_id']) ?
-            $model->setTask($model->getTask()?->reqId() ==
-                (int) $array['task_id'] ? $model->getTask() : null) : '';
-        $task_id = ((isset($array['task_id']))
-                ? (int) $array['task_id'] : '');
+        if (isset($array['task_id'])) {
+            $currentTask = $model->getTask();
+            $model->setTask(
+                $currentTask?->reqId() == (int) $array['task_id'] ? $currentTask : null
+            );
+        }
+        $task_id = isset($array['task_id']) ? (int) $array['task_id'] : '';
         // Product id and task id are mutually exclusive
         $model->setTaskId((int) $task_id);
 

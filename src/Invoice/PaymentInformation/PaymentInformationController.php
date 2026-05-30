@@ -1277,22 +1277,22 @@ final class PaymentInformationController
     public function stripeComplete(
                         Request $request, CurrentRoute $currentRoute): Response
     {
-        $invoice_url_key = $currentRoute->getArgument('url_key');
-        if (null !== $invoice_url_key) {
-            $sandbox_url_array = $this->sR->sandboxUrlArray();
+        $invoiceUrlKey = $currentRoute->getArgument('url_key');
+        if (null !== $invoiceUrlKey) {
+            $sandboxUrlArray = $this->sR->sandboxUrlArray();
             $invoice           =
-                        $this->iR->repoUrlKeyGuestLoaded($invoice_url_key);
+                        $this->iR->repoUrlKeyGuestLoaded($invoiceUrlKey);
             if (null === $invoice) {
                 return $this->webService->getNotFoundResponse();
             }
             $invoiceNumber               = (null !== $invoice->getNumber()) ?:
                                                                         'unknown';
             $query_params                = $request->getQueryParams();
-            $redirect_status_from_stripe =
+            $redirectStatus =
                                 (string) ($query_params['redirect_status'] ?? '');
             $result                      =
                     $this->stripePaymentService->handleCompletion(
-                                        $invoice, $redirect_status_from_stripe);
+                                        $invoice, $redirectStatus);
             $invoice->setStatusId((int) $result['status_id']);
             $invoice->setPaymentMethod(4);
             $this->iR->save($invoice);
@@ -1309,7 +1309,7 @@ final class PaymentInformationController
                 $this->iaR->save($invoice_amount_record);
                 $this->recordOnlinePaymentsAndMerchant(
                     // Reference
-                    (string) $invoiceNumber . '-' . $redirect_status_from_stripe,
+                    (string) $invoiceNumber . '-' . $redirectStatus,
                     (string) $invoice_amount_record->reqInvId(),
                     $balance ?: 0.00,
                     // Card / Direct Debit - Customer Ready => 6
@@ -1317,33 +1317,25 @@ final class PaymentInformationController
                     (string) $invoiceNumber,
                     'Stripe',
                     'stripe',
-                    $invoice_url_key,
+                    $invoiceUrlKey,
                     true,
-                    $sandbox_url_array,
+                    $sandboxUrlArray,
                 );
-                $heading = 'succeeded' == $redirect_status_from_stripe
-                  ? sprintf(
-                        $this->translator->translate(
-                                'online.payment.payment.successful'),
-                                    (string) $invoiceNumber)
-                  : sprintf($this->translator->translate(
-                                'online.payment.payment.failed'),
-                                    (string) $invoiceNumber
-                                        . ' '
-                                        . ((string) $result['message'] ?: ''));
+                
                 $view_data = [
                     'render' => $this->webViewRenderer->renderPartialAsString(
                         '//invoice/paymentinformation/payment_message',
                         [
-                            'heading'     => $heading,
+                            'heading'     => $this->stripeCompleteHeading(
+                                $result, (string) $invoiceNumber, $redirectStatus),
                             'message'     =>
                                 $this->translator->translate('payment')
                                     . ':'
                                     . $this->translator->translate('complete'),
                             'url'         => 'inv/urlKey',
-                            'url_key'     => $invoice_url_key,
+                            'url_key'     => $invoiceUrlKey,
                             'gateway' => 'Stripe',
-                            'sandbox_url' => $sandbox_url_array['stripe'],
+                            'sandbox_url' => $sandboxUrlArray['stripe'],
                         ],
                     ),
                 ];
@@ -1353,9 +1345,27 @@ final class PaymentInformationController
             } // null!==$balance
 
             return $this->webService->getNotFoundResponse();
-        } // null!== $invoice_url_key
+        } // null!== $invoiceUrlKey
 
         return $this->webService->getNotFoundResponse();
+    }
+    
+    public function stripeCompleteHeading(
+        array $result, string $invoiceNumber, string $redirectStatus): string
+    {
+        $message = (string) ($result['message'] ?? '');
+
+        if ($redirectStatus === 'succeeded') {
+            $heading = sprintf(
+                $this->translator->translate('online.payment.payment.successful'),
+                $invoiceNumber);
+        } else {
+            $heading = sprintf(
+                $this->translator->translate('online.payment.payment.failed'),
+                trim($invoiceNumber . ' ' . $message)
+            );
+        }
+        return $heading;
     }
 
     public function getStripePciClientSecret(array $yii_invoice): ?string

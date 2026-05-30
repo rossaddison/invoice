@@ -361,14 +361,14 @@ final class QuoteController extends BaseController
 
     private function rbacAccountant() : bool {
         // has accountant role
-        return ($this->userService->hasPermission(Permissions::VIEW_INV)
+        return $this->userService->hasPermission(Permissions::VIEW_INV)
             && ($this->userService->hasPermission(Permissions::VIEW_PAYMENT))
-            && ($this->userService->hasPermission(Permissions::EDIT_PAYMENT)));
+            && ($this->userService->hasPermission(Permissions::EDIT_PAYMENT));
     }
 
     private function rbacAdmin() : bool {
         // has observer role
-        return ($this->userService->hasPermission(Permissions::VIEW_INV)
-            && ($this->userService->hasPermission(Permissions::EDIT_INV)));
+        return $this->userService->hasPermission(Permissions::VIEW_INV)
+            && ($this->userService->hasPermission(Permissions::EDIT_INV));
     }
 }

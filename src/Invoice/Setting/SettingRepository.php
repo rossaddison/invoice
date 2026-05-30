@@ -205,13 +205,15 @@ final class SettingRepository extends Select\Repository
                 // convert to cents in order to use the int
                 ->getMinorAmount()
                 ->toInt();
-            return $this->getSetting('peppol_debug_with_emojis') == '1' ?
-                (string) $from
-                . ' ' . $a . ' '
-                . ' x ' . $one_of_a_converts_to_this_of_b .  '↔️'
-                . number_format(((float)$int) / 100.00 ?: 0.00, 2, '.', '')
-                . ' ' . $b . ' ' :
-                number_format(((float)$int) / 100.00 ?: 0.00, 2, '.', '');
+            $formatted = number_format(((float)$int) / 100.00 ?: 0.00, 2, '.', '');
+            if ($this->getSetting('peppol_debug_with_emojis') == '1') {
+                return (string) $from
+                    . ' ' . $a . ' '
+                    . ' x ' . $one_of_a_converts_to_this_of_b . '↔️'
+                    . $formatted
+                    . ' ' . $b . ' ';
+            }
+            return $formatted;
         } else {
             /**
              * @psalm-suppress InvalidCast $from

@@ -105,9 +105,13 @@ final readonly class GridComponents
 
             $invId = $invoice->reqId();
             $invNumberRaw = $invoice->getNumber();
-            $invNumberLabel = (null !== $invNumberRaw)
-                ? $invNumberRaw
-                : $this->translator->translate('number.missing.therefore.use.invoice.id') . ($invId ?: '');
+            if ($invNumberRaw !== null) {
+                $invNumberLabel = $invNumberRaw;
+            } else {
+                $invNumberLabel =
+                    $this->translator->translate('number.missing.therefore.use.invoice.id')
+                    . ($invId ?: '');
+            }
 
             // Format amount: round to 2 decimals then trim trailing zeros (at most 2 decimals)
             $invBalance = $invoice->getInvAmount()->getBalance();

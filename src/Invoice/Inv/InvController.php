@@ -383,8 +383,7 @@ final class InvController extends BaseController
                   ['class' => 'bi bi-pencil'],
               ),
               $setting_url,
-              ['class' =>
-                    $mark_sent == '0' ? 'btn btn-success' : 'btn btn-danger'],
+              ['class' => 'btn btn-' . $level],
           )
           : '');
         $this->flashMessage($level, $message);

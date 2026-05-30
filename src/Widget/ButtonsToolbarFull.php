@@ -343,12 +343,12 @@ final readonly class ButtonsToolbarFull
 
     private function canDeleteInvoice(Inv $inv, bool $invEdit): bool
     {
-        return ($inv->reqStatusId() === 1
+        return $inv->reqStatusId() === 1
                 && $this->settingRepository->getSetting(
                     'enable_invoice_deletion') === '1'
                 && $inv->getIsReadOnly() === false
                 && !($inv->getSoId() > 0)
-                && $invEdit);
+                && $invEdit;
     }
 
     private function createButton(
