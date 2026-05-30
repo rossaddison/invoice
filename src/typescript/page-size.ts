@@ -22,7 +22,7 @@ export class PageSizeHandler {
         try {
             const response = await fetch(url);
             if (response.ok) {
-                window.location.reload();
+                globalThis.location.reload();
             } else {
                 console.error('Page size save failed: HTTP', response.status, response.url);
                 select.disabled = false;

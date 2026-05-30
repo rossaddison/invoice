@@ -72,8 +72,8 @@ export class FamilyHandler {
                 return;
             }
             const modalEl = document.getElementById('generate-products-modal');
-            if (modalEl && (window as any).bootstrap?.Modal !== undefined) {
-                (window as any).bootstrap.Modal.getOrCreateInstance(modalEl).show();
+            if (modalEl && (globalThis as any).bootstrap?.Modal !== undefined) {
+                (globalThis as any).bootstrap.Modal.getOrCreateInstance(modalEl).show();
             }
         }
 
@@ -422,17 +422,17 @@ export class FamilyHandler {
             console.warn('Warnings during product generation:', data.warnings);
         }
         const modal = document.getElementById('generate-products-modal');
-        if (modal && (window as any).bootstrap?.Modal !== undefined) {
-            const bsModal = (window as any).bootstrap.Modal.getInstance(modal);
+        if (modal && (globalThis as any).bootstrap?.Modal !== undefined) {
+            const bsModal = (globalThis as any).bootstrap.Modal.getInstance(modal);
             if (bsModal) {
                 bsModal.hide();
             }
         }
         setTimeout(() => {
             if (data.redirect_url) {
-                window.location.href = data.redirect_url;
+                globalThis.location.href = data.redirect_url;
             } else {
-                window.location.reload();
+                globalThis.location.reload();
             }
         }, 1000);
     }

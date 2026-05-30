@@ -240,8 +240,8 @@ declare global {
 }
 
 export function initializeCommalistPicker() {
-    window.toggleCommalistPicker = toggleCommalistPicker;
-    window.picker = null;
+    globalThis.toggleCommalistPicker = toggleCommalistPicker;
+    globalThis.picker = null;
 }
 
 function toggleCommalistPicker() {
@@ -269,7 +269,7 @@ function toggleCommalistPicker() {
             }
 
             picker = new FamilyCommalistPicker('number-picker', 'family_commalist');
-            window.picker = picker;
+            globalThis.picker = picker;
         }
     } else {
         // Hide picker

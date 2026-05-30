@@ -256,10 +256,10 @@ export class InvoiceHandler {
 
             if (data.success === 1) {
                 if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
-                window.location.reload();
+                globalThis.location.reload();
             } else {
                 if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-x-lg"></i></h2>';
-                window.location.reload();
+                globalThis.location.reload();
             }
         } catch (error) {
             console.error('mark_as_sent error', error);
@@ -287,10 +287,10 @@ export class InvoiceHandler {
 
             if (data.success === 1) {
                 if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
-                window.location.reload();
+                globalThis.location.reload();
             } else {
                 if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-x-lg"></i></h2>';
-                window.location.reload();
+                globalThis.location.reload();
             }
         } catch (error) {
             console.error('mark_sent_as_draft error', error);
@@ -353,7 +353,7 @@ export class InvoiceHandler {
                 this.closeModal('create-recurring-multiple');
 
                 setTimeout(() => {
-                    window.location.reload();
+                    globalThis.location.reload();
                 }, 500);
             } else {
                 if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-x-lg"></i></h2>';
@@ -410,10 +410,10 @@ export class InvoiceHandler {
 
             if (data.success === 1) {
                 if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
-                window.location.reload();
+                globalThis.location.reload();
             } else {
                 if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-x-lg"></i></h2>';
-                window.location.reload();
+                globalThis.location.reload();
             }
         } catch (error) {
             console.error('multiplecopy error', error);
@@ -456,7 +456,7 @@ export class InvoiceHandler {
                 this.closeModal('add-inv-tax');
 
                 setTimeout(() => {
-                    window.location.reload();
+                    globalThis.location.reload();
                 }, 500);
             } else {
                 if (btn) btn.innerHTML = '<i class="bi bi-x-lg"></i>';
@@ -505,14 +505,14 @@ export class InvoiceHandler {
 
                 // Redirect to the newly created invoice
                 if (data.new_invoice_id) {
-                    window.location.href = `${location.origin}/invoice/inv/view/${data.new_invoice_id}`;
+                    globalThis.location.href = `${location.origin}/invoice/inv/view/${data.new_invoice_id}`;
                 } else {
                     // Fallback to reload current page if new_invoice_id not provided
-                    window.location.reload();
+                    globalThis.location.reload();
                 }
             } else {
                 if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-x-lg"></i></h2>';
-                window.location.reload();
+                globalThis.location.reload();
             }
         } catch (error) {
             console.error('inv_to_inv_confirm error', error);
@@ -579,7 +579,7 @@ export class InvoiceHandler {
                 this.closeModal('delete-items');
 
                 setTimeout(() => {
-                    window.location.reload();
+                    globalThis.location.reload();
                 }, 500);
             } else {
                 if (btn) btn.innerHTML = '<i class="bi bi-x-lg"></i>';
@@ -602,7 +602,7 @@ export class InvoiceHandler {
     private handlePdfExport(withCustomFields: boolean): void {
         const endpoint = withCustomFields ? '1' : '0';
         const url = `${location.origin}/invoice/inv/pdf/${endpoint}`;
-        window.open(url, '_blank');
+        globalThis.open(url, '_blank');
     }
 
     private handleModalPdfView(withCustomFields: boolean): void {
@@ -617,10 +617,10 @@ export class InvoiceHandler {
 
         // Open the modal using Bootstrap
         try {
-            if (typeof (window as any).bootstrap?.Modal !== 'undefined') {
+            if (typeof (globalThis as any).bootstrap?.Modal !== 'undefined') {
                 const modalEl = document.getElementById('modal-layout-modal-pdf-inv');
                 if (modalEl) {
-                    const modal = new (window as any).bootstrap.Modal(modalEl);
+                    const modal = new (globalThis as any).bootstrap.Modal(modalEl);
                     modal.show();
                 }
             }
@@ -632,7 +632,7 @@ export class InvoiceHandler {
     private handleHtmlExport(withCustomFields: boolean): void {
         const endpoint = withCustomFields ? '1' : '0';
         const url = `${location.origin}/invoice/inv/html/${endpoint}`;
-        window.open(url, '_blank');
+        globalThis.open(url, '_blank');
     }
 
     private async handlePaymentSubmit(): Promise<void> {
@@ -664,7 +664,7 @@ export class InvoiceHandler {
                 // Close payment modal and reload
                 this.closeModal('payment-modal'); // Adjust modal ID as needed
                 setTimeout(() => {
-                    window.location.reload();
+                    globalThis.location.reload();
                 }, 500);
             } else {
                 if (btn && originalHtml) {
@@ -762,7 +762,7 @@ export class InvoiceHandler {
                 }
                 alert('Deleted');
                 // Reload to update totals
-                window.location.reload();
+                globalThis.location.reload();
             } else {
                 alert('Failed to delete item. Please try again.');
             }
@@ -798,10 +798,10 @@ export class InvoiceHandler {
 
     private closeModal(modalId: string): void {
         try {
-            if (typeof (window as any).bootstrap?.Modal !== 'undefined') {
+            if (typeof (globalThis as any).bootstrap?.Modal !== 'undefined') {
                 const modalEl = document.getElementById(modalId);
                 if (modalEl) {
-                    const modalInstance = (window as any).bootstrap.Modal.getInstance(modalEl);
+                    const modalInstance = (globalThis as any).bootstrap.Modal.getInstance(modalEl);
                     if (modalInstance) {
                         modalInstance.hide();
                     }

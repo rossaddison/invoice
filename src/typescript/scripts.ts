@@ -2,7 +2,7 @@
 // Converted from scripts.js - Global UI utilities
 
 export function initTooltips(): void {
-    const bs = (window as any).bootstrap;
+    const bs = (globalThis as any).bootstrap;
     if (!bs?.Tooltip) return;
     document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
         try {
@@ -14,7 +14,7 @@ export function initTooltips(): void {
 }
 
 export function initSimpleSelects(root?: Document | Element): void {
-    const TomSelect = (window as any).TomSelect;
+    const TomSelect = (globalThis as any).TomSelect;
     if (typeof TomSelect === 'undefined') return;
 
     const container = root || document;

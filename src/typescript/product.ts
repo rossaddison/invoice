@@ -179,11 +179,11 @@ export class ProductHandler {
 
     private initializeComponents(): void {
         // Initialize TomSelect (replaces jQuery select2)
-        if (typeof window.TomSelect !== 'undefined') {
+        if (typeof globalThis.TomSelect !== 'undefined') {
             document.querySelectorAll('.simple-select').forEach((el: Element) => {
                 const tracked = el as Element & { _tomselect?: boolean };
                 if (!tracked._tomselect) {
-                    new window.TomSelect(el, {});
+                    new globalThis.TomSelect(el, {});
                     tracked._tomselect = true;
                 }
             });
@@ -244,7 +244,7 @@ export class ProductHandler {
     private async submitProductFilters(event: Event): Promise<void> {
         event.preventDefault();
 
-        const url = `${window.location.origin}/invoice/product/search`;
+        const url = `${globalThis.location.origin}/invoice/product/search`;
         const buttons = document.querySelectorAll(
             '.product_filters_submit'
         ) as NodeListOf<HTMLElement>;
@@ -292,7 +292,7 @@ export class ProductHandler {
     }
 
     private async handleQuoteConfirm(): Promise<void> {
-        const absoluteUrl = new URL(window.location.href);
+        const absoluteUrl = new URL(globalThis.location.href);
         const btn = document.querySelector('.select-items-confirm-quote') as HTMLElement;
         this.setSecureButtonContent(btn, 'h2', 'text-center', 'spinner-border spinner-border-sm');
         
@@ -324,7 +324,7 @@ export class ProductHandler {
             const data = await response.json() as ProductSelectionResponse;
             this.processProducts(data);
             this.setSecureButtonContent(btn, 'h2', 'text-center', 'bi bi-check-lg');
-            window.location.reload();
+            globalThis.location.reload();
         } catch (error) {
             console.error('Error:', error);
             this.setSecureButtonContent(btn, 'h2', 'text-center', 'bi bi-x-lg');
@@ -332,7 +332,7 @@ export class ProductHandler {
     }
 
     private async handleInvoiceConfirm(): Promise<void> {
-        const absoluteUrl = new URL(window.location.href);
+        const absoluteUrl = new URL(globalThis.location.href);
         const btn = document.querySelector('.select-items-confirm-inv') as HTMLElement;
         this.setSecureButtonContent(btn, 'h2', 'text-center', 'spinner-border spinner-border-sm');
         
@@ -364,7 +364,7 @@ export class ProductHandler {
             const data = await response.json() as ProductSelectionResponse;
             this.processProducts(data);
             this.setSecureButtonContent(btn, 'h2', 'text-center', 'bi bi-check-lg');
-            window.location.reload();
+            globalThis.location.reload();
         } catch (error) {
             console.error('Error:', error);
             this.setSecureButtonContent(btn, 'h2', 'text-center', 'bi bi-x-lg');
@@ -438,7 +438,7 @@ export class ProductHandler {
      * Expose global functions for compatibility with existing code
      */
     private exposeGlobalFunctions(): void {
-        window.productTableFilter = this.filterTableBySku.bind(this);
+        globalThis.productTableFilter = this.filterTableBySku.bind(this);
     }
 
     /**

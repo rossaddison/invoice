@@ -32,8 +32,8 @@ function escapeIdForQuerySelector(id: string): string {
     // Fallback to escaping brackets.
     // Note: we only need this if using querySelector with the id that contains brackets.
     // We'll use getElementById where possible (no escaping required).
-    if ((window as any).CSS && typeof (window as any).CSS.escape === 'function') {
-        return (window as any).CSS.escape(id);
+    if ((globalThis as any).CSS && typeof (globalThis as any).CSS.escape === 'function') {
+        return (globalThis as any).CSS.escape(id);
     }
     // First escape backslash, then escape brackets and other CSS selector special chars
     return id.replace(/\\/g, '\\\\').replace(/([\[\]#;.])/g, '\\$1');
@@ -132,7 +132,7 @@ export function initGenerateCronKey(): void {
 
 // If this script is included as a simple script tag (not module), auto-init
 // @ts-ignore-next-line: allow global check
-if (typeof window !== 'undefined' && !(window as any).module) {
+if (typeof globalThis.window !== 'undefined' && !(globalThis as any).module) {
     // Delay slightly to allow other scripts to wire up or to ensure DOM is ready
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
         initGenerateCronKey();

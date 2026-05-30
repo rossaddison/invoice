@@ -9,7 +9,7 @@ let angularAppMounted = false;
 
 export function initializeCommalistPicker() {
   // Add the toggle function to global scope
-  window.toggleCommalistPicker = toggleCommalistPicker;
+  globalThis.toggleCommalistPicker = toggleCommalistPicker;
 
   // Auto-show picker if there's existing data
   const textarea = document.getElementById('family_commalist') as HTMLTextAreaElement;

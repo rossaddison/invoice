@@ -19,7 +19,7 @@ class MobilePreviewToggle {
     private sideTab!: HTMLButtonElement;
 
     constructor() {
-        if (window.self !== window.top) return;
+        if (globalThis.self !== globalThis.top) return;
         this.injectStyles();
         this.createButton();
         this.createSideTab();
@@ -175,7 +175,7 @@ class MobilePreviewToggle {
 
         const iframe = document.createElement('iframe') as HTMLIFrameElement;
         iframe.id = 'mp-iframe';
-        iframe.src = window.location.href;
+        iframe.src = globalThis.location.href;
         phone.appendChild(iframe);
 
         const homeBar = document.createElement('div');

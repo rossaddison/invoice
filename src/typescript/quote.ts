@@ -3,7 +3,7 @@ import { parsedata, getJson, ApiResponse, RequestParams } from './utils.js';
 // Secure navigation helper to prevent Open Redirect vulnerabilities
 function secureReload(): void {
     // Safely reload the current page without using potentially manipulable URLs
-    window.location.reload();
+    globalThis.location.reload();
 }
 
 // Secure HTML insertion helper to prevent XSS vulnerabilities
@@ -408,10 +408,10 @@ export class QuoteHandler {
 
             // Redirect to the created invoice if successful
             if (data.success && data.redirect_url) {
-                window.location.href = data.redirect_url;
+                globalThis.location.href = data.redirect_url;
             } else if (data.success && data.new_invoice_id) {
                 // Fallback to old behavior for backward compatibility
-                window.location.href = `${location.origin}/invoice/inv/view/${data.new_invoice_id}`;
+                globalThis.location.href = `${location.origin}/invoice/inv/view/${data.new_invoice_id}`;
             } else {
                 // Fallback to reload if no redirect URL is provided
                 secureReload();
@@ -454,7 +454,7 @@ export class QuoteHandler {
 
             // Redirect to the created sales order if successful
             if (data.success && data.redirect_url) {
-                window.location.href = data.redirect_url;
+                globalThis.location.href = data.redirect_url;
             } else {
                 // Fallback to reload if no redirect URL is provided
                 secureReload();
@@ -541,14 +541,14 @@ export class QuoteHandler {
         // PDF with custom fields
         if (target.closest('#quote_to_pdf_confirm_with_custom_fields')) {
             const url = `${location.origin}/invoice/quote/pdf/1`;
-            window.open(url, '_blank');
+            globalThis.open(url, '_blank');
             return;
         }
 
         // PDF without custom fields
         if (target.closest('#quote_to_pdf_confirm_without_custom_fields')) {
             const url = `${location.origin}/invoice/quote/pdf/0`;
-            window.open(url, '_blank');
+            globalThis.open(url, '_blank');
             return;
         }
     }
@@ -680,7 +680,7 @@ export class QuoteHandler {
 
         // Taggable focus tracking
         if (target.classList?.contains('taggable')) {
-            (window as any).lastTaggableClicked = target;
+            (globalThis as any).lastTaggableClicked = target;
         }
     }
 
@@ -699,10 +699,10 @@ export class QuoteHandler {
     }
 
     private initializeTooltips(): void {
-        if (typeof (window as any).bootstrap?.Tooltip !== 'undefined') {
+        if (typeof (globalThis as any).bootstrap?.Tooltip !== 'undefined') {
             document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(element => {
                 try {
-                    new (window as any).bootstrap.Tooltip(element);
+                    new (globalThis as any).bootstrap.Tooltip(element);
                 } catch (error) {
                     // Ignore tooltip initialization errors
                 }
@@ -716,8 +716,8 @@ export class QuoteHandler {
             selectElement.addEventListener('change', event => {
                 const currentTarget = event.currentTarget as HTMLSelectElement;
 
-                if ((window as any).lastTaggableClicked) {
-                    this.insertAtCaret((window as any).lastTaggableClicked.id, currentTarget.value);
+                if ((globalThis as any).lastTaggableClicked) {
+                    this.insertAtCaret((globalThis as any).lastTaggableClicked.id, currentTarget.value);
                 }
 
                 // Reset select value

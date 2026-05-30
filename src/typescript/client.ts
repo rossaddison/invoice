@@ -21,7 +21,7 @@ function getFieldValue(id: string): string {
 // Secure navigation helper to prevent Open Redirect vulnerabilities
 function secureReload(): void {
     // Safely reload the current page without using potentially manipulable URLs
-    window.location.reload();
+    globalThis.location.reload();
 }
 
 // Helper function to safely create loading/success UI elements to prevent XSS
@@ -181,7 +181,7 @@ export class ClientHandler {
             const data = parsedata(response);
 
             if (data.success === 1) {
-                window.location.reload();
+                globalThis.location.reload();
             } else {
                 this.clearValidationErrors();
 
@@ -278,7 +278,7 @@ export class ClientHandler {
         // Close the modal if it exists
         const modal = document.getElementById('modal-add-quote') || document.getElementById('modal-add-client');
         if (modal) {
-            const bootstrapModal = (window as any).bootstrap?.Modal?.getInstance(modal);
+            const bootstrapModal = (globalThis as any).bootstrap?.Modal?.getInstance(modal);
             if (bootstrapModal) {
                 bootstrapModal.hide();
             }
@@ -313,7 +313,7 @@ export class ClientHandler {
         // Close the modal if it exists
         const modal = document.getElementById('modal-add-inv') || document.getElementById('modal-add-client');
         if (modal) {
-            const bootstrapModal = (window as any).bootstrap?.Modal?.getInstance(modal);
+            const bootstrapModal = (globalThis as any).bootstrap?.Modal?.getInstance(modal);
             if (bootstrapModal) {
                 bootstrapModal.hide();
             }

@@ -67,10 +67,10 @@ class InvoiceApp {
     /**
      * Initialize Bootstrap tooltips — Bootstrap must be loaded before this runs.
      * Registration order in layout/invoice.php ensures bootstrap.bundle.js
-     * executes before the IIFE, so (window as any).bootstrap is available here.
+     * executes before the IIFE, so (globalThis as any).bootstrap is available here.
      */
     private initializeTooltips(): void {
-        const bs = (window as any).bootstrap;
+        const bs = (globalThis as any).bootstrap;
         if (!bs?.Tooltip) return;
         document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(element => {
             try {
@@ -90,7 +90,7 @@ class InvoiceApp {
             (event: FocusEvent) => {
                 const target = event.target as Element;
                 if (target?.classList?.contains('taggable')) {
-                    window.lastTaggableClicked = target;
+                    globalThis.lastTaggableClicked = target;
                 }
             },
             true

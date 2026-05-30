@@ -11,7 +11,7 @@ declare global {
     }
 }
 
-// Pin htmx on window so inline hx-on:: handlers and other scripts can reach it.
-window.htmx = htmx;
+// Pin htmx on globalThis so inline hx-on:: handlers and other scripts can reach it.
+globalThis.htmx = htmx;
 
 export default htmx;

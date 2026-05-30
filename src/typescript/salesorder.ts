@@ -12,7 +12,7 @@ function secureInsertHTML(element: Element, html: string): void {
 
 // Secure reload helper to prevent Open Redirect vulnerabilities
 function secureReload(): void {
-    window.location.reload();
+    globalThis.location.reload();
 }
 
 interface SalesOrderConversionResponse {
@@ -107,7 +107,7 @@ export class SalesOrderHandler {
      * Initialize Tom Select if present for salesorder selects
      */
     private initSelects(): void {
-        if (typeof window.TomSelect === 'undefined') return;
+        if (typeof globalThis.TomSelect === 'undefined') return;
 
         const selects = document.querySelectorAll(
             '.simple-select'
@@ -116,7 +116,7 @@ export class SalesOrderHandler {
             // Check if already initialized
             if (!(element as any)._tomselect) {
                 try {
-                    new window.TomSelect(element, {});
+                    new globalThis.TomSelect(element, {});
                     (element as any)._tomselect = true;
                 } catch (error) {
                     console.warn('Failed to initialize TomSelect:', error);
@@ -147,8 +147,8 @@ export class SalesOrderHandler {
 
             // Show modal using Bootstrap if available
             const modalEl = target.querySelector('.modal') as HTMLElement;
-            if (modalEl && window.bootstrap?.Modal) {
-                const modalInstance = new window.bootstrap.Modal(modalEl);
+            if (modalEl && globalThis.bootstrap?.Modal) {
+                const modalInstance = new globalThis.bootstrap.Modal(modalEl);
                 modalInstance.show();
             }
 
@@ -165,8 +165,8 @@ export class SalesOrderHandler {
      */
     private handlePdfExport(withCustomFields: boolean): void {
         const url = location.origin + "/invoice/salesorder/pdf/" + (withCustomFields ? "1" : "0");
-        window.location.reload();
-        window.open(url, '_blank');
+        globalThis.location.reload();
+        globalThis.open(url, '_blank');
     }
 
     /**
@@ -207,7 +207,7 @@ export class SalesOrderHandler {
                 }
                 // Navigate to the new invoice if inv_id is provided, otherwise reload
                 if (response.inv_id) {
-                    window.location.href = `${location.origin}/invoice/inv/view/${response.inv_id}`;
+                    globalThis.location.href = `${location.origin}/invoice/inv/view/${response.inv_id}`;
                 } else {
                     secureReload();
                 }
@@ -279,7 +279,7 @@ export class SalesOrderHandler {
             );
             const data = parsedata(response);
             if (data.success === 1) {
-                window.location.reload();
+                globalThis.location.reload();
             } else {
                 if (btn && originalHtml) {
                     btn.innerHTML = originalHtml;
@@ -331,7 +331,7 @@ export class SalesOrderHandler {
 
             if (parsedResponse.success === 1) {
                 // Reload page on successful save
-                window.location.reload();
+                globalThis.location.reload();
             } else {
                 const message = parsedResponse.message || 'Save failed';
                 alert(message);
