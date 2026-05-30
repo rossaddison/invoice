@@ -87,8 +87,7 @@ class MailerHelper
             $user_id = $quote->getUser()?->reqId() ?? null;
             $user_inv = null !== $user_id ?
                 $uiR->repoUserInvUserIdquery($user_id) : null;
-            if (null !== $user_inv) {
-                if (null !== $quote->getClient()?->getClientName()) {
+            if (null !== $user_inv && null !== $quote->getClient()?->getClientName()) {
                     $from_email = $user_inv->getUser()?->getEmail() ?? '';
                     $from_name = $user_inv->getName() ?? '';
                     $subject = sprintf(
@@ -106,7 +105,6 @@ class MailerHelper
                     if ($this->s->getSetting('email_send_method') == 'yiimail') {
                         return $this->yiiMailerSend($from_email, $from_name, $from_email, $subject, $body, null, null, [], '', $uiR);
                     }
-                }
             }
         }
         return false;
@@ -149,14 +147,12 @@ class MailerHelper
         }
 
         // Bcc mails to admin && the admin email account has been setup under userinv which is an extension table of user
-        if (null !== $uiR) {
-            if (($this->s->getSetting('bcc_mails_to_admin') == 1)
+        if (null !== $uiR && ($this->s->getSetting('bcc_mails_to_admin') == 1)
                     && ($uiR->repoUserInvUserIdcount(1) > 0)) {
-                $user_inv = $uiR->repoUserInvUserIdquery(1) ?: null;
-                $email = null !== $user_inv ? $user_inv->getUser()?->getEmail() : '';
-                // $bcc should be an array after the explode
-                is_array($bcc) && $email !== '' ? array_unshift($bcc, $email) : '';
-            }
+            $user_inv = $uiR->repoUserInvUserIdquery(1) ?: null;
+            $email = null !== $user_inv ? $user_inv->getUser()?->getEmail() : '';
+            // $bcc should be an array after the explode
+            is_array($bcc) && $email !== '' ? array_unshift($bcc, $email) : '';
         }
 
         $email = new \Yiisoft\Mailer\Message(
@@ -209,15 +205,13 @@ class MailerHelper
             $email_attachments_with_pdf_template = $email;
         }
         // Ensure that the administrator exists in the userinv extension table. If the email is blank generate a flash
-        if (null !== $uiR) {
-            if ($uiR->repoUserInvUserIdcount(1) == 0) {
-                $admin = new UserInv();
-                $admin->setUserId(1);
-                // Administrator's are given a type of 0, Guests eg. Accountant 1
-                $admin->setType(0);
-                $admin->setName('Administrator');
-                $uiR->save($admin);
-            }
+        if (null !== $uiR && $uiR->repoUserInvUserIdcount(1) == 0) {
+            $admin = new UserInv();
+            $admin->setUserId(1);
+            // Administrator's are given a type of 0, Guests eg. Accountant 1
+            $admin->setType(0);
+            $admin->setName('Administrator');
+            $uiR->save($admin);
         }
         try {
             $this->mailer->send($email_attachments_with_pdf_template);

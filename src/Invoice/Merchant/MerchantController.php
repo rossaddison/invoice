@@ -81,11 +81,9 @@ final class MerchantController extends BaseController
 
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
-            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                if (is_array($body)) {
+            if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                     $this->merchantService->saveMerchant($merchant, $body);
                     return $this->webService->getRedirectResponse('merchant/index');
-                }
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
@@ -121,11 +119,9 @@ final class MerchantController extends BaseController
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
-                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    if (is_array($body)) {
+                if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                         $this->merchantService->saveMerchant($merchant, $body);
                         return $this->webService->getRedirectResponse('merchant/index');
-                    }
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;

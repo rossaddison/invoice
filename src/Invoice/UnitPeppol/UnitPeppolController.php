@@ -91,11 +91,9 @@ final class UnitPeppolController extends BaseController
             if (array_key_exists('Description', $enece_array[$key]) && !isset($body['description'])) {
                 $body['description'] = $enece_array[$key]['Description'];
             }
-            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                if (is_array($body)) {
+            if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                     $this->unitpeppolService->saveUnitPeppol($unitPeppol, $body);
                     return $this->webService->getRedirectResponse('unitpeppol/index');
-                }
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;

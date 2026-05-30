@@ -129,24 +129,23 @@ final class SalesOrderItemController extends BaseController
      */
     private function rbacObserver(SalesOrder $so, UCR $ucR, UIR $uiR) : bool {
         $statusId = $so->getStatusId();
-        if (null!==$statusId) {
+        if (null !== $statusId
             // has observer role
-            if ($this->userService->hasPermission(Permissions::VIEW_INV)
-                && !($this->userService->hasPermission(Permissions::EDIT_INV))
-                // the salesorder has passed the 'draft' stage i.e sent / appears
-                // in the observer user's guest index
-                && !($statusId === 1)
-                // the salesorder is intended for the current user
-                && ($so->reqUserId() === $this->userService->getUser()?->reqId())
-                // the salesorder client is associated with the above user
-                && ($ucR->repoUserClientqueryCount(
-                    $so->reqUserId(),
-                    $so->reqClientId()) > 0)) {
-                $userInv = $uiR->repoUserInvUserIdquery($so->reqUserId());
-                // the current observer user is active
-                if (null !== $userInv && $userInv->getActive()) {
-                    return true;
-                }
+            && $this->userService->hasPermission(Permissions::VIEW_INV)
+            && !($this->userService->hasPermission(Permissions::EDIT_INV))
+            // the salesorder has passed the 'draft' stage i.e sent / appears
+            // in the observer user's guest index
+            && !($statusId === 1)
+            // the salesorder is intended for the current user
+            && ($so->reqUserId() === $this->userService->getUser()?->reqId())
+            // the salesorder client is associated with the above user
+            && ($ucR->repoUserClientqueryCount(
+                $so->reqUserId(),
+                $so->reqClientId()) > 0)) {
+            $userInv = $uiR->repoUserInvUserIdquery($so->reqUserId());
+            // the current observer user is active
+            if (null !== $userInv && $userInv->getActive()) {
+                return true;
             }
         }
         return false;

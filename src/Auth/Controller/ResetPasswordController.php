@@ -68,9 +68,9 @@ final class ResetPasswordController
                 $identity = $tR->findIdentityByToken(
                     $tokenRandomStringOnly,
                     self::REQUEST_PASSWORD_RESET_TOKEN);
-                if (null !== $identity) {
-                    if (null !== ($user = $identity->getUser())
-                        && ($identityId = (int) $identity->getId()) > 0) {
+                if (null !== $identity
+                    && null !== ($user = $identity->getUser())
+                    && ($identityId = (int) $identity->getId()) > 0) {
                         if ($formHydrator->populateFromPostAndValidate(
                                 $resetPasswordForm, $request)) {
 /**
@@ -107,7 +107,6 @@ final class ResetPasswordController
                                 'token' => $maskedToken,
                             ]
                         );
-                    }
                 }
             }
         }

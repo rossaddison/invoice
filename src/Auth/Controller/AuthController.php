@@ -444,7 +444,7 @@ final class AuthController
         $tfaaf = $tfa . '.attempt.failure';
         if (is_array($body)) {
             $inputCode = $this->sanitizeAndValidateCode($body['code'] ?? '');
-            if ($inputCode !== null) {
+            if ($inputCode !== null) { // NOSONAR - outer if has code after inner block
                 if ($pendingUserId > 0) {
                     $user = $userRepository->findById($pendingUserId);
                     /** @var mixed $tempSecretRaw */
@@ -574,8 +574,7 @@ final class AuthController
             $body = $request->getParsedBody();
             if (is_array($body)) {
                 $inputCode = $this->sanitizeAndValidateCode($body['code'] ?? '');
-                if (null !== $inputCode) {
-                    if ($vuid > 0) {
+                if (null !== $inputCode && $vuid > 0) {
                         $user = $userRepository->findById($vuid);
                         $totpSecretRaw = $user->getTotpSecret();
                         $totpSec = (\is_string($totpSecretRaw)
@@ -624,8 +623,7 @@ final class AuthController
                             'formModel' => $form,
                             'codes' => $codes,
                         ]);
-                    }
-                } // null!==$inputCode
+                } // null!==$inputCode && $vuid > 0
                 $parameters['error'] = $translator->translate($tfaaf);
             }
         }
@@ -811,8 +809,7 @@ final class AuthController
                 $userInv = $uiR->repoUserInvUserIdquery((int) $userId);
                 if (null !== $userInv) {
                     $user = $userInv->getUser();
-                    if (null !== $user) {
-                        if ($this->sR->getSetting('enable_tfa') == '1') {
+                    if (null !== $user && $this->sR->getSetting('enable_tfa') == '1') {
                             $enabled = $user->is2FAEnabled();
                             if ($enabled) {
                                 $user->set2FAEnabled(false);
@@ -824,7 +821,6 @@ final class AuthController
                                 // Clear secret from memory
                                 $this->secureClearSensitiveData([&$totpSecret]);
                             }
-                        }
                     }
                 }
             }

@@ -75,12 +75,10 @@ final class ItemLookupController extends BaseController
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
-            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                if (is_array($body)) {
+            if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                     $this->itemlookupService->saveItemLookup($itemLookup, $body);
                     return $this->webService->getRedirectResponse(
                                                             'itemlookup/index');
-                }
             }
             $parameters['errors'] =
               $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -114,12 +112,10 @@ final class ItemLookupController extends BaseController
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
-                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    if (is_array($body)) {
+                if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                         $this->itemlookupService->saveItemLookup($lookup, $body);
                         return $this->webService->getRedirectResponse(
                                                             'itemlookup/index');
-                    }
                 }
                 $parameters['errors'] =
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();

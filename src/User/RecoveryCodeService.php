@@ -91,14 +91,12 @@ final class RecoveryCodeService
          */
         foreach ($codes as $recoveryCode) {
             // Only check unused codes
-            if (!$recoveryCode->isUsed()) {
-                // Use password_verify for secure hash comparison
-                if (password_verify($inputCode, $recoveryCode->getCodeHash())) {
+            if (!$recoveryCode->isUsed()
+                && password_verify($inputCode, $recoveryCode->getCodeHash())) {
                     // Mark the code as used and persist i.e. save
                     $recoveryCode->setUsed(true);
                     $this->repository->save($recoveryCode);
                     return true;
-                }
             }
         }
         // No valid code found

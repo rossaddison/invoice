@@ -437,19 +437,17 @@ final readonly class QuoteItemService
         $product = $pr->repoProductquery(
             (int) $array['product_id']
         );
-        if (null !== $product) {
-            if (isset($array['product_id'])) {
-                $name = ($pr->repoCount((int) $array['product_id']) > 0 ?
-                    $product->getProductName() : '');
-                $model->setName($name ?? '');
-                // If the user has changed the description on the
-                // form => override default product description
-                $description = ((isset($array['description']))
-                    ? (string) $array['description']
-                    : ($product->getProductDescription() ??
-                        $translator->translate('not.available')));
-                $model->setDescription($description);
-            }
+        if (null !== $product && isset($array['product_id'])) {
+            $name = ($pr->repoCount((int) $array['product_id']) > 0 ?
+                $product->getProductName() : '');
+            $model->setName($name ?? '');
+            // If the user has changed the description on the
+            // form => override default product description
+            $description = ((isset($array['description']))
+                ? (string) $array['description']
+                : ($product->getProductDescription() ??
+                    $translator->translate('not.available')));
+            $model->setDescription($description);
         }
 
         isset($array['quantity']) ?

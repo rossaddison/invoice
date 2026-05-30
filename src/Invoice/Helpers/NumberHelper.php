@@ -655,18 +655,17 @@ final readonly class NumberHelper
 // ie. paid,
 // for Administrative purposes set the invoice to read-only to avoid tampering
             if (($sR->getSetting('read_only_toggle') === (string) 4)
-                    && null !== $invoice) {
+                    && null !== $invoice
 // Force the user to set the status to read-only manually i.e. view..edit  if
 // it is a deliberate zero invoice i.e. `paid` and `total` equaling zero ....
 // here by only setting to read only if `paid` and `total` are greater than zero.
-            if ($balance == 0.00
+                    && $balance == 0.00
                     && ($invoice->getInvAmount()->getPaid() > 0.00)
                     && ($invoice->getInvAmount()->getTotal() > 0.00)) {
                 $invoice->setIsReadOnly(true);
                 // Set the status to paid
                 $invoice->setStatusId(4);
                 $iR->save($invoice);
-            }
         }
     }
 

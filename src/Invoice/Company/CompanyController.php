@@ -80,11 +80,9 @@ final class CompanyController extends BaseController
         ];
 
         if ($request->getMethod() === Method::POST) {
-            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                if (is_array($body)) {
+            if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                     $this->companyService->saveCompany(new Company(), $body);
                     return $this->webService->getRedirectResponse('company/index');
-                }
             }
             $parameters['form'] = $form;
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -119,11 +117,9 @@ final class CompanyController extends BaseController
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
-                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    if (is_array($body)) {
+                if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                         $this->companyService->saveCompany($company, $body);
                         return $this->webService->getRedirectResponse('company/index');
-                    }
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
@@ -143,10 +139,8 @@ final class CompanyController extends BaseController
         CompanyRepository $companyRepository,
     ): Response {
         $company = $this->company($currentRoute, $companyRepository);
-        if ($company) {
-            if ($this->companyService->deleteCompany($company)) {
-                $this->flashMessage('info', $this->translator->translate('company.deleted'));
-            }
+        if ($company && $this->companyService->deleteCompany($company)) {
+            $this->flashMessage('info', $this->translator->translate('company.deleted'));
         }
         return $this->webService->getRedirectResponse('company/index');
     }

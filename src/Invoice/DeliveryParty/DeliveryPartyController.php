@@ -60,11 +60,9 @@ final class DeliveryPartyController extends BaseController
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
-            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                if (is_array($body)) {
+            if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                     $this->deliveryPartyService->saveDeliveryParty(new DeliveryParty(), $body);
                     return $this->webService->getRedirectResponse('deliveryparty/index');
-                }
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
@@ -138,11 +136,9 @@ final class DeliveryPartyController extends BaseController
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
-                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    if (is_array($body)) {
+                if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                         $this->deliveryPartyService->saveDeliveryParty($deliveryparty, $body);
                         return $this->webService->getRedirectResponse('deliveryparty/index');
-                    }
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;

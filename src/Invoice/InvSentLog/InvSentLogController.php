@@ -287,10 +287,8 @@ final class InvSentLogController extends BaseController
          */
         foreach ($invsentlogs as $invsentlog) {
             $invNumber = $invsentlog->getInv()?->getNumber();
-            if (null !== $invNumber) {
-                if (!in_array($invNumber, $optionsDataInvNumbers)) {
-                    $optionsDataInvNumbers[$invNumber] = $invNumber;
-                }
+            if (null !== $invNumber && !in_array($invNumber, $optionsDataInvNumbers)) {
+                $optionsDataInvNumbers[$invNumber] = $invNumber;
             }
         }
         return $optionsDataInvNumbers;
@@ -312,10 +310,9 @@ final class InvSentLogController extends BaseController
             $clientFullName =
                     $invsentlog->getInv()?->getClient()?->getClientFullName();
             $clientId = $invsentlog->getInv()?->getClient()?->reqId();
-            if (null !== $clientFullName && null !== $clientId) {
-                if (!in_array($clientFullName, $optionsDataClients)) {
-                    $optionsDataClients[$clientId] = $clientFullName;
-                }
+            if (null !== $clientFullName && null !== $clientId
+                && !in_array($clientFullName, $optionsDataClients)) {
+                $optionsDataClients[$clientId] = $clientFullName;
             }
         }
         return $optionsDataClients;
@@ -340,10 +337,8 @@ final class InvSentLogController extends BaseController
             $invNumber = $invSentLog->getInv()?->getNumber();
             if (null !== $invNumber) {
                 $invUserId = $invSentLog->getInv()?->getUser()->reqId();
-                if ($user_id == $invUserId) {
-                    if (!in_array($invNumber, $optionsDataGuestInvNumbers)) {
-                        $optionsDataGuestInvNumbers[$invNumber] = $invNumber;
-                    }
+                if ($user_id == $invUserId && !in_array($invNumber, $optionsDataGuestInvNumbers)) {
+                    $optionsDataGuestInvNumbers[$invNumber] = $invNumber;
                 }
             }
         }
@@ -369,15 +364,12 @@ final class InvSentLogController extends BaseController
                     $invSentLog->getInv()?->getClient()?->getClientFullName();
             $invClientId = $invSentLog->getInv()?->getClient()?->reqId();
             $invUserId = $invSentLog->getInv()?->getUser()?->reqId();
-            if (null !== $invUserId && null !== $invClientId) {
-                if ((null !== $invClientFullName)
-                        && ($userId == $invUserId)) {
-                    if (!in_array($invClientFullName,
-                            $optionsDataGuestClientsOfUser)) {
-                        $optionsDataGuestClientsOfUser[$invClientId] =
-                                $invClientFullName;
-                    }
-                }
+            if (null !== $invUserId && null !== $invClientId
+                && null !== $invClientFullName
+                && $userId == $invUserId
+                && !in_array($invClientFullName, $optionsDataGuestClientsOfUser)) {
+                $optionsDataGuestClientsOfUser[$invClientId] =
+                        $invClientFullName;
             }
         }
         return $optionsDataGuestClientsOfUser;

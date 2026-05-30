@@ -202,13 +202,11 @@ final class InvController extends BaseController
             $inv = $iR->repoInvUnloadedquery($inv_id);
             if ($inv) {
                 $group_id = $inv->reqGroupId();
-                if ($iR->repoCount($inv_id) > 0) {
-                    if ($inv->reqStatusId() === 1 && $inv->getNumber() === '') {
-                        // Generate new inv number if applicable
-                        $inv->setNumber((string) $this->generateInvGetNumber(
-                            $group_id, $sR, $iR, $gR));
-                        $iR->save($inv);
-                    }
+                if ($iR->repoCount($inv_id) > 0 && $inv->reqStatusId() === 1 && $inv->getNumber() === '') {
+                    // Generate new inv number if applicable
+                    $inv->setNumber((string) $this->generateInvGetNumber(
+                        $group_id, $sR, $iR, $gR));
+                    $iR->save($inv);
                 }
             }
         }
@@ -305,23 +303,22 @@ final class InvController extends BaseController
      */
     private function rbacObserver(Inv $inv, UCR $ucR, UIR $uiR) : bool {
         $statusId = $inv->reqStatusId();
-        if ($statusId > 0) {
-            // has observer role
-            if ($this->userService->hasPermission(Permissions::VIEW_INV)
-                && !($this->userService->hasPermission(Permissions::EDIT_INV))
-                // the invoice  is not a draft i.e. has been sent
-                && !($statusId === 1)
-                // the invoice is intended for the current user
-                && ($inv->reqUserId() === $this->userService->getUser()?->reqId())
-                // the invoice client is associated with the above user
-                // the observer user may be paying for more than one client
-                && ($ucR->repoUserClientqueryCount($inv->reqUserId(),
-                                                $inv->reqClientId()) > 0)) {
-                $userInv = $uiR->repoUserInvUserIdquery($inv->reqUserId());
-                // the current observer user is active
-                if (null !== $userInv && $userInv->getActive()) {
-                    return true;
-                }
+        // has observer role
+        if ($statusId > 0
+            && $this->userService->hasPermission(Permissions::VIEW_INV)
+            && !($this->userService->hasPermission(Permissions::EDIT_INV))
+            // the invoice  is not a draft i.e. has been sent
+            && !($statusId === 1)
+            // the invoice is intended for the current user
+            && ($inv->reqUserId() === $this->userService->getUser()?->reqId())
+            // the invoice client is associated with the above user
+            // the observer user may be paying for more than one client
+            && ($ucR->repoUserClientqueryCount($inv->reqUserId(),
+                                            $inv->reqClientId()) > 0)) {
+            $userInv = $uiR->repoUserInvUserIdquery($inv->reqUserId());
+            // the current observer user is active
+            if (null !== $userInv && $userInv->getActive()) {
+                return true;
             }
         }
         return false;

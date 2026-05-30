@@ -584,11 +584,9 @@ class GeneratorController extends BaseController
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
-            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                if (is_array($body)) {
+            if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                     $this->generatorService->saveGenerator($gentor, $body);
                     return $this->webService->getRedirectResponse('generator/index');
-                }
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
@@ -620,12 +618,10 @@ class GeneratorController extends BaseController
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
-                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    if (is_array($body)) {
+                if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                         $this->generatorService->saveGenerator($generator, $body);
                         $this->flashMessage('warning', $this->translator->translate('record.successfully.updated'));
                         return $this->webService->getRedirectResponse('generator/index');
-                    }
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;

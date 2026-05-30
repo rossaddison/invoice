@@ -254,8 +254,7 @@ final class ClientPeppolController extends BaseController
                     PeppolArrays::electronicAddressScheme(),
                 'iso_6523_array' => $peppolarrays->getIso6523Icd(),
             ];
-            if ($request->getMethod() === Method::POST) {
-                if (is_array($body)) {
+            if ($request->getMethod() === Method::POST && is_array($body)) {
                     if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                         $this->clientPeppolService->saveClientPeppol(
                             $clientpeppol, $body);
@@ -290,7 +289,6 @@ final class ClientPeppolController extends BaseController
                     $parameters['errors'] =
               $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                     $parameters['form'] = $form;
-                }
             }
             return $this->webViewRenderer->render('_form', $parameters);
         }

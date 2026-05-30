@@ -249,7 +249,7 @@ final class AllowanceChargeController extends BaseController
                     'allowances' => $allowances,
                 ];
                 if ($request->getMethod() === Method::POST) {
-                    if (is_array($body)) {
+                    if (is_array($body)) { // NOSONAR - outer if has additional statements
                         if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                             $ac = $this->allowanceChargeService->saveAllowanceCharge(
                                 $allowanceCharge, $body);
@@ -302,7 +302,7 @@ final class AllowanceChargeController extends BaseController
                 'charges' => $charges,
             ];
             if ($request->getMethod() === Method::POST) {
-                if (is_array($body)) {
+                if (is_array($body)) { // NOSONAR - outer if has additional statements
                     if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                         $this->allowanceChargeService->saveAllowanceCharge($allowanceCharge, $body);
                         $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));

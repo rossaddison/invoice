@@ -144,10 +144,8 @@ final class InvAllowanceChargeController extends BaseController
          */
         foreach ($acis as $invAllowanceCharge) {
             $invNumber = $invAllowanceCharge->getInv()?->getNumber();
-            if (null !== $invNumber) {
-                if (!in_array($invNumber, $optionsDataInvNumbers)) {
-                    $optionsDataInvNumbers[$invNumber] = $invNumber;
-                }
+            if (null !== $invNumber && !in_array($invNumber, $optionsDataInvNumbers)) {
+                $optionsDataInvNumbers[$invNumber] = $invNumber;
             }
         }
         return $optionsDataInvNumbers;
@@ -198,11 +196,9 @@ final class InvAllowanceChargeController extends BaseController
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
-                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    if (is_array($body)) {
-                        $this->invallowancechargeService->saveInvAllowanceCharge($invAllowanceCharge, $body);
-                        return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
-                    }
+                if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
+                    $this->invallowancechargeService->saveInvAllowanceCharge($invAllowanceCharge, $body);
+                    return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;

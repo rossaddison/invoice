@@ -71,7 +71,7 @@ trait UrlKey
                         // If the userinv is a Guest => type = 1 ie. NOT an
                         // administrator =>type = 0
                         // So if the user has a type of 1 they are a guest.
-                        if ($user_inv->getType() == 1) {
+                        if ($user_inv->getType() == 1) { // NOSONAR - outer if has additional statements
                             if ($quote->reqStatusId() === 2) {
                                 // The quote has just been sent so change its
                                 // status otherwise leave its status alone

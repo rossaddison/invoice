@@ -66,8 +66,7 @@ trait Credit
 
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
-            if (is_array($body)) {
-                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+            if (is_array($body) && $formHydrator->populateFromPostAndValidate($form, $request)) {
                     // Only clients that were assigned to user accounts were
                     // made available in dropdown therefore use the 'user client'
                     // user id
@@ -139,7 +138,6 @@ trait Credit
                         $this->flashMessage('warning', $message);
                     }
                     return $this->webService->getRedirectResponse('inv/index');
-                }
             }
             $parameters['errors'] =
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();

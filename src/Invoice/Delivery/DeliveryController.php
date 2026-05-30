@@ -80,11 +80,9 @@ final class DeliveryController extends BaseController
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
-                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    if (is_array($body)) {
+                if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                         $this->deliveryService->saveDelivery($delivery, $body);
                         return $this->webService->getRedirectResponse('inv/edit', ['id' => $inv_id]);
-                    }
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
@@ -204,11 +202,9 @@ final class DeliveryController extends BaseController
                     ];
                     if ($request->getMethod() === Method::POST) {
                         $body = $request->getParsedBody() ?? [];
-                        if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                            if (is_array($body)) {
+                        if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                                 $this->deliveryService->saveDelivery($delivery, $body);
                                 return $this->webService->getRedirectResponse('delivery/index');
-                            }
                         }
                         $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                         $parameters['form'] = $form;

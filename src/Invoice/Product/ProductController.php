@@ -277,46 +277,44 @@ final class ProductController extends BaseController
                             return $this->webViewRenderer->render('_form', $parameters);
                         }
                         // Only save custom fields if they exist
-                        if ($cfR->repoTableCountquery('product_custom') > 0) {
-                            if (isset($body['custom'])) {
-                                $custom = (array) $body['custom'];
-                                $errorsCustom = [];
-                                /** @var array|string $value */
-                                foreach ($custom as $custom_field_id => $value) {
-                                    $product_custom =
-                                        $pcR->repoFormValuequery(
-                                            $product_id, (int) $custom_field_id);
+                        if ($cfR->repoTableCountquery('product_custom') > 0 && isset($body['custom'])) {
+                            $custom = (array) $body['custom'];
+                            $errorsCustom = [];
+                            /** @var array|string $value */
+                            foreach ($custom as $custom_field_id => $value) {
+                                $product_custom =
+                                    $pcR->repoFormValuequery(
+                                        $product_id, (int) $custom_field_id);
 
-                                    // If product_custom doesn't exist, create a new one
-                                    if (null === $product_custom) {
-                                        $product_custom = new ProductCustom();
-                                    }
-
-                                    $product_custom_input = [
-                                        'product_id' => $product_id,
-                                        'custom_field_id' => (int) $custom_field_id,
-                                        'value' => is_array($value) ? serialize($value) : $value,
-                                    ];
-
-                                    $productCustomForm = new ProductCustomForm();
-                                    if ($formHydrator->populateAndValidate(
-                                        $productCustomForm, $product_custom_input)) {
-                                        $this->productCustomService->saveProductCustom(
-                                            $product_custom, $product_custom_input);
-                                    } else {
-                                        $errorsCustom = array_merge($errorsCustom,                                                       $productCustomForm->getValidationResult()
-                                                ->getErrorMessagesIndexedByProperty());
-                                    }
-                                    $parameters['productCustomForm'] = $productCustomForm;
-                                } //foreach
-
-                                // If there are custom field errors, return to form
-                                if (count($errorsCustom) > 0) {
-                                    $parameters['errorsCustom'] = $errorsCustom;
-                                    return $this->webViewRenderer->render('_form', $parameters);
+                                // If product_custom doesn't exist, create a new one
+                                if (null === $product_custom) {
+                                    $product_custom = new ProductCustom();
                                 }
-                            } //isset
-                        } // cfR
+
+                                $product_custom_input = [
+                                    'product_id' => $product_id,
+                                    'custom_field_id' => (int) $custom_field_id,
+                                    'value' => is_array($value) ? serialize($value) : $value,
+                                ];
+
+                                $productCustomForm = new ProductCustomForm();
+                                if ($formHydrator->populateAndValidate(
+                                    $productCustomForm, $product_custom_input)) {
+                                    $this->productCustomService->saveProductCustom(
+                                        $product_custom, $product_custom_input);
+                                } else {
+                                    $errorsCustom = array_merge($errorsCustom,                                                       $productCustomForm->getValidationResult()
+                                            ->getErrorMessagesIndexedByProperty());
+                                }
+                                $parameters['productCustomForm'] = $productCustomForm;
+                            } //foreach
+
+                            // If there are custom field errors, return to form
+                            if (count($errorsCustom) > 0) {
+                                $parameters['errorsCustom'] = $errorsCustom;
+                                return $this->webViewRenderer->render('_form', $parameters);
+                            }
+                        } // cfR && isset
                     } // is_array
                     $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
                     return $this->webService->getRedirectResponse('product/index');
@@ -1124,14 +1122,13 @@ final class ProductController extends BaseController
         foreach ($products as $product) {
             $productSku = $product->getProductSku();
             // Remove repeats
-            if (!in_array($product->getProductSku(), $optionsDataProducts)) {
+            if (!in_array($product->getProductSku(), $optionsDataProducts)
                 // Include the $productSku as 'key' so that Url Query Parameter
                 // picks it up.
                 // Tip: After selecting a value in the dropdown, or inputting into an input box always see
                 // how the browser's query url Parameter is being influenced by the selection or input
-                if (null !== $productSku) {
-                    $optionsDataProducts[$productSku] = $product->getProductSku();
-                }
+                && null !== $productSku) {
+                $optionsDataProducts[$productSku] = $product->getProductSku();
             }
         }
         return $optionsDataProducts;
@@ -1151,10 +1148,8 @@ final class ProductController extends BaseController
         foreach ($families as $family) {
             $familyId = $family->reqId();
             // Remove repeats
-            if (!in_array($family->reqId(), $optionsDataFamilies)) {
-                if ($familyId > 0) {
-                    $optionsDataFamilies[(string) $familyId] = (string) $family->getFamilyName();
-                }
+            if (!in_array($family->reqId(), $optionsDataFamilies) && $familyId > 0) {
+                $optionsDataFamilies[(string) $familyId] = (string) $family->getFamilyName();
             }
         }
         return $optionsDataFamilies;

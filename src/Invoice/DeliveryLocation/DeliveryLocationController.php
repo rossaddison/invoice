@@ -145,8 +145,7 @@ final class DeliveryLocationController extends BaseController
 
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
-            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                if (is_array($body)) {
+            if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                     $this->delService->saveDeliveryLocation($delivery_location, $body);
                     $this->flashMessage('success',
                     $this->translator->translate('record.successfully.created'));
@@ -165,7 +164,6 @@ final class DeliveryLocationController extends BaseController
                     }
                     // Redirect to inv/index
                     return $this->webService->getRedirectResponse($url);
-                }
             }
             $parameters['errors'] =
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -212,8 +210,7 @@ final class DeliveryLocationController extends BaseController
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
-                if (is_array($body)) {
-                    if ($formHydrator->populateFromPostAndValidate($form,
+                if (is_array($body) && $formHydrator->populateFromPostAndValidate($form,
                                                                     $request)) {
                         $this->delService->saveDeliveryLocation($del, $body);
                         $this->flashMessage('success',
@@ -232,7 +229,6 @@ final class DeliveryLocationController extends BaseController
                         }
                         // Redirect to inv/index
                         return $this->webService->getRedirectResponse($url);
-                    }
                 }
                 $parameters['errors'] =
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();

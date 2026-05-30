@@ -214,16 +214,14 @@ final class QuoteController extends BaseController
     {
         $quote = $qR->repoQuoteUnloadedquery($quote_id);
         if (!empty($quote) && ($quote->reqStatusId() == 1)
-            && ($quote->getNumber() == '')) {
+            && ($quote->getNumber() == '')
             // Generate new quote number if applicable
-            if ((int) $sR->getSetting(
-                'generate_quote_number_for_draft') === 0) {
-                $quote_number = (string) $qR->getQuoteNumber(
-                    $quote->reqGroupId(), $gR);
-                // Set new quote number and save
-                $quote->setNumber($quote_number);
-                $qR->save($quote);
-            }
+            && (int) $sR->getSetting('generate_quote_number_for_draft') === 0) {
+            $quote_number = (string) $qR->getQuoteNumber(
+                $quote->reqGroupId(), $gR);
+            // Set new quote number and save
+            $quote->setNumber($quote_number);
+            $qR->save($quote);
         }
     }
 
@@ -338,22 +336,21 @@ final class QuoteController extends BaseController
      */
     private function rbacObserver(Quote $quote, UCR $ucR, UIR $uiR) : bool {
         $statusId = $quote->reqStatusId();
-        if ($statusId > 0) {
+        if ($statusId > 0
             // has observer role
-            if ($this->userService->hasPermission(Permissions::VIEW_INV)
-                && !($this->userService->hasPermission(Permissions::EDIT_INV))
-                // the quote  is not a draft i.e. has been sent
-                && !($statusId === 1)
-                // the quote is intended for the current user
-                && ($quote->reqUserId() === $this->userService->getUser()?->reqId())
-                // the quote client is associated with the above user
-                && ($ucR->repoUserClientqueryCount(
-                    $quote->reqUserId(), $quote->reqClientId()) > 0)) {
-                $userInv = $uiR->repoUserInvUserIdquery($quote->reqUserId());
-                // the current observer user is active
-                if (null !== $userInv && $userInv->getActive()) {
-                    return true;
-                }
+            && $this->userService->hasPermission(Permissions::VIEW_INV)
+            && !($this->userService->hasPermission(Permissions::EDIT_INV))
+            // the quote  is not a draft i.e. has been sent
+            && !($statusId === 1)
+            // the quote is intended for the current user
+            && ($quote->reqUserId() === $this->userService->getUser()?->reqId())
+            // the quote client is associated with the above user
+            && ($ucR->repoUserClientqueryCount(
+                $quote->reqUserId(), $quote->reqClientId()) > 0)) {
+            $userInv = $uiR->repoUserInvUserIdquery($quote->reqUserId());
+            // the current observer user is active
+            if (null !== $userInv && $userInv->getActive()) {
+                return true;
             }
         }
         return false;

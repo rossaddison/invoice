@@ -102,8 +102,7 @@ final class InvItemController extends BaseController
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
-            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                if (is_array($body)) {
+            if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                     $this->invitemService->addInvItemProduct($invitem,
                             $body, $inv_id, $pR, $trR,
                             new IIAS($iiar, $iiR),  $iiar, $this->sR, $uR);
@@ -111,7 +110,6 @@ final class InvItemController extends BaseController
                         $this->translator->translate('record.successfully.created'));
                     return $this->webService->getRedirectResponse('inv/view',
                         ['id' => $inv_id]);
-                }
             }
             $parameters['errors'] =
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -159,13 +157,11 @@ final class InvItemController extends BaseController
 
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
-            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                if (is_array($body)) {
+            if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                     $this->invitemService->addInvItemTask($invitem, $body,
                             $inv_id, $taskR, $trR, new IIAS($iiar, $iiR), $iiar);
                     $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
                     return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
-                }
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;

@@ -77,22 +77,18 @@ final class PaymentPeppolController extends BaseController
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
-            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                if (is_array($body)) {
-                    $this->paymentpeppolService->savePaymentPeppol(
-                            $paymentPeppol, $body);
-                    return $this->webService->getRedirectResponse(
-                        'paymentpeppol/index');
-                }
+            if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
+                $this->paymentpeppolService->savePaymentPeppol(
+                        $paymentPeppol, $body);
+                return $this->webService->getRedirectResponse(
+                    'paymentpeppol/index');
             }
             $parameters['errors'] =
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        if (null!==$inv) {
-            if ($this->rbacObserver($inv, $ucR, $uiR)) {
-                return $this->webViewRenderer->render('_form', $parameters);
-            }
+        if (null !== $inv && $this->rbacObserver($inv, $ucR, $uiR)) {
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('paymentpeppol/index');
     }
@@ -177,13 +173,11 @@ final class PaymentPeppolController extends BaseController
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
-                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    if (is_array($body)) {
-                        $this->paymentpeppolService->savePaymentPeppol(
-                                                        $paymentPeppol, $body);
-                        return $this->webService->getRedirectResponse(
-                                                        'paymentpeppol/index');
-                    }
+                if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
+                    $this->paymentpeppolService->savePaymentPeppol(
+                                                    $paymentPeppol, $body);
+                    return $this->webService->getRedirectResponse(
+                                                    'paymentpeppol/index');
                 }
                 $parameters['errors'] =
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();

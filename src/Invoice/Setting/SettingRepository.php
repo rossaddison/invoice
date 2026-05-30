@@ -699,16 +699,15 @@ final class SettingRepository extends Select\Repository
              * @var CompanyPrivate $private
              */
             foreach ($this->compPR->findAllPreloaded() as $private) {
-                if ($private->reqCompanyId() === $company->reqId()) {
+                if ($private->reqCompanyId() === $company->reqId()
                     // site's logo: take the first logo where the current date
                     //  falls within the logo's start and end dates
-                    if ($private->getStartDate()?->format('Y-m-d') 
+                    && $private->getStartDate()?->format('Y-m-d')
                             < (new \DateTimeImmutable('now'))->format('Y-m-d')
                     && ($private->getEndDate()?->format('Y-m-d')
                             > (new \DateTimeImmutable('now'))->format('Y-m-d'))) {
-                        $companyLogoFileNameWithSuffix =
-                                (string) $private->getLogoFilename();
-                    }
+                    $companyLogoFileNameWithSuffix =
+                            (string) $private->getLogoFilename();
                 }
             }
             $company_array['logofilenamewithsuffix'] =
@@ -1075,13 +1074,11 @@ final class SettingRepository extends Select\Repository
     public function quoteMarkViewed(int $quote_id, QR $qR): void
     {
         $quote = $qR->repoQuoteStatusquery($quote_id, 2);
-        if ($quote) {
+        if ($quote && $qR->repoCount($quote_id) > 0) {
             //mark as viewed if status is 2
-            if ($qR->repoCount($quote_id) > 0) {
-                //set the quote to viewed status ie 3
-                $quote->setStatusId(3);
-                $qR->save($quote);
-            }
+            //set the quote to viewed status ie 3
+            $quote->setStatusId(3);
+            $qR->save($quote);
         }
     }
 
@@ -1099,11 +1096,10 @@ final class SettingRepository extends Select\Repository
             }
             //set the invoice to read only ie. not updateable,
             // if invoice_status_id is 2
-            if (null !== $this->withKey('read_only_toggle')) {
-                if ($this->withKey(
+            if (null !== $this->withKey('read_only_toggle')
+                && $this->withKey(
                         'read_only_toggle')?->getSettingValue() === '2') {
-                    $invoice->setIsReadOnly(true);
-                }
+                $invoice->setIsReadOnly(true);
             }
             $iR->save($invoice);
         }

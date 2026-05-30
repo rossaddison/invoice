@@ -67,8 +67,7 @@ final readonly class QuoteToolbar
         );
 
         // Email button (only if editing allowed, quote is draft, and has amount)
-        if (null !== $quoteAmountTotal) {
-            if ($quoteEdit && ($quote->reqStatusId() === 1) && ($quoteAmountTotal > 0)) {
+        if (null !== $quoteAmountTotal && $quoteEdit && ($quote->reqStatusId() === 1) && ($quoteAmountTotal > 0)) {
                 $buttons[] = $this->createLinkButton(
                     'send-email',
                     $this->urlGenerator->generate('quote/emailStage0', ['id' => $quoteId]),
@@ -76,7 +75,6 @@ final readonly class QuoteToolbar
                     'btn-outline-success',
                     $this->translator->translate('send.email'),
                 );
-            }
         }
 
         // Quote to SO button - show enabled if approved, disabled if not approved

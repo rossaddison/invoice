@@ -1132,10 +1132,8 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                  */
                 foreach ($invoice->getItems() as $item) {
                     $product = $item->getProduct();
-                    if (null !== $product) {
-                        if (!($product->getUnitPeppolId() > 0)) {
-                            throw new ProductUnitCodeNf($this->t, $product);
-                        }
+                    if (null !== $product && !($product->getUnitPeppolId() > 0)) {
+                        throw new ProductUnitCodeNf($this->t, $product);
                     }
                     // Item Identification number eg. TRQWERQERQ9879
                     $peppol_po_itemid = $this->PeppolPoItemid($item, $soiR);

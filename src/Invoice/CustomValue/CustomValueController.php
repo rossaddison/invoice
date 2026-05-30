@@ -123,14 +123,12 @@ final class CustomValueController extends BaseController
 
                 if ($request->getMethod() === Method::POST) {
                     $body = $request->getParsedBody() ?? [];
-                    if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                        if (is_array($body)) {
+                    if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                             $this->customValueService->saveCustomValue(
                                 $custom_value, $body);
-                            return 
+                            return
                                 $this->webService->getRedirectResponse(
                                     'customvalue/field', ['id' => $field_id]);
-                        }
                     }
                     $parameters['form'] = $form;
                     $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -171,12 +169,10 @@ final class CustomValueController extends BaseController
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
-                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    if (is_array($body)) {
+                if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                         $this->customValueService->saveCustomValue($custom_value, $body);
                         return $this->webService->getRedirectResponse(
                             'customvalue/field', ['id' => $custom_field_id]);
-                    }
                 }
                 $parameters['form'] = $form;
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();

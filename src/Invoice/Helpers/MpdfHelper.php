@@ -330,12 +330,10 @@ class MpdfHelper
             $mpdf->showWatermarkImage = true;
         }
 
-        if (($quote_or_invoice instanceof Quote) || ($quote_or_invoice instanceof Inv)) {
-            if (null !== $quote_or_invoice->getClient()?->getClientLanguage()) {
-                if ($quote_or_invoice->getClient()?->getClientLanguage() === 'Arabic') {
-                    $mpdf->SetDirectionality('rtl');
-                }
-            }
+        if ((($quote_or_invoice instanceof Quote) || ($quote_or_invoice instanceof Inv))
+            && null !== $quote_or_invoice->getClient()?->getClientLanguage()
+            && $quote_or_invoice->getClient()?->getClientLanguage() === 'Arabic') {
+            $mpdf->SetDirectionality('rtl');
         }
         // Set a password if set for the voucher
         if (null !== $password) {

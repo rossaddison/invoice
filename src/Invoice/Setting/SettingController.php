@@ -354,20 +354,18 @@ final class SettingController extends BaseController
     {
         // Set thousands_separator and decimal_point according to number_format
         $number_formats = $this->sR->numberFormats();
-        if (strlen($value) > 0) {
-            if (is_array($number_formats[$value])) {
-                if ($this->sR->repoCount('decimal_point') == 1) {
-                    $this->tabIndexSettingsSave(
-                        'decimal_point',
-                        (string) $number_formats[$value]['decimal_point'],
-                    );
-                }
-                if ($this->sR->repoCount('thousands_separator') == 1) {
-                    $this->tabIndexSettingsSave(
-                        'thousands_separator',
-                        (string) $number_formats[$value]['thousands_separator'],
-                    );
-                }
+        if (strlen($value) > 0 && is_array($number_formats[$value])) {
+            if ($this->sR->repoCount('decimal_point') == 1) {
+                $this->tabIndexSettingsSave(
+                    'decimal_point',
+                    (string) $number_formats[$value]['decimal_point'],
+                );
+            }
+            if ($this->sR->repoCount('thousands_separator') == 1) {
+                $this->tabIndexSettingsSave(
+                    'thousands_separator',
+                    (string) $number_formats[$value]['thousands_separator'],
+                );
             }
         }
     }

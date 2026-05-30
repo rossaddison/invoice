@@ -108,7 +108,7 @@ trait Peppol
                             $pVal = new PeppolValidator($this->translator);
                             // Not saving to file. Showing in Browser
                             if ($this->sR->getSetting('peppol_xml_stream') == '1') {
-                                if (($xml !==false) && (strlen($xml) > 0)) {
+                                if (($xml !==false) && (strlen($xml) > 0)) { // NOSONAR - outer if has code after this block
                                     if ($this->sR->getSetting(
                                'peppol_debug_with_internal_validator') == '1') {
                                         $pVal->loadXML($xml);

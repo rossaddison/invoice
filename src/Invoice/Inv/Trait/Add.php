@@ -62,8 +62,7 @@ trait Add
 
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
-            if (is_array($body)) {
-                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+            if (is_array($body) && $formHydrator->populateFromPostAndValidate($form, $request)) {
                     // Only clients that were assigned to user accounts were
                     // made available in dropdown therefore use the 'user client'
                     // user id
@@ -147,7 +146,6 @@ $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
                     }
                     $this->flashMessage('warning', $this->translator->translate(
                             'user.client.active.no'));
-                }
             }
             $this->flashMessage('warning', $this->translator->translate(
                     'creation.unsuccessful'));

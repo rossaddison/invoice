@@ -103,13 +103,11 @@ final class EmailTemplateController extends BaseController
 
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
-            if (null !== $this->userService->getUser() && $formHydrator->populateAndValidate($form, $body)) {
-                if (is_array($body)) {
-                    $this->emailTemplateService->saveEmailTemplate($emailTemplate, $body);
+            if (null !== $this->userService->getUser() && $formHydrator->populateAndValidate($form, $body) && is_array($body)) {
+                $this->emailTemplateService->saveEmailTemplate($emailTemplate, $body);
                     $this->flashMessage('info',
                         $this->translator->translate('email.template.successfully.added'));
                     return $this->webService->getRedirectResponse('emailtemplate/index');
-                }
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
@@ -154,12 +152,10 @@ final class EmailTemplateController extends BaseController
 
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
-            if (null !== $this->userService->getUser() && $formHydrator->populateAndValidate($form, $body)) {
-                if (is_array($body)) {
-                    $this->emailTemplateService->saveEmailTemplate($emailTemplate, $body);
+            if (null !== $this->userService->getUser() && $formHydrator->populateAndValidate($form, $body) && is_array($body)) {
+                $this->emailTemplateService->saveEmailTemplate($emailTemplate, $body);
                     $this->flashMessage('info', $this->translator->translate('email.template.successfully.added'));
                     return $this->webService->getRedirectResponse('emailtemplate/index');
-                }
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
@@ -220,12 +216,10 @@ final class EmailTemplateController extends BaseController
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
-                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    if (is_array($body)) {
+                if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                         $this->emailTemplateService->saveEmailTemplate($emailTemplate, $body);
                         $this->flashMessage('info', $this->translator->translate('email.template.successfully.edited'));
                         return $this->webService->getRedirectResponse('emailtemplate/index');
-                    }
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
@@ -280,12 +274,10 @@ final class EmailTemplateController extends BaseController
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
-                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    if (is_array($body)) {
+                if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                         $this->emailTemplateService->saveEmailTemplate($emailTemplate, $body);
                         $this->flashMessage('info', $this->translator->translate('email.template.successfully.edited'));
                         return $this->webService->getRedirectResponse('emailtemplate/index');
-                    }
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;

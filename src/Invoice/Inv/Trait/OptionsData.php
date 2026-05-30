@@ -167,12 +167,10 @@ trait OptionsData
          */
         foreach ($invs as $inv) {
             $client = $inv->getClient();
-            if (null !== $client) {
-                if (strlen($client->getClientFullName()) > 0) {
-                    $fullName = $client->getClientFullName();
-                    $optionsDataClients[$client->getClientFullName()] =
-                        !empty($fullName) ? $fullName : '';
-                }
+            if (null !== $client && strlen($client->getClientFullName()) > 0) {
+                $fullName = $client->getClientFullName();
+                $optionsDataClients[$client->getClientFullName()] =
+                    !empty($fullName) ? $fullName : '';
             }
         }
         return $optionsDataClients;
@@ -190,12 +188,10 @@ trait OptionsData
          */
         foreach ($userClients as $userClient) {
             $client = $userClient->getClient();
-            if (null !== $client) {
-                if (strlen($client->getClientFullName()) > 0) {
-                    $fullName = $client->getClientFullName();
-                    $optionsDataClients[$client->getClientFullName()] =
-                        !empty($fullName) ? $fullName : '';
-                }
+            if (null !== $client && strlen($client->getClientFullName()) > 0) {
+                $fullName = $client->getClientFullName();
+                $optionsDataClients[$client->getClientFullName()] =
+                    !empty($fullName) ? $fullName : '';
             }
         }
         return $optionsDataClients;
@@ -251,10 +247,8 @@ trait OptionsData
          */
         foreach ($invs as $inv) {
             $invNumber = $inv->getNumber();
-            if (null !== $invNumber) {
-                if (!in_array($invNumber, $optionsDataInvNumbers)) {
-                    $optionsDataInvNumbers[$invNumber] = $invNumber;
-                }
+            if (null !== $invNumber && !in_array($invNumber, $optionsDataInvNumbers)) {
+                $optionsDataInvNumbers[$invNumber] = $invNumber;
             }
         }
         return $optionsDataInvNumbers;
@@ -272,10 +266,8 @@ trait OptionsData
          */
         foreach ($invs as $inv) {
             $familyName = $inv->getFirstItemFamilyName();
-            if (strlen($familyName) > 0) {
-                if (!in_array($familyName, $optionsDataFamilyNames)) {
-                    $optionsDataFamilyNames[$familyName] = $familyName;
-                }
+            if (strlen($familyName) > 0 && !in_array($familyName, $optionsDataFamilyNames)) {
+                $optionsDataFamilyNames[$familyName] = $familyName;
             }
         }
         return $optionsDataFamilyNames;
@@ -343,10 +335,8 @@ trait OptionsData
          */
         foreach ($invs as $inv) {
             $invNumber = $inv->getNumber();
-            if (null !== $invNumber) {
-                if (!in_array($invNumber, $optionsDataInvNumbers)) {
-                    $optionsDataInvNumbers[$invNumber] = $invNumber;
-                }
+            if (null !== $invNumber && !in_array($invNumber, $optionsDataInvNumbers)) {
+                $optionsDataInvNumbers[$invNumber] = $invNumber;
             }
         }
         return $optionsDataInvNumbers;

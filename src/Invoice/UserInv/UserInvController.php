@@ -251,11 +251,9 @@ final class UserInvController extends BaseController
                 ];
                 if ($request->getMethod() === Method::POST) {
                     $body = $request->getParsedBody() ?? [];
-                    if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                        if (is_array($body)) {
+                    if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                             $this->userinvService->saveUserInv($userinv, $body);
                             return $this->webService->getRedirectResponse('invoice/index');
-                        }
                     }
                     $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                     $parameters['form'] = $form;
@@ -375,8 +373,7 @@ final class UserInvController extends BaseController
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
-                if (is_array($body)) {
-                    if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                if (is_array($body) && $formHydrator->populateFromPostAndValidate($form, $request)) {
                         /**
                          * @var string $body['type']
                          */
@@ -415,7 +412,6 @@ final class UserInvController extends BaseController
                             }
                             return $this->webService->getRedirectResponse('userinv/index');
                         } // null!== user_id
-                    }
                 } // is_array
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;

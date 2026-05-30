@@ -188,22 +188,20 @@ trait QuoteToSo
             UCR $ucR, UIR $uiR):
         Response
     {
-        if ($url_key) {
-            if ($qR->repoUrlKeyGuestCount($url_key) > 0) {
-                $quote = $qR->repoUrlKeyGuestLoaded($url_key);
-                if ($quote) {
-                    $quote_id = $quote->reqId();
-                    if ($this->rbacObserver($quote, $ucR, $uiR)) {
-                        $quote->setStatusId(5);
-                        $qR->save($quote);
-                        return $this->factory->createResponse(
-                            $this->webViewRenderer->renderPartialAsString(
-                            '//invoice/setting/quote_successful',
-                            ['heading' => $this->translator->translate(
-                                'record.successfully.updated'),'url' =>
-                                'quote/view','id' => $quote_id],
-                        ));
-                    }
+        if ($url_key && $qR->repoUrlKeyGuestCount($url_key) > 0) {
+            $quote = $qR->repoUrlKeyGuestLoaded($url_key);
+            if ($quote) {
+                $quote_id = $quote->reqId();
+                if ($this->rbacObserver($quote, $ucR, $uiR)) {
+                    $quote->setStatusId(5);
+                    $qR->save($quote);
+                    return $this->factory->createResponse(
+                        $this->webViewRenderer->renderPartialAsString(
+                        '//invoice/setting/quote_successful',
+                        ['heading' => $this->translator->translate(
+                            'record.successfully.updated'),'url' =>
+                            'quote/view','id' => $quote_id],
+                    ));
                 }
             }
         }

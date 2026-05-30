@@ -21,12 +21,10 @@ trait OptionsData
          */
         foreach ($quotes as $quote) {
             $client = $quote->getClient();
-            if (null !== $client) {
-                if (strlen($client->getClientFullName()) > 0) {
-                    $fullName = $client->getClientFullName();
-                    $optionsDataClients[$fullName] =
-                        !empty($fullName) ? $fullName : '';
-                }
+            if (null !== $client && strlen($client->getClientFullName()) > 0) {
+                $fullName = $client->getClientFullName();
+                $optionsDataClients[$fullName] =
+                    !empty($fullName) ? $fullName : '';
             }
         }
         return $optionsDataClients;
@@ -60,10 +58,8 @@ trait OptionsData
          */
         foreach ($quotes as $quote) {
             $quoteNumber = $quote->getNumber();
-            if (null !== $quoteNumber) {
-                if (!in_array($quoteNumber, $optionsDataQuoteNumbers)) {
-                    $optionsDataQuoteNumbers[$quoteNumber] = $quoteNumber;
-                }
+            if (null !== $quoteNumber && !in_array($quoteNumber, $optionsDataQuoteNumbers)) {
+                $optionsDataQuoteNumbers[$quoteNumber] = $quoteNumber;
             }
         }
         return $optionsDataQuoteNumbers;

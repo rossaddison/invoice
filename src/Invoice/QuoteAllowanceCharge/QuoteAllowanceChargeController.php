@@ -144,10 +144,8 @@ final class QuoteAllowanceChargeController extends BaseController
         /** @var QuoteAllowanceCharge $quoteAllowanceCharge */
         foreach ($acqs as $quoteAllowanceCharge) {
             $quoteNumber = $quoteAllowanceCharge->getQuote()?->getNumber();
-            if (null !== $quoteNumber) {
-                if (!in_array($quoteNumber, $optionsDataQuoteNumbers)) {
-                    $optionsDataQuoteNumbers[$quoteNumber] = $quoteNumber;
-                }
+            if (null !== $quoteNumber && !in_array($quoteNumber, $optionsDataQuoteNumbers)) {
+                $optionsDataQuoteNumbers[$quoteNumber] = $quoteNumber;
             }
         }
         return $optionsDataQuoteNumbers;
@@ -214,13 +212,11 @@ final class QuoteAllowanceChargeController extends BaseController
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
-                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    if (is_array($body)) {
-                        $this->qacService->saveQuoteAllowanceCharge(
-                            $quoteAllowanceCharge, $body);
-                        return $this->webService->getRedirectResponse(
-                            'quoteallowancecharge/index');
-                    }
+                if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
+                    $this->qacService->saveQuoteAllowanceCharge(
+                        $quoteAllowanceCharge, $body);
+                    return $this->webService->getRedirectResponse(
+                        'quoteallowancecharge/index');
                 }
                 $parameters['errors'] =
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();

@@ -233,11 +233,9 @@ trait Edit
             $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
             if (null !== $user) {
                 $form = InvForm::show($inv);
-                if (null !== $body && is_array($body)) {
-                    if ($formHydrator->populateAndValidate($form, $body)) {
-                        $this->inv_service->saveInv($user, $inv, $body,
-                            $this->sR, $groupRepo);
-                    }
+                if (null !== $body && is_array($body) && $formHydrator->populateAndValidate($form, $body)) {
+                    $this->inv_service->saveInv($user, $inv, $body,
+                        $this->sR, $groupRepo);
                 }
                 return $form;
             } // null !== $user

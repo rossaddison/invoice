@@ -121,11 +121,9 @@ final class CustomFieldController extends BaseController
         ];
 
         if ($request->getMethod() === Method::POST) {
-            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                if (is_array($body)) {
+            if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                     $this->customFieldService->saveCustomField($custom_field, $body);
                     return $this->webService->getRedirectResponse('customfield/index');
-                }
             }
             $parameters['form'] = $form;
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -162,11 +160,9 @@ final class CustomFieldController extends BaseController
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
-                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    if (is_array($body)) {
+                if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                         $this->customFieldService->saveCustomField($custom_field, $body);
                         return $this->webService->getRedirectResponse('customfield/index');
-                    }
                 }
                 $parameters['form'] = $form;
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
