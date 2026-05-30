@@ -169,7 +169,7 @@ final class Cryptor
      * @param  int $fmt Optional override for the output encoding. One of FORMAT_RAW, FORMAT_B64 or FORMAT_HEX.
      * @return mixed
      */
-    public static function Encrypt($in, $key, $fmt = null): mixed
+    public static function encrypt($in, $key, $fmt = null): mixed
     {
         $c = new self();
         return $c->encryptString($in, $key, $fmt);
@@ -182,7 +182,7 @@ final class Cryptor
      * @param  int $fmt Optional override for the input encoding. One of FORMAT_RAW, FORMAT_B64 or FORMAT_HEX.
      * @return mixed
      */
-    public static function Decrypt($in, $key, $fmt = null): mixed
+    public static function decrypt($in, $key, $fmt = null): mixed
     {
         $c = new self();
         return $c->decryptString($in, $key, $fmt);

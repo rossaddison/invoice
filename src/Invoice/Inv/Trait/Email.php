@@ -307,8 +307,6 @@ trait Email
                         $template_helper->parseTemplate($inv_id, true,
                             $from[1], $cvR, $iR, $iaR, $qR, $qaR, $soR,
                                 $uiR)];
-                //$message = (empty($mail_message) ? 'this is a message ' :
-                //  $mail_message);
                 $message = $mail_message;
                 // mail_from[0] is the from_email and mail_from[1] is the
                 // from_name

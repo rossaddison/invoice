@@ -215,7 +215,6 @@ final readonly class PeppolUblXml
         $writer = new Writer();
         $writer->openMemory();
         $writer->setIndent(true);
-        //$writer->startDocument('1.0', 'UTF-8');
         $writer->text(Generator::invoice($ubl_invoice, $ubl_invoice->getDocumentCurrencyCode()));
         $writer->endDocument();
         return $writer->outputMemory();

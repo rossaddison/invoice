@@ -478,8 +478,6 @@ final readonly class TemplateHelper
                             $cf = $this->cfR->repoCustomFieldquery((int) $cf_id[1]);
                             // Get the table from the custom field table
                             $table = $cf->getTable();
-                            //$custom_fields = $this->cfR->repoTablequery($table) ?: null;
-
                             // If the table is eg. 'quote_custom' search the table with the custom_field_id
                             // and retrieve the value for this particularly designed field
                             switch ($table) {

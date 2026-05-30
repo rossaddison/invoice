@@ -175,14 +175,6 @@ class Invoice implements XmlSerializable
          * Error message: [UBL-CR-004]-A UBL invoice should
                                                   not include the CopyIndicator
          */
-
-        //if ($this->isCopyIndicator !== null) {
-        //  $writer->write([
-        //    Schema::CBC . 'CopyIndicator' => $this->isCopyIndicator ? 'true' :
-        //     'false'
-        //  ]);
-        //}
-
         $writer->write([
                 Schema::CBC
                     . 'IssueDate' =>
@@ -236,13 +228,6 @@ class Invoice implements XmlSerializable
  * Error message:
             [UBL-CR-010]-A UBL invoice should not include the AccountingCostCode
 */
-//if ($this->accountingCostCode !== null) {
-//
-// $writer->write([
-//   Schema::CBC . 'AccountingCostCode' => $this->accountingCostCode
-// ]);
-//}
-
         if ($this->buyerReference !== null) {
             $writer->write([
                 Schema::CBC

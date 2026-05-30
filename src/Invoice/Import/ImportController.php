@@ -253,7 +253,7 @@ final class ImportController extends BaseController
         }
     }
 
-    private function InsertUnits(array $units): void
+    private function insertUnits(array $units): void
     {
         /**
          * @var array $unit
@@ -267,7 +267,7 @@ final class ImportController extends BaseController
         $this->flashMessage('info', $this->translator->translate('invoiceplane.units'));
     }
 
-    private function InsertFamilies(array $families): void
+    private function insertFamilies(array $families): void
     {
         /**
          * @var array $family
@@ -280,7 +280,7 @@ final class ImportController extends BaseController
         $this->flashMessage('info', $this->translator->translate('invoiceplane.families'));
     }
 
-    private function InsertTaxRates(array $taxRates): void
+    private function insertTaxRates(array $taxRates): void
     {
         /**
          * @var array $taxRate
@@ -294,7 +294,7 @@ final class ImportController extends BaseController
         $this->flashMessage('info', $this->translator->translate('invoiceplane.taxrates'));
     }
 
-    private function InsertClients(array $clients): void
+    private function insertClients(array $clients): void
     {
         /**
          * @var array $client
@@ -327,7 +327,7 @@ final class ImportController extends BaseController
         $this->flashMessage('info', $this->translator->translate('invoiceplane.clients'));
     }
 
-    private function InsertProducts(array $products): void
+    private function insertProducts(array $products): void
     {
         /**
          * @var array $product

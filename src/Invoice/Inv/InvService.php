@@ -312,7 +312,6 @@ final readonly class InvService
         $model->setDateTaxPoint($datetimeimmutable_tax_point);
 
         $model->setDateDue($s);
-        //$model->setDateCreated($form->getDateCreated());
         $model->setClientId((int) $details['client_id']);
         $model->setGroupId((int) $details['group_id']);
         $model->setStatusId((int) $details['status_id']);

@@ -550,7 +550,7 @@ class ReportController extends BaseController
                               ? $iR->withItemTaxTotalFromToUsingProduct($product_id, $from, $to, $iiaR)
                               : 0.00;
                 $results[] = $row;
-            } // null!==$product_id;
+            }
         }
         return $results;
     }
@@ -663,7 +663,7 @@ class ReportController extends BaseController
                               ? $iR->withItemTaxTotalFromToUsingTask($task_id, $from, $to, $iiaR)
                               : 0.00;
                 $results[] = $row;
-            } // null!==$task_id;
+            }
         }
         return $results;
     }

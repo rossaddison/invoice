@@ -1526,7 +1526,7 @@ final class SalesOrderController extends BaseController
         return $this->webService->getNotFoundResponse();
     }
 
-    private function OptionsData(
+    private function optionsData(
         int $client_id,
         CR $clientRepo,
         DR $delRepo,

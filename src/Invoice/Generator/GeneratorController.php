@@ -937,7 +937,7 @@ class GeneratorController extends BaseController
      * @param DatabaseManager $dbal
      * @param View $view
      */
-    public function _index(
+    public function generatorIndex(
         CurrentRoute $currentRoute,
         GeneratorRepository $gr,
         GeneratorRelationRepository $grr,
@@ -981,7 +981,7 @@ class GeneratorController extends BaseController
      * @param DatabaseManager $dbal
      * @param View $view
      */
-    public function _form(
+    public function generatorForm(
         CurrentRoute $currentRoute,
         GeneratorRepository $gr,
         GeneratorRelationRepository $grr,
@@ -1024,7 +1024,7 @@ class GeneratorController extends BaseController
      * @param DatabaseManager $dbal
      * @param View $view
      */
-    public function _view(
+    public function generatorView(
         CurrentRoute $currentRoute,
         GeneratorRepository $gr,
         GeneratorRelationRepository $grr,
@@ -1070,7 +1070,7 @@ class GeneratorController extends BaseController
      * @param DatabaseManager $dbal
      * @param View $view
      */
-    public function _route(
+    public function generatorRoute(
         CurrentRoute $currentRoute,
         GeneratorRepository $gr,
         GeneratorRelationRepository $grr,

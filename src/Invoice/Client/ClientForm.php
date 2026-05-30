@@ -103,7 +103,6 @@ final class ClientForm extends FormModel
             : null;
         $form->client_age = $client->getClientAge();
         $form->client_gender = $client->getClientGender();
-        //$form->postaladdress_id = $client->getPostaladdressId();
         $form->client_telegram_chat_id = $client->getClientTelegramChatId();
         return $form;
     }
