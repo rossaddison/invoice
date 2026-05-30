@@ -7,6 +7,7 @@
 ![Static Analysis](https://img.shields.io/static/v1?label=Static%20Analysis&message=Passing&color=66ff00)
 ![Psalm Level](https://img.shields.io/static/v1?label=Psalm%20Level&message=1&color=66ff00)
 [![type-coverage](https://shepherd.dev/github/rossaddison/invoice/coverage.svg)](https://shepherd.dev/github/rossaddison/invoice)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=rossaddison_invoice&metric=coverage)](https://sonarcloud.io/summary/new_code?id=rossaddison_invoice)
 [![PHP-CS-Fixer](https://img.shields.io/badge/php--cs--fixer-enabled-blue?logo=php)](https://github.com/FriendsOfPHP/PHP-CS-Fixer)
 ![Stats](https://github-readme-stats.vercel.app/api?username=rossaddison)
 ![Hosted by Vultr](https://img.shields.io/badge/hosting-vultr%20(yii3i.online)-blue?logo=vultr&style=flat-square)
@@ -30,6 +31,8 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
  Peppol network.
 
 **Recent Implementations**
+
+[TypeScript Vitest Coverage](docs/TYPESCRIPT_VITEST_COVERAGE.md) — Vitest + jsdom + v8 coverage wired into CI for `inv-index.ts`, `list-utils.ts`, and `quote-index.ts`; `phpunit.xml.dist` case fix for Linux CI; PHP and TS coverage fed to SonarCloud; coverage badge added (May 2026)
 
 [SonarCloud First Gate](docs/SONARCLOUD_FIRST_GATE.md) — SonarCloud runs as a standalone job before the PHP matrix build; `needs: [sonar]` blocks all four runners until the quality gate passes; AI-assisted contributions must self-audit before commit (May 2026)
 
