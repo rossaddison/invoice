@@ -23,11 +23,14 @@ export class AmountMagnifier {
 
     private isAmount(el: HTMLElement): boolean {
         const text = el.textContent?.trim() ?? '';
-        // Length cap bounds worst-case backtracking to O(20²) = 400 steps.
-        // JS lacks atomic groups/possessive quantifiers, so capping is the
-        // correct mitigation for the [\d,]+ / \d* digit-overlap ReDoS risk.
         if (text.length === 0 || text.length > 20) return false;
-        return /^[\d,]+\.?\d*$/.test(text);
+        // JS has no possessive quantifiers, so we mimic them with a lookahead +
+        // backreference: (?=([\d,]+))\1 locks [\d,]+ to its greedy match and
+        // prevents it from giving characters back during backtracking.
+        // (?:\.\d+)? requires a literal dot before any fractional digits,
+        // removing the [\d,]+ / \d* digit overlap that causes super-linear
+        // backtracking in the original /^[\d,]+\.?\d*$/ pattern.
+        return /^(?=([\d,]+))\1(?:\.\d+)?$/.test(text);
     }
 
     private addBehavior(el: HTMLElement): void {
