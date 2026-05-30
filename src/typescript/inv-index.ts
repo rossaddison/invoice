@@ -1,5 +1,9 @@
 import { AmountMagnifier, initGroupBySelect, initGroupCollapsible } from './list-utils.js';
 
+// Module-level refs keep the MutationObserver and setInterval alive after setup()
+let magnifier: AmountMagnifier;
+let mobilePreview: MobilePreviewToggle;
+
 class MobilePreviewToggle {
     private isActive = false;
     private previewWin: WindowProxy | null = null;
@@ -130,7 +134,7 @@ export function initInvIndex(): void {
             ? (JSON.parse(configEl.textContent ?? '{}') as Record<string, string>)
             : {};
 
-        new AmountMagnifier('table-invoice');
+        magnifier = new AmountMagnifier('table-invoice');
         initGroupBySelect();
 
         Object.entries(labels).forEach(([id, label]) => {
@@ -142,7 +146,7 @@ export function initInvIndex(): void {
             initGroupCollapsible();
         }
 
-        new MobilePreviewToggle();
+        mobilePreview = new MobilePreviewToggle();
     };
 
     if (document.readyState === 'loading') {

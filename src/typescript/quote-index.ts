@@ -1,8 +1,11 @@
 import { AmountMagnifier, initGroupBySelect, initGroupCollapsible } from './list-utils.js';
 
+// Module-level ref keeps the MutationObserver alive after setup()
+let magnifier: AmountMagnifier;
+
 export function initQuoteIndex(): void {
     const setup = (): void => {
-        new AmountMagnifier('table-quote');
+        magnifier = new AmountMagnifier('table-quote');
         initGroupBySelect();
 
         if (document.querySelector('.group-header') !== null) {
