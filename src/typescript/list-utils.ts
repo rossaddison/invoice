@@ -13,9 +13,9 @@ export class AmountMagnifier {
     private attachMagnifiers(): void {
         ['.badge.bg-success', '.badge.bg-warning', '.badge.bg-danger'].forEach(selector => {
             document.querySelectorAll<HTMLElement>(selector).forEach(el => {
-                if (this.isAmount(el) && !el.hasAttribute('data-magnifier-initialized')) {
+                if (this.isAmount(el) && !el.dataset['magnifierInitialized']) {
                     this.addBehavior(el);
-                    el.setAttribute('data-magnifier-initialized', 'true');
+                    el.dataset['magnifierInitialized'] = 'true';
                 }
             });
         });
@@ -23,7 +23,11 @@ export class AmountMagnifier {
 
     private isAmount(el: HTMLElement): boolean {
         const text = el.textContent?.trim() ?? '';
-        return /^[\d,]+\.?\d*$/.test(text) && text.length > 0;
+        // Length cap bounds worst-case backtracking to O(20²) = 400 steps.
+        // JS lacks atomic groups/possessive quantifiers, so capping is the
+        // correct mitigation for the [\d,]+ / \d* digit-overlap ReDoS risk.
+        if (text.length === 0 || text.length > 20) return false;
+        return /^[\d,]+\.?\d*$/.test(text);
     }
 
     private addBehavior(el: HTMLElement): void {
@@ -55,7 +59,7 @@ export class AmountMagnifier {
     }
 
     private magnify(el: HTMLElement, orig: OriginalStyles, borderColor: string, bgColor: string): void {
-        const newSize = parseFloat(orig.fontSize) * this.magnificationFactor;
+        const newSize = Number.parseFloat(orig.fontSize) * this.magnificationFactor;
         el.style.fontSize        = `${newSize}px`;
         el.style.fontWeight      = 'bold';
         el.style.backgroundColor = bgColor;
@@ -90,9 +94,9 @@ export class AmountMagnifier {
 export function initGroupBySelect(): void {
     const select = document.querySelector<HTMLSelectElement>('.group-by-select');
     if (!select) return;
-    const allowed = ['none', 'status', 'client', 'client_group', 'month', 'year', 'date', 'amount_range'];
+    const allowed = new Set(['none', 'status', 'client', 'client_group', 'month', 'year', 'date', 'amount_range']);
     select.addEventListener('change', function () {
-        if (allowed.includes(this.value)) {
+        if (allowed.has(this.value)) {
             const base = this.dataset['baseUrl'] ?? '';
             globalThis.location.href = `${base}?groupBy=${encodeURIComponent(this.value)}`;
         }
@@ -118,9 +122,7 @@ export function initGroupCollapsible(): void {
             const icon = header.querySelector('.group-toggle-icon');
             const collapsed = icon?.classList.contains('bi-chevron-right') ?? false;
             const toggle = (globalThis as Record<string, unknown>)['toggleGroupRows'] as (h: HTMLElement) => void;
-            if (expand === null)            toggle(header);
-            else if (expand && collapsed)   toggle(header);
-            else if (!expand && !collapsed) toggle(header);
+            if (expand === null || (expand && collapsed) || (!expand && !collapsed)) toggle(header);
         });
     };
 }
