@@ -10,7 +10,8 @@
       "Bash(powershell -Command \"Get-Content 'c:\\\\wamp64\\\\www\\\\invoice\\\\src\\\\Invoice\\\\Asset\\\\invoice\\\\css\\\\style.css' | Measure-Object -Line\")",
       "Bash(grep -nP \"^\\\\s*\\\\{$\" \"c:/wamp64/www/invoice/src/Invoice/Asset/invoice/css/style.css\")",
       "Bash(awk 'NR>=8430 && NR<=8460' \"c:/wamp64/www/invoice/src/Invoice/Asset/invoice/css/style.css\")",
-      "Bash(lighthouse --version)"
+      "Bash(lighthouse --version)",
+      "Bash(vendor/bin/psalm --no-cache)"
     ]
   },
   "hooks": {

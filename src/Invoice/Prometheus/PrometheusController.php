@@ -195,7 +195,7 @@ final class PrometheusController extends BaseController
         // Update Windows service status (examples)
         $services = ['mysql', 'apache', 'redis'];
         foreach ($services as $service) {
-            $isRunning = $this->checkWindowsService($service);
+            $isRunning = $this->checkWindowsService();
             $this->prometheusService->updateWindowsServiceStatus($service, $isRunning);
         }
     }
@@ -214,7 +214,7 @@ final class PrometheusController extends BaseController
         return random_int(5, 25);
     }
 
-    private function checkWindowsService(string $_serviceName): bool
+    private function checkWindowsService(): bool
     {
         // Mock implementation - replace with actual Windows service checking
         // You might use `sc query` command or Windows API

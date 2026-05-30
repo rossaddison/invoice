@@ -53,8 +53,6 @@ final class PaymentPeppolController extends BaseController
     public function add(
         #[RouteArgument('inv_id')]
         string $inv_id,
-        #[RouteArgument('_language')]
-        string $_language,
         IR $iR,
         UCR $ucR,
         UIR $uiR,

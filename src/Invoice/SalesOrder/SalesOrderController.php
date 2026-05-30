@@ -1032,7 +1032,6 @@ final class SalesOrderController extends BaseController
      * @param IIAS $iiaS
      * @param PR $pR
      * @param SoCR $socR
-     * @param SoIAR $soiaR
      * @param SoIR $soiR
      * @param SoR $soR
      * @param SoTRR $sotrR
@@ -1059,7 +1058,6 @@ final class SalesOrderController extends BaseController
         IIAS $iiaS,
         PR $pR,
         SoCR $socR,
-        SoIAR $soiaR,
         SoIR $soiR,
         SoR $soR,
         SoTRR $sotrR,
@@ -1120,8 +1118,8 @@ final class SalesOrderController extends BaseController
                         // inv_item_amount for each item
                         $this->soToInvoiceSoItems($so_id, $inv_id,
                                 $aciiR, $acsoiR, $iiaR, $iiaS, $pR,
-                                $taskR, $soiaR, $soiR, $trR,
-                                $formHydrator, $sR, $unR);
+                                $taskR, $soiR, $trR,
+                                $formHydrator, $unR);
                         $this->soToInvoiceSoTaxRates(
                             $so_id, $inv_id, $sotrR, $formHydrator);
                         $this->soToInvoiceSoCustom(
@@ -1191,8 +1189,7 @@ final class SalesOrderController extends BaseController
 
     private function soToInvoiceSoItems(int $so_id, int $new_inv_id,
         ACIIR $aciiR, ACSOIR $acsoiR, IIAR $iiaR, IIAS $iiaS, PR $pR, TASKR $taskR,
-            SoIAR $soiaR, SoIR $soiR, TRR $trR, FormHydrator $formHydrator,
-                SettingRepository $sR, UNR $unR): void
+            SoIR $soiR, TRR $trR, FormHydrator $formHydrator, UNR $unR): void
     {
         // Get all items that belong to the salesorder
         $items = $soiR->repoSalesOrderItemIdquery($so_id);

@@ -40,11 +40,9 @@ final readonly class ButtonsToolbarFull
         Inv $inv,
         InvAmountRepository $iaR,
         bool $invEdit = true,
-        bool $paymentView = true,
         bool $read_only = false,
         array $enabledGateways = [],
         string $vat = '0',
-        bool $isRecurring = false,
         bool $paymentCfExist = false,
     ): string {
         $invId = $inv->reqId();
@@ -160,7 +158,7 @@ final readonly class ButtonsToolbarFull
 
         // Get advanced buttons
         $advancedButtons = $this->getAdvancedButtons(
-            $inv, $invEdit, $enabledGateways, $vat);
+            $inv, $invEdit, $vat);
 
         return $this->renderFullToolbar($primaryButtons, $advancedButtons, $inv);
     }
@@ -168,7 +166,6 @@ final readonly class ButtonsToolbarFull
     private function getAdvancedButtons(
         Inv $inv,
         bool $invEdit,
-        array $enabledGateways,
         string $vat,
     ): array {
         $invId = $inv->reqId();

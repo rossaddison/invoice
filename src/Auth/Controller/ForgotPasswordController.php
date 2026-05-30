@@ -148,7 +148,7 @@ final class ForgotPasswordController
                          */
                         $htmlBody =
                             $this->htmlBodyWithMaskedRandomAndTimeTokenLink(
-                                $user, $_language, $requestPasswordResetToken);
+                                $_language, $requestPasswordResetToken);
                         if (($this->sR->getSetting('email_send_method')
                                 == 'symfony')
                                 || ($this->sR->mailerEnabled() == true)) {
@@ -224,13 +224,11 @@ final class ForgotPasswordController
     }
 
     /**
-     * @param User $user
      * @param string $_language
      * @param string $randomAndTimeToken
      * @return string
      */
     private function htmlBodyWithMaskedRandomAndTimeTokenLink(
-        User $user,
         string $_language,
         string $randomAndTimeToken,
     ): string {

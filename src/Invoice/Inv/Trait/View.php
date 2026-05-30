@@ -340,12 +340,9 @@ trait View
                         $inv,
                         $iaR,
                         $this->userService->hasPermission(Permissions::EDIT_INV),
-                        $this->userService->hasPermission(
-                            Permissions::VIEW_PAYMENT),
                         $read_only,
                         $enabled_gateways,
                         $this->sR->getSetting('enable_vat_registration'),
-                        $is_recurring,
                         $cfR->repoTableCountquery('payment_custom') > 0,
                     ),
                 ];
