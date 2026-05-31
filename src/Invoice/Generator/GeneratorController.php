@@ -117,9 +117,9 @@ class GeneratorController extends BaseController
         $fileEnAppPath = $en . DIRECTORY_SEPARATOR . 'app.php';
 
         $lang = [];
-        if (($foundEnAppPath = file_exists($fileEnAppPath)) === true) {
+        if ((file_exists($fileEnAppPath)) === true) {
             // $lang is a full array inside the file designated by $fileEnAppPath
-            $lang = include $fileEnAppPath;
+            $lang = include_once $fileEnAppPath;
         }
         $arrayEnAppDotPhp = $lang;
         $messages = $this->aliases->get('@messages');
@@ -129,9 +129,9 @@ class GeneratorController extends BaseController
                        . DIRECTORY_SEPARATOR . 'app.php';
 
         $lang = [];
-        if (($foundTargetLangFileAppPath = file_exists($targetLangFileAppPath)) === true) {
+        if ((file_exists($targetLangFileAppPath)) === true) {
             // $lang is a full array inside the file designated by $targetLangFileAppPath
-            $lang = include $targetLangFileAppPath;
+            $lang = include_once $targetLangFileAppPath;
         }
 
         $arrayTargetLocaleDotPhp = $lang ?? [];
@@ -491,7 +491,7 @@ class GeneratorController extends BaseController
         }
 
         /** @var array<string, string> $app */
-        $app = include $source;
+        $app = include_once $source;
 
         $export = var_export($app, true);
 
@@ -513,10 +513,12 @@ class GeneratorController extends BaseController
             case 'app':
                 $file = self::APP;
                 break;
-                /**
-                 * Related logic: see ../resources/views/layout/invoice.php DropdownItem::link($translator->translate('generator.google.translate.latest.a'),
-                 *      $urlGenerator->generate('generator/google_translate_lang', ['type' => 'a_latest']),  false, false),
-                 */
+/**
+ * Related logic: see ../resources/views/layout/invoice.php
+ * DropdownItem::link($translator->translate('generator.google.translate.latest.a'),
+ * $urlGenerator->generate('generator/google_translate_lang', ['type' => 'a_latest']),
+ * false, false),
+ */
             case 'diff':
                 $file = self::_DIFF;
                 break;
@@ -533,13 +535,16 @@ class GeneratorController extends BaseController
     {
         $ds = DIRECTORY_SEPARATOR;
         return new Aliases([
-            '@generators' => dirname(__DIR__, 3) . '/resources/views/invoice/generator/templates_protected',
-            '@generated' => dirname(__DIR__, 3) . '/resources/views/invoice/generator/output_overwrite',
+            '@generators' => dirname(__DIR__, 3) .
+                '/resources/views/invoice/generator/templates_protected',
+            '@generated' => dirname(__DIR__, 3) .
+                '/resources/views/invoice/generator/output_overwrite',
             '@Entity' => dirname(__DIR__, 3) . '/src/Invoice/Entity',
             '@Invoice' => dirname(__DIR__, 3) . '/src/Invoice',
             '@invoice' => dirname(__DIR__, 3) . '/resources/views/invoice',
             '@messages' => dirname(__DIR__, 3) . '/resources/messages',
-            '@en' => dirname(__DIR__, 3) . $ds . 'resources' . $ds . 'messages' . $ds . 'en',
+            '@en' => dirname(__DIR__, 3) .
+                $ds . 'resources' . $ds . 'messages' . $ds . 'en',
             '@English' => dirname(__DIR__, 3) . '/src/Invoice/Language/English',
         ]);
     }

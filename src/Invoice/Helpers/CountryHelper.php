@@ -34,15 +34,12 @@ class CountryHelper
                 . DIRECTORY_SEPARATOR
                 . 'country.php';
         if (file_exists($file)) {
-            /**
-             * @psalm-suppress UnresolvableInclude
-             */
-            return include $file;
+            return include_once $file;
         }
         /**
          * @psalm-suppress UnresolvableInclude
          */
-        return include $default_english;
+        return include_once $default_english;
     }
 
     /**

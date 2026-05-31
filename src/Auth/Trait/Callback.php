@@ -76,7 +76,7 @@ trait Callback
          */
         $oAuthToken =
                 $developerSandboxHmrc->fetchAccessTokenWithCodeVerifier($request,
-                        $code, $params = [
+                        $code, [
             'redirect_uri' => $developerSandboxHmrc->getOauth2ReturnUrl(),
             'code_verifier' => $codeVerifier,
             'grant_type' => 'authorization_code',
@@ -394,7 +394,7 @@ trait Callback
         // For Github we know that the parameter key for the token is
         //  'access_token' and not the default 'oauth_token'
         /** @psalm-var \Yiisoft\Yii\AuthClient\Client\GitHub $github */
-        $oAuthTokenType = $github->fetchAccessToken($request, $code, $params = []);
+        $oAuthTokenType = $github->fetchAccessToken($request, $code, []);
         /**
          * Every time you receive an access token, you should use the token
          *  to revalidate the user's identity.
@@ -516,7 +516,7 @@ trait Callback
             // code and state are both present
         }
         /** @psalm-var \Yiisoft\Yii\AuthClient\Client\Google $google */
-        $oAuthTokenType = $google->fetchAccessToken($request, $code, $params = [
+        $oAuthTokenType = $google->fetchAccessToken($request, $code, [
             'grant_type' => 'authorization_code',
         ]);
 
@@ -637,7 +637,7 @@ trait Callback
             // code and state are both present
         }
         /** @psalm-var \App\Auth\Client\GovUk $govUk */
-        $oAuthTokenType = $govUk->fetchAccessToken($request, $code, $params = []);
+        $oAuthTokenType = $govUk->fetchAccessToken($request, $code, []);
         $userArray = $govUk->getCurrentUserJsonArray($oAuthTokenType);
         /**
          * @var int $userArray['id']

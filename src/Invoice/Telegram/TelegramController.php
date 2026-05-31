@@ -58,6 +58,7 @@ final class TelegramController extends BaseController
         $settingRepositoryTelegramToken = $this->sR->getSetting('telegram_token');
         $chatId = $this->sR->getSetting('telegram_chat_id');
         $ipAddress = null;
+        $businessConnectionId = null;
         $maxConnections = null;
         $allowUpdates = null;
         $dropPendingUpdates = null;
@@ -100,17 +101,17 @@ final class TelegramController extends BaseController
                                 $sendMessageResult = $this->telegramBotApi->sendMessage(
                                     $chatId,
                                     $text,
-                                    $businessConnectionId = null,
-                                    $messageThreadId = null,
-                                    $parseMode = null,
-                                    $entities = null,
-                                    $linkPreviewOptions = null,
-                                    $disableNotification = null,
-                                    $protectContent = null,
-                                    $messageEffectId = null,
-                                    $replyParameters = null,
-                                    $replyMarkup = null,
-                                    $allowPaidBroadcast = null,
+                                    $businessConnectionId,
+                                    $messageThreadId,
+                                    $parseMode,
+                                    $entities,
+                                    $linkPreviewOptions,
+                                    $disableNotification,
+                                    $protectContent,
+                                    $messageEffectId,
+                                    $replyParameters,
+                                    $replyMarkup,
+                                    $allowPaidBroadcast,
                                 );
                                 if (!$sendMessageResult instanceof FailResult) {
                                     $this->flashMessage('success',
@@ -602,11 +603,16 @@ final class TelegramController extends BaseController
                     );
                     $failResultSetWebhook = $telegramHelper->setWebhook(
                         $urlGenerator,
-                        $ipAddress = null,
-                        $maxConnections = null,
-                        $allowUpdates = null,
-                        $dropPendingUpdates = false,
-                        $secretToken = null,
+                        // ipAddress
+                        null,
+                        // maxConnections
+                        null,
+                        // allowUpdates
+                        null,
+                        // dropPendingUpdates
+                        false,
+                        // secretToken
+                        null,
                     );
                     $failResultWebhookInfo = $telegramHelper->getWebhookInfo();
                     if (!$failResultSetWebhook instanceof FailResult) {

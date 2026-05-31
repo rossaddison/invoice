@@ -58,8 +58,12 @@ final class ItemsCommand extends Command
     private array $groups = [];
     /** @var Product[] */
     private array $products = [];
-    private array $productNames = ['Mouse', 'Keyboard', 'Screen', 'Hard drive', 'Box', 'Motherboard'];
-    private array $productDescriptions = ['3-button', 'US', '24inch x 16inch', '1 TB', 'Standard', 'Intel i15'];
+    private array $productNames = [
+        'Mouse', 'Keyboard', 'Screen', 'Hard drive', 'Box', 'Motherboard'
+    ];
+    private array $productDescriptions = [
+        '3-button', 'US', '24inch x 16inch', '1 TB', 'Standard', 'Intel i15'
+    ];
     /** @var TaxRate[] */
     private array $taxRates = [];
     /** @var Unit[] */
@@ -128,8 +132,8 @@ final class ItemsCommand extends Command
             $this->addUsers($count);
             $this->addClients($count);
 
-            /* Assign one client to each user although more than one client can be assigned to each user */
-            $this->addUserClients($count);
+            /* Assign between one and five clients to each user randomly */ 
+            $this->addUserClients();
 
             /* Add more extensive user information */
             $this->addUserInvs($count);
@@ -467,13 +471,25 @@ final class ItemsCommand extends Command
         }
     }
 
-    private function addUserClients(int $count): void
+    private function addUserClients(): void
     {
-        for ($i = 0; $i < $count; $i++) {
-            foreach ($this->users as $_) {
+        foreach ($this->users as $user) {
+            $numberOfClients = $this->faker->numberBetween(1, 5);
+
+            $clients = $this->faker->randomElements(
+                $this->clients,
+                $numberOfClients
+            );
+
+            /**
+             * @var \App\Infrastructure\Persistence\Client\Client
+             */
+            foreach ($clients as $client) {
                 $userClient = new UserClient();
-                $userClient->setUserId($this->faker->numberBetween(1, $count));
-                $userClient->setClientId($this->faker->numberBetween(1, $count));
+
+                $userClient->setUserId($user->reqId());
+                $userClient->setClientId($client->reqId());
+
                 $this->userClients[] = $userClient;
             }
         }

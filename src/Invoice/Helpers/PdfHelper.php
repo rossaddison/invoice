@@ -150,7 +150,7 @@ class PdfHelper
                 ]),
                 'company_logo_and_address' => $webViewRenderer->renderPartialAsString(
                 '//invoice/setting/company_logo_and_address.php',
-                    ['company' => $company = $this->s->getConfigCompanyDetails(),
+                    ['company' => $this->s->getConfigCompanyDetails(),
                         'document_number' => $quote->getNumber(),
                         'client_number' => $client_number,
                         'isInvoice' => false,
@@ -221,7 +221,6 @@ class PdfHelper
                     (!empty($this->s->getSetting('pdf_salesorder_template')) ?
                         $this->s->getSetting('pdf_salesorder_template') :
                             'salesorder');
-                $_language = $this->session->get('_language') ?? 'en';
                 $items = ($soiR->repoCount((int) $so_id) > 0 ?
                     $soiR->repoSalesOrderItemIdquery((int) $so_id) : null);
                 $client_number = (string) $so->getClient()?->getClientNumber();
@@ -267,7 +266,7 @@ class PdfHelper
                     ]),
                     'company_logo_and_address' => $webViewRenderer->renderPartialAsString(
                     '//invoice/setting/company_logo_and_address.php',
-                        ['company' => $company = $this->s->getConfigCompanyDetails(),
+                        ['company' => $this->s->getConfigCompanyDetails(),
                             'document_number' => $so->getNumber(),
                             'client_number' => $client_number,
                             'isInvoice' => false,
