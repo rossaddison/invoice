@@ -31,6 +31,7 @@ $pr       = null;
 $type     = null;
 $severity = null;
 $rule     = null;
+$file     = null;
 $hotspots = false;
 
 foreach ($args as $arg) {
@@ -38,6 +39,7 @@ foreach ($args as $arg) {
     if (str_starts_with($arg, '--type='))     { $type     = strtoupper(substr($arg, 7)); }
     if (str_starts_with($arg, '--severity=')) { $severity = strtoupper(substr($arg, 11)); }
     if (str_starts_with($arg, '--rule='))     { $rule     = substr($arg, 7); }
+    if (str_starts_with($arg, '--file='))     { $file     = substr($arg, 7); }
     if ($arg === '--hotspots')                { $hotspots = true; }
 }
 
@@ -80,7 +82,7 @@ function sonarGet(string $path, array $query, string $token): array
 }
 
 // ── Collect all pages ─────────────────────────────────────────────────────────
-function fetchAllIssues(string $token, ?string $pr, ?string $type, ?string $severity, ?string $rule): array
+function fetchAllIssues(string $token, ?string $pr, ?string $type, ?string $severity, ?string $rule, ?string $file = null): array
 {
     $issues = [];
     $page   = 1;
@@ -96,6 +98,7 @@ function fetchAllIssues(string $token, ?string $pr, ?string $type, ?string $seve
         if ($type !== null)     { $query['types']       = $type; }
         if ($severity !== null) { $query['severities']  = $severity; }
         if ($rule !== null)     { $query['rules']       = $rule; }
+        if ($file !== null)     { $query['components']  = PROJECT_KEY . ':' . ltrim($file, '/'); }
 
         $data    = sonarGet('/api/issues/search', $query, $token);
         $batch   = $data['issues'] ?? [];
@@ -152,7 +155,7 @@ if ($hotspots) {
     }
     echo "\n" . count($items) . " hotspot(s)\n";
 } else {
-    $items = fetchAllIssues($token, $pr, $type, $severity, $rule);
+    $items = fetchAllIssues($token, $pr, $type, $severity, $rule, $file);
     foreach ($items as $issue) {
         $sev     = $issue['severity'] ?? 'MAJOR';
         $label   = $severityLabel[$sev] ?? $sev;

@@ -29,31 +29,31 @@ describe('AmountMagnifier', () => {
     describe('attachMagnifiers — isAmount gating', () => {
         it('marks a badge with a valid integer amount as initialized', () => {
             const badge = makeBadge(CLS_SUCCESS, '100', 'tbl-a');
-            new AmountMagnifier('tbl-a');
+            const _m = new AmountMagnifier('tbl-a');
             expect(badge.dataset[ATTR_INIT]).toBe('true');
         });
 
         it('marks a badge with a comma-separated decimal amount as initialized', () => {
             const badge = makeBadge(CLS_SUCCESS, '1,234.56', 'tbl-b');
-            new AmountMagnifier('tbl-b');
+            const _m = new AmountMagnifier('tbl-b');
             expect(badge.dataset[ATTR_INIT]).toBe('true');
         });
 
         it('skips a badge whose text is not a valid amount', () => {
             const badge = makeBadge(CLS_SUCCESS, 'not-a-number', 'tbl-c');
-            new AmountMagnifier('tbl-c');
+            const _m = new AmountMagnifier('tbl-c');
             expect(badge.dataset[ATTR_INIT]).toBeUndefined();
         });
 
         it('skips a badge with empty text (isAmount length === 0 guard)', () => {
             const badge = makeBadge(CLS_SUCCESS, '', 'tbl-d');
-            new AmountMagnifier('tbl-d');
+            const _m = new AmountMagnifier('tbl-d');
             expect(badge.dataset[ATTR_INIT]).toBeUndefined();
         });
 
         it('skips a badge with text longer than 20 characters', () => {
             const badge = makeBadge(CLS_SUCCESS, '1,234,567,890.1234567', 'tbl-e');
-            new AmountMagnifier('tbl-e');
+            const _m = new AmountMagnifier('tbl-e');
             expect(badge.dataset[ATTR_INIT]).toBeUndefined();
         });
 
@@ -61,7 +61,7 @@ describe('AmountMagnifier', () => {
             const badge = makeBadge(CLS_SUCCESS, '100', 'tbl-f');
             badge.dataset[ATTR_INIT] = 'true';
             const cursorBefore = badge.style.cursor;
-            new AmountMagnifier('tbl-f');
+            const _m = new AmountMagnifier('tbl-f');
             expect(badge.style.cursor).toBe(cursorBefore); // addBehavior not called again
         });
     });
@@ -69,7 +69,7 @@ describe('AmountMagnifier', () => {
     describe('addBehavior — event handlers', () => {
         function initBadge(cls: string, containerId: string): HTMLElement {
             const badge = makeBadge(cls, '100', containerId);
-            new AmountMagnifier(containerId);
+            const _m = new AmountMagnifier(containerId);
             return badge;
         }
 
@@ -143,7 +143,7 @@ describe('AmountMagnifier', () => {
             container.appendChild(badge);
             document.body.appendChild(container);
 
-            new AmountMagnifier('nonexistent-id');
+            const _m = new AmountMagnifier('nonexistent-id');
             expect(badge.dataset[ATTR_INIT]).toBe('true');
         });
 
@@ -157,7 +157,7 @@ describe('AmountMagnifier', () => {
                 const container = document.createElement('div');
                 container.id = 'mut-table';
                 document.body.appendChild(container);
-                new AmountMagnifier('mut-table');
+                const _m = new AmountMagnifier('mut-table');
 
                 // Add a valid badge after construction — should be caught by observer
                 const badge = document.createElement('span');

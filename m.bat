@@ -853,9 +853,10 @@ echo  [4]  Filter by severity    (BLOCKER / CRITICAL / MAJOR / MINOR / INFO)
 echo  [5]  Security hotspots
 echo  [6]  Combine type + severity filters
 echo  [7]  Filter by rule key    (e.g. php:S1192 / javascript:S7647 / typescript:S7785)
+echo  [8]  Filter by file path   (e.g. src/typescript/list-utils.test.ts)
 echo  [0]  Back to Main Menu
 echo.
-set /p sonar_choice="SonarCloud choice [0-7]: "
+set /p sonar_choice="SonarCloud choice [0-8]: "
 
 if "%sonar_choice%"=="0" goto menu
 if "%sonar_choice%"=="1" goto sonar_all
@@ -865,6 +866,7 @@ if "%sonar_choice%"=="4" goto sonar_severity
 if "%sonar_choice%"=="5" goto sonar_hotspots
 if "%sonar_choice%"=="6" goto sonar_combined
 if "%sonar_choice%"=="7" goto sonar_rule
+if "%sonar_choice%"=="8" goto sonar_file
 echo Invalid choice.
 pause
 goto sonar_menu
@@ -973,6 +975,23 @@ echo.
 echo Fetching issues for rule: %sonar_rule_val%
 echo.
 php sonar-issues.php --rule=%sonar_rule_val%
+pause
+goto sonar_menu
+
+:sonar_file
+echo.
+echo  Enter the file path relative to the project root.
+echo  Examples:
+echo    src/typescript/list-utils.test.ts
+echo    src/Invoice/Inv/InvController.php
+echo    src/Invoice/Libraries/Cryptor.php
+echo.
+set /p sonar_file_val="File path: "
+if "%sonar_file_val%"=="" (echo No path entered.& pause& goto sonar_menu)
+echo.
+echo Fetching SonarCloud issues for: %sonar_file_val%
+echo.
+php sonar-issues.php --file=%sonar_file_val%
 pause
 goto sonar_menu
 

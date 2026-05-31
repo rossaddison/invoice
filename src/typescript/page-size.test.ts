@@ -34,7 +34,7 @@ describe('PageSizeHandler', () => {
     it('defers init until DOMContentLoaded when document is loading', () => {
         Object.defineProperty(document, 'readyState', { value: 'loading', configurable: true });
         makeSelect();
-        new PageSizeHandler();
+        const _h = new PageSizeHandler();
         const sel = document.getElementById('page-size-select') as HTMLSelectElement;
         // handler not yet bound — fire DOMContentLoaded to trigger #init
         document.dispatchEvent(new Event('DOMContentLoaded'));
@@ -61,7 +61,7 @@ describe('PageSizeHandler', () => {
         const fetchMock = vi.fn().mockResolvedValue({ ok: true, status: 200, url: '' });
         vi.stubGlobal('fetch', fetchMock);
 
-        new PageSizeHandler();
+        const _h = new PageSizeHandler();
         sel.dispatchEvent(new Event('change'));
         await vi.waitFor(() => expect(fetchMock).toHaveBeenCalledWith('/limit/50'));
     });
@@ -76,7 +76,7 @@ describe('PageSizeHandler', () => {
         const sel = makeSelect('/limit/__SIZE__', '10');
         vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, status: 200, url: '' }));
 
-        new PageSizeHandler();
+        const _h = new PageSizeHandler();
         sel.dispatchEvent(new Event('change'));
         await vi.waitFor(() => expect(reloadMock).toHaveBeenCalled());
     });
@@ -87,7 +87,7 @@ describe('PageSizeHandler', () => {
         const sel = makeSelect('/limit/__SIZE__', '25');
         vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false, status: 500, url: '/limit/25' }));
 
-        new PageSizeHandler();
+        const _h = new PageSizeHandler();
         sel.disabled = false;
         sel.dispatchEvent(new Event('change'));
         expect(sel.disabled).toBe(true); // disabled during request
@@ -98,7 +98,7 @@ describe('PageSizeHandler', () => {
         const sel = makeSelect('/limit/__SIZE__', '25');
         vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('network fail')));
 
-        new PageSizeHandler();
+        const _h = new PageSizeHandler();
         sel.dispatchEvent(new Event('change'));
         await vi.waitFor(() => expect(sel.disabled).toBe(false));
     });
@@ -110,7 +110,7 @@ describe('PageSizeHandler', () => {
         const fetchMock = vi.fn();
         vi.stubGlobal('fetch', fetchMock);
 
-        new PageSizeHandler();
+        const _h = new PageSizeHandler();
         sel.dispatchEvent(new Event('change'));
         await Promise.resolve();
         expect(fetchMock).not.toHaveBeenCalled();
@@ -121,7 +121,7 @@ describe('PageSizeHandler', () => {
         const fetchMock = vi.fn();
         vi.stubGlobal('fetch', fetchMock);
 
-        new PageSizeHandler();
+        const _h = new PageSizeHandler();
         sel.dispatchEvent(new Event('change'));
         await Promise.resolve();
         expect(fetchMock).not.toHaveBeenCalled();

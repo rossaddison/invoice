@@ -181,10 +181,9 @@ export class ProductHandler {
         // Initialize TomSelect (replaces jQuery select2)
         if (typeof globalThis.TomSelect !== 'undefined') {
             document.querySelectorAll('.simple-select').forEach((el: Element) => {
-                const tracked = el as Element & { _tomselect?: boolean };
+                const tracked = el as Element & { _tomselect?: unknown };
                 if (!tracked._tomselect) {
-                    new globalThis.TomSelect(el, {});
-                    tracked._tomselect = true;
+                    tracked._tomselect = new globalThis.TomSelect(el, {});
                 }
             });
         }
