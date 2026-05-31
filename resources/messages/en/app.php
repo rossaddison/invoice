@@ -489,6 +489,7 @@ return [
   'curl.store.cove.api.setup.successful' =>
     'Store Cove Setup Api Call Successful',
   'currency' => 'Currency',
+  'currency.and.number.settings' => 'Currency and Number Settings',
   'currency.code' => 'Currency Code',
   'currency.symbol' => 'Currency Symbol',
   'currency.symbol.placement' => 'Currency Symbol Placement',

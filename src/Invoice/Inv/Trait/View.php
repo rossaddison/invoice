@@ -17,6 +17,7 @@ use App\Invoice\{
     CustomValue\CustomValueRepository as CVR,
     CustomField\CustomFieldRepository as CFR,
     DeliveryLocation\DeliveryLocationRepository as DLR,
+    EmailTemplate\EmailTemplateRepository as ETR,
     Family\FamilyRepository as FR,
     Group\GroupRepository as GR,
     Inv\InvRepository as IR,
@@ -82,6 +83,7 @@ trait View
         ACIR $aciR,
         ACIIR $aciiR,
         CR $cR,
+        ETR $etR,
         GR $gR,
         ICR $icR,
         PYMR $pymR,
@@ -160,6 +162,8 @@ trait View
                         $cfR->repoTableCountquery('payment_custom') > 0,
                     'paymentView' => $this->userService->hasPermission(
                         Permissions::VIEW_PAYMENT),
+                    'email_templates_invoice' => $etR->findAllPreloaded(),
+                    'invoice_groups' => $gR->findAllPreloaded(),
                     'payment_methods' => $pmR->findAllWithActive(1),
                     'payments' => $pymR->repoCount(
                         (int) $this->session->get('inv_id')) > 0 ?

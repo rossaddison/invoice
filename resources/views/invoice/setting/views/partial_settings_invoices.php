@@ -288,6 +288,7 @@ echo H::openTag('div', $row); //1
          ->content(
           $translator->translate('yes')
          );
+       echo H::closeTag('select');
        echo H::openTag('p', $helpBlock);
         echo $translator->translate(
          'pdf.include.zugferd.help'

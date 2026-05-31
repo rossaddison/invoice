@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use App\Widget\Button;
+use Yiisoft\Bootstrap5\Breadcrumbs;
+use Yiisoft\Bootstrap5\BreadcrumbLink;
 use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\A;
@@ -62,7 +64,542 @@ use Yiisoft\Html\Tag\Option;
  * @var string $sales_order_number
  * @var string $title
  * @var string $view_custom_fields
+ * @var array $email_templates_invoice
+ * @var array $invoice_groups
  */
+
+$settingTabIndex = 'setting/tabIndex';
+
+// Resolve invoice group name from ID
+$defaultInvGroupName = $translator->translate('not.set');
+/** @var App\Infrastructure\Persistence\Group\Group $group */
+foreach ($invoice_groups as $group) {
+    if ((string) $group->reqId() === $s->getSetting('default_invoice_group')) {
+        $defaultInvGroupName = $group->getName() ?? $translator->translate('not.set');
+        break;
+    }
+}
+
+// Resolve payment method name from ID
+$defaultPmName = $translator->translate('not.set');
+/** @var App\Infrastructure\Persistence\PaymentMethod\PaymentMethod $pm */
+foreach ($payment_methods as $pm) {
+    if ((string) $pm->reqId() === $s->getSetting('invoice_default_payment_method')) {
+        $defaultPmName = $pm->getName() ?? $translator->translate('not.set');
+        break;
+    }
+}
+
+// Resolve email template titles from IDs
+$emailInvTemplateName = $translator->translate('not.set');
+$emailInvTemplatePaidName = $translator->translate('not.set');
+$emailInvTemplateOverdueName = $translator->translate('not.set');
+/** @var App\Infrastructure\Persistence\EmailTemplate\EmailTemplate $et */
+foreach ($email_templates_invoice as $et) {
+    $etId = (string) $et->reqEmailTemplateId();
+    $etTitle = $et->getEmailTemplateTitle() ?? $translator->translate('not.set');
+    if ($etId === $s->getSetting('email_invoice_template')) {
+        $emailInvTemplateName = $etTitle;
+    }
+    if ($etId === $s->getSetting('email_invoice_template_paid')) {
+        $emailInvTemplatePaidName = $etTitle;
+    }
+    if ($etId === $s->getSetting('email_invoice_template_overdue')) {
+        $emailInvTemplateOverdueName = $etTitle;
+    }
+}
+
+// Map read_only_toggle numeric value to label
+$readOnlyLabel = match($s->getSetting('read_only_toggle')) {
+    '2' => $translator->translate('sent'),
+    '3' => $translator->translate('viewed'),
+    '4' => $translator->translate('paid'),
+    default => $translator->translate('not.set'),
+};
+
+echo Breadcrumbs::widget()
+ ->links(
+     // ── Invoice settings ──────────────────────────────────────────────
+     BreadcrumbLink::to(
+         label: $translator->translate('default.invoice.group'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'invoices'],
+             'settings[default_invoice_group]',
+         ),
+         active: true,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $defaultInvGroupName,
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('default.terms'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'invoices'],
+             'settings[default_invoice_terms]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('default_invoice_terms')
+             ?: $translator->translate('not.set'),
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('default.payment.method'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'invoices'],
+             'settings[invoice_default_payment_method]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $defaultPmName,
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('invoices.due.after'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'invoices'],
+             'settings[invoices_due_after]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('invoices_due_after')
+             ?: $translator->translate('not.set'),
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('generate.invoice.number.for.draft'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'invoices'],
+             'settings[generate_invoice_number_for_draft]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('generate_invoice_number_for_draft') == '1' ? '✅' : '❌',
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('mark.invoices.sent.pdf'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'invoices'],
+             'settings[mark_invoices_sent_pdf]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('mark_invoices_sent_pdf') == '1' ? '✅' : '❌',
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('pre.password'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'invoices'],
+             'settings[invoice_pre_password]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('invoice_pre_password')
+             ?: $translator->translate('not.set'),
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('pdf.include.zugferd'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'invoices'],
+             'settings[include_zugferd]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('include_zugferd') == '1' ? '✅' : '❌',
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('pdf.watermark'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'invoices'],
+             'settings[pdf_watermark]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('pdf_watermark') == '1' ? '✅' : '❌',
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('stream'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'invoices'],
+             'settings[pdf_stream_inv]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('pdf_stream_inv') == '1' ? '✅' : '❌',
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('archive'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'invoices'],
+             'settings[pdf_archive_inv]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('pdf_archive_inv') == '1' ? '✅' : '❌',
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: 'Preview Invoice Pdf as Webpage',
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'invoices'],
+             'settings[pdf_html_inv]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('pdf_html_inv') == '1' ? '✅' : '❌',
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('default.pdf.template'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'invoices'],
+             'settings[pdf_invoice_template]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('pdf_invoice_template')
+             ?: $translator->translate('not.set'),
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('pdf.template.paid'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'invoices'],
+             'settings[pdf_invoice_template_paid]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('pdf_invoice_template_paid')
+             ?: $translator->translate('not.set'),
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('pdf.template.overdue'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'invoices'],
+             'settings[pdf_invoice_template_overdue]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('pdf_invoice_template_overdue')
+             ?: $translator->translate('not.set'),
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('default.public.template'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'invoices'],
+             'settings[public_invoice_template]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('public_invoice_template')
+             ?: $translator->translate('not.set'),
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('default.email.template'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'invoices'],
+             'settings[email_invoice_template]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $emailInvTemplateName,
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('email.template.paid'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'invoices'],
+             'settings[email_invoice_template_paid]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $emailInvTemplatePaidName,
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('email.template.overdue'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'invoices'],
+             'settings[email_invoice_template_overdue]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $emailInvTemplateOverdueName,
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('automatic.email.on.recur'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'invoices'],
+             'settings[automatic_email_on_recur]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('automatic_email_on_recur') == '1' ? '✅' : '❌',
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('set.to.read.only'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'invoices'],
+             'settings[read_only_toggle]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $readOnlyLabel,
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('mark.invoices.sent.copy'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'invoices'],
+             'settings[mark_invoices_sent_copy]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('mark_invoices_sent_copy') == '1' ? '✅' : '❌',
+         ],
+         encodeLabel: false,
+     ),
+     // ── Peppol settings ───────────────────────────────────────────────
+     BreadcrumbLink::to(
+         label: $translator->translate('peppol.enable'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'peppol'],
+             'settings[enable_peppol]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('enable_peppol') == '1' ? '✅' : '❌',
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('peppol.document.currency'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'peppol'],
+             'settings[peppol_document_currency]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('peppol_document_currency')
+             ?: $translator->translate('not.set'),
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('peppol.currency.code.from'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'peppol'],
+             'settings[currency_code_from]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('currency_code_from')
+             ?: $translator->translate('not.set'),
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('peppol.currency.code.to'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'peppol'],
+             'settings[currency_code_to]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('currency_code_to')
+             ?: $translator->translate('not.set'),
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('peppol.stand.in.code'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'peppol'],
+             'settings[stand_in_code]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('stand_in_code')
+             ?: $translator->translate('not.set'),
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('peppol.include.delivery.period'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'peppol'],
+             'settings[include_delivery_period]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('include_delivery_period') == '1' ? '✅' : '❌',
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('peppol.xml.stream'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'peppol'],
+             'settings[peppol_xml_stream]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('peppol_xml_stream') == '1' ? '✅' : '❌',
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('peppol.debug.with.emojis'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'peppol'],
+             'settings[peppol_debug_with_emojis]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('peppol_debug_with_emojis') == '1' ? '✅' : '❌',
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('peppol.debug.with.internal.validator'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'peppol'],
+             'settings[peppol_debug_with_internal_validator]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('peppol_debug_with_internal_validator') == '1' ? '✅' : '❌',
+         ],
+         encodeLabel: false,
+     ),
+ )
+ ->listId(false)
+ ->render();
 
 $vat          = $s->getSetting('enable_vat_registration');
 $biBiPlus     = 'bi bi-plus';
