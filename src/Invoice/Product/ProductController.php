@@ -1083,7 +1083,7 @@ final class ProductController extends BaseController
                 $file_ext = $path_parts['extension'] ?? '';
                 if (file_exists($target_path_with_filename)) {
                     $file_size = filesize($target_path_with_filename);
-                    if ($file_size) {
+                    if ($file_size != false) {
                         $allowed_content_type_array = $piR->getContentTypes();
                         // Check extension against allowed content file types Related logic: see ProductImageRepository getContentTypes
                         $save_ctype = isset($allowed_content_type_array[$file_ext]);

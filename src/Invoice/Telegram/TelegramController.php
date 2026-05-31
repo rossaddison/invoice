@@ -190,7 +190,7 @@ final class TelegramController extends BaseController
             $this->logger->warning($e->getMessage());
             $this->flashMessage('secondary', $e->getMessage());
         }
-        return $this->webViewRenderer->render('index', $parameters = [
+        return $this->webViewRenderer->render('index', [
             'alert' => $this->alert(),
         ]);
     }
@@ -578,7 +578,7 @@ final class TelegramController extends BaseController
             $this->logger->warning($e->getMessage());
             $this->flashMessage('secondary', $e->getMessage());
         }
-        return $this->webViewRenderer->render('getwebhookinfo', $parameters = [
+        return $this->webViewRenderer->render('getwebhookinfo', [
             'alert' => $this->alert(),
             'webhookinfo' => $failResultWebhookInfo,
         ]);
@@ -648,7 +648,7 @@ final class TelegramController extends BaseController
             $this->logger->warning($e->getMessage());
             $this->flashMessage('secondary', $e->getMessage());
         }
-        return $this->webViewRenderer->render('setwebhook', $parameters = [
+        return $this->webViewRenderer->render('setwebhook', [
             'alert' => $this->alert(),
             'webhookinfo' => $failResultWebhookInfo,
         ]);
@@ -704,7 +704,7 @@ final class TelegramController extends BaseController
             $this->logger->warning($e->getMessage());
             $this->flashMessage('secondary', $e->getMessage());
         }
-        return $this->webViewRenderer->render('index', $parameters = [
+        return $this->webViewRenderer->render('index', [
             'alert' => $this->alert(),
         ]);
     }
@@ -781,7 +781,7 @@ final class TelegramController extends BaseController
             $this->logger->warning($e->getMessage());
             $this->flashMessage('secondary', $e->getMessage());
         }
-        return $this->webViewRenderer->render('updates', $parameters = [
+        return $this->webViewRenderer->render('updates', [
             'alert' => $this->alert(),
             'updates' => $failResultUpdates,
         ]);

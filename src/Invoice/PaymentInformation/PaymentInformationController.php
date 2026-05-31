@@ -648,7 +648,7 @@ final class PaymentInformationController
                             $invoice,
                             $items_array,
                             $yii_invoice_array,
-                            $payment_method = 'creditcard',
+                            'creditcard',
                             $mollie_locale,
                             $disable_form,
                             $is_overdue,

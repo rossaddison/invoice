@@ -569,7 +569,6 @@ final class InvoiceController extends BaseController
                 'Content-Type: application/json']);
             curl_setopt($site, CURLOPT_HEADER, true);
             // World ie. GB,  to Germany a.k.a "World to DE"
-            /** @psalm-suppress UnusedVariable */
             $dataWorldTo = '{
                 "legalEntityId": ' . (string) (int) $this->sR->getSetting('storecove_legal_entity_id') . ',
                 "routing": {
@@ -860,8 +859,9 @@ final class InvoiceController extends BaseController
                   }
                 }
               }';
-
-            curl_setopt($site, CURLOPT_POSTFIELDS, $data);
+            
+            $dualArray = [$dataWorldTo, $data];
+            curl_setopt($site, CURLOPT_POSTFIELDS, $dualArray[1]);
             $message = curl_error($site) ?: $this->translator->translate(
                           'curl.store.cove.api.setup.legal.entity.successful');
             $parameters = [

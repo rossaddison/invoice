@@ -265,7 +265,7 @@ trait PdfTrait
                             $original_file_name = $path_parts['basename'];
                             if (file_exists($temp_aliase)) {
                                 $file_size = filesize($temp_aliase);
-                                if ($file_size) {
+                                if ($file_size != false) {
                                     $allowed_content_type_array =
                                         $upR->getContentTypes();
                                     // Check extension against allowed content
@@ -361,7 +361,7 @@ trait PdfTrait
                             $original_file_name = $path_parts['filename'];
                             if (file_exists($temp_aliase)) {
                                 $file_size = filesize($temp_aliase);
-                                if ($file_size) {
+                                if ($file_size != false) {
                                     $allowed_content_type_array =
                                         $upR->getContentTypes();
                                     // Check extension against allowed content

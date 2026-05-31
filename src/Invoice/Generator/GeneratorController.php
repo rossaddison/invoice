@@ -205,7 +205,7 @@ class GeneratorController extends BaseController
                 throw new GoogleTranslateJsonFileNotFoundException();
             }
             $data = file_get_contents(FileHelper::normalizePath($path_and_filename));
-            if ($data) {
+            if ($data != false) {
                 /** @var array $json */
                 $json = Json::decode($data, true);
                 $projectId = (string) $json['project_id'];
@@ -307,7 +307,7 @@ class GeneratorController extends BaseController
     public function googleTranslateInfo(): \Psr\Http\Message\ResponseInterface
     {
         $curlcertificate = \ini_get('curl.cainfo');
-        if (!$curlcertificate) {
+        if ($curlcertificate == false) {
             throw new CaCertFileNotFoundException();
         }
 
@@ -326,7 +326,7 @@ class GeneratorController extends BaseController
         }
 
         $data = file_get_contents(FileHelper::normalizePath($path_and_filename));
-        if (!$data) {
+        if ($data == false) {
             $this->flashMessage('danger', 'Failed to read Google Translate JSON credentials file.');
             return $this->webService->getRedirectResponse('setting/tabIndex', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
         }

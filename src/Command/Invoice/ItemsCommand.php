@@ -498,15 +498,16 @@ final class ItemsCommand extends Command
     private function addUserInvs(int $count): void
     {
         /**
-         * UserInv is an extension table of User carrying more detailed data of the user e.g. active
+         * UserInv is an extension table of User carrying more detailed data
+         * of the user e.g. active
          * One UserInv can be responsible for paying off more than one Client
          * UserInv details relate to the 'user' that will pay off the Clients
          * Let us assume that each UserInv has only one Client to pay off.
          */
         for ($i = 0; $i < $count; $i++) {
-            foreach ($this->users as $_) {
+            foreach ($this->users as $user) {
                 $userInv = new UserInv();
-                $userInv->setUserId($this->faker->numberBetween(1, $count));
+                $userInv->setUserId($user->reqId());
                 $userInv->setActive(true);
                 $this->userInvs[] = $userInv;
             }

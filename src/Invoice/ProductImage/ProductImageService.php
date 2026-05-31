@@ -81,8 +81,8 @@ final readonly class ProductImageService
         // will delete the file
         $realTargetPath = realpath($targetPath);
         $realFilePath = realpath($file_path);
-        if (($realTargetPath)
-            && ($realFilePath)) {
+        if (($realTargetPath != false)
+            && ($realFilePath != false)) {
             str_starts_with($realTargetPath, $realFilePath) ?
                 FileHelper::unlink($file_path) : '';
             $this->repository->delete($model);

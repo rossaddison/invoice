@@ -255,7 +255,7 @@ trait Callback
             // code and state are both present
         }
         /** @psalm-var \Yiisoft\Yii\AuthClient\Client\Facebook $facebook */
-        $oAuthTokenType = $facebook->fetchAccessToken($request, $code, $params = []);
+        $oAuthTokenType = $facebook->fetchAccessToken($request, $code, []);
         $userArray = $facebook->getCurrentUserJsonArray($oAuthTokenType);
         /**
          * @var int $userArray['id']
@@ -848,7 +848,7 @@ trait Callback
         if (strlen($code) == 0) {
             $authorizationUrl =
                 $microsoftOnline->buildAuthUrl($request,
-                    $params = [
+                    [
                         'redirect_uri' =>
                             'https://yii3i.online/callbackMicrosoftOnline']);
             return $this->webService->getRedirectResponse($authorizationUrl);
