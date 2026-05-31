@@ -360,7 +360,7 @@ class CustomValuesHelper
                 break;
 
             case 'SINGLE-CHOICE':
-                $customValue = $this->cvR->repoCustomValueDropDown((int) 
+                $customValue = $this->cvR->repoCustomValueDropDown((int)
                         $fieldValue, $customFieldId);
                 if (null !== $customValue) {
                     echo Field::text($formModel, 'custom_field_id')

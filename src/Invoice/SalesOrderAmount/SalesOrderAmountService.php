@@ -147,7 +147,7 @@ final readonly class SalesOrderAmountService
                 foreach ($items as $item) {
                     $salesorderItemId = (string) $item->reqId();
                     $salesorderItemAmount =
-                        $soiaR->repoSalesOrderItemAmountquery( 
+                        $soiaR->repoSalesOrderItemAmountquery(
                             (int) $salesorderItemId
                         );
                     if ($salesorderItemAmount) {

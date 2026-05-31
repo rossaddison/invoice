@@ -211,7 +211,7 @@ final class DeliveryController extends BaseController
                     }
                     return $this->webViewRenderer->render('_form', $parameters);
                 } // null!==$inv
-            }     
+            }
         }
         return $this->webService->getRedirectResponse('delivery/index');
     }

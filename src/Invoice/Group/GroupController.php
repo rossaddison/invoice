@@ -204,7 +204,7 @@ final class GroupController extends BaseController
      */
     private function group(CurrentRoute $curR, GroupRepository $gR): ?Group
     {
-        return $gR->repoGroupquery((int) $curR->getArgument('id'));        
+        return $gR->repoGroupquery((int) $curR->getArgument('id'));
     }
 
     /**

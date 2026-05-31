@@ -45,5 +45,5 @@ trait Archive
             'body' => $request->getParsedBody(),
         ];
         return $this->webViewRenderer->render('archive', $parameters);
-    }    
+    }
 }

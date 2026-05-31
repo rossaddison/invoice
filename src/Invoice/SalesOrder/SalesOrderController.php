@@ -604,7 +604,7 @@ final class SalesOrderController extends BaseController
                 'terms_and_conditions' =>
                     $settingRepository->getTermsAndConditions(),
                 // if there are no delivery locations add a flash message
-                'no_delivery_locations' => $delRepo->repoClientCount( 
+                'no_delivery_locations' => $delRepo->repoClientCount(
                     $so->reqClientId()) > 0 ? '' :
                         $this->flashMessage(
                                 'warning', $this->translator->translate(

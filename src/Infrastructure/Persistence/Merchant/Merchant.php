@@ -16,7 +16,7 @@ use DateTimeImmutable;
 #[Entity(repository: \App\Invoice\Merchant\MerchantRepository::class)]
 class Merchant
 {
-    use RequireId;  
+    use RequireId;
  
     #[BelongsTo(target: Inv::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Inv $inv = null;

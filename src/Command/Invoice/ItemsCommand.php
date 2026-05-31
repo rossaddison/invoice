@@ -132,7 +132,7 @@ final class ItemsCommand extends Command
             $this->addUsers($count);
             $this->addClients($count);
 
-            /* Assign between one and five clients to each user randomly */ 
+            /* Assign between one and five clients to each user randomly */
             $this->addUserClients();
 
             /* Add more extensive user information */

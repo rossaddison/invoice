@@ -41,7 +41,7 @@ class Gentor
     public function hasIdentity(): bool
     {
         return $this->id !== null;
-    }   
+    }
     
     public function getRoutePrefix(): string
     {

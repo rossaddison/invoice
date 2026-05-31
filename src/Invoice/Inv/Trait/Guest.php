@@ -19,7 +19,7 @@ use Yiisoft\{
     Data\Reader\DataReaderInterface as DRI,
     Data\Reader\SortableDataInterface as SDI,
     Input\Http\Attribute\Parameter\Query,
-    Router\HydratorAttribute\RouteArgument 
+    Router\HydratorAttribute\RouteArgument
 };
 use Psr\{Http\Message\ResponseInterface as Response,
 };

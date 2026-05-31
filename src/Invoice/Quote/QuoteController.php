@@ -14,7 +14,7 @@ use App\Infrastructure\Persistence\{
 use App\User\UserService;
 use App\Invoice\{
     Inv\InvService, InvItem\InvItemService,
-    InvAllowanceCharge\InvAllowanceChargeService, InvAmount\InvAmountService, 
+    InvAllowanceCharge\InvAllowanceChargeService, InvAmount\InvAmountService,
     InvTaxRate\InvTaxRateService, InvCustom\InvCustomService,
     SalesOrder\SalesOrderService as soS,
     SalesOrderAllowanceCharge\SalesOrderAllowanceChargeService as soACS,

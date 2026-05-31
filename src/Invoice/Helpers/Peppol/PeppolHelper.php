@@ -11,7 +11,7 @@ use Yiisoft\Security\Random;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 // Entities
 use App\Infrastructure\Persistence\{
-    DeliveryLocation\DeliveryLocation as DL, 
+    DeliveryLocation\DeliveryLocation as DL,
     InvAllowanceCharge\InvAllowanceCharge, Inv\Inv, InvItem\InvItem,
     InvItemAllowanceCharge\InvItemAllowanceCharge,
     InvAmount\InvAmount, InvItemAmount\InvItemAmount
@@ -1093,7 +1093,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             }
             return $dateSupplied;
         }
-        return $dateSupplied; 
+        return $dateSupplied;
     }
 
     /**
@@ -1551,7 +1551,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             if ($contract) {
                 return $contract->getReference();
             }
-        }    
+        }
         return null;
     }
 

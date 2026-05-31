@@ -253,7 +253,7 @@ class Inv
 
     public function reqId(): int
     {
-        return $this->requireId($this->id, 'Inv'); 
+        return $this->requireId($this->id, 'Inv');
     }
     
     public function hasIdentity(): bool

@@ -286,7 +286,7 @@ trait Email
                 );
             } // pdf_template_target_path
         } // quote_entity
-        return false;        
+        return false;
     }
 
     public function emailStage2(

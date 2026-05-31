@@ -35,7 +35,7 @@ class AllowanceCharge
         #[Column(type: 'integer(11)', nullable: false)]
         /**
          * $multiplier_factor_numeric x $base_amount = $amount
-         * Fixed $amount i.e. no calculation involved 
+         * Fixed $amount i.e. no calculation involved
          * ... use a 0 or 1 for $multiplier_factor_numeric
          * $multiplier_factor_numeric > 1 => $base_amount must be > 0
          */

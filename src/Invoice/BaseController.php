@@ -301,8 +301,8 @@ abstract class BaseController
      * @return string
      */
     protected function viewPartialDeliveryLocation(
-            string $_language, 
-            DeliveryLocationRepository $dlr, 
+            string $_language,
+            DeliveryLocationRepository $dlr,
             ?int $delivery_location_id): string
     {
         if ($delivery_location_id > 0) {
@@ -329,5 +329,5 @@ abstract class BaseController
             return '';
         }
         return '';
-    }    
+    }
 }

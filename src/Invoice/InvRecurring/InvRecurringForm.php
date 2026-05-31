@@ -31,7 +31,7 @@ final class InvRecurringForm extends FormModel
         $form->next = $invRecurring->getNext();
         $form->end = $invRecurring->getEnd();
         $form->inv_id = $inv_id;
-        return $form; 
+        return $form;
     }
 
     public function getInvId(): ?int

@@ -6,7 +6,7 @@ namespace App\Invoice\Quote\Trait;
 
 use App\Auth\Permissions;
 use App\Infrastructure\Persistence\{
-    QuoteAllowanceCharge\QuoteAllowanceCharge, 
+    QuoteAllowanceCharge\QuoteAllowanceCharge,
     Quote\Quote,
     QuoteCustom\QuoteCustom,
     QuoteItem\QuoteItem

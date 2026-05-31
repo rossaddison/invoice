@@ -107,7 +107,7 @@ final class CustomValueController extends BaseController
         $field_id = $currentRoute->getArgument('id');
         if (null !== $field_id) {
             $this->session->set('custom_field_id', $field_id);
-            $custom_field = 
+            $custom_field =
                 $custom_fieldRepository->repoCustomFieldquery((int) $field_id);
             $custom_value = new CustomValue();
             if ($custom_field) {

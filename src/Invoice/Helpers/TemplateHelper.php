@@ -511,7 +511,7 @@ final readonly class TemplateHelper
                                                 $invoice->reqId(),
                                                     (int) $cf_id[1]);
                                     }
-                                    break;                                    
+                                    break;
                                 case 'client_custom':
                                    // Client custom fields can be included on
                                    // either an invoice or a quote

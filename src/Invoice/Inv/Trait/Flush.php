@@ -95,5 +95,5 @@ trait Flush
         $this->flashMessage('danger',
             $this->translator->translate('caution.deleted.invoices'));
         return $this->webService->getRedirectResponse('inv/index');
-    } 
+    }
 }

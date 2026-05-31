@@ -225,7 +225,7 @@ final class SettingRepository extends Select\Repository
     }
 
     /**
-     * Related logic: 
+     * Related logic:
      * https://developer.service.hmrc.gov.uk/api-documentation/docs/
         reference-guide#errors
      * Related logic: see https://developer.service.hmrc.gov.uk/guides/

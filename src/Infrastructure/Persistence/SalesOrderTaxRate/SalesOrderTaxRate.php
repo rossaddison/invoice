@@ -7,7 +7,7 @@ namespace App\Infrastructure\Persistence\SalesOrderTaxRate;
 use App\Infrastructure\Persistence\{
     SalesOrder\SalesOrder,
     TaxRate\TaxRate,
-    Trait\RequireId 
+    Trait\RequireId
 };
 use App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateRepository as SOTRR;
 use Cycle\Annotated\Annotation\Column;

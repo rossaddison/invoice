@@ -97,7 +97,7 @@ trait Callback
 
         if ($this->sR->getEnv() == 'dev') {
             /**
-             * @see Yiisoft\Yii\AuthClient\Client\DeveloperSandboxHmrc 
+             * @see Yiisoft\Yii\AuthClient\Client\DeveloperSandboxHmrc
              *  function getTestUserArray;
              */
             $requestBody = [
@@ -1545,7 +1545,7 @@ public function tfaCheckBeforeRedirects(
         string $role,
     ): bool {
         $this->manager->revokeAll((string) $userId);
-        $this->manager->assign($role, (string) $userId); 
+        $this->manager->assign($role, (string) $userId);
  
         $roles = $this->manager->getRolesByUserId((string) $userId);
         if (empty($roles)) {

@@ -361,7 +361,7 @@ trait View
         return $this->webService->getNotFoundResponse();
     }
     
-    // resources/views/invoice/inv/partial_item_table has this route 
+    // resources/views/invoice/inv/partial_item_table has this route
     public function deleteInvTaxRate(#[RouteArgument('id')] int $id,
             ITRR $invtaxrateRepository):
         Response {
@@ -537,7 +537,7 @@ trait View
         }
         // Override the invoice's readonly
         return $this->sR->getSetting('disable_read_only') === (string) 1;
-    }    
+    }
     
     private function flashNoEnabledGateways(
         array $enabled_gateways, string $message): void

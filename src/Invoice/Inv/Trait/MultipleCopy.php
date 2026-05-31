@@ -6,8 +6,8 @@ namespace App\Invoice\Inv\Trait;
 
 use App\Infrastructure\Persistence\
 {
-    Inv\Inv, InvAllowanceCharge\InvAllowanceCharge, 
-    InvItem\InvItem, InvCustom\InvCustom, InvTaxRate\InvTaxRate 
+    Inv\Inv, InvAllowanceCharge\InvAllowanceCharge,
+    InvItem\InvItem, InvCustom\InvCustom, InvTaxRate\InvTaxRate
 };
 
 use App\Invoice\{
@@ -32,7 +32,7 @@ use App\Invoice\{
 };
 use App\User\UserRepository as UR;
 use Yiisoft\{
-    FormModel\FormHydrator, Json\Json, Security\Random 
+    FormModel\FormHydrator, Json\Json, Security\Random
 };
 use Psr\{Http\Message\ResponseInterface as Response,
     Http\Message\ServerRequestInterface as Request,

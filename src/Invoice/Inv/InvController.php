@@ -114,7 +114,7 @@ final class InvController extends BaseController
             }
         }
         return null;
-    }       
+    }
 
     // Add, Credit
     public function defaultTaxes(Inv $inv, TRR $trR,
@@ -151,7 +151,7 @@ final class InvController extends BaseController
                             new InvTaxRate(), $inv_tax_rate) : '';
     }
 
-    // resources/views/invoice/inv/partial_item_table 
+    // resources/views/invoice/inv/partial_item_table
     public function deleteInvItem(#[RouteArgument('id')] int $id, IIR $iiR,
             ACIIR $aciiR, IIAR $iiaR):
         Response
@@ -192,7 +192,7 @@ final class InvController extends BaseController
                     $this->translator->translate('record.successfully.deleted'),
                 'url' => 'inv/view', 'id' => $inv_id],
         ));
-    }    
+    }
     
     // Email, PdfTrait
     public function generateInvNumberIfApplicable(int $inv_id, IR $iR,
@@ -336,7 +336,7 @@ final class InvController extends BaseController
         }
     }
 
-    // Attachment, Edit, PdfTrait, View 
+    // Attachment, Edit, PdfTrait, View
     private function rbacAdmin() : bool {
         // has observer role
         if ($this->userService->hasPermission(Permissions::VIEW_INV)

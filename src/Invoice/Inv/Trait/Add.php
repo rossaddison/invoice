@@ -186,5 +186,5 @@ $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
             ]);
         }
         return $this->webService->getNotFoundResponse();
-    } 
+    }
 }

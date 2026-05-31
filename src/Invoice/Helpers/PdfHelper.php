@@ -10,7 +10,7 @@ use App\Invoice\CustomField\CustomFieldRepository;
 use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository;
 use App\Invoice\InvItem\InvItemRepository;
 use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository;
-use App\Invoice\InvItemAmount\InvItemAmountRepository; 
+use App\Invoice\InvItemAmount\InvItemAmountRepository;
 use App\Invoice\Inv\InvRepository;
 use App\Invoice\InvTaxRate\InvTaxRateRepository;
 use App\Invoice\QuoteItem\QuoteItemRepository;
@@ -508,7 +508,7 @@ class PdfHelper
             $aOrC = 'allowance.or.charge.';
             /**
              * @var InvAllowanceCharge $inv_allowance_charge
-             */            
+             */
             foreach ($inv_allowance_charges as $inv_allowance_charge) {
                 $allowanceCharge = $inv_allowance_charge->getAllowanceCharge();
                 $allowanceOrCharge = '';

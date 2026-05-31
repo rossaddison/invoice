@@ -14,7 +14,7 @@ use App\Infrastructure\Persistence\{
 use App\Infrastructure\Persistence\{
     QuoteCustom\QuoteCustom,
     QuoteItemAllowanceCharge\QuoteItemAllowanceCharge,
-    QuoteTaxRate\QuoteTaxRate, 
+    QuoteTaxRate\QuoteTaxRate,
     SalesOrderAllowanceCharge\SalesOrderAllowanceCharge,
     SalesOrderTaxRate\SalesOrderTaxRate as SoTaxRate
 };

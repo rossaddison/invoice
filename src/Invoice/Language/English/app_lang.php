@@ -1,6 +1,6 @@
 <?php
 
-/** 
+/**
  * Note this file is auto-generated from resources/messages/en/app.php.
  * Any adjustments must be made to app.php only.
  **/

@@ -290,7 +290,7 @@ final class PaymentPeppolController extends BaseController
             if (null !== $userInv && $userInv->getActive()) {
                 return true;
             }
-        }        
+        }
         return false;
     }
 

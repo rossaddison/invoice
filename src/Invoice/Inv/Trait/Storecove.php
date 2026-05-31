@@ -20,7 +20,7 @@ use App\Invoice\{
     SalesOrderItem\SalesOrderItemRepository as SOIR,
     TaxRate\TaxRateRepository as TRR,
     UnitPeppol\UnitPeppolRepository as unpR,
-    Upload\UploadRepository as UPR,    
+    Upload\UploadRepository as UPR,
 };
 use App\Invoice\Helpers\StoreCove\StoreCoveHelper;
 use Yiisoft\{Json\Json, Router\HydratorAttribute\RouteArgument, User\CurrentUser};
