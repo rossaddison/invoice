@@ -78,7 +78,7 @@
         "rossaddison/yii-gii": "*",
         "sabre/xml": "^4.1.0",
         "setasign/fpdf": "^1.8.6",
-        "spomky-labs/otphp": "^11.4.2",
+        "spomky-labs/otphp": "^11.4.3",
         "stripe/stripe-php": ">=19",
         "symfony/console": ">=8.1.0",
         "symfony/process": ">=8.1.0",
