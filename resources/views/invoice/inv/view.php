@@ -69,6 +69,7 @@ use Yiisoft\Html\Tag\Option;
  */
 
 $settingTabIndex = 'setting/tabIndex';
+$peppolEnabled = $s->getSetting('enable_peppol') == '1';
 
 // Resolve invoice group name from ID
 $defaultInvGroupName = $translator->translate('not.set');
@@ -117,8 +118,7 @@ $readOnlyLabel = match($s->getSetting('read_only_toggle')) {
     default => $translator->translate('not.set'),
 };
 
-echo Breadcrumbs::widget()
- ->links(
+$breadcrumbLinks = [
      // ── Invoice settings ──────────────────────────────────────────────
      BreadcrumbLink::to(
          label: $translator->translate('default.invoice.group'),
@@ -457,6 +457,9 @@ echo Breadcrumbs::widget()
          ],
          encodeLabel: false,
      ),
+];
+if ($peppolEnabled) {
+    $breadcrumbLinks = array_merge($breadcrumbLinks, [
      // ── Peppol settings ───────────────────────────────────────────────
      BreadcrumbLink::to(
          label: $translator->translate('peppol.enable'),
@@ -597,7 +600,10 @@ echo Breadcrumbs::widget()
          ],
          encodeLabel: false,
      ),
- )
+    ]);
+}
+echo Breadcrumbs::widget()
+ ->links(...$breadcrumbLinks)
  ->listId(false)
  ->render();
 
@@ -830,7 +836,7 @@ if ($showButtons
     echo H::closeTag('li');
 }
 // Options ... Peppol UBL 2.1 Invoice
-//if ($showButtons && $invEdit) {
+if ($peppolEnabled) {
     echo H::openTag('li');
      echo H::openTag('a', [
          'href' => $urlGenerator->generate('inv/peppol', ['id' => $inv->reqId()]),
@@ -890,6 +896,7 @@ if ($showButtons
       echo ' ' . H::encode($translator->translate('peppol.ecosio.validator'));
      echo H::closeTag('a');
     echo H::closeTag('li');
+}
     echo H::openTag('li');
      echo H::openTag('a', [
          'href' => $urlGenerator->generate('inv/storecove', ['id' => $inv->reqId()]),
@@ -903,7 +910,7 @@ if ($showButtons
      echo H::closeTag('a');
     echo H::closeTag('li');
 // Options ... Send via Peppol (Oxalis) — only available for non-draft invoices
-if ($inv->reqStatusId() !== 1) {
+if ($peppolEnabled && $inv->reqStatusId() !== 1) {
     echo H::openTag('li');
      echo H::openTag('a', [
          'href' => $urlGenerator->generate('inv/peppolSend', ['id' => $inv->reqId()]),

@@ -34,7 +34,7 @@ final readonly class ButtonsToolbarFull
 
     /**
      * Generate comprehensive invoice actions toolbar with all features
-     * @psalm-suppress UnusedParam $paymentView, $isRecurring
+     * @psalm-suppress UnusedParam $paymentView, $isRecurring, $enabledGateways
      */
     public function render(
         Inv $inv,
@@ -198,7 +198,8 @@ final readonly class ButtonsToolbarFull
         }
 
         // PEPPOL features
-        if ($invEdit && ($inv->getSoId() > 0)) {
+        if ($invEdit && ($inv->getSoId() > 0)
+            && $this->settingRepository->getSetting('enable_peppol') === '1') {
             $buttons[] = $this->createWindowButton(
                 'peppol',
                 $this->urlGenerator->generate('inv/peppol', ['id' => $invId]),
@@ -267,6 +268,22 @@ final readonly class ButtonsToolbarFull
                 'fa-eye',
                 'btn-outline-info',
                 $this->translator->translate('storecove.invoice.json.encoded'),
+            );
+        }
+
+        // Peppol disabled indicator — links directly to the enable setting
+        if ($this->settingRepository->getSetting('enable_peppol') !== '1') {
+            $buttons[] = $this->createButton(
+                'peppol-disabled',
+                $this->urlGenerator->generate(
+                    'setting/tabIndex',
+                    [],
+                    ['active' => 'peppol'],
+                    'settings[enable_peppol]',
+                ),
+                'bi-reception-0',
+                'btn-outline-secondary',
+                'Peppol ❌',
             );
         }
 
