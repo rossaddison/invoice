@@ -29,6 +29,9 @@
         <testsuite name="PHPUnit">
             <directory>./Tests/PHPUnit</directory>
         </testsuite>
+        <testsuite name="Unit">
+            <directory>./Tests/Unit</directory>
+        </testsuite>
     </testsuites>
     <source>
         <include>

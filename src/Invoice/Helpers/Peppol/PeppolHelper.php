@@ -35,9 +35,12 @@ use App\Invoice\{Setting\SettingRepository as SRepo,
     Upload\UploadRepository as upR,
     UnitPeppol\UnitPeppolRepository as unpR};
 use App\Invoice\Ubl\{AdditionalDocumentReference, Address, Attachment, Contact,
-    Country, FinancialInstitutionBranch, InvoicePeriod, Party,
-    PartyLegalEntity, PartyTaxScheme, PayeeFinancialAccount, Schema,
-    TaxScheme};
+    ContractDocumentReference, Country, Delivery, FinancialInstitutionBranch,
+    InvoicePeriod, LegalMonetaryTotal, OrderReference, Party,
+    PartyLegalEntity, PartyTaxScheme, PayeeFinancialAccount, PaymentMeans,
+    PaymentTerms, Schema, TaxScheme};
+use App\Invoice\Libraries\{PeppolFinancialData, PeppolInvoiceDates,
+    PeppolInvoiceHeader, PeppolInvoiceReferences, PeppolPaymentData};
 use App\Invoice\Helpers\Peppol\Exception\{
     PeppolBuyerReferenceNotFoundException as BuyerRefNf,
     PeppolBuyerPostalAddressNotFoundException as BuyerPostAddNf,
@@ -226,8 +229,7 @@ class PeppolHelper
         $path = $this->UploadsTempPeppolXmlFileNamePathWithExt($invoice);
         // Generate inv items from Entity Inv->getItems() HasMany function
         // Generate inv item amounts from $iiaR
-        $peppol_ubl_xml = new PeppolUblXml($this->s, $this->t, $invoice,
-                $iiaR, $this->inv_amount);
+        $peppol_ubl_xml = new PeppolUblXml($this->s);
         $f = fopen($path, 'wb');
         if (!$f) {
             throw new PeppolHelperException(
@@ -408,72 +410,85 @@ class PeppolHelper
                             $invoice) ?
                                 $this->DescriptionCode($invoice, $delRepo)
                                     : '';
-// input parameters follow the sequence of
 // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/
+                        $peppolHeader = new PeppolInvoiceHeader(
+                            $profileID,
+                            $id,
+                            new PeppolInvoiceDates(
+                                $issueDate,
+                                $dueDate,
+                                $taxPointDate,
+                                new InvoicePeriod($start_datetime, $end_datetime, $description_code),
+                            ),
+                            $note,
+                            $accountingCost,
+                            $buyerReference,
+                            new PeppolInvoiceReferences(
+                                new OrderReference($client_purchase_order_id, (string) $sales_order_id),
+                                null !== $cdr_id ? new ContractDocumentReference($cdr_id) : null,
+                                $isCopyIndicator,
+                                $supplierAssignedAccountID,
+                            ),
+                        );
+                        $supplierParty = new Party(
+                            $this->t,
+                            $supplier_name,
+                            $supplier_partyIdentificationId,
+                            $supplier_partyIdentificationSchemeId,
+                            $supplier_postalAddress,
+                            null,
+                            $supplier_contact,
+                            $supplier_partyTaxScheme,
+                            $supplier_partyLegalEntity,
+                            $supplier_endpointID,
+                            $supplier_endpointID_schemeID,
+                        );
+                        $customerParty = new Party(
+                            $this->t,
+                            $customer_name,
+                            $customer_partyIdentificationId,
+                            $customer_partyIdentificationSchemeId,
+                            $customer_postalAddress,
+                            null,
+                            $customer_contact,
+                            $customer_partyTaxScheme,
+                            $customer_partyLegalEntity,
+                            $customer_endpointID,
+                            $customer_endpointID_schemeID,
+                        );
+                        $peppolPayment = new PeppolPaymentData(
+                            new PaymentMeans($payeeFinancialAccount, $paymentId),
+                            new PaymentTerms($payment_terms),
+                        );
+                        $peppolFinancial = new PeppolFinancialData(
+                            $allowanceCharges,
+                            $taxAmounts_item_subtotal,
+                            $taxSubtotal,
+                            new LegalMonetaryTotal(
+                                $lineExtensionAmount,
+                                $taxExclusiveAmount,
+                                $taxInclusiveAmount,
+                                $allowanceTotalAmount,
+                                $payableAmount,
+                                $this->s->getSetting(self::SETTING_PEPPOL_DOCUMENT_CURRENCY),
+                                $this->s,
+                            ),
+                            $invoiceLines,
+                        );
                         $xml = $peppol_ubl_xml->xml(
-                        $profileID,
-                        $id,
-                        $issueDate,
-                        $dueDate,
-                        $note,
-                        $taxPointDate,
-                        $accountingCost,
-                        $buyerReference,
-                        // InvoicePeriod
-                        $start_datetime,
-                        $end_datetime,
-                        $description_code,
-                        // OR
-                        $client_purchase_order_id,
-                        $sales_order_id,
-                        // CDR
-                        $cdr_id,
-                        $additionalDocumentReferences,
-                        // aSP
-                        $supplier_name,
-                        $supplier_partyIdentificationId,
-                        $supplier_partyIdentificationSchemeId,
-                        $supplier_postalAddress,
-                        $supplier_contact,
-                        $supplier_partyTaxScheme,
-                        $supplier_partyLegalEntity,
-                        $supplier_endpointID,
-                        $supplier_endpointID_schemeID,
-                        // cSP
-                        $customer_name,
-                        $customer_partyIdentificationId,
-                        $customer_partyIdentificationSchemeId,
-                        $customer_postalAddress,
-                        $customer_contact,
-                        $customer_partyTaxScheme,
-                        $customer_partyLegalEntity,
-                        $customer_endpointID,
-                        $customer_endpointID_schemeID,
-                        // Delivery
-                        $actualDeliveryDate_datetime,
-                        $deliveryLocation_ID_scheme,
-                        $deliveryLocation_Address,
-                        $deliveryParty_Party,
-                        // PM
-                        $payeeFinancialAccount,
-                        $paymentId,
-                        // PT
-                        $payment_terms,
-                        $allowanceCharges,
-                        // TT
-                        $taxAmounts_item_subtotal,
-                        // TST
-                        $taxSubtotal,
-                        // LegalMonetaryTotal
-                        $lineExtensionAmount,
-                        $taxExclusiveAmount,
-                        $taxInclusiveAmount,
-                        $allowanceTotalAmount,
-                        $payableAmount,
-                        $invoiceLines,
-                        $isCopyIndicator,
-                        $supplierAssignedAccountID,
-                    );
+                            $peppolHeader,
+                            $additionalDocumentReferences,
+                            $supplierParty,
+                            $customerParty,
+                            new Delivery(
+                                $actualDeliveryDate_datetime,
+                                $deliveryLocation_ID_scheme,
+                                $deliveryLocation_Address,
+                                $deliveryParty_Party,
+                            ),
+                            $peppolPayment,
+                            $peppolFinancial,
+                        );
                     fwrite($f, $peppol_ubl_xml->output($xml));
                     fclose($f);
                     return $path;
