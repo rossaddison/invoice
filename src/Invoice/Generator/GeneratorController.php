@@ -119,7 +119,7 @@ class GeneratorController extends BaseController
         $lang = [];
         if ((file_exists($fileEnAppPath)) === true) {
             // $lang is a full array inside the file designated by $fileEnAppPath
-            $lang = include_once $fileEnAppPath;
+            $lang = include $fileEnAppPath; // NOSONAR — data file returns an array; include_once returns true on second call
         }
         $arrayEnAppDotPhp = $lang;
         $messages = $this->aliases->get('@messages');
@@ -131,7 +131,7 @@ class GeneratorController extends BaseController
         $lang = [];
         if ((file_exists($targetLangFileAppPath)) === true) {
             // $lang is a full array inside the file designated by $targetLangFileAppPath
-            $lang = include_once $targetLangFileAppPath;
+            $lang = include $targetLangFileAppPath; // NOSONAR — data file returns an array; include_once returns true on second call
         }
 
         $arrayTargetLocaleDotPhp = $lang ?? [];
@@ -491,7 +491,7 @@ class GeneratorController extends BaseController
         }
 
         /** @var array<string, string> $app */
-        $app = include_once $source;
+        $app = include $source; // NOSONAR — data file returns an array; include_once returns true on second call
 
         $export = var_export($app, true);
 
