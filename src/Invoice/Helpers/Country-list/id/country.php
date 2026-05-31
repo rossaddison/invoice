@@ -246,5 +246,5 @@ return [
     'GR' => 'Yunani',
     'ZM' => 'Zambia',
     'ZW' => 'Zimbabwe',
-    'AX' => '�Land Islands',
+    'AX' => 'Åland Islands',
 ];

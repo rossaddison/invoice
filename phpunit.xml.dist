@@ -34,5 +34,8 @@
         <include>
             <directory>./src</directory>
         </include>
+        <exclude>
+            <directory>./src/Invoice/Asset</directory>
+        </exclude>
     </source>
 </phpunit>
