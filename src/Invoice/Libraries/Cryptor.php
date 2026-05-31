@@ -41,11 +41,11 @@ final class Cryptor
     public function __construct(private readonly string $cipher_algo = 'aes-256-ctr', private readonly string $hash_algo = 'sha256', private readonly int $format = self::FORMAT_B64)
     {
         if (!in_array($this->cipher_algo, openssl_get_cipher_methods(true))) {
-            throw new \Exception("Cryptor:: - unknown cipher algo {$this->cipher_algo}");
+            throw new CryptorException("Cryptor:: - unknown cipher algo {$this->cipher_algo}");
         }
 
         if (!in_array($this->hash_algo, openssl_get_md_methods(true))) {
-            throw new \Exception("Cryptor:: - unknown hash algo {$this->hash_algo}");
+            throw new CryptorException("Cryptor:: - unknown hash algo {$this->hash_algo}");
         }
 
         $openBytes = openssl_cipher_iv_length($this->cipher_algo);
@@ -58,7 +58,7 @@ final class Cryptor
      * @param string $in
      * @param string $key
      * @param int|null $fmt
-     * @throws \Exception
+     * @throws CryptorException
      * @return mixed
      */
     public function encryptString(string $in, string $key, ?int $fmt = null): mixed
@@ -70,14 +70,14 @@ final class Cryptor
         // Build an initialisation vector
         $iv = openssl_random_pseudo_bytes($this->iv_num_bytes, $isStrongCrypto);
         if (!$isStrongCrypto) {
-            throw new \Exception('Cryptor::encryptString() - Not a strong key');
+            throw new CryptorException('Cryptor::encryptString() - Not a strong key');
         }
 
         // Hash the key
         $keyhash = openssl_digest($key, $this->hash_algo, true);
 
         if ($keyhash === false) {
-            throw new \Exception('Keyhash is false');
+            throw new CryptorException('Keyhash is false');
         }
 
         // and encrypt
@@ -86,7 +86,7 @@ final class Cryptor
 
         $errorString = openssl_error_string();
         if (($encrypted === false) && ($errorString != false)) {
-            throw new \Exception('Cryptor::encryptString() - Encryption failed: ' . $errorString);
+            throw new CryptorException('Cryptor::encryptString() - Encryption failed: ' . $errorString);
         }
 
         // The result comprises the IV and encrypted data
@@ -115,7 +115,7 @@ final class Cryptor
      * @param  string $in  String to decrypt.
      * @param  string $key Decryption key.
      * @param  int $fmt Optional override for the input encoding. One of FORMAT_RAW, FORMAT_B64 or FORMAT_HEX.
-     * @throws \Exception
+     * @throws CryptorException
      * @return mixed
      */
     public function decryptString($in, $key, $fmt = null): mixed
@@ -135,7 +135,7 @@ final class Cryptor
 
         // and do an integrity check on the size.
         if (strlen($raw) < $this->iv_num_bytes) {
-            throw new \Exception('Cryptor::decryptString() - '
+            throw new CryptorException('Cryptor::decryptString() - '
                 . 'data length ' . (string) strlen($raw) . " is less than iv length {$this->iv_num_bytes}");
         }
 
@@ -147,7 +147,7 @@ final class Cryptor
         $keyhash = openssl_digest($key, $this->hash_algo, true);
 
         if ($keyhash === false) {
-            throw new \Exception('Keyhash is false');
+            throw new CryptorException('Keyhash is false');
         }
 
         // and decrypt.
@@ -156,7 +156,7 @@ final class Cryptor
 
         $errorString = openssl_error_string();
         if (($res === false) && ($errorString != false)) {
-            throw new \Exception('Cryptor::decryptString - decryption failed: ' . $errorString);
+            throw new CryptorException('Cryptor::decryptString - decryption failed: ' . $errorString);
         }
 
         return $res;

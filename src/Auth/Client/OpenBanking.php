@@ -162,12 +162,12 @@ final class OpenBanking extends OAuth2
             $response = $this->httpClient->sendRequest($request);
             $body = $response->getBody()->getContents();
         } catch (\Throwable $e) {
-            throw new \RuntimeException('Failed to get access token: ' . $e->getMessage(), 0, $e);
+            throw new OpenBankingClientException('Failed to get access token: ' . $e->getMessage(), 0, $e);
         }
 
         $output = json_decode($body, true);
         if (!is_array($output)) {
-            throw new \RuntimeException('Failed to decode access token response');
+            throw new OpenBankingClientException('Failed to decode access token response');
         }
 
         $token = new OAuthToken();

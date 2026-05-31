@@ -23,7 +23,6 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
-use RuntimeException;
 
 final class CompanyPrivateController extends BaseController
 {
@@ -94,11 +93,11 @@ final class CompanyPrivateController extends BaseController
         if ($request->getMethod() === Method::POST) {
             $logoFileName = $_FILES['logo_filename']['name'];
             if (!isset($_FILES['logo_filename']['tmp_name']) || empty($_FILES['logo_filename']['tmp_name'])) {
-                throw new RuntimeException('No file uploaded or temporary file missing.');
+                throw new CompanyPrivateException('No file uploaded or temporary file missing.');
             }
 
             if ($_FILES['logo_filename']['error'] !== UPLOAD_ERR_OK) {
-                throw new RuntimeException('File upload error: ' . $_FILES['logo_filename']['error']);
+                throw new CompanyPrivateException('File upload error: ' . $_FILES['logo_filename']['error']);
             }
 
             $tmp = $_FILES['logo_filename']['tmp_name'];
@@ -120,12 +119,12 @@ final class CompanyPrivateController extends BaseController
 
                     // Move the uploaded file
                     if (!move_uploaded_file($tmp, $target_file_name)) {
-                        throw new RuntimeException('Failed to move uploaded file.');
+                        throw new CompanyPrivateException('Failed to move uploaded file.');
                     }
 
                     // Copy the file to the public folder
                     if (!copy($target_file_name, $target_public_logo)) {
-                        throw new RuntimeException('Failed to copy file to public folder.');
+                        throw new CompanyPrivateException('Failed to copy file to public folder.');
                     }
 
                     // Process form data

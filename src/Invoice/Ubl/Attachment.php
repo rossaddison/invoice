@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Invoice\Ubl;
 
-use Exception;
 use Sabre\Xml\Writer;
 use Sabre\Xml\XmlSerializable;
 use InvalidArgumentException;
@@ -19,7 +18,7 @@ class Attachment implements XmlSerializable
     }
 
     /**
-     * @throws Exception
+     * @throws AttachmentException
      * @return string
      */
     public function getFileMimeType(): string
@@ -28,10 +27,10 @@ class Attachment implements XmlSerializable
             if (($mime_type = mime_content_type($this->filePath)) !== false) {
                 return $mime_type;
             }
-            throw new Exception('Could not determine mime_type of '
+            throw new AttachmentException('Could not determine mime_type of '
                                                             . $this->filePath);
         }
-        throw new Exception('Cannot determine MimeType. FilePath does not exist.');
+        throw new AttachmentException('Cannot determine MimeType. FilePath does not exist.');
     }
 
     /**

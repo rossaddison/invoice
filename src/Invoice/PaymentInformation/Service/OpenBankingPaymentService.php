@@ -75,7 +75,7 @@ final class OpenBankingPaymentService
         string $url_key,
     ): \Yiisoft\Yii\AuthClient\OAuthToken {
         if (null === $providerConfig) {
-            throw new \RuntimeException('Open Banking provider is not configured.');
+            throw new OpenBankingPaymentException('Open Banking provider is not configured.');
         }
         $this->openBanking->setAuthUrl($providerConfig['authUrl']);
         $this->openBanking->setTokenUrl($providerConfig['tokenUrl']);
@@ -83,7 +83,7 @@ final class OpenBankingPaymentService
 
         $codeVerifier = $this->session->get('code_verifier');
         if (!is_string($codeVerifier) || '' === $codeVerifier) {
-            throw new \RuntimeException('Missing code verifier in session.');
+            throw new OpenBankingPaymentException('Missing code verifier in session.');
         }
 
         return $this->openBanking->fetchAccessTokenWithCodeVerifier(

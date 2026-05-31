@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use Exception;
 use PDO;
 use PDOException;
 use Symfony\Component\Console\Command\Command;
@@ -147,7 +146,7 @@ final class InstallCommand extends Command
             }
 
             return $this->createDatabase($dbConfig, $io);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $io->error('Failed to setup database: ' . $e->getMessage());
             return false;
         }
@@ -158,7 +157,7 @@ final class InstallCommand extends Command
         $paramsFile = __DIR__ . '/../../config/common/params.php';
 
         if (!file_exists($paramsFile)) {
-            throw new Exception('Configuration file not found: ' . $paramsFile);
+            throw new InstallCommandException('Configuration file not found: ' . $paramsFile);
         }
 
         // Set environment variables if not set to get proper config
@@ -169,7 +168,7 @@ final class InstallCommand extends Command
         // Parse the file to extract the database variables
         $content = file_get_contents($paramsFile);
         if ($content === false) {
-            throw new Exception('Failed to read configuration file: ' . $paramsFile);
+            throw new InstallCommandException('Failed to read configuration file: ' . $paramsFile);
         }
 
         // Extract the switch statement values for the current environment

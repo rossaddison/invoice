@@ -37,8 +37,6 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 use Yiisoft\Yii\Runner\Http\HttpApplicationRunner;
 use DateTimeZone;
 use DateTime;
-use Exception;
-use RuntimeException;
 
 /**
  * @template TEntity of Setting
@@ -300,12 +298,12 @@ final class SettingRepository extends Select\Repository
      * Validate the retrieved IP address.
      *
      * @param string $ip The IP address to validate.
-     * @throws RuntimeException If the IP address is invalid.
+     * @throws SettingException If the IP address is invalid.
      */
     private function validateIp(string $ip): void
     {
         if (!filter_var($ip, FILTER_VALIDATE_IP)) {
-            throw new RuntimeException('Invalid IP address format.');
+            throw new SettingException('Invalid IP address format.');
         }
     }
 
@@ -447,13 +445,13 @@ final class SettingRepository extends Select\Repository
         $response = file_get_contents($url);
 
         if ($response === false) {
-            throw new Exception('Failed to fetch the public IP from the API.');
+            throw new SettingException('Failed to fetch the public IP from the API.');
         }
 
         $data = json_decode($response, true);
 
         if (!is_array($data) || !isset($data['ip']) || !is_string($data['ip'])) {
-            throw new Exception("Invalid response format or missing 'ip' key.");
+            throw new SettingException("Invalid response format or missing 'ip' key.");
         }
 
         return $data['ip'];

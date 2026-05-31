@@ -230,7 +230,7 @@ class PeppolHelper
                 $iiaR, $this->inv_amount);
         $f = fopen($path, 'wb');
         if (!$f) {
-            throw new \Exception(
+            throw new PeppolHelperException(
                     sprintf('Unable to create output file %s', $path));
         }
         $deliveryLocation_ID_scheme =

@@ -9,8 +9,6 @@ use Yiisoft\Yii\AuthClient\OAuth2;
 use Yiisoft\Yii\AuthClient\OAuthToken;
 use Yiisoft\Yii\AuthClient\RequestUtil;
 use InvalidArgumentException;
-use RuntimeException;
-use Exception;
 
 /**
  * As at: 24/04/2025
@@ -152,7 +150,7 @@ class GovUk extends OAuth2
     /**
      * Fetches the JSON Web Key Set (JWKS) from the configured URL.
      *
-     * @throws RuntimeException If fetching or decoding the JWKS fails.
+     * @throws GovUkException If fetching or decoding the JWKS fails.
      * @return array The decoded JWKS as an associative array.
      */
     protected function fetchJWKS(): array
@@ -161,14 +159,14 @@ class GovUk extends OAuth2
         $json = file_get_contents($this->jwksUrl);
 
         if ($json === false) {
-            throw new RuntimeException('Failed to fetch JWKS from URL: ' . $this->jwksUrl);
+            throw new GovUkException('Failed to fetch JWKS from URL: ' . $this->jwksUrl);
         }
 
         // Decode the JSON
         $decoded = json_decode($json, true);
 
         if (!is_array($decoded)) {
-            throw new RuntimeException('Failed to decode JWKS JSON from URL: ' . $this->jwksUrl);
+            throw new GovUkException('Failed to decode JWKS JSON from URL: ' . $this->jwksUrl);
         }
 
         return $decoded;
@@ -261,7 +259,7 @@ class GovUk extends OAuth2
         }
 
         if ($publicKey === null) {
-            throw new Exception('Public key not found for the specified kid');
+            throw new GovUkException('Public key not found for the specified kid');
         }
 
         return $publicKey;

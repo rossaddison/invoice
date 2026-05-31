@@ -23,7 +23,6 @@ use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Infrastructure\Persistence\User\User;
 use Cycle\ORM\EntityManager;
 use Doctrine\Inflector\InflectorFactory;
-use Exception;
 use Faker\Factory;
 use Faker\Generator;
 use Psr\Log\LoggerInterface;
@@ -593,13 +592,13 @@ final class ItemsCommand extends Command
         bool $includeItemTaxesInSummaryTaxSoApplyAfter = true,
     ): void {
         if (empty($this->users)) {
-            throw new Exception('No users');
+            throw new ItemsCommandException('No users');
         }
         if (empty($this->userClients)) {
-            throw new Exception('No clients have been associated with users');
+            throw new ItemsCommandException('No clients have been associated with users');
         }
         if (empty($this->userInvs)) {
-            throw new Exception('No users that have been made active for invoicing!');
+            throw new ItemsCommandException('No users that have been made active for invoicing!');
         }
         $this->inv = [];
         $this->invId = 1;

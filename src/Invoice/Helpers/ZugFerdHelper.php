@@ -65,7 +65,7 @@ final readonly class ZugFerdHelper
         $z = new ZugferdXml($this->s, $invoice, $this->iiaR, $this->inv_amount, $this->translator);
         $f = fopen($path, 'wb');
         if (!$f) {
-            throw new \Exception(sprintf('Unable to create output file %s', $path));
+            throw new ZugFerdHelperException(sprintf('Unable to create output file %s', $path));
         }
         fwrite($f, $z->xml(), strlen($z->xml()));
         fclose($f);

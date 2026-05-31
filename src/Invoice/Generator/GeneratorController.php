@@ -257,7 +257,7 @@ class GeneratorController extends BaseController
                         }
                     }
                     if (count($result_array) !== $numItems) {
-                        throw new \RuntimeException('Total translation count mismatch.');
+                        throw new GeneratorException('Total translation count mismatch.');
                     }
                     $combined_array = array_combine($keys, $result_array);
                     $templateFile = $this->googleTranslateGetFileFromType($type);
@@ -487,7 +487,7 @@ class GeneratorController extends BaseController
         $destination = $this->aliases->get('@English') . '/app_lang.php';
 
         if (!file_exists($source)) {
-            throw new \RuntimeException("Source file not found: $source");
+            throw new GeneratorException("Source file not found: $source");
         }
 
         /** @var array<string, string> $app */
