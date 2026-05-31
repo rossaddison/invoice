@@ -195,7 +195,7 @@ final class SignupController
                     $signupForm->getConsentPeriodicInvoice(),
                     $signupForm->getConsentTelegramOutstanding());
                 if (($this->sR->getSetting('email_send_method') == 'symfony')
-                        || ($this->sR->mailerEnabled() == true)) {
+                        || ($this->sR->mailerEnabled())) {
                     $configEmail = $this->sR->getConfigAdminEmail();
                     $tta = $this->translator->translate('administrator');
                     $email = new \Yiisoft\Mailer\Message(

@@ -49,7 +49,7 @@ final class Cryptor
         }
 
         $openBytes = openssl_cipher_iv_length($this->cipher_algo);
-        if ($openBytes != false) {
+        if ($openBytes) {
             $this->iv_num_bytes = $openBytes;
         }
     }
@@ -85,12 +85,12 @@ final class Cryptor
         $encrypted = openssl_encrypt($in, $this->cipher_algo, $keyhash, $opts, $iv);
 
         $errorString = openssl_error_string();
-        if (($encrypted === false) && ($errorString != false)) {
+        if ((!$encrypted) && ($errorString != false)) {
             throw new \Exception('Cryptor::encryptString() - Encryption failed: ' . $errorString);
         }
 
         // The result comprises the IV and encrypted data
-        if ($encrypted != false) {
+        if ($encrypted) {
             $res = $iv . $encrypted;
 
             // and format the result if required.
@@ -155,7 +155,7 @@ final class Cryptor
         $res = openssl_decrypt($raw, $this->cipher_algo, $keyhash, $opts, $iv);
 
         $errorString = openssl_error_string();
-        if (($res === false) && ($errorString != false)) {
+        if ((!$res) && ($errorString)) {
             throw new \Exception('Cryptor::decryptString - decryption failed: ' . $errorString);
         }
 

@@ -82,7 +82,7 @@ final class ForgotPasswordController
         // check that symfony and the config/common/params.php
         //  mailer->senderEmail have been setup
         if (($this->sR->getSetting('email_send_method') !== 'symfony')
-                || ($this->sR->mailerEnabled() == false)
+                || (!$this->sR->mailerEnabled())
                 || empty($this->sR->getConfigSenderEmail())) {
             return $this->webService->getRedirectResponse(
                 'site/forgotemailfailed');
@@ -151,7 +151,7 @@ final class ForgotPasswordController
                                 $_language, $requestPasswordResetToken);
                         if (($this->sR->getSetting('email_send_method')
                                 == 'symfony')
-                                || ($this->sR->mailerEnabled() == true)) {
+                                || $this->sR->mailerEnabled()) {
                             $email = new \Yiisoft\Mailer\Message(
                                 charset: 'utf-8',
                                 headers: [

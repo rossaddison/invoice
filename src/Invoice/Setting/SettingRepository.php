@@ -578,7 +578,7 @@ final class SettingRepository extends Select\Repository
     {
         $directories = [];
         $scanDir = scandir($base_dir);
-        if ($scanDir != false) {
+        if ($scanDir) {
             foreach ($scanDir as $file) {
                 if ($file == '.' || $file == '..') {
                     continue;
@@ -1289,9 +1289,9 @@ final class SettingRepository extends Select\Repository
         $templates = [];
         $pdf = scandir($aliases->get('@pdf'), SCANDIR_SORT_ASCENDING);
         $public = scandir($aliases->get('@public'), SCANDIR_SORT_ASCENDING);
-        if (($type == 'pdf') && ($pdf != false)) {
+        if (($type == 'pdf') && $pdf) {
             $templates = array_diff($pdf, ['..', '.']);
-        } elseif (($type == 'public') && ($public != false)) {
+        } elseif (($type == 'public') && $public) {
             $templates = array_diff($public, ['..', '.']);
         }
         return $this->removeExtension($templates);
@@ -1310,9 +1310,9 @@ final class SettingRepository extends Select\Repository
         $templates = [];
         $scanPdf = scandir($aliases->get('@pdf'), SCANDIR_SORT_ASCENDING);
         $scanPublic = scandir($aliases->get('@public'), SCANDIR_SORT_ASCENDING);
-        if (($type == 'pdf') && ($scanPdf != false)) {
+        if (($type == 'pdf') && $scanPdf) {
             $templates = array_diff($scanPdf, ['..', '.']);
-        } elseif (($type == 'public') && ($scanPublic != false)) {
+        } elseif (($type == 'public') && $scanPublic) {
             $templates = array_diff($scanPublic, ['..', '.']);
         }
         return $this->removeExtension($templates);
@@ -2492,7 +2492,7 @@ final class SettingRepository extends Select\Repository
     public function signupAutomaticallyAssignClient(
                                     bool $signupAutomaticallyAssignClient): void
     {
-        if ($signupAutomaticallyAssignClient == true) {
+        if ($signupAutomaticallyAssignClient) {
             $count = $this->repoCount('signup_automatically_assign_client');
             if ($count == 1) {
                 $setting = $this->withKey('signup_automatically_assign_client');

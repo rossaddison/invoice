@@ -70,7 +70,7 @@ final readonly class UploadService
         // see vendor/yiisoft/files/src/FileHelper::unlink will delete the file
         $realTargetPath = realpath($targetPath);
         $realFilePath = realpath($file_path);
-        if (($realTargetPath != false) && ($realFilePath != false)) {
+        if (($realTargetPath != false) && $realFilePath) {
             str_starts_with($realTargetPath, $realFilePath)
                 ? FileHelper::unlink($file_path)
                 : '';

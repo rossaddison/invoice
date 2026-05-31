@@ -99,7 +99,7 @@ class Attachment implements XmlSerializable
         if (null !== $filePath) {
             $fileContents = file_get_contents($filePath, true);
 
-            if ($fileContents != false) {
+            if ($fileContents) {
                 $newFileContents = base64_encode($fileContents);
                 $mimeType = $this->getFileMimeType();
 
