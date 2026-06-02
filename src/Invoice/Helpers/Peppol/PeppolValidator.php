@@ -4,6 +4,18 @@ declare(strict_types=1);
 
 namespace App\Invoice\Helpers\Peppol;
 
+use App\Invoice\Helpers\Peppol\Calculator\InvoiceLineCalculator;
+use App\Invoice\Helpers\Peppol\Calculator\MonetaryTotalCalculator;
+use App\Invoice\Helpers\Peppol\Calculator\TaxCalculator;
+use App\Invoice\Helpers\Peppol\CodeList;
+use App\Invoice\Helpers\Peppol\CodeLists;
+use App\Invoice\Helpers\Peppol\Rule\EN16931\PEPPOL_EN16931_R001;
+use App\Invoice\Helpers\Peppol\Rule\EN16931\PEPPOL_EN16931_R002;
+use App\Invoice\Helpers\Peppol\Rule\EN16931\PEPPOL_EN16931_R003;
+use App\Invoice\Helpers\Peppol\Rule\RuleRegistry;
+use App\Invoice\Helpers\Peppol\Rule\Severity;
+use App\Invoice\Helpers\Peppol\Rule\ValidationContext;
+use App\Invoice\Helpers\Peppol\XPathHelper;
 use DOMDocument;
 use DOMElement;
 use DOMNode;
@@ -23,11 +35,20 @@ class PeppolValidator
     private DOMDocument $dom;
     private ?DOMXPath $xpath = null;
 
-/** @var array<int, array{message: string, line: int|null, xpath: string|null}> */
+    /** @var array<int, array{rule: string, text: string, line: string|null, xpath: string|null}> */
     private array $errors = [];
 
-/** @var array<int, array{message: string, line: int|null, xpath: string|null}> */
+    /** @var array<int, array{message: string, line: int|null, xpath: string|null}> */
     private array $warnings = [];
+
+    private const string XPATH_PROFILE_ID        = '//cbc:ProfileID';
+    private const string XPATH_CUSTOMIZATION_ID  = '//cbc:CustomizationID';
+    private const string XPATH_SUPPLIER_PARTY    = '//cac:AccountingSupplierParty/cac:Party/';
+    private const string XPATH_CUSTOMER_PARTY    = '//cac:AccountingCustomerParty/cac:Party/';
+    private const string XPATH_TAX_SCHEME_VAT    = "cac:PartyTaxScheme[cac:TaxScheme/cbc:ID='VAT']/";
+    private const string XPATH_TAX_CURRENCY_CODE = '//cbc:TaxCurrencyCode';
+    private const string REGEX_10_DIGITS = '/^\d{10}$/';
+    private const string REGEX_11_DIGITS = '/^\d{11}$/';
 
 /** @var array<string, string> */
     private array $namespaces = [
@@ -41,31 +62,63 @@ class PeppolValidator
             . 'xsd:CreditNote-2',
     ];
 
-    /** @var array<int, string> */
-    private array $iso3166 = [];
-
-    /** @var array<int, string> */
-    private array $iso4217 = [];
-
-    /** @var array<int, string> */
-    private array $mimeCode = [];
-
-    /** @var array<int, string> */
-    private array $uncl2005 = [];
-
-    /** @var array<int, string> */
-    private array $uncl5189 = [];
-
-    /** @var array<int, string> */
-    private array $uncl7161 = [];
-
-    /** @var array<int, string> */
-    private array $eaid = [];
-
+    /**
+     * What?  The Peppol business-process profile number extracted from cbc:ProfileID,
+     *        e.g. '01' for BIS Billing 3.0 ('urn:fdc:peppol.eu:2017:poacc:billing:01:1.0').
+     * Why?   The profile identifies which Peppol process governs this invoice; it must match
+     *        the expected pattern or rules R001 and R007 will fire.
+     * When?  Set once during extractDocumentVariables() when the XML is loaded; then read
+     *        inside validateDocumentLevel().
+     * Where? Checked in validateDocumentLevel() to detect an unrecognised profile format.
+     * How?   Set by matching cbc:ProfileID against a regex; defaults to the translated
+     *        'reason.unknown' string if the element is absent or the pattern does not match.
+     */
     private ?string $profile = null;
+    /**
+     * What?  The two-letter ISO 3166 country code of the invoice seller, e.g. 'GB' or 'DE'.
+     * Why?   Several Peppol rules are country-specific (e.g. rule R002 relaxes the note limit
+     *        only for DE-to-DE invoices); the validator must know the supplier's country.
+     * When?  Set once by extractSupplierCountry() during extractDocumentVariables() when the
+     *        XML is loaded.
+     * Where? Read in validateNoteRestrictions() alongside $customerCountry.
+     * How?   The first two characters of the seller's VAT CompanyID are taken and uppercased;
+     *        falls back to the tax representative VAT, then the postal address; defaults to 'XX'.
+     */
     private ?string $supplierCountry = null;
+    /**
+     * What?  The two-letter ISO 3166 country code of the invoice buyer, e.g. 'GB' or 'DE'.
+     * Why?   Needed alongside $supplierCountry to apply country-pair rules, currently the
+     *        DE-to-DE note-count relaxation in rule R002.
+     * When?  Set once by extractCustomerCountry() during extractDocumentVariables() when the
+     *        XML is loaded.
+     * Where? Read in validateNoteRestrictions() alongside $supplierCountry.
+     * How?   The first two characters of the buyer's VAT CompanyID are taken and uppercased;
+     *        falls back to the postal address country; defaults to 'XX' if neither is present.
+     */
     private ?string $customerCountry = null;
+    /**
+     * What?  The three-letter ISO 4217 currency code declared in cbc:DocumentCurrencyCode,
+     *        e.g. 'GBP' or 'EUR', that every monetary amount in the invoice must use.
+     * Why?   Peppol rule R051 requires all amount elements to carry the document currency;
+     *        rules BR-CL-04 and R005 also reference this value.
+     * When?  Set once during extractDocumentVariables() when the XML is loaded.
+     * Where? Read in validateCurrency(), validateCurrencyCodeLists(), validateTaxAmountsSameSign(),
+     *        and validateTaxCurrencyNotEqualDocCurrency().
+     * How?   Retrieved with getNodeValue('//cbc:DocumentCurrencyCode'); stored as a trimmed
+     *        string or null if the element is absent.
+     */
     private ?string $documentCurrencyCode = null;
+    /**
+     * What?  A string recording whether the loaded XML is an 'Invoice' or a 'CreditNote',
+     *        detected from the document's root namespace.
+     * Why?   Some Peppol rules only apply to one document type (e.g. R080 — max one project
+     *        reference — is credit-note-only); the validator must branch on type.
+     * When?  Set once during extractDocumentVariables() when the XML is loaded; checked at
+     *        the top of validate() to abort early if still null.
+     * Where? Read in validate() (null guard) and validateCreditNoteProjectReference().
+     * How?   Set by querying for a //ubl-invoice:Invoice or //ubl-creditnote:CreditNote
+     *        namespace-qualified root element; remains null if neither is found.
+     */
     private ?string $documentType = null;
 
     public function __construct(
@@ -74,84 +127,6 @@ class PeppolValidator
     {
         $this->dom = new DOMDocument();
         $this->dom->preserveWhiteSpace = false;
-        $this->initializeCodeLists();
-    }
-
-    private function initializeCodeLists(): void
-    {
-        $this->iso3166 = explode(' ', 'AD AE AF AG AI AL AM AO AQ AR '
-            . 'AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN '
-            . 'BO BQ BR BS BT BV BW BY BZ CA CC CD CF CG CH CI CK CL '
-            . 'CM CN CO CR CU CV CW CX CY CZ DE DJ DK DM DO DZ EC EE '
-            . 'EG EH ER ES ET FI FJ FK FM FO FR GA GB GD GE GF GG GH '
-            . 'GI GL GM GN GP GQ GR GS GT GU GW GY HK HM HN HR HT HU '
-            . 'ID IE IL IM IN IO IQ IR IS IT JE JM JO JP KE KG KH KI '
-            . 'KM KN KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY '
-            . 'MA MC MD ME MF MG MH MK ML MM MN MO MP MQ MR MS MT MU '
-            . 'MV MW MX MY MZ NA NC NE NF NG NI NL NO NP NR NU NZ OM '
-            . 'PA PE PF PG PH PK PL PM PN PR PS PT PW PY QA RE RO RS '
-            . 'RU RW SA SB SC SD SE SG SH SI SJ SK SL SM SN SO SR SS '
-            . 'ST SV SX SY SZ TC TD TF TG TH TJ TK TL TM TN TO TR TT '
-            . 'TV TW TZ UA UG UM US UY UZ VA VC VE VG VI VN VU WF WS '
-            . 'YE YT ZA ZM ZW 1A XI');
-
-        $this->iso4217 = explode(' ', 'AED AFN ALL AMD ANG AOA ARS '
-            . 'AUD AWG AZN BAM BBD BDT BGN BHD BIF BMD BND BOB BOV '
-            . 'BRL BSD BTN BWP BYN BZD CAD CDF CHE CHF CHW CLF CLP '
-            . 'CNY COP COU CRC CUP CVE CZK DJF DKK DOP DZD EGP ERN '
-            . 'ETB EUR FJD FKP GBP GEL GHS GIP GMD GNF GTQ GYD HKD '
-            . 'HNL HTG HUF IDR ILS INR IQD IRR ISK JMD JOD JPY KES '
-            . 'KGS KHR KMF KPW KRW KWD KYD KZT LAK LBP LKR LRD LSL '
-            . 'LYD MAD MDL MGA MKD MMK MNT MOP MRU MUR MVR MWK MXN '
-            . 'MXV MYR MZN NAD NGN NIO NOK NPR NZD OMR PAB PEN PGK '
-            . 'PHP PKR PLN PYG QAR RON RSD RUB RWF SAR SBD SCR SDG '
-            . 'SEK SGD SHP SLE SOS SRD SSP STN SVC SYP SZL THB TJS '
-            . 'TMT TND TOP TRY TTD TWD TZS UAH UGX USD USN UYI UYU '
-            . 'UYW UZS VED VES VND VUV WST XAF XAG XAU XBA XBB XBC '
-            . 'XBD XCD XDR XOF XPD XPF XPT XSU XTS XUA YER ZAR ZMW '
-            . 'ZWG XXX');
-
-        $this->mimeCode = [
-            'application/pdf',
-            'image/png',
-            'image/jpeg',
-            'text/csv',
-            'application/vnd.openxmlformats-officedocument.'
-                . 'spreadsheetml.sheet',
-            'application/vnd.oasis.opendocument.spreadsheet',
-        ];
-
-        $this->uncl2005 = ['3', '35', '432'];
-
-        $this->uncl5189 = ['41', '42', '60', '62', '63', '64', '65',
-            '66', '67', '68', '70', '71', '88', '95', '100', '102',
-            '103', '104', '105'];
-
-        $this->uncl7161 = explode(' ', 'AA AAA AAC AAD AAE AAF AAH '
-            . 'AAI AAS AAT AAV AAY AAZ ABA ABB ABC ABD ABF ABK ABL '
-            . 'ABN ABR ABS ABT ABU ACF ACG ACH ACI ACJ ACK ACL ACM '
-            . 'ACS ADC ADE ADJ ADK ADL ADM ADN ADO ADP ADQ ADR ADT '
-            . 'ADW ADY ADZ AEA AEB AEC AED AEF AEH AEI AEJ AEK AEL '
-            . 'AEM AEN AEO AEP AES AET AEU AEV AEW AEX AEY AEZ AJ '
-            . 'AU CA CAB CAD CAE CAF CAI CAJ CAK CAL CAM CAN CAO '
-            . 'CAP CAQ CAR CAS CAT CAU CAV CAW CAX CAY CAZ CD CG '
-            . 'CS CT DAB DAC DAD DAF DAG DAH DAI DAJ DAK DAL DAM '
-            . 'DAN DAO DAP DAQ DL EG EP ER FAA FAB FAC FC FH FI '
-            . 'GAA HAA HD HH IAA IAB ID IF IR IS KO L1 LA LAA LAB '
-            . 'LF MAE MI ML NAA OA PA PAA PC PL PRV RAB RAC RAD '
-            . 'RAF RE RF RH RV SA SAA SAD SAE SAI SG SH SM SU TAB '
-            . 'TAC TT TV V1 V2 WH XAA YY ZZZ');
-
-        $this->eaid = explode(' ', '0002 0007 0009 0037 0060 0088 '
-            . '0096 0097 0106 0130 0135 0142 0151 0177 0183 0184 '
-            . '0188 0190 0191 0192 0193 0195 0196 0198 0199 0200 '
-            . '0201 0202 0204 0208 0209 0210 0211 0212 0213 0215 '
-            . '0216 0218 0221 0230 0235 9910 9913 9914 9915 9918 '
-            . '9919 9920 9922 9923 9924 9925 9926 9927 9928 9929 '
-            . '9930 9931 9932 9933 9934 9935 9936 9937 9938 9939 '
-            . '9940 9941 9942 9943 9944 9945 9946 9947 9948 9949 '
-            . '9950 9951 9952 9953 9957 9959 0147 0154 0158 0170 '
-            . '0194 0203 0205 0217 0225 0240');
     }
 
     /**
@@ -198,7 +173,7 @@ class PeppolValidator
             $this->documentType = 'CreditNote';
         }
 
-        $profileID = $this->getNodeValue('//cbc:ProfileID');
+        $profileID = $this->getNodeValue(self::XPATH_PROFILE_ID);
         if ($profileID !== null) {
             $pattern = '/urn:fdc:peppol\.eu:2017:poacc:billing:'
                 . '(\d{2}):1\.0/';
@@ -220,27 +195,26 @@ class PeppolValidator
 
     private function extractSupplierCountry(): string
     {
-        $vatPath = "//cac:AccountingSupplierParty/cac:Party/"
-            . "cac:PartyTaxScheme[cac:TaxScheme/cbc:ID='VAT']/"
-            . "cbc:CompanyID";
+        $vatPath = self::XPATH_SUPPLIER_PARTY
+            . self::XPATH_TAX_SCHEME_VAT
+            . 'cbc:CompanyID';
         $vatCountry = $this->getNodeValue($vatPath);
 
         if ($vatCountry !== null && strlen($vatCountry) >= 2) {
             return strtoupper(substr($vatCountry, 0, 2));
         }
 
-        $taxRepPath = "//cac:TaxRepresentativeParty/"
-            . "cac:PartyTaxScheme[cac:TaxScheme/cbc:ID='VAT']/"
-            . "cbc:CompanyID";
+        $taxRepPath = '//cac:TaxRepresentativeParty/'
+            . self::XPATH_TAX_SCHEME_VAT
+            . 'cbc:CompanyID';
         $taxRepCountry = $this->getNodeValue($taxRepPath);
 
         if ($taxRepCountry !== null && strlen($taxRepCountry) >= 2) {
             return strtoupper(substr($taxRepCountry, 0, 2));
         }
 
-        $addressPath = '//cac:AccountingSupplierParty/cac:Party/'
-            . 'cac:PostalAddress/cac:Country/'
-            . 'cbc:IdentificationCode';
+        $addressPath = self::XPATH_SUPPLIER_PARTY
+            . 'cac:PostalAddress/cac:Country/cbc:IdentificationCode';
         $country = $this->getNodeValue($addressPath);
 
         return $country !== null ? strtoupper($country) : 'XX';
@@ -248,18 +222,17 @@ class PeppolValidator
 
     private function extractCustomerCountry(): string
     {
-        $vatPath = "//cac:AccountingCustomerParty/cac:Party/"
-            . "cac:PartyTaxScheme[cac:TaxScheme/cbc:ID='VAT']/"
-            . "cbc:CompanyID";
+        $vatPath = self::XPATH_CUSTOMER_PARTY
+            . self::XPATH_TAX_SCHEME_VAT
+            . 'cbc:CompanyID';
         $custVatCountry = $this->getNodeValue($vatPath);
 
         if ($custVatCountry !== null && strlen($custVatCountry) >= 2) {
             return strtoupper(substr($custVatCountry, 0, 2));
         }
 
-        $addressPath = '//cac:AccountingCustomerParty/cac:Party/'
-            . 'cac:PostalAddress/cac:Country/'
-            . 'cbc:IdentificationCode';
+        $addressPath = self::XPATH_CUSTOMER_PARTY
+            . 'cac:PostalAddress/cac:Country/cbc:IdentificationCode';
         $country = $this->getNodeValue($addressPath);
 
         return $country !== null ? strtoupper($country) : 'XX';
@@ -280,14 +253,99 @@ class PeppolValidator
             return false;
         }
 
+        $this->validateUBLVersion();
         $this->validateEmptyElements();
         $this->validateDocumentLevel();
         $this->validateParties();
         $this->validateAllowanceCharge();
         $this->validatePaymentMeans();
         $this->validateCurrency();
+        $this->validateCodeLists();
+        $this->validateWithCalculators();
+        $this->validateWithRegistry();
 
         return empty($this->errors);
+    }
+
+    /**
+     * Run all registered ValidationRule classes and fan their violations into
+     * $this->errors (Fatal) or $this->warnings (Warning / Info), preserving the
+     * existing array shape expected by getErrors() and getWarnings().
+     */
+    private function validateWithRegistry(): void
+    {
+        if ($this->xpath === null) {
+            return;
+        }
+
+        $context = new ValidationContext(
+            documentType:         $this->documentType,
+            documentCurrencyCode: $this->documentCurrencyCode,
+            supplierCountry:      $this->supplierCountry,
+            customerCountry:      $this->customerCountry,
+            profile:              $this->profile,
+        );
+
+        $registry = new RuleRegistry();
+        $registry->register(
+            new PEPPOL_EN16931_R001($this->t),
+            new PEPPOL_EN16931_R002($this->t),
+            new PEPPOL_EN16931_R003($this->t),
+        );
+
+        foreach ($registry->run($this->xpath, $context) as $v) {
+            if ($v->severity === Severity::Warning
+                || $v->severity === Severity::Info
+            ) {
+                $this->warnings[] = [
+                    'message' => $v->ruleId . ': ' . $v->message,
+                    'line'    => $v->line !== null ? (int) $v->line : null,
+                    'xpath'   => $v->xpath,
+                ];
+            } else {
+                $this->errors[] = [
+                    'rule'  => $v->ruleId,
+                    'text'  => $v->message,
+                    'line'  => $v->line,
+                    'xpath' => $v->xpath,
+                ];
+            }
+        }
+    }
+
+    /**
+     * Delegate rule sets to dedicated calculator classes and merge their errors.
+     */
+    private function validateWithCalculators(): void
+    {
+        if ($this->xpath === null) {
+            return;
+        }
+
+        $calculators = [
+            new MonetaryTotalCalculator($this->xpath, $this->t),
+            new TaxCalculator($this->xpath, $this->t),
+            new InvoiceLineCalculator($this->xpath, $this->t),
+        ];
+
+        foreach ($calculators as $calculator) {
+            $calculator->validate();
+            array_push($this->errors, ...$calculator->getErrors());
+        }
+    }
+
+    private function validateUBLVersion(): void
+    {
+        $version = $this->getNodeValue('//cbc:UBLVersionID');
+
+        if ($version !== null && $version !== '2.4') {
+            $this->addError(
+                'UBL-VERSION       : '
+                . $this->t->translate('ubl.version.required.2.4')
+                . ' (' . $version . ')',
+                $this->getNode('//cbc:UBLVersionID')
+            );
+        }
     }
 
     /**
@@ -328,76 +386,24 @@ class PeppolValidator
 
     private function validateDocumentLevel(): void
     {
-        if ($this->getNodeValue('//cbc:ProfileID') === null) {
-            // Business process MUST be provided
-            $this->addError(
-                'PEPPOL-EN16931-R001: '
-                . $this->t->translate('PEPPOL.EN16931.R001'),
-                $this->getNode('//cbc:ProfileID')
-            );
-        }
-
-        if ($this->profile === 'Unknown') {
-            // Business process MUST be in format
+        // R001 (ProfileID present) and R002/R003 are handled by the RuleRegistry.
+        if ($this->profile === $this->t->translate('reason.unknown')) {
             $this->addError(
                 'PEPPOL-EN16931-R007: '
                 . $this->t->translate('PEPPOL.EN16931.R007')
                 . "'urn:fdc:peppol.eu:2017:poacc:billing:NN:1.0'",
-                $this->getNode('//cbc:ProfileID')
+                $this->getNode(self::XPATH_PROFILE_ID)
             );
         }
 
-        $this->validateNoteRestrictions();
-        $this->validateBuyerReference();
         $this->validateCustomizationID();
         $this->validateTaxTotals();
-    }
-
-    private function validateNoteRestrictions(): void
-    {
-        if ($this->xpath === null) {
-            return;
-        }
-
-        $supplierDE = ($this->supplierCountry === 'DE');
-        $customerDE = ($this->customerCountry === 'DE');
-
-        $notes = $this->xpath->query('//cbc:Note');
-        if ($notes === false) {
-            return;
-        }
-
-        $noteCount = $notes->length;
-
-        if ($noteCount > 1 && !($supplierDE && $customerDE)) {
-            $node = $notes->item(1); // Second note
-            $domNode = ($node instanceof DOMNode) ? $node : null;
-            // Max one note allowed unless both parties are DE
-            $this->addError(
-            'PEPPOL-EN16931-R002: ' . $this->t->translate('PEPPOL.EN16931.R002'),
-                $domNode
-            );
-        }
-    }
-
-    private function validateBuyerReference(): void
-    {
-        $buyerRef = $this->getNodeValue('//cbc:BuyerReference');
-        $orderRef = $this->getNodeValue('//cac:OrderReference/cbc:ID');
-
-        if ($buyerRef === null && $orderRef === null) {
-            // Buyer reference or order reference required
-            $this->addError(
-            'PEPPOL-EN16931-R003: ' . $this->t->translate('PEPPOL.EN16931.R003'),
-                $this->getNode('//cbc:BuyerReference')
-            );
-        }
     }
 
     private function validateCustomizationID(): void
     {
         $customizationID = $this->getNodeValue(
-            '//cbc:CustomizationID'
+            self::XPATH_CUSTOMIZATION_ID
         );
 
         $requiredStart = 'urn:cen.eu:en16931:2017#compliant#'
@@ -408,7 +414,7 @@ class PeppolValidator
             $this->addError(
                 'PEPPOL-EN16931-R004: ' .
                 $this->t->translate('PEPPOL.EN16931.R004.REQUIRED'),
-                $this->getNode('//cbc:CustomizationID')
+                $this->getNode(self::XPATH_CUSTOMIZATION_ID)
             );
             return;
         }
@@ -418,12 +424,27 @@ class PeppolValidator
             $this->addError(
                 'PEPPOL-EN16931-R004: '
                 . $this->t->translate('PEPPOL.EN16931.R004.INVALID'),
-                $this->getNode('//cbc:CustomizationID')
+                $this->getNode(self::XPATH_CUSTOMIZATION_ID)
             );
         }
     }
 
     private function validateTaxTotals(): void
+    {
+        if ($this->xpath === null) {
+            return;
+        }
+
+        $taxCurrencyCode = $this->getNodeValue(self::XPATH_TAX_CURRENCY_CODE);
+
+        $this->validateTaxTotalWithSubtotal();
+        $this->validateTaxTotalWithoutSubtotal($taxCurrencyCode);
+        $this->validateTaxAmountsSameSign($taxCurrencyCode);
+        $this->validateTaxCurrencyNotEqualDocCurrency($taxCurrencyCode);
+        $this->validateCreditNoteProjectReference();
+    }
+
+    private function validateTaxTotalWithSubtotal(): void
     {
         if ($this->xpath === null) {
             return;
@@ -438,69 +459,76 @@ class PeppolValidator
             $node = $taxTotalWithSub->length > 0
                 ? $taxTotalWithSub->item(1)
                 : $this->getNode('//cac:TaxTotal');
-            $domNode = ($node instanceof DOMNode) ? $node : null;
-            // One tax total with subtotals required
             $this->addError(
                 'PEPPOL-EN16931-R053: '
                 . $this->t->translate('PEPPOL.EN16931.R053'),
-                $domNode
+                ($node instanceof DOMNode) ? $node : null
             );
         }
+    }
 
-        $taxCurrencyCode = $this->getNodeValue(
-            '//cbc:TaxCurrencyCode'
-        );
+    private function validateTaxTotalWithoutSubtotal(
+        ?string $taxCurrencyCode
+    ): void {
+        if ($this->xpath === null) {
+            return;
+        }
 
         $taxTotalWithoutSub = $this->xpath
             ->query('//cac:TaxTotal[not(cac:TaxSubtotal)]');
 
-        if ($taxTotalWithoutSub !== false) {
-            $expectedCount = $taxCurrencyCode !== null ? 1 : 0;
-
-            if ($taxTotalWithoutSub->length !== $expectedCount) {
-                $node = $taxTotalWithoutSub->length > 0
-                    ? $taxTotalWithoutSub->item(0)
-                    : null;
-                $domNode = ($node instanceof DOMNode) ? $node : null;
-                // Invalid tax total without subtotals count
-                $this->addError(
-                    'PEPPOL-EN16931-R054: '
-                    . $this->t->translate('PEPPOL.EN16931.R054'),
-                    $domNode
-                );
-            }
+        if ($taxTotalWithoutSub === false) {
+            return;
         }
 
-        $this->validateTaxAmountsSameSign($taxCurrencyCode);
+        $expectedCount = $taxCurrencyCode !== null ? 1 : 0;
 
+        if ($taxTotalWithoutSub->length !== $expectedCount) {
+            $node = $taxTotalWithoutSub->length > 0
+                ? $taxTotalWithoutSub->item(0)
+                : null;
+            $this->addError(
+                'PEPPOL-EN16931-R054: '
+                . $this->t->translate('PEPPOL.EN16931.R054'),
+                ($node instanceof DOMNode) ? $node : null
+            );
+        }
+    }
+
+    private function validateTaxCurrencyNotEqualDocCurrency(
+        ?string $taxCurrencyCode
+    ): void {
         if ($taxCurrencyCode !== null
             && $this->documentCurrencyCode !== null
             && $taxCurrencyCode === $this->documentCurrencyCode
         ) {
-            // Tax currency must differ from document currency
             $this->addError(
                 'PEPPOL-EN16931-R005: '
                 . $this->t->translate('PEPPOL.EN16931.R005'),
-                $this->getNode('//cbc:TaxCurrencyCode')
+                $this->getNode(self::XPATH_TAX_CURRENCY_CODE)
             );
         }
+    }
 
-        if ($this->documentType === 'CreditNote') {
-            $projectRefs = $this->xpath->query(
-                "//cac:AdditionalDocumentReference"
-                . "[cbc:DocumentTypeCode='50']"
+    private function validateCreditNoteProjectReference(): void
+    {
+        if ($this->documentType !== 'CreditNote'
+            || $this->xpath === null
+        ) {
+            return;
+        }
+
+        $projectRefs = $this->xpath->query(
+            "//cac:AdditionalDocumentReference[cbc:DocumentTypeCode='50']"
+        );
+
+        if ($projectRefs !== false && $projectRefs->length > 1) {
+            $node = $projectRefs->item(1);
+            $this->addError(
+                'PEPPOL-EN16931-R080: '
+                . $this->t->translate('PEPPOL.EN16931.R080'),
+                ($node instanceof DOMNode) ? $node : null
             );
-
-            if ($projectRefs !== false && $projectRefs->length > 1) {
-                $node = $projectRefs->item(1);
-                $domNode = ($node instanceof DOMNode) ? $node : null;
-                // Max one project reference allowed
-                $this->addError(
-                    'PEPPOL-EN16931-R080: '
-                    . $this->t->translate('PEPPOL.EN16931.R080'),
-                    $domNode
-                );
-            }
         }
     }
 
@@ -522,40 +550,29 @@ class PeppolValidator
         $taxCurrPath = "//cac:TaxTotal/cbc:TaxAmount"
             . "[@currencyID='{$taxCurrencyCode}']";
 
-        $docNode = $this->xpath->query($docCurrPath);
-        $taxNode = $this->xpath->query($taxCurrPath);
+        $docNodes = $this->xpath->query($docCurrPath);
+        $taxNodes = $this->xpath->query($taxCurrPath);
 
-        if ($docNode === false || $taxNode === false) {
+        $docItem  = ($docNodes !== false) ? $docNodes->item(0) : null;
+        $taxItem  = ($taxNodes !== false) ? $taxNodes->item(0) : null;
+
+        $docValueStr  = $docItem?->nodeValue;
+        $taxValueStr  = $taxItem?->nodeValue;
+        $taxAmountDoc = $docValueStr !== null ? (float) $docValueStr : null;
+        $taxAmountTax = $taxValueStr !== null ? (float) $taxValueStr : null;
+
+        if ($taxAmountDoc === null || $taxAmountTax === null) {
             return;
         }
-
-        $docItem = $docNode->item(0);
-        $taxItem = $taxNode->item(0);
-
-        if ($docItem === null || $taxItem === null) {
-            return;
-        }
-
-        $docValue = $docItem->nodeValue;
-        $taxValue = $taxItem->nodeValue;
-
-        if ($docValue === null || $taxValue === null) {
-            return;
-        }
-
-        $taxAmountDoc = (float)$docValue;
-        $taxAmountTax = (float)$taxValue;
 
         $differentSigns = ($taxAmountDoc < 0 && $taxAmountTax > 0)
             || ($taxAmountDoc > 0 && $taxAmountTax < 0);
 
         if ($differentSigns) {
-            $domNode = ($docItem instanceof DOMNode) ? $docItem : null;
-            // Tax amounts must have same sign
             $this->addError(
                 'PEPPOL-EN16931-R055: '
                 . $this->t->translate('PEPPOL.EN16931.R055'),
-                $domNode
+                ($docItem instanceof DOMNode) ? $docItem : null
             );
         }
     }
@@ -563,28 +580,26 @@ class PeppolValidator
     private function validateParties(): void
     {
         $buyerEndpoint = $this->getNodeValue(
-            '//cac:AccountingCustomerParty/cac:Party/'
-            . 'cbc:EndpointID'
+            self::XPATH_CUSTOMER_PARTY . 'cbc:EndpointID'
         );
 
         if ($buyerEndpoint === null) {
-            $this->addError(
-                'PEPPOL-EN16931-R010: Buyer electronic address required',
-                $this->getNode('//cac:AccountingCustomerParty/cac:Party/cbc:'
-                        . 'EndpointID')
+            // Buyer Electronic Address Required
+            $this->addError($this->t->translate('PEPPOL.EN16931.R010'),
+                $this->getNode(self::XPATH_CUSTOMER_PARTY . 'cbc:EndpointID')
             );
         }
 
         $sellerEndpoint = $this->getNodeValue(
-            '//cac:AccountingSupplierParty/cac:Party/'
-            . 'cbc:EndpointID'
+            self::XPATH_SUPPLIER_PARTY . 'cbc:EndpointID'
         );
 
         if ($sellerEndpoint === null) {
+            // Seller Electronic Address Required
             $this->addError(
-                'PEPPOL-EN16931-R020: Seller electronic address required',
-                $this->getNode('//cac:AccountingSupplierParty/cac:Party/cbc:'
-                        . 'EndpointID')
+                'PEPPOL-EN16931-R020: '
+                . $this->t->translate('PEPPOL.EN16931.R020'),
+                $this->getNode(self::XPATH_SUPPLIER_PARTY . 'cbc:EndpointID')
             );
         }
     }
@@ -639,18 +654,18 @@ class PeppolValidator
         if ($hasPercentage && !$hasBaseAmount) {
             // Base amount required when percentage provided',
             $this->addError(
-           'PEPPOL-EN16931-R041: '
-            . $this->t->translate('PEPPOL.EN16931.R041'),
-            $ac
+                'PEPPOL-EN16931-R041: '
+                . $this->t->translate('PEPPOL.EN16931.R041'),
+                $ac
             );
         }
 
         if (!$hasPercentage && $hasBaseAmount) {
             // Percentage required when base amount provided
             $this->addError(
-           'PEPPOL-EN16931-R042: '
-            . $this->t->translate('PEPPOL.EN16931.R042'),
-            $ac
+                'PEPPOL-EN16931-R042: '
+                . $this->t->translate('PEPPOL.EN16931.R042'),
+                $ac
             );
         }
 
@@ -663,7 +678,7 @@ class PeppolValidator
         ) {
             // Charge indicator must be true or false
             $this->addError(
-           'PEPPOL-EN16931-R043: '
+                'PEPPOL-EN16931-R043: '
                 . $this->t->translate('PEPPOL.EN16931.R043'),
                 $ac
             );
@@ -808,6 +823,197 @@ class PeppolValidator
         }
     }
 
+    private function validateCodeLists(): void
+    {
+        $this->validateCurrencyCodeLists();
+        $this->validateCountryCodeList();
+        $this->validateMimeCodeList();
+        $this->validateAllowanceChargeReasonCodes();
+        $this->validateInvoicePeriodDescriptionCode();
+        $this->validateEndpointSchemeIDs();
+        $this->validateEndpointSchemeFormats();
+    }
+
+    private function validateCurrencyCodeLists(): void
+    {
+        if ($this->documentCurrencyCode !== null
+            && !CodeList::contains(CodeLists::ISO4217, $this->documentCurrencyCode)
+        ) {
+            $this->addError(
+                'BR-CL-04          : '
+                . $this->t->translate('BR.CL.04'),
+                $this->getNode('//cbc:DocumentCurrencyCode')
+            );
+        }
+
+        $taxCurrency = $this->getNodeValue(self::XPATH_TAX_CURRENCY_CODE);
+        if ($taxCurrency !== null
+            && !CodeList::contains(CodeLists::ISO4217, $taxCurrency)
+        ) {
+            $this->addError(
+                'BR-CL-05          : '
+                . $this->t->translate('BR.CL.05'),
+                $this->getNode(self::XPATH_TAX_CURRENCY_CODE)
+            );
+        }
+    }
+
+    private function validateCountryCodeList(): void
+    {
+        if ($this->xpath === null) {
+            return;
+        }
+
+        $nodes = $this->xpath->query(
+            '//cac:Country/cbc:IdentificationCode'
+        );
+
+        if ($nodes === false) {
+            return;
+        }
+
+        foreach ($nodes as $node) {
+            if (!($node instanceof DOMElement)) {
+                continue;
+            }
+
+            $value = trim((string) $node->nodeValue);
+            if ($value !== '' && !CodeList::contains(CodeLists::ISO3166, $value)) {
+                $this->addError(
+                    'BR-CL-14          : '
+                    . $this->t->translate('BR.CL.14'),
+                    $node
+                );
+            }
+        }
+    }
+
+    private function validateMimeCodeList(): void
+    {
+        if ($this->xpath === null) {
+            return;
+        }
+
+        $nodes = $this->xpath->query(
+            '//cac:Attachment/cbc:EmbeddedDocumentBinaryObject'
+        );
+
+        if ($nodes === false) {
+            return;
+        }
+
+        foreach ($nodes as $node) {
+            if (!($node instanceof DOMElement)) {
+                continue;
+            }
+
+            $mime = $node->getAttribute('mimeCode');
+            if ($mime !== '' && !CodeList::contains(CodeLists::MIME, $mime)) {
+                $this->addError(
+                    'BR-CL-24          : '
+                    . $this->t->translate('BR.CL.24'),
+                    $node
+                );
+            }
+        }
+    }
+
+    private function validateAllowanceChargeReasonCodes(): void
+    {
+        if ($this->xpath === null) {
+            return;
+        }
+
+        $nodes = $this->xpath->query('//cac:AllowanceCharge');
+
+        if ($nodes === false) {
+            return;
+        }
+
+        foreach ($nodes as $node) {
+            if (!($node instanceof DOMElement)) {
+                continue;
+            }
+
+            $reasonCode = $this->getNodeValue(
+                'cbc:AllowanceChargeReasonCode',
+                $node
+            );
+
+            if ($reasonCode === null) {
+                continue;
+            }
+
+            $isCharge = $this->getNodeValue(
+                'cbc:ChargeIndicator',
+                $node
+            ) === 'true';
+
+            if ($isCharge
+                && !CodeList::contains(CodeLists::UNCL7161, $reasonCode)
+            ) {
+                $this->addError(
+                    'BR-CL-21: '
+                    . $this->t->translate('BR.CL.21'),
+                    $node
+                );
+            } elseif (!$isCharge
+                && !CodeList::contains(CodeLists::UNCL5189, $reasonCode)
+            ) {
+                $this->addError(
+                    'BR-CL-20: '
+                    . $this->t->translate('BR.CL.20'),
+                    $node
+                );
+            }
+        }
+    }
+
+    private function validateInvoicePeriodDescriptionCode(): void
+    {
+        $code = $this->getNodeValue(
+            '//cac:InvoicePeriod/cbc:DescriptionCode'
+        );
+
+        if ($code !== null && !CodeList::contains(CodeLists::UNCL2005, $code)) {
+            $this->addError(
+                'BR-CL-23: '
+                . $this->t->translate('BR.CL.23'),
+                $this->getNode('//cac:InvoicePeriod/cbc:DescriptionCode')
+            );
+        }
+    }
+
+    private function validateEndpointSchemeIDs(): void
+    {
+        if ($this->xpath === null) {
+            return;
+        }
+
+        $nodes = $this->xpath->query('//cbc:EndpointID');
+
+        if ($nodes === false) {
+            return;
+        }
+
+        foreach ($nodes as $node) {
+            if (!($node instanceof DOMElement)) {
+                continue;
+            }
+
+            $schemeID = $node->getAttribute('schemeID');
+            if ($schemeID !== ''
+                && !CodeList::contains(CodeLists::EAID, $schemeID)
+            ) {
+                $this->addError(
+                    'PEPPOL-CL-0008: '
+                    . $this->t->translate('PEPPOL.CL.0008'),
+                    $node
+                );
+            }
+        }
+    }
+
     private function validateCurrency(): void
     {
         if ($this->xpath === null
@@ -899,21 +1105,11 @@ class PeppolValidator
             ? $this->xpath->query($xpath, $contextNode)
             : $this->xpath->query($xpath);
 
-        if ($nodes === false || $nodes->length === 0) {
-            return null;
-        }
+        $first     = ($nodes !== false && $nodes->length > 0)
+            ? $nodes->item(0) : null;
+        $nodeValue = $first?->nodeValue;
 
-        $value = $nodes->item(0);
-        if ($value === null) {
-            return null;
-        }
-
-        $nodeValue = $value->nodeValue;
-        if ($nodeValue === null) {
-            return null;
-        }
-
-        return trim($nodeValue);
+        return $nodeValue !== null ? trim($nodeValue) : null;
     }
 
     /**
@@ -943,6 +1139,236 @@ class PeppolValidator
 
         // Ensure we only return DOMNode, not DOMNameSpaceNode
         return ($node instanceof DOMNode) ? $node : null;
+    }
+
+    private function addWarning(
+        string $message,
+        ?DOMNode $node = null
+    ): void {
+        $this->warnings[] = [
+            'message'  => $message,
+            'line'     => $node?->getLineNo(),
+            'xpath'    => $node !== null ? $this->getNodeXPath($node) : null,
+        ];
+    }
+
+    // ── PEPPOL-COMMON-R040–R053: endpoint / party ID format checks ────────
+
+    private function validateEndpointSchemeFormats(): void
+    {
+        if ($this->xpath === null) {
+            return;
+        }
+
+        $nodes = $this->xpath->query(
+            '//cbc:EndpointID[@schemeID] | '
+            . '//cac:PartyIdentification/cbc:ID[@schemeID] | '
+            . '//cbc:CompanyID[@schemeID]'
+        );
+
+        if ($nodes === false) {
+            return;
+        }
+
+        foreach ($nodes as $node) {
+            if (!($node instanceof DOMElement)) {
+                continue;
+            }
+            $this->applySchemeFormatRule($node);
+        }
+    }
+
+    private function applySchemeFormatRule(DOMElement $node): void
+    {
+        $schemeID = $node->getAttribute('schemeID');
+        $value    = trim((string) $node->nodeValue);
+        if ($value === '') {
+            return;
+        }
+        $this->applyFatalSchemeRules($schemeID, $value, $node);
+        $this->applyWarningSchemeRules($schemeID, $value, $node);
+    }
+
+    private function applyFatalSchemeRules(
+        string $schemeID, string $value, DOMElement $node
+    ): void {
+        if ($schemeID === '0088' && !$this->checkGLN($value)) {
+            $this->addError('PEPPOL-COMMON-R040: '
+                . $this->t->translate('peppol.common.r040'), $node);
+        } elseif ($schemeID === '0192' && !$this->checkMod11($value)) {
+            $this->addError('PEPPOL-COMMON-R041: '
+                . $this->t->translate('peppol.common.r041'), $node);
+        } elseif ($schemeID === '0208' && !$this->checkMod97BE($value)) {
+            $this->addError('PEPPOL-COMMON-R043: '
+                . $this->t->translate('peppol.common.r043'), $node);
+        } elseif ($schemeID === '0007' && !$this->checkSEOrgnr($value)) {
+            $this->addError('PEPPOL-COMMON-R049: '
+                . $this->t->translate('peppol.common.r049'), $node);
+        } elseif ($schemeID === '0151' && !$this->checkABN($value)) {
+            $this->addError('PEPPOL-COMMON-R050: '
+                . $this->t->translate('peppol.common.r050'), $node);
+        }
+    }
+
+    private function applyWarningSchemeRules(
+        string $schemeID, string $value, DOMElement $node
+    ): void {
+        if ($schemeID === '0184' && !$this->checkDanishCVR($value)) {
+            $this->addWarning('PEPPOL-COMMON-R042: '
+                . $this->t->translate('peppol.common.r042'), $node);
+        } elseif ($schemeID === '0201' && !$this->checkCodiceIPA($value)) {
+            $this->addWarning('PEPPOL-COMMON-R044: '
+                . $this->t->translate('peppol.common.r044'), $node);
+        } elseif ($schemeID === '0210' && !$this->checkCF($value)) {
+            $this->addWarning('PEPPOL-COMMON-R045: '
+                . $this->t->translate('peppol.common.r045'), $node);
+        } elseif ($schemeID === '9907' && !$this->checkCF($value)) {
+            $this->addWarning('PEPPOL-COMMON-R046: '
+                . $this->t->translate('peppol.common.r046'), $node);
+        } elseif ($schemeID === '0211' && !$this->checkPIVAseIT($value)) {
+            $this->addWarning('PEPPOL-COMMON-R047: '
+                . $this->t->translate('peppol.common.r047'), $node);
+        } elseif ($schemeID === '0096' && !$this->checkDanishCC($value)) {
+            $this->addWarning('PEPPOL-COMMON-R052: '
+                . $this->t->translate('peppol.common.r052'), $node);
+        } elseif ($schemeID === '0198' && !$this->checkDanishERSTORG($value)) {
+            $this->addWarning('PEPPOL-COMMON-R053: '
+                . $this->t->translate('peppol.common.r053'), $node);
+        }
+    }
+
+    private function checkGLN(string $val): bool
+    {
+        if (!preg_match('/^\d+$/', $val)) {
+            return false;
+        }
+        $len        = strlen($val);
+        $checkDigit = (int) $val[$len - 1];
+        $main       = array_reverse(str_split(substr($val, 0, $len - 1)));
+        $sum        = 0;
+        foreach ($main as $i => $d) {
+            $sum += (int) $d * (1 + (($i + 1) % 2) * 2);
+        }
+        return (10 - ($sum % 10)) % 10 === $checkDigit;
+    }
+
+    private function checkMod11(string $val): bool
+    {
+        if (!preg_match('/^\d+$/', $val) || (float) $val <= 0) {
+            return false;
+        }
+        $len        = strlen($val);
+        $checkDigit = (int) $val[$len - 1];
+        $main       = array_reverse(str_split(substr($val, 0, $len - 1)));
+        $sum        = 0;
+        foreach ($main as $i => $d) {
+            $sum += (int) $d * (($i % 6) + 2);
+        }
+        return (11 - ($sum % 11)) % 11 === $checkDigit;
+    }
+
+    private function checkMod97BE(string $val): bool
+    {
+        if (!preg_match(self::REGEX_10_DIGITS, $val)) {
+            return false;
+        }
+        $check      = (int) substr($val, 8, 2);
+        $calculated = 97 - ((int) substr($val, 0, 8) % 97);
+        return $check === $calculated;
+    }
+
+    private function checkDanishCVR(string $val): bool
+    {
+        if (strlen($val) === 10 && str_starts_with($val, 'DK')) {
+            return (bool) preg_match('/^DK\d{8}$/', $val);
+        }
+        return (bool) preg_match('/^\d{8}$/', $val);
+    }
+
+    private function checkDanishCC(string $val): bool
+    {
+        return (bool) preg_match(self::REGEX_10_DIGITS, $val);
+    }
+
+    private function checkDanishERSTORG(string $val): bool
+    {
+        return (bool) preg_match('/^DK\d{8}$/', $val);
+    }
+
+    private function checkCodiceIPA(string $val): bool
+    {
+        return (bool) preg_match('/^[A-Za-z0-9]{6}$/', $val);
+    }
+
+    private function checkItalianPIVA(string $val): int
+    {
+        /** @var array<int,int> $doubleMap */
+        $doubleMap = [0, 2, 4, 6, 8, 1, 3, 5, 7, 9];
+        $sum = 0;
+        $len = strlen($val);
+        for ($i = 0; $i < $len; $i++) {
+            $d    = (int) $val[$i];
+            $sum += ($i % 2 === 0) ? $d : $doubleMap[$d];
+        }
+        return $sum % 10;
+    }
+
+    private function checkCF(string $val): bool
+    {
+        $val = trim($val);
+        if (strlen($val) === 16) {
+            return (bool) preg_match(
+                '/^[A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z]$/i',
+                $val
+            );
+        }
+        if (strlen($val) === 11 && preg_match(self::REGEX_11_DIGITS, $val)) {
+            return $this->checkItalianPIVA($val) === 0;
+        }
+        return false;
+    }
+
+    private function checkPIVAseIT(string $val): bool
+    {
+        return preg_match(self::REGEX_11_DIGITS, $val) === 1
+            && $this->checkItalianPIVA($val) === 0;
+    }
+
+    private function checkSEOrgnr(string $val): bool
+    {
+        if (!preg_match(self::REGEX_10_DIGITS, $val)) {
+            return false;
+        }
+        $main       = strrev(substr($val, 0, 9));
+        $checkDigit = (int) $val[9];
+        $sum        = 0;
+        for ($i = 0; $i < 9; $i++) {
+            $n = (int) $main[$i];
+            if ($i % 2 === 0) {
+                $d    = $n * 2;
+                $sum += ($d % 10) + intdiv($d, 10);
+            } else {
+                $sum += $n;
+            }
+        }
+        return (10 - $sum % 10) % 10 === $checkDigit;
+    }
+
+    
+    private function checkABN(string $val): bool
+    {
+        if (!preg_match(self::REGEX_11_DIGITS, $val)) {
+            return false;
+        }
+        /** @var array<int<0,10>, int> $weights */
+        $weights = [10, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19];
+        $digits  = str_split($val);
+        $digits[0] = (string) ((int) $digits[0] - 1);
+        $sum = 0;
+        for ($i = 0; $i <= 10; $i++) {
+            $sum += (int) $digits[$i] * $weights[$i];
+        }
+        return $sum % 89 === 0;
     }
 
     private function getXMLErrors(): string
@@ -993,70 +1419,14 @@ class PeppolValidator
         ];
     }
 
-    /**
-     * Add a warning with line number tracking
-     *
-     * @param string $message Warning message
-     * @param DOMNode|null $node The node where warning occurred
-     * @param string|null $xpath XPath to the element (optional)
-     */
-    private function addWarning(
-        string $message,
-        ?DOMNode $node = null,
-        ?string $xpath = null
-    ): void {
-        $lineNo = null;
-        $computedXPath = $xpath;
-
-        if ($node !== null) {
-            $lineNo = $node->getLineNo();
-
-            if ($computedXPath === null) {
-                $computedXPath = $this->getNodeXPath($node);
-            }
-        }
-
-        $this->warnings[] = [
-            'message' => $message,
-            'line' => $lineNo,
-            'xpath' => $computedXPath,
-        ];
-    }
-
-    /**
-     * Build XPath for a given node
-     *
-     * @param DOMNode $node The node
-     * @return string XPath expression
-     */
+    /** @param DOMNode $node The node */
     private function getNodeXPath(DOMNode $node): string
     {
-        $path = '';
-
-        while ($node !== null && $node->nodeType === XML_ELEMENT_NODE) {
-            $nodeName = $node->nodeName;
-
-            // Count preceding siblings with same name
-            $position = 1;
-            $sibling = $node->previousSibling;
-            while ($sibling !== null) {
-                if ($sibling->nodeType === XML_ELEMENT_NODE
-                    && $sibling->nodeName === $nodeName
-                ) {
-                    $position++;
-                }
-                $sibling = $sibling->previousSibling;
-            }
-
-            $path = "/{$nodeName}[{$position}]" . $path;
-            $node = $node->parentNode;
-        }
-
-        return $path ?: '/';
+        return XPathHelper::buildPath($node);
     }
 
 /**
- * @return array<int, array{message: string, line: int|null, xpath: string|null}>
+ * @return array<int, array{rule: string, text: string, line: string|null, xpath: string|null}>
  */
     public function getErrors(): array
     {
@@ -1104,7 +1474,7 @@ class PeppolValidator
         $formatted = [];
 
         foreach ($this->errors as $error) {
-            $msg = $error['message'];
+            $msg = $error['rule'] . ' ' . $error['text'];
 
             if ($error['line'] !== null) {
                 $msg = "[Line {$error['line']}] " . $msg;

@@ -6,12 +6,23 @@
       "Bash(vendor/bin/phpunit Tests/Unit/Invoice/Entity/ --no-coverage)",
       "Bash(php c:/wamp64/www/invoice/vendor/bin/phpunit c:/wamp64/www/invoice/Tests/Unit/ --no-coverage)",
       "Bash(c:/wamp64/www/invoice/node_modules/.bin/sass --version)",
-      "Bash(npx sass *)",
+      "Bash(npx sass :*)",
       "Bash(powershell -Command \"Get-Content 'c:\\\\wamp64\\\\www\\\\invoice\\\\src\\\\Invoice\\\\Asset\\\\invoice\\\\css\\\\style.css' | Measure-Object -Line\")",
       "Bash(grep -nP \"^\\\\s*\\\\{$\" \"c:/wamp64/www/invoice/src/Invoice/Asset/invoice/css/style.css\")",
       "Bash(awk 'NR>=8430 && NR<=8460' \"c:/wamp64/www/invoice/src/Invoice/Asset/invoice/css/style.css\")",
       "Bash(lighthouse --version)",
-      "Bash(vendor/bin/psalm --no-cache)"
+      "Bash(vendor/bin/psalm --no-cache)",
+      "Bash(gh api :*)",
+      "Bash(php vendor/bin/psalm --no-cache)",
+      "Bash(curl -s \"https://raw.githubusercontent.com/OpenPEPPOL/peppol-bis-invoice-3/master/rules/sch/CEN-EN16931-UBL.sch\" -o \"C:\\\\wamp64\\\\www\\\\invoice\\\\CEN-EN16931-UBL.sch\")",
+      "Bash(gh api *)",
+      "Bash(powershell *)",
+      "Bash(vendor/bin/psalm --no-cache src/Invoice/Helpers/Peppol/)",
+      "Bash(php -v)",
+      "Bash(mkdir -p src/Invoice/Helpers/Peppol/Emit/Vo)"
+    ],
+    "additionalDirectories": [
+      "c:\\wamp64\\www\\invoice\\src\\Invoice\\Helpers\\Peppol\\Emit"
     ]
   },
   "hooks": {
