@@ -32,6 +32,8 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 **Recent Implementations**
 
+[Peppol Schematron Validator — Route 1](docs/PEPPOL_SCHEMATRON_VALIDATOR_ROUTE1.md) — `SchematronRuleRunner` evaluates `PEPPOL-EN16931-UBL.sch` directly against the invoice DOM at runtime; XPath 2.0 subset implemented in PHP (`normalize-space`, `substring`, `translate`, `castable as`, sequence constructors, `for…return`, axis `::` steps); ten `u:` checksum functions wired from existing `PeppolValidator` methods; hand-written rule methods gated off when `.sch` file present (June 2026)
+
 [Peppol Schematron Code Generation](docs/PEPPOL_SCHEMATRON_CODEGEN.md) — PHP/TypeScript/Scala validator files generated from the official Peppol BIS Billing 3.0 Schematron `.sch` file; `bin/generate-php-validators.php`, `bin/generate-ts-validators.php`, `bin/generate-scala-validators.php`; VO layer; PHP upgrade path replacing `PeppolValidator` XPath methods with a hydrator + generated functions (June 2026)
 
 [TypeScript Vitest Coverage](docs/TYPESCRIPT_VITEST_COVERAGE.md) — Vitest + jsdom + v8 coverage wired into CI for `inv-index.ts`, `list-utils.ts`, and `quote-index.ts`; `phpunit.xml.dist` case fix for Linux CI; PHP and TS coverage fed to SonarCloud; coverage badge added (May 2026)
