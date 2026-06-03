@@ -260,6 +260,27 @@ final class XPathParserTest extends TestCase
         self::assertSame(ChecksumAlgorithm::Mod11, $ast->algorithm);
     }
 
+    public function testFunctionCallWithSubscriptBecomesPath(): void
+    {
+        // tokenize(...)[7] — postfix [n] on a function call must be collected as a
+        // single raw Path so DOMXPath receives the whole expression intact.
+        $ast = $this->p->parse("tokenize(normalize-space(cbc:ProfileID), ':')[7]");
+        self::assertInstanceOf(Path::class, $ast);
+        self::assertStringContainsString('tokenize(', $ast->xpath);
+        self::assertStringContainsString('[7]', $ast->xpath);
+    }
+
+    public function testFunctionCallSubscriptInIfThenElse(): void
+    {
+        // The $profile let variable pattern in Peppol BIS 3.0:
+        // if (cond) then tokenize(str, ':')[7] else 'Unknown'
+        $ast = $this->p->parse("if (cbc:ProfileID) then tokenize(cbc:ProfileID, ':')[7] else 'Unknown'");
+        self::assertInstanceOf(IfThenElse::class, $ast);
+        self::assertInstanceOf(Path::class, $ast->then);
+        self::assertStringContainsString('[7]', $ast->then->xpath);
+        self::assertInstanceOf(Literal::class, $ast->else);
+    }
+
     public function testParseAxisExpression(): void
     {
         // preceding-sibling:: and following-sibling:: must survive as raw Path nodes

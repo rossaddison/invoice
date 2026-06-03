@@ -204,13 +204,21 @@ final class XPathParser
         $nextType = ($this->tokens[$this->pos + 1] ?? ['type' => ''])['type'];
 
         if ($t['type'] === XPathTokenizer::T_NAME) {
-            return match ($t['value']) {
+            $savedPos = $this->pos;
+            $result   = match ($t['value']) {
                 'some', 'every', 'for' => $this->parseQuantified($t['value']),
                 'if'            => $this->parseIfThenElse(),
                 default         => $nextType === XPathTokenizer::T_LPAREN
                                     ? $this->parseFunctionCall($t['value'])
                                     : $this->collectPath(),
             };
+            // funcCall(args)[predicate] — the subscript was not consumed by parseFunctionCall.
+            // Backtrack and re-collect the whole expression as a raw Path for DOMXPath.
+            if ($nextType === XPathTokenizer::T_LPAREN && $this->tokenIs(XPathTokenizer::T_LBRACKET)) {
+                $this->pos = $savedPos;
+                return $this->collectPath();
+            }
+            return $result;
         }
 
         // $var/path, $var//path, or $var[n] — collect as a raw path so DOMXPath receives it intact.

@@ -39,13 +39,14 @@ final class SchematronRuleRunner
     /**
      * Validate $document against all rules in $doc and return every violation found.
      *
-     * @return ValidationViolation[]
+     * @return array<int, ValidationViolation>
      */
     public function run(SchematronDocument $doc, DOMDocument $document): array
     {
         $xpath = new DOMXPath($document);
         $this->registerNamespaces($xpath, $doc->namespaces);
         $bindings   = $this->buildBindings($doc, $xpath);
+        /** @var array<int, ValidationViolation> $violations */
         $violations = [];
 
         foreach ($doc->rules as $rule) {
@@ -91,7 +92,7 @@ final class SchematronRuleRunner
      * Run all assertions in one rule and return any violations.
      *
      * @param array<string, mixed> $bindings
-     * @return ValidationViolation[]
+     * @return array<int, ValidationViolation>
      */
     private function runRule(Rule $rule, DOMXPath $xpath, array $bindings): array
     {

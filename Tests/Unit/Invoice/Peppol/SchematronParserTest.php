@@ -72,6 +72,26 @@ final class SchematronParserTest extends TestCase
         self::assertSame([], $doc->variables);
     }
 
+    public function testLetElementIsParsedAsVariable(): void
+    {
+        // The Peppol BIS Billing 3.0 Schematron uses <let> not <variable>.
+        // e.g.: <let name="documentCurrencyCode" value="/*/cbc:DocumentCurrencyCode"/>
+        $xml = $this->sch('<let name="documentCurrencyCode" value="/*/cbc:DocumentCurrencyCode"/>');
+        $doc = $this->parser->parseString($xml);
+        self::assertArrayHasKey('documentCurrencyCode', $doc->variables);
+    }
+
+    public function testLetAndVariableCoexist(): void
+    {
+        $xml = $this->sch(
+            '<variable name="fromSelect" select="//cbc:ID"/>'
+            . '<let name="fromValue" value="//cbc:Note"/>'
+        );
+        $doc = $this->parser->parseString($xml);
+        self::assertArrayHasKey('fromSelect', $doc->variables);
+        self::assertArrayHasKey('fromValue',  $doc->variables);
+    }
+
     // ── Rules and assertions ──────────────────────────────────────────────────
 
     public function testSingleAssertIsParsed(): void

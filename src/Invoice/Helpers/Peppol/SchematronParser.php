@@ -122,26 +122,29 @@ final class SchematronParser
     // ── Schema-level variables ─────────────────────────────────────────────────
 
     /**
-     * Collect <sch:variable> declarations at schema/pattern level.
+     * Collect <sch:variable> and <sch:let> declarations at schema/pattern level.
      *
-     * Variables defined here are typically referenced in assertion test expressions
-     * as $name.  Their select expressions are parsed into the AST so the evaluator
-     * can resolve them before running rule assertions.
+     * The Peppol BIS Billing 3.0 Schematron uses <sch:let name="x" value="expr"/>
+     * while some Schematrons use <sch:variable name="x" select="expr"/>.
+     * Both are equivalent; this method handles either attribute name.
      *
      * @return array<string, Expression>
      */
     private function collectVariables(DOMXPath $xpath): array
     {
         $variables = [];
-        // Schema-level variables (direct children of <sch:schema> or <sch:pattern>)
-        $nodes = $xpath->query('//sch:variable');
+        $nodes = $xpath->query('//sch:variable | //sch:let');
         if ($nodes === false) {
             return $variables;
         }
         foreach ($nodes as $node) {
             /** @var DOMElement $node */
             $name   = $node->getAttribute('name');
+            // <sch:variable> uses @select; <sch:let> uses @value
             $select = $node->getAttribute('select');
+            if ($select === '') {
+                $select = $node->getAttribute('value');
+            }
             if ($name === '' || $select === '') {
                 continue;
             }

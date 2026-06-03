@@ -272,6 +272,7 @@ class PeppolValidator
     /** @return array<int, \App\Invoice\Helpers\Peppol\Rule\ValidationViolation> */
     private function runSchematron(): array
     {
+        /** @var \App\Invoice\Helpers\Peppol\SchematronDocument|null $schDoc */
         static $schDoc = null;
         if ($schDoc === null) {
             $schDoc = (new SchematronParser())->parseFile(self::schPath());
@@ -285,6 +286,10 @@ class PeppolValidator
     /** @return array<int, \App\Invoice\Helpers\Peppol\Rule\ValidationViolation> */
     private function runHandwrittenRules(): array
     {
+        if ($this->xpath === null) {
+            return [];
+        }
+
         $context = new ValidationContext(
             documentType:         $this->documentType,
             documentCurrencyCode: $this->documentCurrencyCode,
