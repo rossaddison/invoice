@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\Helpers\Peppol;
 
+use App\Invoice\Helpers\Peppol\Ast\ChecksumAlgorithm;
+use App\Invoice\Helpers\Peppol\Ast\ExpressionEvaluator;
 use App\Invoice\Helpers\Peppol\Calculator\InvoiceLineCalculator;
 use App\Invoice\Helpers\Peppol\Calculator\MonetaryTotalCalculator;
 use App\Invoice\Helpers\Peppol\Calculator\TaxCalculator;
@@ -15,6 +17,9 @@ use App\Invoice\Helpers\Peppol\Rule\EN16931\PEPPOL_EN16931_R003;
 use App\Invoice\Helpers\Peppol\Rule\RuleRegistry;
 use App\Invoice\Helpers\Peppol\Rule\Severity;
 use App\Invoice\Helpers\Peppol\Rule\ValidationContext;
+use App\Invoice\Helpers\Peppol\SchematronParser;
+use App\Invoice\Helpers\Peppol\SchematronRuleRunner;
+use Yiisoft\Aliases\Aliases;
 use App\Invoice\Helpers\Peppol\XPathHelper;
 use DOMDocument;
 use DOMElement;
@@ -62,63 +67,10 @@ class PeppolValidator
             . 'xsd:CreditNote-2',
     ];
 
-    /**
-     * What?  The Peppol business-process profile number extracted from cbc:ProfileID,
-     *        e.g. '01' for BIS Billing 3.0 ('urn:fdc:peppol.eu:2017:poacc:billing:01:1.0').
-     * Why?   The profile identifies which Peppol process governs this invoice; it must match
-     *        the expected pattern or rules R001 and R007 will fire.
-     * When?  Set once during extractDocumentVariables() when the XML is loaded; then read
-     *        inside validateDocumentLevel().
-     * Where? Checked in validateDocumentLevel() to detect an unrecognised profile format.
-     * How?   Set by matching cbc:ProfileID against a regex; defaults to the translated
-     *        'reason.unknown' string if the element is absent or the pattern does not match.
-     */
     private ?string $profile = null;
-    /**
-     * What?  The two-letter ISO 3166 country code of the invoice seller, e.g. 'GB' or 'DE'.
-     * Why?   Several Peppol rules are country-specific (e.g. rule R002 relaxes the note limit
-     *        only for DE-to-DE invoices); the validator must know the supplier's country.
-     * When?  Set once by extractSupplierCountry() during extractDocumentVariables() when the
-     *        XML is loaded.
-     * Where? Read in validateNoteRestrictions() alongside $customerCountry.
-     * How?   The first two characters of the seller's VAT CompanyID are taken and uppercased;
-     *        falls back to the tax representative VAT, then the postal address; defaults to 'XX'.
-     */
     private ?string $supplierCountry = null;
-    /**
-     * What?  The two-letter ISO 3166 country code of the invoice buyer, e.g. 'GB' or 'DE'.
-     * Why?   Needed alongside $supplierCountry to apply country-pair rules, currently the
-     *        DE-to-DE note-count relaxation in rule R002.
-     * When?  Set once by extractCustomerCountry() during extractDocumentVariables() when the
-     *        XML is loaded.
-     * Where? Read in validateNoteRestrictions() alongside $supplierCountry.
-     * How?   The first two characters of the buyer's VAT CompanyID are taken and uppercased;
-     *        falls back to the postal address country; defaults to 'XX' if neither is present.
-     */
     private ?string $customerCountry = null;
-    /**
-     * What?  The three-letter ISO 4217 currency code declared in cbc:DocumentCurrencyCode,
-     *        e.g. 'GBP' or 'EUR', that every monetary amount in the invoice must use.
-     * Why?   Peppol rule R051 requires all amount elements to carry the document currency;
-     *        rules BR-CL-04 and R005 also reference this value.
-     * When?  Set once during extractDocumentVariables() when the XML is loaded.
-     * Where? Read in validateCurrency(), validateCurrencyCodeLists(), validateTaxAmountsSameSign(),
-     *        and validateTaxCurrencyNotEqualDocCurrency().
-     * How?   Retrieved with getNodeValue('//cbc:DocumentCurrencyCode'); stored as a trimmed
-     *        string or null if the element is absent.
-     */
     private ?string $documentCurrencyCode = null;
-    /**
-     * What?  A string recording whether the loaded XML is an 'Invoice' or a 'CreditNote',
-     *        detected from the document's root namespace.
-     * Why?   Some Peppol rules only apply to one document type (e.g. R080 — max one project
-     *        reference — is credit-note-only); the validator must branch on type.
-     * When?  Set once during extractDocumentVariables() when the XML is loaded; checked at
-     *        the top of validate() to abort early if still null.
-     * Where? Read in validate() (null guard) and validateCreditNoteProjectReference().
-     * How?   Set by querying for a //ubl-invoice:Invoice or //ubl-creditnote:CreditNote
-     *        namespace-qualified root element; remains null if neither is found.
-     */
     private ?string $documentType = null;
 
     public function __construct(
@@ -254,23 +206,40 @@ class PeppolValidator
         }
 
         $this->validateUBLVersion();
-        $this->validateEmptyElements();
-        $this->validateDocumentLevel();
-        $this->validateParties();
-        $this->validateAllowanceCharge();
-        $this->validatePaymentMeans();
-        $this->validateCurrency();
-        $this->validateCodeLists();
+
+        // When the Schematron file is present the runner covers all business rules
+        // (R008, R004, R005, R007, R010, R020, R040–R080, COMMON-R040–R053, BR-CL-xx).
+        // Skip the hand-written equivalents to avoid duplicate errors.
+        if (!is_file(self::schPath())) {
+            $this->validateEmptyElements();
+            $this->validateDocumentLevel();
+            $this->validateParties();
+            $this->validateAllowanceCharge();
+            $this->validatePaymentMeans();
+            $this->validateCurrency();
+            $this->validateCodeLists();
+        }
+
+        // Calculators run regardless — they perform rounding/arithmetic checks that
+        // complement but are more detailed than the Schematron's amount assertions.
         $this->validateWithCalculators();
         $this->validateWithRegistry();
 
         return empty($this->errors);
     }
 
+    private static function schPath(): string
+    {
+        $aliases = new Aliases(['@peppol' => dirname(__DIR__, 4) . '/resources/peppol']);
+        return $aliases->get('@peppol') . '/PEPPOL-EN16931-UBL.sch';
+    }
+
     /**
-     * Run all registered ValidationRule classes and fan their violations into
-     * $this->errors (Fatal) or $this->warnings (Warning / Info), preserving the
-     * existing array shape expected by getErrors() and getWarnings().
+     * Run all Schematron rules via SchematronRuleRunner when the .sch file is present,
+     * falling back to the three hand-written EN16931 rules otherwise.
+     *
+     * The parsed SchematronDocument is cached statically so the file is only read
+     * and parsed once per PHP process, regardless of how many invoices are validated.
      */
     private function validateWithRegistry(): void
     {
@@ -278,6 +247,44 @@ class PeppolValidator
             return;
         }
 
+        $violations = is_file(self::schPath())
+            ? $this->runSchematron()
+            : $this->runHandwrittenRules();
+
+        foreach ($violations as $v) {
+            if ($v->severity === Severity::Warning || $v->severity === Severity::Info) {
+                $this->warnings[] = [
+                    'message' => $v->ruleId . ': ' . $v->message,
+                    'line'    => $v->line !== null ? (int) $v->line : null,
+                    'xpath'   => $v->xpath,
+                ];
+            } else {
+                $this->errors[] = [
+                    'rule'  => $v->ruleId,
+                    'text'  => $v->message,
+                    'line'  => $v->line,
+                    'xpath' => $v->xpath,
+                ];
+            }
+        }
+    }
+
+    /** @return array<int, \App\Invoice\Helpers\Peppol\Rule\ValidationViolation> */
+    private function runSchematron(): array
+    {
+        static $schDoc = null;
+        if ($schDoc === null) {
+            $schDoc = (new SchematronParser())->parseFile(self::schPath());
+        }
+
+        return (new SchematronRuleRunner(
+            new ExpressionEvaluator($this->checksumHandlers())
+        ))->run($schDoc, $this->dom);
+    }
+
+    /** @return array<int, \App\Invoice\Helpers\Peppol\Rule\ValidationViolation> */
+    private function runHandwrittenRules(): array
+    {
         $context = new ValidationContext(
             documentType:         $this->documentType,
             documentCurrencyCode: $this->documentCurrencyCode,
@@ -293,24 +300,28 @@ class PeppolValidator
             new PEPPOL_EN16931_R003($this->t),
         );
 
-        foreach ($registry->run($this->xpath, $context) as $v) {
-            if ($v->severity === Severity::Warning
-                || $v->severity === Severity::Info
-            ) {
-                $this->warnings[] = [
-                    'message' => $v->ruleId . ': ' . $v->message,
-                    'line'    => $v->line !== null ? (int) $v->line : null,
-                    'xpath'   => $v->xpath,
-                ];
-            } else {
-                $this->errors[] = [
-                    'rule'  => $v->ruleId,
-                    'text'  => $v->message,
-                    'line'  => $v->line,
-                    'xpath' => $v->xpath,
-                ];
-            }
-        }
+        return $registry->run($this->xpath, $context);
+    }
+
+    /**
+     * Map each ChecksumAlgorithm to the corresponding private check* method so
+     * ExpressionEvaluator can dispatch checksum calls without depending on this class.
+     *
+     * @return array<string, callable(string): bool>
+     */
+    private function checksumHandlers(): array
+    {
+        return [
+            ChecksumAlgorithm::GLN->value            => fn(string $v) => $this->checkGLN($v),
+            ChecksumAlgorithm::Mod11->value          => fn(string $v) => $this->checkMod11($v),
+            ChecksumAlgorithm::Mod97BE->value        => fn(string $v) => $this->checkMod97BE($v),
+            ChecksumAlgorithm::SEOrgnr->value        => fn(string $v) => $this->checkSEOrgnr($v),
+            ChecksumAlgorithm::ABN->value            => fn(string $v) => $this->checkABN($v),
+            ChecksumAlgorithm::CodiceFiscale->value  => fn(string $v) => $this->checkCF($v),
+            ChecksumAlgorithm::PIVAseIT->value       => fn(string $v) => $this->checkPIVAseIT($v),
+            ChecksumAlgorithm::CodiceIPA->value      => fn(string $v) => $this->checkCodiceIPA($v),
+            ChecksumAlgorithm::DanishCVR->value      => fn(string $v) => $this->checkDanishCVR($v),
+        ];
     }
 
     /**
@@ -334,13 +345,15 @@ class PeppolValidator
         }
     }
 
+    private const array UBL_ACCEPTED_VERSIONS = ['2.1', '2.2', '2.3', '2.4'];
+
     private function validateUBLVersion(): void
     {
         $version = $this->getNodeValue('//cbc:UBLVersionID');
 
-        if ($version !== null && $version !== '2.4') {
+        if ($version !== null && !in_array($version, self::UBL_ACCEPTED_VERSIONS, true)) {
             $this->addError(
-                'UBL-VERSION       : '
+                'UBL-VERSION: '
                 . $this->t->translate('ubl.version.required.2.4')
                 . ' (' . $version . ')',
                 $this->getNode('//cbc:UBLVersionID')
@@ -584,8 +597,9 @@ class PeppolValidator
         );
 
         if ($buyerEndpoint === null) {
-            // Buyer Electronic Address Required
-            $this->addError($this->t->translate('PEPPOL.EN16931.R010'),
+            $this->addError(
+                'PEPPOL-EN16931-R010: '
+                . $this->t->translate('PEPPOL.EN16931.R010'),
                 $this->getNode(self::XPATH_CUSTOMER_PARTY . 'cbc:EndpointID')
             );
         }
@@ -1194,19 +1208,19 @@ class PeppolValidator
     ): void {
         if ($schemeID === '0088' && !$this->checkGLN($value)) {
             $this->addError('PEPPOL-COMMON-R040: '
-                . $this->t->translate('peppol.common.r040'), $node);
+                . $this->t->translate('PEPPOL.COMMON.R040'), $node);
         } elseif ($schemeID === '0192' && !$this->checkMod11($value)) {
             $this->addError('PEPPOL-COMMON-R041: '
-                . $this->t->translate('peppol.common.r041'), $node);
+                . $this->t->translate('PEPPOL.COMMON.R041'), $node);
         } elseif ($schemeID === '0208' && !$this->checkMod97BE($value)) {
             $this->addError('PEPPOL-COMMON-R043: '
-                . $this->t->translate('peppol.common.r043'), $node);
+                . $this->t->translate('PEPPOL.COMMON.R043'), $node);
         } elseif ($schemeID === '0007' && !$this->checkSEOrgnr($value)) {
             $this->addError('PEPPOL-COMMON-R049: '
-                . $this->t->translate('peppol.common.r049'), $node);
+                . $this->t->translate('PEPPOL.COMMON.R049'), $node);
         } elseif ($schemeID === '0151' && !$this->checkABN($value)) {
             $this->addError('PEPPOL-COMMON-R050: '
-                . $this->t->translate('peppol.common.r050'), $node);
+                . $this->t->translate('PEPPOL.COMMON.R050'), $node);
         }
     }
 
@@ -1215,25 +1229,25 @@ class PeppolValidator
     ): void {
         if ($schemeID === '0184' && !$this->checkDanishCVR($value)) {
             $this->addWarning('PEPPOL-COMMON-R042: '
-                . $this->t->translate('peppol.common.r042'), $node);
+                . $this->t->translate('PEPPOL.COMMON.R042'), $node);
         } elseif ($schemeID === '0201' && !$this->checkCodiceIPA($value)) {
             $this->addWarning('PEPPOL-COMMON-R044: '
-                . $this->t->translate('peppol.common.r044'), $node);
+                . $this->t->translate('PEPPOL.COMMON.R044'), $node);
         } elseif ($schemeID === '0210' && !$this->checkCF($value)) {
             $this->addWarning('PEPPOL-COMMON-R045: '
-                . $this->t->translate('peppol.common.r045'), $node);
+                . $this->t->translate('PEPPOL.COMMON.R045'), $node);
         } elseif ($schemeID === '9907' && !$this->checkCF($value)) {
             $this->addWarning('PEPPOL-COMMON-R046: '
-                . $this->t->translate('peppol.common.r046'), $node);
+                . $this->t->translate('PEPPOL.COMMON.R046'), $node);
         } elseif ($schemeID === '0211' && !$this->checkPIVAseIT($value)) {
             $this->addWarning('PEPPOL-COMMON-R047: '
-                . $this->t->translate('peppol.common.r047'), $node);
+                . $this->t->translate('PEPPOL.COMMON.R047'), $node);
         } elseif ($schemeID === '0096' && !$this->checkDanishCC($value)) {
             $this->addWarning('PEPPOL-COMMON-R052: '
-                . $this->t->translate('peppol.common.r052'), $node);
+                . $this->t->translate('PEPPOL.COMMON.R052'), $node);
         } elseif ($schemeID === '0198' && !$this->checkDanishERSTORG($value)) {
             $this->addWarning('PEPPOL-COMMON-R053: '
-                . $this->t->translate('peppol.common.r053'), $node);
+                . $this->t->translate('PEPPOL.COMMON.R053'), $node);
         }
     }
 
@@ -1401,19 +1415,15 @@ class PeppolValidator
 
         if ($node !== null) {
             $lineNo = (string) $node->getLineNo();
-
-            // Try to build XPath if not provided
             if ($computedXPath === null) {
                 $computedXPath = $this->getNodeXPath($node);
             }
         }
 
-        /**
-         * @psalm-suppress PropertyTypeCoercion $this->errors
-         */
+        $parts = explode(': ', $message, 2);
         $this->errors[] = [
-            'rule' => substr($message, 0,19),
-            'text' => substr($message, 20, strlen($message)),
+            'rule' => rtrim($parts[0]),
+            'text' => $parts[1] ?? '',
             'line' => $lineNo,
             'xpath' => $computedXPath,
         ];

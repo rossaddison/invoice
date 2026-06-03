@@ -7,6 +7,7 @@ namespace App\Invoice\Helpers\Peppol;
 use App\Invoice\Helpers\Peppol\Ast\Abs;
 use App\Invoice\Helpers\Peppol\Ast\BinaryExpression;
 use App\Invoice\Helpers\Peppol\Ast\BinaryOperator;
+use App\Invoice\Helpers\Peppol\Ast\CastableAs;
 use App\Invoice\Helpers\Peppol\Ast\Checksum;
 use App\Invoice\Helpers\Peppol\Ast\ChecksumAlgorithm;
 use App\Invoice\Helpers\Peppol\Ast\Contains;
@@ -14,6 +15,7 @@ use App\Invoice\Helpers\Peppol\Ast\Count;
 use App\Invoice\Helpers\Peppol\Ast\Decimal;
 use App\Invoice\Helpers\Peppol\Ast\Every;
 use App\Invoice\Helpers\Peppol\Ast\Exists;
+use App\Invoice\Helpers\Peppol\Ast\ForExpression;
 use App\Invoice\Helpers\Peppol\Ast\Expression;
 use App\Invoice\Helpers\Peppol\Ast\FunctionCall;
 use App\Invoice\Helpers\Peppol\Ast\IfThenElse;
@@ -26,6 +28,11 @@ use App\Invoice\Helpers\Peppol\Ast\Round;
 use App\Invoice\Helpers\Peppol\Ast\Some;
 use App\Invoice\Helpers\Peppol\Ast\StartsWith;
 use App\Invoice\Helpers\Peppol\Ast\StringCast;
+use App\Invoice\Helpers\Peppol\Ast\NormalizeSpace;
+use App\Invoice\Helpers\Peppol\Ast\Sequence;
+use App\Invoice\Helpers\Peppol\Ast\StringLength;
+use App\Invoice\Helpers\Peppol\Ast\Substring;
+use App\Invoice\Helpers\Peppol\Ast\Translate;
 use App\Invoice\Helpers\Peppol\Ast\Sum;
 use App\Invoice\Helpers\Peppol\Ast\UpperCase;
 use App\Invoice\Helpers\Peppol\Ast\VariableRef;
@@ -128,6 +135,14 @@ final class XPathParser
     private function parseComparison(): Expression
     {
         $left = $this->parseAdditive();
+
+        // XPath 2.0 postfix type operators — lower precedence than additive, higher than and/or.
+        if ($this->tokenIs(XPathTokenizer::T_NAME, 'castable')) {
+            $this->pos++;
+            $this->consumeKeyword('as');
+            return new CastableAs($left, $this->consume(XPathTokenizer::T_NAME));
+        }
+
         $ops  = [
             XPathTokenizer::T_EQ => BinaryOperator::EQ,
             XPathTokenizer::T_NE => BinaryOperator::NE,
@@ -190,7 +205,7 @@ final class XPathParser
 
         if ($t['type'] === XPathTokenizer::T_NAME) {
             return match ($t['value']) {
-                'some', 'every' => $this->parseQuantified($t['value']),
+                'some', 'every', 'for' => $this->parseQuantified($t['value']),
                 'if'            => $this->parseIfThenElse(),
                 default         => $nextType === XPathTokenizer::T_LPAREN
                                     ? $this->parseFunctionCall($t['value'])
@@ -198,9 +213,11 @@ final class XPathParser
             };
         }
 
-        // $var/path or $var//path — collect as a raw path so DOMXPath receives it intact.
+        // $var/path, $var//path, or $var[n] — collect as a raw path so DOMXPath receives it intact.
         $isVarPath = $t['type'] === XPathTokenizer::T_VARIABLE
-            && ($nextType === XPathTokenizer::T_SLASH || $nextType === XPathTokenizer::T_DSLASH);
+            && ($nextType === XPathTokenizer::T_SLASH
+                || $nextType === XPathTokenizer::T_DSLASH
+                || $nextType === XPathTokenizer::T_LBRACKET);
 
         if ($isVarPath || in_array($t['type'], [XPathTokenizer::T_LPAREN, XPathTokenizer::T_SLASH, XPathTokenizer::T_DSLASH,
                                                  XPathTokenizer::T_AT, XPathTokenizer::T_DOT, XPathTokenizer::T_DOTDOT,
@@ -239,7 +256,18 @@ final class XPathParser
             'xs:decimal',
             'xs:integer'      => new Decimal($this->oneArg($args, $name)),
             'upper-case'      => new UpperCase($this->oneArg($args, $name)),
-            'string'          => new StringCast($this->oneArg($args, $name)),
+            'string'          => new StringCast(count($args) === 0 ? new Path('.') : $this->oneArg($args, $name)),
+            'normalize-space' => new NormalizeSpace(count($args) === 0 ? new Path('.') : $this->oneArg($args, $name)),
+            'string-length'   => new StringLength(count($args) === 0 ? new Path('.') : $this->oneArg($args, $name)),
+            'number'          => new Decimal($this->oneArg($args, $name)),
+            'substring'       => match (count($args)) {
+                2 => new Substring($args[0], $args[1], null),
+                3 => new Substring($args[0], $args[1], $args[2]),
+                default => throw new XPathParseException('substring() requires 2 or 3 arguments'),
+            },
+            'translate'       => count($args) === 3
+                ? new Translate($args[0], $args[1], $args[2])
+                : throw new XPathParseException('translate() requires 3 arguments'),
             'contains'        => count($args) === 2 ? new Contains($args[0], $args[1])
                                     : throw new XPathParseException('contains() requires 2 arguments'),
             'starts-with'     => count($args) === 2 ? new StartsWith($args[0], $args[1])
@@ -293,6 +321,10 @@ final class XPathParser
         $varName = $this->consume(XPathTokenizer::T_VARIABLE);
         $this->consumeKeyword('in');
         $in = $this->parseOr();
+        if ($kind === 'for') {
+            $this->consumeKeyword('return');
+            return new ForExpression($varName, $in, $this->parseOr());
+        }
         $this->consumeKeyword('satisfies');
         $satisfies = $this->parseOr();
         return $kind === 'some'
@@ -326,6 +358,18 @@ final class XPathParser
         }
         $savedPos = $this->pos++;
         $expr     = $this->parseOr();
+
+        // XPath 2.0 sequence constructor: (A, B, ...) — collect all comma-separated items.
+        if ($this->tokenIs(XPathTokenizer::T_COMMA)) {
+            $items = [$expr];
+            while ($this->tokenIs(XPathTokenizer::T_COMMA)) {
+                $this->pos++;
+                $items[] = $this->parseOr();
+            }
+            $this->consume(XPathTokenizer::T_RPAREN);
+            return new Sequence($items);
+        }
+
         $this->consume(XPathTokenizer::T_RPAREN);
         if ($this->tokenIs(XPathTokenizer::T_SLASH) || $this->tokenIs(XPathTokenizer::T_DSLASH) || $this->tokenIs(XPathTokenizer::T_LBRACKET)) {
             $this->pos = $savedPos;

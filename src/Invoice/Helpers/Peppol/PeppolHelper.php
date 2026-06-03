@@ -1195,6 +1195,21 @@ $country_helper->getCountryIdentificationCodeWithLeague(
 // https://kinsta.com/blog/php-8-2/#deprecate--string-interpolation
 // Note: The following string interpolation,
 // ie. curly brackets within double quotes, conforms with php 8.2 requirements
+
+                        // Optional elements — only emit when the source value is non-empty
+                        // to avoid R008 "Document MUST not contain empty elements."
+                        $lineDesc = $item->getDescription() ?? '';
+                        $lineNote = $lineDesc !== ''
+                            ? [['name' => "{$b}Note", 'value' => $lineDesc]]
+                            : [];
+                        $itemDesc = $lineDesc !== ''
+                            ? [['name' => "{$b}Description", 'value' => $lineDesc]]
+                            : [];
+                        $originCode = $item->getProduct()?->getProductCountryOfOriginCode() ?? '';
+                        $originCountry = $originCode !== ''
+                            ? [['name' => "{$a}OriginCountry", 'value' => [['name' => "{$b}IdentificationCode", 'value' => $originCode]]]]
+                            : [];
+
             $invoiceLines[$item_id] =
                 [
                     'name' => "{$a}InvoiceLine",
@@ -1203,10 +1218,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                             'name' => "{$b}ID",
                             'value' => (string) $item_id
                         ],
-                        [
-                            'name' => "{$b}Note",
-                            'value' => $item->getDescription()
-                        ],
+                        ...$lineNote,
                         [
                             'name' => "{$b}InvoicedQuantity",
                             'value' => (string) $item->getQuantity(),
@@ -1266,10 +1278,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                         [
                             'name' => "{$a}Item",
                             'value' => [
-                                [
-                                    'name' => "{$b}Description",
-                                    'value' => $item->getDescription()
-                                ],
+                                ...$itemDesc,
                                 [
                                     'name' => "{$b}Name",
                                     'value' => $item->getName()
@@ -1307,16 +1316,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                                         ],
                                     ],
                                 ],
-                                [
-                                    'name' => "{$a}OriginCountry",
-                                    'value' => [
-                                        [
-                                            'name' => "{$b}IdentificationCode",
-                                            'value' =>
-                        $item->getProduct()?->getProductCountryOfOriginCode()
-                                        ],
-                                    ],
-                                ],
+                                ...$originCountry,
                                 [
                                     'name' => "{$a}CommodityClassification",
                                     'value' => [

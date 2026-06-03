@@ -343,14 +343,24 @@ The validator registers and uses the following namespaces:
 
 ## Error Object Structure
 
-Each error/warning contains:
+Each error contains:
 
 ```php
 [
-    'rule' => 'PEPPOL-EN16931-RXXX',  // Rule identifier (first 19 chars)
-    'text' => 'Description of error',  // Error message
-    'line' => 42,                      // Line number (or null)
-    'xpath' => '/Invoice[1]/...'      // XPath location (or null)
+    'rule' => 'PEPPOL-EN16931-RXXX',  // Rule identifier (split on first ': ')
+    'text' => 'Description of error',  // Remainder of the message
+    'line' => '42',                    // DOM line number as string (or null)
+    'xpath' => '/Invoice[1]/...'       // XPath location (or null)
+]
+```
+
+Each warning contains:
+
+```php
+[
+    'message' => 'PEPPOL-COMMON-R042: ...',  // Full message string
+    'line'    => 42,                          // DOM line number as int (or null)
+    'xpath'   => '/Invoice[1]/...'            // XPath location (or null)
 ]
 ```
 
@@ -483,3 +493,162 @@ MIT License - See project license file for details.
 
 - **1.1.0** - Added complete line number tracking and XPath support
 - **1.0.0** - Initial release with core PEPPOL validation rules
+
+---
+
+## Internals
+
+This section documents the private design of `PeppolValidator` for
+contributors.  See also
+[PEPPOL_SCHEMATRON_CODEGEN.md](PEPPOL_SCHEMATRON_CODEGEN.md) for the
+code-generation pipeline that produces additional validators from the
+Schematron `.sch` file.
+
+### Lifecycle
+
+```
+new PeppolValidator($translator)
+        │
+        ▼
+  loadXML($xmlContent)
+    ├── DOMDocument::loadXML()
+    ├── DOMXPath namespace registration
+    └── extractDocumentVariables()        ← sets the five state fields below
+        │
+        ▼
+  validate()
+    ├── validateUBLVersion()
+    ├── validateEmptyElements()           R008
+    ├── validateDocumentLevel()           R004, R005, R007, R053, R054, R055, R080
+    ├── validateParties()                 R010, R020
+    ├── validateAllowanceCharge()         R040–R046
+    ├── validatePaymentMeans()            R061
+    ├── validateCurrency()                R051
+    ├── validateCodeLists()               BR-CL-xx
+    ├── validateWithCalculators()         delegates to Calculator classes
+    └── validateWithRegistry()            delegates to ValidationRule classes (R001–R003)
+```
+
+The five private state fields are set **once** by `extractDocumentVariables()`
+and treated as read-only throughout `validate()`.
+
+---
+
+### Private state fields
+
+#### `$profile`
+
+**What:** The two-digit Peppol business-process identifier extracted from
+`cbc:ProfileID`, e.g. `'01'` for BIS Billing 3.0
+(`urn:fdc:peppol.eu:2017:poacc:billing:01:1.0`).
+
+**Why:** The profile URI identifies which Peppol process governs this
+invoice.  If it is absent or does not match the expected URI pattern,
+rule R001 (via `RuleRegistry`) and R007 (inline in
+`validateDocumentLevel`) will fire.
+
+**How:** The full `cbc:ProfileID` string is matched against
+`/urn:fdc:peppol\.eu:2017:poacc:billing:(\d{2}):1\.0/`.  On a match,
+`$profile` gets the two-digit capture group (e.g. `'01'`).  If the
+element is absent or the pattern does not match, `$profile` is set to
+the translated `'reason.unknown'` string, which is what triggers R007.
+
+---
+
+#### `$supplierCountry`
+
+**What:** Two-letter ISO 3166-1 alpha-2 country code of the invoice
+seller, e.g. `'GB'` or `'DE'`.
+
+**Why:** Several Peppol rules are country-specific.  Currently R002
+(max one document-level `cbc:Note`) is relaxed when *both* supplier and
+customer are in Germany — DE-to-DE invoices may carry more than one note.
+More country-pair rules may be added in future Schematron versions.
+
+**How (fallback chain, first match wins):**
+
+| Priority | Source |
+|----------|--------|
+| 1 | First two chars (uppercased) of the seller's VAT `cbc:CompanyID` via `//cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme[TaxScheme/ID='VAT']/cbc:CompanyID` |
+| 2 | First two chars (uppercased) of the tax representative's VAT `cbc:CompanyID` via `//cac:TaxRepresentativeParty/…/cbc:CompanyID` |
+| 3 | `cbc:IdentificationCode` inside the seller's `cac:PostalAddress/cac:Country` |
+| 4 | `'XX'` (unknown) |
+
+---
+
+#### `$customerCountry`
+
+**What:** Two-letter ISO 3166-1 alpha-2 country code of the invoice
+buyer, e.g. `'GB'` or `'DE'`.
+
+**Why:** Required alongside `$supplierCountry` for country-pair rules —
+currently only the DE-to-DE relaxation in R002.
+
+**How (fallback chain, first match wins):**
+
+| Priority | Source |
+|----------|--------|
+| 1 | First two chars (uppercased) of the buyer's VAT `cbc:CompanyID` via `//cac:AccountingCustomerParty/cac:Party/…/cbc:CompanyID` |
+| 2 | `cbc:IdentificationCode` inside the buyer's `cac:PostalAddress/cac:Country` |
+| 3 | `'XX'` (unknown) |
+
+---
+
+#### `$documentCurrencyCode`
+
+**What:** Three-letter ISO 4217 currency code from
+`cbc:DocumentCurrencyCode`, e.g. `'GBP'` or `'EUR'`.
+
+**Why:** Every monetary amount in a Peppol invoice must use the
+document currency (rule R051).  The same value is checked by
+BR-CL-04 (currency in the allowed code list) and R005 (tax currency
+must differ from document currency when both are present).
+
+**How:** Retrieved directly from `//cbc:DocumentCurrencyCode` via
+`getNodeValue()`; stored as a trimmed string, or `null` if the element
+is absent.
+
+---
+
+#### `$documentType`
+
+**What:** `'Invoice'` or `'CreditNote'`, detected from the document's
+root namespace.
+
+**Why:** Some rules apply to only one document type.  R080 (max one
+`AdditionalDocumentReference` with `DocumentTypeCode = '50'`) is
+credit-note-only.  A `null` value means the root element was not
+recognised; `validate()` returns `false` immediately in that case.
+
+**How:** The document is queried for `//ubl-invoice:Invoice` and for
+`//ubl-creditnote:CreditNote`.  The first match sets the field; if
+neither is found it remains `null`.
+
+---
+
+### Rule infrastructure
+
+#### RuleRegistry (hand-written rules)
+
+`validateWithRegistry()` instantiates a `RuleRegistry`, registers
+concrete `ValidationRule` implementations (currently R001–R003), runs
+them all, and fans the resulting `ValidationViolation` objects into
+`$this->errors` (Fatal) or `$this->warnings` (Warning/Info).
+
+To add a new rule: implement `ValidationRule`, extend `AbstractRule`
+for the DOM query helpers (`queryValue`, `queryNode`, `fatal`, `warn`),
+and add one `$registry->register(new MyRule($this->t))` line to
+`validateWithRegistry()`.
+
+#### Calculator classes
+
+`validateWithCalculators()` delegates three groups of arithmetic checks:
+
+| Class | Responsibility |
+|-------|---------------|
+| `MonetaryTotalCalculator` | `LegalMonetaryTotal` field cross-checks |
+| `TaxCalculator` | Tax subtotal and rounding checks |
+| `InvoiceLineCalculator` | Per-line amount cross-checks |
+
+Each calculator exposes `validate()` + `getErrors()` and is
+instantiated fresh on every `validate()` call.

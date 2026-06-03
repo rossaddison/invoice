@@ -5,6 +5,13 @@ declare(strict_types=1);
 namespace App\Invoice\Helpers\Peppol\Ast;
 
 use App\Invoice\Helpers\Peppol\CodeList;
+use App\Invoice\Helpers\Peppol\Ast\CastableAs;
+use App\Invoice\Helpers\Peppol\Ast\ForExpression;
+use App\Invoice\Helpers\Peppol\Ast\NormalizeSpace;
+use App\Invoice\Helpers\Peppol\Ast\Sequence;
+use App\Invoice\Helpers\Peppol\Ast\StringLength;
+use App\Invoice\Helpers\Peppol\Ast\Substring;
+use App\Invoice\Helpers\Peppol\Ast\Translate;
 use DOMNode;
 use DOMNodeList;
 use DOMXPath;
@@ -117,8 +124,22 @@ final class ExpressionEvaluator // NOSONAR php:S1448 — visitor pattern; each E
                 (float) $this->evalString($expr->value, $xpath, $context, $bindings),
             $expr instanceof StringCast  =>
                 $this->evalString($expr->value, $xpath, $context, $bindings),
-            $expr instanceof UpperCase   =>
+            $expr instanceof UpperCase      =>
                 strtoupper($this->evalString($expr->value, $xpath, $context, $bindings)),
+            $expr instanceof NormalizeSpace =>
+                trim((string) preg_replace('/\s+/', ' ', $this->evalString($expr->value, $xpath, $context, $bindings))),
+            $expr instanceof StringLength   =>
+                mb_strlen($this->evalString($expr->value, $xpath, $context, $bindings)),
+            $expr instanceof Substring      =>
+                $this->evalSubstring($expr, $xpath, $context, $bindings),
+            $expr instanceof Translate      =>
+                $this->evalTranslate($expr, $xpath, $context, $bindings),
+            $expr instanceof CastableAs     =>
+                $this->evalCastableAs($expr, $xpath, $context, $bindings),
+            $expr instanceof Sequence       =>
+                $this->evalSequenceNodes($expr, $xpath, $context, $bindings),
+            $expr instanceof ForExpression  =>
+                $this->evalFor($expr, $xpath, $context, $bindings),
 
             $expr instanceof Contains    => str_contains(
                 $this->evalString($expr->haystack, $xpath, $context, $bindings),
@@ -179,6 +200,9 @@ final class ExpressionEvaluator // NOSONAR php:S1448 — visitor pattern; each E
         if ($v instanceof DOMNodeList) {
             return $v->length > 0;
         }
+        if ($v instanceof DOMNode) {
+            return ($v->nodeValue ?? '') !== '';
+        }
         if (is_array($v)) {
             return $v !== [];
         }
@@ -206,6 +230,9 @@ final class ExpressionEvaluator // NOSONAR php:S1448 — visitor pattern; each E
         if ($v instanceof DOMNodeList) {
             $first = $v->item(0);
             return $first !== null ? trim($first->nodeValue ?? '') : '';
+        }
+        if ($v instanceof DOMNode) {
+            return trim($v->nodeValue ?? '');
         }
         if (is_array($v)) {
             /** @psalm-suppress MixedAssignment */
@@ -235,6 +262,9 @@ final class ExpressionEvaluator // NOSONAR php:S1448 — visitor pattern; each E
         if ($v instanceof DOMNodeList) {
             $first = $v->item(0);
             return $first !== null ? (float) trim($first->nodeValue ?? '0') : 0.0;
+        }
+        if ($v instanceof DOMNode) {
+            return (float) trim($v->nodeValue ?? '0');
         }
         if (is_array($v)) {
             /** @psalm-suppress MixedAssignment */
@@ -379,10 +409,10 @@ final class ExpressionEvaluator // NOSONAR php:S1448 — visitor pattern; each E
         if ($leftNodes !== [] || $rightNodes !== []) {
             $ls = $leftNodes  !== []
                 ? array_map(fn (DOMNode $n) => trim($n->nodeValue ?? ''), $leftNodes)
-                : [$this->scalarToString($right)];
+                : [$this->scalarToString($left)];
             $rs = $rightNodes !== []
                 ? array_map(fn (DOMNode $n) => trim($n->nodeValue ?? ''), $rightNodes)
-                : [$this->scalarToString($left)];
+                : [$this->scalarToString($right)];
 
             foreach ($ls as $l) {
                 foreach ($rs as $r) {
@@ -538,6 +568,30 @@ final class ExpressionEvaluator // NOSONAR php:S1448 — visitor pattern; each E
     }
 
     /**
+     * for $v in $in return $return
+     * Evaluates the return expression for each item in the source sequence,
+     * collecting all results into a flat PHP array.
+     *
+     * @param array<string, mixed> $bindings
+     * @return array<int, mixed>
+     */
+    private function evalFor(
+        ForExpression $expr,
+        DOMXPath $xpath,
+        ?DOMNode $context,
+        array $bindings
+    ): array {
+        $result = [];
+        /** @psalm-suppress MixedAssignment */
+        foreach ($this->evalSequence($expr->in, $xpath, $context, $bindings) as $item) {
+            $scope = array_merge($bindings, [$expr->variable => $item]);
+            /** @psalm-suppress MixedAssignment */
+            $result[] = $this->evaluate($expr->return, $xpath, $context, $scope);
+        }
+        return $result;
+    }
+
+    /**
      * Merge two node-sets, preserving document order and deduplicating by identity.
      *
      * @param array<string, mixed> $bindings
@@ -604,6 +658,102 @@ final class ExpressionEvaluator // NOSONAR php:S1448 — visitor pattern; each E
         return [];
     }
 
+    // ── String functions ──────────────────────────────────────────────────────
+
+    /** @param array<string, mixed> $bindings */
+    private function evalSubstring(
+        Substring $expr,
+        DOMXPath $xpath,
+        ?DOMNode $context,
+        array $bindings
+    ): string {
+        $str      = $this->evalString($expr->value, $xpath, $context, $bindings);
+        // XPath substring() uses 1-based indexing; convert to 0-based for mb_substr.
+        $phpStart = max(0, (int) $this->evalNumeric($expr->start, $xpath, $context, $bindings) - 1);
+        if ($expr->length === null) {
+            return mb_substr($str, $phpStart);
+        }
+        return mb_substr($str, $phpStart, (int) $this->evalNumeric($expr->length, $xpath, $context, $bindings));
+    }
+
+    /** @param array<string, mixed> $bindings */
+    private function evalTranslate(
+        Translate $expr,
+        DOMXPath $xpath,
+        ?DOMNode $context,
+        array $bindings
+    ): string {
+        $value  = $this->evalString($expr->value, $xpath, $context, $bindings);
+        $from   = $this->evalString($expr->from,  $xpath, $context, $bindings);
+        $to     = $this->evalString($expr->to,    $xpath, $context, $bindings);
+        $toLen  = mb_strlen($to);
+        $result = '';
+        foreach (mb_str_split($value) as $char) {
+            $pos = mb_strpos($from, $char);
+            if ($pos === false) {
+                $result .= $char;
+            } elseif ($pos < $toLen) {
+                $result .= mb_substr($to, $pos, 1);
+            }
+            // char whose position in $from >= len($to) is deleted — XPath spec
+        }
+        return $result;
+    }
+
+    /** @param array<string, mixed> $bindings */
+    private function evalCastableAs(
+        CastableAs $expr,
+        DOMXPath $xpath,
+        ?DOMNode $context,
+        array $bindings
+    ): bool {
+        $value = trim($this->evalString($expr->value, $xpath, $context, $bindings));
+        return match ($expr->typeName) {
+            'xs:date'            => $this->isValidXsDate($value),
+            'xs:integer',
+            'xs:long',
+            'xs:int',
+            'xs:short',
+            'xs:byte'            => ctype_digit(ltrim($value, '-+')) && $value !== '' && $value !== '-' && $value !== '+',
+            'xs:decimal',
+            'xs:float',
+            'xs:double'          => is_numeric($value),
+            'xs:boolean'         => in_array($value, ['true', 'false', '1', '0'], true),
+            'xs:string'          => true,
+            default              => false,
+        };
+    }
+
+    /**
+     * Merge every item in a sequence constructor into a single node array.
+     * evalBool treats a non-empty array as true, so (A, B) is true when any
+     * item produces at least one node — the XPath 2.0 EBV for node sequences.
+     *
+     * @param array<string, mixed> $bindings
+     * @return array<int, DOMNode>
+     */
+    private function evalSequenceNodes(
+        Sequence $expr,
+        DOMXPath $xpath,
+        ?DOMNode $context,
+        array $bindings
+    ): array {
+        $nodes = [];
+        foreach ($expr->items as $item) {
+            array_push($nodes, ...$this->evalNodes($item, $xpath, $context, $bindings));
+        }
+        return $nodes;
+    }
+
+    private function isValidXsDate(string $value): bool
+    {
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)) {
+            return false;
+        }
+        [$y, $m, $d] = array_map('intval', explode('-', $value));
+        return checkdate($m, $d, $y);
+    }
+
     // ── Scalar utilities ──────────────────────────────────────────────────────
 
     /**
@@ -620,6 +770,9 @@ final class ExpressionEvaluator // NOSONAR php:S1448 — visitor pattern; each E
                 $out[] = $node;
             }
             return $out;
+        }
+        if ($value instanceof DOMNode) {
+            return [$value];
         }
         if (is_array($value)) {
             return array_values(
@@ -638,6 +791,9 @@ final class ExpressionEvaluator // NOSONAR php:S1448 — visitor pattern; each E
         if ($value instanceof DOMNodeList) {
             $first = $value->item(0);
             return $first !== null ? trim($first->nodeValue ?? '') : '';
+        }
+        if ($value instanceof DOMNode) {
+            return trim($value->nodeValue ?? '');
         }
         if (is_array($value)) {
             /** @psalm-suppress MixedAssignment */

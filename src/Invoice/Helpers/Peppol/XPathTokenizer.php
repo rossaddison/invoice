@@ -33,6 +33,7 @@ final class XPathTokenizer
     public const T_DOTDOT   = 'DOTDOT';
     public const T_STAR     = 'STAR';
     public const T_PIPE     = 'PIPE';
+    public const T_DCOLON   = 'DCOLON';
     public const T_PLUS     = 'PLUS';
     public const T_MINUS    = 'MINUS';
     public const T_EQ       = 'EQ';
@@ -142,6 +143,7 @@ final class XPathTokenizer
             self::T_DOTDOT   => '..',
             self::T_STAR     => '*',
             self::T_PIPE     => '|',
+            self::T_DCOLON   => '::',
             self::T_PLUS     => '+',
             self::T_MINUS    => '-',
             self::T_EQ       => '=',
@@ -255,11 +257,12 @@ final class XPathTokenizer
             return null;
         }
         return match ($input[$i] . $input[$i + 1]) {
-            '//' => ['type' => self::T_DSLASH, 'value' => '//'],
-            '!=' => ['type' => self::T_NE,     'value' => '!='],
-            '<=' => ['type' => self::T_LE,     'value' => '<='],
-            '>=' => ['type' => self::T_GE,     'value' => '>='],
-            '..' => ['type' => self::T_DOTDOT, 'value' => '..'],
+            '//' => ['type' => self::T_DSLASH,  'value' => '//'],
+            '!=' => ['type' => self::T_NE,      'value' => '!='],
+            '<=' => ['type' => self::T_LE,      'value' => '<='],
+            '>=' => ['type' => self::T_GE,      'value' => '>='],
+            '..' => ['type' => self::T_DOTDOT,  'value' => '..'],
+            '::' => ['type' => self::T_DCOLON,  'value' => '::'],
             default => null,
         };
     }

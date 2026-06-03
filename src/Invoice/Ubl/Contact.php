@@ -74,7 +74,7 @@ class Contact implements XmlSerializable
             ]);
         }
 
-        if ($this->telephone !== null) {
+        if ($this->telephone !== null && $this->telephone !== '') {
             $writer->write([
                 Schema::CBC . 'Telephone' => $this->telephone,
             ]);

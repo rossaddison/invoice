@@ -32,7 +32,8 @@ final class PEPPOL_EN16931_R001 extends AbstractRule
     #[\Override]
     public function validate(DOMXPath $xpath, ValidationContext $context): array
     {
-        if ($this->queryValue($xpath, '//cbc:ProfileID') !== null) {
+        $value = $this->queryValue($xpath, '//cbc:ProfileID');
+        if ($value !== null && $value !== '') {
             return [];
         }
 

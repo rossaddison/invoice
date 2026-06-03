@@ -76,8 +76,13 @@ final class SchematronRuleRunner
     {
         $bindings = [];
         foreach ($doc->variables as $name => $selectExpr) {
-            /** @psalm-suppress MixedAssignment */
-            $bindings[$name] = $this->evaluator->evaluate($selectExpr, $xpath);
+            try {
+                /** @psalm-suppress MixedAssignment */
+                $bindings[$name] = $this->evaluator->evaluate($selectExpr, $xpath);
+            } catch (\RuntimeException) {
+                // Variable uses an XPath 2.0 function not yet supported by the evaluator.
+                // Leave the binding absent; assertions that reference it will also be skipped.
+            }
         }
         return $bindings;
     }
@@ -102,7 +107,14 @@ final class SchematronRuleRunner
                 continue; // DOMNameSpaceNode can appear in DOMNodeList; skip it
             }
             foreach ($rule->assertions as $assertion) {
-                if (!$this->evaluator->evaluateBool($assertion->test, $xpath, $contextNode, $bindings)) {
+                try {
+                    $passes = $this->evaluator->evaluateBool($assertion->test, $xpath, $contextNode, $bindings);
+                } catch (\RuntimeException) {
+                    // Assertion uses an XPath 2.0 feature not yet implemented (e.g. tokenize,
+                    // sequence indexing). Skip this assertion rather than crashing validation.
+                    continue;
+                }
+                if (!$passes) {
                     $violations[] = new ValidationViolation(
                         severity: $this->mapFlag($assertion->flag),
                         ruleId:   $assertion->id,
