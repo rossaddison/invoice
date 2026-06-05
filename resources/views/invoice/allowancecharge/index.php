@@ -134,7 +134,7 @@ $columns = [
     ),
     new DataColumn(
         property: 'identifier',
-        header: $translator->translate('i/app.edit'),
+        header: $translator->translate('edit'),
         content: static function (AllowanceCharge $model) use ($urlGenerator): A {
             $route = $model->getIdentifier()
                 ? 'allowancecharge/editCharge'

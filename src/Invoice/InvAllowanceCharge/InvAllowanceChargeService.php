@@ -6,7 +6,6 @@ namespace App\Invoice\InvAllowanceCharge;
 
 use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
 use App\Invoice\AllowanceCharge\AllowanceChargeRepository as ACR;
-use App\Invoice\Setting\SettingRepository;
 
 final readonly class InvAllowanceChargeService
 {

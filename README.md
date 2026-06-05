@@ -32,6 +32,8 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 **Recent Implementations**
 
+[AllowanceCharge Amount Validation and View Toggle](docs/ALLOWANCE_CHARGE_AMOUNT_VALIDATION.md) — Cross-field validation on `AllowanceChargeForm` via inline `Callback` closures in `getRules()`; enforces `MFN × base ÷ 100 = amount` in percentage mode and rejects non-positive fixed amounts; dynamic formula in error message; two translation keys added; `AllowanceChargeToggleHandler` TypeScript class reads `data-ac-templates` from the select element and switches `quoteitemallowancecharge` and `quoteallowancecharge` forms between fixed-amount and variable (base + live formula) mode without page reload (June 2026)
+
 [Peppol Schematron Validator — Route 1](docs/PEPPOL_SCHEMATRON_VALIDATOR_ROUTE1.md) — `SchematronRuleRunner` evaluates `PEPPOL-EN16931-UBL.sch` directly against the invoice DOM at runtime; XPath 2.0 subset implemented in PHP (`normalize-space`, `substring`, `translate`, `castable as`, sequence constructors, `for…return`, axis `::` steps); ten `u:` checksum functions wired from existing `PeppolValidator` methods; hand-written rule methods gated off when `.sch` file present (June 2026)
 
 [Peppol Schematron Code Generation](docs/PEPPOL_SCHEMATRON_CODEGEN.md) — PHP/TypeScript/Scala validator files generated from the official Peppol BIS Billing 3.0 Schematron `.sch` file; `bin/generate-php-validators.php`, `bin/generate-ts-validators.php`, `bin/generate-scala-validators.php`; VO layer; PHP upgrade path replacing `PeppolValidator` XPath methods with a hydrator + generated functions (June 2026)

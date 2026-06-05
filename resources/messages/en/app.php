@@ -63,9 +63,13 @@ return [
   'allowance.or.charge.allowance.tax' =>
     'Tax on allowance',
   'allowance.or.charge.amount' =>
-    'Amount (mfn x base | fixed)',
+    'Amount (variable: (mfn x base) / 100 or fixed)',
+  'allowance.or.charge.amount.fixed.must.be.positive' =>
+    'Fixed amount must be greater than 0.',
   'allowance.or.charge.base.amount' =>
     'Base Amount (Must exist if MFN > 1)',
+  'allowance.or.charge.base.amount.required.when.mfn.set' =>
+    'Base amount must be greater than 0 when multiplier factor is set.',
   'allowance.or.charge.charge' => 'Charge',
   'allowance.or.charge.charge.vat' => 'Vat on charge',
   'allowance.or.charge.charge.tax' => 'Tax on charge',
@@ -771,6 +775,7 @@ return [
   'enter.payment' => 'Enter Payment',
   'error.duplicate.file' =>
     'Error: Duplicate file name, please change it!',
+  'error.summary' => 'Error Summary',
   'errors' => 'Errors',
   'every' => 'Every',
   'example' => 'Example',

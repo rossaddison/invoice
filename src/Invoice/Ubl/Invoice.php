@@ -215,7 +215,7 @@ class Invoice implements XmlSerializable
             Schema::CBC
                 . 'DocumentCurrencyCode' =>
             $this->sR->getSetting('peppol_debug_with_emojis') == '1' ?
-                'ðŸ’²' . $this->getDocumentCurrencyCode() .  'ðŸ’²':
+                '➡' . $this->getDocumentCurrencyCode() .  '➡' :
                     $this->getDocumentCurrencyCode()
         ]);
 

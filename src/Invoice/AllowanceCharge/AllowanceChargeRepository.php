@@ -135,4 +135,24 @@ final class AllowanceChargeRepository extends Select\Repository
         }
         return $optionsDataAllowanceCharges;
     }
+
+    /**
+     * @return array<int, array{mfn: int, base: int}>
+     */
+    public function acTemplateDataForJs(): array
+    {
+        $map = [];
+        $allowanceCharges = $this->findAllPreloaded();
+        /** @var AllowanceCharge $allowanceCharge */
+        foreach ($allowanceCharges as $allowanceCharge) {
+            $key = $allowanceCharge->reqId();
+            if ($key) {
+                $map[$key] = [
+                    'mfn'  => $allowanceCharge->getMultiplierFactorNumeric(),
+                    'base' => $allowanceCharge->getBaseAmount(),
+                ];
+            }
+        }
+        return $map;
+    }
 }
