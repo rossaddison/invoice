@@ -1676,7 +1676,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'pdf.template.paid' => 'Paid PDF Template',
   'pdf.watermark' => 'Enable PDF Watermarks',
   'peppol' => 'Peppol Universal Business Language'
-    . ' (UBL) 2.1 Invoice - Ecosio Validated',
+    . ' (UBL) 2.4 Invoice - Ecosio Validated',
   'peppol.abbreviation' => 'Peppol',
   'peppol.allowance.or.charge.inherit.inv' =>
     'Invoice Allowance Charges and Invoice'

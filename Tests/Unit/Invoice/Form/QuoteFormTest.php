@@ -17,8 +17,8 @@ class QuoteFormTest extends TestCase
         int $clientId = 1,
         int $statusId = 1,
     ): Quote {
-        /** @var Quote&\PHPUnit\Framework\MockObject\MockObject $quote */
-        $quote = $this->createMock(Quote::class);
+        /** @var Quote&\PHPUnit\Framework\MockObject\Stub $quote */
+        $quote = $this->createStub(Quote::class);
         $quote->method('getNumber')->willReturn($number);
         $quote->method('getDateCreated')->willReturn(new DateTimeImmutable('2026-01-01'));
         $quote->method('reqGroupId')->willReturn($groupId);
@@ -56,8 +56,8 @@ class QuoteFormTest extends TestCase
 
     public function testShowPopulatesFromMockedQuote(): void
     {
-        /** @var Quote&\PHPUnit\Framework\MockObject\MockObject $quote */
-        $quote = $this->createMock(Quote::class);
+        /** @var Quote&\PHPUnit\Framework\MockObject\Stub $quote */
+        $quote = $this->createStub(Quote::class);
         $quote->method('getNumber')->willReturn('Q-0001');
         $quote->method('getDateCreated')->willReturn(new DateTimeImmutable('2026-01-01'));
         $quote->method('reqGroupId')->willReturn(1);
@@ -87,8 +87,8 @@ class QuoteFormTest extends TestCase
 
     public function testShowWithLinkedInvoiceAndSalesOrder(): void
     {
-        /** @var Quote&\PHPUnit\Framework\MockObject\MockObject $quote */
-        $quote = $this->createMock(Quote::class);
+        /** @var Quote&\PHPUnit\Framework\MockObject\Stub $quote */
+        $quote = $this->createStub(Quote::class);
         $quote->method('getNumber')->willReturn('Q-0002');
         $quote->method('getDateCreated')->willReturn(new DateTimeImmutable('2026-02-01'));
         $quote->method('reqGroupId')->willReturn(2);

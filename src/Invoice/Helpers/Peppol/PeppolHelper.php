@@ -500,6 +500,105 @@ class PeppolHelper
             } // null!==sales order
             throw new SalesOrderNf($this->t);
         } else { // if $invoice->getSoId() > 0
+            // independent invoice i.e. no quote or salesorder
+            $client_po_number = $invoice->getClientPoNumber();
+            if (null !== $client_po_number && !empty($client_po_number)) {
+// https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/
+//                                          cac-InvoicePeriod/cbc-DescriptionCode/
+// Only permit a description code if there is no tax point date ie.
+//                           DateTimeImmutable->format('Y-m-d') === 1901/01/01
+// since the tax_point_date and description code are mutually exclusive
+                $description_code = $this->noTaxPointDate(
+                        $invoice) ?
+                            $this->DescriptionCode($invoice, $delRepo)
+                                : '';
+// https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/
+                    $peppolHeader = new PeppolInvoiceHeader(
+                        $profileID,
+                        $id,
+                        new PeppolInvoiceDates(
+                            $issueDate,
+                            $dueDate,
+                            $taxPointDate,
+                            new InvoicePeriod($start_datetime, $end_datetime, $description_code),
+                        ),
+                        $note,
+                        $accountingCost,
+                        $buyerReference,
+                        new PeppolInvoiceReferences(
+                            // a standalone invoice i.e. without salesorder
+                            // will have null SalesOrderId. 
+                            // OrderReference assigns 'NA' to mandatory
+                            // SalesOrderId    
+                            new OrderReference($client_po_number, null),
+                            null !== $cdr_id ? new ContractDocumentReference($cdr_id) : null,
+                            $isCopyIndicator,
+                            $supplierAssignedAccountID,
+                        ),
+                    );
+                    $supplierParty = new Party(
+                        $this->t,
+                        $supplier_name,
+                        $supplier_partyIdentificationId,
+                        $supplier_partyIdentificationSchemeId,
+                        $supplier_postalAddress,
+                        null,
+                        $supplier_contact,
+                        $supplier_partyTaxScheme,
+                        $supplier_partyLegalEntity,
+                        $supplier_endpointID,
+                        $supplier_endpointID_schemeID,
+                    );
+                    $customerParty = new Party(
+                        $this->t,
+                        $customer_name,
+                        $customer_partyIdentificationId,
+                        $customer_partyIdentificationSchemeId,
+                        $customer_postalAddress,
+                        null,
+                        $customer_contact,
+                        $customer_partyTaxScheme,
+                        $customer_partyLegalEntity,
+                        $customer_endpointID,
+                        $customer_endpointID_schemeID,
+                    );
+                    $peppolPayment = new PeppolPaymentData(
+                        new PaymentMeans($payeeFinancialAccount, $paymentId),
+                        new PaymentTerms($payment_terms),
+                    );
+                    $peppolFinancial = new PeppolFinancialData(
+                        $allowanceCharges,
+                        $taxAmounts_item_subtotal,
+                        $taxSubtotal,
+                        new LegalMonetaryTotal(
+                            $lineExtensionAmount,
+                            $taxExclusiveAmount,
+                            $taxInclusiveAmount,
+                            $allowanceTotalAmount,
+                            $payableAmount,
+                            $this->s->getSetting(self::SETTING_PEPPOL_DOCUMENT_CURRENCY),
+                            $this->s,
+                        ),
+                        $invoiceLines,
+                    );
+                    $xml = $peppol_ubl_xml->xml(
+                        $peppolHeader,
+                        $additionalDocumentReferences,
+                        $supplierParty,
+                        $customerParty,
+                        new Delivery(
+                            $actualDeliveryDate_datetime,
+                            $deliveryLocation_ID_scheme,
+                            $deliveryLocation_Address,
+                            $deliveryParty_Party,
+                        ),
+                        $peppolPayment,
+                        $peppolFinancial,
+                    );
+                fwrite($f, $peppol_ubl_xml->output($xml));
+                fclose($f);
+                return $path;
+            } // if $client_po_number
             throw new BuyerRefNf();
         }
     }

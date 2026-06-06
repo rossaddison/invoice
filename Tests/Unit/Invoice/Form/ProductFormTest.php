@@ -30,8 +30,8 @@ class ProductFormTest extends TestCase
 
     public function testShowPopulatesFromMockedProduct(): void
     {
-        /** @var Product&\PHPUnit\Framework\MockObject\MockObject $product */
-        $product = $this->createMock(Product::class);
+        /** @var Product&\PHPUnit\Framework\MockObject\Stub $product */
+        $product = $this->createStub(Product::class);
         $product->method('getProductSku')->willReturn('SKU-001');
         $product->method('getProductName')->willReturn('Widget Pro');
         $product->method('getProductDescription')->willReturn('A professional widget');
@@ -68,8 +68,8 @@ class ProductFormTest extends TestCase
 
     public function testShowWithPeppolFields(): void
     {
-        /** @var Product&\PHPUnit\Framework\MockObject\MockObject $product */
-        $product = $this->createMock(Product::class);
+        /** @var Product&\PHPUnit\Framework\MockObject\Stub $product */
+        $product = $this->createStub(Product::class);
         $product->method('getProductSku')->willReturn('SKU-002');
         $product->method('getProductName')->willReturn('Peppol Item');
         $product->method('getProductDescription')->willReturn('');
@@ -102,8 +102,8 @@ class ProductFormTest extends TestCase
 
     public function testShowReturnsNewInstance(): void
     {
-        /** @var Product&\PHPUnit\Framework\MockObject\MockObject $product */
-        $product = $this->createMock(Product::class);
+        /** @var Product&\PHPUnit\Framework\MockObject\Stub $product */
+        $product = $this->createStub(Product::class);
         $product->method('getProductSku')->willReturn('X');
         $product->method('getProductName')->willReturn('X');
         $product->method('getProductDescription')->willReturn('');
