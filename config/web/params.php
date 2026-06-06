@@ -76,22 +76,53 @@ return [
     ],
 
     // Content-Security-Policy directives.
-    // Add payment-provider script/frame domains here as needed, e.g.:
-    //   'https://js.stripe.com' in script-src and frame-src
-    //   'https://js.braintreegateway.com' in script-src
-    //   'https://static-na.payments-amazon.com' in script-src
+    // Mirrors the policy in public/.htaccess — both headers are sent and browsers
+    // apply the intersection, so they must stay in sync.
     'csp' => [
         'policy' => implode('; ', [
             "default-src 'self'",
-            "script-src 'self'",
-            "style-src 'self' 'unsafe-inline'",
-            "img-src 'self' data: blob:",
-            "font-src 'self' data:",
-            "connect-src 'self'",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval'"
+                . " https://apis.google.com"
+                . " https://cdn.jsdelivr.net"
+                . " https://js.stripe.com"
+                . " https://*.stripe.com"
+                . " https://*.payments-amazon.com"
+                . " https://assets.braintreegateway.com"
+                . " https://js.braintreegateway.com",
+            "style-src 'self' 'unsafe-inline'"
+                . " https://fonts.googleapis.com"
+                . " https://cdn.jsdelivr.net"
+                . " https://assets.braintreegateway.com",
+            "font-src 'self'"
+                . " https://fonts.gstatic.com"
+                . " https://cdn.jsdelivr.net",
+            "img-src 'self' data: blob:"
+                . " https://flagcdn.com"
+                . " https://*.stripe.com"
+                . " https://assets.braintreegateway.com"
+                . " https://s3.amazonaws.com"
+                . " https://www.mollie.com",
+            "connect-src 'self'"
+                . " https://api.storecove.com"
+                . " https://api.stripe.com"
+                . " https://*.stripe.com"
+                . " https://*.braintreegateway.com"
+                . " https://*.payments-amazon.com",
+            "frame-src 'self'"
+                . " https://js.stripe.com"
+                . " https://*.stripe.com"
+                . " https://hooks.stripe.com"
+                . " https://assets.braintreegateway.com"
+                . " https://*.payments-amazon.com",
+            "child-src 'self'"
+                . " https://js.stripe.com"
+                . " https://*.stripe.com",
             "form-action 'self'",
             "frame-ancestors 'none'",
             "base-uri 'self'",
             "object-src 'none'",
+            "manifest-src 'self'",
+            "worker-src 'self'",
         ]),
     ],
     'yiisoft/widget' => [
