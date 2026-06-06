@@ -42,7 +42,8 @@ use DOMXPath;
  */
 final class SchematronParser
 {
-    private const SCH_NS = 'http://purl.oclc.org/dsdl/schematron';
+    // Namespace URI is an opaque identifier mandated by the ISO Schematron spec — must not be changed to https.
+    private const SCH_NS = 'http://purl.oclc.org/dsdl/schematron'; // NOSONAR
 
     private XPathParser $xpathParser;
 
