@@ -527,9 +527,9 @@ class PeppolHelper
                         $buyerReference,
                         new PeppolInvoiceReferences(
                             // a standalone invoice i.e. without salesorder
-                            // will have null SalesOrderId. 
+                            // will have null SalesOrderId.
                             // OrderReference assigns 'NA' to mandatory
-                            // SalesOrderId    
+                            // SalesOrderId
                             new OrderReference($client_po_number, null),
                             null !== $cdr_id ? new ContractDocumentReference($cdr_id) : null,
                             $isCopyIndicator,

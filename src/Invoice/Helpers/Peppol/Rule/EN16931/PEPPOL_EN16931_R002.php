@@ -21,7 +21,7 @@ use Yiisoft\Translator\TranslatorInterface;
  *     No more than one Note is allowed on document level.
  *   </assert>
  */
-final class PEPPOL_EN16931_R002 extends AbstractRule
+final class PEPPOL_EN16931_R002 extends AbstractRule // NOSONAR php:S101 — name mirrors schematron rule ID
 {
     public function __construct(private readonly TranslatorInterface $t) {}
 

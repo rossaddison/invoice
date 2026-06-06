@@ -81,18 +81,12 @@ final class XPathHelper
             }
 
             $val = trim($child->nodeValue ?? '');
-            if ($val === '') {
-                return null;
-            }
-
-            if (!str_contains($val, "'")) {
-                return "[cbc:ID='{$val}']";
-            }
-            if (!str_contains($val, '"')) {
-                return "[cbc:ID=\"{$val}\"]";
-            }
-
-            return null; // Both quote types present — fall back to positional.
+            return match(true) {
+                $val === ''               => null,
+                !str_contains($val, "'") => "[cbc:ID='{$val}']",
+                !str_contains($val, '"') => "[cbc:ID=\"{$val}\"]",
+                default                  => null, // Both quote types — fall back to positional.
+            };
         }
 
         return null;

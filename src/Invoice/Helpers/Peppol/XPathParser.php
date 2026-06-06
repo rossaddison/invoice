@@ -198,7 +198,7 @@ final class XPathParser
         return $this->parsePrimary();
     }
 
-    private function parsePrimary(): Expression
+    private function parsePrimary(): Expression // NOSONAR php:S1142 — recursive descent parser; multiple early returns are idiomatic
     {
         $t        = $this->current();
         $nextType = ($this->tokens[$this->pos + 1] ?? ['type' => ''])['type'];
@@ -264,9 +264,9 @@ final class XPathParser
             'xs:decimal',
             'xs:integer'      => new Decimal($this->oneArg($args, $name)),
             'upper-case'      => new UpperCase($this->oneArg($args, $name)),
-            'string'          => new StringCast(count($args) === 0 ? new Path('.') : $this->oneArg($args, $name)),
-            'normalize-space' => new NormalizeSpace(count($args) === 0 ? new Path('.') : $this->oneArg($args, $name)),
-            'string-length'   => new StringLength(count($args) === 0 ? new Path('.') : $this->oneArg($args, $name)),
+            'string'          => new StringCast(empty($args) ? new Path('.') : $this->oneArg($args, $name)),
+            'normalize-space' => new NormalizeSpace(empty($args) ? new Path('.') : $this->oneArg($args, $name)),
+            'string-length'   => new StringLength(empty($args) ? new Path('.') : $this->oneArg($args, $name)),
             'number'          => new Decimal($this->oneArg($args, $name)),
             'substring'       => match (count($args)) {
                 2 => new Substring($args[0], $args[1], null),
@@ -359,7 +359,7 @@ final class XPathParser
      * closing ')' is followed by '/', '//', or '[', collect the whole thing as a raw
      * Path delegated to DOMXPath.  Otherwise parse it as a grouped expression.
      */
-    private function parseParenOrPath(): Expression
+    private function parseParenOrPath(): Expression // NOSONAR php:S1142 — recursive descent parser; multiple early returns are idiomatic
     {
         if ($this->tokenizer !== null && $this->tokenizer->hasPipeAtOuterDepth($this->tokens, $this->pos)) {
             return $this->collectPath();

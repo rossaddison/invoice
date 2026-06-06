@@ -15,7 +15,7 @@ use App\Invoice\Helpers\Peppol\Ast\Translate;
 use DOMNode;
 use DOMNodeList;
 use DOMXPath;
-use RuntimeException;
+use RuntimeException; // kept for legacy catch sites outside this class
 
 /**
  * Evaluates a Peppol / EN16931 expression AST against a DOM document.
@@ -157,7 +157,7 @@ final class ExpressionEvaluator // NOSONAR php:S1448 — visitor pattern; each E
             $expr instanceof Every       => $this->evalEvery($expr,       $xpath, $context, $bindings),
             $expr instanceof Union       => $this->evalUnion($expr,       $xpath, $context, $bindings),
 
-            default => throw new RuntimeException(
+            default => throw new EvaluationException(
                 'Unhandled expression type: ' . $expr::class
             ),
         };
@@ -197,19 +197,13 @@ final class ExpressionEvaluator // NOSONAR php:S1448 — visitor pattern; each E
         /** @psalm-suppress MixedAssignment */
         $v = $this->evaluate($expr, $xpath, $context, $bindings);
 
-        if ($v instanceof DOMNodeList) {
-            return $v->length > 0;
-        }
-        if ($v instanceof DOMNode) {
-            return ($v->nodeValue ?? '') !== '';
-        }
-        if (is_array($v)) {
-            return $v !== [];
-        }
-        if (is_string($v)) {
-            return $v !== '';
-        }
-        return (bool) $v;
+        return match(true) {
+            $v instanceof DOMNodeList => $v->length > 0,
+            $v instanceof DOMNode     => ($v->nodeValue ?? '') !== '',
+            is_array($v)              => $v !== [],
+            is_string($v)             => $v !== '',
+            default                   => (bool) $v,
+        };
     }
 
     /**
@@ -234,14 +228,9 @@ final class ExpressionEvaluator // NOSONAR php:S1448 — visitor pattern; each E
         if ($v instanceof DOMNode) {
             return trim($v->nodeValue ?? '');
         }
-        if (is_array($v)) {
-            /** @psalm-suppress MixedAssignment */
-            $first = $v[0] ?? null;
-            return $first instanceof DOMNode
-                ? trim($first->nodeValue ?? '')
-                : (string) ($first ?? '');
-        }
-        return (string) $v;
+        /** @psalm-suppress MixedAssignment */
+        $first = is_array($v) ? ($v[0] ?? null) : $v;
+        return $first instanceof DOMNode ? trim($first->nodeValue ?? '') : (string) ($first ?? '');
     }
 
     /**
@@ -266,14 +255,9 @@ final class ExpressionEvaluator // NOSONAR php:S1448 — visitor pattern; each E
         if ($v instanceof DOMNode) {
             return (float) trim($v->nodeValue ?? '0');
         }
-        if (is_array($v)) {
-            /** @psalm-suppress MixedAssignment */
-            $first = $v[0] ?? null;
-            return $first instanceof DOMNode
-                ? (float) trim($first->nodeValue ?? '0')
-                : (float) ($first ?? 0);
-        }
-        return (float) $v;
+        /** @psalm-suppress MixedAssignment */
+        $first = is_array($v) ? ($v[0] ?? null) : $v;
+        return $first instanceof DOMNode ? (float) trim($first->nodeValue ?? '0') : (float) ($first ?? 0);
     }
 
     /**
@@ -360,10 +344,13 @@ final class ExpressionEvaluator // NOSONAR php:S1448 — visitor pattern; each E
     /** XPath div: IEEE 754 — 0÷0 → NaN, x÷0 → ±Inf. */
     private function safeDivide(float $left, float $right): float
     {
-        if ($right == 0.0) {
-            return $left == 0.0 ? NAN : ($left > 0.0 ? INF : -INF);
+        if ($right !== 0.0) {
+            return $left / $right;
         }
-        return $left / $right;
+        if ($left == 0.0) {
+            return NAN;
+        }
+        return $left > 0.0 ? INF : -INF;
     }
 
     /** @param array<string, mixed> $bindings */
@@ -499,7 +486,7 @@ final class ExpressionEvaluator // NOSONAR php:S1448 — visitor pattern; each E
         $handler = $this->checksumHandlers[$key] ?? null;
 
         if ($handler === null) {
-            throw new RuntimeException(
+            throw new EvaluationException(
                 "No checksum handler registered for: {$key}. "
                 . 'Inject one via the $checksumHandlers constructor argument.'
             );
@@ -651,11 +638,8 @@ final class ExpressionEvaluator // NOSONAR php:S1448 — visitor pattern; each E
         if (is_array($v)) {
             return array_values($v);
         }
-        if (is_string($v) && $v !== '') {
-            // Space-delimited token list from an uncompressed Schematron tokenize().
-            return preg_split('/\s+/', trim($v)) ?: [];
-        }
-        return [];
+        // Space-delimited token list from an uncompressed Schematron tokenize(), or empty.
+        return is_string($v) && $v !== '' ? (preg_split('/\s+/', trim($v)) ?: []) : [];
     }
 
     // ── String functions ──────────────────────────────────────────────────────
@@ -774,12 +758,9 @@ final class ExpressionEvaluator // NOSONAR php:S1448 — visitor pattern; each E
         if ($value instanceof DOMNode) {
             return [$value];
         }
-        if (is_array($value)) {
-            return array_values(
-                array_filter($value, fn (mixed $v) => $v instanceof DOMNode)
-            );
-        }
-        return [];
+        return is_array($value)
+            ? array_values(array_filter($value, fn (mixed $v) => $v instanceof DOMNode))
+            : [];
     }
 
     /**
@@ -795,13 +776,8 @@ final class ExpressionEvaluator // NOSONAR php:S1448 — visitor pattern; each E
         if ($value instanceof DOMNode) {
             return trim($value->nodeValue ?? '');
         }
-        if (is_array($value)) {
-            /** @psalm-suppress MixedAssignment */
-            $first = $value[0] ?? null;
-            return $first instanceof DOMNode
-                ? trim($first->nodeValue ?? '')
-                : (string) ($first ?? '');
-        }
-        return (string) $value;
+        /** @psalm-suppress MixedAssignment */
+        $first = is_array($value) ? ($value[0] ?? null) : $value;
+        return $first instanceof DOMNode ? trim($first->nodeValue ?? '') : (string) ($first ?? '');
     }
 }

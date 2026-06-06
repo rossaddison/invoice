@@ -101,13 +101,18 @@ final class PurchaseEntryController extends BaseController
         if ($entry === null) {
             return $this->webService->getRedirectResponse('purchase-entry/index');
         }
+        return $this->renderEditForm($request, $formHydrator, $entry);
+    }
+
+    private function renderEditForm(Request $request, FormHydrator $formHydrator, PurchaseEntry $entry): Response
+    {
         $form = PurchaseEntryForm::show($entry);
         $parameters = [
-            'title'          => $this->translator->translate('i.edit'),
-            'actionName'     => 'purchase-entry/edit',
+            'title'           => $this->translator->translate('i.edit'),
+            'actionName'      => 'purchase-entry/edit',
             'actionArguments' => ['id' => $entry->reqId()],
-            'errors'         => [],
-            'form'           => $form,
+            'errors'          => [],
+            'form'            => $form,
         ];
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -152,58 +157,71 @@ final class PurchaseEntryController extends BaseController
         if ($canEdit instanceof Response) {
             return $canEdit;
         }
-        $parameters = [
-            'alert' => $this->alert(),
-        ];
+        $parameters = ['alert' => $this->alert()];
         if ($request->getMethod() === Method::POST) {
-            $files = $request->getUploadedFiles();
-            /** @var UploadedFileInterface|null $file */
-            $file = $files['csv_file'] ?? null;
-            if ($file === null || $file->getError() !== UPLOAD_ERR_OK) {
-                $this->flashMessage('danger', $this->translator->translate('purchase.entry.csv.no.file'));
-                return $this->webViewRenderer->render('csv_import', $parameters);
-            }
-            $handle = fopen('php://temp', 'r+');
-            if ($handle === false) {
-                $this->flashMessage('danger', $this->translator->translate('purchase.entry.csv.no.file'));
-                return $this->webViewRenderer->render('csv_import', $parameters);
-            }
-            fwrite($handle, $file->getStream()->getContents());
-            rewind($handle);
-            $imported = 0;
-            $skipped = 0;
-            $rowIndex = 0;
-            while (($cols = fgetcsv($handle)) !== false) {
-                if (!is_array($cols)) {
-                    continue;
-                }
-                $rowIndex++;
-                if ($rowIndex === 1) {
-                    // skip header row
-                    continue;
-                }
-                if (count($cols) < 4 || trim((string) $cols[0]) === '') {
-                    $skipped++;
-                    continue;
-                }
-                $entry = new PurchaseEntry();
-                $this->purchaseEntryService->saveEntry($entry, [
-                    'date'          => trim((string) $cols[0]),
-                    'supplier'      => trim((string) $cols[1]),
-                    'amount_ex_vat' => trim((string) $cols[2]),
-                    'vat_amount'    => trim((string) $cols[3]),
-                    'description'   => isset($cols[4]) && trim($cols[4]) !== '' ? trim($cols[4]) : null,
-                ]);
-                $imported++;
-            }
-            fclose($handle);
-            $this->flashMessage(
-                'success',
-                $this->translator->translate('purchase.entry.csv.imported', ['count' => $imported, 'skipped' => $skipped]),
-            );
-            return $this->webService->getRedirectResponse('purchase-entry/index');
+            return $this->processCsvUpload($request, $parameters);
         }
         return $this->webViewRenderer->render('csv_import', $parameters);
+    }
+
+    /** @param array<string, mixed> $parameters */
+    private function processCsvUpload(Request $request, array $parameters): Response
+    {
+        $files = $request->getUploadedFiles();
+        /** @var UploadedFileInterface|null $file */
+        $file = $files['csv_file'] ?? null;
+        if ($file === null || $file->getError() !== UPLOAD_ERR_OK) {
+            $this->flashMessage('danger', $this->translator->translate('purchase.entry.csv.no.file'));
+            return $this->webViewRenderer->render('csv_import', $parameters);
+        }
+        $handle = fopen('php://temp', 'r+');
+        if ($handle === false) {
+            $this->flashMessage('danger', $this->translator->translate('purchase.entry.csv.no.file'));
+            return $this->webViewRenderer->render('csv_import', $parameters);
+        }
+        fwrite($handle, $file->getStream()->getContents());
+        rewind($handle);
+        [$imported, $skipped] = $this->importCsvRows($handle);
+        fclose($handle);
+        $this->flashMessage(
+            'success',
+            $this->translator->translate('purchase.entry.csv.imported', ['count' => $imported, 'skipped' => $skipped]),
+        );
+        return $this->webService->getRedirectResponse('purchase-entry/index');
+    }
+
+    /**
+     * @param resource $handle
+     * @return array{int, int} [imported, skipped]
+     */
+    private function importCsvRows($handle): array
+    {
+        $imported = 0;
+        $skipped  = 0;
+        $rowIndex = 0;
+        while (($cols = fgetcsv($handle)) !== false) {
+            if (!is_array($cols)) {
+                continue;
+            }
+            $rowIndex++;
+            if ($rowIndex === 1) {
+                continue; // skip header row
+            }
+            if (count($cols) < 4 || trim((string) $cols[0]) === '') {
+                $skipped++;
+                continue;
+            }
+            $entry = new PurchaseEntry();
+            $this->purchaseEntryService->saveEntry($entry, [
+                'date'          => trim((string) $cols[0]),
+                'supplier'      => trim((string) $cols[1]),
+                'amount_ex_vat' => trim((string) $cols[2]),
+                'vat_amount'    => trim((string) $cols[3]),
+                'description'   => isset($cols[4]) && trim($cols[4]) !== '' ? trim($cols[4]) : null,
+            ]);
+            $imported++;
+        }
+        return [$imported, $skipped];
     }
 
     /**

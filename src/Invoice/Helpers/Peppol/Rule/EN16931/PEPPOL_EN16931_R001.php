@@ -19,7 +19,7 @@ use Yiisoft\Translator\TranslatorInterface;
  *     A business process MUST be provided.
  *   </assert>
  */
-final class PEPPOL_EN16931_R001 extends AbstractRule
+final class PEPPOL_EN16931_R001 extends AbstractRule // NOSONAR php:S101 — name mirrors schematron rule ID
 {
     public function __construct(private readonly TranslatorInterface $t) {}
 

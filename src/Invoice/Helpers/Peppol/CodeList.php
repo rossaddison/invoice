@@ -67,7 +67,7 @@ final class CodeList
             }
 
             /** @var mixed $data */
-            $data = require $path;
+            $data = require_once $path;
 
             if (!is_array($data)) {
                 throw new InvalidArgumentException(

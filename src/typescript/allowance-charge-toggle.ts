@@ -38,7 +38,7 @@ export class AllowanceChargeToggleHandler {
         const recalculate = (): void => {
             const t = getTemplate();
             if (t.mfn <= 0) return;
-            const base = parseFloat(baseInput.value) || 0;
+            const base = Number.parseFloat(baseInput.value) || 0;
             const result = Math.round(t.mfn * base) / 100;
             amountInput.value = result.toFixed(2);
             formulaHint.textContent = `${t.mfn} × ${base} ÷ 100 = ${result.toFixed(2)}`;
