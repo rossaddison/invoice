@@ -15,7 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use DOMDocument;
 use DOMElement;
 
-final class ZugferdXml
+final class ZugferdXml extends AbstractZugferdXml
 {
     public ArrayCollection $items;
     public string $currencyCode;
@@ -93,28 +93,6 @@ final class ZugferdXml
         $node->appendChild($noteNode);
 
         return $node;
-    }
-
-    /**
-     * @param DOMDocument $doc
-     * @param \DateTimeImmutable $date
-     * @return DOMElement
-     */
-    protected function dateElement(DOMDocument $doc, \DateTimeImmutable $date): DOMElement
-    {
-        $el = $doc->createElement('udt:DateTimeString', $this->zugferdFormattedDate($date) ?? 'YYYYmmdd');
-        $el->setAttribute('format', (string) 102);
-        return $el;
-    }
-
-    /**
-     * @param \DateTimeImmutable $date
-     * @return string
-     */
-    protected function zugferdFormattedDate(\DateTimeImmutable $date): ?string
-    {
-        $return_date = \DateTime::createFromFormat('Y-m-d', $date->format('Y-m-d'));
-        return $return_date->format('Ymd');
     }
 
     /**
@@ -202,21 +180,6 @@ final class ZugferdXml
         $node->appendChild($this->xmlSpecifiedTaxRegistration($doc, 'VA', $this->invoice->getClient()?->getClientVatId() ?? ''));
         $node->appendChild($this->xmlSpecifiedTaxRegistration($doc, 'FC', Html::encode($this->invoice->getClient()?->getClientTaxCode())));
 
-        return $node;
-    }
-
-    /**
-     * @param DOMDocument $doc
-     * @param string $schemeID
-     * @param string $content
-     * @return DOMElement
-     */
-    protected function xmlSpecifiedTaxRegistration(DOMDocument $doc, string $schemeID, string $content): DOMElement
-    {
-        $node = $doc->createElement('ram:SpecifiedTaxRegistration');
-        $el = $doc->createElement('ram:ID', $content);
-        $el->setAttribute('schemeID', $schemeID);
-        $node->appendChild($el);
         return $node;
     }
 
@@ -323,16 +286,6 @@ final class ZugferdXml
     }
 
     /**
-     * @param float $amount
-     * @param int $nb_decimals
-     * @return string
-     */
-    protected function zugferdFormattedFloat(float $amount, int $nb_decimals = 2): string
-    {
-        return number_format($amount, $nb_decimals);
-    }
-
-    /**
      * @param DOMDocument $doc
      * @return DOMElement
      */
@@ -404,19 +357,6 @@ final class ZugferdXml
         $node->appendChild($netPriceNode);
 
         return $node;
-    }
-
-    /**
-     * @param DOMDocument $doc
-     * @param string $name
-     * @param float $quantity
-     * @return DOMElement
-     */
-    protected function quantityElement(DOMDocument $doc, string $name, float $quantity): DOMElement
-    {
-        $el = $doc->createElement($name, $this->zugferdFormattedFloat($quantity, 4));
-        $el->setAttribute('unitCode', 'C62');
-        return $el;
     }
 
     /**

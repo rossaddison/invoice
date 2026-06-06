@@ -67,7 +67,7 @@ final class PrometheusController extends BaseController
                 ->withHeader('Expires', '0');
 
         } catch (\Throwable) {
-            $this->prometheusService->setApplicationHealth(false);
+            $this->prometheusService->getRecorder()->setApplicationHealth(false);
 
             return $this->rawTextResponse($this->getErrorMetrics(), $this->prometheusService->getContentType(), 500);
         } finally {
@@ -168,23 +168,17 @@ final class PrometheusController extends BaseController
 
     private function updateSystemMetrics(): void
     {
-        // Update PHP memory usage
-        $this->prometheusService->updateMemoryUsage();
+        $recorder = $this->prometheusService->getRecorder();
+        $recorder->updateMemoryUsage();
+        $recorder->updateDatabaseConnections($this->getActiveConnectionCount());
+        $recorder->updateActiveUsers($this->getActiveUserCount());
 
-        // Update database connections (mock - you'd implement actual DB connection counting)
-        $this->prometheusService->updateDatabaseConnections($this->getActiveConnectionCount());
-
-        // Update active user sessions
-        $this->prometheusService->updateActiveUsers($this->getActiveUserCount());
-
-        // Initialize build info if not already set
         static $buildInfoInitialized = false;
         if (!$buildInfoInitialized) {
-            $this->prometheusService->initializeBuildInfo('1.0.0', PHP_VERSION, '3.0');
+            $recorder->initializeBuildInfo('1.0.0', PHP_VERSION, '3.0');
             $buildInfoInitialized = true;
         }
 
-        // Windows-specific metrics
         if (PHP_OS_FAMILY === 'Windows') {
             $this->updateWindowsMetrics();
         }
@@ -192,11 +186,9 @@ final class PrometheusController extends BaseController
 
     private function updateWindowsMetrics(): void
     {
-        // Update Windows service status (examples)
-        $services = ['mysql', 'apache', 'redis'];
-        foreach ($services as $service) {
-            $isRunning = $this->checkWindowsService();
-            $this->prometheusService->updateWindowsServiceStatus($service, $isRunning);
+        $recorder = $this->prometheusService->getRecorder();
+        foreach (['mysql', 'apache', 'redis'] as $service) {
+            $recorder->updateWindowsServiceStatus($service, $this->checkWindowsService());
         }
     }
 

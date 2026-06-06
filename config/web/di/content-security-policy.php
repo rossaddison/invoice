@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Middleware\ContentSecurityPolicyMiddleware;
 
-/** @var array $params */
+/** @var array{csp: array{policy: string}} $params */
 
 return [
     ContentSecurityPolicyMiddleware::class => [
