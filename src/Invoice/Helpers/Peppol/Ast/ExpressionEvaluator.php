@@ -639,7 +639,8 @@ final class ExpressionEvaluator // NOSONAR php:S1448 — visitor pattern; each E
             return array_values($v);
         }
         // Space-delimited token list from an uncompressed Schematron tokenize(), or empty.
-        return is_string($v) && $v !== '' ? (preg_split('/\s+/', trim($v)) ?: []) : [];
+        $rawSplit = is_string($v) && $v !== '' ? preg_split('/\s+/', trim($v)) : false;
+        return $rawSplit !== false ? $rawSplit : [];
     }
 
     // ── String functions ──────────────────────────────────────────────────────

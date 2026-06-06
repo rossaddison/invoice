@@ -335,8 +335,8 @@ final class HmrcController extends BaseController
      * Note: The connection method determines what headers are included.
      *       16 headers are required for the WEB_APP_VIA_SERVER method.
      * Related logic: https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/
-     */ // NOSONAR php:S107 — HMRC fraud-prevention spec mandates exactly 16 header strings
-    private function webAppViaServerBuildArrayFromStrings(
+     */
+    private function webAppViaServerBuildArrayFromStrings( // NOSONAR php:S107 — HMRC fraud-prevention spec mandates exactly 16 header strings
         string $govClientConnectionMethod,
         string $govClientBrowserJsUserAgent,
         string $govClientDeviceID,
