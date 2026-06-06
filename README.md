@@ -168,7 +168,7 @@ Automated generation and transmission of compliant UBL 2.4 documents via the
 
 [AuthController Production Environment Fix](docs/AUTHCONTROLLER_PROD_ENV_FIX.md) (March 2026)
 
-[Content Security Policy Updates](docs/CONTENT_SECURITY_POLICY_UPDATES.md) (March 2026)
+[Content Security Policy Updates](docs/CONTENT_SECURITY_POLICY_UPDATES.md) — `.htaccess` CSP for Stripe/Braintree/Amazon Pay (March 2026); PSR-15 `ContentSecurityPolicyMiddleware` replacing it with `script-src 'self'` (no `unsafe-inline`/`unsafe-eval`), DI-injected policy string, payment-provider extensibility via `params.php`; response to htmx CodeQL alerts #194/#195 (June 2026)
 
 [Email Setup for yii3i.online](docs/EMAIL_SETUP_SUMMARY.md) (March 2026)
 
