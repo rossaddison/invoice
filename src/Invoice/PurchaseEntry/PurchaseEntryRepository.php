@@ -10,6 +10,7 @@ use Throwable;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
+use App\Invoice\PurchaseEntry\PurchaseEntryVatAggregator;
 
 /**
  * @template TEntity of PurchaseEntry
@@ -103,19 +104,9 @@ final class PurchaseEntryRepository extends Select\Repository
             ->where('date', '>=', $start)
             ->andWhere('date', '<=', $end);
 
-        $inputVat = 0.0;
-        $purchasesExVat = 0.0;
-
-        /** @var PurchaseEntry $entry */
-        foreach ((new EntityReader($query))->read() as $entry) {
-            $inputVat += $entry->getVatAmount();
-            $purchasesExVat += $entry->getAmountExVat();
-        }
-
-        return [
-            'input_vat'       => round($inputVat, 2),
-            'purchases_ex_vat' => round($purchasesExVat, 2),
-        ];
+        /** @var iterable<PurchaseEntry> $entries */
+        $entries = (new EntityReader($query))->read();
+        return (new PurchaseEntryVatAggregator())->aggregate($entries);
     }
 
     /**
