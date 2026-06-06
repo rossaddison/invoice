@@ -270,6 +270,8 @@ trait View
                                 [
                                     'optionsDataAllowanceCharges' =>
                                         $acR->optionsDataAllowanceCharges(),
+                                    'acTemplateData' =>
+                                        $acR->acTemplateDataForJs(),
                                     'actionName' => 'invallowancecharge/add',
                                     'actionArguments' => [
                                         'inv_id' =>

@@ -256,5 +256,8 @@ controller and service unchanged.
 | Form | Toggle needed | Reason |
 |---|---|---|
 | `quoteitemallowancecharge/_form.php` | Yes — done | First point of assignment; MFN must be applied |
-| `quoteallowancecharge/_form.php` | Yes — todo | Same; quote-level allowance/charge |
-| Salesorder / invoice forms | No | Quote item amount is already resolved before an order or invoice is raised |
+| `quoteallowancecharge/_form.php` | Yes — done | Same; quote-level allowance/charge |
+| `quote/modal_add_allowance_charge_form.php` | Yes — done | Quote modal; same toggle pattern |
+| `invallowancecharge/modal_add_allowance_charge_form.php` | Yes — done | Invoice modal; same toggle pattern |
+| `inv/modal_add_allowance_charge_form.php` | Yes — done | Invoice modal (inv variant); same toggle pattern |
+| Salesorder forms | No | Quote item amount is already resolved before an order or invoice is raised |

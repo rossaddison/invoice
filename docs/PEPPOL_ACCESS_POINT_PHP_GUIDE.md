@@ -1,4 +1,4 @@
-# Building a PEPPOL Access Point in PHP
+﻿# Building a PEPPOL Access Point in PHP
 
 ## Overview
 
@@ -110,7 +110,7 @@ You need:
 
 Common standards include:
 
-- UBL 2.1
+- UBL 2.4
 - PEPPOL BIS Billing 3.0
 - EN16931
 
@@ -464,7 +464,7 @@ The AS4 and WS-Security implementation remains the highest-risk area.
 
 # Recommended Learning Order
 
-1. UBL 2.1
+1. UBL 2.4
 2. EN16931
 3. PEPPOL BIS Billing 3.0
 4. SMP/SML

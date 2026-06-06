@@ -1,8 +1,8 @@
-# Oxalis Integration Plan
+﻿# Oxalis Integration Plan
 
 ## Context
 
-This project already generates and validates OpenPeppol UBL 2.1 Invoice 3.0.15 XML
+This project already generates and validates OpenPeppol UBL 2.4 Invoice 3.0.15 XML
 (see `src/Invoice/Libraries/PeppolUblXml.php`, `src/Invoice/Inv/Trait/Peppol.php`,
 and `src/Invoice/Helpers/Peppol/`).  The missing piece is **AS4 transport** — the
 ability to actually transmit those documents over the Peppol network and receive
@@ -29,7 +29,7 @@ HTTP.
 ┌─────────────────────────────────────────────┐
 │  Yii3 Invoice (PHP)                         │
 │                                             │
-│  PeppolUblXml  ──generates──►  UBL 2.1 XML  │
+│  PeppolUblXml  ──generates──►  UBL 2.4 XML  │
 │  PeppolSendService ──POST──►  Oxalis REST   │
 │  PeppolInboundController ◄──callback──      │
 │  PeppolMessage (Cycle ORM)  (persists state)│
@@ -344,7 +344,7 @@ HTTP call to Oxalis, so a crash between `QUEUED` and `SENT` is recoverable.  The
 status lifecycle mirrors the guide's recommended state machine.
 
 **Reuse existing XML generation** — `PeppolUblXml` and `Inv/Trait/Peppol.php`
-already produce valid, Ecosio-validated UBL 2.1.  `PeppolSendService` takes the
+already produce valid, Ecosio-validated UBL 2.4.  `PeppolSendService` takes the
 generated string and passes it to Oxalis — no duplication.
 
 **Test network first** — All development and CI runs against the Peppol test

@@ -1,7 +1,7 @@
-# Peppol Send via Oxalis
+﻿# Peppol Send via Oxalis
 
 End-to-end implementation of the **"Send via Peppol (Oxalis)"** menu option on
-the invoice view. Clicking the option generates a UBL 2.1 XML document and
+the invoice view. Clicking the option generates a UBL 2.4 XML document and
 transmits it to the Peppol network through a local Oxalis AS4 gateway (or a
 WireMock stub during development).
 

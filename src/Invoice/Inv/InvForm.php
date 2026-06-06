@@ -53,6 +53,10 @@ final class InvForm extends FormModel
     private ?string $note = '';
     #[Length(min: 0, max: 32, skipOnEmpty: true)]
     private ?string $document_description = '';
+    #[Length(min: 0, max: 100, skipOnEmpty: true)]
+    private ?string $client_po_number = '';
+    #[Length(min: 0, max: 100, skipOnEmpty: true)]
+    private ?string $client_po_person = '';
     private bool $is_read_only = false;
     private mixed $time_created = '';
 
@@ -82,6 +86,8 @@ final class InvForm extends FormModel
         $form->terms = $inv->getTerms();
         $form->note = $inv->getNote();
         $form->document_description = $inv->getDocumentDescription();
+        $form->client_po_number = $inv->getClientPoNumber();
+        $form->client_po_person = $inv->getClientPoPerson();
         $form->url_key = $inv->getUrlKey();
         $form->payment_method = $inv->getPaymentMethod();
         $form->creditinvoice_parent_id = (int) $inv->getCreditinvoiceParentId();
@@ -248,6 +254,16 @@ final class InvForm extends FormModel
     public function getDocumentDescription(): ?string
     {
         return $this->document_description;
+    }
+
+    public function getClientPoNumber(): ?string
+    {
+        return $this->client_po_number;
+    }
+
+    public function getClientPoPerson(): ?string
+    {
+        return $this->client_po_person;
     }
 
     public function getIsReadOnly(): bool

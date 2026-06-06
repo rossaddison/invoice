@@ -17,7 +17,7 @@
 
 # Yii3-i (Rossaddison/Invoice)
 
-A professional Open Source E-Invoicing System for PHP (Yii3) with UBL 2.1 and
+A professional Open Source E-Invoicing System for PHP (Yii3) with UBL 2.4 and
  Peppol support.
 
 ## Features
@@ -26,11 +26,13 @@ A professional Open Source E-Invoicing System for PHP (Yii3) with UBL 2.1 and
 
 ### Multi-Currency Billing
 
-### Peppol UBL 2.1 E-Invoicing
-Automated generation and transmission of compliant UBL 2.1 documents via the
+### Peppol UBL 2.4 E-Invoicing
+Automated generation and transmission of compliant UBL 2.4 documents via the
  Peppol network.
 
 **Recent Implementations**
+
+[MTD VAT — Purchase Entries & Bridging Software Strategy](docs/MTD_VAT_PURCHASE_ENTRIES.md) — `PurchaseEntry` lightweight entity for supplier invoice recording; CSV bridging import; VAT100 Box 4 and Box 7 auto-populated from `PurchaseEntryRepository::repoVatTotalsForPeriod()`; why `inv_type` on `Inv` was rejected; HMRC Developer Hub sandbox route map; next steps checklist (June 2026)
 
 [AllowanceCharge Amount Validation and View Toggle](docs/ALLOWANCE_CHARGE_AMOUNT_VALIDATION.md) — Cross-field validation on `AllowanceChargeForm` via inline `Callback` closures in `getRules()`; enforces `MFN × base ÷ 100 = amount` in percentage mode and rejects non-positive fixed amounts; dynamic formula in error message; two translation keys added; `AllowanceChargeToggleHandler` TypeScript class reads `data-ac-templates` from the select element and switches `quoteitemallowancecharge` and `quoteallowancecharge` forms between fixed-amount and variable (base + live formula) mode without page reload (June 2026)
 
@@ -227,7 +229,7 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 * Code Generator - Controller to views. 
 * PCI-compliant payment gateway interfaces – Braintree Sandbox, Stripe Sandbox,
  and Amazon Pay integration tested. 
-* Generate OpenPeppol UBL 2.1 Invoice 3.0.15 XML invoices – validated with Ecosio. 
+* Generate OpenPeppol UBL 2.4 Invoice 3.0.15 XML invoices – validated with Ecosio. 
 * StoreCove API connector with JSON invoice. 
 * Invoice cycle – Quote to Sales Order (with client's purchase order details) to Invoice.     
 * Multiple language compliant – steps to generate new language files included. 

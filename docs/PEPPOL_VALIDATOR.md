@@ -1,4 +1,4 @@
-# PeppolValidator Documentation
+﻿# PeppolValidator Documentation
 
 ## Overview
 
@@ -483,7 +483,7 @@ if ($result['success']) {
 
 - [PEPPOL BIS Billing 3.0 Documentation](https://docs.peppol.eu/poacc/billing/3.0/)
 - [PEPPOL Validation Rules](https://docs.peppol.eu/poacc/billing/3.0/2025-Q4/rules/ubl-peppol/)
-- [UBL 2.1 Specification](http://docs.oasis-open.org/ubl/UBL-2.1.html)
+- [UBL 2.4 Specification](http://docs.oasis-open.org/ubl/UBL-2.1.html)
 
 ## License
 

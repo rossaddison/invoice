@@ -41,4 +41,17 @@ return [
     Route::get('/backend/hmrc/createTestUserIndividual')
         ->action([HmrcController::class, 'createTestUserIndividual'])
         ->name('backend/hmrc/createTestUserIndividual'),
+
+    // https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/vat-api/1.0
+    Route::get('/backend/hmrc/vatReturnPrepare')
+        ->action([HmrcController::class, 'vatReturnPrepare'])
+        ->name('backend/hmrc/vatReturnPrepare'),
+
+    Route::get('/backend/hmrc/vatObligations')
+        ->action([HmrcController::class, 'vatObligations'])
+        ->name('backend/hmrc/vatObligations'),
+
+    Route::methods([Method::GET, Method::POST], '/backend/hmrc/vatReturnSubmit')
+        ->action([HmrcController::class, 'vatReturnSubmit'])
+        ->name('backend/hmrc/vatReturnSubmit'),
 ];

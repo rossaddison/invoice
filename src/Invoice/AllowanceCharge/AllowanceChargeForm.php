@@ -27,7 +27,8 @@ final class AllowanceChargeForm extends FormModel implements RulesProviderInterf
     private int $level = 0;
 
     /**
-     * Related logic: see Not required because determined from value 'reason' in array using AllowanceChargeContoller
+     * Related logic: see Not required because determined from value 'reason'
+     *  in array using AllowanceChargeContoller
      */
     private ?string $reason_code = '';
 

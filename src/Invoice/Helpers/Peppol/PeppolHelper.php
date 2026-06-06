@@ -277,11 +277,15 @@ class PeppolHelper
         $client_purchase_order_id = '';
         if ($so && null !== $so->getClientPoNumber()) {
             $client_purchase_order_id = $so->getClientPoNumber();
+        } elseif (null !== $invoice->getClientPoNumber() && $invoice->getClientPoNumber() !== '') {
+            $client_purchase_order_id = $invoice->getClientPoNumber();
         }
 // Buyer Reference https://docs.peppol.eu/poacc/billing/3.0/bis/#buyerref
         $buyerReference = '';
         if ($so && null !== $so->getClientPoPerson()) {
             $buyerReference = $so->getClientPoPerson();
+        } elseif (null !== $invoice->getClientPoPerson() && $invoice->getClientPoPerson() !== '') {
+            $buyerReference = $invoice->getClientPoPerson();
         }
         $config_company_details = $this->s->getConfigCompanyDetails();
 /**
@@ -1152,13 +1156,13 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                     }
                     // Item Identification number eg. TRQWERQERQ9879
                     $peppol_po_itemid = $this->PeppolPoItemid($item, $soiR);
-                    if (null == $peppol_po_itemid) {
+                    if (null == $peppol_po_itemid && $item->getSoItemId() > 0) {
                         throw new SOIPOINNe($this->t);
                     }
 
                     // Item Line Number eg. Line 1 of 4
                     $peppol_po_lineid = $this->PeppolPoLineid($item, $soiR);
-                    if (null == $peppol_po_lineid) {
+                    if (null == $peppol_po_lineid && $item->getSoItemId() > 0) {
                         throw new SOIPOLNNe($this->t);
                     }
 /**
@@ -1209,6 +1213,12 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                         $originCountry = $originCode !== ''
                             ? [['name' => "{$a}OriginCountry", 'value' => [['name' => "{$b}IdentificationCode", 'value' => $originCode]]]]
                             : [];
+                        $orderLineRef = ($peppol_po_lineid !== null && $peppol_po_lineid !== '')
+                            ? [['name' => "{$a}OrderLineReference", 'value' => [['name' => "{$b}LineID", 'value' => $peppol_po_lineid]]]]
+                            : [];
+                        $buyersItemId = ($peppol_po_itemid !== null && $peppol_po_itemid !== '')
+                            ? [['name' => "{$a}BuyersItemIdentification", 'value' => [['name' => "{$b}ID", 'value' => $peppol_po_itemid]]]]
+                            : [];
 
             $invoiceLines[$item_id] =
                 [
@@ -1251,15 +1261,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                                 ],
                             ]
                         ],
-                        [
-                            'name' => "{$a}OrderLineReference",
-                            'value' => [
-                                [
-                                    'name' => "{$b}LineID",
-                                    'value' => $peppol_po_lineid,
-                                ],
-                            ]
-                        ],
+                        ...$orderLineRef,
                         [
                             'name' => "{$a}DocumentReference",
                             'value' => [
@@ -1283,15 +1285,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                                     'name' => "{$b}Name",
                                     'value' => $item->getName()
                                 ],
-                                [
-                                    'name' => "{$a}BuyersItemIdentification",
-                                    'value' => [
-                                        [
-                                            'name' => "{$b}ID",
-                                            'value' => $peppol_po_itemid
-                                        ],
-                                    ],
-                                ],
+                                ...$buyersItemId,
                                 [
                                     'name' => "{$a}SellersItemIdentification",
                                     'value' => [
@@ -1640,7 +1634,9 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 throw new SOINe($this->t);
             }
         }
-        return null;
+        // Standalone invoice: use InvItem's own buyer item identifier (may be empty)
+        $itemid = $item->getPeppolPoItemid();
+        return ($itemid !== '' && $itemid !== null) ? $itemid : null;
     }
 
     /**
@@ -1666,7 +1662,9 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 throw new SOINe($this->t);
             }
         }
-        return null;
+        // Standalone invoice: use InvItem's own PO line identifier (may be empty)
+        $lineid = $item->getPeppolPoLineid();
+        return ($lineid !== '' && $lineid !== null) ? $lineid : null;
     }
 
     /**
