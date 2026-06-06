@@ -12,6 +12,7 @@ use Yiisoft\RequestProvider\RequestCatcherMiddleware;
 use Yiisoft\Router\Middleware\Router;
 use Yiisoft\Session\SessionMiddleware;
 use Yiisoft\User\Login\Cookie\CookieLoginMiddleware;
+use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\PageOutOfRangeMiddleware;
 use Yiisoft\Yii\Middleware\Locale;
 
@@ -63,6 +64,7 @@ return [
     'middlewares' => [
         RequestCatcherMiddleware::class,
         ErrorCatcher::class,
+        ContentSecurityPolicyMiddleware::class,
         PrometheusMiddleware::class,
         SessionMiddleware::class,
         CsrfTokenMiddleware::class,
@@ -71,6 +73,26 @@ return [
         Locale::class,
         PageOutOfRangeMiddleware::class,
         Router::class,
+    ],
+
+    // Content-Security-Policy directives.
+    // Add payment-provider script/frame domains here as needed, e.g.:
+    //   'https://js.stripe.com' in script-src and frame-src
+    //   'https://js.braintreegateway.com' in script-src
+    //   'https://static-na.payments-amazon.com' in script-src
+    'csp' => [
+        'policy' => implode('; ', [
+            "default-src 'self'",
+            "script-src 'self'",
+            "style-src 'self' 'unsafe-inline'",
+            "img-src 'self' data: blob:",
+            "font-src 'self' data:",
+            "connect-src 'self'",
+            "form-action 'self'",
+            "frame-ancestors 'none'",
+            "base-uri 'self'",
+            "object-src 'none'",
+        ]),
     ],
     'yiisoft/widget' => [
         'defaultTheme' => 'bootstrap5',
