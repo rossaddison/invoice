@@ -68,6 +68,7 @@ final class InvAllowanceChargeController extends BaseController
             'errors' => [],
             'form' => $form,
             self::PARAM_OPTIONS_DATA_ALLOWANCE_CHARGES => $allowanceChargeRepository->optionsDataAllowanceCharges(),
+            'acTemplateData' => $allowanceChargeRepository->acTemplateDataForJs(),
         ];
 
         if ($request->getMethod() === Method::POST) {

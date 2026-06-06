@@ -12,7 +12,7 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 
 /**
- * Sends a UBL 2.1 XML document to the Peppol network via the Oxalis AS4
+ * Sends a UBL 2.4 XML document to the Peppol network via the Oxalis AS4
  * gateway REST API.  Oxalis must be running and reachable at $oxalisBaseUrl.
  *
  * Every send attempt is persisted as a PeppolMessage *before* the HTTP call
@@ -42,7 +42,7 @@ final class PeppolSendService
      * Transmit a UBL XML document to a Peppol participant.
      *
      * @param int    $invId       Invoice entity ID (for audit trail)
-     * @param string $ublXml      Raw UBL 2.1 XML string
+     * @param string $ublXml      Raw UBL 2.4 XML string
      * @param string $recipientId Peppol participant identifier (e.g. 0088:1234567890123)
      * @param string $documentTypeId  Peppol document type URN (defaults to BIS Billing 3.0 Invoice)
      * @param string $processId       Peppol process URN (defaults to BIS Billing 3.0)

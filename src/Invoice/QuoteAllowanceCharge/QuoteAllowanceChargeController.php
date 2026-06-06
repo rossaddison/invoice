@@ -67,6 +67,8 @@ final class QuoteAllowanceChargeController extends BaseController
             'form' => $form,
             'optionsDataAllowanceCharges' =>
                 $allowanceChargeRepository->optionsDataAllowanceCharges(),
+            'acTemplateData' =>
+                $allowanceChargeRepository->acTemplateDataForJs(),
         ];
 
         if ($request->getMethod() === Method::POST) {
@@ -209,6 +211,8 @@ final class QuoteAllowanceChargeController extends BaseController
                 'form' => $form,
                 'optionsDataAllowanceCharges' =>
                     $allowanceChargeRepository->optionsDataAllowanceCharges(),
+                'acTemplateData' =>
+                    $allowanceChargeRepository->acTemplateDataForJs(),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];

@@ -13,5 +13,6 @@
     "typescript.preferences.quoteStyle": "single",
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": "explicit"
-    }
+    },
+    "typescript.native-preview.tsdk": "node_modules\\@typescript\\native-preview"
 }

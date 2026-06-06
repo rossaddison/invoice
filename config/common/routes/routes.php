@@ -43,6 +43,7 @@ use App\Invoice\{
     Payment\PaymentController,
     PaymentInformation\PaymentInformationController as PICLR,
     PaymentMethod\PaymentMethodController,
+    PurchaseEntry\PurchaseEntryController,
     PaymentPeppol\PaymentPeppolController,
     PostalAddress\PostalAddressController,
     Product\ProductController,
@@ -2285,5 +2286,29 @@ return [
                     '/userinv/signup/{language}/{token}/{tokenType}')
                 ->name('userinv/signup')
                 ->action([UserInvController::class, 'signup']),
+            Route::get('/purchase-entry')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([PurchaseEntryController::class, 'index'])
+                ->name('purchase-entry/index'),
+            Route::methods([$mG, $mP], '/purchase-entry/add')
+                ->name('purchase-entry/add')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([PurchaseEntryController::class, 'add']),
+            Route::methods([$mG, $mP], '/purchase-entry/edit/{id}')
+                ->name('purchase-entry/edit')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([PurchaseEntryController::class, 'edit']),
+            Route::methods([$mG, $mP], '/purchase-entry/delete/{id}')
+                ->name('purchase-entry/delete')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([PurchaseEntryController::class, 'delete']),
+            Route::methods([$mG, $mP], '/purchase-entry/csv-import')
+                ->name('purchase-entry/csv-import')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([PurchaseEntryController::class, 'csvImport']),
+            Route::get('/purchase-entry/csv-template')
+                ->name('purchase-entry/csv-template')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([PurchaseEntryController::class, 'csvTemplate']),
         ), // invoice
 ];

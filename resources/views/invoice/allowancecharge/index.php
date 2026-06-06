@@ -24,28 +24,27 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $csrf
  */
 
-$toolbarReset =  new A()
-    ->addAttributes(['type' => 'reset'])
+$toolbarReset = new A()
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
+    ->content(new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'allowancecharge/index'))
     ->id('btn-reset')
     ->render();
 
 ?>
-<?= Html::openTag('div');?>
+<?= Html::openTag('div', ['class' => 'mb-3']);?>
     <?= Html::openTag('div', ['class' => 'btn-group']);?>
     <?php
         if ($canEdit) {
             echo (new A())
-                ->addClass('btn btn-outline-success btn-sm mb-3 me-1')
+                ->addClass('btn btn-outline-success btn-sm me-1')
                 ->encode(false)
                 ->content(Html::tag('i', '', ['class' => 'bi bi-plus-circle me-1'])
                     . $translator->translate('allowance.or.charge.allowance'))
                 ->href($urlGenerator->generate('allowancecharge/addAllowance'))
                 ->render();
             echo (new A())
-                ->addClass('btn btn-outline-primary btn-sm mb-3')
+                ->addClass('btn btn-outline-primary btn-sm')
                 ->encode(false)
                 ->content(Html::tag('i', '', ['class' => 'bi bi-plus-circle me-1'])
                     . $translator->translate('allowance.or.charge.charge'))
@@ -53,11 +52,6 @@ $toolbarReset =  new A()
                 ->render();
         } ?>
     <?= Html::closeTag('div');?>
-    <?= Html::Tag('br'); ?>
-    <?= Html::Tag('br'); ?>
-<?= Html::closeTag('div');?>
-<?= Html::openTag('div');?>
-    <?= Html::Tag('br'); ?>
 <?= Html::closeTag('div');?>
 
 <?php
@@ -68,10 +62,20 @@ $columns = [
         content: static fn (AllowanceCharge $model) => $model->reqId(),
     ),
     new DataColumn(
+        property: 'identifier',
+        header: $translator->translate('allowance.or.charge'),
+        content: static function (AllowanceCharge $model): string {
+            return $model->getIdentifier()
+                ? '<span class="badge bg-primary">▲ Charge</span>'
+                : '<span class="badge bg-success">▽ Allowance</span>';
+        },
+        encodeContent: false,
+    ),
+    new DataColumn(
         property: 'level',
         header: $translator->translate('allowance.or.charge.level'),
         content: static function (AllowanceCharge $model): string {
-            return ($model->getLevel() == 0) ? '⬅ Overall' : 'Invoice Line ➡';
+            return $model->getLevel() === 0 ? '⬅ Overall' : 'Invoice Line ➡';
         },
     ),
     new DataColumn(
@@ -85,19 +89,32 @@ $columns = [
         content: static fn (AllowanceCharge $model) => $model->getReason(),
     ),
     new DataColumn(
-        'base_amount',
-        header: $translator->translate('allowance.or.charge.base.text-end'),
-        content: static fn (AllowanceCharge $model) => $model->getBaseAmount(),
-    ),
-    new DataColumn(
-        'multiplier_factor_numeric',
+        property: 'multiplier_factor_numeric',
         header: $translator->translate('allowance.or.charge.multiplier.factor.numeric'),
         content: static function (AllowanceCharge $model): string {
-            return ($model->getMultiplierFactorNumeric() == 0
-                    || $model->getMultiplierFactorNumeric() == 1) ?
-        '0 or 1 => Fixed Amount' : (string) $model->getMultiplierFactorNumeric()
-                . '>1 => Variable Amount';
+            $m    = $model->getMultiplierFactorNumeric();
+            $base = $model->getBaseAmount();
+
+            // R041: percentage present but no base → warn
+            if ($m > 0 && $base == 0) {
+                return ($m === 100 ? '100 % (= Base)' : $m . ' %')
+                    . ' <span class="badge bg-danger" title="R041: base amount required">R041</span>';
+            }
+            // R042: base present but no percentage → warn (shown in Base Amount column,
+            // but also flag here for visibility)
+            if ($m == 0 && $base > 0) {
+                return '— Fixed <span class="badge bg-danger" title="R042: percentage required">R042</span>';
+            }
+            if ($m === 0)   { return '— Fixed'; }
+            if ($m === 100) { return '100 % (= Base)'; }
+            return $m . ' %';
         },
+        encodeContent: false,
+    ),
+    new DataColumn(
+        'base_amount',
+        header: $translator->translate('allowance.or.charge.base.amount'),
+        content: static fn (AllowanceCharge $model) => $model->getBaseAmount() ?: '—',
     ),
     new DataColumn(
         'amount',
@@ -116,34 +133,17 @@ $columns = [
         encodeContent: false,
     ),
     new DataColumn(
-        'identifier',
-        header: $translator->translate('allowance.or.charge.allowance'),
+        property: 'identifier',
+        header: $translator->translate('edit'),
         content: static function (AllowanceCharge $model) use ($urlGenerator): A {
-            return !$model->getIdentifier()
-                  ? Html::a(
-                      Html::tag('i', '', ['class' => 'bi bi-pencil-square']),
-                      $urlGenerator->generate(
-                          'allowancecharge/editAllowance',
-                          ['id' => $model->reqId()],
-                      ),
-                      ['class' => 'btn btn-outline-warning btn-sm'],
-                  ) : Html::a();
-        },
-        encodeContent: false,
-    ),
-    new DataColumn(
-        'identifier',
-        header: $translator->translate('allowance.or.charge.charge'),
-        content: static function (AllowanceCharge $model) use ($urlGenerator): A {
-            return $model->getIdentifier()
-                ? Html::a(
-                    Html::tag('i', '', ['class' => 'bi bi-pencil-square']),
-                    $urlGenerator->generate(
-                        'allowancecharge/editCharge',
-                        ['id' => $model->reqId()],
-                    ),
-                    ['class' => 'btn btn-outline-warning btn-sm'],
-                ) : Html::a();
+            $route = $model->getIdentifier()
+                ? 'allowancecharge/editCharge'
+                : 'allowancecharge/editAllowance';
+            return Html::a(
+                Html::tag('i', '', ['class' => 'bi bi-pencil-square']),
+                $urlGenerator->generate($route, ['id' => $model->reqId()]),
+                ['class' => 'btn btn-outline-warning btn-sm'],
+            );
         },
         encodeContent: false,
     ),
@@ -157,7 +157,7 @@ $columns = [
                     [
                         'type' => 'submit',
                         'class' => 'btn btn-outline-danger btn-sm',
-                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                        'onclick' => "return confirm('" . $translator->translate('delete.record.warning') . "');",
                     ],
                 ),
                 $urlGenerator->generate('allowancecharge/delete', ['id' => $model->reqId()]),

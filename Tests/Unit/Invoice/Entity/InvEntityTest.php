@@ -173,6 +173,52 @@ class InvEntityTest extends TestCase
         $this->assertFalse($inv->isDeleted());
     }
 
+    public function testClientPoNumberDefaultsToEmpty(): void
+    {
+        $inv = new Inv();
+
+        $this->assertSame('', $inv->getClientPoNumber());
+    }
+
+    public function testSetAndGetClientPoNumber(): void
+    {
+        $inv = new Inv();
+        $inv->setClientPoNumber('PO-2026-001');
+
+        $this->assertSame('PO-2026-001', $inv->getClientPoNumber());
+    }
+
+    public function testClientPoNumberIsString(): void
+    {
+        $inv = new Inv();
+        $inv->setClientPoNumber('PO-XYZ');
+
+        $this->assertIsString($inv->getClientPoNumber());
+    }
+
+    public function testClientPoPersonDefaultsToEmpty(): void
+    {
+        $inv = new Inv();
+
+        $this->assertSame('', $inv->getClientPoPerson());
+    }
+
+    public function testSetAndGetClientPoPerson(): void
+    {
+        $inv = new Inv();
+        $inv->setClientPoPerson('Jane Smith');
+
+        $this->assertSame('Jane Smith', $inv->getClientPoPerson());
+    }
+
+    public function testClientPoPersonIsString(): void
+    {
+        $inv = new Inv();
+        $inv->setClientPoPerson('J. Doe');
+
+        $this->assertIsString($inv->getClientPoPerson());
+    }
+
     /**
      * Simulates what the ORM SoftDelete behavior does at the persistence layer.
      */

@@ -21,6 +21,7 @@ import { initStreetOrder } from './family-street-order.js';
 import { initStepPopovers } from './google-translate-popover.js';
 import { initInvIndex } from './inv-index.js';
 import { initQuoteIndex } from './quote-index.js';
+import { AllowanceChargeToggleHandler } from './allowance-charge-toggle.js';
 
 /**
  * Initialize Invoice Application
@@ -58,6 +59,8 @@ class InvoiceApp {
 
         // Set up fullpage loader handlers
         this.initializeFullpageLoader();
+
+        new AllowanceChargeToggleHandler(); // NOSONAR typescript:S1848 — constructor binds DOM event listeners; instantiation is the side effect
 
         console.log(
             'Invoice TypeScript App initialized with all core handlers: Quote, Client, Invoice, Product, Task, SalesOrder, Family, and Settings'

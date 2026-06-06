@@ -48,6 +48,8 @@ echo new Form()
   echo Field::errorSummary($form)
       ->errors($errors)
       ->header($translator->translate('error.summary'))
+      ->headerAttributes(['class' => 'header'])
+      ->listAttributes(['class' => 'list'])    
       ->onlyProperties(...[
           'id',
           'reason',
@@ -55,7 +57,7 @@ echo new Form()
           'amount',
           'base_amount',
           'tax_rate_id'])
-      ->onlyCommonErrors();
+      ->addListClass('list-group-item list-group-item-warning');
   echo Html::openTag('div', $row); //2
    echo Html::openTag('div', $formSwitch); //3
     echo Field::checkbox($form, 'level')

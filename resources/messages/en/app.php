@@ -63,9 +63,13 @@ return [
   'allowance.or.charge.allowance.tax' =>
     'Tax on allowance',
   'allowance.or.charge.amount' =>
-    'Amount (mfn x base | fixed)',
+    'Amount (variable: (mfn x base) / 100 or fixed)',
+  'allowance.or.charge.amount.fixed.must.be.positive' =>
+    'Fixed amount must be greater than 0.',
   'allowance.or.charge.base.amount' =>
     'Base Amount (Must exist if MFN > 1)',
+  'allowance.or.charge.base.amount.required.when.mfn.set' =>
+    'Base amount must be greater than 0 when multiplier factor is set.',
   'allowance.or.charge.charge' => 'Charge',
   'allowance.or.charge.charge.vat' => 'Vat on charge',
   'allowance.or.charge.charge.tax' => 'Tax on charge',
@@ -283,6 +287,8 @@ return [
   'client.notes' => 'Client Notes',
   'client.number' => 'Client Number',
   'client.telegram.chat.id' => 'Telegram Chat ID',
+  'client.po.number' => 'Customer Purchase Order Number',
+  'client.po.person' => 'Customer Purchase Order Contact',
   'client.peppol' => 'Client Peppol Details',
   'client.peppol.accounting.cost' => 'Client Accounting'
     . ' Cost Code for Bookkeeping',
@@ -771,6 +777,7 @@ return [
   'enter.payment' => 'Enter Payment',
   'error.duplicate.file' =>
     'Error: Duplicate file name, please change it!',
+  'error.summary' => 'Error Summary',
   'errors' => 'Errors',
   'every' => 'Every',
   'example' => 'Example',
@@ -1083,7 +1090,7 @@ return [
   'invoice.created.from.quote' => 'Invoice created from quote',
   'invoice.needs.to.be.sent' => 'To see Pay buttons change'
     . ' status to sent.',
-  'invoice.trash' => 'Invoice Trash',  
+  'invoice.trash' => 'Invoice Trash',
   'invoice.validation.errors' => 'Invoice Validation Errors',
   'invoiced' => 'Invoiced',
   'invoiceplane' => 'InvoicePlane',
@@ -1342,6 +1349,17 @@ prior to importing and no existing documents e.g. Invoices.',
   'mtd.gov.vendor.version' => 'A key-value data structure'
     . ' of the software versions that'
     . ' are involved in handling a request',
+  'mtd.vat.obligations.missing.vrn.or.token' => 'VAT Registration Number or HMRC access token not set',
+  'mtd.vat.registration.number' => 'VAT Registration Number (VRN)',
+  'mtd.vat.registration.number.hint' => '9-digit number on your VAT registration certificate',
+  'mtd.vat.obligations' => 'VAT Obligations',
+  'mtd.vat.return.submit' => 'Submit VAT Return',
+  'purchase.entry.add' => 'Add Purchase Entry',
+  'purchase.entry.csv.imported' => 'Imported {count} purchase entries ({skipped} rows skipped).',
+  'purchase.entry.csv.no.file' => 'No CSV file uploaded or upload error.',
+  'purchase.entry.delete' => 'Delete Purchase Entry',
+  'purchase.entry.edit' => 'Edit Purchase Entry',
+  'purchase.entry.index' => 'Purchase Entries',
   'multiple.choice' => 'Multiple Choice',
   'name' => 'Name',
   'new' => 'New',
@@ -1658,7 +1676,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'pdf.template.paid' => 'Paid PDF Template',
   'pdf.watermark' => 'Enable PDF Watermarks',
   'peppol' => 'Peppol Universal Business Language'
-    . ' (UBL) 2.1 Invoice - Ecosio Validated',
+    . ' (UBL) 2.4 Invoice - Ecosio Validated',
   'peppol.abbreviation' => 'Peppol',
   'peppol.allowance.or.charge.inherit.inv' =>
     'Invoice Allowance Charges and Invoice'
@@ -1724,11 +1742,23 @@ prior to importing and no existing documents e.g. Invoices.',
   'PEPPOL.EN16931.R055' => 'Tax amounts must have same sign',
   'PEPPOL.EN16931.R061' => 'Mandate reference required for direct debit',
   'PEPPOL.EN16931.R080' => 'Max one project reference allowed',
+  'PEPPOL.COMMON.R040' => 'GLN must have a valid format according to GS1 rules',
+  'PEPPOL.COMMON.R041' => 'Norwegian organization number MUST be stated in the correct format',
+  'PEPPOL.COMMON.R042' => 'Danish CVR number MUST be stated in the correct format',
+  'PEPPOL.COMMON.R043' => 'Belgian enterprise number MUST be stated in the correct format',
+  'PEPPOL.COMMON.R044' => 'IPA Code (Codice Univoco Unità Organizzativa) must be stated in the correct format',
+  'PEPPOL.COMMON.R045' => 'Tax Code (Codice Fiscale) must be stated in the correct format',
+  'PEPPOL.COMMON.R046' => 'Tax Code (Codice Fiscale) for national scheme MUST be stated in the correct format',
+  'PEPPOL.COMMON.R047' => 'Italian VAT Code (Partita Iva) must be stated in the correct format',
+  'PEPPOL.COMMON.R049' => 'Swedish organization number MUST be stated in the correct format',
+  'PEPPOL.COMMON.R050' => 'Australian Business Number (ABN) MUST be stated in the correct format',
+  'PEPPOL.COMMON.R052' => 'Danish chamber of commerce number MUST be stated in the correct format',
+  'PEPPOL.COMMON.R053' => 'Danish ERSTORG number MUST be stated in the correct format',
   'peppol.electronic.invoicing' =>
     'Peppol Electronic Invoicing',
   'peppol.enable' =>
     'Enable Peppol using'
-    . ' Universal Business Language (UBL) 2.1',
+    . ' Universal Business Language (UBL) 2.4',
   'peppol.include.delivery.period' => 'Include Delivery Periods',
   'peppol.invoice.note.not.found' => 'Invoice note not found',
   'peppol.label.switch.off' => 'Peppol Defaults Enabled',
@@ -2683,6 +2713,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'two.factor.authentication.setup' =>
     'Setup Two Factor Authentication',
   'type' => 'Type',
+  'ubl.version.required.2.4' => 'UBL version must be 2.1, 2.2, 2.3, or 2.4',
   'unit' => 'Unit',
   'unit.add' => 'Unit Add',
   'unit.already.exists' => 'Unit already exists!',

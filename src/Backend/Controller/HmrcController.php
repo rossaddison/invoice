@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Backend\Controller;
 
 use App\Invoice\BaseController;
+use App\Invoice\PurchaseEntry\PurchaseEntryRepository;
 use App\Invoice\Setting\SettingRepository as SR;
 use App\Service\WebControllerService;
 use App\User\UserService;
@@ -14,6 +15,8 @@ use GuzzleHttp\Promise\PromiseInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as ServerRequest;
+use Yiisoft\Http\Method;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
@@ -46,10 +49,13 @@ final class HmrcController extends BaseController
         $this->webViewRenderer = $webViewRenderer->withViewPath('@hmrc');
     }
 
-    public function index(): \Psr\Http\Message\ResponseInterface
+    public function index(): Response
     {
         $parameters = [
-            'text' => 'This is a text',
+            'vrn' => $this->sR->getSetting('vat_registration_number'),
+            'fphConnectionMethod' => $this->sR->getSetting('fph_connection_method'),
+            'govVendorProductName' => $this->sR->getGovVendorProductName(),
+            'govVendorVersion' => $this->sR->getGovVendorVersion(),
         ];
         return $this->webViewRenderer->render('index', $parameters);
     }
@@ -57,8 +63,6 @@ final class HmrcController extends BaseController
     /**
      * Not tested yet 23/05/2025
      * $api e.g. 'self-assessment', 'vat', 'employment', 'customs', 'individuals'
-     * @param string $api
-     * @return Response
      */
     public function fphFeedback(
         #[RouteArgument('api')]
@@ -83,7 +87,7 @@ final class HmrcController extends BaseController
             $tokenString = (string) $this->session->get('hmrc_access_token');
 
             if (strlen($tokenString) > 0) {
-                $requestPartOne = $this->createRequest('GET', $this->getfphValidateHeadersUrl());
+                $requestPartOne = $this->createRequest('GET', $this->getFphValidateHeadersUrl());
 
                 $acceptAndAuthorizationArray = [
                     'Accept' => 'application/vnd.hmrc.1.0+json',
@@ -92,10 +96,7 @@ final class HmrcController extends BaseController
 
                 $mergedArray = array_merge($acceptAndAuthorizationArray, $headers);
 
-                $requestPartTwo = RequestUtil::addHeaders(
-                    $requestPartOne,
-                    $mergedArray,
-                );
+                $requestPartTwo = RequestUtil::addHeaders($requestPartOne, $mergedArray);
 
                 return $this->sendRequest($requestPartTwo);
             }
@@ -106,27 +107,207 @@ final class HmrcController extends BaseController
         return $this->webService->getRedirectResponse('invoice/index');
     }
 
+    /**
+     * Retrieve open VAT obligations for the configured VRN and render them.
+     * Related logic: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/vat-api/1.0/oas/page#tag/VAT/operation/Retrieve-VAT-obligations
+     */
+    public function vatObligations(): Response
+    {
+        $vrn = $this->sR->getSetting('vat_registration_number');
+        $tokenString = (string) $this->session->get('hmrc_access_token');
+        $otpReference = (string) $this->session->get('otpRef');
+
+        if ($vrn === '' || strlen($tokenString) === 0) {
+            $this->flashMessage('warning', $this->translator->translate('mtd.vat.obligations.missing.vrn.or.token'));
+            return $this->webService->getRedirectResponse('backend/hmrc/index');
+        }
+
+        $request = $this->createRequest(
+            'GET',
+            'https://api.service.hmrc.gov.uk/organisations/vat/' . urlencode($vrn) . '/obligations?status=O',
+        );
+
+        $request = RequestUtil::addHeaders($request, array_merge(
+            ['Accept' => 'application/vnd.hmrc.1.0+json', 'Authorization' => 'Bearer ' . $tokenString],
+            $this->getWebAppViaServerHeaders($otpReference),
+        ));
+
+        $apiResponse = $this->sendRequest($request);
+        /** @var array{obligations?: array<int, array<string, string>>} $parsed */
+        $parsed = (array) json_decode($apiResponse->getBody()->getContents(), true);
+        $obligations = $parsed['obligations'] ?? [];
+
+        return $this->webViewRenderer->render('vatObligations', [
+            'obligations' => $obligations,
+            'vrn' => $vrn,
+            'statusCode' => $apiResponse->getStatusCode(),
+        ]);
+    }
+
+    /**
+     * Prepare step: auto-fill Boxes 1 and 6 from InvAmount for the period,
+     * derive Box 3 and 5 client-side, leave Boxes 4 and 7 for manual entry.
+     */
+    public function vatReturnPrepare(
+        ServerRequest $request,
+        \App\Invoice\InvAmount\InvAmountRepository $invAmountRepository,
+        PurchaseEntryRepository $purchaseEntryRepository,
+    ): Response {
+        $vrn = $this->sR->getSetting('vat_registration_number');
+        $tokenString = (string) $this->session->get('hmrc_access_token');
+
+        if ($vrn === '' || strlen($tokenString) === 0) {
+            $this->flashMessage('warning', $this->translator->translate('mtd.vat.obligations.missing.vrn.or.token'));
+            return $this->webService->getRedirectResponse('backend/hmrc/index');
+        }
+
+        $queryParams = $request->getQueryParams();
+        $periodKey = (string) ($queryParams['periodKey'] ?? '');
+        $periodStart = (string) ($queryParams['start'] ?? '');
+        $periodEnd = (string) ($queryParams['end'] ?? '');
+
+        $salesTotals = $invAmountRepository->repoVatTotalsForPeriod($periodStart, $periodEnd);
+        $purchaseTotals = $purchaseEntryRepository->repoVatTotalsForPeriod($periodStart, $periodEnd);
+
+        return $this->webViewRenderer->render('vatReturnPrepare', [
+            'vrn'         => $vrn,
+            'periodKey'   => $periodKey,
+            'periodStart' => $periodStart,
+            'periodEnd'   => $periodEnd,
+            'box1'        => $salesTotals['output_vat'],
+            'box4'        => $purchaseTotals['input_vat'],
+            'box6'        => $salesTotals['sales_ex_vat'],
+            'box7'        => $purchaseTotals['purchases_ex_vat'],
+        ]);
+    }
+
+    /**
+     * Show VAT100 form (GET) and submit a VAT return to HMRC (POST).
+     * Related logic: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/vat-api/1.0/oas/page#tag/VAT/operation/Submit-VAT-return-for-period
+     */
+    public function vatReturnSubmit(ServerRequest $request): Response
+    {
+        $vrn = $this->sR->getSetting('vat_registration_number');
+        $tokenString = (string) $this->session->get('hmrc_access_token');
+
+        if ($vrn === '' || strlen($tokenString) === 0) {
+            $this->flashMessage('warning', $this->translator->translate('mtd.vat.obligations.missing.vrn.or.token'));
+            return $this->webService->getRedirectResponse('backend/hmrc/index');
+        }
+
+        if ($request->getMethod() === Method::POST) {
+            $body = $request->getParsedBody();
+            /** @var array<string, string> $body */
+            $body = is_array($body) ? $body : [];
+
+            $returnData = [
+                'periodKey' => $body['periodKey'] ?? '',
+                'vatDueSales' => (float) ($body['vatDueSales'] ?? 0),
+                'vatDueAcquisitions' => (float) ($body['vatDueAcquisitions'] ?? 0),
+                'totalVatDue' => (float) ($body['totalVatDue'] ?? 0),
+                'vatReclaimedCurrPeriod' => (float) ($body['vatReclaimedCurrPeriod'] ?? 0),
+                'netVatDue' => (float) ($body['netVatDue'] ?? 0),
+                'totalValueSalesExVAT' => (int) ($body['totalValueSalesExVAT'] ?? 0),
+                'totalValuePurchasesExVAT' => (int) ($body['totalValuePurchasesExVAT'] ?? 0),
+                'totalValueGoodsSuppliedExVAT' => (int) ($body['totalValueGoodsSuppliedExVAT'] ?? 0),
+                'totalAcquisitionsExVAT' => (int) ($body['totalAcquisitionsExVAT'] ?? 0),
+                'finalised' => isset($body['finalised']),
+            ];
+
+            $otpReference = (string) $this->session->get('otpRef');
+
+            $apiRequest = $this->createRequest(
+                'POST',
+                'https://api.service.hmrc.gov.uk/organisations/vat/' . urlencode($vrn) . '/returns',
+            );
+
+            $apiRequest = RequestUtil::addHeaders($apiRequest, array_merge(
+                [
+                    'Accept' => 'application/vnd.hmrc.1.0+json',
+                    'Authorization' => 'Bearer ' . $tokenString,
+                    'Content-Type' => 'application/json',
+                ],
+                $this->getWebAppViaServerHeaders($otpReference),
+            ));
+
+            $apiRequest = $apiRequest->withBody(
+                \GuzzleHttp\Psr7\Utils::streamFor(json_encode($returnData)),
+            );
+
+            $apiResponse = $this->sendRequest($apiRequest);
+            /** @var array<string, mixed> $result */
+            $result = (array) json_decode($apiResponse->getBody()->getContents(), true);
+
+            return $this->webViewRenderer->render('vatReturnResult', [
+                'statusCode' => $apiResponse->getStatusCode(),
+                'result' => $result,
+                'periodKey' => $returnData['periodKey'],
+            ]);
+        }
+
+        // GET — show the form, pre-populate period key from query string
+        $queryParams = $request->getQueryParams();
+        return $this->webViewRenderer->render('vatReturnSubmit', [
+            'vrn' => $vrn,
+            'periodKey' => (string) ($queryParams['periodKey'] ?? ''),
+            'periodStart' => (string) ($queryParams['start'] ?? ''),
+            'periodEnd' => (string) ($queryParams['end'] ?? ''),
+        ]);
+    }
+
+    public function createTestUserIndividual(array $requestBody = []): array
+    {
+        /**
+         * Related logic: see src\Auth\Controller\AuthController
+         *      function callbackDeveloperSandboxHmrc
+         */
+        $tokenString = (string) $this->session->get('hmrc_access_token');
+
+        if (strlen($tokenString) > 0) {
+            $url = 'https://test-api.service.hmrc.gov.uk/create-test-user/individuals';
+
+            $request = $this->createRequest('POST', $url);
+
+            $request = RequestUtil::addHeaders(
+                $request,
+                [
+                    'Authorization' => 'Bearer ' . $tokenString,
+                    'Content-Type' => 'application/json',
+                ],
+            );
+
+            $request = $request->withBody(
+                \GuzzleHttp\Psr7\Utils::streamFor(json_encode($requestBody)),
+            );
+
+            $response = $this->sendRequest($request);
+
+            return (array) json_decode($response->getBody()->getContents(), true);
+        }
+
+        return [];
+    }
+
     private function getWebAppViaServerHeaders(string $otpReference): array
     {
-        return
-            $this->WebAppViaServerBuildArrayFromStrings(
-                $this->sR->getSetting('fph_connection_method'),
-                $this->sR->getSetting('fph_client_browser_js_user_agent'),
-                $this->sR->getSetting('fph_client_device_id'),
-                $this->sR->fphGenerateMultiFactor('TOTP', $otpReference),
-                $this->sR->getGovClientPublicIp() ?? '',
-                $this->sR->getGovClientPublicIpTimestamp() ?? '',
-                $this->sR->getGovClientPublicPort(),
-                $this->sR->getGovClientScreens(),
-                $this->sR->getGovClientTimezone(),
-                $this->sR->getGovClientUserIDs(),
-                $this->sR->getSetting('fph_window_size'),
-                $this->sR->getGovVendorForwarded(),
-                $this->sR->getGovVendorLicenseIDs(),
-                $this->sR->getGovVendorProductName(),
-                $this->sR->getGovVendorPublicIP(),
-                $this->sR->getGovVendorVersion(),
-            );
+        return $this->webAppViaServerBuildArrayFromStrings(
+            $this->sR->getSetting('fph_connection_method'),
+            $this->sR->getSetting('fph_client_browser_js_user_agent'),
+            $this->sR->getSetting('fph_client_device_id'),
+            $this->sR->fphGenerateMultiFactor('TOTP', $otpReference),
+            $this->sR->getGovClientPublicIp() ?? '',
+            $this->sR->getGovClientPublicIpTimestamp() ?? '',
+            $this->sR->getGovClientPublicPort(),
+            $this->sR->getGovClientScreens(),
+            $this->sR->getGovClientTimezone(),
+            $this->sR->getGovClientUserIDs(),
+            $this->sR->getSetting('fph_window_size'),
+            $this->sR->getGovVendorForwarded(),
+            $this->sR->getGovVendorLicenseIDs(),
+            $this->sR->getGovVendorProductName(),
+            $this->sR->getGovVendorPublicIP(),
+            $this->sR->getGovVendorVersion(),
+        );
     }
 
     private function getFphValidateHeadersUrl(): string
@@ -134,12 +315,7 @@ final class HmrcController extends BaseController
         return 'https://test-api.service.hmrc.gov.uk/test/fraud-prevention-headers/validate';
     }
 
-    /**
-     * Related logic: see scope
-     * $api = "self-assessment" / "vat" / "employment" / "customs" / "individuals"
-     * @param string $api
-     * @return string
-     */
+    /** $api = "self-assessment" / "vat" / "employment" / "customs" / "individuals" */
     private function getFphValidationFeedbackUrl(string $api): string
     {
         return 'https://test-api.service.hmrc.gov.uk/test/fraud-prevention-headers/' . $api . '/validation-feedback';
@@ -155,70 +331,12 @@ final class HmrcController extends BaseController
         return $this->httpClient->sendRequest($request);
     }
 
-    public function createTestUserIndividual(array $requestBody = []): array
-    {
-        /**
-         * Related logic: see src\Auth\Controller\AuthController
-         *      function callbackDeveloperSandboxHmrc
-         */
-        $tokenString = (string) $this->session->get('hmrc_access_token');
-
-        if (strlen($tokenString) > 0) {
-            // Define the URL for the create-test-user/individuals endpoint
-            $url = 'https://test-api.service.hmrc.gov.uk/create-test-user/individuals';
-
-            // Create a POST request
-            $request = $this->createRequest('POST', $url);
-
-            // Add necessary headers, including the access token
-            $request = RequestUtil::addHeaders(
-                $request,
-                [
-                    'Authorization' => 'Bearer ' . $tokenString,
-                    'Content-Type' => 'application/json',
-                ],
-            );
-
-            // Add the JSON payload to the request body
-            $request = $request->withBody(
-                \GuzzleHttp\Psr7\Utils::streamFor(json_encode($requestBody)),
-            );
-
-            // Send the request and retrieve the response
-            $response = $this->sendRequest($request);
-
-            // Decode the JSON response into an array and return it
-            return (array) json_decode($response->getBody()->getContents(), true);
-        }
-
-        return [];
-    }
-
     /**
-     * Note: The connection method determines what headers are included
-     *       16 headers are required for the WebAppViaServer Method
-     *       Insert this array into TestFraudPreventionHeaders function below
-     * Related logic: see https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/
-     * Related logic: see https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/
-     * @param string $govClientConnectionMethod
-     * @param string $govClientBrowserJsUserAgent
-     * @param string $govClientDeviceID
-     * @param string $govClientMultiFactor
-     * @param string $govClientPublicIp
-     * @param string $govClientPublicIpTimestamp
-     * @param int $govClientPublicPort
-     * @param string $govClientScreens
-     * @param string $govClientTimezone
-     * @param string $govClientUserIds
-     * @param string $govClientWindowSize
-     * @param string $govVendorForwarded
-     * @param string $govVendorLicenseIDs
-     * @param string $govVendorProductName
-     * @param string $govVendorPublicIP
-     * @param string $govVendorVersion
-     * @return array
+     * Note: The connection method determines what headers are included.
+     *       16 headers are required for the WEB_APP_VIA_SERVER method.
+     * Related logic: https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/
      */
-    public function webAppViaServerBuildArrayFromStrings(
+    private function webAppViaServerBuildArrayFromStrings( // NOSONAR php:S107 — HMRC fraud-prevention spec mandates exactly 16 header strings
         string $govClientConnectionMethod,
         string $govClientBrowserJsUserAgent,
         string $govClientDeviceID,
@@ -237,57 +355,26 @@ final class HmrcController extends BaseController
         string $govVendorVersion,
     ): array {
         return [
-            // Example: "WEB_APP_VIA_SERVER"
             'Gov-Client-Connection-Method' => $govClientConnectionMethod,
-
-            // Example: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36"
             'Gov-Client-Browser-JS-User-Agent' => $govClientBrowserJsUserAgent,
-
-            // Example: "c1a8843e-1e2c-4b9e-8d8a-6e2b1f6f8b96"
             'Gov-Client-Device-ID' => $govClientDeviceID,
-
-            // Example: "type=totp;timestamp=2021-07-21T17:32:28Z"
             'Gov-Client-Multi-Factor' => $govClientMultiFactor,
-
-            // Example: "203.0.113.0"
             'Gov-Client-Public-Ip' => $govClientPublicIp,
-
-            // Example: "2025-05-17T10:08:05Z"
             'Gov-Client-Public-IP-Timestamp' => $govClientPublicIpTimestamp,
-
-            // Example: 54321
             'Gov-Client-Public-Port' => $govClientPublicPort,
-
-            // Example: "1920x1080,1280x1024"
             'Gov-Client-Screens' => $govClientScreens,
-
-            // Example: "Europe/London"
             'Gov-Client-Timezone' => $govClientTimezone,
-
             'Gov-Client-User-IDs' => $govClientUserIds,
-
-            // Example: "1920x1040"
             'Gov-Client-Window-Size' => $govClientWindowSize,
-
-            // Example: "for=203.0.113.43;proto=https;by=203.0.113.1"
             'Gov-Vendor-Forwarded' => $govVendorForwarded,
-
-            // Example: ["lic-12345", "lic-67890"]
             'Gov-Vendor-License-IDs' => $govVendorLicenseIDs,
-
-            // Example: "invoice-app"
             'Gov-Vendor-Product-Name' => $govVendorProductName,
-
-            // Example: "198.51.100.1"
             'Gov-Vendor-Public-IP' => $govVendorPublicIP,
-
-            // Example: "1.0.0"
-            'Gov-Vendor-Version' => $govVendorVersion];
+            'Gov-Vendor-Version' => $govVendorVersion,
+        ];
     }
 
-    /**
-     * @psalm-return HandlerStack
-     */
+    /** @psalm-return HandlerStack */
     private function buildHandlerStackWithLogging(string $logFile): HandlerStack
     {
         $stack = HandlerStack::create();
@@ -295,18 +382,12 @@ final class HmrcController extends BaseController
         return $stack;
     }
 
-    /**
-     * Returns a Guzzle middleware that logs request details.
-     *
-     * @param string $logFile
-     * @return callable(callable): callable
-     */
+    /** @return callable(callable): callable */
     private function getRequestLoggingMiddleware(string $logFile): callable
     {
         return fn (callable $handler): callable => function (Request $request, array $options) use ($handler, $logFile): PromiseInterface {
             $headersJson = json_encode($request->getHeaders(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
-            // Prevent log corruption if encoding fails
             if ($headersJson === false) {
                 $headersJson = 'Error encoding headers';
             }
@@ -318,25 +399,17 @@ final class HmrcController extends BaseController
                 (string) $request->getUri(),
                 $headersJson,
             );
-            // Use file_put_contents with LOCK_EX to prevent concurrent writes
             file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX);
 
-            /**
-             * Call the next handler in the stack
-             * @psalm-suppress MixedReturnStatement
-             */
+            /** @psalm-suppress MixedReturnStatement */
             return $handler($request, $options);
         };
     }
 
-    /**
-     * @psalm-return HttpClient
-     */
+    /** @psalm-return HttpClient */
     private function createLoggedGuzzleClient(string $logFile): HttpClient
     {
         $stack = $this->buildHandlerStackWithLogging($logFile);
-        return new HttpClient([
-            'handler' => $stack,
-        ]);
+        return new HttpClient(['handler' => $stack]);
     }
 }

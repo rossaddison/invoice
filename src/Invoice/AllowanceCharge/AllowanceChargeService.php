@@ -27,7 +27,7 @@ final readonly class AllowanceChargeService
         isset($array['reason']) ?
             $model->setReason((string) $array['reason']) : '';
         isset($array['multiplier_factor_numeric']) ?
-            $model->setMultiplierFactorNumeric(
+             $model->setMultiplierFactorNumeric(
                     (int) $array['multiplier_factor_numeric']) : '';
         isset($array['amount']) ?
             $model->setAmount((int) $array['amount']) : '';

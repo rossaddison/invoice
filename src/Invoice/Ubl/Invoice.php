@@ -14,8 +14,8 @@ use InvalidArgumentException;
 
 class Invoice implements XmlSerializable
 {
-    // http://www.datypic.com/sc/ubl23/t-ns53_InvoiceType.html
-    private ?string $UBLVersionID = '2.1';
+    // http://www.datypic.com/sc/ubl24/t-ns53_InvoiceType.html
+    private ?string $UBLVersionID = '2.4';
     private ?string $customizationID = 'urn:cen.eu:en16931:2017#compliant#urn:'
             . 'fdc:peppol.eu:2017:poacc:billing:3.0';
     protected ?int $invoiceTypeCode = InvoiceTypeCode::INVOICE;
@@ -61,7 +61,7 @@ class Invoice implements XmlSerializable
     /**
      * Related logic: http://www.schemacentral.com Business Document Standards
      * @param string|null $UBLVersionID
-     * eg. '2.0', '2.1', '2.2', '2.3'
+     * eg. '2.1', '2.2', '2.3', '2.4'
      * @return Invoice
      */
     public function setUBLVersionID(?string $UBLVersionID): self
@@ -215,7 +215,7 @@ class Invoice implements XmlSerializable
             Schema::CBC
                 . 'DocumentCurrencyCode' =>
             $this->sR->getSetting('peppol_debug_with_emojis') == '1' ?
-                'ðŸ’²' . $this->getDocumentCurrencyCode() .  'ðŸ’²':
+                '➡' . $this->getDocumentCurrencyCode() .  '➡' :
                     $this->getDocumentCurrencyCode()
         ]);
 

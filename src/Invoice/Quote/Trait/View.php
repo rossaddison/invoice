@@ -302,6 +302,8 @@ trait View
                                     [
                                         'optionsDataAllowanceCharges' =>
                                         $acR->optionsDataAllowanceCharges(),
+                                        'acTemplateData' =>
+                                        $acR->acTemplateDataForJs(),
                                         'actionName' => 'quoteallowancecharge/add',
                                         'actionArguments' => [
                                             'quote_id' =>

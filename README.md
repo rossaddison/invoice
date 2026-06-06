@@ -17,7 +17,7 @@
 
 # Yii3-i (Rossaddison/Invoice)
 
-A professional Open Source E-Invoicing System for PHP (Yii3) with UBL 2.1 and
+A professional Open Source E-Invoicing System for PHP (Yii3) with UBL 2.4 and
  Peppol support.
 
 ## Features
@@ -26,11 +26,19 @@ A professional Open Source E-Invoicing System for PHP (Yii3) with UBL 2.1 and
 
 ### Multi-Currency Billing
 
-### Peppol UBL 2.1 E-Invoicing
-Automated generation and transmission of compliant UBL 2.1 documents via the
+### Peppol UBL 2.4 E-Invoicing
+Automated generation and transmission of compliant UBL 2.4 documents via the
  Peppol network.
 
 **Recent Implementations**
+
+[MTD VAT — Purchase Entries & Bridging Software Strategy](docs/MTD_VAT_PURCHASE_ENTRIES.md) — `PurchaseEntry` lightweight entity for supplier invoice recording; CSV bridging import; VAT100 Box 4 and Box 7 auto-populated from `PurchaseEntryRepository::repoVatTotalsForPeriod()`; why `inv_type` on `Inv` was rejected; HMRC Developer Hub sandbox route map; `PurchaseEntryVatAggregator` extracted from repository so summation logic (Box 4 input VAT + Box 7 purchases ex-VAT, rounded to 2dp) is unit-testable without ORM infrastructure; 11 PHPUnit tests cover empty period, rounding, zero-rated supplies, large amounts, mixed VAT rates, and generator iterables (June 2026)
+
+[AllowanceCharge Amount Validation and View Toggle](docs/ALLOWANCE_CHARGE_AMOUNT_VALIDATION.md) — Cross-field validation on `AllowanceChargeForm` via inline `Callback` closures in `getRules()`; enforces `MFN × base ÷ 100 = amount` in percentage mode and rejects non-positive fixed amounts; dynamic formula in error message; two translation keys added; `AllowanceChargeToggleHandler` TypeScript class reads `data-ac-templates` from the select element and switches `quoteitemallowancecharge` and `quoteallowancecharge` forms between fixed-amount and variable (base + live formula) mode without page reload (June 2026)
+
+[Peppol Schematron Validator — Route 1](docs/PEPPOL_SCHEMATRON_VALIDATOR_ROUTE1.md) — `SchematronRuleRunner` evaluates `PEPPOL-EN16931-UBL.sch` directly against the invoice DOM at runtime; XPath 2.0 subset implemented in PHP (`normalize-space`, `substring`, `translate`, `castable as`, sequence constructors, `for…return`, axis `::` steps); ten `u:` checksum functions wired from existing `PeppolValidator` methods; hand-written rule methods gated off when `.sch` file present (June 2026)
+
+[Peppol Schematron Code Generation](docs/PEPPOL_SCHEMATRON_CODEGEN.md) — PHP/TypeScript/Scala validator files generated from the official Peppol BIS Billing 3.0 Schematron `.sch` file; `bin/generate-php-validators.php`, `bin/generate-ts-validators.php`, `bin/generate-scala-validators.php`; VO layer; PHP upgrade path replacing `PeppolValidator` XPath methods with a hydrator + generated functions (June 2026)
 
 [TypeScript Vitest Coverage](docs/TYPESCRIPT_VITEST_COVERAGE.md) — Vitest + jsdom + v8 coverage wired into CI for `inv-index.ts`, `list-utils.ts`, and `quote-index.ts`; `phpunit.xml.dist` case fix for Linux CI; PHP and TS coverage fed to SonarCloud; coverage badge added (May 2026)
 
@@ -160,7 +168,7 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 [AuthController Production Environment Fix](docs/AUTHCONTROLLER_PROD_ENV_FIX.md) (March 2026)
 
-[Content Security Policy Updates](docs/CONTENT_SECURITY_POLICY_UPDATES.md) (March 2026)
+[Content Security Policy Updates](docs/CONTENT_SECURITY_POLICY_UPDATES.md) — `.htaccess` CSP for Stripe/Braintree/Amazon Pay (March 2026); PSR-15 `ContentSecurityPolicyMiddleware` replacing it with `script-src 'self'` (no `unsafe-inline`/`unsafe-eval`), DI-injected policy string, payment-provider extensibility via `params.php`; response to htmx CodeQL alerts #194/#195 (June 2026)
 
 [Email Setup for yii3i.online](docs/EMAIL_SETUP_SUMMARY.md) (March 2026)
 
@@ -221,7 +229,7 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 * Code Generator - Controller to views. 
 * PCI-compliant payment gateway interfaces – Braintree Sandbox, Stripe Sandbox,
  and Amazon Pay integration tested. 
-* Generate OpenPeppol UBL 2.1 Invoice 3.0.15 XML invoices – validated with Ecosio. 
+* Generate OpenPeppol UBL 2.4 Invoice 3.0.15 XML invoices – validated with Ecosio. 
 * StoreCove API connector with JSON invoice. 
 * Invoice cycle – Quote to Sales Order (with client's purchase order details) to Invoice.     
 * Multiple language compliant – steps to generate new language files included. 

@@ -321,6 +321,24 @@ if ($vat) {
     ->hint($translator->translate('hint.this.field.is.not.required'))
 ?>
                         <?= Html::closeTag('div'); ?>
+                        <?= Html::openTag('div'); ?>
+                            <?= Field::text($form, 'client_po_number')
+    ->label($translator->translate('client.po.number'))
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
+    ->value(Html::encode($form->getClientPoNumber() ?? ''))
+    ->placeholder($translator->translate('client.po.number'))
+    ->hint($translator->translate('hint.this.field.is.not.required'))
+?>
+                        <?= Html::closeTag('div'); ?>
+                        <?= Html::openTag('div'); ?>
+                            <?= Field::text($form, 'client_po_person')
+    ->label($translator->translate('client.po.person'))
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
+    ->value(Html::encode($form->getClientPoPerson() ?? ''))
+    ->placeholder($translator->translate('client.po.person'))
+    ->hint($translator->translate('hint.this.field.is.not.required'))
+?>
+                        <?= Html::closeTag('div'); ?>
                     <?php
                         /**
                          * @var App\Infrastructure\Persistence\CustomField\CustomField $customField
