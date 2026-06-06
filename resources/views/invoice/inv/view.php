@@ -835,7 +835,7 @@ if ($showButtons
      echo H::closeTag('a');
     echo H::closeTag('li');
 }
-// Options ... Peppol UBL 2.1 Invoice
+// Options ... Peppol UBL 2.4 Invoice
 if ($peppolEnabled) {
     echo H::openTag('li');
      echo H::openTag('a', [

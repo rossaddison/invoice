@@ -152,6 +152,12 @@ class Inv
         //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/cbc-DescriptionCode/
         #[Column(type: 'string(3)', nullable: false)]
         private string $stand_in_code = '',
+        // https://docs.peppol.eu/poacc/billing/3.0/bis/#orderref
+        #[Column(type: 'string(100)', nullable: true)]
+        private ?string $client_po_number = '',
+        // https://docs.peppol.eu/poacc/billing/3.0/bis/#buyerref
+        #[Column(type: 'string(100)', nullable: true)]
+        private ?string $client_po_person = '',
     ) {
         $this->items = new ArrayCollection();
         // create also the invoice amount when the invoice is created.
@@ -584,5 +590,25 @@ class Inv
     public function getInvAmount(): InvAmount
     {
         return $this->invAmount;
+    }
+
+    public function getClientPoNumber(): ?string
+    {
+        return $this->client_po_number;
+    }
+
+    public function setClientPoNumber(string $client_po_number): void
+    {
+        $this->client_po_number = $client_po_number;
+    }
+
+    public function getClientPoPerson(): ?string
+    {
+        return $this->client_po_person;
+    }
+
+    public function setClientPoPerson(string $client_po_person): void
+    {
+        $this->client_po_person = $client_po_person;
     }
 }

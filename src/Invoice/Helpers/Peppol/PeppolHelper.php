@@ -277,11 +277,15 @@ class PeppolHelper
         $client_purchase_order_id = '';
         if ($so && null !== $so->getClientPoNumber()) {
             $client_purchase_order_id = $so->getClientPoNumber();
+        } elseif (null !== $invoice->getClientPoNumber() && $invoice->getClientPoNumber() !== '') {
+            $client_purchase_order_id = $invoice->getClientPoNumber();
         }
 // Buyer Reference https://docs.peppol.eu/poacc/billing/3.0/bis/#buyerref
         $buyerReference = '';
         if ($so && null !== $so->getClientPoPerson()) {
             $buyerReference = $so->getClientPoPerson();
+        } elseif (null !== $invoice->getClientPoPerson() && $invoice->getClientPoPerson() !== '') {
+            $buyerReference = $invoice->getClientPoPerson();
         }
         $config_company_details = $this->s->getConfigCompanyDetails();
 /**
@@ -496,6 +500,105 @@ class PeppolHelper
             } // null!==sales order
             throw new SalesOrderNf($this->t);
         } else { // if $invoice->getSoId() > 0
+            // independent invoice i.e. no quote or salesorder
+            $client_po_number = $invoice->getClientPoNumber();
+            if (null !== $client_po_number && !empty($client_po_number)) {
+// https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/
+//                                          cac-InvoicePeriod/cbc-DescriptionCode/
+// Only permit a description code if there is no tax point date ie.
+//                           DateTimeImmutable->format('Y-m-d') === 1901/01/01
+// since the tax_point_date and description code are mutually exclusive
+                $description_code = $this->noTaxPointDate(
+                        $invoice) ?
+                            $this->DescriptionCode($invoice, $delRepo)
+                                : '';
+// https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/
+                    $peppolHeader = new PeppolInvoiceHeader(
+                        $profileID,
+                        $id,
+                        new PeppolInvoiceDates(
+                            $issueDate,
+                            $dueDate,
+                            $taxPointDate,
+                            new InvoicePeriod($start_datetime, $end_datetime, $description_code),
+                        ),
+                        $note,
+                        $accountingCost,
+                        $buyerReference,
+                        new PeppolInvoiceReferences(
+                            // a standalone invoice i.e. without salesorder
+                            // will have null SalesOrderId.
+                            // OrderReference assigns 'NA' to mandatory
+                            // SalesOrderId
+                            new OrderReference($client_po_number, null),
+                            null !== $cdr_id ? new ContractDocumentReference($cdr_id) : null,
+                            $isCopyIndicator,
+                            $supplierAssignedAccountID,
+                        ),
+                    );
+                    $supplierParty = new Party(
+                        $this->t,
+                        $supplier_name,
+                        $supplier_partyIdentificationId,
+                        $supplier_partyIdentificationSchemeId,
+                        $supplier_postalAddress,
+                        null,
+                        $supplier_contact,
+                        $supplier_partyTaxScheme,
+                        $supplier_partyLegalEntity,
+                        $supplier_endpointID,
+                        $supplier_endpointID_schemeID,
+                    );
+                    $customerParty = new Party(
+                        $this->t,
+                        $customer_name,
+                        $customer_partyIdentificationId,
+                        $customer_partyIdentificationSchemeId,
+                        $customer_postalAddress,
+                        null,
+                        $customer_contact,
+                        $customer_partyTaxScheme,
+                        $customer_partyLegalEntity,
+                        $customer_endpointID,
+                        $customer_endpointID_schemeID,
+                    );
+                    $peppolPayment = new PeppolPaymentData(
+                        new PaymentMeans($payeeFinancialAccount, $paymentId),
+                        new PaymentTerms($payment_terms),
+                    );
+                    $peppolFinancial = new PeppolFinancialData(
+                        $allowanceCharges,
+                        $taxAmounts_item_subtotal,
+                        $taxSubtotal,
+                        new LegalMonetaryTotal(
+                            $lineExtensionAmount,
+                            $taxExclusiveAmount,
+                            $taxInclusiveAmount,
+                            $allowanceTotalAmount,
+                            $payableAmount,
+                            $this->s->getSetting(self::SETTING_PEPPOL_DOCUMENT_CURRENCY),
+                            $this->s,
+                        ),
+                        $invoiceLines,
+                    );
+                    $xml = $peppol_ubl_xml->xml(
+                        $peppolHeader,
+                        $additionalDocumentReferences,
+                        $supplierParty,
+                        $customerParty,
+                        new Delivery(
+                            $actualDeliveryDate_datetime,
+                            $deliveryLocation_ID_scheme,
+                            $deliveryLocation_Address,
+                            $deliveryParty_Party,
+                        ),
+                        $peppolPayment,
+                        $peppolFinancial,
+                    );
+                fwrite($f, $peppol_ubl_xml->output($xml));
+                fclose($f);
+                return $path;
+            } // if $client_po_number
             throw new BuyerRefNf();
         }
     }
@@ -1152,13 +1255,13 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                     }
                     // Item Identification number eg. TRQWERQERQ9879
                     $peppol_po_itemid = $this->PeppolPoItemid($item, $soiR);
-                    if (null == $peppol_po_itemid) {
+                    if (null == $peppol_po_itemid && $item->getSoItemId() > 0) {
                         throw new SOIPOINNe($this->t);
                     }
 
                     // Item Line Number eg. Line 1 of 4
                     $peppol_po_lineid = $this->PeppolPoLineid($item, $soiR);
-                    if (null == $peppol_po_lineid) {
+                    if (null == $peppol_po_lineid && $item->getSoItemId() > 0) {
                         throw new SOIPOLNNe($this->t);
                     }
 /**
@@ -1195,6 +1298,27 @@ $country_helper->getCountryIdentificationCodeWithLeague(
 // https://kinsta.com/blog/php-8-2/#deprecate--string-interpolation
 // Note: The following string interpolation,
 // ie. curly brackets within double quotes, conforms with php 8.2 requirements
+
+                        // Optional elements — only emit when the source value is non-empty
+                        // to avoid R008 "Document MUST not contain empty elements."
+                        $lineDesc = $item->getDescription() ?? '';
+                        $lineNote = $lineDesc !== ''
+                            ? [['name' => "{$b}Note", 'value' => $lineDesc]]
+                            : [];
+                        $itemDesc = $lineDesc !== ''
+                            ? [['name' => "{$b}Description", 'value' => $lineDesc]]
+                            : [];
+                        $originCode = $item->getProduct()?->getProductCountryOfOriginCode() ?? '';
+                        $originCountry = $originCode !== ''
+                            ? [['name' => "{$a}OriginCountry", 'value' => [['name' => "{$b}IdentificationCode", 'value' => $originCode]]]]
+                            : [];
+                        $orderLineRef = ($peppol_po_lineid !== null && $peppol_po_lineid !== '')
+                            ? [['name' => "{$a}OrderLineReference", 'value' => [['name' => "{$b}LineID", 'value' => $peppol_po_lineid]]]]
+                            : [];
+                        $buyersItemId = ($peppol_po_itemid !== null && $peppol_po_itemid !== '')
+                            ? [['name' => "{$a}BuyersItemIdentification", 'value' => [['name' => "{$b}ID", 'value' => $peppol_po_itemid]]]]
+                            : [];
+
             $invoiceLines[$item_id] =
                 [
                     'name' => "{$a}InvoiceLine",
@@ -1203,10 +1327,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                             'name' => "{$b}ID",
                             'value' => (string) $item_id
                         ],
-                        [
-                            'name' => "{$b}Note",
-                            'value' => $item->getDescription()
-                        ],
+                        ...$lineNote,
                         [
                             'name' => "{$b}InvoicedQuantity",
                             'value' => (string) $item->getQuantity(),
@@ -1239,15 +1360,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                                 ],
                             ]
                         ],
-                        [
-                            'name' => "{$a}OrderLineReference",
-                            'value' => [
-                                [
-                                    'name' => "{$b}LineID",
-                                    'value' => $peppol_po_lineid,
-                                ],
-                            ]
-                        ],
+                        ...$orderLineRef,
                         [
                             'name' => "{$a}DocumentReference",
                             'value' => [
@@ -1266,23 +1379,12 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                         [
                             'name' => "{$a}Item",
                             'value' => [
-                                [
-                                    'name' => "{$b}Description",
-                                    'value' => $item->getDescription()
-                                ],
+                                ...$itemDesc,
                                 [
                                     'name' => "{$b}Name",
                                     'value' => $item->getName()
                                 ],
-                                [
-                                    'name' => "{$a}BuyersItemIdentification",
-                                    'value' => [
-                                        [
-                                            'name' => "{$b}ID",
-                                            'value' => $peppol_po_itemid
-                                        ],
-                                    ],
-                                ],
+                                ...$buyersItemId,
                                 [
                                     'name' => "{$a}SellersItemIdentification",
                                     'value' => [
@@ -1307,16 +1409,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                                         ],
                                     ],
                                 ],
-                                [
-                                    'name' => "{$a}OriginCountry",
-                                    'value' => [
-                                        [
-                                            'name' => "{$b}IdentificationCode",
-                                            'value' =>
-                        $item->getProduct()?->getProductCountryOfOriginCode()
-                                        ],
-                                    ],
-                                ],
+                                ...$originCountry,
                                 [
                                     'name' => "{$a}CommodityClassification",
                                     'value' => [
@@ -1640,7 +1733,9 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 throw new SOINe($this->t);
             }
         }
-        return null;
+        // Standalone invoice: use InvItem's own buyer item identifier (may be empty)
+        $itemid = $item->getPeppolPoItemid();
+        return ($itemid !== '' && $itemid !== null) ? $itemid : null;
     }
 
     /**
@@ -1666,7 +1761,9 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 throw new SOINe($this->t);
             }
         }
-        return null;
+        // Standalone invoice: use InvItem's own PO line identifier (may be empty)
+        $lineid = $item->getPeppolPoLineid();
+        return ($lineid !== '' && $lineid !== null) ? $lineid : null;
     }
 
     /**

@@ -23,6 +23,9 @@ class AllowanceCharge
         #[Column(type: 'primary')]
         private ?int $id = null,
         #[Column(type: 'bool', typecast: 'bool', default: false, nullable: false)]
+        /**
+         * Identifier true => charge, false => allowance
+         */
         private bool $identifier = false,
         #[Column(type: 'tinyInteger(1)',
                 nullable: false, default: 0)]
@@ -34,7 +37,7 @@ class AllowanceCharge
         private string $reason = '',
         #[Column(type: 'integer(11)', nullable: false)]
         /**
-         * $multiplier_factor_numeric x $base_amount = $amount
+         * $multiplier_factor_numeric x $base_amount / 100 = $amount
          * Fixed $amount i.e. no calculation involved
          * ... use a 0 or 1 for $multiplier_factor_numeric
          * $multiplier_factor_numeric > 1 => $base_amount must be > 0

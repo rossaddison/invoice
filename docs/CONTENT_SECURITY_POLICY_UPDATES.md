@@ -221,3 +221,114 @@ After CSP updates:
   https://developers.braintreepayments.com/guides/drop-in/overview/javascript/v3)
 - [Amazon Pay Integration Guide](
   https://developer.amazon.com/docs/amazon-pay-checkout/introduction.html)
+
+---
+
+## PSR-15 Middleware Migration (June 2026)
+
+### Background
+
+The `.htaccess` approach from March 2026 required Apache-specific configuration
+and used `'unsafe-inline'` and `'unsafe-eval'` in `script-src`. The June 2026
+implementation replaces that with a PSR-15 middleware injected into the Yii3
+middleware stack — independent of the web server, compatible with any SAPI.
+
+This was prompted by two CodeQL alerts (#194 XSS, #195 incomplete URL check) in
+the bundled htmx IIFE. Those alerts are in third-party bundled source (excluded
+from CodeQL via `paths-ignore`), but the correct defence-in-depth response was a
+strict CSP that neutralises injected scripts even if htmx were exploited.
+
+### Architecture
+
+| Component | Path |
+|-----------|------|
+| Middleware class | `src/Middleware/ContentSecurityPolicyMiddleware.php` |
+| DI wiring | `config/web/di/content-security-policy.php` |
+| Policy config | `config/web/params.php` — `'csp' => ['policy' => ...]` |
+
+### Middleware class
+
+```php
+final class ContentSecurityPolicyMiddleware implements MiddlewareInterface
+{
+    public function __construct(private readonly string $policy) {}
+
+    #[\Override]
+    public function process(
+        ServerRequestInterface $request,
+        RequestHandlerInterface $handler,
+    ): ResponseInterface {
+        return $handler->handle($request)
+            ->withHeader('Content-Security-Policy', $this->policy);
+    }
+}
+```
+
+The policy string is injected via Yii3 DI — the middleware class has no
+knowledge of specific domains, so adding a payment provider requires only a
+change to `config/web/params.php`.
+
+### Stack position
+
+```php
+'middlewares' => [
+    RequestCatcherMiddleware::class,
+    ErrorCatcher::class,
+    ContentSecurityPolicyMiddleware::class,   // ← here, before session/CSRF
+    PrometheusMiddleware::class,
+    SessionMiddleware::class,
+    ...
+]
+```
+
+Placed immediately after `ErrorCatcher` so that error responses (400, 500 pages)
+also carry the CSP header.
+
+### Current policy directives
+
+| Directive | Value | Reason |
+|-----------|-------|--------|
+| `default-src` | `'self'` | Block everything external by default |
+| `script-src` | `'self'` | Only the IIFE bundle; neutralises XSS injection |
+| `style-src` | `'self' 'unsafe-inline'` | Bootstrap 5 injects inline styles at runtime |
+| `img-src` | `'self' data: blob:` | `data:` for QR codes and base64 charts |
+| `font-src` | `'self' data:` | Embedded web fonts |
+| `connect-src` | `'self'` | htmx AJAX stays on-origin |
+| `form-action` | `'self'` | Forms may not POST off-site |
+| `frame-ancestors` | `'none'` | Clickjacking prevention |
+| `base-uri` | `'self'` | Block `<base>` tag injection |
+| `object-src` | `'none'` | No plugins (Flash, Java applets) |
+
+### Adding payment provider domains
+
+When a payment integration is activated, append its domains in
+`config/web/params.php` inside the `implode('; ', [...])` array:
+
+```php
+'csp' => [
+    'policy' => implode('; ', [
+        "default-src 'self'",
+        "script-src 'self' https://js.stripe.com https://*.stripe.com",
+        "style-src 'self' 'unsafe-inline'",
+        "img-src 'self' data: blob: https://*.stripe.com",
+        "font-src 'self' data:",
+        "connect-src 'self' https://api.stripe.com https://*.stripe.com",
+        "frame-src 'self' https://js.stripe.com https://*.stripe.com",
+        "form-action 'self'",
+        "frame-ancestors 'none'",
+        "base-uri 'self'",
+        "object-src 'none'",
+    ]),
+],
+```
+
+### Key improvement over .htaccess approach
+
+| | `.htaccess` (March 2026) | PSR-15 (June 2026) |
+|---|---|---|
+| `script-src unsafe-inline` | Yes | **No** |
+| `script-src unsafe-eval` | Yes | **No** |
+| Web-server dependency | Apache only | Framework-level, any SAPI |
+| Error-page coverage | Depends on Apache config | Always (before router) |
+| Payment domain extension | Edit `.htaccess` | Edit `params.php` |
+| Psalm / static analysis | Not applicable | Level 1 clean |

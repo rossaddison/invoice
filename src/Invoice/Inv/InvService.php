@@ -143,6 +143,10 @@ final readonly class InvService
         }
         isset($array['contract_id']) ?
             $model->setContractId((int) $array['contract_id']) : '';
+        isset($array['client_po_number']) ?
+            $model->setClientPoNumber((string) $array['client_po_number']) : '';
+        isset($array['client_po_person']) ?
+            $model->setClientPoPerson((string) $array['client_po_person']) : '';
 
         if (!$model->hasIdentity()) {
             if ($s->getSetting('mark_invoices_sent_copy') === '1') {
@@ -237,6 +241,8 @@ final readonly class InvService
         $model->setPostalAddressId(
             (int) $array['postal_address_id']);
         $model->setContractId((int) $array['contract_id']);
+        $model->setClientPoNumber((string) ($array['client_po_number'] ?? ''));
+        $model->setClientPoPerson((string) ($array['client_po_person'] ?? ''));
         $this->repository->save($model);
         return $model;
     }

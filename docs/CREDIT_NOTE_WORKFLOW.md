@@ -1,4 +1,4 @@
-# Credit Note Creation Workflow
+﻿# Credit Note Creation Workflow
 
 ## Overview
 
@@ -1369,7 +1369,7 @@ When modifying the credit note workflow:
 
 ### External Resources
 - [Peppol BIS Billing 3.0](https://docs.peppol.eu/poacc/billing/3.0/)
-- [UBL 2.1 Specification](http://docs.oasis-open.org/ubl/UBL-2.1.html)
+- [UBL 2.4 Specification](http://docs.oasis-open.org/ubl/UBL-2.1.html)
 - [EN 16931 Standard](https://ec.europa.eu/cefdigital/wiki/display/CEFDIGITAL/Electronic+invoicing)
 - [Ecosio Validator](https://ecosio.com/en/peppol/)
 - [OpenPeppol](https://peppol.org/)

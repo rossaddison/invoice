@@ -21,6 +21,7 @@ $panelHead = ['class' => 'card-header'];
 $panelBody = ['class' => 'card-body'];
 $formGroup = ['class' => 'mb-3'];
 $formControl = 'form-control';
+$kVatRegistrationNumber = 'settings[vat_registration_number]';
 $kFphConnectionMethod = 'settings[fph_connection_method]';
 $kFphClientBrowserJsUserAgent = 'settings[fph_client_browser_js_user_agent]';
 $kFphClientDeviceId = 'settings[fph_client_device_id]';
@@ -42,6 +43,26 @@ echo H::openTag('div', $row); //1
      ->render();
    echo H::closeTag('div'); //4
    echo H::openTag('div', $panelBody); //4
+    echo H::openTag('div', $formGroup); //5
+     echo H::openTag('label', ['for' => $kVatRegistrationNumber]);
+      echo H::openTag('h4');
+       echo $translator->translate('mtd.vat.registration.number');
+      echo H::closeTag('h4');
+     echo H::closeTag('label');
+     $body[$kVatRegistrationNumber] = $s->getSetting('vat_registration_number');
+     echo H::openTag('input', [
+      'type' => 'text',
+      'name' => $kVatRegistrationNumber,
+      'id' => $kVatRegistrationNumber,
+      'class' => $formControl,
+      'maxlength' => '9',
+      'placeholder' => '123456789',
+      'value' => $body[$kVatRegistrationNumber],
+     ]);
+     echo H::openTag('small', ['class' => 'text-muted']);
+      echo $translator->translate('mtd.vat.registration.number.hint');
+     echo H::closeTag('small');
+    echo H::closeTag('div'); //5
     echo H::openTag('br');
     echo H::openTag('label');
      echo H::openTag('h4');

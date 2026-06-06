@@ -114,8 +114,8 @@ trait Peppol
                                         $pVal->loadXML($xml);
                                         // show the e-invoice if it passes
                                         if ($pVal->validate()) {
-                                            return $this->factory->createResponse(
-                                           '<pre>'. Html::encode($xml) . '</pre>');
+                                            return $this->webService->getHtmlResponse(
+                                                '<pre>' . Html::encode($xml) . '</pre>');
                                         // display all the errors
                                         } else {
                                             $parameters = [

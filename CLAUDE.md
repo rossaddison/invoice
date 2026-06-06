@@ -1,4 +1,4 @@
-# CLAUDE.md — rossaddison/invoice
+﻿# CLAUDE.md — rossaddison/invoice
 
 This file provides persistent context for Claude when reviewing pull requests,
 assisting with issues, and suggesting code improvements in this repository.
@@ -10,7 +10,7 @@ assisting with issues, and suggesting code improvements in this repository.
 **invoice** is a professional open-source e-invoicing system built with:
 - **PHP** (primary language)
 - **Yii3** framework
-- **UBL 2.1** (Universal Business Language) standard
+- **UBL 2.4** (Universal Business Language) standard
 - **Peppol** e-invoicing network support
 - **PHPUnit** for testing (see `Tests/` directory)
 - **Angular** frontend (see `angular/` directory)
@@ -82,7 +82,7 @@ When reviewing PHP files, Claude should:
 - Follows **PSR-1** and **PSR-12**
 - PHP 8.4+ is the minimum (enums, readonly properties, named arguments, property hooks, asymmetric visibility)
 - Yii3 dependency injection patterns should be preserved
-- Do not suggest changes that break UBL 2.1 or Peppol compliance
+- Do not suggest changes that break UBL 2.4 or Peppol compliance
 
 ---
 

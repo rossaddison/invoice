@@ -3,6 +3,7 @@
 .DS_Store
 .buildpath
 .idea
+.claude/settings.local.json
 .project
 .settings
 Thumbs.db

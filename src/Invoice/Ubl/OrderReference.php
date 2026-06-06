@@ -27,5 +27,9 @@ class OrderReference implements XmlSerializable
             $writer->write([ Schema::CBC
                                     . 'SalesOrderID' => $this->salesOrderId ]);
         }
+        if ($this->salesOrderId === null) {
+            $writer->write([ Schema::CBC
+                                    . 'SalesOrderID' => 'NA' ]);
+        }
     }
 }

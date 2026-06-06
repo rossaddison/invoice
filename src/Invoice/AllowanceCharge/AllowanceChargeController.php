@@ -54,7 +54,7 @@ final class AllowanceChargeController extends BaseController
         TaxRateRepository $tR,
     ): Response {
         $allowanceCharge = new AllowanceCharge();
-        $form = new AllowanceChargeForm();
+        $form = new AllowanceChargeForm($this->translator);
         $peppolArrays = new PeppolArrays();
         $allowances = $peppolArrays->getAllowancesSubsetArray();
         $parameters = [
@@ -118,7 +118,7 @@ final class AllowanceChargeController extends BaseController
         TaxRateRepository $tR,
     ): Response {
         $allowanceCharge = new AllowanceCharge();
-        $form = new AllowanceChargeForm();
+        $form = new AllowanceChargeForm($this->translator);
         $peppolArrays = new PeppolArrays();
         $charges = $peppolArrays->getChargesArray();
         $parameters = [
@@ -156,7 +156,7 @@ final class AllowanceChargeController extends BaseController
             }
         }
         if ($request->getMethod() === Method::POST) {
-            $form = new AllowanceChargeForm();
+            $form = new AllowanceChargeForm($this->translator);
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $ac = $this->allowanceChargeService->saveAllowanceCharge(
                     $allowanceCharge, $body);
@@ -235,7 +235,7 @@ final class AllowanceChargeController extends BaseController
         $body = $request->getParsedBody() ?? [];
         
             if (null !== $allowanceCharge) {
-                $form = AllowanceChargeForm::show($allowanceCharge);
+                $form = AllowanceChargeForm::show($allowanceCharge, $this->translator);
                 $peppolArrays = new PeppolArrays();
                 $allowances = $peppolArrays->getAllowancesSubsetArray();
                 $parameters = [
@@ -286,7 +286,7 @@ final class AllowanceChargeController extends BaseController
         $allowanceCharge = $this->allowanceCharge($currentRoute, $allowanceChargeRepository);
         $body = $request->getParsedBody() ?? [];
         if (null !== $allowanceCharge) {
-            $form = AllowanceChargeForm::show($allowanceCharge);
+            $form = AllowanceChargeForm::show($allowanceCharge, $this->translator);
             $peppolArrays = new PeppolArrays();
             $charges = $peppolArrays->getChargesArray();
             //$shippingCharges = $peppolArrays->getCommonChargesShipping();
@@ -294,7 +294,7 @@ final class AllowanceChargeController extends BaseController
             //$charges =
             $parameters = [
                 'title' => $this->translator->translate('allowance.or.charge.edit.charge'),
-                'actionName' => 'allowancecharge/editAllowance',
+                'actionName' => 'allowancecharge/editCharge',
                 'actionArguments' => ['id' => $allowanceCharge->reqId()],
                 'errors' => [],
                 'form' => $form,
@@ -349,7 +349,7 @@ final class AllowanceChargeController extends BaseController
     {
         $allowanceCharge = $this->allowanceCharge($currentRoute, $allowanceChargeRepository);
         if ($allowanceCharge) {
-            $form = AllowanceChargeForm::show($allowanceCharge);
+            $form = AllowanceChargeForm::show($allowanceCharge, $this->translator);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'allowancecharge/view',

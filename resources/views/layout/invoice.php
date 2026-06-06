@@ -1313,6 +1313,12 @@ if ((null !== $currentPath) && !$isGuest) {
                     'report.test.fraud.prevention.headers.api'),
                 $urlGenerator->generate('backend/hmrc/fphValidate'),
                 itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('mtd.vat.obligations'),
+                $urlGenerator->generate('backend/hmrc/vatObligations'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('purchase.entry.index'),
+                $urlGenerator->generate('purchase-entry/index'),
+                itemAttributes: $itemFontArray),
         ),
     )
     ->styles(NavStyle::NAVBAR);

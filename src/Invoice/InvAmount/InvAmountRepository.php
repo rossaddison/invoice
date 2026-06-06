@@ -242,4 +242,26 @@ final class InvAmountRepository extends Select\Repository
         }
         return $return;
     }
+
+    /**
+     * Sum Box 1 (output VAT) and Box 6 (sales ex-VAT) for sent/viewed/paid
+     * invoices within the given obligation period (dates as YYYY-MM-DD strings).
+     * @return array{output_vat: float, sales_ex_vat: float}
+     */
+    public function repoVatTotalsForPeriod(string $start, string $end): array
+    {
+        $query = $this->select()
+            ->load('inv')
+            ->where('inv.status_id', 'in', [2, 3, 4])
+            ->andWhere('inv.date_created', '>=', $start)
+            ->andWhere('inv.date_created', '<=', $end);
+        $outputVat = 0.0;
+        $salesExVat = 0.0;
+        /** @var InvAmount $invAmount */
+        foreach ($this->prepareDataReader($query)->read() as $invAmount) {
+            $outputVat += (float) $invAmount->getTaxTotal();
+            $salesExVat += $invAmount->getItemSubtotal();
+        }
+        return ['output_vat' => round($outputVat, 2), 'sales_ex_vat' => round($salesExVat, 2)];
+    }
 }
