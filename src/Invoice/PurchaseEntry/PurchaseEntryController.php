@@ -312,13 +312,10 @@ final class PurchaseEntryController extends BaseController
             return $canEdit;
         }
         $body  = $request->getParsedBody();
-        if (!is_array($body)) {
-            return $this->webService->getRedirectResponse('entry/tax-year-locales');
-        }
-        $month = str_pad((string) ($body['month'] ?? ''), 2, '0', STR_PAD_LEFT);
-        $day   = str_pad((string) ($body['day'] ?? ''), 2, '0', STR_PAD_LEFT);
-        if (!preg_match('/^(0[1-9]|1[0-2])$/', $month)
-            || !preg_match('/^(0[1-9]|[12]\d|3[01])$/', $day)) {
+        $month = is_array($body) ? str_pad((string) ($body['month'] ?? ''), 2, '0', STR_PAD_LEFT) : '';
+        $day   = is_array($body) ? str_pad((string) ($body['day'] ?? ''), 2, '0', STR_PAD_LEFT) : '';
+        if (preg_match('/^(0[1-9]|1[0-2])$/', $month) !== 1
+            || preg_match('/^(0[1-9]|[12]\d|3[01])$/', $day) !== 1) {
             $this->flashMessage('danger',
                 $this->translator->translate('purchase.entry.tax.year.locale.invalid'));
             return $this->webService->getRedirectResponse('entry/tax-year-locales');
