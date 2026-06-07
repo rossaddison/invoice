@@ -24,11 +24,24 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
     }
 
     /**
-     * @return array
-     * @psalm-return array<string, mixed>
+     * @return array<string, mixed>
      */
     #[\Override]
     public function getCommonParameters(): array
+    {
+        return array_merge(
+            $this->resolveCompanyData(),
+            ['translator' => $this->translator, 'url' => $this->url],
+            $this->translationParameters(),
+        );
+    }
+
+    /**
+     * Finds the current company and its active logo, returns all company fields.
+     *
+     * @return array<string, mixed>
+     */
+    private function resolveCompanyData(): array
     {
         $companies = $this->companyRepository->findAllPreloaded();
         $companyPrivates = $this->companyPrivateRepository->findAllPreloaded();
@@ -64,145 +77,147 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
                 $companyEmail = $company->getEmail();
                 $arbitrationBody = $company->getArbitrationBody();
                 $arbitrationJurisdiction = $company->getArbitrationJurisdiction();
-
                 /**
                  * @var CompanyPrivate $private
                  */
                 foreach ($companyPrivates as $private) {
+                    // site's logo: take the first logo where the current date falls within
+                    // the logo's start and end dates
                     if ($private->reqCompanyId() === $company->reqId()
-// site's logo: take the first logo where the current date falls within
-//  the logo's start and end dates
                         && ($private->getStartDate()?->format('Y-m-d') <
                             (new \DateTimeImmutable('now'))->format('Y-m-d'))
                         && ($private->getEndDate()?->format('Y-m-d') >
                             (new \DateTimeImmutable('now'))->format('Y-m-d'))) {
-                            $companyLogoFileName = $private->getLogoFilename();
-                            $companyLogoWidth = $private->getLogoWidth();
-                            $companyLogoHeight = $private->getLogoHeight();
-                            $companyStartDate = $private->getStartDate()?->format('Y-m-d');
+                        $companyLogoFileName = $private->getLogoFilename() ?? '';
+                        $companyLogoWidth = $private->getLogoWidth();
+                        $companyLogoHeight = $private->getLogoHeight();
+                        $companyStartDate = $private->getStartDate()?->format('Y-m-d');
                     }
                 }
             }
         }
-        $logoPath = (
-            (isset($companyLogoFileName) && !empty($companyLogoFileName))
-                                      ? '/logo/' . $companyLogoFileName
-                                      : '/site/' . $this->settingRepository->publicLogo() . '.png'
-        );
+        $logoPath = $companyLogoFileName !== ''
+            ? '/logo/' . $companyLogoFileName
+            : '/site/' . $this->settingRepository->publicLogo() . '.png';
 
         return [
-            'arbitrationBody' => $arbitrationBody ?? '',
-            'arbitrationJurisdiction' => $arbitrationJurisdiction ?? '',
-            'companyAddress1' => $companyAddress1 ?? '',
-            'companyAddress2' => $companyAddress2 ?? '',
-            'companyCity' => $companyCity ?? '',
-            'companyState' => $companyState ?? '',
-            'companyZip' => $companyZip ?? '',
-            'companyCountry' => $companyCountry ?? '',
-            'companyPhone' => $companyPhone ?? '',
-            'companyEmail' => $companyEmail ?? '',
-            'companyLogoFileName' => $companyLogoFileName ?? '',
+            'arbitrationBody' => $arbitrationBody,
+            'arbitrationJurisdiction' => $arbitrationJurisdiction,
+            'companyAddress1' => $companyAddress1,
+            'companyAddress2' => $companyAddress2,
+            'companyCity' => $companyCity,
+            'companyState' => $companyState,
+            'companyZip' => $companyZip,
+            'companyCountry' => $companyCountry,
+            'companyPhone' => $companyPhone,
+            'companyEmail' => $companyEmail,
+            'companyLogoFileName' => $companyLogoFileName,
             'companyLogoWidth' => $companyLogoWidth ?? 80,
             'companyLogoHeight' => $companyLogoHeight ?? 40,
-            'companyName' => $companyName ?? '',
-            'companySeoDescription' => $companySeoDescription ??
-                'Search Engine Optimization Description',
-            'companyStartDate' => $companyStartDate ?? date('Y-m-d'),
-            'companyWeb' => $companyWeb ?? 'mywebpage.com',
+            'companyName' => $companyName,
+            'companySeoDescription' => $companySeoDescription ?? 'Search Engine Optimization Description',
+            'companyStartDate' => $companyStartDate !== '' ? $companyStartDate : date('Y-m-d'),
+            'companyWeb' => $companyWeb !== '' ? $companyWeb : 'mywebpage.com',
             'logoPath' => $logoPath,
-            'translator' => $this->translator,
-            'url' => $this->url,
+        ];
+    }
 
-            /**
-             * Related logic: see \invoice\resources\messages\en\app.php
-             * Related logic: see \invoice\vendor\yiisoft\yii-view\src\
-             *  ViewRenderer.php function getCommonParameters
-             */
+    /**
+     * Returns all soletrader translation arrays and auth-alert parameters.
+     *
+     * Related logic: see resources/messages/en/app.php
+     *
+     * @return array<string, array<string, string>>
+     */
+    private function translationParameters(): array
+    {
+        $t = $this->translator;
+        return [
             'about' => [
-                'we' => $this->translator->translate('site.soletrader.about.we'),
-                'choose' => $this->translator->translate('site.soletrader.about.choose'),
-                'competitive' => $this->translator->translate('site.soletrader.about.competitive.rates'),
-                'quality' => $this->translator->translate('site.soletrader.about.quality'),
-                'contemporary' => $this->translator->translate('site.soletrader.about.contemporary'),
-                'trained' => $this->translator->translate('site.soletrader.about.trained'),
-                'willing' => $this->translator->translate('site.soletrader.about.willing'),
-                'dissatisfaction' => $this->translator->translate('site.soletrader.about.dissatisfaction'),
-                'simply' => $this->translator->translate('site.soletrader.about.simply'),
-                'happy' => $this->translator->translate('site.soletrader.about.happy'),
-                'solved' => $this->translator->translate('site.soletrader.about.solved'),
-                'finished' => $this->translator->translate('site.soletrader.about.finished'),
-                'return' => $this->translator->translate('site.soletrader.about.return'),
+                'we' => $t->translate('site.soletrader.about.we'),
+                'choose' => $t->translate('site.soletrader.about.choose'),
+                'competitive' => $t->translate('site.soletrader.about.competitive.rates'),
+                'quality' => $t->translate('site.soletrader.about.quality'),
+                'contemporary' => $t->translate('site.soletrader.about.contemporary'),
+                'trained' => $t->translate('site.soletrader.about.trained'),
+                'willing' => $t->translate('site.soletrader.about.willing'),
+                'dissatisfaction' => $t->translate('site.soletrader.about.dissatisfaction'),
+                'simply' => $t->translate('site.soletrader.about.simply'),
+                'happy' => $t->translate('site.soletrader.about.happy'),
+                'solved' => $t->translate('site.soletrader.about.solved'),
+                'finished' => $t->translate('site.soletrader.about.finished'),
+                'return' => $t->translate('site.soletrader.about.return'),
             ],
             'team' => [
-                'we' => $this->translator->translate('site.soletrader.team.we'),
-                'coordinator' => $this->translator->translate('site.soletrader.team.coordinator'),
-                'assistant' => $this->translator->translate('site.soletrader.team.assistant'),
+                'we' => $t->translate('site.soletrader.team.we'),
+                'coordinator' => $t->translate('site.soletrader.team.coordinator'),
+                'assistant' => $t->translate('site.soletrader.team.assistant'),
             ],
             'pricing' => [
-                'pricing' => $this->translator->translate('site.soletrader.pricing.pricing'),
-                'explore' => $this->translator->translate('site.soletrader.pricing.explore'),
-                'plans' => $this->translator->translate('site.soletrader.pricing.plans'),
-                'starter' => $this->translator->translate('site.soletrader.pricing.starter'),
-                'currencyAmount' => $this->translator->translate('site.soletrader.pricing.currencyAmount'),
-                'currencyPerMonth' => $this->translator->translate('site.soletrader.pricing.currencyPerMonth'),
-                'basic' => $this->translator->translate('site.soletrader.pricing.basic'),
-                'visits' => $this->translator->translate('site.soletrader.pricing.visits'),
-                'pro' => $this->translator->translate('site.soletrader.pricing.pro'),
-                'proPrice' => $this->translator->translate('site.soletrader.pricing.proPrice'),
-                'special' => $this->translator->translate('site.soletrader.pricing.special'),
-                'choosePlan' => $this->translator->translate('site.soletrader.pricing.choosePlan'),
+                'pricing' => $t->translate('site.soletrader.pricing.pricing'),
+                'explore' => $t->translate('site.soletrader.pricing.explore'),
+                'plans' => $t->translate('site.soletrader.pricing.plans'),
+                'starter' => $t->translate('site.soletrader.pricing.starter'),
+                'currencyAmount' => $t->translate('site.soletrader.pricing.currencyAmount'),
+                'currencyPerMonth' => $t->translate('site.soletrader.pricing.currencyPerMonth'),
+                'basic' => $t->translate('site.soletrader.pricing.basic'),
+                'visits' => $t->translate('site.soletrader.pricing.visits'),
+                'pro' => $t->translate('site.soletrader.pricing.pro'),
+                'proPrice' => $t->translate('site.soletrader.pricing.proPrice'),
+                'special' => $t->translate('site.soletrader.pricing.special'),
+                'choosePlan' => $t->translate('site.soletrader.pricing.choosePlan'),
             ],
             'testimonial' => [
-                'we' => $this->translator->translate('site.soletrader.testimonial.we'),
-                'worker1' => $this->translator->translate('site.soletrader.testimonial.worker1'),
-                'worker2' => $this->translator->translate('site.soletrader.testimonial.worker2'),
-                'worker3' => $this->translator->translate('site.soletrader.testimonial.worker3'),
+                'we' => $t->translate('site.soletrader.testimonial.we'),
+                'worker1' => $t->translate('site.soletrader.testimonial.worker1'),
+                'worker2' => $t->translate('site.soletrader.testimonial.worker2'),
+                'worker3' => $t->translate('site.soletrader.testimonial.worker3'),
             ],
             'contact' => [
-                'touch' => $this->translator->translate('site.soletrader.contact.touch'),
-                'lookout' => $this->translator->translate('site.soletrader.contact.lookout'),
-                'address' => $this->translator->translate('site.soletrader.contact.address'),
-                'email' => $this->translator->translate('site.soletrader.contact.email'),
-                'phone' => $this->translator->translate('site.soletrader.contact.phone'),
+                'touch' => $t->translate('site.soletrader.contact.touch'),
+                'lookout' => $t->translate('site.soletrader.contact.lookout'),
+                'address' => $t->translate('site.soletrader.contact.address'),
+                'email' => $t->translate('site.soletrader.contact.email'),
+                'phone' => $t->translate('site.soletrader.contact.phone'),
             ],
             'forgotalert' => [
-                'passwordResetEmail' => $this->translator->translate('password.reset.email'),
+                'passwordResetEmail' => $t->translate('password.reset.email'),
             ],
             'adminmustmakeactive' => [
-                'adminMustMakeActive' => $this->translator->translate('loginalert.user.inactive'),
+                'adminMustMakeActive' => $t->translate('loginalert.user.inactive'),
             ],
             'forgotemailfailed' => [
-                'passwordResetFailed' => $this->translator->translate('password.reset.failed'),
-                'invoiceEmailException' => $this->translator->translate('email.exception'),
+                'passwordResetFailed' => $t->translate('password.reset.failed'),
+                'invoiceEmailException' => $t->translate('email.exception'),
             ],
             'forgotusernotfound' => [
-                'loginAlertUserNotFound' => $this->translator->translate('loginalert.user.not.found'),
+                'loginAlertUserNotFound' => $t->translate('loginalert.user.not.found'),
             ],
             'oauth2callbackresultunauthorised' => [
-                'oauth2callbackresultunauthorised' => $this->translator->translate('layout.page.not-authorised'),
+                'oauth2callbackresultunauthorised' => $t->translate('layout.page.not-authorised'),
             ],
             'onetimepassworderror' => [
-                'onetimePasswordError' => $this->translator->translate('two.factor.authentication.error'),
+                'onetimePasswordError' => $t->translate('two.factor.authentication.error'),
             ],
             'onetimepasswordfailure' => [
-                'onetimePasswordFailure' => $this->translator->translate('two.factor.authentication.attempt.failure'),
+                'onetimePasswordFailure' => $t->translate('two.factor.authentication.attempt.failure'),
             ],
             'onetimepasswordsuccess' => [
-                'onetimePasswordSuccess' => $this->translator->translate('two.factor.authentication.attempt.success'),
+                'onetimePasswordSuccess' => $t->translate('two.factor.authentication.attempt.success'),
             ],
             'resetpasswordfailed' => [
-                'resetPasswordFailed' => $this->translator->translate('password.reset.failed'),
+                'resetPasswordFailed' => $t->translate('password.reset.failed'),
             ],
             'resetpasswordsuccess' => [
-                'resetPasswordSuccess' => $this->translator->translate('password.reset'),
+                'resetPasswordSuccess' => $t->translate('password.reset'),
             ],
             'signupfailed' => [
-                'emailNotSentSuccessfully' => $this->translator->translate('email.not.sent.successfully'),
-                'invoiceEmailException' => $this->translator->translate('email.exception'),
-                'localhostUserCanLoginAfterAdminMakesActive' => $this->translator->translate('loginalert.user.inactive'),
+                'emailNotSentSuccessfully' => $t->translate('email.not.sent.successfully'),
+                'invoiceEmailException' => $t->translate('email.exception'),
+                'localhostUserCanLoginAfterAdminMakesActive' => $t->translate('loginalert.user.inactive'),
             ],
             'signupsuccess' => [
-                'emailSuccessfullySent' => $this->translator->translate('email.successfully.sent'),
+                'emailSuccessfullySent' => $t->translate('email.successfully.sent'),
             ],
         ];
     }

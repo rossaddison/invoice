@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Helpers\Peppol;
 
-class Peppol_UNECERec20_11e
+class PeppolUneceRec2011e
 {
     public function getUNECERec2011e(): array
     {

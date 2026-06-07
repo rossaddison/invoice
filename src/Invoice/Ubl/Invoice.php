@@ -60,13 +60,13 @@ class Invoice implements XmlSerializable
 
     /**
      * Related logic: http://www.schemacentral.com Business Document Standards
-     * @param string|null $UBLVersionID
+     * @param string|null $ublVersionID
      * eg. '2.1', '2.2', '2.3', '2.4'
      * @return Invoice
      */
-    public function setUBLVersionID(?string $UBLVersionID): self
+    public function setUBLVersionID(?string $ublVersionID): self
     {
-        $this->UBLVersionID = $UBLVersionID;
+        $this->UBLVersionID = $ublVersionID;
         return $this;
     }
 
@@ -139,268 +139,164 @@ class Invoice implements XmlSerializable
     public function xmlSerialize(Writer $writer): void
     {
         $this->validate();
+        $this->writeHeaderFields($writer);
+        $this->writeReferenceFields($writer);
+        $this->writePartyAndPaymentFields($writer);
+        $this->writeTaxAndTotals($writer);
+    }
 
+    /**
+     * Writes mandatory CBC header fields: IDs, dates, type code, currency.
+     *
+     * [UBL-CR-004] CopyIndicator must not appear — omitted intentionally.
+     */
+    private function writeHeaderFields(Writer $writer): void
+    {
         $writer->write([
-            Schema::CBC
-                . 'UBLVersionID' =>
-                    $this->UBLVersionID,
-            Schema::CBC
-                . 'CustomizationID' =>
-                    $this->customizationID,
+            Schema::CBC . 'UBLVersionID'    => $this->UBLVersionID,
+            Schema::CBC . 'CustomizationID' => $this->customizationID,
         ]);
 
         if ($this->profileID !== null) {
-            $writer->write([
-                Schema::CBC . 'ProfileID' => $this->profileID,
-            ]);
+            $writer->write([Schema::CBC . 'ProfileID' => $this->profileID]);
         }
 
-        $writer->write([
-            Schema::CBC . 'ID' => $this->id,
-        ]);
+        $writer->write([Schema::CBC . 'ID' => $this->id]);
 
-        /**
-         * Rule set: OpenPeppol UBL Invoice (3.15.0) (a.k.a BIS Billing 3.0.14)
-         *
-         * Related logic:
-         *  https://ecosio.com/en/peppol-and-xml-document-validator-button/
-         * Related logic:
-         *  https://docs.peppol.eu/poacc/billing/3.0/rules/UBL-CR-004/
-         * Warning
-         * Location:
-         *  src/Invoice/Helpers/Peppol/EcosioTestFiles/
-         *                                         invoice_CtuZ7QoIINV107_peppol
-         * Element/context: /:Invoice[1]
-         * XPath test: not(cbc:CopyIndicator)
-         * Error message: [UBL-CR-004]-A UBL invoice should
-                                                  not include the CopyIndicator
-         */
         $writer->write([
-                Schema::CBC
-                    . 'IssueDate' =>
-                    $this->issueDate->format('Y-m-d'),
+            Schema::CBC . 'IssueDate' => $this->issueDate->format('Y-m-d'),
         ]);
 
         if ($this->dueDate !== null) {
             $writer->write([
-                Schema::CBC
-                    . 'DueDate' =>
-                    $this->dueDate->format('Y-m-d'),
+                Schema::CBC . 'DueDate' => $this->dueDate->format('Y-m-d'),
             ]);
         }
 
-        $writer->write([
-                Schema::CBC
-                    . 'InvoiceTypeCode' =>
-                    $this->invoiceTypeCode,
-        ]);
+        $writer->write([Schema::CBC . 'InvoiceTypeCode' => $this->invoiceTypeCode]);
 
         if ($this->note !== null) {
-            $writer->write([
-                Schema::CBC
-                    . 'Note' =>
-                    $this->note,
-            ]);
+            $writer->write([Schema::CBC . 'Note' => $this->note]);
         }
 
         if ($this->taxPointDate !== null) {
             $writer->write([
-                Schema::CBC
-                    . 'TaxPointDate' =>
-                    $this->taxPointDate->format('Y-m-d'),
+                Schema::CBC . 'TaxPointDate' => $this->taxPointDate->format('Y-m-d'),
             ]);
         }
 
+        $currencyCode = $this->getDocumentCurrencyCode();
         $writer->write([
-            Schema::CBC
-                . 'DocumentCurrencyCode' =>
-            $this->sR->getSetting('peppol_debug_with_emojis') == '1' ?
-                '➡' . $this->getDocumentCurrencyCode() .  '➡' :
-                    $this->getDocumentCurrencyCode()
+            Schema::CBC . 'DocumentCurrencyCode' =>
+                $this->sR->getSetting('peppol_debug_with_emojis') == '1'
+                    ? '➡' . $currencyCode . '➡'
+                    : $currencyCode,
         ]);
+    }
 
-/*
- * Warning
- * Location:
-        src/Invoice/Helpers/Peppol/EcosioTestFiles/invoice_a0Vc8Tz6INV107_peppol
- * Element/context: /:Invoice[1]
- * XPath test: not(cbc:AccountingCostCode)
- * Error message:
-            [UBL-CR-010]-A UBL invoice should not include the AccountingCostCode
-*/
+    /**
+     * Writes optional reference fields: BuyerReference, InvoicePeriod,
+     * OrderReference, ContractDocumentReference, AdditionalDocumentReference.
+     *
+     * [UBL-CR-010] AccountingCostCode must not appear — omitted intentionally.
+     * [UBL-CR-114] AdditionalDocumentReference/DocumentType must not appear.
+     */
+    private function writeReferenceFields(Writer $writer): void
+    {
         if ($this->buyerReference !== null) {
-            $writer->write([
-                Schema::CBC
-                    . 'BuyerReference' =>
-                    $this->buyerReference,
-            ]);
+            $writer->write([Schema::CBC . 'BuyerReference' => $this->buyerReference]);
         }
 
         if ($this->invoicePeriod !== null) {
-            $writer->write([
-                Schema::CAC
-                    . 'InvoicePeriod' =>
-                    $this->invoicePeriod,
-            ]);
+            $writer->write([Schema::CAC . 'InvoicePeriod' => $this->invoicePeriod]);
         }
 
         if ($this->orderReference !== null) {
-            $writer->write([
-                Schema::CAC
-                    . 'OrderReference' =>
-                    $this->orderReference,
-            ]);
+            $writer->write([Schema::CAC . 'OrderReference' => $this->orderReference]);
         }
 
         if ($this->contractDocumentReference !== null) {
             $writer->write([
-                Schema::CAC
-                     . 'ContractDocumentReference' =>
-                    $this->contractDocumentReference,
+                Schema::CAC . 'ContractDocumentReference' => $this->contractDocumentReference,
             ]);
         }
-
-    /**
-     * Related logic: see src/Invoice/Helpers/Peppol/PeppolHelper
-     * Warning
-     * Location:
-     * src/Invoice/Helpers/Peppol/EcosioTestFiles/invoice_a0Vc8Tz6INV107_peppol
-     * Element/context: /:Invoice[1]
-     * XPath test: not(cac:AdditionalDocumentReference/cbc:DocumentType)
-     * Error message: [UBL-CR-114]-A UBL invoice should not include the
-       AdditionalDocumentReference DocumentType
-     */
 
         if ($this->additionalDocumentReference !== null) {
             $writer->write([
-                Schema::CAC
-                    . 'AdditionalDocumentReference' =>
-                    $this->additionalDocumentReference,
+                Schema::CAC . 'AdditionalDocumentReference' => $this->additionalDocumentReference,
             ]);
         }
+    }
 
-
-        /*
-         * Warning
-         * Location: invoice_a0Vc8Tz6INV107_peppol
-         * Element/context: /:Invoice[1]
-         * XPath test:
-         *  not(cac:AccountingCustomerParty/cbc:SupplierAssignedAccountID)
-         * Error message: [UBL-CR-202]-A UBL invoice should not include the
-                              AccountingCustomerParty SupplierAssignedAccountID
-         */
-        //if ($this->supplierAssignedAccountID !== null) {
-        //  $customerParty = [
-        //    Schema::CBC . 'SupplierAssignedAccountID' =>
-        //     $this->supplierAssignedAccountID,
-        //    Schema::CAC . "Party" => $this->accountingCustomerParty
-        //  ];
-        //} else {
-        $customerParty = [
-            Schema::CAC . 'Party' => $this->accountingCustomerParty,
-        ];
-        //}
-
+    /**
+     * Writes supplier/customer parties, delivery, payment means, payment terms,
+     * and allowance charges.
+     *
+     * [UBL-CR-202] AccountingCustomerParty/SupplierAssignedAccountID must not
+     * appear — omitted intentionally.
+     */
+    private function writePartyAndPaymentFields(Writer $writer): void
+    {
         $writer->write([
             Schema::CAC . 'AccountingSupplierParty' => [
-                Schema::CAC . 'Party' => $this->accountingSupplierParty
+                Schema::CAC . 'Party' => $this->accountingSupplierParty,
             ],
-            Schema::CAC . 'AccountingCustomerParty' => $customerParty,
+            Schema::CAC . 'AccountingCustomerParty' => [
+                Schema::CAC . 'Party' => $this->accountingCustomerParty,
+            ],
         ]);
 
         if ($this->delivery !== null) {
-            $writer->write([
-                Schema::CAC . 'Delivery' => $this->delivery,
-            ]);
+            $writer->write([Schema::CAC . 'Delivery' => $this->delivery]);
         }
 
         if ($this->paymentMeans !== null) {
-            $writer->write([
-                Schema::CAC . 'PaymentMeans' => $this->paymentMeans,
-            ]);
+            $writer->write([Schema::CAC . 'PaymentMeans' => $this->paymentMeans]);
         }
 
         if ($this->paymentTerms !== null) {
-            $writer->write([
-                Schema::CAC . 'PaymentTerms' => $this->paymentTerms,
-            ]);
+            $writer->write([Schema::CAC . 'PaymentTerms' => $this->paymentTerms]);
         }
 
         if (!empty($this->allowanceCharges)) {
             /** @var AllowanceCharge $allowanceCharge */
             foreach ($this->allowanceCharges as $allowanceCharge) {
-                $writer->write([
-                    Schema::CAC . 'AllowanceCharge' => $allowanceCharge,
-                ]);
+                $writer->write([Schema::CAC . 'AllowanceCharge' => $allowanceCharge]);
             }
         }
+    }
 
+    /**
+     * Writes TaxTotal (with sub-totals), LegalMonetaryTotal, and InvoiceLines.
+     */
+    private function writeTaxAndTotals(Writer $writer): void
+    {
         $this->validate();
         $tst = $this->taxAmounts;
-        /**
-         * @var float $tst['supp_tax_cc_tax_amount']
-         */
-        $supp_tax_cc_tax_amount = $tst['supp_tax_cc_tax_amount'] ?: 0.00;
-        /**
-         * @var string $tst['supp_tax_cc']
-         */
-        $supp_cc = $tst['supp_tax_cc'] ?? '';
-        /**
-         * @var string $tst['doc_cc']
-         */
-        $doc_cc = $tst['doc_cc'] ?? '';
+        /** @var float $tst['supp_tax_cc_tax_amount'] */
+        $suppTaxAmount = $tst['supp_tax_cc_tax_amount'] ?: 0.00;
+        /** @var string $tst['supp_tax_cc'] */
+        $suppCc = $tst['supp_tax_cc'] ?? '';
 
-        // if the document's currency code is the same as us (Supplier)
-        // ie. sending locally
-        if ($doc_cc === $supp_cc) {
-            $writer->write([
-                [
-                    'name' => Schema::CAC . 'TaxTotal',
-                    'value' => [
-                        [
-                            'name' => Schema::CBC . 'TaxAmount',
-                            'value' => number_format($supp_tax_cc_tax_amount ?:
-                                    0.00, 2, '.', ''),
-                            'attributes' => [
-                                'currencyID' => $supp_cc,
-                            ],
-                        ],
-                        [
-                            $this->buildTaxSubTotalsArray(),
-                        ],
+        $writer->write([
+            [
+                'name'  => Schema::CAC . 'TaxTotal',
+                'value' => [
+                    [
+                        'name'       => Schema::CBC . 'TaxAmount',
+                        'value'      => number_format($suppTaxAmount, 2, '.', ''),
+                        'attributes' => ['currencyID' => $suppCc],
                     ],
+                    [$this->buildTaxSubTotalsArray()],
                 ],
-            ]);
-        } else {
-            $writer->write([
-                [
-                    'name' => Schema::CAC . 'TaxTotal',
-                    'value' => [
-                        [
-                            'name' => Schema::CBC . 'TaxAmount',
-                            'value' => number_format($supp_tax_cc_tax_amount ?:
-                                                            0.00, 2, '.', ''),
-                            'attributes' => [
-                                'currencyID' => $supp_cc,
-                            ],
-                        ],
-                        [
-                            $this->buildTaxSubTotalsArray(),
-                        ],
-                    ],
-                ],
-            ]);
-        } // elseif
+            ],
+        ]);
 
         $writer->write([
             Schema::CAC . 'LegalMonetaryTotal' => $this->legalMonetaryTotal,
         ]);
 
-        /**
-         * Related logic: see src/Invoice/Helpers/Peppol/PeppolHelper function
-            buildInvoiceLinesArray
-         * @var array $invoiceLine
-         */
+        /** @var array $invoiceLine */
         foreach ($this->invoiceLines as $invoiceLine) {
             $writer->write($invoiceLine);
         }

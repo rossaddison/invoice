@@ -30,7 +30,7 @@ use App\Invoice\Helpers\CountryHelper;
 use App\Invoice\Helpers\CustomValuesHelper;
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Helpers\NumberHelper;
-use App\Invoice\Helpers\Peppol\Peppol_UNECERec20_11e;
+use App\Invoice\Helpers\Peppol\PeppolUneceRec2011e;
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Inv\InvRepository;
 use App\Invoice\InvAmount\InvAmountRepository;
@@ -357,7 +357,7 @@ return [
             'datehelper' => Reference::to(DateHelper::class),
             'dateHelper' => Reference::to(DateHelper::class),
             'numberHelper' => Reference::to(NumberHelper::class),
-            'peppolUNECERec2011e' => Reference::to(Peppol_UNECERec20_11e::class),
+            'peppolUNECERec2011e' => Reference::to(PeppolUneceRec2011e::class),
             'gridComponents' => Reference::to(GridComponents::class),
             'subMenu' => Reference::to(SubMenu::class),
 // Appear in client/view.php and duplication taken out of ClientController
