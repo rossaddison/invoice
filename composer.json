@@ -152,6 +152,7 @@
         "codeception/module-asserts": "^3.3.0",
         "codeception/module-cli": "^2.0.1",
         "codeception/module-phpbrowser": "^4.0.0",
+        "dg/bypass-finals": "^1.10",
         "friendsofphp/php-cs-fixer": "^3.95.4",
         "guzzlehttp/promises": ">=2.5.0",
         "phpunit/phpunit": ">=13",
@@ -159,11 +160,11 @@
         "roave/better-reflection": "^6.71",
         "roave/infection-static-analysis-plugin": ">=1.44",
         "roave/security-advisories": "dev-latest",
+        "rossaddison/translator-extractor": "dev-master",
         "shipmonk/composer-dependency-analyser": "^1.8.4",
         "spatie/phpunit-watcher": ">=1.24.4",
         "squizlabs/php_codesniffer": "^4.0.1",
-        "vimeo/psalm": ">=6.16.1",
-        "rossaddison/translator-extractor": "dev-master"
+        "vimeo/psalm": ">=6.16.1"
     },      
     "autoload": {
         "psr-4": {

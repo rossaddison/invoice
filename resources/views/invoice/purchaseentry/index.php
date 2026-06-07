@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Infrastructure\Persistence\PurchaseEntry\PurchaseEntry;
+use App\Invoice\PurchaseEntry\PurchaseEntryService;
 use Yiisoft\Bootstrap5\Breadcrumbs;
 use Yiisoft\Bootstrap5\BreadcrumbLink;
 use Yiisoft\Data\Paginator\OffsetPaginator;
@@ -164,15 +165,7 @@ $toolbarString = new Form()
     . (new Div())->addClass('float-end m-1')->content($toolbarReset)->encode(false)->render()
     . (new Form())->close();
 
-// VAT quarter key: given a date and tax-year start month, returns e.g. "Q1 2025/2026".
 $startMonth = (int) $taxYearMonth;
-$vatQuarterKey = static function (DateTimeImmutable $date) use ($startMonth): string {
-    $m       = (int) $date->format('n');
-    $y       = (int) $date->format('Y');
-    $quarter = (int) floor((($m - $startMonth + 12) % 12) / 3) + 1;
-    $taxYear = $m < $startMonth ? $y - 1 : $y;
-    return sprintf('Q%d %d/%d', $quarter, $taxYear, $taxYear + 1);
-};
 
 // HTMX wrapper: hx-boost + hx-select means pagination/group links swap only this section.
 echo Html::openTag('div', [
@@ -262,7 +255,7 @@ if ($groupBy === 'none') {
         $date = $entry->getDate();
         $key  = match ($groupBy) {
             'month'    => $date instanceof DateTimeImmutable ? $date->format('Y-m') : 'Unknown',
-            'quarter'  => $date instanceof DateTimeImmutable ? $vatQuarterKey($date) : 'Unknown',
+            'quarter'  => $date instanceof DateTimeImmutable ? PurchaseEntryService::vatQuarterLabel($date, $startMonth) : 'Unknown',
             'supplier' => $entry->getSupplier() ?: 'Unknown',
             default    => 'All',
         };

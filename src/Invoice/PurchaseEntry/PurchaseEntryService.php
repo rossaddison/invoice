@@ -35,4 +35,18 @@ final readonly class PurchaseEntryService
     {
         $this->repository->delete($entry);
     }
+
+    /**
+     * Returns a VAT quarter label (e.g. "Q1 2025/2026") for a given date and
+     * tax year start month. Q1 begins in $startMonth; each quarter spans 3 months.
+     * Entries whose month precedes $startMonth belong to the prior tax year's Q4.
+     */
+    public static function vatQuarterLabel(\DateTimeImmutable $date, int $startMonth): string
+    {
+        $m       = (int) $date->format('n');
+        $y       = (int) $date->format('Y');
+        $quarter = (int) floor((($m - $startMonth + 12) % 12) / 3) + 1;
+        $taxYear = $m < $startMonth ? $y - 1 : $y;
+        return sprintf('Q%d %d/%d', $quarter, $taxYear, $taxYear + 1);
+    }
 }

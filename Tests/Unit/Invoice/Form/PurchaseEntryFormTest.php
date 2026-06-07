@@ -6,6 +6,7 @@ namespace Tests\Unit\Invoice\Form;
 
 use App\Infrastructure\Persistence\PurchaseEntry\PurchaseEntry;
 use App\Invoice\PurchaseEntry\PurchaseEntryForm;
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 
 class PurchaseEntryFormTest extends TestCase
@@ -14,7 +15,7 @@ class PurchaseEntryFormTest extends TestCase
     {
         $form = new PurchaseEntryForm();
 
-        $this->assertSame('', $form->getDate());
+        $this->assertNull($form->getDate());
         $this->assertSame('', $form->getSupplier());
         $this->assertNull($form->getDescription());
         $this->assertSame(0.00, $form->getAmountExVat());
@@ -30,7 +31,7 @@ class PurchaseEntryFormTest extends TestCase
     public function testShowPopulatesAllFields(): void
     {
         $entry = new PurchaseEntry();
-        $entry->setDate('2026-01-15');
+        $entry->setDate(new DateTimeImmutable('2026-01-15'));
         $entry->setSupplier('ACME Supplies Ltd');
         $entry->setDescription('Invoice #1234');
         $entry->setAmountExVat(500.00);
@@ -45,10 +46,23 @@ class PurchaseEntryFormTest extends TestCase
         $this->assertSame(100.00, $form->getVatAmount());
     }
 
+    public function testShowWithNullDate(): void
+    {
+        $entry = new PurchaseEntry();
+        $entry->setDate(null);
+        $entry->setSupplier('No-Date Supplier');
+        $entry->setAmountExVat(50.00);
+        $entry->setVatAmount(10.00);
+
+        $form = PurchaseEntryForm::show($entry);
+
+        $this->assertNull($form->getDate());
+    }
+
     public function testShowWithNullDescription(): void
     {
         $entry = new PurchaseEntry();
-        $entry->setDate('2026-03-01');
+        $entry->setDate(new DateTimeImmutable('2026-03-01'));
         $entry->setSupplier('Stationery Co');
         $entry->setDescription(null);
         $entry->setAmountExVat(120.00);
@@ -64,7 +78,7 @@ class PurchaseEntryFormTest extends TestCase
     public function testShowWithZeroAmounts(): void
     {
         $entry = new PurchaseEntry();
-        $entry->setDate('2026-06-01');
+        $entry->setDate(new DateTimeImmutable('2026-06-01'));
         $entry->setSupplier('Zero Vat Supplier');
         $entry->setAmountExVat(0.00);
         $entry->setVatAmount(0.00);
@@ -78,7 +92,7 @@ class PurchaseEntryFormTest extends TestCase
     public function testShowReturnsNewInstance(): void
     {
         $entry = new PurchaseEntry();
-        $entry->setDate('2026-01-01');
+        $entry->setDate(new DateTimeImmutable('2026-01-01'));
         $entry->setSupplier('Test');
 
         $this->assertNotSame(PurchaseEntryForm::show($entry), PurchaseEntryForm::show($entry));
@@ -87,7 +101,7 @@ class PurchaseEntryFormTest extends TestCase
     public function testGettersReturnCorrectTypes(): void
     {
         $entry = new PurchaseEntry();
-        $entry->setDate('2026-01-01');
+        $entry->setDate(new DateTimeImmutable('2026-01-01'));
         $entry->setSupplier('Supplier');
         $entry->setAmountExVat(200.00);
         $entry->setVatAmount(40.00);
