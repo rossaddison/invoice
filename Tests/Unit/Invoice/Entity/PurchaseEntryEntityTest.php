@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Invoice\Entity;
 
 use App\Infrastructure\Persistence\PurchaseEntry\PurchaseEntry;
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 
 class PurchaseEntryEntityTest extends TestCase
@@ -14,12 +15,12 @@ class PurchaseEntryEntityTest extends TestCase
         $entry = new PurchaseEntry();
 
         $this->assertFalse($entry->isPersisted());
-        $this->assertSame('', $entry->getDate());
+        $this->assertNull($entry->getDate());
         $this->assertSame('', $entry->getSupplier());
         $this->assertNull($entry->getDescription());
         $this->assertSame(0.00, $entry->getAmountExVat());
         $this->assertSame(0.00, $entry->getVatAmount());
-        $this->assertSame('', $entry->getCreatedAt());
+        $this->assertInstanceOf(DateTimeImmutable::class, $entry->getCreatedAt());
     }
 
     public function testReqIdThrowsWhenUnpersisted(): void
@@ -58,9 +59,20 @@ class PurchaseEntryEntityTest extends TestCase
     public function testDateSetterAndGetter(): void
     {
         $entry = new PurchaseEntry();
-        $entry->setDate('2026-01-15');
+        $date  = new DateTimeImmutable('2026-01-15');
+        $entry->setDate($date);
 
-        $this->assertSame('2026-01-15', $entry->getDate());
+        $result = $entry->getDate();
+        $this->assertInstanceOf(DateTimeImmutable::class, $result);
+        $this->assertSame('2026-01-15', $result->format('Y-m-d'));
+    }
+
+    public function testDateSetterAcceptsNull(): void
+    {
+        $entry = new PurchaseEntry();
+        $entry->setDate(null);
+
+        $this->assertNull($entry->getDate());
     }
 
     public function testSupplierSetterAndGetter(): void
@@ -105,7 +117,8 @@ class PurchaseEntryEntityTest extends TestCase
         $entry = new PurchaseEntry();
         $entry->setCreatedAt('2026-06-06 10:30:00');
 
-        $this->assertSame('2026-06-06 10:30:00', $entry->getCreatedAt());
+        $this->assertInstanceOf(DateTimeImmutable::class, $entry->getCreatedAt());
+        $this->assertSame('2026-06-06 10:30:00', $entry->getCreatedAt()->format('Y-m-d H:i:s'));
     }
 
     public function testZeroAmounts(): void
@@ -122,7 +135,8 @@ class PurchaseEntryEntityTest extends TestCase
     {
         $entry = new PurchaseEntry();
         $entry->setId(1);
-        $entry->setDate('2026-01-05');
+        $date = new DateTimeImmutable('2026-01-05');
+        $entry->setDate($date);
         $entry->setSupplier('Cloud Hosting Co');
         $entry->setDescription('Monthly hosting — Jan 2026');
         $entry->setAmountExVat(200.00);
@@ -131,7 +145,9 @@ class PurchaseEntryEntityTest extends TestCase
 
         $this->assertTrue($entry->isPersisted());
         $this->assertSame(1, $entry->reqId());
-        $this->assertSame('2026-01-05', $entry->getDate());
+        $result = $entry->getDate();
+        $this->assertInstanceOf(DateTimeImmutable::class, $result);
+        $this->assertSame('2026-01-05', $result->format('Y-m-d'));
         $this->assertSame('Cloud Hosting Co', $entry->getSupplier());
         $this->assertSame('Monthly hosting — Jan 2026', $entry->getDescription());
         $this->assertSame(200.00, $entry->getAmountExVat());

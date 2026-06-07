@@ -17,6 +17,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
+use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
@@ -25,7 +26,9 @@ use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class PurchaseEntryController extends BaseController
 {
-    protected string $controllerName = 'invoice/purchase-entry';
+    private const ROUTE_INDEX = 'entry/index';
+
+    protected string $controllerName = 'invoice/purchaseentry';
 
     public function __construct(
         private PurchaseEntryService $purchaseEntryService,
@@ -40,22 +43,41 @@ final class PurchaseEntryController extends BaseController
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator,
+            $webViewRenderer, $session, $sR, $flash);
         $this->purchaseEntryService = $purchaseEntryService;
         $this->purchaseEntryRepository = $purchaseEntryRepository;
         $this->responseFactory = $responseFactory;
         $this->streamFactory = $streamFactory;
     }
 
-    public function index(): Response
-    {
+    public function index(
+        #[Query('page')] ?int $page = null,
+        #[Query('groupBy')] ?string $groupBy = null,
+    ): Response {
         $canEdit = $this->rbac();
         if ($canEdit instanceof Response) {
             return $canEdit;
         }
+        $taxYearYear  = $this->sR->getSetting('this_tax_year_from_date_year');
+        $taxYearMonth = $this->sR->getSetting('this_tax_year_from_date_month');
+        $taxYearDay   = $this->sR->getSetting('this_tax_year_from_date_day');
+        $taxYearSet   = $taxYearYear !== '' && $taxYearMonth !== '' && $taxYearDay !== '';
+        if (!$taxYearSet) {
+            $this->flashMessage('warning',
+                $this->translator->translate('purchase.entry.tax.year.not.configured'));
+        }
+        $validGroups  = $taxYearSet ? ['month', 'supplier', 'quarter'] : ['month', 'supplier'];
+        $safeGroupBy  = in_array($groupBy, $validGroups, true) ? $groupBy : 'none';
         $parameters = [
-            'entries' => $this->purchaseEntryRepository->findAllPreloaded(),
-            'alert'   => $this->alert(),
+            'purchaseentries' => $this->purchaseEntryRepository->getReader(),
+            'page'            => max(1, $page ?? 1),
+            'groupBy'         => $safeGroupBy,
+            'taxYearSet'      => $taxYearSet,
+            'taxYearYear'     => $taxYearYear,
+            'taxYearMonth'    => $taxYearMonth,
+            'taxYearDay'      => $taxYearDay,
+            'alert'           => $this->alert(),
         ];
         return $this->webViewRenderer->render('index', $parameters);
     }
@@ -68,22 +90,23 @@ final class PurchaseEntryController extends BaseController
         }
         $form = new PurchaseEntryForm();
         $parameters = [
-            'title'          => $this->translator->translate('i.add'),
-            'actionName'     => 'purchase-entry/add',
+            'title'          => $this->translator->translate('add'),
+            'actionName'     => 'entry/add',
             'actionArguments' => [],
             'errors'         => [],
             'form'           => $form,
         ];
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument
-                 */
-                $this->purchaseEntryService->saveEntry(new PurchaseEntry(), $request->getParsedBody());
-                return $this->webService->getRedirectResponse('purchase-entry/index');
+                $body = $request->getParsedBody();
+                if (is_array($body)) {
+                    $this->purchaseEntryService->saveEntry(new PurchaseEntry(), $body);
+                }
+                return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
             }
             $parameters['form']   = $form;
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+            $parameters['errors'] =
+                $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         }
         return $this->webViewRenderer->render('_form', $parameters);
     }
@@ -99,31 +122,33 @@ final class PurchaseEntryController extends BaseController
         }
         $entry = $this->entry($currentRoute);
         if ($entry === null) {
-            return $this->webService->getRedirectResponse('purchase-entry/index');
+            return $this->webService->getRedirectResponse('index');
         }
         return $this->renderEditForm($request, $formHydrator, $entry);
     }
 
-    private function renderEditForm(Request $request, FormHydrator $formHydrator, PurchaseEntry $entry): Response
+    private function renderEditForm(Request $request, FormHydrator $formHydrator,
+        PurchaseEntry $entry): Response
     {
         $form = PurchaseEntryForm::show($entry);
         $parameters = [
-            'title'           => $this->translator->translate('i.edit'),
-            'actionName'      => 'purchase-entry/edit',
+            'title'           => $this->translator->translate('edit'),
+            'actionName'      => 'entry/edit',
             'actionArguments' => ['id' => $entry->reqId()],
             'errors'          => [],
             'form'            => $form,
         ];
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument
-                 */
-                $this->purchaseEntryService->saveEntry($entry, $request->getParsedBody());
-                return $this->webService->getRedirectResponse('purchase-entry/index');
+                $body = $request->getParsedBody();
+                if (is_array($body)) {
+                    $this->purchaseEntryService->saveEntry($entry, $body);
+                }
+                return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
             }
             $parameters['form']   = $form;
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+            $parameters['errors'] =
+                $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         }
         return $this->webViewRenderer->render('_form', $parameters);
     }
@@ -141,9 +166,10 @@ final class PurchaseEntryController extends BaseController
             }
         } catch (\Exception $e) {
             unset($e);
-            $this->flashMessage('danger', $this->translator->translate('i.record.not.deleted'));
+            $this->flashMessage('danger',
+                $this->translator->translate('record.not.deleted'));
         }
-        return $this->webService->getRedirectResponse('purchase-entry/index');
+        return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
     }
 
     /**
@@ -171,12 +197,14 @@ final class PurchaseEntryController extends BaseController
         /** @var UploadedFileInterface|null $file */
         $file = $files['csv_file'] ?? null;
         if ($file === null || $file->getError() !== UPLOAD_ERR_OK) {
-            $this->flashMessage('danger', $this->translator->translate('purchase.entry.csv.no.file'));
+            $this->flashMessage('danger',
+                $this->translator->translate('purchase.entry.csv.no.file'));
             return $this->webViewRenderer->render('csv_import', $parameters);
         }
         $handle = fopen('php://temp', 'r+');
         if ($handle === false) {
-            $this->flashMessage('danger', $this->translator->translate('purchase.entry.csv.no.file'));
+            $this->flashMessage('danger',
+                $this->translator->translate('purchase.entry.csv.no.file'));
             return $this->webViewRenderer->render('csv_import', $parameters);
         }
         fwrite($handle, $file->getStream()->getContents());
@@ -185,9 +213,10 @@ final class PurchaseEntryController extends BaseController
         fclose($handle);
         $this->flashMessage(
             'success',
-            $this->translator->translate('purchase.entry.csv.imported', ['count' => $imported, 'skipped' => $skipped]),
+            $this->translator->translate('purchase.entry.csv.imported',
+                ['count' => $imported, 'skipped' => $skipped]),
         );
-        return $this->webService->getRedirectResponse('purchase-entry/index');
+        return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
     }
 
     /**
@@ -199,7 +228,14 @@ final class PurchaseEntryController extends BaseController
         $imported = 0;
         $skipped  = 0;
         $rowIndex = 0;
-        while (($cols = fgetcsv($handle)) !== false) {
+
+        // Detect delimiter from the header row then rewind for normal processing.
+        $headerRaw = fgets($handle);
+        $header    = $headerRaw !== false ? $headerRaw : '';
+        $delimiter = substr_count($header, ';') >= substr_count($header, ',') ? ';' : ',';
+        rewind($handle);
+
+        while (($cols = fgetcsv($handle, 0, $delimiter)) !== false) {
             if (!is_array($cols)) {
                 continue;
             }
@@ -217,7 +253,8 @@ final class PurchaseEntryController extends BaseController
                 'supplier'      => trim((string) $cols[1]),
                 'amount_ex_vat' => trim((string) $cols[2]),
                 'vat_amount'    => trim((string) $cols[3]),
-                'description'   => isset($cols[4]) && trim($cols[4]) !== '' ? trim($cols[4]) : null,
+                'description'   => isset($cols[4]) && trim($cols[4]) !== '' ?
+                    trim($cols[4]) : null,
             ]);
             $imported++;
         }
@@ -251,9 +288,55 @@ final class PurchaseEntryController extends BaseController
         return $this->responseFactory
             ->createResponse(200)
             ->withHeader('Content-Type', 'text/csv; charset=UTF-8')
-            ->withHeader('Content-Disposition', 'attachment; filename="purchase-entries-template.csv"')
+            ->withHeader('Content-Disposition',
+                'attachment; filename="purchase-entries-template.csv"')
             ->withHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
             ->withBody($this->streamFactory->createStream($csv));
+    }
+
+    public function taxYearLocales(): Response
+    {
+        $canEdit = $this->rbac();
+        if ($canEdit instanceof Response) {
+            return $canEdit;
+        }
+        return $this->webViewRenderer->render('tax_year_locales', [
+            'alert' => $this->alert(),
+        ]);
+    }
+
+    public function applyTaxYearLocale(Request $request): Response
+    {
+        $canEdit = $this->rbac();
+        if ($canEdit instanceof Response) {
+            return $canEdit;
+        }
+        $body  = $request->getParsedBody();
+        $month = is_array($body) ? str_pad((string) ($body['month'] ?? ''), 2, '0', STR_PAD_LEFT) : '';
+        $day   = is_array($body) ? str_pad((string) ($body['day'] ?? ''), 2, '0', STR_PAD_LEFT) : '';
+        if (preg_match('/^(0[1-9]|1[0-2])$/', $month) !== 1
+            || preg_match('/^(0[1-9]|[12]\d|3[01])$/', $day) !== 1) {
+            $this->flashMessage('danger',
+                $this->translator->translate('purchase.entry.tax.year.locale.invalid'));
+            return $this->webService->getRedirectResponse('entry/tax-year-locales');
+        }
+        $existingYear = $this->sR->getSetting('this_tax_year_from_date_year');
+        $year = $existingYear !== '' ? $existingYear : date('Y');
+        $this->saveSettingValue('this_tax_year_from_date_year', $year);
+        $this->saveSettingValue('this_tax_year_from_date_month', $month);
+        $this->saveSettingValue('this_tax_year_from_date_day', $day);
+        $this->flashMessage('success',
+            $this->translator->translate('purchase.entry.tax.year.locale.applied'));
+        return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
+    }
+
+    private function saveSettingValue(string $key, string $value): void
+    {
+        $setting = $this->sR->withKey($key);
+        if ($setting !== null) {
+            $setting->setSettingValue($value);
+            $this->sR->save($setting);
+        }
     }
 
     private function rbac(): bool|Response
@@ -261,13 +344,14 @@ final class PurchaseEntryController extends BaseController
         $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
         if (!$canEdit) {
             $this->flashMessage('warning', $this->translator->translate('permission'));
-            return $this->webService->getRedirectResponse('purchase-entry/index');
+            return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
         }
         return $canEdit;
     }
 
     private function entry(CurrentRoute $currentRoute): ?PurchaseEntry
     {
-        return $this->purchaseEntryRepository->repoFindById((int) $currentRoute->getArgument('id'));
+        return $this->purchaseEntryRepository
+                    ->repoFindById((int) $currentRoute->getArgument('id'));
     }
 }
