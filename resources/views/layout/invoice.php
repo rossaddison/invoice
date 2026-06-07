@@ -1317,7 +1317,7 @@ if ((null !== $currentPath) && !$isGuest) {
                 $urlGenerator->generate('backend/hmrc/vatObligations'),
                 itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('purchase.entry.index'),
-                $urlGenerator->generate('purchase-entry/index'),
+                $urlGenerator->generate('entry/index'),
                 itemAttributes: $itemFontArray),
         ),
     )

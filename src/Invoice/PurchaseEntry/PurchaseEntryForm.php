@@ -9,12 +9,13 @@ use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Number;
 use Yiisoft\Validator\Rule\Required;
+use DateTimeImmutable;
 
 final class PurchaseEntryForm extends FormModel
 {
     #[Required]
-    private ?string $date = '';
-
+    private ?string $date = null;
+    
     #[Required]
     #[Length(min: 1, max: 200)]
     private ?string $supplier = '';
@@ -33,7 +34,10 @@ final class PurchaseEntryForm extends FormModel
     public static function show(PurchaseEntry $entry): self
     {
         $form = new self();
-        $form->date = $entry->getDate();
+        $date = $entry->getDate();
+        $form->date = $date instanceof DateTimeImmutable
+            ? $date->format('Y-m-d')
+            : null;
         $form->supplier = $entry->getSupplier();
         $form->description = $entry->getDescription();
         $form->amount_ex_vat = $entry->getAmountExVat();

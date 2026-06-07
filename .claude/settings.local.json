@@ -19,7 +19,8 @@
       "Bash(powershell *)",
       "Bash(vendor/bin/psalm --no-cache src/Invoice/Helpers/Peppol/)",
       "Bash(php -v)",
-      "Bash(mkdir -p src/Invoice/Helpers/Peppol/Emit/Vo)"
+      "Bash(mkdir -p src/Invoice/Helpers/Peppol/Emit/Vo)",
+      "Bash(vendor/bin/psalm --no-cache src/Invoice/PurchaseEntry/ resources/views/invoice/purchaseentry/)"
     ],
     "additionalDirectories": [
       "c:\\wamp64\\www\\invoice\\src\\Invoice\\Helpers\\Peppol\\Emit"

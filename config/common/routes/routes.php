@@ -1751,6 +1751,42 @@ return [
                 ->name('paymentmethod/view')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([PaymentMethodController::class, 'view']),
+            Route::methods([$mG, $mP],
+                    '/userinv/signup/{language}/{token}/{tokenType}')
+                ->name('userinv/signup')
+                ->action([UserInvController::class, 'signup']),
+            Route::get('/entry')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([PurchaseEntryController::class, 'index'])
+                ->name('entry/index'),
+            Route::methods([$mG, $mP], '/entry/add')
+                ->name('entry/add')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([PurchaseEntryController::class, 'add']),
+            Route::methods([$mG, $mP], '/entry/edit/{id}')
+                ->name('entry/edit')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([PurchaseEntryController::class, 'edit']),
+            Route::methods([$mG, $mP], '/entry/delete/{id}')
+                ->name('entry/delete')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([PurchaseEntryController::class, 'delete']),
+            Route::methods([$mG, $mP], '/entry/csv-import')
+                ->name('entry/csv-import')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([PurchaseEntryController::class, 'csvImport']),
+            Route::get('/entry/csv-template')
+                ->name('entry/csv-template')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([PurchaseEntryController::class, 'csvTemplate']),
+            Route::get('/entry/tax-year-locales')
+                ->name('entry/tax-year-locales')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([PurchaseEntryController::class, 'taxYearLocales']),
+            Route::methods([$mP], '/entry/apply-tax-year-locale')
+                ->name('entry/apply-tax-year-locale')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([PurchaseEntryController::class, 'applyTaxYearLocale']),
             Route::methods([$mG, $mP], '/quote/add/{origin}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([QuoteController::class, 'add'])
@@ -2282,33 +2318,6 @@ return [
  * github-access
  * Related logic: see AuthController function getTokenType($provider)
  */
-            Route::methods([$mG, $mP],
-                    '/userinv/signup/{language}/{token}/{tokenType}')
-                ->name('userinv/signup')
-                ->action([UserInvController::class, 'signup']),
-            Route::get('/purchase-entry')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([PurchaseEntryController::class, 'index'])
-                ->name('purchase-entry/index'),
-            Route::methods([$mG, $mP], '/purchase-entry/add')
-                ->name('purchase-entry/add')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([PurchaseEntryController::class, 'add']),
-            Route::methods([$mG, $mP], '/purchase-entry/edit/{id}')
-                ->name('purchase-entry/edit')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([PurchaseEntryController::class, 'edit']),
-            Route::methods([$mG, $mP], '/purchase-entry/delete/{id}')
-                ->name('purchase-entry/delete')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([PurchaseEntryController::class, 'delete']),
-            Route::methods([$mG, $mP], '/purchase-entry/csv-import')
-                ->name('purchase-entry/csv-import')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([PurchaseEntryController::class, 'csvImport']),
-            Route::get('/purchase-entry/csv-template')
-                ->name('purchase-entry/csv-template')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([PurchaseEntryController::class, 'csvTemplate']),
+            
         ), // invoice
 ];
