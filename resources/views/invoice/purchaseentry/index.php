@@ -211,6 +211,12 @@ if ($groupBy === 'none') {
         ),
         new ActionColumn(buttons: [
             new ActionButton(
+                content: '👁',
+                url: static fn (PurchaseEntry $model): string =>
+                    $urlGenerator->generate('entry/view', ['id' => $model->reqId()]),
+                attributes: ['class' => 'btn btn-sm btn-outline-secondary', 'data-bs-toggle' => 'tooltip', 'title' => 'View', 'hx-boost' => 'false'],
+            ),
+            new ActionButton(
                 content: '✎',
                 url: static fn (PurchaseEntry $model): string =>
                     $urlGenerator->generate('entry/edit', ['id' => $model->reqId()]),
@@ -314,6 +320,8 @@ if ($groupBy === 'none') {
               echo Html::tag('td', number_format($entry->getAmountExVat(), 2), ['class' => 'text-end']);
               echo Html::tag('td', number_format($entry->getVatAmount(), 2), ['class' => 'text-end']);
               echo Html::openTag('td', ['class' => 'd-flex gap-1']);
+               echo Html::a('👁', $urlGenerator->generate('entry/view', ['id' => $entry->reqId()]),
+                   ['class' => 'btn btn-xs btn-outline-secondary', 'hx-boost' => 'false']);
                echo Html::a('✎', $urlGenerator->generate('entry/edit', ['id' => $entry->reqId()]),
                    ['class' => 'btn btn-xs btn-outline-primary']);
                echo Html::a('❌', $urlGenerator->generate('entry/delete', ['id' => $entry->reqId()]),

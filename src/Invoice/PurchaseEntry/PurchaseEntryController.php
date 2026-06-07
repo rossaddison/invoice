@@ -153,6 +153,22 @@ final class PurchaseEntryController extends BaseController
         return $this->webViewRenderer->render('_form', $parameters);
     }
 
+    public function view(CurrentRoute $currentRoute): Response
+    {
+        $canEdit = $this->rbac();
+        if ($canEdit instanceof Response) {
+            return $canEdit;
+        }
+        $entry = $this->entry($currentRoute);
+        if ($entry === null) {
+            return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
+        }
+        return $this->webViewRenderer->render('_view', [
+            'entry' => $entry,
+            'form'  => PurchaseEntryForm::show($entry),
+        ]);
+    }
+
     public function delete(CurrentRoute $currentRoute): Response
     {
         $canEdit = $this->rbac();

@@ -1779,6 +1779,10 @@ return [
                 ->name('entry/csv-template')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([PurchaseEntryController::class, 'csvTemplate']),
+            Route::get('/entry/view/{id}')
+                ->name('entry/view')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([PurchaseEntryController::class, 'view']),
             Route::get('/entry/tax-year-locales')
                 ->name('entry/tax-year-locales')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
