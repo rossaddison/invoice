@@ -5,45 +5,21 @@ declare(strict_types=1);
 namespace App\Invoice\Inv\Trait;
 
 use App\Auth\Permissions;
-use App\Infrastructure\Persistence\{
-    InvAmount\InvAmount,
-    InvCustom\InvCustom,InvItem\InvItem,
-    InvAllowanceCharge\InvAllowanceCharge
-};
+use App\Infrastructure\Persistence\InvAmount\InvAmount;
 use App\Invoice\{
     InvAllowanceCharge\InvAllowanceChargeForm, InvItem\InvItemForm,
-    AllowanceCharge\AllowanceChargeRepository as ACR,
     Client\ClientRepository as CR,
     CustomValue\CustomValueRepository as CVR,
     CustomField\CustomFieldRepository as CFR,
-    DeliveryLocation\DeliveryLocationRepository as DLR,
-    EmailTemplate\EmailTemplateRepository as ETR,
-    Family\FamilyRepository as FR,
-    Group\GroupRepository as GR,
-    Inv\InvRepository as IR,
     Inv\InvAttachmentsForm,
     Inv\InvForm,
-    InvAllowanceCharge\InvAllowanceChargeRepository as ACIR,
-    InvCustom\InvCustomRepository as ICR,
+    Inv\InvViewDeps,
     InvCustom\InvCustomForm,
     InvItem\InvItemRepository as IIR,
-    InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR,
-    InvAmount\InvAmountRepository as IAR,
-    InvItemAmount\InvItemAmountRepository as IIAR,
-    InvRecurring\InvRecurringRepository as IRR,
     InvTaxRate\InvTaxRateRepository as ITRR,
-    Payment\PaymentRepository as PYMR,
-    PaymentMethod\PaymentMethodRepository as PMR,
-    ProductImage\ProductImageRepository as PIR,
-    Product\ProductRepository as PR,
-    Project\ProjectRepository as PRJCTR,
-    SalesOrder\SalesOrderRepository as SOR,
-    Task\TaskRepository as TASKR,
-    TaxRate\TaxRateRepository as TRR,
-    Unit\UnitRepository as UNR,
-    Upload\UploadRepository as UPR,
-    UserClient\UserClientRepository as UCR,
-    UserInv\UserInvRepository as UIR
+    Group\GroupRepository as GR,
+    Inv\InvRepository as IR,
+    Upload\UploadRepository as UPR
 };
 use App\Invoice\Helpers\CustomValuesHelper as CVH;
 use App\Widget\{Bootstrap5ModalTranslatorMessageWithoutAction
@@ -65,44 +41,16 @@ trait View
         int $id,
         #[RouteArgument('_language')]
         string $_language,
-        CFR $cfR,
-        CVR $cvR,
-        PR $pR,
-        PIR $piR,
-        IAR $iaR,
-        IIAR $iiaR,
-        IIR $iiR,
-        IR $iR,
-        IRR $irR,
-        ITRR $itrR,
-        PMR $pmR,
-        TRR $trR,
-        FR $fR,
-        UNR $uR,
-        ACR $acR,
-        ACIR $aciR,
-        ACIIR $aciiR,
-        CR $cR,
-        ETR $etR,
-        GR $gR,
-        ICR $icR,
-        PYMR $pymR,
-        TASKR $taskR,
-        PRJCTR $prjctR,
-        UIR $uiR,
-        UCR $ucR,
-        UPR $upR,
-        SOR $soR,
-        DLR $dlR,
+        InvViewDeps $d,
     ): Response {
-        $inv = $this->inv($id, $iR, false);
+        $inv = $this->inv($id, $d->iR, false);
         $enabled_gateways = $this->sR->paymentGatewaysEnabledDriverList();
         $this->flashNoEnabledGateways($enabled_gateways,
             $this->translator->translate('payment.gateway.no'));
         if ($inv) {
             $sales_order_number = '';
             if (null !== $inv->getSoId()) {
-                $so = $soR->repoSalesOrderUnloadedquery((int) $inv->getSoId());
+                $so = $d->soR->repoSalesOrderUnloadedquery((int) $inv->getSoId());
                 if ($so) {
                     $sales_order_number = $so->getNumber();
                 }
@@ -112,18 +60,16 @@ trait View
             $read_only = $inv->getIsReadOnly();
             $this->session->set('inv_id', $inv->reqId());
             $this->numberHelper->calculateInv(
-                (int) $this->session->get('inv_id'), $aciR, $iiR, $iiaR,
-                    $itrR, $iaR, $iR, $pymR);
-            $inv_amount = (($iaR->repoInvAmountCount($inv->reqId()) > 0) ?
-                    $iaR->repoInvquery((int) $this->session->get('inv_id')) :
+                (int) $this->session->get('inv_id'), $d->aciR, $d->iiR, $d->iiaR,
+                    $d->itrR, $d->iaR, $d->iR, $d->pymR);
+            $inv_amount = (($d->iaR->repoInvAmountCount($inv->reqId()) > 0) ?
+                    $d->iaR->repoInvquery((int) $this->session->get('inv_id')) :
                 null);
             if ($inv_amount) {
                 $inv_custom_values = $this->invCustomValues(
-                    (int) $this->session->get('inv_id'), $icR);
-                $is_recurring = $irR->repoCount((int) $this->session->get('inv_id')) > 0;
+                    (int) $this->session->get('inv_id'), $d->icR);
+                $is_recurring = $d->irR->repoCount((int) $this->session->get('inv_id')) > 0;
                 $show_buttons = $this->displayEditDeleteButtons($read_only);
-                // Each file attachment is recorded in Upload table with
-                // invoice's url_key, and client_id
                 $url_key = $inv->getUrlKey();
                 $client_id = $inv->reqClientId();
                 $delivery_location_id = $inv->getDeliveryLocationId();
@@ -132,42 +78,34 @@ trait View
                     $this->webViewRenderer,
                 );
                 $parameters = [
-                    'aciR' => $aciR,
+                    'aciR' => $d->aciR,
                     'alert' => $this->alert(),
-                    // Get the standard extra custom fields built for EVERY invoice.
-                    'custom_fields' => $cfR->repoTablequery('inv_custom'),
+                    'custom_fields' => $d->cfR->repoTablequery('inv_custom'),
                     'custom_values' =>
-                    $cvR->fixCfValueToCf(
-                        $cfR->repoTablequery('inv_custom')),
-                    'cvH' => new CVH($this->sR, $cvR),
+                    $d->cvR->fixCfValueToCf(
+                        $d->cfR->repoTablequery('inv_custom')),
+                    'cvH' => new CVH($this->sR, $d->cvR),
                     'enabled_gateways' => $enabled_gateways,
-                    // Get all the fields that have been setup for this SPECIFIC
-                    // invoice in inv_custom.
-                    'fields' => $icR->repoFields(
+                    'fields' => $d->icR->repoFields(
                             (int) $this->session->get('inv_id')),
                     'form' => InvForm::show($inv),
-                    'iaR' => $iaR,
+                    'iaR' => $d->iaR,
                     'inv' => $inv,
-                    // Determine if a 'viewInv' user has 'editInv' permission
                     'invEdit' => $this->userService->hasPermission(
                             Permissions::EDIT_INV),
                     'inv_custom_values' => $inv_custom_values,
                     'isRecurring' => $is_recurring,
-                    'inv_statuses' => $iR->getStatuses($this->translator),
-                    // Determine if a 'viewInv' user has 'viewPayment' permission
-                    // This permission is necessary for a guest viewing a
-                    // read-only view to go to the Pay now section. If a custom
-                    // field exists for payments, use it on the payment form.
+                    'inv_statuses' => $d->iR->getStatuses($this->translator),
                     'paymentCfExist' =>
-                        $cfR->repoTableCountquery('payment_custom') > 0,
+                        $d->cfR->repoTableCountquery('payment_custom') > 0,
                     'paymentView' => $this->userService->hasPermission(
                         Permissions::VIEW_PAYMENT),
-                    'email_templates_invoice' => $etR->findAllPreloaded(),
-                    'invoice_groups' => $gR->findAllPreloaded(),
-                    'payment_methods' => $pmR->findAllWithActive(1),
-                    'payments' => $pymR->repoCount(
+                    'email_templates_invoice' => $d->etR->findAllPreloaded(),
+                    'invoice_groups' => $d->gR->findAllPreloaded(),
+                    'payment_methods' => $d->pmR->findAllWithActive(1),
+                    'payments' => $d->pymR->repoCount(
                         (int) $this->session->get('inv_id')) > 0 ?
-                            $pymR->repoInvquery(
+                            $d->pymR->repoInvquery(
                                 (int) $this->session->get('inv_id')) : null,
                     'peppol_doc_currency_toggle' =>
                         $this->sR->getSetting('peppol_doc_currency_toggle'),
@@ -177,8 +115,6 @@ trait View
                     'sales_order_number' => $sales_order_number,
                     'showButtons' => $show_buttons,
                     'title' => $this->translator->translate('view'),
-                    // Sits above options section of invoice allowing the
-                    // adding of a new row to the invoice
                     'add_inv_item_product' =>
                         $this->webViewRenderer->renderPartialAsString(
                             '//invoice/invitem/_item_form_product', [
@@ -186,17 +122,16 @@ trait View
                         'actionArguments' => ['_language' => $_language],
                         'errors' => [],
                         'form' => new InvItemForm(),
-                        'inv' => $iR->repoInvLoadedquery($invoice),
-                        'isRecurring' => $irR->repoCount($invoice) > 0,
+                        'inv' => $d->iR->repoInvLoadedquery($invoice),
+                        'isRecurring' => $d->irR->repoCount($invoice) > 0,
                         'inv_id' => $this->session->get('inv_id'),
-                        'invItemAllowancesCharges' => $aciiR->repoACIquery(
+                        'invItemAllowancesCharges' => $d->aciiR->repoACIquery(
                             (int) $this->session->get('inv_id')),
-                        'invItemAllowancesChargesCount' => $aciiR->repoInvcount(
+                        'invItemAllowancesChargesCount' => $d->aciiR->repoInvcount(
                             (int) $this->session->get('inv_id')),
-                        'taxRates' => $trR->findAllPreloaded(),
-                        // Tasks are excluded
-                        'products' => $pR->findAllPreloaded(),
-                        'units' => $uR->findAllPreloaded(),
+                        'taxRates' => $d->trR->findAllPreloaded(),
+                        'products' => $d->pR->findAllPreloaded(),
+                        'units' => $d->unR->findAllPreloaded(),
                     ]),
                     'add_inv_item_task' =>
                         $this->webViewRenderer->renderPartialAsString(
@@ -205,34 +140,31 @@ trait View
                         'actionArguments' => ['_language' => $_language],
                         'errors' => [],
                         'form' => new InvItemForm(),
-                        'inv' => $iR->repoInvLoadedquery(
+                        'inv' => $d->iR->repoInvLoadedquery(
                             (int) $this->session->get('inv_id')),
                         'isRecurring' => $is_recurring,
                         'inv_id' => (int) $this->session->get('inv_id'),
-                        'taxRates' => $trR->findAllPreloaded(),
-                        // Only tasks with complete or status of 3 are made
-                        // available for selection
-                        'tasks' => $taskR->repoTaskStatusquery(3),
-                        // Products are excluded
-                        'units' => $uR->findAllPreloaded(),
+                        'taxRates' => $d->trR->findAllPreloaded(),
+                        'tasks' => $d->taskR->repoTaskStatusquery(3),
+                        'units' => $d->unR->findAllPreloaded(),
                     ]),
                     'modal_choose_items' =>
                         $this->webViewRenderer->renderPartialAsString(
                         '//invoice/product/modal_product_lookups_inv',
                         [
-                            'families' => $fR->findAllPreloaded(),
+                            'families' => $d->fR->findAllPreloaded(),
                             'default_item_tax_rate' =>
                                 $this->sR->getSetting('default_item_tax_rate')
                                     !== '' ?: 0,
                             'filter_product' => '',
                             'filter_family' => '',
                             'reset_table' => '',
-                            'products' => $pR->findAllPreloadedWithPrice(),
+                            'products' => $d->pR->findAllPreloadedWithPrice(),
                             'partial_product_table_modal' =>
                                 $this->webViewRenderer->renderPartialAsString(
                                 '//invoice/product/_partial_product_table_modal',
                                 [
-                                    'products' => $pR->findAllPreloadedWithPrice(),
+                                    'products' => $d->pR->findAllPreloadedWithPrice(),
                                 ],
                             ),
                         ],
@@ -244,22 +176,22 @@ trait View
                             'partial_task_table_modal' =>
                             $this->webViewRenderer->renderPartialAsString(
                                 '//invoice/task/partial_task_table_modal', [
-                                'tasks' => $taskR->repoTaskStatusquery(3),
-                                'projectR' => $prjctR,
+                                'tasks' => $d->taskR->repoTaskStatusquery(3),
+                                'projectR' => $d->prjctR,
                                 'dateHelper' => $this->dateHelper,
                                 'numberHelper' => $this->numberHelper,
                             ]),
                             'default_item_tax_rate' =>
                             $this->sR->getSetting('default_item_tax_rate')
                                 !== '' ?: 0,
-                            'tasks' => $taskR->findAllPreloaded(),
+                            'tasks' => $d->taskR->findAllPreloaded(),
                             'head' => $head,
                         ],
                     ),
                     'modal_add_inv_tax' =>
                         $this->webViewRenderer->renderPartialAsString(
                         '//invoice/inv/modal_add_inv_tax', [
-                            'taxRates' => $trR->findAllPreloaded(),
+                            'taxRates' => $d->trR->findAllPreloaded(),
                         ]),
                     'modal_add_allowance_charge' =>
                         $this->webViewRenderer->renderPartialAsString(
@@ -269,9 +201,9 @@ trait View
                                 '//invoice/inv/modal_add_allowance_charge_form',
                                 [
                                     'optionsDataAllowanceCharges' =>
-                                        $acR->optionsDataAllowanceCharges(),
+                                        $d->acR->optionsDataAllowanceCharges(),
                                     'acTemplateData' =>
-                                        $acR->acTemplateDataForJs(),
+                                        $d->acR->acTemplateDataForJs(),
                                     'actionName' => 'invallowancecharge/add',
                                     'actionArguments' => [
                                         'inv_id' =>
@@ -288,52 +220,39 @@ trait View
                     'modal_copy_inv' =>
                         $this->webViewRenderer->renderPartialAsString(
                             '//invoice/inv/modal_copy_inv', [
-                        'inv' => $iR->repoInvLoadedquery(
+                        'inv' => $d->iR->repoInvLoadedquery(
                             (int) $this->session->get('inv_id')),
-                        'clients' => $cR->repoUserClient(
-                            $ucR->getClientsWithUserAccounts()),
-                        'groups' => $gR->findAllPreloaded(),
+                        'clients' => $d->cR->repoUserClient(
+                            $d->ucR->getClientsWithUserAccounts()),
+                        'groups' => $d->gR->findAllPreloaded(),
                     ]),
-                    // Partial item table: Used to build items either
-                    // products/tasks that make up the invoice
-                    // Partial item table: Items and Grand Totals
                     'partial_item_table' => $this->viewPartialItemTable(
                         $show_buttons,
                         $id,
-                        $aciR,
-                        $aciiR,
-                        $pR,
-                        $piR,
-                        $taskR,
-                        $iiR,
-                        $iiaR,
-                        $iR,
-                        $trR,
-                        $uR,
-                        $itrR,
+                        $d,
                         $inv_amount,
                     ),
                     'modal_delete_inv' =>
                         $this->viewModalDeleteInv($_language),
-                    'modal_delete_items' => $this->viewModalDeleteItems($iiR),
+                    'modal_delete_items' => $this->viewModalDeleteItems($d->iiR),
                     'modal_change_client' =>
-                        $this->viewModalChangeClient($id, $cR, $iR),
-                    'modal_inv_to_pdf' => $this->viewModalInvToPdf($id, $iR),
+                        $this->viewModalChangeClient($id, $d->cR, $d->iR),
+                    'modal_inv_to_pdf' => $this->viewModalInvToPdf($id, $d->iR),
                     'modal_inv_to_modal_pdf' =>
-                        $this->viewModalInvToModalPdf($id, $iR),
+                        $this->viewModalInvToModalPdf($id, $d->iR),
                     'modal_pdf' => $this->viewModalPdf(),
                     'modal_inv_to_html' =>
-                        $this->viewModalInvToHtml($id, $iR),
+                        $this->viewModalInvToHtml($id, $d->iR),
                     'modal_create_credit' =>
-                        $this->viewModalCreateCredit($id, $gR, $iR),
+                        $this->viewModalCreateCredit($id, $d->gR, $d->iR),
                     'view_custom_fields' =>
-                        $this->viewCustomFields($cfR, $cvR, $inv_custom_values),
+                        $this->viewCustomFields($d->cfR, $d->cvR, $inv_custom_values),
                     'partial_inv_attachments' =>
                         $this->viewPartialInvAttachments(
-                            $_language, $url_key, $client_id, $upR),
+                            $_language, $url_key, $client_id, $d->upR),
                     'partial_inv_delivery_location' =>
                             $this->viewPartialDeliveryLocation(
-                                $_language, $dlR, (int) $delivery_location_id),
+                                $_language, $d->dlR, (int) $delivery_location_id),
                     'modal_message_no_payment_method' =>
                         $bootstrap5ModalTranslatorMessageWithoutAction
                         ->renderPartialLayoutWithTranslatorMessageAsString(
@@ -344,15 +263,15 @@ trait View
                         ),
                     'buttonsToolbarFull' => $this->buttonsToolbarFull->render(
                         $inv,
-                        $iaR,
+                        $d->iaR,
                         $this->userService->hasPermission(Permissions::EDIT_INV),
                         $read_only,
                         $enabled_gateways,
                         $this->sR->getSetting('enable_vat_registration'),
-                        $cfR->repoTableCountquery('payment_custom') > 0,
+                        $d->cfR->repoTableCountquery('payment_custom') > 0,
                     ),
                 ];
-                if ($this->rbacObserver($inv, $ucR, $uiR)) {
+                if ($this->rbacObserver($inv, $d->ucR, $d->uiR)) {
                     return $this->webViewRenderer->render('view', $parameters);
                 }
                 if ($this->rbacAdmin()) {
@@ -361,12 +280,12 @@ trait View
                 if ($this->rbacAccountant()) {
                     return $this->webViewRenderer->render('view', $parameters);
                 }
-            } // if $inv_amount
+            }
             return $this->webService->getNotFoundResponse();
-        } // if $inv
+        }
         return $this->webService->getNotFoundResponse();
     }
-    
+
     // resources/views/invoice/inv/partial_item_table has this route
     public function deleteInvTaxRate(#[RouteArgument('id')] int $id,
             ITRR $invtaxrateRepository):
@@ -382,7 +301,7 @@ trait View
         $inv_id = (string) $this->session->get('inv_id');
         return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
     }
-    
+
     private function viewCustomFields(
         CFR $cfR, CVR $cvR, array $inv_custom_values): string
     {
@@ -488,63 +407,55 @@ trait View
         ]);
     }
 
-    private function viewPartialItemTable(bool $show_buttons, int $id,
-        ACIR $aciR, ACIIR $aciiR, PR $pR, PIR $piR, TASKR $taskR, IIR $iiR,
-            IIAR $iiaR, IR $iR, TRR $trR, UNR $uR, ITRR $itrR,
-                ?InvAmount $invAmount): string
-    {
-        $inv = $this->inv($id, $iR, false);
+    private function viewPartialItemTable(
+        bool $show_buttons,
+        int $id,
+        InvViewDeps $d,
+        ?InvAmount $invAmount,
+    ): string {
+        $inv = $this->inv($id, $d->iR, false);
         if ($inv) {
             $draft = $inv->reqStatusId() == '1';
-            $inv_tax_rates = (($itrR->repoCount(
+            $inv_tax_rates = (($d->itrR->repoCount(
                 (int) $this->session->get('inv_id')) > 0) ?
-                    $itrR->repoInvquery((int) $this->session->get('inv_id'))
+                    $d->itrR->repoInvquery((int) $this->session->get('inv_id'))
                     : null);
-            // Allowances or Charges: DOCUMENT Level using $aciR
-            // Allowances or Charges: ITEM Level using $aciiR
-            // $inv_item_allowances_charges=
-            //      $aciiR->repoACIquery((string)$inv->reqId());
-            // $inv_item_allowances_charges_count=
-            //      $aciiR->repoCount((string)$inv->reqId());
-            $packHandleShipTotal = $aciR->getPackHandleShipTotal($inv->reqId());
+            $packHandleShipTotal = $d->aciR->getPackHandleShipTotal($inv->reqId());
             return $this->webViewRenderer->renderPartialAsString(
                 '//invoice/inv/partial_item_table', [
                 'packHandleShipTotal' => $packHandleShipTotal,
-                'aciiR' => $aciiR,
-                // Only make buttons available if status is draft
+                'aciiR' => $d->aciiR,
                 'draft' => $draft,
-                'piR' => $piR,
+                'piR' => $d->piR,
                 'showButtons' => $show_buttons,
                 'included' => $this->translator->translate('item.tax.included'),
                 'excluded' => $this->translator->translate('item.tax.excluded'),
-                'products' => $pR->findAllPreloadedWithPrice(),
-                // Only tasks with complete or status of 3 are made available for selection
-                'tasks' => $taskR->repoTaskStatusquery(3),
+                'products' => $d->pR->findAllPreloadedWithPrice(),
+                'tasks' => $d->taskR->repoTaskStatusquery(3),
                 'userCanEdit' => $this->userService->hasPermission(
                     Permissions::EDIT_INV),
-                'invItems' => $iiR->repoInvquery((int) $this->session->get('inv_id')),
-                'invItemAmountR' => $iiaR,
+                'invItems' => $d->iiR->repoInvquery((int) $this->session->get('inv_id')),
+                'invItemAmountR' => $d->iiaR,
                 'invTaxRates' => $inv_tax_rates,
                 'invAmount' => $invAmount,
-                'inv' => $iR->repoInvLoadedquery(
+                'inv' => $d->iR->repoInvLoadedquery(
                     (int) $this->session->get('inv_id')),
-                'taxRates' => $trR->findAllPreloaded(),
-                'units' => $uR->findAllPreloaded(),
+                'taxRates' => $d->trR->findAllPreloaded(),
+                'units' => $d->unR->findAllPreloaded(),
             ]);
-        } // inv
+        }
         return '';
     }
-    
+
     private function displayEditDeleteButtons(bool $read_only): bool
     {
         if (!$read_only
                 && ($this->sR->getSetting('disable_read_only') === (string) 0)) {
             return true;
         }
-        // Override the invoice's readonly
         return $this->sR->getSetting('disable_read_only') === (string) 1;
     }
-    
+
     private function flashNoEnabledGateways(
         array $enabled_gateways, string $message): void
     {

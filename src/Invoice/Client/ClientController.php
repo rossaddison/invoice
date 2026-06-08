@@ -9,9 +9,7 @@ use App\Invoice\BaseController;
 // Entity's
 use App\Infrastructure\Persistence\Client\Client;
 use App\Infrastructure\Persistence\ClientCustom\ClientCustom;
-use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\Inv\InvForm;
-use App\Infrastructure\Persistence\Quote\Quote;
 // Services
 use App\Service\WebControllerService;
 use App\Invoice\ClientCustom\ClientCustomService;
@@ -22,24 +20,19 @@ use App\User\UserService;
 // Repositories
 use App\Invoice\Client\ClientRepository as cR;
 use App\Invoice\ClientCustom\ClientCustomRepository as ccR;
-use App\Invoice\ClientNote\ClientNoteRepository as cnR;
-use App\Invoice\ClientPeppol\ClientPeppolRepository as cpR;
-use App\Invoice\CustomValue\CustomValueRepository as cvR;
 use App\Invoice\CustomField\CustomFieldRepository as cfR;
-use App\Invoice\DeliveryLocation\DeliveryLocationRepository as delR;
-use App\Invoice\Group\GroupRepository as gR;
-use App\Invoice\InvAmount\InvAmountRepository as iaR;
+use App\Invoice\CustomValue\CustomValueRepository as cvR;
 use App\Invoice\Inv\InvRepository as iR;
-use App\Invoice\InvRecurring\InvRecurringRepository as irR;
-use App\Invoice\Payment\PaymentRepository as pymtR;
 use App\Invoice\PostalAddress\PostalAddressRepository as paR;
 use App\Invoice\Quote\QuoteRepository as qR;
 use App\Invoice\Setting\SettingRepository as sR;
-use App\Invoice\UserClient\UserClientRepository as ucR;
 use App\Invoice\UserInv\UserInvRepository as uiR;
+// Deps
+use App\Invoice\Client\ClientEditDeps;
+use App\Invoice\Client\ClientIndexDeps;
+use App\Invoice\Client\ClientViewDeps;
 // Helpers
 use App\Invoice\Helpers\CountryHelper;
-use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Client\ClientCustomFieldProcessor;
 // Traits
 use App\Invoice\Client\Traits\ClientCustomFieldTrait;
@@ -277,22 +270,18 @@ final class ClientController extends BaseController
 
     public function edit(
         Request $request,
-        cR $cR,
-        ccR $ccR,
-        cfR $cfR,
-        cvR $cvR,
         FormHydrator $formHydrator,
-        paR $paR,
         CurrentRoute $currentRoute,
+        ClientEditDeps $d,
     ): Response {
-        $client = $this->resolveClientWithId($currentRoute, $cR);
+        $client = $this->resolveClientWithId($currentRoute, $d->cR);
         if (null === $client) {
             return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
         }
 
         $origin     = $currentRoute->getArgument('origin');
-        $parameters = $this->buildEditParameters($currentRoute, $cfR, $cvR,
-                $ccR, $paR, $client, $origin);
+        $parameters = $this->buildEditParameters($currentRoute, $d->cfR, $d->cvR,
+                $d->ccR, $d->paR, $client, $origin);
         /** @var ClientForm $form */
         $form = $parameters['form'];
 
@@ -477,22 +466,14 @@ final class ClientController extends BaseController
      * @param CurrentRoute $currentRoute
      * @param Request $request
      * @param UrlGenerator $urlGenerator
-     * @param cR $cR
-     * @param iaR $iaR
-     * @param iR $iR
-     * @param cpR $cpR
-     * @param ucR $ucR
+     * @param ClientIndexDeps $d
      * @return Response
      */
     public function index(
         CurrentRoute $currentRoute,
         Request $request,
         UrlGenerator $urlGenerator,
-        cR $cR,
-        iaR $iaR,
-        iR $iR,
-        cpR $cpR,
-        ucR $ucR,
+        ClientIndexDeps $d,
     ): Response {
         /**
          * Related logic: see $canEdit used in client/index.php to display via label
@@ -522,22 +503,22 @@ final class ClientController extends BaseController
                     // Show the latest products first => -id
                     ->withOrder($order);
         /** @psalm-var RDI<array-key, array<array-key, mixed>|object>&LDI&ODI&CDI $clients */
-        $clients = $cR->findAllWithActive($active)->withSort($sort);
+        $clients = $d->cR->findAllWithActive($active)->withSort($sort);
         if (isset($query_params['filter_client_name'])
                 && !empty($query_params['filter_client_name'])) {
-            $clients = $cR->filterClientName(
+            $clients = $d->cR->filterClientName(
                     (string) $query_params['filter_client_name']);
         }
         if (isset($query_params['filter_client_surname'])
                 && !empty($query_params['filter_client_surname'])) {
-            $clients = $cR->filterClientSurname(
+            $clients = $d->cR->filterClientSurname(
                     (string) $query_params['filter_client_surname']);
         }
         if ((isset($query_params['filter_client_name'])
                 && !empty($query_params['filter_client_name']))
            && (isset($query_params['filter_client_surname'])
                    && !empty($query_params['filter_client_surname']))) {
-            $clients = $cR->filterClientNameSurname(
+            $clients = $d->cR->filterClientNameSurname(
                     (string) $query_params['filter_client_name'],
                         (string) $query_params['filter_client_surname']);
         }
@@ -548,20 +529,20 @@ final class ClientController extends BaseController
         $parameters = [
             'paginator' => $paginator,
             'alert' => $this->alert(),
-            'iR' => $iR,
-            'iaR' => $iaR,
+            'iR' => $d->iR,
+            'iaR' => $d->iaR,
             'canEdit' => $canEdit,
             'active' => $active,
-            'cpR' => $cpR,
-            'ucR' => $ucR,
+            'cpR' => $d->cpR,
+            'ucR' => $d->ucR,
             'defaultPageSizeOffsetPaginator' =>
                 $this->sR->getSetting('default_list_limit') ?
                     (int) $this->sR->getSetting('default_list_limit') : 1,
             'modal_create_client' => $this->webViewRenderer->renderPartialAsString('//invoice/client/modal_create_client'),
             'optionsDataClientNameDropdownFilter' =>
-                $this->optionsDataClientNameDropdownFilter($cR),
+                $this->optionsDataClientNameDropdownFilter($d->cR),
             'optionsDataClientSurnameDropdownFilter' =>
-                $this->optionsDataClientSurnameDropdownFilter($cR),
+                $this->optionsDataClientSurnameDropdownFilter($d->cR),
             'urlCreator' => $urlCreator,
             'visible' =>
                 $this->sR->getSetting('columns_all_visible') == '0' ? false : true,
@@ -573,12 +554,7 @@ final class ClientController extends BaseController
         CurrentRoute $currentRoute,
         Request $request,
         UrlGenerator $urlGenerator,
-        cR $cR,
-        iaR $iaR,
-        iR $iR,
-        cpR $cpR,
-        ucR $ucR,
-        uiR $uiR,
+        ClientIndexDeps $d,
     ): Response {
         $query_params = $request->getQueryParams();
         /**
@@ -593,19 +569,19 @@ final class ClientController extends BaseController
         $urlCreator = new UrlCreator($urlGenerator);
         $order = OrderHelper::stringToArray($sortString);
         $urlCreator->__invoke([], $order);
-        $context = $this->resolveGuestUserContext($uiR);
+        $context = $this->resolveGuestUserContext($d->uiR);
         if (null === $context) {
             return $this->webService->getNotFoundResponse();
         }
         $user_id = (int) $context['user_id'];
         $userInv = $context['userInv'];
-        $client_array = $ucR->getAssignedToUser($user_id);
+        $client_array = $d->ucR->getAssignedToUser($user_id);
         if (empty($client_array)) {
             $this->flashMessage('warning',
                 $this->translator->translate('user.clients.assigned.not'));
             return $this->webService->getNotFoundResponse();
         }
-        $clients = $cR->repoUserClient($client_array);
+        $clients = $d->cR->repoUserClient($client_array);
         /** @psalm-var positive-int $listLimit */
         $listLimit = $userInv->getListLimit() > 0 ? ($userInv->getListLimit() ?? 1) : 1;
         $paginator = (new DataOffsetPaginator($clients))
@@ -615,11 +591,11 @@ final class ClientController extends BaseController
         $parameters = [
             'paginator' => $paginator,
             'alert'     => $this->alert(),
-            'iR'        => $iR,
-            'iaR'       => $iaR,
+            'iR'        => $d->iR,
+            'iaR'       => $d->iaR,
             'editInv'   => $this->userService->hasPermission(Permissions::EDIT_INV),
             'active'    => $active,
-            'cpR'       => $cpR,
+            'cpR'       => $d->cpR,
             'defaultPageSizeOffsetPaginator' =>
                 $this->sR->getSetting('default_list_limit')
                     ? (int) $this->sR->getSetting('default_list_limit') : 1,
@@ -635,37 +611,15 @@ final class ClientController extends BaseController
     /**
      * @param SessionInterface $session
      * @param CurrentRoute $currentRoute
-     * @param cR $cR
-     * @param cfR $cfR
-     * @param cnR $cnR
-     * @param cpR $cpR
-     * @param cvR $cvR
-     * @param ccR $ccR
-     * @param delR $delR
-     * @param gR $gR
-     * @param iR $iR
-     * @param qR $qR
-     * @param pymtR $pymtR
-     * @param ucR $ucR
+     * @param ClientViewDeps $d
      * @return Response
      */
     public function view(
         SessionInterface $session,
         CurrentRoute $currentRoute,
-        cR $cR,
-        cfR $cfR,
-        cnR $cnR,
-        cpR $cpR,
-        cvR $cvR,
-        ccR $ccR,
-        delR $delR,
-        gR $gR,
-        iR $iR,
-        qR $qR,
-        pymtR $pymtR,
-        ucR $ucR,
+        ClientViewDeps $d,
     ): Response {
-        $client = $this->client($currentRoute, $cR);
+        $client = $this->client($currentRoute, $d->cR);
         if (!($client instanceof Client)) {
             return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
         }
@@ -676,11 +630,11 @@ final class ClientController extends BaseController
         // Note: client_id is used as the 'origin'
         //  (could be 'quote','main','dashboard')
         $bootstrap5ModalQuote = new Bootstrap5ModalQuote(
-            $this->translator, $this->webViewRenderer, $cR, $gR, $this->sR, $ucR,
+            $this->translator, $this->webViewRenderer, $d->cR, $d->gR, $this->sR, $d->ucR,
             new QuoteForm(),
         );
         $bootstrap5ModalInv = new Bootstrap5ModalInv(
-            $this->translator, $this->webViewRenderer, $cR, $gR, $this->sR, $ucR,
+            $this->translator, $this->webViewRenderer, $d->cR, $d->gR, $this->sR, $d->ucR,
             new InvForm(),
         );
 
@@ -688,13 +642,13 @@ final class ClientController extends BaseController
             'title'             => $this->translator->translate('client'),
             'alert'             => $this->alert(),
             'clientCustomForm'  => $clientCustomForm,
-            'custom_fields'     => $cfR->repoTablequery('client_custom'),
-            'customValues'      => $cvR->fixCfValueToCf($cfR->repoTablequery('client_custom')),
-            'cpR'               => $cpR,
-            'clientCustomValues'=> $this->clientCustomValues($cId, $ccR),
+            'custom_fields'     => $d->cfR->repoTablequery('client_custom'),
+            'customValues'      => $d->cvR->fixCfValueToCf($d->cfR->repoTablequery('client_custom')),
+            'cpR'               => $d->cpR,
+            'clientCustomValues'=> $this->clientCustomValues($cId, $d->ccR),
             'client'            => $client,
-            'client_notes'      => $cnR->repoClientNoteCount($cId) > 0
-                                       ? $cnR->repoClientquery($cId) : [],
+            'client_notes'      => $d->cnR->repoClientNoteCount($cId) > 0
+                                       ? $d->cnR->repoClientquery($cId) : [],
             'partial_client_address' => $this->webViewRenderer->renderPartialAsString(
                 '//invoice/client/partial_client_address', ['client' => $client]
             ),
@@ -704,26 +658,26 @@ final class ClientController extends BaseController
                 $bootstrap5ModalInv->renderPartialLayoutWithFormAsString((string) $cId, []),
             'partial_notes' => $this->webViewRenderer->renderPartialAsString(
                 '//invoice/clientnote/partial_notes',
-                ['client_notes' => $cnR->repoClientquery($cId)]
+                ['client_notes' => $d->cnR->repoClientquery($cId)]
             ),
             // All payments are loaded here and filtered inside the view partial
             // via: if ($payment->getInv()->reqClientId() === $client->reqId())
             'payment_table' => $this->webViewRenderer->renderPartialAsString(
                 '//invoice/payment/partial_payment_table', [
                     'client'   => $client,
-                    'payments' => $pymtR->repoPaymentInvLoadedAll(
+                    'payments' => $d->pymtR->repoPaymentInvLoadedAll(
                         (int) $this->sR->getSetting('payment_list_limit') ?: 10
                     ),
                 ]
             ),
             'delivery_locations' => $this->webViewRenderer->renderPartialAsString(
                 '//invoice/client/client_delivery_location_list',
-                ['locations' => $delR->repoClientquery($client->reqId())]
+                ['locations' => $d->delR->repoClientquery($client->reqId())]
             ),
         ];
 
         // Quote tables — "all" plus one per status (1 draft … 6 cancelled)
-        $parameters['quote_table'] = $this->renderQuoteTablePartial($qR, $cId);
+        $parameters['quote_table'] = $this->renderQuoteTablePartial($d->qR, $cId);
         $quoteStatusKeys = [
             1 => 'quote_draft_table',
             2 => 'quote_sent_table',
@@ -733,12 +687,12 @@ final class ClientController extends BaseController
             6 => 'quote_cancelled_table',
         ];
         foreach ($quoteStatusKeys as $status => $key) {
-            $parameters[$key] = $this->renderQuoteTablePartial($qR, $cId, $status);
+            $parameters[$key] = $this->renderQuoteTablePartial($d->qR, $cId, $status);
         }
 
         // Invoice tables — "all" (with session) plus one per status
         //  (1 draft … 13 written-off)
-        $parameters['invoice_table'] = $this->renderInvTablePartial($iR, $cId,
+        $parameters['invoice_table'] = $this->renderInvTablePartial($d->iR, $cId,
                 null, $session);
         $invStatusKeys = [
             1  => 'invoice_draft_table',
@@ -756,7 +710,7 @@ final class ClientController extends BaseController
             13 => 'invoice_written_off_table',
         ];
         foreach ($invStatusKeys as $status => $key) {
-            $parameters[$key] = $this->renderInvTablePartial($iR, $cId, $status);
+            $parameters[$key] = $this->renderInvTablePartial($d->iR, $cId, $status);
         }
 
         return $this->webViewRenderer->render('view', $parameters);

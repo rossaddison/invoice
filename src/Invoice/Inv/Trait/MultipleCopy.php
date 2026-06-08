@@ -11,26 +11,12 @@ use App\Infrastructure\Persistence\
 };
 
 use App\Invoice\{
-    InvItemAmount\InvItemAmountService as IIAS,
     InvAllowanceCharge\InvAllowanceChargeForm, InvCustom\InvCustomForm,
     InvItem\InvItemForm, InvTaxRate\InvTaxRateForm,
-    Group\GroupRepository as GR,
-    Inv\InvRepository as IR, Inv\InvForm,
-    InvAllowanceCharge\InvAllowanceChargeRepository as ACIR,
-    InvCustom\InvCustomRepository as ICR,
-    InvItem\InvItemRepository as IIR,
-    InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR,
-    InvAmount\InvAmountRepository as IAR,
-    InvItemAmount\InvItemAmountRepository as IIAR,
-    InvTaxRate\InvTaxRateRepository as ITRR,
-    Product\ProductRepository as PR,
-    Task\TaskRepository as TASKR,
-    TaxRate\TaxRateRepository as TRR,
-    Unit\UnitRepository as UNR,
-    UserClient\UserClientRepository as UCR,
-    UserInv\UserInvRepository as UIR
+    Inv\InvCopyDeps,
+    Inv\InvForm
 };
-use App\User\UserRepository as UR;
+
 use Yiisoft\{
     FormModel\FormHydrator, Json\Json, Security\Random
 };
@@ -43,22 +29,7 @@ trait MultipleCopy
     public function multiplecopy(
         Request $request,
         FormHydrator $formHydrator,
-        ACIIR $aciiR,
-        GR $gR,
-        IIAS $iiaS,
-        PR $pR,
-        TASKR $taskR,
-        ICR $icR,
-        IAR $iaR,
-        IIAR $iiaR,
-        IIR $iiR,
-        IR $iR,
-        ITRR $itrR,
-        TRR $trR,
-        UR $uR,
-        UCR $ucR,
-        UIR $uiR,
-        UNR $unR,
+        InvCopyDeps $d,
     ): Response {
         $data = $request->getQueryParams();
         /**
@@ -73,34 +44,27 @@ trait MultipleCopy
              */
             foreach ($keyList as $value) {
                 $invId = (int) $value;
-                $original = $iR->repoInvUnloadedquery($invId);
+                $original = $d->iR->repoInvUnloadedquery($invId);
                 if ($original) {
                     $invoice_body = [
                         'client_id' => $original->reqClientId(),
                         'group_id' => $original->reqGroupId(),
                         'so_id' => $original->getSoId(),
                         'quote_id' => $original->getQuoteId(),
-                        // user_id below
                         'status_id' =>
                         $this->sR->getSetting('mark_invoices_sent_copy') ===
                             '1' ? 2 : 1,
                         'is_read_only' => $this->sR->getSetting(
                             'mark_invoices_sent_copy') === '1',
                         'password' => '',
-                        // date_supplied and date_tax_point will change as soon
-                        // as goods are supplied and a supplied/service date
-                        // is recorded
                         'date_supplied' => new \DateTimeImmutable('now'),
                         'date_tax_point' => new \DateTimeImmutable('now'),
                         'time_created' =>
                             (new \DateTimeImmutable('now'))->format('H:i:s'),
-                        // the company will be registered for their own personal
-                        // peppol stand-in-code
                         'stand_in_code' => $this->sR->getSetting('stand_in_code'),
-                        // if draft invoices must get invoice numbers
                         'number' => $this->sR->getSetting(
                             'generate_invoice_number_for_draft') === '1' ?
-                                (string) $gR->generateNumber(
+                                (string) $d->gR->generateNumber(
                                     $original->reqGroupId(), true) : '',
                         'discount_amount' =>
                             (float) $original->getDiscountAmount(),
@@ -110,7 +74,6 @@ trait MultipleCopy
                             $original->getDocumentDescription(),
                         'url_key' => Random::string(32),
                         'payment_method' => $original->getPaymentMethod(),
-                        // a copied invoice will not have a credit note
                         'creditinvoice_parent_id' => null,
                         'delivery_id' => $original->getDeliveryId(),
                         'delivery_location_id' =>
@@ -125,14 +88,11 @@ trait MultipleCopy
                          * @var string $invoice_body['client_id']
                          */
                         $client_id = (int) $invoice_body['client_id'];
-                        $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
+                        $user = $this->activeUser($client_id, $d->uR, $d->ucR, $d->uiR);
                         if (null !== $user) {
                             $this->inv_service->withTransaction(
                                 function () use (
-                                    $user, $copy, $invoice_body, $data, $invId,
-                                    $iiaR, $iiaS, $pR, $taskR, $iiR, $trR,
-                                    $aciiR, $formHydrator, $unR, $itrR,
-                                    $icR, $iaR, $iR
+                                    $user, $copy, $invoice_body, $data, $invId, $d, $formHydrator
                                 ): void {
                                     $copied = $this->inv_service->copyInv(
                                         $user, $copy, $invoice_body, $this->sR);
@@ -142,39 +102,37 @@ trait MultipleCopy
                                      */
                                     $copied->setDateCreated(
                                         (string) $data['modal_created_date']);
-                                    $iR->save($copied);
+                                    $d->iR->save($copied);
                                     $copied_id = $copied->reqId();
-                                    // Transfer each inv_item to inv_item and
-                                    // the corresponding inv_item_amount for
-                                    // each item
                                     if ($copied_id > 0) {
                                         $this->invToInvInvItems($invId,
-                                            $copied_id, $iiaR, $iiaS, $pR,
-                                            $taskR, $iiR, $trR, $aciiR,
-                                            $formHydrator, $unR);
+                                            $copied_id, $d, $formHydrator);
                                         $this->invToInvInvTaxRates($invId,
-                                            $copied_id, $itrR, $formHydrator);
+                                            $copied_id, $d, $formHydrator);
                                         $this->invToInvInvCustom($invId,
-                                            $copied_id, $icR, $formHydrator);
+                                            $copied_id, $d, $formHydrator);
                                         $this->invToInvInvAmount($invId,
-                                            $copied_id, $iaR);
-                                        $iR->save($copy);
+                                            $copied_id, $d);
+                                        $d->iR->save($copy);
                                     }
                                 }
                             );
                         }
                     }
-                } // original
-            } // foreach $keyList
+                }
+            }
             return $this->factory->createResponse(Json::encode(['success' => 1]));
-        } // !empty($keyList)
+        }
         return $this->factory->createResponse(Json::encode(['success' => 0]));
     }
-    
-    private function invToInvInvAllowanceCharges(int $inv_id,
-        int $copy_id, ACIR $aciR, FormHydrator $formHydrator): void
-    {
-        $inv_allowance_charges = $aciR->repoACIquery($inv_id);
+
+    private function invToInvInvAllowanceCharges(
+        int $inv_id,
+        int $copy_id,
+        InvCopyDeps $d,
+        FormHydrator $formHydrator,
+    ): void {
+        $inv_allowance_charges = $d->aciR->repoACIquery($inv_id);
         /**
          * @var InvAllowanceCharge $inv_allowance_charge
          */
@@ -196,10 +154,9 @@ trait MultipleCopy
         }
     }
 
-    private function invToInvInvAmount(int $invId, int $copiedId, IAR $iaR):
-        void
+    private function invToInvInvAmount(int $invId, int $copiedId, InvCopyDeps $d): void
     {
-        $original = $iaR->repoInvquery($invId);
+        $original = $d->iaR->repoInvquery($invId);
         if (null !== $original) {
             $array = [];
             $array['inv_id'] = $original->reqInvId();
@@ -211,7 +168,7 @@ trait MultipleCopy
             $array['total'] = $original->getTotal();
             $array['paid'] = 0;
             $array['balance'] = $original->getBalance();
-            $copied = $iaR->repoInvquery($copiedId);
+            $copied = $d->iaR->repoInvquery($copiedId);
             null !== $copied ?
                 $this->inv_amount_service->saveInvAmountViaCalculations(
                         $copied, $array) : '';
@@ -225,27 +182,11 @@ trait MultipleCopy
     public function invToInvConfirm(
         Request $request,
         FormHydrator $formHydrator,
-        ACIIR $aciiR,
-        ACIR $aciR,
-        GR $gR,
-        IIAS $iiaS,
-        PR $pR,
-        TASKR $taskR,
-        IAR $iaR,
-        ICR $icR,
-        IIAR $iiaR,
-        IIR $iiR,
-        IR $iR,
-        ITRR $itrR,
-        TRR $trR,
-        UR $uR,
-        UCR $ucR,
-        UIR $uiR,
-        UNR $unR,
+        InvCopyDeps $d,
     ): Response {
         $data_inv_js = $request->getQueryParams();
         $inv_id = (int) $data_inv_js['inv_id'];
-        $original = $iR->repoInvUnloadedquery($inv_id);
+        $original = $d->iR->repoInvUnloadedquery($inv_id);
         if ($original) {
             $group_id = $original->reqGroupId();
             $ajax_body = [
@@ -255,7 +196,7 @@ trait MultipleCopy
                 'status_id' =>
                     $this->sR->getSetting('mark_invoices_sent_copy') === '1' ?
                         2 : 1,
-                'number' => $gR->generateNumber($group_id),
+                'number' => $d->gR->generateNumber($group_id),
                 'creditinvoice_parent_id' => null,
                 'discount_amount' => (float) $original->getDiscountAmount(),
                 'url_key' => '',
@@ -270,41 +211,33 @@ trait MultipleCopy
                  * @var string $ajax_body['client_id']
                  */
                 $client_id = (int) $ajax_body['client_id'];
-                $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
+                $user = $this->activeUser($client_id, $d->uR, $d->ucR, $d->uiR);
                 if (null !== $user) {
                     $copy_id = 0;
                     $this->inv_service->withTransaction(
                         function () use (
-                            $user, $copy, $ajax_body, $gR, $inv_id,
-                            $iiaR, $iiaS, $pR, $taskR, $iiR, $trR, $aciiR,
-                            $formHydrator, $unR, $itrR, $icR, $iaR, $aciR,
-                            $iR, &$copy_id
+                            $user, $copy, $ajax_body, $inv_id, $d, $formHydrator, &$copy_id
                         ): void {
                             $this->inv_service->saveInv(
-                                $user, $copy, $ajax_body, $this->sR, $gR);
+                                $user, $copy, $ajax_body, $this->sR, $d->gR);
                             $copy_id = $copy->reqId();
-                            // Transfer each inv_item to inv_item and the
-                            // corresponding inv_item_amount for each item
                             if ($copy_id > 0) {
                                 $this->invToInvInvItems($inv_id, $copy_id,
-                                    $iiaR, $iiaS, $pR, $taskR, $iiR, $trR,
-                                    $aciiR, $formHydrator, $unR);
+                                    $d, $formHydrator);
                                 $this->invToInvInvTaxRates($inv_id, $copy_id,
-                                    $itrR, $formHydrator);
+                                    $d, $formHydrator);
                                 $this->invToInvInvCustom($inv_id, $copy_id,
-                                    $icR, $formHydrator);
+                                    $d, $formHydrator);
                                 $this->invToInvInvAllowanceCharges($inv_id,
-                                    $copy_id, $aciR, $formHydrator);
-                                $this->invToInvInvAmount($inv_id, $copy_id, $iaR);
-                                $iR->save($copy);
+                                    $copy_id, $d, $formHydrator);
+                                $this->invToInvInvAmount($inv_id, $copy_id, $d);
+                                $d->iR->save($copy);
                             }
                         }
                     );
                     if ($copy_id > 0) {
                         $parameters = ['success' => 1,
                             'new_invoice_id' => $copy_id];
-                        //return response to inv.js to redirect to newly
-                        //created invoice
                         $this->flashMessage('info', $this->translator->translate(
                             'draft.guest'));
                         return $this->factory->createResponse(
@@ -315,20 +248,18 @@ trait MultipleCopy
             $parameters = [
                 'success' => 0,
             ];
-            //return response to inv.js to reload page at location
             return $this->factory->createResponse(Json::encode($parameters));
         }
-        // if original
         return $this->webService->getNotFoundResponse();
     }
 
-    /**
-     * @param int $copy_id
-     */
-    private function invToInvInvCustom(int $inv_id, int $copy_id,
-        ICR $icR, FormHydrator $formHydrator): void
-    {
-        $inv_customs = $icR->repoFields($inv_id);
+    private function invToInvInvCustom(
+        int $inv_id,
+        int $copy_id,
+        InvCopyDeps $d,
+        FormHydrator $formHydrator,
+    ): void {
+        $inv_customs = $d->icR->repoFields($inv_id);
         /**
          * @var InvCustom $inv_custom
          */
@@ -353,25 +284,15 @@ trait MultipleCopy
     private function invToInvInvItems(
         int $inv_id,
         int $copy_id,
-        IIAR $iiaR,
-        IIAS $iiaS,
-        PR $pR,
-        TASKR $taskR,
-        IIR $iiR,
-        TRR $trR,
-        ACIIR $aciiR,
+        InvCopyDeps $d,
         FormHydrator $formHydrator,
-        UNR $unR,
     ): void {
-        // Get all items that belong to the original invoice
-        $items = $iiR->repoInvItemIdquery($inv_id);
+        $items = $d->iiR->repoInvItemIdquery($inv_id);
         /**
          * @var InvItem $inv_item
          */
         foreach ($items as $inv_item) {
             $copy_item = [
-                // Follow sequence of InvItem construct
-                //id
                 'date added' => new \DateTimeImmutable(),
                 'task_id' => $inv_item->getTaskId(),
                 'name' => $inv_item->getName(),
@@ -399,7 +320,6 @@ trait MultipleCopy
                 'tax_rate_id' => $inv_item->reqTaxRateId(),
                 'product_id' => $inv_item->getProductId(),
                 'product_unit_id' => $inv_item->getProductUnitId(),
-                // recurring date
                 'date' => $inv_item->getDate(),
                 'belongs_to_vat_invoice' =>
                     $inv_item->getBelongsToVatInvoice(),
@@ -408,7 +328,6 @@ trait MultipleCopy
             ];
             $originalInvItemId = $inv_item->reqId();
             {
-                // Create an equivalent invoice item for the invoice item
                 $invItem = new InvItem();
                 $form = new InvItemForm();
                 if ($formHydrator->populateAndValidate($form, $copy_item)) {
@@ -416,12 +335,12 @@ trait MultipleCopy
                     if ($productId > 0) {
                         $newInvItemId =
                             $this->inv_item_service->addInvItemProduct(
-                                $invItem, $copy_item, (string) $copy_id, $pR, $trR, $iiaS,
-                                    $iiaR, $this->sR, $unR);
+                                $invItem, $copy_item, (string) $copy_id, $d->pR, $d->trR, $d->iiaS,
+                                    $d->iiaR, $this->sR, $d->unR);
                         if (null !== $newInvItemId) {
                             $this->inv_item_service->addInvItemAllowanceCharges(
                                 (string) $copy_id, $originalInvItemId, $newInvItemId,
-                                    $aciiR);
+                                    $d->aciiR);
                             if (($invItem->getQuantity() >=  0.00)
                                 && ($invItem->getPrice() >= 0.00)
                                 && ($invItem->getDiscountAmount() >= 0.00)
@@ -434,8 +353,8 @@ trait MultipleCopy
                                     $invItem->getDiscountAmount() ?? 0.00,
                                     $inv_item->getTaxRate()?->getTaxRatePercent()
                                         ?? 0.00,
-                                    $iiaS,
-                                    $iiaR
+                                    $d->iiaS,
+                                    $d->iiaR
                                 );
                             }
                         }
@@ -443,11 +362,11 @@ trait MultipleCopy
                     $taskId = (int) $inv_item->getTaskId();
                     if ($taskId > 0) {
                         $newInvItemId = $this->inv_item_service->addInvItemTask(
-                            $invItem, $copy_item, (string) $copy_id, $taskR, $trR, $iiaS,
-                                $iiaR);
+                            $invItem, $copy_item, (string) $copy_id, $d->taskR, $d->trR, $d->iiaS,
+                                $d->iiaR);
                         if (null !== $newInvItemId) {
                             $this->inv_item_service->addInvItemAllowanceCharges(
-                            (string) $copy_id, $originalInvItemId, $newInvItemId, $aciiR);
+                            (string) $copy_id, $originalInvItemId, $newInvItemId, $d->aciiR);
                             if (($invItem->getQuantity() >=  0.00)
                                 && ($invItem->getPrice() >= 0.00)
                                 && ($invItem->getDiscountAmount() >= 0.00)
@@ -460,8 +379,8 @@ trait MultipleCopy
                                     $invItem->getDiscountAmount() ?? 0.00,
                                     $inv_item->getTaxRate()?->getTaxRatePercent()
                                         ?? 0.00,
-                                    $iiaS,
-                                    $iiaR
+                                    $d->iiaS,
+                                    $d->iiaR
                                 );
                             }
                         }
@@ -475,18 +394,17 @@ trait MultipleCopy
                                 . (string) $inv_item->reqId());
                     }
                 }
-            } // null!==originalItemId
-        } // foreach
+            }
+        }
     }
 
-    /**
-     * @param int $copy_id
-     */
-    private function invToInvInvTaxRates(int $inv_id, int $copy_id,
-        ITRR $itrR, FormHydrator $formHydrator): void
-    {
-        // Get all tax rates that have been setup for the invoice
-        $inv_tax_rates = $itrR->repoInvquery($inv_id);
+    private function invToInvInvTaxRates(
+        int $inv_id,
+        int $copy_id,
+        InvCopyDeps $d,
+        FormHydrator $formHydrator,
+    ): void {
+        $inv_tax_rates = $d->itrR->repoInvquery($inv_id);
         /**
          * @var InvTaxRate $inv_tax_rate
          */

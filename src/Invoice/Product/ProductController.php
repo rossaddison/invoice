@@ -16,12 +16,12 @@ use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use App\Infrastructure\Persistence\Unit\Unit;
 use App\Infrastructure\Persistence\InvItem\InvItem;
 use App\Invoice\Family\FamilyRepository as fR;
-use App\Invoice\CustomValue\CustomValueRepository as cvR;
-use App\Invoice\CustomField\CustomFieldRepository as cfR;
 use App\Invoice\Helpers\CountryHelper;
 use App\Invoice\Helpers\CustomValuesHelper as CVH;
+use App\Invoice\Helpers\InvRecalculator;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
+use App\Invoice\Helpers\QuoteRecalculator;
 // Product
 use App\Invoice\Product\ProductRepository as pR;
 use App\Invoice\ProductCustom\ProductCustomRepository as pcR;
@@ -42,20 +42,9 @@ use App\Invoice\ProductProperty\ProductPropertyRepository as ppR;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\TaxRate\TaxRateRepository as trR;
 use App\Invoice\Unit\UnitRepository as uR;
-use App\Invoice\UnitPeppol\UnitPeppolRepository as upR;
-use App\Invoice\QuoteItem\QuoteItemRepository as qiR;
-use App\Invoice\QuoteAllowanceCharge\QuoteAllowanceChargeRepository as acqR;
 use App\Invoice\InvItem\InvItemRepository as iiR;
-use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository as aciR;
 use App\Invoice\QuoteItemAmount\QuoteItemAmountRepository as qiaR;
-use App\Invoice\QuoteTaxRate\QuoteTaxRateRepository as qtrR;
-use App\Invoice\InvTaxRate\InvTaxRateRepository as itrR;
-use App\Invoice\QuoteAmount\QuoteAmountRepository as qaR;
-use App\Invoice\InvAmount\InvAmountRepository as iaR;
-use App\Invoice\Quote\QuoteRepository as qR;
-use App\Invoice\Inv\InvRepository as iR;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as iiaR;
-use App\Invoice\Payment\PaymentRepository as pymR;
 use App\Service\WebControllerService;
 use App\User\UserService;
 //  Psr
@@ -91,6 +80,9 @@ final class ProductController extends BaseController
         private FormFields $formFields,
         private ProductService $productService,
         private ProductCustomService $productCustomService,
+        private ProductFormDependencies $formDeps,
+        private InvRecalculator $invRecalculator,
+        private QuoteRecalculator $quoteRecalculator,
         private QuoteItemService $quoteitemService,
         private InvItemService $invitemService,
         SessionInterface $session,
@@ -105,6 +97,9 @@ final class ProductController extends BaseController
         $this->responseFactory = $responseFactory;
         $this->productService = $productService;
         $this->productCustomService = $productCustomService;
+        $this->formDeps = $formDeps;
+        $this->invRecalculator = $invRecalculator;
+        $this->quoteRecalculator = $quoteRecalculator;
         $this->quoteitemService = $quoteitemService;
         $this->invitemService = $invitemService;
     }
@@ -112,18 +107,11 @@ final class ProductController extends BaseController
     /**
      * @param Request $request
      * @param FormHydrator $formHydrator
-     * @param fR $fR
-     * @param uR $uR
-     * @param trR $trR
-     * @param cvR $cvR
-     * @param cfR $cfR
-     * @param upR $upR
      * @return Response
      */
-    public function add(Request $request,
-            FormHydrator $formHydrator, fR $fR, uR $uR, trR $trR, cvR $cvR,
-            cfR $cfR, upR $upR): Response
+    public function add(Request $request, FormHydrator $formHydrator): Response
     {
+        $d = $this->formDeps;
         $countries = new CountryHelper();
         $peppolarrays = new PeppolArrays();
         $form = new ProductForm();
@@ -142,16 +130,15 @@ final class ProductController extends BaseController
             'standard_item_identification_schemeids' =>
                 $peppolarrays->getIso6523Icd(),
             'item_classification_code_listids' => $peppolarrays->getUncl7143(),
-            'families' => $this->families($fR->findAllPreloaded()),
-            'units' => $this->units($uR->findAllPreloaded()),
-            'taxRates' => $this->taxRates($trR->findAllPreloaded()),
-            'unitPeppols' => $this->unitPeppols($upR->findAllPreloaded()),
-            // Custom fields and values for product
-            'customFields' => $this->fetchCustomFieldsAndValues($cfR, $cvR,
-                    'product_custom')['customFields'],
-            'customValues' => $this->fetchCustomFieldsAndValues($cfR, $cvR,
-                    'product_custom')['customValues'],
-            'cvH' => new CVH($this->sR, $cvR),
+            'families' => $this->families($d->familyRepository->findAllPreloaded()),
+            'units' => $this->units($d->unitRepository->findAllPreloaded()),
+            'taxRates' => $this->taxRates($d->taxRateRepository->findAllPreloaded()),
+            'unitPeppols' => $this->unitPeppols($d->unitPeppolRepository->findAllPreloaded()),
+            'customFields' => $this->fetchCustomFieldsAndValues(
+                    $d->customFieldRepository, $d->customValueRepository, 'product_custom')['customFields'],
+            'customValues' => $this->fetchCustomFieldsAndValues(
+                    $d->customFieldRepository, $d->customValueRepository, 'product_custom')['customValues'],
+            'cvH' => new CVH($this->sR, $d->customValueRepository),
             'productCustomValues' => [],
             'productCustomForm' => $productCustomForm,
             'formFields' => $this->formFields,
@@ -208,13 +195,7 @@ final class ProductController extends BaseController
      * @param int $id
      * @param FormHydrator $formHydrator
      * @param pR $pR
-     * @param fR $fR
-     * @param uR $uR
-     * @param trR $trR
-     * @param cvR $cvR
-     * @param cfR $cfR
      * @param pcR $pcR
-     * @param upR $upR
      * @return Response
      */
     public function edit(
@@ -223,14 +204,9 @@ final class ProductController extends BaseController
         int $id,
         FormHydrator $formHydrator,
         pR $pR,
-        fR $fR,
-        uR $uR,
-        trR $trR,
-        cvR $cvR,
-        cfR $cfR,
         pcR $pcR,
-        upR $upR,
     ): Response {
+        $d = $this->formDeps;
         $countries = new CountryHelper();
         $peppolarrays = new PeppolArrays();
         $product = $this->product($id, $pR);
@@ -253,13 +229,15 @@ final class ProductController extends BaseController
                     'standard_item_identification_schemeids' =>
                         $peppolarrays->getIso6523Icd(),
                     'item_classification_code_listids' => $peppolarrays->getUncl7143(),
-                    'families' => $this->families($fR->findAllPreloaded()),
-                    'units' => $this->units($uR->findAllPreloaded()),
-                    'taxRates' => $this->taxRates($trR->findAllPreloaded()),
-                    'unitPeppols' => $this->unitPeppols($upR->findAllPreloaded()),
-                    'customFields' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'product_custom')['customFields'],
-                    'customValues' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'product_custom')['customValues'],
-                    'cvH' => new CVH($this->sR, $cvR),
+                    'families' => $this->families($d->familyRepository->findAllPreloaded()),
+                    'units' => $this->units($d->unitRepository->findAllPreloaded()),
+                    'taxRates' => $this->taxRates($d->taxRateRepository->findAllPreloaded()),
+                    'unitPeppols' => $this->unitPeppols($d->unitPeppolRepository->findAllPreloaded()),
+                    'customFields' => $this->fetchCustomFieldsAndValues(
+                            $d->customFieldRepository, $d->customValueRepository, 'product_custom')['customFields'],
+                    'customValues' => $this->fetchCustomFieldsAndValues(
+                            $d->customFieldRepository, $d->customValueRepository, 'product_custom')['customValues'],
+                    'cvH' => new CVH($this->sR, $d->customValueRepository),
                     'productCustomValues' =>
                         $this->productCustomValues($product_id, $pcR),
                     'productCustomForm' => $productCustomForm,
@@ -277,7 +255,7 @@ final class ProductController extends BaseController
                             return $this->webViewRenderer->render('_form', $parameters);
                         }
                         // Only save custom fields if they exist
-                        if ($cfR->repoTableCountquery('product_custom') > 0 && isset($body['custom'])) {
+                        if ($d->customFieldRepository->repoTableCountquery('product_custom') > 0 && isset($body['custom'])) {
                             $custom = (array) $body['custom'];
                             $errorsCustom = [];
                             /** @var array|string $value */
@@ -667,39 +645,27 @@ final class ProductController extends BaseController
      * @param FormHydrator $formHydrator
      * @param Request $request
      * @param pR $pR
-     * @param qaR $qaR
-     * @param qiR $qiR
-     * @param qR $qR
-     * @param qtrR $qtrR
      * @param trR $trR
      * @param uR $uR
      * @param qiaR $qiaR
      * @param qiaS $qiaS
-     * @param acqR $acqR
      */
     public function selectionQuote(
         FormHydrator $formHydrator,
         Request $request,
         pR $pR,
-        qaR $qaR,
-        qiR $qiR,
-        qR $qR,
-        qtrR $qtrR,
         trR $trR,
         uR $uR,
         qiaR $qiaR,
         qiaS $qiaS,
-        acqR $acqR,
     ): Response {
         $select_items = $request->getQueryParams();
         /** @var array $select_items['product_ids'] */
         $product_ids = ($select_items['product_ids'] ?: []);
         /** @var string $quote_id */
         $quote_id = $select_items['quote_id'];
-        // Use Spiral||Cycle\Database\Injection\Parameter to build 'IN' array of products.
         $products = $pR->findinProducts($product_ids);
         $numberHelper = new NumberHelper($this->sR);
-        // Format the product prices according to comma or point or other setting choice.
         $order = 1;
         /** @var Product $product */
         foreach ($products as $product) {
@@ -709,8 +675,7 @@ final class ProductController extends BaseController
                     $pR, $trR, $uR, $qiaR, $qiaS, $formHydrator);
             $order++;
         }
-        $numberHelper->calculateQuote((int) $quote_id,
-                $acqR, $qiR, $qiaR, $qtrR, $qaR, $qR);
+        $this->quoteRecalculator->recalculate((int) $quote_id);
         return $this->responseFactory->createResponse(Json::encode($products));
     }
 
@@ -724,25 +689,23 @@ final class ProductController extends BaseController
      * @param uR $uR
      * @param iiaR $iiaR
      * @param iiR $iiR
-     * @param itrR $itrR
-     * @param iaR $iaR
-     * @param iR $iR
-     * @param pymR $pymR
-     * @param aciR $aciR
      */
-    public function selectionInv(FormHydrator $formHydrator, Request $request,
-            pR $pR, trR $trR, uR $uR, iiaR $iiaR, iiR $iiR, itrR $itrR,
-            iaR $iaR, iR $iR, pymR $pymR, aciR $aciR): Response
-    {
+    public function selectionInv(
+        FormHydrator $formHydrator,
+        Request $request,
+        pR $pR,
+        trR $trR,
+        uR $uR,
+        iiaR $iiaR,
+        iiR $iiR,
+    ): Response {
         $select_items = $request->getQueryParams();
         /** @var array $select_items['product_ids'] */
         $product_ids = ($select_items['product_ids'] ?: []);
         /** @var string $inv_id */
         $inv_id = $select_items['inv_id'];
-        // Use Spiral||Cycle\Database\Injection\Parameter to build 'IN' array of products.
         $products = $pR->findinProducts($product_ids);
         $numberHelper = new NumberHelper($this->sR);
-        // Format the product prices according to comma or point or other setting choice.
         $order = 1;
         /** @var Product $product */
         foreach ($products as $product) {
@@ -753,8 +716,7 @@ final class ProductController extends BaseController
                     $uR, $formHydrator);
             $order++;
         }
-        $numberHelper->calculateInv((int) $inv_id, $aciR, $iiR, $iiaR,
-                $itrR, $iaR, $iR, $pymR);
+        $this->invRecalculator->recalculate((int) $inv_id);
         return $this->responseFactory->createResponse(Json::encode($products));
     }
 
@@ -807,32 +769,21 @@ final class ProductController extends BaseController
     }
 
     /**
-     * @param cfR $cfR
-     * @param cvR $cvR
-     * @param fR $fR
      * @param pR $pR
      * @param pcR $pcR
      * @param ppR $ppR
      * @param piR $piR
-     * @param trR $trR
-     * @param uR $uR
-     * @param upR $upR
      * @param string $id
      */
     public function view(
-        cfR $cfR,
-        cvR $cvR,
-        fR $fR,
         pR $pR,
         pcR $pcR,
         ppR $ppR,
         piR $piR,
-        trR $trR,
-        uR $uR,
-        upR $upR,
         #[RouteArgument('id')]
         string $id,
     ): Response {
+        $d = $this->formDeps;
         $product = $this->product((int) $id, $pR);
         $language = (string) $this->session->get('_language');
         $peppolarrays = new PeppolArrays();
@@ -841,6 +792,7 @@ final class ProductController extends BaseController
             $productCustomForm = new ProductCustomForm();
             $product_id = $product->reqId();
             $product_images = $piR->repoProductImageProductquery($product_id);
+            $cfRepo = $d->customFieldRepository;
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'product/view',
@@ -851,17 +803,17 @@ final class ProductController extends BaseController
                         'form' => $productForm,
                         'standard_item_identification_schemeids' => $peppolarrays->getIso6523Icd(),
                         'item_classification_code_listids' => $peppolarrays->getUncl7143(),
-                        'families' => $this->families($fR->findAllPreloaded()),
-                        'units' => $this->units($uR->findAllPreloaded()),
-                        'tax_rates' => $this->taxRates($trR->findAllPreloaded()),
-                        'unit_peppols' => $this->unitPeppols($upR->findAllPreloaded()),
-                        'custom_fields' => $cfR->repoTablequery('product_custom'),
-                        'custom_values' => $cvR->fixCfValueToCf($cfR->repoTablequery('product_custom')),
-                        'cvH' => new CVH($this->sR, $cvR),
+                        'families' => $this->families($d->familyRepository->findAllPreloaded()),
+                        'units' => $this->units($d->unitRepository->findAllPreloaded()),
+                        'tax_rates' => $this->taxRates($d->taxRateRepository->findAllPreloaded()),
+                        'unit_peppols' => $this->unitPeppols($d->unitPeppolRepository->findAllPreloaded()),
+                        'custom_fields' => $cfRepo->repoTablequery('product_custom'),
+                        'custom_values' => $d->customValueRepository->fixCfValueToCf(
+                                $cfRepo->repoTablequery('product_custom')),
+                        'cvH' => new CVH($this->sR, $d->customValueRepository),
                         'product_custom_values' => $this->productCustomValues($product_id, $pcR),
                         'productCustomForm' => $productCustomForm,
-                        'upR' => $upR,
-                        //load Entity\Product BelongTo relations ie. $family, $tax_rate, $unit by means of repoProductQuery
+                        'upR' => $d->unitPeppolRepository,
                         'product' => $pR->repoProductquery($product_id),
                     ],
                 ),

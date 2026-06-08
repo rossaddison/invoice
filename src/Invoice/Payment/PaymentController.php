@@ -13,13 +13,8 @@ use App\Infrastructure\Persistence\Payment\Payment;
 use App\Infrastructure\Persistence\PaymentCustom\PaymentCustom;
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\Helpers\CustomValuesHelper;
-use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\Inv\InvRepository;
-use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository as ACIR;
 use App\Invoice\InvAmount\InvAmountRepository;
-use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
-use App\Invoice\InvItem\InvItemRepository as IIR;
-use App\Invoice\InvTaxRate\InvTaxRateRepository as ITRR;
 use App\Invoice\Merchant\MerchantRepository;
 use App\Invoice\PaymentMethod\PaymentMethodRepository;
 use App\Invoice\PaymentCustom\PaymentCustomRepository;
@@ -53,6 +48,7 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
+use App\Invoice\Helpers\InvRecalculator;
 use App\Invoice\Payment\PaymentCustomFieldProcessor;
 
 final class PaymentController extends BaseController
@@ -63,6 +59,7 @@ final class PaymentController extends BaseController
         private PaymentService $paymentService,
         private PaymentCustomService $paymentCustomService,
         private PaymentCustomFieldProcessor $paymentCustomFieldProcessor,
+        private InvRecalculator $invRecalculator,
         private DataResponseFactoryInterface $factory,
         SessionInterface $session,
         sR $sR,
@@ -77,41 +74,32 @@ final class PaymentController extends BaseController
         $this->paymentService = $paymentService;
         $this->paymentCustomService = $paymentCustomService;
         $this->paymentCustomFieldProcessor = $paymentCustomFieldProcessor;
+        $this->invRecalculator = $invRecalculator;
         $this->factory = $factory;
     }
 
     /**
      * @param Request $request
      * @param FormHydrator $fmHyd
-     * @param ACIR $aciR
      * @param InvRepository $invRepository
      * @param InvAmountRepository $iaR
      * @param PaymentMethodRepository $payment_methodRepository
      * @param PaymentCustomRepository $pcR
-     * @param PaymentRepository $pmtR
      * @param CustomFieldRepository $cfR
      * @param CustomValueRepository $cvR
      * @param ClientRepository $cR
-     * @param IIR $iiR
-     * @param IIAR $iiaR
-     * @param ITRR $itrR
      * @return Response
      */
     public function add(
         Request $request,
         FormHydrator $fmHyd,
-        ACIR $aciR,
         InvRepository $invRepository,
         InvAmountRepository $iaR,
         PaymentMethodRepository $payment_methodRepository,
         PaymentCustomRepository $pcR,
-        PaymentRepository $pmtR,
         CustomFieldRepository $cfR,
         CustomValueRepository $cvR,
         ClientRepository $cR,
-        IIR $iiR,
-        IIAR $iiaR,
-        ITRR $itrR,
     ): Response {
         $open = $invRepository->open();
         $invRepository->openCount() == 0 ?
@@ -134,7 +122,6 @@ final class PaymentController extends BaseController
                  . $open_invoice_id] = $open_invoice->getPaymentMethod();
             
         }
-        $numberHelper = new NumberHelper($this->sR);
         $payment = new Payment();
         $form = new PaymentForm();
         $pcForm = new PaymentCustomForm();
@@ -177,9 +164,7 @@ final class PaymentController extends BaseController
 // Once the payment has been saved, retrieve the payment id for the custom fields
                     $payment_id = $payment->reqId();
                     $inv_id = $payment->reqInvId();
-                    // Recalculate the invoice
-                    $numberHelper->calculateInv($inv_id, $aciR, $iiR, $iiaR,
-                                            $itrR, $iaR, $invRepository, $pmtR);
+                    $this->invRecalculator->recalculate($inv_id);
                     $this->flashMessage('info',
                     $this->translator->translate('record.successfully.created'));
                     if (isset($body['custom'])) {
@@ -303,33 +288,19 @@ final class PaymentController extends BaseController
 
     /**
      * @param CurrentRoute $currentRoute
-     * @param InvRepository $invRepository
-     * @param InvAmountRepository $iaR
      * @param PaymentRepository $pmtR
-     * @param ACIR $aciR
-     * @param IIR $iiR
-     * @param IIAR $iiaR
-     * @param ITRR $itrR
      * @return Response
      */
     public function delete(
         CurrentRoute $currentRoute,
-        InvRepository $invRepository,
-        InvAmountRepository $iaR,
         PaymentRepository $pmtR,
-        ACIR $aciR,
-        IIR $iiR,
-        IIAR $iiaR,
-        ITRR $itrR,
     ): Response {
         try {
-            $number_helper = new NumberHelper($this->sR);
             $payment = $this->payment($currentRoute, $pmtR);
             if ($payment) {
                 $inv_id = $payment->getInv()?->reqId();
                 $this->paymentService->deletePayment($payment);
-                $number_helper->calculateInv((int) $inv_id, $aciR, $iiR,
-                                    $iiaR, $itrR, $iaR, $invRepository, $pmtR);
+                $this->invRecalculator->recalculate((int) $inv_id);
                 $this->flashMessage('success',
                                 $this->translator->translate('payment.deleted'));
                 return $this->webService->getRedirectResponse('payment/index');
@@ -355,16 +326,12 @@ final class PaymentController extends BaseController
      * @param CustomFieldRepository $cfR
      * @param CustomValueRepository $cvR
      * @param ClientRepository $cR
-     * @param IIR $iiR
-     * @param IIAR $iiaR
-     * @param ITRR $itrR
      * @return Response
      */
     public function edit(
         Request $request,
         CurrentRoute $currentRoute,
         FormHydrator $fmHyd,
-        ACIR $aciR,
         InvRepository $invRepository,
         InvAmountRepository $iaR,
         PaymentRepository $pmtR,
@@ -373,9 +340,6 @@ final class PaymentController extends BaseController
         CustomFieldRepository $cfR,
         CustomValueRepository $cvR,
         ClientRepository $cR,
-        IIR $iiR,
-        IIAR $iiaR,
-        ITRR $itrR,
     ): Response {
         $payment = $this->payment($currentRoute, $pmtR);
         if ($payment) {
@@ -385,7 +349,6 @@ final class PaymentController extends BaseController
             $payment_id = $payment->reqId();
             $inv_id = $payment->reqId();
             $open = $invRepository->open();
-            $number_helper = new NumberHelper($this->sR);
             $params = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'payment/edit',
@@ -429,8 +392,7 @@ final class PaymentController extends BaseController
                                                                     $payment_id);
                             }
                         }
-                        $number_helper->calculateInv($inv_id, $aciR, $iiR,
-                                    $iiaR, $itrR, $iaR, $invRepository, $pmtR);
+                        $this->invRecalculator->recalculate($inv_id);
                         $this->flashMessage('info',
                         $this->translator->translate('record.successfully.updated'));
                         return $this->webService->getRedirectResponse('payment/index');

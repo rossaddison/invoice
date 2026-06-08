@@ -12,30 +12,12 @@ use App\Infrastructure\Persistence\{
 };
 
 use App\Invoice\{
-    Client\ClientRepository as CR,
-    ClientCustom\ClientCustomRepository as CCR,
-    CustomValue\CustomValueRepository as CVR,
-    CustomField\CustomFieldRepository as CFR,
-    DeliveryLocation\DeliveryLocationRepository as DLR,
     EmailTemplate\EmailTemplateRepository as ETR,
-    Group\GroupRepository as GR,
-    Inv\InvRepository as IR,
+    Inv\InvEmailStage0Deps,
+    Inv\InvEmailStage1Data,
+    Inv\InvEmailStage2Deps,
     Inv\MailerInvForm,
-    InvAllowanceCharge\InvAllowanceChargeRepository as ACIR,
-    InvCustom\InvCustomRepository as ICR,
-    InvItem\InvItemRepository as IIR,
-    InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR,
-    InvAmount\InvAmountRepository as IAR,
-    InvItemAmount\InvItemAmountRepository as IIAR,
-    InvSentLog\InvSentLogRepository as ISLR,
-    InvTaxRate\InvTaxRateRepository as ITRR,
-    PaymentCustom\PaymentCustomRepository as PCR,
-    Quote\QuoteRepository as QR,
-    QuoteAmount\QuoteAmountRepository as QAR,
-    QuoteCustom\QuoteCustomRepository as QCR,
-    SalesOrder\SalesOrderRepository as SOR,
-    SalesOrderCustom\SalesOrderCustomRepository as SOCR,
-    UserInv\UserInvRepository as UIR
+    InvSentLog\InvSentLogRepository as ISLR
 };
 
 use Yiisoft\{
@@ -53,52 +35,27 @@ trait Email
         return $this->sR->getInvoiceTemplates($type);
     }
 
-    /**
-     * @param WebViewRenderer $head
-     * @param int $id
-     * @param CCR $ccR
-     * @param CFR $cfR
-     * @param CVR $cvR
-     * @param ETR $etR
-     * @param ICR $icR
-     * @param IR $iR
-     * @param PCR $pcR
-     * @param SOCR $socR
-     * @param QCR $qcR
-     * @param UIR $uiR
-     * @return Response
-     */
     public function emailStage0(
         WebViewRenderer $head,
         #[RouteArgument('id')]
         int $id,
-        CCR $ccR,
-        CFR $cfR,
-        CVR $cvR,
-        ETR $etR,
-        ICR $icR,
-        IR $iR,
-        PCR $pcR,
-        SOCR $socR,
-        QCR $qcR,
-        UIR $uiR
+        InvEmailStage0Deps $d,
     ): Response {
         $mailer_helper = new MailerHelper(
             $this->sR, $this->session, $this->translator, $this->logger,
-                $this->mailer, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
-        $template_helper = new TemplateHelper($this->sR, $ccR, $qcR, $icR, $pcR,
-            $socR, $cfR, $cvR);
+                $this->mailer, $d->ccR, $d->qcR, $d->icR, $d->pcR, $d->socR, $d->cfR, $d->cvR);
+        $template_helper = new TemplateHelper($this->sR, $d->ccR, $d->qcR, $d->icR, $d->pcR,
+            $d->socR, $d->cfR, $d->cvR);
         if (!$mailer_helper->mailerConfigured()) {
             $this->flashMessage('warning',
                 $this->translator->translate('email.not.configured'));
             return $this->webService->getRedirectResponse('inv/index');
         }
-        $inv = $this->inv($id, $iR, true);
+        $inv = $this->inv($id, $d->iR, true);
         if (null !== $inv) {
             $inv_id = $inv->reqId();
-            $invoice = $iR->repoInvUnLoadedquery($inv_id);
+            $invoice = $d->iR->repoInvUnLoadedquery($inv_id);
             if ($invoice instanceof Inv) {
-                // Get all custom fields
                 $custom_fields = [];
                 $custom_tables = [
                     'client_custom' => 'client',
@@ -108,19 +65,18 @@ trait Email
                     'salesorder_custom' => 'salesorder',
                 ];
                 foreach (array_keys($custom_tables) as $table) {
-                    $custom_fields[$table] = $cfR->repoTablequery($table);
+                    $custom_fields[$table] = $d->cfR->repoTablequery($table);
                 }
-                if ($template_helper->selectEmailInvoiceTemplate(
-                    $invoice) == '') {
+                if ($template_helper->selectEmailInvoiceTemplate($invoice) == '') {
                     $this->flashMessage('warning',
-                    $this->translator->translate('email.template.not.configured'));
+                        $this->translator->translate('email.template.not.configured'));
                     return $this->webService->getRedirectResponse(
                         'setting/tabIndex', ['_language' => 'en'],
                             ['active' => 'invoices'],
                             'settings[email_invoice_template]');
                 }
                 $setting_status_email_template =
-                    $etR->repoEmailTemplatequery((int)
+                    $d->etR->repoEmailTemplatequery((int)
                     $template_helper->selectEmailInvoiceTemplate($invoice)) ?:
                         null;
                 null === $setting_status_email_template ? $this->flashMessage(
@@ -139,30 +95,18 @@ trait Email
                     'actionName' => 'inv/emailStage2',
                     'actionArguments' => ['id' => $inv_id],
                     'alert' => $this->alert(),
-                    // If email templates have been built under Setting...Email
-                    // Template for Normal, Overdue, and Paid and Setting...View
-                    // ...Invoice...Invoice Templates have been linked to these
-                    // built email templates then an email template should
-                    // automatically appear on the mailer_invoice form by
-                    // passing the status related email template to the
-                    // get_inject_email_template_array function
                     'autoTemplate' => null !== $setting_status_email_template ?
                         $this->getInjectEmailTemplateArray(
                             $setting_status_email_template) : [],
-                    //eg. If the invoice is overdue ie. status is 5,
-                    //automatically select the 'overdue' pdf template
-                    //which has 'overdue' text on it as a watermark
                     'settingStatusPdfTemplate' =>
                         $template_helper->selectPdfInvoiceTemplate($invoice),
-                    'emailTemplates' => $etR->repoEmailTemplateType('invoice'),
-                    'dropdownTitlesOfEmailTemplates' => $this->emailTemplates(
-                        $etR),
-                    'userInv' => $uiR->repoUserInvUserIdcount(
+                    'emailTemplates' => $d->etR->repoEmailTemplateType('invoice'),
+                    'dropdownTitlesOfEmailTemplates' => $this->emailTemplates($d->etR),
+                    'userInv' => $d->uiR->repoUserInvUserIdcount(
                         $invoice->reqUserId()) > 0 ?
-                        $uiR->repoUserInvUserIdquery($invoice->reqUserId())
+                        $d->uiR->repoUserInvUserIdquery($invoice->reqUserId())
                         : null,
                     'invoice' => $invoice,
-                    // All templates ie. overdue, paid, invoice
                     'pdfTemplates' => $this->emailGetInvoiceTemplates('pdf'),
                     'templateTags' => $this->webViewRenderer->renderPartialAsString(
                         '//invoice/emailtemplate/template-tags-with-inv', [
@@ -178,14 +122,13 @@ trait Email
                     'form' => new MailerInvForm(),
                 ];
                 return $this->webViewRenderer->render('mailer_invoice', $parameters);
-            }// if invoice
+            }
             return $this->webService->getRedirectResponse('inv/index');
-        } // if $inv
+        }
         return $this->webService->getRedirectResponse('inv/index');
     }
 
-    public function getInjectEmailTemplateArray(EmailTemplate $email_template):
-        array
+    public function getInjectEmailTemplateArray(EmailTemplate $email_template): array
     {
         return [
             'body' => Json::htmlEncode($email_template->getEmailTemplateBody()),
@@ -194,14 +137,11 @@ trait Email
             'from_email' => $email_template->getEmailTemplateFromEmail() ?? '',
             'cc' => $email_template->getEmailTemplateCc() ?? '',
             'bcc' => $email_template->getEmailTemplateBcc() ?? '',
-            'pdf_template' => $email_template->getEmailTemplatePdfTemplate()
-                ?? '',
+            'pdf_template' => $email_template->getEmailTemplatePdfTemplate() ?? '',
         ];
     }
 
     /**
-     * @param ETR $etR
-     *
      * @return (string|null)[]
      *
      * @psalm-return array<''|int, null|string>
@@ -219,111 +159,75 @@ trait Email
 
     public function emailStage1(
         int $inv_id,
-        array $from,
-        // $to can only have one email address
-        string $to,
-        string $subject,
-        string $email_body,
-        string $cc,
-        string $bcc,
-        array $attachFiles,
-        CR $cR,
-        CCR $ccR,
-        CFR $cfR,
-        DLR $dlR,
-        ACIR $aciR,
-        CVR $cvR,
-        IAR $iaR,
-        ICR $icR,
-        IIAR $iiaR,
-        ACIIR $aciiR,
-        IIR $iiR,
-        IR $iR,
-        ITRR $itrR,
-        PCR $pcR,
-        SOCR $socR,
-        QR $qR,
-        QAR $qaR,
-        QCR $qcR,
-        SOR $soR,
-        UIR $uiR,
-        WebViewRenderer $webViewRenderer,
+        InvEmailStage1Data $data,
+        InvEmailStage2Deps $d,
     ): bool {
-        $template_helper = new TemplateHelper($this->sR, $ccR, $qcR, $icR, $pcR,
-            $socR, $cfR, $cvR);
+        $template_helper = new TemplateHelper($this->sR, $d->ccR, $d->qcR, $d->icR, $d->pcR,
+            $d->socR, $d->cfR, $d->cvR);
         $mailer_helper = new MailerHelper(
             $this->sR,
             $this->session,
             $this->translator,
             $this->logger,
             $this->mailer,
-            $ccR,
-            $qcR,
-            $icR,
-            $pcR,
-            $socR,
-            $cfR,
-            $cvR,
+            $d->ccR,
+            $d->qcR,
+            $d->icR,
+            $d->pcR,
+            $d->socR,
+            $d->cfR,
+            $d->cvR,
         );
-        $inv_amount = (($iaR->repoInvAmountCount($inv_id) > 0) ?
-            $iaR->repoInvquery($inv_id) : null);
-        $inv_custom_values = $this->invCustomValues($inv_id, $icR);
-        $inv = $iR->repoCount($inv_id) > 0 ?
-            $iR->repoInvUnLoadedquery($inv_id) : null;
+        $inv_amount = (($d->iaR->repoInvAmountCount($inv_id) > 0) ?
+            $d->iaR->repoInvquery($inv_id) : null);
+        $inv_custom_values = $this->invCustomValues($inv_id, $d->icR);
+        $inv = $d->iR->repoCount($inv_id) > 0 ?
+            $d->iR->repoInvUnLoadedquery($inv_id) : null;
         if ($inv) {
-            // The Google sign under Invoices ... Pdf Settings
-            // The initial recommendation for testing email sending is that
-            // this be set to off ie. 1 so that a plain successful message
-            // can be output without interferance from a pdf
             $stream = ($this->sR->getSetting('pdf_stream_inv') == '1' ?
                 true : false);
-            $so = (($soId = $inv->getSoId()) > 0 ? $soR->repoSalesOrderLoadedquery(
+            $so = (($soId = $inv->getSoId()) > 0 ? $d->soR->repoSalesOrderLoadedquery(
                 $soId) : null);
-            // true => invoice ie. not quote
-            // If $stream is false => pdfhelper->generate_inv_pdf =>
-            // mpdfhelper->pdf_Create => filename returned
             $pdf_template_target_path = $this->pdfHelper->generateInvPdf(
                 $inv_id, $inv->reqUserId(), $stream, true, $so, $inv_amount,
-                    $inv_custom_values, $cR, $cvR, $cfR, $dlR, $aciR, $iiR,
-                        $aciiR, $iiaR, $iR, $itrR, $uiR, $webViewRenderer);
+                    $inv_custom_values, $d->cR, $d->cvR, $d->cfR, $d->dlR, $d->aciR, $d->iiR,
+                        $d->aciiR, $d->iiaR, $d->iR, $d->itrR, $d->uiR, $this->webViewRenderer);
             if ($pdf_template_target_path) {
                 $mail_message = $template_helper->parseTemplate(
-                    $inv_id, true, $email_body, $cvR, $iR, $iaR, $qR,
-                        $qaR, $soR, $uiR);
+                    $inv_id, true, $data->emailBody, $d->cvR, $d->iR, $d->iaR, $d->qR,
+                        $d->qaR, $d->soR, $d->uiR);
                 $mail_subject = $template_helper->parseTemplate(
-                    $inv_id, true, $subject, $cvR, $iR, $iaR, $qR,
-                        $qaR, $soR, $uiR);
+                    $inv_id, true, $data->subject, $d->cvR, $d->iR, $d->iaR, $d->qR,
+                        $d->qaR, $d->soR, $d->uiR);
                 $mail_cc = $template_helper->parseTemplate($inv_id, true,
-                    $cc, $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR);
+                    $data->cc, $d->cvR, $d->iR, $d->iaR, $d->qR, $d->qaR, $d->soR, $d->uiR);
                 $mail_bcc = $template_helper->parseTemplate($inv_id, true,
-                    $bcc, $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR);
-                // from[0] is the from_email and from[1] is the from_name
+                    $data->bcc, $d->cvR, $d->iR, $d->iaR, $d->qR, $d->qaR, $d->soR, $d->uiR);
                 /**
-                 * @var string $from[0]
-                 * @var string $from[1]
+                 * @var string $data->from[0]
+                 * @var string $data->from[1]
                  */
-                $mail_from = [$template_helper->parseTemplate($inv_id, true,
-                    $from[0], $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR),
-                        $template_helper->parseTemplate($inv_id, true,
-                            $from[1], $cvR, $iR, $iaR, $qR, $qaR, $soR,
-                                $uiR)];
+                $mail_from = [
+                    $template_helper->parseTemplate($inv_id, true,
+                        $data->from[0], $d->cvR, $d->iR, $d->iaR, $d->qR, $d->qaR, $d->soR, $d->uiR),
+                    $template_helper->parseTemplate($inv_id, true,
+                        $data->from[1], $d->cvR, $d->iR, $d->iaR, $d->qR, $d->qaR, $d->soR, $d->uiR),
+                ];
                 $message = $mail_message;
-                // mail_from[0] is the from_email and mail_from[1] is the
-                // from_name
                 return $mailer_helper->yiiMailerSend(
                     $mail_from[0],
                     $mail_from[1],
-                    $to,
+                    $data->to,
                     $mail_subject,
                     $message,
                     $mail_cc,
                     $mail_bcc,
-                    $attachFiles,
+                    $data->attachFiles,
                     $pdf_template_target_path,
-                    $uiR,
+                    $d->uiR,
                 );
-            } //is_string
-        } //inv
+            }
+        }
         return false;
     }
 
@@ -331,33 +235,12 @@ trait Email
         Request $request,
         #[RouteArgument('id')]
         int $inv_id,
-        CR $cR,
-        CCR $ccR,
-        CFR $cfR,
-        DLR $dlR,
-        ACIR $aciR,
-        CVR $cvR,
-        GR $gR,
-        IAR $iaR,
-        ACIIR $aciiR,
-        IIAR $iiaR,
-        ICR $icR,
-        IIR $iiR,
-        IR $iR,
-        ITRR $itrR,
-        PCR $pcR,
-        SOCR $socR,
-        QR $qR,
-        QAR $qaR,
-        QCR $qcR,
-        SOR $soR,
-        UIR $uiR,
-        ISLR $islR,
+        InvEmailStage2Deps $d,
     ): Response {
         if ($inv_id) {
             $mailer_helper = new MailerHelper($this->sR, $this->session,
-                $this->translator, $this->logger, $this->mailer, $ccR, $qcR,
-                    $icR, $pcR, $socR, $cfR, $cvR);
+                $this->translator, $this->logger, $this->mailer, $d->ccR, $d->qcR,
+                    $d->icR, $d->pcR, $d->socR, $d->cfR, $d->cvR);
             $body = $request->getParsedBody() ?? [];
             if (is_array($body)) {
                 $body['btn_cancel'] = 0;
@@ -386,7 +269,6 @@ trait Email
                     $body['MailerInvForm']['from_email'] ?? '',
                     $body['MailerInvForm']['from_name'] ?? '',
                 ];
-
                 if (empty($from[0])) {
                     return $this->factory->createResponse(
                         $this->webViewRenderer->renderPartialAsString(
@@ -399,71 +281,35 @@ trait Email
                 }
                 /** @var array $body['MailerInvForm'] */
                 $subject = (string) $body['MailerInvForm']['subject'] ?: '';
-                /**  @var string $email_body */
+                /** @var string $email_body */
                 $email_body = $body['MailerInvForm']['body'] ?? '';
-
-                /**  @var string $cc */
+                /** @var string $cc */
                 $cc = $body['MailerInvForm']['cc'] ?? '';
-                /**  @var string $bcc */
+                /** @var string $bcc */
                 $bcc = $body['MailerInvForm']['bcc'] ?? '';
 
                 $attachFiles = $request->getUploadedFiles();
 
-                $this->generateInvNumberIfApplicable($inv_id,
-                    $iR, $this->sR, $gR);
+                $this->generateInvNumberIfApplicable($inv_id, $d->iR, $this->sR, $d->gR);
 
-                // Custom fields are automatically included on the invoice
                 if ($this->emailStage1(
                     $inv_id,
-                    $from,
-                    $to,
-                    $subject,
-                    $email_body,
-                    $cc,
-                    $bcc,
-                    $attachFiles,
-                    $cR,
-                    $ccR,
-                    $cfR,
-                    $dlR,
-                    $aciR,
-                    $cvR,
-                    $iaR,
-                    $icR,
-                    $iiaR,
-                    $aciiR,
-                    $iiR,
-                    $iR,
-                    $itrR,
-                    $pcR,
-                    $socR,
-                    $qR,
-                    $qaR,
-                    $qcR,
-                    $soR,
-                    $uiR,
-                    $this->webViewRenderer,
+                    new InvEmailStage1Data($from, $to, $subject, $email_body, $cc, $bcc, $attachFiles),
+                    $d,
                 )) {
-                    $invoice = $iR->repoInvUnloadedquery($inv_id);
+                    $invoice = $d->iR->repoInvUnloadedquery($inv_id);
                     if ($invoice) {
-                        //draft->sent->view->paid
-                        //set the invoice to sent ie. 2
                         $invoice->setStatusId(2);
-                        // Make read_only if status is sent i.e. 2 and read-only
-                        // ability exists
                         if (($this->sR->getSetting('read_only_toggle') == '2')
-                            &&  ($this->sR->getSetting(
-                                    'disable_read_only') == '0')) {
+                            && ($this->sR->getSetting('disable_read_only') == '0')) {
                             $invoice->setIsReadOnly(true);
                         }
-                        //keep a record of all the times this invoice is sent
-                        $this->emailedThereforeAddLog($invoice, $islR);
-                        $iR->save($invoice);
+                        $this->emailedThereforeAddLog($invoice, $d->islR);
+                        $d->iR->save($invoice);
                     }
                     return $this->factory->createResponse(
                         $this->webViewRenderer->renderPartialAsString(
                         '//invoice/setting/inv_message',
-                        // EMAIL SENT
                         ['heading' => '',
                             'message' => $this->translator->translate(
                                 'email.successfully.sent'),
@@ -474,17 +320,15 @@ trait Email
                 return $this->factory->createResponse(
                     $this->webViewRenderer->renderPartialAsString(
                     '//invoice/setting/inv_message',
-                    // EMAIL ... NOT ... SENT
                     ['heading' => '',
                         'message' => $this->translator->translate(
                                 'email.not.sent.successfully'),
                         'url' => 'inv/view',
                         'id' => $inv_id],
                 ));
-                //$this->email_stage_1
-            } //is_array(body)
+            }
             return $this->factory->createResponse(
-                    $this->webViewRenderer->renderPartialAsString(
+                $this->webViewRenderer->renderPartialAsString(
                 '//invoice/setting/inv_message',
                 ['heading' => '', 'message' => $this->translator->translate(
                         'email.not.sent.successfully'),
@@ -492,7 +336,7 @@ trait Email
             ));
         }
         return $this->factory->createResponse(
-                $this->webViewRenderer->renderPartialAsString(
+            $this->webViewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
             ['heading' => '', 'message' => $this->translator->translate(
                     'email.not.sent'),
