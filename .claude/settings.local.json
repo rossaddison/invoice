@@ -22,7 +22,8 @@
       "Bash(mkdir -p src/Invoice/Helpers/Peppol/Emit/Vo)",
       "Bash(vendor/bin/psalm --no-cache src/Invoice/PurchaseEntry/ resources/views/invoice/purchaseentry/)",
       "Bash(vendor/bin/phpunit --testdox)",
-      "Bash(vendor/bin/psalm --no-cache src/Invoice/PaymentInformation/PaymentInformationController.php src/Invoice/PaymentInformation/PaymentInformationGatewayContext.php src/Invoice/PaymentInformation/PaymentRecordContext.php)"
+      "Bash(vendor/bin/psalm --no-cache src/Invoice/PaymentInformation/PaymentInformationController.php src/Invoice/PaymentInformation/PaymentInformationGatewayContext.php src/Invoice/PaymentInformation/PaymentRecordContext.php)",
+      "Bash(vendor/bin/phpunit --no-coverage)"
     ],
     "additionalDirectories": [
       "c:\\wamp64\\www\\invoice\\src\\Invoice\\Helpers\\Peppol\\Emit"

@@ -6,7 +6,8 @@ namespace App\Auth\Controller;
 
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
-use App\Auth\{AuthService, Form\LoginForm, Form\TwoFactorAuthenticationSetupForm,
+use App\Auth\{AuthService, CallbackDeps, Form\LoginForm,
+    Form\TwoFactorAuthenticationSetupForm,
     Form\TwoFactorAuthenticationVerifyLoginForm, Trait\Callback, Trait\ClassList,
     Trait\Oauth2, Client\OpenBanking, Permissions, TokenRepository};
 use App\Infrastructure\Persistence\UserInv\UserInv;
@@ -155,32 +156,25 @@ final class AuthController
                     . " query parameter.");
         }
 
+        $d = new CallbackDeps($request, $this->translator, $tR, $uiR, $uR);
+
         return match ($authclient) {
             'developersandboxhmrc' => $this->callbackDeveloperGovSandboxHmrc(
-                    $request, $this->translator, $tR, $uiR, $uR, $_language,
-                    $code, $state),
-            'facebook' => $this->callbackFacebook($request, $this->translator,
-                    $tR, $uiR, $uR, $_language, $code, $state, $error,
-                    $errorCode, $errorReason),
-            'github' => $this->callbackGithub($request, $this->translator, $tR,
-                    $uiR, $uR, $_language, $code, $state),
-            'google' => $this->callbackGoogle($request, $this->translator, $tR,
-                    $uiR, $uR, $_language, $code, $state),
-            'govuk' => $this->callbackGovUk($request, $this->translator, $tR,
-                    $uiR, $uR, $_language, $code, $state),
-            'linkedin' => $this->callbackLinkedIn($request, $this->translator,
-                    $tR, $uiR, $uR, $_language, $code, $state),
-            'microsoftonline' => $this->callbackMicrosoftOnline($request,
-                    $this->translator, $tR, $uiR, $uR, $_language, $code, $state,
-                    (string) $sessionState),
+                    $d, $_language, $code, $state),
+            'facebook' => $this->callbackFacebook($d, $_language, $code, $state,
+                    $error, $errorCode, $errorReason),
+            'github' => $this->callbackGithub($d, $_language, $code, $state),
+            'google' => $this->callbackGoogle($d, $_language, $code, $state),
+            'govuk' => $this->callbackGovUk($d, $_language, $code, $state),
+            'linkedin' => $this->callbackLinkedIn($d, $_language, $code, $state),
+            'microsoftonline' => $this->callbackMicrosoftOnline($d, $_language,
+                    $code, $state, (string) $sessionState),
             'openbanking' => $this->callbackOpenBanking($request,
                     $this->translator, $code, $state),
-            'x' => $this->callbackX($request, $this->translator, $tR, $uiR, $uR,
-                    $_language, $code, $state),
-            'vkontakte' => $this->callbackVKontakte($request, $this->translator,
-                    $tR, $uiR, $uR, $_language, $code, $state, (string) $deviceId),
-            'yandex' => $this->callbackYandex($request, $this->translator, $tR,
-                    $uiR, $uR, $_language, $code, $state),
+            'x' => $this->callbackX($d, $_language, $code, $state),
+            'vkontakte' => $this->callbackVKontakte($d, $_language, $code,
+                    $state, (string) $deviceId),
+            'yandex' => $this->callbackYandex($d, $_language, $code, $state),
             default => throw new \InvalidArgumentException(
                     "Unsupported 'authclient' value: {$authclient}"),
         };
