@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2d9733125a0d79e8c405bb2b7978cfb9",
+    "content-hash": "2dcb93fb20ba7b14fab23b7bac964cff",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -5018,16 +5018,16 @@
         },
         {
             "name": "mollie/mollie-api-php",
-            "version": "v3.13.0",
+            "version": "v3.13.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mollie/mollie-api-php.git",
-                "reference": "94544db36bb99ef9cc12aab4e2d0ac85b110397d"
+                "reference": "c35f5b1549a032a3cb52014828485bb6c40396cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/94544db36bb99ef9cc12aab4e2d0ac85b110397d",
-                "reference": "94544db36bb99ef9cc12aab4e2d0ac85b110397d",
+                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/c35f5b1549a032a3cb52014828485bb6c40396cb",
+                "reference": "c35f5b1549a032a3cb52014828485bb6c40396cb",
                 "shasum": ""
             },
             "require": {
@@ -5108,9 +5108,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mollie/mollie-api-php/issues",
-                "source": "https://github.com/mollie/mollie-api-php/tree/v3.13.0"
+                "source": "https://github.com/mollie/mollie-api-php/tree/v3.13.1"
             },
-            "time": "2026-06-01T12:10:54+00:00"
+            "time": "2026-06-08T09:26:28+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -25804,5 +25804,5 @@
         "ext-zend-opcache": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
