@@ -17,15 +17,10 @@ use App\Invoice\Client\ClientRepository;
 use App\Invoice\Family\FamilyRepository;
 use App\Invoice\Group\GroupRepository;
 use App\Invoice\Inv\InvRepository;
-use App\Invoice\InvAmount\InvAmountRepository;
-use App\Invoice\InvRecurring\InvRecurringRepository;
 use App\Invoice\PaymentMethod\PaymentMethodRepository;
 use App\Invoice\Product\ProductRepository;
-use App\Invoice\Project\ProjectRepository;
 use App\Invoice\Quote\QuoteRepository;
-use App\Invoice\QuoteAmount\QuoteAmountRepository;
 use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Task\TaskRepository;
 use App\Invoice\TaxRate\TaxRateRepository;
 use App\Invoice\Unit\UnitRepository;
 // Services and forms
@@ -38,7 +33,6 @@ use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Security\Random;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
-use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use App\Invoice\Libraries\Crypt;
 
@@ -873,67 +867,57 @@ final class InvoiceController extends BaseController
         return $this->webViewRenderer->render('curl/api_result', $parameters);
     }
 
-    public function dashboard(
-        ClientRepository $cR,
-        InvRepository $iR,
-        InvAmountRepository $iaR,
-        InvRecurringRepository $irR,
-        QuoteRepository $qR,
-        QuoteAmountRepository $qaR,
-        SettingRepository $sR,
-        TaskRepository $taskR,
-        ProjectRepository $prjctR,
-        TranslatorInterface $translator,
-    ): \Psr\Http\Message\ResponseInterface {
+    public function dashboard(DashboardDeps $d): \Psr\Http\Message\ResponseInterface
+    {
         $data = [
             'alerts' => $this->alert(),
             // Repositories
-            'iR' => $iR,
-            'irR' => $irR,
-            'qR' => $qR,
-            'qaR' => $qaR,
-            'iaR' => $iaR,
+            'iR' => $d->iR,
+            'irR' => $d->irR,
+            'qR' => $d->qR,
+            'qaR' => $d->qaR,
+            'iaR' => $d->iaR,
 
             // All invoices and quotes
-            'invoices' => $iR->findAllPreloaded(),
-            'overdueInvoices' => $iR->isOverdue(),
-            'quotes' => $qR->findAllPreloaded(),
+            'invoices' => $d->iR->findAllPreloaded(),
+            'overdueInvoices' => $d->iR->isOverdue(),
+            'quotes' => $d->qR->findAllPreloaded(),
 
             // Totals for status eg. draft, sent, viewed...
-            'invoice_status_totals' => $iaR->getStatusTotals(
-                    $iR, $sR, $translator, $sR->getSetting(
+            'invoice_status_totals' => $d->iaR->getStatusTotals(
+                    $d->iR, $this->sR, $this->translator, $this->sR->getSetting(
                             'invoice_overview_period') ?: 'this-month'),
-            'quote_status_totals' => $qaR->getStatusTotals(
-                    $qR, $sR, $translator, $sR->getSetting(
+            'quote_status_totals' => $d->qaR->getStatusTotals(
+                    $d->qR, $this->sR, $this->translator, $this->sR->getSetting(
                             'quote_status_period') ?: 'this-month'),
 
             // Array of statuses: draft, sent, viewed, paid, cancelled
-            'invoice_statuses' => $iR->getStatuses($this->translator),
+            'invoice_statuses' => $d->iR->getStatuses($this->translator),
 
             // Array of statuses: draft, sent, viewed, approved, rejected,
             // cancelled
-            'quote_statuses' => $qR->getStatuses($this->translator),
+            'quote_statuses' => $d->qR->getStatuses($this->translator),
 
             // this-month, last-month, this-quarter, lsat-quarter, this-year,
             // last-year
-            'invoice_status_period' => str_replace('-', '_', $sR->getSetting(
+            'invoice_status_period' => str_replace('-', '_', $this->sR->getSetting(
                     'invoice_overview_period')),
 
             // this-month, last-month, this-quarter, lsat-quarter, this-year,
             // last-year
-            'quote_status_period' => str_replace('-', '_', $sR->getSetting(
+            'quote_status_period' => str_replace('-', '_', $this->sR->getSetting(
                     'quote_overview_period')),
 
             // Projects
-            'projects' => $prjctR->findAllPreloaded(),
+            'projects' => $d->prjctR->findAllPreloaded(),
 
             // Current tasks
-            'taskR' => $taskR,
+            'taskR' => $d->taskR,
 
             'modal_create_client' => $this->webViewRenderer->renderPartialAsString(
                     '//invoice/client/modal_create_client'),
 
-            'client_count' => $cR->count(),
+            'client_count' => $d->cR->count(),
         ];
         return $this->webViewRenderer->render('dashboard/index', $data);
     }
@@ -941,33 +925,19 @@ final class InvoiceController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param SessionInterface $session
-     * @param SettingRepository $sR
-     * @param TaxRateRepository $trR
-     * @param UnitRepository $uR
-     * @param FamilyRepository $fR
-     * @param PaymentMethodRepository $pmR
-     * @param ProductRepository $pR
-     * @param ClientRepository $cR
-     * @param GroupRepository $gR
+     * @param InvoiceIndexDeps $d
      * @return \Psr\Http\Message\ResponseInterface
      */
     public function index(
         CurrentRoute $currentRoute,
         SessionInterface $session,
-        SettingRepository $sR,
-        TaxRateRepository $trR,
-        UnitRepository $uR,
-        FamilyRepository $fR,
-        PaymentMethodRepository $pmR,
-        ProductRepository $pR,
-        ClientRepository $cR,
-        GroupRepository $gR,
+        InvoiceIndexDeps $d,
     ): \Psr\Http\Message\ResponseInterface {
         if ($this->userService->hasPermission(
                 Permissions::NO_ENTRY_TO_BASE_CONTROLLER)) {
             return $this->webService->getNotFoundResponse();
         }
-        if (($sR->getSetting('debug_mode') == '1')
+        if (($this->sR->getSetting('debug_mode') == '1')
                 && $this->userService->hasPermission(Permissions::EDIT_INV)) {
             // Load language-specific info file from locale subfolder
             // (e.g., ru/invoice.php)
@@ -986,16 +956,16 @@ final class InvoiceController extends BaseController
                 //        '//invoice/info/en/invoice'));
             }
         }
-        $gR->repoCountAll() === 0 ?
-                $this->installDefaultInvoiceAndQuoteGroup($gR) : '';
-        $pmR->count() === 0 ?
-                $this->installDefaultPaymentMethods($pmR) : '';
+        $d->gR->repoCountAll() === 0 ?
+                $this->installDefaultInvoiceAndQuoteGroup($d->gR) : '';
+        $d->pmR->count() === 0 ?
+                $this->installDefaultPaymentMethods($d->pmR) : '';
         // If you want to reinstall the default settings, remove the
         // default_settings_exist setting => its count will be zero
-        $sR->repoCount('default_settings_exist') === 0 ?
-                $this->installDefaultSettingsOnFirstRun($sR) : '';
+        $this->sR->repoCount('default_settings_exist') === 0 ?
+                $this->installDefaultSettingsOnFirstRun($this->sR) : '';
         $this->installCheckForPreexistingTestData(
-                                                $sR, $fR, $uR, $pR, $trR, $cR);
+                                                $this->sR, $d->fR, $d->uR, $d->pR, $d->trR, $d->cR);
         $session->set('_language', $currentRoute->getArgument('_language'));
         $parameters = [
             'alerts' => $this->alert(),
@@ -1409,7 +1379,6 @@ final class InvoiceController extends BaseController
     }
 
     /**
-     * @param SettingRepository $sR
      * @param UnitRepository $uR
      * @param FamilyRepository $fR
      * @param ProductRepository $pR
@@ -1419,7 +1388,6 @@ final class InvoiceController extends BaseController
      * @param TaxRateRepository $trR
      */
     public function testDataReset(
-        SettingRepository $sR,
         UnitRepository $uR,
         FamilyRepository $fR,
         ProductRepository $pR,
@@ -1428,7 +1396,7 @@ final class InvoiceController extends BaseController
         InvRepository $iR,
         TaxRateRepository $trR,
     ): \Psr\Http\Message\ResponseInterface {
-        if ($sR->repoCount('install_test_data') > 0 && $sR->getSetting(
+        if ($this->sR->repoCount('install_test_data') > 0 && $this->sR->getSetting(
                 'install_test_data') == 1) {
             // Only remove the test data if the user's test quotes and invoices
             // have been removed FIRST else integrity constraint violations
