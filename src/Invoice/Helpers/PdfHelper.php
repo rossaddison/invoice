@@ -181,9 +181,8 @@ class PdfHelper
                 . '_'
                 . str_replace(['\\', '/'], '_', $quote->getNumber() ??
                     (string) random_int(0, 10));
-            return $mpdfhelper->pdfCreate($html, $filename, $stream,
-                $quote->getPassword(), $this->s, null, null, false,
-                false, [], $quote);
+            return $mpdfhelper->pdfCreate($html, $filename, $stream, $this->s,
+                new PdfCreateContext($quote->getPassword(), null, null, false, false, [], $quote));
         }
         return null;
     }
@@ -292,9 +291,8 @@ class PdfHelper
                     . '_'
                     . str_replace(['\\', '/'], '_', $so->getNumber() ??
                         (string) random_int(0, 10));
-                return $mpdfhelper->pdfCreate($html, $filename, $stream,
-                    $so->getPassword(), $this->s, null, null, false, false,
-                    [], $so);
+                return $mpdfhelper->pdfCreate($html, $filename, $stream, $this->s,
+                    new PdfCreateContext($so->getPassword(), null, null, false, false, [], $so));
             }
         }
         return '';
@@ -460,10 +458,8 @@ class PdfHelper
 // If stream is true return the pdf as a string using mpdf otherwise save to
 // local file and return the filename inclusive target_path to be used to
 // attach to email attachments
-            return $mpdfhelper->pdfCreate($html,
-                $filename, $stream, $inv->getPassword(), $this->s,
-                $iiaR, $inv_amount, true, $include_zugferd,
-                $associatedFiles, $inv);
+            return $mpdfhelper->pdfCreate($html, $filename, $stream, $this->s,
+                new PdfCreateContext($inv->getPassword(), $iiaR, $inv_amount, true, $include_zugferd, $associatedFiles, $inv));
         } // if $inv
         return '';
     }

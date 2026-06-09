@@ -51,8 +51,11 @@ use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 // Yiisoft
+use App\Invoice\Product\Widget\ProductsListWidget;
 use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\HtmlResponseFactory;
 use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
@@ -414,7 +417,6 @@ final class ProductController extends BaseController
     }
 
     /**
-     * @param FastRouteGenerator $urlFastRouteGenerator
      * @param Request $request
      * @param productClientR $pcR
      * @param pR $pR
@@ -422,58 +424,88 @@ final class ProductController extends BaseController
      * @param string $page
      * @return Response
      */
-    public function index(FastRouteGenerator $urlFastRouteGenerator,
-            Request $request, productClientR $pcR, pR $pR, fR $fR,
-            #[RouteArgument('page')] string $page = '1'): Response
-    {
+    public function index(
+        Request $request,
+        productClientR $pcR,
+        pR $pR,
+        fR $fR,
+        HtmlResponseFactory $htmlResponseFactory,
+        #[RouteArgument('page')] string $page = '1',
+    ): Response {
         $this->rbac();
         $this->flashMessage('info', $this->translator->translate('productimage.view'));
-        $query_params = $request->getQueryParams();
+        $q                    = $request->getQueryParams();
+        $queryPage            = isset($q['page']) ? (int) $q['page'] : null;
+        $currentPageNeverZero = max(1, $queryPage ?? (int) $page);
+        /** @psalm-suppress MixedAssignment */
+        $sortString           = isset($q['sort']) ? (string) $q['sort'] : '-id';
 
-        /**
-         * @var string $query_params['page']
-         */
-        $currentPage = $query_params['page'] ?? $page;
-        /** @psalm-var positive-int $currentPageNeverZero */
-        $currentPageNeverZero = (int) $currentPage > 0 ? (int) $currentPage : 1;
         $products = $pR->findAllPreloaded();
-        if (isset($query_params['family_id'])
-                && !empty($query_params['family_id'])) {
-            $products = $pR->filterFamilyId((int) $query_params['family_id']);
+        if (!empty($q['family_id'])) {
+            $products = $pR->filterFamilyId((int) $q['family_id']);
         }
-        if (isset($query_params['product_sku'])
-                && !empty($query_params['product_sku'])) {
-            $products = $pR->filterProductSku((string) $query_params['product_sku']);
+        if (!empty($q['product_sku']) && !empty($q['product_price'])) {
+            $products = $pR->filterProductSkuPrice(
+                (string) $q['product_price'],
+                (string) $q['product_sku'],
+            );
+        } elseif (!empty($q['product_sku'])) {
+            $products = $pR->filterProductSku((string) $q['product_sku']);
+        } elseif (!empty($q['product_price'])) {
+            $products = $pR->filterProductPrice((string) $q['product_price']);
         }
-        if (isset($query_params['product_price'])
-                && !empty($query_params['product_price'])) {
-            $products = $pR->filterProductPrice((string) $query_params['product_price']);
-        }
-        if ((isset($query_params['product_sku'])
-                && !empty($query_params['product_sku']))
-           && (isset($query_params['product_price'])
-                   && !empty($query_params['product_price']))) {
-            $products =
-                    $pR->filterProductSkuPrice(
-                            (string) $query_params['product_price'],
-                            (string) $query_params['product_sku']);
+
+        $sort = Sort::only([
+            'id', 'family_id', 'unit_id', 'tax_rate_id',
+            'product_name', 'product_sku', 'product_price',
+            'product_description', 'product_price_base_quantity',
+        ])->withOrderString($sortString);
+
+        /** @psalm-suppress InvalidArgument */
+        $paginator = (new OffsetPaginator($products))
+            ->withPageSize($this->sR->positiveListLimit())
+            ->withCurrentPage($currentPageNeverZero)
+            ->withSort($sort);
+
+        $gridSummary = $this->sR->gridSummary(
+            $paginator,
+            $this->translator,
+            (int) $this->sR->getSetting('default_list_limit'),
+            $this->translator->translate('products'),
+            '',
+        );
+
+        $visible                          = $this->sR->getSetting('columns_all_visible') !== '0';
+        $optionsDataProductsDropdownFilter = $this->optionsDataProducts($pR);
+        $optionsDataFamiliesDropdownFilter = $this->optionsDataFamilies($fR);
+
+        if ($request->hasHeader('Hx-Request')) {
+            return $htmlResponseFactory->createResponse(
+                ProductsListWidget::widget()
+                    ->withPaginator($paginator)
+                    ->withSR($this->sR)
+                    ->withPcR($pcR)
+                    ->withCsrf((string) ($request->getParsedBody()['_csrf'] ?? ''))
+                    ->withVisible($visible)
+                    ->withGridSummary($gridSummary)
+                    ->withSortString($sortString)
+                    ->withOptionsDataProductsDropdownFilter($optionsDataProductsDropdownFilter)
+                    ->withOptionsDataFamiliesDropdownFilter($optionsDataFamiliesDropdownFilter)
+                    ->render()
+            );
         }
 
         $parameters = [
-            'alert' => $this->alert(),
-            'page' => $currentPageNeverZero,
-            'productClientR' => $pcR,
-            'defaultPageSizeOffsetPaginator' =>
+            'alert'                             => $this->alert(),
+            'paginator'                         => $paginator,
+            'productClientR'                    => $pcR,
+            'defaultPageSizeOffsetPaginator'    =>
                 (int) $this->sR->getSetting('default_list_limit'),
-            'optionsDataProductsDropdownFilter' =>
-                $this->optionsDataProducts($pR),
-            'optionsDataFamiliesDropdownFilter' =>
-                $this->optionsDataFamilies($fR),
-            'products' => $products,
-            /** @var string $query_params['sort'] */
-            'sortString' => $query_params['sort'] ?? '-id, -product_sku',
-            'urlFastRouteGenerator' => $urlFastRouteGenerator,
-            'visible' => $this->sR->getSetting('columns_all_visible') == '0' ? false : true,
+            'optionsDataProductsDropdownFilter' => $optionsDataProductsDropdownFilter,
+            'optionsDataFamiliesDropdownFilter' => $optionsDataFamiliesDropdownFilter,
+            'sortString'                        => $sortString,
+            'visible'                           => $visible,
+            'gridSummary'                       => $gridSummary,
         ];
         return $this->webViewRenderer->render('index', $parameters);
     }
@@ -1062,7 +1094,7 @@ final class ProductController extends BaseController
 
     /**
      * @param ProductRepository $pR
-     * @return array
+     * @return array<string, string>
      */
     public function optionsDataProducts(pR $pR): array
     {
@@ -1080,7 +1112,7 @@ final class ProductController extends BaseController
                 // Tip: After selecting a value in the dropdown, or inputting into an input box always see
                 // how the browser's query url Parameter is being influenced by the selection or input
                 && null !== $productSku) {
-                $optionsDataProducts[$productSku] = $product->getProductSku();
+                $optionsDataProducts[$productSku] = $productSku;
             }
         }
         return $optionsDataProducts;
@@ -1088,7 +1120,7 @@ final class ProductController extends BaseController
 
     /**
      * @param fR $fR
-     * @return array
+     * @return array<string, string>
      */
     public function optionsDataFamilies(fR $fR): array
     {

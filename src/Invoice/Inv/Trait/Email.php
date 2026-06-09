@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Invoice\Inv\Trait;
 
 use App\Invoice\Helpers\MailerHelper;
+use App\Invoice\Helpers\MailerHelperCustomDeps;
+use App\Invoice\Helpers\MailerSendParams;
 use App\Invoice\Helpers\TemplateHelper;
 use App\Infrastructure\Persistence\{
     Inv\Inv, InvSentLog\InvSentLog,
@@ -41,9 +43,9 @@ trait Email
         int $id,
         InvEmailStage0Deps $d,
     ): Response {
+        $mailerDeps = new MailerHelperCustomDeps($d->ccR, $d->qcR, $d->icR, $d->pcR, $d->socR, $d->cfR, $d->cvR);
         $mailer_helper = new MailerHelper(
-            $this->sR, $this->session, $this->translator, $this->logger,
-                $this->mailer, $d->ccR, $d->qcR, $d->icR, $d->pcR, $d->socR, $d->cfR, $d->cvR);
+            $this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $mailerDeps);
         $template_helper = new TemplateHelper($this->sR, $d->ccR, $d->qcR, $d->icR, $d->pcR,
             $d->socR, $d->cfR, $d->cvR);
         if (!$mailer_helper->mailerConfigured()) {
@@ -164,20 +166,9 @@ trait Email
     ): bool {
         $template_helper = new TemplateHelper($this->sR, $d->ccR, $d->qcR, $d->icR, $d->pcR,
             $d->socR, $d->cfR, $d->cvR);
+        $mailerDeps = new MailerHelperCustomDeps($d->ccR, $d->qcR, $d->icR, $d->pcR, $d->socR, $d->cfR, $d->cvR);
         $mailer_helper = new MailerHelper(
-            $this->sR,
-            $this->session,
-            $this->translator,
-            $this->logger,
-            $this->mailer,
-            $d->ccR,
-            $d->qcR,
-            $d->icR,
-            $d->pcR,
-            $d->socR,
-            $d->cfR,
-            $d->cvR,
-        );
+            $this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $mailerDeps);
         $inv_amount = (($d->iaR->repoInvAmountCount($inv_id) > 0) ?
             $d->iaR->repoInvquery($inv_id) : null);
         $inv_custom_values = $this->invCustomValues($inv_id, $d->icR);
@@ -213,19 +204,8 @@ trait Email
                     $template_helper->parseTemplate($inv_id, true,
                         $data->from[1], $d->cvR, $d->iR, $d->iaR, $d->qR, $d->qaR, $d->soR, $d->uiR),
                 ];
-                $message = $mail_message;
-                return $mailer_helper->yiiMailerSend(
-                    $mail_from[0],
-                    $mail_from[1],
-                    $data->to,
-                    $mail_subject,
-                    $message,
-                    $mail_cc,
-                    $mail_bcc,
-                    $data->attachFiles,
-                    $pdf_template_target_path,
-                    $d->uiR,
-                );
+                $mailerParams = new MailerSendParams($mail_from[0], $mail_from[1], $data->to, $mail_subject, $mail_message, $mail_cc, $mail_bcc);
+                return $mailer_helper->yiiMailerSend($mailerParams, $data->attachFiles, $pdf_template_target_path, $d->uiR);
             }
         }
         return false;
@@ -238,9 +218,9 @@ trait Email
         InvEmailStage2Deps $d,
     ): Response {
         if ($inv_id) {
+            $mailerDeps = new MailerHelperCustomDeps($d->ccR, $d->qcR, $d->icR, $d->pcR, $d->socR, $d->cfR, $d->cvR);
             $mailer_helper = new MailerHelper($this->sR, $this->session,
-                $this->translator, $this->logger, $this->mailer, $d->ccR, $d->qcR,
-                    $d->icR, $d->pcR, $d->socR, $d->cfR, $d->cvR);
+                $this->translator, $this->logger, $this->mailer, $mailerDeps);
             $body = $request->getParsedBody() ?? [];
             if (is_array($body)) {
                 $body['btn_cancel'] = 0;

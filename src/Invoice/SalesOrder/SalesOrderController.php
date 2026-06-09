@@ -50,6 +50,7 @@ UserInv\UserInvRepository as UIR,
 };
 use App\Service\WebControllerService;
 use App\User\UserService;
+use App\Invoice\SalesOrder\Widget\SalesOrdersListWidget;
 use App\Widget\SalesOrderToolbar;
 use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -59,6 +60,7 @@ use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\DataReaderInterface as DRI;
 use Yiisoft\Data\Reader\SortableDataInterface as SDI;
 use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\HtmlResponseFactory;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Input\Http\Attribute\Parameter\Query;
@@ -190,64 +192,82 @@ final class SalesOrderController extends BaseController
         return $this->webService->getNotFoundResponse();
     }
 
-    /**
-     * @param CurrentRoute $currentRoute
-     * @param CR $clientRepo
-     * @param Request $request
-     * @param SoAR $soaR
-     * @param SOR $soR
-     * @param SettingRepository $sR
-     * @param string|null $queryFilterClient
-     * @return \Psr\Http\Message\ResponseInterface
-     */
-    public function index(CurrentRoute $currentRoute, CR $clientRepo,
-            Request $request, SoAR $soaR, SoR $soR, InvRepo $iR,
-            SettingRepository $sR,
-            #[Query('filterClient')]
-            ?string $queryFilterClient = null,
-            #[Query('groupBy')]
-            ?string $queryGroupBy = 'none'): \Psr\Http\Message\ResponseInterface
-    {
-        // If the language dropdown changes
+    public function index(
+        CurrentRoute $currentRoute,
+        CR $clientRepo,
+        Request $request,
+        SoAR $soaR,
+        SoR $soR,
+        InvRepo $iR,
+        HtmlResponseFactory $htmlResponseFactory,
+    ): \Psr\Http\Message\ResponseInterface {
         $this->session->set('_language', $currentRoute->getArgument('_language'));
-        $query_params = $request->getQueryParams();
-        $page = (int) $currentRoute->getArgument('page', '1');
-        $currentPageNeverZero = $page > 0 ? $page : 1;
-        //status 0 => 'all';
-        $status = (int) $currentRoute->getArgument('status', '0');
-        /** @psalm-suppress MixedAssignment $sort_string */
-        $sort_string = $query_params['sort'] ?? '-id';
-        $sort = Sort::only(['id','status_id','number','date_created','client_id'])
-                    // (Related logic: see vendor\yiisoft\data\src\Reader\Sort
-                    // - => 'desc'  so -id => default descending on id
-                    // Show the latest quotes first => -id
-                    /** @psalm-suppress MixedArgument $sort_string */
-                    ->withOrderString((string) $sort_string);
+        $q                    = $request->getQueryParams();
+        $routePage            = (int) $currentRoute->getArgument('page', '1');
+        $queryPage            = isset($q['page']) ? (int) $q['page'] : null;
+        $currentPageNeverZero = max(1, $queryPage ?? $routePage);
+        $status               = (int) $currentRoute->getArgument('status', '0');
+        /** @psalm-suppress MixedAssignment */
+        $sortString           = isset($q['sort']) ? (string) $q['sort'] : '-id';
+        $queryFilterClient    = isset($q['filterClient']) ? (string) $q['filterClient'] : null;
+        $queryGroupBy         = isset($q['groupBy']) ? (string) $q['groupBy'] : 'none';
+        $sort = Sort::only(['id', 'status_id', 'number', 'date_created', 'client_id'])
+            /** @psalm-suppress MixedArgument */
+            ->withOrderString($sortString);
         $salesorders = $this->salesordersStatusWithSort($soR, $status, $sort);
-        if (isset($queryFilterClient) && !empty($queryFilterClient)) {
+        if (isset($queryFilterClient) && $queryFilterClient !== '') {
             $salesorders = $soR->filterClient($queryFilterClient)->withSort($sort);
         }
-        $so_statuses = $soR->getStatuses($this->translator);
-        $visible = $sR->getSetting('columns_all_visible') === '1';
+        /** @psalm-suppress InvalidArgument */
+        $paginator = (new OffsetPaginator($salesorders))
+            ->withPageSize($this->sR->positiveListLimit())
+            ->withCurrentPage($currentPageNeverZero);
+        $visible      = $this->sR->getSetting('columns_all_visible') === '1';
+        $gridSummary  = $this->sR->gridSummary(
+            $paginator,
+            $this->translator,
+            (int) $this->sR->getSetting('default_list_limit'),
+            $this->translator->translate('sales.orders'),
+            $soR->getSpecificStatusArrayLabel((string) $status),
+        );
+        $optionsDataClientsDropdownFilter = $this->optionsDataClientsFilter($soR);
+        if ($request->hasHeader('Hx-Request')) {
+            return $htmlResponseFactory->createResponse(
+                SalesOrdersListWidget::widget()
+                    ->withPaginator($paginator)
+                    ->withSoR($soR)
+                    ->withSoAR($soaR)
+                    ->withIR($iR)
+                    ->withSR($this->sR)
+                    ->withCsrf((string) ($request->getParsedBody()['_csrf'] ?? ''))
+                    ->withVisible($visible)
+                    ->withGroupBy($queryGroupBy)
+                    ->withClientCount($clientRepo->count())
+                    ->withGridSummary($gridSummary)
+                    ->withSortString($sortString)
+                    ->withStatus($status)
+                    ->withSalesOrderToolbar($this->salesOrderToolbar->render())
+                    ->withOptionsDataClientsDropdownFilter($optionsDataClientsDropdownFilter)
+                    ->render()
+            );
+        }
         $parameters = [
-            'alert' => $this->alert(),
-            'soaR' => $soaR,
-            'soR' => $soR,
-            'iR' => $iR,
-            'status' => $status,
-            'defaultPageSizeOffsetPaginator' =>
-                $this->sR->getSetting('default_list_limit')
-                    ? (int) $this->sR->getSetting('default_list_limit') : 1,
-            'so_statuses' => $so_statuses,
-            'salesorders' => $salesorders,
-            'client_count' => $clientRepo->count(),
-            'groupBy' => $queryGroupBy,
-            'visible' => $visible,
-            'optionsDataClientsDropdownFilter' =>
-                $this->optionsDataClientsFilter($soR),
-            'sortString' => $sort_string,
-            'page' => $currentPageNeverZero,
-            'salesOrderToolbar' => $this->salesOrderToolbar->render(),
+            'alert'                           => $this->alert(),
+            'soaR'                            => $soaR,
+            'soR'                             => $soR,
+            'iR'                              => $iR,
+            'status'                          => $status,
+            'defaultPageSizeOffsetPaginator'  =>
+                (int) $this->sR->getSetting('default_list_limit') ?: 1,
+            'paginator'                       => $paginator,
+            'client_count'                    => $clientRepo->count(),
+            'groupBy'                         => $queryGroupBy,
+            'visible'                         => $visible,
+            'optionsDataClientsDropdownFilter' => $optionsDataClientsDropdownFilter,
+            'sortString'                      => $sortString,
+            'page'                            => $currentPageNeverZero,
+            'salesOrderToolbar'               => $this->salesOrderToolbar->render(),
+            'gridSummary'                     => $gridSummary,
         ];
         return $this->webViewRenderer->render('index', $parameters);
     }
@@ -1349,6 +1369,7 @@ final class SalesOrderController extends BaseController
         ];
     }
 
+    /** @return array<string, string> */
     public function optionsDataClientsFilter(SOR $soR): array
     {
         $optionsDataClients = [];

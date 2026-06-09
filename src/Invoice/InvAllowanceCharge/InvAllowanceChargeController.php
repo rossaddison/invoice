@@ -11,11 +11,9 @@ use App\Invoice\AllowanceCharge\AllowanceChargeRepository;
 use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository as aciR;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
-use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Http\Method;
-use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Session\Flash\Flash;
@@ -29,20 +27,20 @@ final class InvAllowanceChargeController extends BaseController
 {
     protected string $controllerName = 'invoice/invallowancecharge';
     private const ROUTE_INDEX = 'invallowancecharge/index';
+    private InvAllowanceChargeService $invallowancechargeService;
     private const PARAM_OPTIONS_DATA_ALLOWANCE_CHARGES = 'optionsDataAllowanceCharges';
 
     public function __construct(
-        private InvAllowanceChargeService $invallowancechargeService,
+        InvAllowanceChargeControllerDeps $d,
         SessionInterface $session,
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
         WebViewRenderer $webViewRenderer,
-        WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
-        $this->invallowancechargeService = $invallowancechargeService;
+        parent::__construct($d->webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
+        $this->invallowancechargeService = $d->invallowancechargeService;
     }
 
     /**
@@ -93,21 +91,18 @@ final class InvAllowanceChargeController extends BaseController
      */
     public function index(
         aciR $aciR,
+        Request $request,
         #[RouteArgument('_language')]
         string $_language,
         #[RouteArgument('page')]
         string $page = '1',
-        #[Query('page')]
-        ?string $queryPage = null,
-        #[Query('sort')]
-        ?string $querySort = null,
-        #[Query('filterInvNumber')]
-        ?string $queryFilterInvNumber = null,
-        #[Query('filterReasonCode')]
-        ?string $queryFilterReasonCode = null,
-        #[Query('filterReason')]
-        ?string $queryFilterReason = null,
     ): Response {
+        $q = $request->getQueryParams();
+        $queryPage = isset($q['page']) ? (string) $q['page'] : null;
+        $querySort = isset($q['sort']) ? (string) $q['sort'] : null;
+        $queryFilterInvNumber = isset($q['filterInvNumber']) ? (string) $q['filterInvNumber'] : null;
+        $queryFilterReasonCode = isset($q['filterReasonCode']) ? (string) $q['filterReasonCode'] : null;
+        $queryFilterReason = isset($q['filterReason']) ? (string) $q['filterReason'] : null;
         // If the language dropdown changes
         $this->session->set('_language', $_language);
         $invAllowanceCharges = $aciR->findAllPreloaded();

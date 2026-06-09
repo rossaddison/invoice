@@ -29,7 +29,7 @@ use App\Invoice\{
     UserInv\UserInvRepository as UIR,
 };
 use App\Invoice\Quote\MailerQuoteForm;
-use App\Invoice\Helpers\{MailerHelper, TemplateHelper};
+use App\Invoice\Helpers\{MailerHelper, MailerHelperCustomDeps, MailerSendParams, TemplateHelper};
 use Yiisoft\{
     Json\Json,
     Router\HydratorAttribute\RouteArgument,
@@ -62,9 +62,9 @@ trait Email
         QCR $qcR,
         UIR $uiR,
     ): Response {
+        $mailerDeps = new MailerHelperCustomDeps($ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
         $mailer_helper = new MailerHelper(
-            $this->sR, $this->session, $this->translator, $this->logger,
-                $this->mailer, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
+            $this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $mailerDeps);
         $template_helper = new TemplateHelper(
             $this->sR, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
         if (!$mailer_helper->mailerConfigured()) {
@@ -229,9 +229,9 @@ trait Email
         // All custom repositories, including icR have to be initialised.
         $template_helper = new TemplateHelper(
             $this->sR, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
+        $mailerDeps = new MailerHelperCustomDeps($ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
         $mailer_helper = new MailerHelper(
-        $this->sR, $this->session, $this->translator, $this->logger,
-            $this->mailer, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
+            $this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $mailerDeps);
         $quote_amount = (($qaR->repoQuoteAmountCount($quote_id) > 0) ?
             $qaR->repoQuotequery($quote_id) : null);
         $quote_custom_values = $this->quoteCustomValues($quote_id, $qcR);
@@ -272,18 +272,8 @@ trait Email
                                 $uiR)];
                 // mail_from[0] is the from_email and mail_from[1] is
                 // the from_name
-                return $mailer_helper->yiiMailerSend(
-                    $mail_from[0],
-                    $mail_from[1],
-                    $to,
-                    $mail_subject,
-                    $mail_message,
-                    $mail_cc,
-                    $mail_bcc,
-                    $attachFiles,
-                    $pdf_template_target_path,
-                    $uiR,
-                );
+                $mailerParams = new MailerSendParams($mail_from[0], $mail_from[1], $to, $mail_subject, $mail_message, $mail_cc, $mail_bcc);
+                return $mailer_helper->yiiMailerSend($mailerParams, $attachFiles, $pdf_template_target_path, $uiR);
             } // pdf_template_target_path
         } // quote_entity
         return false;
@@ -315,9 +305,9 @@ trait Email
         UIR $uiR,
     ): Response {
         if ($quote_id) {
+            $mailerDeps = new MailerHelperCustomDeps($ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
             $mailer_helper = new MailerHelper(
-                $this->sR, $this->session, $this->translator, $this->logger,
-                    $this->mailer, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
+                $this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $mailerDeps);
             $body = $request->getParsedBody() ?? [];
             if (is_array($body)) {
                 $body['btn_cancel'] = 0;

@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Helpers;
 
 use App\Invoice\Setting\SettingRepository as SR;
-use App\Invoice\InvItemAmount\InvItemAmountRepository as iiaR;
 use App\Infrastructure\Persistence\Inv\Inv;
-use App\Infrastructure\Persistence\InvAmount\InvAmount;
 use App\Infrastructure\Persistence\Quote\Quote;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Files\FileHelper;
@@ -161,39 +159,25 @@ class MpdfHelper
      * @param string $html
      * @param string $filename
      * @param bool $stream
-     * @param string|null $password
-     * @param sR $sR
-     * @param iiaR|null $iiaR
-     * @param bool $isInvoice
-     * @param bool $zugferd_invoice
-     * @param array $associated_files
-     * @param object|null $quote_or_invoice
+     * @param SR $sR
+     * @param PdfCreateContext $ctx
      * @return string
      */
     public function pdfCreate(
         string $html,
         string $filename,
         bool $stream,
-        ?string $password,
         SR $sR,
-        // ZugferdXml is not created for a quote => null
-        // but iiaR is necessary for the invoice item amounts
-        // along with the entity InvAmount
-        ?iiaR $iiaR,
-        ?InvAmount $inv_amount,
-        bool $isInvoice = false,
-        bool $zugferd_invoice = false,
-        array $associated_files = [],
-        ?object $quote_or_invoice = null,
+        PdfCreateContext $ctx,
     ): string {
         $sR->loadSettings();
         $aliases = $this->ensureUploadsFolderExists($sR);
         $archived_file = $aliases->get('@uploads') . $sR::getUploadsArchiveholderRelativeUrl() . '' . date('Y-m-d') . '_' . $filename . '.pdf';
         $title = $sR->getSetting('pdf_archive_inv') == '1' ? $archived_file : $filename . '.pdf';
-        $start_mpdf = $this->initializePdf($password, $sR, $title, $quote_or_invoice, $iiaR, $inv_amount, $zugferd_invoice, $associated_files);
+        $start_mpdf = $this->initializePdf($sR, $title, $ctx);
         $css = $this->getCssFile($aliases);
         $mpdf = $this->writeHtmlToPdf($css, $html, $start_mpdf);
-        if ($isInvoice) {
+        if ($ctx->isInvoice) {
             $this->isInvoice($filename, $mpdf, $aliases, $sR);
         }
         if ($stream) {
@@ -273,17 +257,12 @@ class MpdfHelper
     }
 
     /**
-     * @param string|null $password
      * @param SR $sR
      * @param string $title
-     * @param object|null $quote_or_invoice
-     * @param IIAR|null $iiaR
-     * @param InvAmount|null $inv_amount
-     * @param bool $zugferd_invoice
-     * @param array $associated_files
+     * @param PdfCreateContext $ctx
      * @return \Mpdf\Mpdf
      */
-    private function initializePdf(?string $password, SR $sR, string $title, ?object $quote_or_invoice, ?iiaR $iiaR, ?InvAmount $inv_amount, bool $zugferd_invoice, array $associated_files = []): \Mpdf\Mpdf
+    private function initializePdf(SR $sR, string $title, PdfCreateContext $ctx): \Mpdf\Mpdf
     {
         $optionsArray = $this->options();
         $mpdf = new \Mpdf\Mpdf($optionsArray);
@@ -299,8 +278,8 @@ class MpdfHelper
         $mpdf->showImageErrors = ($sR->getSetting('mpdf_show_image_errors') === '1' ? true : false);
 
         // Include zugferd if enabled
-        if ($zugferd_invoice === true && null !== $inv_amount && null !== $iiaR) {
-            $z = new ZugFerdHelper($sR, $iiaR, $inv_amount, $this->translator);
+        if ($ctx->zugferd_invoice === true && null !== $ctx->inv_amount && null !== $ctx->iiaR) {
+            $z = new ZugFerdHelper($sR, $ctx->iiaR, $ctx->inv_amount, $this->translator);
             //https://mpdf.github.io/reference/mpdf-variables/useadobecjk.html
             // A zugferd invoice must have fully embedded fonts => $mpdf->useAdobeCJK = false
             $mpdf->useAdobeCJK = false;
@@ -312,7 +291,7 @@ class MpdfHelper
 
             $mpdf->PDFAauto = true;
             $mpdf->SetAdditionalXmpRdf($z->zugferdRdf());
-            $mpdf->SetAssociatedFiles($associated_files);
+            $mpdf->SetAssociatedFiles($ctx->associated_files);
         }
 
         $content = $title . ': ' . date($this->translator->translate('date_format'));
@@ -330,14 +309,14 @@ class MpdfHelper
             $mpdf->showWatermarkImage = true;
         }
 
-        if ((($quote_or_invoice instanceof Quote) || ($quote_or_invoice instanceof Inv))
-            && null !== $quote_or_invoice->getClient()?->getClientLanguage()
-            && $quote_or_invoice->getClient()?->getClientLanguage() === 'Arabic') {
+        if ((($ctx->quote_or_invoice instanceof Quote) || ($ctx->quote_or_invoice instanceof Inv))
+            && null !== $ctx->quote_or_invoice->getClient()?->getClientLanguage()
+            && $ctx->quote_or_invoice->getClient()?->getClientLanguage() === 'Arabic') {
             $mpdf->SetDirectionality('rtl');
         }
         // Set a password if set for the voucher
-        if (null !== $password) {
-            $mpdf->SetProtection(['copy', 'print'], $password, $password);
+        if (null !== $ctx->password) {
+            $mpdf->SetProtection(['copy', 'print'], $ctx->password, $ctx->password);
         }
         return $mpdf;
     }

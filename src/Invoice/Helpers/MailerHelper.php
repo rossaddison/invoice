@@ -7,13 +7,6 @@ namespace App\Invoice\Helpers;
 // Entities
 use App\Infrastructure\Persistence\UserInv\UserInv;
 // Repositories
-use App\Invoice\ClientCustom\ClientCustomRepository as CCR;
-use App\Invoice\CustomField\CustomFieldRepository as CFR;
-use App\Invoice\CustomValue\CustomValueRepository as CVR;
-use App\Invoice\InvCustom\InvCustomRepository as ICR;
-use App\Invoice\PaymentCustom\PaymentCustomRepository as PCR;
-use App\Invoice\SalesOrderCustom\SalesOrderCustomRepository as SOCR;
-use App\Invoice\QuoteCustom\QuoteCustomRepository as QCR;
 use App\Invoice\Quote\QuoteRepository as QR;
 use App\Invoice\Setting\SettingRepository as SRepo;
 use App\Invoice\UserInv\UserInvRepository as UIR;
@@ -43,16 +36,10 @@ class MailerHelper
         private readonly TranslatorInterface $translator,
         private LoggerInterface $logger,
         private MailerInterface $mailer,
-        CCR $ccR,
-        QCR $qcR,
-        ICR $icR,
-        PCR $pcR,
-        SOCR $socR,
-        CFR $cfR,
-        CVR $cvR,
+        MailerHelperCustomDeps $d,
     ) {
         $this->pdfhelper = new PdfHelper($this->s, $this->session, $this->translator);
-        $this->templatehelper = new TemplateHelper($this->s, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
+        $this->templatehelper = new TemplateHelper($this->s, $d->ccR, $d->qcR, $d->icR, $d->pcR, $d->socR, $d->cfR, $d->cvR);
         $this->invoicehelper = new InvoiceHelper($this->s, $this->session, $this->translator);
         $this->logger = $logger;
         $this->mailer = $mailer;
@@ -103,7 +90,8 @@ class MailerHelper
                     );
 
                     if ($this->s->getSetting('email_send_method') == 'yiimail') {
-                        return $this->yiiMailerSend($from_email, $from_name, $from_email, $subject, $body, null, null, [], '', $uiR);
+                        $mailerParams = new MailerSendParams($from_email, $from_name, $from_email, $subject, $body, null, null);
+                        return $this->yiiMailerSend($mailerParams, [], '', $uiR);
                     }
             }
         }
@@ -111,31 +99,21 @@ class MailerHelper
     }
 
     /**
-     * @param string $from_email
-     * @param string $from_name
-     * @param string $to
-     * @param string $subject
-     * @param string $html_body
-     * @param array|string|null $cc
-     * @param array|string|null $bcc
+     * @param MailerSendParams $params
      * @param array $attachFiles
      * @param string|null $pdf_template_target_path
      * @param UIR|null $uiR
      * @return bool
      */
     public function yiiMailerSend(
-        string $from_email,
-        string $from_name,
-        string $to,
-        string $subject,
-        string $html_body,
-        array|string|null $cc,
-        array|string|null $bcc,
+        MailerSendParams $params,
         array $attachFiles,
         // $target_path of pdfs generated
         ?string $pdf_template_target_path,
         ?UIR $uiR,
     ): bool {
+        $cc = $params->cc;
+        $bcc = $params->bcc;
         if (null !== $cc && is_string($cc) && (strlen($cc) > 4) && !is_array($cc)) {
             // Allow multiple CC's delimited by comma or semicolon
             $cc = (strpos($cc, ',') > 0) ? explode(',', $cc) : explode(';', $cc);
@@ -157,11 +135,11 @@ class MailerHelper
 
         $email = new \Yiisoft\Mailer\Message(
             charset: 'utf-8',
-            subject: $subject,
+            subject: $params->subject,
             date: new \DateTimeImmutable('now'),
-            from: [$from_email => $from_name],
-            to: $to,
-            htmlBody: $html_body,
+            from: [$params->from_email => $params->from_name],
+            to: $params->to,
+            htmlBody: $params->html_body,
         );
 
         /** @var array<array-key, string>|string $cc */

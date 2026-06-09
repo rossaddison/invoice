@@ -13,7 +13,6 @@ use App\Invoice\Helpers\CountryHelper;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\UserClient\UserClientRepository as ucR;
 use App\Invoice\UserInv\UserInvRepository as uiR;
-use App\Service\WebControllerService;
 use App\User\UserService;
 use App\User\UserRepository as uR;
 use App\Widget\Button;
@@ -24,10 +23,7 @@ use Yiisoft\Data\Reader\Sort;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Input\Http\Attribute\Parameter\Query;
-use Yiisoft\Rbac\AssignmentsStorageInterface as Assignment;
-use Yiisoft\Rbac\ItemsStorageInterface as ItemStorage;
 use Yiisoft\Rbac\Manager as Manager;
-use Yiisoft\Rbac\RuleFactoryInterface as Rule;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Security\TokenMask;
@@ -40,31 +36,26 @@ final class UserInvController extends BaseController
 {
     protected string $controllerName = 'invoice/userinv';
 
+    private Manager $manager;
+    private UrlGenerator $urlGenerator;
+    private UserInvService $userinvService;
+    private \App\Widget\FormFields $formFields;
+
     public function __construct(
-        // add, save, remove, clear, children, parents
-        private ItemStorage $itemstorage,
-        private Assignment $assignment,
-        private Rule $rule,
-        private Manager $manager,
-        private UrlGenerator $urlGenerator,
-        private UserInvService $userinvService,
-        private \App\Widget\FormFields $formFields,
+        UserInvControllerDeps $d,
         SessionInterface $session,
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
         WebViewRenderer $webViewRenderer,
-        WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
+        parent::__construct($d->webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         // Related logic: see yiisoft/rbac-php
-        $this->itemstorage = $itemstorage;
-        $this->assignment = $assignment;
-        $this->rule = $rule;
-        $this->manager = new Manager($this->itemstorage, $this->assignment, $this->rule);
-        $this->urlGenerator = $urlGenerator;
-        $this->userinvService = $userinvService;
+        $this->manager = new Manager($d->itemstorage, $d->assignment, $d->rule);
+        $this->urlGenerator = $d->urlGenerator;
+        $this->userinvService = $d->userinvService;
+        $this->formFields = $d->formFields;
     }
 
     /**
