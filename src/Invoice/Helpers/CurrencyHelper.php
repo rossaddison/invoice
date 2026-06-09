@@ -68,15 +68,21 @@ class CurrencyHelper
     }
 
     /**
-     * Related logic: see ISO 4217 alpha-3 ie. 3 letter currency codes
-     * Get an array of all supported currencies
+     * ISO 4217 alpha-3 currency codes — merges A–L and M–Z segments.
      *
-     * @return (int|string)[][]
-     *
-     * @psalm-return array{
-        AED: array{numeric: '784', decimals: 2, stripe_v10: 1},...}
+     * @return array<string, array{numeric: string, decimals: int, stripe_v10: int}>
      */
     public static function all(): array
+    {
+        return array_merge(static::currenciesAToL(), static::currenciesMToZ());
+    }
+
+    /**
+     * ISO 4217 currencies A–L.
+     *
+     * @return array<string, array{numeric: string, decimals: int, stripe_v10: int}>
+     */
+    private static function currenciesAToL(): array
     {
         return [
             'AED' => ['numeric' => '784', 'decimals' => 2, 'stripe_v10' => 1],
@@ -167,9 +173,20 @@ class CurrencyHelper
             'LKR' => ['numeric' => '144', 'decimals' => 2, 'stripe_v10' => 1],
             'LRD' => ['numeric' => '430', 'decimals' => 2, 'stripe_v10' => 1],
             'LSL' => ['numeric' => '426', 'decimals' => 2, 'stripe_v10' => 1],
-            'LYD' => ['numeric' => '434', 'decimals' => 3, 'stripe_v10' => 0],
             'LTL' => ['numeric' => '440', 'decimals' => 2, 'stripe_v10' => 1],
             'LVL' => ['numeric' => '428', 'decimals' => 2, 'stripe_v10' => 1],
+            'LYD' => ['numeric' => '434', 'decimals' => 3, 'stripe_v10' => 0],
+        ];
+    }
+
+    /**
+     * ISO 4217 currencies M–Z.
+     *
+     * @return array<string, array{numeric: string, decimals: int, stripe_v10: int}>
+     */
+    private static function currenciesMToZ(): array
+    {
+        return [
             'MAD' => ['numeric' => '504', 'decimals' => 2, 'stripe_v10' => 1],
             'MDL' => ['numeric' => '498', 'decimals' => 2, 'stripe_v10' => 1],
             'MGA' => ['numeric' => '969', 'decimals' => 2, 'stripe_v10' => 1],
@@ -222,9 +239,9 @@ class CurrencyHelper
             'SZL' => ['numeric' => '748', 'decimals' => 2, 'stripe_v10' => 1],
             'THB' => ['numeric' => '764', 'decimals' => 2, 'stripe_v10' => 1],
             'TJS' => ['numeric' => '972', 'decimals' => 2, 'stripe_v10' => 1],
-            'TOP' => ['numeric' => '776', 'decimals' => 2, 'stripe_v10' => 1],
             'TMT' => ['numeric' => '934', 'decimals' => 2, 'stripe_v10' => 0],
             'TND' => ['numeric' => '788', 'decimals' => 3, 'stripe_v10' => 0],
+            'TOP' => ['numeric' => '776', 'decimals' => 2, 'stripe_v10' => 1],
             'TRY' => ['numeric' => '949', 'decimals' => 2, 'stripe_v10' => 1],
             'TTD' => ['numeric' => '780', 'decimals' => 2, 'stripe_v10' => 1],
             'TWD' => ['numeric' => '901', 'decimals' => 2, 'stripe_v10' => 1],
@@ -238,8 +255,8 @@ class CurrencyHelper
             'UYW' => ['numeric' => '927', 'decimals' => 4, 'stripe_v10' => 0],
             'UZS' => ['numeric' => '860', 'decimals' => 2, 'stripe_v10' => 1],
             'VED' => ['numeric' => '926', 'decimals' => 2, 'stripe_v10' => 0],
-            'VES' => ['numeric' => '928', 'decimals' => 2, 'stripe_v10' => 0],
             'VEF' => ['numeric' => '937', 'decimals' => 2, 'stripe_v10' => 1],
+            'VES' => ['numeric' => '928', 'decimals' => 2, 'stripe_v10' => 0],
             'VND' => ['numeric' => '704', 'decimals' => 0, 'stripe_v10' => 1],
             'VUV' => ['numeric' => '548', 'decimals' => 0, 'stripe_v10' => 1],
             'WST' => ['numeric' => '882', 'decimals' => 2, 'stripe_v10' => 1],
