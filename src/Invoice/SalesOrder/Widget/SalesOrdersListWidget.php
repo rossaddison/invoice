@@ -9,7 +9,6 @@ use App\Invoice\Inv\InvRepository as InvRepo;
 use App\Invoice\SalesOrder\SalesOrderRepository as SoR;
 use App\Invoice\SalesOrderAmount\SalesOrderAmountRepository as SoAR;
 use App\Invoice\Setting\SettingRepository as SR;
-use App\Widget\GridComponents;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Html\Html;
@@ -47,7 +46,6 @@ final class SalesOrdersListWidget extends Widget
     private string|\Stringable $csrf = '';
     private bool $visible = false;
     private string $groupBy = 'none';
-    private int $clientCount = 0;
     private string $gridSummary = '';
     private string $sortString = '-id';
     private int $status = 0;
@@ -59,7 +57,6 @@ final class SalesOrdersListWidget extends Widget
         private readonly CurrentRoute $currentRoute,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly TranslatorInterface $translator,
-        private readonly GridComponents $gridComponents,
     ) {
     }
 
@@ -120,13 +117,6 @@ final class SalesOrdersListWidget extends Widget
     {
         $new = clone $this;
         $new->groupBy = $groupBy;
-        return $new;
-    }
-
-    public function withClientCount(int $clientCount): static
-    {
-        $new = clone $this;
-        $new->clientCount = $clientCount;
         return $new;
     }
 
@@ -620,8 +610,6 @@ final class SalesOrdersListWidget extends Widget
         OffsetPaginator $paginator,
         callable $getGroupValue,
     ): array {
-        \assert($this->soaR !== null);
-        $soaR        = $this->soaR;
         $groupTotals = [];
         foreach ($paginator->read() as $so) {
             /** @var SalesOrder $so */
@@ -630,13 +618,8 @@ final class SalesOrdersListWidget extends Widget
                 $groupTotals[$gv] = ['count' => 0, 'total' => 0.0];
             }
             $groupTotals[$gv]['count']++;
-            $soId     = $so->reqId();
-            $soAmount = $soaR->repoSalesOrderAmountCount($soId) > 0
-                ? $soaR->repoSalesOrderquery($soId)
-                : null;
-            $groupTotals[$gv]['total'] += null !== $soAmount
-                ? ($soAmount->getTotal() ?? 0.0)
-                : 0.0;
+            $soAmount = $so->getSalesOrderAmount();
+            $groupTotals[$gv]['total'] += $soAmount->getTotal() ?? 0.0;
         }
         return $groupTotals;
     }

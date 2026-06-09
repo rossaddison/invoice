@@ -194,7 +194,6 @@ final class SalesOrderController extends BaseController
 
     public function index(
         CurrentRoute $currentRoute,
-        CR $clientRepo,
         Request $request,
         SoAR $soaR,
         SoR $soR,
@@ -242,7 +241,6 @@ final class SalesOrderController extends BaseController
                     ->withCsrf((string) ($request->getParsedBody()['_csrf'] ?? ''))
                     ->withVisible($visible)
                     ->withGroupBy($queryGroupBy)
-                    ->withClientCount($clientRepo->count())
                     ->withGridSummary($gridSummary)
                     ->withSortString($sortString)
                     ->withStatus($status)
@@ -260,7 +258,6 @@ final class SalesOrderController extends BaseController
             'defaultPageSizeOffsetPaginator'  =>
                 (int) $this->sR->getSetting('default_list_limit') ?: 1,
             'paginator'                       => $paginator,
-            'client_count'                    => $clientRepo->count(),
             'groupBy'                         => $queryGroupBy,
             'visible'                         => $visible,
             'optionsDataClientsDropdownFilter' => $optionsDataClientsDropdownFilter,

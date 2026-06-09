@@ -21,7 +21,6 @@ use Yiisoft\Translator\TranslatorInterface;
  * @var UrlGenerator $urlGenerator
  * @var TranslatorInterface $translator
  * @var bool $visible
- * @var int $client_count
  * @var int $status
  * @var string $alert
  * @var string $csrf
@@ -66,7 +65,6 @@ echo SalesOrdersListWidget::widget()
     ->withCsrf($csrf)
     ->withVisible($visible)
     ->withGroupBy($groupBy)
-    ->withClientCount($client_count)
     ->withGridSummary($gridSummary)
     ->withSortString($sortString)
     ->withStatus($status)
