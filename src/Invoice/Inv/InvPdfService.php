@@ -40,9 +40,7 @@ final readonly class InvPdfService
 
     public function generate(int $invId, bool $stream, bool $custom): string
     {
-        $invAmount = $this->coreDeps->iaR->repoInvAmountCount($invId) > 0
-            ? $this->coreDeps->iaR->repoInvquery($invId)
-            : null;
+        $invAmount = $this->loadInvAmount($invId);
         if (null === $invAmount) {
             return '';
         }
@@ -84,11 +82,9 @@ final readonly class InvPdfService
 
     public function generateHtml(int $invId, bool $custom): string
     {
-        $invAmount = $this->coreDeps->iaR->repoInvAmountCount($invId) > 0
-            ? $this->coreDeps->iaR->repoInvquery($invId) : null;
+        $invAmount   = $this->loadInvAmount($invId);
         $invUnloaded = $this->coreDeps->iR->repoInvUnloadedquery($invId);
-        $inv = $this->coreDeps->iR->repoCount($invId) > 0
-            ? $this->coreDeps->iR->repoInvLoadedquery($invId) : null;
+        $inv         = $this->loadInv($invId);
         if (null === $invAmount || null === $invUnloaded || null === $inv) {
             return '';
         }
@@ -107,9 +103,7 @@ final readonly class InvPdfService
         ?InvAmount $invAmount,
         array $invCustomValues,
     ): string {
-        $inv = $this->coreDeps->iR->repoCount($invId) > 0
-            ? $this->coreDeps->iR->repoInvLoadedquery($invId)
-            : null;
+        $inv = $this->loadInv($invId);
         if (null === $inv) {
             return '';
         }
@@ -175,6 +169,13 @@ final readonly class InvPdfService
         }
         $cfTable = $this->docDeps->cfR->repoTablequery('inv_custom');
         $cvH = new CVH($this->s, $this->docDeps->cvR);
+        $customFieldParams = [
+            'custom_fields'     => $cfTable,
+            'cvR'               => $this->docDeps->cvR,
+            'inv_custom_values' => $invCustomValues,
+            'cvH'               => $cvH,
+        ];
+        $company = $this->s->getPrivateCompanyDetails() ?: $this->s->getConfigCompanyDetails();
         $data = [
             'aciiR' => $this->itemDeps->aciiR,
             'inv' => $inv,
@@ -191,22 +192,16 @@ final readonly class InvPdfService
             'cvH' => $cvH,
             'inv_custom_values' => $invCustomValues,
             'top_custom_fields' => $this->webViewRenderer->renderPartialAsString(
-                '//invoice/template/invoice/pdf/top_custom_fields',
-                ['custom_fields' => $cfTable, 'cvR' => $this->docDeps->cvR,
-                 'inv_custom_values' => $invCustomValues, 'cvH' => $cvH],
+                '//invoice/template/invoice/pdf/top_custom_fields', $customFieldParams,
             ),
             'view_custom_fields' => $this->webViewRenderer->renderPartialAsString(
-                '//invoice/template/invoice/pdf/view_custom_fields',
-                ['custom_fields' => $cfTable, 'cvR' => $this->docDeps->cvR,
-                 'inv_custom_values' => $invCustomValues, 'cvH' => $cvH],
+                '//invoice/template/invoice/pdf/view_custom_fields', $customFieldParams,
             ),
             'userinv' => $userinv,
             'company_logo_and_address' => $this->webViewRenderer->renderPartialAsString(
                 '//invoice/setting/company_logo_and_address.php',
                 [
-                    'company' => $this->s->getPrivateCompanyDetails() !== []
-                        ? $this->s->getPrivateCompanyDetails()
-                        : $this->s->getConfigCompanyDetails(),
+                    'company' => $company,
                     'document_number' => $inv->getNumber(),
                     'client_purchase_order_number' => $clientPoNumber,
                     'date_tax_point' => $dateHelper->dateFromMysql($inv->getDateTaxPoint()),
@@ -238,18 +233,15 @@ final readonly class InvPdfService
 
     private function resolveTemplate(int $statusId): string
     {
+        $paidTemplate    = $this->s->getSetting('pdf_invoice_template_paid');
+        $overdueTemplate = $this->s->getSetting('pdf_invoice_template_overdue');
+        $defaultTemplate = $this->s->getSetting('pdf_invoice_template');
         return match (true) {
-            $statusId == 4 && !empty($this->s->getSetting('pdf_invoice_template_paid')) =>
-                $this->s->getSetting('pdf_invoice_template_paid'),
-            $statusId == 4 && empty($this->s->getSetting('pdf_invoice_template_paid')) =>
-                'paid',
-            $statusId == 5 && !empty($this->s->getSetting('pdf_invoice_template_overdue')) =>
-                $this->s->getSetting('pdf_invoice_template_overdue'),
-            $statusId == 5 && empty($this->s->getSetting('pdf_invoice_template_overdue')) =>
-                'overdue',
-            default => strlen($this->s->getSetting('pdf_invoice_template')) > 0
-                ? $this->s->getSetting('pdf_invoice_template')
-                : 'invoice',
+            $statusId == 4 && !empty($paidTemplate)    => $paidTemplate,
+            $statusId == 4                             => 'paid',
+            $statusId == 5 && !empty($overdueTemplate) => $overdueTemplate,
+            $statusId == 5                             => 'overdue',
+            default => $defaultTemplate !== '' ? $defaultTemplate : 'invoice',
         };
     }
 
@@ -326,6 +318,20 @@ final readonly class InvPdfService
             }
         }
         return $values;
+    }
+
+    private function loadInvAmount(int $invId): ?InvAmount
+    {
+        return $this->coreDeps->iaR->repoInvAmountCount($invId) > 0
+            ? $this->coreDeps->iaR->repoInvquery($invId)
+            : null;
+    }
+
+    private function loadInv(int $invId): ?Inv
+    {
+        return $this->coreDeps->iR->repoCount($invId) > 0
+            ? $this->coreDeps->iR->repoInvLoadedquery($invId)
+            : null;
     }
 
     private function markSentIfApplicable(int $invId): void

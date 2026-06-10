@@ -167,19 +167,18 @@ final class SalesOrdersListWidget extends Widget
         $groupBy        = $this->groupBy;
         $enableGrouping = $groupBy !== 'none';
 
+        $domId     = '#' . self::DOM_ID;
         $htmxAttrs = [
-            'hx-indicator'   => '#' . self::DOM_ID,
-            'hx-target'      => '#' . self::DOM_ID,
-            'hx-select'      => '#' . self::DOM_ID,
+            'hx-indicator'   => $domId,
+            'hx-target'      => $domId,
+            'hx-select'      => $domId,
             'hx-replace-url' => 'true',
             'hx-swap'        => 'outerHTML',
         ];
+        $htmxBoostAttrs = ['hx-boost' => 'true', ...$htmxAttrs];
 
         /** @var PaginationWidgetInterface<\Yiisoft\Data\Paginator\PaginatorInterface> */
-        $pagination = OffsetPagination::widget()->addLinkAttributes([
-            'hx-boost' => 'true',
-            ...$htmxAttrs,
-        ]);
+        $pagination = OffsetPagination::widget()->addLinkAttributes($htmxBoostAttrs);
 
         $urlCreator = new UrlCreator($this->urlGenerator);
         $urlCreator->__invoke([], OrderHelper::stringToArray($this->sortString));
@@ -202,8 +201,8 @@ final class SalesOrdersListWidget extends Widget
             ->dataReader($this->paginator)
             ->urlCreator($urlCreator)
             ->paginationWidget($pagination)
-            ->sortableLinkAttributes(['hx-boost' => 'true', ...$htmxAttrs])
-            ->filterFormAttributes(['hx-boost' => 'true', ...$htmxAttrs])
+            ->sortableLinkAttributes($htmxBoostAttrs)
+            ->filterFormAttributes($htmxBoostAttrs)
             ->sortableHeaderPrepend(
                 '<div class="float-end text-secondary text-opacity-50">⭥</div>')
             ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
@@ -289,22 +288,8 @@ final class SalesOrdersListWidget extends Widget
                 ->addClass('btn-group ms-2')
                 ->addAttributes(['role' => 'group'])
                 ->content(
-                    (new HtmlButton())
-                        ->type('button')
-                        ->addClass('btn btn-outline-secondary btn-sm')
-                        ->addAttributes([
-                            'onclick' => 'toggleAllGroups(false)',
-                            'title'   => 'Collapse All Groups',
-                        ])
-                        ->content(new I()->addClass('bi bi-chevron-up'))
-                    . (new HtmlButton())
-                        ->type('button')
-                        ->addClass('btn btn-outline-secondary btn-sm')
-                        ->addAttributes([
-                            'onclick' => 'toggleAllGroups(true)',
-                            'title'   => 'Expand All Groups',
-                        ])
-                        ->content(new I()->addClass('bi bi-chevron-down'))
+                    $this->groupToggleButton(false)
+                    . $this->groupToggleButton(true)
                 )
                 ->encode(false)
                 ->render()
@@ -329,6 +314,19 @@ final class SalesOrdersListWidget extends Widget
                 ->render()
             . $this->salesOrderToolbar
             . (new Form())->close();
+    }
+
+    private function groupToggleButton(bool $expand): string
+    {
+        return (new HtmlButton())
+            ->type('button')
+            ->addClass('btn btn-outline-secondary btn-sm')
+            ->addAttributes([
+                'onclick' => $expand ? 'toggleAllGroups(true)' : 'toggleAllGroups(false)',
+                'title'   => $expand ? 'Expand All Groups' : 'Collapse All Groups',
+            ])
+            ->content(new I()->addClass($expand ? 'bi bi-chevron-down' : 'bi bi-chevron-up'))
+            ->render();
     }
 
     private function buildStatusBar(): string

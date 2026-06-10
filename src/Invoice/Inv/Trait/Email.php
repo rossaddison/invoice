@@ -66,7 +66,8 @@ trait Email
                 foreach (array_keys($custom_tables) as $table) {
                     $custom_fields[$table] = $d->cfR->repoTablequery($table);
                 }
-                if ($template_helper->selectEmailInvoiceTemplate($invoice) == '') {
+                $emailTemplateName = $template_helper->selectEmailInvoiceTemplate($invoice);
+                if ($emailTemplateName == '') {
                     $this->flashMessage('warning',
                         $this->translator->translate('email.template.not.configured'));
                     return $this->webService->getRedirectResponse(
@@ -75,20 +76,19 @@ trait Email
                             'settings[email_invoice_template]');
                 }
                 $setting_status_email_template =
-                    $d->etR->repoEmailTemplatequery((int)
-                    $template_helper->selectEmailInvoiceTemplate($invoice)) ?:
-                        null;
+                    $d->etR->repoEmailTemplatequery((int) $emailTemplateName) ?: null;
                 null === $setting_status_email_template ? $this->flashMessage(
                     'info',
                     $this->translator->translate('default.email.template') . '=>'
                     . $this->translator->translate('not.set'),
                 ) : '';
-                empty($template_helper->selectPdfInvoiceTemplate($invoice)) ?
-                    $this->flashMessage(
+                $pdfTemplateName = $template_helper->selectPdfInvoiceTemplate($invoice);
+                empty($pdfTemplateName) ? $this->flashMessage(
                     'info',
                     $this->translator->translate('default.pdf.template') . '=>'
                     . $this->translator->translate('not.set'),
                 ) : '';
+                $userId = $invoice->reqUserId();
                 $parameters = [
                     'head' => $head,
                     'actionName' => 'inv/emailStage2',
@@ -97,13 +97,11 @@ trait Email
                     'autoTemplate' => null !== $setting_status_email_template ?
                         $this->getInjectEmailTemplateArray(
                             $setting_status_email_template) : [],
-                    'settingStatusPdfTemplate' =>
-                        $template_helper->selectPdfInvoiceTemplate($invoice),
+                    'settingStatusPdfTemplate' => $pdfTemplateName,
                     'emailTemplates' => $d->etR->repoEmailTemplateType('invoice'),
                     'dropdownTitlesOfEmailTemplates' => $this->emailTemplates($d->etR),
-                    'userInv' => $d->uiR->repoUserInvUserIdcount(
-                        $invoice->reqUserId()) > 0 ?
-                        $d->uiR->repoUserInvUserIdquery($invoice->reqUserId())
+                    'userInv' => $d->uiR->repoUserInvUserIdcount($userId) > 0
+                        ? $d->uiR->repoUserInvUserIdquery($userId)
                         : null,
                     'invoice' => $invoice,
                     'pdfTemplates' => $this->emailGetInvoiceTemplates('pdf'),
@@ -122,7 +120,6 @@ trait Email
                 ];
                 return $this->webViewRenderer->render('mailer_invoice', $parameters);
             }
-            return $this->webService->getRedirectResponse('inv/index');
         }
         return $this->webService->getRedirectResponse('inv/index');
     }
@@ -183,25 +180,12 @@ trait Email
                 /** @var array $body['MailerInvForm'] */
                 $to          = (string) ($body['MailerInvForm']['to_email'] ?? '');
                 if (empty($to)) {
-                    return $this->factory->createResponse(
-                        $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/setting/inv_message',
-                        ['heading' => '', 'message' =>
-                         $this->translator->translate('email.to.address.missing'),
-                            'url' => 'inv/view', 'id' => $inv_id],
-                    ));
+                    return $this->invMessageResponse($inv_id, 'email.to.address.missing');
                 }
                 $from_email  = (string) ($body['MailerInvForm']['from_email'] ?? '');
                 $from_name   = (string) ($body['MailerInvForm']['from_name'] ?? '');
                 if (empty($from_email)) {
-                    return $this->factory->createResponse(
-                        $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/setting/inv_message',
-                        ['heading' => '',
-                         'message' =>
-                         $this->translator->translate('email.to.address.missing'),
-                         'url' => 'inv/view', 'id' => $inv_id],
-                    ));
+                    return $this->invMessageResponse($inv_id, 'email.to.address.missing');
                 }
                 $subject     = (string) ($body['MailerInvForm']['subject'] ?? '');
                 $email_body  = (string) ($body['MailerInvForm']['body'] ?? '');
@@ -226,41 +210,24 @@ trait Email
                         $this->emailedThereforeAddLog($invoice, $d->core->islR);
                         $d->core->iR->save($invoice);
                     }
-                    return $this->factory->createResponse(
-                        $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/setting/inv_message',
-                        ['heading' => '',
-                            'message' => $this->translator->translate(
-                                'email.successfully.sent'),
-                            'url' => 'inv/view',
-                            'id' => $inv_id],
-                    ));
+                    return $this->invMessageResponse($inv_id, 'email.successfully.sent');
                 }
-                return $this->factory->createResponse(
-                    $this->webViewRenderer->renderPartialAsString(
-                    '//invoice/setting/inv_message',
-                    ['heading' => '',
-                        'message' => $this->translator->translate(
-                                'email.not.sent.successfully'),
-                        'url' => 'inv/view',
-                        'id' => $inv_id],
-                ));
+                return $this->invMessageResponse($inv_id, 'email.not.sent.successfully');
             }
-            return $this->factory->createResponse(
-                $this->webViewRenderer->renderPartialAsString(
-                '//invoice/setting/inv_message',
-                ['heading' => '', 'message' => $this->translator->translate(
-                        'email.not.sent.successfully'),
-                    'url' => 'inv/view', 'id' => $inv_id],
-            ));
+            return $this->invMessageResponse($inv_id, 'email.not.sent.successfully');
         }
+        return $this->invMessageResponse($inv_id, 'email.not.sent');
+    }
+
+    private function invMessageResponse(int $inv_id, string $messageKey): Response
+    {
         return $this->factory->createResponse(
             $this->webViewRenderer->renderPartialAsString(
-            '//invoice/setting/inv_message',
-            ['heading' => '', 'message' => $this->translator->translate(
-                    'email.not.sent'),
-                'url' => 'inv/view', 'id' => $inv_id],
-        ));
+                '//invoice/setting/inv_message',
+                ['heading' => '', 'message' => $this->translator->translate($messageKey),
+                 'url' => 'inv/view', 'id' => $inv_id],
+            )
+        );
     }
 
     private function emailedThereforeAddLog(Inv $invoice, ISLR $islR): void
