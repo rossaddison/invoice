@@ -163,27 +163,16 @@ trait Email
         int $inv_id,
         InvEmailStage1Data $data,
         InvEmailStage2Deps $d,
+        \App\Invoice\Inv\InvPdfService $invPdfService,
     ): bool {
         $template_helper = new TemplateHelper($this->sR, $d->ccR, $d->qcR, $d->icR, $d->pcR,
             $d->socR, $d->cfR, $d->cvR);
         $mailerDeps = new MailerHelperCustomDeps($d->ccR, $d->qcR, $d->icR, $d->pcR, $d->socR, $d->cfR, $d->cvR);
         $mailer_helper = new MailerHelper(
             $this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $mailerDeps);
-        $inv_amount = (($d->iaR->repoInvAmountCount($inv_id) > 0) ?
-            $d->iaR->repoInvquery($inv_id) : null);
-        $inv_custom_values = $this->invCustomValues($inv_id, $d->icR);
-        $inv = $d->iR->repoCount($inv_id) > 0 ?
-            $d->iR->repoInvUnLoadedquery($inv_id) : null;
-        if ($inv) {
-            $stream = ($this->sR->getSetting('pdf_stream_inv') == '1' ?
-                true : false);
-            $so = (($soId = $inv->getSoId()) > 0 ? $d->soR->repoSalesOrderLoadedquery(
-                $soId) : null);
-            $pdf_template_target_path = $this->pdfHelper->generateInvPdf(
-                $inv_id, $inv->reqUserId(), $stream, true, $so, $inv_amount,
-                    $inv_custom_values, $d->cR, $d->cvR, $d->cfR, $d->dlR, $d->aciR, $d->iiR,
-                        $d->aciiR, $d->iiaR, $d->iR, $d->itrR, $d->uiR, $this->webViewRenderer);
-            if ($pdf_template_target_path) {
+        $stream = $this->sR->getSetting('pdf_stream_inv') === '1';
+        $pdf_template_target_path = $invPdfService->generate($inv_id, $stream, true);
+        if ($pdf_template_target_path) {
                 $mail_message = $template_helper->parseTemplate(
                     $inv_id, true, $data->emailBody, $d->cvR, $d->iR, $d->iaR, $d->qR,
                         $d->qaR, $d->soR, $d->uiR);
@@ -206,7 +195,6 @@ trait Email
                 ];
                 $mailerParams = new MailerSendParams($mail_from[0], $mail_from[1], $data->to, $mail_subject, $mail_message, $mail_cc, $mail_bcc);
                 return $mailer_helper->yiiMailerSend($mailerParams, $data->attachFiles, $pdf_template_target_path, $d->uiR);
-            }
         }
         return false;
     }
@@ -216,6 +204,7 @@ trait Email
         #[RouteArgument('id')]
         int $inv_id,
         InvEmailStage2Deps $d,
+        \App\Invoice\Inv\InvPdfService $invPdfService,
     ): Response {
         if ($inv_id) {
             $mailerDeps = new MailerHelperCustomDeps($d->ccR, $d->qcR, $d->icR, $d->pcR, $d->socR, $d->cfR, $d->cvR);
@@ -276,6 +265,7 @@ trait Email
                     $inv_id,
                     new InvEmailStage1Data($from, $to, $subject, $email_body, $cc, $bcc, $attachFiles),
                     $d,
+                    $invPdfService,
                 )) {
                     $invoice = $d->iR->repoInvUnloadedquery($inv_id);
                     if ($invoice) {

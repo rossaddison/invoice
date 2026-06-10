@@ -6,8 +6,8 @@ namespace App\Invoice\Inv\Trait;
 
 use App\Infrastructure\Persistence\{Inv\Inv};
 use App\Invoice\Inv\Exception\PdfNotFoundException;
-use App\Invoice\Inv\InvPdfDeps;
-use App\Invoice\Helpers\PdfHelper;
+use App\Invoice\Inv\InvPdfService;
+use App\Invoice\Upload\UploadRepository as UPR;
 use App\Widget\Bootstrap5ModalPdf;
 
 use Yiisoft\{Json\Json, Router\HydratorAttribute\RouteArgument};
@@ -30,40 +30,17 @@ trait PdfTrait
 
     public function pdf(
         #[RouteArgument('include')] int $include,
-        InvPdfDeps $d,
+        InvPdfService $invPdfService,
     ): Response {
         try {
-            $inv_id = (int) ($this->session->get('inv_id') ?? '0');
-            $inv_amount = (($d->iaR->repoInvAmountCount($inv_id) > 0) ?
-                $d->iaR->repoInvquery($inv_id) : null);
-            if ($inv_amount) {
-                $custom = ($include === 1);
-                $inv_custom_values = $this->invCustomValues($inv_id, $d->icR);
-                $pdfhelper = new PdfHelper($this->sR, $this->session,
-                        $this->translator);
-                $stream = ($this->sR->getSetting('pdf_stream_inv') == '0') ?
-                    false : true;
-                if ($this->sR->getSetting('mark_invoices_sent_pdf') == 1) {
-                    $this->generateInvNumberIfApplicable($inv_id, $d->iR,
-                        $this->sR, $d->gR);
-                    $this->sR->invoiceMarkSent($inv_id, $d->iR);
-                }
-                $inv = $d->iR->repoInvUnloadedquery($inv_id);
-                if (null !== $inv) {
-                    $so = (null !== ($soId = $inv->getSoId())) ?
-                        $d->soR->repoSalesOrderUnloadedquery($soId) : null;
-                    $pdfhelper->generateInvPdf($inv_id, $inv->reqUserId(),
-                            $stream, $custom, $so, $inv_amount,
-                            $inv_custom_values, $d->cR, $d->cvR, $d->cfR, $d->dlR, $d->aciR,
-                            $d->iiR, $d->aciiR, $d->iiaR, $d->iR, $d->itrR, $d->uiR,
-                            $this->webViewRenderer);
-                    return $this->pdfArchiveMessage();
-                }
-                return $this->factory->createResponse(
-                    Json::encode(['success' => 0]));
+            $invId = (int) ($this->session->get('inv_id') ?? '0');
+            $stream = $this->sR->getSetting('pdf_stream_inv') !== '0';
+            $path = $invPdfService->generate($invId, $stream, $include === 1);
+            if ($path !== '') {
+                return $this->pdfArchiveMessage();
             }
             return $this->factory->createResponse(Json::encode(['success' => 0]));
-        } catch (\Yiisoft\ErrorHandler\Exception\ErrorException $e) {
+        } catch (\Yiisoft\ErrorHandler\Exception\ErrorException) {
             throw new PdfNotFoundException($this->translator);
         }
     }
@@ -88,148 +65,46 @@ trait PdfTrait
 
     public function pdfDashboardIncludeCf(
         #[RouteArgument('id')] int $inv_id,
-        InvPdfDeps $d,
+        InvPdfService $invPdfService,
     ): void {
-        $inv = $d->iR->repoInvUnLoadedquery($inv_id);
+        $inv = $invPdfService->findInv($inv_id);
         if (null !== $inv) {
-            $this->pdfNotFoundException($inv, $d);
+            $this->pdfNotFoundException($inv, $invPdfService);
         }
         if ($inv_id) {
-            $inv_amount = (($d->iaR->repoInvAmountCount($inv_id) > 0) ?
-                    $d->iaR->repoInvquery($inv_id) : null);
-            if ($inv_amount) {
-                $inv_custom_values = $this->invCustomValues($inv_id, $d->icR);
-                $pdfhelper = new PdfHelper($this->sR, $this->session,
-                        $this->translator);
-                $stream = true;
-                if ($this->sR->getSetting('mark_invoices_sent_pdf') == 1) {
-                    $this->generateInvNumberIfApplicable($inv_id,
-                        $d->iR, $this->sR, $d->gR);
-                    $this->sR->invoiceMarkSent($inv_id, $d->iR);
-                }
-                $inv = $d->iR->repoInvUnloadedquery($inv_id);
-                if ($inv) {
-                    $so = (!empty((int) $inv->getSoId()) ?
-                        $d->soR->repoSalesOrderLoadedquery((int) $inv->getSoId()) : null);
-                    $pdfhelper->generateInvPdf(
-                            $inv_id, $inv->reqUserId(), $stream, true,
-                            $so, $inv_amount, $inv_custom_values, $d->cR, $d->cvR,
-                                $d->cfR, $d->dlR, $d->aciR, $d->iiR, $d->aciiR, $d->iiaR, $d->iR,
-                                    $d->itrR, $d->uiR, $this->webViewRenderer);
-                }
-            }
+            $invPdfService->generate($inv_id, true, true);
         }
     }
 
     public function pdfDashboardExcludeCf(
         #[RouteArgument('id')] int $inv_id,
-        InvPdfDeps $d,
+        InvPdfService $invPdfService,
     ): void {
-        $inv = $d->iR->repoInvUnLoadedquery($inv_id);
+        $inv = $invPdfService->findInv($inv_id);
         if (null !== $inv) {
-            $this->pdfNotFoundException($inv, $d);
+            $this->pdfNotFoundException($inv, $invPdfService);
         }
         if ($inv_id) {
-            $inv_amount = (($d->iaR->repoInvAmountCount($inv_id) > 0) ?
-                    $d->iaR->repoInvquery($inv_id) : null);
-            if ($inv_amount) {
-                $inv_custom_values = $this->invCustomValues($inv_id, $d->icR);
-                $pdfhelper = new PdfHelper($this->sR, $this->session,
-                    $this->translator);
-                $stream = true;
-                if ($this->sR->getSetting('mark_invoices_sent_pdf') == 1) {
-                    $this->generateInvNumberIfApplicable(
-                        $inv_id, $d->iR, $this->sR, $d->gR);
-                    $this->sR->invoiceMarkSent($inv_id, $d->iR);
-                }
-                $inv = $d->iR->repoInvUnloadedquery($inv_id);
-                if ($inv) {
-                    $so = (!empty((int) $inv->getSoId()) ?
-                        $d->soR->repoSalesOrderLoadedquery((int) $inv->getSoId()) : null);
-                    $pdfhelper->generateInvPdf(
-                            $inv_id, $inv->reqUserId(), $stream, false,
-                            $so, $inv_amount, $inv_custom_values, $d->cR, $d->cvR,
-                                $d->cfR, $d->dlR, $d->aciR, $d->iiR, $d->aciiR, $d->iiaR, $d->iR,
-                                    $d->itrR, $d->uiR, $this->webViewRenderer);
-                }
-            }
+            $invPdfService->generate($inv_id, true, false);
         }
     }
 
     public function pdfDownloadIncludeCf(
         #[RouteArgument('url_key')] string $url_key,
-        InvPdfDeps $d,
+        InvPdfService $invPdfService,
+        UPR $upR,
     ): mixed {
-        $inv = $d->iR->repoUrlKeyGuestLoaded($url_key);
+        $inv = $invPdfService->loadGuestInv($url_key);
         if (null !== $inv) {
-            $this->pdfNotFoundException($inv, $d);
+            $this->pdfNotFoundException($inv, $invPdfService);
         }
         if ($url_key) {
-            if ($d->iR->repoUrlKeyGuestCount($url_key) < 1) {
-                return $this->webService->getNotFoundResponse();
-            }
-            $inv_guest = $d->iR->repoUrlKeyGuestCount($url_key) ?
-                    $d->iR->repoUrlKeyGuestLoaded($url_key) : null;
+            $inv_guest = $invPdfService->loadGuestInv($url_key);
             if ($inv_guest) {
                 $inv_id = $inv_guest->reqId();
-                $inv_amount = (($d->iaR->repoInvAmountCount($inv_id) > 0) ?
-                        $d->iaR->repoInvquery($inv_id) : null);
-                if ($inv_amount) {
-                    $inv_custom_values = $this->invCustomValues($inv_id, $d->icR);
-                    $pdfhelper = new PdfHelper(
-                            $this->sR, $this->session, $this->translator);
-                    $stream = false;
-                    $c_f = true;
-                    if ($this->sR->getSetting('mark_invoices_sent_pdf') == 1) {
-                        $this->generateInvNumberIfApplicable($inv_id, $d->iR,
-                                $this->sR, $d->gR);
-                        $this->sR->invoiceMarkSent($inv_id, $d->iR);
-                    }
-                    $inv = $d->iR->repoInvUnloadedquery($inv_id);
-                    if ($inv) {
-                        $so = (($inv->getSoId() > 0) ?
-                            $d->soR->repoSalesOrderLoadedquery((int) $inv->getSoId()) :
-                            null);
-                        $temp_aliase = $pdfhelper->generateInvPdf(
-                            $inv_id, $inv->reqUserId(), $stream, $c_f, $so,
-                                $inv_amount, $inv_custom_values, $d->cR, $d->cvR,
-                                    $d->cfR, $d->dlR, $d->aciR, $d->iiR, $d->aciiR, $d->iiaR,
-                                        $d->iR, $d->itrR, $d->uiR, $this->webViewRenderer);
-                        if ($temp_aliase) {
-                            $path_parts = pathinfo($temp_aliase);
-                            /**
-                             * @var string $path_parts['extension']
-                             */
-                            $file_ext = $path_parts['extension'];
-                            $original_file_name = $path_parts['basename'];
-                            if (file_exists($temp_aliase)) {
-                                $file_size = filesize($temp_aliase);
-                                if ($file_size != false) {
-                                    $allowed_content_type_array =
-                                        $d->upR->getContentTypes();
-                                    $save_ctype = isset(
-                                        $allowed_content_type_array[$file_ext]);
-                                    /**
-                                     * @var string $ctype
-                                     */
-                                    $ctype = $save_ctype ?
-                                        $allowed_content_type_array[$file_ext] :
-                                        $d->upR->getContentTypeDefaultOctetStream();
-    // https://www.php.net/manual/en/function.header.php
-    // Remember that header() must be called before any actual output
-    // is sent, either by normal HTML tags, blank lines in a file,
-    // or from PHP.
-    header('Expires: -1');
-    header('Cache-Control: public, must-revalidate, post-check=0, pre-check=0');
-    header("Content-Disposition: attachment; filename=\"$original_file_name\"");
-    header('Content-Type: ' . $ctype);
-    header('Content-Length: ' . (string) $file_size);
-    echo file_get_contents($temp_aliase, true);
-                                }
-                                exit;
-                            }
-                        }
-                    }
+                $temp_aliase = $invPdfService->generate($inv_id, false, true);
+                if ($temp_aliase) {
+                    $this->sendFileDownload($temp_aliase, $upR);
                 }
             }
         }
@@ -238,82 +113,54 @@ trait PdfTrait
 
     public function pdfDownloadExcludeCf(
         #[RouteArgument('url_key')] string $urlKey,
-        InvPdfDeps $d,
+        InvPdfService $invPdfService,
+        UPR $upR,
     ): mixed {
-        $inv = $d->iR->repoUrlKeyGuestLoaded($urlKey);
+        $inv = $invPdfService->loadGuestInv($urlKey);
         if (null !== $inv) {
-            $this->pdfNotFoundException($inv, $d);
+            $this->pdfNotFoundException($inv, $invPdfService);
         }
         if ($urlKey) {
-            if ($d->iR->repoUrlKeyGuestCount($urlKey) < 1) {
-                return $this->webService->getNotFoundResponse();
-            }
-            $inv_guest = $d->iR->repoUrlKeyGuestCount($urlKey) ?
-                $d->iR->repoUrlKeyGuestLoaded($urlKey) : null;
+            $inv_guest = $invPdfService->loadGuestInv($urlKey);
             if ($inv_guest) {
                 $inv_id = $inv_guest->reqId();
-                $inv_amount = (($d->iaR->repoInvAmountCount($inv_id) > 0) ?
-                    $d->iaR->repoInvquery($inv_id) : null);
-                if ($inv_amount) {
-                    $inv_custom_values = $this->invCustomValues($inv_id, $d->icR);
-                    $pdfhelper = new PdfHelper($this->sR, $this->session,
-                        $this->translator);
-                    $stream = false;
-                    $c_f = false;
-                    if ($this->sR->getSetting('mark_invoices_sent_pdf') == 1) {
-                        $this->generateInvNumberIfApplicable($inv_id, $d->iR,
-                            $this->sR, $d->gR);
-                        $this->sR->invoiceMarkSent($inv_id, $d->iR);
-                    }
-                    $inv = $d->iR->repoInvUnloadedquery($inv_id);
-                    if ($inv) {
-                        $so = $d->soR->repoSalesOrderLoadedquery((int) $inv->getSoId());
-                        $temp_aliase = $pdfhelper->generateInvPdf(
-                            $inv_id, $inv->reqUserId(), $stream, $c_f, $so,
-                                $inv_amount, $inv_custom_values, $d->cR, $d->cvR,
-                                    $d->cfR, $d->dlR, $d->aciR, $d->iiR, $d->aciiR, $d->iiaR, $d->iR,
-                                        $d->itrR, $d->uiR, $this->webViewRenderer);
-                        if ($temp_aliase) {
-                            $path_parts = pathinfo($temp_aliase);
-                            /**
-                             * @var string $path_parts['extension']
-                             */
-                            $file_ext = $path_parts['extension'];
-                            $original_file_name = $path_parts['filename'];
-                            if (file_exists($temp_aliase)) {
-                                $file_size = filesize($temp_aliase);
-                                if ($file_size != false) {
-                                    $allowed_content_type_array =
-                                        $d->upR->getContentTypes();
-                                    $save_ctype = isset(
-                                        $allowed_content_type_array[$file_ext]);
-                                    /** @var string $ctype */
-                                    $ctype = $save_ctype ?
-                                        $allowed_content_type_array[$file_ext] :
-                                        $d->upR->getContentTypeDefaultOctetStream();
-// https://www.php.net/manual/en/function.header.php
-// Remember that header() must be called before any actual output is sent,
-// either by normal HTML tags, blank lines in a file, or from PHP.
-header('Expires: -1');
-header('Cache-Control: public, must-revalidate, post-check=0, pre-check=0');
-header("Content-Disposition: attachment; filename=\"$original_file_name\"");
-header('Content-Type: ' . $ctype);
-header('Content-Length: ' . (string) $file_size);
-echo file_get_contents($temp_aliase, true);
-                                }
-                                exit;
-                            }
-                        }
-                    }
+                $temp_aliase = $invPdfService->generate($inv_id, false, false);
+                if ($temp_aliase) {
+                    $this->sendFileDownload($temp_aliase, $upR);
                 }
             }
         }
         exit;
     }
 
-    private function pdfNotFoundException(Inv $inv, InvPdfDeps $d): void
+    private function sendFileDownload(string $filePath, UPR $upR): void
     {
-        if (($this->rbacObserver($inv, $d->ucR, $d->uiR))
+        if (!file_exists($filePath)) {
+            return;
+        }
+        $fileSize = filesize($filePath);
+        if ($fileSize === false) {
+            return;
+        }
+        $ext = pathinfo($filePath, PATHINFO_EXTENSION);
+        $originalFileName = pathinfo($filePath, PATHINFO_BASENAME);
+        $contentTypes = $upR->getContentTypes();
+        $ctype = (string) (isset($contentTypes[$ext])
+            ? $contentTypes[$ext]
+            : $upR->getContentTypeDefaultOctetStream());
+        // https://www.php.net/manual/en/function.header.php
+        // header() must be called before any actual output is sent
+        header('Expires: -1');
+        header('Cache-Control: public, must-revalidate, post-check=0, pre-check=0');
+        header("Content-Disposition: attachment; filename=\"{$originalFileName}\"");
+        header('Content-Type: ' . $ctype);
+        header('Content-Length: ' . (string) $fileSize);
+        echo file_get_contents($filePath, true);
+    }
+
+    private function pdfNotFoundException(Inv $inv, InvPdfService $invPdfService): void
+    {
+        if (($this->rbacObserver($inv, $invPdfService->ucR(), $invPdfService->uiR()))
                 ||
             ($this->rbacAdmin())
                 ||

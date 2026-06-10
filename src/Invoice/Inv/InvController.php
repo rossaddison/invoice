@@ -36,7 +36,7 @@ use App\Invoice\{
 };
 use App\User\UserRepository as UR;
 use App\Service\WebControllerService;
-use App\Invoice\Helpers\{DateHelper, NumberHelper, PdfHelper};
+use App\Invoice\Helpers\{DateHelper, NumberHelper};
 use App\Invoice\Inv\Trait\{Add, Archive, Attachment, Credit, Delete, Edit, Email,
     Flush, Guest, HtmlTrait, Index, MultipleCopy, OptionsData, PdfTrait, Peppol,
     Storecove, Trash, Typescript, UrlKey, View};
@@ -63,7 +63,6 @@ final class InvController extends BaseController
 
     private readonly DateHelper $dateHelper;
     private readonly NumberHelper $numberHelper;
-    private readonly PdfHelper $pdfHelper;
 
     public function __construct(
         private readonly DataResponseFactoryInterface $factory,
@@ -94,7 +93,6 @@ final class InvController extends BaseController
                 $session, $sR, $flash);
         $this->dateHelper = new DateHelper($sR);
         $this->numberHelper = new NumberHelper($sR);
-        $this->pdfHelper = new PdfHelper($sR, $session, $translator);
     }
 
     // Add, Credit, MultipleCopy
