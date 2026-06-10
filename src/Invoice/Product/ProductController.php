@@ -171,6 +171,15 @@ final class ProductController extends BaseController
         if (!is_array($body)) {
             return null;
         }
+        return $this->persistNewProduct($body, $formHydrator, $parameters);
+    }
+
+    /** @param array<string, mixed> $parameters */
+    private function persistNewProduct(
+        array $body,
+        FormHydrator $formHydrator,
+        array &$parameters,
+    ): ?Response {
         $product = new Product();
         $this->productService->saveProduct($product, $body);
         if (!$product->hasIdentity()) {
