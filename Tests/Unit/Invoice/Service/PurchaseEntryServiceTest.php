@@ -11,39 +11,35 @@ use DateTimeImmutable;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class PurchaseEntryServiceTest extends TestCase
+final class PurchaseEntryServiceTest extends TestCase
 {
-    /** @psalm-suppress PropertyNotSetInConstructor */
-    private MockObject&PurchaseEntryRepository $repository;
-
-    /** @psalm-suppress PropertyNotSetInConstructor */
-    private PurchaseEntryService $service;
-
-    #[\Override]
-    protected function setUp(): void
+    /** @return array{MockObject&PurchaseEntryRepository, PurchaseEntryService} */
+    private function makeService(): array
     {
-        $this->repository = $this->createMock(PurchaseEntryRepository::class);
-        $this->service    = new PurchaseEntryService($this->repository);
+        $mock = $this->createMock(PurchaseEntryRepository::class);
+        return [$mock, new PurchaseEntryService($mock)];
     }
 
     // --- saveEntry: field population ---
 
     public function testSaveEntryPopulatesSupplier(): void
     {
-        $this->repository->expects($this->once())->method('save');
+        [$repo, $service] = $this->makeService();
+        $repo->expects($this->once())->method('save');
         $entry = new PurchaseEntry();
 
-        $this->service->saveEntry($entry, ['supplier' => 'ACME Ltd']);
+        $service->saveEntry($entry, ['supplier' => 'ACME Ltd']);
 
         $this->assertSame('ACME Ltd', $entry->getSupplier());
     }
 
     public function testSaveEntryPopulatesAmounts(): void
     {
-        $this->repository->expects($this->once())->method('save');
+        [$repo, $service] = $this->makeService();
+        $repo->expects($this->once())->method('save');
         $entry = new PurchaseEntry();
 
-        $this->service->saveEntry($entry, [
+        $service->saveEntry($entry, [
             'amount_ex_vat' => '250.00',
             'vat_amount'    => '50.00',
         ]);
@@ -54,30 +50,33 @@ class PurchaseEntryServiceTest extends TestCase
 
     public function testSaveEntryPopulatesDescription(): void
     {
-        $this->repository->expects($this->once())->method('save');
+        [$repo, $service] = $this->makeService();
+        $repo->expects($this->once())->method('save');
         $entry = new PurchaseEntry();
 
-        $this->service->saveEntry($entry, ['description' => 'Monthly hosting']);
+        $service->saveEntry($entry, ['description' => 'Monthly hosting']);
 
         $this->assertSame('Monthly hosting', $entry->getDescription());
     }
 
     public function testSaveEntryEmptyDescriptionBecomesNull(): void
     {
-        $this->repository->expects($this->once())->method('save');
+        [$repo, $service] = $this->makeService();
+        $repo->expects($this->once())->method('save');
         $entry = new PurchaseEntry();
 
-        $this->service->saveEntry($entry, ['description' => '']);
+        $service->saveEntry($entry, ['description' => '']);
 
         $this->assertNull($entry->getDescription());
     }
 
     public function testSaveEntryMissingDescriptionBecomesNull(): void
     {
-        $this->repository->expects($this->once())->method('save');
+        [$repo, $service] = $this->makeService();
+        $repo->expects($this->once())->method('save');
         $entry = new PurchaseEntry();
 
-        $this->service->saveEntry($entry, ['supplier' => 'Supplier']);
+        $service->saveEntry($entry, ['supplier' => 'Supplier']);
 
         $this->assertNull($entry->getDescription());
     }
@@ -86,10 +85,11 @@ class PurchaseEntryServiceTest extends TestCase
 
     public function testSaveEntryWithValidDateSetsDateTimeImmutable(): void
     {
-        $this->repository->expects($this->once())->method('save');
+        [$repo, $service] = $this->makeService();
+        $repo->expects($this->once())->method('save');
         $entry = new PurchaseEntry();
 
-        $this->service->saveEntry($entry, ['date' => '2026-04-06']);
+        $service->saveEntry($entry, ['date' => '2026-04-06']);
 
         $date = $entry->getDate();
         $this->assertInstanceOf(DateTimeImmutable::class, $date);
@@ -98,20 +98,22 @@ class PurchaseEntryServiceTest extends TestCase
 
     public function testSaveEntryWithInvalidDateFallsBackToNow(): void
     {
-        $this->repository->expects($this->once())->method('save');
+        [$repo, $service] = $this->makeService();
+        $repo->expects($this->once())->method('save');
         $entry = new PurchaseEntry();
 
-        $this->service->saveEntry($entry, ['date' => 'not-a-date']);
+        $service->saveEntry($entry, ['date' => 'not-a-date']);
 
         $this->assertInstanceOf(DateTimeImmutable::class, $entry->getDate());
     }
 
     public function testSaveEntryWithNoDateKeyLeavesDateNull(): void
     {
-        $this->repository->expects($this->once())->method('save');
+        [$repo, $service] = $this->makeService();
+        $repo->expects($this->once())->method('save');
         $entry = new PurchaseEntry();
 
-        $this->service->saveEntry($entry, ['supplier' => 'No Date Supplier']);
+        $service->saveEntry($entry, ['supplier' => 'No Date Supplier']);
 
         $this->assertNull($entry->getDate());
     }
@@ -120,11 +122,12 @@ class PurchaseEntryServiceTest extends TestCase
 
     public function testSaveEntryNewEntrySetsCreatedAt(): void
     {
-        $this->repository->expects($this->once())->method('save');
+        [$repo, $service] = $this->makeService();
+        $repo->expects($this->once())->method('save');
         $entry  = new PurchaseEntry();
         $before = new DateTimeImmutable();
 
-        $this->service->saveEntry($entry, ['supplier' => 'New Supplier']);
+        $service->saveEntry($entry, ['supplier' => 'New Supplier']);
 
         $this->assertInstanceOf(DateTimeImmutable::class, $entry->getCreatedAt());
         $this->assertGreaterThanOrEqual(
@@ -135,12 +138,13 @@ class PurchaseEntryServiceTest extends TestCase
 
     public function testSaveEntryExistingEntryDoesNotOverwriteCreatedAt(): void
     {
-        $this->repository->expects($this->once())->method('save');
+        [$repo, $service] = $this->makeService();
+        $repo->expects($this->once())->method('save');
         $entry = new PurchaseEntry();
         $entry->setId(1);
         $original = $entry->getCreatedAt();
 
-        $this->service->saveEntry($entry, ['supplier' => 'Existing Supplier']);
+        $service->saveEntry($entry, ['supplier' => 'Existing Supplier']);
 
         $this->assertSame($original, $entry->getCreatedAt());
     }
@@ -149,10 +153,11 @@ class PurchaseEntryServiceTest extends TestCase
 
     public function testSaveEntryEmptyBodyUsesDefaults(): void
     {
-        $this->repository->expects($this->once())->method('save');
+        [$repo, $service] = $this->makeService();
+        $repo->expects($this->once())->method('save');
         $entry = new PurchaseEntry();
 
-        $this->service->saveEntry($entry, []);
+        $service->saveEntry($entry, []);
 
         $this->assertSame('', $entry->getSupplier());
         $this->assertSame(0.00, $entry->getAmountExVat());
@@ -164,10 +169,11 @@ class PurchaseEntryServiceTest extends TestCase
 
     public function testSaveEntryZeroAmountsAreAccepted(): void
     {
-        $this->repository->expects($this->once())->method('save');
+        [$repo, $service] = $this->makeService();
+        $repo->expects($this->once())->method('save');
         $entry = new PurchaseEntry();
 
-        $this->service->saveEntry($entry, [
+        $service->saveEntry($entry, [
             'amount_ex_vat' => '0.00',
             'vat_amount'    => '0.00',
         ]);
@@ -180,25 +186,27 @@ class PurchaseEntryServiceTest extends TestCase
 
     public function testSaveEntryAlwaysCallsRepositorySave(): void
     {
-        $this->repository->expects($this->exactly(3))->method('save');
+        [$repo, $service] = $this->makeService();
+        $repo->expects($this->exactly(3))->method('save');
 
-        $this->service->saveEntry(new PurchaseEntry(), []);
-        $this->service->saveEntry(new PurchaseEntry(), ['supplier' => 'A']);
-        $this->service->saveEntry(new PurchaseEntry(), ['supplier' => 'B', 'date' => '2026-01-01']);
+        $service->saveEntry(new PurchaseEntry(), []);
+        $service->saveEntry(new PurchaseEntry(), ['supplier' => 'A']);
+        $service->saveEntry(new PurchaseEntry(), ['supplier' => 'B', 'date' => '2026-01-01']);
     }
 
     // --- deleteEntry ---
 
     public function testDeleteEntryCallsRepositoryDelete(): void
     {
+        [$repo, $service] = $this->makeService();
         $entry = new PurchaseEntry();
         $entry->setId(7);
 
-        $this->repository->expects($this->once())
+        $repo->expects($this->once())
             ->method('delete')
             ->with($entry);
 
-        $this->service->deleteEntry($entry);
+        $service->deleteEntry($entry);
     }
 
     // --- vatQuarterLabel: UK tax year (April start, month = 4) ---

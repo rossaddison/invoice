@@ -8,6 +8,7 @@ use App\Infrastructure\Persistence\Client\Client;
 use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
 use App\Infrastructure\Persistence\SalesOrderAmount\SalesOrderAmount;
 use App\Invoice\SalesOrder\SalesOrderRepository as SoR;
+use App\Invoice\SalesOrder\Widget\SalesOrdersGroupingRenderer;
 use App\Invoice\SalesOrder\Widget\SalesOrdersListWidget;
 use App\Invoice\SalesOrderAmount\SalesOrderAmountRepository as SoAR;
 use App\Invoice\Setting\SettingRepository as SR;
@@ -122,33 +123,28 @@ final class SalesOrdersListWidgetTest extends TestCase
         return $so;
     }
 
-    /** Invoke a private method on a freshly created widget (no deps). */
-    private function callPrivate(string $method, mixed ...$args): mixed
+    private function makeGroupingRenderer(?SoR $soR = null, ?SR $sR = null): SalesOrdersGroupingRenderer
     {
-        return (new \ReflectionMethod(SalesOrdersListWidget::class, $method))
-            ->invoke($this->makeWidget(), ...$args);
-    }
-
-    /** Invoke a private method on a given widget instance. */
-    private function callPrivateOn(SalesOrdersListWidget $widget, string $method, mixed ...$args): mixed
-    {
-        return (new \ReflectionMethod(SalesOrdersListWidget::class, $method))
-            ->invoke($widget, ...$args);
+        return new SalesOrdersGroupingRenderer(
+            $soR ?? $this->makeSoR(),
+            $sR  ?? $this->makeSR(),
+        );
     }
 
     /**
-     * makeGroupValueResolver asserts $this->soR, so must be called on a widget
-     * with soR set.  The 'status' key additionally needs the translator set in soR.
+     * The 'status' branch calls $soR->getSpecificStatusArrayLabel().
+     * With the stub translator returning the key as-is, status 1 ('draft' key)
+     * maps to the string 'draft'.
      */
     private function resolveGroup(
         string $groupBy,
         SalesOrder $so,
         bool $withTranslator = false,
     ): string {
-        $soR    = $withTranslator ? $this->makeSoRWithTranslator() : $this->makeSoR();
-        $widget = $this->makeWidget()->withSoR($soR);
+        $soR      = $withTranslator ? $this->makeSoRWithTranslator() : $this->makeSoR();
+        $renderer = $this->makeGroupingRenderer($soR);
         /** @var \Closure(SalesOrder): string $resolver */
-        $resolver = $this->callPrivateOn($widget, 'makeGroupValueResolver', $groupBy);
+        $resolver = $renderer->makeGroupValueResolver($groupBy);
         return $resolver($so);
     }
 
@@ -432,7 +428,7 @@ final class SalesOrdersListWidgetTest extends TestCase
         $getGroupValue = static fn(SalesOrder $_so): string => 'unused';
 
         /** @var array<string, array{count: int, total: float}> $result */
-        $result = $this->callPrivate('computeGroupTotals', $paginator, $getGroupValue);
+        $result = $this->makeGroupingRenderer()->computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertSame([], $result);
     }
@@ -446,7 +442,7 @@ final class SalesOrdersListWidgetTest extends TestCase
         $getGroupValue = static fn(SalesOrder $_so): string => 'All';
 
         /** @var array<string, array{count: int, total: float}> $result */
-        $result = $this->callPrivate('computeGroupTotals', $paginator, $getGroupValue);
+        $result = $this->makeGroupingRenderer()->computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertCount(1, $result);
         $this->assertSame(2,      $result['All']['count']);
@@ -460,13 +456,13 @@ final class SalesOrdersListWidgetTest extends TestCase
         $so3 = $this->makeSalesOrderMock(clientFullName: 'Alice', total: 150.00);
 
         $paginator = new OffsetPaginator(new IterableDataReader([$so1, $so2, $so3]));
-        $widget    = $this->makeWidget()->withSoR($this->makeSoR());
+        $renderer  = $this->makeGroupingRenderer($this->makeSoR());
 
         /** @var \Closure(SalesOrder): string $getGroupValue */
-        $getGroupValue = $this->callPrivateOn($widget, 'makeGroupValueResolver', 'client');
+        $getGroupValue = $renderer->makeGroupValueResolver('client');
 
         /** @var array<string, array{count: int, total: float}> $result */
-        $result = $this->callPrivateOn($widget, 'computeGroupTotals', $paginator, $getGroupValue);
+        $result = $renderer->computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertCount(2, $result);
         $this->assertSame(2,      $result['Alice']['count']);
@@ -487,7 +483,7 @@ final class SalesOrdersListWidgetTest extends TestCase
         $getGroupValue = static fn(SalesOrder $_so): string => 'NullTotal';
 
         /** @var array<string, array{count: int, total: float}> $result */
-        $result = $this->callPrivate('computeGroupTotals', $paginator, $getGroupValue);
+        $result = $this->makeGroupingRenderer()->computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertSame(1,    $result['NullTotal']['count']);
         $this->assertSame(0.00, $result['NullTotal']['total']);
