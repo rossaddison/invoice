@@ -12,7 +12,7 @@ use Yiisoft\Translator\TranslatorInterface;
 /**
  * @psalm-suppress UnusedClass
  */
-final class Peppol_EN16931_R001 extends \RuntimeException implements FriendlyExceptionInterface
+final class PeppolEn16931R001 extends \RuntimeException implements FriendlyExceptionInterface
 {
     public function __construct(private readonly string $client_id, private readonly TranslatorInterface $translator, private readonly UrlGenerator $urlGenerator)
     {

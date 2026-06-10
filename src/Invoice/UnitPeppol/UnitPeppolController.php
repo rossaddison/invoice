@@ -7,7 +7,7 @@ namespace App\Invoice\UnitPeppol;
 use App\Invoice\BaseController;
 use App\Infrastructure\Persistence\Unit\Unit;
 use App\Infrastructure\Persistence\UnitPeppol\UnitPeppol;
-use App\Invoice\Helpers\Peppol\Peppol_UNECERec20_11e;
+use App\Invoice\Helpers\Peppol\PeppolUneceRec2011e;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Unit\UnitRepository;
 use App\User\UserService;
@@ -54,7 +54,7 @@ final class UnitPeppolController extends BaseController
         FormHydrator $formHydrator,
         UnitRepository $unitRepository,
     ): Response {
-        $enece = new Peppol_UNECERec20_11e();
+        $enece = new PeppolUneceRec2011e();
         $enece_array = $enece->getUNECERec2011e();
         $units = $unitRepository->findAllPreloaded();
         $unitPeppol = new UnitPeppol();
@@ -163,7 +163,7 @@ final class UnitPeppolController extends BaseController
     ): Response {
         $unitPeppol = $this->unitpeppol($currentRoute, $unitpeppolRepository);
         $units = $unitRepository->findAllPreloaded();
-        $enece = new Peppol_UNECERec20_11e();
+        $enece = new PeppolUneceRec2011e();
         $enece_array = $enece->getUNECERec2011e();
         if (null!==$unitPeppol) {
             $form = UnitPeppolForm::show($unitPeppol);
@@ -229,7 +229,7 @@ final class UnitPeppolController extends BaseController
     ): \Psr\Http\Message\ResponseInterface {
         $unitPeppol = $this->unitpeppol($currentRoute, $unitpeppolRepository);
         $units = $unitRepository->findAllPreloaded();
-        $enece = new Peppol_UNECERec20_11e();
+        $enece = new PeppolUneceRec2011e();
         $eneceArray = $enece->getUNECERec2011e();
         if (null!==$unitPeppol) {
             $form = UnitPeppolForm::show($unitPeppol);
