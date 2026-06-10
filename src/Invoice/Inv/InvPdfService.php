@@ -85,26 +85,17 @@ final readonly class InvPdfService
     public function generateHtml(int $invId, bool $custom): string
     {
         $invAmount = $this->coreDeps->iaR->repoInvAmountCount($invId) > 0
-            ? $this->coreDeps->iaR->repoInvquery($invId)
-            : null;
-        if (null === $invAmount) {
+            ? $this->coreDeps->iaR->repoInvquery($invId) : null;
+        $invUnloaded = $this->coreDeps->iR->repoInvUnloadedquery($invId);
+        $inv = $this->coreDeps->iR->repoCount($invId) > 0
+            ? $this->coreDeps->iR->repoInvLoadedquery($invId) : null;
+        if (null === $invAmount || null === $invUnloaded || null === $inv) {
             return '';
         }
         $invCustomValues = $this->customValues($invId);
-        $invUnloaded = $this->coreDeps->iR->repoInvUnloadedquery($invId);
-        if (null === $invUnloaded) {
-            return '';
-        }
         $soId = $invUnloaded->getSoId();
         $so = ($soId !== null && $soId > 0)
-            ? $this->coreDeps->soR->repoSalesOrderUnloadedquery($soId)
-            : null;
-        $inv = $this->coreDeps->iR->repoCount($invId) > 0
-            ? $this->coreDeps->iR->repoInvLoadedquery($invId)
-            : null;
-        if (null === $inv) {
-            return '';
-        }
+            ? $this->coreDeps->soR->repoSalesOrderUnloadedquery($soId) : null;
         return $this->renderHtml($invId, $inv->reqUserId(), $custom, $so, $invAmount, $invCustomValues, $inv);
     }
 

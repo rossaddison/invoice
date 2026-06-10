@@ -590,6 +590,8 @@ final class PaymentInformationController
                             'creditcard',
                             $mollie_locale,
                         );
+                    default:
+                        break;
                 }
             }
         } else {
@@ -653,36 +655,44 @@ final class PaymentInformationController
                                                         $amazon_pci_view_data);
     }
 
+    /**
+     * @return array{clientToken: string, merchantId: string}|null
+     */
+    private function initializeBraintree(PaymentInformationGatewayContext $ctx): ?array
+    {
+        if (!$this->braintreePaymentService->isConfigured()) {
+            $this->flashMessage('warning',
+                'Braintree payment gateway is not properly configured.');
+            return null;
+        }
+        if (!$this->braintreePaymentService->findOrCreateCustomer($ctx->invoice)) {
+            $this->flashMessage('warning',
+                'Unable to create or find customer in Braintree.');
+        }
+        $clientToken = $this->braintreePaymentService->generateClientToken();
+        if (empty($clientToken)) {
+            $this->flashMessage('warning',
+                'Unable to generate Braintree client token.');
+            return null;
+        }
+        return [
+            'clientToken' => $clientToken,
+            'merchantId'  => $this->braintreePaymentService->getMerchantId(),
+        ];
+    }
+
     public function brainTreeInForm(
         PaymentInformationGatewayContext $ctx,
         Request $request,
         int $invoice_id,
         array $sandbox_url_array,
     ): Response {
-        // Check if Braintree is properly configured
-        if (!$this->braintreePaymentService->isConfigured()) {
-            $this->flashMessage('warning',
-                    'Braintree payment gateway is not properly configured.');
-
+        $init = $this->initializeBraintree($ctx);
+        if (null === $init) {
             return $this->webService->getNotFoundResponse();
         }
-
-        // Create or find customer
-        if (!$this->braintreePaymentService->findOrCreateCustomer($ctx->invoice)) {
-            $this->flashMessage('warning',
-                    'Unable to create or find customer in Braintree.');
-        }
-
-        // Generate client token
-        $clientToken = $this->braintreePaymentService->generateClientToken();
-        if (empty($clientToken)) {
-            $this->flashMessage('warning',
-                    'Unable to generate Braintree client token.');
-
-            return $this->webService->getNotFoundResponse();
-        }
-
-        $merchantId = $this->braintreePaymentService->getMerchantId();
+        $clientToken = $init['clientToken'];
+        $merchantId  = $init['merchantId'];
 
         // Return the view
         $braintree_pci_view_data = [

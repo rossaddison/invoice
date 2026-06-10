@@ -17,16 +17,12 @@ use Yiisoft\Html\Tag\Button as HtmlButton;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Html\Tag\Label;
 use Yiisoft\Html\Tag\Select;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Widget\Widget;
-use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
-use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
-use Yiisoft\Yii\DataView\GridView\Column\CheckboxColumn;
 use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
@@ -188,9 +184,10 @@ final class SalesOrdersListWidget extends Widget
         $urlCreator = new UrlCreator($this->urlGenerator);
         $urlCreator->__invoke([], OrderHelper::stringToArray($this->sortString));
 
-        $getGroupValue = $this->makeGroupValueResolver($groupBy);
-        $groupTotals   = $enableGrouping
-            ? $this->computeGroupTotals($this->paginator, $getGroupValue)
+        $groupingRenderer = new SalesOrdersGroupingRenderer($this->soR, $this->sR);
+        $getGroupValue    = $groupingRenderer->makeGroupValueResolver($groupBy);
+        $groupTotals      = $enableGrouping
+            ? $groupingRenderer->computeGroupTotals($this->paginator, $getGroupValue)
             : [];
 
         $columns = $this->buildColumns();
@@ -219,14 +216,14 @@ final class SalesOrdersListWidget extends Widget
             ->toolbar($this->buildToolbarString($enableGrouping));
 
         if ($enableGrouping) {
-            $gridView = $this->applyGrouping($gridView, $getGroupValue, $groupTotals,
-                $groupBy);
+            $gridView = $groupingRenderer->applyGrouping($gridView, $getGroupValue,
+                $groupTotals, $groupBy);
         }
 
         $output = $gridView->render();
 
         if ($enableGrouping) {
-            $output .= $this->groupingScriptAndStyle();
+            $output .= $groupingRenderer->groupingScriptAndStyle();
         }
 
         return $output;
@@ -372,22 +369,20 @@ final class SalesOrdersListWidget extends Widget
     // Columns
     // -------------------------------------------------------------------------
 
-    /** @return list<DataColumn|CheckboxColumn> */
+    /** @return list<DataColumn|\Yiisoft\Yii\DataView\GridView\Column\CheckboxColumn> */
     private function buildColumns(): array
     {
         \assert($this->soR !== null && $this->soaR !== null && $this->sR !== null);
-
-        $soR  = $this->soR;
-        $soaR = $this->soaR;
-        $sR   = $this->sR;
-        $iR   = $this->iR;
-        $ug   = $this->urlGenerator;
-        $t    = $this->translator;
-        $vis  = $this->visible;
-        $opts = $this->optionsDataClientsDropdownFilter;
-
+        $ug      = $this->urlGenerator;
+        $t       = $this->translator;
+        $vis     = $this->visible;
+        $builder = new SalesOrdersColumnBuilder(
+            $ug, $t, $vis, $this->iR,
+            $this->sR, $this->soR, $this->soaR,
+            $this->optionsDataClientsDropdownFilter,
+        );
         return [
-            $this->buildCheckboxColumn(),
+            $builder->buildCheckboxColumn(),
             new DataColumn(
                 'id',
                 header: $t->translate('id'),
@@ -404,331 +399,13 @@ final class SalesOrdersListWidget extends Widget
                     );
                 },
             ),
-            $this->buildStatusColumn($soR, $ug),
-            $this->buildNumberColumn($ug),
-            $this->buildQuoteColumn($ug, $t, $vis),
-            $this->buildInvoiceColumn($ug, $t, $iR, $vis),
-            $this->buildDateCreatedColumn($t, $vis),
-            $this->buildClientColumn($t, $opts),
-            $this->buildTotalColumn($sR, $soaR, $t, $vis),
+            $builder->buildStatusColumn(),
+            $builder->buildNumberColumn(),
+            $builder->buildQuoteColumn(),
+            $builder->buildInvoiceColumn(),
+            $builder->buildDateCreatedColumn(),
+            $builder->buildClientColumn(),
+            $builder->buildTotalColumn(),
         ];
-    }
-
-    private function buildCheckboxColumn(): CheckboxColumn
-    {
-        return new CheckboxColumn(
-            content: static function (Checkbox $input, DataContext $context): string {
-                $so = $context->data;
-                if (!$so instanceof SalesOrder) {
-                    return '';
-                }
-                return $input
-                    ->addAttributes([
-                        'id'             => (string) $so->reqId(),
-                        'name'           => 'checkbox[]',
-                        'data-bs-toggle' => 'tooltip',
-                        'title'          => '',
-                    ])
-                    ->value((string) $so->reqId())
-                    ->render();
-            },
-            multiple: true,
-        );
-    }
-
-    private function buildStatusColumn(SoR $soR, UrlGeneratorInterface $ug): DataColumn
-    {
-        return new DataColumn(
-            'status_id',
-            content: static function (SalesOrder $m) use ($soR, $ug): string {
-                $statusId = $m->getStatusId();
-                if (null === $statusId) {
-                    return Html::tag('span')->render();
-                }
-                $label   = $soR->getSpecificStatusArrayLabel((string) $statusId);
-                $class   = $soR->getSpecificStatusArrayClass($statusId);
-                $spanTag = Html::tag('span', $label, ['class' => 'badge text-bg-' . $class])->render();
-                if (7 === $statusId) {
-                    return Html::tag('a', $spanTag, [
-                        'href'     => $ug->generate('salesorder/soToInvoice',
-                            ['id' => $m->reqId()]),
-                        'class'    => 'text-decoration-none',
-                        'hx-boost' => 'false',
-                    ])->render();
-                }
-                return $spanTag;
-            },
-            encodeContent: false,
-        );
-    }
-
-    private function buildNumberColumn(UrlGeneratorInterface $ug): DataColumn
-    {
-        return new DataColumn(
-            'number',
-            content: static fn(SalesOrder $m): A =>
-                Html::a(
-                    $m->getNumber() ?? '#',
-                    $ug->generate('salesorder/view', ['id' => $m->reqId()]),
-                    ['class' => 'text-decoration-none', 'hx-boost' => 'false'],
-                ),
-        );
-    }
-
-    private function buildQuoteColumn(
-        UrlGeneratorInterface $ug,
-        TranslatorInterface $t,
-        bool $visible,
-    ): DataColumn {
-        return new DataColumn(
-            'quote_id',
-            header: $t->translate('quote'),
-            content: static function (SalesOrder $m) use ($ug): string|A {
-                $quote = $m->getQuote();
-                return $quote
-                    ? Html::a(
-                        $quote->getNumber() ?? '#',
-                        $ug->generate('quote/view', ['id' => $quote->reqId()]),
-                        ['class' => 'text-decoration-none', 'hx-boost' => 'false'],
-                    )
-                    : '';
-            },
-            visible: $visible,
-        );
-    }
-
-    private function buildInvoiceColumn(
-        UrlGeneratorInterface $ug,
-        TranslatorInterface $t,
-        ?InvRepo $iR,
-        bool $visible,
-    ): DataColumn {
-        return new DataColumn(
-            'inv_id',
-            header: $t->translate('invoice'),
-            content: static function (SalesOrder $m) use ($ug, $iR): string|A {
-                if (!$m->hasLinkedInvoice() || $iR === null) {
-                    return '';
-                }
-                $invId = $m->reqInvId();
-                $inv   = $iR->repoInvUnloadedquery($invId);
-                return $inv
-                    ? Html::a(
-                        $inv->getNumber() ?? '#',
-                        $ug->generate('inv/view', ['id' => $invId]),
-                        ['class' => 'text-decoration-none', 'hx-boost' => 'false'],
-                    )
-                    : '';
-            },
-            visible: $visible,
-        );
-    }
-
-    private function buildDateCreatedColumn(TranslatorInterface $t, bool $visible): DataColumn
-    {
-        return new DataColumn(
-            'date_created',
-            header: $t->translate('date.created'),
-            content: static fn(SalesOrder $m): string =>
-                $m->getDateCreated() instanceof \DateTimeImmutable
-                    ? $m->getDateCreated()->format('Y-m-d')
-                    : '',
-            encodeContent: true,
-            visible: $visible,
-        );
-    }
-
-    /**
-     * @psalm-param array<array-key, array<array-key, string>|string> $opts
-     */
-    private function buildClientColumn(
-        TranslatorInterface $t,
-        array $opts,
-    ): DataColumn {
-        return new DataColumn(
-            property: 'filterClient',
-            header: $t->translate('client'),
-            content: static fn(SalesOrder $m): string =>
-                Html::encode($m->getClient()?->getClientFullName() ?? ''),
-            encodeContent: false,
-            filter: DropdownFilter::widget()
-                ->addAttributes(['name' => 'client_id', 'class' => 'native-reset'])
-                ->optionsData($opts),
-            withSorting: false,
-        );
-    }
-
-    private function buildTotalColumn(
-        SR $sR,
-        SoAR $soaR,
-        TranslatorInterface $t,
-        bool $visible,
-    ): DataColumn {
-        return new DataColumn(
-            'id',
-            header: $t->translate('total'),
-            content: static function (SalesOrder $m) use ($sR, $soaR): string {
-                $soId     = $m->reqId();
-                $soAmount = $soaR->repoSalesOrderAmountCount($soId) > 0
-                    ? $soaR->repoSalesOrderquery($soId)
-                    : null;
-                return $sR->formatCurrency(
-                    null !== $soAmount ? ($soAmount->getTotal() ?? 0.00) : 0.00
-                );
-            },
-            visible: $visible,
-        );
-    }
-
-    // -------------------------------------------------------------------------
-    // Grouping helpers
-    // -------------------------------------------------------------------------
-
-    /** @return \Closure(SalesOrder): string */
-    private function makeGroupValueResolver(string $groupBy): \Closure
-    {
-        \assert($this->soR !== null);
-        $soR = $this->soR;
-        return static function (SalesOrder $so) use ($soR, $groupBy): string {
-            return match ($groupBy) {
-                'client' => $so->getClient()?->getClientFullName() ?? 'Unknown Client',
-                'status' => $soR->getSpecificStatusArrayLabel(
-                    (string) $so->getStatusId()),
-                'month'  => $so->getDateCreated()->format('Y-m'),
-                'year'   => $so->getDateCreated()->format('Y'),
-                'date'   => $so->getDateCreated()->format('Y-m-d'),
-                default  => 'No Group',
-            };
-        };
-    }
-
-    /**
-     * @param callable(SalesOrder): string $getGroupValue
-     * @return array<string, array{count: int, total: float}>
-     */
-    private function computeGroupTotals(
-        OffsetPaginator $paginator,
-        callable $getGroupValue,
-    ): array {
-        $groupTotals = [];
-        foreach ($paginator->read() as $so) {
-            /** @var SalesOrder $so */
-            $gv = $getGroupValue($so);
-            if (!isset($groupTotals[$gv])) {
-                $groupTotals[$gv] = ['count' => 0, 'total' => 0.0];
-            }
-            $groupTotals[$gv]['count']++;
-            $soAmount = $so->getSalesOrderAmount();
-            $groupTotals[$gv]['total'] += $soAmount->getTotal() ?? 0.0;
-        }
-        return $groupTotals;
-    }
-
-    /**
-     * @param callable(SalesOrder): string $getGroupValue
-     * @param array<string, array{count: int, total: float}> $groupTotals
-     */
-    private function applyGrouping(
-        GridView $gridView,
-        callable $getGroupValue,
-        array $groupTotals,
-        string $groupBy,
-    ): GridView {
-        \assert($this->sR !== null);
-        $sR                 = $this->sR;
-        $previousGroupValue = '';
-        return $gridView->beforeRow(
-            static function (array|object $so) use (
-                &$previousGroupValue,
-                $getGroupValue,
-                $groupTotals,
-                $groupBy,
-                $sR,
-            ): ?\Yiisoft\Html\Tag\Tr {
-                \assert($so instanceof SalesOrder);
-                $current = $getGroupValue($so);
-                if ($previousGroupValue === $current) {
-                    return null;
-                }
-                $previousGroupValue = $current;
-                $gd  = $groupTotals[$current] ?? ['count' => 0, 'total' => 0.0];
-                $cur = $sR->getSetting('currency_symbol');
-                return \Yiisoft\Html\Html::tr()
-                    ->addClass(
-                        'group-header bg-secondary text-white fw-bold group-collapsible')
-                    ->addAttributes(['onclick' => 'toggleGroupRows(this)'])
-                    ->cells(
-                        \Yiisoft\Html\Html::td()
-                            ->addAttributes(['colspan' => '10'])
-                            ->addClass('p-3')
-                            ->content(
-                                '<div class="d-flex justify-content-between align-items-center">'
-                                . '<div>'
-                                . '<i class="bi bi-chevron-down me-2 group-toggle-icon"></i>'
-                                . '<i class="bi bi-folder2-open me-2"></i>'
-                                . '<span class="fs-5">'
-                                . Html::encode(ucfirst($groupBy)) . ': '
-                                . Html::encode($current) . '</span>'
-                                . '<span class="badge bg-primary ms-2">'
-                                . $gd['count'] . ' order'
-                                . ($gd['count'] === 1 ? '' : 's') . '</span>'
-                                . '</div>'
-                                . '<div class="text-end">'
-                                . '<small class="d-block">Total: <strong>'
-                                . number_format($gd['total'], 2)
-                                . ' ' . Html::encode($cur) . '</strong></small>'
-                                . '</div>'
-                                . '</div>'
-                            )
-                            ->encode(false)
-                    );
-            }
-        );
-    }
-
-    private function groupingScriptAndStyle(): string
-    {
-        $js = <<<'JS'
-function toggleGroupRows(headerRow) {
-    const icon = headerRow.querySelector('.group-toggle-icon');
-    let nextRow = headerRow.nextElementSibling;
-    let isCollapsed = icon.classList.contains('bi-chevron-right');
-    if (isCollapsed) {
-        icon.classList.replace('bi-chevron-right', 'bi-chevron-down');
-    } else {
-        icon.classList.replace('bi-chevron-down', 'bi-chevron-right');
-    }
-    while (nextRow && !nextRow.classList.contains('group-header')) {
-        nextRow.style.display = isCollapsed ? '' : 'none';
-        nextRow = nextRow.nextElementSibling;
-    }
-}
-function toggleAllGroups(expand) {
-    document.querySelectorAll('.group-header').forEach(header => {
-        const icon = header.querySelector('.group-toggle-icon');
-        let nextRow = header.nextElementSibling;
-        if (expand) {
-            icon.classList.replace('bi-chevron-right', 'bi-chevron-down');
-        } else {
-            icon.classList.replace('bi-chevron-down', 'bi-chevron-right');
-        }
-        while (nextRow && !nextRow.classList.contains('group-header')) {
-            nextRow.style.display = expand ? '' : 'none';
-            nextRow = nextRow.nextElementSibling;
-        }
-    });
-}
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.group-header').forEach(h => h.style.cursor = 'pointer');
-});
-JS;
-
-        $css = <<<'CSS'
-.group-collapsible:hover { background-color: #495057 !important; cursor: pointer; }
-.group-toggle-icon { transition: transform 0.2s ease; }
-CSS;
-
-        return Html::script($js)->type('module')->render()
-            . Html::style($css)->render();
     }
 }

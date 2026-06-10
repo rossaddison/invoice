@@ -259,6 +259,84 @@ It searches by calling `->reqCustomFieldId()` on each array element — the arra
 
 ---
 
+---
+
+## Round 4 — S1142, S1448, S131, S3776 (June 2026)
+
+> [!NOTE]
+> Five SonarQube violations resolved across four files. No `@psalm-suppress` used; Psalm errorLevel 1 passes clean.
+
+### S1142 — `InvPdfService::generateHtml` (4 returns → 2)
+
+The three early null-guard returns were collapsed into one combined check by loading all three nullable values (`$invAmount`, `$invUnloaded`, `$inv`) before the single guard. Custom values and the sales-order lookup are deferred until after the guard to avoid unnecessary DB queries.
+
+```php
+// Before: 3 separate early returns + 1 success return = 4
+// After: 1 combined guard + 1 success return = 2
+$invAmount   = ...;
+$invUnloaded = ...;
+$inv         = ...;
+if (null === $invAmount || null === $invUnloaded || null === $inv) {
+    return '';
+}
+$invCustomValues = $this->customValues($invId);
+...
+return $this->renderHtml(...);
+```
+
+### S131 — `PaymentInformationController` switch missing `default`
+
+Added `default: break;` to the gateway switch. The outer method already returns `getNotFoundResponse()` when no case matches, so `break` is semantically correct.
+
+### S1142 — `PaymentInformationController::brainTreeInForm` (4 returns → 3)
+
+Extracted `initializeBraintree(PaymentInformationGatewayContext $ctx): ?array` which:
+- returns `null` (with flash warnings) if not configured or if the client token cannot be generated
+- returns `['clientToken' => ..., 'merchantId' => ...]` on success
+
+`brainTreeInForm` now has exactly 3 returns: one `getNotFoundResponse()` guard, one POST completion render, one GET form render.
+
+### S3776 — `ProductController::add()` (complexity 36 → 2)
+
+Extracted two private methods:
+
+| Method | Complexity | Responsibility |
+|--------|-----------|----------------|
+| `handleAddPost(Request, FormHydrator, ProductForm, array &$parameters): ?Response` | ~4 | Form validation, product save, redirect |
+| `saveProductCustomFields(Product, array, FormHydrator, array &$parameters): void` | ~3 | Custom-field loop with typed `@var` annotation |
+
+`add()` itself drops to complexity 2 (one `if POST` check, one `if redirect !== null`).
+
+### S1448 — `SalesOrdersListWidget` (30 methods → 18)
+
+Two new classes extracted into the same `Widget\` namespace:
+
+| New class | Methods extracted | Count |
+|-----------|------------------|-------|
+| `SalesOrdersColumnBuilder` | `buildCheckboxColumn`, `buildStatusColumn`, `buildNumberColumn`, `buildQuoteColumn`, `buildInvoiceColumn`, `buildDateCreatedColumn`, `buildClientColumn`, `buildTotalColumn` | 8 |
+| `SalesOrdersGroupingRenderer` | `makeGroupValueResolver`, `computeGroupTotals`, `applyGrouping`, `groupingScriptAndStyle` | 4 |
+
+`SalesOrdersListWidget` keeps: `__construct`, 13 `with*` setters, `render`, `buildToolbarString`, `buildStatusBar`, `buildColumns` = **18 methods** ✓
+
+`SalesOrdersColumnBuilder` constructor (8 params):
+```php
+public function __construct(
+    private readonly UrlGeneratorInterface $urlGenerator,
+    private readonly TranslatorInterface $translator,
+    private readonly bool $visible,
+    private readonly ?InvRepo $iR,
+    private readonly SR $sR,
+    private readonly SoR $soR,
+    private readonly SoAR $soaR,
+    private readonly array $optionsDataClientsDropdownFilter,
+)
+```
+`SalesOrdersGroupingRenderer` constructor (2 params): `SoR $soR`, `SR $sR`.
+
+Both classes are `final` and not registered in DI — they are constructed locally inside `buildColumns()` and `render()` respectively.
+
+---
+
 ## Remaining S107 candidates
 
 > [!IMPORTANT]
