@@ -25,7 +25,7 @@ BaseController, Client\ClientRepository as CR,
 CustomField\CustomFieldRepository as CFR,
 DeliveryLocation\DeliveryLocationRepository as DR,
 Group\GroupRepository as GR,
-Helpers\CustomValuesHelper as CVH, Helpers\PdfHelper, Inv\InvForm,
+Helpers\CustomValuesHelper as CVH, Inv\InvForm,
 Inv\InvRepository as InvRepo, Inv\InvService, InvAllowanceCharge\InvAllowanceChargeForm,
 InvAllowanceCharge\InvAllowanceChargeService, InvAmount\InvAmountService,
 InvCustom\InvCustomForm, InvCustom\InvCustomService,
@@ -50,7 +50,7 @@ UserInv\UserInvRepository as UIR,
 };
 use App\Service\WebControllerService;
 use App\User\UserService;
-use App\Invoice\SalesOrder\Widget\SalesOrdersListWidget;
+use App\Invoice\SalesOrder\{SalesOrderPdfService, Widget\SalesOrdersListWidget};
 use App\Widget\SalesOrderToolbar;
 use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -665,38 +665,13 @@ final class SalesOrderController extends BaseController
     }
 
     public function pdf(
-        CurrentRoute $currentRoute,
-        SalesOrderViewDependencies $d,
+        #[RouteArgument('include')] int $include,
+        SalesOrderPdfService $soPdfService,
     ): \Psr\Http\Message\ResponseInterface {
-        $include = $currentRoute->getArgument('include');
-        $so_id = (int) $this->session->get('so_id');
-        $salesorder_amount = (($d->soaR->repoSalesOrderAmountCount($so_id) > 0) ?
-            $d->soaR->repoSalesOrderquery($so_id) : null);
-        if ($salesorder_amount) {
-            $custom = (($include === (string) 1) ? true : false);
-            $salesorder_custom_values = $this->salesorderCustomValues(
-                (int) $this->session->get('so_id'), $d->socR);
-            $pdfhelper = new PdfHelper($d->settingRepository, $this->session, $this->translator);
-            $stream = true;
-            $so = $d->soR->repoSalesOrderUnloadedquery($so_id);
-            if ($so && (($userId = $so->reqUserId()) > 0)) {
-                $pdfhelper->generateSalesorderPdf((string)$so_id, $userId,
-                    $stream, $custom, $salesorder_amount,
-                        $salesorder_custom_values, $d->cR, $d->cvR, $d->cfR,
-                            $d->soiR, $d->soiaR, $d->acsoiR, $d->soR, $d->sotrR, $d->uiR,
-                                $this->webViewRenderer, $this->translator);
-                $parameters = ($include == '1'
-                ? [
-                    'success' => 1,
-                ]
-                : [
-                    'success' => 0,
-                ]);
-                return $this->factory->createResponse(Json::encode($parameters));
-            }
-            return $this->factory->createResponse(Json::encode(['success' => 0]));
-        }
-        return $this->webService->getNotFoundResponse();
+        $soId = (int) $this->session->get('so_id');
+        $path = $soPdfService->generate($soId, true, $include === 1);
+        $parameters = $path !== '' ? ['success' => 1] : ['success' => 0];
+        return $this->factory->createResponse(Json::encode($parameters));
     }
 
     public function view(

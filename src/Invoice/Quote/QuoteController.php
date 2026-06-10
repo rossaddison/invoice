@@ -44,9 +44,7 @@ use App\Invoice\{
     UserInv\UserInvRepository as UIR,
 };
 use App\User\UserRepository as UR;
-use App\Invoice\Helpers\{
-    NumberHelper, PdfHelper
-};
+use App\Invoice\Helpers\NumberHelper;
 use App\Widget\QuoteToolbar;
 use Yiisoft\{
     DataResponse\ResponseFactory\DataResponseFactoryInterface,
@@ -75,7 +73,6 @@ final class QuoteController extends BaseController
     protected string $controllerName = 'invoice/quote';
 
     private readonly NumberHelper $numberHelper;
-    private readonly PdfHelper $pdfHelper;
 
     public function __construct(
         private readonly DataResponseFactoryInterface $factory,
@@ -114,7 +111,6 @@ final class QuoteController extends BaseController
         parent::__construct($webService, $userService, $translator,
             $webViewRenderer, $session, $sR, $flash);
         $this->numberHelper = new NumberHelper($sR);
-        $this->pdfHelper = new PdfHelper($sR, $session, $translator);
     }
 
     private function activeUser(int $client_id, UR $uR, UCR $ucR,

@@ -331,7 +331,7 @@ final readonly class InvPdfService
         if ($invId > 0 && $this->docDeps->icR->repoInvCount($invId) > 0) {
             /** @var InvCustom $invCustom */
             foreach ($this->docDeps->icR->repoFields($invId) as $invCustom) {
-                $values['custom[' . $invCustom->reqCustomFieldId() . ']'] = $invCustom->getValue() ?? '';
+                $values[] = $invCustom;
             }
         }
         return $values;
