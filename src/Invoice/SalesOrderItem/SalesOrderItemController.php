@@ -11,16 +11,12 @@ use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
 use App\Infrastructure\Persistence\SalesOrderItemAmount\SalesOrderItemAmount;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountService as SOIAS;
-use App\Invoice\Product\ProductRepository as PR;
-use App\Invoice\Task\TaskRepository as TaskR;
-use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
 use App\Invoice\SalesOrderItem\SalesOrderItemRepository as SOIR;
 use App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountRepository as SOIAR;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\TaxRate\TaxRateRepository as TRR;
 use App\Invoice\UserClient\UserClientRepository as UCR;
 use App\Invoice\UserInv\UserInvRepository as UIR;
-use App\Invoice\Unit\UnitRepository as UR;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -31,7 +27,6 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class SalesOrderItemController extends BaseController
@@ -58,20 +53,12 @@ final class SalesOrderItemController extends BaseController
     public function edit(
         CurrentRoute $currentRoute,
         Request $request,
-        FormHydrator $formHydrator,
-        SOIR $soiR,
-        TRR $trR,
-        PR $pR,
-        TaskR $taskR,
-        UCR $ucR,
-        UIR $uiR,
-        UR $uR,
-        SOR $qR,
+        SalesOrderItemEditDeps $d,
     ): Response {
-        $so_item = $this->salesorderitem($currentRoute, $soiR);
+        $so_item = $this->salesorderitem($currentRoute, $d->soiR);
         if ($so_item) {
             $so = $so_item->getSalesOrder();
-            if (null!== $so && ($this->rbacObserver($so, $ucR, $uiR)
+            if (null!== $so && ($this->rbacObserver($so, $d->ucR, $d->uiR)
              || $this->rbacAccountant()
              || $this->rbacAdmin())) {
                 $so_id = (string) $so_item->reqSalesOrderId();
@@ -83,15 +70,15 @@ final class SalesOrderItemController extends BaseController
                     'errors' => [],
                     'form' => $form,
                     'so_id' => $so_id,
-                    'tax_rates' => $trR->findAllPreloaded(),
-                    'products' => $pR->findAllPreloaded(),
-                    'tasks' => $taskR->findAllPreloaded(),
-                    'quotes' => $qR->findAllPreloaded(),
-                    'units' => $uR->findAllPreloaded(),
+                    'tax_rates' => $d->trR->findAllPreloaded(),
+                    'products' => $d->pR->findAllPreloaded(),
+                    'tasks' => $d->taskR->findAllPreloaded(),
+                    'quotes' => $d->soR->findAllPreloaded(),
+                    'units' => $d->uR->findAllPreloaded(),
                     'numberHelper' => new NumberHelper($this->sR),
                 ];
                 if ($request->getMethod() === Method::POST) {
-                    if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                    if ($d->formHydrator->populateFromPostAndValidate($form, $request)) {
                         $body = $request->getParsedBody() ?? [];
                         if (is_array($body)) {
     // The only item that is different from the quote is the customer's purchase

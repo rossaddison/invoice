@@ -10,22 +10,8 @@ use App\Infrastructure\Persistence\Task\Task;
 use App\Infrastructure\Persistence\InvItem\InvItem;
 use App\Infrastructure\Persistence\QuoteItem\QuoteItem;
 use App\Invoice\Helpers\NumberHelper;
-use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository as ACIR;
 use App\Invoice\InvItemAmount\InvItemAmountService as iiaS;
-use App\Invoice\InvItem\InvItemRepository as iiR;
-use App\Invoice\InvTaxRate\InvTaxRateRepository as itrR;
-use App\Invoice\InvAmount\InvAmountRepository as iaR;
-use App\Invoice\Inv\InvRepository as iR;
-use App\Invoice\InvItemAmount\InvItemAmountRepository as iiaR;
-use App\Invoice\Payment\PaymentRepository as pymR;
 use App\Invoice\Project\ProjectRepository as prjctR;
-use App\Invoice\Quote\QuoteRepository as qR;
-use App\Invoice\QuoteAmount\QuoteAmountRepository as qaR;
-use App\Invoice\QuoteAllowanceCharge\QuoteAllowanceChargeRepository as acqR;
-use App\Invoice\QuoteItem\QuoteItemRepository as qiR;
-use App\Invoice\QuoteItemAmount\QuoteItemAmountRepository as qiaR;
-use App\Invoice\QuoteItemAmount\QuoteItemAmountService as qiaS;
-use App\Invoice\QuoteTaxRate\QuoteTaxRateRepository as qtrR;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Task\TaskRepository as tR;
 use App\Invoice\TaxRate\TaxRateRepository as trR;
@@ -221,67 +207,36 @@ final class TaskController extends BaseController
 
     //views/invoice/task/modal-task-lookups-inv.php => modal_task_lookups_inv.js $(document).on('click', '.select-items-confirm-inv', function ()
 
-    /**
-     * @param FormHydrator $formHydrator
-     * @param Request $request
-     * @param ACIR $aciR
-     * @param tR $taskR
-     * @param trR $trR
-     * @param iiaR $iiaR
-     * @param iiR $iiR
-     * @param itrR $itrR
-     * @param iaR $iaR
-     * @param iR $iR
-     * @param pymR $pymR
-     */
     public function selectionInv(
         FormHydrator $formHydrator,
         Request $request,
-        ACIR $aciR,
-        tR $taskR,
-        trR $trR,
-        iiaR $iiaR,
-        iiR $iiR,
-        itrR $itrR,
-        iaR $iaR,
-        iR $iR,
-        pymR $pymR,
+        TaskSelectionInvDeps $d,
     ): \Psr\Http\Message\ResponseInterface {
         $select_items = $request->getQueryParams();
         /** @var array $task_ids */
         $task_ids = ($select_items['task_ids'] ?: []);
         $inv_id = (int) $select_items['inv_id'];
-        // Use Spiral||Cycle\Database\Injection\Parameter to build 'IN' array of tasks.
-        $tasks = $taskR->findinTasks($task_ids);
+        $tasks = $d->taskR->findinTasks($task_ids);
         $numberHelper = new NumberHelper($this->sR);
-        // Format the task prices according to comma or point or other setting choice.
         $order = 1;
         /** @var Task $task */
         foreach ($tasks as $task) {
             $task->setPrice((float) $numberHelper->formatAmount($task->getPrice()));
-            $this->saveTaskLookupItemInv($order, $task, $inv_id, $taskR, $trR,
-                $iiaR, $iiR, $formHydrator);
+            $this->saveTaskLookupItemInv($order, $task, $inv_id, $d, $formHydrator);
             $order++;
         }
-        $numberHelper->calculateInv((int) $this->session->get('inv_id'), $aciR,
-            $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
+        $numberHelper->calculateInv((int) $this->session->get('inv_id'), $d->aciR,
+            $d->iiR, $d->iiaR, $d->itrR, $d->iaR, $d->iR, $d->pymR);
         return $this->factory->createResponse(Json::encode($tasks));
     }
 
-    /**
-     * @param int $order
-     * @param Task $task
-     * @param int $inv_id
-     * @param tR $taskR
-     * @param trR $trR
-     * @param iiaR $iiaR
-     * @param iiR $iiR
-     * @param FormHydrator $formHydrator
-     */
-    private function saveTaskLookupItemInv(int $order, Task $task,
-            int $inv_id, tR $taskR, trR $trR, iiaR $iiaR, iiR $iiR,
-            FormHydrator $formHydrator): void
-    {
+    private function saveTaskLookupItemInv(
+        int $order,
+        Task $task,
+        int $inv_id,
+        TaskSelectionInvDeps $d,
+        FormHydrator $formHydrator,
+    ): void {
         $invItem = new InvItem();
         $form = new InvItemForm();
         $ajax_content = [
@@ -292,79 +247,48 @@ final class TaskController extends BaseController
             'product_id' => null,
             'date_added' => new \DateTimeImmutable('now'),
             'description' => $task->getDescription(),
-            // A default quantity of 1 is used to initialize the item
             'quantity' => (float) 1,
             'price' => $task->getPrice(),
-            // The user will determine how much discount to give on this item later
             'discount_amount' => (float) 0,
             'order' => $order,
         ];
         if ($formHydrator->populateAndValidate($form, $ajax_content)) {
             $this->invitemService->addInvItemTask($invItem, $ajax_content,
-                    (string) $inv_id, $taskR, $trR, new iiaS($iiaR, $iiR), $iiaR);
+                    (string) $inv_id, $d->taskR, $d->trR, new iiaS($d->iiaR, $d->iiR), $d->iiaR);
         }
     }
 
     //views/invoice/task/modal_task_lookups_quote.php => modal_task_lookups_quote.js $(document).on('click', '.select-items-confirm-task-quote', function ()
 
-    /**
-     * @param FormHydrator $formHydrator
-     * @param Request $request
-     * @param tR $taskR
-     * @param trR $trR
-     * @param qiaR $qiaR
-     * @param qiR $qiR
-     * @param qtrR $qtrR
-     * @param qaR $qaR
-     * @param qR $qR
-     * @param acqR $acqR
-     */
     public function selectionQuote(
         FormHydrator $formHydrator,
         Request $request,
-        tR $taskR,
-        trR $trR,
-        qiaR $qiaR,
-        qiaS $qiaS,
-        qiR $qiR,
-        qtrR $qtrR,
-        qaR $qaR,
-        qR $qR,
-        acqR $acqR,
+        TaskSelectionQuoteDeps $d,
     ): \Psr\Http\Message\ResponseInterface {
         $select_items = $request->getQueryParams();
         /** @var array $task_ids */
         $task_ids = ($select_items['task_ids'] ?: []);
         $quote_id = (int) $select_items['quote_id'];
-        // Use Spiral||Cycle\Database\Injection\Parameter to build 'IN' array of tasks.
-        $tasks = $taskR->findinTasks($task_ids);
+        $tasks = $d->taskR->findinTasks($task_ids);
         $numberHelper = new NumberHelper($this->sR);
-        // Format the task prices according to comma or point or other setting choice.
         $order = 1;
         /** @var Task $task */
         foreach ($tasks as $task) {
             $task->setPrice((float) $numberHelper->formatAmount($task->getPrice()));
-            $this->saveTaskLookupItemQuote($order, $task, $quote_id, $taskR, $trR, $qiaR, $qiaS, $formHydrator);
+            $this->saveTaskLookupItemQuote($order, $task, $quote_id, $d, $formHydrator);
             $order++;
         }
-        $numberHelper->calculateQuote($quote_id, $acqR, $qiR, $qiaR, $qtrR, $qaR, $qR);
+        $numberHelper->calculateQuote($quote_id, $d->acqR, $d->qiR, $d->qiaR, $d->qtrR, $d->qaR, $d->qR);
         return $this->factory->createResponse(Json::encode($tasks));
     }
 
-    /**
-     * @param int $order
-     * @param Task $task
-     * @param int $quote_id
-     * @param tR $taskR
-     * @param trR $trR
-     * @param qiaR $qiaR
-     * @param qiaS $qiaS
-     * @param FormHydrator $formHydrator
-     */
-    private function saveTaskLookupItemQuote(int $order, Task $task, int $quote_id,
-            tR $taskR, trR $trR, qiaR $qiaR, qiaS $qiaS,
-            FormHydrator $formHydrator): void
-    {
+    private function saveTaskLookupItemQuote(
+        int $order,
+        Task $task,
+        int $quote_id,
+        TaskSelectionQuoteDeps $d,
+        FormHydrator $formHydrator,
+    ): void {
         $quoteItem = new QuoteItem();
         $form = new QuoteItemForm();
         $ajax_content = [
@@ -375,15 +299,13 @@ final class TaskController extends BaseController
             'product_id' => null,
             'date_added' => new \DateTimeImmutable('now'),
             'description' => $task->getDescription(),
-            // A default quantity of 1 is used to initialize the item
             'quantity' => (float) 1,
             'price' => $task->getPrice(),
-            // The user will determine how much discount to give on this item later
             'discount_amount' => (float) 0,
             'order' => $order,
         ];
         if ($formHydrator->populateAndValidate($form, $ajax_content)) {
-            $this->quoteitemService->addQuoteItemTask($quoteItem, $ajax_content, $quote_id, $taskR, $qiaR, $qiaS, $trR);
+            $this->quoteitemService->addQuoteItemTask($quoteItem, $ajax_content, $quote_id, $d->taskR, $d->qiaR, $d->qiaS, $d->trR);
         }
     }
 

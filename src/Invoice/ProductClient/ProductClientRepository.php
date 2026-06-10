@@ -103,6 +103,7 @@ final class ProductClientRepository extends Select\Repository
 
     /**
      * Find all client associations for a specific product
+     * @return array<array-key, \App\Infrastructure\Persistence\ProductClient\ProductClient>
      */
     public function findByProductId(int $productId): array
     {

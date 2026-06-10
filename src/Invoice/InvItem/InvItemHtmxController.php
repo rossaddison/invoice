@@ -8,21 +8,8 @@ use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Infrastructure\Persistence\InvItem\InvItem;
 use App\Invoice\Helpers\NumberHelper;
-use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository as ACIR;
-use App\Invoice\InvAmount\InvAmountRepository as IAR;
-use App\Invoice\InvItem\InvItemRepository as IIR;
-use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR;
-use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
 use App\Invoice\InvItemAmount\InvItemAmountService as IIAS;
-use App\Invoice\InvTaxRate\InvTaxRateRepository as ITRR;
-use App\Invoice\Inv\InvRepository as IR;
-use App\Invoice\Payment\PaymentRepository as PYMR;
-use App\Invoice\Product\ProductRepository as PR;
-use App\Invoice\ProductImage\ProductImageRepository as PIR;
 use App\Invoice\Setting\SettingRepository as SR;
-use App\Invoice\Task\TaskRepository as TaskR;
-use App\Invoice\TaxRate\TaxRateRepository as TRR;
-use App\Invoice\Unit\UnitRepository as UR;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -57,19 +44,7 @@ final class InvItemHtmxController extends BaseController
     public function addProduct(
         Request $request,
         FormHydrator $formHydrator,
-        PR $pR,
-        UR $uR,
-        TRR $trR,
-        IIR $iiR,
-        IIAR $iiaR,
-        IAR $iaR,
-        IR $iR,
-        ITRR $itrR,
-        ACIR $aciR,
-        ACIIR $aciiR,
-        PIR $piR,
-        TaskR $taskR,
-        PYMR $pymR,
+        InvItemHtmxDependencies $d,
     ): Response {
         $inv_id = (int) $this->session->get('inv_id');
         $form = new InvItemForm();
@@ -77,7 +52,7 @@ final class InvItemHtmxController extends BaseController
         if ($request->getMethod() === Method::POST && $request->hasHeader('Hx-Request')) {
             $body = $request->getParsedBody() ?? [];
             if (is_array($body) && empty($body['order'])) {
-                $body['order'] = (string) $iiR->repoInvquery($inv_id)->count();
+                $body['order'] = (string) $d->iiR->repoInvquery($inv_id)->count();
                 $request = $request->withParsedBody($body);
             }
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -85,12 +60,9 @@ final class InvItemHtmxController extends BaseController
                 if (is_array($body)) {
                     $this->invItemService->addInvItemProduct(
                         new InvItem(), $body, (string) $inv_id,
-                        $pR, $trR, new IIAS($iiaR, $iiR), $iiaR, $this->sR, $uR,
+                        $d->pR, $d->trR, new IIAS($d->iiaR, $d->iiR), $d->iiaR, $this->sR, $d->uR,
                     );
-                    return $this->renderPartial(
-                        $inv_id, $pR, $uR, $trR, $iiR, $iiaR, $iaR,
-                        $iR, $itrR, $aciR, $aciiR, $piR, $taskR, $pymR,
-                    );
+                    return $this->renderPartial($inv_id, $d);
                 }
             }
             return $this->htmlResponseFactory->createResponse('', 422);
@@ -104,19 +76,7 @@ final class InvItemHtmxController extends BaseController
     public function addTask(
         Request $request,
         FormHydrator $formHydrator,
-        TaskR $taskR,
-        TRR $trR,
-        IIR $iiR,
-        IIAR $iiaR,
-        IAR $iaR,
-        IR $iR,
-        ITRR $itrR,
-        ACIR $aciR,
-        ACIIR $aciiR,
-        PIR $piR,
-        PR $pR,
-        UR $uR,
-        PYMR $pymR,
+        InvItemHtmxDependencies $d,
     ): Response {
         $inv_id = (int) $this->session->get('inv_id');
         $form = new InvItemForm();
@@ -124,7 +84,7 @@ final class InvItemHtmxController extends BaseController
         if ($request->getMethod() === Method::POST && $request->hasHeader('Hx-Request')) {
             $body = $request->getParsedBody() ?? [];
             if (is_array($body) && empty($body['order'])) {
-                $body['order'] = (string) $iiR->repoInvquery($inv_id)->count();
+                $body['order'] = (string) $d->iiR->repoInvquery($inv_id)->count();
                 $request = $request->withParsedBody($body);
             }
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -132,12 +92,9 @@ final class InvItemHtmxController extends BaseController
                 if (is_array($body)) {
                     $this->invItemService->addInvItemTask(
                         new InvItem(), $body, (string) $inv_id,
-                        $taskR, $trR, new IIAS($iiaR, $iiR), $iiaR,
+                        $d->taskR, $d->trR, new IIAS($d->iiaR, $d->iiR), $d->iiaR,
                     );
-                    return $this->renderPartial(
-                        $inv_id, $pR, $uR, $trR, $iiR, $iiaR, $iaR,
-                        $iR, $itrR, $aciR, $aciiR, $piR, $taskR, $pymR,
-                    );
+                    return $this->renderPartial($inv_id, $d);
                 }
             }
             return $this->htmlResponseFactory->createResponse('', 422);
@@ -148,32 +105,20 @@ final class InvItemHtmxController extends BaseController
         );
     }
 
-    private function renderPartial(
-        int $inv_id,
-        PR $pR,
-        UR $uR,
-        TRR $trR,
-        IIR $iiR,
-        IIAR $iiaR,
-        IAR $iaR,
-        IR $iR,
-        ITRR $itrR,
-        ACIR $aciR,
-        ACIIR $aciiR,
-        PIR $piR,
-        TaskR $taskR,
-        PYMR $pymR,
-    ): Response {
+    private function renderPartial(int $inv_id, InvItemHtmxDependencies $d): Response
+    {
         $numberHelper = new NumberHelper($this->sR);
-        $numberHelper->calculateInv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
+        $numberHelper->calculateInv(
+            $inv_id, $d->aciR, $d->iiR, $d->iiaR, $d->itrR, $d->iaR, $d->iR, $d->pymR,
+        );
 
-        $invAmount = $iaR->repoInvAmountquery($inv_id);
+        $invAmount = $d->iaR->repoInvAmountquery($inv_id);
         if ($invAmount === null) {
             return $this->htmlResponseFactory->createResponse()
                 ->withHeader('HX-Refresh', 'true');
         }
 
-        $inv = $iR->repoInvLoadedquery($inv_id);
+        $inv = $d->iR->repoInvLoadedquery($inv_id);
         if ($inv === null) {
             return $this->htmlResponseFactory->createResponse()
                 ->withHeader('HX-Refresh', 'true');
@@ -183,30 +128,30 @@ final class InvItemHtmxController extends BaseController
         $showButtons  = !$inv->getIsReadOnly()
             || $this->sR->getSetting('disable_read_only') === '1';
         $userCanEdit  = $this->userService->hasPermission(Permissions::EDIT_INV);
-        $invTaxRates  = $itrR->repoCount($inv_id) > 0
-            ? $itrR->repoInvquery($inv_id)
+        $invTaxRates  = $d->itrR->repoCount($inv_id) > 0
+            ? $d->itrR->repoInvquery($inv_id)
             : null;
 
         $html = $this->webViewRenderer->renderPartialAsString(
             '//invoice/inv/partial_item_table',
             [
-                'packHandleShipTotal' => $aciR->getPackHandleShipTotal($inv_id),
-                'aciiR'               => $aciiR,
+                'packHandleShipTotal' => $d->aciR->getPackHandleShipTotal($inv_id),
+                'aciiR'               => $d->aciiR,
                 'draft'               => $draft,
-                'piR'                 => $piR,
+                'piR'                 => $d->piR,
                 'showButtons'         => $showButtons,
                 'included'            => $this->translator->translate('item.tax.included'),
                 'excluded'            => $this->translator->translate('item.tax.excluded'),
-                'products'            => $pR->findAllPreloadedWithPrice(),
-                'tasks'               => $taskR->repoTaskStatusquery(3),
+                'products'            => $d->pR->findAllPreloadedWithPrice(),
+                'tasks'               => $d->taskR->repoTaskStatusquery(3),
                 'userCanEdit'         => $userCanEdit,
-                'invItems'            => $iiR->repoInvquery($inv_id),
-                'invItemAmountR'      => $iiaR,
+                'invItems'            => $d->iiR->repoInvquery($inv_id),
+                'invItemAmountR'      => $d->iiaR,
                 'invTaxRates'         => $invTaxRates,
                 'invAmount'           => $invAmount,
                 'inv'                 => $inv,
-                'taxRates'            => $trR->findAllPreloaded(),
-                'units'               => $uR->findAllPreloaded(),
+                'taxRates'            => $d->trR->findAllPreloaded(),
+                'units'               => $d->uR->findAllPreloaded(),
                 'numberHelper'        => $numberHelper,
             ],
         );

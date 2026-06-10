@@ -2,342 +2,38 @@
 
 declare(strict_types=1);
 
-use App\Infrastructure\Persistence\Product\Product;
-use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\A;
-use Yiisoft\Html\Tag\Div;
-use Yiisoft\Html\Tag\Form;
-use Yiisoft\Html\Tag\I;
+use App\Invoice\Product\Widget\ProductsListWidget;
+use App\Invoice\ProductClient\ProductClientRepository as PcR;
+use App\Invoice\Setting\SettingRepository as SR;
 use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\Data\Paginator\PageToken;
-use Yiisoft\Data\Reader\OrderHelper;
-use Yiisoft\Data\Reader\Sort;
-use Yiisoft\Yii\DataView\GridView\Column\ActionButton;
-use Yiisoft\Yii\DataView\GridView\Column\ActionColumn;
-use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
-use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
-use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
-use Yiisoft\Yii\DataView\GridView\GridView;
-use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
+use Yiisoft\Router\FastRoute\UrlGenerator;
+use Yiisoft\Translator\TranslatorInterface;
 
 /**
- * @var App\Invoice\Setting\SettingRepository $s
- * @var App\Invoice\ProductClient\ProductClientRepository $productClientR
- * @var App\Widget\GridComponents $gridComponents
- * @var Yiisoft\Router\CurrentRoute $currentRoute
- * @var Yiisoft\Data\Cycle\Reader\EntityReader $products
- * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
- * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var Yiisoft\Router\FastRoute\UrlGenerator $urlFastRouteGenerator
- * @var Yiisoft\Yii\DataView\YiiRouter\UrlCreator $urlCreator
+ * @var SR $s
+ * @var PcR $productClientR
+ * @var OffsetPaginator $paginator
+ * @var UrlGenerator $urlGenerator
+ * @var TranslatorInterface $translator
  * @var bool $visible
- * @var int $defaultPageSizeOffsetPaginator
  * @var string $alert
  * @var string $csrf
+ * @var string $gridSummary
  * @var string $sortString
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataProductsDropdownFilter
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataFamiliesDropdownFilter
- * @psalm-var positive-int $page
  */
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$allVisible =  new A()
-        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('hide.or.unhide.columns')])
-        ->addClass('btn btn-warning me-1 ajax-loader')
-        ->content('↔️')
-        ->href($urlGenerator->generate('setting/visible', ['origin' => 'product']))
-        ->id('btn-all-visible')
-        ->render();
-
-$toolbarReset =  new A()
-    ->addAttributes(['type' => 'reset'])
-    ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
-    ->href($urlGenerator->generate('product/index'))
-    ->id('btn-reset')
+echo ProductsListWidget::widget()
+    ->withPaginator($paginator)
+    ->withSR($s)
+    ->withPcR($productClientR)
+    ->withCsrf($csrf)
+    ->withVisible($visible)
+    ->withGridSummary($gridSummary)
+    ->withSortString($sortString)
+    ->withOptionsDataProductsDropdownFilter($optionsDataProductsDropdownFilter)
+    ->withOptionsDataFamiliesDropdownFilter($optionsDataFamiliesDropdownFilter)
     ->render();
-
-// Trigger $(document).on('click', '#product_filters_submit', function () located in C:\wamp64\www\invoice\src\Invoice\Asset\rebuild-1.13\js\product.js
-// which in turn runs the ProductController.php index_filters function which returns the index view with the productReppositories search
-$toolbarFilter =  new A()
-    ->addAttributes(['type' => 'reset'])
-    ->addClass('product_filters_submit')
-    ->addClass('btn btn-info me-1')
-    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
-    ->href('#product_filters_submit')
-    ->id('product_filters_submit')
-    ->render();
-
-$columns = [
-    new DataColumn(
-        'id',
-        header: $translator->translate('id'),
-        content: static fn (Product $model) => Html::encode($model->reqId()),
-        withSorting: true,
-    ),
-    new DataColumn(
-        property: 'family_id',
-        header: $translator->translate('family.name'),
-        encodeHeader: true,
-        content: static fn (Product $model): string => Html::encode($model->getFamily()?->getFamilyName() ?? ''),
-        filter: DropdownFilter::widget()
-                ->addAttributes([
-                    'name' => 'family_id',
-                    'class' => 'native-reset',
-                ])
-                ->optionsData($optionsDataFamiliesDropdownFilter),
-        visible: true,
-        withSorting: true,
-    ),
-    new DataColumn(
-        property: 'product_name',
-        header: $translator->translate('product.name'),
-        encodeHeader: true,
-        content: static fn (Product $model): string => Html::encode($model->getProductName()),
-        visible: true,
-        withSorting: false,
-    ),
-    new DataColumn(
-        property: 'client_associations',
-        header: $translator->translate('recent.clients'), 
-        encodeHeader: true,
-        content: static function (Product $model) use (
-                $productClientR, $translator, $urlGenerator, $gridComponents): string {
-            $productClients = $productClientR->findByProductId($productId = $model->reqId());
-            $model->setProductClients();
-            /**
-             * @var App\Infrastructure\Persistence\ProductClient\ProductClient $productClient
-             */
-            foreach ($productClients as $productClient) {
-                $model->addProductClient($productClient);
-            }
-            // If there are no clients, return empty string
-            $clientCount = $model->getProductClients()->count();
-            if ($clientCount === 0) {
-                return '';
-            }
-            // Unique collapse id per product so toggles don't conflict
-            $collapseId = 'clients-product-' . $productId;
-            
-            // Button that toggles the mini table (uses Bootstrap 5 collapse)
-            $buttonHtml = Html::tag(
-                'button', '➡️' . ' ' . Html::encode((string) $clientCount),
-                [
-                    'type' => 'button',
-                    'class' => 'btn btn-sm btn-outline-primary me-2',
-                    'data-bs-toggle' => 'collapse',
-                    'data-bs-target' => '#' . $collapseId,
-                    'aria-expanded' => 'true',
-                    'aria-controls' => $collapseId,
-                ]
-            );
-            
-            // The mini table content generated by the existing helper
-            $tableHtml = $gridComponents->gridMiniTableOfClientsForProduct(
-                $model,
-                $min_clients_per_row = 4,
-                $translator,    
-                $urlGenerator,
-            );
-            
-            // Wrap the table in a collapse container so it can be hidden/shown.
-            // We set it to "show" by default. Toggle will collapse/expand it.
-            $collapseHtml =  new Div()
-                ->id($collapseId)
-                ->addClass('collapse show mt-2')
-                ->content($tableHtml)
-                ->encode(false)
-                ->render();
-
-            return $buttonHtml . $collapseHtml;
-        },
-        encodeContent: false,
-    ),
-    new DataColumn(
-        property: 'product_sku',
-        header: $translator->translate('product.sku'),
-        encodeHeader: true,
-        content: static fn (Product $model): string => Html::encode($model->getProductSku()),
-        filter: DropdownFilter::widget()
-                ->addAttributes([
-                    'name' => 'product_sku',
-                    'class' => 'native-reset',
-                ])
-                ->optionsData($optionsDataProductsDropdownFilter),
-        visible: true,
-        withSorting: false,
-    ),
-    new DataColumn(
-        property: 'product_description',
-        header: $translator->translate('product.description'),
-        content: static fn (Product $model): string => Html::encode(ucfirst($model->getProductDescription() ?? '')),
-        visible: true,
-        withSorting: true,
-    ),
-    new DataColumn(
-        property: 'product_price',
-        header: $translator->translate('product.price') . ' ( ' . $s->getSetting('currency_symbol') . ' ) ',
-        content: static fn (Product $model): string => Html::encode($model->getProductPrice()),
-        filter: TextInputFilter::widget()
-                ->addAttributes([
-                    'style' => 'max-width: 50px',
-                    'class' => 'native-reset',
-                ]),
-        visible: true,
-        withSorting: false,
-    ),
-    new DataColumn(
-        property: 'product_price_base_quantity',
-        header: $translator->translate('product.price.base.quantity'),
-        content: static fn (Product $model): string => Html::encode($model->getProductPriceBaseQuantity()),
-        visible: $visible,
-        withSorting: true,
-    ),
-    new DataColumn(
-        property: 'product_unit',
-        header: $translator->translate('product.unit'),
-        content: static fn (Product $model): string => Html::encode((ucfirst($model->getUnit()?->getUnitName() ?? ''))),
-        visible: true,
-    ),
-    new DataColumn(
-        property: 'tax_rate_id',
-        header: $translator->translate('tax.rate'),
-        content: static fn (Product $model): string => ($model->getTaxrate()?->reqId() > 0)
-                    ? Html::encode($model->getTaxrate()?->getTaxRateName())
-                    : $translator->translate('none'),
-        visible: $visible,
-        withSorting: true,
-    ),
-    new DataColumn(
-        header: $translator->translate('product.property.add'),
-        content: static function (Product $model) use ($urlGenerator): A {
-            return Html::a(
-                Html::tag('i', '', ['class' => 'bi-plus dropdown-item text-decoration-none']),
-                $urlGenerator->generate('productproperty/add', ['product_id' => $model->reqId()]),
-                [],
-            );
-        },
-        encodeContent: false,
-        visible: $visible,
-    ),
-    new ActionColumn(
-        before: Html::openTag('div', ['class' => 'btn-group', 'role' => 'group']),
-        after: Html::closeTag('div'),
-        buttons: [
-        new ActionButton(
-            content: '🔎',
-            url: function (Product $model) use ($urlGenerator): string {
-                /** @psalm-suppress InvalidArgument */
-                return $urlGenerator->generate('product/view', ['id' => $model->reqId()]);
-            },
-            attributes: [
-                'data-bs-toggle' => 'tooltip',
-                'title' => $translator->translate('view'),
-                'class' => 'btn btn-outline-primary btn-sm',
-            ],
-        ),
-        new ActionButton(
-            content: '✎',
-            url: function (Product $model) use ($urlGenerator): string {
-                /** @psalm-suppress InvalidArgument */
-                return $urlGenerator->generate('product/edit', ['id' => $model->reqId()]);
-            },
-            attributes: [
-                'data-bs-toggle' => 'tooltip',
-                'title' => $translator->translate('edit'),
-                'class' => 'btn btn-outline-warning btn-sm',
-            ],
-        ),
-        new ActionButton(
-            content: '❌',
-            url: function (Product $model) use ($urlGenerator): string {
-                /** @psalm-suppress InvalidArgument */
-                return $urlGenerator->generate('product/delete', ['id' => $model->reqId()]);
-            },
-            attributes: [
-                'title' => $translator->translate('delete'),
-                'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
-                'class' => 'btn btn-outline-danger btn-sm',
-            ],
-        ),
-    ]),
-];
-
-$urlCreator = new UrlCreator($urlGenerator);
-$urlCreator->__invoke([], OrderHelper::stringToArray($sortString));
-$sort = Sort::only(['id', 'family_id', 'unit_id', 'tax_rate_id',
-    'product_name', 'product_sku', 'product_price', 'product_description', 'product_price_base_quantity',
-])
-        ->withOrderString($sortString);
-
-$sortedAndPagedPaginator = (new OffsetPaginator($products))
-    ->withPageSize($s->positiveListLimit())
-    ->withCurrentPage($page)
-    ->withSort($sort)
-    ->withToken(PageToken::next((string) $page));
-
-$gridSummary = $s->gridSummary(
-    $sortedAndPagedPaginator,
-    $translator,
-    (int) $s->getSetting('default_list_limit'),
-    $translator->translate('products'),
-    '',
-);
-
-// Add left-aligned wrapper when additional columns are visible to accommodate more columns
-$tableOrTableResponsive = $visible ? 'table-responsive' : 'table';
-
-$toolbarString
-    =  new Form()->post($urlGenerator->generate('product/index'))->csrf($csrf)->open()
-    .  new Div()->addClass('float-start')->content(
-        '<h4 class="me-3 d-inline-block">' . $translator->translate('products') . '</h4>'
-        . '<div class="btn-group me-2" role="group">'
-        . $allVisible
-        . $toolbarReset
-        . $toolbarFilter
-        .  new A()
-            ->href($urlGenerator->generate('product/add'))
-            ->addClass('btn btn-info')
-            ->content('➕')
-            ->render()
-        . '</div>'
-    )->encode(false)->render()
-    .  new Form()->close();
-
-echo $toolbarString;
-
-if ($visible) {
-    echo '<div class="text-start">';
-}
-
-echo GridView::widget()
-->bodyRowAttributes(['class' => 'align-middle'])
-->tableAttributes(['class' => $tableOrTableResponsive . ' table-striped text-center h-75','id' => 'table-product'])
-/** @psalm-suppress InvalidArgument */
-->columns(...$columns)
-->dataReader($sortedAndPagedPaginator)
-->urlCreator($urlCreator)
-// the up and down symbol will appear at first indicating that the column can be sorted
-// Ir also appears in this state if another column has been sorted
-->sortableHeaderPrepend('<div class="float-end text-secondary text-opacity-50">⭥</div>')
-// the up arrow will appear if column values are ascending
-->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
-// the down arrow will appear if column values are descending
-->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
-->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-->urlQueryParameters(['filter_product_sku', 'filter_product_price'])
-->emptyCell($translator->translate('not.set'))
-->emptyCellAttributes(['style' => 'color:red'])
-->id('w4-grid')
-->paginationWidget($gridComponents->offsetPaginationWidget($sortedAndPagedPaginator))
-->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($gridSummary)
-->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
-->noResultsText($translator->translate('no.records'));
-
-// Close the left-aligned wrapper div when additional columns are visible
-if ($visible) {
-    echo '</div>';
-}

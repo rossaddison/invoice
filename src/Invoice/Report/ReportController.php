@@ -22,6 +22,7 @@ use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Helpers\ClientHelper;
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Helpers\MpdfHelper;
+use App\Invoice\Helpers\PdfCreateContext;
 use App\Invoice\Helpers\NumberHelper;
 // Services and forms
 use App\Service\WebControllerService;
@@ -87,14 +88,8 @@ class ReportController extends BaseController
                 $this->webViewRenderer->renderPartialAsString('//invoice/report/invoice_aging', $data),
                 $this->translator->translate('aging'),
                 true,
-                '',
                 $this->sR,
-                null,
-                null,
-                false,
-                false,
-                [],
-                null,
+                new PdfCreateContext('', null, null, false, false, [], null),
             );
         }
         return $this->webViewRenderer->render('invoice_aging_index', $parameters);
@@ -268,14 +263,8 @@ class ReportController extends BaseController
                     $this->webViewRenderer->renderPartialAsString('//invoice/report/payment_history', $data),
                     $this->translator->translate('payment.history'),
                     true,
-                    '',
                     $this->sR,
-                    null,
-                    null,
-                    false,
-                    false,
-                    [],
-                    null,
+                    new PdfCreateContext('', null, null, false, false, [], null),
                 );
             } //is_array body
             return $this->webService->getNotFoundResponse();
@@ -369,14 +358,8 @@ class ReportController extends BaseController
                     $this->webViewRenderer->renderPartialAsString('//invoice/report/sales_by_client', $data),
                     $this->translator->translate('sales.by.client'),
                     true,
-                    '',
                     $this->sR,
-                    null,
-                    null,
-                    false,
-                    false,
-                    [],
-                    null,
+                    new PdfCreateContext('', null, null, false, false, [], null),
                 );
             } // is_array body
             return $this->webService->getNotFoundResponse();
@@ -491,14 +474,8 @@ class ReportController extends BaseController
                     $this->webViewRenderer->renderPartialAsString('///invoice/report/sales_by_product', $data),
                     $this->translator->translate('report.sales.by.product'),
                     true,
-                    '',
                     $this->sR,
-                    null,
-                    null,
-                    false,
-                    false,
-                    [],
-                    null,
+                    new PdfCreateContext('', null, null, false, false, [], null),
                 );
             } // is_array body
             return $this->webService->getNotFoundResponse();
@@ -604,14 +581,8 @@ class ReportController extends BaseController
                     $this->webViewRenderer->renderPartialAsString('//invoice/report/sales_by_task', $data),
                     $this->translator->translate('report.sales.by.task'),
                     true,
-                    '',
                     $this->sR,
-                    null,
-                    null,
-                    false,
-                    false,
-                    [],
-                    null,
+                    new PdfCreateContext('', null, null, false, false, [], null),
                 );
             } // is_array body
             return $this->webService->getNotFoundResponse();
@@ -717,14 +688,8 @@ class ReportController extends BaseController
                     $this->webViewRenderer->renderPartialAsString('//invoice/report/sales_by_year', $data),
                     $this->translator->translate('sales.by.date'),
                     true,
-                    '',
                     $this->sR,
-                    null,
-                    null,
-                    false,
-                    false,
-                    [],
-                    null,
+                    new PdfCreateContext('', null, null, false, false, [], null),
                 );
             } // is_array body
             return $this->webService->getNotFoundResponse();
@@ -805,8 +770,9 @@ class ReportController extends BaseController
                 $interval = new \DateInterval('P1Y');
                 $daterange = new \DatePeriod($immutable_from, $interval, $immutable_to);
                 $client_id = $client->reqId();
+                $cc = new QuartersClientContext($client, $clientHelper, $client_id);
                 foreach ($daterange as $current_year) {
-                    $additional_year = $this->quarters($year, $immutable_from, $current_year, $client, $clientHelper, $client_id, $iR, $iaR);
+                    $additional_year = $this->quarters($year, $immutable_from, $current_year, $cc, $iR, $iaR);
                     $results[] = $additional_year;
                     $immutable_from = $immutable_from->add(new \DateInterval('P1Y'));
                 }
@@ -820,9 +786,7 @@ class ReportController extends BaseController
      * @param (float|(float|string)[][]|string)[] $year $year
      * @param \DateTimeImmutable $immutable_from
      * @param \DateTimeImmutable $current_year
-     * @param Client $client
-     * @param ClientHelper $clienthelper
-     * @param int $client_id
+     * @param QuartersClientContext $cc
      * @param InvRepository $iR
      * @param InvAmountRepository $iaR
      * @return array
@@ -831,12 +795,13 @@ class ReportController extends BaseController
         array $year,
         \DateTimeImmutable $immutable_from,
         \DateTimeImmutable $current_year,
-        Client $client,
-        ClientHelper $clienthelper,
-        int $client_id,
+        QuartersClientContext $cc,
         InvRepository $iR,
         InvAmountRepository $iaR,
     ): array {
+        $client = $cc->client;
+        $clienthelper = $cc->clienthelper;
+        $client_id = $cc->client_id;
         if ($client_id) {
             $quarters = ['first' => 3, 'second' => 6, 'third' => 9, 'fourth' => 12];
             // Develop all the quarters from ONE immutable (unchangeable) start date

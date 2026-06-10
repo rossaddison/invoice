@@ -24,7 +24,7 @@ final class EN16931RulesTest extends TestCase
 
     private function translator(): TranslatorInterface
     {
-        $t = $this->createMock(TranslatorInterface::class);
+        $t = $this->createStub(TranslatorInterface::class);
         $t->method('translate')->willReturnArgument(0);
         return $t;
     }

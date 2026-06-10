@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Auth\Trait;
 
-use App\Auth\Permissions;
+use App\Auth\CallbackDeps;
 use App\Auth\TokenRepository;
-use App\Invoice\UserInv\UserInvRepository;
 use App\Infrastructure\Persistence\User\User;
-use App\User\UserRepository;
+use App\Invoice\UserInv\UserInvRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LogLevel;
@@ -21,11 +20,7 @@ use Yiisoft\Yii\AuthClient\Widget\AuthChoice;
 trait Callback
 {
     public function callbackDeveloperGovSandboxHmrc(
-        ServerRequestInterface $request,
-        TranslatorInterface $translator,
-        TokenRepository $tR,
-        UserInvRepository $uiR,
-        UserRepository $uR,
+        CallbackDeps $d,
         #[RouteArgument('_language')]
         string $_language,
         #[Query('code')]
@@ -35,7 +30,7 @@ trait Callback
     ): ResponseInterface {
         if ($code == null || $state == null) {
             return $this->redirectToOauth2AuthError(
-                $translator->translate('oauth2.missing.authentication.code'
+                $d->translator->translate('oauth2.missing.authentication.code'
                         . '.or.state.parameter'));
         }
 
@@ -46,7 +41,7 @@ trait Callback
          * @psalm-suppress DocblockTypeContradiction $code
          */
         if (strlen($code) == 0) {
-            $authorizationUrl = $developerSandboxHmrc->buildAuthUrl($request, []);
+            $authorizationUrl = $developerSandboxHmrc->buildAuthUrl($d->request, []);
             return $this->webService->getRedirectResponse($authorizationUrl);
         }
 
@@ -62,7 +57,7 @@ trait Callback
              * State is invalid, possible cross-site request forgery.
              */
             return $this->redirectToOauth2AuthError(
-                    $translator->translate('oauth2.missing.state'
+                    $d->translator->translate('oauth2.missing.state'
                             . '.parameter.possible.csrf.attack'));
             // code and state are both present
         }
@@ -75,7 +70,7 @@ trait Callback
          * Use the code received, to get an access_token
          */
         $oAuthToken =
-                $developerSandboxHmrc->fetchAccessTokenWithCodeVerifier($request,
+                $developerSandboxHmrc->fetchAccessTokenWithCodeVerifier($d->request,
                         $code, [
             'redirect_uri' => $developerSandboxHmrc->getOauth2ReturnUrl(),
             'code_verifier' => $codeVerifier,
@@ -109,7 +104,7 @@ trait Callback
                             $requestBody);
         } else {
             return $this->redirectToOauth2AuthError(
-                $translator->translate('oauth2.test.user.creation.not.allowed.prod'));
+                $d->translator->translate('oauth2.test.user.creation.not.allowed.prod'));
         }
 
         /**
@@ -135,13 +130,13 @@ trait Callback
             $password = Random::string(32);
             if ($this->authService->oauthLogin($login)) {
                 return $this->tfaCheckBeforeRedirects('developersandboxhmrc',
-                        $tR, $uiR);
+                        $d->tR, $d->uiR);
             }
             $user = new User($login, $email, $password);
-            $uR->save($user);
+            $d->uR->save($user);
             $userId = $user->reqId();
             if ($userId > 0) {
-                $role = $uR->repoCount() == 1 ? 'admin' : 'observer';
+                $role = $d->uR->repoCount() == 1 ? 'admin' : 'observer';
                 if (!$this->assignRoleAndVerify($userId, $role)) {
                     return $this->redirectToMain();
                 }
@@ -155,13 +150,13 @@ trait Callback
                  */
                 $language = $languageArray[$_language];
                 $randomAndTimeToken = $this->getAccessToken(
-                        $user, $tR, self::DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN);
+                        $user, $d->tR, self::DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN);
                 /**
                  * @see A new UserInv (extension table of user) for the user is created.
                  */
                 $proceedToMenuButton =
                     $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
-                        $translator, $user, $uiR, $language, $_language,
+                        $d->translator, $user, $d->uiR, $language, $_language,
                             $randomAndTimeToken, 'developersandboxhmrc');
                 return $this->webViewRenderer->render('proceed', [
                     'proceedToMenuButton' => $proceedToMenuButton,
@@ -180,11 +175,7 @@ trait Callback
      * 2. clicking on the proceedToMenuButton will further create a userinv
      *       extension of the user table
      * @see src/Invoice/UserInv/UserInvController function facebook
-     * @param ServerRequestInterface $request
-     * @param TranslatorInterface $translator
-     * @param TokenRepository $tR
-     * @param UserInvRepository $uiR
-     * @param UserRepository $uR
+     * @param CallbackDeps $d
      * @param string $_language
      * @param string|null $code
      * @param string|null $state
@@ -194,11 +185,7 @@ trait Callback
      * @return ResponseInterface
      */
     public function callbackFacebook(
-        ServerRequestInterface $request,
-        TranslatorInterface $translator,
-        TokenRepository $tR,
-        UserInvRepository $uiR,
-        UserRepository $uR,
+        CallbackDeps $d,
         #[RouteArgument('_language')]
         string $_language,
         #[Query('code')]
@@ -221,7 +208,7 @@ trait Callback
                 return $this->redirectToUserCancelledOauth2();
             }
             return $this->redirectToOauth2AuthError(
-                $translator->translate('oauth2.missing.authentication.code.'
+                $d->translator->translate('oauth2.missing.authentication.code.'
                         . 'or.state.parameter'));
         }
 
@@ -235,7 +222,7 @@ trait Callback
 // If we don't have an authorization code then get one
 // and use the protected function oauth2->generateAuthState to generate state param
 // which has a session id built into it
-            $authorizationUrl = $facebook->buildAuthUrl($request, []);
+            $authorizationUrl = $facebook->buildAuthUrl($d->request, []);
             return $this->webService->getRedirectResponse($authorizationUrl);
         }
 
@@ -250,12 +237,12 @@ trait Callback
              * State is invalid, possible cross-site request forgery.
              */
             return $this->redirectToOauth2AuthError(
-                $translator->translate('oauth2.missing.state.parameter.'
+                $d->translator->translate('oauth2.missing.state.parameter.'
                         . 'possible.csrf.attack'));
             // code and state are both present
         }
         /** @psalm-var \Yiisoft\Yii\AuthClient\Client\Facebook $facebook */
-        $oAuthTokenType = $facebook->fetchAccessToken($request, $code, []);
+        $oAuthTokenType = $facebook->fetchAccessToken($d->request, $code, []);
         $userArray = $facebook->getCurrentUserJsonArray($oAuthTokenType);
         /**
          * @var int $userArray['id']
@@ -280,13 +267,13 @@ trait Callback
 //   authService->login($login, $password)
 // but it will be used later to build a passwordHash
                 if ($this->authService->oauthLogin($login)) {
-                    return $this->tfaCheckBeforeRedirects('facebook', $tR, $uiR);
+                    return $this->tfaCheckBeforeRedirects('facebook', $d->tR, $d->uiR);
                 }
                 $user = new User($login, $email, $password);
-                $uR->save($user);
+                $d->uR->save($user);
                 $userId = $user->reqId();
                 if ($userId > 0) {
-                    $role = $uR->repoCount() == 1 ? 'admin' : 'observer';
+                    $role = $d->uR->repoCount() == 1 ? 'admin' : 'observer';
                     if (!$this->assignRoleAndVerify($userId, $role)) {
                         return $this->redirectToMain();
                     }
@@ -300,12 +287,12 @@ trait Callback
                      */
                     $language = $languageArray[$_language];
                     $randomAndTimeToken =
-                        $this->getAccessToken($user, $tR,
+                        $this->getAccessToken($user, $d->tR,
                                 self::FACEBOOK_ACCESS_TOKEN);
 /**
  * @see A new UserInv (extension table of user) for the user is created.
  */
-                    $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'facebook');
+                    $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($d->translator, $user, $d->uiR, $language, $_language, $randomAndTimeToken, 'facebook');
                     return $this->webViewRenderer->render('proceed', [
                         'proceedToMenuButton' => $proceedToMenuButton,
                     ]);
@@ -326,22 +313,14 @@ trait Callback
      * @see src/Invoice/UserInv/UserInvController function github
      * @see https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/
      *       authorizing-oauth-apps
-     * @param ServerRequestInterface $request
-     * @param TranslatorInterface $translator
-     * @param TokenRepository $tR
-     * @param UserInvRepository $uiR
-     * @param UserRepository $uR
+     * @param CallbackDeps $d
      * @param string $_language
      * @param string|null $code
      * @param string|null $state
      * @return ResponseInterface
      */
     public function callbackGithub(
-        ServerRequestInterface $request,
-        TranslatorInterface $translator,
-        TokenRepository $tR,
-        UserInvRepository $uiR,
-        UserRepository $uR,
+        CallbackDeps $d,
         #[RouteArgument('_language')]
         string $_language,
         #[Query('code')]
@@ -351,7 +330,7 @@ trait Callback
     ): ResponseInterface {
         if ($code == null || $state == null) {
             return $this->redirectToOauth2AuthError(
-                $translator->translate('oauth2.missing.authentication.code.'
+                $d->translator->translate('oauth2.missing.authentication.code.'
                         . 'or.state.parameter'));
         }
 
@@ -366,7 +345,7 @@ trait Callback
             //  to generate state param 'authState'
             // which has a session id built into it
 
-            $authorizationUrl = $github->buildAuthUrl($request, []);
+            $authorizationUrl = $github->buildAuthUrl($d->request, []);
             return $this->webService->getRedirectResponse($authorizationUrl);
         }
 
@@ -382,7 +361,7 @@ trait Callback
              * State is invalid, possible cross-site request forgery.
              */
             return $this->redirectToOauth2AuthError(
-                    $translator->translate('oauth2.missing.state.parameter'
+                    $d->translator->translate('oauth2.missing.state.parameter'
                             . '.possible.csrf.attack'));
             // code and state are both present
         }
@@ -394,7 +373,7 @@ trait Callback
         // For Github we know that the parameter key for the token is
         //  'access_token' and not the default 'oauth_token'
         /** @psalm-var \Yiisoft\Yii\AuthClient\Client\GitHub $github */
-        $oAuthTokenType = $github->fetchAccessToken($request, $code, []);
+        $oAuthTokenType = $github->fetchAccessToken($d->request, $code, []);
         /**
          * Every time you receive an access token, you should use the token
          *  to revalidate the user's identity.
@@ -427,13 +406,13 @@ trait Callback
                 //   authService->login($login, $password)
                 // but it will be used later to build a passwordHash
                 if ($this->authService->oauthLogin($login)) {
-                    return $this->tfaCheckBeforeRedirects('github', $tR, $uiR);
+                    return $this->tfaCheckBeforeRedirects('github', $d->tR, $d->uiR);
                 }
                 $user = new User($login, $email, $password);
-                $uR->save($user);
+                $d->uR->save($user);
                 $userId = $user->reqId();
                 if ($userId > 0) {
-                    $role = $uR->repoCount() == 1 ? 'admin' : 'observer';
+                    $role = $d->uR->repoCount() == 1 ? 'admin' : 'observer';
                     if (!$this->assignRoleAndVerify($userId, $role)) {
                         return $this->redirectToMain();
                     }
@@ -447,14 +426,14 @@ trait Callback
                      */
                     $language = $languageArray[$_language];
                     $randomAndTimeToken = $this->getAccessToken(
-                            $user, $tR, self::GITHUB_ACCESS_TOKEN);
+                            $user, $d->tR, self::GITHUB_ACCESS_TOKEN);
                     /**
                      * @see A new UserInv (extension table of user) for the
                         user is created.
                      */
                     $proceedToMenuButton =
                         $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
-                            $translator, $user, $uiR, $language, $_language,
+                            $d->translator, $user, $d->uiR, $language, $_language,
                                 $randomAndTimeToken, 'github');
                     return $this->webViewRenderer->render('proceed', [
                         'proceedToMenuButton' => $proceedToMenuButton,
@@ -471,11 +450,7 @@ trait Callback
      * @see https://console.cloud.google.com/apis/credentials?project=YOUR_PROJECT
      */
     public function callbackGoogle(
-        ServerRequestInterface $request,
-        TranslatorInterface $translator,
-        TokenRepository $tR,
-        UserInvRepository $uiR,
-        UserRepository $uR,
+        CallbackDeps $d,
         #[RouteArgument('_language')]
         string $_language,
         #[Query('code')]
@@ -485,7 +460,7 @@ trait Callback
     ): ResponseInterface {
         if ($code == null || $state == null) {
             return $this->redirectToOauth2AuthError(
-                    $translator->translate(
+                    $d->translator->translate(
                         'oauth2.missing.authentication.code.or.state.parameter'));
         }
 
@@ -495,7 +470,7 @@ trait Callback
          * @psalm-suppress DocblockTypeContradiction $code
          */
         if (strlen($code) == 0) {
-            $authorizationUrl = $google->buildAuthUrl($request, []);
+            $authorizationUrl = $google->buildAuthUrl($d->request, []);
             return $this->webService->getRedirectResponse($authorizationUrl);
         }
 
@@ -511,12 +486,12 @@ trait Callback
              * State is invalid, possible cross-site request forgery.
              */
             return $this->redirectToOauth2AuthError(
-                    $translator->translate(
+                    $d->translator->translate(
                         'oauth2.missing.state.parameter.possible.csrf.attack'));
             // code and state are both present
         }
         /** @psalm-var \Yiisoft\Yii\AuthClient\Client\Google $google */
-        $oAuthTokenType = $google->fetchAccessToken($request, $code, [
+        $oAuthTokenType = $google->fetchAccessToken($d->request, $code, [
             'grant_type' => 'authorization_code',
         ]);
 
@@ -550,13 +525,13 @@ trait Callback
             $email = $userArray['email'] ?? 'noemail' . $login . '@google.com';
             $password = Random::string(32);
             if ($this->authService->oauthLogin($login)) {
-                return $this->tfaCheckBeforeRedirects('google', $tR, $uiR);
+                return $this->tfaCheckBeforeRedirects('google', $d->tR, $d->uiR);
             }
             $user = new User($login, $email, $password);
-            $uR->save($user);
+            $d->uR->save($user);
             $userId = $user->reqId();
             if ($userId > 0) {
-                $role = $uR->repoCount() == 1 ? 'admin' : 'observer';
+                $role = $d->uR->repoCount() == 1 ? 'admin' : 'observer';
                 if (!$this->assignRoleAndVerify($userId, $role)) {
                     return $this->redirectToMain();
                 }
@@ -570,14 +545,14 @@ trait Callback
                  */
                 $language = $languageArray[$_language];
                 $randomAndTimeToken = $this->getAccessToken($user,
-                        $tR, self::GOOGLE_ACCESS_TOKEN);
+                        $d->tR, self::GOOGLE_ACCESS_TOKEN);
                 /**
                  * @see A new UserInv (extension table of user) for the user
                  *  is created.
                  */
                 $proceedToMenuButton =
                     $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
-                        $translator, $user, $uiR, $language, $_language,
+                        $d->translator, $user, $d->uiR, $language, $_language,
                             $randomAndTimeToken, 'google');
                 return $this->webViewRenderer->render('proceed', [
                     'proceedToMenuButton' => $proceedToMenuButton,
@@ -590,11 +565,7 @@ trait Callback
     }
 
     public function callbackGovUk(
-        ServerRequestInterface $request,
-        TranslatorInterface $translator,
-        TokenRepository $tR,
-        UserInvRepository $uiR,
-        UserRepository $uR,
+        CallbackDeps $d,
         #[RouteArgument('_language')]
         string $_language,
         #[Query('code')]
@@ -604,7 +575,7 @@ trait Callback
     ): ResponseInterface {
         if ($code == null || $state == null) {
             return $this->redirectToOauth2AuthError(
-                    $translator->translate('oauth2.missing.'
+                    $d->translator->translate('oauth2.missing.'
                             . 'authentication.code.or.state.parameter'));
         }
 
@@ -616,7 +587,7 @@ trait Callback
          * @psalm-suppress DocblockTypeContradiction $code
          */
         if (strlen($code) == 0) {
-            $authorizationUrl = $govUk->buildAuthUrl($request, []);
+            $authorizationUrl = $govUk->buildAuthUrl($d->request, []);
             return $this->webService->getRedirectResponse($authorizationUrl);
         }
 
@@ -632,12 +603,12 @@ trait Callback
              * State is invalid, possible cross-site request forgery.
              */
             return $this->redirectToOauth2AuthError(
-                $translator->translate('oauth2.missing.state.parameter.'
+                $d->translator->translate('oauth2.missing.state.parameter.'
                         . 'possible.csrf.attack'));
             // code and state are both present
         }
         /** @psalm-var \App\Auth\Client\GovUk $govUk */
-        $oAuthTokenType = $govUk->fetchAccessToken($request, $code, []);
+        $oAuthTokenType = $govUk->fetchAccessToken($d->request, $code, []);
         $userArray = $govUk->getCurrentUserJsonArray($oAuthTokenType);
         /**
          * @var int $userArray['id']
@@ -654,16 +625,16 @@ trait Callback
                     . '@gov.uk';
             $password = Random::string(32);
             if ($this->authService->oauthLogin($login)) {
-                return $this->tfaCheckBeforeRedirects('govuk', $tR, $uiR);
+                return $this->tfaCheckBeforeRedirects('govuk', $d->tR, $d->uiR);
             }
             $user = new User($login, $email, $password);
-            $uR->save($user);
+            $d->uR->save($user);
             $userId = $user->reqId();
             if ($userId > 0) {
                 // avoid autoincrement issues and using predefined user id
                 //  of 1 ... and assign the first signed-up user
                 //   ... admin rights
-                $role = $uR->repoCount() == 1 ? 'admin' : 'observer';
+                $role = $d->uR->repoCount() == 1 ? 'admin' : 'observer';
                 if (!$this->assignRoleAndVerify($userId, $role)) {
                     return $this->redirectToMain();
                 }
@@ -676,14 +647,14 @@ trait Callback
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
-                $randomAndTimeToken = $this->getAccessToken($user, $tR,
+                $randomAndTimeToken = $this->getAccessToken($user, $d->tR,
                     self::GOVUK_ACCESS_TOKEN);
                 /**
                  * @see A new UserInv (extension table of user) for the user is created.
                  */
                 $proceedToMenuButton =
                     $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
-                        $translator, $user, $uiR, $language, $_language,
+                        $d->translator, $user, $d->uiR, $language, $_language,
                             $randomAndTimeToken, 'govuk');
                 return $this->webViewRenderer->render('proceed', [
                     'proceedToMenuButton' => $proceedToMenuButton,
@@ -696,11 +667,7 @@ trait Callback
     }
 
     public function callbackLinkedIn(
-        ServerRequestInterface $request,
-        TranslatorInterface $translator,
-        TokenRepository $tR,
-        UserInvRepository $uiR,
-        UserRepository $uR,
+        CallbackDeps $d,
         #[RouteArgument('_language')]
         string $_language,
         #[Query('code')]
@@ -710,7 +677,7 @@ trait Callback
     ): ResponseInterface {
         if ($code == null || $state == null) {
             return $this->redirectToOauth2AuthError(
-                    $translator->translate(
+                    $d->translator->translate(
                         'oauth2.missing.authentication.code.or.state.parameter'));
         }
 
@@ -720,7 +687,7 @@ trait Callback
          * @psalm-suppress DocblockTypeContradiction $code
          */
         if (strlen($code) == 0) {
-            $authorizationUrl = $linkedIn->buildAuthUrl($request, []);
+            $authorizationUrl = $linkedIn->buildAuthUrl($d->request, []);
             return $this->webService->getRedirectResponse($authorizationUrl);
         }
 
@@ -736,7 +703,7 @@ trait Callback
              * State is invalid, possible cross-site request forgery.
              */
             return $this->redirectToOauth2AuthError(
-                $translator->translate('oauth2.missing.state.parameter.'
+                $d->translator->translate('oauth2.missing.state.parameter.'
                         . 'possible.csrf.attack'));
             // code and state are both present
         }
@@ -745,7 +712,7 @@ trait Callback
             'redirect_uri' => $linkedIn->getOauth2ReturnUrl(),
         ];
         /** @psalm-var \Yiisoft\Yii\AuthClient\Client\LinkedIn $linkedIn */
-        $oAuthTokenType = $linkedIn->fetchAccessToken($request, $code, $params);
+        $oAuthTokenType = $linkedIn->fetchAccessToken($d->request, $code, $params);
         $userArray = $linkedIn->getCurrentUserJsonArray(
                 $oAuthTokenType,
                 $this->configWebDiAuthGuzzle,
@@ -777,16 +744,16 @@ trait Callback
             $email = $userArray['email'] ?? 'noemail' . $login . '@linkedin.com';
             $password = Random::string(32);
             if ($this->authService->oauthLogin($login)) {
-                return $this->tfaCheckBeforeRedirects('linkedin', $tR, $uiR);
+                return $this->tfaCheckBeforeRedirects('linkedin', $d->tR, $d->uiR);
             }
             $user = new User($login, $email, $password);
-            $uR->save($user);
+            $d->uR->save($user);
             $userId = $user->reqId();
             if ($userId > 0) {
                 // avoid autoincrement issues and using predefined user id
                 //  of 1 ... and assign the first signed-up user
                 //   ... admin rights
-                $role = $uR->repoCount() == 1 ? 'admin' : 'observer';
+                $role = $d->uR->repoCount() == 1 ? 'admin' : 'observer';
                 if (!$this->assignRoleAndVerify($userId, $role)) {
                     return $this->redirectToMain();
                 }
@@ -800,13 +767,13 @@ trait Callback
                  */
                 $language = $languageArray[$_language];
                 $randomAndTimeToken = $this->getAccessToken(
-                        $user, $tR, self::LINKEDIN_ACCESS_TOKEN);
+                        $user, $d->tR, self::LINKEDIN_ACCESS_TOKEN);
                 /**
                  * @see A new UserInv (extension table of user) for the user is created.
                  */
                 $proceedToMenuButton =
                     $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
-                        $translator, $user, $uiR, $language, $_language,
+                        $d->translator, $user, $d->uiR, $language, $_language,
                             $randomAndTimeToken, 'linkedin');
                 return $this->webViewRenderer->render('proceed', [
                     'proceedToMenuButton' => $proceedToMenuButton,
@@ -819,11 +786,7 @@ trait Callback
     }
 
     public function callbackMicrosoftOnline(
-        ServerRequestInterface $request,
-        TranslatorInterface $translator,
-        TokenRepository $tR,
-        UserInvRepository $uiR,
-        UserRepository $uR,
+        CallbackDeps $d,
         #[RouteArgument('_language')]
         string $_language,
         #[Query('code')]
@@ -835,7 +798,7 @@ trait Callback
     ): ResponseInterface {
         if ($code == null || $state == null || $sessionState == null) {
             return $this->redirectToOauth2AuthError(
-                    $translator->translate(
+                    $d->translator->translate(
                         'oauth2.missing.authentication.code.or.state.parameter'));
         }
 
@@ -847,7 +810,7 @@ trait Callback
          */
         if (strlen($code) == 0) {
             $authorizationUrl =
-                $microsoftOnline->buildAuthUrl($request,
+                $microsoftOnline->buildAuthUrl($d->request,
                     [
                         'redirect_uri' =>
                             'https://yii3i.online/callbackMicrosoftOnline']);
@@ -871,13 +834,13 @@ trait Callback
              * State is invalid, possible cross-site request forgery.
              */
             return $this->redirectToOauth2AuthError(
-                $translator->translate('oauth2.missing.state.parameter'
+                $d->translator->translate('oauth2.missing.state.parameter'
                         . '.possible.csrf.attack'));
             // code and state and stateSession are both present
         }
         /** @psalm-var \Yiisoft\Yii\AuthClient\Client\MicrosoftOnline $microsoftOnline */
-        $oAuthTokenType = $microsoftOnline->fetchAccessToken($request,
-                $code, $params = [
+        $oAuthTokenType = $microsoftOnline->fetchAccessToken($d->request,
+                $code, [
             'grant_type' => 'authorization_code',
             'redirect_uri' => 'https://yii3i.online/callbackMicrosoftOnline',
         ]);
@@ -904,15 +867,15 @@ trait Callback
                     . '@microsoftonline.com';
             $password = Random::string(32);
             if ($this->authService->oauthLogin($login)) {
-                return $this->tfaCheckBeforeRedirects('microsoftonline', $tR, $uiR);
+                return $this->tfaCheckBeforeRedirects('microsoftonline', $d->tR, $d->uiR);
             }
             $user = new User($login, $email, $password);
-            $uR->save($user);
+            $d->uR->save($user);
             $userId = $user->reqId();
             if ($userId > 0) {
                 // avoid autoincrement issues and using predefined user id of 1
                 //  ... and assign the first signed-up user ... admin rights
-                $role = $uR->repoCount() == 1 ? 'admin' : 'observer';
+                $role = $d->uR->repoCount() == 1 ? 'admin' : 'observer';
                 if (!$this->assignRoleAndVerify($userId, $role)) {
                     return $this->redirectToMain();
                 }
@@ -926,7 +889,7 @@ trait Callback
                  */
                 $language = $languageArray[$_language];
                 $randomAndTimeToken =
-                        $this->getAccessToken($user, $tR,
+                        $this->getAccessToken($user, $d->tR,
                                 self::MICROSOFTONLINE_ACCESS_TOKEN);
                 /**
                  * @see A new UserInv (extension table of user) for the
@@ -934,7 +897,7 @@ trait Callback
                  */
                 $proceedToMenuButton =
                     $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
-                        $translator, $user, $uiR, $language, $_language,
+                        $d->translator, $user, $d->uiR, $language, $_language,
                             $randomAndTimeToken, 'microsoftonline');
                 return $this->webViewRenderer->render('proceed', [
                     'proceedToMenuButton' => $proceedToMenuButton,
@@ -1015,11 +978,7 @@ trait Callback
     }
 
     public function callbackX(
-        ServerRequestInterface $request,
-        TranslatorInterface $translator,
-        TokenRepository $tR,
-        UserInvRepository $uiR,
-        UserRepository $uR,
+        CallbackDeps $d,
         #[RouteArgument('_language')]
         string $_language,
         #[Query('code')]
@@ -1029,7 +988,7 @@ trait Callback
     ): ResponseInterface {
         if ($code == null || $state == null) {
             return $this->redirectToOauth2AuthError(
-                $translator->translate('oauth2.missing.authentication.code.'
+                $d->translator->translate('oauth2.missing.authentication.code.'
                     . 'or.state.parameter'));
         }
 
@@ -1048,7 +1007,7 @@ trait Callback
             $this->session->set('code_verifier', $codeVerifier);
 
             $authorizationUrl = $x->buildAuthUrl(
-                $request,
+                $d->request,
                 [
                     'code_challenge' => $codeChallenge,
                     'code_challenge_method' => 'S256',
@@ -1065,7 +1024,7 @@ trait Callback
          */
         if (strlen($state) == 0) {
             return $this->redirectToOauth2AuthError(
-                $translator->translate('oauth2.missing.state.parameter.'
+                $d->translator->translate('oauth2.missing.state.parameter.'
                         . 'possible.csrf.attack'));
         }
         $codeVerifier = (string) $this->session->get('code_verifier');
@@ -1076,7 +1035,7 @@ trait Callback
         ];
         /** @psalm-var \Yiisoft\Yii\AuthClient\Client\X $x */
         $oAuthTokenType = $x->fetchAccessTokenWithCodeVerifier(
-            $request, $code, $params);
+            $d->request, $code, $params);
         $userArray = $x->getCurrentUserJsonArray(
             $oAuthTokenType, $this->configWebDiAuthGuzzle, $this->requestFactory);
         /**
@@ -1097,13 +1056,13 @@ trait Callback
                 $email = $userArray['email'] ?? 'noemail' . $login . '@x.com';
                 $password = Random::string(32);
                 if ($this->authService->oauthLogin($login)) {
-                    return $this->tfaCheckBeforeRedirects('x', $tR, $uiR);
+                    return $this->tfaCheckBeforeRedirects('x', $d->tR, $d->uiR);
                 }
                 $user = new User($login, $email, $password);
-                $uR->save($user);
+                $d->uR->save($user);
                 $userId = $user->reqId();
                 if ($userId > 0) {
-                    $role = $uR->repoCount() == 1 ? 'admin' : 'observer';
+                    $role = $d->uR->repoCount() == 1 ? 'admin' : 'observer';
                     if (!$this->assignRoleAndVerify($userId, $role)) {
                         return $this->redirectToMain();
                     }
@@ -1117,16 +1076,16 @@ trait Callback
                      */
                     $language = $languageArray[$_language];
                     $randomAndTimeToken = $this->getAccessToken($user,
-                        $tR, self::X_ACCESS_TOKEN);
+                        $d->tR, self::X_ACCESS_TOKEN);
                     /**
                      * @see A new UserInv (extension table of user) for the
                         user is created.
                      */
                     $proceedToMenuButton =
                       $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
-                        $translator,
+                        $d->translator,
                         $user,
-                        $uiR,
+                        $d->uiR,
                         $language,
                         $_language,
                         $randomAndTimeToken,
@@ -1144,11 +1103,7 @@ trait Callback
     }
 
     public function callbackVKontakte(
-        ServerRequestInterface $request,
-        TranslatorInterface $translator,
-        TokenRepository $tR,
-        UserInvRepository $uiR,
-        UserRepository $uR,
+        CallbackDeps $d,
         #[RouteArgument('_language')]
         string $_language,
         #[Query('code')]
@@ -1160,7 +1115,7 @@ trait Callback
     ): ResponseInterface {
         if ($code == null || $state == null) {
             return $this->redirectToOauth2AuthError(
-                $translator->translate('oauth2.missing.authentication.code.'
+                $d->translator->translate('oauth2.missing.authentication.code.'
                     . 'or.state.parameter'));
         }
 
@@ -1180,7 +1135,7 @@ trait Callback
             $this->session->set('code_verifier', $codeVerifier);
 
             $authorizationUrl = $vkontakte->buildAuthUrl(
-                $request,
+                $d->request,
                 [
                     'code_challenge' => $codeChallenge,
                     'code_challenge_method' => 'S256',
@@ -1198,7 +1153,7 @@ trait Callback
          */
         if (strlen($state) == 0) {
             return $this->redirectToOauth2AuthError(
-                $translator->translate('oauth2.missing.state.parameter.'
+                $d->translator->translate('oauth2.missing.state.parameter.'
                         . 'possible.csrf.attack'));
         }
         $codeVerifier = (string) $this->session->get('code_verifier');
@@ -1220,7 +1175,7 @@ trait Callback
          *                           'scope' => 'vkid.personal_info email'
          */
         $oAuthTokenType = $vkontakte->fetchAccessTokenWithCodeVerifier(
-            $request, $code, $params);
+            $d->request, $code, $params);
 
         /**
          * e.g.  'user' => [
@@ -1277,15 +1232,15 @@ trait Callback
             //   authService->login($login, $password)
             // but it will be used later to build a passwordHash
             if ($this->authService->oauthLogin($login)) {
-                return $this->tfaCheckBeforeRedirects('vkontakte', $tR, $uiR);
+                return $this->tfaCheckBeforeRedirects('vkontakte', $d->tR, $d->uiR);
             }
             $user = new User($login, $email, $password);
-            $uR->save($user);
+            $d->uR->save($user);
             $userId = $user->reqId();
             if ($userId > 0) {
                 // avoid autoincrement issues and using predefined user id
                 //  of 1 ... and assign the first signed-up user ... admin rights
-                $role = $uR->repoCount() == 1 ? 'admin' : 'observer';
+                $role = $d->uR->repoCount() == 1 ? 'admin' : 'observer';
                 if (!$this->assignRoleAndVerify($userId, $role)) {
                     return $this->redirectToMain();
                 }
@@ -1299,15 +1254,15 @@ trait Callback
                  */
                 $language = $languageArray[$_language];
                 $randomAndTimeToken = $this->getAccessToken($user,
-                        $tR, self::VKONTAKTE_ACCESS_TOKEN);
+                        $d->tR, self::VKONTAKTE_ACCESS_TOKEN);
                 /**
                  * @see A new UserInv (extension table of user) for the user is created.
                  */
                 $proceedToMenuButton =
                   $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
-                    $translator,
+                    $d->translator,
                     $user,
-                    $uiR,
+                    $d->uiR,
                     $language,
                     $_language,
                     $randomAndTimeToken,
@@ -1324,11 +1279,7 @@ trait Callback
     }
 
     public function callbackYandex(
-        ServerRequestInterface $request,
-        TranslatorInterface $translator,
-        TokenRepository $tR,
-        UserInvRepository $uiR,
-        UserRepository $uR,
+        CallbackDeps $d,
         #[RouteArgument('_language')]
         string $_language,
         #[Query('code')]
@@ -1338,7 +1289,7 @@ trait Callback
     ): ResponseInterface {
         if ($code == null || $state == null) {
             return $this->redirectToOauth2AuthError(
-                $translator->translate('oauth2.missing.authentication.code.'
+                $d->translator->translate('oauth2.missing.authentication.code.'
                         . 'or.state.parameter'));
         }
 
@@ -1357,7 +1308,7 @@ trait Callback
             $this->session->set('code_verifier', $codeVerifier);
 
             $authorizationUrl = $yandex->buildAuthUrl(
-                $request,
+                $d->request,
                 [
                     'code_challenge' => $codeChallenge,
                     'code_challenge_method' => 'S256',
@@ -1374,7 +1325,7 @@ trait Callback
          */
         if (strlen($state) == 0) {
             return $this->redirectToOauth2AuthError(
-                $translator->translate('oauth2.missing.state.parameter.'
+                $d->translator->translate('oauth2.missing.state.parameter.'
                         . 'possible.csrf.attack'));
         }
         $codeVerifier = (string) $this->session->get('code_verifier');
@@ -1383,7 +1334,7 @@ trait Callback
             'redirect_uri' => $yandex->getOauth2ReturnUrl(),
             'code_verifier' => $codeVerifier,
         ];
-        $oAuthTokenType = $yandex->fetchAccessTokenWithCodeVerifier($request,
+        $oAuthTokenType = $yandex->fetchAccessTokenWithCodeVerifier($d->request,
                 $code, $params);
         /**
          * @psalm-var \Yiisoft\Yii\AuthClient\Client\Yandex $yandex
@@ -1412,16 +1363,16 @@ trait Callback
             //   authService->login($login, $password)
             // but it will be used later to build a passwordHash
             if ($this->authService->oauthLogin($login)) {
-                return $this->tfaCheckBeforeRedirects('yandex', $tR, $uiR);
+                return $this->tfaCheckBeforeRedirects('yandex', $d->tR, $d->uiR);
             }
             $user = new User($login, $email, $password);
-            $uR->save($user);
+            $d->uR->save($user);
             $userId = $user->reqId();
             if ($userId > 0) {
                 // avoid autoincrement issues and using predefined user
                 //  id of 1 ... and assign the first signed-up user ...
                 //   admin rights
-                $role = $uR->repoCount() == 1 ? 'admin' : 'observer';
+                $role = $d->uR->repoCount() == 1 ? 'admin' : 'observer';
                 if (!$this->assignRoleAndVerify($userId, $role)) {
                     return $this->redirectToMain();
                 }
@@ -1436,15 +1387,15 @@ trait Callback
                 $language = $languageArray[$_language];
                 $randomAndTimeToken =
                         $this->getAccessToken($user,
-                                $tR, self::YANDEX_ACCESS_TOKEN);
+                                $d->tR, self::YANDEX_ACCESS_TOKEN);
         /**
          * @see A new UserInv (extension table of user) for the user is created.
          */
                 $proceedToMenuButton =
                   $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
-                    $translator,
+                    $d->translator,
                     $user,
-                    $uiR,
+                    $d->uiR,
                     $language,
                     $_language,
                     $randomAndTimeToken,
@@ -1468,14 +1419,6 @@ trait Callback
      * redundant and is skipped entirely for all OAuth2 logins.
      * TFA is only applied to the local username/password login path.
      */
-    /**
- * OAuth2 providers (Google, GitHub, Microsoft, LinkedIn, Facebook etc.)
- * enforce their own MFA before issuing an authorization code. By the time
- * any callback fires, the user has already passed the provider's own
- * security checks. Applying an additional TOTP challenge is therefore
- * redundant and is skipped entirely for all OAuth2 logins.
- * TFA is only applied to the local username/password login path.
- */
 public function tfaCheckBeforeRedirects(
     string $providerName,
     TokenRepository $tR,
@@ -1530,7 +1473,7 @@ public function tfaCheckBeforeRedirects(
         'tfaCheck — fell through to redirectToMain');
     return $this->redirectToMain();
 }
-    
+
     /**
      * Assign a role to a newly created OAuth2 user and verify the assignment
      * persisted correctly. Guards against silent failures where assign()
@@ -1546,7 +1489,7 @@ public function tfaCheckBeforeRedirects(
     ): bool {
         $this->manager->revokeAll((string) $userId);
         $this->manager->assign($role, (string) $userId);
- 
+
         $roles = $this->manager->getRolesByUserId((string) $userId);
         if (empty($roles)) {
             $this->logger->log(

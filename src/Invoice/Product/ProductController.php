@@ -16,12 +16,12 @@ use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use App\Infrastructure\Persistence\Unit\Unit;
 use App\Infrastructure\Persistence\InvItem\InvItem;
 use App\Invoice\Family\FamilyRepository as fR;
-use App\Invoice\CustomValue\CustomValueRepository as cvR;
-use App\Invoice\CustomField\CustomFieldRepository as cfR;
 use App\Invoice\Helpers\CountryHelper;
 use App\Invoice\Helpers\CustomValuesHelper as CVH;
+use App\Invoice\Helpers\InvRecalculator;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
+use App\Invoice\Helpers\QuoteRecalculator;
 // Product
 use App\Invoice\Product\ProductRepository as pR;
 use App\Invoice\ProductCustom\ProductCustomRepository as pcR;
@@ -42,28 +42,20 @@ use App\Invoice\ProductProperty\ProductPropertyRepository as ppR;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\TaxRate\TaxRateRepository as trR;
 use App\Invoice\Unit\UnitRepository as uR;
-use App\Invoice\UnitPeppol\UnitPeppolRepository as upR;
-use App\Invoice\QuoteItem\QuoteItemRepository as qiR;
-use App\Invoice\QuoteAllowanceCharge\QuoteAllowanceChargeRepository as acqR;
 use App\Invoice\InvItem\InvItemRepository as iiR;
-use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository as aciR;
 use App\Invoice\QuoteItemAmount\QuoteItemAmountRepository as qiaR;
-use App\Invoice\QuoteTaxRate\QuoteTaxRateRepository as qtrR;
-use App\Invoice\InvTaxRate\InvTaxRateRepository as itrR;
-use App\Invoice\QuoteAmount\QuoteAmountRepository as qaR;
-use App\Invoice\InvAmount\InvAmountRepository as iaR;
-use App\Invoice\Quote\QuoteRepository as qR;
-use App\Invoice\Inv\InvRepository as iR;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as iiaR;
-use App\Invoice\Payment\PaymentRepository as pymR;
 use App\Service\WebControllerService;
 use App\User\UserService;
 //  Psr
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 // Yiisoft
+use App\Invoice\Product\Widget\ProductsListWidget;
 use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\HtmlResponseFactory;
 use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
@@ -91,6 +83,9 @@ final class ProductController extends BaseController
         private FormFields $formFields,
         private ProductService $productService,
         private ProductCustomService $productCustomService,
+        private ProductFormDependencies $formDeps,
+        private InvRecalculator $invRecalculator,
+        private QuoteRecalculator $quoteRecalculator,
         private QuoteItemService $quoteitemService,
         private InvItemService $invitemService,
         SessionInterface $session,
@@ -105,6 +100,9 @@ final class ProductController extends BaseController
         $this->responseFactory = $responseFactory;
         $this->productService = $productService;
         $this->productCustomService = $productCustomService;
+        $this->formDeps = $formDeps;
+        $this->invRecalculator = $invRecalculator;
+        $this->quoteRecalculator = $quoteRecalculator;
         $this->quoteitemService = $quoteitemService;
         $this->invitemService = $invitemService;
     }
@@ -112,18 +110,11 @@ final class ProductController extends BaseController
     /**
      * @param Request $request
      * @param FormHydrator $formHydrator
-     * @param fR $fR
-     * @param uR $uR
-     * @param trR $trR
-     * @param cvR $cvR
-     * @param cfR $cfR
-     * @param upR $upR
      * @return Response
      */
-    public function add(Request $request,
-            FormHydrator $formHydrator, fR $fR, uR $uR, trR $trR, cvR $cvR,
-            cfR $cfR, upR $upR): Response
+    public function add(Request $request, FormHydrator $formHydrator): Response
     {
+        $d = $this->formDeps;
         $countries = new CountryHelper();
         $peppolarrays = new PeppolArrays();
         $form = new ProductForm();
@@ -142,65 +133,91 @@ final class ProductController extends BaseController
             'standard_item_identification_schemeids' =>
                 $peppolarrays->getIso6523Icd(),
             'item_classification_code_listids' => $peppolarrays->getUncl7143(),
-            'families' => $this->families($fR->findAllPreloaded()),
-            'units' => $this->units($uR->findAllPreloaded()),
-            'taxRates' => $this->taxRates($trR->findAllPreloaded()),
-            'unitPeppols' => $this->unitPeppols($upR->findAllPreloaded()),
-            // Custom fields and values for product
-            'customFields' => $this->fetchCustomFieldsAndValues($cfR, $cvR,
-                    'product_custom')['customFields'],
-            'customValues' => $this->fetchCustomFieldsAndValues($cfR, $cvR,
-                    'product_custom')['customValues'],
-            'cvH' => new CVH($this->sR, $cvR),
+            'families' => $this->families($d->familyRepository->findAllPreloaded()),
+            'units' => $this->units($d->unitRepository->findAllPreloaded()),
+            'taxRates' => $this->taxRates($d->taxRateRepository->findAllPreloaded()),
+            'unitPeppols' => $this->unitPeppols($d->unitPeppolRepository->findAllPreloaded()),
+            'customFields' => $this->fetchCustomFieldsAndValues(
+                    $d->customFieldRepository, $d->customValueRepository, 'product_custom')['customFields'],
+            'customValues' => $this->fetchCustomFieldsAndValues(
+                    $d->customFieldRepository, $d->customValueRepository, 'product_custom')['customValues'],
+            'cvH' => new CVH($this->sR, $d->customValueRepository),
             'productCustomValues' => [],
             'productCustomForm' => $productCustomForm,
             'formFields' => $this->formFields,
         ];
         if ($request->getMethod() === Method::POST) {
-            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                $body = $request->getParsedBody() ?? [];
-                if (is_array($body)) {
-                    $product = new Product();
-                    $this->productService->saveProduct($product, $body);
-                    if ($product->hasIdentity()) {
-                        if (isset($body['custom'])) {
-                            // Retrieve the custom array
-                            /** @var array $custom */
-                            $custom = $body['custom'];
-                            /**
-                             * @var int $custom_field_id
-                             * @var array|string $value
-                             */
-                            foreach ($custom as $custom_field_id => $value) {
-                                $productCustom = new ProductCustom();
-                                $formProductCustom = new ProductCustomForm();
-                                $product_custom = [];
-                                $product_custom['product_id'] = $product->reqId();
-                                $product_custom['custom_field_id'] = $custom_field_id;
-                                $product_custom['value'] = is_array($value) ? serialize($value) : $value;
-                                if ($formHydrator->populateAndValidate(
-                                        $formProductCustom, $product_custom)) {
-                                    $this->productCustomService->saveProductCustom(
-                                            $productCustom, $product_custom);
-                                }
-// These two can be used to create customised labels for custom field error
-// validation on the form. Currently not used.
-                                $parameters['formProductCustom'] = $formProductCustom;
-                                $parameters['errorsCustom'] = $formProductCustom->getValidationResult()->getErrorMessagesIndexedByProperty();
-                            }
-                        }
-                        $this->flashMessage('info',
-                                $this->translator->translate(
-                                        'record.successfully.created'));
-                        return $this->webService->getRedirectResponse('product/index');
-                    }
-                }
-            } else {
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+            $redirect = $this->handleAddPost($request, $formHydrator, $form, $parameters);
+            if ($redirect !== null) {
+                return $redirect;
             }
         }
         $parameters['form'] = $form;
         return $this->webViewRenderer->render('_form', $parameters);
+    }
+
+    /** @param array<string, mixed> $parameters */
+    private function handleAddPost(
+        Request $request,
+        FormHydrator $formHydrator,
+        ProductForm $form,
+        array &$parameters,
+    ): ?Response {
+        if (!$formHydrator->populateFromPostAndValidate($form, $request)) {
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+            return null;
+        }
+        $body = $request->getParsedBody() ?? [];
+        if (!is_array($body)) {
+            return null;
+        }
+        return $this->persistNewProduct($body, $formHydrator, $parameters);
+    }
+
+    /** @param array<string, mixed> $parameters */
+    private function persistNewProduct(
+        array $body,
+        FormHydrator $formHydrator,
+        array &$parameters,
+    ): ?Response {
+        $product = new Product();
+        $this->productService->saveProduct($product, $body);
+        if (!$product->hasIdentity()) {
+            return null;
+        }
+        if (isset($body['custom']) && is_array($body['custom'])) {
+            /** @var array<array-key, array|string> $custom */
+            $custom = $body['custom'];
+            $this->saveProductCustomFields($product, $custom, $formHydrator, $parameters);
+        }
+        $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
+        return $this->webService->getRedirectResponse('product/index');
+    }
+
+    /**
+     * @param array<array-key, array|string> $custom
+     * @param array<string, mixed> $parameters
+     */
+    private function saveProductCustomFields(
+        Product $product,
+        array $custom,
+        FormHydrator $formHydrator,
+        array &$parameters,
+    ): void {
+        foreach ($custom as $custom_field_id => $value) {
+            $productCustom = new ProductCustom();
+            $formProductCustom = new ProductCustomForm();
+            $product_custom = [
+                'product_id'      => $product->reqId(),
+                'custom_field_id' => $custom_field_id,
+                'value'           => is_array($value) ? serialize($value) : $value,
+            ];
+            if ($formHydrator->populateAndValidate($formProductCustom, $product_custom)) {
+                $this->productCustomService->saveProductCustom($productCustom, $product_custom);
+            }
+            $parameters['formProductCustom'] = $formProductCustom;
+            $parameters['errorsCustom'] = $formProductCustom->getValidationResult()->getErrorMessagesIndexedByProperty();
+        }
     }
 
     /**
@@ -208,13 +225,7 @@ final class ProductController extends BaseController
      * @param int $id
      * @param FormHydrator $formHydrator
      * @param pR $pR
-     * @param fR $fR
-     * @param uR $uR
-     * @param trR $trR
-     * @param cvR $cvR
-     * @param cfR $cfR
      * @param pcR $pcR
-     * @param upR $upR
      * @return Response
      */
     public function edit(
@@ -223,14 +234,9 @@ final class ProductController extends BaseController
         int $id,
         FormHydrator $formHydrator,
         pR $pR,
-        fR $fR,
-        uR $uR,
-        trR $trR,
-        cvR $cvR,
-        cfR $cfR,
         pcR $pcR,
-        upR $upR,
     ): Response {
+        $d = $this->formDeps;
         $countries = new CountryHelper();
         $peppolarrays = new PeppolArrays();
         $product = $this->product($id, $pR);
@@ -253,13 +259,15 @@ final class ProductController extends BaseController
                     'standard_item_identification_schemeids' =>
                         $peppolarrays->getIso6523Icd(),
                     'item_classification_code_listids' => $peppolarrays->getUncl7143(),
-                    'families' => $this->families($fR->findAllPreloaded()),
-                    'units' => $this->units($uR->findAllPreloaded()),
-                    'taxRates' => $this->taxRates($trR->findAllPreloaded()),
-                    'unitPeppols' => $this->unitPeppols($upR->findAllPreloaded()),
-                    'customFields' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'product_custom')['customFields'],
-                    'customValues' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'product_custom')['customValues'],
-                    'cvH' => new CVH($this->sR, $cvR),
+                    'families' => $this->families($d->familyRepository->findAllPreloaded()),
+                    'units' => $this->units($d->unitRepository->findAllPreloaded()),
+                    'taxRates' => $this->taxRates($d->taxRateRepository->findAllPreloaded()),
+                    'unitPeppols' => $this->unitPeppols($d->unitPeppolRepository->findAllPreloaded()),
+                    'customFields' => $this->fetchCustomFieldsAndValues(
+                            $d->customFieldRepository, $d->customValueRepository, 'product_custom')['customFields'],
+                    'customValues' => $this->fetchCustomFieldsAndValues(
+                            $d->customFieldRepository, $d->customValueRepository, 'product_custom')['customValues'],
+                    'cvH' => new CVH($this->sR, $d->customValueRepository),
                     'productCustomValues' =>
                         $this->productCustomValues($product_id, $pcR),
                     'productCustomForm' => $productCustomForm,
@@ -277,7 +285,7 @@ final class ProductController extends BaseController
                             return $this->webViewRenderer->render('_form', $parameters);
                         }
                         // Only save custom fields if they exist
-                        if ($cfR->repoTableCountquery('product_custom') > 0 && isset($body['custom'])) {
+                        if ($d->customFieldRepository->repoTableCountquery('product_custom') > 0 && isset($body['custom'])) {
                             $custom = (array) $body['custom'];
                             $errorsCustom = [];
                             /** @var array|string $value */
@@ -436,7 +444,6 @@ final class ProductController extends BaseController
     }
 
     /**
-     * @param FastRouteGenerator $urlFastRouteGenerator
      * @param Request $request
      * @param productClientR $pcR
      * @param pR $pR
@@ -444,58 +451,88 @@ final class ProductController extends BaseController
      * @param string $page
      * @return Response
      */
-    public function index(FastRouteGenerator $urlFastRouteGenerator,
-            Request $request, productClientR $pcR, pR $pR, fR $fR,
-            #[RouteArgument('page')] string $page = '1'): Response
-    {
+    public function index(
+        Request $request,
+        productClientR $pcR,
+        pR $pR,
+        fR $fR,
+        HtmlResponseFactory $htmlResponseFactory,
+        #[RouteArgument('page')] string $page = '1',
+    ): Response {
         $this->rbac();
         $this->flashMessage('info', $this->translator->translate('productimage.view'));
-        $query_params = $request->getQueryParams();
+        $q                    = $request->getQueryParams();
+        $queryPage            = isset($q['page']) ? (int) $q['page'] : null;
+        $currentPageNeverZero = max(1, $queryPage ?? (int) $page);
+        /** @psalm-suppress MixedAssignment */
+        $sortString           = isset($q['sort']) ? (string) $q['sort'] : '-id';
 
-        /**
-         * @var string $query_params['page']
-         */
-        $currentPage = $query_params['page'] ?? $page;
-        /** @psalm-var positive-int $currentPageNeverZero */
-        $currentPageNeverZero = (int) $currentPage > 0 ? (int) $currentPage : 1;
         $products = $pR->findAllPreloaded();
-        if (isset($query_params['family_id'])
-                && !empty($query_params['family_id'])) {
-            $products = $pR->filterFamilyId((int) $query_params['family_id']);
+        if (!empty($q['family_id'])) {
+            $products = $pR->filterFamilyId((int) $q['family_id']);
         }
-        if (isset($query_params['product_sku'])
-                && !empty($query_params['product_sku'])) {
-            $products = $pR->filterProductSku((string) $query_params['product_sku']);
+        if (!empty($q['product_sku']) && !empty($q['product_price'])) {
+            $products = $pR->filterProductSkuPrice(
+                (string) $q['product_price'],
+                (string) $q['product_sku'],
+            );
+        } elseif (!empty($q['product_sku'])) {
+            $products = $pR->filterProductSku((string) $q['product_sku']);
+        } elseif (!empty($q['product_price'])) {
+            $products = $pR->filterProductPrice((string) $q['product_price']);
         }
-        if (isset($query_params['product_price'])
-                && !empty($query_params['product_price'])) {
-            $products = $pR->filterProductPrice((string) $query_params['product_price']);
-        }
-        if ((isset($query_params['product_sku'])
-                && !empty($query_params['product_sku']))
-           && (isset($query_params['product_price'])
-                   && !empty($query_params['product_price']))) {
-            $products =
-                    $pR->filterProductSkuPrice(
-                            (string) $query_params['product_price'],
-                            (string) $query_params['product_sku']);
+
+        $sort = Sort::only([
+            'id', 'family_id', 'unit_id', 'tax_rate_id',
+            'product_name', 'product_sku', 'product_price',
+            'product_description', 'product_price_base_quantity',
+        ])->withOrderString($sortString);
+
+        /** @psalm-suppress InvalidArgument */
+        $paginator = (new OffsetPaginator($products))
+            ->withPageSize($this->sR->positiveListLimit())
+            ->withCurrentPage($currentPageNeverZero)
+            ->withSort($sort);
+
+        $gridSummary = $this->sR->gridSummary(
+            $paginator,
+            $this->translator,
+            (int) $this->sR->getSetting('default_list_limit'),
+            $this->translator->translate('products'),
+            '',
+        );
+
+        $visible                          = $this->sR->getSetting('columns_all_visible') !== '0';
+        $optionsDataProductsDropdownFilter = $this->optionsDataProducts($pR);
+        $optionsDataFamiliesDropdownFilter = $this->optionsDataFamilies($fR);
+
+        if ($request->hasHeader('Hx-Request')) {
+            return $htmlResponseFactory->createResponse(
+                ProductsListWidget::widget()
+                    ->withPaginator($paginator)
+                    ->withSR($this->sR)
+                    ->withPcR($pcR)
+                    ->withCsrf((string) ($request->getParsedBody()['_csrf'] ?? ''))
+                    ->withVisible($visible)
+                    ->withGridSummary($gridSummary)
+                    ->withSortString($sortString)
+                    ->withOptionsDataProductsDropdownFilter($optionsDataProductsDropdownFilter)
+                    ->withOptionsDataFamiliesDropdownFilter($optionsDataFamiliesDropdownFilter)
+                    ->render()
+            );
         }
 
         $parameters = [
-            'alert' => $this->alert(),
-            'page' => $currentPageNeverZero,
-            'productClientR' => $pcR,
-            'defaultPageSizeOffsetPaginator' =>
+            'alert'                             => $this->alert(),
+            'paginator'                         => $paginator,
+            'productClientR'                    => $pcR,
+            'defaultPageSizeOffsetPaginator'    =>
                 (int) $this->sR->getSetting('default_list_limit'),
-            'optionsDataProductsDropdownFilter' =>
-                $this->optionsDataProducts($pR),
-            'optionsDataFamiliesDropdownFilter' =>
-                $this->optionsDataFamilies($fR),
-            'products' => $products,
-            /** @var string $query_params['sort'] */
-            'sortString' => $query_params['sort'] ?? '-id, -product_sku',
-            'urlFastRouteGenerator' => $urlFastRouteGenerator,
-            'visible' => $this->sR->getSetting('columns_all_visible') == '0' ? false : true,
+            'optionsDataProductsDropdownFilter' => $optionsDataProductsDropdownFilter,
+            'optionsDataFamiliesDropdownFilter' => $optionsDataFamiliesDropdownFilter,
+            'sortString'                        => $sortString,
+            'visible'                           => $visible,
+            'gridSummary'                       => $gridSummary,
         ];
         return $this->webViewRenderer->render('index', $parameters);
     }
@@ -667,39 +704,27 @@ final class ProductController extends BaseController
      * @param FormHydrator $formHydrator
      * @param Request $request
      * @param pR $pR
-     * @param qaR $qaR
-     * @param qiR $qiR
-     * @param qR $qR
-     * @param qtrR $qtrR
      * @param trR $trR
      * @param uR $uR
      * @param qiaR $qiaR
      * @param qiaS $qiaS
-     * @param acqR $acqR
      */
     public function selectionQuote(
         FormHydrator $formHydrator,
         Request $request,
         pR $pR,
-        qaR $qaR,
-        qiR $qiR,
-        qR $qR,
-        qtrR $qtrR,
         trR $trR,
         uR $uR,
         qiaR $qiaR,
         qiaS $qiaS,
-        acqR $acqR,
     ): Response {
         $select_items = $request->getQueryParams();
         /** @var array $select_items['product_ids'] */
         $product_ids = ($select_items['product_ids'] ?: []);
         /** @var string $quote_id */
         $quote_id = $select_items['quote_id'];
-        // Use Spiral||Cycle\Database\Injection\Parameter to build 'IN' array of products.
         $products = $pR->findinProducts($product_ids);
         $numberHelper = new NumberHelper($this->sR);
-        // Format the product prices according to comma or point or other setting choice.
         $order = 1;
         /** @var Product $product */
         foreach ($products as $product) {
@@ -709,8 +734,7 @@ final class ProductController extends BaseController
                     $pR, $trR, $uR, $qiaR, $qiaS, $formHydrator);
             $order++;
         }
-        $numberHelper->calculateQuote((int) $quote_id,
-                $acqR, $qiR, $qiaR, $qtrR, $qaR, $qR);
+        $this->quoteRecalculator->recalculate((int) $quote_id);
         return $this->responseFactory->createResponse(Json::encode($products));
     }
 
@@ -724,25 +748,23 @@ final class ProductController extends BaseController
      * @param uR $uR
      * @param iiaR $iiaR
      * @param iiR $iiR
-     * @param itrR $itrR
-     * @param iaR $iaR
-     * @param iR $iR
-     * @param pymR $pymR
-     * @param aciR $aciR
      */
-    public function selectionInv(FormHydrator $formHydrator, Request $request,
-            pR $pR, trR $trR, uR $uR, iiaR $iiaR, iiR $iiR, itrR $itrR,
-            iaR $iaR, iR $iR, pymR $pymR, aciR $aciR): Response
-    {
+    public function selectionInv(
+        FormHydrator $formHydrator,
+        Request $request,
+        pR $pR,
+        trR $trR,
+        uR $uR,
+        iiaR $iiaR,
+        iiR $iiR,
+    ): Response {
         $select_items = $request->getQueryParams();
         /** @var array $select_items['product_ids'] */
         $product_ids = ($select_items['product_ids'] ?: []);
         /** @var string $inv_id */
         $inv_id = $select_items['inv_id'];
-        // Use Spiral||Cycle\Database\Injection\Parameter to build 'IN' array of products.
         $products = $pR->findinProducts($product_ids);
         $numberHelper = new NumberHelper($this->sR);
-        // Format the product prices according to comma or point or other setting choice.
         $order = 1;
         /** @var Product $product */
         foreach ($products as $product) {
@@ -753,8 +775,7 @@ final class ProductController extends BaseController
                     $uR, $formHydrator);
             $order++;
         }
-        $numberHelper->calculateInv((int) $inv_id, $aciR, $iiR, $iiaR,
-                $itrR, $iaR, $iR, $pymR);
+        $this->invRecalculator->recalculate((int) $inv_id);
         return $this->responseFactory->createResponse(Json::encode($products));
     }
 
@@ -807,32 +828,21 @@ final class ProductController extends BaseController
     }
 
     /**
-     * @param cfR $cfR
-     * @param cvR $cvR
-     * @param fR $fR
      * @param pR $pR
      * @param pcR $pcR
      * @param ppR $ppR
      * @param piR $piR
-     * @param trR $trR
-     * @param uR $uR
-     * @param upR $upR
      * @param string $id
      */
     public function view(
-        cfR $cfR,
-        cvR $cvR,
-        fR $fR,
         pR $pR,
         pcR $pcR,
         ppR $ppR,
         piR $piR,
-        trR $trR,
-        uR $uR,
-        upR $upR,
         #[RouteArgument('id')]
         string $id,
     ): Response {
+        $d = $this->formDeps;
         $product = $this->product((int) $id, $pR);
         $language = (string) $this->session->get('_language');
         $peppolarrays = new PeppolArrays();
@@ -841,6 +851,7 @@ final class ProductController extends BaseController
             $productCustomForm = new ProductCustomForm();
             $product_id = $product->reqId();
             $product_images = $piR->repoProductImageProductquery($product_id);
+            $cfRepo = $d->customFieldRepository;
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'product/view',
@@ -851,17 +862,17 @@ final class ProductController extends BaseController
                         'form' => $productForm,
                         'standard_item_identification_schemeids' => $peppolarrays->getIso6523Icd(),
                         'item_classification_code_listids' => $peppolarrays->getUncl7143(),
-                        'families' => $this->families($fR->findAllPreloaded()),
-                        'units' => $this->units($uR->findAllPreloaded()),
-                        'tax_rates' => $this->taxRates($trR->findAllPreloaded()),
-                        'unit_peppols' => $this->unitPeppols($upR->findAllPreloaded()),
-                        'custom_fields' => $cfR->repoTablequery('product_custom'),
-                        'custom_values' => $cvR->fixCfValueToCf($cfR->repoTablequery('product_custom')),
-                        'cvH' => new CVH($this->sR, $cvR),
+                        'families' => $this->families($d->familyRepository->findAllPreloaded()),
+                        'units' => $this->units($d->unitRepository->findAllPreloaded()),
+                        'tax_rates' => $this->taxRates($d->taxRateRepository->findAllPreloaded()),
+                        'unit_peppols' => $this->unitPeppols($d->unitPeppolRepository->findAllPreloaded()),
+                        'custom_fields' => $cfRepo->repoTablequery('product_custom'),
+                        'custom_values' => $d->customValueRepository->fixCfValueToCf(
+                                $cfRepo->repoTablequery('product_custom')),
+                        'cvH' => new CVH($this->sR, $d->customValueRepository),
                         'product_custom_values' => $this->productCustomValues($product_id, $pcR),
                         'productCustomForm' => $productCustomForm,
-                        'upR' => $upR,
-                        //load Entity\Product BelongTo relations ie. $family, $tax_rate, $unit by means of repoProductQuery
+                        'upR' => $d->unitPeppolRepository,
                         'product' => $pR->repoProductquery($product_id),
                     ],
                 ),
@@ -1110,7 +1121,7 @@ final class ProductController extends BaseController
 
     /**
      * @param ProductRepository $pR
-     * @return array
+     * @return array<string, string>
      */
     public function optionsDataProducts(pR $pR): array
     {
@@ -1128,7 +1139,7 @@ final class ProductController extends BaseController
                 // Tip: After selecting a value in the dropdown, or inputting into an input box always see
                 // how the browser's query url Parameter is being influenced by the selection or input
                 && null !== $productSku) {
-                $optionsDataProducts[$productSku] = $product->getProductSku();
+                $optionsDataProducts[$productSku] = $productSku;
             }
         }
         return $optionsDataProducts;
@@ -1136,7 +1147,7 @@ final class ProductController extends BaseController
 
     /**
      * @param fR $fR
-     * @return array
+     * @return array<string, string>
      */
     public function optionsDataFamilies(fR $fR): array
     {

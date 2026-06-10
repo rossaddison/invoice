@@ -5,31 +5,14 @@ declare(strict_types=1);
 namespace App\Invoice\Quote\Trait;
 
 use App\Infrastructure\Persistence\EmailTemplate\EmailTemplate;
-use App\Invoice\{
-    Client\ClientRepository as CR,
-    ClientCustom\ClientCustomRepository as CCR,
-    CustomField\CustomFieldRepository as CFR,
-    CustomValue\CustomValueRepository as CVR,
-    DeliveryLocation\DeliveryLocationRepository as DLR,
-    EmailTemplate\EmailTemplateRepository as ETR,
-    Group\GroupRepository as GR,
-    Inv\InvRepository as IR,
-    InvAmount\InvAmountRepository as IAR,
-    InvCustom\InvCustomRepository as ICR,
-    PaymentCustom\PaymentCustomRepository as PCR,
-    Quote\QuoteRepository as QR,
-    QuoteAmount\QuoteAmountRepository as QAR,
-    QuoteCustom\QuoteCustomRepository as QCR,
-    QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository as ACQIR,
-    QuoteItemAmount\QuoteItemAmountRepository as QIAR,
-    QuoteItem\QuoteItemRepository as QIR,
-    QuoteTaxRate\QuoteTaxRateRepository as QTRR,
-    SalesOrder\SalesOrderRepository as SOR,
-    SalesOrderCustom\SalesOrderCustomRepository as SOCR,
-    UserInv\UserInvRepository as UIR,
+use App\Invoice\Quote\{
+    MailerQuoteForm,
+    QuoteEmailStage0Deps,
+    QuoteEmailStage1Data,
+    QuoteEmailStage2Deps,
+    QuotePdfService,
 };
-use App\Invoice\Quote\MailerQuoteForm;
-use App\Invoice\Helpers\{MailerHelper, TemplateHelper};
+use App\Invoice\Helpers\{MailerHelper, MailerHelperCustomDeps, MailerSendParams, TemplateHelper};
 use Yiisoft\{
     Json\Json,
     Router\HydratorAttribute\RouteArgument,
@@ -49,71 +32,55 @@ trait Email
 
     public function emailStage0(
         WebViewRenderer $head,
-        #[RouteArgument('id')]
-        int $id,
-        CCR $ccR,
-        CFR $cfR,
-        CVR $cvR,
-        ETR $etR,
-        ICR $icR,
-        QR $qR,
-        PCR $pcR,
-        SOCR $socR,
-        QCR $qcR,
-        UIR $uiR,
+        #[RouteArgument('id')] int $id,
+        QuoteEmailStage0Deps $d,
     ): Response {
+        $mailerDeps = new MailerHelperCustomDeps(
+            $d->custom->ccR, $d->custom->qcR, $d->custom->icR,
+            $d->custom->pcR, $d->entity->socR, $d->custom->cfR, $d->custom->cvR);
         $mailer_helper = new MailerHelper(
-            $this->sR, $this->session, $this->translator, $this->logger,
-                $this->mailer, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
+            $this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $mailerDeps);
         $template_helper = new TemplateHelper(
-            $this->sR, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
+            $this->sR, $d->custom->ccR, $d->custom->qcR, $d->custom->icR,
+            $d->custom->pcR, $d->entity->socR, $d->custom->cfR, $d->custom->cvR);
         if (!$mailer_helper->mailerConfigured()) {
-            $this->flashMessage('warning', $this->translator->translate(
-                'email.not.configured'));
+            $this->flashMessage('warning', $this->translator->translate('email.not.configured'));
             return $this->webService->getRedirectResponse('quote/index');
         }
-        $quote_entity = $this->quote($id, $qR, true);
+        $quote_entity = $this->quote($id, $d->entity->qR, true);
         if ($quote_entity) {
             $quote_id = $quote_entity->reqId();
-            $quote = $qR->repoQuoteUnLoadedquery($quote_id);
+            $quote = $d->entity->qR->repoQuoteUnLoadedquery($quote_id);
             if ($quote) {
-                // Get all custom fields
                 $custom_fields = [];
                 $custom_tables = [
                     'client_custom' => 'client',
                     'inv_custom' => 'invoice',
                     'payment_custom' => 'payment',
                     'quote_custom' => 'quote',
-                    'salesorder_custom' => 'salesorder'
+                    'salesorder_custom' => 'salesorder',
                 ];
                 foreach (array_keys($custom_tables) as $table) {
-                    $custom_fields[$table] = $cfR->repoTablequery($table);
+                    $custom_fields[$table] = $d->custom->cfR->repoTablequery($table);
                 }
                 if ($template_helper->selectEmailQuoteTemplate() == '') {
                     $this->flashMessage('warning',
-                        $this->translator->translate(
-                            'quote.email.templates.not.configured'));
+                        $this->translator->translate('quote.email.templates.not.configured'));
                     return $this->webService->getRedirectResponse(
                         'setting/tabIndex', ['_language' => 'en'],
-                            ['active' => 'quotes'],
-                                'settings[email_quote_template]');
+                            ['active' => 'quotes'], 'settings[email_quote_template]');
                 }
                 $setting_status_email_template =
-                    $etR->repoEmailTemplatequery((int)
-                    $template_helper->selectEmailQuoteTemplate())
-                                               ?: null;
+                    $d->entity->etR->repoEmailTemplatequery((int) $template_helper->selectEmailQuoteTemplate()) ?: null;
                 null === $setting_status_email_template ? $this->flashMessage(
                     'info',
-                    $this->translator->translate('default.email.template')
-                        . '=>'
-                        . $this->translator->translate('not.set'),
+                    $this->translator->translate('default.email.template') . '=>'
+                    . $this->translator->translate('not.set'),
                 ) : '';
-
-                empty($template_helper->selectPdfQuoteTemplate()) ?
-                    $this->flashMessage('info',
-                    $this->translator->translate('default.pdf.template')
-                        . '=>'
-                        . $this->translator->translate('not.set'),
+                empty($template_helper->selectPdfQuoteTemplate()) ? $this->flashMessage(
+                    'info',
+                    $this->translator->translate('default.pdf.template') . '=>'
+                    . $this->translator->translate('not.set'),
                 ) : '';
                 $parameters = [
                     'head' => $head,
@@ -121,70 +88,53 @@ trait Email
                     'actionArguments' => ['id' => $quote_id],
                     'alert' => $this->alert(),
                     'autoTemplate' => null !== $setting_status_email_template
-                        ? $this->getInjectEmailTemplateArray(
-                            $setting_status_email_template)
+                        ? $this->getInjectEmailTemplateArray($setting_status_email_template)
                         : [],
-                    'settingStatusPdfTemplate' =>
-                        $template_helper->selectPdfQuoteTemplate(),
-                    'email_templates' => $etR->repoEmailTemplateType('quote'),
-                    'dropdownTitlesOfEmailTemplates' =>
-                        $this->emailTemplates($etR),
-                    'userInv' => $uiR->repoUserInvUserIdcount(
-                        $quote->reqUserId()) > 0 ? $uiR->repoUserInvUserIdquery(
-                            $quote->reqUserId()) : null,
+                    'settingStatusPdfTemplate' => $template_helper->selectPdfQuoteTemplate(),
+                    'email_templates' => $d->entity->etR->repoEmailTemplateType('quote'),
+                    'dropdownTitlesOfEmailTemplates' => $this->emailTemplates($d->entity->etR),
+                    'userInv' => $d->entity->uiR->repoUserInvUserIdcount($quote->reqUserId()) > 0
+                        ? $d->entity->uiR->repoUserInvUserIdquery($quote->reqUserId())
+                        : null,
                     'quote' => $quote,
                     'pdfTemplates' => $this->emailGetQuoteTemplates('pdf'),
-                    'templateTags' =>
-                        $this->webViewRenderer->renderPartialAsString(
-                            '//invoice/emailtemplate/template-tags', [
-                        'custom_fields' => $custom_fields,
-                        'template_tags_inv' => '',
-                        'template_tags_quote' =>
-                            $this->webViewRenderer->renderPartialAsString(
+                    'templateTags' => $this->webViewRenderer->renderPartialAsString(
+                        '//invoice/emailtemplate/template-tags', [
+                            'custom_fields' => $custom_fields,
+                            'template_tags_inv' => '',
+                            'template_tags_quote' => $this->webViewRenderer->renderPartialAsString(
                                 '//invoice/emailtemplate/template-tags-quote', [
-                            'custom_fields_quote_custom' =>
-                                $custom_fields['quote_custom'],
+                                    'custom_fields_quote_custom' => $custom_fields['quote_custom'],
+                                ]),
                         ]),
-                    ]),
                     'form' => new MailerQuoteForm(),
                     'custom_fields' => $custom_fields,
                 ];
                 return $this->webViewRenderer->render('mailer_quote', $parameters);
-            } // quote
+            }
             return $this->webService->getRedirectResponse('quote/index');
-        } // quote_entity
+        }
         return $this->webService->getRedirectResponse('quote/index');
     }
 
-    public function getInjectEmailTemplateArray(
-        EmailTemplate $email_template): array
+    public function getInjectEmailTemplateArray(EmailTemplate $email_template): array
     {
         return [
-            'body' => Json::htmlEncode(
-                $email_template->getEmailTemplateBody()),
-            'subject' =>
-                $email_template->getEmailTemplateSubject() ?? '',
-            'from_name' =>
-                $email_template->getEmailTemplateFromName() ?? '',
-            'from_email' =>
-                $email_template->getEmailTemplateFromEmail() ?? '',
-            'cc' =>
-                $email_template->getEmailTemplateCc() ?? '',
-            'bcc' =>
-                $email_template->getEmailTemplateBcc() ?? '',
-            'pdf_template' =>
-                $email_template->getEmailTemplatePdfTemplate() ?? '',
+            'body' => Json::htmlEncode($email_template->getEmailTemplateBody()),
+            'subject' => $email_template->getEmailTemplateSubject() ?? '',
+            'from_name' => $email_template->getEmailTemplateFromName() ?? '',
+            'from_email' => $email_template->getEmailTemplateFromEmail() ?? '',
+            'cc' => $email_template->getEmailTemplateCc() ?? '',
+            'bcc' => $email_template->getEmailTemplateBcc() ?? '',
+            'pdf_template' => $email_template->getEmailTemplatePdfTemplate() ?? '',
         ];
     }
 
     /**
-     * @param ETR $etR
-     *
      * @return (string|null)[]
-     *
      * @psalm-return array<''|int, null|string>
      */
-    public function emailTemplates(ETR $etR): array
+    public function emailTemplates(\App\Invoice\EmailTemplate\EmailTemplateRepository $etR): array
     {
         $email_templates = $etR->repoEmailTemplateType('quote');
         $data = [];
@@ -197,209 +147,112 @@ trait Email
 
     public function emailStage1(
         int $quote_id,
-        array $from,
-        // $to can only have one email address
-        string $to,
-        string $subject,
-        string $email_body,
-        string $cc,
-        string $bcc,
-        array $attachFiles,
-        CR $cR,
-        CCR $ccR,
-        CFR $cfR,
-        DLR $dlR,
-        CVR $cvR,
-        IAR $iaR,
-        ICR $icR,
-        QIAR $qiaR,
-        ACQIR $acqiR,
-        QIR $qiR,
-        IR $iR,
-        QTRR $qtrR,
-        PCR $pcR,
-        SOCR $socR,
-        QR $qR,
-        QAR $qaR,
-        QCR $qcR,
-        SOR $soR,
-        UIR $uiR,
-        WebViewRenderer $webViewRenderer,
+        QuoteEmailStage1Data $data,
+        QuoteEmailStage2Deps $d,
+        QuotePdfService $quotePdfService,
     ): bool {
-        // All custom repositories, including icR have to be initialised.
         $template_helper = new TemplateHelper(
-            $this->sR, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
+            $this->sR, $d->custom->ccR, $d->custom->qcR, $d->custom->icR,
+            $d->custom->pcR, $d->core->socR, $d->custom->cfR, $d->custom->cvR);
+        $mailerDeps = new MailerHelperCustomDeps(
+            $d->custom->ccR, $d->custom->qcR, $d->custom->icR,
+            $d->custom->pcR, $d->core->socR, $d->custom->cfR, $d->custom->cvR);
         $mailer_helper = new MailerHelper(
-        $this->sR, $this->session, $this->translator, $this->logger,
-            $this->mailer, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
-        $quote_amount = (($qaR->repoQuoteAmountCount($quote_id) > 0) ?
-            $qaR->repoQuotequery($quote_id) : null);
-        $quote_custom_values = $this->quoteCustomValues($quote_id, $qcR);
-        $quote_entity = $qR->repoCount($quote_id) > 0 ?
-            $qR->repoQuoteUnLoadedquery($quote_id) : null;
+            $this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $mailerDeps);
+        $quote_entity = $d->relation->qR->repoCount($quote_id) > 0
+            ? $d->relation->qR->repoQuoteUnLoadedquery($quote_id)
+            : null;
         if ($quote_entity) {
-            $stream = false;
-            $pdf_template_target_path =
-                $this->pdfHelper->generateQuotePdf(
-                    $quote_id, $quote_entity->reqUserId(), $stream, true,
-                        $quote_amount, $quote_custom_values, $cR, $cvR,
-                            $cfR, $dlR, $qiR, $qiaR, $acqiR, $qR, $qtrR,
-                                $uiR, $webViewRenderer);
-            if (null !== $pdf_template_target_path) {
+            $pdf_template_target_path = $quotePdfService->generate($quote_id, false, true);
+            if ($pdf_template_target_path !== '') {
                 $mail_message = $template_helper->parseTemplate(
-                    $quote_id, false, $email_body, $cvR, $iR, $iaR,
-                        $qR, $qaR, $soR, $uiR);
+                    $quote_id, false, $data->emailBody,
+                    $d->custom->cvR, $d->core->iR, $d->core->iaR, $d->relation->qR, $d->relation->qaR, $d->relation->soR, $d->core->uiR);
                 $mail_subject = $template_helper->parseTemplate(
-                    $quote_id, false, $subject, $cvR, $iR, $iaR, $qR,
-                        $qaR, $soR, $uiR);
+                    $quote_id, false, $data->subject,
+                    $d->custom->cvR, $d->core->iR, $d->core->iaR, $d->relation->qR, $d->relation->qaR, $d->relation->soR, $d->core->uiR);
                 $mail_cc = $template_helper->parseTemplate(
-                    $quote_id, false, $cc, $cvR, $iR, $iaR, $qR, $qaR,
-                        $soR, $uiR);
-                $mail_bcc = $template_helper->parseTemplate($quote_id,
-                    false, $bcc, $cvR, $iR, $iaR, $qR, $qaR, $soR,
-                        $uiR);
-                // from[0] is the from_email and from[1] is the from_name
-                /**
-                 * @var string $from[0]
-                 * @var string $from[1]
-                 */
-                $mail_from
-                    = [$template_helper->parseTemplate($quote_id, false,
-                        $from[0], $cvR, $iR, $iaR, $qR, $qaR, $soR,
-                            $uiR),
-                        $template_helper->parseTemplate($quote_id, false,
-                            $from[1], $cvR, $iR, $iaR, $qR, $qaR, $soR,
-                                $uiR)];
-                // mail_from[0] is the from_email and mail_from[1] is
-                // the from_name
-                return $mailer_helper->yiiMailerSend(
-                    $mail_from[0],
-                    $mail_from[1],
-                    $to,
-                    $mail_subject,
-                    $mail_message,
-                    $mail_cc,
-                    $mail_bcc,
-                    $attachFiles,
-                    $pdf_template_target_path,
-                    $uiR,
-                );
-            } // pdf_template_target_path
-        } // quote_entity
+                    $quote_id, false, $data->cc,
+                    $d->custom->cvR, $d->core->iR, $d->core->iaR, $d->relation->qR, $d->relation->qaR, $d->relation->soR, $d->core->uiR);
+                $mail_bcc = $template_helper->parseTemplate(
+                    $quote_id, false, $data->bcc,
+                    $d->custom->cvR, $d->core->iR, $d->core->iaR, $d->relation->qR, $d->relation->qaR, $d->relation->soR, $d->core->uiR);
+                $mail_from_email = $template_helper->parseTemplate(
+                    $quote_id, false, $data->fromEmail,
+                    $d->custom->cvR, $d->core->iR, $d->core->iaR, $d->relation->qR, $d->relation->qaR, $d->relation->soR, $d->core->uiR);
+                $mail_from_name = $template_helper->parseTemplate(
+                    $quote_id, false, $data->fromName,
+                    $d->custom->cvR, $d->core->iR, $d->core->iaR, $d->relation->qR, $d->relation->qaR, $d->relation->soR, $d->core->uiR);
+                $mailerParams = new MailerSendParams($mail_from_email, $mail_from_name, $data->to, $mail_subject, $mail_message, $mail_cc, $mail_bcc);
+                return $mailer_helper->yiiMailerSend($mailerParams, $data->attachFiles, $pdf_template_target_path, $d->core->uiR);
+            }
+        }
         return false;
     }
 
     public function emailStage2(
         Request $request,
-        #[RouteArgument('id')]
-        int $quote_id,
-        CR $cR,
-        CCR $ccR,
-        CFR $cfR,
-        DLR $dlR,
-        CVR $cvR,
-        GR $gR,
-        IAR $iaR,
-        QIAR $qiaR,
-        ACQIR $acqiR,
-        ICR $icR,
-        QIR $qiR,
-        IR $iR,
-        QTRR $qtrR,
-        PCR $pcR,
-        SOCR $socR,
-        QR $qR,
-        QAR $qaR,
-        QCR $qcR,
-        SOR $soR,
-        UIR $uiR,
+        #[RouteArgument('id')] int $quote_id,
+        QuoteEmailStage2Deps $d,
+        QuotePdfService $quotePdfService,
     ): Response {
         if ($quote_id) {
+            $mailerDeps = new MailerHelperCustomDeps(
+                $d->custom->ccR, $d->custom->qcR, $d->custom->icR,
+                $d->custom->pcR, $d->core->socR, $d->custom->cfR, $d->custom->cvR);
             $mailer_helper = new MailerHelper(
-                $this->sR, $this->session, $this->translator, $this->logger,
-                    $this->mailer, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
+                $this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $mailerDeps);
             $body = $request->getParsedBody() ?? [];
             if (is_array($body)) {
                 $body['btn_cancel'] = 0;
                 if (!$mailer_helper->mailerConfigured()) {
-                    $this->flashMessage('warning', $this->translator->translate(
-                        'email.not.configured'));
-                    return $this->webService->getRedirectResponse(
-                        'quote/index');
+                    $this->flashMessage('warning', $this->translator->translate('email.not.configured'));
+                    return $this->webService->getRedirectResponse('quote/index');
                 }
-
-                /**
-                 * @var array $body['MailerQuoteForm']
-                 */
-                $to = (string) $body['MailerQuoteForm']['to_email'] ?: '';
+                /** @var array $body['MailerQuoteForm'] */
+                $to = (string) ($body['MailerQuoteForm']['to_email'] ?? '');
                 if (empty($to)) {
                     return $this->factory->createResponse(
                         $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/setting/quote_message',
-                        ['heading' => '',
-                            'message' => $this->translator->translate(
-                                'email.to.address.missing'), 'url' =>
-                                    'quote/view','id' => $quote_id],
-                    ));
+                            '//invoice/setting/quote_message',
+                            ['heading' => '', 'message' =>
+                                $this->translator->translate('email.to.address.missing'),
+                             'url' => 'quote/view', 'id' => $quote_id],
+                        ));
                 }
-
-                /**
-                 * @var array $from
-                 */
-                $from = [
-                    $body['MailerQuoteForm']['from_email'] ?? '',
-                    $body['MailerQuoteForm']['from_name'] ?? '',
-                ];
-
-
-                if (empty($from[0])) {
+                $from_email = (string) ($body['MailerQuoteForm']['from_email'] ?? '');
+                $from_name = (string) ($body['MailerQuoteForm']['from_name'] ?? '');
+                if (empty($from_email)) {
                     return $this->factory->createResponse(
                         $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/setting/quote_message',
-                        ['heading' => '', 'message' =>
-                            $this->translator->translate(
-                                'email.to.address.missing'),
-                                    'url' => 'quote/view','id' => $quote_id],
-                    ));
+                            '//invoice/setting/quote_message',
+                            ['heading' => '', 'message' =>
+                                $this->translator->translate('email.to.address.missing'),
+                             'url' => 'quote/view', 'id' => $quote_id],
+                        ));
                 }
-
-                /**
-                 * @var string $subject
-                 */
+                /** @var string $subject */
                 $subject = $body['MailerQuoteForm']['subject'] ?? '';
-                /**  @var string $body */
-                $email_body = (string) $body['MailerQuoteForm']['body'];
-
-                /**
-                 * @var string $cc
-                 */
+                $email_body = (string) ($body['MailerQuoteForm']['body'] ?? '');
+                /** @var string $cc */
                 $cc = $body['MailerQuoteForm']['cc'] ?? '';
-                /**
-                 * @var string $bcc
-                 */
+                /** @var string $bcc */
                 $bcc = $body['MailerQuoteForm']['bcc'] ?? '';
-
                 $attachFiles = $request->getUploadedFiles();
-
-                $this->generateQuoteNumberIfApplicable($quote_id,
-                    $qR, $this->sR, $gR);
-                // Custom fields are automatically included on the quote
-                if ($this->emailStage1($quote_id, $from, $to,
-                        $subject, $email_body, $cc, $bcc, $attachFiles, $cR,
-                            $ccR, $cfR, $dlR, $cvR, $iaR, $icR, $qiaR, $acqiR,
-                                $qiR, $iR, $qtrR, $pcR, $socR, $qR, $qaR, $qcR,
-                                    $soR, $uiR, $this->webViewRenderer)) {
-                    $this->sR->quoteMarkSent($quote_id, $qR);
-                    $this->flashMessage('success', $this->translator->translate(
-                        'email.successfully.sent'));
-                    return $this->webService->getRedirectResponse('quote/view',
-                        ['id' => $quote_id]);
+                $this->generateQuoteNumberIfApplicable($quote_id, $d->relation->qR, $this->sR, $d->core->gR);
+                if ($this->emailStage1(
+                    $quote_id,
+                    new QuoteEmailStage1Data($from_email, $from_name, $to, $subject, $email_body, $cc, $bcc, $attachFiles),
+                    $d,
+                    $quotePdfService,
+                )) {
+                    $this->sR->quoteMarkSent($quote_id, $d->relation->qR);
+                    $this->flashMessage('success', $this->translator->translate('email.successfully.sent'));
+                    return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
                 }
             }
-        } // quote_id
-        $this->flashMessage('danger', $this->translator->translate(
-                'email.not.sent.successfully'));
-        return $this->webService->getRedirectResponse(
-                'quote/view', ['id' => $quote_id]);
+        }
+        $this->flashMessage('danger', $this->translator->translate('email.not.sent.successfully'));
+        return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
     }
 }

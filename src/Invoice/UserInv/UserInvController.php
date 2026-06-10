@@ -6,8 +6,6 @@ namespace App\Invoice\UserInv;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Auth\TokenRepository as tR;
-use App\Invoice\Client\ClientRepository as cR;
 use App\Infrastructure\Persistence\Client\Client;
 use App\Infrastructure\Persistence\UserClient\UserClient;
 use App\Infrastructure\Persistence\UserInv\UserInv;
@@ -15,7 +13,6 @@ use App\Invoice\Helpers\CountryHelper;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\UserClient\UserClientRepository as ucR;
 use App\Invoice\UserInv\UserInvRepository as uiR;
-use App\Service\WebControllerService;
 use App\User\UserService;
 use App\User\UserRepository as uR;
 use App\Widget\Button;
@@ -26,10 +23,7 @@ use Yiisoft\Data\Reader\Sort;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Input\Http\Attribute\Parameter\Query;
-use Yiisoft\Rbac\AssignmentsStorageInterface as Assignment;
-use Yiisoft\Rbac\ItemsStorageInterface as ItemStorage;
 use Yiisoft\Rbac\Manager as Manager;
-use Yiisoft\Rbac\RuleFactoryInterface as Rule;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Security\TokenMask;
@@ -42,31 +36,26 @@ final class UserInvController extends BaseController
 {
     protected string $controllerName = 'invoice/userinv';
 
+    private Manager $manager;
+    private UrlGenerator $urlGenerator;
+    private UserInvService $userinvService;
+    private \App\Widget\FormFields $formFields;
+
     public function __construct(
-        // add, save, remove, clear, children, parents
-        private ItemStorage $itemstorage,
-        private Assignment $assignment,
-        private Rule $rule,
-        private Manager $manager,
-        private UrlGenerator $urlGenerator,
-        private UserInvService $userinvService,
-        private \App\Widget\FormFields $formFields,
+        UserInvControllerDeps $d,
         SessionInterface $session,
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
         WebViewRenderer $webViewRenderer,
-        WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
+        parent::__construct($d->webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         // Related logic: see yiisoft/rbac-php
-        $this->itemstorage = $itemstorage;
-        $this->assignment = $assignment;
-        $this->rule = $rule;
-        $this->manager = new Manager($this->itemstorage, $this->assignment, $this->rule);
-        $this->urlGenerator = $urlGenerator;
-        $this->userinvService = $userinvService;
+        $this->manager = new Manager($d->itemstorage, $d->assignment, $d->rule);
+        $this->urlGenerator = $d->urlGenerator;
+        $this->userinvService = $d->userinvService;
+        $this->formFields = $d->formFields;
     }
 
     /**
@@ -166,9 +155,7 @@ final class UserInvController extends BaseController
     // using Setting...Invoice User Account
 
     /**
-     * @param cR $cR
-     * @param uiR $uiR
-     * @param ucR $ucR
+     * @param UserInvIndexDeps $d
      * @param string $_language
      * @param string $page
      * @param string $active
@@ -178,9 +165,7 @@ final class UserInvController extends BaseController
      * @return \Psr\Http\Message\ResponseInterface
      */
     public function index(
-        cR $cR,
-        uiR $uiR,
-        ucR $ucR,
+        UserInvIndexDeps $d,
         #[RouteArgument('_language')]
         string $_language,
         #[RouteArgument('page')]
@@ -200,15 +185,15 @@ final class UserInvController extends BaseController
         $sortString = $querySort ?? '-user_id';
         $sort = Sort::only(['user_id', 'name'])
             ->withOrderString($sortString);
-        $userinvs = $this->userinvsActiveWithSort($uiR, $activeInt, $sort);
+        $userinvs = $this->userinvsActiveWithSort($d->uiR, $activeInt, $sort);
         if (isset($queryFilterUser) && !empty($queryFilterUser)) {
-            $userinvs = $uiR->filterUserInvs($queryFilterUser);
+            $userinvs = $d->uiR->filterUserInvs($queryFilterUser);
         }
         $parameters = [
-            'cR' => $cR,
-            'uiR' => $uiR,
+            'cR' => $d->cR,
+            'uiR' => $d->uiR,
             // get a count of clients allocated to the user
-            'ucR' => $ucR,
+            'ucR' => $d->ucR,
             'active' => $activeInt,
             'canEdit' => $canEdit,
             'userinvs' => $userinvs,
@@ -218,7 +203,7 @@ final class UserInvController extends BaseController
             'page' => (int) $page > 0 ? (int) $page : 1,
             'sortOrder' => $querySort ?? '',
             'manager' => $this->manager,
-            'optionsDataFilterUserInvLoginDropDown' => $this->optionsDataFilterUserInvLogin($uiR),
+            'optionsDataFilterUserInvLoginDropDown' => $this->optionsDataFilterUserInvLogin($d->uiR),
         ];
         return $this->webViewRenderer->render('index', $parameters);
     }
@@ -475,11 +460,7 @@ final class UserInvController extends BaseController
      * @param string $language
      * @param string $tokenMasked
      * @param string $tokenType
-     * @param cR $cR
-     * @param uiR $uiR
-     * @param ucR $ucR
-     * @param sR $sR
-     * @param tR $tR
+     * @param UserInvSignupDeps $d
      * @return Response
      */
     public function signup(
@@ -493,11 +474,7 @@ final class UserInvController extends BaseController
         string $tokenMasked,
         #[RouteArgument('tokenType')]
         string $tokenType,
-        cR $cR,
-        uiR $uiR,
-        ucR $ucR,
-        sR $sR,
-        tR $tR,
+        UserInvSignupDeps $d,
     ): Response {
         // A token consists of a random 32 length string concatenated with a timestamp and then Masked.
         $unMaskedToken = TokenMask::remove($tokenMasked);
@@ -507,23 +484,23 @@ final class UserInvController extends BaseController
             $lengthTimeStamp = strlen($timestamp);
             $tokenWithoutTimestamp = substr($unMaskedToken, 0, -($lengthTimeStamp + 1));
             if ((int) $timestamp + 3600 >= time()) {
-                $identity = $tR->findIdentityByToken($tokenWithoutTimestamp, $tokenType);
+                $identity = $d->tR->findIdentityByToken($tokenWithoutTimestamp, $tokenType);
                 if (null !== $identity) {
                     $userId = $identity->getUser()?->reqId();
                     if (null !== $userId) {
-                        $userInv = $uiR->repoUserInvUserIdquery($userId);
+                        $userInv = $d->uiR->repoUserInvUserIdquery($userId);
                         if (null !== $userInv) {
                             $userInv->setActive(true);
-                            $uiR->save($userInv);
+                            $d->uiR->save($userInv);
                             $userId = $userInv->reqUserId();
                             // the status is now active i.e. 1, now make sure the token cannot be used again
-                            $tokenEntity = $tR->findTokenByTokenAndType($tokenWithoutTimestamp, $tokenType);
+                            $tokenEntity = $d->tR->findTokenByTokenAndType($tokenWithoutTimestamp, $tokenType);
                             if (null !== $tokenEntity) {
                                 /**
                                  * Related logic: see https://github.com/search?q=repo%3Ayiisoft%2Fyii2-app-advanced%20already_&type=code
                                  */
                                 $tokenEntity->setToken('already_used_token_' . (string) time());
-                                $tR->save($tokenEntity);
+                                $d->tR->save($tokenEntity);
                                 // $email address field in signup form and a field in the user table
                                 $email = $identity->getUser()?->getEmail();
                                 if (null !== $email) {
@@ -531,21 +508,21 @@ final class UserInvController extends BaseController
                                      * The client will have to be assigned to the user by the admin manually if this is not set
                                      * Related logic: see InvoiceController 'signup_automatically_assign_client' => 0
                                      */
-                                    if ($sR->getSetting('signup_automatically_assign_client') == '1') {
+                                    if ($this->sR->getSetting('signup_automatically_assign_client') == '1') {
                                         $client = new Client();
                                         // set the client as active so that invoices can be created for the client
                                         $client->setClientActive(true);
                                         $client->setClientEmail($email);
                                         $client->setClientLanguage($language);
-                                        $client->setClientAge($sR->getSetting('signup_default_age_minimum_eighteen') == '1' ? 18 : 0);
-                                        $cR->save($client);
+                                        $client->setClientAge($this->sR->getSetting('signup_default_age_minimum_eighteen') == '1' ? 18 : 0);
+                                        $d->cR->save($client);
                                         $this->flashMessage('info', $this->translator->translate('assign.client.on.signup.done'));
                                         $clientId = $client->reqId();
                                         $userClient = new UserClient();
                                         $userClient->setUserId($userInv->reqUserId());
                                         $userClient->setClientId($clientId);
-                                        $ucR->save($userClient);
-                                        
+                                        $d->ucR->save($userClient);
+
                                         if ($userId > 0 && $userId > 1) {
                                             $this->manager->revokeAll($userId);
                                             $this->manager->assign('observer', $userId);
