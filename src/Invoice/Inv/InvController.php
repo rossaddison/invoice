@@ -5,23 +5,21 @@ declare(strict_types=1);
 namespace App\Invoice\Inv;
 
 use App\Auth\Permissions;
-use App\Widget\FormFields;
-use App\Widget\ButtonsToolbarFull;
 use App\Infrastructure\Persistence\{
     TaxRate\TaxRate, Inv\Inv, InvItemAllowanceCharge\InvItemAllowanceCharge,
     InvItem\InvItem, InvTaxRate\InvTaxRate
 };
-use App\User\UserService;
 use App\Infrastructure\Persistence\User\User;
-
 use App\Invoice\{
     BaseController, Inv\InvCustomFieldProcessor,
-    InvAllowanceCharge\InvAllowanceChargeService, InvItem\InvItemService,
-    InvItemAllowanceCharge\InvItemAllowanceChargeService,
-    InvAmount\InvAmountService,
-    InvTaxRate\InvTaxRateService, InvCustom\InvCustomService,
-    InvTaxRate\InvTaxRateForm,
     Delivery\DeliveryRepository as DelRepo,
+    InvAllowanceCharge\InvAllowanceChargeService,
+    InvAmount\InvAmountService,
+    InvCustom\InvCustomService,
+    InvItem\InvItemService,
+    InvItemAllowanceCharge\InvItemAllowanceChargeService,
+    InvTaxRate\InvTaxRateService,
+    InvTaxRate\InvTaxRateForm,
     Group\GroupRepository as GR,
     Inv\InvRepository as IR,
     InvCustom\InvCustomRepository as ICR,
@@ -35,7 +33,7 @@ use App\Invoice\{
     UserInv\UserInvRepository as UIR
 };
 use App\User\UserRepository as UR;
-use App\Service\WebControllerService;
+use App\Widget\{ButtonsToolbarFull, FormFields};
 use App\Invoice\Helpers\{DateHelper, NumberHelper};
 use App\Invoice\Inv\Trait\{Add, Archive, Attachment, Credit, Delete, Edit, Email,
     Flush, Guest, HtmlTrait, Index, MultipleCopy, OptionsData, PdfTrait, Peppol,
@@ -45,9 +43,7 @@ use Yiisoft\{
     DataResponse\ResponseFactory\HtmlResponseFactory,
     FormModel\FormHydrator, Html\Html,
     Mailer\MailerInterface, Router\FastRoute\UrlGenerator,
-    Router\HydratorAttribute\RouteArgument, Session\Flash\Flash,
-    Session\SessionInterface, Translator\TranslatorInterface,
-    Yii\View\Renderer\WebViewRenderer
+    Router\HydratorAttribute\RouteArgument,
 };
 use Psr\{
     Log\LoggerInterface, Http\Message\ResponseInterface as Response
@@ -58,41 +54,56 @@ final class InvController extends BaseController
     use Add, Archive, Attachment, Credit, Delete, Edit, Email, Flush, Guest,
         HtmlTrait, Index, MultipleCopy, OptionsData, PdfTrait, Peppol,
         Storecove, Trash, Typescript, UrlKey, View;
-    
+
     protected string $controllerName = 'invoice/inv';
 
     private readonly DateHelper $dateHelper;
     private readonly NumberHelper $numberHelper;
+    private readonly DataResponseFactoryInterface $factory;
+    private readonly HtmlResponseFactory $htmlResponseFactory;
+    private readonly FormFields $formFields;
+    private readonly ButtonsToolbarFull $buttonsToolbarFull;
+    private readonly DelRepo $delRepo;
+    private readonly InvAllowanceChargeService $inv_allowance_charge_service;
+    private readonly InvAmountService $inv_amount_service;
+    private readonly InvService $inv_service;
+    private readonly InvCustomService $inv_custom_service;
+    private readonly InvItemService $inv_item_service;
+    private readonly InvItemAllowanceChargeService $aciis;
+    private readonly InvTaxRateService $inv_tax_rate_service;
+    private readonly LoggerInterface $logger;
+    private readonly MailerInterface $mailer;
+    private readonly UrlGenerator $url_generator;
+    private readonly InvCustomFieldProcessor $customFieldProcessor;
 
     public function __construct(
-        private readonly DataResponseFactoryInterface $factory,
-        private readonly HtmlResponseFactory $htmlResponseFactory,
-        private readonly FormFields $formFields,
-        private readonly ButtonsToolbarFull $buttonsToolbarFull,
-        private readonly DelRepo $delRepo,
-        private readonly InvAllowanceChargeService $inv_allowance_charge_service,
-        private readonly InvAmountService $inv_amount_service,
-        private readonly InvService $inv_service,
-        private readonly InvCustomService $inv_custom_service,
-        private readonly InvItemService $inv_item_service,
-        private readonly InvItemAllowanceChargeService $aciis,
-        private readonly InvTaxRateService $inv_tax_rate_service,
-        private readonly LoggerInterface $logger,
-        private readonly MailerInterface $mailer,
-        private readonly UrlGenerator $url_generator,
-        private readonly InvCustomFieldProcessor $customFieldProcessor,
-        SessionInterface $session,
-        SR $sR,
-        TranslatorInterface $translator,
-        UserService $userService,
-        WebViewRenderer $webViewRenderer,
-        WebControllerService $webService,
-        Flash $flash,
+        InvControllerBaseDeps $base,
+        InvControllerServiceDeps $services,
+        InvControllerInfraDeps $infra,
+        InvControllerUIDeps $ui,
     ) {
-        parent::__construct($webService, $userService, $translator, $webViewRenderer,
-                $session, $sR, $flash);
-        $this->dateHelper = new DateHelper($sR);
-        $this->numberHelper = new NumberHelper($sR);
+        parent::__construct(
+            $base->webService, $base->userService, $base->translator,
+            $base->webViewRenderer, $base->session, $base->sR, $base->flash
+        );
+        $this->factory                      = $infra->factory;
+        $this->htmlResponseFactory          = $infra->htmlResponseFactory;
+        $this->logger                       = $infra->logger;
+        $this->mailer                       = $infra->mailer;
+        $this->url_generator                = $infra->urlGenerator;
+        $this->delRepo                      = $infra->delRepo;
+        $this->inv_allowance_charge_service = $services->invAllowanceChargeService;
+        $this->inv_amount_service           = $services->invAmountService;
+        $this->inv_service                  = $services->invService;
+        $this->inv_custom_service           = $services->invCustomService;
+        $this->inv_item_service             = $services->invItemService;
+        $this->inv_tax_rate_service         = $services->invTaxRateService;
+        $this->aciis                        = $ui->aciis;
+        $this->formFields                   = $ui->formFields;
+        $this->buttonsToolbarFull           = $ui->buttonsToolbarFull;
+        $this->customFieldProcessor         = $ui->customFieldProcessor;
+        $this->dateHelper                   = new DateHelper($this->sR);
+        $this->numberHelper                 = new NumberHelper($this->sR);
     }
 
     // Add, Credit, MultipleCopy

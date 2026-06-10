@@ -21,35 +21,31 @@ use App\Infrastructure\Persistence\{
         SalesOrderTaxRate\SalesOrderTaxRate,
 };
 use App\Invoice\{
-BaseController, Client\ClientRepository as CR,
-CustomField\CustomFieldRepository as CFR,
-DeliveryLocation\DeliveryLocationRepository as DR,
-Group\GroupRepository as GR,
-Helpers\CustomValuesHelper as CVH, Inv\InvForm,
-Inv\InvRepository as InvRepo, Inv\InvService, InvAllowanceCharge\InvAllowanceChargeForm,
-InvAllowanceCharge\InvAllowanceChargeService, InvAmount\InvAmountService,
-InvCustom\InvCustomForm, InvCustom\InvCustomService,
-InvItem\InvItemForm, InvItem\InvItemService,
-InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR,
-InvItemAllowanceCharge\InvItemAllowanceChargeService as IIACS,
-InvTaxRate\InvTaxRateForm, InvTaxRate\InvTaxRateService,
-SalesOrder\SalesOrderRepository as SoR,
-SalesOrderAmount\SalesOrderAmountRepository as SoAR,
-SalesOrderAmount\SalesOrderAmountService as SoAS,
-SalesOrderCustom\SalesOrderCustomRepository as SoCR,
-SalesOrderCustom\SalesOrderCustomService as SoCS,
-SalesOrderItem\SalesOrderItemRepository as SoIR,
-SalesOrderItem\SalesOrderItemService as SoIS,
-SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceChargeRepository as ACSOIR,
-SalesOrderItemAmount\SalesOrderItemAmountRepository as SoIAR,
-SalesOrderTaxRate\SalesOrderTaxRateRepository as SoTRR,
-SalesOrderTaxRate\SalesOrderTaxRateService as SoTRS,
-Setting\SettingRepository,
-UserClient\UserClientRepository as UCR,
-UserInv\UserInvRepository as UIR,
+    BaseController, Client\ClientRepository as CR,
+    CustomField\CustomFieldRepository as CFR,
+    DeliveryLocation\DeliveryLocationRepository as DR,
+    Group\GroupRepository as GR,
+    Helpers\CustomValuesHelper as CVH, Inv\InvForm,
+    Inv\InvRepository as InvRepo, Inv\InvService,
+    InvAllowanceCharge\InvAllowanceChargeForm, InvAllowanceCharge\InvAllowanceChargeService,
+    InvCustom\InvCustomForm, InvCustom\InvCustomService,
+    InvItem\InvItemForm, InvItem\InvItemService,
+    InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR,
+    InvTaxRate\InvTaxRateForm, InvTaxRate\InvTaxRateService,
+    SalesOrder\SalesOrderRepository as SoR,
+    SalesOrderAmount\SalesOrderAmountRepository as SoAR,
+    SalesOrderAmount\SalesOrderAmountService as SoAS,
+    SalesOrderCustom\SalesOrderCustomRepository as SoCR,
+    SalesOrderCustom\SalesOrderCustomService as SoCS,
+    SalesOrderItem\SalesOrderItemRepository as SoIR,
+    SalesOrderItem\SalesOrderItemService as SoIS,
+    SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceChargeRepository as ACSOIR,
+    SalesOrderItemAmount\SalesOrderItemAmountRepository as SoIAR,
+    SalesOrderTaxRate\SalesOrderTaxRateRepository as SoTRR,
+    SalesOrderTaxRate\SalesOrderTaxRateService as SoTRS,
+    UserClient\UserClientRepository as UCR,
+    UserInv\UserInvRepository as UIR,
 };
-use App\Service\WebControllerService;
-use App\User\UserService;
 use App\Invoice\SalesOrder\{SalesOrderPdfService, Widget\SalesOrdersListWidget};
 use App\Widget\SalesOrderToolbar;
 use Exception;
@@ -67,37 +63,38 @@ use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
-use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Session\SessionInterface as Session;
-use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\CurrentUser;
-use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class SalesOrderController extends BaseController
 {
     protected string $controllerName = 'invoice/salesorder';
 
+    private readonly DataResponseFactoryInterface $factory;
+    private readonly InvService $invService;
+    private readonly InvAllowanceChargeService $inv_allowance_charge_service;
+    private readonly InvCustomService $inv_custom_service;
+    private readonly InvItemService $invItemService;
+    private readonly InvTaxRateService $invTaxRateService;
+    private readonly SalesOrderService $salesorderService;
+    private readonly SalesOrderToolbar $salesOrderToolbar;
+
     public function __construct(
-        private readonly DataResponseFactoryInterface $factory,
-        private readonly InvService $invService,
-        private readonly InvAllowanceChargeService $inv_allowance_charge_service,
-        private readonly InvCustomService $inv_custom_service,
-        private readonly InvAmountService $invAmountService,
-        private readonly InvItemService $invItemService,
-        private readonly IIACS $inv_item_ac_service,
-        private readonly InvTaxRateService $invTaxRateService,
-        private readonly SalesOrderService $salesorderService,
-        private readonly SalesOrderToolbar $salesOrderToolbar,
-        Session $session,
-        SettingRepository $sR,
-        WebViewRenderer $webViewRenderer,
-        WebControllerService $webService,
-        UserService $userService,
-        TranslatorInterface $translator,
-        Flash $flash,
+        SoControllerBaseDeps $base,
+        SoControllerInvDeps $inv,
+        SoControllerMiscDeps $misc,
     ) {
-        parent::__construct($webService, $userService, $translator,
-                $webViewRenderer, $session, $sR, $flash);
+        parent::__construct(
+            $base->webService, $base->userService, $base->translator,
+            $base->webViewRenderer, $base->session, $base->sR, $base->flash
+        );
+        $this->factory                      = $misc->factory;
+        $this->invService                   = $inv->invService;
+        $this->inv_allowance_charge_service = $inv->invAllowanceChargeService;
+        $this->inv_custom_service           = $inv->invCustomService;
+        $this->invItemService               = $inv->invItemService;
+        $this->invTaxRateService            = $inv->invTaxRateService;
+        $this->salesorderService            = $misc->salesorderService;
+        $this->salesOrderToolbar            = $misc->salesOrderToolbar;
     }
 
     /**
@@ -679,26 +676,26 @@ final class SalesOrderController extends BaseController
         int $id,
         #[RouteArgument('_language')]
         string $_language,
-        SalesOrderViewDependencies $d,
+        SalesOrderViewService $service,
     ): \Psr\Http\Message\ResponseInterface {
-        $so = $this->salesorderunloaded($id, $d->soR, false);
+        $so = $this->salesorderunloaded($id, $service->core->soR, false);
         if ($so) {
             $so_id = $so->reqId();
             $this->session->set('so_id', $so_id);
-            $so_tax_rates = (($d->sotrR->repoCount($so_id) > 0) ?
-                $d->sotrR->repoSalesOrderquery($so_id) : null);
+            $so_tax_rates = (($service->core->sotrR->repoCount($so_id) > 0) ?
+                $service->core->sotrR->repoSalesOrderquery($so_id) : null);
             $inv_id = $so->reqInvId();
-            $inv = $d->invRepo->repoInvUnloadedquery($inv_id);
+            $inv = $service->meta->invRepo->repoInvUnloadedquery($inv_id);
             $invNumber = ($inv ? $inv->getNumber() : '');
             $quote_id = $so->reqQuoteId();
-            $quote = $d->qR->repoQuoteUnLoadedQuery($quote_id);
+            $quote = $service->relation->qR->repoQuoteUnLoadedQuery($quote_id);
             $quoteNumber = $quote?->getNumber() ?? 'None';
-            $so_amount = (($d->soaR->repoSalesOrderAmountCount(
-                $so_id) > 0) ? $d->soaR->repoSalesOrderquery(
+            $so_amount = (($service->core->soaR->repoSalesOrderAmountCount(
+                $so_id) > 0) ? $service->core->soaR->repoSalesOrderquery(
                     $so_id) : null);
             if ($so_amount) {
                 $salesorder_custom_values = $this->salesorderCustomValues(
-                        $so_id, $d->socR);
+                        $so_id, $service->core->socR);
                 $form = SalesOrderForm::show($so);
                 $parameters = [
                     'alert' => $this->alert(),
@@ -708,27 +705,27 @@ final class SalesOrderController extends BaseController
                     'errors' => [],
                     'form' => $form,
                     'so' => $so,
-                    'soItems' => $d->soiR->repoSalesOrderquery($so_id),
-                    'soR' => $d->soR,
+                    'soItems' => $service->core->soiR->repoSalesOrderquery($so_id),
+                    'soR' => $service->core->soR,
                     'invNumber' => $invNumber,
                     'quoteNumber' => $quoteNumber,
-                    'fields' => $d->socR->repoFields((int) $this->session->get('quote_id')),
+                    'fields' => $service->core->socR->repoFields((int) $this->session->get('quote_id')),
                     'customFields' =>
-                        $this->fetchCustomFieldsAndValues($d->cfR, $d->cvR,
+                        $this->fetchCustomFieldsAndValues($service->meta->cfR, $service->meta->cvR,
                             'salesorder_custom')['customFields'],
                     'customValues' =>
-                        $this->fetchCustomFieldsAndValues($d->cfR, $d->cvR,
+                        $this->fetchCustomFieldsAndValues($service->meta->cfR, $service->meta->cvR,
                             'salesorder_custom')['customValues'],
-                    'cvH' => new CVH($d->settingRepository, $d->cvR),
+                    'cvH' => new CVH($service->meta->settingRepository, $service->meta->cvR),
                     'terms_and_conditions' =>
-                        $d->settingRepository->getTermsAndConditions(),
-                    'soStatuses' => $d->soR->getStatuses($this->translator),
+                        $service->meta->settingRepository->getTermsAndConditions(),
+                    'soStatuses' => $service->core->soR->getStatuses($this->translator),
                     'salesOrderCustomValues' => $salesorder_custom_values,
                     'partial_item_table' =>
                         $this->webViewRenderer->renderPartialAsString(
                             '//invoice/salesorder/partial_item_table', [
-                        'acsoiR' => $d->acsoiR,
-                        'packHandleShipTotal' => $d->acsoR->getPackHandleShipTotal(
+                        'acsoiR' => $service->relation->acsoiR,
+                        'packHandleShipTotal' => $service->relation->acsoR->getPackHandleShipTotal(
                                     $so->reqId()),
                         'included' => $this->translator->translate(
                                 'item.tax.included'),
@@ -738,19 +735,19 @@ final class SalesOrderController extends BaseController
                                 Permissions::EDIT_INV) ? true : false,
                         'editClientPeppol' => $this->userService->hasPermission(
                                 Permissions::EDIT_CLIENT_PEPPOL) ? true : false,
-                        'piR' => $d->piR,
+                        'piR' => $service->items->piR,
                         'invView' => $this->userService->hasPermission(
                                 Permissions::VIEW_INV) ? true : false,
-                        'products' => $d->pR->findAllPreloaded(),
-                        'soItems' => $d->soiR->repoSalesOrderquery($so_id),
-                        'soiaR' => $d->soiaR,
+                        'products' => $service->items->pR->findAllPreloaded(),
+                        'soItems' => $service->core->soiR->repoSalesOrderquery($so_id),
+                        'soiaR' => $service->core->soiaR,
                         'soTaxRates' => $so_tax_rates,
                         'soAmount' => $so_amount,
                         'so' => $so,
                         'language' => $_language,
-                        'taxRates' => $d->trR->findAllPreloaded(),
-                        'tasks' => $d->taskR->findAllPreloaded(),
-                        'units' => $d->uR->findAllPreloaded(),
+                        'taxRates' => $service->items->trR->findAllPreloaded(),
+                        'tasks' => $service->items->taskR->findAllPreloaded(),
+                        'units' => $service->items->uR->findAllPreloaded(),
                     ]),
                     'modal_salesorder_to_pdf' =>
                         $this->webViewRenderer->renderPartialAsString(
@@ -761,26 +758,26 @@ final class SalesOrderController extends BaseController
                         $this->webViewRenderer->renderPartialAsString(
                             '//invoice/salesorder/modal_so_to_invoice', [
                         'so' => $so,
-                        'gR' => $d->gR,
+                        'gR' => $service->meta->gR,
                     ]),
                     'view_custom_fields' =>
                         $this->webViewRenderer->renderPartialAsString(
                             '//invoice/salesorder/view_custom_fields', [
                         'customFields' => $this->fetchCustomFieldsAndValues(
-                            $d->cfR, $d->cvR, 'salesorder_custom')['customFields'],
+                            $service->meta->cfR, $service->meta->cvR, 'salesorder_custom')['customFields'],
                         'customValues' => $this->fetchCustomFieldsAndValues(
-                            $d->cfR, $d->cvR, 'salesorder_custom')['customValues'],
+                            $service->meta->cfR, $service->meta->cvR, 'salesorder_custom')['customValues'],
                         'form' => $form,
                         'salesOrderCustomValues' => $salesorder_custom_values,
-                        'cvH' => new CVH($d->settingRepository, $d->cvR),
+                        'cvH' => new CVH($service->meta->settingRepository, $service->meta->cvR),
                     ]),
-                    'partial_quote_delivery_location' => null!==
-                        ($quote = $d->qR->repoQuoteUnLoadedQuery($so->reqQuoteId())) ?
+                    'partial_quote_delivery_location' => null !==
+                        ($quote = $service->relation->qR->repoQuoteUnLoadedQuery($so->reqQuoteId())) ?
                         $this->viewPartialDeliveryLocation(
-                            $_language, $d->dR, $quote->getDeliveryLocationId())
+                            $_language, $service->relation->dR, $quote->getDeliveryLocationId())
                                 : '',
                 ];
-                if ($this->rbacObserver($so, $d->ucR, $d->uiR)) {
+                if ($this->rbacObserver($so, $service->relation->ucR, $service->relation->uiR)) {
                     return $this->webViewRenderer->render('view', $parameters);
                 }
                 if ($this->rbacAdmin()) {

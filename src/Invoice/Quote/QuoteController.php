@@ -6,12 +6,10 @@ namespace App\Invoice\Quote;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Widget\FormFields;
 use App\Infrastructure\Persistence\{
     TaxRate\TaxRate, Quote\Quote, QuoteItem\QuoteItem,
     QuoteTaxRate\QuoteTaxRate, User\User
 };
-use App\User\UserService;
 use App\Invoice\{
     Inv\InvService, InvItem\InvItemService,
     InvAllowanceCharge\InvAllowanceChargeService, InvAmount\InvAmountService,
@@ -25,12 +23,6 @@ use App\Invoice\{
     QuoteAmount\QuoteAmountService, QuoteCustom\QuoteCustomService,
     QuoteItem\QuoteItemService,
     QuoteTaxRate\QuoteTaxRateService,
-};
-use App\Service\WebControllerService;
-// Forms
-use App\Invoice\Quote\Trait\{Add, ChangeStatus, Delete, Edit, Email, Guest, Index, OptionsData,
-    PdfTrait, QuoteCopy, QuoteToInvoice, QuoteToSo, UrlKey, View};
-use App\Invoice\{
     Quote\QuoteCustomFieldProcessor,
     QuoteTaxRate\QuoteTaxRateForm,
     Group\GroupRepository as GR,
@@ -45,7 +37,9 @@ use App\Invoice\{
 };
 use App\User\UserRepository as UR;
 use App\Invoice\Helpers\NumberHelper;
-use App\Widget\QuoteToolbar;
+use App\Widget\{FormFields, QuoteToolbar};
+use App\Invoice\Quote\Trait\{Add, ChangeStatus, Delete, Edit, Email, Guest, Index, OptionsData,
+    PdfTrait, QuoteCopy, QuoteToInvoice, QuoteToSo, UrlKey, View};
 use Yiisoft\{
     DataResponse\ResponseFactory\DataResponseFactoryInterface,
     DataResponse\ResponseFactory\HtmlResponseFactory,
@@ -53,11 +47,7 @@ use Yiisoft\{
     Mailer\MailerInterface,
     Router\FastRoute\UrlGenerator,
     Router\HydratorAttribute\RouteArgument,
-    Session\Flash\Flash,
-    Session\SessionInterface as Session,
     FormModel\FormHydrator,
-    Translator\TranslatorInterface as Translator,
-    Yii\View\Renderer\WebViewRenderer,
 };
 use Psr\{
     Log\LoggerInterface,
@@ -69,48 +59,74 @@ final class QuoteController extends BaseController
 {
     use Add, ChangeStatus, Delete, Edit, Email, Guest, Index, OptionsData, PdfTrait,
         QuoteCopy, QuoteToInvoice, QuoteToSo, UrlKey, View;
-    
+
     protected string $controllerName = 'invoice/quote';
 
     private readonly NumberHelper $numberHelper;
+    private readonly DataResponseFactoryInterface $factory;
+    private readonly HtmlResponseFactory $htmlResponseFactory;
+    private readonly FormFields $formFields;
+    private readonly InvAllowanceChargeService $inv_allowance_charge_service;
+    private readonly InvAmountService $inv_amount_service;
+    private readonly InvService $inv_service;
+    private readonly InvCustomService $inv_custom_service;
+    private readonly InvItemService $inv_item_service;
+    private readonly InvTaxRateService $inv_tax_rate_service;
+    private readonly LoggerInterface $logger;
+    private readonly MailerInterface $mailer;
+    private readonly soACS $soac_service;
+    private readonly soCS $so_custom_service;
+    private readonly soIS $so_item_service;
+    private readonly soS $so_service;
+    private readonly soTRS $so_tax_rate_service;
+    private readonly QuoteAllowanceChargeService $qac_Service;
+    private readonly QuoteAmountService $quote_amount_service;
+    private readonly QuoteCustomService $quote_custom_service;
+    private readonly QuoteItemService $quote_item_service;
+    private readonly QuoteService $quote_service;
+    private readonly QuoteTaxRateService $quote_tax_rate_service;
+    private readonly QuoteCustomFieldProcessor $quoteCustomFieldProcessor;
+    private readonly QuoteToolbar $quoteToolbar;
+    private readonly UrlGenerator $url_generator;
 
     public function __construct(
-        private readonly DataResponseFactoryInterface $factory,
-        private readonly HtmlResponseFactory $htmlResponseFactory,
-        private readonly FormFields $formFields,
-        private readonly InvAllowanceChargeService $inv_allowance_charge_service,
-        private readonly InvAmountService $inv_amount_service,
-        private readonly InvService $inv_service,
-        private readonly InvCustomService $inv_custom_service,
-        private readonly InvItemService $inv_item_service,
-        private readonly InvTaxRateService $inv_tax_rate_service,
-        private readonly LoggerInterface $logger,
-        private readonly MailerInterface $mailer,
-        private readonly soACS $soac_service,
-        private readonly soCS $so_custom_service,
-        private readonly soIS $so_item_service,
-        private readonly soS $so_service,
-        private readonly soTRS $so_tax_rate_service,
-        private readonly QuoteAllowanceChargeService $qac_Service,
-        private readonly QuoteAmountService $quote_amount_service,
-        private readonly QuoteCustomService $quote_custom_service,
-        private readonly QuoteItemService $quote_item_service,
-        private readonly QuoteService $quote_service,
-        private readonly QuoteTaxRateService $quote_tax_rate_service,
-        private readonly QuoteCustomFieldProcessor $quoteCustomFieldProcessor,
-        private readonly QuoteToolbar $quoteToolbar,
-        private readonly UrlGenerator $url_generator,
-        Session $session,
-        SR $sR,
-        Translator $translator,
-        UserService $userService,
-        WebViewRenderer $webViewRenderer,
-        WebControllerService $webService,
-        Flash $flash,
+        QuoteControllerBaseDeps $base,
+        QuoteControllerInvDeps $inv,
+        QuoteControllerQuoteDeps $quote,
+        QuoteControllerSoDeps $so,
+        QuoteControllerInfraDeps $infra,
+        QuoteControllerUIDeps $ui,
     ) {
-        parent::__construct($webService, $userService, $translator,
-            $webViewRenderer, $session, $sR, $flash);
-        $this->numberHelper = new NumberHelper($sR);
+        parent::__construct(
+            $base->webService, $base->userService, $base->translator,
+            $base->webViewRenderer, $base->session, $base->sR, $base->flash
+        );
+        $this->factory                     = $infra->factory;
+        $this->htmlResponseFactory         = $infra->htmlResponseFactory;
+        $this->logger                      = $infra->logger;
+        $this->mailer                      = $infra->mailer;
+        $this->url_generator               = $infra->urlGenerator;
+        $this->formFields                  = $infra->formFields;
+        $this->inv_allowance_charge_service = $inv->invAllowanceChargeService;
+        $this->inv_amount_service          = $inv->invAmountService;
+        $this->inv_service                 = $inv->invService;
+        $this->inv_custom_service          = $inv->invCustomService;
+        $this->inv_item_service            = $inv->invItemService;
+        $this->inv_tax_rate_service        = $inv->invTaxRateService;
+        $this->qac_Service                 = $quote->qacService;
+        $this->quote_amount_service        = $quote->quoteAmountService;
+        $this->quote_custom_service        = $quote->quoteCustomService;
+        $this->quote_item_service          = $quote->quoteItemService;
+        $this->quote_service               = $quote->quoteService;
+        $this->quote_tax_rate_service      = $quote->quoteTaxRateService;
+        $this->soac_service                = $so->soacService;
+        $this->so_custom_service           = $so->soCustomService;
+        $this->so_item_service             = $so->soItemService;
+        $this->so_service                  = $so->soService;
+        $this->so_tax_rate_service         = $so->soTaxRateService;
+        $this->quoteCustomFieldProcessor   = $ui->quoteCustomFieldProcessor;
+        $this->quoteToolbar                = $ui->quoteToolbar;
+        $this->numberHelper                = new NumberHelper($this->sR);
     }
 
     private function activeUser(int $client_id, UR $uR, UCR $ucR,

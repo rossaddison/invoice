@@ -35,19 +35,22 @@ trait Email
         #[RouteArgument('id')] int $id,
         QuoteEmailStage0Deps $d,
     ): Response {
-        $mailerDeps = new MailerHelperCustomDeps($d->ccR, $d->qcR, $d->icR, $d->pcR, $d->socR, $d->cfR, $d->cvR);
+        $mailerDeps = new MailerHelperCustomDeps(
+            $d->custom->ccR, $d->custom->qcR, $d->custom->icR,
+            $d->custom->pcR, $d->entity->socR, $d->custom->cfR, $d->custom->cvR);
         $mailer_helper = new MailerHelper(
             $this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $mailerDeps);
         $template_helper = new TemplateHelper(
-            $this->sR, $d->ccR, $d->qcR, $d->icR, $d->pcR, $d->socR, $d->cfR, $d->cvR);
+            $this->sR, $d->custom->ccR, $d->custom->qcR, $d->custom->icR,
+            $d->custom->pcR, $d->entity->socR, $d->custom->cfR, $d->custom->cvR);
         if (!$mailer_helper->mailerConfigured()) {
             $this->flashMessage('warning', $this->translator->translate('email.not.configured'));
             return $this->webService->getRedirectResponse('quote/index');
         }
-        $quote_entity = $this->quote($id, $d->qR, true);
+        $quote_entity = $this->quote($id, $d->entity->qR, true);
         if ($quote_entity) {
             $quote_id = $quote_entity->reqId();
-            $quote = $d->qR->repoQuoteUnLoadedquery($quote_id);
+            $quote = $d->entity->qR->repoQuoteUnLoadedquery($quote_id);
             if ($quote) {
                 $custom_fields = [];
                 $custom_tables = [
@@ -58,7 +61,7 @@ trait Email
                     'salesorder_custom' => 'salesorder',
                 ];
                 foreach (array_keys($custom_tables) as $table) {
-                    $custom_fields[$table] = $d->cfR->repoTablequery($table);
+                    $custom_fields[$table] = $d->custom->cfR->repoTablequery($table);
                 }
                 if ($template_helper->selectEmailQuoteTemplate() == '') {
                     $this->flashMessage('warning',
@@ -68,7 +71,7 @@ trait Email
                             ['active' => 'quotes'], 'settings[email_quote_template]');
                 }
                 $setting_status_email_template =
-                    $d->etR->repoEmailTemplatequery((int) $template_helper->selectEmailQuoteTemplate()) ?: null;
+                    $d->entity->etR->repoEmailTemplatequery((int) $template_helper->selectEmailQuoteTemplate()) ?: null;
                 null === $setting_status_email_template ? $this->flashMessage(
                     'info',
                     $this->translator->translate('default.email.template') . '=>'
@@ -88,10 +91,10 @@ trait Email
                         ? $this->getInjectEmailTemplateArray($setting_status_email_template)
                         : [],
                     'settingStatusPdfTemplate' => $template_helper->selectPdfQuoteTemplate(),
-                    'email_templates' => $d->etR->repoEmailTemplateType('quote'),
-                    'dropdownTitlesOfEmailTemplates' => $this->emailTemplates($d->etR),
-                    'userInv' => $d->uiR->repoUserInvUserIdcount($quote->reqUserId()) > 0
-                        ? $d->uiR->repoUserInvUserIdquery($quote->reqUserId())
+                    'email_templates' => $d->entity->etR->repoEmailTemplateType('quote'),
+                    'dropdownTitlesOfEmailTemplates' => $this->emailTemplates($d->entity->etR),
+                    'userInv' => $d->entity->uiR->repoUserInvUserIdcount($quote->reqUserId()) > 0
+                        ? $d->entity->uiR->repoUserInvUserIdquery($quote->reqUserId())
                         : null,
                     'quote' => $quote,
                     'pdfTemplates' => $this->emailGetQuoteTemplates('pdf'),
@@ -149,28 +152,39 @@ trait Email
         QuotePdfService $quotePdfService,
     ): bool {
         $template_helper = new TemplateHelper(
-            $this->sR, $d->ccR, $d->qcR, $d->icR, $d->pcR, $d->socR, $d->cfR, $d->cvR);
-        $mailerDeps = new MailerHelperCustomDeps($d->ccR, $d->qcR, $d->icR, $d->pcR, $d->socR, $d->cfR, $d->cvR);
+            $this->sR, $d->custom->ccR, $d->custom->qcR, $d->custom->icR,
+            $d->custom->pcR, $d->core->socR, $d->custom->cfR, $d->custom->cvR);
+        $mailerDeps = new MailerHelperCustomDeps(
+            $d->custom->ccR, $d->custom->qcR, $d->custom->icR,
+            $d->custom->pcR, $d->core->socR, $d->custom->cfR, $d->custom->cvR);
         $mailer_helper = new MailerHelper(
             $this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $mailerDeps);
-        $quote_entity = $d->qR->repoCount($quote_id) > 0
-            ? $d->qR->repoQuoteUnLoadedquery($quote_id)
+        $quote_entity = $d->relation->qR->repoCount($quote_id) > 0
+            ? $d->relation->qR->repoQuoteUnLoadedquery($quote_id)
             : null;
         if ($quote_entity) {
             $pdf_template_target_path = $quotePdfService->generate($quote_id, false, true);
             if ($pdf_template_target_path !== '') {
                 $mail_message = $template_helper->parseTemplate(
-                    $quote_id, false, $data->emailBody, $d->cvR, $d->iR, $d->iaR, $d->qR, $d->qaR, $d->soR, $d->uiR);
+                    $quote_id, false, $data->emailBody,
+                    $d->custom->cvR, $d->core->iR, $d->core->iaR, $d->relation->qR, $d->relation->qaR, $d->relation->soR, $d->core->uiR);
                 $mail_subject = $template_helper->parseTemplate(
-                    $quote_id, false, $data->subject, $d->cvR, $d->iR, $d->iaR, $d->qR, $d->qaR, $d->soR, $d->uiR);
+                    $quote_id, false, $data->subject,
+                    $d->custom->cvR, $d->core->iR, $d->core->iaR, $d->relation->qR, $d->relation->qaR, $d->relation->soR, $d->core->uiR);
                 $mail_cc = $template_helper->parseTemplate(
-                    $quote_id, false, $data->cc, $d->cvR, $d->iR, $d->iaR, $d->qR, $d->qaR, $d->soR, $d->uiR);
+                    $quote_id, false, $data->cc,
+                    $d->custom->cvR, $d->core->iR, $d->core->iaR, $d->relation->qR, $d->relation->qaR, $d->relation->soR, $d->core->uiR);
                 $mail_bcc = $template_helper->parseTemplate(
-                    $quote_id, false, $data->bcc, $d->cvR, $d->iR, $d->iaR, $d->qR, $d->qaR, $d->soR, $d->uiR);
-                $mail_from_email = $template_helper->parseTemplate($quote_id, false, $data->fromEmail, $d->cvR, $d->iR, $d->iaR, $d->qR, $d->qaR, $d->soR, $d->uiR);
-                $mail_from_name = $template_helper->parseTemplate($quote_id, false, $data->fromName, $d->cvR, $d->iR, $d->iaR, $d->qR, $d->qaR, $d->soR, $d->uiR);
+                    $quote_id, false, $data->bcc,
+                    $d->custom->cvR, $d->core->iR, $d->core->iaR, $d->relation->qR, $d->relation->qaR, $d->relation->soR, $d->core->uiR);
+                $mail_from_email = $template_helper->parseTemplate(
+                    $quote_id, false, $data->fromEmail,
+                    $d->custom->cvR, $d->core->iR, $d->core->iaR, $d->relation->qR, $d->relation->qaR, $d->relation->soR, $d->core->uiR);
+                $mail_from_name = $template_helper->parseTemplate(
+                    $quote_id, false, $data->fromName,
+                    $d->custom->cvR, $d->core->iR, $d->core->iaR, $d->relation->qR, $d->relation->qaR, $d->relation->soR, $d->core->uiR);
                 $mailerParams = new MailerSendParams($mail_from_email, $mail_from_name, $data->to, $mail_subject, $mail_message, $mail_cc, $mail_bcc);
-                return $mailer_helper->yiiMailerSend($mailerParams, $data->attachFiles, $pdf_template_target_path, $d->uiR);
+                return $mailer_helper->yiiMailerSend($mailerParams, $data->attachFiles, $pdf_template_target_path, $d->core->uiR);
             }
         }
         return false;
@@ -183,7 +197,9 @@ trait Email
         QuotePdfService $quotePdfService,
     ): Response {
         if ($quote_id) {
-            $mailerDeps = new MailerHelperCustomDeps($d->ccR, $d->qcR, $d->icR, $d->pcR, $d->socR, $d->cfR, $d->cvR);
+            $mailerDeps = new MailerHelperCustomDeps(
+                $d->custom->ccR, $d->custom->qcR, $d->custom->icR,
+                $d->custom->pcR, $d->core->socR, $d->custom->cfR, $d->custom->cvR);
             $mailer_helper = new MailerHelper(
                 $this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $mailerDeps);
             $body = $request->getParsedBody() ?? [];
@@ -223,14 +239,14 @@ trait Email
                 /** @var string $bcc */
                 $bcc = $body['MailerQuoteForm']['bcc'] ?? '';
                 $attachFiles = $request->getUploadedFiles();
-                $this->generateQuoteNumberIfApplicable($quote_id, $d->qR, $this->sR, $d->gR);
+                $this->generateQuoteNumberIfApplicable($quote_id, $d->relation->qR, $this->sR, $d->core->gR);
                 if ($this->emailStage1(
                     $quote_id,
                     new QuoteEmailStage1Data($from_email, $from_name, $to, $subject, $email_body, $cc, $bcc, $attachFiles),
                     $d,
                     $quotePdfService,
                 )) {
-                    $this->sR->quoteMarkSent($quote_id, $d->qR);
+                    $this->sR->quoteMarkSent($quote_id, $d->relation->qR);
                     $this->flashMessage('success', $this->translator->translate('email.successfully.sent'));
                     return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
                 }

@@ -337,16 +337,242 @@ Both classes are `final` and not registered in DI — they are constructed local
 
 ---
 
+## Round 5 — `InvEmailService` + `InvViewService` (June 2026)
+
+### `InvEmailService`
+
+`InvEmailStage2Deps` trimmed from 22 to **15 params** (7 dead repos dropped — `aciR`, `aciiR`, `cR`, `dlR`, `iiaR`, `iiR`, `itrR` — never referenced in `Email.php`).
+
+`InvEmailStage1Data::$from: array` replaced with typed `$fromEmail: string` + `$fromName: string` (same Psalm-enforced fix as Quote).
+
+`InvEmailService` (7 params) consolidates the send path:
+
+```php
+final readonly class InvEmailService
+{
+    public function __construct(
+        private SR $sR,
+        private SessionInterface $session,
+        private TranslatorInterface $translator,
+        private LoggerInterface $logger,
+        private MailerInterface $mailer,
+        public readonly InvEmailStage2Deps $d,
+        private InvPdfService $invPdfService,
+    ) {}
+
+    public function mailerConfigured(): bool { ... }
+    public function send(int $invId, InvEmailStage1Data $data): bool { ... }
+}
+```
+
+`Email.php` trait `emailStage1` and `emailStage2` now each take 3 params (was 28/21).
+
+PSR-7 body extraction in `emailStage2` uses the established pattern from the Quote email trait:
+
+```php
+/** @var array $body['MailerInvForm'] */
+$to = (string) ($body['MailerInvForm']['to_email'] ?? '');
+```
+
+This avoids `MixedAssignment`/`MixedArrayAccess` Psalm errors without `@psalm-suppress` — `getParsedBody()` returns `null|array|object` so its array values are `mixed`; the `@var` annotation asserts the element type to Psalm.
+
+### `InvViewService`
+
+29-param `InvViewDeps` replaced by five sub-groups + a slim service:
+
+| Class | Repos grouped | Params |
+|-------|--------------|--------|
+| `InvViewCoreDeps` | `iR`, `iaR`, `icR`, `irR`, `pymR`, `gR` | 6 |
+| `InvViewItemDeps` | `iiR`, `iiaR`, `piR`, `pR`, `taskR`, `prjctR` | 6 |
+| `InvViewMetaDeps` | `cfR`, `cvR`, `etR`, `pmR`, `trR`, `unR` | 6 |
+| `InvViewAllowanceDeps` | `acR`, `aciR`, `aciiR`, `itrR`, `fR` | 5 |
+| `InvViewRelationDeps` | `cR`, `dlR`, `soR`, `ucR`, `uiR`, `upR` | 6 |
+
+```php
+final readonly class InvViewService
+{
+    public function __construct(
+        public readonly InvViewCoreDeps $core,
+        public readonly InvViewItemDeps $items,
+        public readonly InvViewMetaDeps $meta,
+        public readonly InvViewAllowanceDeps $allowance,
+        public readonly InvViewRelationDeps $relation,
+    ) {}
+}
+```
+
+`InvViewDeps` deleted. `View.php` trait updated throughout (`$d->iR` → `$service->core->iR`, etc.). Psalm errorLevel 1 clean.
+
+---
+
+## Round 6 — `SalesOrderViewService` (June 2026)
+
+23-param `SalesOrderViewDependencies` split into four sub-groups. Dead `cR` (ClientRepository) dropped — never referenced in `view()`.
+
+| Class | Repos grouped | Params |
+|-------|--------------|--------|
+| `SoViewCoreDeps` | `soR`, `soaR`, `soiR`, `sotrR`, `socR`, `soiaR` | 6 |
+| `SoViewItemDeps` | `piR`, `pR`, `taskR`, `trR`, `uR` | 5 |
+| `SoViewMetaDeps` | `cfR`, `cvR`, `gR`, `invRepo`, `settingRepository` | 5 |
+| `SoViewRelationDeps` | `acsoiR`, `acsoR`, `dR`, `qR`, `ucR`, `uiR` | 6 |
+
+```php
+final readonly class SalesOrderViewService
+{
+    public function __construct(
+        public readonly SoViewCoreDeps $core,
+        public readonly SoViewItemDeps $items,
+        public readonly SoViewMetaDeps $meta,
+        public readonly SoViewRelationDeps $relation,
+    ) {}
+}
+```
+
+`SalesOrderViewDependencies` deleted. `SalesOrderController::view()` updated throughout (`$d->soR` → `$service->core->soR`, etc.). Psalm errorLevel 1 clean.
+
+---
+
+---
+
+## Round 7 — `InvEmailStage2Deps` sub-split (June 2026)
+
+15-param `InvEmailStage2Deps` reduced to 3 params by introducing three sub-groups:
+
+| Class | Repos grouped | Params |
+|-------|--------------|--------|
+| `InvEmailCoreDeps` | `iR`, `iaR`, `icR`, `islR`, `gR`, `uiR` | 6 |
+| `InvEmailCustomDeps` | `ccR`, `cfR`, `cvR`, `pcR`, `qcR`, `socR` | 6 |
+| `InvEmailRelationDeps` | `qaR`, `qR`, `soR` | 3 |
+
+```php
+final class InvEmailStage2Deps
+{
+    public function __construct(
+        public readonly InvEmailCoreDeps $core,
+        public readonly InvEmailCustomDeps $custom,
+        public readonly InvEmailRelationDeps $relation,
+    ) {}
+}
+```
+
+`InvEmailService` updated (`$d->iR` → `$d->core->iR`, `$d->cvR` → `$d->custom->cvR`, etc.). `Email.php` trait `emailStage2` updated (`$d->gR` → `$d->core->gR`, `$d->islR` → `$d->core->islR`). Psalm errorLevel 1 clean.
+
+---
+
+## Round 8 — `QuoteEmailStage2Deps` + `QuoteEmailStage0Deps` sub-split (June 2026)
+
+14-param `QuoteEmailStage2Deps` and 10-param `QuoteEmailStage0Deps` reduced by introducing shared and per-stage sub-groups.
+
+### Shared sub-group (used by both Stage0 and Stage2)
+
+| Class | Repos grouped | Params |
+|-------|--------------|--------|
+| `QuoteEmailCustomDeps` | `ccR`, `cfR`, `cvR`, `icR`, `pcR`, `qcR` | 6 |
+
+### Stage0-specific
+
+| Class | Repos grouped | Params |
+|-------|--------------|--------|
+| `QuoteEmailStage0EntityDeps` | `etR`, `qR`, `socR`, `uiR` | 4 |
+
+```php
+final class QuoteEmailStage0Deps
+{
+    public function __construct(
+        public readonly QuoteEmailCustomDeps $custom,
+        public readonly QuoteEmailStage0EntityDeps $entity,
+    ) {}
+}
+```
+
+### Stage2-specific
+
+| Class | Repos grouped | Params |
+|-------|--------------|--------|
+| `QuoteEmailStage2CoreDeps` | `gR`, `iaR`, `iR`, `socR`, `uiR` | 5 |
+| `QuoteEmailStage2RelationDeps` | `qaR`, `qR`, `soR` | 3 |
+
+```php
+final class QuoteEmailStage2Deps
+{
+    public function __construct(
+        public readonly QuoteEmailCustomDeps $custom,
+        public readonly QuoteEmailStage2CoreDeps $core,
+        public readonly QuoteEmailStage2RelationDeps $relation,
+    ) {}
+}
+```
+
+`Quote/Trait/Email.php` updated throughout (`$d->ccR` → `$d->custom->ccR`, `$d->qR` → `$d->entity->qR` / `$d->relation->qR`, etc.). `QuoteEmailCustomDeps` is shared — Yii3 DI autowires the same instance to both `QuoteEmailStage0Deps` and `QuoteEmailStage2Deps`. Psalm errorLevel 1 clean.
+
+---
+
+## Round 9 — `InvController::__construct` (June 2026)
+
+23-param constructor reduced to 4 params by grouping all deps into four sub-classes. All 16 controller-specific properties keep their existing names — zero trait files changed.
+
+| Class | Contents | Params |
+|-------|----------|--------|
+| `InvControllerBaseDeps` | `webService`, `userService`, `translator`, `webViewRenderer`, `session`, `sR`, `flash` | 7 |
+| `InvControllerServiceDeps` | `invAllowanceChargeService`, `invAmountService`, `invService`, `invCustomService`, `invItemService`, `invTaxRateService` | 6 |
+| `InvControllerInfraDeps` | `factory`, `htmlResponseFactory`, `logger`, `mailer`, `urlGenerator`, `delRepo` | 6 |
+| `InvControllerUIDeps` | `aciis`, `formFields`, `buttonsToolbarFull`, `customFieldProcessor` | 4 |
+
+```php
+public function __construct(
+    InvControllerBaseDeps $base,
+    InvControllerServiceDeps $services,
+    InvControllerInfraDeps $infra,
+    InvControllerUIDeps $ui,
+) {
+    parent::__construct(
+        $base->webService, $base->userService, $base->translator,
+        $base->webViewRenderer, $base->session, $base->sR, $base->flash
+    );
+    $this->factory = $infra->factory;
+    // ... all 16 properties assigned from groups
+}
+```
+
+> [!TIP]
+> The "re-expose via assignment" technique: properties keep the same name (`$this->factory`, `$this->inv_service`, etc.) but are no longer constructor-promoted — they are declared at class level and assigned in the constructor body from the deps objects. All 20+ trait files continue to work without modification.
+
+Psalm errorLevel 1 clean.
+
+---
+
+## Round 10 — `QuoteController` + `SalesOrderController` constructors (June 2026)
+
+### QuoteController (32p → 6p)
+
+25 controller-specific params grouped into 5 deps classes:
+
+| Class | Contents | Params |
+|-------|----------|--------|
+| `QuoteControllerBaseDeps` | `webService`, `userService`, `translator`, `webViewRenderer`, `session`, `sR`, `flash` | 7 |
+| `QuoteControllerInvDeps` | `invAllowanceChargeService`, `invAmountService`, `invService`, `invCustomService`, `invItemService`, `invTaxRateService` | 6 |
+| `QuoteControllerQuoteDeps` | `qacService`, `quoteAmountService`, `quoteCustomService`, `quoteItemService`, `quoteService`, `quoteTaxRateService` | 6 |
+| `QuoteControllerSoDeps` | `soacService`, `soCustomService`, `soItemService`, `soService`, `soTaxRateService` | 5 |
+| `QuoteControllerInfraDeps` | `factory`, `htmlResponseFactory`, `logger`, `mailer`, `urlGenerator`, `formFields` | 6 |
+| `QuoteControllerUIDeps` | `quoteCustomFieldProcessor`, `quoteToolbar` | 2 |
+
+Constructor reduced to **6 params**. All 25 properties re-declared at class level; zero trait files changed.
+
+### SalesOrderController (17p → 3p)
+
+Two dead params dropped (`InvAmountService $invAmountService`, `IIACS $inv_item_ac_service` — never referenced outside constructor):
+
+| Class | Contents | Params |
+|-------|----------|--------|
+| `SoControllerBaseDeps` | `webService`, `userService`, `translator`, `webViewRenderer`, `session`, `sR`, `flash` | 7 |
+| `SoControllerInvDeps` | `invService`, `invAllowanceChargeService`, `invCustomService`, `invItemService`, `invTaxRateService` | 5 |
+| `SoControllerMiscDeps` | `factory`, `salesorderService`, `salesOrderToolbar` | 3 |
+
+Constructor reduced to **3 params**. Psalm errorLevel 1 clean.
+
+---
+
 ## Remaining S107 candidates
 
-> [!IMPORTANT]
-> ~126 violations remain project-wide after rounds 1–3. These are the highest-impact targets.
-
-| Class | Approx params | Suggested service |
-|-------|--------------|-------------------|
-| `InvController::__construct` | ~23 | Action-level DI split |
-| `InvEmailStage2Deps` | ~14 | `InvEmailService` |
-| `InvViewDeps` | ~30 | `InvViewService` |
-| `SalesOrderViewDependencies` | ~24 | `SalesOrderViewService` |
-| `QuoteEmailStage0Deps::__construct` | 10 | Further domain split |
-| `QuoteEmailStage2Deps::__construct` | 14 | Further domain split |
+> [!NOTE]
+> All major S107 violations resolved through Round 10.
