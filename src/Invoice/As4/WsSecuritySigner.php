@@ -24,7 +24,7 @@ use RobRichards\XMLSecLibs\XMLSecurityKey;
  *
  * @psalm-suppress UnusedClass
  */
-final class WsSecuritySigner
+final class WsSecuritySigner implements As4EnvelopeSignerInterface
 {
     private const string NS_WSS  = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd';
     private const string NS_WSU  = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd';

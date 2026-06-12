@@ -30,7 +30,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  *
  * @psalm-suppress UnusedClass
  */
-final class As4HttpClient
+final class As4HttpClient implements As4HttpTransportInterface
 {
     private const string SOAP_CONTENT_TYPE = 'application/soap+xml';
     private const string ENVELOPE_CID      = 'soappart@as4.local';

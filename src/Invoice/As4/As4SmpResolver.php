@@ -20,7 +20,7 @@ use Psr\Log\LoggerInterface;
  *
  * @psalm-suppress UnusedClass
  */
-final class As4SmpResolver
+final class As4SmpResolver implements As4SmpResolverInterface
 {
     private const string SMP_NS        = As4Constants::SMP_NS;
     private const string PARTICIPANT_SCHEME = As4Constants::SMP_PARTICIPANT_SCHEME;

@@ -21,7 +21,7 @@ use DOMXPath;
  *
  * @psalm-suppress UnusedClass
  */
-final class As4ReceiptParser
+final class As4ReceiptParser implements As4ReceiptParserInterface
 {
     private const string NS_EB = As4Constants::EBMS3_NS;
 

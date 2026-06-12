@@ -24,7 +24,7 @@ use DOMElement;
  *
  * @psalm-suppress UnusedClass
  */
-final class SoapEnvelopeBuilder
+final class SoapEnvelopeBuilder implements As4EnvelopeBuilderInterface
 {
     private const string NS_SOAP = As4Constants::SOAP_NS;
     private const string NS_EB   = As4Constants::EBMS3_NS;
