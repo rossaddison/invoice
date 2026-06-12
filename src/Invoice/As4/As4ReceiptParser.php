@@ -170,7 +170,7 @@ final class As4ReceiptParser implements As4ReceiptParserInterface
     ): As4ReceiptSignal|As4ErrorSignal|null {
         $messageId = $this->text($xpath, 'eb:MessageInfo/eb:MessageId', $signal);
         $refId     = $this->text($xpath, 'eb:MessageInfo/eb:RefToMessageId', $signal);
-        $timestamp = $this->text($xpath, 'eb:MessageInfo/eb:Timestamp', $signal);
+        $timestamp = $this->parseTimestamp($this->text($xpath, 'eb:MessageInfo/eb:Timestamp', $signal));
 
         $receipts = $xpath->query('eb:Receipt', $signal);
         if ($receipts !== false && $receipts->length > 0) {
@@ -188,15 +188,24 @@ final class As4ReceiptParser implements As4ReceiptParserInterface
                 messageId:        $messageId,
                 refToMessageId:   $refId,
                 timestamp:        $timestamp,
-                category:         $errorEl->getAttribute('category'),
+                category:         As4ErrorCategory::tryFrom($errorEl->getAttribute('category')) ?? As4ErrorCategory::Processing,
                 errorCode:        $errorEl->getAttribute('errorCode'),
-                severity:         $errorEl->getAttribute('severity'),
+                severity:         As4ErrorSeverity::tryFrom($errorEl->getAttribute('severity')) ?? As4ErrorSeverity::Failure,
                 shortDescription: $errorEl->getAttribute('shortDescription'),
                 description:      $this->text($xpath, 'eb:Error/eb:Description', $signal),
             );
         }
 
         return null;
+    }
+
+    private function parseTimestamp(string $raw): \DateTimeImmutable
+    {
+        try {
+            return new \DateTimeImmutable($raw !== '' ? $raw : 'now');
+        } catch (\Exception) {
+            return new \DateTimeImmutable();
+        }
     }
 
     private function text(DOMXPath $xpath, string $expr, DOMElement $context): string

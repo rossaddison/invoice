@@ -20,14 +20,13 @@ final readonly class As4ErrorSignal
         public string $messageId,
         /** eb:RefToMessageId — references the original sent message */
         public string $refToMessageId,
-        /** eb:Timestamp of the signal (ISO 8601) */
-        public string $timestamp,
-        /** @error category attribute: "Content", "Unpackaging", "Processing", "Communication", "Security" */
-        public string $category,
+        /** eb:Timestamp of the signal */
+        public \DateTimeImmutable $timestamp,
+        /** @error category attribute */
+        public As4ErrorCategory $category,
         /** ebMS3 error code, e.g. "EBMS:0001" */
         public string $errorCode,
-        /** "failure" or "warning" */
-        public string $severity,
+        public As4ErrorSeverity $severity,
         /** Brief human-readable description from @shortDescription attribute */
         public string $shortDescription,
         /** Detailed description from eb:Description child element */
@@ -36,6 +35,6 @@ final readonly class As4ErrorSignal
 
     public function isFailure(): bool
     {
-        return $this->severity === 'failure';
+        return $this->severity === As4ErrorSeverity::Failure;
     }
 }

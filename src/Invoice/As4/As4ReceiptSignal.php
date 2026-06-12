@@ -19,7 +19,7 @@ final readonly class As4ReceiptSignal
         public string $messageId,
         /** eb:RefToMessageId — references the original sent message */
         public string $refToMessageId,
-        /** eb:Timestamp of the signal (ISO 8601) */
-        public string $timestamp,
+        /** eb:Timestamp of the signal */
+        public \DateTimeImmutable $timestamp,
     ) {}
 }

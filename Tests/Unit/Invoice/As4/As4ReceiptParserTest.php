@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Invoice\As4;
 
+use App\Invoice\As4\As4ErrorCategory;
+use App\Invoice\As4\As4ErrorSeverity;
 use App\Invoice\As4\As4ErrorSignal;
 use App\Invoice\As4\As4ReceiptParser;
 use App\Invoice\As4\As4ReceiptSignal;
@@ -184,7 +186,8 @@ class As4ReceiptParserTest extends TestCase
         /** @var As4ReceiptSignal $result */
         $result = $this->parser->parse($this->receiptSoap());
         $this->assertInstanceOf(As4ReceiptSignal::class, $result);
-        $this->assertSame(self::TIMESTAMP, $result->timestamp);
+        $this->assertInstanceOf(\DateTimeImmutable::class, $result->timestamp);
+        $this->assertSame('2024-06-01T10:05:00', $result->timestamp->format('Y-m-d\TH:i:s'));
     }
 
     // ── Plain SOAP — Error signal ─────────────────────────────────────────────
@@ -216,7 +219,8 @@ class As4ReceiptParserTest extends TestCase
         /** @var As4ErrorSignal $result */
         $result = $this->parser->parse($this->errorSoap());
         $this->assertInstanceOf(As4ErrorSignal::class, $result);
-        $this->assertSame(self::TIMESTAMP, $result->timestamp);
+        $this->assertInstanceOf(\DateTimeImmutable::class, $result->timestamp);
+        $this->assertSame('2024-06-01T10:05:00', $result->timestamp->format('Y-m-d\TH:i:s'));
     }
 
     public function testErrorSignalCategory(): void
@@ -224,7 +228,7 @@ class As4ReceiptParserTest extends TestCase
         /** @var As4ErrorSignal $result */
         $result = $this->parser->parse($this->errorSoap(category: 'Security'));
         $this->assertInstanceOf(As4ErrorSignal::class, $result);
-        $this->assertSame('Security', $result->category);
+        $this->assertSame(As4ErrorCategory::Security, $result->category);
     }
 
     public function testErrorSignalErrorCode(): void
@@ -240,7 +244,7 @@ class As4ReceiptParserTest extends TestCase
         /** @var As4ErrorSignal $result */
         $result = $this->parser->parse($this->errorSoap(severity: 'failure'));
         $this->assertInstanceOf(As4ErrorSignal::class, $result);
-        $this->assertSame('failure', $result->severity);
+        $this->assertSame(As4ErrorSeverity::Failure, $result->severity);
         $this->assertTrue($result->isFailure());
     }
 
@@ -249,7 +253,25 @@ class As4ReceiptParserTest extends TestCase
         /** @var As4ErrorSignal $result */
         $result = $this->parser->parse($this->errorSoap(severity: 'warning'));
         $this->assertInstanceOf(As4ErrorSignal::class, $result);
+        $this->assertSame(As4ErrorSeverity::Warning, $result->severity);
         $this->assertFalse($result->isFailure());
+    }
+
+    public function testUnknownSeverityFallsBackToFailure(): void
+    {
+        /** @var As4ErrorSignal $result */
+        $result = $this->parser->parse($this->errorSoap(severity: 'banana'));
+        $this->assertInstanceOf(As4ErrorSignal::class, $result);
+        $this->assertSame(As4ErrorSeverity::Failure, $result->severity);
+        $this->assertTrue($result->isFailure());
+    }
+
+    public function testUnknownCategoryFallsBackToProcessing(): void
+    {
+        /** @var As4ErrorSignal $result */
+        $result = $this->parser->parse($this->errorSoap(category: 'Banana'));
+        $this->assertInstanceOf(As4ErrorSignal::class, $result);
+        $this->assertSame(As4ErrorCategory::Processing, $result->category);
     }
 
     public function testErrorSignalShortDescription(): void
