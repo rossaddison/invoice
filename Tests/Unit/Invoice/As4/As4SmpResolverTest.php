@@ -207,12 +207,12 @@ class As4SmpResolverTest extends TestCase
 
     // ── Process-matching preference ───────────────────────────────────────────
 
-    public function testFallsBackToFirstEndpointWhenProcessNotFound(): void
+    public function testThrowsWhenProcessNotFound(): void
     {
-        $xml    = $this->smpXml(processId: 'urn:some:other:process');
-        $result = $this->resolver($xml)->resolve($this->query());
-        // Resolves successfully using the first (only) endpoint
-        $this->assertSame(self::ENDPOINT_URL, $result->endpointUrl);
+        $xml = $this->smpXml(processId: 'urn:some:other:process');
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('No endpoint found for process');
+        $this->resolver($xml)->resolve($this->query());
     }
 
     public function testPrefersEndpointUnderMatchingProcess(): void

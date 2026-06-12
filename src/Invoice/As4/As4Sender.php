@@ -10,7 +10,7 @@ use Psr\Log\LoggerInterface;
 /**
  * AS4 message sender — high-level orchestrator.
  *
- * Accepts a serialized SOAP envelope string and optional raw attachment parts,
+ * Accepts a signed DOMDocument envelope and optional raw attachment parts,
  * converts them into typed value objects, and delegates HTTP transport to
  * As4HttpClient which applies the correct Peppol multipart/related MIME packaging.
  *
@@ -24,19 +24,17 @@ final class As4Sender
     ) {}
 
     /**
-     * Send a serialized AS4 message to the given endpoint.
+     * Send a signed AS4 envelope to the given endpoint.
      *
      * @param array<string, string> $parts  Attachment parts keyed by Content-ID
      *
-     * @throws \InvalidArgumentException  When $soapMessage is not valid XML
      * @throws \Psr\Http\Client\ClientExceptionInterface  On network failure
      */
     public function send(
         string $endpoint,
-        string $soapMessage,
+        DOMDocument $envelope,
         array $parts = [],
     ): As4HttpResponse {
-        $doc     = $this->parseEnvelope($soapMessage);
         $attachments = [];
         foreach ($parts as $contentId => $data) {
             $attachments[] = new As4MimePart(
@@ -48,7 +46,7 @@ final class As4Sender
 
         $this->logger->info('Sending AS4 message', ['endpoint' => $endpoint]);
 
-        $response = $this->httpClient->send($endpoint, $doc, $attachments);
+        $response = $this->httpClient->send($endpoint, $envelope, $attachments);
 
         $this->logger->info('AS4 transmission response', [
             'statusCode' => $response->statusCode,
@@ -56,20 +54,5 @@ final class As4Sender
         ]);
 
         return $response;
-    }
-
-    private function parseEnvelope(string $xml): DOMDocument
-    {
-        $doc        = new DOMDocument();
-        $prevErrors = libxml_use_internal_errors(true);
-        $loaded     = $doc->loadXML($xml);
-        libxml_clear_errors();
-        libxml_use_internal_errors($prevErrors);
-
-        if (!$loaded) {
-            throw new \InvalidArgumentException('soapMessage is not well-formed XML');
-        }
-
-        return $doc;
     }
 }

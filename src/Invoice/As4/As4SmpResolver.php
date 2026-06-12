@@ -128,9 +128,10 @@ final class As4SmpResolver implements As4SmpResolverInterface
     }
 
     /**
-     * Finds the Endpoint element whose transportProfile matches $this->transportProfile.
-     * Prefers the endpoint under the process that matches $processId; falls back to the
-     * first matching endpoint in the document when no process match is found.
+     * Finds the Endpoint element whose transportProfile matches $this->transportProfile
+     * and that is a descendant of the Process whose identifier matches $processId.
+     *
+     * @throws \UnexpectedValueException When no matching endpoint+process combination exists
      */
     private function findEndpointElement(DOMXPath $xpath, string $processId): DOMElement
     {
@@ -146,19 +147,17 @@ final class As4SmpResolver implements As4SmpResolverInterface
             ));
         }
 
-        // Prefer the endpoint under the requested process (PHP-level filter avoids XPath injection)
+        // PHP-level process filter avoids XPath injection on $processId
         foreach ($nodes as $node) {
             if ($node instanceof DOMElement && $this->isUnderProcess($xpath, $node, $processId)) {
                 return $node;
             }
         }
 
-        // Fallback: first endpoint regardless of process
-        $first = $nodes->item(0);
-        if (!$first instanceof DOMElement) {
-            throw new \UnexpectedValueException('SMP Endpoint node is not a DOMElement');
-        }
-        return $first;
+        throw new \UnexpectedValueException(sprintf(
+            'No endpoint found for process "%s" in SMP response',
+            $processId,
+        ));
     }
 
     /** Returns true when $endpoint is a descendant of an smp:Process whose identifier equals $processId. */
