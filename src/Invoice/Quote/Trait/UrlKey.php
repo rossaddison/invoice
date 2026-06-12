@@ -4,20 +4,11 @@ declare(strict_types=1);
 
 namespace App\Invoice\Quote\Trait;
 
-use App\Auth\Permissions;
 use App\Invoice\{
-    CustomField\CustomFieldRepository as CFR,
-    Quote\QuoteRepository as QR,
-    QuoteAmount\QuoteAmountRepository as QAR,
-    QuoteItem\QuoteItemRepository as QIR,
-    QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository as ACQIR,
-    QuoteItemAmount\QuoteItemAmountRepository as QIAR,
-    QuoteTaxRate\QuoteTaxRateRepository as QTRR,
-    UserClient\UserClientRepository as UCR,
-    UserInv\UserInvRepository as UIR,
+    Quote\QuoteUrlKeyRepoDeps,
+    Quote\QuoteUrlKeyUserDeps,
 };
 use Yiisoft\{
-    Json\Json,
     Router\HydratorAttribute\RouteArgument,
     User\CurrentUser,
 };
@@ -31,10 +22,12 @@ trait UrlKey
     // experience eg. invoice/quote/url_key/{url_key}
     // config/routes accesschecker ensures client has viewInv permission
 
-    public function urlKey(#[RouteArgument('url_key')] string $urlKey,
-        CurrentUser $currentUser, CFR $cfR, QAR $qaR, QIR $qiR, QIAR $qiaR,
-            ACQIR $acqiR, QR $qR, QTRR $qtrR, UIR $uiR, UCR $ucR): Response
-    {
+    public function urlKey(
+        #[RouteArgument('url_key')] string $urlKey,
+        CurrentUser $currentUser,
+        QuoteUrlKeyRepoDeps $repos,
+        QuoteUrlKeyUserDeps $ud,
+    ): Response {
         // If there is no quote with such a url_key, issue a not found response
         if ($urlKey === '') {
             return $this->webService->getNotFoundResponse();
@@ -42,30 +35,30 @@ trait UrlKey
 
         // If there is a quote with the url key ... continue or else issue
         // not found response
-        if ($qR->repoUrlKeyGuestCount($urlKey) < 1) {
+        if ($repos->qR->repoUrlKeyGuestCount($urlKey) < 1) {
             return $this->webService->getNotFoundResponse();
         }
 
         // If this quote has a status id that falls into the category of
         // (just)sent, viewed(in the past), approved(in the past) then continue
-        $quote = $qR->repoUrlKeyGuestLoaded($urlKey);
+        $quote = $repos->qR->repoUrlKeyGuestLoaded($urlKey);
         $quote_tax_rates = null;
         if ($quote) {
             $quote_id = $quote->reqId();
-            if ($qtrR->repoCount($quote_id) > 0) {
-                $quote_tax_rates = $qtrR->repoQuotequery($quote_id);
+            if ($ud->qtrR->repoCount($quote_id) > 0) {
+                $quote_tax_rates = $ud->qtrR->repoQuotequery($quote_id);
             }
             // If the quote status is sent 2, viewed 3, or approved_with 4,
             // or approved_without 5 or rejected 6
             if (in_array($quote->reqStatusId(), [2,3,4,5,6])) {
                 $user_id = $quote->reqUserId();
-                if ($uiR->repoUserInvUserIdcount($user_id) === 1) {
+                if ($ud->uiR->repoUserInvUserIdcount($user_id) === 1) {
                     // After signup the user was included in the userinv using
                     // Settings...User Account...+
-                    $user_inv = $uiR->repoUserInvUserIdquery($user_id);
+                    $user_inv = $ud->uiR->repoUserInvUserIdquery($user_id);
                     // The client has been assigned to the user id using
                     // Setting...User Account...Assigned Clients
-                    $user_client = $ucR->repoUserClientqueryCount($user_id,
+                    $user_client = $ud->ucR->repoUserClientqueryCount($user_id,
                         $quote->reqClientId()) === 1 ? true : false;
                     if ($user_inv && $user_client && $user_inv->getActive()) {
                         // If the userinv is a Guest => type = 1 ie. NOT an
@@ -77,14 +70,14 @@ trait UrlKey
                                 // status otherwise leave its status alone
                                 $quote->setStatusId(3);
                             }
-                            $qR->save($quote);
+                            $repos->qR->save($quote);
                             $custom_fields = [
-                                'invoice' => $cfR->repoTablequery('inv_custom'),
-                                'client' => $cfR->repoTablequery('client_custom'),
+                                'invoice' => $repos->cfR->repoTablequery('inv_custom'),
+                                'client' => $repos->cfR->repoTablequery('client_custom'),
                             ];
                             $quote_amount = (
-                                ($qaR->repoQuoteAmountCount($quote_id) > 0)
-                                    ? $qaR->repoQuotequery($quote_id) : null);
+                                ($repos->qaR->repoQuoteAmountCount($quote_id) > 0)
+                                    ? $repos->qaR->repoQuotequery($quote_id) : null);
                             if ($quote_amount) {
                                 $parameters = [
                                     'renderTemplate' =>
@@ -97,10 +90,10 @@ trait UrlKey
                                         'isGuest' => $currentUser->isGuest(),
                                         'alert' => $this->alert(),
                                         'quote' => $quote,
-                                        'qiaR' => $qiaR,
-                                        'acqiR' => $acqiR,
+                                        'qiaR' => $repos->qiaR,
+                                        'acqiR' => $repos->acqiR,
                                         'quote_amount' => $quote_amount,
-                                        'items' => $qiR->repoQuotequery(
+                                        'items' => $repos->qiR->repoQuotequery(
                                             $quote_id),
                                         // Get all the quote tax rates that
                                         // have been setup for this quote
@@ -121,9 +114,9 @@ trait UrlKey
                                         // Get the details of the user
                                         // of this quote
                                         'userInv' =>
-                                            $uiR->repoUserInvUserIdcount(
+                                            $ud->uiR->repoUserInvUserIdcount(
                                             $user_id) > 0 ?
-                                            $uiR->repoUserInvUserIdquery(
+                                            $ud->uiR->repoUserInvUserIdquery(
                                                 $user_id) : null,
                                         'modal_purchase_order_number' =>
                                             $this->webViewRenderer
@@ -135,10 +128,10 @@ trait UrlKey
                                 return $this->webViewRenderer->render(
                                     'url_key', $parameters);
                             } // if quote_amount
-                            
+
                         } // user_inv->getType
                     } // user_inv
-                } // $uiR
+                } // $ud->uiR
             } // if in_array
         } // if quote
         return $this->webService->getNotFoundResponse();

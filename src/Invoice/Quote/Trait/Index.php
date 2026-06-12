@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace App\Invoice\Quote\Trait;
 
-use App\Infrastructure\Persistence\Quote\Quote;
 use App\Invoice\{
     Client\ClientRepository as CR,
     Group\GroupRepository as GR,
+    Quote\QuoteIndexDeps,
+    Quote\QuoteIndexFilter,
     Quote\QuoteRepository as QR,
     Quote\QuoteForm,
-    QuoteAmount\QuoteAmountRepository as QAR,
-    SalesOrder\SalesOrderRepository as SOR,
-    Setting\SettingRepository as SR,
-    UserClient\UserClientRepository as UCR,
 };
 use App\Invoice\Quote\Widget\QuotesListWidget;
 use App\Widget\Bootstrap5ModalQuote;
@@ -23,7 +20,6 @@ use Yiisoft\{
     Data\Reader\Sort,
     Data\Reader\OrderHelper,
     Html\Html,
-    Input\Http\Attribute\Parameter\Query,
     Json\Json,
     Router\HydratorAttribute\RouteArgument,
     Yii\DataView\YiiRouter\UrlCreator,
@@ -40,39 +36,28 @@ trait Index
 
     public function index(
         Request $request,
-        QAR $qaR,
-        QR $quoteRepo,
-        CR $clientRepo,
-        GR $groupRepo,
-        SOR $soR,
-        SR $sR,
-        UCR $ucR,
+        QuoteIndexDeps $d,
+        QuoteIndexFilter $filter,
         #[RouteArgument('_language')]
         string $_language,
         #[RouteArgument('page')]
         string $page = '1',
         #[RouteArgument('status')]
         string $status = '0',
-        #[Query('groupBy')]
-        ?string $queryGroupBy = 'none',
-        #[Query('filterClient')]
-        ?string $queryFilterClient = null,
-        #[Query('filterStatus')]
-        ?string $queryFilterStatus = null,
     ): Response {
         $quoteForm = new QuoteForm();
         $bootstrap5ModalQuote = new Bootstrap5ModalQuote(
             $this->translator,
             $this->webViewRenderer,
-            $clientRepo,
-            $groupRepo,
-            $sR,
-            $ucR,
+            $d->clientRepo,
+            $d->groupRepo,
+            $this->sR,
+            $d->ucR,
             $quoteForm,
         );
         // If the language dropdown changes
         $this->session->set('_language', $_language);
-        $active_clients = $ucR->getClientsWithUserAccounts();
+        $active_clients = $d->ucR->getClientsWithUserAccounts();
         if (!$active_clients == []) {
             $query_params = $request->getQueryParams();
             /**
@@ -94,31 +79,31 @@ trait Index
                 // - => 'desc'  so -id => default descending on id
                 // Show the latest quotes first => -id
                     ->withOrder($order);
-            $effectiveStatus = isset($queryFilterStatus)
-                && !empty($queryFilterStatus) ?
-                    $queryFilterStatus : $status;
+            $effectiveStatus = isset($filter->filterStatus)
+                && !empty($filter->filterStatus) ?
+                    $filter->filterStatus : $status;
             /**
              * @psalm-var \Yiisoft\Data\Reader\ReadableDataInterface<array-key, array<array-key, mixed>|object>&\Yiisoft\Data\Reader\LimitableDataInterface&\Yiisoft\Data\Reader\OffsetableDataInterface&\Yiisoft\Data\Reader\CountableDataInterface $quotes
              */
-            $quotes = $this->quotesStatusWithSort($quoteRepo, (int) $effectiveStatus, $sort);
+            $quotes = $this->quotesStatusWithSort($d->quoteRepo, (int) $effectiveStatus, $sort);
             if (isset($query_params['filterQuoteNumber'])
                 && !empty($query_params['filterQuoteNumber'])) {
-                $quotes = $quoteRepo->filterQuoteNumber(
+                $quotes = $d->quoteRepo->filterQuoteNumber(
                     (string) $query_params['filterQuoteNumber']);
             }
             if (isset($query_params['filterQuoteAmountTotal'])
                 && !empty($query_params['filterQuoteAmountTotal'])) {
-                $quotes = $quoteRepo->filterQuoteAmountTotal(
+                $quotes = $d->quoteRepo->filterQuoteAmountTotal(
                     (string) $query_params['filterQuoteAmountTotal']);
             }
-            if (isset($queryFilterClient) && !empty($queryFilterClient)) {
-                $quotes = $quoteRepo->filterClient($queryFilterClient);
+            if (isset($filter->filterClient) && !empty($filter->filterClient)) {
+                $quotes = $d->quoteRepo->filterClient($filter->filterClient);
             }
             if ((isset($query_params['filterQuoteNumber'])
                 && !empty($query_params['filterQuoteNumber']))
                 && (isset($query_params['filterQuoteAmountTotal'])
                 && !empty($query_params['filterQuoteAmountTotal']))) {
-                $quotes = $quoteRepo->filterQuoteNumberAndQuoteAmountTotal(
+                $quotes = $d->quoteRepo->filterQuoteNumberAndQuoteAmountTotal(
                     (string) $query_params['filterQuoteNumber'],
                         (float) $query_params['filterQuoteAmountTotal']);
             }
@@ -127,7 +112,7 @@ trait Index
             ->withCurrentPage($currentPageNeverZero)
             ->withSort($sort)
             ->withToken(PageToken::next($page));
-            $quote_statuses = $quoteRepo->getStatuses($this->translator);
+            $quote_statuses = $d->quoteRepo->getStatuses($this->translator);
             $parameters = [
                 'status' => $status,
                 'decimalPlaces' => (int)
@@ -136,36 +121,36 @@ trait Index
                 'sortOrder' => $query_params['sort'] ?? '',
                 'sortString' => $sortString,
                 'alert' => $this->alert(),
-                'clientCount' => $clientRepo->count(),
-                'groupBy' => $queryGroupBy,
-                'label' => $quoteRepo->getSpecificStatusArrayLabel((string) $status),
+                'clientCount' => $d->clientRepo->count(),
+                'groupBy' => $filter->groupBy,
+                'label' => $d->quoteRepo->getSpecificStatusArrayLabel((string) $status),
                 'page' => $currentPageNeverZero,
                 'quotes' => $quotes,
                 'visible' => $this->sR->getSetting('columns_all_visible') === '1',
                 'optionsDataClientsDropdownFilter' =>
-                    $this->optionsDataClients($quoteRepo),
+                    $this->optionsDataClients($d->quoteRepo),
                 'optionsDataClientGroupDropDownFilter' =>
-                    $this->optionsDataClientGroup($quoteRepo),
+                    $this->optionsDataClientGroup($d->quoteRepo),
                 'optionsDataQuoteNumberDropDownFilter' =>
-                    $this->optionsDataQuoteNumber($quoteRepo),
+                    $this->optionsDataQuoteNumber($d->quoteRepo),
                 'optionsDataStatusDropDownFilter' =>
-                    $this->optionsDataStatuses($quoteRepo),
-                'gridSummary' => $sR->gridSummary(
+                    $this->optionsDataStatuses($d->quoteRepo),
+                'gridSummary' => $this->sR->gridSummary(
                     $paginator,
                     $this->translator,
-                    (int) $sR->getSetting('default_list_limit'),
+                    (int) $this->sR->getSetting('default_list_limit'),
                     $this->translator->translate('quotes'),
-                    $quoteRepo->getSpecificStatusArrayLabel((string) $status),
+                    $d->quoteRepo->getSpecificStatusArrayLabel((string) $status),
                 ),
                 'defaultPageSizeOffsetPaginator' =>
                     $this->sR->getSetting('default_list_limit')
                     ? (int) $this->sR->getSetting('default_list_limit') : 1,
-                'defaultQuoteGroup' => $this->indexDefaultQuoteGroup($groupRepo),
+                'defaultQuoteGroup' => $this->indexDefaultQuoteGroup($d->groupRepo),
                 'quoteStatuses' => $quote_statuses,
-                'max' => (int) $sR->getSetting('default_list_limit'),
-                'qR' => $quoteRepo,
-                'qaR' => $qaR,
-                'soR' => $soR,
+                'max' => (int) $this->sR->getSetting('default_list_limit'),
+                'qR' => $d->quoteRepo,
+                'qaR' => $d->qaR,
+                'soR' => $d->soR,
                 'modal_add_quote' =>
                     $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString(
                         'quote', []),
@@ -175,24 +160,24 @@ trait Index
                 return $this->htmlResponseFactory->createResponse(
                     QuotesListWidget::widget()
                         ->withPaginator($paginator)
-                        ->withQR($quoteRepo)
-                        ->withSoR($soR)
-                        ->withSR($sR)
+                        ->withQR($d->quoteRepo)
+                        ->withSoR($d->soR)
+                        ->withSR($this->sR)
                         ->withCsrf((string) ($request->getParsedBody()['_csrf'] ?? ''))
-                        ->withDecimalPlaces((int) $sR->getSetting('tax_rate_decimal_places'))
-                        ->withVisible($sR->getSetting('columns_all_visible') === '1')
-                        ->withGroupBy($queryGroupBy ?? 'none')
-                        ->withClientCount($clientRepo->count())
-                        ->withGridSummary($sR->gridSummary(
+                        ->withDecimalPlaces((int) $this->sR->getSetting('tax_rate_decimal_places'))
+                        ->withVisible($this->sR->getSetting('columns_all_visible') === '1')
+                        ->withGroupBy($filter->groupBy ?? 'none')
+                        ->withClientCount($d->clientRepo->count())
+                        ->withGridSummary($this->sR->gridSummary(
                             $paginator,
                             $this->translator,
-                            (int) $sR->getSetting('default_list_limit'),
+                            (int) $this->sR->getSetting('default_list_limit'),
                             $this->translator->translate('quotes'),
-                            $quoteRepo->getSpecificStatusArrayLabel((string) $status),
+                            $d->quoteRepo->getSpecificStatusArrayLabel((string) $status),
                         ))
                         ->withSortString($sortString)
-                        ->withOptionsDataClientsDropdownFilter($this->optionsDataClients($quoteRepo))
-                        ->withOptionsDataStatusDropDownFilter($this->optionsDataStatuses($quoteRepo))
+                        ->withOptionsDataClientsDropdownFilter($this->optionsDataClients($d->quoteRepo))
+                        ->withOptionsDataStatusDropDownFilter($this->optionsDataStatuses($d->quoteRepo))
                         ->render()
                 );
             }
@@ -202,7 +187,7 @@ trait Index
             $this->translator->translate('user.client.active.no'));
         return $this->webService->getRedirectResponse('client/index');
     }
-    
+
     public function indexDefaultQuoteGroup(GR $groupRepo): string
     {
         $group = $groupRepo->repoGroupquery(

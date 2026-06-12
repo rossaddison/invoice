@@ -13,84 +13,64 @@ use App\Infrastructure\Persistence\{
 };
 
 use App\Invoice\{
-    Inv\InvRepository as IR,
-    InvAllowanceCharge\InvAllowanceChargeRepository as ACIR,
-    InvCustom\InvCustomRepository as ICR,
-    InvItem\InvItemRepository as IIR,
-    InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR,
-    InvAmount\InvAmountRepository as IAR,
-    InvItemAmount\InvItemAmountRepository as IIAR,
-    InvRecurring\InvRecurringRepository as IRR,
-    InvSentLog\InvSentLogRepository as ISLR,
-    InvTaxRate\InvTaxRateRepository as ITRR,
-    Payment\PaymentRepository as PYMR,
-    PaymentCustom\PaymentCustomRepository as PCR
+    Inv\InvFlushCoreDeps,
+    Inv\InvFlushItemDeps,
 };
 use Psr\Http\Message\ResponseInterface as Response;
 
 trait Flush
 {
     public function flush(
-        ISLR $islR,
-        IRR $irR,
-        IIAR $iiaR,
-        IAR $iaR,
-        ITRR $itrR,
-        IIR $iiR,
-        ICR $icR,
-        ACIIR $aciiR,
-        ACIR $aciR,
-        PCR $pcR,
-        PYMR $pymR,
-        IR $iR,
+        InvFlushCoreDeps $core,
+        InvFlushItemDeps $item,
     ): Response {
         /** @var InvSentLog $isl */
-        foreach ($islR->findAllPreloaded() as $isl) {
-            $islR->delete($isl);
+        foreach ($core->islR->findAllPreloaded() as $isl) {
+            $core->islR->delete($isl);
         }
         /** @var InvRecurring $ir */
-        foreach ($irR->findAllPreloaded() as $ir) {
-            $irR->delete($ir);
+        foreach ($core->irR->findAllPreloaded() as $ir) {
+            $core->irR->delete($ir);
         }
         /** @var InvItemAmount $iia */
-        foreach ($iiaR->findAllPreloaded() as $iia) {
-            $iiaR->delete($iia);
+        foreach ($item->iiaR->findAllPreloaded() as $iia) {
+            $item->iiaR->delete($iia);
         }
         /** @var InvAmount $ia */
-        foreach ($iaR->findAllPreloaded() as $ia) {
-            $iaR->delete($ia);
+        foreach ($core->iaR->findAllPreloaded() as $ia) {
+            $core->iaR->delete($ia);
         }
         /** @var InvTaxRate $itr */
-        foreach ($itrR->findAllPreloaded() as $itr) {
-            $itrR->delete($itr);
+        foreach ($item->itrR->findAllPreloaded() as $itr) {
+            $item->itrR->delete($itr);
         }
         /** @var InvItemAllowanceCharge $iiac */
-            foreach ($aciiR->findAllPreloaded() as $iiac) {
-            $aciiR->delete($iiac);
+        foreach ($item->aciiR->findAllPreloaded() as $iiac) {
+            $item->aciiR->delete($iiac);
         }
         /** @var InvItem $ii */
-        foreach ($iiR->findAllPreloaded() as $ii) {
-            $iiR->delete($ii);
+        foreach ($core->iiR->findAllPreloaded() as $ii) {
+            $core->iiR->delete($ii);
         }
         /** @var InvCustom $ic */
-        foreach ($icR->findAllPreloaded() as $ic) {
-            $icR->delete($ic);
+        foreach ($core->icR->findAllPreloaded() as $ic) {
+            $core->icR->delete($ic);
         }
         /** @var InvAllowanceCharge $iac */
-        foreach ($aciR->findAllPreloaded() as $iac) {
-            $aciR->delete($iac);
+        foreach ($item->aciR->findAllPreloaded() as $iac) {
+            $item->aciR->delete($iac);
         }
         /** @var PaymentCustom $pc */
-        foreach ($pcR->findAllPreloaded() as $pc) {
-            $pcR->delete($pc);
+        foreach ($item->pcR->findAllPreloaded() as $pc) {
+            $item->pcR->delete($pc);
         }
         /** @var Payment $pym */
-        foreach ($pymR->findAllPreloaded() as $pym) {
-            $pymR->delete($pym);
+        foreach ($item->pymR->findAllPreloaded() as $pym) {
+            $item->pymR->delete($pym);
         }
         /** @var Inv $i */
-        foreach ($iR->findAllPreloaded() as $i) {
-            $iR->delete($i);
+        foreach ($core->iR->findAllPreloaded() as $i) {
+            $core->iR->delete($i);
         }
         $this->flashMessage('danger',
             $this->translator->translate('caution.deleted.invoices'));

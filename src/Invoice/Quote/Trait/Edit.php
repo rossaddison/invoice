@@ -6,24 +6,14 @@ namespace App\Invoice\Quote\Trait;
 
 use App\Infrastructure\Persistence\{Contract\Contract, Group\Group};
 use App\Infrastructure\Persistence\Quote\Quote;
-use App\Infrastructure\Persistence\QuoteCustom\QuoteCustom;
 use App\Infrastructure\Persistence\QuoteTaxRate\QuoteTaxRate;
 use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
 use App\Invoice\{
-    Client\ClientRepository as CR,
-    Contract\ContractRepository as ContractRepo,
-    CustomField\CustomFieldRepository as CFR,
-    CustomValue\CustomValueRepository as CVR,
-    DeliveryLocation\DeliveryLocationRepository as DLR,
-    Group\GroupRepository as GR,
-    Inv\InvRepository as IR,
-    Quote\QuoteRepository as QR,
-    QuoteCustom\QuoteCustomRepository as QCR,
+    Quote\QuoteEditCoreDeps,
+    Quote\QuoteEditFormDeps,
+    Quote\QuoteEditLocationDeps,
     QuoteTaxRate\QuoteTaxRateForm,
-    UserClient\UserClientRepository as UCR,
-    UserInv\UserInvRepository as UIR,
 };
-use App\User\UserRepository as UR;
 use App\Invoice\Quote\QuoteForm;
 use App\Invoice\QuoteCustom\QuoteCustomForm;
 use App\Invoice\Helpers\{CustomValuesHelper as CVH, NumberHelper};
@@ -45,79 +35,66 @@ trait Edit
         #[RouteArgument('id')]
         int $id,
         FormHydrator $formHydrator,
-        QR $quoteRepo,
-        IR $invRepo,
-        CR $clientRepo,
-        ContractRepo $contractRepo,
-        DLR $delRepo,
-        GR $groupRepo,
-        CFR $cfR,
-        CVR $cvR,
-        QCR $qcR,
-        UR $uR,
-        UCR $ucR,
-        UIR $uiR,
+        QuoteEditCoreDeps $core,
+        QuoteEditLocationDeps $loc,
+        QuoteEditFormDeps $form,
     ): Response {
-        $quote = $this->quote($id, $quoteRepo, true);
+        $quote = $this->quote($id, $core->quoteRepo, true);
         if (null !== $quote) {
-            $form = QuoteForm::show($quote);
+            $quoteForm = QuoteForm::show($quote);
             $quoteCustomForm = new QuoteCustomForm();
             $quote_id = $quote->reqId();
             $client_id = $quote->reqClientId();
-            $dels = $delRepo->repoClientquery($quote->reqClientId());
+            $dels = $loc->delRepo->repoClientquery($quote->reqClientId());
             $parameters = [
                 'title' => '',
                 'alert' => $this->alert(),
                 'actionName' => 'quote/edit',
                 'actionArguments' => ['id' => $quote_id],
                 'errors' => [],
-                'form' => $form,
+                'form' => $quoteForm,
                 'optionsData' => $this->editOptionsData(
                     $quote,
                     $client_id,
-                    $clientRepo,
-                    $contractRepo,
-                    $delRepo,
-                    $groupRepo,
-                    $quoteRepo,
-                    $ucR,
+                    $core,
+                    $loc,
                 ),
-                'invs' => $invRepo->findAllPreloaded(),
-                'clients' => $clientRepo->findAllPreloaded(),
+                'invs' => $core->invRepo->findAllPreloaded(),
+                'clients' => $core->clientRepo->findAllPreloaded(),
                 'dels' => $dels,
-                'groups' => $groupRepo->findAllPreloaded(),
+                'groups' => $core->groupRepo->findAllPreloaded(),
                 'numberhelper' => new NumberHelper($this->sR),
-                'quote_statuses' => $quoteRepo->getStatuses($this->translator),
-                'cvH' => new CVH($this->sR, $cvR),
+                'quote_statuses' => $core->quoteRepo->getStatuses($this->translator),
+                'cvH' => new CVH($this->sR, $form->cvR),
                 'customFields' => $this->fetchCustomFieldsAndValues(
-                    $cfR, $cvR, 'quote_custom')['customFields'],
+                    $form->cfR, $form->cvR, 'quote_custom')['customFields'],
                 // Applicable to normally building up permanent selection lists
                 // eg. dropdowns
                 'customValues' => $this->fetchCustomFieldsAndValues(
-                    $cfR, $cvR, 'quote_custom')['customValues'],
+                    $form->cfR, $form->cvR, 'quote_custom')['customValues'],
                 // There will initially be no custom_values attached to this
                 // quote until they are filled in the field on the form
-                'quoteCustomValues' => $this->quoteCustomValues($quote_id, $qcR),
+                'quoteCustomValues' => $this->quoteCustomValues($quote_id, $form->qcR),
                 'quote' => $quote,
                 'quoteCustomForm' => $quoteCustomForm,
-                'delCount' => $delRepo->repoClientCount($quote->reqClientId()),
+                'delCount' => $loc->delRepo->repoClientCount($quote->reqClientId()),
                 'returnUrlAction' => 'edit',
                 'formFields' => $this->formFields,
             ];
-            $delRepo->repoClientCount($quote->reqClientId()) > 0 ? '' :
+            $loc->delRepo->repoClientCount($quote->reqClientId()) > 0 ? '' :
                 $this->flashMessage('warning', $this->translator->translate(
                     'quote.delivery.location.none'));
             if ($request->getMethod() === Method::POST) {
                 $body = (array) $request->getParsedBody();
-                $quote = $this->quote($id, $quoteRepo, false);
+                $quote = $this->quote($id, $core->quoteRepo, false);
                 if ($quote) {
-                    $form = QuoteForm::show($quote);
+                    $quoteForm = QuoteForm::show($quote);
                     $client_id = $quote->reqClientId();
-                    $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
+                    $user = $this->activeUser($client_id, $form->uR, $core->ucR, $core->uiR);
                     if (null !== $user) {
-                        if ($formHydrator->populateAndValidate($form, $body)) {
+                        if ($formHydrator->populateAndValidate($quoteForm, $body)) {
                             $this->quote_service->saveQuote($user, $quote,
-                                $body, $this->sR, $groupRepo);
+                                $body, $this->sR, $core->groupRepo);
                             $this->processCustomFields($body, $formHydrator,
                                 $this->quoteCustomFieldProcessor,
                                     $quote_id);
@@ -127,9 +104,9 @@ trait Edit
                             return $this->webService->getRedirectResponse(
                                 'quote/view', ['id' => $quote_id]);
                         }
-                        $parameters['form'] = $form;
+                        $parameters['form'] = $quoteForm;
                         $parameters['errors'] =
-                            $form->getValidationResult()
+                            $quoteForm->getValidationResult()
                                  ->getErrorMessagesIndexedByProperty();
                         return $this->webViewRenderer->render('_form', $parameters);
                     }
@@ -176,14 +153,10 @@ trait Edit
     private function editOptionsData(
         Quote $quote,
         int $client_id,
-        CR $clientRepo,
-        ContractRepo $contractRepo,
-        DLR $delRepo,
-        GR $groupRepo,
-        QR $quoteRepo,
-        UCR $ucR,
+        QuoteEditCoreDeps $core,
+        QuoteEditLocationDeps $loc,
     ): array {
-        $contracts = $contractRepo->repoClient($quote->reqClientId());
+        $contracts = $loc->contractRepo->repoClient($quote->reqClientId());
         $optionsDataContract = [];
         /**
          * @var Contract $contract
@@ -198,9 +171,9 @@ trait Edit
                 $contractLine[] = $contract->getReference();
             }
             $optionsDataContract[$id] = implode(',', $contractLine);
-            
+
         }
-        $dLocs = $delRepo->repoClientquery($client_id);
+        $dLocs = $loc->delRepo->repoClientquery($client_id);
         $optionsDataDeliveryLocations = [];
         /**
          * @var DeliveryLocation $dLoc
@@ -218,10 +191,10 @@ trait Edit
                 $address[] = $dLoc->getCity();
             }
             $optionsDataDeliveryLocations[$dLocId] = implode(', ', $address);
-            
+
         }
 
-        $groups = $groupRepo->findAllPreloaded();
+        $groups = $core->groupRepo->findAllPreloaded();
         $optionsDataGroup = [];
         /**
          * @var Group $group
@@ -235,11 +208,11 @@ trait Edit
          * @var string $key
          * @var array $status
          */
-        foreach ($quoteRepo->getStatuses($this->translator) as $key => $status) {
+        foreach ($core->quoteRepo->getStatuses($this->translator) as $key => $status) {
             $optionsDataQuoteStatus[$key] = (string) $status['label'];
         }
         return [
-            'client' => $clientRepo->optionsData($ucR),
+            'client' => $core->clientRepo->optionsData($core->ucR),
             'contract' => $optionsDataContract,
             'deliveryLocation' => $optionsDataDeliveryLocations,
             'group' => $optionsDataGroup,

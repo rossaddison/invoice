@@ -236,9 +236,8 @@ final readonly class StoreCoveHelper
       DateTimeImmutable $date_supplied, DateTimeImmutable $date_created): string
     {
         // For yii3-i,'Date created' is used interchangeably with 'Date issued'
-        // https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL2005/
-        // The below array has been built manually from
-        //  src\Invoice\Helpers\Peppol\uncl2005.php
+        // Canonical source and quarterly update guidance: resources/peppol/uncl2005.php
+        // Upstream: https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL2005/
         $dcI = 'Invoice Issue Date/Time ie. Date Created/Issued';
         $adS = 'Actual Delivery Date/Time ie. Date Supplied';
         $ptd = 'Paid to Date';
@@ -586,22 +585,23 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
     /**
      * @param Inv $invoice
      * @param InvoicePeriod $invoice_period
-     * @param iiaR $iiaR
-     * @param cpR $cpR
-     * @param SOIR $soiR
-     * @param ACIIR $aciiR
-     * @param unpR $unpR
-     * @param ppR $ppR
+     * @param StoreCoveHelperInvDeps $inv
+     * @param StoreCoveHelperNetDeps $net
+     * @param StoreCoveHelperChargeDeps $charge
      * @throws PeppolClientNotFoundException
      * @return array
      */
-    private function buildInvoiceLinesArray(Inv $invoice,
-            InvoicePeriod $invoice_period, IIAR $iiaR, cpR $cpR, SOIR $soiR,
-                                    ACIIR $aciiR, unpR $unpR, ppR $ppR): array
+    private function buildInvoiceLinesArray(
+        Inv $invoice,
+        InvoicePeriod $invoice_period,
+        StoreCoveHelperInvDeps $inv,
+        StoreCoveHelperNetDeps $net,
+        StoreCoveHelperChargeDeps $charge,
+    ): array
     {
         $client = $invoice->getClient();
         if ($client) {
-            $client_peppol = $cpR->repoClientPeppolLoadedquery($client->reqId());
+            $client_peppol = $inv->cpR->repoClientPeppolLoadedquery($client->reqId());
             if ($client_peppol) {
                 $invoiceLines = [];
                 /**
@@ -609,15 +609,15 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
                  */
                 foreach ($invoice->getItems() as $item) {
                     $price = ($item->getPrice() ?? 0.00);
-                    $peppol_po_itemid = $this->peppolPoItemid($item, $soiR);
-                    $peppol_po_lineid = $this->peppolPoLineid($item, $soiR);
+                    $peppol_po_itemid = $this->peppolPoItemid($item, $charge->soiR);
+                    $peppol_po_lineid = $this->peppolPoLineid($item, $charge->soiR);
                     $item_id = $item->reqId();
                     // if the additionalitemproperty field has been used,
                     //  use the product property name value pairs to build
                     //   an array
                     $product_properties_array =
-                            $this->buildProductPropertyArray($item_id, $ppR);
-                    $inv_item_amount = $this->getInvItemAmount($item_id, $iiaR);
+                            $this->buildProductPropertyArray($item_id, $net->ppR);
+                    $inv_item_amount = $this->getInvItemAmount($item_id, $inv->iiaR);
                     if (isset($inv_item_amount)) {
 
         // using Array Format 2
@@ -635,7 +635,7 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
                             'quantity' => $item->getQuantity(),
                             'quantityUnitCode' => $this->unitCode(
                                 $item->getProduct()?->getUnit()?->reqId(),
-                                $unpR),
+                                $net->unpR),
                             'tax' => [
                                 'percentage' =>
                    $item->getProduct()?->getTaxRate()?->getTaxRatePercent(),
@@ -678,7 +678,7 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
                             ],
                         ];
                         $inv_item_allowance_charges =
-                                $aciiR->repoInvItemquery($item_id);
+                                $charge->aciiR->repoInvItemquery($item_id);
                         /**
                          * @var InvItemAllowanceCharge $acii
                          */
@@ -1465,33 +1465,14 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
      *  JSON Object
      */
     public function maximumPreJsonPhpObjectForAnInvoice(
-        SOR $soR,
         Inv $invoice,
-        //IAR $iaR,
-        IIAR $iiaR,
-        //IIR $iiR,
-        ContractRepo $contractRepo,
-        DelRepo $delRepo,
-        DelPartyRepo $delPartyRepo,
-        // PostalAddress Repository
-        paR $paR,
-        // ClientPeppol Repository
-        cpR $cpR,
-        ppR $ppR,
-        // UnitPeppol Repository
-        unpR $unpR,
-        // Upload Repository
-        upR $upR,
-        // Document Level InvAllowanceCharge Repository;
-        // used to retrieve invoice allowance charges
-        ACIR $aciR,
-        ACIIR $aciiR,
-        SOIR $soiR,
-        TRR $trR,
+        StoreCoveHelperInvDeps $inv,
+        StoreCoveHelperNetDeps $net,
+        StoreCoveHelperChargeDeps $charge,
     ): array {
         $invoice_id = $invoice->reqId();
-        $references = $this->buildReferencesArray($invoice, $contractRepo,
-                                                        $cpR, $soiR, $soR);
+        $references = $this->buildReferencesArray($invoice, $net->contractRepo,
+                                                        $inv->cpR, $charge->soiR, $inv->soR);
         $config_peppol = $this->s->getConfigPeppol();
         /**
          * @var array $config_peppol['PartyLegalEntity']
@@ -1561,7 +1542,7 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
         $contact = $this->supplierContact();
         $this->validateSupplierContact($contact);
         $acp = $this->buildPeppolAccountingCustomerPartyArray(
-                                                        $invoice, $paR, $cpR);
+                                                        $invoice, $inv->paR, $inv->cpR);
         $customer_partyTaxScheme = $this->buildCustomerPartyTaxScheme($acp);
         $customer_partyLegalEntity = $this->buildCustomerLegalEntity($acp);
         $customer_tax_scheme = $customer_partyTaxScheme->getTaxScheme();
@@ -1572,8 +1553,8 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
         $customer_physical = $this->buildCustomerPhysicalLocation($acp);
         $c_contact = $this->buildCustomerContact($acp);
         $c_del_loc_address = $this->buildDeliveryLocationAddress();
-        $c_actual_del_datetime = $this->actualDeliveryDate($invoice, $delRepo);
-        $c_del_party = $this->deliveryParty($invoice, $delRepo, $delPartyRepo);
+        $c_actual_del_datetime = $this->actualDeliveryDate($invoice, $net->delRepo);
+        $c_del_party = $this->deliveryParty($invoice, $net->delRepo, $net->delPartyRepo);
         $payment_means_array = $this->buildPeppolPaymentMeansArray();
         /**
          * @var array $payment_means_array['PayeeFinancialAccount']
@@ -1587,10 +1568,10 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
                                                           $invoice_id);
         $invoice_period = $this->ublInvoicePeriod($invoice, $this->s);
         $invoice_lines = $this->buildInvoiceLinesArray($invoice,
-                   $invoice_period, $iiaR, $cpR, $soiR, $aciiR, $unpR, $ppR);
+                                            $invoice_period, $inv, $net, $charge);
         $allowance_charges = $this->documentLevelAllowanceCharges($invoice,
-                                                                      $aciR);
-        $taxSubtotal = $this->buildTaxSubtotalArray($invoice, $iiaR, $trR);
+                                                                  $charge->aciR);
+        $taxSubtotal = $this->buildTaxSubtotalArray($invoice, $inv->iiaR, $charge->trR);
         /**
          * @var float $taxSubtotal['TaxableAmounts']
          */
@@ -1627,7 +1608,7 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
                 ],
                 'workflow' => 'full',
             ],
-            'attachments' => $this->buildAttachmentsArray($invoice, $upR),
+            'attachments' => $this->buildAttachmentsArray($invoice, $net->upR),
             'document' => [
                 self::KEY_DOCUMENT_TYPE => 'invoice',
                 'invoice' => [
@@ -1642,7 +1623,7 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
                                 $this->invoicePeriod($invoice, $this->s),
                     'references' => $references,
                     'accountingCost' =>
-                                $this->accountingCost($invoice, $cpR),
+                                $this->accountingCost($invoice, $inv->cpR),
                     'note' => $invoice->getNote() ??
        $this->t->translate('storecove.advisory.to.developer.easily.missed'),
                     'accountingSupplierParty' => [

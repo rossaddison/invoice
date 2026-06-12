@@ -6,19 +6,9 @@ namespace App\Invoice\Inv\Trait;
 
 use App\Infrastructure\Persistence\{Inv\Inv, InvItem\InvItem};
 use App\Invoice\{
-    CustomField\CustomFieldRepository as CFR,
-    Inv\InvRepository as IR,
-    InvItem\InvItemRepository as IIR,
-    InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR,
-    InvAmount\InvAmountRepository as IAR,
-    InvItemAmount\InvItemAmountRepository as IIAR,
-    InvTaxRate\InvTaxRateRepository as ITRR,
-    PaymentMethod\PaymentMethodRepository as PMR,
-    Upload\UploadRepository as UPR,
-    UserClient\UserClientRepository as UCR,
-    UserInv\UserInvRepository as UIR
+    Inv\InvUrlKeyRepoDeps,
+    Inv\InvUrlKeyUserDeps,
 };
-use App\User\UserRepository as UR;
 use Yiisoft\{
     Router\HydratorAttribute\RouteArgument, User\CurrentUser,
 };
@@ -34,18 +24,8 @@ trait UrlKey
         #[RouteArgument('_language')]
         string $_language,
         CurrentUser $currentUser,
-        CFR $cfR,
-        IAR $iaR,
-        IIAR $iiaR,
-        ACIIR $aciiR,
-        IIR $iiR,
-        IR $iR,
-        ITRR $itrR,
-        UR $uR,
-        UCR $ucR,
-        UIR $uiR,
-        PMR $pmR,
-        UPR $upR,
+        InvUrlKeyRepoDeps $repos,
+        InvUrlKeyUserDeps $ud,
     ): Response {
         // if the current user is a guest it will return a null value
         if ($urlKey === '' || $currentUser->isGuest()) {
@@ -56,47 +36,47 @@ trait UrlKey
         }
         // If the status is sent 2, viewed 3, or paid 4 and the url key exists
         // accept otherwise not found response
-        if (($iR->repoUrlKeyGuestCount($urlKey) < 1)
+        if (($repos->iR->repoUrlKeyGuestCount($urlKey) < 1)
                 && (!$currentUser->isGuest())) {
             return $this->webService->getNotFoundResponse();
         }
-        $inv = $iR->repoUrlKeyGuestLoaded($urlKey);
+        $inv = $repos->iR->repoUrlKeyGuestLoaded($urlKey);
         if ($inv instanceof Inv) {
             $inv_id = $inv->reqId();
             $this->session->set('inv_id', $inv_id);
-            if ($itrR->repoCount($inv_id) == 0) {
+            if ($repos->itrR->repoCount($inv_id) == 0) {
                 $this->flashMessage('warning',
                     $this->translator->translate('tax.rate.active.not'));
             }
             $client_id = $inv->reqClientId();
-            $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
+            $user = $this->activeUser($client_id, $ud->uR, $ud->ucR, $ud->uiR);
             if ($user) {
                 $user_id = $user->reqId();
                 if ($user_id > 0) {
-                    $user_inv = $uiR->repoUserInvUserIdquery($user_id);
+                    $user_inv = $ud->uiR->repoUserInvUserIdquery($user_id);
                     // If the user is not an administrator and the status is
                     // sent 2, now mark it as viewed
                     if (null !== $user_inv && $user_inv->getActive()) {
-                        if ($uiR->repoUserInvUserIdcount($user_id) === 1
+                        if ($ud->uiR->repoUserInvUserIdcount($user_id) === 1
                                 && $user_inv->getType() !== 1 && $inv->reqStatusId() === 2) {
                             // Mark the invoice as viewed and check whether
                             // it should be marked as read only according to the
                             // read only toggle setting.
-                            $this->sR->invoiceMarkViewed($inv_id, $iR);
+                            $this->sR->invoiceMarkViewed($inv_id, $repos->iR);
                         }
-                        $iR->save($inv);
+                        $repos->iR->save($inv);
                         $payment_method = $inv->getPaymentMethod() !== 0 ?
-                            $pmR->repoPaymentMethodquery(
+                            $ud->pmR->repoPaymentMethodquery(
                                 (int) $inv->getPaymentMethod()) : null;
                         $custom_fields = [
-                            'invoice' => $cfR->repoTablequery('inv_custom'),
-                            'client' => $cfR->repoTablequery('client_custom'),
+                            'invoice' => $repos->cfR->repoTablequery('inv_custom'),
+                            'client' => $repos->cfR->repoTablequery('client_custom'),
                         ];
                         $attachments = $this->viewPartialInvAttachments(
-                            $_language, $urlKey, $client_id, $upR);
+                            $_language, $urlKey, $client_id, $ud->upR);
                         $inv_amount = ((
-                            $iaR->repoInvAmountCount($inv_id) > 0) ?
-                                $iaR->repoInvquery($inv_id) : null);
+                            $repos->iaR->repoInvAmountCount($inv_id) > 0) ?
+                                $repos->iaR->repoInvquery($inv_id) : null);
                         if ($inv_amount) {
                             $is_overdue = (
                                 $inv_amount->getBalance() > 0
@@ -124,14 +104,14 @@ trait UrlKey
                                     'inv' => $inv,
                                     'inv_amount' => $inv_amount,
                                     'inv_tax_rates' => ($inv_id > 0)
-                                        && $itrR->repoCount($inv_id) > 0 ?
-                                            $itrR->repoInvquery($inv_id) : [],
+                                        && $repos->itrR->repoCount($inv_id) > 0 ?
+                                            $repos->itrR->repoInvquery($inv_id) : [],
                                     'inv_url_key' => $urlKey,
-                                    'iiaR' => $iiaR,
-                                    'aciiR' => $aciiR,
+                                    'iiaR' => $repos->iiaR,
+                                    'aciiR' => $ud->aciiR,
                                     'is_overdue' => $is_overdue,
                                     'items' => ($inv_id > 0) ?
-                                        $iiR->repoInvquery($inv_id) :
+                                        $repos->iiR->repoInvquery($inv_id) :
                                             new InvItem(),
                                     '_language' => $_language,
                                     'payment_method' => $payment_method,
@@ -139,8 +119,8 @@ trait UrlKey
                                         $this->sR->getPaymentTermArray(
                                             $this->translator),
                                     'userInv' =>
-                                        $uiR->repoUserInvUserIdcount($user_id)
-                                            > 0 ? $uiR->repoUserInvUserIdquery(
+                                        $ud->uiR->repoUserInvUserIdcount($user_id)
+                                            > 0 ? $ud->uiR->repoUserInvUserIdquery(
                                             $user_id) : null,
                                 ]),
                             ];

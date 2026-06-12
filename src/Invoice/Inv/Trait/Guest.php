@@ -8,17 +8,13 @@ use App\Auth\Permissions;
 use App\Infrastructure\Persistence\User\User;
 
 use App\Invoice\{
+    Inv\InvGuestDeps,
+    Inv\InvGuestFilter,
     Inv\InvRepository as IR,
-    InvAmount\InvAmountRepository as IAR,
-    InvRecurring\InvRecurringRepository as IRR,
-    PaymentInformation\Service\BacsPaymentService,
-    UserClient\UserClientRepository as UCR,
-    UserInv\UserInvRepository as UIR
 };
 use Yiisoft\{
     Data\Reader\DataReaderInterface as DRI,
     Data\Reader\SortableDataInterface as SDI,
-    Input\Http\Attribute\Parameter\Query,
     Router\HydratorAttribute\RouteArgument
 };
 use Psr\{Http\Message\ResponseInterface as Response,
@@ -33,37 +29,15 @@ trait Guest
      *  status and page are digits
      */
     public function guest(
-        IAR $iaR,
-        IRR $irR,
-        IR $iR,
-        UCR $ucR,
-        UIR $uiR,
-        BacsPaymentService $bacsPaymentService,
+        InvGuestDeps $d,
+        InvGuestFilter $filter,
         #[RouteArgument('page')]
         string $page = '1',
         #[RouteArgument('status')]
         string $status = '0',
-        #[Query('page')]
-        ?string $queryPage = null,
-        #[Query('sort')]
-        ?string $querySort = null,
-        #[Query('filterClient')]
-        ?string $queryFilterClient = null,
-        #[Query('filterInvNumber')]
-        ?string $queryFilterInvNumber = null,
-        #[Query('filterCreditInvNumber')]
-        ?string $queryFilterCreditInvNumber = null,
-        #[Query('filterInvAmountTotal')]
-        ?string $queryFilterInvAmountTotal = null,
-        #[Query('filterInvAmountPaid')]
-        ?string $queryFilterInvAmountPaid = null,
-        #[Query('filterInvAmountBalance')]
-        ?string $queryFilterInvAmountBalance = null,
-        #[Query('filterStatus')]
-        ?string $queryFilterStatus = null,
     ): Response {
-        $page = $queryPage ?? $page;
-        $sortString = $querySort ?? '-id';
+        $page = $filter->page ?? $page;
+        $sortString = $filter->sort ?? '-id';
         // Get the current user and determine from (Related logic: see Settings
         // ...User Account) whether they have been given either guest or admin
         // rights. These rights are unrelated to rbac and serve as a second
@@ -73,8 +47,8 @@ trait Guest
         if ($user instanceof User && (($user_id = $user->reqId()) > 0)) {
             // Use this user's id to see whether a user has been setup under
             // UserInv ie. yii-invoice's list of users
-            $userInv = ($uiR->repoUserInvUserIdcount($user_id) > 0 ?
-                $uiR->repoUserInvUserIdquery($user_id) : null);
+            $userInv = ($d->uiR->repoUserInvUserIdcount($user_id) > 0 ?
+                $d->uiR->repoUserInvUserIdquery($user_id) : null);
             if (null !== $userInv && $user_id > 0 && $userInv->getActive()) {
                 $userInvListLimit = $userInv->getListLimit();
                 // Determine what clients have been allocated to this user
@@ -85,76 +59,77 @@ trait Guest
                 // A user-guest-client will be allocated their client number by
                 // the administrator so that they can view their invoices and
                 // make payment
-                $user_clients = $ucR->getAssignedToUser($user_id);
+                $user_clients = $d->ucR->getAssignedToUser($user_id);
                 if (!empty($user_clients)) {
-                    $effectiveStatus = isset($queryFilterStatus)
-                        && !empty($queryFilterStatus) ?
-                            (int) $queryFilterStatus : (int) $status;
-                    $invs = $this->invsStatusGuest($iR, $effectiveStatus,
+                    $effectiveStatus = isset($filter->filterStatus)
+                        && !empty($filter->filterStatus) ?
+                            (int) $filter->filterStatus : (int) $status;
+                    $invs = $this->invsStatusGuest($d->iR, $effectiveStatus,
                             $user_clients);
                     $preFilterInvs = $invs;
-                    if (isset($queryFilterInvNumber)
-                            && !empty($queryFilterInvNumber)) {
-                        $invs = $iR->filterInvNumber($queryFilterInvNumber);
+                    if (isset($filter->filterInvNumber)
+                            && !empty($filter->filterInvNumber)) {
+                        $invs = $d->iR->filterInvNumber($filter->filterInvNumber);
                     }
-                    if (isset($queryFilterCreditInvNumber)
-                            && !empty($queryFilterCreditInvNumber)) {
-                        $invs = $iR->filterCreditInvNumber(
-                            $queryFilterCreditInvNumber);
+                    if (isset($filter->filterCreditInvNumber)
+                            && !empty($filter->filterCreditInvNumber)) {
+                        $invs = $d->iR->filterCreditInvNumber(
+                            $filter->filterCreditInvNumber);
                     }
-                    if (isset($queryFilterInvAmountTotal)
-                            && !empty($queryFilterInvAmountTotal)) {
-                        $invs = $iR->filterInvAmountTotal(
-                            (float) $queryFilterInvAmountTotal);
+                    if (isset($filter->filterInvAmountTotal)
+                            && !empty($filter->filterInvAmountTotal)) {
+                        $invs = $d->iR->filterInvAmountTotal(
+                            (float) $filter->filterInvAmountTotal);
                     }
-                    if (isset($queryFilterInvAmountPaid)
-                            && !empty($queryFilterInvAmountPaid)) {
-                        $invs = $iR->filterInvAmountPaid(
-                            (float) $queryFilterInvAmountPaid);
+                    if (isset($filter->filterInvAmountPaid)
+                            && !empty($filter->filterInvAmountPaid)) {
+                        $invs = $d->iR->filterInvAmountPaid(
+                            (float) $filter->filterInvAmountPaid);
                     }
-                    if (isset($queryFilterInvAmountBalance)
-                            && !empty($queryFilterInvAmountBalance)) {
-                        $invs = $iR->filterInvAmountBalance(
-                                (float) $queryFilterInvAmountBalance);
+                    if (isset($filter->filterInvAmountBalance)
+                            && !empty($filter->filterInvAmountBalance)) {
+                        $invs = $d->iR->filterInvAmountBalance(
+                                (float) $filter->filterInvAmountBalance);
                     }
-                    if ((isset($queryFilterInvNumber)
-                            && !empty($queryFilterInvNumber))
-                       && (isset($queryFilterInvAmountTotal)
-                               && !empty($queryFilterInvAmountTotal))) {
-                        $invs = $iR->filterInvNumberAndInvAmountTotal(
-                            $queryFilterInvNumber,
-                                (float) $queryFilterInvAmountTotal);
+                    if ((isset($filter->filterInvNumber)
+                            && !empty($filter->filterInvNumber))
+                       && (isset($filter->filterInvAmountTotal)
+                               && !empty($filter->filterInvAmountTotal))) {
+                        $invs = $d->iR->filterInvNumberAndInvAmountTotal(
+                            $filter->filterInvNumber,
+                                (float) $filter->filterInvAmountTotal);
                     }
-                    if (isset($queryFilterClient) && !empty($queryFilterClient)) {
-                        $invs = $iR->filterGuestClient($queryFilterClient);
+                    if (isset($filter->filterClient) && !empty($filter->filterClient)) {
+                        $invs = $d->iR->filterGuestClient($filter->filterClient);
                     }
-                    $inv_statuses = $iR->getStatuses($this->translator);
-                    $label = $iR->getSpecificStatusArrayLabel($status);
-                    $bacsUnpaidInvs = $iR->repoUnpaidByClientIds($user_clients);
+                    $inv_statuses = $d->iR->getStatuses($this->translator);
+                    $label = $d->iR->getSpecificStatusArrayLabel($status);
+                    $bacsUnpaidInvs = $d->iR->repoUnpaidByClientIds($user_clients);
                     $dp = (int) $this->sR->getSetting('tax_rate_decimal_places');
                     $parameters = [
                         'alert' => $this->alert(),
-                        'bacsPaymentService' => $bacsPaymentService,
+                        'bacsPaymentService' => $d->bacsPaymentService,
                         'bacsUnpaidInvs' => $bacsUnpaidInvs,
                         'decimalPlaces' => $dp,
                         'modalBacsQuickPay' =>
                             $this->webViewRenderer->renderPartialAsString(
                                 '_modal_bacs_quickpay', [
-                                    'bacsPaymentService' => $bacsPaymentService,
+                                    'bacsPaymentService' => $d->bacsPaymentService,
                                     'bacsUnpaidInvs'     => $bacsUnpaidInvs,
                                     'decimalPlaces'      => $dp,
                         ]),
                         'optionsClientsDropDownFilter' =>
-                        $this->optionsDataUserClientsFilter($ucR, $user_id),
-                        'optionsInvNumberDropDownFilter' => $this->                                                         optionsDataInvNumberGuestFilter($preFilterInvs),
+                        $this->optionsDataUserClientsFilter($d->ucR, $user_id),
+                        'optionsInvNumberDropDownFilter' =>
+                            $this->optionsDataInvNumberGuestFilter($preFilterInvs),
                         'optionsCreditInvNumberDropDownFilter' =>
                         $this->optionsDataCreditInvNumberGuestFilter(
-                            $preFilterInvs, $iR),
+                            $preFilterInvs, $d->iR),
                         'optionsStatusDropDownFilter' =>
-                                $this->optionsDataStatusFilter($iR),
-                        'iaR' => $iaR,
-                        'iR' => $iR,
-                        'irR' => $irR,
+                                $this->optionsDataStatusFilter($d->iR),
+                        'iaR' => $d->iaR,
+                        'iR' => $d->iR,
+                        'irR' => $d->irR,
                         'invs' => $invs,
                         'label' => $label,
                         // the guest will not have access to the pageSizeLimiter
@@ -171,7 +146,7 @@ trait Guest
                         'page' => (int) $page > 0 ? (int) $page : 1,
                         // Clicking on a grid column sort hyperlink will
                         // generate a url query_param eg. ?sort=
-                        'sortOrder' => $querySort ?? '',
+                        'sortOrder' => $filter->sort ?? '',
                         'sortString' => $sortString,
                         'status' => $status,
                     ];

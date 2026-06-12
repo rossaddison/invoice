@@ -64,15 +64,15 @@ echo [4s] Angular: Generate Component               [4t]  Angular: Lint Check
 echo [5]  Require Checker                           [15]  invoice/quote/truncate2
 echo [25] Performance Benchmarks                    [16]  invoice/salesorder/truncate3
 echo [26] SonarCloud Issues                         [17]  invoice/nonuserrelated/truncate4
-echo [99] System Info / Diagnostics                 [18]  invoice/userrelated/truncate5
-echo                                                [19]  invoice/autoincrementsettooneafter/truncate6
+echo [27] Peppol Code-List Currency Check           [18]  invoice/userrelated/truncate5
+echo [99] System Info / Diagnostics                 [19]  invoice/autoincrementsettooneafter/truncate6
 echo                                                [20]  GitHub CLI: Install
 echo                                                [21]  GitHub CLI: Auth Status
 echo                                                [22]  GitHub CLI: Copilot Version
 echo                                                [23]  Exit
 echo                                                [24]  Exit to Current Directory
 echo =================================
-set /p choice="Enter your choice [0-26,99]: "
+set /p choice="Enter your choice [0-27,99]: "
 
 REM ======== MENU COMMAND ROUTING ========
 if "%choice%"=="1" goto c01
@@ -150,6 +150,7 @@ if "%choice%"=="23" goto c23
 if "%choice%"=="24" goto c24
 if "%choice%"=="25" goto c25
 if "%choice%"=="26" goto c26
+if "%choice%"=="27" goto c27
 if "%choice%"=="99" goto c99
 echo Invalid choice. Please try again.
 pause
@@ -994,6 +995,26 @@ echo.
 php sonar-issues.php --file=%sonar_file_val%
 pause
 goto sonar_menu
+
+:c27
+cls
+echo ======================================================================================
+echo                  PEPPOL CODE-LIST CURRENCY CHECK  (Yii3-i)
+echo ======================================================================================
+echo  Compares local XML files in src/Invoice/Helpers/Peppol/DownloadedXml/
+echo  against the last commit date on OpenPEPPOL/peppol-bis-invoice-3 (master).
+echo  Green = UP-TO-DATE   Red = STALE
+echo.
+echo  A GitHub personal-access token raises the API rate limit
+echo  from 60 requests/hour to 5000 requests/hour.
+echo  Leave blank to run unauthenticated (sufficient for occasional checks).
+echo ======================================================================================
+set /p github_token_input="GitHub token (press Enter to skip): "
+if not "%github_token_input%"=="" set GITHUB_TOKEN=%github_token_input%
+echo.
+php bin/check-peppol-codelists.php
+pause
+goto menu
 
 :c99
 echo .......... VERSIONS - PHP, COMPOSER, NODE, TYPESCRIPT ..........

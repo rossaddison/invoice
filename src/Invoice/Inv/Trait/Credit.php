@@ -9,17 +9,11 @@ use App\Infrastructure\Persistence\{
 };
 
 use App\Invoice\{
-    Client\ClientRepository as CR,
-    Group\GroupRepository as GR,
-    Inv\InvRepository as IR,
+    Inv\InvCreditDeps,
+    Inv\InvCreateCreditCoreDeps,
+    Inv\InvCreateCreditUserDeps,
     Inv\InvForm,
-    InvItem\InvItemRepository as IIR,
-    InvItemAmount\InvItemAmountRepository as IIAR,
-    TaxRate\TaxRateRepository as TRR,
-    UserClient\UserClientRepository as UCR,
-    UserInv\UserInvRepository as UIR
 };
-use App\User\UserRepository as UR;
 use Yiisoft\{FormModel\FormHydrator, Http\Method, Json\Json, Security\Random};
 use Psr\{Http\Message\ResponseInterface as Response,
     Http\Message\ServerRequestInterface as Request,
@@ -33,19 +27,14 @@ trait Credit
     public function credit(
         Request $request,
         FormHydrator $formHydrator,
-        CR $clientRepository,
-        GR $gR,
-        TRR $trR,
-        UR $uR,
-        UCR $ucR,
-        UIR $uiR,
+        InvCreditDeps $d,
     ): Response {
         $inv = new Inv();
         $form = new InvForm();
         $invAmount = new InvAmount();
         $defaultGroupId = (int) $this->sR->getSetting('default_invoice_group');
         $optionsGroupData = [];
-        $groups = $gR->findAllPreloaded();
+        $groups = $d->gR->findAllPreloaded();
         /**
          * @var Group
          */
@@ -58,7 +47,7 @@ trait Credit
             'actionArguments' => [],
             'errors' => [],
             'form' => $form,
-            'clients' => $clientRepository->optionsData($ucR),
+            'clients' => $d->clientRepository->optionsData($d->ucR),
             'groups' => $optionsGroupData,
             'defaultGroupId' => $defaultGroupId,
             'urlKey' => Random::string(32),
@@ -75,7 +64,7 @@ trait Credit
                      * @var string $body['client_id']
                      */
                     $client_id = (int) $body['client_id'];
-                    $user_client = $ucR->repoUserquery($client_id);
+                    $user_client = $d->ucR->repoUserquery($client_id);
                     if (null !== $user_client
                             && null !== $user_client->getClient()) {
                         $client_first_name =
@@ -98,22 +87,22 @@ trait Credit
                     // So this line is an extra measure to ensure that the
                     // invoice is being made out to the correct payer
                     // ie. not more than one user is associated with the client.
-                    $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
+                    $user = $this->activeUser($client_id, $d->uR, $d->ucR, $d->uiR);
                     if (null !== $user) {
                         $model_id = 0;
                         $this->inv_service->withTransaction(
                             function () use (
-                                $user, $inv, $body, $gR, $trR, $formHydrator,
+                                $user, $inv, $body, $d, $formHydrator,
                                 $invAmount, &$model_id
                             ): void {
                                 $saved_model = $this->inv_service->saveInv(
-                                    $user, $inv, $body, $this->sR, $gR);
+                                    $user, $inv, $body, $this->sR, $d->gR);
                                 $model_id = $saved_model->reqId();
                                 if ($model_id > 0) {
                                     $this->inv_amount_service->initializeInvAmount(
                                         $invAmount, $model_id);
                                     $this->defaultTaxes(
-                                        $saved_model, $trR, $formHydrator);
+                                        $saved_model, $d->trR, $formHydrator);
                                 }
                             }
                         );
@@ -151,12 +140,14 @@ trait Credit
      *  $(document).on('click', '#create-credit-confirm', function ()
      * Related logic: see resources/views/invoice/inv/modal_create_credit
      */
-    public function createCreditConfirm(Request $request,
-            FormHydrator $formHydrator, IR $iR, GR $gR, IIR $iiR, IIAR $iiaR,
-                UCR $ucR, UIR $uiR, UR $uR): Response
-    {
+    public function createCreditConfirm(
+        Request $request,
+        FormHydrator $formHydrator,
+        InvCreateCreditCoreDeps $core,
+        InvCreateCreditUserDeps $userDeps,
+    ): Response {
         $body = $request->getQueryParams();
-        $basis_inv = $iR->repoInvLoadedquery((int) $body['inv_id']);
+        $basis_inv = $core->iR->repoInvLoadedquery((int) $body['inv_id']);
         if (null !== $basis_inv) {
             $basis_inv_id = (int) $body['inv_id'];
             // Set the basis_inv to read-only;
@@ -168,7 +159,7 @@ trait Credit
                 'user_id' => $body['user_id'],
                 'status_id' => $basis_inv->reqStatusId(),
                 'is_read_only' => true,
-                'number' => $gR->generateNumber(4, true),
+                'number' => $core->gR->generateNumber(4, true),
                 'discount_amount' => $basis_inv->getDiscountAmount(),
                 'url_key' => '',
                 'password' => $body['password'],
@@ -184,28 +175,28 @@ trait Credit
                  * @var string $ajax_body['client_id']
                  */
                 $client_id = (int) $ajax_body['client_id'];
-                $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
+                $user = $this->activeUser($client_id, $userDeps->uR, $userDeps->ucR, $userDeps->uiR);
                 if (null !== $user) {
                     $saved_inv_id = 0;
                     $this->inv_service->withTransaction(
                         function () use (
-                            $user, $new_inv, $ajax_body, $gR, $basis_inv_id,
-                            $basis_inv, $iiR, $iiaR, $iR, &$saved_inv_id
+                            $user, $new_inv, $ajax_body, $core, $basis_inv_id,
+                            $basis_inv, &$saved_inv_id
                         ): void {
                             $saved_inv = $this->inv_service->saveInv(
-                                $user, $new_inv, $ajax_body, $this->sR, $gR);
+                                $user, $new_inv, $ajax_body, $this->sR, $core->gR);
                             $saved_inv_id = $saved_inv->reqId();
                             if ($saved_inv_id > 0) {
                                 $savedInvId = (string) $saved_inv_id;
                                 $this->inv_item_service->initializeCreditInvItems(
-                                    $basis_inv_id, $savedInvId, $iiR, $iiaR);
+                                    $basis_inv_id, $savedInvId, $core->iiR, $core->iiaR);
                                 $this->inv_amount_service->initializeCreditInvAmount(
                                     new InvAmount(), $basis_inv_id, $savedInvId);
                                 $this->inv_tax_rate_service->initializeCreditInvTaxRate(
                                     $basis_inv_id, $savedInvId);
                                 // Record the new Credit Note's id in the basis invoice
                                 $basis_inv->setCreditinvoiceParentId($saved_inv_id);
-                                $iR->save($basis_inv);
+                                $core->iR->save($basis_inv);
                             }
                         }
                     );

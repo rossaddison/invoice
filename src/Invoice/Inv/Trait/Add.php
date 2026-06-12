@@ -6,14 +6,9 @@ namespace App\Invoice\Inv\Trait;
 
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\{
-    Client\ClientRepository as CR,
-    Group\GroupRepository as GR,
+    Inv\InvAddDeps,
     Inv\InvForm,
-    TaxRate\TaxRateRepository as TRR,
-    UserClient\UserClientRepository as UCR,
-    UserInv\UserInvRepository as UIR
 };
-use App\User\UserRepository as UR;
 use App\Widget\{Bootstrap5ModalInv};
 use Yiisoft\{
     FormModel\FormHydrator, Http\Method, Router\HydratorAttribute\RouteArgument,
@@ -34,12 +29,7 @@ trait Add
         #[RouteArgument('origin')]
         string $origin,
         FormHydrator $formHydrator,
-        CR $clientRepository,
-        GR $gR,
-        TRR $trR,
-        UR $uR,
-        UCR $ucR,
-        UIR $uiR,
+        InvAddDeps $d,
     ): Response {
         $inv = new Inv();
         $errors = [];
@@ -47,10 +37,10 @@ trait Add
         $bootstrap5ModalInv = new Bootstrap5ModalInv(
             $this->translator,
             $this->webViewRenderer,
-            $clientRepository,
-            $gR,
+            $d->clientRepository,
+            $d->gR,
             $this->sR,
-            $ucR,
+            $d->ucR,
             $form,
         );
         // An invoice can originate and be added from the following pages:
@@ -70,13 +60,13 @@ trait Add
                      * @var string $body['client_id']
                      */
                     $client_id = (int) $body['client_id'];
-                    $user_client = $ucR->repoUserquery($client_id);
+                    $user_client = $d->ucR->repoUserquery($client_id);
                     if (null !== $user_client && null !==
                             $user_client->getClient()) {
                         // no warning necessary a user client relationship exists
                     } else {
                         $this->flashMessage('danger',
-                            $clientRepository->repoClientquery($client_id)
+                            $d->clientRepository->repoClientquery($client_id)
                                              ->getClientFullName()
                                     . ': ' . $this->translator->translate(
                                             'user.client.no.account'));
@@ -90,19 +80,19 @@ trait Add
 // invoice is being made out to the correct payer ie. not more than one user
 // is associated with the client.
 
-$user = $this->activeUser($client_id, $uR, $ucR, $uiR);
+$user = $this->activeUser($client_id, $d->uR, $d->ucR, $d->uiR);
                     if (null !== $user) {
                         $saved_model = null;
                         $this->inv_service->withTransaction(
                             function () use (
-                                $user, $inv, $body, $gR, $trR, $formHydrator,
+                                $user, $inv, $body, $d, $formHydrator,
                                 &$saved_model
                             ): void {
                                 $saved_model = $this->inv_service->saveInv(
-                                    $user, $inv, $body, $this->sR, $gR);
+                                    $user, $inv, $body, $this->sR, $d->gR);
                                 if ($saved_model->hasIdentity()) {
                                     $this->defaultTaxes(
-                                        $saved_model, $trR, $formHydrator);
+                                        $saved_model, $d->trR, $formHydrator);
                                 }
                             }
                         );
