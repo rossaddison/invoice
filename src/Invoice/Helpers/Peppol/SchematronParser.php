@@ -40,7 +40,7 @@ use DOMXPath;
 /**
  * @psalm-suppress UnusedClass
  */
-final class SchematronParser
+final class SchematronParser implements SchematronParserInterface
 {
     // Namespace URI is an opaque identifier mandated by the ISO Schematron spec — must not be changed to https.
     private const SCH_NS = 'http://purl.oclc.org/dsdl/schematron'; // NOSONAR
@@ -57,6 +57,7 @@ final class SchematronParser
      *
      * @throws SchematronParseException on XML load failure or malformed assertions.
      */
+    #[\Override]
     public function parseFile(string $path): SchematronDocument
     {
         if (!is_file($path)) {
@@ -72,6 +73,7 @@ final class SchematronParser
      * @param string $source Human-readable source label for error messages.
      * @throws SchematronParseException on XML parse failure.
      */
+    #[\Override]
     public function parseString(string $xml, string $source = '<string>'): SchematronDocument
     {
         $dom = new DOMDocument();
