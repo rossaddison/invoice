@@ -104,8 +104,8 @@ class As4RetryEngine
             $message->markSent();
             $this->persist($message);
 
-            if ($response->isSuccessful()) {
-                if ($response->receiptOrError !== null) {
+            if ($response->isSuccess()) {
+                if ($response->body !== '') {
                     $this->logger->info('Received receipt in response', [
                         'messageId' => $message->getMessageId(),
                     ]);

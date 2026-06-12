@@ -4,171 +4,72 @@ declare(strict_types=1);
 
 namespace App\Invoice\As4;
 
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\StreamFactoryInterface;
+use DOMDocument;
 use Psr\Log\LoggerInterface;
-use Exception;
 
 /**
- * AS4 Message Sender
+ * AS4 message sender — high-level orchestrator.
  *
- * Transmits AS4 messages to Oxalis (or any AS4 access point) via HTTPS
- * with multipart/related MIME packaging per section 3.2.3.
+ * Accepts a serialized SOAP envelope string and optional raw attachment parts,
+ * converts them into typed value objects, and delegates HTTP transport to
+ * As4HttpClient which applies the correct Peppol multipart/related MIME packaging.
+ *
+ * @psalm-suppress UnusedClass
  */
-class As4Sender
+final class As4Sender
 {
-    private ClientInterface $httpClient;
-    private RequestFactoryInterface $requestFactory;
-    private StreamFactoryInterface $streamFactory;
-    private LoggerInterface $logger;
-
     public function __construct(
-        ClientInterface $httpClient,
-        RequestFactoryInterface $requestFactory,
-        StreamFactoryInterface $streamFactory,
-        LoggerInterface $logger
-    ) {
-        $this->httpClient = $httpClient;
-        $this->requestFactory = $requestFactory;
-        $this->streamFactory = $streamFactory;
-        $this->logger = $logger;
-    }
+        private readonly As4HttpClient $httpClient,
+        private readonly LoggerInterface $logger,
+    ) {}
 
     /**
-     * Send AS4 message to endpoint.
+     * Send a serialized AS4 message to the given endpoint.
      *
-     * @param array<string, string> $parts    MIME parts: [contentId => binary_data]
-     * @param array<string, string> $headers  Additional HTTP headers
+     * @param array<string, string> $parts  Attachment parts keyed by Content-ID
      *
-     * @throws Exception on network/protocol errors
+     * @throws \InvalidArgumentException  When $soapMessage is not valid XML
+     * @throws \Psr\Http\Client\ClientExceptionInterface  On network failure
      */
     public function send(
         string $endpoint,
         string $soapMessage,
         array $parts = [],
-        array $headers = []
-    ): As4SendResponse {
-        try {
-            $boundary = 'boundary-' . bin2hex(random_bytes(16));
-            $mimeBody = $this->buildMimeMessage($soapMessage, $parts, $boundary);
-
-            $request = $this->requestFactory->createRequest('POST', $endpoint);
-            $request = $request->withHeader(
-                'Content-Type',
-                "multipart/related; type=\"application/xop+xml\"; boundary=\"{$boundary}\""
-            );
-            $request = $request->withHeader('SOAPAction', '');
-
-            foreach ($headers as $name => $value) {
-                $request = $request->withHeader($name, $value);
-            }
-
-            $stream = $this->streamFactory->createStream($mimeBody);
-            $request = $request->withBody($stream);
-
-            $this->logger->info('Sending AS4 message', [
-                'endpoint' => $endpoint,
-                'messageSize' => strlen($mimeBody),
-            ]);
-
-            $response = $this->httpClient->sendRequest($request);
-
-            $statusCode = $response->getStatusCode();
-            $responseBody = (string) $response->getBody();
-
-            $this->logger->info('AS4 transmission response', [
-                'statusCode' => $statusCode,
-                'bodySize' => strlen($responseBody),
-            ]);
-
-            $receiptOrError = null;
-            if ($statusCode === 200 && $responseBody !== '') {
-                $receiptOrError = $this->parseMultipartResponse($responseBody);
-            }
-
-            return new As4SendResponse(
-                statusCode: $statusCode,
-                success: in_array($statusCode, [200, 202]),
-                receiptOrError: $receiptOrError,
-                responseBody: $responseBody
-            );
-        } catch (Exception $e) {
-            $this->logger->error('AS4 transmission failed', [
-                'endpoint' => $endpoint,
-                'error' => $e->getMessage(),
-            ]);
-            throw $e;
-        }
-    }
-
-    /**
-     * Build multipart/related MIME message per RFC 2387.
-     *
-     * @param array<string, string> $parts
-     */
-    private function buildMimeMessage(string $soapMessage, array $parts, string $boundary): string
-    {
-        $mime = "--{$boundary}\r\n";
-        $mime .= "Content-Type: application/xop+xml; charset=UTF-8; type=\"application/soap+xml\"\r\n";
-        $mime .= "Content-Transfer-Encoding: 8bit\r\n";
-        $mime .= "Content-ID: <root.message@as4.example.org>\r\n";
-        $mime .= "\r\n";
-        $mime .= $soapMessage;
-        $mime .= "\r\n";
-
+    ): As4HttpResponse {
+        $doc     = $this->parseEnvelope($soapMessage);
+        $attachments = [];
         foreach ($parts as $contentId => $data) {
-            $mime .= "--{$boundary}\r\n";
-            $mime .= "Content-Type: application/gzip\r\n";
-            $mime .= "Content-Transfer-Encoding: binary\r\n";
-            $mime .= "Content-ID: <{$contentId}>\r\n";
-            $mime .= "Content-Disposition: attachment; filename=\"payload\"\r\n";
-            $mime .= "\r\n";
-            $mime .= $data;
-            $mime .= "\r\n";
+            $attachments[] = new As4MimePart(
+                contentId:   $contentId,
+                contentType: As4Constants::MIME_XML,
+                body:        $data,
+            );
         }
 
-        $mime .= "--{$boundary}--\r\n";
-        return $mime;
+        $this->logger->info('Sending AS4 message', ['endpoint' => $endpoint]);
+
+        $response = $this->httpClient->send($endpoint, $doc, $attachments);
+
+        $this->logger->info('AS4 transmission response', [
+            'statusCode' => $response->statusCode,
+            'bodySize'   => strlen($response->body),
+        ]);
+
+        return $response;
     }
 
-    private function parseMultipartResponse(string $responseBody): ?string
+    private function parseEnvelope(string $xml): DOMDocument
     {
-        if (preg_match('/boundary=(["\']?)([^"\';\s]+)\1/', $responseBody, $matches)) {
-            $boundary = $matches[2];
-            $parts = explode("--{$boundary}", $responseBody);
+        $doc        = new DOMDocument();
+        $prevErrors = libxml_use_internal_errors(true);
+        $loaded     = $doc->loadXML($xml);
+        libxml_clear_errors();
+        libxml_use_internal_errors($prevErrors);
 
-            if (isset($parts[1])) {
-                $part = $parts[1];
-                $bodyStart = strpos($part, "\r\n\r\n");
-                if ($bodyStart !== false) {
-                    return substr($part, $bodyStart + 4);
-                }
-            }
+        if (!$loaded) {
+            throw new \InvalidArgumentException('soapMessage is not well-formed XML');
         }
-        return null;
-    }
-}
 
-/**
- * Response from AS4 transmission attempt.
- */
-class As4SendResponse
-{
-    public function __construct(
-        public readonly int $statusCode,
-        public readonly bool $success,
-        public readonly ?string $receiptOrError,
-        public readonly string $responseBody
-    ) {}
-
-    public function isSuccessful(): bool
-    {
-        return $this->success;
-    }
-
-    public function isRetriable(): bool
-    {
-        return in_array($this->statusCode, [408, 429, 500, 502, 503, 504]);
+        return $doc;
     }
 }
