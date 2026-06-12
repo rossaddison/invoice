@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Invoice\As4;
+namespace App\Invoice\As4;
 
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;

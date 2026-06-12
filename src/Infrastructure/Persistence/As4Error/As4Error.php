@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Invoice\Infrastructure\Persistence\As4Error;
+namespace App\Infrastructure\Persistence\As4Error;
 
 use Cycle\Annotated\Annotation as Cycle;
 use DateTime;
@@ -93,6 +93,11 @@ class As4Error
         $this->errorXml = $errorXml;
         $this->receivedAt = new DateTime();
         $this->createdAt = new DateTime();
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
     }
 
     /** @psalm-suppress RedundantPropertyInitializationCheck */

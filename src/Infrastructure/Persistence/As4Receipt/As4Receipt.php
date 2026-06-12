@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Invoice\Infrastructure\Persistence\As4Receipt;
+namespace App\Infrastructure\Persistence\As4Receipt;
 
 use Cycle\Annotated\Annotation as Cycle;
 use DateTime;
@@ -73,6 +73,11 @@ class As4Receipt
         $this->receiptXml = $receiptXml;
         $this->receivedAt = new DateTime();
         $this->createdAt = new DateTime();
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
     }
 
     /** @psalm-suppress RedundantPropertyInitializationCheck */

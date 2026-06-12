@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Invoice\As4;
+namespace App\Invoice\As4;
 
 use Cycle\ORM\ORMInterface;
-use Invoice\Infrastructure\Persistence\As4Message\As4Message;
+use App\Infrastructure\Persistence\As4Message\As4Message;
 use Psr\Log\LoggerInterface;
 use DateTime;
 

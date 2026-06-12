@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Invoice\Infrastructure\Persistence\As4Message;
+namespace App\Infrastructure\Persistence\As4Message;
 
 use Cycle\Annotated\Annotation as Cycle;
 use DateTime;
@@ -148,6 +148,11 @@ class As4Message
         $this->soapMessage = $soapMessage;
         $this->createdAt = new DateTime();
         $this->updatedAt = new DateTime();
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
     }
 
     /** @psalm-suppress RedundantPropertyInitializationCheck */

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Invoice\As4;
+namespace App\Invoice\As4;
 
 /**
  * AS4 Constants aligned with eDelivery AS4 2.0 specification
