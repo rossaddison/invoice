@@ -27,8 +27,13 @@ class As4Constants
     public const string WSS_X509_NS = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0';
     public const string WSS_SOAP_SWA_NS = 'http://docs.oasis-open.org/wss/oasis-wss-SwAProfile-1.1#';
 
-    // AS4 Transport Profile
-    public const string AS4_TRANSPORT_PROFILE = 'bdxr-transport-ebms3-as4-v1p0';
+    // AS4 Transport Profiles
+    public const string AS4_TRANSPORT_PROFILE        = 'bdxr-transport-ebms3-as4-v1p0';
+    public const string PEPPOL_TRANSPORT_PROFILE     = 'peppol-transport-as4-v2_0';
+
+    // SMP / BDXR service metadata
+    public const string SMP_NS                       = 'http://docs.oasis-open.org/bdxr/ns/SMP/1.0/';
+    public const string SMP_PARTICIPANT_SCHEME        = 'iso6523-actorid-upis';
 
     // Message Exchange Patterns (MEPs)
     public const string MEP_ONE_WAY = 'http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/oneWay';

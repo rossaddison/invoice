@@ -4,162 +4,203 @@ declare(strict_types=1);
 
 namespace App\Invoice\As4;
 
+use DOMDocument;
+use DOMElement;
+use DOMXPath;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Log\LoggerInterface;
-use DOMDocument;
-use DOMElement;
-use Exception;
 
 /**
- * SMP (Service Metadata Publisher) Integration
+ * Resolves a Peppol receiver's AS4 endpoint by querying their SMP (Service Metadata Publisher).
  *
- * Implements Dynamic Sender (Profile Enhancement 4.3) and Dynamic Receiver (4.2)
- * by querying SMP for recipient endpoint URL, encryption certificate, and P-Mode
- * parameters.
+ * Implements OASIS BDXR SMP 1.0 over HTTP (no DNS/SML lookup — caller supplies the SMP base URL).
+ *
+ * URL pattern: {smpBaseUrl}/{iso6523-actorid-upis::{participantId}}/services/{documentTypeId}
  *
  * @psalm-suppress UnusedClass
  */
-class As4SmpResolver
+final class As4SmpResolver
 {
-    private ClientInterface $httpClient;
-    private RequestFactoryInterface $requestFactory;
-    private LoggerInterface $logger;
-    private string $smpHostname;
+    private const string SMP_NS        = As4Constants::SMP_NS;
+    private const string PARTICIPANT_SCHEME = As4Constants::SMP_PARTICIPANT_SCHEME;
+
+    private const string PEM_HEADER = '-----BEGIN CERTIFICATE-----';
+    private const string PEM_FOOTER = '-----END CERTIFICATE-----';
 
     public function __construct(
-        ClientInterface $httpClient,
-        RequestFactoryInterface $requestFactory,
-        LoggerInterface $logger,
-        string $smpHostname
-    ) {
-        $this->httpClient = $httpClient;
-        $this->requestFactory = $requestFactory;
-        $this->logger = $logger;
-        $this->smpHostname = $smpHostname;
-    }
+        private readonly ClientInterface $httpClient,
+        private readonly RequestFactoryInterface $requestFactory,
+        private readonly LoggerInterface $logger,
+        /** Base URL of the SMP, e.g. "https://smp.test.peppol.eu" */
+        private readonly string $smpBaseUrl,
+        /** Transport profile to match in the SMP response */
+        private readonly string $transportProfile = As4Constants::PEPPOL_TRANSPORT_PROFILE,
+    ) {}
 
     /**
-     * Resolve recipient endpoint and certificate via SMP lookup.
+     * Resolves the AS4 endpoint for the participant described in $query.
      *
-     * @throws Exception if SMP resolution fails
+     * @throws \RuntimeException           On non-200 HTTP response from SMP
+     * @throws \UnexpectedValueException   On unparseable or incomplete SMP XML
+     * @throws \Psr\Http\Client\ClientExceptionInterface  On transport failure
      */
-    public function resolveEndpoint(
-        string $recipientGln,
-        string $documentTypeId,
-        string $processId
-    ): As4SmpEndpoint {
-        try {
-            $participantId = 'urn:oasis:names:tc:ebcore:partyid-type:iso6523:0088:' . $recipientGln;
-            $docId = urlencode($documentTypeId);
-            $procId = urlencode($processId);
-
-            $smpUrl = sprintf(
-                'https://%s/%s/services/%s/processes/%s',
-                $this->smpHostname,
-                $participantId,
-                $docId,
-                $procId
-            );
-
-            $this->logger->info('Resolving endpoint via SMP', [
-                'recipientGln' => $recipientGln,
-                'smpUrl' => $smpUrl,
-            ]);
-
-            $request = $this->requestFactory->createRequest('GET', $smpUrl);
-            $request = $request->withHeader('Accept', 'application/xml');
-
-            $response = $this->httpClient->sendRequest($request);
-
-            if ($response->getStatusCode() !== 200) {
-                throw new Exception(
-                    "SMP query failed with HTTP {$response->getStatusCode()}: " .
-                    $response->getReasonPhrase()
-                );
-            }
-
-            return $this->parseSmpResponse((string) $response->getBody());
-        } catch (Exception $e) {
-            $this->logger->error('SMP resolution failed', [
-                'recipientGln' => $recipientGln,
-                'error' => $e->getMessage(),
-            ]);
-            throw $e;
-        }
-    }
-
-    /**
-     * Parse SMP XML response and return endpoint details.
-     *
-     * @throws Exception if the XML is invalid or required fields are missing
-     */
-    private function parseSmpResponse(string $xmlBody): As4SmpEndpoint
+    public function resolve(As4SmpQuery $query): As4SmpEndpoint
     {
-        $doc = new DOMDocument();
-        if (!$doc->loadXML($xmlBody)) {
-            throw new Exception('Invalid SMP XML response');
+        $url = $this->buildUrl($query->participantId, $query->documentTypeId);
+        $this->logger->info('Querying SMP', ['url' => $url, 'participantId' => $query->participantId]);
+
+        $xml      = $this->fetchXml($url);
+        $endpoint = $this->parseSmpXml($xml, $query->processId);
+
+        $this->logger->info('SMP endpoint resolved', ['endpointUrl' => $endpoint->endpointUrl]);
+        return $endpoint;
+    }
+
+    // ── URL construction ──────────────────────────────────────────────────────
+
+    private function buildUrl(string $participantId, string $documentTypeId): string
+    {
+        $participantEncoded = urlencode(self::PARTICIPANT_SCHEME . '::' . $participantId);
+        $doctypeEncoded     = urlencode($documentTypeId);
+        return sprintf('%s/%s/services/%s', $this->smpBaseUrl, $participantEncoded, $doctypeEncoded);
+    }
+
+    // ── HTTP fetch ────────────────────────────────────────────────────────────
+
+    private function fetchXml(string $url): string
+    {
+        $request  = $this->requestFactory
+            ->createRequest('GET', $url)
+            ->withHeader('Accept', 'application/xml');
+        $response = $this->httpClient->sendRequest($request);
+
+        if ($response->getStatusCode() !== 200) {
+            throw new \UnexpectedValueException(sprintf(
+                'SMP returned HTTP %d for URL: %s',
+                $response->getStatusCode(),
+                $url,
+            ));
         }
 
-        $xpath = new \DOMXPath($doc);
-        $xpath->registerNamespace('smd', 'http://docs.oasis-open.org/bdxr/ns/SMP/ServiceMetadata/1.0/');
+        return (string) $response->getBody();
+    }
 
-        $endpoints = $xpath->query(
-            "//smd:Endpoint[@transportProfile='" . As4Constants::AS4_TRANSPORT_PROFILE . "'] | " .
-            "//Endpoint[@transportProfile='" . As4Constants::AS4_TRANSPORT_PROFILE . "']"
-        );
+    // ── XML parsing ───────────────────────────────────────────────────────────
 
-        if ($endpoints === false || $endpoints->length === 0) {
-            throw new Exception('No AS4 endpoint found in SMP response');
+    private function parseSmpXml(string $xml, string $processId): As4SmpEndpoint
+    {
+        $doc   = $this->loadDocument($xml);
+        $xpath = new DOMXPath($doc);
+        $xpath->registerNamespace('smp', self::SMP_NS);
+
+        $endpointEl      = $this->findEndpointElement($xpath, $processId);
+        $endpointUrl     = $this->nodeText($xpath, 'smp:EndpointURI', $endpointEl);
+        $certBase64      = $this->nodeText($xpath, 'smp:Certificate', $endpointEl);
+        $transportProfile = $endpointEl->getAttribute('transportProfile');
+
+        if ($endpointUrl === '' || $certBase64 === '') {
+            throw new \UnexpectedValueException(
+                'SMP Endpoint element is missing EndpointURI or Certificate'
+            );
         }
-
-        $endpoint = $endpoints->item(0);
-        if (!$endpoint instanceof DOMElement) {
-            throw new Exception('SMP endpoint node is not a DOMElement');
-        }
-
-        $uriNode = $xpath->query('smd:EndpointURI | EndpointURI', $endpoint);
-        $endpointUrl = ($uriNode !== false && $uriNode->length > 0)
-            ? ($uriNode->item(0)?->nodeValue ?? '')
-            : '';
-
-        $certNode = $xpath->query('smd:Certificate | Certificate', $endpoint);
-        $certificate = ($certNode !== false && $certNode->length > 0)
-            ? ($certNode->item(0)?->nodeValue ?? '')
-            : '';
-
-        $hashNode = $xpath->query('smd:CertificateHash | CertificateHash', $endpoint);
-        $certificateHash = ($hashNode !== false && $hashNode->length > 0)
-            ? ($hashNode->item(0)?->nodeValue ?? '')
-            : '';
-
-        if ($endpointUrl === '' || $certificate === '') {
-            throw new Exception('Missing endpoint URL or certificate in SMP response');
-        }
-
-        $this->logger->info('SMP endpoint resolved', [
-            'endpointUrl' => $endpointUrl,
-            'certificateHash' => substr($certificateHash, 0, 16) . '...',
-        ]);
 
         return new As4SmpEndpoint(
-            endpointUrl: $endpointUrl,
-            certificate: $certificate,
-            certificateHash: $certificateHash,
-            transportProfile: As4Constants::AS4_TRANSPORT_PROFILE
+            endpointUrl:      $endpointUrl,
+            certificatePem:   $this->toPem($certBase64),
+            transportProfile: $transportProfile,
         );
     }
-}
 
-/**
- * SMP endpoint information.
- */
-class As4SmpEndpoint
-{
-    public function __construct(
-        public readonly string $endpointUrl,
-        public readonly string $certificate,
-        public readonly string $certificateHash,
-        public readonly string $transportProfile
-    ) {}
+    private function loadDocument(string $xml): DOMDocument
+    {
+        $doc        = new DOMDocument();
+        $prevErrors = libxml_use_internal_errors(true);
+        $loaded     = $doc->loadXML($xml);
+        libxml_clear_errors();
+        libxml_use_internal_errors($prevErrors);
+
+        if (!$loaded) {
+            throw new \UnexpectedValueException('SMP response body is not valid XML');
+        }
+
+        return $doc;
+    }
+
+    /**
+     * Finds the Endpoint element whose transportProfile matches $this->transportProfile.
+     * Prefers the endpoint under the process that matches $processId; falls back to the
+     * first matching endpoint in the document when no process match is found.
+     */
+    private function findEndpointElement(DOMXPath $xpath, string $processId): DOMElement
+    {
+        // transportProfile is a class constant — safe to embed in XPath
+        $nodes = $xpath->query(
+            '//smp:Endpoint[@transportProfile="' . $this->transportProfile . '"]'
+        );
+
+        if ($nodes === false || $nodes->length === 0) {
+            throw new \UnexpectedValueException(sprintf(
+                'No Endpoint with transportProfile "%s" found in SMP response',
+                $this->transportProfile,
+            ));
+        }
+
+        // Prefer the endpoint under the requested process (PHP-level filter avoids XPath injection)
+        foreach ($nodes as $node) {
+            if ($node instanceof DOMElement && $this->isUnderProcess($xpath, $node, $processId)) {
+                return $node;
+            }
+        }
+
+        // Fallback: first endpoint regardless of process
+        $first = $nodes->item(0);
+        if (!$first instanceof DOMElement) {
+            throw new \UnexpectedValueException('SMP Endpoint node is not a DOMElement');
+        }
+        return $first;
+    }
+
+    /** Returns true when $endpoint is a descendant of an smp:Process whose identifier equals $processId. */
+    private function isUnderProcess(DOMXPath $xpath, DOMElement $endpoint, string $processId): bool
+    {
+        $nodes = $xpath->query('ancestor::smp:Process/smp:ProcessIdentifier', $endpoint);
+        if ($nodes === false) {
+            return false;
+        }
+        foreach ($nodes as $node) {
+            if ($node instanceof DOMElement && trim($node->textContent) === $processId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function nodeText(DOMXPath $xpath, string $expr, DOMElement $context): string
+    {
+        $nodes = $xpath->query($expr, $context);
+        if ($nodes === false || $nodes->length === 0) {
+            return '';
+        }
+        $node = $nodes->item(0);
+        return $node instanceof DOMElement ? trim($node->textContent) : '';
+    }
+
+    // ── Certificate conversion ────────────────────────────────────────────────
+
+    /**
+     * Converts a base64 DER certificate (as stored in SMP Certificate elements)
+     * to PEM format with 64-character line wrapping.
+     */
+    private function toPem(string $base64): string
+    {
+        // Strip any existing PEM headers and whitespace to get raw base64
+        $raw = (string) preg_replace('/-----[^-]+-----|\\s/', '', $base64);
+        if ($raw === '') {
+            throw new \UnexpectedValueException('Certificate field in SMP response is empty');
+        }
+        return self::PEM_HEADER . "\n"
+            . chunk_split($raw, 64, "\n")
+            . self::PEM_FOOTER . "\n";
+    }
 }
