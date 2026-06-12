@@ -43,6 +43,7 @@ final class WsSecuritySigner implements As4EnvelopeSignerInterface
     /**
      * Returns a new signed DOMDocument. The original is not modified.
      */
+    #[\Override]
     public function sign(DOMDocument $envelope): DOMDocument
     {
         $doc = clone $envelope;
@@ -111,7 +112,7 @@ final class WsSecuritySigner implements As4EnvelopeSignerInterface
         $nodes  = $this->makeXPath($doc)->query('//soap:Header');
         $header = ($nodes !== false) ? $nodes->item(0) : null;
         if (!$header instanceof DOMElement) {
-            throw new \RuntimeException('soap:Header not found in envelope');
+            throw new \UnexpectedValueException('soap:Header not found in envelope');
         }
         $security = $doc->createElementNS(self::NS_WSS, 'wsse:Security');
         $security->setAttributeNS(self::NS_SOAP, 'soap:mustUnderstand', 'true');
@@ -137,7 +138,7 @@ final class WsSecuritySigner implements As4EnvelopeSignerInterface
         $nodes = $this->makeXPath($doc)->query($xpathQuery);
         $node  = ($nodes !== false) ? $nodes->item(0) : null;
         if (!$node instanceof DOMElement) {
-            throw new \RuntimeException($errorMsg);
+            throw new \UnexpectedValueException($errorMsg);
         }
         return $node;
     }
@@ -172,7 +173,7 @@ final class WsSecuritySigner implements As4EnvelopeSignerInterface
     {
         $result = $node->C14N(true, false);
         if ($result === false) {
-            throw new \RuntimeException('XML exclusive canonicalization failed');
+            throw new \UnexpectedValueException('XML exclusive canonicalization failed');
         }
         return $result;
     }

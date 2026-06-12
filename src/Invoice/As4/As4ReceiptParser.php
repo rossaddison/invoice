@@ -29,6 +29,7 @@ final class As4ReceiptParser implements As4ReceiptParserInterface
      * @param string $body        Raw HTTP response body (may be empty, XML, or MIME multipart)
      * @param string $contentType Value of the HTTP Content-Type response header
      */
+    #[\Override]
     public function parse(string $body, string $contentType = ''): As4ReceiptSignal|As4ErrorSignal|null
     {
         $xml = $this->extractXml(trim($body), $contentType);

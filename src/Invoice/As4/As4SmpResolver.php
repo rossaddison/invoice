@@ -41,10 +41,10 @@ final class As4SmpResolver implements As4SmpResolverInterface
     /**
      * Resolves the AS4 endpoint for the participant described in $query.
      *
-     * @throws \RuntimeException           On non-200 HTTP response from SMP
-     * @throws \UnexpectedValueException   On unparseable or incomplete SMP XML
+     * @throws \UnexpectedValueException                  On unparseable or incomplete SMP XML
      * @throws \Psr\Http\Client\ClientExceptionInterface  On transport failure
      */
+    #[\Override]
     public function resolve(As4SmpQuery $query): As4SmpEndpoint
     {
         $url = $this->buildUrl($query->participantId, $query->documentTypeId);

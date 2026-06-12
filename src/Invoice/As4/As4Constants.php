@@ -31,6 +31,20 @@ class As4Constants
     public const string AS4_TRANSPORT_PROFILE        = 'bdxr-transport-ebms3-as4-v1p0';
     public const string PEPPOL_TRANSPORT_PROFILE     = 'peppol-transport-as4-v2_0';
 
+    // Peppol BIS Billing 3.0 — process and document type identifiers
+    public const string PEPPOL_PROCESS_BIS3 =
+        'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0';
+    public const string PEPPOL_DOCTYPE_INVOICE_BIS3 =
+        'busdox-docid-qns::urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice' .
+        '##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1';
+    public const string PEPPOL_DOCTYPE_CREDITNOTE_BIS3 =
+        'busdox-docid-qns::urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote' .
+        '##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1';
+
+    // ebMS3 party roles (composed from EBMS3_NS to avoid hardcoded URIs)
+    public const string ROLE_INITIATOR = self::EBMS3_NS . 'initiator';
+    public const string ROLE_RESPONDER = self::EBMS3_NS . 'responder';
+
     // SMP / BDXR service metadata
     public const string SMP_NS                       = 'http://docs.oasis-open.org/bdxr/ns/SMP/1.0/';
     public const string SMP_PARTICIPANT_SCHEME        = 'iso6523-actorid-upis';
@@ -84,10 +98,10 @@ class As4Constants
     public const string MIME_JSON = 'application/json';
     public const string MIME_SOAP = 'application/soap+xml';
 
-    // WS-Security token types
-    public const string WSS_TOKEN_X509V3 = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3';
-    public const string WSS_TOKEN_X509_SKI = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509SubjectKeyIdentifier';
-    public const string WSS_TOKEN_X509_PKIPATH = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509PKIPathv1';
+    // WS-Security token types (composed from WSS_X509_NS to avoid hardcoded URIs)
+    public const string WSS_TOKEN_X509V3       = self::WSS_X509_NS . '#X509v3';
+    public const string WSS_TOKEN_X509_SKI     = self::WSS_X509_NS . '#X509SubjectKeyIdentifier';
+    public const string WSS_TOKEN_X509_PKIPATH = self::WSS_X509_NS . '#X509PKIPathv1';
 
     // Binary encoding
     public const string WSS_ENCODING_BASE64 = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary';

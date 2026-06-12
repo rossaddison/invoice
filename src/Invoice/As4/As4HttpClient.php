@@ -50,6 +50,7 @@ final class As4HttpClient implements As4HttpTransportInterface
      * @throws \UnexpectedValueException  When the envelope cannot be serialized to XML
      * @throws \Psr\Http\Client\ClientExceptionInterface  On network/transport failure
      */
+    #[\Override]
     public function send(
         string $endpointUrl,
         DOMDocument $signedEnvelope,

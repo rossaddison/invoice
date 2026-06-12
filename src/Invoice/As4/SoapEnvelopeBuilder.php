@@ -35,6 +35,7 @@ final class SoapEnvelopeBuilder implements As4EnvelopeBuilderInterface
     // ISO 6523 scheme prefix for eb:PartyId type attributes
     private const string PARTY_TYPE_PREFIX = 'urn:oasis:names:tc:ebcore:partyid-type:iso6523:';
 
+    #[\Override]
     public function build(SoapEnvelopeParams $params): DOMDocument
     {
         $doc = new DOMDocument('1.0', 'UTF-8');
