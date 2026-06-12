@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  AS4 Common Profile XML Structure Quick Reference
+  eDelivery AS4 2.0 - Complete Hierarchy
+  
+  This reference shows all mandatory and optional elements
+  for building compliant AS4 messages.
+-->
+
+<!-- ====================================================================== -->
+<!--  MINIMAL AS4 MESSAGE (One-Way/Push Invoice)                           -->
+<!-- ====================================================================== -->
+
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
+               xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+               xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+               xmlns:eb="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/"
+               xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+               xmlns:xenc="http://www.w3.org/2001/04/xmlenc#">
+
+  <soap:Header>
+    
+    <!-- WS-Security header for signatures and encryption -->
+    <wsse:Security soap:mustUnderstand="true">
+      <!-- BinarySecurityToken: Sender's X.509 certificate -->
+      <wsse:BinarySecurityToken wsu:Id="X509-token-id"
+                                EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary"
+                                ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3">
+        BASE64_ENCODED_DER_CERTIFICATE
+      </wsse:BinarySecurityToken>
+
+      <!-- XML Signature (ED25519) -->
+      <ds:Signature Id="signature-id">
+        <ds:SignedInfo>
+          <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+          <ds:SignatureMethod Algorithm="http://www.w3.org/2021/04/xmldsig-more#eddsa-ed25519"/>
+          
+          <!-- Reference 1: SOAP body -->
+          <ds:Reference URI="#body-id">
+            <ds:Transforms>
+              <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+            </ds:Transforms>
+            <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+            <ds:DigestValue>BASE64_DIGEST_VALUE</ds:DigestValue>
+          </ds:Reference>
+
+          <!-- Reference 2: eb:Messaging header -->
+          <ds:Reference URI="#messaging-id">
+            <ds:Transforms>
+              <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+            </ds:Transforms>
+            <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+            <ds:DigestValue>BASE64_DIGEST_VALUE</ds:DigestValue>
+          </ds:Reference>
+
+          <!-- Reference 3+: Each MIME payload part -->
+          <ds:Reference URI="cid:payload-1@example.com">
+            <ds:Transforms>
+              <ds:Transform Algorithm="http://docs.oasis-open.org/wss/oasis-wss-SwAProfile-1.1#Attachment-Content-Signature-Transform"/>
+            </ds:Transforms>
+            <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+            <ds:DigestValue>BASE64_DIGEST_VALUE</ds:DigestValue>
+          </ds:Reference>
+        </ds:SignedInfo>
+        
+        <ds:SignatureValue>BASE64_SIGNATURE_VALUE</ds:SignatureValue>
+        
+        <ds:KeyInfo>
+          <wsse:SecurityTokenReference>
+            <wsse:Reference URI="#X509-token-id"/>
+          </wsse:SecurityTokenReference>
+        </ds:KeyInfo>
+      </ds:Signature>
+
+      <!-- XML Encryption (AES-128-GCM with X25519 key agreement) -->
+      <xenc:EncryptedKey wsu:Id="encrypted-key-id">
+        <xenc:EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#kw-aes128"/>
+        <ds:KeyInfo>
+          <xenc:AgreementMethod Algorithm="http://www.w3.org/2021/04/xmldsig-more#x25519">
+            <xenc11:KeyDerivationMethod Algorithm="http://www.w3.org/2021/04/xmldsig-more#hkdf">
+              <dsig-more:HKDFParams>
+                <dsig-more:PRF Algorithm="http://www.w3.org/2001/04/xmldsig-more#hmac-sha256"/>
+                <dsig-more:Salt>BASE64_RANDOM_SALT</dsig-more:Salt>
+                <dsig-more:Info>dGVzdC1pbmZv</dsig-more:Info>
+                <dsig-more:KeyLength>16</dsig-more:KeyLength>
+              </dsig-more:HKDFParams>
+            </xenc11:KeyDerivationMethod>
+            
+            <!-- Ephemeral sender public key -->
+            <xenc:OriginatorKeyInfo>
+              <ds:KeyValue>
+                <dsig11:DEREncodedKeyValue>BASE64_EPHEMERAL_KEY</dsig11:DEREncodedKeyValue>
+              </ds:KeyValue>
+            </xenc:OriginatorKeyInfo>
+            
+            <!-- Recipient's static public key reference -->
+            <xenc:RecipientKeyInfo>
+              <wsse:SecurityTokenReference>
+                <wsse:KeyIdentifier ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509SubjectKeyIdentifier">
+                  BASE64_SKI
+                </wsse:KeyIdentifier>
+              </wsse:SecurityTokenReference>
+            </xenc:RecipientKeyInfo>
+          </xenc:AgreementMethod>
+        </ds:KeyInfo>
+        
+        <xenc:CipherData>
+          <xenc:CipherValue>BASE64_WRAPPED_KEY</xenc:CipherValue>
+        </xenc:CipherData>
+        
+        <xenc:ReferenceList>
+          <xenc:DataReference URI="#encrypted-payload-1"/>
+        </xenc:ReferenceList>
+      </xenc:EncryptedKey>
+
+      <!-- Encrypted payload part -->
+      <xenc:EncryptedData Id="encrypted-payload-1" MimeType="application/gzip">
+        <xenc:EncryptionMethod Algorithm="http://www.w3.org/2009/xmlenc11#aes128-gcm"/>
+        <ds:KeyInfo>
+          <wsse:SecurityTokenReference>
+            <wsse:Reference URI="#encrypted-key-id"/>
+          </wsse:SecurityTokenReference>
+        </ds:KeyInfo>
+        <xenc:CipherData>
+          <xenc:CipherReference URI="cid:payload-1@example.com">
+            <xenc:Transforms>
+              <ds:Transform Algorithm="http://docs.oasis-open.org/wss/oasis-wss-SwAProfile-1.1#Attachment-Ciphertext-Transform"/>
+            </xenc:Transforms>
+          </xenc:CipherReference>
+        </xenc:CipherData>
+      </xenc:EncryptedData>
+    </wsse:Security>
+
+    <!-- ebMS3 Messaging Header -->
+    <eb:Messaging wsu:Id="messaging-id" soap:mustUnderstand="true">
+      
+      <!-- USER MESSAGE (business document) -->
+      <eb:UserMessage>
+        
+        <!-- MessageInfo: Message identifiers and timestamp -->
+        <eb:MessageInfo>
+          <eb:Timestamp>2024-06-12T14:30:00Z</eb:Timestamp>
+          <!-- RFC 2822 compliant: UUID + domain -->
+          <eb:MessageId>xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx@sender.example.com</eb:MessageId>
+          <!-- For response messages in Two-Way exchanges -->
+          <!-- <eb:RefToMessageId>...</eb:RefToMessageId> -->
+        </eb:MessageInfo>
+
+        <!-- PartyInfo: Sender and Receiver identification -->
+        <eb:PartyInfo>
+          <eb:From>
+            <!-- ISO 6523 GLN identifier (type attribute REQUIRED per 3.4.1) -->
+            <eb:PartyId type="urn:oasis:names:tc:ebcore:partyid-type:iso6523:0088">5412345000016</eb:PartyId>
+            <eb:Role>Seller</eb:Role>
+          </eb:From>
+          <eb:To>
+            <eb:PartyId type="urn:oasis:names:tc:ebcore:partyid-type:iso6523:0088">5412345000023</eb:PartyId>
+            <eb:Role>Buyer</eb:Role>
+          </eb:To>
+        </eb:PartyInfo>
+
+        <!-- CollaborationInfo: Business process and action -->
+        <eb:CollaborationInfo>
+          <!-- REQUIRED: ConversationId (mandatory per 3.2.2) -->
+          <eb:ConversationId>urn:conversation:purchase-order-2024</eb:ConversationId>
+          <!-- Service category -->
+          <eb:Service>urn:service:invoice</eb:Service>
+          <!-- Specific action -->
+          <eb:Action>SendInvoice</eb:Action>
+          <!-- Optional: Agreement reference -->
+          <!-- <eb:AgreementRef pmode="pmode-id">...</eb:AgreementRef> -->
+        </eb:CollaborationInfo>
+
+        <!-- MessageProperties: Metadata (optional, used in Four Corner Topology) -->
+        <!-- <eb:MessageProperties>
+          <eb:Property name="originalSender">5412345000016</eb:Property>
+          <eb:Property name="finalRecipient">5412345000023</eb:Property>
+          <eb:Property name="trackingIdentifier">track-001</eb:Property>
+        </eb:MessageProperties> -->
+
+        <!-- PayloadInfo: References to MIME attachments -->
+        <eb:PayloadInfo>
+          <eb:PartInfo href="cid:invoice-001@sender.example.com">
+            <eb:PartProperties>
+              <!-- REQUIRED: MimeType before compression -->
+              <eb:Property name="MimeType">application/xml</eb:Property>
+              <!-- RECOMMENDED: CharacterSet for XML -->
+              <eb:Property name="CharacterSet">utf-8</eb:Property>
+              <!-- REQUIRED if compressed: Must match actual attachment MIME type -->
+              <eb:Property name="CompressionType">application/gzip</eb:Property>
+            </eb:PartProperties>
+          </eb:PartInfo>
+        </eb:PayloadInfo>
+      </eb:UserMessage>
+
+      <!-- SIGNAL MESSAGE (receipt or error response) -->
+      <!-- <eb:SignalMessage>
+        <eb:MessageInfo>
+          <eb:Timestamp>2024-06-12T14:31:00Z</eb:Timestamp>
+          <eb:MessageId>signal-uuid@receiver.example.com</eb:MessageId>
+          <eb:RefToMessageId>xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx@sender.example.com</eb:RefToMessageId>
+        </eb:MessageInfo>
+        
+        <!-- Non-Repudiation Receipt: Confirms successful processing -->
+        <!-- <eb:Receipt>
+          <ds:Reference URI="#_body-id">
+            <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+            <ds:DigestValue>BASE64_VALUE</ds:DigestValue>
+          </ds:Reference>
+        </eb:Receipt> -->
+        
+        <!-- Error Signal: Reports failure -->
+        <!-- <eb:Error category="Communication" refToMessageInError="..." errorCode="EBMS:0202">
+          <eb:ErrorCode>EBMS:0202</eb:ErrorCode>
+          <eb:ShortDescription>DeliveryFailure</eb:ShortDescription>
+          <eb:Description>Consumer endpoint not responding</eb:Description>
+        </eb:Error> -->
+      <!-- </eb:SignalMessage> -->
+    </eb:Messaging>
+
+  </soap:Header>
+
+  <!-- SOAP Body: MUST be empty per AS4 spec (section 3.2.3) -->
+  <!-- All payload content is in MIME attachment parts -->
+  <soap:Body wsu:Id="body-id">
+  </soap:Body>
+
+</soap:Envelope>
+
+<!-- ====================================================================== -->
+<!--  MIME ATTACHMENT STRUCTURE (separate from XML above)                  -->
+<!-- ====================================================================== -->
+<!--
+  The SOAP message above is sent as multipart/related MIME:
+  
+  --boundary
+  Content-Type: application/xop+xml; charset=UTF-8; type="application/soap+xml"
+  Content-Transfer-Encoding: 8bit
+  Content-ID: <root.message@cxf.apache.org>
+  
+  [SOAP XML from above]
+  
+  --boundary
+  Content-Type: application/gzip
+  Content-Transfer-Encoding: binary
+  Content-ID: <invoice-001@sender.example.com>
+  Content-Disposition: attachment; filename="invoice-001.xml.gz"
+  
+  [Binary gzip-compressed invoice XML]
+  
+  --boundary--
+-->
+
+<!-- ====================================================================== -->
+<!--  FOUR CORNER TOPOLOGY ADDITIONS (Profile Enhancement 4.1)             -->
+<!-- ====================================================================== -->
+<!--
+  When using Four Corner Topology:
+  
+  1. eb:From and eb:To identify INTERMEDIATE access points (C2, C3)
+  2. Original party (C1) and final party (C4) go in MessageProperties
+  3. eb:From/eb:PartyId = C2 (Sender Access Point)
+  4. eb:To/eb:PartyId = C3 (Receiver Access Point)
+  5. MessageProperties:
+     - originalSender = C1 (original seller)
+     - finalRecipient = C4 (final buyer)
+     - trackingIdentifier = optional tracking reference
+-->
+
+<!-- ====================================================================== -->
+<!--  P-MODE PARAMETER REQUIREMENTS                                         -->
+<!-- ====================================================================== -->
+<!--
+  Common Profile (Section 3.5):
+  
+  MEP:                 http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/oneWay
+  MEPBinding:          http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push
+  
+  Security:
+    - Sign:            true (REQUIRED)
+    - SignAlgorithm:   http://www.w3.org/2021/04/xmldsig-more#eddsa-ed25519
+    - HashAlgorithm:   http://www.w3.org/2001/04/xmlenc#sha256
+    - Encrypt:         true (REQUIRED)
+    - EncryptAlgorithm: http://www.w3.org/2009/xmlenc11#aes128-gcm
+    - KeyAgreement:    http://www.w3.org/2021/04/xmldsig-more#x25519
+    - KeyWrapping:     http://www.w3.org/2001/04/xmlenc#kw-aes128
+  
+  Receipts:
+    - SendReceipt:                true (REQUIRED)
+    - NonRepudiation:             true (REQUIRED)
+    - ReplyPattern:               Response
+  
+  Reliability:
+    - ReceptionAwareness:         true (REQUIRED)
+    - DuplicateDetection:         true (REQUIRED)
+    - Retry:                      true (REQUIRED)
+    - MaxRetries:                 3
+    - RetryInterval:              300 seconds
+  
+  Compression:
+    - CompressionType:            application/gzip
+-->
+
+<!-- ====================================================================== -->
+<!--  TEST SERVICE (Ping) - Section 3.2.4                                   -->
+<!-- ====================================================================== -->
+<!--
+  For testing connectivity without business processing:
+  
+  Service: http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/service
+  Action:  http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/test
+  
+  Same security requirements as normal messages
+  Must not be delivered to business applications (implementation requirement)
+-->

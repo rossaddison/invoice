@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  AS4 Error Signal Message Example
+  eDelivery AS4 2.0 Common Profile, Section 3.2.5
+  
+  Error signal sent when message processing fails.
+  Must be reported synchronously per section 3.2.5.
+  
+  Common error codes:
+  - EBMS:0001 Other
+  - EBMS:0002 FeatureNotSupported
+  - EBMS:0201 ChannelNotFound
+  - EBMS:0202 DeliveryFailure
+  - EBMS:0203 ExpiredMessage
+  - EBMS:0301 MissingReceipt
+  - EBMS:0303 DecompressionFailure
+  - EBMS:0401 ProcessingError
+  - EBMS:0402 InvalidHeader
+-->
+<soap:Envelope
+    xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
+    xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+    xmlns:eb="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/">
+
+  <soap:Header>
+    <wsse:Security soap:mustUnderstand="true">
+      <!-- Error messages SHOULD be signed per section 3.2.5 -->
+    </wsse:Security>
+
+    <eb:Messaging soap:mustUnderstand="true">
+      
+      <eb:SignalMessage>
+        
+        <eb:MessageInfo>
+          <eb:Timestamp>2024-06-12T14:31:15Z</eb:Timestamp>
+          <eb:MessageId>uuid-error-5555-6666-7777-888888888888@buyer.example.com</eb:MessageId>
+          <!-- References the message that failed -->
+          <eb:RefToMessageId>uuid-12345678-1234-1234-1234-123456789012@seller.example.com</eb:RefToMessageId>
+        </eb:MessageInfo>
+
+        <!-- Error element: Reports failure reason -->
+        <eb:Error 
+            category="Communication" 
+            refToMessageInError="uuid-12345678-1234-1234-1234-123456789012@seller.example.com"
+            errorCode="EBMS:0202">
+          
+          <!-- Error code: Delivery failure in reception awareness -->
+          <eb:ErrorCode>EBMS:0202</eb:ErrorCode>
+          
+          <!-- Short description -->
+          <eb:ShortDescription>DeliveryFailure</eb:ShortDescription>
+          
+          <!-- Detailed error description -->
+          <eb:Description>Consumer not available at delivery endpoint. Message will be retried.</eb:Description>
+          
+        </eb:Error>
+
+      </eb:SignalMessage>
+    </eb:Messaging>
+
+  </soap:Header>
+
+  <soap:Body wsu:Id="_body-error">
+  </soap:Body>
+
+</soap:Envelope>

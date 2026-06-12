@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  AS4 Receipt Signal Message Example
+  eDelivery AS4 2.0 Common Profile, Section 3.3.2
+  
+  Non-Repudiation Receipt sent by receiver to confirm successful message reception.
+  
+  Key points:
+  - Receipt is sent synchronously (per section 3.2.5 error handling)
+  - Must be signed with receiver's certificate for non-repudiation
+  - Contains digest value of original message
+  - References original message via RefToMessageId
+-->
+<soap:Envelope
+    xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
+    xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+    xmlns:eb="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/"
+    xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+
+  <soap:Header>
+    <wsse:Security soap:mustUnderstand="true">
+      <!-- Receiver signs receipt with their certificate for non-repudiation -->
+    </wsse:Security>
+
+    <eb:Messaging soap:mustUnderstand="true">
+      
+      <!-- SignalMessage: Response signal (not a business document) -->
+      <eb:SignalMessage>
+        
+        <eb:MessageInfo>
+          <eb:Timestamp>2024-06-12T14:31:00Z</eb:Timestamp>
+          <!-- Receipt gets its own unique message ID -->
+          <eb:MessageId>uuid-receipt-1111-2222-3333-444444444444@buyer.example.com</eb:MessageId>
+          <!-- RefToMessageId: References the original user message -->
+          <eb:RefToMessageId>uuid-12345678-1234-1234-1234-123456789012@seller.example.com</eb:RefToMessageId>
+        </eb:MessageInfo>
+
+        <!-- Receipt: Acknowledges successful reception (per section 3.2.2) -->
+        <eb:Receipt>
+          <!-- Reference to original message using digest value -->
+          <ds:Reference URI="#_840b593a-a40f-40d8-a8fd-89591478e5df">
+            <!-- Digest method: SHA-256 (mandatory per section 3.2.6.2.2) -->
+            <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+            <!-- Base64-encoded SHA-256 hash of original message -->
+            <ds:DigestValue>jyTXyVrh+cX3iJzgmxqiHdnnJQxcX6kTGHPES1YUYEs=</ds:DigestValue>
+          </ds:Reference>
+        </eb:Receipt>
+
+      </eb:SignalMessage>
+    </eb:Messaging>
+
+  </soap:Header>
+
+  <soap:Body wsu:Id="_body-id-1234">
+  </soap:Body>
+
+</soap:Envelope>
