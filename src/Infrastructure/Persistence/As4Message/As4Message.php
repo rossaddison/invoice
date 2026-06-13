@@ -253,7 +253,12 @@ class As4Message
         return $this;
     }
 
-    public function isReadyForRetry(): bool
+    /**
+     * @param int $intervalSeconds Override the wait interval (0 = use the message's own retryIntervalSeconds).
+     *                             Pass the value computed by As4RetryPolicyInterface::delaySeconds() to enable
+     *                             exponential back-off or other custom policies.
+     */
+    public function isReadyForRetry(int $intervalSeconds = 0): bool
     {
         if ($this->state !== As4MessageState::sent->value) {
             return false;
@@ -265,7 +270,8 @@ class As4Message
             return true;
         }
 
-        $nextRetry = (clone $this->lastAttemptAt)->modify("+{$this->retryIntervalSeconds} seconds");
+        $delay     = $intervalSeconds > 0 ? $intervalSeconds : $this->retryIntervalSeconds;
+        $nextRetry = (clone $this->lastAttemptAt)->modify("+{$delay} seconds");
         return new DateTime() >= $nextRetry;
     }
 

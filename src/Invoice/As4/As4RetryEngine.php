@@ -24,6 +24,7 @@ class As4RetryEngine
         private readonly As4Sender $sender,
         private readonly LoggerInterface $logger,
         private readonly As4ReceiptParserInterface $receiptParser,
+        private readonly As4RetryPolicyInterface $retryPolicy = new As4FixedIntervalRetryPolicy(),
     ) {}
 
     /**
@@ -37,7 +38,11 @@ class As4RetryEngine
 
         try {
             foreach ($this->repository->findPendingRetries() as $message) {
-                if (!$message->isReadyForRetry()) {
+                $delay = $this->retryPolicy->delaySeconds(
+                    $message->getAttemptCount(),
+                    $message->getRetryIntervalSeconds()
+                );
+                if (!$message->isReadyForRetry($delay)) {
                     continue;
                 }
 
