@@ -8,25 +8,18 @@ use App\Infrastructure\Persistence\Setting\Setting;
 
 use App\Invoice\{
     ClientPeppol\ClientPeppolRepository as cpR,
-    Contract\ContractRepository as ContractRepo,
-    Delivery\DeliveryRepository as DelRepo,
-    DeliveryParty\DeliveryPartyRepository as DelPartyRepo,
-    DeliveryLocation\DeliveryLocationRepository as DLR,
-    Inv\InvRepository as IR,
-    InvAllowanceCharge\InvAllowanceChargeRepository as ACIR,
-    InvItem\InvItemRepository as IIR,
-    InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR,
-    InvAmount\InvAmountRepository as IAR,
-    InvItemAmount\InvItemAmountRepository as IIAR,
-    PostalAddress\PostalAddressRepository as paR,
-    SalesOrder\SalesOrderRepository as SOR,
-    SalesOrderItem\SalesOrderItemRepository as SOIR,
-    TaxRate\TaxRateRepository as TRR,
-    UnitPeppol\UnitPeppolRepository as unpR,
-    Upload\UploadRepository as UPR
+    Inv\InvPeppolChargeDeps,
+    Inv\InvPeppolCoreDeps,
+    Inv\InvPeppolInvDeps,
+    Inv\InvPeppolNetworkDeps,
+    Upload\UploadRepository as UPR,
 };
-use App\Invoice\Helpers\{
-    Peppol\PeppolHelper, Peppol\PeppolValidator
+use App\Invoice\Helpers\Peppol\{
+    PeppolHelper,
+    PeppolHelperChargeDeps,
+    PeppolHelperInvDeps,
+    PeppolHelperNetDeps,
+    PeppolValidator,
 };
 use App\Invoice\Peppol\PeppolSendService;
 use Yiisoft\{Html\Html, Router\HydratorAttribute\RouteArgument, User\CurrentUser
@@ -45,65 +38,49 @@ trait Peppol
         #[RouteArgument('id')]
         int $id,
         CurrentUser $currentUser,
-        cpR $cpR,
-        IAR $iaR,
-        IIAR $iiaR,
-        IIR $iiR,
-        IR $invRepo,
-        ContractRepo $contractRepo,
-        DelRepo $delRepo,
-        DelPartyRepo $delPartyRepo,
-        DLR $dlR,
-        paR $paR,
-        SOR $soR,
-        unpR $unpR,
-        UPR $upR,
-        ACIR $aciR,
-        ACIIR $aciiR,
-        SOIR $soiR,
-        TRR $trR,
+        InvPeppolCoreDeps $core,
+        InvPeppolNetworkDeps $net,
+        InvPeppolChargeDeps $charge,
+        InvPeppolInvDeps $inv,
     ): Response {
         if ($currentUser->isGuest()) {
             return $this->webService->getNotFoundResponse();
         }
         // Load the inv's HASONE relation 'invAmount'
         if ($id) {
-            $invoice = $invRepo->repoInvLoadInvAmountquery($id);
+            $invoice = $core->invRepo->repoInvLoadInvAmountquery($id);
             if ($invoice) {
                 $client_id = $invoice->getClient()?->reqId();
                 $delLocId = $invoice->getDeliveryLocationId();
                 if ($client_id > 0) {
-                    if ($this->peppolClientFullySetup($client_id, $cpR)) {
-                        $delloc = $dlR->repoDeliveryLocationquery((int) $delLocId);
+                    if ($this->peppolClientFullySetup($client_id, $core->cpR)) {
+                        $delloc = $core->dlR->repoDeliveryLocationquery((int) $delLocId);
                         if (null !== $delloc) {
                             $inv_amount = $invoice->getInvAmount();
                             $peppolhelper = new PeppolHelper(
                                 $this->sR,
-                                $delRepo,
+                                $net->delRepo,
                                 $inv_amount,
                                 $delloc,
                                 $this->translator,
                             );
                             $uploads_temp_peppol_absolute_path_dot_xml =
                         $peppolhelper->generateInvoicePeppolUblXmlTempFile(
-                                $soR,
                                 $invoice,
-                                $iaR,
-                                $iiaR,
-                                $iiR,
-                                $contractRepo,
-                                $delRepo,
-                                $delPartyRepo,
-                                $paR,
-                                $cpR,
-                                $unpR,
-                                $upR,
-                                $aciR,
-                                $aciiR,
-                                $soiR,
-                                $trR,
+                                new PeppolHelperInvDeps(
+                                    $core->soR, $inv->iaR, $core->iiaR,
+                                    $inv->iiR, $core->paR, $core->cpR,
+                                ),
+                                new PeppolHelperNetDeps(
+                                    $net->contractRepo, $net->delRepo,
+                                    $net->delPartyRepo, $net->unpR, $net->upR,
+                                ),
+                                new PeppolHelperChargeDeps(
+                                    $charge->aciR, $charge->aciiR,
+                                    $charge->soiR, $charge->trR,
+                                ),
                             );
-                            $xml = $this->peppolOutput($upR,
+                            $xml = $this->peppolOutput($net->upR,
                                     $uploads_temp_peppol_absolute_path_dot_xml);
                             $pVal = new PeppolValidator($this->translator);
                             // Not saving to file. Showing in Browser
@@ -367,23 +344,10 @@ trait Peppol
         #[RouteArgument('id')]
         int $id,
         CurrentUser $currentUser,
-        cpR $cpR,
-        IAR $iaR,
-        IIAR $iiaR,
-        IIR $iiR,
-        IR $invRepo,
-        ContractRepo $contractRepo,
-        DelRepo $delRepo,
-        DelPartyRepo $delPartyRepo,
-        DLR $dlR,
-        paR $paR,
-        SOR $soR,
-        unpR $unpR,
-        UPR $upR,
-        ACIR $aciR,
-        ACIIR $aciiR,
-        SOIR $soiR,
-        TRR $trR,
+        InvPeppolCoreDeps $core,
+        InvPeppolNetworkDeps $net,
+        InvPeppolChargeDeps $charge,
+        InvPeppolInvDeps $inv,
         PeppolSendService $peppolSendService,
     ): Response {
         if ($currentUser->isGuest()) {
@@ -393,7 +357,7 @@ trait Peppol
             return $this->webService->getNotFoundResponse();
         }
 
-        $invoice = $invRepo->repoInvLoadInvAmountquery($id);
+        $invoice = $core->invRepo->repoInvLoadInvAmountquery($id);
         if (null === $invoice) {
             return $this->webService->getNotFoundResponse();
         }
@@ -406,12 +370,12 @@ trait Peppol
             return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $id]);
         }
 
-        if (!$this->peppolClientFullySetup($client_id, $cpR)) {
+        if (!$this->peppolClientFullySetup($client_id, $core->cpR)) {
             return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $id]);
         }
 
         $delLocId = $invoice->getDeliveryLocationId();
-        $delloc   = $dlR->repoDeliveryLocationquery((int) $delLocId);
+        $delloc   = $core->dlR->repoDeliveryLocationquery((int) $delLocId);
         if (null === $delloc) {
             $this->flashMessage('warning',
                 $this->translator->translate('delivery.location.peppol.output'));
@@ -420,7 +384,7 @@ trait Peppol
 
         $peppolhelper = new PeppolHelper(
             $this->sR,
-            $delRepo,
+            $net->delRepo,
             $invoice->getInvAmount(),
             $delloc,
             $this->translator,
@@ -428,9 +392,19 @@ trait Peppol
 
         try {
             $xmlPath = $peppolhelper->generateInvoicePeppolUblXmlTempFile(
-                $soR, $invoice, $iaR, $iiaR, $iiR,
-                $contractRepo, $delRepo, $delPartyRepo, $paR,
-                $cpR, $unpR, $upR, $aciR, $aciiR, $soiR, $trR,
+                $invoice,
+                new PeppolHelperInvDeps(
+                    $core->soR, $inv->iaR, $core->iiaR,
+                    $inv->iiR, $core->paR, $core->cpR,
+                ),
+                new PeppolHelperNetDeps(
+                    $net->contractRepo, $net->delRepo,
+                    $net->delPartyRepo, $net->unpR, $net->upR,
+                ),
+                new PeppolHelperChargeDeps(
+                    $charge->aciR, $charge->aciiR,
+                    $charge->soiR, $charge->trR,
+                ),
             );
         } catch (\RuntimeException $e) {
             $msg = $e instanceof \Yiisoft\FriendlyException\FriendlyExceptionInterface
@@ -447,7 +421,7 @@ trait Peppol
             return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $id]);
         }
 
-        $cp = $cpR->repoClientPeppolLoadedquery($client_id);
+        $cp = $core->cpR->repoClientPeppolLoadedquery($client_id);
         if (null === $cp) {
             $this->flashMessage('warning',
                 $this->translator->translate('peppol.client.check'));

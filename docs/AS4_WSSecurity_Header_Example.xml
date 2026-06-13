@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  WS-Security Header Example with Signing and Encryption
+  eDelivery AS4 2.0, Section 3.2.6 (Message Layer Security)
+  
+  Complete example showing:
+  1. XML Signature using Ed25519 (section 3.2.6.2.2)
+  2. XML Encryption using X25519 key agreement (section 3.2.6.2.3)
+  3. HKDF key derivation with SHA-256 (section 3.2.6.2.3)
+  
+  Security chain:
+  1. Signing happens FIRST: DS:Signature covers the SOAP body + eb:Messaging header
+  2. Encryption happens SECOND: XEnc:EncryptedData wraps all payload MIME parts
+  3. Both signing and encryption are mandatory per Common Profile
+-->
+<wsse:Security 
+    xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+    xmlns:wsse11="http://docs.oasis-open.org/wss/oasis-wss-wssecurity-secext-1.1.xsd"
+    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+    xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+    xmlns:dsig-more="http://www.w3.org/2021/04/xmldsig-more#"
+    xmlns:dsig11="http://www.w3.org/2009/xmldsig11#"
+    xmlns:xenc="http://www.w3.org/2001/04/xmlenc#"
+    xmlns:xenc11="http://www.w3.org/2009/xmlenc11#">
+
+  <!-- 
+    ENCRYPTION STRUCTURE
+    Per section 3.2.6.2.3: XEnc:EncryptedKey contains key agreement info
+    X25519 ephemeral-static mode for forward secrecy
+  -->
+  <xenc:EncryptedKey wsu:Id="EK-6263cc2e-e01a-4bd2-a2f3-39f9c74e82ab">
+    <!-- Key wrapping algorithm: AES-128 key wrap -->
+    <xenc:EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#kw-aes128"/>
+    
+    <ds:KeyInfo>
+      <!-- X25519 key agreement with HKDF derivation -->
+      <xenc:AgreementMethod Algorithm="http://www.w3.org/2021/04/xmldsig-more#x25519">
+        
+        <!-- Key derivation function: HKDF with SHA-256 -->
+        <xenc11:KeyDerivationMethod Algorithm="http://www.w3.org/2021/04/xmldsig-more#hkdf">
+          <dsig-more:HKDFParams>
+            <!-- Pseudo-Random Function: HMAC-SHA256 -->
+            <dsig-more:PRF Algorithm="http://www.w3.org/2001/04/xmldsig-more#hmac-sha256"/>
+            
+            <!-- Random salt (Base64-encoded) -->
+            <dsig-more:Salt>xWdTey4T6awUJkp0NPZNVTa2JQkWukC0Uk+qaeEpn4Y=</dsig-more:Salt>
+            
+            <!-- Additional info for key derivation -->
+            <dsig-more:Info>dGVzdC1pbmZvLWRhdGE=</dsig-more:Info>
+            
+            <!-- Derived key length: 16 bytes for AES-128 -->
+            <dsig-more:KeyLength>16</dsig-more:KeyLength>
+          </dsig-more:HKDFParams>
+        </xenc11:KeyDerivationMethod>
+        
+        <!-- Originator (sender) ephemeral X25519 public key -->
+        <xenc:OriginatorKeyInfo>
+          <ds:KeyValue>
+            <dsig11:DEREncodedKeyValue>
+              <!-- Base64-encoded DER X25519 public key per RFC 8410 -->
+              BAHQXIjLoPO4LBehXFzOveAzouszXfs3aTmkFiwPrsXwTgaV7lBy5B7mPRLYCB7NgPlWD/Yhx1OqJmSkrU+HjugU6AFPPrUmNARHk7x+JKK+V5v8ErNO1+GSnB25X6N9y08rIHeYaazT5Rc9YpdwEFBGmPOciWlDJCOfRVLJtcRF2X6L0Q==
+            </dsig11:DEREncodedKeyValue>
+          </ds:KeyValue>
+        </xenc:OriginatorKeyInfo>
+        
+        <!-- Recipient (receiver) static public key certificate reference -->
+        <xenc:RecipientKeyInfo>
+          <wsse:SecurityTokenReference xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+            <wsse:KeyIdentifier 
+                EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary"
+                ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509SubjectKeyIdentifier">
+              <!-- Subject Key Identifier from recipient's certificate -->
+              ENCODED_SKI_VALUE_HERE
+            </wsse:KeyIdentifier>
+          </wsse:SecurityTokenReference>
+        </xenc:RecipientKeyInfo>
+      </xenc:AgreementMethod>
+    </ds:KeyInfo>
+    
+    <!-- Encrypted symmetric key (wrapped with derived key) -->
+    <xenc:CipherData>
+      <xenc:CipherValue>1OygswQnDMJi8AUWzoMhIuyyE/GjfHY3</xenc:CipherValue>
+    </xenc:CipherData>
+    
+    <!-- List of encrypted data elements using this key -->
+    <xenc:ReferenceList>
+      <xenc:DataReference URI="#ED-ad394cf3-a2c0-442e-9943-f01cea6782cb"/>
+    </xenc:ReferenceList>
+  </xenc:EncryptedKey>
+
+  <!-- Encrypted MIME attachment part (compressed gzip XML) -->
+  <xenc:EncryptedData 
+      Id="ED-ad394cf3-a2c0-442e-9943-f01cea6782cb" 
+      MimeType="application/gzip"
+      Type="http://docs.oasis-open.org/wss/oasis-wss-SwAProfile-1.1#Attachment-Content-Only">
+    
+    <!-- Encryption method: AES-128-GCM (mandatory per section 3.2.6.2.3) -->
+    <xenc:EncryptionMethod Algorithm="http://www.w3.org/2009/xmlenc11#aes128-gcm"/>
+    
+    <ds:KeyInfo>
+      <!-- Reference to encrypted key above -->
+      <wsse:SecurityTokenReference wsse11:TokenType="http://docs.oasis-open.org/wss/oasis-wss-soap-message-security-1.1#EncryptedKey">
+        <wsse:Reference URI="#EK-6263cc2e-e01a-4bd2-a2f3-39f9c74e82ab"/>
+      </wsse:SecurityTokenReference>
+    </ds:KeyInfo>
+    
+    <!-- Encrypted content (MIME part reference) -->
+    <xenc:CipherData>
+      <xenc:CipherReference URI="cid:1400668830234@seller.eu">
+        <!-- Attachment decryption transform -->
+        <xenc:Transforms>
+          <ds:Transform Algorithm="http://docs.oasis-open.org/wss/oasis-wss-SwAProfile-1.1#Attachment-Ciphertext-Transform"/>
+        </xenc:Transforms>
+      </xenc:CipherReference>
+    </xenc:CipherData>
+  </xenc:EncryptedData>
+
+  <!-- Binary Security Token: Sender's X.509 certificate for signing -->
+  <wsse:BinarySecurityToken
+      EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary"
+      ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"
+      wsu:Id="X509-48b6d459-777b-4226-81bd-df327f37b30c">
+    <!-- Base64-encoded X.509 certificate (DER format) -->
+    MIID...ENCODED_CERTIFICATE...==
+  </wsse:BinarySecurityToken>
+
+  <!-- 
+    SIGNATURE STRUCTURE
+    Per section 3.2.6.2.2: Ed25519 signature covers SOAP body + eb:Messaging
+  -->
+  <ds:Signature Id="SIG-adcdc058-ddac-4437-8902-ab37cf037ca4">
+    
+    <ds:SignedInfo>
+      <!-- Canonicalization: Exclusive XML canonicalization per section 3.2.6.2.2 -->
+      <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+        <ec:InclusiveNamespaces 
+            xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#" 
+            PrefixList="env"/>
+      </ds:CanonicalizationMethod>
+      
+      <!-- Signature algorithm: Ed25519 (mandatory per Common Profile 2.0) -->
+      <ds:SignatureMethod Algorithm="http://www.w3.org/2021/04/xmldsig-more#eddsa-ed25519"/>
+      
+      <!-- Reference 1: Empty SOAP body -->
+      <ds:Reference URI="#_840b593a-a40f-40d8-a8fd-89591478e5df">
+        <ds:Transforms>
+          <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+        </ds:Transforms>
+        <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ds:DigestValue>jyTXyVrh+cX3iJzgmxqiHdnnJQxcX6kTGHPES1YUYEs=</ds:DigestValue>
+      </ds:Reference>
+      
+      <!-- Reference 2: eb:Messaging header -->
+      <ds:Reference URI="#_210bca51-e9b3-4ee1-81e7-226949ab6ff6">
+        <ds:Transforms>
+          <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+        </ds:Transforms>
+        <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ds:DigestValue>5RMz5/mSIFTI1+amk+XLHsLR2yE7h5KFgAsLrHrya98=</ds:DigestValue>
+      </ds:Reference>
+      
+      <!-- Reference 3: MIME attachment payload -->
+      <ds:Reference URI="cid:1400668830234@seller.eu">
+        <ds:Transforms>
+          <!-- SOAP with Attachments signature transform -->
+          <ds:Transform Algorithm="http://docs.oasis-open.org/wss/oasis-wss-SwAProfile-1.1#Attachment-Content-Signature-Transform"/>
+        </ds:Transforms>
+        <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ds:DigestValue>wVgT8wKEsJlO0O5OjjQB/vw9mGsxi1n/0dc9qeRqFM4=</ds:DigestValue>
+      </ds:Reference>
+    </ds:SignedInfo>
+    
+    <!-- Base64-encoded Ed25519 signature value -->
+    <ds:SignatureValue>CyVaSr9BLh7m4KC7xNszOsmJNM6aNJPKwQwNNqY5cvu3GgSIYBQWecg==</ds:SignatureValue>
+    
+    <!-- Key info pointing to the certificate -->
+    <ds:KeyInfo Id="KI-29066baf-2595-444f-9d27-58667dc40da3">
+      <wsse:SecurityTokenReference wsu:Id="STR-a54b721a-0d19-4112-b1cf-06752cd826fa">
+        <wsse:Reference URI="#X509-48b6d459-777b-4226-81bd-df327f37b30c"
+            ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>
+      </wsse:SecurityTokenReference>
+    </ds:KeyInfo>
+  </ds:Signature>
+
+</wsse:Security>

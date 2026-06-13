@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Invoice\Quote\Trait;
 
 use App\Infrastructure\Persistence\{
-    Quote\Quote, QuoteAmount\QuoteAmount, User\User
+    Quote\Quote, QuoteAmount\QuoteAmount
 };
 use App\Invoice\{
-    Client\ClientRepository as CR,
     Group\GroupRepository as GR,
+    Quote\QuoteAddDeps,
     Quote\QuoteForm,
     TaxRate\TaxRateRepository as TRR,
     UserClient\UserClientRepository as UCR,
@@ -35,12 +35,7 @@ trait Add
         #[RouteArgument('origin')]
         string $origin,
         FormHydrator $formHydrator,
-        CR $clientRepository,
-        GR $gR,
-        TRR $trR,
-        UR $uR,
-        UCR $ucR,
-        UIR $uiR,
+        QuoteAddDeps $d,
     ): Response {
         $quote = new Quote();
         $errors = [];
@@ -48,10 +43,10 @@ trait Add
         $bootstrap5ModalQuote = new Bootstrap5ModalQuote(
             $this->translator,
             $this->webViewRenderer,
-            $clientRepository,
-            $gR,
+            $d->clientRepository,
+            $d->gR,
             $this->sR,
-            $ucR,
+            $d->ucR,
             $form,
         );
 
@@ -70,7 +65,7 @@ trait Add
                 if (is_array($body)) {
                     $client_id = (int) $body['client_id'];
                     $client_fullname = '';
-                    $user_client = $ucR->repoUserquery($client_id);
+                    $user_client = $d->ucR->repoUserquery($client_id);
                     if (null !== $user_client &&
                         null !== $user_client->getClient()) {
                         $client_first_name =
@@ -83,7 +78,7 @@ trait Add
                                          . ($client_surname ?? '');
                     } else {
                         $this->flashMessage('danger',
-                            $clientRepository->repoClientquery($client_id)
+                            $d->clientRepository->repoClientquery($client_id)
                                 ->getClientFullName() . ': '
                                     . $this->translator->translate(
                                         'user.client.no.account'));
@@ -97,11 +92,11 @@ trait Add
                     // So this line is an extra measure to ensure that the quote
                     // is being made out to the correct payer
                     // ie. not more than one user is associated with the client.
-                    $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
+                    $user = $this->activeUser($client_id, $d->uR, $d->ucR, $d->uiR);
                     if (null !== $user) {
                         $saved_model =
                             $this->quote_service->saveQuote(
-                                $user, $quote, $body, $this->sR, $gR);
+                                $user, $quote, $body, $this->sR, $d->gR);
                         if ($saved_model->hasIdentity()) {
                             /**
                              * The QuoteAmount entity is created automatically
@@ -110,7 +105,7 @@ trait Add
                              * $this->quoteAmount = new QuoteAmount();
                              */
                             $model_id = $saved_model->reqId();
-                            $this->defaultTaxes($quote, $trR, $formHydrator);
+                            $this->defaultTaxes($quote, $d->trR, $formHydrator);
                             // Inform the user of generated quote number for
                             // draft setting
                             $this->flashMessage('info',

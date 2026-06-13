@@ -47,9 +47,6 @@
         <!-- Data/language files that assign to file-scope variables consumed by require callers -->
         <UnusedVariable>
             <errorLevel type="suppress">
-                <file name="src/Invoice/Helpers/Peppol/uncl2005.php" />
-                <file name="src/Invoice/Helpers/Peppol/uncl2005_subset.php" />
-                <file name="src/Invoice/Helpers/Peppol/untdid2005.php" />
                 <file name="src/Invoice/Language/English/app_lang.php" />
                 <file name="src/Invoice/InvoiceController.php" />
             </errorLevel>

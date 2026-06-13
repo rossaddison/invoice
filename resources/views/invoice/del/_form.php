@@ -183,10 +183,13 @@ use Yiisoft\Html\Tag\Form;
                      * @var array $value
                      */
                     foreach ($electronic_address_scheme as $value) {
-                        $optionsDataEAS[(string) $value['code']] = (string) $value['code'] . str_repeat("-", 10) . (string) $value['description'];
+                        $optionsDataEAS[(string) $value['Id']] = (string) $value['Id'] . str_repeat("-", 10) . (string) $value['Name'];
                     }
                 ?>
                 <?= Html::a('EAS', 'https://docs.peppol.eu/poacc/upgrade-3/codelist/eas'); ?>
+                <?= Html::tag('small',
+                    'PeppolArrays::electronicAddressScheme() ← DownloadedXml/eas.xml',
+                    ['class' => 'text-muted d-block mb-1']); ?>
                 <?= Field::select($form, 'electronic_address_scheme')
                     ->label($translator->translate('delivery.location.electronic.address.scheme'))
                     ->optionsData($optionsDataEAS)

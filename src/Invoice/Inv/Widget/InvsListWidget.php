@@ -481,14 +481,15 @@ final class InvsListWidget extends Widget
                         'data-base-url' => $ug->generate(self::ROUTE_INDEX),
                     ])
                     ->optionsData([
-                        'none'         => $t->translate('grouping.none'),
-                        'status'       => $t->translate('status'),
-                        'client'       => $t->translate('client'),
-                        'client_group' => $t->translate('client.group'),
-                        'month'        => $t->translate('month'),
-                        'year'         => $t->translate('year'),
-                        'date'         => $t->translate('date'),
-                        'amount_range' => 'Amount Range',
+                        'none'             => $t->translate('grouping.none'),
+                        'status'           => $t->translate('status'),
+                        'client'           => $t->translate('client'),
+                        'client_group'     => $t->translate('client.group'),
+                        'month'            => $t->translate('month'),
+                        'year'             => $t->translate('year'),
+                        'date'             => $t->translate('date'),
+                        'amount_range'     => 'Amount Range',
+                        'peppol_workflow'  => $t->translate('peppol'),
                     ])
                     ->value($this->groupBy)
             )
@@ -1132,6 +1133,44 @@ final class InvsListWidget extends Widget
         );
     }
 
+    private function buildWorkflowTypeColumn(): DataColumn
+    {
+        $t = $this->translator;
+        return new DataColumn(
+            header: (new Label())->content('🔀')
+                ->addAttributes(['data-bs-toggle' => 'tooltip',
+                    'title' => $t->translate('invoice') . ' / '
+                        . $t->translate('quote') . ' → '
+                        . $t->translate('salesorder') . ' → '
+                        . $t->translate('invoice')])
+                ->render(),
+            encodeHeader: false,
+            content: static function (Inv $model) use ($t): string {
+                if ($model->getSoId() !== null) {
+                    return '<span class="badge bg-primary" data-bs-toggle="tooltip" title="'
+                        . Html::encode(
+                            $t->translate('quote') . ' → '
+                            . $t->translate('salesorder') . ' → '
+                            . $t->translate('invoice')
+                            . ' (' . $t->translate('peppol') . ')')
+                        . '">🔀</span>';
+                }
+                if ($model->getQuoteId() !== null) {
+                    return '<span class="badge bg-info text-dark" data-bs-toggle="tooltip" title="'
+                        . Html::encode(
+                            $t->translate('quote') . ' → '
+                            . $t->translate('invoice'))
+                        . '">💬→📄</span>';
+                }
+                return '<span class="badge bg-secondary" data-bs-toggle="tooltip" title="'
+                    . Html::encode($t->translate('invoice'))
+                    . '">📄</span>';
+            },
+            encodeContent: false,
+            withSorting: false,
+        );
+    }
+
     private function buildDeliveryAddColumn(): DataColumn
     {
         $ug = $this->urlGenerator;
@@ -1249,6 +1288,7 @@ final class InvsListWidget extends Widget
 
         $columns = [
             $this->buildCheckboxColumn(),
+            $this->buildWorkflowTypeColumn(),
             $this->buildEditColumn($sR),
             $this->buildPdfEmailColumn(),
             $this->buildInvNumberColumn(),
@@ -1356,6 +1396,11 @@ final class InvsListWidget extends Widget
                     ($invoice->getInvAmount()->getTotal() ?? 0) < 500    => '$100 - $500',
                     ($invoice->getInvAmount()->getTotal() ?? 0) < 1000   => '$500 - $1000',
                     default => '> $1000',
+                },
+                'peppol_workflow' => match (true) {
+                    $invoice->getSoId() !== null    => 'Peppol (Quote → SO → Invoice)',
+                    $invoice->getQuoteId() !== null => 'Quote → Invoice',
+                    default                         => 'Standard Invoice',
                 },
                 default => 'No Group',
             };

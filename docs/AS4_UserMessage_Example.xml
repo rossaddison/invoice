@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  AS4 UserMessage Example
+  eDelivery AS4 2.0 Common Profile Specification
+  
+  This example demonstrates a complete AS4 message structure with:
+  - SOAP 1.2 envelope
+  - ebMS3 UserMessage with MessageInfo, PartyInfo, CollaborationInfo
+  - Empty SOAP body (required by spec)
+  - Payload references (actual payloads are MIME attachments)
+  
+  Key requirements per section 3.2:
+  - All payloads must be in MIME parts (never in SOAP body)
+  - Message is signed and encrypted per WS-Security 1.1.1
+  - Mandatory elements: MessageId, ConversationId, Service, Action, From, To
+-->
+<soap:Envelope
+    xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
+    xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+    xmlns:eb="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/"
+    xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+    xmlns:xenc="http://www.w3.org/2001/04/xmlenc#"
+    xmlns:dsig-more="http://www.w3.org/2021/04/xmldsig-more#">
+
+  <!-- SOAP Header -->
+  <soap:Header>
+    
+    <!-- WS-Security Header (will contain signature and encryption elements) -->
+    <wsse:Security soap:mustUnderstand="true">
+      <!-- Security elements populated by signing/encryption process -->
+    </wsse:Security>
+
+    <!-- ebMS3 Messaging Header (mandatory) -->
+    <eb:Messaging soap:mustUnderstand="true">
+      
+      <!-- UserMessage structure per section 3.2.2 -->
+      <eb:UserMessage>
+        
+        <!-- MessageInfo: Contains message identifiers and timestamp -->
+        <eb:MessageInfo>
+          <!-- ISO 8601 timestamp per RFC 3339 -->
+          <eb:Timestamp>2024-06-12T14:30:00Z</eb:Timestamp>
+          
+          <!-- Unique message identifier (RFC 2822 msg-id format recommended) -->
+          <eb:MessageId>uuid-12345678-1234-1234-1234-123456789012@seller.example.com</eb:MessageId>
+          
+          <!-- Optional: Correlate response to request in Two-Way exchanges -->
+          <!-- <eb:RefToMessageId>uuid-87654321-4321-4321-4321-210987654321@buyer.example.com</eb:RefToMessageId> -->
+        </eb:MessageInfo>
+
+        <!-- PartyInfo: Identifies sender and receiver using ebCore Party IDs -->
+        <eb:PartyInfo>
+          
+          <!-- From: Sender party with ISO 6523 GLN identifier -->
+          <eb:From>
+            <!-- Party ID with type attribute (ISO 6523 code required per section 3.4.1) -->
+            <eb:PartyId type="urn:oasis:names:tc:ebcore:partyid-type:iso6523:0088">5412345000016</eb:PartyId>
+            <!-- Role identifier (business process role) -->
+            <eb:Role>Seller</eb:Role>
+          </eb:From>
+
+          <!-- To: Receiver party with ISO 6523 GLN identifier -->
+          <eb:To>
+            <eb:PartyId type="urn:oasis:names:tc:ebcore:partyid-type:iso6523:0088">5412345000023</eb:PartyId>
+            <eb:Role>Buyer</eb:Role>
+          </eb:To>
+        </eb:PartyInfo>
+
+        <!-- CollaborationInfo: Identifies the business process and action -->
+        <eb:CollaborationInfo>
+          <!-- ConversationId: Correlates related messages (mandatory per section 3.2.2) -->
+          <eb:ConversationId>urn:uuid:purchase-order-2024-06</eb:ConversationId>
+          
+          <!-- Service: Identifies the service category (e.g., invoice transmission) -->
+          <eb:Service>urn:service:invoice:transmission</eb:Service>
+          
+          <!-- Action: Identifies the specific action (e.g., send invoice) -->
+          <eb:Action>SendInvoice</eb:Action>
+          
+          <!-- Optional AgreementRef for bilateral agreements -->
+          <!-- <eb:AgreementRef pmode="pmode-invoice-001">urn:agreement:invoice-2024</eb:AgreementRef> -->
+        </eb:CollaborationInfo>
+
+        <!-- MessageProperties: Additional metadata (used in Four Corner Topology) -->
+        <eb:MessageProperties>
+          <!-- StandardProperty for duplicate detection and tracking -->
+          <eb:Property name="originalMessageId">order-12345-2024-06</eb:Property>
+          
+          <!-- Four Corner Topology properties (Profile Enhancement 4.1) -->
+          <!-- <eb:Property name="originalSender">5412345000009</eb:Property> -->
+          <!-- <eb:Property name="finalRecipient">5412345000023</eb:Property> -->
+          <!-- <eb:Property name="trackingIdentifier">tracking-ref-001</eb:Property> -->
+        </eb:MessageProperties>
+
+        <!-- PayloadInfo: References payload MIME parts -->
+        <eb:PayloadInfo>
+          
+          <!-- PartInfo for compressed XML invoice (primary payload) -->
+          <eb:PartInfo href="cid:invoice-2024-0001@seller.example.com">
+            <eb:PartProperties>
+              <!-- MimeType: Pre-compression type (required per section 3.3.1) -->
+              <eb:Property name="MimeType">application/xml</eb:Property>
+              
+              <!-- CharacterSet: Pre-compression charset (recommended for XML per section 3.3.1) -->
+              <eb:Property name="CharacterSet">utf-8</eb:Property>
+              
+              <!-- CompressionType: Indicates GZIP compression was applied (mandatory per section 3.3.1) -->
+              <eb:Property name="CompressionType">application/gzip</eb:Property>
+            </eb:PartProperties>
+          </eb:PartInfo>
+
+          <!-- PartInfo for additional attachment (optional) -->
+          <eb:PartInfo href="cid:attachment-001@seller.example.com">
+            <eb:PartProperties>
+              <eb:Property name="MimeType">application/pdf</eb:Property>
+              <!-- No CompressionType for binary PDFs -->
+            </eb:PartProperties>
+          </eb:PartInfo>
+        </eb:PayloadInfo>
+
+      </eb:UserMessage>
+    </eb:Messaging>
+
+  </soap:Header>
+
+  <!-- SOAP Body: Must be empty per AS4 spec section 3.2.3 -->
+  <!-- All payload content is in MIME attachment parts, never in the body -->
+  <soap:Body wsu:Id="_840b593a-a40f-40d8-a8fd-89591478e5df">
+  </soap:Body>
+
+</soap:Envelope>

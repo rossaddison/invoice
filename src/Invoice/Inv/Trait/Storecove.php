@@ -5,24 +5,17 @@ declare(strict_types=1);
 namespace App\Invoice\Inv\Trait;
 
 use App\Invoice\{
-    ClientPeppol\ClientPeppolRepository as cpR,
-    Contract\ContractRepository as ContractRepo,
-    Delivery\DeliveryRepository as DelRepo,
-    DeliveryParty\DeliveryPartyRepository as DelPartyRepo,
-    DeliveryLocation\DeliveryLocationRepository as DLR,
-    Inv\InvRepository as IR,
-    InvAllowanceCharge\InvAllowanceChargeRepository as ACIR,
-    InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR,
-    InvItemAmount\InvItemAmountRepository as IIAR,
-    PostalAddress\PostalAddressRepository as paR,
+    Inv\InvPeppolChargeDeps,
+    Inv\InvPeppolCoreDeps,
+    Inv\InvPeppolNetworkDeps,
     ProductProperty\ProductPropertyRepository as ppR,
-    SalesOrder\SalesOrderRepository as SOR,
-    SalesOrderItem\SalesOrderItemRepository as SOIR,
-    TaxRate\TaxRateRepository as TRR,
-    UnitPeppol\UnitPeppolRepository as unpR,
-    Upload\UploadRepository as UPR,
 };
-use App\Invoice\Helpers\StoreCove\StoreCoveHelper;
+use App\Invoice\Helpers\StoreCove\{
+    StoreCoveHelper,
+    StoreCoveHelperChargeDeps,
+    StoreCoveHelperInvDeps,
+    StoreCoveHelperNetDeps,
+};
 use Yiisoft\{Json\Json, Router\HydratorAttribute\RouteArgument, User\CurrentUser};
 use Psr\Http\Message\ResponseInterface as Response;
 
@@ -37,33 +30,21 @@ trait Storecove
         #[RouteArgument('id')]
         int $id,
         CurrentUser $currentUser,
-        cpR $cpR,
-        IIAR $iiaR,
-        IR $invRepo,
-        ContractRepo $contractRepo,
-        DelRepo $delRepo,
-        DelPartyRepo $delPartyRepo,
-        DLR $dlR,
-        paR $paR,
+        InvPeppolCoreDeps $core,
+        InvPeppolNetworkDeps $net,
+        InvPeppolChargeDeps $charge,
         ppR $ppR,
-        unpR $unpR,
-        SOR $soR,
-        UPR $upR,
-        ACIR $aciR,
-        ACIIR $aciiR,
-        SOIR $soiR,
-        TRR $trR,
     ): Response {
         if ($currentUser->isGuest()) {
             return $this->webService->getNotFoundResponse();
         }
         // Load the inv's HASONE relation 'invamount'
         if ($id) {
-            $invoice = $invRepo->repoInvLoadInvAmountquery($id);
+            $invoice = $core->invRepo->repoInvLoadInvAmountquery($id);
             if ($invoice) {
                 $client_id = $invoice->getClient()?->reqId();
                 if (null !== $client_id) {
-                    $delivery_location = $dlR->repoDeliveryLocationquery($client_id);
+                    $delivery_location = $core->dlR->repoDeliveryLocationquery($client_id);
                     if (null !== $delivery_location) {
                         $storecovehelper = new StoreCoveHelper(
                             $this->sR,
@@ -73,22 +54,18 @@ trait Storecove
                         );
                         $storecove_array =
                     $storecovehelper->maximumPreJsonPhpObjectForAnInvoice(
-                            $soR,
                             $invoice,
-                            $iiaR,
-                            //$iiR,
-                            $contractRepo,
-                            $delRepo,
-                            $delPartyRepo,
-                            $paR,
-                            $cpR,
-                            $ppR,
-                            $unpR,
-                            $upR,
-                            $aciR,
-                            $aciiR,
-                            $soiR,
-                            $trR,
+                            new StoreCoveHelperInvDeps(
+                                $core->soR, $core->iiaR, $core->paR, $core->cpR,
+                            ),
+                            new StoreCoveHelperNetDeps(
+                                $net->contractRepo, $net->delRepo,
+                                $net->delPartyRepo, $net->unpR, $net->upR, $ppR,
+                            ),
+                            new StoreCoveHelperChargeDeps(
+                                $charge->aciR, $charge->aciiR,
+                                $charge->soiR, $charge->trR,
+                            ),
                         );
                         echo Json::encode(
                             $storecove_array,

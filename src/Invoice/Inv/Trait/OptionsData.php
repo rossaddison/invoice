@@ -13,13 +13,10 @@ use App\Infrastructure\Persistence\{
 };
 use App\Invoice\{
     Client\ClientRepository as CR,
-    Contract\ContractRepository as ContractRepo,
-    Delivery\DeliveryRepository as DelRepo,
-    DeliveryLocation\DeliveryLocationRepository as DLR,
-    Group\GroupRepository as GR,
+    Inv\InvEditCoreDeps,
+    Inv\InvEditLocationDeps,
     Inv\InvRepository as IR,
     PaymentMethod\PaymentMethodRepository as PMR,
-    PostalAddress\PostalAddressRepository as paR,
     UserClient\UserClientRepository as UCR,
 };
 use App\Invoice\Helpers\Peppol\PeppolArrays;
@@ -34,17 +31,11 @@ trait OptionsData
         PeppolArrays $peppol_array,
         Inv $inv,
         int $client_id,
-        CR $clientRepo,
-        ContractRepo $contractRepo,
-        DelRepo $deliveryRepo,
-        DLR $delRepo,
-        GR $groupRepo,
-        IR $invRepo,
-        paR $paR,
+        InvEditCoreDeps $core,
+        InvEditLocationDeps $loc,
         PMR $pmRepo,
-        UCR $ucR,
     ): array {
-        $contracts = $contractRepo->repoClient($inv->reqClientId());
+        $contracts = $loc->contractRepo->repoClient($inv->reqClientId());
         $optionsDataContract = [];
         /**
          * @var Contract $contract
@@ -53,9 +44,9 @@ trait OptionsData
             $id = $contract->reqId();
             $optionsDataContract[$id] = ($contract->getName() ?? '')
                 . ' ' . ($contract->getReference() ?? '');
-            
+
         }
-        $deliverys = $deliveryRepo->findAllPreloaded();
+        $deliverys = $loc->deliveryRepo->findAllPreloaded();
         $optionsDataDelivery = [];
         /**
          * @var Delivery $delivery
@@ -82,7 +73,7 @@ trait OptionsData
             }
         }
 
-        $dLocs = $delRepo->repoClientquery($client_id);
+        $dLocs = $loc->delRepo->repoClientquery($client_id);
         $optionsDataDeliveryLocations = [];
         /**
          * @var DeliveryLocation $dLoc
@@ -93,13 +84,13 @@ trait OptionsData
                 ?? '') . ', ' . ($dLoc->getAddress2() ?? '') . ', '
                     . ($dLoc->getCity() ?? '') . ', '
                     . ($dLoc->getZip() ?? '');
-            
+
         }
         $optionsDataGroup = [];
         /**
          * @var Group $group
          */
-        foreach ($groupRepo->findAllPreloaded() as $group) {
+        foreach ($core->groupRepo->findAllPreloaded() as $group) {
             $optionsDataGroup[$group->reqId()] = $group->getName();
         }
 
@@ -126,7 +117,7 @@ trait OptionsData
         /**
          * @var PostalAddress $postalAddress
          */
-        foreach ($paR->repoClientAll($client_id) as $postalAddress) {
+        foreach ($loc->paR->repoClientAll($client_id) as $postalAddress) {
             $optionsDataPostalAddress[$postalAddress->reqId()] =
                     $postalAddress->getStreetName()
                         . ', ' . $postalAddress->getAdditionalStreetName()
@@ -139,11 +130,11 @@ trait OptionsData
          * @var string $key
          * @var array $status
          */
-        foreach ($invRepo->getStatuses($this->translator) as $key => $status) {
+        foreach ($core->invRepo->getStatuses($this->translator) as $key => $status) {
             $optionsDataInvoiceStatus[$key] = (string) $status['label'];
         }
         return [
-            'client' => $clientRepo->optionsData($ucR),
+            'client' => $core->clientRepo->optionsData($core->ucR),
             'contract' => $optionsDataContract,
             'delivery' => $optionsDataDelivery,
             'deliveryLocation' => $optionsDataDeliveryLocations,

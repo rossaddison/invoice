@@ -41,24 +41,37 @@ use Yiisoft\Html\Tag\Form;
 ?>
         <?php
             $optionsDataAllowanceCharge = [];
+            $optionsAttributesAllowanceCharge = [];
 /**
  * @var App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge $allowance_charge
  */
 foreach ($allowance_charges as $allowance_charge) {
-    $optionsDataAllowanceCharge[$allowance_charge->reqId()]
-    = ($allowance_charge->getIdentifier()
-    ? $translator->translate('allowance.or.charge.charge')
-    : $translator->translate('allowance.or.charge.allowance'))
-    . ' ' . ($allowance_charge->getReason())
-    . ' ' . ($allowance_charge->getReasonCode())
-    . ' ' . ($allowance_charge->getTaxRate()?->getTaxRateName() ?? '')
-    . ' ' . ($translator->translate('allowance.or.charge.allowance'));
+    $isCharge = $allowance_charge->getIdentifier();
+    $type = $isCharge
+        ? $translator->translate('allowance.or.charge.charge')
+        : $translator->translate('allowance.or.charge.allowance');
+    $parts = array_filter(
+        [
+            $allowance_charge->getReasonCode(),
+            $allowance_charge->getReason(),
+            $allowance_charge->getTaxRate()?->getTaxRateName() ?? '',
+        ],
+        static fn(string $v): bool => $v !== ''
+    );
+    $id = $allowance_charge->reqId();
+    $optionsDataAllowanceCharge[$id] = $type . ' — ' . implode(' — ', $parts);
+    $optionsAttributesAllowanceCharge[$id] = ['style' => $isCharge ? 'color:#dc3545' : 'color:#198754'];
 }
 ?>
+        <?= Html::a(
+            $translator->translate('allowance.or.charge.index'),
+            $urlGenerator->generate('allowancecharge/index'),
+            ['class' => 'small text-muted d-block mb-1']
+        ); ?>
         <?= Field::select($form, 'allowance_charge_id')
     ->label($translator->translate('allowance.or.charge.item.invoice'))
     ->addInputAttributes(['class' => 'form-control form-control-lg',])
-    ->optionsData($optionsDataAllowanceCharge)
+    ->optionsData($optionsDataAllowanceCharge, true, $optionsAttributesAllowanceCharge)
     ->value($form->getAllowanceChargeId())
     ->prompt($translator->translate('none'))
     ->hint($translator->translate('hint.this.field.is.required'));

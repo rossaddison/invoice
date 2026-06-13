@@ -30,7 +30,7 @@ use DOMXPath;
  *   $issues  = $runner->run($doc, $invoiceDom);
  */
 /** @psalm-suppress UnusedClass */
-final class SchematronRuleRunner
+final class SchematronRuleRunner implements SchematronRunnerInterface
 {
     public function __construct(
         private readonly ExpressionEvaluator $evaluator,
@@ -41,6 +41,7 @@ final class SchematronRuleRunner
      *
      * @return array<int, ValidationViolation>
      */
+    #[\Override]
     public function run(SchematronDocument $doc, DOMDocument $document): array
     {
         $xpath = new DOMXPath($document);

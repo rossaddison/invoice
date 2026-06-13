@@ -6,31 +6,19 @@ namespace App\Invoice\Inv\Trait;
 
 use App\Auth\Permissions;
 use App\Invoice\{
-    Client\ClientRepository as CR,
-    Contract\ContractRepository as ContractRepo,
-    CustomValue\CustomValueRepository as CVR,
-    CustomField\CustomFieldRepository as CFR,
-    Delivery\DeliveryRepository as DelRepo,
-    DeliveryLocation\DeliveryLocationRepository as DLR,
-    Group\GroupRepository as GR,
-    Inv\InvRepository as IR,
+    Inv\InvEditCoreDeps,
+    Inv\InvEditFormDeps,
+    Inv\InvEditLocationDeps,
     Inv\InvForm,
-    InvCustom\InvCustomRepository as ICR,
-    InvCustom\InvCustomForm,
     InvAmount\InvAmountRepository as IAR,
-    PaymentMethod\PaymentMethodRepository as PMR,
-    PostalAddress\PostalAddressRepository as paR,
-    UserClient\UserClientRepository as UCR,
-    UserInv\UserInvRepository as UIR
+    InvCustom\InvCustomForm,
 };
-use App\User\UserRepository as UR;
-use App\Infrastructure\Persistence\InvCustom\InvCustom;
 use App\Invoice\Helpers\{
     CustomValuesHelper as CVH, Peppol\PeppolArrays
 };
 use Yiisoft\{
-    FormModel\FormHydrator, Html\Html, Http\Method, 
-    Router\HydratorAttribute\RouteArgument 
+    FormModel\FormHydrator, Http\Method,
+    Router\HydratorAttribute\RouteArgument
 };
 use Psr\{
     Http\Message\ResponseInterface as Response,
@@ -44,25 +32,13 @@ trait Edit
         #[RouteArgument('id')]
         int $id,
         FormHydrator $formHydrator,
-        IR $invRepo,
-        CR $clientRepo,
-        ContractRepo $contractRepo,
-        DelRepo $deliveryRepo,
-        DLR $delRepo,
-        GR $groupRepo,
-        PMR $pmRepo,
-        UR $userRepo,
-        IAR $iaR,
-        CFR $cfR,
-        CVR $cvR,
-        ICR $icR,
-        paR $paR,
-        UCR $ucR,
-        UIR $uiR,
+        InvEditCoreDeps $core,
+        InvEditLocationDeps $loc,
+        InvEditFormDeps $form,
     ): Response {
-        $inv = $this->inv($id, $invRepo, true);
+        $inv = $this->inv($id, $core->invRepo, true);
         if ($inv) {
-            $form = InvForm::show($inv);
+            $invForm = InvForm::show($inv);
             $invCustomForm = new InvCustomForm();
             $inv_id = $inv->reqId();
             $client_id = $inv->reqClientId();
@@ -77,29 +53,29 @@ trait Edit
             $parameters = [
                 'actionName' => 'inv/edit',
                 'actionArguments' => ['id' => $inv_id],
-                'contractCount' => $contractRepo->repoClientCount(
+                'contractCount' => $loc->contractRepo->repoClientCount(
                     $inv->reqClientId()),
                 'customFields' => $this->fetchCustomFieldsAndValues(
-                    $cfR, $cvR, 'inv_custom')['customFields'],
-                'cvH' => new CVH($this->sR, $cvR),
+                    $form->cfR, $form->cvR, 'inv_custom')['customFields'],
+                'cvH' => new CVH($this->sR, $form->cvR),
                 // Applicable to normally building up permanent selection lists
                 // eg. dropdowns
                 'customValues' => $this->fetchCustomFieldsAndValues(
-                    $cfR, $cvR, 'inv_custom')['customValues'],
+                    $form->cfR, $form->cvR, 'inv_custom')['customValues'],
                 // There will initially be no custom_values attached to this
                 // invoice until they are filled in the field on the form
                 'defaultGroupId' => $defaultGroupId,
-                'delCount' => $delRepo->repoClientCount($inv->reqClientId()),
-                'deliveryCount' => $deliveryRepo->repoCountInvoice($inv_id),
+                'delCount' => $loc->delRepo->repoClientCount($inv->reqClientId()),
+                'deliveryCount' => $loc->deliveryRepo->repoCountInvoice($inv_id),
                 'editInputAttributesPaymentMethod' =>
-                    $this->editInputAttributesPaymentMethod($form),
+                    $this->editInputAttributesPaymentMethod($invForm),
                 'editInputAttributesUrlKey' =>
-                    $this->editInputAttributesUrlKey($form),
+                    $this->editInputAttributesUrlKey($invForm),
                 'errors' => [],
-                'form' => $form,
+                'form' => $invForm,
                 'inv' => $inv,
-                'invs' => $invRepo->findAllPreloaded(),
-                'invCustomValues' => $this->invCustomValues($inv_id, $icR),
+                'invs' => $core->invRepo->findAllPreloaded(),
+                'invCustomValues' => $this->invCustomValues($inv_id, $form->icR),
                 'invCustomForm' => $invCustomForm,
                 'noteOnTaxPoint' => $note_on_tax_point ?: '',
                 'originId' => $inv->reqId(),
@@ -107,19 +83,13 @@ trait Edit
                     $peppol_array,
                     $inv,
                     $client_id,
-                    $clientRepo,
-                    $contractRepo,
-                    $deliveryRepo,
-                    $delRepo,
-                    $groupRepo,
-                    $invRepo,
-                    $paR,
-                    $pmRepo,
-                    $ucR,
+                    $core,
+                    $loc,
+                    $form->pmRepo,
                 ),
-                'paR' => $paR,
+                'paR' => $loc->paR,
                 'postalAddressCount' =>
-                    $paR->repoClientCount($inv->reqClientId()),
+                    $loc->paR->repoClientCount($inv->reqClientId()),
                 'formFields' => $this->formFields,
             ];
             if ($request->getMethod() === Method::POST) {
@@ -131,7 +101,7 @@ trait Edit
                     // If the status has changed to 'paid', check that the
                     // balance on the invoice is zero
                     if (!$this->editCheckStatusReconcilingWithBalance(
-                            $iaR, $inv_id) && $body['status_id'] === 4) {
+                            $form->iaR, $inv_id) && $body['status_id'] === 4) {
                         return $this->factory->createResponse(
                             $this->webViewRenderer->renderPartialAsString(
                             '//invoice/setting/inv_message',
@@ -146,8 +116,7 @@ trait Edit
                         ));
                     }
                     $ret_form = $this->editSaveFormFields(
-                        $body, $id, $formHydrator, $invRepo, $groupRepo,
-                            $userRepo, $ucR, $uiR);
+                        $body, $id, $formHydrator, $core);
                     $parameters['form'] = $ret_form;
                     if ($ret_form instanceof InvForm) {
                         if (!$ret_form->isValid()) {
@@ -224,18 +193,17 @@ trait Edit
     }
 
     public function editSaveFormFields(array|object|null $body, int $id,
-        FormHydrator $formHydrator, IR $invRepo, GR $groupRepo, UR $uR,
-            UCR $ucR, UIR $uiR): ?InvForm
+        FormHydrator $formHydrator, InvEditCoreDeps $core): ?InvForm
     {
-        $inv = $this->inv($id, $invRepo, true);
+        $inv = $this->inv($id, $core->invRepo, true);
         if ($inv) {
             $client_id = $inv->reqClientId();
-            $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
+            $user = $this->activeUser($client_id, $core->userRepo, $core->ucR, $core->uiR);
             if (null !== $user) {
                 $form = InvForm::show($inv);
                 if (null !== $body && is_array($body) && $formHydrator->populateAndValidate($form, $body)) {
                     $this->inv_service->saveInv($user, $inv, $body,
-                        $this->sR, $groupRepo);
+                        $this->sR, $core->groupRepo);
                 }
                 return $form;
             } // null !== $user

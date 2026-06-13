@@ -51,5 +51,8 @@ hero:
     - theme: brand
       text: Typescript Go V7 Compatability Testing Guide
       link: /TYPESCRIPT_GO_V7_COMPATIBILITY_TESTING_GUIDE
+    - theme: brand
+      text: Peppol BIS Payload Validator Caching
+      link: /PEPPOL_BIS_PAYLOAD_VALIDATOR_CACHING
 ---
 

@@ -631,6 +631,8 @@ class CustomValuesHelper
             case 'd':
                 $end = $strict ? '$' : '';
                 return (bool) preg_match("/^{$token}:[0-9.E+-]+;$end/", $data);
+            default:
+                return false;    
         }
         return false;
     }

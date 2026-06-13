@@ -65,6 +65,7 @@ use App\Invoice\{
     Setting\SettingController,
     Task\TaskController,
     TaxRate\TaxRateController,
+    As4\As4ReceiveController,
     Peppol\PeppolInboundController,
     Telegram\TelegramController,
     Unit\UnitController,
@@ -2156,6 +2157,10 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([TelegramController::class, 'getUpdates'])
                 ->name('telegram/getUpdates'),
+            // No auth middleware: bilateral AS4 trading partners POST directly here.
+            Route::methods([$mP], '/as4/receive')
+                ->action([As4ReceiveController::class, 'receive'])
+                ->name('as4/receive'),
             // No auth middleware: Oxalis AS4 access point calls this directly.
             Route::methods([$mG, $mP], '/peppol/inbound/delivery')
                 ->action([PeppolInboundController::class, 'delivery'])

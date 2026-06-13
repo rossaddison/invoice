@@ -17,7 +17,7 @@ use Yiisoft\VarDumper\VarDumper;
  * @var App\Widget\Button $button
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @psalm-var array<array-key, array{code: string, description: string}> $electronic_address_scheme
+ * @psalm-var array<array-key, array{Id: string, Name: string, Description: string}> $electronic_address_scheme
  * @psalm-var array<array-key, array{Id: string, Name: string, Description: string}> $iso_6523_array
  * @var array $pep
  * @var array $pep['endpointid']
@@ -112,6 +112,9 @@ use Yiisoft\VarDumper\VarDumper;
                 <?= Html::closeTag('div'); ?>
 
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
+                  <?= Html::tag('small',
+                      'PeppolArrays::electronicAddressScheme() ← DownloadedXml/eas.xml',
+                      ['class' => 'text-muted d-block mb-1']); ?>
                   <?= Field::select($form, 'endpointid_schemeid')
                     ->label($translator->translate(
                             'client.peppol.endpointid.schemeid')
@@ -126,11 +129,11 @@ use Yiisoft\VarDumper\VarDumper;
                         ($defaults ? $pep['endpointid_schemeid']['eg'] : '0088'))
                     ->optionsData(array_combine(
                         /** @var list<string> */
-                        array_column($electronic_address_scheme, 'code'),
+                        array_column($electronic_address_scheme, 'Id'),
                         array_map(
-                            /** @param array{code: string, description: string} $v */
-                            fn($v) => $v['code']
-                                . str_repeat("-", 10) . $v['description'],
+                            /** @param array{Id: string, Name: string, Description: string} $v */
+                            fn($v) => $v['Id']
+                                . str_repeat("-", 10) . $v['Name'],
                             $electronic_address_scheme
                         )
                     ))
@@ -196,6 +199,9 @@ use Yiisoft\VarDumper\VarDumper;
                 <?= Html::closeTag('div'); ?>
 
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
+                  <?= Html::tag('small',
+                      'StoreCoveArrays::storeCoveReceiverIdentifierArray()',
+                      ['class' => 'text-muted d-block mb-1']); ?>
                   <?= Field::select($form, 'taxschemeid')
                     ->label($translator->translate('client.peppol.taxschemeid'))
                     ->addInputAttributes([
@@ -252,6 +258,9 @@ use Yiisoft\VarDumper\VarDumper;
                 <?= Html::closeTag('div'); ?>
 
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
+                  <?= Html::tag('small',
+                      'PeppolArrays::getIso6523Icd() ← DownloadedXml/icd.xml',
+                      ['class' => 'text-muted d-block mb-1']); ?>
                   <?= Field::select($form, 'legal_entity_companyid')
                     ->label($translator->translate(
                                         'client.peppol.legal.entity.companyid'))
@@ -287,6 +296,9 @@ use Yiisoft\VarDumper\VarDumper;
                 <?= Html::closeTag('div'); ?>
 
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
+                  <?= Html::tag('small',
+                      'PeppolArrays::getIso6523Icd() ← DownloadedXml/icd.xml',
+                      ['class' => 'text-muted d-block mb-1']); ?>
                   <?= Field::select($form, 'legal_entity_companyid_schemeid')
                     ->label($translator->translate(
                             'client.peppol.legal.entity.companyid.schemeid')

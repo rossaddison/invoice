@@ -176,7 +176,7 @@ use Yiisoft\Html\Tag\Form;
  * @var array $value
  */
 foreach ($electronic_address_scheme as $value) {
-    $optionsDataEAS[(string) $value['code']] = (string) $value['code'] . str_repeat("-", 10) . (string) $value['description'];
+    $optionsDataEAS[(string) $value['Id']] = (string) $value['Id'] . str_repeat("-", 10) . (string) $value['Name'];
 }
 ?>
                 <?= Html::a('EAS', 'https://docs.peppol.eu/poacc/upgrade-3/codelist/eas'); ?>

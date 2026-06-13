@@ -11,29 +11,22 @@ use App\Infrastructure\Persistence\{
     QuoteTaxRate\QuoteTaxRate
 };
 use App\Invoice\{
-    Group\GroupRepository as GR,
+    Quote\QuoteConvertCoreDeps,
+    Quote\QuoteConvertItemDeps,
+    Quote\QuoteConvertUserDeps,
     Quote\QuoteForm,
-    Quote\QuoteRepository as QR,
     QuoteAllowanceCharge\QuoteAllowanceChargeRepository as ACQR,
     QuoteAllowanceCharge\QuoteAllowanceChargeForm,
     QuoteAmount\QuoteAmountRepository as QAR,
     QuoteCustom\QuoteCustomRepository as QCR,
     QuoteCustom\QuoteCustomForm,
-    QuoteItem\QuoteItemRepository as QIR,
-    QuoteItem\QuoteItemForm,
     QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository as ACQIR,
     QuoteItemAmount\QuoteItemAmountRepository as QIAR,
     QuoteItemAmount\QuoteItemAmountService as QIAS,
     QuoteTaxRate\QuoteTaxRateRepository as QTRR,
     QuoteTaxRate\QuoteTaxRateForm,
-    Product\ProductRepository as PR,
-    Task\TaskRepository as TASKR,
-    TaxRate\TaxRateRepository as TRR,
-    Unit\UnitRepository as UNR,
-    UserClient\UserClientRepository as UCR,
-    UserInv\UserInvRepository as UIR,
+    QuoteItem\QuoteItemForm,
 };
-use App\User\UserRepository as UR;
 use Yiisoft\{
     FormModel\FormHydrator,
     Json\Json,
@@ -50,27 +43,15 @@ trait QuoteCopy
     public function quoteToQuoteConfirm(
         Request $request,
         FormHydrator $formHydrator,
-        ACQR $acqR,
-        ACQIR $acqiR,
-        GR $gR,
+        QuoteConvertCoreDeps $core,
+        QuoteConvertItemDeps $items,
+        QuoteConvertUserDeps $userDeps,
         QIAS $qiaS,
-        PR $pR,
-        TASKR $taskR,
-        QAR $qaR,
-        QCR $qcR,
         QIAR $qiaR,
-        QIR $qiR,
-        QR $qR,
-        QTRR $qtrR,
-        TRR $trR,
-        UR $uR,
-        UCR $ucR,
-        UIR $uiR,
-        UNR $unR
     ): Response {
         $data_quote_js = $request->getQueryParams();
         $quote_id = (int) $data_quote_js['quote_id'];
-        $original = $qR->repoQuoteUnloadedquery($quote_id);
+        $original = $core->qR->repoQuoteUnloadedquery($quote_id);
         if ($original) {
             $group_id = $original->reqGroupId();
             $quote_body = [
@@ -78,7 +59,7 @@ trait QuoteCopy
                 'client_id' => $data_quote_js['client_id'],
                 'group_id' => $group_id,
                 'status_id' => 1,
-                'number' => $gR->generateNumber($group_id),
+                'number' => $core->gR->generateNumber($group_id),
                 'discount_amount' => (float) $original->getDiscountAmount(),
                 'url_key' => '',
                 'password' => '',
@@ -91,33 +72,32 @@ trait QuoteCopy
                  * @var string $quote_body['client_id']
                  */
                 $client_id = (int) $quote_body['client_id'];
-                $user_client = $ucR->repoUserquery($client_id);
-                $user_client_count = $ucR->repoUserquerycount($client_id);
+                $user_client = $userDeps->ucR->repoUserquery($client_id);
+                $user_client_count = $userDeps->ucR->repoUserquerycount($client_id);
                 if (null !== $user_client && $user_client_count == 1) {
                     // Only one user account per client
                     $user_id = $user_client->reqUserId();
-                    $user = $uR->findById($user_id);
-                    $user_inv = $uiR->repoUserInvUserIdquery($user_id);
+                    $user = $userDeps->uR->findById($user_id);
+                    $user_inv = $userDeps->uiR->repoUserInvUserIdquery($user_id);
                     if (null !== $user_inv && $user_inv->getActive()) {
                         $this->quote_service->saveQuote($user, $copy,
-                            $quote_body, $this->sR, $gR);
+                            $quote_body, $this->sR, $core->gR);
                         // Transfer each quote_item to quote_item and the
                         // corresponding quote_item_amount to
                         // quote_item_amount for each item
                         $copy_id = $copy->reqId();
                         $this->quoteToQuoteQuoteItems($quote_id,
-                                $copy_id, $acqiR, $qiaR, $qiaS, $pR,
-                                $taskR, $qiR, $trR, $unR, $formHydrator);
+                            $copy_id, $qiaR, $qiaS, $core, $items, $formHydrator);
                         $this->quoteToQuoteQuoteTaxRates($quote_id,
-                            $copy_id, $qtrR, $formHydrator);
+                            $copy_id, $items->qtrR, $formHydrator);
                         $this->quoteToQuoteQuoteCustom($quote_id,
-                            $copy_id, $qcR, $formHydrator);
+                            $copy_id, $core->qcR, $formHydrator);
                         $this->quoteToQuoteQuoteAmount(
-                            $quote_id, $copy_id, $qaR);
+                            $quote_id, $copy_id, $core->qaR);
                         $this->quoteToQuoteQuoteAllowanceCharges(
-                            $quote_id, $copy_id, $acqR,
+                            $quote_id, $copy_id, $core->acqR,
                             $formHydrator);
-                        $qR->save($copy);
+                        $core->qR->save($copy);
                         $parameters = [
                             'success' => 1,
                             'flash_message' =>
@@ -129,7 +109,7 @@ trait QuoteCopy
                         return $this->factory->createResponse(
                             Json::encode($parameters));
                     } // null!==$user_inv && $user_inv->getActive()
-                    
+
                 } // null!==$user_client && $user_client_count==1
             } // $formHydrator->populateAndValidate($form, $body)
         } else {
@@ -190,15 +170,19 @@ trait QuoteCopy
         }
     }
 
-    private function quoteToQuoteQuoteItems(int $quote_id,
-        int $new_quote_id, ACQIR $acqiR, QIAR $qiaR, QIAS $qiaS, PR $pR,
-        TASKR $taskR, QIR $qiR, TRR $trR, UNR $unR,
-            FormHydrator $formHydrator): void
-    {
+    private function quoteToQuoteQuoteItems(
+        int $quote_id,
+        int $new_quote_id,
+        QIAR $qiaR,
+        QIAS $qiaS,
+        QuoteConvertCoreDeps $core,
+        QuoteConvertItemDeps $items,
+        FormHydrator $formHydrator,
+    ): void {
         // Get all items that belong to the original quote
-        $items = $qiR->repoQuoteItemIdquery($quote_id);
+        $itemList = $items->qiR->repoQuoteItemIdquery($quote_id);
         /** @var QuoteItem $quote_item */
-        foreach ($items as $quote_item) {
+        foreach ($itemList as $quote_item) {
             $origQuoteItemId = $quote_item->reqId();
             $product_unit_id = null;
             try {
@@ -226,12 +210,13 @@ trait QuoteCopy
             $form = new QuoteItemForm();
             if ($formHydrator->populateAndValidate($form, $copy_item)) {
                 $this->quote_item_service->addQuoteItemProductTask(
-                    $newQuoteItem, $copy_item, (string) $new_quote_id, $pR, $taskR, $qiaR,
-                        $qiaS, $unR, $trR, $this->translator);
+                    $newQuoteItem, $copy_item, (string) $new_quote_id,
+                    $items->pR, $items->taskR, $qiaR,
+                    $qiaS, $items->unR, $items->trR, $this->translator);
                 // All the original allowance charges associated with the quote
                 // item will have to be copied as well
                 $this->copyQuoteItemAllowanceCharges($origQuoteItemId,
-                    $acqiR, $new_quote_id, $newQuoteItem);
+                    $core->acqiR, $new_quote_id, $newQuoteItem);
             }
 
         } // items as quote_item
