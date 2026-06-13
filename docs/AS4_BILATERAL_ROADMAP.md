@@ -77,12 +77,15 @@ development and integration-testing strategy before pursuing OpenPeppol accredit
 | `As4InboundMessage` | `src/Invoice/As4/` | Value object: parsed inbound message (UserMessage / Receipt / Error) | ✅ done |
 | `As4ParseException` | `src/Invoice/As4/` | Dedicated exception for inbound parse failures (replaces generic `\Exception`) | ✅ done |
 | `As4Receiver` | `src/Invoice/As4/` | Boundary detection, CID→part mapping, DOM parse of inbound SOAP | ✅ done |
-| `As4SignatureVerifierInterface` | `src/Invoice/As4/` | Verify WS-Security XML-DSIG on the SOAP header | ⬜ todo (placeholder in `As4SecurityHandler::verifySignature()`) |
+| `As4SignatureVerifierInterface` | `src/Invoice/As4/` | Verify WS-Security XML-DSIG on the SOAP header | ✅ done (Ed25519 XML-DSIG in `As4SecurityHandler::verifySignatureElement()`) |
 | `As4DuplicateDetectorInterface` | `src/Invoice/As4/` | Idempotency check on `eb:MessageId` | ✅ done |
 | `As4DuplicateDetector` | `src/Invoice/As4/` | Uses `As4MessageRepositoryInterface::findByMessageId()` | ✅ done |
 | `As4ReceiptGeneratorInterface` | `src/Invoice/As4/` | Build an ebMS3 `eb:Receipt` signal SOAP response | ✅ done |
 | `As4ReceiptGenerator` | `src/Invoice/As4/` | SHA-256 NRR digest embedded in `eb:Receipt` via `As4MessageBuilder` | ✅ done |
 | `As4ReceiveController` | `src/Invoice/As4/` | `POST /as4/receive` — Receiver → DuplicateDetector → store → ReceiptGenerator | ✅ done |
+| `As4UserMessageHandlerInterface` | `src/Invoice/As4/` | Orchestrate duplicate check, save, payload dispatch, receipt for a UserMessage | ✅ done |
+| `As4UserMessageHandlerService` | `src/Invoice/As4/` | Concrete handler; calls `As4PayloadHandlerInterface` for each payload | ✅ done |
+| `As4PayloadHandlerInterface` | `src/Invoice/As4/` | Integration seam for UBL invoice import; `NullAs4PayloadHandler` is the default | ✅ done (null impl; real importer TBD) |
 
 ### Inbound processing flow
 
@@ -96,7 +99,8 @@ As4SignatureVerifier::verify($envelope)                 → throws if invalid
     ↓
 As4DuplicateDetector::isDuplicate($messageId)           → if true: return cached Receipt
     ↓
-[dispatch payload to UBL invoice import pipeline]
+As4PayloadHandlerInterface::handle($payloadXml, $senderPartyId, $action)
+    → NullAs4PayloadHandler (default) or real UBL importer when registered
     ↓
 As4ReceiptGenerator::generate($inboundMessageId)
     → DOMDocument (SOAP envelope containing eb:Receipt)
