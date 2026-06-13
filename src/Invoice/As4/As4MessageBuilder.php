@@ -275,7 +275,11 @@ class As4MessageBuilder
 
     public function getXml(): string
     {
-        return $this->doc->saveXML();
+        $xml = $this->doc->saveXML();
+        if ($xml === false) {
+            throw new As4ParseException('DOMDocument serialization failed');
+        }
+        return $xml;
     }
 
     public function getDocument(): DOMDocument

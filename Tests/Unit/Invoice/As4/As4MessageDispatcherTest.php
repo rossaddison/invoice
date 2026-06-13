@@ -8,6 +8,8 @@ use App\Invoice\As4\As4Constants;
 use App\Invoice\As4\As4DispatchRequest;
 use App\Invoice\As4\As4EnvelopeBuilderInterface;
 use App\Invoice\As4\As4EnvelopeSignerInterface;
+use App\Invoice\As4\As4ErrorCategory;
+use App\Invoice\As4\As4ErrorSeverity;
 use App\Invoice\As4\As4ErrorSignal;
 use App\Invoice\As4\As4HttpResponse;
 use App\Invoice\As4\As4HttpTransportInterface;
@@ -66,17 +68,17 @@ class As4MessageDispatcherTest extends TestCase
         return new As4ReceiptSignal(
             messageId:      'rcpt-001@example.com',
             refToMessageId: 'orig-001@example.com',
-            timestamp:      '2026-01-01T12:00:00Z',
+            timestamp:      new \DateTimeImmutable(),
         );
     }
 
-    private function errorSignal(string $severity = 'failure'): As4ErrorSignal
+    private function errorSignal(As4ErrorSeverity $severity = As4ErrorSeverity::Failure): As4ErrorSignal
     {
         return new As4ErrorSignal(
             messageId:        'err-001@example.com',
             refToMessageId:   'orig-001@example.com',
-            timestamp:        '2026-01-01T12:00:00Z',
-            category:         'Content',
+            timestamp:        new \DateTimeImmutable(),
+            category:         As4ErrorCategory::Content,
             errorCode:        'EBMS:0004',
             severity:         $severity,
             shortDescription: 'Other',
@@ -412,7 +414,7 @@ class As4MessageDispatcherTest extends TestCase
 
     public function testHasErrorReturnsTrueForFailureErrorSignal(): void
     {
-        $signal = $this->errorSignal('failure');
+        $signal = $this->errorSignal(As4ErrorSeverity::Failure);
         $result = $this->dispatcher(receiptParser: $this->parserReturning($signal))->dispatch($this->request());
         $this->assertTrue($result->hasError());
     }

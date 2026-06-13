@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\As4Message;
 
+use App\Invoice\As4\As4InboundMessage;
 use App\Invoice\As4\As4MessageState;
 use Cycle\Annotated\Annotation as Cycle;
 use DateTime;
@@ -256,6 +257,34 @@ class As4Message
         $this->receiptMessageId = $receiptMessageId;
         $this->receiptDigest = $digest;
         $this->receiptReceivedAt = new DateTime();
+        $this->updatedAt = new DateTime();
+        return $this;
+    }
+
+    /**
+     * Creates an As4Message record for an inbound UserMessage received at /as4/receive.
+     * Used to persist the MessageId so As4DuplicateDetector can catch re-transmissions.
+     */
+    public static function fromInbound(As4InboundMessage $msg): self
+    {
+        $entity = new self(
+            messageId:        $msg->messageId ?? '',
+            conversationId:   $msg->conversationId ?? '',
+            senderPartyId:    $msg->senderPartyId ?? '',
+            senderRole:       '',
+            receiverPartyId:  $msg->receiverPartyId ?? '',
+            receiverRole:     '',
+            service:          $msg->service ?? '',
+            action:           $msg->action ?? '',
+            receiverEndpoint: '',
+            soapMessage:      $msg->xmlBody,
+        );
+        return $entity->markReceived();
+    }
+
+    public function markReceived(): self
+    {
+        $this->state     = As4MessageState::received->value;
         $this->updatedAt = new DateTime();
         return $this;
     }

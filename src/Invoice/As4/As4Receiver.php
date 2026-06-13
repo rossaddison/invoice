@@ -7,7 +7,6 @@ namespace App\Invoice\As4;
 use DOMDocument;
 use DOMElement;
 use Psr\Log\LoggerInterface;
-use Exception;
 
 /**
  * AS4 Inbound Message Receiver
@@ -36,18 +35,18 @@ class As4Receiver
     {
         $boundary = $this->extractBoundary($contentType);
         if ($boundary === null) {
-            throw new Exception('No boundary in multipart message');
+            throw new As4ParseException('No boundary in multipart message');
         }
 
         $parts = explode("--{$boundary}", $body);
 
         if (!isset($parts[1])) {
-            throw new Exception('SOAP envelope not found in multipart message');
+            throw new As4ParseException('SOAP envelope not found in multipart message');
         }
 
         $soapPart = $this->extractPartBody($parts[1]);
         if ($soapPart === '') {
-            throw new Exception('Invalid SOAP part');
+            throw new As4ParseException('Invalid SOAP part');
         }
 
         $doc = new DOMDocument();
@@ -68,7 +67,7 @@ class As4Receiver
             return $this->parseSignalMessage($soapPart, $xpath);
         }
 
-        throw new Exception('Neither UserMessage nor SignalMessage found');
+        throw new As4ParseException('Neither UserMessage nor SignalMessage found');
     }
 
     /**
@@ -83,7 +82,7 @@ class As4Receiver
     ): As4InboundMessage {
         $msgNode = $xpath->query('//eb:UserMessage')->item(0);
         if (!$msgNode instanceof DOMElement) {
-            throw new Exception('UserMessage element not found');
+            throw new As4ParseException('UserMessage element not found');
         }
 
         $messageId = $this->queryText($xpath, 'eb:MessageInfo/eb:MessageId', $msgNode);
@@ -128,7 +127,7 @@ class As4Receiver
     {
         $signal = $xpath->query('//eb:SignalMessage')->item(0);
         if (!$signal instanceof DOMElement) {
-            throw new Exception('SignalMessage element not found');
+            throw new As4ParseException('SignalMessage element not found');
         }
 
         $messageId = $this->queryText($xpath, 'eb:MessageInfo/eb:MessageId', $signal);
@@ -155,7 +154,7 @@ class As4Receiver
         if ($errors !== false && $errors->length > 0) {
             $errorNode = $errors->item(0);
             if (!$errorNode instanceof DOMElement) {
-                throw new Exception('No Receipt or Error in SignalMessage');
+                throw new As4ParseException('No Receipt or Error in SignalMessage');
             }
 
             $errorCode = $errorNode->getAttribute('errorCode');
@@ -178,7 +177,7 @@ class As4Receiver
             );
         }
 
-        throw new Exception('No Receipt or Error in SignalMessage');
+        throw new As4ParseException('No Receipt or Error in SignalMessage');
     }
 
     /**
@@ -233,33 +232,3 @@ class As4Receiver
     }
 }
 
-/**
- * Parsed inbound AS4 message.
- */
-class As4InboundMessage
-{
-    /**
-     * @param string[] $payloads
-     */
-    public function __construct(
-        public readonly string $type,
-        public readonly ?string $messageId = null,
-        public readonly ?string $conversationId = null,
-        public readonly ?string $refToMessageId = null,
-        public readonly ?string $service = null,
-        public readonly ?string $action = null,
-        public readonly ?string $senderPartyId = null,
-        public readonly ?string $receiverPartyId = null,
-        public readonly ?string $digestValue = null,
-        public readonly ?string $errorCode = null,
-        public readonly ?string $errorShortDescription = null,
-        public readonly ?string $errorDescription = null,
-        public readonly ?string $errorCategory = null,
-        public readonly array $payloads = [],
-        public readonly string $xmlBody = ''
-    ) {}
-
-    public function isReceipt(): bool { return $this->type === 'Receipt'; }
-    public function isError(): bool { return $this->type === 'Error'; }
-    public function isUserMessage(): bool { return $this->type === 'UserMessage'; }
-}

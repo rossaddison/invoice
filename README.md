@@ -32,6 +32,8 @@ Automated generation and transmission of compliant UBL 2.4 documents via the
 
 **Recent Implementations**
 
+[AS4 Access Point — Bilateral & Peppol Roadmap](docs/AS4_BILATERAL_ROADMAP.md) — Living roadmap for the native AS4 Access Point built in PHP; outbound stack complete (`As4RetryEngine`, `CycleOrmAs4MessageRepository`, `As4RetryPolicyInterface`, `As4SenderInterface`, ebMS3 signal detection, atomic concurrency claim, 15 PHPUnit tests); Phase 1 plans the inbound pipeline (`As4Receiver`, `As4SignatureVerifier`, `As4DuplicateDetector`, `As4ReceiptGenerator`, `As4ReceiveController`) for bilateral testing between `localhost` and `yii3i.online` without Peppol PKI; Phase 2 maps the small delta to a full Peppol 4-corner Access Point (SMP lookup already built, Peppol-issued certificate + SML registration + EFTIA conformance remaining) (June 2026)
+
 [Oxalis Access Point — Localhost Setup](docs/OXALIS_LOCALHOST_SETUP.md) — Phase A: `docker-compose up oxalis-mock` runs a WireMock stub on port 8181 (no certificate needed, works today); Phase B: real Oxalis AS4 container on port 8080 once a test certificate is obtained from a Peppol AP provider; inbound callback wired to `POST /peppol/inbound/delivery`; all four env vars documented in `.env.example` (June 2026)
 
 [Invoice Index — Workflow Type Badges](docs/INV_INDEX_WORKFLOW_BADGES.md) — Always-visible emoji badge column in `InvsListWidget` distinguishes standalone invoices (📄 grey), quote-derived invoices (💬→📄 teal), and full Peppol observer-workflow invoices (🔀 blue, `so_id` set); tooltips show full chain in UI language; `peppol_workflow` added to Group By dropdown with three named groups; Psalm errorLevel 1 clean (June 2026)

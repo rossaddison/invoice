@@ -26,4 +26,6 @@ enum As4MessageState: string
     case failed          = 'failed';
     case duplicate       = 'duplicate';
     case delivered       = 'delivered';
+    /** Inbound UserMessage received and stored by As4ReceiveController. */
+    case received        = 'received';
 }
