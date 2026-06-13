@@ -133,13 +133,48 @@ class As4MessageEntityTest extends TestCase
         $this->assertSame(As4MessageState::sent, $msg->getState());
         $this->assertSame(1, $msg->getAttemptCount());
         $this->assertInstanceOf(DateTime::class, $msg->getLastAttemptAt());
+        $this->assertInstanceOf(DateTime::class, $msg->getFirstSentAt());
     }
 
     public function testMarkSentIncrementsTwice(): void
     {
         $msg = $this->makeMessage();
         $msg->markSent();
+        $firstSentAt = $msg->getFirstSentAt();
         $msg->markSent();
+
+        $this->assertSame(2, $msg->getAttemptCount());
+        $this->assertSame($firstSentAt, $msg->getFirstSentAt(), 'firstSentAt must not change on subsequent markSent');
+    }
+
+    public function testFirstSentAtIsNullBeforeMarkSent(): void
+    {
+        $this->assertNull($this->makeMessage()->getFirstSentAt());
+    }
+
+    public function testRecordAttemptIncrementsCountAndSetsTimestamps(): void
+    {
+        $msg = $this->makeMessage();
+        $msg->recordAttempt();
+
+        $this->assertSame(1, $msg->getAttemptCount());
+        $this->assertInstanceOf(DateTime::class, $msg->getLastAttemptAt());
+    }
+
+    public function testRecordAttemptDoesNotChangeState(): void
+    {
+        $msg = $this->makeMessage();
+        $msg->recordAttempt();
+
+        $this->assertSame(As4MessageState::pending, $msg->getState());
+    }
+
+    public function testRecordAttemptIncrementsTwice(): void
+    {
+        $msg = $this->makeMessage();
+        $msg->recordAttempt();
+        $msg->recordAttempt();
+
         $this->assertSame(2, $msg->getAttemptCount());
     }
 

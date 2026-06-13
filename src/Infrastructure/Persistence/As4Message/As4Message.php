@@ -103,6 +103,10 @@ class As4Message
     #[Cycle\Column(type: 'datetime', nullable: true)]
     private ?DateTime $receiptReceivedAt = null;
 
+    /** Timestamp of the very first transmission attempt (receipt deadline anchor). */
+    #[Cycle\Column(type: 'datetime', nullable: true)]
+    private ?DateTime $firstSentAt = null;
+
     /** Error code (if failed) */
     #[Cycle\Column(type: 'string', nullable: true)]
     private ?string $errorCode = null;
@@ -178,6 +182,7 @@ class As4Message
     public function getReceiptMessageId(): ?string { return $this->receiptMessageId; }
     public function getReceiptDigest(): ?string { return $this->receiptDigest; }
     public function getReceiptReceivedAt(): ?DateTime { return $this->receiptReceivedAt; }
+    public function getFirstSentAt(): ?DateTime { return $this->firstSentAt; }
     public function getErrorCode(): ?string { return $this->errorCode; }
     public function getErrorDescription(): ?string { return $this->errorDescription; }
     public function getCreatedAt(): DateTime { return $this->createdAt; }
@@ -206,10 +211,26 @@ class As4Message
 
     public function markSent(): self
     {
-        $this->state = As4MessageState::sent->value;
+        if ($this->firstSentAt === null) {
+            $this->firstSentAt = new DateTime();
+        }
+        $this->state         = As4MessageState::sent->value;
         $this->lastAttemptAt = new DateTime();
         $this->attemptCount++;
-        $this->updatedAt = new DateTime();
+        $this->updatedAt     = new DateTime();
+        return $this;
+    }
+
+    /**
+     * Records a transmission attempt without changing the message state.
+     * Call this before each send — ensures the attempt counter and lastAttemptAt
+     * are persisted even when the HTTP response is a failure or exception.
+     */
+    public function recordAttempt(): self
+    {
+        $this->attemptCount++;
+        $this->lastAttemptAt = new DateTime();
+        $this->updatedAt     = new DateTime();
         return $this;
     }
 

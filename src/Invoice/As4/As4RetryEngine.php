@@ -56,7 +56,12 @@ class As4RetryEngine
     }
 
     /**
-     * Check for missing receipts and trigger MissingReceipt errors (EBMS:0301).
+     * Check for missing receipts and generate EBMS:0301 errors on timeout.
+     *
+     * The deadline is anchored to the first transmission time, not the last
+     * retry. This matches eDelivery AS4 2.0 section 3.3.2: the MissingReceipt
+     * error is raised after the configured receipt timeout has expired since
+     * the timestamp of the original UserMessage.
      */
     public function detectMissingReceipts(): int
     {
@@ -64,19 +69,20 @@ class As4RetryEngine
         try {
             $now = new DateTime();
             foreach ($this->repository->findAwaitingReceipts() as $message) {
-                $lastAttempt = $message->getLastAttemptAt();
-                if ($lastAttempt === null) {
+                $firstSent = $message->getFirstSentAt();
+                if ($firstSent === null) {
                     continue;
                 }
 
-                $timeoutSeconds = ($message->getMaxAttempts() + 1) * $message->getRetryIntervalSeconds();
-                $timeout = (clone $lastAttempt)->modify("+{$timeoutSeconds} seconds");
+                $receiptDeadline = (clone $firstSent)->modify(
+                    sprintf('+%d seconds', ($message->getMaxAttempts() + 1) * $message->getRetryIntervalSeconds())
+                );
 
-                if ($now > $timeout) {
-                    $this->logger->warning('Missing receipt timeout', [
-                        'messageId'   => $message->getMessageId(),
-                        'lastAttempt' => $lastAttempt->format('c'),
-                        'timeout'     => $timeout->format('c'),
+                if ($now > $receiptDeadline) {
+                    $this->logger->warning('Missing receipt timeout — raising EBMS:0301', [
+                        'messageId'       => $message->getMessageId(),
+                        'firstSentAt'     => $firstSent->format('c'),
+                        'receiptDeadline' => $receiptDeadline->format('c'),
                     ]);
                     $message->markFailed('EBMS:0301', 'Receipt not received within timeout period');
                     $this->repository->save($message);
@@ -88,18 +94,6 @@ class As4RetryEngine
         }
 
         return $count;
-    }
-
-    /**
-     * Duplicate detection: check if a message with the same MessageId already exists.
-     *
-     * Per section 3.3.2: Receivers MUST implement duplicate detection.
-     * Placeholder — real implementation belongs in As4DuplicateDetector.
-     */
-    public function isDuplicate(string $messageId): bool
-    {
-        $this->logger->debug('Duplicate check', ['messageId' => $messageId]);
-        return false;
     }
 
     public function getNextRetryDelay(As4Message $message): ?int
@@ -157,30 +151,63 @@ class As4RetryEngine
         ]);
 
         try {
-            return $this->sender->send(
-                endpoint: $message->getReceiverEndpoint(),
-                envelope: $this->parseEnvelope($message->getSoapMessage()),
-                parts:    []
-            );
+            $envelope = $this->parseEnvelope($message->getSoapMessage());
         } catch (\UnexpectedValueException $e) {
-            // Malformed persisted SOAP envelope — cannot retry, permanent failure
+            // Malformed persisted SOAP — cannot retry, permanent failure
             $message->markFailed('MALFORMED_SOAP', $e->getMessage());
             $this->repository->save($message);
             return null;
+        }
+
+        return $this->executeSend($message, $envelope);
+    }
+
+    private function executeSend(As4Message $message, DOMDocument $envelope): ?As4HttpResponse
+    {
+        // Record the attempt before the HTTP call so the counter is persisted
+        // even when the send fails — prevents infinite retry on permanent errors
+        $message->recordAttempt();
+        $this->repository->save($message);
+
+        try {
+            return $this->sender->send(
+                endpoint: $message->getReceiverEndpoint(),
+                envelope: $envelope,
+                parts:    []
+            );
+        } catch (\Psr\Http\Client\ClientExceptionInterface $e) {
+            $this->handleTransportException($message, $e);
+            return null;
         } catch (\Exception $e) {
-            // Transient network failure — leave in current state for next retry cycle
-            $this->logger->warning('Transient failure during AS4 send, will retry', [
+            // Unexpected failure — treat as permanent to prevent infinite retry
+            $message->markFailed('UNEXPECTED_ERROR', $e->getMessage());
+            $this->repository->save($message);
+            return null;
+        }
+    }
+
+    private function handleTransportException(
+        As4Message $message,
+        \Psr\Http\Client\ClientExceptionInterface $e,
+    ): void {
+        if (!($e instanceof \Psr\Http\Client\RequestExceptionInterface)) {
+            // Network-level failure — transient, will retry after interval
+            $this->logger->warning('Transient network failure during AS4 send, will retry', [
                 'messageId' => $message->getMessageId(),
                 'error'     => $e->getMessage(),
             ]);
-            return null;
+            return;
         }
+
+        // Malformed request — permanent, do not retry
+        $message->markFailed('REQUEST_ERROR', $e->getMessage());
+        $this->repository->save($message);
     }
 
     private function processResponse(As4Message $message, As4HttpResponse $response): bool
     {
         if ($response->isSuccess()) {
-            // HTTP transport accepted — message is now in Sent/AwaitingReceipt state
+            // HTTP transport accepted — AS4 receipt signal confirms actual delivery
             $message->markSent();
             $this->repository->save($message);
             $this->logger->info('AS4 transport succeeded, awaiting receipt signal', [
