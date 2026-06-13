@@ -51,6 +51,9 @@ php-cs-fixer.cache
 # Tests
 /Tests/_output
 
+# Generated coverage reports (auto-produced by test runner, never commit)
+/coverage
+
 # Oxalis / Peppol certificates and production config — NEVER commit these
 /oxalis-conf/
 *.p12
