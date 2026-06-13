@@ -29,8 +29,10 @@ final class SoapEnvelopeBuilder implements As4EnvelopeBuilderInterface
     private const string NS_SOAP = As4Constants::SOAP_NS;
     private const string NS_EB   = As4Constants::EBMS3_NS;
 
-    private const string ROLE_INITIATOR = 'http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/initiator';
-    private const string ROLE_RESPONDER = 'http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/responder';
+    private const string ROLE_INITIATOR =
+        'http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/initiator'; // NOSONAR
+    private const string ROLE_RESPONDER =
+        'http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/responder'; // NOSONAR
 
     // ISO 6523 scheme prefix for eb:PartyId type attributes
     private const string PARTY_TYPE_PREFIX = 'urn:oasis:names:tc:ebcore:partyid-type:iso6523:';
@@ -67,8 +69,10 @@ final class SoapEnvelopeBuilder implements As4EnvelopeBuilderInterface
         $messaging->appendChild($userMessage);
 
         $userMessage->appendChild($this->buildMessageInfo($doc, $params->messageId, $ts));
-        $userMessage->appendChild($this->buildPartyInfo($doc, $params->senderPartyId, $params->receiverPartyId));
-        $userMessage->appendChild($this->buildCollaborationInfo($doc, $params->service, $params->action, $params->conversationId));
+        $userMessage->appendChild($this->buildPartyInfo($doc, $params->senderPartyId,
+            $params->receiverPartyId));
+        $userMessage->appendChild($this->buildCollaborationInfo($doc, $params->service,
+            $params->action, $params->conversationId));
         $userMessage->appendChild($this->buildPayloadInfo($doc, $params->payloadContentId));
 
         return $messaging;
