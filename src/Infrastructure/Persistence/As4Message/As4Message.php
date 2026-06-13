@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\As4Message;
 
+use App\Invoice\As4\As4MessageState;
 use Cycle\Annotated\Annotation as Cycle;
 use DateTime;
 
@@ -18,14 +19,6 @@ use DateTime;
 #[Cycle\Entity(role: 'as4Message', table: 'as4_messages')]
 class As4Message
 {
-    // Message States per spec
-    public const string STATE_PENDING = 'pending';
-    public const string STATE_SENT = 'sent';
-    public const string STATE_RECEIPT_RECEIVED = 'receipt';
-    public const string STATE_FAILED = 'failed';
-    public const string STATE_DUPLICATE = 'duplicate';
-    public const string STATE_DELIVERED = 'delivered';
-
     /** @psalm-suppress PropertyNotSetInConstructor */
     #[Cycle\Column(type: 'primary')]
     private int $id;
@@ -78,9 +71,9 @@ class As4Message
     #[Cycle\Column(type: 'text', nullable: true)]
     private ?string $payloadPartIds = null;
 
-    /** Current state per STATE_* constants */
+    /** Current message lifecycle state. */
     #[Cycle\Column(type: 'string', nullable: false)]
-    private string $state = self::STATE_PENDING;
+    private string $state;
 
     /** Number of transmission attempts */
     #[Cycle\Column(type: 'integer', nullable: false)]
@@ -146,8 +139,9 @@ class As4Message
         $this->action = $action;
         $this->receiverEndpoint = $receiverEndpoint;
         $this->soapMessage = $soapMessage;
-        $this->createdAt = new DateTime();
-        $this->updatedAt = new DateTime();
+        $this->state       = As4MessageState::pending->value;
+        $this->createdAt   = new DateTime();
+        $this->updatedAt   = new DateTime();
     }
 
     public function setId(int $id): void
@@ -176,7 +170,7 @@ class As4Message
     public function getReceiverEndpoint(): string { return $this->receiverEndpoint; }
     public function getSoapMessage(): string { return $this->soapMessage; }
     public function getPayloadPartIds(): ?string { return $this->payloadPartIds; }
-    public function getState(): string { return $this->state; }
+    public function getState(): As4MessageState { return As4MessageState::from($this->state); }
     public function getAttemptCount(): int { return $this->attemptCount; }
     public function getMaxAttempts(): int { return $this->maxAttempts; }
     public function getRetryIntervalSeconds(): int { return $this->retryIntervalSeconds; }
@@ -212,7 +206,7 @@ class As4Message
 
     public function markSent(): self
     {
-        $this->state = self::STATE_SENT;
+        $this->state = As4MessageState::sent->value;
         $this->lastAttemptAt = new DateTime();
         $this->attemptCount++;
         $this->updatedAt = new DateTime();
@@ -221,7 +215,7 @@ class As4Message
 
     public function markReceiptReceived(string $receiptMessageId, string $digest): self
     {
-        $this->state = self::STATE_RECEIPT_RECEIVED;
+        $this->state = As4MessageState::receiptReceived->value;
         $this->receiptMessageId = $receiptMessageId;
         $this->receiptDigest = $digest;
         $this->receiptReceivedAt = new DateTime();
@@ -231,7 +225,7 @@ class As4Message
 
     public function markFailed(string $errorCode, string $errorDescription): self
     {
-        $this->state = self::STATE_FAILED;
+        $this->state = As4MessageState::failed->value;
         $this->errorCode = $errorCode;
         $this->errorDescription = $errorDescription;
         $this->updatedAt = new DateTime();
@@ -240,7 +234,7 @@ class As4Message
 
     public function isReadyForRetry(): bool
     {
-        if ($this->state !== self::STATE_SENT) {
+        if ($this->state !== As4MessageState::sent->value) {
             return false;
         }
         if ($this->attemptCount >= $this->maxAttempts) {

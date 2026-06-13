@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Invoice\Entity;
 
 use App\Infrastructure\Persistence\As4Message\As4Message;
+use App\Invoice\As4\As4MessageState;
 use PHPUnit\Framework\TestCase;
 use DateTime;
 
@@ -73,7 +74,7 @@ class As4MessageEntityTest extends TestCase
 
     public function testDefaultStateIsPending(): void
     {
-        $this->assertSame(As4Message::STATE_PENDING, $this->makeMessage()->getState());
+        $this->assertSame(As4MessageState::pending, $this->makeMessage()->getState());
     }
 
     public function testDefaultAttemptCountIsZero(): void
@@ -100,14 +101,14 @@ class As4MessageEntityTest extends TestCase
         $this->assertNull($msg->getErrorDescription());
     }
 
-    public function testStateConstants(): void
+    public function testStateEnumValues(): void
     {
-        $this->assertSame('pending', As4Message::STATE_PENDING);
-        $this->assertSame('sent', As4Message::STATE_SENT);
-        $this->assertSame('receipt', As4Message::STATE_RECEIPT_RECEIVED);
-        $this->assertSame('failed', As4Message::STATE_FAILED);
-        $this->assertSame('duplicate', As4Message::STATE_DUPLICATE);
-        $this->assertSame('delivered', As4Message::STATE_DELIVERED);
+        $this->assertSame('pending',   As4MessageState::pending->value);
+        $this->assertSame('sent',      As4MessageState::sent->value);
+        $this->assertSame('receipt',   As4MessageState::receiptReceived->value);
+        $this->assertSame('failed',    As4MessageState::failed->value);
+        $this->assertSame('duplicate', As4MessageState::duplicate->value);
+        $this->assertSame('delivered', As4MessageState::delivered->value);
     }
 
     public function testSetRefToMessageId(): void
@@ -129,7 +130,7 @@ class As4MessageEntityTest extends TestCase
         $msg = $this->makeMessage();
         $msg->markSent();
 
-        $this->assertSame(As4Message::STATE_SENT, $msg->getState());
+        $this->assertSame(As4MessageState::sent, $msg->getState());
         $this->assertSame(1, $msg->getAttemptCount());
         $this->assertInstanceOf(DateTime::class, $msg->getLastAttemptAt());
     }
@@ -147,7 +148,7 @@ class As4MessageEntityTest extends TestCase
         $msg = $this->makeMessage();
         $msg->markReceiptReceived('receipt-msg-001', 'abc123digest==');
 
-        $this->assertSame(As4Message::STATE_RECEIPT_RECEIVED, $msg->getState());
+        $this->assertSame(As4MessageState::receiptReceived, $msg->getState());
         $this->assertSame('receipt-msg-001', $msg->getReceiptMessageId());
         $this->assertSame('abc123digest==', $msg->getReceiptDigest());
         $this->assertInstanceOf(DateTime::class, $msg->getReceiptReceivedAt());
@@ -158,7 +159,7 @@ class As4MessageEntityTest extends TestCase
         $msg = $this->makeMessage();
         $msg->markFailed('EBMS:0202', 'Delivery failure');
 
-        $this->assertSame(As4Message::STATE_FAILED, $msg->getState());
+        $this->assertSame(As4MessageState::failed, $msg->getState());
         $this->assertSame('EBMS:0202', $msg->getErrorCode());
         $this->assertSame('Delivery failure', $msg->getErrorDescription());
     }
@@ -215,7 +216,7 @@ class As4MessageEntityTest extends TestCase
         $this->assertIsString($msg->getAction());
         $this->assertIsString($msg->getReceiverEndpoint());
         $this->assertIsString($msg->getSoapMessage());
-        $this->assertIsString($msg->getState());
+        $this->assertInstanceOf(As4MessageState::class, $msg->getState());
         $this->assertIsInt($msg->getAttemptCount());
         $this->assertIsInt($msg->getMaxAttempts());
         $this->assertIsInt($msg->getRetryIntervalSeconds());
