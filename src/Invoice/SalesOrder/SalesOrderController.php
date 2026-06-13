@@ -46,7 +46,7 @@ use App\Invoice\{
     UserClient\UserClientRepository as UCR,
     UserInv\UserInvRepository as UIR,
 };
-use App\Invoice\SalesOrder\{SalesOrderPdfService, Widget\SalesOrdersListWidget};
+use App\Invoice\SalesOrder\{SalesOrderPdfService, SoDeleteFinancialDeps, SoDeleteSubEntityDeps, Widget\SalesOrdersListWidget};
 use App\Widget\SalesOrderToolbar;
 use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -595,36 +595,19 @@ final class SalesOrderController extends BaseController
         return $this->webService->getRedirectResponse('salesorder/index');
     }
 
-    /**
-     * @param CurrentRoute $currentRoute
-     * @param SalesOrderRepository $salesorderRepository
-     * @param SoCR $socR
-     * @param SoCS $socS
-     * @param SoIR $soiR
-     * @param SoIS $soiS
-     * @param SoTRR $sotrR
-     * @param SoTRS $sotrS
-     * @param SoAR $soaR
-     * @param SoAS $soaS
-     * @return Response
-     */
     public function delete(
         CurrentRoute $currentRoute,
-        SoR $salesorderRepository,
-        SoCR $socR,
-        SoCS $socS,
-        SoIR $soiR,
-        SoIS $soiS,
-        SoTRR $sotrR,
-        SoTRS $sotrS,
-        SoAR $soaR,
-        SoAS $soaS,
+        SoDeleteSubEntityDeps $subDeps,
+        SoDeleteFinancialDeps $financialDeps,
     ): Response {
         try {
-            $so = $this->salesorder($currentRoute, $salesorderRepository);
+            $so = $this->salesorder($currentRoute, $subDeps->soR);
             if ($so) {
-                $this->salesorderService->deleteSo($so, $socR, $socS, $soiR,
-                    $soiS, $sotrR, $sotrS, $soaR, $soaS);
+                $this->salesorderService->deleteSo($so,
+                    $subDeps->socR, $subDeps->socS,
+                    $subDeps->soiR, $subDeps->soiS,
+                    $financialDeps->sotrR, $financialDeps->sotrS,
+                    $financialDeps->soaR, $financialDeps->soaS);
                 $this->flashMessage('info', $this->translator->translate(
                     'record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('salesorder/index');
