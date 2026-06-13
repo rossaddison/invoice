@@ -52,7 +52,7 @@ jobs:
         run: composer config --global --auth github-oauth.github.com "$GITHUB_TOKEN"
 
       - name: Install Composer dependencies
-        run: composer update --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
+        run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
 
       - name: Generate PHP coverage
         run: php -d memory_limit=512M vendor/bin/phpunit --coverage-clover coverage.xml --log-junit test-results.xml
@@ -63,7 +63,7 @@ jobs:
           node-version: '24'
 
       - name: Install npm dependencies
-        run: npm install
+        run: npm ci --ignore-scripts
 
       - name: Generate TypeScript coverage
         run: npm run test:coverage
@@ -138,7 +138,7 @@ jobs:
         run: composer self-update
         
       - name: Install dependencies with composer
-        run: composer update --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
+        run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
                 
       - name: Setup Node.js
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
@@ -146,4 +146,4 @@ jobs:
           node-version: '24'
           
       - name: Install dependencies with npm
-        run: npm update
+        run: npm ci --ignore-scripts
