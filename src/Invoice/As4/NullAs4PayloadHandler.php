@@ -6,6 +6,9 @@ namespace App\Invoice\As4;
 
 use Psr\Log\LoggerInterface;
 
+/**
+ * @psalm-suppress UnusedClass
+ */
 final class NullAs4PayloadHandler implements As4PayloadHandlerInterface
 {
     public function __construct(private readonly LoggerInterface $logger) {}

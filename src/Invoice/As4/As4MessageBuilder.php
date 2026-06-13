@@ -287,14 +287,13 @@ class As4MessageBuilder
         return $this->doc;
     }
 
-    private function appendElement(DOMElement $parent, string $tagName, string $value = ''): DOMElement
+    private function appendElement(DOMElement $parent, string $tagName, string $value = ''): void
     {
         $elem = $this->doc->createElementNS(As4Constants::EBMS3_NS, $tagName);
         if ($value !== '') {
             $elem->nodeValue = $value;
         }
         $parent->appendChild($elem);
-        return $elem;
     }
 
     private function generateUuid(): string

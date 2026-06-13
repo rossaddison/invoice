@@ -17,6 +17,10 @@ namespace App\Invoice\As4;
  *
  * Set jitterCeiling to 0 for deterministic behaviour in tests.
  */
+
+/**
+ * @psalm-suppress UnusedClass
+ */
 final class As4ExponentialBackoffRetryPolicy implements As4RetryPolicyInterface
 {
     public function __construct(

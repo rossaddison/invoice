@@ -27,7 +27,11 @@
       "Bash(vendor/bin/psalm --no-cache src/Invoice/Inv/InvPdfService.php src/Invoice/PaymentInformation/PaymentInformationController.php src/Invoice/Product/ProductController.php src/Invoice/SalesOrder/Widget/SalesOrdersListWidget.php src/Invoice/SalesOrder/Widget/SalesOrdersColumnBuilder.php src/Invoice/SalesOrder/Widget/SalesOrdersGroupingRenderer.php)",
       "Bash(awk -F: '{print $1}')",
       "Bash(vendor/bin/phpunit Tests/Unit/ --no-coverage --display-notices)",
-      "Bash(grep -v \"^$\")"
+      "Bash(grep -v \"^$\")",
+      "Bash(vendor/bin/psalm --no-cache src/Invoice/As4/WsSecuritySigner.php)",
+      "Bash(vendor/bin/psalm --no-cache src/Invoice/As4/WsSecuritySigner.php Tests/Unit/Invoice/As4/WsSecuritySignerTest.php)",
+      "Bash(vendor/bin/psalm --no-cache src/Invoice/As4/As4InboundMessage.php src/Invoice/As4/As4ParseException.php src/Invoice/As4/As4Receiver.php src/Invoice/As4/As4MessageState.php src/Invoice/As4/As4MessageBuilder.php src/Invoice/As4/As4ReceiptGeneratorInterface.php src/Invoice/As4/As4ReceiptGenerator.php src/Invoice/As4/As4DuplicateDetectorInterface.php src/Invoice/As4/As4DuplicateDetector.php src/Invoice/As4/As4ReceiveController.php src/Infrastructure/Persistence/As4Message/As4Message.php)",
+      "Bash(git checkout *)"
     ],
     "additionalDirectories": [
       "c:\\wamp64\\www\\invoice\\src\\Invoice\\Helpers\\Peppol\\Emit"
