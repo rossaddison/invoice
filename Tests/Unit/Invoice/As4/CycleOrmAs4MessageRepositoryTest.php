@@ -9,6 +9,7 @@ use App\Infrastructure\Persistence\As4Message\CycleOrmAs4MessageRepository;
 use App\Invoice\As4\As4MessageState;
 use Cycle\Database\DatabaseInterface;
 use Cycle\ORM\Select;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
@@ -24,6 +25,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  *  1. claimForRetry() — the raw SQL CAS update and its isPersisted() guard
  *  2. save() — delegation to EntityWriter::write()
  */
+#[AllowMockObjectsWithoutExpectations]
 class CycleOrmAs4MessageRepositoryTest extends TestCase
 {
     // ── Fixture helpers ───────────────────────────────────────────────────────

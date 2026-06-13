@@ -14,6 +14,7 @@ use App\Invoice\As4\As4Receiver;
 use App\Invoice\As4\As4UserMessageHandlerInterface;
 use HttpSoft\Message\ResponseFactory;
 use HttpSoft\Message\StreamFactory;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -29,6 +30,7 @@ final class As4ReceiveControllerTestFixture
     ) {}
 }
 
+#[AllowMockObjectsWithoutExpectations]
 class As4ReceiveControllerTest extends TestCase
 {
     private const string MULTIPART_CT = 'multipart/related; boundary=AS4Boundary';

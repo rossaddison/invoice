@@ -10,6 +10,7 @@ use App\Invoice\As4\As4MessageRepositoryInterface;
 use App\Invoice\As4\As4PayloadHandlerInterface;
 use App\Invoice\As4\As4ReceiptGeneratorInterface;
 use App\Invoice\As4\As4UserMessageHandlerService;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -25,6 +26,7 @@ final class As4UserMessageHandlerServiceTestFixture
     ) {}
 }
 
+#[AllowMockObjectsWithoutExpectations]
 class As4UserMessageHandlerServiceTest extends TestCase
 {
     private const string MSG_ID     = 'msg-001@test.local';

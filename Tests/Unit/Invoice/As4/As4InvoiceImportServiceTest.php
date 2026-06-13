@@ -13,6 +13,7 @@ use App\Invoice\Inv\InvRepository;
 use App\Invoice\InvItem\InvItemRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Ubl\Schema;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -29,6 +30,7 @@ final class As4InvoiceImportServiceTestFixture
     ) {}
 }
 
+#[AllowMockObjectsWithoutExpectations]
 class As4InvoiceImportServiceTest extends TestCase
 {
     private const string SENDER      = '0088:1234567890123';
