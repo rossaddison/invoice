@@ -21,7 +21,7 @@ class As4RetryEngine
 {
     public function __construct(
         private readonly As4MessageRepositoryInterface $repository,
-        private readonly As4Sender $sender,
+        private readonly As4SenderInterface $sender,
         private readonly LoggerInterface $logger,
         private readonly As4ReceiptParserInterface $receiptParser,
         private readonly As4RetryPolicyInterface $retryPolicy = new As4FixedIntervalRetryPolicy(),
@@ -274,9 +274,8 @@ class As4RetryEngine
             ]);
         }
 
-        // null (async 202) or warning signal — transport accepted, await async receipt
-        $message->markSent();
-        $this->repository->save($message);
+        // null (async 202) or warning signal — transport accepted, state already sent,
+        // attempt count already persisted by recordAttempt() in executeSend()
         $this->logger->info('AS4 transport accepted, awaiting receipt signal', [
             'messageId' => $message->getMessageId(),
         ]);

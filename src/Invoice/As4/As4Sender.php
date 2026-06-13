@@ -16,7 +16,7 @@ use Psr\Log\LoggerInterface;
  *
  * @psalm-suppress UnusedClass
  */
-final class As4Sender
+final class As4Sender implements As4SenderInterface
 {
     public function __construct(
         private readonly As4HttpClient $httpClient,
@@ -30,6 +30,7 @@ final class As4Sender
      *
      * @throws \Psr\Http\Client\ClientExceptionInterface  On network failure
      */
+    #[\Override]
     public function send(
         string $endpoint,
         DOMDocument $envelope,
