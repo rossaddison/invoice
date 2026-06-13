@@ -79,7 +79,7 @@ class As4SecurityHandler
 
         $canon = $doc->createElementNS(As4Constants::XMLDSIG_NS, 'ds:CanonicalizationMethod');
         $canon->setAttribute('Algorithm', As4Constants::CANONICALIZATION);
-        $incNamespaces = $doc->createElementNS('http://www.w3.org/2001/10/xml-exc-c14n#', 'ec:InclusiveNamespaces');
+        $incNamespaces = $doc->createElementNS('https://www.w3.org/2001/10/xml-exc-c14n#', 'ec:InclusiveNamespaces');
         $incNamespaces->setAttribute('PrefixList', 'env');
         $canon->appendChild($incNamespaces);
         $signedInfo->appendChild($canon);
@@ -143,14 +143,16 @@ class As4SecurityHandler
         $ephemeralKeyPair = sodium_crypto_box_keypair();
         $ephemeralPublicKey = sodium_crypto_box_publickey($ephemeralKeyPair);
 
-        $sharedSecret = sodium_crypto_box($ephemeralPublicKey, $this->encryptionPublicKeyX25519, $ephemeralKeyPair);
+        $sharedSecret = sodium_crypto_box($ephemeralPublicKey,
+            $this->encryptionPublicKeyX25519, $ephemeralKeyPair);
 
         $salt = random_bytes(32);
         $info = 'test-info-data';
         $derivedKey = $this->hkdfDerive($sharedSecret, $salt, $info, 16);
 
         $encryptedKeyId = 'EK-' . $this->generateUuid();
-        $encryptedKey = $this->createEncryptedKeyElement($doc, $encryptedKeyId, $ephemeralPublicKey, $salt, $info);
+        $encryptedKey = $this->createEncryptedKeyElement($doc, $encryptedKeyId,
+            $ephemeralPublicKey, $salt, $info);
         $wssHeader->appendChild($encryptedKey);
 
         $encryptedParts = [];
@@ -241,7 +243,9 @@ class As4SecurityHandler
         $transform = $doc->createElementNS(As4Constants::XMLDSIG_NS, 'ds:Transform');
         $transform->setAttribute(
             'Algorithm',
-            str_starts_with($uri, 'cid:') ? As4Constants::SOAP_SWA_ATTACHMENT_SIGNATURE : As4Constants::CANONICALIZATION
+            str_starts_with($uri, 'cid:') ?
+                As4Constants::SOAP_SWA_ATTACHMENT_SIGNATURE :
+                As4Constants::CANONICALIZATION
         );
         $transforms->appendChild($transform);
         $ref->appendChild($transforms);
@@ -347,7 +351,8 @@ class As4SecurityHandler
 
         $keyInfo = $doc->createElementNS(As4Constants::XMLDSIG_NS, 'ds:KeyInfo');
         $strRef = $doc->createElementNS(As4Constants::WSS_NS, 'wsse:SecurityTokenReference');
-        $strRef->setAttributeNS(As4Constants::WSS11_NS, 'wsse11:TokenType', 'http://docs.oasis-open.org/wss/oasis-wss-soap-message-security-1.1#EncryptedKey');
+        $strRef->setAttributeNS(As4Constants::WSS11_NS, 'wsse11:TokenType',
+            'https://docs.oasis-open.org/wss/oasis-wss-soap-message-security-1.1#EncryptedKey');
         $ref = $doc->createElementNS(As4Constants::WSS_NS, 'wsse:Reference');
         $ref->setAttribute('URI', '#' . $encryptedKeyId);
         $strRef->appendChild($ref);
@@ -653,13 +658,9 @@ class As4SecurityHandler
 
     private function generateUuid(): string
     {
-        return sprintf(
-            '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0x0fff) | 0x4000,
-            mt_rand(0, 0x3fff) | 0x8000,
-            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
-        );
+        $bytes = random_bytes(16);
+        $bytes[6] = chr(ord($bytes[6]) & 0x0f | 0x40);
+        $bytes[8] = chr(ord($bytes[8]) & 0x3f | 0x80);
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($bytes), 4));
     }
 }
