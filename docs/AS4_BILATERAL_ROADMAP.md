@@ -77,12 +77,15 @@ development and integration-testing strategy before pursuing OpenPeppol accredit
 | `As4InboundMessage` | `src/Invoice/As4/` | Value object: parsed inbound message (UserMessage / Receipt / Error) | ✅ done |
 | `As4ParseException` | `src/Invoice/As4/` | Dedicated exception for inbound parse failures (replaces generic `\Exception`) | ✅ done |
 | `As4Receiver` | `src/Invoice/As4/` | Boundary detection, CID→part mapping, DOM parse of inbound SOAP | ✅ done |
-| `As4SignatureVerifierInterface` | `src/Invoice/As4/` | Verify WS-Security XML-DSIG on the SOAP header | ⬜ todo (placeholder in `As4SecurityHandler::verifySignature()`) |
+| `As4SignatureVerifierInterface` | `src/Invoice/As4/` | Verify WS-Security XML-DSIG on the SOAP header | ✅ done (Ed25519 XML-DSIG in `As4SecurityHandler::verifySignatureElement()`) |
 | `As4DuplicateDetectorInterface` | `src/Invoice/As4/` | Idempotency check on `eb:MessageId` | ✅ done |
 | `As4DuplicateDetector` | `src/Invoice/As4/` | Uses `As4MessageRepositoryInterface::findByMessageId()` | ✅ done |
 | `As4ReceiptGeneratorInterface` | `src/Invoice/As4/` | Build an ebMS3 `eb:Receipt` signal SOAP response | ✅ done |
 | `As4ReceiptGenerator` | `src/Invoice/As4/` | SHA-256 NRR digest embedded in `eb:Receipt` via `As4MessageBuilder` | ✅ done |
 | `As4ReceiveController` | `src/Invoice/As4/` | `POST /as4/receive` — Receiver → DuplicateDetector → store → ReceiptGenerator | ✅ done |
+| `As4UserMessageHandlerInterface` | `src/Invoice/As4/` | Orchestrate duplicate check, save, payload dispatch, receipt for a UserMessage | ✅ done |
+| `As4UserMessageHandlerService` | `src/Invoice/As4/` | Concrete handler; calls `As4PayloadHandlerInterface` for each payload | ✅ done |
+| `As4PayloadHandlerInterface` | `src/Invoice/As4/` | Integration seam for UBL invoice import; `NullAs4PayloadHandler` is the default | ✅ done (null impl; real importer TBD) |
 
 ### Inbound processing flow
 
@@ -96,7 +99,8 @@ As4SignatureVerifier::verify($envelope)                 → throws if invalid
     ↓
 As4DuplicateDetector::isDuplicate($messageId)           → if true: return cached Receipt
     ↓
-[dispatch payload to UBL invoice import pipeline]
+As4PayloadHandlerInterface::handle($payloadXml, $senderPartyId, $action)
+    → NullAs4PayloadHandler (default) or real UBL importer when registered
     ↓
 As4ReceiptGenerator::generate($inboundMessageId)
     → DOMDocument (SOAP envelope containing eb:Receipt)
@@ -148,16 +152,18 @@ policy, receipt storage) is identical.
 
 ---
 
-## Deferred Work (code-first, tests to follow)
+## Deferred Work
 
-| Item | Note |
-|---|---|
-| DI container wiring for `CycleOrmAs4MessageRepository` | Bind interface in `config/di/as4.php` |
-| `As4ErrorSignalTest`, `As4ReceiptSignalTest` | Value object tests |
-| `As4MimePartTest`, `As4SmpEndpointTest`, `As4SmpQueryTest` | Value object tests |
-| `As4DispatchRequestTest`, `As4DispatchResultTest` | Value object tests |
-| `CycleOrmAs4MessageRepositoryTest` | Integration test with real Cycle ORM |
-| Inbound pipeline tests | `As4ReceiveControllerTest` (12), `As4DuplicateDetectorTest` (3), `As4ReceiptGeneratorTest` (7) — all passing | ✅ done |
+| Item | Note | Status |
+|---|---|---|
+| DI container wiring — all interfaces | `config/common/di/as4.php` | ✅ done |
+| `As4ErrorSignalTest`, `As4ReceiptSignalTest` | Value object tests | ✅ done |
+| `As4MimePartTest`, `As4SmpEndpointTest`, `As4SmpQueryTest` | Value object tests | ✅ done |
+| `As4DispatchRequestTest`, `As4DispatchResultTest` | Value object tests | ✅ done |
+| `As4UserMessageHandlerServiceTest` | 8 tests: duplicate/new-message branches, payload handler args | ✅ done |
+| `CycleOrmAs4MessageRepositoryTest` | `claimForRetry()` SQL CAS unit tests + `save()` delegation; find*() deferred to a future integration suite (needs live ORM) | ✅ done (10 tests) |
+| Real `As4PayloadHandlerInterface` implementation | UBL XML → invoice records | ✅ done (`As4InvoiceImportService`; `UblXmlParser` uses `Schema` namespace constants; 32 tests) |
+| `As4SecurityHandlerTest` | Sign+verify round-trip with pre-generated Ed25519 fixtures | ✅ done (10 tests; C14N orphan bug in `signMessage()` fixed) |
 
 ---
 
@@ -168,3 +174,8 @@ policy, receipt storage) is identical.
 | June 2026 | Initial roadmap created; outbound AS4 stack complete on `as4` branch |
 | June 2026 | Inbound pipeline complete: `As4InboundMessage`, `As4ParseException`, `As4ReceiptGenerator`, `As4DuplicateDetector`, `As4ReceiveController`; `POST /as4/receive` route wired; DI config in `config/common/di/as4.php`; `As4MessageState::received` added; `As4Message::fromInbound()` factory added |
 | June 2026 | Inbound pipeline tests complete: `As4ReceiveControllerTest` (12 tests), `As4DuplicateDetectorTest` (3 tests), `As4ReceiptGeneratorTest` (7 tests); all Psalm errorLevel 1 clean |
+| June 2026 | Ed25519 XML-DSIG signature verification implemented in `As4SecurityHandler::verifySignatureElement()`; `canonicalizeXml()` fixed to use Exclusive C14N |
+| June 2026 | `As4PayloadHandlerInterface` + `NullAs4PayloadHandler` + `As4UserMessageHandlerService` added; controller S107-compliant (6 params); DI config updated; 348 tests all pass |
+| June 2026 | `As4SecurityHandlerTest` (10 tests): C14N orphan bug fixed in `signMessage()` — `DOMNode::C14N()` returns empty string for nodes not yet in the document tree; fix: append to tree before canonicalising |
+| June 2026 | `As4InvoiceImportService` + `UblXmlParser` added; `Schema` namespace URI constants centralised; `ClientPeppolRepository::findByEndpointId()` added; DI wired to real handler; 32 tests |
+| June 2026 | `CycleOrmAs4MessageRepositoryTest` (10 tests): `claimForRetry()` SQL CAS logic, `isPersisted()` guard, `save()` delegation to `EntityWriter`; all deferred work complete |

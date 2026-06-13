@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace Tests\Unit\Invoice\As4;
 
 use App\Infrastructure\Persistence\As4Message\As4Message;
-use App\Invoice\As4\As4DuplicateDetectorInterface;
 use App\Invoice\As4\As4InboundMessage;
 use App\Invoice\As4\As4MessageRepositoryInterface;
 use App\Invoice\As4\As4MessageState;
 use App\Invoice\As4\As4ParseException;
-use App\Invoice\As4\As4ReceiptGeneratorInterface;
 use App\Invoice\As4\As4ReceiveController;
 use App\Invoice\As4\As4Receiver;
+use App\Invoice\As4\As4UserMessageHandlerInterface;
 use HttpSoft\Message\ResponseFactory;
 use HttpSoft\Message\StreamFactory;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -25,12 +25,12 @@ final class As4ReceiveControllerTestFixture
     public function __construct(
         public readonly As4ReceiveController $controller,
         public readonly As4Receiver&MockObject $receiver,
-        public readonly As4DuplicateDetectorInterface&MockObject $duplicateDetector,
-        public readonly As4ReceiptGeneratorInterface&MockObject $receiptGenerator,
+        public readonly As4UserMessageHandlerInterface&MockObject $userMessageHandler,
         public readonly As4MessageRepositoryInterface&MockObject $repository,
     ) {}
 }
 
+#[AllowMockObjectsWithoutExpectations]
 class As4ReceiveControllerTest extends TestCase
 {
     private const string MULTIPART_CT = 'multipart/related; boundary=AS4Boundary';
@@ -43,25 +43,22 @@ class As4ReceiveControllerTest extends TestCase
 
     private function createFixture(): As4ReceiveControllerTestFixture
     {
-        $receiver          = $this->createMock(As4Receiver::class);
-        $duplicateDetector = $this->createMock(As4DuplicateDetectorInterface::class);
-        $receiptGenerator  = $this->createMock(As4ReceiptGeneratorInterface::class);
-        $repository        = $this->createMock(As4MessageRepositoryInterface::class);
+        $receiver           = $this->createMock(As4Receiver::class);
+        $userMessageHandler = $this->createMock(As4UserMessageHandlerInterface::class);
+        $repository         = $this->createMock(As4MessageRepositoryInterface::class);
 
         return new As4ReceiveControllerTestFixture(
             controller: new As4ReceiveController(
-                receiver:          $receiver,
-                duplicateDetector: $duplicateDetector,
-                receiptGenerator:  $receiptGenerator,
-                repository:        $repository,
-                responseFactory:   new ResponseFactory(),
-                streamFactory:     new StreamFactory(),
-                logger:            $this->createStub(LoggerInterface::class),
+                receiver:           $receiver,
+                userMessageHandler: $userMessageHandler,
+                repository:         $repository,
+                responseFactory:    new ResponseFactory(),
+                streamFactory:      new StreamFactory(),
+                logger:             $this->createStub(LoggerInterface::class),
             ),
-            receiver:          $receiver,
-            duplicateDetector: $duplicateDetector,
-            receiptGenerator:  $receiptGenerator,
-            repository:        $repository,
+            receiver:           $receiver,
+            userMessageHandler: $userMessageHandler,
+            repository:         $repository,
         );
     }
 
@@ -149,13 +146,22 @@ class As4ReceiveControllerTest extends TestCase
         );
     }
 
-    // ── UserMessage — new ─────────────────────────────────────────────────────
+    // ── UserMessage ───────────────────────────────────────────────────────────
 
-    public function testReturns200WithReceiptXmlForNewUserMessage(): void
+    public function testUserMessageHandlerCalledOnce(): void
     {
         $f = $this->createFixture();
         $f->receiver->method('receive')->willReturn($this->userMessage());
-        $f->receiptGenerator->method('generate')->willReturn(self::RECEIPT_XML);
+        $f->userMessageHandler->expects($this->once())->method('handle')->willReturn(self::RECEIPT_XML);
+
+        $f->controller->receive($this->makeRequest());
+    }
+
+    public function testUserMessageResponseHasStatus200AndReceiptBody(): void
+    {
+        $f = $this->createFixture();
+        $f->receiver->method('receive')->willReturn($this->userMessage());
+        $f->userMessageHandler->method('handle')->willReturn(self::RECEIPT_XML);
 
         $response = $f->controller->receive($this->makeRequest());
 
@@ -163,62 +169,16 @@ class As4ReceiveControllerTest extends TestCase
         $this->assertSame(self::RECEIPT_XML, (string) $response->getBody());
     }
 
-    public function testReceiptResponseHasSoapXmlContentType(): void
+    public function testUserMessageResponseHasSoapXmlContentType(): void
     {
         $f = $this->createFixture();
         $f->receiver->method('receive')->willReturn($this->userMessage());
+        $f->userMessageHandler->method('handle')->willReturn(self::RECEIPT_XML);
 
         $this->assertStringContainsString(
             'application/soap+xml',
             $f->controller->receive($this->makeRequest())->getHeaderLine('Content-Type'),
         );
-    }
-
-    public function testSavesInboundRecordForNewUserMessage(): void
-    {
-        $f = $this->createFixture();
-        $f->receiver->method('receive')->willReturn($this->userMessage());
-        $f->repository->expects($this->once())->method('save');
-
-        $f->controller->receive($this->makeRequest());
-    }
-
-    public function testReceiptGeneratorCalledWithInboundMessageId(): void
-    {
-        $f = $this->createFixture();
-        $f->receiver->method('receive')->willReturn($this->userMessage(self::MSG_ID));
-        $f->receiptGenerator
-            ->expects($this->once())
-            ->method('generate')
-            ->with(self::MSG_ID, $this->anything())
-            ->willReturn(self::RECEIPT_XML);
-
-        $f->controller->receive($this->makeRequest());
-    }
-
-    // ── UserMessage — duplicate ───────────────────────────────────────────────
-
-    public function testReturns200ReceiptForDuplicateUserMessage(): void
-    {
-        $f = $this->createFixture();
-        $f->receiver->method('receive')->willReturn($this->userMessage());
-        $f->duplicateDetector->method('isDuplicate')->willReturn(true);
-        $f->receiptGenerator->method('generate')->willReturn(self::RECEIPT_XML);
-
-        $response = $f->controller->receive($this->makeRequest());
-
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame(self::RECEIPT_XML, (string) $response->getBody());
-    }
-
-    public function testDoesNotSaveForDuplicateUserMessage(): void
-    {
-        $f = $this->createFixture();
-        $f->receiver->method('receive')->willReturn($this->userMessage());
-        $f->duplicateDetector->method('isDuplicate')->willReturn(true);
-        $f->repository->expects($this->never())->method('save');
-
-        $f->controller->receive($this->makeRequest());
     }
 
     // ── Inbound Receipt signal ────────────────────────────────────────────────

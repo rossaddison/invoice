@@ -7,6 +7,7 @@ namespace Tests\Unit\Invoice\As4;
 use App\Infrastructure\Persistence\As4Message\As4Message;
 use App\Invoice\As4\As4DuplicateDetector;
 use App\Invoice\As4\As4MessageRepositoryInterface;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -18,6 +19,7 @@ final class As4DuplicateDetectorTestFixture
     ) {}
 }
 
+#[AllowMockObjectsWithoutExpectations]
 class As4DuplicateDetectorTest extends TestCase
 {
     private function createFixture(): As4DuplicateDetectorTestFixture

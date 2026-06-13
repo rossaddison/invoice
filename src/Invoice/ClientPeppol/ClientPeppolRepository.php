@@ -123,4 +123,22 @@ final class ClientPeppolRepository extends Select\Repository
                       ->where(['client_id' => $client_id]);
         return $query->count();
     }
+
+    /**
+     * Look up a ClientPeppol record by Peppol endpoint ID and scheme ID.
+     * Used by As4InvoiceImportService to resolve an AS4 senderPartyId
+     * (format "schemeId:endpointId") to a local client.
+     *
+     * @psalm-return TEntity|null
+     */
+    public function findByEndpointId(string $endpointId, string $schemeId): ?ClientPeppol
+    {
+        $query = $this->select()
+                      ->load('client')
+                      ->where([
+                          'endpointid'          => $endpointId,
+                          'endpointid_schemeid' => $schemeId,
+                      ]);
+        return $query->fetchOne() ?: null;
+    }
 }

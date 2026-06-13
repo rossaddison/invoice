@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\PurchaseEntry;
 
 use App\Infrastructure\Persistence\PurchaseEntry\PurchaseEntry;
+use App\Invoice\AppConstants;
 
 final readonly class PurchaseEntryService
 {
@@ -26,7 +27,7 @@ final readonly class PurchaseEntryService
         $entry->setAmountExVat((float) ($body['amount_ex_vat'] ?? 0));
         $entry->setVatAmount((float) ($body['vat_amount'] ?? 0));
         if (!$entry->isPersisted()) {
-            $entry->setCreatedAt((new \DateTimeImmutable())->format('Y-m-d H:i:s'));
+            $entry->setCreatedAt((new \DateTimeImmutable())->format(AppConstants::DATETIME_FORMAT));
         }
         $this->repository->save($entry);
     }

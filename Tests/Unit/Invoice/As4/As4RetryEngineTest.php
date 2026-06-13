@@ -18,6 +18,7 @@ use App\Invoice\As4\As4RetryEngine;
 use App\Invoice\As4\As4SenderInterface;
 use DateTime;
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -37,6 +38,7 @@ final class As4RetryEngineTestFixture
     ) {}
 }
 
+#[AllowMockObjectsWithoutExpectations]
 class As4RetryEngineTest extends TestCase
 {
     // ── factory ───────────────────────────────────────────────────────────────

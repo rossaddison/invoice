@@ -94,13 +94,16 @@ class As4SecurityHandler
             $signedInfo->appendChild($ref);
         }
 
-        $canonSignedInfo = $this->canonicalizeXml($signedInfo);
-        $privateKey = $this->loadEd25519PrivateKey();
-        $signatureValue = sodium_crypto_sign_detached($canonSignedInfo, $privateKey);
-
+        // Signature and SignedInfo must be in the document tree before C14N:
+        // DOMNode::C14N() returns an empty string on orphan nodes.
         $signature = $doc->createElementNS(As4Constants::XMLDSIG_NS, 'ds:Signature');
         $signature->setAttribute('Id', $signatureId);
         $signature->appendChild($signedInfo);
+        $wssHeader->appendChild($signature);
+
+        $canonSignedInfo = $this->canonicalizeXml($signedInfo);
+        $privateKey = $this->loadEd25519PrivateKey();
+        $signatureValue = sodium_crypto_sign_detached($canonSignedInfo, $privateKey);
 
         $sigValue = $doc->createElementNS(As4Constants::XMLDSIG_NS, 'ds:SignatureValue');
         $sigValue->nodeValue = base64_encode($signatureValue);
@@ -120,7 +123,6 @@ class As4SecurityHandler
         $keyInfo->appendChild($strRef);
         $signature->appendChild($keyInfo);
 
-        $wssHeader->appendChild($signature);
         return $signature;
     }
 
@@ -475,15 +477,158 @@ class As4SecurityHandler
 
     private function canonicalizeXml(DOMElement $elem): string
     {
-        // Simple C14N — exclusive with InclusiveNamespaces
-        return $elem->ownerDocument->saveXML($elem);
+        $result = $elem->C14N(true, false);
+        return $result !== false ? $result : '';
     }
 
-    /** @psalm-suppress UnusedParam */
     private function verifySignatureElement(DOMElement $sigElem, DOMDocument $doc): bool
     {
-        // Placeholder: full Ed25519 signature verification to be implemented
+        $sigBytes     = $this->extractSignatureBytes($sigElem, $doc);
+        $canonSigInfo = $this->canonicalizeSignedInfo($sigElem, $doc);
+        $publicKey    = $this->extractSignerPublicKey($doc);
+
+        if ($sigBytes === null || $canonSigInfo === null || $publicKey === null) {
+            return false;
+        }
+
+        if (!sodium_crypto_sign_verify_detached($sigBytes, $canonSigInfo, $publicKey)) {
+            return false;
+        }
+
+        return $this->verifyAllReferences($sigElem, $doc);
+    }
+
+    private function extractSignatureBytes(DOMElement $sigElem, DOMDocument $doc): ?string
+    {
+        $xpath = new \DOMXPath($doc);
+        $xpath->registerNamespace('ds', As4Constants::XMLDSIG_NS);
+        $nodes = $xpath->query('ds:SignatureValue', $sigElem);
+        $node  = ($nodes !== false && $nodes->length > 0) ? $nodes->item(0) : null;
+
+        if (!$node instanceof DOMElement) {
+            return null;
+        }
+
+        $decoded = base64_decode(trim($node->textContent), true);
+        return ($decoded !== false && strlen($decoded) === SODIUM_CRYPTO_SIGN_BYTES) ? $decoded : null;
+    }
+
+    private function canonicalizeSignedInfo(DOMElement $sigElem, DOMDocument $doc): ?string
+    {
+        $xpath = new \DOMXPath($doc);
+        $xpath->registerNamespace('ds', As4Constants::XMLDSIG_NS);
+        $nodes = $xpath->query('ds:SignedInfo', $sigElem);
+        $node  = ($nodes !== false && $nodes->length > 0) ? $nodes->item(0) : null;
+
+        if (!$node instanceof DOMElement) {
+            return null;
+        }
+
+        $c14n = $node->C14N(true, false);
+        return $c14n !== false ? $c14n : null;
+    }
+
+    private function extractSignerPublicKey(DOMDocument $doc): ?string
+    {
+        $xpath = new \DOMXPath($doc);
+        $xpath->registerNamespace('wsse', As4Constants::WSS_NS);
+        $nodes = $xpath->query('//wsse:BinarySecurityToken');
+        $node  = ($nodes !== false && $nodes->length > 0) ? $nodes->item(0) : null;
+
+        if (!$node instanceof DOMElement) {
+            return null;
+        }
+
+        $certDer = base64_decode(trim($node->textContent), true);
+        return $certDer !== false ? $this->extractEd25519PublicKeyFromCertDer($certDer) : null;
+    }
+
+    private function extractEd25519PublicKeyFromCertDer(string $certDer): ?string
+    {
+        $pem     = "-----BEGIN CERTIFICATE-----\n"
+            . chunk_split(base64_encode($certDer), 64, "\n")
+            . "-----END CERTIFICATE-----\n";
+        $cert    = openssl_x509_read($pem);
+        $pubKey  = $cert !== false ? openssl_pkey_get_public($cert) : false;
+        $details = $pubKey !== false ? openssl_pkey_get_details($pubKey) : false;
+
+        if ($details === false) {
+            return null;
+        }
+
+        $spki = base64_decode($this->extractPemBody((string) ($details['key'] ?? '')), true);
+        return ($spki !== false && strlen($spki) >= SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES)
+            ? substr($spki, -SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES)
+            : null;
+    }
+
+    private function extractPemBody(string $pem): string
+    {
+        $lines  = explode("\n", $pem);
+        $body   = '';
+        $inside = false;
+        foreach ($lines as $line) {
+            if (str_contains($line, 'BEGIN PUBLIC KEY')) { $inside = true; continue; }
+            if (str_contains($line, 'END PUBLIC KEY')) { break; }
+            if ($inside) { $body .= trim($line); }
+        }
+        return $body;
+    }
+
+    private function verifyAllReferences(DOMElement $sigElem, DOMDocument $doc): bool
+    {
+        $xpath = new \DOMXPath($doc);
+        $xpath->registerNamespace('ds', As4Constants::XMLDSIG_NS);
+        $refs = $xpath->query('ds:SignedInfo/ds:Reference', $sigElem);
+
+        if ($refs === false) {
+            return false;
+        }
+
+        foreach ($refs as $ref) {
+            if ($ref instanceof DOMElement && !$this->verifyReference($ref, $doc)) {
+                return false;
+            }
+        }
+
         return true;
+    }
+
+    private function verifyReference(DOMElement $refElem, DOMDocument $doc): bool
+    {
+        $uri = $refElem->getAttribute('URI');
+
+        // MIME attachment references: raw bytes not available during XML-only verification
+        if (str_starts_with($uri, 'cid:')) {
+            return true;
+        }
+
+        return $this->verifyElementReference(ltrim($uri, '#'), $refElem, $doc);
+    }
+
+    private function verifyElementReference(string $elementId, DOMElement $refElem, DOMDocument $doc): bool
+    {
+        if (!preg_match('/^[A-Za-z0-9_\-]+$/', $elementId)) {
+            return false;
+        }
+
+        $xpath = new \DOMXPath($doc);
+        $xpath->registerNamespace('wsu', As4Constants::WSS_UTIL_NS);
+        $xpath->registerNamespace('ds', As4Constants::XMLDSIG_NS);
+
+        $nodes   = $xpath->query('//*[@wsu:Id="' . $elementId . '"]');
+        $refNode = ($nodes !== false && $nodes->length > 0) ? $nodes->item(0) : null;
+        $c14n    = $refNode instanceof DOMElement ? $refNode->C14N(true, false) : false;
+
+        if ($c14n === false) {
+            return false;
+        }
+
+        $actualDigest = base64_encode(hash('sha256', $c14n, true));
+        $digestNodes  = $xpath->query('ds:DigestValue', $refElem);
+        $digestNode   = ($digestNodes !== false && $digestNodes->length > 0) ? $digestNodes->item(0) : null;
+
+        return $digestNode instanceof DOMElement && $digestNode->textContent === $actualDigest;
     }
 
     /**

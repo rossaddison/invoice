@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Invoice\As4;
 
-use App\Infrastructure\Persistence\As4Message\As4Message;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -28,8 +27,7 @@ final class As4ReceiveController
 {
     public function __construct(
         private readonly As4Receiver $receiver,
-        private readonly As4DuplicateDetectorInterface $duplicateDetector,
-        private readonly As4ReceiptGeneratorInterface $receiptGenerator,
+        private readonly As4UserMessageHandlerInterface $userMessageHandler,
         private readonly As4MessageRepositoryInterface $repository,
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly StreamFactoryInterface $streamFactory,
@@ -65,29 +63,7 @@ final class As4ReceiveController
 
     private function handleUserMessage(As4InboundMessage $message): Response
     {
-        $messageId = $message->messageId ?? '';
-
-        if ($this->duplicateDetector->isDuplicate($messageId)) {
-            $this->logger->info('AS4 receive: duplicate UserMessage — returning Receipt', [
-                'messageId' => $messageId,
-            ]);
-            return $this->soapResponse(
-                $this->receiptGenerator->generate($messageId, $message->xmlBody)
-            );
-        }
-
-        $this->repository->save(As4Message::fromInbound($message));
-
-        $this->logger->info('AS4 receive: UserMessage accepted', [
-            'messageId'     => $messageId,
-            'senderPartyId' => $message->senderPartyId,
-            'action'        => $message->action,
-            'payloadCount'  => count($message->payloads),
-        ]);
-
-        return $this->soapResponse(
-            $this->receiptGenerator->generate($messageId, $message->xmlBody)
-        );
+        return $this->soapResponse($this->userMessageHandler->handle($message));
     }
 
     private function handleInboundReceipt(As4InboundMessage $signal): Response
