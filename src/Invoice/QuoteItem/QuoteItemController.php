@@ -8,7 +8,6 @@ use App\Invoice\BaseController;
 use App\Infrastructure\Persistence\QuoteItem\QuoteItem;
 use App\Infrastructure\Persistence\QuoteItemAmount\QuoteItemAmount;
 use App\Invoice\Product\ProductRepository as PR;
-use App\Invoice\Quote\QuoteRepository as QR;
 use App\Invoice\QuoteItem\QuoteItemRepository as QIR;
 use App\Invoice\QuoteItemAmount\QuoteItemAmountRepository as QIAR;
 use App\Invoice\QuoteItemAmount\QuoteItemAmountService as QIAS;
@@ -154,32 +153,14 @@ final class QuoteItemController extends BaseController
         return $this->webViewRenderer->render('_item_form_task', $parameters);
     }
 
-    /**
-     * @param CurrentRoute $currentRoute
-     * @param Request $request
-     * @param FormHydrator $formHydrator
-     * @param QIR $qiR
-     * @param TRR $trR
-     * @param PR $pR
-     * @param UR $uR
-     * @param QR $qR
-     * @param QIAS $qias
-     * @param QIAR $qiar
-     */
     public function editProduct(
         CurrentRoute $currentRoute,
         Request $request,
         FormHydrator $formHydrator,
-        QIR $qiR,
-        TRR $trR,
-        PR $pR,
-        UR $uR,
-        QR $qR,
-        QIAS $qias,
-        QIAR $qiar,
+        QiEditProductDeps $deps,
     ): \Psr\Http\Message\ResponseInterface {
         $quote_id = (string) $this->session->get('quote_id');
-        $quoteItem = $this->quoteitem($currentRoute, $qiR);
+        $quoteItem = $this->quoteitem($currentRoute, $deps->qiR);
         if (null !== $quoteItem) {
             $form = QuoteItemForm::show($quoteItem, $quoteItem->reqQuoteId());
             $parameters = [
@@ -189,10 +170,10 @@ final class QuoteItemController extends BaseController
                 'errors' => [],
                 'form' => $form,
                 'quote_id' => $quote_id,
-                'taxRates' => $trR->findAllPreloaded(),
-                'products' => $pR->findAllPreloaded(),
-                'quotes' => $qR->findAllPreloaded(),
-                'units' => $uR->findAllPreloaded(),
+                'taxRates' => $deps->trR->findAllPreloaded(),
+                'products' => $deps->pR->findAllPreloaded(),
+                'quotes' => $deps->qR->findAllPreloaded(),
+                'units' => $deps->uR->findAllPreloaded(),
                 'numberHelper' => new NumberHelper($this->sR),
             ];
             if ($request->getMethod() === Method::POST) {
@@ -202,21 +183,21 @@ final class QuoteItemController extends BaseController
                     $price = (float) ($body['price'] ?? 0.00);
                     $discount = (float) ($body['discount_amount'] ?? 0.00);
                     if (is_array($body)) {
-                        $tax_rate_id = $this->quoteitemService->saveQuoteItemProduct($quoteItem, $body, $quote_id, $pR, $uR, $this->translator) ?: 1;
-                        $tax_rate_percentage = $this->taxratePercentage($tax_rate_id, $trR);
+                        $tax_rate_id = $this->quoteitemService->saveQuoteItemProduct($quoteItem, $body, $quote_id, $deps->pR, $deps->uR, $this->translator) ?: 1;
+                        $tax_rate_percentage = $this->taxratePercentage($tax_rate_id, $deps->trR);
                         if (null !== $tax_rate_percentage) {
                             /**
                              * @psalm-suppress PossiblyNullReference getId
                              */
-                            $request_quote_item = $this->quoteitem($currentRoute, $qiR)->reqId();
+                            $request_quote_item = $this->quoteitem($currentRoute, $deps->qiR)->reqId();
                             $this->quoteitemService->saveQuoteItemAmount(
                                 $request_quote_item,
                                 $quantity,
                                 $price,
                                 $discount,
                                 $tax_rate_percentage,
-                                $qiar,
-                                $qias
+                                $deps->qiar,
+                                $deps->qias
                             );
                             $this->flashMessage('success', $this->translator->translate('record.successfully.updated'));
                             return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
@@ -231,28 +212,14 @@ final class QuoteItemController extends BaseController
         return $this->webService->getNotFoundResponse();
     }
 
-    /**
-     * @param CurrentRoute $currentRoute
-     * @param Request $request
-     * @param FormHydrator $formHydrator
-     * @param QIR $qiR
-     * @param TRR $trR
-     * @param TASKR $taskR
-     * @param QIAS $qias
-     * @param QIAR $qiar
-     */
     public function editTask(
         CurrentRoute $currentRoute,
         Request $request,
         FormHydrator $formHydrator,
-        QIR $qiR,
-        TRR $trR,
-        TASKR $taskR,
-        QIAS $qias,
-        QIAR $qiar,
+        QiEditTaskDeps $deps,
     ): \Psr\Http\Message\ResponseInterface {
         $quote_id = (string) $this->session->get('quote_id');
-        $quoteItem = $this->quoteitem($currentRoute, $qiR);
+        $quoteItem = $this->quoteitem($currentRoute, $deps->qiR);
         if (null !== $quoteItem) {
             $form = QuoteItemForm::show($quoteItem, $quoteItem->reqQuoteId());
             $parameters = [
@@ -262,8 +229,8 @@ final class QuoteItemController extends BaseController
                 'errors' => [],
                 'form' => $form,
                 'quote_id' => $quote_id,
-                'taxRates' => $trR->findAllPreloaded(),
-                'tasks' => $taskR->repoTaskStatusquery(1),
+                'taxRates' => $deps->trR->findAllPreloaded(),
+                'tasks' => $deps->taskR->repoTaskStatusquery(1),
                 'numberHelper' => new NumberHelper($this->sR),
             ];
             if ($request->getMethod() === Method::POST) {
@@ -273,21 +240,21 @@ final class QuoteItemController extends BaseController
                     $price = (float) ($body['price'] ?? 0.00);
                     $discount = (float) ($body['discount_amount'] ?? 0.00);
                     if (is_array($body)) {
-                        $tax_rate_id = $this->quoteitemService->saveQuoteItemTask($quoteItem, $body, $quote_id, $taskR) ?: 1;
-                        $tax_rate_percentage = $this->taxratePercentage($tax_rate_id, $trR);
+                        $tax_rate_id = $this->quoteitemService->saveQuoteItemTask($quoteItem, $body, $quote_id, $deps->taskR) ?: 1;
+                        $tax_rate_percentage = $this->taxratePercentage($tax_rate_id, $deps->trR);
                         if (null !== $tax_rate_percentage) {
                             /**
                              * @psalm-suppress PossiblyNullReference getId
                              */
-                            $request_quote_item = $this->quoteitem($currentRoute, $qiR)->reqId();
+                            $request_quote_item = $this->quoteitem($currentRoute, $deps->qiR)->reqId();
                             $this->quoteitemService->saveQuoteItemAmount(
                                 $request_quote_item,
                                 $quantity,
                                 $price,
                                 $discount,
                                 $tax_rate_percentage,
-                                $qiar,
-                                $qias
+                                $deps->qiar,
+                                $deps->qias
                             );
                             $this->flashMessage('success', $this->translator->translate('record.successfully.updated'));
                             return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
