@@ -107,6 +107,16 @@ class As4Message
     #[Cycle\Column(type: 'datetime', nullable: true)]
     private ?DateTime $firstSentAt = null;
 
+    /**
+     * Claim lock timestamp.
+     * Null = unclaimed. Set atomically by CycleOrmAs4MessageRepository::claimForRetry()
+     * to prevent two concurrent workers from retrying the same message.
+     * Automatically expires after a configurable TTL so a crashed worker cannot
+     * permanently block a message.
+     */
+    #[Cycle\Column(type: 'datetime', nullable: true)]
+    private ?DateTime $lockedAt = null;
+
     /** Error code (if failed) */
     #[Cycle\Column(type: 'string', nullable: true)]
     private ?string $errorCode = null;
@@ -183,6 +193,12 @@ class As4Message
     public function getReceiptDigest(): ?string { return $this->receiptDigest; }
     public function getReceiptReceivedAt(): ?DateTime { return $this->receiptReceivedAt; }
     public function getFirstSentAt(): ?DateTime { return $this->firstSentAt; }
+    public function getLockedAt(): ?\DateTimeImmutable
+    {
+        return $this->lockedAt !== null
+            ? \DateTimeImmutable::createFromMutable($this->lockedAt)
+            : null;
+    }
     public function getErrorCode(): ?string { return $this->errorCode; }
     public function getErrorDescription(): ?string { return $this->errorDescription; }
     public function getCreatedAt(): DateTime { return $this->createdAt; }
