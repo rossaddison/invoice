@@ -6,14 +6,12 @@ namespace App\Invoice\Payment;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Client\ClientRepository;
 use App\Invoice\CustomField\CustomFieldRepository;
 use App\Invoice\CustomValue\CustomValueRepository;
 use App\Infrastructure\Persistence\Payment\Payment;
 use App\Infrastructure\Persistence\PaymentCustom\PaymentCustom;
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\Helpers\CustomValuesHelper;
-use App\Invoice\Inv\InvRepository;
 use App\Invoice\InvAmount\InvAmountRepository;
 use App\Invoice\Merchant\MerchantRepository;
 use App\Invoice\PaymentMethod\PaymentMethodRepository;
@@ -49,7 +47,9 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use App\Invoice\Helpers\InvRecalculator;
+use App\Invoice\Payment\PaymentAddDeps;
 use App\Invoice\Payment\PaymentCustomFieldProcessor;
+use App\Invoice\Payment\PaymentEditDeps;
 
 final class PaymentController extends BaseController
 {
@@ -78,31 +78,13 @@ final class PaymentController extends BaseController
         $this->factory = $factory;
     }
 
-    /**
-     * @param Request $request
-     * @param FormHydrator $fmHyd
-     * @param InvRepository $invRepository
-     * @param InvAmountRepository $iaR
-     * @param PaymentMethodRepository $payment_methodRepository
-     * @param PaymentCustomRepository $pcR
-     * @param CustomFieldRepository $cfR
-     * @param CustomValueRepository $cvR
-     * @param ClientRepository $cR
-     * @return Response
-     */
     public function add(
         Request $request,
         FormHydrator $fmHyd,
-        InvRepository $invRepository,
-        InvAmountRepository $iaR,
-        PaymentMethodRepository $payment_methodRepository,
-        PaymentCustomRepository $pcR,
-        CustomFieldRepository $cfR,
-        CustomValueRepository $cvR,
-        ClientRepository $cR,
+        PaymentAddDeps $deps,
     ): Response {
-        $open = $invRepository->open();
-        $invRepository->openCount() == 0 ?
+        $open = $deps->invR->open();
+        $deps->invR->openCount() == 0 ?
                 $this->flashMessage('danger', $this->translator->translate(
                         'payment.no.invoice.sent')) : '';
         $amounts = [];
@@ -110,17 +92,14 @@ final class PaymentController extends BaseController
         /** @var Inv $open_invoice */
         foreach ($open as $open_invoice) {
             $open_invoice_id = $open_invoice->reqId();
-            $inv_amount = $iaR->repoInvquery($open_invoice_id);
+            $inv_amount = $deps->iaR->repoInvquery($open_invoice_id);
              if (null !== $inv_amount) {
-              
-              
                  $amounts['invoice'
                      . $open_invoice_id] =
                          $this->sR->formatAmount($inv_amount->getBalance());
              }
              $invoice_payment_methods['invoice'
                  . $open_invoice_id] = $open_invoice->getPaymentMethod();
-            
         }
         $payment = new Payment();
         $form = new PaymentForm();
@@ -132,23 +111,23 @@ final class PaymentController extends BaseController
             'errors' => [],
             'errorsCustom' => [],
             'form' => $form,
-            'openInvsCount' => $invRepository->openCount(),
+            'openInvsCount' => $deps->invR->openCount(),
             'openInvs' => $open,
             // jquery script at bottom of _from to load all amounts
             'amounts' => Json::encode($amounts),
             'invoicePaymentMethods' => Json::encode($invoice_payment_methods),
-            'paymentMethods' => $payment_methodRepository->count() > 0
-                        ? $payment_methodRepository->findAllPreloaded() : null,
-            'cR' => $cR,
-            'iaR' => $iaR,
-            'cvH' => new CustomValuesHelper($this->sR, $cvR),
-            'customFields' => $this->fetchCustomFieldsAndValues($cfR,
-                    $cvR, 'payment_custom')['customFields'],
+            'paymentMethods' => $deps->pmtMethodR->count() > 0
+                        ? $deps->pmtMethodR->findAllPreloaded() : null,
+            'cR' => $deps->cR,
+            'iaR' => $deps->iaR,
+            'cvH' => new CustomValuesHelper($this->sR, $deps->cvR),
+            'customFields' => $this->fetchCustomFieldsAndValues($deps->cfR,
+                    $deps->cvR, 'payment_custom')['customFields'],
             // Applicable to normally building up permanent selection lists eg.
             // dropdowns
             'customValues' =>
             $this->fetchCustomFieldsAndValues(
-                                    $cfR, $cvR, 'payment_custom')['customValues'],
+                                    $deps->cfR, $deps->cvR, 'payment_custom')['customValues'],
 // There will initially be no custom_values attached to this payment until they
 // are filled in the field on the form
 //'payment_custom_values' => $this->paymentCustomValues($payment_id,$pcR),
@@ -186,7 +165,7 @@ final class PaymentController extends BaseController
                             ];
                             if ($fmHyd->populate($pcForm, $paymentCustomInput)
                                 && $pcForm->isValid() && $this->addCustomField(
-                                        $payment_id, $custom_field_id, $pcR)) {
+                                        $payment_id, $custom_field_id, $deps->pcR)) {
                                 $this->paymentCustomService->savePaymentCustom(
                                     $paymentCustom, $paymentCustomInput);
                             }
@@ -314,41 +293,20 @@ final class PaymentController extends BaseController
         }
     }
 
-    /**
-     * @param Request $request
-     * @param CurrentRoute $currentRoute
-     * @param FormHydrator $fmHyd
-     * @param InvRepository $invRepository
-     * @param InvAmountRepository $iaR
-     * @param PaymentRepository $pmtR
-     * @param PaymentMethodRepository $payment_methodRepository
-     * @param PaymentCustomRepository $pcR
-     * @param CustomFieldRepository $cfR
-     * @param CustomValueRepository $cvR
-     * @param ClientRepository $cR
-     * @return Response
-     */
     public function edit(
         Request $request,
         CurrentRoute $currentRoute,
         FormHydrator $fmHyd,
-        InvRepository $invRepository,
-        InvAmountRepository $iaR,
-        PaymentRepository $pmtR,
-        PaymentMethodRepository $payment_methodRepository,
-        PaymentCustomRepository $pcR,
-        CustomFieldRepository $cfR,
-        CustomValueRepository $cvR,
-        ClientRepository $cR,
+        PaymentEditDeps $deps,
     ): Response {
-        $payment = $this->payment($currentRoute, $pmtR);
+        $payment = $this->payment($currentRoute, $deps->pmtR);
         if ($payment) {
             $form = PaymentForm::show($payment);
             $paymentCustom = new PaymentCustom();
             $pcForm = PaymentCustomForm::show($paymentCustom);
             $payment_id = $payment->reqId();
             $inv_id = $payment->reqId();
-            $open = $invRepository->open();
+            $open = $deps->invR->open();
             $params = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'payment/edit',
@@ -358,21 +316,21 @@ final class PaymentController extends BaseController
                 'errors' => [],
                 'errorsCustom' => [],
                 'openInvs' => $open,
-                'openInvsCount' => $invRepository->openCount(),
-                'paymentMethods' => $payment_methodRepository->findAllPreloaded(),
-                'cR' => $cR,
-                'iaR' => $iaR,
-                'cvH' => new CustomValuesHelper($this->sR, $cvR),
-                'customFields' => $this->fetchCustomFieldsAndValues($cfR, $cvR,
+                'openInvsCount' => $deps->invR->openCount(),
+                'paymentMethods' => $deps->pmtMethodR->findAllPreloaded(),
+                'cR' => $deps->cR,
+                'iaR' => $deps->iaR,
+                'cvH' => new CustomValuesHelper($this->sR, $deps->cvR),
+                'customFields' => $this->fetchCustomFieldsAndValues($deps->cfR, $deps->cvR,
                         'payment_custom')['customFields'],
 // Applicable to normally building up permanent selection lists eg. dropdowns
-                'customValues' => $this->fetchCustomFieldsAndValues($cfR, $cvR,
+                'customValues' => $this->fetchCustomFieldsAndValues($deps->cfR, $deps->cvR,
                         'payment_custom')['customValues'],
 // There will initially be no custom_values attached to this payment until they
 // are filled in the field on the form
 // 'payment_custom_values' => $this->paymentCustomValues($payment_id,$pcR),
                 'paymentCustomValues' =>
-                                $this->paymentCustomValues($payment_id, $pcR),
+                                $this->paymentCustomValues($payment_id, $deps->pcR),
                 'edit' => true,
                 'paymentCustomForm' => $pcForm,
             ];
@@ -380,13 +338,13 @@ final class PaymentController extends BaseController
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
                     $form = $this->saveFormFields($body, $currentRoute, $fmHyd,
-                            $pmtR);
+                            $deps->pmtR);
                     if (isset($params['errors'])) {
                         // Recalculate the invoice
                         if (isset($body['custom'])) {
                             /** @var array $body['custom'] */
                             $custom = $body['custom'];
-                            if ($pcR->repoPaymentCount($payment_id) > 0) {
+                            if ($deps->pcR->repoPaymentCount($payment_id) > 0) {
                                 $this->processCustomFields(['custom' => $custom],
                                     $fmHyd, $this->paymentCustomFieldProcessor,
                                                                     $payment_id);
