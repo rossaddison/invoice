@@ -94,13 +94,16 @@ class As4SecurityHandler
             $signedInfo->appendChild($ref);
         }
 
-        $canonSignedInfo = $this->canonicalizeXml($signedInfo);
-        $privateKey = $this->loadEd25519PrivateKey();
-        $signatureValue = sodium_crypto_sign_detached($canonSignedInfo, $privateKey);
-
+        // Signature and SignedInfo must be in the document tree before C14N:
+        // DOMNode::C14N() returns an empty string on orphan nodes.
         $signature = $doc->createElementNS(As4Constants::XMLDSIG_NS, 'ds:Signature');
         $signature->setAttribute('Id', $signatureId);
         $signature->appendChild($signedInfo);
+        $wssHeader->appendChild($signature);
+
+        $canonSignedInfo = $this->canonicalizeXml($signedInfo);
+        $privateKey = $this->loadEd25519PrivateKey();
+        $signatureValue = sodium_crypto_sign_detached($canonSignedInfo, $privateKey);
 
         $sigValue = $doc->createElementNS(As4Constants::XMLDSIG_NS, 'ds:SignatureValue');
         $sigValue->nodeValue = base64_encode($signatureValue);
@@ -120,7 +123,6 @@ class As4SecurityHandler
         $keyInfo->appendChild($strRef);
         $signature->appendChild($keyInfo);
 
-        $wssHeader->appendChild($signature);
         return $signature;
     }
 

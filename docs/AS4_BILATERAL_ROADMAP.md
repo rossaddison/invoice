@@ -152,16 +152,18 @@ policy, receipt storage) is identical.
 
 ---
 
-## Deferred Work (code-first, tests to follow)
+## Deferred Work
 
-| Item | Note |
-|---|---|
-| DI container wiring for `CycleOrmAs4MessageRepository` | Bind interface in `config/di/as4.php` |
-| `As4ErrorSignalTest`, `As4ReceiptSignalTest` | Value object tests |
-| `As4MimePartTest`, `As4SmpEndpointTest`, `As4SmpQueryTest` | Value object tests |
-| `As4DispatchRequestTest`, `As4DispatchResultTest` | Value object tests |
-| `CycleOrmAs4MessageRepositoryTest` | Integration test with real Cycle ORM |
-| Inbound pipeline tests | `As4ReceiveControllerTest` (12), `As4DuplicateDetectorTest` (3), `As4ReceiptGeneratorTest` (7) — all passing | ✅ done |
+| Item | Note | Status |
+|---|---|---|
+| DI container wiring — all interfaces | `config/common/di/as4.php` | ✅ done |
+| `As4ErrorSignalTest`, `As4ReceiptSignalTest` | Value object tests | ✅ done |
+| `As4MimePartTest`, `As4SmpEndpointTest`, `As4SmpQueryTest` | Value object tests | ✅ done |
+| `As4DispatchRequestTest`, `As4DispatchResultTest` | Value object tests | ✅ done |
+| `As4UserMessageHandlerServiceTest` | 8 tests: duplicate/new-message branches, payload handler args | ✅ done |
+| `CycleOrmAs4MessageRepositoryTest` | Integration test with real Cycle ORM | ⬜ todo |
+| Real `As4PayloadHandlerInterface` implementation | UBL XML → invoice records; `NullAs4PayloadHandler` is current default | ⬜ todo |
+| `As4SecurityHandlerTest` | Sign+verify round-trip with in-memory Ed25519 certs | ⬜ todo |
 
 ---
 
@@ -172,3 +174,5 @@ policy, receipt storage) is identical.
 | June 2026 | Initial roadmap created; outbound AS4 stack complete on `as4` branch |
 | June 2026 | Inbound pipeline complete: `As4InboundMessage`, `As4ParseException`, `As4ReceiptGenerator`, `As4DuplicateDetector`, `As4ReceiveController`; `POST /as4/receive` route wired; DI config in `config/common/di/as4.php`; `As4MessageState::received` added; `As4Message::fromInbound()` factory added |
 | June 2026 | Inbound pipeline tests complete: `As4ReceiveControllerTest` (12 tests), `As4DuplicateDetectorTest` (3 tests), `As4ReceiptGeneratorTest` (7 tests); all Psalm errorLevel 1 clean |
+| June 2026 | Ed25519 XML-DSIG signature verification implemented in `As4SecurityHandler::verifySignatureElement()`; `canonicalizeXml()` fixed to use Exclusive C14N |
+| June 2026 | `As4PayloadHandlerInterface` + `NullAs4PayloadHandler` + `As4UserMessageHandlerService` added; controller S107-compliant (6 params); DI config updated; 348 tests all pass |
