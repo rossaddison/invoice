@@ -46,6 +46,14 @@ class As4RetryEngine
                     continue;
                 }
 
+                if (!$this->repository->claimForRetry($message)) {
+                    // Another worker claimed this message — skip without counting
+                    $this->logger->debug('Skipping message already claimed by another worker', [
+                        'messageId' => $message->getMessageId(),
+                    ]);
+                    continue;
+                }
+
                 $stats['processed']++;
 
                 if ($this->retryMessage($message)) {

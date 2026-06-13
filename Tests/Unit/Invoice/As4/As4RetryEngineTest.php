@@ -41,11 +41,13 @@ class As4RetryEngineTest extends TestCase
 {
     // ── factory ───────────────────────────────────────────────────────────────
 
-    private function createFixture(): As4RetryEngineTestFixture
+    private function createFixture(bool $claimSucceeds = true): As4RetryEngineTestFixture
     {
         $repository    = $this->createMock(As4MessageRepositoryInterface::class);
         $sender        = $this->createMock(As4SenderInterface::class);
         $receiptParser = $this->createMock(As4ReceiptParserInterface::class);
+
+        $repository->method('claimForRetry')->willReturn($claimSucceeds);
 
         return new As4RetryEngineTestFixture(
             engine: new As4RetryEngine(
@@ -176,6 +178,27 @@ class As4RetryEngineTest extends TestCase
         $this->assertSame(1, $count);
         $this->assertSame(As4MessageState::failed, $message->getState());
         $this->assertSame('EBMS:0301', $message->getErrorCode());
+    }
+
+    // ── processRetries — concurrency protection ───────────────────────────────
+
+    public function testProcessRetriesSkipsMessageWhenClaimFails(): void
+    {
+        $f       = $this->createFixture(claimSucceeds: false);
+        $message = $this->makeSentReadyMessage();
+        $f->repository->method('findPendingRetries')->willReturn([$message]);
+        $f->sender->expects($this->never())->method('send');
+        // No save() because the message was skipped entirely
+        $f->repository->expects($this->never())->method('save');
+
+        $stats = $f->engine->processRetries();
+
+        // Message not counted — claim failure is silent, not a retry failure
+        $this->assertSame(0, $stats['processed']);
+        $this->assertSame(0, $stats['succeeded']);
+        $this->assertSame(0, $stats['failed']);
+        // State unchanged — another worker owns this message
+        $this->assertSame(As4MessageState::sent, $message->getState());
     }
 
     // ── processRetries — skip paths ───────────────────────────────────────────

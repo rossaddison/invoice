@@ -33,5 +33,18 @@ interface As4MessageRepositoryInterface
 
     public function findByMessageId(string $messageId): ?As4Message;
 
+    /**
+     * Atomically claim this message for retry by this worker.
+     *
+     * The implementation must use a database-level compare-and-swap (e.g.
+     * UPDATE ... WHERE state = 'sent' AND locked_at IS NULL) so that only
+     * one concurrent worker proceeds. Returns true when the claim succeeded,
+     * false when another worker beat this one to it.
+     *
+     * Called from As4RetryEngine::processRetries() immediately after
+     * isReadyForRetry() passes, before any HTTP work begins.
+     */
+    public function claimForRetry(As4Message $message): bool;
+
     public function save(As4Message $message): void;
 }
