@@ -25,7 +25,7 @@ final class As4NrrValidator
 {
     private const string NS_EB   = As4Constants::EBMS3_NS;
     private const string NS_DS   = As4Constants::XMLDSIG_NS;
-    private const string NS_EBBP = 'http://docs.oasis-open.org/ebcore/ns/NonRepudiation/v1.0';
+    private const string NS_EBBP = 'http://docs.oasis-open.org/ebcore/ns/NonRepudiation/v1.0'; // NOSONAR
 
     /**
      * @param string $signedEnvelopeXml  Serialized outbound signed SOAP envelope

@@ -26,14 +26,25 @@ use RobRichards\XMLSecLibs\XMLSecurityKey;
  */
 final class WsSecuritySigner implements As4EnvelopeSignerInterface
 {
-    private const string NS_WSS  = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd';
-    private const string NS_WSU  = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd';
-    private const string NS_DS   = 'http://www.w3.org/2000/09/xmldsig#';
-    private const string NS_SOAP = 'http://www.w3.org/2003/05/soap-envelope';
-    private const string NS_EB   = 'http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/';
+    private const string NS_WSS  =
+        'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-' // NOSONAR
+            . 'secext-1.0.xsd';
+    private const string NS_WSU  =
+        'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-' // NOSONAR
+            . 'utility-1.0.xsd';
+    private const string NS_DS   =
+        'http://www.w3.org/2000/09/xmldsig#'; // NOSONAR
+    private const string NS_SOAP =
+        'http://www.w3.org/2003/05/soap-envelope'; // NOSONAR
+    private const string NS_EB =
+        'http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/'; // NOSONAR
 
-    private const string ENCODING_BASE64 = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary';
-    private const string VALUE_TYPE_X509 = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3';
+    private const string ENCODING_BASE64 =
+        'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-' // NOSONAR
+            . 'security-1.0#Base64Binary';
+    private const string VALUE_TYPE_X509 =
+        'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-' // NOSONAR
+            . 'profile-1.0#X509v3';
 
     public function __construct(
         private readonly string $privateKeyPem,
@@ -58,13 +69,16 @@ final class WsSecuritySigner implements As4EnvelopeSignerInterface
         $security    = $this->requireSecurityHeader($doc);
         $this->addBinarySecurityToken($security, $doc, $tokenId);
 
-        $bodyEl      = $this->requireElement($doc, '//soap:Body', 'soap:Body not found in envelope');
-        $messagingEl = $this->requireElement($doc, '//eb:Messaging', 'eb:Messaging not found in envelope');
+        $bodyEl      = $this->requireElement($doc, '//soap:Body',
+            'soap:Body not found in envelope');
+        $messagingEl = $this->requireElement($doc, '//eb:Messaging',
+            'eb:Messaging not found in envelope');
 
         // Append ds:Signature to Security before signing so SignedInfo is
         // canonicalized within the correct document namespace context.
         $signature  = $doc->createElementNS(self::NS_DS, 'ds:Signature');
-        $signedInfo = $this->buildSignedInfo($doc, $bodyEl, $bodyId, $messagingEl, $messagingId);
+        $signedInfo = $this->buildSignedInfo($doc, $bodyEl, $bodyId,
+            $messagingEl, $messagingId);
         $signature->appendChild($signedInfo);
         $security->appendChild($signature);
 
