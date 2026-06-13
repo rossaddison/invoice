@@ -234,7 +234,7 @@ class As4Message
         return $this;
     }
 
-    public function markReceiptReceived(string $receiptMessageId, string $digest): self
+    public function markReceiptReceived(string $receiptMessageId, string $digest = ''): self
     {
         $this->state = As4MessageState::receiptReceived->value;
         $this->receiptMessageId = $receiptMessageId;

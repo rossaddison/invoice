@@ -23,6 +23,7 @@ class As4RetryEngine
         private readonly As4MessageRepositoryInterface $repository,
         private readonly As4Sender $sender,
         private readonly LoggerInterface $logger,
+        private readonly As4ReceiptParserInterface $receiptParser,
     ) {}
 
     /**
@@ -207,13 +208,7 @@ class As4RetryEngine
     private function processResponse(As4Message $message, As4HttpResponse $response): bool
     {
         if ($response->isSuccess()) {
-            // HTTP transport accepted — AS4 receipt signal confirms actual delivery
-            $message->markSent();
-            $this->repository->save($message);
-            $this->logger->info('AS4 transport succeeded, awaiting receipt signal', [
-                'messageId' => $message->getMessageId(),
-            ]);
-            return true;
+            return $this->handleSuccessResponse($message, $response);
         }
 
         if ($response->isRetriable()) {
@@ -227,6 +222,60 @@ class As4RetryEngine
         $message->markFailed('HTTP_' . $response->statusCode, 'AS4 endpoint returned non-retriable error');
         $this->repository->save($message);
         return false;
+    }
+
+    /**
+     * Inspects the body of a successful (2xx) HTTP response for an ebMS3 signal.
+     *
+     * HTTP 200/202 does NOT guarantee delivery — the body may contain a receipt
+     * signal (confirmed delivery), an error signal (receiver rejected the message),
+     * or nothing at all (async 202 acceptance, receipt will arrive separately).
+     */
+    private function handleSuccessResponse(As4Message $message, As4HttpResponse $response): bool
+    {
+        $signal = $this->receiptParser->parse($response->body, $response->contentType);
+
+        if ($signal instanceof As4ReceiptSignal) {
+            $message->markReceiptReceived($signal->messageId);
+            $this->repository->save($message);
+            $this->logger->info('Receipt signal confirmed delivery', [
+                'messageId'       => $message->getMessageId(),
+                'signalMessageId' => $signal->messageId,
+                'refToMessageId'  => $signal->refToMessageId,
+            ]);
+            return true;
+        }
+
+        if ($signal instanceof As4ErrorSignal && $signal->isFailure()) {
+            $message->markFailed($signal->errorCode, $signal->shortDescription);
+            $this->repository->save($message);
+            $this->logger->error('ebMS error signal received — message rejected by receiver', [
+                'messageId'        => $message->getMessageId(),
+                'signalMessageId'  => $signal->messageId,
+                'errorCode'        => $signal->errorCode,
+                'shortDescription' => $signal->shortDescription,
+                'severity'         => $signal->severity->value,
+            ]);
+            return false;
+        }
+
+        if ($signal instanceof As4ErrorSignal) {
+            // Warning-level error — receiver accepted the message but flagged an issue
+            $this->logger->warning('ebMS warning signal in AS4 response', [
+                'messageId'        => $message->getMessageId(),
+                'signalMessageId'  => $signal->messageId,
+                'errorCode'        => $signal->errorCode,
+                'shortDescription' => $signal->shortDescription,
+            ]);
+        }
+
+        // null (async 202) or warning signal — transport accepted, await async receipt
+        $message->markSent();
+        $this->repository->save($message);
+        $this->logger->info('AS4 transport accepted, awaiting receipt signal', [
+            'messageId' => $message->getMessageId(),
+        ]);
+        return true;
     }
 
     private function parseEnvelope(string $xml): DOMDocument
