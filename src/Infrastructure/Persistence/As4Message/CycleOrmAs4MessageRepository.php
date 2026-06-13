@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\As4Message;
 
+use App\Invoice\AppConstants;
 use App\Invoice\As4\As4MessageRepositoryInterface;
 use App\Invoice\As4\As4MessageState;
 use Cycle\Database\DatabaseInterface;
@@ -105,11 +106,11 @@ final class CycleOrmAs4MessageRepository extends Select\Repository implements As
                AND (locked_at IS NULL OR locked_at < ?)
             SQL,
             [
-                $now->format('Y-m-d H:i:s'),
-                $now->format('Y-m-d H:i:s'),
+                $now->format(AppConstants::DATETIME_FORMAT),
+                $now->format(AppConstants::DATETIME_FORMAT),
                 $message->reqId(),
                 As4MessageState::sent->value,
-                $expiry->format('Y-m-d H:i:s'),
+                $expiry->format(AppConstants::DATETIME_FORMAT),
             ],
         );
 

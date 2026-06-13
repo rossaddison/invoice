@@ -9,14 +9,6 @@ use App\Invoice\As4\As4MessageState;
 use Cycle\Annotated\Annotation as Cycle;
 use DateTime;
 
-/**
- * AS4Message Infrastructure Entity
- *
- * Persists outbound AS4 messages with reception awareness state tracking
- * per eDelivery AS4 2.0 section 3.3.2 (Reliable Messaging and Non-Repudiation).
- *
- * @Cycle\Entity(role="as4Message", table="as4_messages")
- */
 #[Cycle\Entity(role: 'as4Message', table: 'as4_messages')]
 class As4Message
 {
@@ -305,10 +297,7 @@ class As4Message
      */
     public function isReadyForRetry(int $intervalSeconds = 0): bool
     {
-        if ($this->state !== As4MessageState::sent->value) {
-            return false;
-        }
-        if ($this->attemptCount >= $this->maxAttempts) {
+        if ($this->state !== As4MessageState::sent->value || $this->attemptCount >= $this->maxAttempts) {
             return false;
         }
         if ($this->lastAttemptAt === null) {

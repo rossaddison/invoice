@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Prometheus;
 
+use App\Invoice\AppConstants;
 use App\Invoice\BaseController;
 use App\Invoice\Prometheus\PrometheusService;
 use App\Service\WebControllerService;
@@ -283,7 +284,7 @@ final class PrometheusController extends BaseController
             'memory_limit' => ini_get('memory_limit'),
             'memory_usage' => memory_get_usage(true),
             'peak_memory' => memory_get_peak_usage(true),
-            'server_time' => date('Y-m-d H:i:s'),
+            'server_time' => date(AppConstants::DATETIME_FORMAT),
             'uptime_seconds' => time() - ($_SERVER['REQUEST_TIME'] ?? time())
         ];
     }

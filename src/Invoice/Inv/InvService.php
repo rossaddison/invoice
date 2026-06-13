@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv;
 
+use App\Invoice\AppConstants;
 // Entities
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\User\User;
@@ -306,15 +307,15 @@ final readonly class InvService
     {
         $datehelper = new DateHelper($s);
         $datetime = $datehelper->getOrSetWithStyle($details['date_created'] ?? new \DateTime());
-        $datetimeimmutable = new DateTimeImmutable($datetime instanceof \DateTime ? $datetime->format('Y-m-d H:i:s') : 'now');
+        $datetimeimmutable = new DateTimeImmutable($datetime instanceof \DateTime ? $datetime->format(AppConstants::DATETIME_FORMAT) : 'now');
         $model->setDateCreated($datetimeimmutable->format('Y-m-d'));
 
         $datetime_supplied = $datehelper->getOrSetWithStyle($details['date_supplied'] ?? new \DateTime());
-        $datetimeimmutable_supplied = new DateTimeImmutable($datetime_supplied instanceof \DateTime ? $datetime_supplied->format('Y-m-d H:i:s') : 'now');
+        $datetimeimmutable_supplied = new DateTimeImmutable($datetime_supplied instanceof \DateTime ? $datetime_supplied->format(AppConstants::DATETIME_FORMAT) : 'now');
         $model->setDateSupplied($datetimeimmutable_supplied);
 
         $datetime_tax_point = $datehelper->getOrSetWithStyle($details['date_tax_point'] ?? new \DateTime());
-        $datetimeimmutable_tax_point = new DateTimeImmutable($datetime_tax_point instanceof \DateTime ? $datetime_tax_point->format('Y-m-d H:i:s') : 'now');
+        $datetimeimmutable_tax_point = new DateTimeImmutable($datetime_tax_point instanceof \DateTime ? $datetime_tax_point->format(AppConstants::DATETIME_FORMAT) : 'now');
         $model->setDateTaxPoint($datetimeimmutable_tax_point);
 
         $model->setDateDue($s);
