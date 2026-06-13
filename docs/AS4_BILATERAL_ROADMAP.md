@@ -162,7 +162,7 @@ policy, receipt storage) is identical.
 | `As4DispatchRequestTest`, `As4DispatchResultTest` | Value object tests | ✅ done |
 | `As4UserMessageHandlerServiceTest` | 8 tests: duplicate/new-message branches, payload handler args | ✅ done |
 | `CycleOrmAs4MessageRepositoryTest` | Integration test with real Cycle ORM | ⬜ todo |
-| Real `As4PayloadHandlerInterface` implementation | UBL XML → invoice records; `NullAs4PayloadHandler` is current default | ⬜ todo |
+| Real `As4PayloadHandlerInterface` implementation | UBL XML → invoice records | ✅ done (`As4InvoiceImportService`; `UblXmlParser` uses `Schema` namespace constants; 32 tests) |
 | `As4SecurityHandlerTest` | Sign+verify round-trip with pre-generated Ed25519 fixtures | ✅ done (10 tests; C14N orphan bug in `signMessage()` fixed) |
 
 ---
@@ -177,3 +177,4 @@ policy, receipt storage) is identical.
 | June 2026 | Ed25519 XML-DSIG signature verification implemented in `As4SecurityHandler::verifySignatureElement()`; `canonicalizeXml()` fixed to use Exclusive C14N |
 | June 2026 | `As4PayloadHandlerInterface` + `NullAs4PayloadHandler` + `As4UserMessageHandlerService` added; controller S107-compliant (6 params); DI config updated; 348 tests all pass |
 | June 2026 | `As4SecurityHandlerTest` (10 tests): C14N orphan bug fixed in `signMessage()` — `DOMNode::C14N()` returns empty string for nodes not yet in the document tree; fix: append to tree before canonicalising |
+| June 2026 | `As4InvoiceImportService` + `UblXmlParser` added; `Schema` namespace URI constants centralised; `ClientPeppolRepository::findByEndpointId()` added; DI wired to real handler; 32 tests |
