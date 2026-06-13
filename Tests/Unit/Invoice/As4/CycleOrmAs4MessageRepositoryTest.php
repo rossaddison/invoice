@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Invoice\As4;
 
 use App\Infrastructure\Persistence\As4Message\As4Message;
+use App\Infrastructure\Persistence\As4Message\As4MessageParams;
 use App\Infrastructure\Persistence\As4Message\CycleOrmAs4MessageRepository;
 use App\Invoice\As4\As4MessageState;
 use Cycle\Database\DatabaseInterface;
@@ -56,7 +57,7 @@ class CycleOrmAs4MessageRepositoryTest extends TestCase
 
     private function newMessage(): As4Message
     {
-        return new As4Message(
+        return new As4Message(new As4MessageParams(
             messageId:        'msg-001@test.local',
             conversationId:   'conv-001',
             senderPartyId:    '0088:1234567890123',
@@ -67,7 +68,7 @@ class CycleOrmAs4MessageRepositoryTest extends TestCase
             action:           'urn:test:action',
             receiverEndpoint: 'https://receiver.example.com/as4',
             soapMessage:      '<soap/>',
-        );
+        ));
     }
 
     private function persistedMessage(int $id = 99): As4Message

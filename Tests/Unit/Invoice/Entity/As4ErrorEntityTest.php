@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Invoice\Entity;
 
 use App\Infrastructure\Persistence\As4Error\As4Error;
+use App\Infrastructure\Persistence\As4Error\As4ErrorParams;
 use PHPUnit\Framework\TestCase;
 use DateTime;
 
@@ -12,16 +13,16 @@ class As4ErrorEntityTest extends TestCase
 {
     private function makeError(): As4Error
     {
-        return new As4Error(
-            errorMessageId: 'err-msg-001@as4.example.com',
-            refToMessageId: 'orig-msg-001@as4.example.com',
-            errorCode: As4Error::CATEGORY_PROCESSING,
-            category: As4Error::CATEGORY_PROCESSING,
+        return new As4Error(new As4ErrorParams(
+            errorMessageId:   'err-msg-001@as4.example.com',
+            refToMessageId:   'orig-msg-001@as4.example.com',
+            errorCode:        As4Error::CATEGORY_PROCESSING,
+            category:         As4Error::CATEGORY_PROCESSING,
             shortDescription: 'ValueNotRecognized',
-            originSender: '0088:1234567890123',
-            originReceiver: '0088:9876543210987',
-            errorXml: '<eb:SignalMessage/>'
-        );
+            originSender:     '0088:1234567890123',
+            originReceiver:   '0088:9876543210987',
+            errorXml:         '<eb:SignalMessage/>',
+        ));
     }
 
     public function testIsPersistedReturnsFalseByDefault(): void
@@ -95,48 +96,48 @@ class As4ErrorEntityTest extends TestCase
     public function testIsCriticalForKnownCriticalCodes(): void
     {
         foreach (['EBMS:0201', 'EBMS:0202', 'EBMS:0303', 'EBMS:0402'] as $code) {
-            $error = new As4Error(
-                errorMessageId: 'id',
-                refToMessageId: 'ref',
-                errorCode: $code,
-                category: As4Error::CATEGORY_PROCESSING,
+            $error = new As4Error(new As4ErrorParams(
+                errorMessageId:   'id',
+                refToMessageId:   'ref',
+                errorCode:        $code,
+                category:         As4Error::CATEGORY_PROCESSING,
                 shortDescription: 'test',
-                originSender: 'sender',
-                originReceiver: 'receiver',
-                errorXml: '<xml/>'
-            );
+                originSender:     'sender',
+                originReceiver:   'receiver',
+                errorXml:         '<xml/>',
+            ));
             $this->assertTrue($error->isCritical(), "Expected {$code} to be critical");
         }
     }
 
     public function testIsCriticalReturnsFalseForNonCriticalCode(): void
     {
-        $error = new As4Error(
-            errorMessageId: 'id',
-            refToMessageId: 'ref',
-            errorCode: 'EBMS:0001',
-            category: As4Error::CATEGORY_PROCESSING,
+        $error = new As4Error(new As4ErrorParams(
+            errorMessageId:   'id',
+            refToMessageId:   'ref',
+            errorCode:        'EBMS:0001',
+            category:         As4Error::CATEGORY_PROCESSING,
             shortDescription: 'test',
-            originSender: 'sender',
-            originReceiver: 'receiver',
-            errorXml: '<xml/>'
-        );
+            originSender:     'sender',
+            originReceiver:   'receiver',
+            errorXml:         '<xml/>',
+        ));
         $this->assertFalse($error->isCritical());
     }
 
     public function testIsRetriableForKnownRetriableCodes(): void
     {
         foreach (['EBMS:0202', 'EBMS:0203'] as $code) {
-            $error = new As4Error(
-                errorMessageId: 'id',
-                refToMessageId: 'ref',
-                errorCode: $code,
-                category: As4Error::CATEGORY_PROCESSING,
+            $error = new As4Error(new As4ErrorParams(
+                errorMessageId:   'id',
+                refToMessageId:   'ref',
+                errorCode:        $code,
+                category:         As4Error::CATEGORY_PROCESSING,
                 shortDescription: 'test',
-                originSender: 'sender',
-                originReceiver: 'receiver',
-                errorXml: '<xml/>'
-            );
+                originSender:     'sender',
+                originReceiver:   'receiver',
+                errorXml:         '<xml/>',
+            ));
             $this->assertTrue($error->isRetriable(), "Expected {$code} to be retriable");
         }
     }

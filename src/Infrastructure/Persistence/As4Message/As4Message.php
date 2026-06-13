@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\As4Message;
 
+use App\Infrastructure\Persistence\As4Message\As4MessageParams;
 use App\Invoice\As4\As4InboundMessage;
 use App\Invoice\As4\As4MessageState;
 use Cycle\Annotated\Annotation as Cycle;
@@ -124,31 +125,21 @@ class As4Message
     #[Cycle\Column(type: 'datetime')]
     private DateTime $updatedAt;
 
-    public function __construct(
-        string $messageId,
-        string $conversationId,
-        string $senderPartyId,
-        string $senderRole,
-        string $receiverPartyId,
-        string $receiverRole,
-        string $service,
-        string $action,
-        string $receiverEndpoint,
-        string $soapMessage
-    ) {
-        $this->messageId = $messageId;
-        $this->conversationId = $conversationId;
-        $this->senderPartyId = $senderPartyId;
-        $this->senderRole = $senderRole;
-        $this->receiverPartyId = $receiverPartyId;
-        $this->receiverRole = $receiverRole;
-        $this->service = $service;
-        $this->action = $action;
-        $this->receiverEndpoint = $receiverEndpoint;
-        $this->soapMessage = $soapMessage;
-        $this->state       = As4MessageState::pending->value;
-        $this->createdAt   = new DateTime();
-        $this->updatedAt   = new DateTime();
+    public function __construct(As4MessageParams $p)
+    {
+        $this->messageId        = $p->messageId;
+        $this->conversationId   = $p->conversationId;
+        $this->senderPartyId    = $p->senderPartyId;
+        $this->senderRole       = $p->senderRole;
+        $this->receiverPartyId  = $p->receiverPartyId;
+        $this->receiverRole     = $p->receiverRole;
+        $this->service          = $p->service;
+        $this->action           = $p->action;
+        $this->receiverEndpoint = $p->receiverEndpoint;
+        $this->soapMessage      = $p->soapMessage;
+        $this->state            = As4MessageState::pending->value;
+        $this->createdAt        = new DateTime();
+        $this->updatedAt        = new DateTime();
     }
 
     public function setId(int $id): void
@@ -259,7 +250,7 @@ class As4Message
      */
     public static function fromInbound(As4InboundMessage $msg): self
     {
-        $entity = new self(
+        $entity = new self(new As4MessageParams(
             messageId:        $msg->messageId ?? '',
             conversationId:   $msg->conversationId ?? '',
             senderPartyId:    $msg->senderPartyId ?? '',
@@ -270,7 +261,7 @@ class As4Message
             action:           $msg->action ?? '',
             receiverEndpoint: '',
             soapMessage:      $msg->xmlBody,
-        );
+        ));
         return $entity->markReceived();
     }
 

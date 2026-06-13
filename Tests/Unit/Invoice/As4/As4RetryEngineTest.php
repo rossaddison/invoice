@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Invoice\As4;
 
 use App\Infrastructure\Persistence\As4Message\As4Message;
+use App\Infrastructure\Persistence\As4Message\As4MessageParams;
 use App\Invoice\As4\As4ErrorCategory;
 use App\Invoice\As4\As4ErrorSeverity;
 use App\Invoice\As4\As4ErrorSignal;
@@ -67,7 +68,7 @@ class As4RetryEngineTest extends TestCase
 
     private function makeMessage(string $soapMessage = '<Envelope/>'): As4Message
     {
-        return new As4Message(
+        return new As4Message(new As4MessageParams(
             messageId:        'msg-001@as4.example.com',
             conversationId:   'conv-001',
             senderPartyId:    '0088:1234567890123',
@@ -78,7 +79,7 @@ class As4RetryEngineTest extends TestCase
             action:           'busdox-docid-qns::urn:oasis:names:specification:ubl:schema:xsd:Invoice-2',
             receiverEndpoint: 'https://ap.example.com/as4',
             soapMessage:      $soapMessage,
-        );
+        ));
     }
 
     /**

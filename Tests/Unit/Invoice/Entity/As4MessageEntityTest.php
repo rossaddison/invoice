@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Invoice\Entity;
 
 use App\Infrastructure\Persistence\As4Message\As4Message;
+use App\Infrastructure\Persistence\As4Message\As4MessageParams;
 use App\Invoice\As4\As4MessageState;
 use PHPUnit\Framework\TestCase;
 use DateTime;
@@ -13,18 +14,18 @@ class As4MessageEntityTest extends TestCase
 {
     private function makeMessage(): As4Message
     {
-        return new As4Message(
-            messageId: 'msg-001@as4.example.com',
-            conversationId: 'conv-001',
-            senderPartyId: '0088:1234567890123',
-            senderRole: 'Seller',
-            receiverPartyId: '0088:9876543210987',
-            receiverRole: 'Buyer',
-            service: 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0',
-            action: 'busdox-docid-qns::urn:oasis:names:specification:ubl:schema:xsd:Invoice-2',
+        return new As4Message(new As4MessageParams(
+            messageId:        'msg-001@as4.example.com',
+            conversationId:   'conv-001',
+            senderPartyId:    '0088:1234567890123',
+            senderRole:       'Seller',
+            receiverPartyId:  '0088:9876543210987',
+            receiverRole:     'Buyer',
+            service:          'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0',
+            action:           'busdox-docid-qns::urn:oasis:names:specification:ubl:schema:xsd:Invoice-2',
             receiverEndpoint: 'https://ap.example.com/as4',
-            soapMessage: '<env:Envelope/>'
-        );
+            soapMessage:      '<env:Envelope/>',
+        ));
     }
 
     public function testIsPersistedReturnsFalseByDefault(): void

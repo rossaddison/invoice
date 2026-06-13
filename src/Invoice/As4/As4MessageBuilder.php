@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\As4;
 
+use App\Invoice\As4\As4UserMessageParams;
 use DOMDocument;
 use DOMElement;
 
@@ -17,6 +18,8 @@ use DOMElement;
  */
 class As4MessageBuilder
 {
+    private const string NS_XMLNS = 'http://www.w3.org/2000/xmlns/';
+
     private DOMDocument $doc;
     private DOMElement $soapEnvelope;
     private DOMElement $soapBody;
@@ -33,13 +36,13 @@ class As4MessageBuilder
             As4Constants::SOAP_NS,
             'env:Envelope'
         );
-        $this->soapEnvelope->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:env', As4Constants::SOAP_NS);
-        $this->soapEnvelope->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:wsse', As4Constants::WSS_NS);
-        $this->soapEnvelope->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:wsu', As4Constants::WSS_UTIL_NS);
-        $this->soapEnvelope->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:eb', As4Constants::EBMS3_NS);
-        $this->soapEnvelope->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:ds', As4Constants::XMLDSIG_NS);
-        $this->soapEnvelope->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xenc', As4Constants::XMLENC_NS);
-        $this->soapEnvelope->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:dsig-more', As4Constants::XMLDSIG_MORE_NS);
+        $this->soapEnvelope->setAttributeNS(self::NS_XMLNS, 'xmlns:env', As4Constants::SOAP_NS);
+        $this->soapEnvelope->setAttributeNS(self::NS_XMLNS, 'xmlns:wsse', As4Constants::WSS_NS);
+        $this->soapEnvelope->setAttributeNS(self::NS_XMLNS, 'xmlns:wsu', As4Constants::WSS_UTIL_NS);
+        $this->soapEnvelope->setAttributeNS(self::NS_XMLNS, 'xmlns:eb', As4Constants::EBMS3_NS);
+        $this->soapEnvelope->setAttributeNS(self::NS_XMLNS, 'xmlns:ds', As4Constants::XMLDSIG_NS);
+        $this->soapEnvelope->setAttributeNS(self::NS_XMLNS, 'xmlns:xenc', As4Constants::XMLENC_NS);
+        $this->soapEnvelope->setAttributeNS(self::NS_XMLNS, 'xmlns:dsig-more', As4Constants::XMLDSIG_MORE_NS);
 
         $this->doc->appendChild($this->soapEnvelope);
 
@@ -61,28 +64,16 @@ class As4MessageBuilder
 
     /**
      * Add a UserMessage to the ebMS3 Messaging header.
-     *
-     * @param array<string, string> $properties
      */
-    public function addUserMessage(
-        string $messageId,
-        string $conversationId,
-        string $service,
-        string $action,
-        string $senderPartyId,
-        string $senderRole,
-        string $receiverPartyId,
-        string $receiverRole,
-        ?string $refToMessageId = null,
-        array $properties = []
-    ): DOMElement {
+    public function addUserMessage(As4UserMessageParams $p): DOMElement
+    {
         $userMessage = $this->doc->createElementNS(As4Constants::EBMS3_NS, 'eb:UserMessage');
 
         $messageInfo = $this->doc->createElementNS(As4Constants::EBMS3_NS, 'eb:MessageInfo');
         $this->appendElement($messageInfo, 'eb:Timestamp', date('c'));
-        $this->appendElement($messageInfo, 'eb:MessageId', $messageId);
-        if ($refToMessageId !== null) {
-            $this->appendElement($messageInfo, 'eb:RefToMessageId', $refToMessageId);
+        $this->appendElement($messageInfo, 'eb:MessageId', $p->messageId);
+        if ($p->refToMessageId !== null) {
+            $this->appendElement($messageInfo, 'eb:RefToMessageId', $p->refToMessageId);
         }
         $userMessage->appendChild($messageInfo);
 
@@ -91,30 +82,30 @@ class As4MessageBuilder
         $from = $this->doc->createElementNS(As4Constants::EBMS3_NS, 'eb:From');
         $fromPartyId = $this->doc->createElementNS(As4Constants::EBMS3_NS, 'eb:PartyId');
         $fromPartyId->setAttribute('type', 'urn:oasis:names:tc:ebcore:partyid-type:iso6523:0088');
-        $fromPartyId->nodeValue = $senderPartyId;
+        $fromPartyId->nodeValue = $p->senderPartyId;
         $from->appendChild($fromPartyId);
-        $this->appendElement($from, 'eb:Role', $senderRole);
+        $this->appendElement($from, 'eb:Role', $p->senderRole);
         $partyInfo->appendChild($from);
 
         $to = $this->doc->createElementNS(As4Constants::EBMS3_NS, 'eb:To');
         $toPartyId = $this->doc->createElementNS(As4Constants::EBMS3_NS, 'eb:PartyId');
         $toPartyId->setAttribute('type', 'urn:oasis:names:tc:ebcore:partyid-type:iso6523:0088');
-        $toPartyId->nodeValue = $receiverPartyId;
+        $toPartyId->nodeValue = $p->receiverPartyId;
         $to->appendChild($toPartyId);
-        $this->appendElement($to, 'eb:Role', $receiverRole);
+        $this->appendElement($to, 'eb:Role', $p->receiverRole);
         $partyInfo->appendChild($to);
 
         $userMessage->appendChild($partyInfo);
 
         $collabInfo = $this->doc->createElementNS(As4Constants::EBMS3_NS, 'eb:CollaborationInfo');
-        $this->appendElement($collabInfo, 'eb:ConversationId', $conversationId);
-        $this->appendElement($collabInfo, 'eb:Service', $service);
-        $this->appendElement($collabInfo, 'eb:Action', $action);
+        $this->appendElement($collabInfo, 'eb:ConversationId', $p->conversationId);
+        $this->appendElement($collabInfo, 'eb:Service', $p->service);
+        $this->appendElement($collabInfo, 'eb:Action', $p->action);
         $userMessage->appendChild($collabInfo);
 
-        if ($properties !== []) {
+        if ($p->properties !== []) {
             $messageProps = $this->doc->createElementNS(As4Constants::EBMS3_NS, 'eb:MessageProperties');
-            foreach ($properties as $name => $value) {
+            foreach ($p->properties as $name => $value) {
                 $prop = $this->doc->createElementNS(As4Constants::EBMS3_NS, 'eb:Property');
                 $prop->setAttribute('name', $name);
                 $prop->nodeValue = $value;

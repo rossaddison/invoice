@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Invoice\As4;
 
 use App\Infrastructure\Persistence\As4Message\As4Message;
+use App\Infrastructure\Persistence\As4Message\As4MessageParams;
 use App\Invoice\As4\As4InboundMessage;
 use App\Invoice\As4\As4MessageRepositoryInterface;
 use App\Invoice\As4\As4MessageState;
@@ -106,7 +107,7 @@ class As4ReceiveControllerTest extends TestCase
 
     private function makeSentMessage(string $messageId = self::REF_ID): As4Message
     {
-        $m = new As4Message(
+        $m = new As4Message(new As4MessageParams(
             messageId:        $messageId,
             conversationId:   'conv-001',
             senderPartyId:    '0088:1234567890123',
@@ -117,7 +118,7 @@ class As4ReceiveControllerTest extends TestCase
             action:           'busdox-docid-qns::urn:test:invoice:1.0',
             receiverEndpoint: 'https://ap.example.com/as4',
             soapMessage:      self::SOAP_BODY,
-        );
+        ));
         $m->markSent();
         return $m;
     }

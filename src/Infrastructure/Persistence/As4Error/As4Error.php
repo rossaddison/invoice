@@ -6,6 +6,7 @@ namespace App\Infrastructure\Persistence\As4Error;
 
 use Cycle\Annotated\Annotation as Cycle;
 use DateTime;
+use App\Infrastructure\Persistence\As4Error\As4ErrorParams;
 
 /**
  * AS4Error Infrastructure Entity
@@ -73,26 +74,18 @@ class As4Error
     #[Cycle\Column(type: 'datetime')]
     private DateTime $createdAt;
 
-    public function __construct(
-        string $errorMessageId,
-        string $refToMessageId,
-        string $errorCode,
-        string $category,
-        string $shortDescription,
-        string $originSender,
-        string $originReceiver,
-        string $errorXml
-    ) {
-        $this->errorMessageId = $errorMessageId;
-        $this->refToMessageId = $refToMessageId;
-        $this->errorCode = $errorCode;
-        $this->category = $category;
-        $this->shortDescription = $shortDescription;
-        $this->originSender = $originSender;
-        $this->originReceiver = $originReceiver;
-        $this->errorXml = $errorXml;
-        $this->receivedAt = new DateTime();
-        $this->createdAt = new DateTime();
+    public function __construct(As4ErrorParams $p)
+    {
+        $this->errorMessageId   = $p->errorMessageId;
+        $this->refToMessageId   = $p->refToMessageId;
+        $this->errorCode        = $p->errorCode;
+        $this->category         = $p->category;
+        $this->shortDescription = $p->shortDescription;
+        $this->originSender     = $p->originSender;
+        $this->originReceiver   = $p->originReceiver;
+        $this->errorXml         = $p->errorXml;
+        $this->receivedAt       = new DateTime();
+        $this->createdAt        = new DateTime();
     }
 
     public function setId(int $id): void

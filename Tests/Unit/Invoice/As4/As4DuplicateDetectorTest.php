@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Invoice\As4;
 
 use App\Infrastructure\Persistence\As4Message\As4Message;
+use App\Infrastructure\Persistence\As4Message\As4MessageParams;
 use App\Invoice\As4\As4DuplicateDetector;
 use App\Invoice\As4\As4MessageRepositoryInterface;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
@@ -33,7 +34,7 @@ class As4DuplicateDetectorTest extends TestCase
 
     private function makeMessage(string $messageId = 'msg-001@test.local'): As4Message
     {
-        $m = new As4Message(
+        $m = new As4Message(new As4MessageParams(
             messageId:        $messageId,
             conversationId:   'conv-001',
             senderPartyId:    '0088:1234567890123',
@@ -44,7 +45,7 @@ class As4DuplicateDetectorTest extends TestCase
             action:           'busdox-docid-qns::urn:test:invoice:1.0',
             receiverEndpoint: '',
             soapMessage:      '',
-        );
+        ));
         return $m->markReceived();
     }
 
