@@ -21,8 +21,4 @@ final class Permissions
     public const string EDIT_PAYMENT = 'edit.payment';
 
     public const string EDIT_CLIENT_PEPPOL = 'edit.client.peppol';
-
-    public function __construct()
-    {
-    }
 }
