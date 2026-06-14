@@ -22,8 +22,7 @@ export function initSimpleSelects(root?: Document | Element): void {
 
     selectElements.forEach((el) => {
         if (!(el as any)._tomselect) {
-            new TomSelect(el, {});
-            (el as any)._tomselect = true;
+            (el as any)._tomselect = new TomSelect(el, {});
         }
     });
 }

@@ -119,7 +119,7 @@ class InvoiceApp {
 // Initialize the application when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-        new InvoiceApp();
+        const _app = new InvoiceApp();
         initStripePayment();
         initAmazonPayment();
         initBraintreePayment();

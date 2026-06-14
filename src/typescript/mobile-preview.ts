@@ -218,5 +218,5 @@ class MobilePreviewToggle {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    new MobilePreviewToggle();
+    const _toggle = new MobilePreviewToggle();
 });

@@ -41,13 +41,8 @@ function setButtonLoading(button: HTMLElement, isLoading: boolean, originalHtml?
         button.appendChild(createSecureUIElement('h6', 'text-center', 'spinner-border spinner-border-sm'));
         (button as HTMLButtonElement).disabled = true;
     } else {
-        if (originalHtml) {
-            button.textContent = '';
-            button.appendChild(createSecureUIElement('h6', 'text-center', 'bi bi-check-lg'));
-        } else {
-            button.textContent = '';
-            button.appendChild(createSecureUIElement('h6', 'text-center', 'bi bi-check-lg'));
-        }
+        button.textContent = '';
+        button.appendChild(createSecureUIElement('h6', 'text-center', 'bi bi-check-lg'));
         (button as HTMLButtonElement).disabled = false;
     }
 }
