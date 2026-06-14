@@ -607,20 +607,9 @@ final class ProductController extends BaseController
                 '_partial_product_table_modal', $parameters);
     }
 
-    /**
-     * @param int $order
-     * @param Product $product
-     * @param int $quote_id
-     * @param pR $pR
-     * @param trR $trR
-     * @param uR $unR
-     * @param QIAR $qiaR
-     * @param QIAS $qiaS
-     * @param FormHydrator $formHydrator
-     */
     private function saveProductLookupItemQuote(int $order,
-            Product $product, int $quote_id, pR $pR, trR $trR, uR $unR,
-            qiaR $qiaR, qiaS $qiaS, FormHydrator $formHydrator): void
+            Product $product, int $quote_id,
+            ProductLookupQuoteDeps $deps, FormHydrator $formHydrator): void
     {
         $quoteItem = new QuoteItem();
         $form = new QuoteItemForm();
@@ -639,31 +628,19 @@ final class ProductController extends BaseController
             'discount_amount' => (float) 0,
             'order' => $order,
 // The default quantity is 1 so the singular name will be used.
-            'product_unit' => $unR->singularOrPluralName($product->reqUnitId(), 1),
+            'product_unit' => $deps->uR->singularOrPluralName($product->reqUnitId(), 1),
             'product_unit_id' => $product->reqUnitId(),
         ];
         if ($formHydrator->populateAndValidate($form, $ajax_content)) {
             $this->quoteitemService->addQuoteItemProduct(
-                    $quoteItem, $ajax_content, (string) $quote_id, $pR, $qiaR, $qiaS,
-                    $unR, $trR, $this->translator);
+                    $quoteItem, $ajax_content, (string) $quote_id, $deps->pR, $deps->qiaR, $deps->qiaS,
+                    $deps->uR, $deps->trR, $this->translator);
         }
     }
 
-    /**
-     * @param int $order
-     * @param Product $product
-     * @param int $inv_id
-     * @param pR $pR
-     * @param trR $trR
-     * @param uR $unR
-     * @param iiaR $iiaR
-     * @param iiR $iiR
-     * @param uR $uR
-     * @param FormHydrator $formHydrator
-     */
     private function saveProductLookupItemInv(int $order, Product $product,
-            int $inv_id, pR $pR, trR $trR, uR $unR, iiaR $iiaR, iiR $iiR,
-                uR $uR, FormHydrator $formHydrator): void
+            int $inv_id, ProductLookupInvDeps $deps,
+            FormHydrator $formHydrator): void
     {
         $invItem = new InvItem();
         $form = new InvItemForm();
@@ -685,13 +662,13 @@ final class ProductController extends BaseController
             'order' => $order,
 // The default quantity is 1 so the singular name will be used.
             'product_unit' =>
-                $unR->singularOrPluralName($product->reqUnitId(), 1),
+                $deps->uR->singularOrPluralName($product->reqUnitId(), 1),
             'product_unit_id' => $product->reqUnitId(),
         ];
         if ($formHydrator->populateAndValidate($form, $ajax_content)) {
             $this->invitemService->addInvItemProduct(
-                    $invItem, $ajax_content, (string) $inv_id, $pR, $trR,
-                    new iiaS($iiaR, $iiR), $iiaR, $this->sR, $uR);
+                    $invItem, $ajax_content, (string) $inv_id, $deps->pR, $deps->trR,
+                    new iiaS($deps->iiaR, $deps->iiR), $deps->iiaR, $this->sR, $deps->uR);
         }
     }
 
@@ -731,7 +708,7 @@ final class ProductController extends BaseController
             $product->setProductPrice((float) $numberHelper->formatAmount(
                 $product->getProductPrice()));
             $this->saveProductLookupItemQuote($order, $product, (int) $quote_id,
-                    $pR, $trR, $uR, $qiaR, $qiaS, $formHydrator);
+                    new ProductLookupQuoteDeps($pR, $trR, $uR, $qiaR, $qiaS), $formHydrator);
             $order++;
         }
         $this->quoteRecalculator->recalculate((int) $quote_id);
@@ -771,8 +748,8 @@ final class ProductController extends BaseController
             $product->setProductPrice(
                     (float) $numberHelper->formatAmount($product->getProductPrice()));
             $this->saveProductLookupItemInv(
-                    $order, $product, (int) $inv_id, $pR, $trR, $uR, $iiaR, $iiR,
-                    $uR, $formHydrator);
+                    $order, $product, (int) $inv_id,
+                    new ProductLookupInvDeps($pR, $trR, $uR, $iiaR, $iiR), $formHydrator);
             $order++;
         }
         $this->invRecalculator->recalculate((int) $inv_id);
