@@ -7,6 +7,7 @@ namespace App\Invoice\InvItem;
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Infrastructure\Persistence\InvItem\InvItem;
+use App\Invoice\Helpers\CalcInvDeps;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\InvItemAmount\InvItemAmountService as IIAS;
 use App\Invoice\Setting\SettingRepository as SR;
@@ -109,7 +110,7 @@ final class InvItemHtmxController extends BaseController
     {
         $numberHelper = new NumberHelper($this->sR);
         $numberHelper->calculateInv(
-            $inv_id, $d->aciR, $d->iiR, $d->iiaR, $d->itrR, $d->iaR, $d->iR, $d->pymR,
+            $inv_id, new CalcInvDeps($d->aciR, $d->iiR, $d->iiaR, $d->itrR, $d->iaR, $d->iR, $d->pymR),
         );
 
         $invAmount = $d->iaR->repoInvAmountquery($inv_id);

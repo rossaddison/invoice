@@ -31,13 +31,7 @@ final class InvRecalculator
     {
         (new NumberHelper($this->sR))->calculateInv(
             $invId,
-            $this->aciR,
-            $this->iiR,
-            $this->iiaR,
-            $this->itrR,
-            $this->iaR,
-            $this->iR,
-            $this->pmtR,
+            new CalcInvDeps($this->aciR, $this->iiR, $this->iiaR, $this->itrR, $this->iaR, $this->iR, $this->pmtR),
         );
     }
 }

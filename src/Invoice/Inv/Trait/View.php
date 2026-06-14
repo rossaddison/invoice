@@ -21,6 +21,7 @@ use App\Invoice\{
     Inv\InvRepository as IR,
     Upload\UploadRepository as UPR
 };
+use App\Invoice\Helpers\CalcInvDeps;
 use App\Invoice\Helpers\CustomValuesHelper as CVH;
 use App\Widget\{Bootstrap5ModalTranslatorMessageWithoutAction
 };
@@ -60,9 +61,8 @@ trait View
             $read_only = $inv->getIsReadOnly();
             $this->session->set('inv_id', $inv->reqId());
             $this->numberHelper->calculateInv(
-                (int) $this->session->get('inv_id'), $service->allowance->aciR, $service->items->iiR,
-                    $service->items->iiaR, $service->allowance->itrR, $service->core->iaR,
-                    $service->core->iR, $service->core->pymR);
+                (int) $this->session->get('inv_id'),
+                new CalcInvDeps($service->allowance->aciR, $service->items->iiR, $service->items->iiaR, $service->allowance->itrR, $service->core->iaR, $service->core->iR, $service->core->pymR));
             $inv_amount = (($service->core->iaR->repoInvAmountCount($inv->reqId()) > 0) ?
                     $service->core->iaR->repoInvquery((int) $this->session->get('inv_id')) :
                 null);

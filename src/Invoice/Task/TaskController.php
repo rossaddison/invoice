@@ -9,6 +9,7 @@ use App\Invoice\BaseController;
 use App\Infrastructure\Persistence\Task\Task;
 use App\Infrastructure\Persistence\InvItem\InvItem;
 use App\Infrastructure\Persistence\QuoteItem\QuoteItem;
+use App\Invoice\Helpers\CalcInvDeps;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\InvItemAmount\InvItemAmountService as iiaS;
 use App\Invoice\Project\ProjectRepository as prjctR;
@@ -225,8 +226,7 @@ final class TaskController extends BaseController
             $this->saveTaskLookupItemInv($order, $task, $inv_id, $d, $formHydrator);
             $order++;
         }
-        $numberHelper->calculateInv((int) $this->session->get('inv_id'), $d->aciR,
-            $d->iiR, $d->iiaR, $d->itrR, $d->iaR, $d->iR, $d->pymR);
+        $numberHelper->calculateInv((int) $this->session->get('inv_id'), new CalcInvDeps($d->aciR, $d->iiR, $d->iiaR, $d->itrR, $d->iaR, $d->iR, $d->pymR));
         return $this->factory->createResponse(Json::encode($tasks));
     }
 

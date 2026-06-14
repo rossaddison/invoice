@@ -8,6 +8,7 @@ use App\Invoice\BaseController;
 use App\Infrastructure\Persistence\InvItem\InvItem;
 use App\Infrastructure\Persistence\InvItemAmount\InvItemAmount;
 use App\Infrastructure\Persistence\InvItemAllowanceCharge\InvItemAllowanceCharge;
+use App\Invoice\Helpers\CalcInvDeps;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\InvItem\InvItemRepository as IIR;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
@@ -261,7 +262,7 @@ final class InvItemController extends BaseController
                                 $this->sR,
                             );
                             $numberHelper = new NumberHelper($this->sR);
-                            $numberHelper->calculateInv($inv_id, $d->aciR, $d->iiR, $d->iiaR, $d->itrR, $d->iaR, $d->iR, $d->pymR);
+                            $numberHelper->calculateInv($inv_id, new CalcInvDeps($d->aciR, $d->iiR, $d->iiaR, $d->itrR, $d->iaR, $d->iR, $d->pymR));
                             $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
                             return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                         }
@@ -403,7 +404,7 @@ final class InvItemController extends BaseController
                                 $this->sR,
                             );
                             $numberHelper = new NumberHelper($this->sR);
-                            $numberHelper->calculateInv($inv_id, $d->aciR, $d->iiR, $d->iiaR, $d->itrR, $d->iaR, $d->iR, $d->pymR);
+                            $numberHelper->calculateInv($inv_id, new CalcInvDeps($d->aciR, $d->iiR, $d->iiaR, $d->itrR, $d->iaR, $d->iR, $d->pymR));
                             $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
                             return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                         }

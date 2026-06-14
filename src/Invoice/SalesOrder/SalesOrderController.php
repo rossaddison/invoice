@@ -46,7 +46,7 @@ use App\Invoice\{
     UserClient\UserClientRepository as UCR,
     UserInv\UserInvRepository as UIR,
 };
-use App\Invoice\SalesOrder\{SalesOrderPdfService, SoDeleteFinancialDeps, SoDeleteSubEntityDeps, Widget\SalesOrdersListWidget};
+use App\Invoice\SalesOrder\{SalesOrderPdfService, SoDeleteFinancialDeps, SoDeleteSubEntityDeps, SoUrlKeyDeps, Widget\SalesOrdersListWidget};
 use App\Widget\SalesOrderToolbar;
 use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -603,11 +603,7 @@ final class SalesOrderController extends BaseController
         try {
             $so = $this->salesorder($currentRoute, $subDeps->soR);
             if ($so) {
-                $this->salesorderService->deleteSo($so,
-                    $subDeps->socR, $subDeps->socS,
-                    $subDeps->soiR, $subDeps->soiS,
-                    $financialDeps->sotrR, $financialDeps->sotrS,
-                    $financialDeps->soaR, $financialDeps->soaS);
+                $this->salesorderService->deleteSo($so, $subDeps, $financialDeps);
                 $this->flashMessage('info', $this->translator->translate(
                     'record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('salesorder/index');
@@ -1159,23 +1155,17 @@ final class SalesOrderController extends BaseController
         }
     }
 
-    /**
-     * @param CurrentRoute $currentRoute
-     * @param CurrentUser $currentUser
-     * @param CFR $cfR
-     * @param SOAR $soaR
-     * @param SOIR $soiR
-     * @param SOIAR $soiaR
-     * @param SOR $soR
-     * @param SOTRR $sotrR
-     * @param UIR $uiR
-     * @param UCR $ucR
-     * @return Response
-     */
-    public function urlKey(CurrentRoute $currentRoute, CurrentUser $currentUser,
-        CFR $cfR, SoAR $soaR, SoIR $soiR, SoIAR $soiaR, ACSOIR $acsoiR,
-            SoR $soR, SoTRR $sotrR, UIR $uiR, UCR $ucR): Response
+    public function urlKey(CurrentRoute $currentRoute, CurrentUser $currentUser, SoUrlKeyDeps $deps): Response
     {
+        $cfR = $deps->cfR;
+        $soaR = $deps->soaR;
+        $soiR = $deps->soiR;
+        $soiaR = $deps->soiaR;
+        $acsoiR = $deps->acsoiR;
+        $soR = $deps->soR;
+        $sotrR = $deps->sotrR;
+        $uiR = $deps->uiR;
+        $ucR = $deps->ucR;
         // Get the url key from the browser
         $url_key = $currentRoute->getArgument('key');
 

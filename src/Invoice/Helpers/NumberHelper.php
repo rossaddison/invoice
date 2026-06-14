@@ -368,9 +368,15 @@ final readonly class NumberHelper
         }
     }
 
-    public function calculateInv(int $inv_id, ACIR $aciR, IIR $iiR,
-                    IIAR $iiaR, ITRR $itrR, IAR $iaR, IR $iR, PYMR $pymR): void
+    public function calculateInv(int $inv_id, CalcInvDeps $deps): void
     {
+        $aciR = $deps->aciR;
+        $iiR = $deps->iiR;
+        $iiaR = $deps->iiaR;
+        $itrR = $deps->itrR;
+        $iaR = $deps->iaR;
+        $iR = $deps->iR;
+        $pymR = $deps->pymR;
         $inv_allowance_charge_amount_total = 0.00;
         $inv_allowance_charge_tax_total = 0.00;
         // Get all items that belong to a specific invoice by accessing $iiR

@@ -6,6 +6,7 @@ namespace App\Invoice\InvItemAllowanceCharge;
 
 use App\Invoice\BaseController;
 use App\Infrastructure\Persistence\InvItemAllowanceCharge\InvItemAllowanceCharge;
+use App\Invoice\Helpers\CalcInvDeps;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\InvAmount\InvAmountService;
 use App\Invoice\AllowanceCharge\AllowanceChargeRepository;
@@ -166,7 +167,7 @@ final class InvItemAllowanceChargeController extends BaseController
             // delete the inv item allowance/charge and update the related inv item amount record
             $this->aciiService->deleteInvItemAllowanceCharge($acii, $subDeps->iiaR, $subDeps->aciiR);
             // update the inv amount record
-            $this->numberHelper->calculateInv($inv_id, $subDeps->aciR, $subDeps->iiR, $subDeps->iiaR, $financialDeps->itrR, $financialDeps->iaR, $financialDeps->iR, $financialDeps->pymR);
+            $this->numberHelper->calculateInv($inv_id, new CalcInvDeps($subDeps->aciR, $subDeps->iiR, $subDeps->iiaR, $financialDeps->itrR, $financialDeps->iaR, $financialDeps->iR, $financialDeps->pymR));
             $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
             return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
         }

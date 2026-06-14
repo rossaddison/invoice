@@ -30,6 +30,7 @@ final class QuoteAllowanceChargeController extends BaseController
 
     public function __construct(
         private QuoteAllowanceChargeService $qacService,
+        private acqR $acqR,
         SessionInterface $session,
         sR $sR,
         TranslatorInterface $translator,
@@ -91,7 +92,6 @@ final class QuoteAllowanceChargeController extends BaseController
     }
 
     public function index(
-        acqR $acqR,
         #[RouteArgument('_language')]
         string $_language,
         #[RouteArgument('page')]
@@ -108,18 +108,18 @@ final class QuoteAllowanceChargeController extends BaseController
         ?string $queryFilterReason = null,
     ): Response {
         $this->session->set('_language', $_language);
-        $quoteAllowanceCharges = $acqR->findAllPreloaded();
+        $quoteAllowanceCharges = $this->acqR->findAllPreloaded();
         if (isset($queryFilterReasonCode) && !empty($queryFilterReasonCode)) {
             $quoteAllowanceCharges =
-                $acqR->repoReasonCodeQuery($queryFilterReasonCode);
+                $this->acqR->repoReasonCodeQuery($queryFilterReasonCode);
         }
         if (isset($queryFilterReason) && !empty($queryFilterReason)) {
             $quoteAllowanceCharges =
-                $acqR->repoReasonQuery($queryFilterReason);
+                $this->acqR->repoReasonQuery($queryFilterReason);
         }
         if (isset($queryFilterQuoteNumber) && !empty($queryFilterQuoteNumber)) {
             $quoteAllowanceCharges =
-                $acqR->repoQuoteNumberQuery($queryFilterQuoteNumber);
+                $this->acqR->repoQuoteNumberQuery($queryFilterQuoteNumber);
         }
         $page = $queryPage ?? $page;
         $parameters = [
@@ -127,7 +127,7 @@ final class QuoteAllowanceChargeController extends BaseController
                 (int) $this->sR->getSetting('default_list_limit') ?: 1,
             'quoteAllowanceCharges' => $quoteAllowanceCharges,
             'optionsDataQuoteNumberDropDownFilter' =>
-                $this->optionsDataQuoteNumberFilter($acqR),
+                $this->optionsDataQuoteNumberFilter($this->acqR),
             'page' => (int) $page > 0 ? (int) $page : 1,
             'sortString' => $querySort ?? '-id',
             'alert' => $this->alert(),

@@ -186,28 +186,19 @@ final readonly class SalesOrderService
         return $model;
     }
 
-    /**
-     * @param SalesOrder $model
-     * @param SoCR $socR
-     * @param SoCS $socS
-     * @param SoIR $soiR
-     * @param SoIS $soiS
-     * @param SoTRR $sotrR
-     * @param SoTRS $sotrS
-     * @param SoAR $soaR
-     * @param SoAS $soaS
-     */
     public function deleteSo(
         SalesOrder $model,
-        SoCR $socR,
-        SoCS $socS,
-        SoIR $soiR,
-        SoIS $soiS,
-        SoTRR $sotrR,
-        SoTRS $sotrS,
-        SoAR $soaR,
-        SoAS $soaS
+        SoDeleteSubEntityDeps $subDeps,
+        SoDeleteFinancialDeps $financialDeps,
     ): void {
+        $socR = $subDeps->socR;
+        $socS = $subDeps->socS;
+        $soiR = $subDeps->soiR;
+        $soiS = $subDeps->soiS;
+        $sotrR = $financialDeps->sotrR;
+        $sotrS = $financialDeps->sotrS;
+        $soaR = $financialDeps->soaR;
+        $soaS = $financialDeps->soaS;
         $so_id = $model->hasIdentity() ? $model->reqId() : null;
         // SalesOrders with no items: If there are no items
         // there will be no amount record so check if there is an
