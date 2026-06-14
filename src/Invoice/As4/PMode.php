@@ -6,10 +6,10 @@ namespace App\Invoice\As4;
 
 /**
  * P-Mode (Processing Mode) Configuration
- * 
+ *
  * Encapsulates AS4 message processing configuration per eDelivery AS4 2.0
  * section 3.5 P-Mode Parameters table.
- * 
+ *
  * P-Mode governs:
  * - Message Exchange Patterns (OneWay/Push, TwoWay/Push-and-Push, etc.)
  * - Security (signing/encryption certificates and algorithms)

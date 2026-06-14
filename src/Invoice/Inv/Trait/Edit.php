@@ -178,7 +178,7 @@ trait Edit
             ];
         }
         return $inputAttributesPaymentMethod;
-    }    
+    }
 
     public function editCheckStatusReconcilingWithBalance(IAR $iaR,
         int $inv_id): bool
