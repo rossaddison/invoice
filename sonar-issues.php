@@ -31,18 +31,40 @@ $pr       = null;
 $type     = null;
 $severity = null;
 $rule     = null;
+$language = null;
 $file     = null;
 $hotspots = false;
 $grouped  = false;
+
+// SonarCloud language key map: rule-prefix → API language code
+const LANGUAGE_MAP = [
+    'php'        => 'php',
+    'typescript' => 'ts',
+    'javascript' => 'js',
+    'css'        => 'css',
+    'xml'        => 'xml',
+    'shell'      => 'shell',
+    'shelldre'   => 'shell',
+];
 
 foreach ($args as $arg) {
     if (str_starts_with($arg, '--pr='))       { $pr       = substr($arg, 5); }
     if (str_starts_with($arg, '--type='))     { $type     = strtoupper(substr($arg, 7)); }
     if (str_starts_with($arg, '--severity=')) { $severity = strtoupper(substr($arg, 11)); }
-    if (str_starts_with($arg, '--rule='))     { $rule     = substr($arg, 7); }
+    if (str_starts_with($arg, '--language=')) { $language = LANGUAGE_MAP[strtolower(substr($arg, 11))] ?? substr($arg, 11); }
     if (str_starts_with($arg, '--file='))     { $file     = substr($arg, 7); }
     if ($arg === '--hotspots')                { $hotspots = true; }
     if ($arg === '--grouped')                 { $grouped  = true; }
+    if (str_starts_with($arg, '--rule=')) {
+        $val = substr($arg, 7);
+        // 'typescript:' (trailing colon, no rule number) → language filter
+        if (str_ends_with($val, ':')) {
+            $prefix   = rtrim($val, ':');
+            $language = LANGUAGE_MAP[strtolower($prefix)] ?? $prefix;
+        } else {
+            $rule = $val;
+        }
+    }
 }
 
 // ── Token ─────────────────────────────────────────────────────────────────────
@@ -84,7 +106,7 @@ function sonarGet(string $path, array $query, string $token): array
 }
 
 // ── Collect all pages ─────────────────────────────────────────────────────────
-function fetchAllIssues(string $token, ?string $pr, ?string $type, ?string $severity, ?string $rule, ?string $file = null): array
+function fetchAllIssues(string $token, ?string $pr, ?string $type, ?string $severity, ?string $rule, ?string $file = null, ?string $language = null): array
 {
     $issues = [];
     $page   = 1;
@@ -100,6 +122,7 @@ function fetchAllIssues(string $token, ?string $pr, ?string $type, ?string $seve
         if ($type !== null)     { $query['types']       = $type; }
         if ($severity !== null) { $query['severities']  = $severity; }
         if ($rule !== null)     { $query['rules']       = $rule; }
+        if ($language !== null) { $query['languages']   = $language; }
         if ($file !== null)     { $query['components']  = PROJECT_KEY . ':' . ltrim($file, '/'); }
 
         $data    = sonarGet('/api/issues/search', $query, $token);
@@ -157,7 +180,7 @@ if ($hotspots) {
     }
     echo "\n" . count($items) . " hotspot(s)\n";
 } else {
-    $items = fetchAllIssues($token, $pr, $type, $severity, $rule, $file);
+    $items = fetchAllIssues($token, $pr, $type, $severity, $rule, $file, $language);
     if ($grouped) {
         /** @var array<string, array{count: int, message: string}> $byRule */
         $byRule = [];

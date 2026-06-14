@@ -858,9 +858,10 @@ echo  [8]  Filter by file path   (e.g. src/typescript/list-utils.test.ts)
 echo  [9]  Reliability issues    (BUG type -- all, flat list)
 echo  [10] Reliability grouped by rule
 echo  [11] All issues grouped by rule
+echo  [12] Filter by language     (typescript / php / javascript)
 echo  [0]  Back to Main Menu
 echo.
-set /p sonar_choice="SonarCloud choice [0-11]: "
+set /p sonar_choice="SonarCloud choice [0-12]: "
 
 if "%sonar_choice%"=="0"  goto menu
 if "%sonar_choice%"=="1"  goto sonar_all
@@ -874,6 +875,7 @@ if "%sonar_choice%"=="8"  goto sonar_file
 if "%sonar_choice%"=="9"  goto sonar_reliability
 if "%sonar_choice%"=="10" goto sonar_reliability_grouped
 if "%sonar_choice%"=="11" goto sonar_all_grouped
+if "%sonar_choice%"=="12" goto sonar_language
 echo Invalid choice.
 pause
 goto sonar_menu
@@ -928,6 +930,18 @@ set /p sonar_comb_sev="Severity: "
 if "%sonar_comb_sev%"=="" (echo No severity entered.& pause& goto sonar_menu)
 echo.
 php sonar-issues.php --type=%sonar_comb_type% --severity=%sonar_comb_sev%
+pause
+goto sonar_menu
+
+:sonar_language
+echo.
+echo  Languages: typescript   php   javascript   css   xml
+echo  Tip: you can also type  typescript:  in option [7] for the same result.
+echo.
+set /p sonar_lang_val="Language: "
+if "%sonar_lang_val%"=="" (echo No language entered.& pause& goto sonar_menu)
+echo.
+php sonar-issues.php --language=%sonar_lang_val%
 pause
 goto sonar_menu
 
@@ -987,7 +1001,8 @@ echo  [21] php:S2234   Arguments to a function should match the function's param
 echo  [22] php:S4144   Methods should not have identical implementations
 echo  [23] php:S1117   Local variables should not shadow class fields
 echo ======================================================================================
-echo  Enter a number above, or type a full rule key (e.g. php:S1848), or press Enter to cancel.
+echo  Enter a number above, a full rule key (e.g. php:S1848), a language prefix
+echo  (e.g. typescript:  php:  javascript:), or press Enter to cancel.
 echo ======================================================================================
 set /p sonar_rule_val="Rule [1-23 or custom key]: "
 if "%sonar_rule_val%"=="" (goto sonar_menu)
