@@ -150,6 +150,12 @@ export function getInputValue(id: string): string {
     return element?.value || '';
 }
 
+function rejectAfter(ms: number, label: string): Promise<never> {
+    return new Promise<never>((_, reject) => {
+        setTimeout(() => reject(new Error(`Processing timeout for item ${label}`)), ms);
+    });
+}
+
 /**
  * ES2024: Advanced Promise.withResolvers for batch data processing
  * Processes multiple async operations with timeout, retry, and progress tracking
@@ -179,11 +185,7 @@ export async function processBatchWithProgress<T, R>(
             // Retry logic with exponential backoff
             for (let attempt = 0; attempt <= maxRetries; attempt++) {
                 try {
-                    const timeoutPromise = new Promise<never>((_, timeoutReject) => {
-                        setTimeout(() => timeoutReject(
-                            new Error(`Processing timeout for item ${globalIndex}`)
-                        ), timeoutMs);
-                    });
+                    const timeoutPromise = rejectAfter(timeoutMs, String(globalIndex));
 
                     const result = await Promise.race([
                         processor(item, globalIndex),

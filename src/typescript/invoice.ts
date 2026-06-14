@@ -148,47 +148,7 @@ export class InvoiceHandler {
             return;
         }
 
-        // PDF Export with custom fields
-        const pdfWithCustom = closestSafe<HTMLElement>(target, '#inv_to_pdf_confirm_with_custom_fields');
-        if (pdfWithCustom) {
-            this.handlePdfExport(true);
-            return;
-        }
-
-        // PDF Export without custom fields
-        const pdfWithoutCustom = closestSafe<HTMLElement>(target, '#inv_to_pdf_confirm_without_custom_fields');
-        if (pdfWithoutCustom) {
-            this.handlePdfExport(false);
-            return;
-        }
-
-        // Modal PDF with custom fields
-        const modalPdfWithCustom = closestSafe<HTMLElement>(target, '#inv_to_modal_pdf_confirm_with_custom_fields');
-        if (modalPdfWithCustom) {
-            this.handleModalPdfView(true);
-            return;
-        }
-
-        // Modal PDF without custom fields
-        const modalPdfWithoutCustom = closestSafe<HTMLElement>(target, '#inv_to_modal_pdf_confirm_without_custom_fields');
-        if (modalPdfWithoutCustom) {
-            this.handleModalPdfView(false);
-            return;
-        }
-
-        // HTML Export with custom fields
-        const htmlWithCustom = closestSafe<HTMLElement>(target, '#inv_to_html_confirm_with_custom_fields');
-        if (htmlWithCustom) {
-            this.handleHtmlExport(true);
-            return;
-        }
-
-        // HTML Export without custom fields
-        const htmlWithoutCustom = closestSafe<HTMLElement>(target, '#inv_to_html_confirm_without_custom_fields');
-        if (htmlWithoutCustom) {
-            this.handleHtmlExport(false);
-            return;
-        }
+        if (this.handleExportClick(target)) { return; }
 
         // Payment modal submit
         const paymentSubmit = closestSafe<HTMLElement>(target, '#btn_modal_payment_submit');
@@ -215,6 +175,41 @@ export class InvoiceHandler {
         const deleteItem = closestSafe<HTMLElement>(target, '.btn_delete_item');
         if (deleteItem) {
             this.handleDeleteSingleItem(deleteItem);
+        }
+    }
+
+    private handleExportClick(target: HTMLElement): boolean {
+        if (closestSafe<HTMLElement>(target, '#inv_to_pdf_confirm_with_custom_fields')) {
+            this.handlePdfExport(true);
+            return true;
+        }
+        if (closestSafe<HTMLElement>(target, '#inv_to_pdf_confirm_without_custom_fields')) {
+            this.handlePdfExport(false);
+            return true;
+        }
+        if (closestSafe<HTMLElement>(target, '#inv_to_modal_pdf_confirm_with_custom_fields')) {
+            this.handleModalPdfView(true);
+            return true;
+        }
+        if (closestSafe<HTMLElement>(target, '#inv_to_modal_pdf_confirm_without_custom_fields')) {
+            this.handleModalPdfView(false);
+            return true;
+        }
+        if (closestSafe<HTMLElement>(target, '#inv_to_html_confirm_with_custom_fields')) {
+            this.handleHtmlExport(true);
+            return true;
+        }
+        if (closestSafe<HTMLElement>(target, '#inv_to_html_confirm_without_custom_fields')) {
+            this.handleHtmlExport(false);
+            return true;
+        }
+        return false;
+    }
+
+    private restoreButton(btn: HTMLElement | null, html: string | undefined): void {
+        if (btn && html) {
+            btn.innerHTML = html;
+            (btn as HTMLButtonElement).disabled = false;
         }
     }
 
@@ -315,10 +310,7 @@ export class InvoiceHandler {
 
             if (selected.length === 0) {
                 alert('Please select invoices to create recurring invoices.');
-                if (btn && originalHtml) {
-                    btn.innerHTML = originalHtml;
-                    (btn as HTMLButtonElement).disabled = false;
-                }
+                this.restoreButton(btn, originalHtml);
                 return;
             }
 
@@ -332,10 +324,7 @@ export class InvoiceHandler {
             // Validate required fields
             if (!payload.recur_frequency || !payload.recur_start_date) {
                 alert('Please select frequency and start date.');
-                if (btn && originalHtml) {
-                    btn.innerHTML = originalHtml;
-                    (btn as HTMLButtonElement).disabled = false;
-                }
+                this.restoreButton(btn, originalHtml);
                 return;
             }
 
@@ -357,17 +346,11 @@ export class InvoiceHandler {
                 // Use the server's error message if available, otherwise fall back to generic message
                 const errorMessage = data.message || 'Failed to create recurring invoices. Please try again.';
                 alert(errorMessage);
-                if (btn && originalHtml) {
-                    btn.innerHTML = originalHtml;
-                    (btn as HTMLButtonElement).disabled = false;
-                }
+                this.restoreButton(btn, originalHtml);
             }
         } catch (error) {
             console.error('invrecurring/multiple error', error);
-            if (btn && originalHtml) {
-                btn.innerHTML = originalHtml;
-                (btn as HTMLButtonElement).disabled = false;
-            }
+            this.restoreButton(btn, originalHtml);
             alert('An error occurred while creating recurring invoices. See console for details.');
         }
     }
@@ -553,10 +536,7 @@ export class InvoiceHandler {
 
             if (selected.length === 0) {
                 alert('Please select items to delete.');
-                if (btn && originalHtml) {
-                    btn.innerHTML = originalHtml;
-                    (btn as HTMLButtonElement).disabled = false;
-                }
+                this.restoreButton(btn, originalHtml);
                 return;
             }
 
@@ -581,17 +561,11 @@ export class InvoiceHandler {
             } else {
                 if (btn) btn.innerHTML = '<i class="bi bi-x-lg"></i>';
                 alert('Failed to delete items. Please try again.');
-                if (btn && originalHtml) {
-                    btn.innerHTML = originalHtml;
-                    (btn as HTMLButtonElement).disabled = false;
-                }
+                this.restoreButton(btn, originalHtml);
             }
         } catch (error) {
             console.error('delete items error', error);
-            if (btn && originalHtml) {
-                btn.innerHTML = originalHtml;
-                (btn as HTMLButtonElement).disabled = false;
-            }
+            this.restoreButton(btn, originalHtml);
             alert('An error occurred while deleting items. See console for details.');
         }
     }

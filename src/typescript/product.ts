@@ -371,47 +371,47 @@ export class ProductHandler {
     }
 
     private processProducts(products: ProductSelectionResponse): void {
-        // Process each product - PHP backend handles row creation
         for (const [, product] of Object.entries(products)) {
-            // Sanitize remote data before use
             if (!product || typeof product !== 'object') continue;
-            
+
             const currentTaxRateId = product.tax_rate_id;
             let productDefaultTaxRateId: string;
-            
+
             if (currentTaxRateId) {
                 productDefaultTaxRateId = currentTaxRateId;
             } else {
                 const defaultTaxRateEl = document.getElementById('default_item_tax_rate') as HTMLInputElement;
                 productDefaultTaxRateId = defaultTaxRateEl ? defaultTaxRateEl.getAttribute('value') || '' : '';
             }
-            
-            // Get the last tbody element (matches original JavaScript exactly)
+
             const lastItemRow = document.querySelector('#item_table tbody:last-of-type') as HTMLElement;
-            
             if (lastItemRow) {
-                const itemName = lastItemRow.querySelector('input[name=item_name]') as HTMLInputElement;
-                if (itemName) itemName.value = product.product_name;
-                
-                const itemDesc = lastItemRow.querySelector('textarea[name=item_description]') as HTMLTextAreaElement;
-                if (itemDesc) itemDesc.value = product.product_description;
-                
-                const itemPrice = lastItemRow.querySelector('input[name=item_price]') as HTMLInputElement;
-                if (itemPrice) itemPrice.value = product.product_price;
-                
-                const itemQty = lastItemRow.querySelector('input[name=item_quantity]') as HTMLInputElement;
-                if (itemQty) itemQty.value = '1';
-                
-                const itemTaxRate = lastItemRow.querySelector('select[name=item_tax_rate_id]') as HTMLSelectElement;
-                if (itemTaxRate) itemTaxRate.value = productDefaultTaxRateId;
-                
-                const itemProductId = lastItemRow.querySelector('input[name=item_product_id]') as HTMLInputElement;
-                if (itemProductId) itemProductId.value = product.id;
-                
-                const itemUnitId = lastItemRow.querySelector('select[name=item_product_unit_id]') as HTMLSelectElement;
-                if (itemUnitId) itemUnitId.value = product.unit_id;
+                this.populateItemRow(lastItemRow, product, productDefaultTaxRateId);
             }
         }
+    }
+
+    private populateItemRow(row: HTMLElement, product: Product, taxRateId: string): void {
+        const itemName = row.querySelector('input[name=item_name]') as HTMLInputElement;
+        if (itemName) itemName.value = product.product_name;
+
+        const itemDesc = row.querySelector('textarea[name=item_description]') as HTMLTextAreaElement;
+        if (itemDesc) itemDesc.value = product.product_description;
+
+        const itemPrice = row.querySelector('input[name=item_price]') as HTMLInputElement;
+        if (itemPrice) itemPrice.value = product.product_price;
+
+        const itemQty = row.querySelector('input[name=item_quantity]') as HTMLInputElement;
+        if (itemQty) itemQty.value = '1';
+
+        const itemTaxRate = row.querySelector('select[name=item_tax_rate_id]') as HTMLSelectElement;
+        if (itemTaxRate) itemTaxRate.value = taxRateId;
+
+        const itemProductId = row.querySelector('input[name=item_product_id]') as HTMLInputElement;
+        if (itemProductId) itemProductId.value = product.id;
+
+        const itemUnitId = row.querySelector('select[name=item_product_unit_id]') as HTMLSelectElement;
+        if (itemUnitId) itemUnitId.value = product.unit_id;
     }
 
     private setSecureButtonContent(button: HTMLElement, tagName: string, className: string, iconClass: string): void {
