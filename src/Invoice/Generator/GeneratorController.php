@@ -438,22 +438,25 @@ class GeneratorController extends BaseController
         // to stay within Google Translate API limits
         $maxChunkSize = 5000;
         $segments = [];
-        $length = strlen($html);
+        $length   = strlen($html);
+        $offset   = 0;
 
-        for ($i = 0; $i < $length; $i += $maxChunkSize) {
-            $chunk = substr($html, $i, $maxChunkSize);
+        while ($offset < $length) {
+            $chunk   = substr($html, $offset, $maxChunkSize);
+            $advance = $maxChunkSize;
 
             // Try to break at a logical point (end of tag or paragraph)
-            if ($i + $maxChunkSize < $length) {
+            if ($offset + $maxChunkSize < $length) {
                 // Look for last closing tag in chunk
                 $lastCloseTag = strrpos($chunk, '>');
                 if ($lastCloseTag !== false && $lastCloseTag > $maxChunkSize * 0.8) {
-                    $chunk = substr($chunk, 0, $lastCloseTag + 1);
-                    $i = $i + $lastCloseTag + 1 - $maxChunkSize; // Adjust offset
+                    $chunk   = substr($chunk, 0, $lastCloseTag + 1);
+                    $advance = $lastCloseTag + 1;
                 }
             }
 
             $segments[] = $chunk;
+            $offset    += $advance;
         }
 
         return $segments;
