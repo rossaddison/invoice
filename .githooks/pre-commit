@@ -1,0 +1,15 @@
+#!/bin/sh
+# Rebuild the TypeScript IIFE bundle before every commit so the compiled
+# output is never stale relative to the source files.
+
+echo "[pre-commit] Building TypeScript IIFE..."
+npm run build:typescript:prod
+if [ $? -ne 0 ]; then
+    echo "[pre-commit] TypeScript build FAILED — commit aborted."
+    exit 1
+fi
+
+git add src/Invoice/Asset/rebuild/js/invoice-typescript-iife.js \
+        src/Invoice/Asset/rebuild/js/invoice-typescript-iife.min.js
+
+echo "[pre-commit] IIFE rebuilt and staged."

@@ -63,6 +63,7 @@
     "build:typescript:dev": "node node_modules/esbuild/bin/esbuild src/typescript/index.ts --bundle --outfile=src/Invoice/Asset/rebuild/js/invoice-typescript-iife.js --target=es2024 --format=iife --global-name=InvoiceApp --sourcemap --supported:const=true",
     "build:typescript:prod": "node node_modules/esbuild/bin/esbuild src/typescript/index.ts --bundle --outfile=src/Invoice/Asset/rebuild/js/invoice-typescript-iife.js --target=es2024 --format=iife --global-name=InvoiceApp --minify --supported:const-and-let=true && node node_modules/esbuild/bin/esbuild src/typescript/index.ts --bundle --outfile=src/Invoice/Asset/rebuild/js/invoice-typescript-iife.min.js --target=es2024 --format=iife --global-name=InvoiceApp --minify --supported:const-and-let=true",
     "build:typescript:watch": "npm run build:typescript:dev -- --watch",
+    "prepare": "git config core.hooksPath .githooks",
     "build:angular": "ng build --configuration production",
     "build:angular:dev": "ng build",
     "build:dev": "npm run build:typescript:dev && npm run build:angular:dev",
