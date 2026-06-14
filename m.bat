@@ -857,7 +857,7 @@ echo  [7]  Filter by rule key    (e.g. php:S1192 / javascript:S7647 / typescript
 echo  [8]  Filter by file path   (e.g. src/typescript/list-utils.test.ts)
 echo  [9]  Reliability issues    (BUG type -- all, flat list)
 echo  [10] Reliability grouped by rule
-echo  [11] All issues grouped by rule   ^<-- overall picture^>
+echo  [11] All issues grouped by rule
 echo  [0]  Back to Main Menu
 echo.
 set /p sonar_choice="SonarCloud choice [0-11]: "
