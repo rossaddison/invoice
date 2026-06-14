@@ -34,14 +34,13 @@ final readonly class ButtonsToolbarFull
 
     /**
      * Generate comprehensive invoice actions toolbar with all features
-     * @psalm-suppress UnusedParam $paymentView, $isRecurring, $enabledGateways
+     * @psalm-suppress UnusedParam $paymentView, $isRecurring
      */
     public function render(
         Inv $inv,
         InvAmountRepository $iaR,
         bool $invEdit = true,
         bool $read_only = false,
-        array $enabledGateways = [],
         string $vat = '0',
         bool $paymentCfExist = false,
     ): string {

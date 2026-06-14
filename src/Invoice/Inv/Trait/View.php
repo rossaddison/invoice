@@ -267,7 +267,6 @@ trait View
                         $service->core->iaR,
                         $this->userService->hasPermission(Permissions::EDIT_INV),
                         $read_only,
-                        $enabled_gateways,
                         $this->sR->getSetting('enable_vat_registration'),
                         $service->meta->cfR->repoTableCountquery('payment_custom') > 0,
                     ),
