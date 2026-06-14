@@ -76,15 +76,7 @@ async function handleGenerateClick(button: HTMLElement) {
                     // show a success checkmark briefly
                     button.innerHTML = '<i class="bi bi-check-lg" aria-hidden="true"></i>';
                 } else {
-                    // fallback: select the input text and attempt execCommand (legacy)
-                    input.select();
-                    const ok = document.execCommand?.('copy');
-                    if (ok) {
-                        button.innerHTML = '<i class="bi bi-check-lg" aria-hidden="true"></i>';
-                    } else {
-                        // keep the spinner for a moment, then restore
-                        button.innerHTML = '<i class="bi bi-arrow-repeat me-1" aria-hidden="true"></i>';
-                    }
+                    button.innerHTML = '<i class="bi bi-arrow-repeat me-1" aria-hidden="true"></i>';
                 }
             } catch (e) {
                 // Clipboard copy failed; leave the key in the field and restore button

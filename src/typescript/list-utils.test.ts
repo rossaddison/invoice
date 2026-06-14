@@ -21,6 +21,12 @@ function makeBadge(cls: string, text: string, containerId: string): HTMLElement 
     return badge;
 }
 
+function initBadge(cls: string, containerId: string): HTMLElement {
+    const badge = makeBadge(cls, '100', containerId);
+    const _m = new AmountMagnifier(containerId);
+    return badge;
+}
+
 describe('AmountMagnifier', () => {
     beforeEach(() => {
         document.body.innerHTML = '';
@@ -65,12 +71,6 @@ describe('AmountMagnifier', () => {
             expect(badge.style.cursor).toBe(cursorBefore); // addBehavior not called again
         });
     });
-
-    function initBadge(cls: string, containerId: string): HTMLElement {
-        const badge = makeBadge(cls, '100', containerId);
-        const _m = new AmountMagnifier(containerId);
-        return badge;
-    }
 
     describe('addBehavior — event handlers', () => {
         it('mouseenter on a bg-success badge applies success colours', () => {

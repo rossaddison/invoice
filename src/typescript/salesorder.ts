@@ -204,12 +204,7 @@ export class SalesOrderHandler {
                 if (btn) {
                     btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
                 }
-                // Navigate to the new invoice if inv_id is provided, otherwise reload
-                if (response.inv_id) {
-                    globalThis.location.href = `${location.origin}/invoice/inv/view/${response.inv_id}`;
-                } else {
-                    secureReload();
-                }
+                this.navigateAfterConversion(response.inv_id);
             } else {
                 if (response?.validation_errors) {
                     this.applyValidationErrors(response.validation_errors);
@@ -224,6 +219,14 @@ export class SalesOrderHandler {
                 btn.innerHTML = '<h6 class="text-center"><i class="bi bi-check-lg"></i></h6>';
             }
             alert('An error occurred during conversion. Please try again.');
+        }
+    }
+
+    private navigateAfterConversion(invId?: string): void {
+        if (invId) {
+            globalThis.location.href = `${location.origin}/invoice/inv/view/${invId}`;
+        } else {
+            secureReload();
         }
     }
 
