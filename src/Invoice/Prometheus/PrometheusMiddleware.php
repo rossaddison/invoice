@@ -326,16 +326,6 @@ final class PrometheusMiddleware implements MiddlewareInterface
             $normalizedPath = $path;
         }
 
-        // Handle common patterns in your invoice application
-        $result = preg_replace('/\/product\/\{id\}\/view/', '/product/{id}/view', $normalizedPath);
-        $normalizedPath = $result !== null ? $result : $normalizedPath;
-
-        $result = preg_replace('/\/invoice\/\{id\}\/edit/', '/invoice/{id}/edit', $normalizedPath);
-        $normalizedPath = $result !== null ? $result : $normalizedPath;
-
-        $result = preg_replace('/\/family\/\{id\}/', '/family/{id}', $normalizedPath);
-        $normalizedPath = $result !== null ? $result : $normalizedPath;
-
         return $normalizedPath !== '' ? $normalizedPath : '/';
     }
 
