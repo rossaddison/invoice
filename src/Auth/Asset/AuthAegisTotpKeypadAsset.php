@@ -19,6 +19,6 @@ class AuthAegisTotpKeypadAsset extends AssetBundle
 
     /** @psalm-suppress NonInvariantDocblockPropertyType */
     public array $js = [
-        'rebuild/js/keypad_copy_to_clipboard-iife.js',
+        'rebuild/js/keypad-copy-to-clipboard-iife.js',
     ];
 }
