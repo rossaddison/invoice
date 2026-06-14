@@ -527,6 +527,8 @@ final readonly class TemplateHelper
                                    }
 
                                    break;
+                                default:
+                                    break;
                             }
                             // All the different entities are represented by $replace_custom
 
