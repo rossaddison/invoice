@@ -258,7 +258,6 @@ final class ItemsCommand extends Command
     private function renderInvItemTable(OutputInterface $output): array
     {
         $table = new Table($output);
-        $invItems = $this->invItems;
         $table->setHeaders(
             [
                 'Name',
@@ -275,151 +274,21 @@ final class ItemsCommand extends Command
             ],
         );
 
+        $invItems = $this->invItems;
         $itemCount = count($invItems);
-        $currentIndex = 0;
-        $discountedSubTotal = 0;
-        $itemTaxTotal = 0;
-        $grandTotal = 0;
-        foreach ($invItems as $invItem) {
-            $quantity = $invItem->getQuantity() ?? 0;
-            $price = $invItem->getPrice() ?? 0;
-            $percentage = $invItem->reqTaxRateId() == '1' ? 15 : 20;
-            $subTotal = $quantity * $price;
-            $discount = 1;
-            $netDiscount = ($quantity * ($price - $discount));
-            $totalDiscount = $quantity * $discount;
-            $itemTax = $netDiscount * ($percentage / 100);
-            $itemTotal = $netDiscount + $itemTax;
+        $discountedSubTotal = 0.0;
+        $itemTaxTotal = 0.0;
+        $grandTotal = 0.0;
 
-            // Check if this item has any allowances or charges
-            $itemId = $currentIndex + 1;
-            $hasAllowancesOrCharges = false;
-            foreach ($this->invItemAllowanceCharges as $invItemAllowanceCharge) {
-                if ($invItemAllowanceCharge->reqInvItemId() == $itemId) {
-                    $hasAllowancesOrCharges = true;
-                    break;
-                }
-            }
-
-            // Use purple color for items without allowances/charges
-            $colorCode = $hasAllowancesOrCharges ? '' : "\033[35m";
-            $colorEnd = $hasAllowancesOrCharges ? '' : "\033[0m";
-
-            $table->addRow(
-                [
-                    $colorCode . ($invItem->getName() ?? 'None Available') . $colorEnd,
-                    $colorCode . ($invItem->getDescription() ?? 'None Available') . $colorEnd,
-                    $colorCode . (float) $quantity . $colorEnd,
-                    $colorCode . $this->format((float) $price) . $colorEnd,
-                    $colorCode . $this->format($discount) . $colorEnd,
-                    $colorCode . $this->format($subTotal) . $colorEnd,
-                    "\033[31m" . $this->formatBracketed($totalDiscount) . "\033[0m",
-                    $colorCode . $this->format($subTotal - $totalDiscount) . $colorEnd,
-                    $colorCode . $this->format($percentage) . $colorEnd,
-                    $colorCode . $this->format($itemTax) . $colorEnd,
-                    $colorCode . $this->format($itemTotal) . $colorEnd,
-                ],
-            );
-
-            // Display InvItemAllowanceCharge entries for this item and calculate subtotals
-            $itemAllowanceAmount = 0;
-            $itemAllowanceTax = 0;
-            $itemChargeAmount = 0;
-            $itemChargeTax = 0;
-
-            foreach ($this->invItemAllowanceCharges as $invItemAllowanceCharge) {
-                if ($invItemAllowanceCharge->reqInvItemId() == $itemId) {
-                    $allowanceChargeId = $invItemAllowanceCharge->reqAllowanceChargeId();
-                    $allowanceCharge = $this->allowanceCharges[$allowanceChargeId - 1] ?? null;
-                    $isCharge = $allowanceCharge?->getIdentifier() ?? false;
-                    $reason = $allowanceCharge?->getReason() ?? 'N/A';
-                    $amount = (float)$invItemAllowanceCharge->getAmount();
-                    $vatOrTax = (float)$invItemAllowanceCharge->getVatOrTax();
-
-                    // Get the tax rate percentage from the AllowanceCharge entity
-                    $taxRateId = $allowanceCharge?->getTaxRateId() ?? 1;
-                    $taxRatePercent = 0;
-                    foreach ($this->taxRates as $taxRate) {
-                        if ($taxRate->reqId() === $taxRateId) {
-                            $taxRatePercent = $taxRate->getTaxRatePercent();
-                            break;
-                        }
-                    }
-
-                    if ($isCharge) {
-                        $itemChargeAmount += $amount;
-                        $itemChargeTax += $vatOrTax;
-                        $chargeTotal = $amount + $vatOrTax;
-                        $table->addRow([
-                            '  â†’ ' . $reason,
-                            '',
-                            '',
-                            '',
-                            '',
-                            '',
-                            '',
-                            "\033[32m" . $this->format($amount) . "\033[0m",
-                            $this->format($taxRatePercent ?? 0.00),
-                            $this->format($vatOrTax),
-                            "\033[32m" . $this->format($chargeTotal) . "\033[0m",
-                        ]);
-                    } else {
-                        $itemAllowanceAmount += $amount;
-                        $itemAllowanceTax += $vatOrTax;
-                        $allowanceTotal = $amount + $vatOrTax;
-                        $table->addRow([
-                            '  â†’ ' . $reason,
-                            '',
-                            '',
-                            '',
-                            '',
-                            '',
-                            '',
-                            "\033[31m" . $this->formatBracketed($amount) . "\033[0m",
-                            $this->format($taxRatePercent ?? 0.00),
-                            "\033[31m" . $this->formatBracketed($vatOrTax) . "\033[0m",
-                            "\033[31m" . $this->formatBracketed($allowanceTotal) . "\033[0m",
-                        ]);
-                    }
-                }
-            }
-
-            // Add subtotal row if there are any allowances or charges
-            if ($itemAllowanceAmount > 0 || $itemChargeAmount > 0) {
-                $subtotalTax = $itemTax + $itemChargeTax - $itemAllowanceTax;
-                $subtotalAmount = $itemTotal + ($itemChargeAmount + $itemChargeTax) - ($itemAllowanceAmount + $itemAllowanceTax);
-
-                $table->addRow([
-                    '  Subtotal',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    "\033[35m" . $this->format($subtotalTax) . "\033[0m",
-                    "\033[35m" . $this->format($subtotalAmount) . "\033[0m",
-                ]);
-
-                // Use the subtotal for grand total calculation
-                $grandTotal += $subtotalAmount;
-            } else {
-                // Use the base item total for items without allowances/charges
-                $grandTotal += $itemTotal;
-            }
-
-            if ($currentIndex < $itemCount - 1) {
-                $table->addRow(new TableSeparator());
-            }
-
-            $currentIndex++;
-
-            /* Build Summary Totals - After Discount includes base items and allowance/charge amounts (excluding tax) */
-            $discountedSubTotal += $netDiscount + $itemChargeAmount - $itemAllowanceAmount;
-            $itemTaxTotal += $itemTax + $itemChargeTax - $itemAllowanceTax;
+        foreach ($invItems as $index => $invItem) {
+            $itemId = (int) $index + 1;
+            $isLast = ((int) $index === $itemCount - 1);
+            $totals = $this->renderInvItemRow($table, $invItem, $itemId, $isLast);
+            $discountedSubTotal += $totals['discountedSubTotal'];
+            $itemTaxTotal += $totals['itemTaxTotal'];
+            $grandTotal += $totals['grandTotal'];
         }
+
         $table->addRow(new TableSeparator());
         $table->addRow(
             [
@@ -439,6 +308,144 @@ final class ItemsCommand extends Command
         return [
             'After Discount' => $discountedSubTotal,
             'Item Tax' => $itemTaxTotal,
+        ];
+    }
+
+    /**
+     * @return array{discountedSubTotal: float, itemTaxTotal: float, grandTotal: float}
+     */
+    private function renderInvItemRow(
+        Table $table,
+        InvItem $invItem,
+        int $itemId,
+        bool $isLast,
+    ): array {
+        $quantity = $invItem->getQuantity() ?? 0;
+        $price = $invItem->getPrice() ?? 0;
+        $percentage = $invItem->reqTaxRateId() == '1' ? 15 : 20;
+        $subTotal = $quantity * $price;
+        $discount = 1;
+        $netDiscount = ($quantity * ($price - $discount));
+        $totalDiscount = $quantity * $discount;
+        $itemTax = $netDiscount * ($percentage / 100);
+        $itemTotal = $netDiscount + $itemTax;
+
+        $hasAllowancesOrCharges = false;
+        foreach ($this->invItemAllowanceCharges as $invItemAllowanceCharge) {
+            if ($invItemAllowanceCharge->reqInvItemId() == $itemId) {
+                $hasAllowancesOrCharges = true;
+                break;
+            }
+        }
+
+        // Use purple color for items without allowances/charges
+        $colorCode = $hasAllowancesOrCharges ? '' : "\033[35m";
+        $colorEnd = $hasAllowancesOrCharges ? '' : "\033[0m";
+
+        $table->addRow(
+            [
+                $colorCode . ($invItem->getName() ?? 'None Available') . $colorEnd,
+                $colorCode . ($invItem->getDescription() ?? 'None Available') . $colorEnd,
+                $colorCode . (float) $quantity . $colorEnd,
+                $colorCode . $this->format((float) $price) . $colorEnd,
+                $colorCode . $this->format($discount) . $colorEnd,
+                $colorCode . $this->format($subTotal) . $colorEnd,
+                "\033[31m" . $this->formatBracketed($totalDiscount) . "\033[0m",
+                $colorCode . $this->format($subTotal - $totalDiscount) . $colorEnd,
+                $colorCode . $this->format($percentage) . $colorEnd,
+                $colorCode . $this->format($itemTax) . $colorEnd,
+                $colorCode . $this->format($itemTotal) . $colorEnd,
+            ],
+        );
+
+        $itemAllowanceAmount = 0.0;
+        $itemAllowanceTax = 0.0;
+        $itemChargeAmount = 0.0;
+        $itemChargeTax = 0.0;
+
+        foreach ($this->invItemAllowanceCharges as $invItemAllowanceCharge) {
+            if ($invItemAllowanceCharge->reqInvItemId() != $itemId) {
+                continue;
+            }
+            $allowanceChargeId = $invItemAllowanceCharge->reqAllowanceChargeId();
+            $allowanceCharge = $this->allowanceCharges[$allowanceChargeId - 1] ?? null;
+            $isCharge = $allowanceCharge?->getIdentifier() ?? false;
+            $reason = $allowanceCharge?->getReason() ?? 'N/A';
+            $amount = (float) $invItemAllowanceCharge->getAmount();
+            $vatOrTax = (float) $invItemAllowanceCharge->getVatOrTax();
+            $taxRateId = $allowanceCharge?->getTaxRateId() ?? 1;
+            $taxRatePercent = 0;
+            foreach ($this->taxRates as $taxRate) {
+                if ($taxRate->reqId() === $taxRateId) {
+                    $taxRatePercent = $taxRate->getTaxRatePercent();
+                    break;
+                }
+            }
+            if ($isCharge) {
+                $itemChargeAmount += $amount;
+                $itemChargeTax += $vatOrTax;
+                $chargeTotal = $amount + $vatOrTax;
+                $table->addRow([
+                    '  -> ' . $reason,
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    "\033[32m" . $this->format($amount) . "\033[0m",
+                    $this->format($taxRatePercent ?? 0.00),
+                    $this->format($vatOrTax),
+                    "\033[32m" . $this->format($chargeTotal) . "\033[0m",
+                ]);
+            } else {
+                $itemAllowanceAmount += $amount;
+                $itemAllowanceTax += $vatOrTax;
+                $allowanceTotal = $amount + $vatOrTax;
+                $table->addRow([
+                    '  -> ' . $reason,
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    "\033[31m" . $this->formatBracketed($amount) . "\033[0m",
+                    $this->format($taxRatePercent ?? 0.00),
+                    "\033[31m" . $this->formatBracketed($vatOrTax) . "\033[0m",
+                    "\033[31m" . $this->formatBracketed($allowanceTotal) . "\033[0m",
+                ]);
+            }
+        }
+
+        $grandTotal = $itemTotal;
+        if ($itemAllowanceAmount > 0 || $itemChargeAmount > 0) {
+            $subtotalTax = $itemTax + $itemChargeTax - $itemAllowanceTax;
+            $subtotalAmount = $itemTotal + ($itemChargeAmount + $itemChargeTax) - ($itemAllowanceAmount + $itemAllowanceTax);
+            $table->addRow([
+                '  Subtotal',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                "\033[35m" . $this->format($subtotalTax) . "\033[0m",
+                "\033[35m" . $this->format($subtotalAmount) . "\033[0m",
+            ]);
+            $grandTotal = $subtotalAmount;
+        }
+
+        if (!$isLast) {
+            $table->addRow(new TableSeparator());
+        }
+
+        return [
+            'discountedSubTotal' => $netDiscount + $itemChargeAmount - $itemAllowanceAmount,
+            'itemTaxTotal' => $itemTax + $itemChargeTax - $itemAllowanceTax,
+            'grandTotal' => $grandTotal,
         ];
     }
 
