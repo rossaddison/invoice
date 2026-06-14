@@ -18,11 +18,6 @@ final class InstallCommand extends Command
 {
     protected static string $defaultName = 'install';
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     #[\Override]
     protected function configure(): void
     {

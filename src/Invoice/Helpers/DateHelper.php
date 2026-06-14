@@ -13,14 +13,6 @@ use DateInterval;
 class DateHelper extends AbstractDateHelper
 {
     /**
-     * @param SRepo $s
-     */
-    public function __construct(SRepo $s)
-    {
-        parent::__construct($s);
-    }
-
-    /**
      * @param \DateTimeImmutable $datetimeimmutable
      * @return string
      */
