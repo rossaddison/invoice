@@ -146,7 +146,8 @@ final class UploadController extends BaseController
                 $this->flashMessage('info',
                     $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('inv/view',
-                        ['id' => $inv_id]);            }
+                        ['id' => $inv_id]);
+            }
             return $this->webService->getRedirectResponse('upload/index');
         } catch (Exception $e) {
             $this->flashMessage('danger', $e->getMessage());
