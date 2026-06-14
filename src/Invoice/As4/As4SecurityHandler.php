@@ -6,7 +6,6 @@ namespace App\Invoice\As4;
 
 use DOMDocument;
 use DOMElement;
-use Exception;
 
 /**
  * AS4 Message Security Handler
@@ -29,7 +28,7 @@ class As4SecurityHandler
     private string $encryptionPublicKeyX25519;
 
     /**
-     * @throws Exception if files cannot be read or libsodium is unavailable
+     * @throws As4SecurityException if files cannot be read or libsodium is unavailable
      */
     public function __construct(
         string $signingCertPath,
@@ -37,24 +36,24 @@ class As4SecurityHandler
         string $encryptCertPath
     ) {
         if (!extension_loaded('sodium')) {
-            throw new Exception('PHP ext-sodium (libsodium) is required for AS4 security');
+            throw new As4SecurityException('PHP ext-sodium (libsodium) is required for AS4 security');
         }
 
         $signingCert = file_get_contents($signingCertPath);
         if ($signingCert === false) {
-            throw new Exception("Cannot read signing certificate: {$signingCertPath}");
+            throw new As4SecurityException("Cannot read signing certificate: {$signingCertPath}");
         }
         $this->signingCertificatePem = $signingCert;
 
         $signingKey = file_get_contents($signingKeyPath);
         if ($signingKey === false) {
-            throw new Exception("Cannot read signing private key: {$signingKeyPath}");
+            throw new As4SecurityException("Cannot read signing private key: {$signingKeyPath}");
         }
         $this->signingPrivateKeyPem = $signingKey;
 
         $encryptCert = file_get_contents($encryptCertPath);
         if ($encryptCert === false) {
-            throw new Exception("Cannot read encryption certificate: {$encryptCertPath}");
+            throw new As4SecurityException("Cannot read encryption certificate: {$encryptCertPath}");
         }
         $this->encryptionCertificatePem = $encryptCert;
 
@@ -214,7 +213,7 @@ class As4SecurityHandler
                 }
             }
             return true;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -415,28 +414,28 @@ class As4SecurityHandler
     /**
      * Extract X25519 public key from a certificate using PHP's OpenSSL extension.
      *
-     * @throws Exception if the certificate cannot be parsed or the key extracted
+     * @throws As4SecurityException if the certificate cannot be parsed or the key extracted
      */
     private function extractX25519PublicKey(string $certPath): string
     {
         $certContent = file_get_contents($certPath);
         if ($certContent === false) {
-            throw new Exception("Cannot read certificate file: {$certPath}");
+            throw new As4SecurityException("Cannot read certificate file: {$certPath}");
         }
 
         $cert = openssl_x509_read($certContent);
         if ($cert === false) {
-            throw new Exception("Cannot parse certificate: {$certPath}");
+            throw new As4SecurityException("Cannot parse certificate: {$certPath}");
         }
 
         $pubkey = openssl_pkey_get_public($cert);
         if ($pubkey === false) {
-            throw new Exception("Cannot extract public key from certificate: {$certPath}");
+            throw new As4SecurityException("Cannot extract public key from certificate: {$certPath}");
         }
 
         $details = openssl_pkey_get_details($pubkey);
         if ($details === false) {
-            throw new Exception("Cannot get key details from certificate: {$certPath}");
+            throw new As4SecurityException("Cannot get key details from certificate: {$certPath}");
         }
 
         // Parse the PEM public key to extract raw bytes for X25519
@@ -639,7 +638,7 @@ class As4SecurityHandler
     /**
      * Locate the wsse:Security header element and assert it is a DOMElement.
      *
-     * @throws Exception if the header is missing
+     * @throws As4SecurityException if the header is missing
      */
     private function requireWssHeader(DOMDocument $doc): DOMElement
     {
@@ -647,11 +646,11 @@ class As4SecurityHandler
         $xpath->registerNamespace('wsse', As4Constants::WSS_NS);
         $nodes = $xpath->query('//wsse:Security');
         if ($nodes === false || $nodes->length === 0) {
-            throw new Exception('WS-Security header not found in SOAP message');
+            throw new As4SecurityException('WS-Security header not found in SOAP message');
         }
         $node = $nodes->item(0);
         if (!$node instanceof DOMElement) {
-            throw new Exception('WS-Security header is not a DOMElement');
+            throw new As4SecurityException('WS-Security header is not a DOMElement');
         }
         return $node;
     }
