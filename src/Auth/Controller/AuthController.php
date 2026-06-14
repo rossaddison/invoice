@@ -438,8 +438,7 @@ final class AuthController
         $tfaaf = $tfa . '.attempt.failure';
         if (is_array($body)) {
             $inputCode = $this->sanitizeAndValidateCode($body['code'] ?? '');
-            if ($inputCode !== null) { // NOSONAR - outer if has code after inner block
-                if ($pendingUserId > 0) {
+            if ($inputCode !== null && $pendingUserId > 0) {
                     $user = $userRepository->findById($pendingUserId);
                     /** @var mixed $tempSecretRaw */
                         $tempSecretRaw = $this->session->get('2fa_temp_secret');
@@ -492,8 +491,7 @@ final class AuthController
                             'error' => $error,
                             'formModel' => $tfasf,
                         ]);
-                }
-            } // null!==$inputCode
+            }
         }
         return $this->redirectToOneTimePasswordError();
     }
