@@ -296,9 +296,9 @@ final class PaymentPeppolController extends BaseController
 
     private function rbacAccountant() : bool {
         // has accountant role
-        if (($this->userService->hasPermission(Permissions::VIEW_INV)
-            && ($this->userService->hasPermission(Permissions::VIEW_PAYMENT))
-            && ($this->userService->hasPermission(Permissions::EDIT_PAYMENT)))) {
+        if ($this->userService->hasPermission(Permissions::VIEW_INV)
+            && $this->userService->hasPermission(Permissions::VIEW_PAYMENT)
+            && $this->userService->hasPermission(Permissions::EDIT_PAYMENT)) {
             return true;
         } else {
             return false;
