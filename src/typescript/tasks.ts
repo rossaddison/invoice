@@ -112,8 +112,8 @@ export class TaskHandler {
             const input = el as HTMLInputElement;
             const currentVal = input.value || '';
             if (currentVal.length) {
-                const taskId = parseInt(currentVal, 10);
-                if (!isNaN(taskId)) {
+                const taskId = Number.parseInt(currentVal, 10);
+                if (!Number.isNaN(taskId)) {
                     selectedTasks.push(taskId);
                 }
             }
@@ -122,9 +122,9 @@ export class TaskHandler {
         let hiddenTasks = 0;
         document.querySelectorAll('.modal-task-id').forEach((el: Element) => {
             const idAttr = el.id || '';
-            const idNum = parseInt(idAttr.replace('task-id-', ''), 10);
+            const idNum = Number.parseInt(idAttr.replace('task-id-', ''), 10);
 
-            if (!Number.isNaN(idNum) && selectedTasks.includes(idNum)) {
+            if (!Number.Number.isNaN(idNum) && selectedTasks.includes(idNum)) {
                 // Hide the row containing this modal-task-id
                 const row = el.closest('tr') ||
                            (el.parentElement && el.parentElement.parentElement);
@@ -237,8 +237,8 @@ export class TaskHandler {
         const taskIds = Array.from(
             document.querySelectorAll("input[name='task_ids[]']:checked")
         )
-            .map((el: Element) => parseInt((el as HTMLInputElement).value, 10))
-            .filter((id: number) => !isNaN(id));
+            .map((el: Element) => Number.parseInt((el as HTMLInputElement).value, 10))
+            .filter((id: number) => !Number.isNaN(id));
 
         if (taskIds.length === 0) return;
 

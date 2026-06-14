@@ -227,7 +227,7 @@ export class QuoteHandler {
                 "input[name='item_ids[]']:checked"
             ) as NodeListOf<HTMLInputElement>;
             const item_ids = Array.from(itemCheckboxes)
-                .map(input => parseInt(input.value, 10))
+                .map(input => Number.parseInt(input.value, 10))
                 .filter(Boolean)
                 .toSorted((a, b) => a - b); // ES2024: Sort for consistent ordering
 

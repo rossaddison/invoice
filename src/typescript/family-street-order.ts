@@ -13,7 +13,7 @@ interface ReorderResponse {
 
 function collectIds(list: HTMLUListElement): number[] {
     return Array.from(list.querySelectorAll<HTMLLIElement>('li[data-id]'))
-        .map(li => parseInt(li.dataset['id'] ?? '0', 10))
+        .map(li => Number.parseInt(li.dataset['id'] ?? '0', 10))
         .filter(id => id > 0);
 }
 

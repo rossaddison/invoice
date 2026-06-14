@@ -299,8 +299,8 @@ export class ProductHandler {
         const quoteId = (absoluteUrl.pathname.split('/').at(-1) || '').replace(/[^0-9]/g, '');
         
         document.querySelectorAll("input[name='product_ids[]']:checked").forEach((input: Element) => {
-            const value = parseInt((input as HTMLInputElement).value, 10);
-            if (!isNaN(value)) {
+            const value = Number.parseInt((input as HTMLInputElement).value, 10);
+            if (!Number.isNaN(value)) {
                 productIds.push(value);
             }
         });
@@ -339,8 +339,8 @@ export class ProductHandler {
         const invId = absoluteUrl.pathname.split('/').at(-1) || '';
         
         document.querySelectorAll("input[name='product_ids[]']:checked").forEach((input: Element) => {
-            const value = parseInt((input as HTMLInputElement).value, 10);
-            if (!isNaN(value)) {
+            const value = Number.parseInt((input as HTMLInputElement).value, 10);
+            if (!Number.isNaN(value)) {
                 productIds.push(value);
             }
         });

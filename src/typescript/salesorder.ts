@@ -60,7 +60,7 @@ export class SalesOrderHandler {
         // Bulk status change via SalesOrderToolbar button
         const statusBtn = target.closest('.so-status-btn') as HTMLElement | null;
         if (statusBtn) {
-            const statusId = parseInt(statusBtn.dataset.statusId ?? '0', 10);
+            const statusId = Number.parseInt(statusBtn.dataset.statusId ?? '0', 10);
             if (statusId > 0) {
                 this.handleChangeStatus(statusId);
             }

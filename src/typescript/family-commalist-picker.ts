@@ -28,8 +28,8 @@ class FamilyCommalistPicker {
         if (this.textarea.value) {
             const existingNumbers = this.textarea.value
                 .split(',')
-                .map(n => parseInt(n.trim()))
-                .filter(n => !isNaN(n) && n >= 1 && n <= 200);
+                .map(n => Number.parseInt(n.trim()))
+                .filter(n => !Number.isNaN(n) && n >= 1 && n <= 200);
 
             this.selectedNumbers = new Set(existingNumbers);
         }
