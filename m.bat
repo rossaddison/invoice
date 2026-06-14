@@ -855,7 +855,7 @@ echo  [5]  Security hotspots
 echo  [6]  Combine type + severity filters
 echo  [7]  Filter by rule key    (e.g. php:S1192 / javascript:S7647 / typescript:S7785)
 echo  [8]  Filter by file path   (e.g. src/typescript/list-utils.test.ts)
-echo  [9]  Reliability issues    (BUG type — all, flat list)
+echo  [9]  Reliability issues    (BUG type -- all, flat list)
 echo  [10] Reliability grouped by rule  ^<-- start here for 40+ issues^>
 echo  [11] All issues grouped by rule   ^<-- overall picture^>
 echo  [0]  Back to Main Menu
@@ -940,7 +940,7 @@ goto sonar_menu
 
 :sonar_reliability_grouped
 echo.
-echo Reliability (BUG) issues grouped by rule — copy the rule key into option [7] to drill down.
+echo Reliability (BUG) issues grouped by rule -- copy the rule key into option [7] to drill down.
 echo.
 php sonar-issues.php --type=BUG --grouped
 pause
@@ -957,7 +957,7 @@ goto sonar_menu
 :sonar_rule
 cls
 echo ======================================================================================
-echo                         SONARCLOUD — FILTER BY RULE
+echo                         SONARCLOUD -- FILTER BY RULE
 echo ======================================================================================
 echo  PHP
 echo  [1]  php:S1192   String literals duplicated 3+ times
@@ -979,7 +979,7 @@ echo  [15] typescript:S7764  Use globalThis instead of window
 echo  [16] javascript:S7647  Lifecycle methods should not be empty (JS)
 echo  Shell
 echo  [17] shelldre:S1066    Merge this if statement with the enclosing one
-echo  PHP Reliability (BUG type) — run option [10] to discover your rule keys
+echo  PHP Reliability (BUG type) -- run option [10] to discover your rule keys
 echo  [18] php:S2583   Conditions that are always true or false
 echo  [19] php:S905    Non-empty statements that are no-ops
 echo  [20] php:S2681   Multiline blocks should be enclosed in curly braces
