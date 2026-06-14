@@ -78,6 +78,8 @@ Automated generation and transmission of compliant UBL 2.4 documents via the
 
 [TypeScript Vitest Coverage](docs/TYPESCRIPT_VITEST_COVERAGE.md) — Vitest + jsdom + v8 coverage wired into CI for `inv-index.ts`, `list-utils.ts`, and `quote-index.ts`; `phpunit.xml.dist` case fix for Linux CI; PHP and TS coverage fed to SonarCloud; coverage badge added (May 2026)
 
+[Pre-commit TypeScript IIFE Build Hook](docs/PRE_COMMIT_TYPESCRIPT_BUILD.md) — `.githooks/pre-commit` rebuilds both IIFE bundles (≈ 20 ms via esbuild) and auto-stages the output before every commit so the compiled bundle is never stale relative to TypeScript source; `prepare` script in `package.json` runs `git config core.hooksPath .githooks` automatically after `npm install` on a fresh clone; esbuild invoked via `node node_modules/esbuild/bin/esbuild` to bypass missing `.bin/` shim on Windows (June 2026)
+
 [SonarCloud First Gate](docs/SONARCLOUD_FIRST_GATE.md) — SonarCloud runs as a standalone job before the PHP matrix build; `needs: [sonar]` blocks all four runners until the quality gate passes; AI-assisted contributions must self-audit before commit (May 2026)
 
 [BACS Quick Pay](docs/BACS_QUICK_PAY.md) — One-off bank-transfer modal on the invoice guest page: bank details card, per-invoice QR codes, copy-to-clipboard buttons, `BacsPaymentService`, 38 new PHPUnit tests; fixed gateway CDN script ordering, CSP `https://` violations, and missing `$bacsUnpaidInvs` parameter bug (May 2026)
