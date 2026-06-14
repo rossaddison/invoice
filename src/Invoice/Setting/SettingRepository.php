@@ -1586,6 +1586,17 @@ final class SettingRepository extends Select\Repository
 
     public function tooltipArray(): array
     {
+        return array_merge(
+            $this->tooltipArrayA(),
+            $this->tooltipArrayB(),
+            $this->tooltipArrayC(),
+            $this->tooltipArrayD(),
+            $this->tooltipArrayE(),
+        );
+    }
+
+    private function tooltipArrayA(): array
+    {
         return [
             'active_only' => [
                 'why' => 'Old fully paid up clients, that have cancelled i.e.'
@@ -1717,6 +1728,12 @@ final class SettingRepository extends Select\Repository
                 . ' documents in their language provided their language is set'
                 . ' in the client form.',
             ],
+        ];
+    }
+
+    private function tooltipArrayB(): array
+    {
+        return [
             'default_list_limit' => [
                 'why' => 'This value is used with the Paginator to limit the'
                 . ' number of records viewed',
@@ -1848,6 +1865,12 @@ final class SettingRepository extends Select\Repository
                 'where' => 'InvController/generate_inv_get_number and'
                 . ' InvRepository/get_inv_number',
             ],
+        ];
+    }
+
+    private function tooltipArrayC(): array
+    {
+        return [
             'generate_quote_number_for_draft' => [
                 'why' => 'Automatically generate a Quote Number by means of the'
                 . ' Group Identifier.',
@@ -1989,6 +2012,12 @@ final class SettingRepository extends Select\Repository
                 . ' Edit section under Inv/View/Options Dropdown Button. ',
                 'where' => 'InvController/inv_to_inv',
             ],
+        ];
+    }
+
+    private function tooltipArrayD(): array
+    {
+        return [
             'monospace_amounts' => [
                 'why' => 'Evenly spaced characters for better presentation.',
                 'where' => 'views/layout/invoice.php and views/layout/guest.php',
@@ -2129,6 +2158,12 @@ final class SettingRepository extends Select\Repository
                 'href' => 'https://docs.peppol.eu/poacc/billing/3.0/syntax/'
                 . 'ubl-invoice/cac-InvoicePeriod/cbc-DescriptionCode/',
             ],
+        ];
+    }
+
+    private function tooltipArrayE(): array
+    {
+        return [
             'storecove_country' => [
                 'why' => 'The first step in sending an invoice is to create'
                 . ' a sender. This sender is called'
