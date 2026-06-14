@@ -18,6 +18,6 @@ fi
 
 git add src/Invoice/Asset/rebuild/js/invoice-typescript-iife.js \
         src/Invoice/Asset/rebuild/js/invoice-typescript-iife.min.js \
-        src/Auth/Asset/rebuild/js/keypad_copy_to_clipboard.js
+        src/Auth/Asset/rebuild/js/keypad_copy_to_clipboard-iife.js
 
 echo "[pre-commit] IIFE rebuilt and staged."

@@ -61,7 +61,7 @@
     "build:css:prod": "sass src/Invoice/Asset/invoice/scss/style.scss src/Invoice/Asset/invoice/css/style.css --style=compressed --no-source-map",
     "build:typescript": "npm run build:typescript:prod",
     "build:typescript:dev": "node node_modules/esbuild/bin/esbuild src/typescript/index.ts --bundle --outfile=src/Invoice/Asset/rebuild/js/invoice-typescript-iife.js --target=es2024 --format=iife --global-name=InvoiceApp --sourcemap --supported:const=true",
-    "build:typescript:auth": "node node_modules/esbuild/bin/esbuild src/Auth/Asset/keypad_copy_to_clipboard.ts --bundle --platform=browser --outfile=src/Auth/Asset/rebuild/js/keypad_copy_to_clipboard.js --target=es2024 --format=iife --minify --supported:const-and-let=true",
+    "build:typescript:auth": "node node_modules/esbuild/bin/esbuild src/Auth/Asset/keypad_copy_to_clipboard.ts --bundle --platform=browser --outfile=src/Auth/Asset/rebuild/js/keypad_copy_to_clipboard-iife.js --target=es2024 --format=iife --minify --supported:const-and-let=true",
     "build:typescript:prod": "node node_modules/esbuild/bin/esbuild src/typescript/index.ts --bundle --outfile=src/Invoice/Asset/rebuild/js/invoice-typescript-iife.js --target=es2024 --format=iife --global-name=InvoiceApp --minify --supported:const-and-let=true && node node_modules/esbuild/bin/esbuild src/typescript/index.ts --bundle --outfile=src/Invoice/Asset/rebuild/js/invoice-typescript-iife.min.js --target=es2024 --format=iife --global-name=InvoiceApp --minify --supported:const-and-let=true",
     "build:typescript:watch": "npm run build:typescript:dev -- --watch",
     "prepare": "git config core.hooksPath .githooks",
