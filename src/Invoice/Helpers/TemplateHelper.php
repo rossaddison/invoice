@@ -466,7 +466,7 @@ final readonly class TemplateHelper
                         //  $cf_id = [];
                         //$cf = '';
                         $replace_custom = null;
-                        if (preg_match('/cf_([0-9].*)/', $var, $cf_id)) {
+                        if (preg_match('/cf_(\d.*)/', $var, $cf_id)) {
                             // Get the custom field
                             /** @var CustomField $cf */
                             $cf = $this->cfR->repoCustomFieldquery((int) $cf_id[1]);
