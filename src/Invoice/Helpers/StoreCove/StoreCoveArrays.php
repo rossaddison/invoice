@@ -370,6 +370,16 @@ final class StoreCoveArrays
      */
     public static function storeCoveReceiverIdentifierArray(): array
     {
+        return array_merge(
+            self::storeCoveReceiverIdentifierArrayA(),
+            self::storeCoveReceiverIdentifierArrayB(),
+            self::storeCoveReceiverIdentifierArrayC(),
+            self::storeCoveReceiverIdentifierArrayD(),
+        );
+    }
+
+    private static function storeCoveReceiverIdentifierArrayA(): array
+    {
         return [
             -1 => [
                 'region' => 'Region',
@@ -499,6 +509,12 @@ final class StoreCoveArrays
                 'tax' => 'BE:VAT',
                 'routing' => 'BE:EN',
             ],
+        ];
+    }
+
+    private static function storeCoveReceiverIdentifierArrayB(): array
+    {
+        return [
             15 => [
                 'region' => 'EU',
                 'country' => 'BG',
@@ -619,6 +635,12 @@ final class StoreCoveArrays
                 'tax' => 'IE:VAT',
                 'routing' => 'IE:VAT',
             ],
+        ];
+    }
+
+    private static function storeCoveReceiverIdentifierArrayC(): array
+    {
+        return [
             30 => [
                 'region' => 'EU',
                 'country' => 'IT',
@@ -739,6 +761,12 @@ final class StoreCoveArrays
                 'tax' => 'PT:VAT',
                 'routing' => 'PT:VAT',
             ],
+        ];
+    }
+
+    private static function storeCoveReceiverIdentifierArrayD(): array
+    {
+        return [
             45 => [
                 'region' => 'EU',
                 'country' => 'RO',
