@@ -220,24 +220,14 @@ final class InvSentLogController extends BaseController
     }
 
     private function rbacAccountant() : bool {
-        // has accountant role
-        if ($this->userService->hasPermission(Permissions::VIEW_INV)
+        return $this->userService->hasPermission(Permissions::VIEW_INV)
             && $this->userService->hasPermission(Permissions::VIEW_PAYMENT)
-            && $this->userService->hasPermission(Permissions::EDIT_PAYMENT)) {
-            return true;
-        } else {
-            return false;
-        }
+            && $this->userService->hasPermission(Permissions::EDIT_PAYMENT);
     }
 
     private function rbacAdmin() : bool {
-        // has observer role
-        if ($this->userService->hasPermission(Permissions::VIEW_INV)
-            && ($this->userService->hasPermission(Permissions::EDIT_INV))) {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->userService->hasPermission(Permissions::VIEW_INV)
+            && $this->userService->hasPermission(Permissions::EDIT_INV);
     }
 
     /**
