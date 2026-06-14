@@ -377,7 +377,7 @@ final class ProductClientController extends BaseController
                             ->getRedirectResponse('productclient/index');
             }
             return $this->webService->getRedirectResponse('productclient/index');
-	} catch (Exception $e) {
+    } catch (Exception $e) {
             $this->flashMessage('danger', $e->getMessage());
             return $this->webService->getRedirectResponse('productclient/index');
         }

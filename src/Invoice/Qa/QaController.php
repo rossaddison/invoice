@@ -114,7 +114,7 @@ final class QaController extends BaseController
                 return $this->webService->getRedirectResponse('qa/index');
             }
             return $this->webService->getRedirectResponse('qa/index');
-	} catch (Exception $e) {
+    } catch (Exception $e) {
             $this->flashMessage('danger', $e->getMessage());
             return $this->webService->getRedirectResponse('qa/index');
         }

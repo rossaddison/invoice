@@ -273,7 +273,7 @@ final class AuthController
                             }
 // Regenerate session ID on successful login
                             $this->session->regenerateId();
-		            $this->session->set('tfa_verified', true);
+                    $this->session->set('tfa_verified', true);
                             if ($identity instanceof CookieLoginIdentityInterface
                                     && $loginForm->getPropertyValue('rememberMe')) {
                                 return $cookieLogin->addCookie($identity,

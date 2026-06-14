@@ -12,14 +12,14 @@ final class Lang
     /**
      * List of translations
      *
-     * @var	array
+     * @var    array
      */
     public $uLanguage = [];
 
     /**
      * List of loaded language files
      *
-     * @var	array
+     * @var    array
      */
     public $isLoaded = [];
 
@@ -39,11 +39,11 @@ final class Lang
     /**
      * Load a language file
      *
-     * @param array|string $langfile	Language file name
-     * @param string $idiom		Language name (english, etc.)
-     * @param bool $return		Whether to return the loaded array of translations
-     * @param bool $add_suffix	Whether to add suffix to $langfile
-     * @param string $alt_path	Alternative path to look for the language file
+     * @param array|string $langfile    Language file name
+     * @param string $idiom        Language name (english, etc.)
+     * @param bool $return        Whether to return the loaded array of translations
+     * @param bool $add_suffix    Whether to add suffix to $langfile
+     * @param string $alt_path    Alternative path to look for the language file
      *
      * @return array|true|null Array containing translations, if $return is set to true
      *
@@ -112,9 +112,9 @@ final class Lang
      *
      * Fetches a single line of text from the language array
      *
-     * @param	string	$line		Language line key
-     * @param	bool	$log_errors	Whether to log an error message if the line is not found
-     * @return	false|mixed|string	Translation
+     * @param    string    $line        Language line key
+     * @param    bool    $log_errors    Whether to log an error message if the line is not found
+     * @return    false|mixed|string    Translation
      */
     public function line($line, $log_errors = true)
     {
