@@ -1133,7 +1133,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                  */
                 foreach ($invoice->getItems() as $item) {
                     $product = $item->getProduct();
-                    if (null !== $product && !($product->getUnitPeppolId() > 0)) {
+                    if (null !== $product && $product->getUnitPeppolId() <= 0) {
                         throw new ProductUnitCodeNf($this->t, $product);
                     }
                     // Item Identification number eg. TRQWERQERQ9879

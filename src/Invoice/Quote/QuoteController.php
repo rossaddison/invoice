@@ -351,9 +351,9 @@ final class QuoteController extends BaseController
         if ($statusId > 0
             // has observer role
             && $this->userService->hasPermission(Permissions::VIEW_INV)
-            && !($this->userService->hasPermission(Permissions::EDIT_INV))
+            && !$this->userService->hasPermission(Permissions::EDIT_INV)
             // the quote  is not a draft i.e. has been sent
-            && !($statusId === 1)
+            && $statusId !== 1
             // the quote is intended for the current user
             && ($quote->reqUserId() === $this->userService->getUser()?->reqId())
             // the quote client is associated with the above user

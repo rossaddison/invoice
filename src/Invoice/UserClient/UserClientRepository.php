@@ -205,7 +205,7 @@ final class UserClientRepository extends Select\Repository
             // Exclude clients, that already have user accounts, from the dropdown box
             // if the client id does not appear in the user client table as a client
             // => this client has not been already assigned therefore it can be made available
-            if (!($this->repoUserquerycount($client_id) > 0)) {
+            if ($this->repoUserquerycount($client_id) <= 0) {
                 $every_client_ids[] = $client_id;
             }
         }
@@ -232,7 +232,7 @@ final class UserClientRepository extends Select\Repository
             // Exclude clients, that already have user accounts, from the dropdown box
             // if the client id does not appear in the user client table as a client
             // => this client has not been already assigned therefore it can be made available
-            if (!($this->repoUserquerycount($client_id) > 0)) {
+            if ($this->repoUserquerycount($client_id) <= 0) {
                 $unassigned_client_ids[] = $client_id;
             }
         }

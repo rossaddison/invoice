@@ -183,7 +183,7 @@ final class CustomFieldController extends BaseController
         if ($custom_field instanceof CustomField) {
             $custom_values = $customvalueRepository->repoCustomFieldqueryCount($custom_field->reqId());
             // Make sure all custom values associated with the custom field have been deleted first before commencing
-            if (!($custom_values > 0)) {
+            if ($custom_values <= 0) {
                 $this->customFieldService->deleteCustomField($custom_field);
                 return $this->webService->getRedirectResponse('customfield/index');
             }

@@ -786,10 +786,10 @@ final class SalesOrderController extends BaseController
         if (null !== $statusId
             // has observer role
             && $this->userService->hasPermission(Permissions::VIEW_INV)
-            && !($this->userService->hasPermission(Permissions::EDIT_INV))
+            && !$this->userService->hasPermission(Permissions::EDIT_INV)
             // the salesorder has passed the 'draft' stage i.e sent / appears
             // in the observer user's guest index
-            && !($statusId === 1)
+            && $statusId !== 1
             && (($soUserId = $so->reqUserId()) > 0)
             // the salesorder is intended for the current user
             && ($soUserId === $this->userService->getUser()?->reqId())

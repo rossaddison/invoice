@@ -360,7 +360,7 @@ final readonly class ButtonsToolbarFull
                 && $this->settingRepository->getSetting(
                     'enable_invoice_deletion') === '1'
                 && $inv->getIsReadOnly() === false
-                && !($inv->getSoId() > 0)
+                && $inv->getSoId() <= 0
                 && $invEdit;
     }
 

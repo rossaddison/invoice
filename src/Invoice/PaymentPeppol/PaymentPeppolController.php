@@ -276,9 +276,9 @@ final class PaymentPeppolController extends BaseController
         $statusId = $inv->reqStatusId();
         // has observer role
         if ($this->userService->hasPermission(Permissions::VIEW_INV)
-            && !($this->userService->hasPermission(Permissions::EDIT_INV))
+            && !$this->userService->hasPermission(Permissions::EDIT_INV)
             // the invoice  is not a draft i.e. has been sent
-            && !($statusId === 1)
+            && $statusId !== 1
             // the invoice is intended for the current user
             && ($inv->reqUserId() === (int) $this->userService->getUser()?->reqId())
             // the invoice client is associated with the above user
