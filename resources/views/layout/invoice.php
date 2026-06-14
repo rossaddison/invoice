@@ -673,9 +673,10 @@ if ((null !== $currentPath) && !$isGuest) {
                 DropdownItem::text(PerformanceMetrics::prometheusStatus(),
                     itemAttributes: $itemFontArray),
                 DropdownItem::text($subMenu->generate('Prometheus Monitoring',
-                    $urlGenerator, $subMenuPrometheus,
+                    $urlGenerator,
                     $bootstrap5LayoutInvoiceNavbarFont,
-                    $bootstrap5LayoutInvoiceNavbarFontSize)),
+                    $bootstrap5LayoutInvoiceNavbarFontSize,
+                    $subMenuPrometheus)),
             ),
             // Platform
             Dropdown::widget()

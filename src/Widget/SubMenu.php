@@ -15,17 +15,17 @@ final class SubMenu
             ]
      * @param string $title
      * @param UrlGenerator $urlGenerator
-     * @param array $items
      * @param string $navBarFont
      * @param string $navBarFontSize
+     * @param array $items
      * @return string
      */
     public static function generate(
         string $title,
         UrlGenerator $urlGenerator,
-        array $items = [],
         string $navBarFont,
         string $navBarFontSize,
+        array $items = [],
         ): string
     {
         $finalString = '';

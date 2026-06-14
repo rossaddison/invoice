@@ -861,10 +861,10 @@ final class SalesOrderController extends BaseController
     }
 
     public function soToInvoiceConfirm(
-        #[RouteArgument('id')] string $id = '',
         Request $request,
         FormHydrator $formHydrator,
         SoToInvoiceDependencies $d,
+        #[RouteArgument('id')] string $id = '',
     ): \Psr\Http\Message\ResponseInterface {
         $body = $request->getQueryParams();
         $so_id = $id !== '' ? (int) $id : (int) ($body['so_id'] ?? '');
