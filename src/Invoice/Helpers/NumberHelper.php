@@ -29,7 +29,7 @@ use App\Invoice\InvItem\InvItemRepository as IIR;
 use App\Invoice\QuoteAmount\QuoteAmountRepository as QAR;
 
 use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository as ACIR;
-use App\Invoice\QuoteAllowanceCharge\QuoteAllowanceChargeRepository aS ACQR;
+use App\Invoice\QuoteAllowanceCharge\QuoteAllowanceChargeRepository as ACQR;
 use App\Invoice\SalesOrderAllowanceCharge\SalesOrderAllowanceChargeRepository
     as ACSOR;
 use App\Invoice\SalesOrderItem\SalesOrderItemRepository as SOIR;
