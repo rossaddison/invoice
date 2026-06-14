@@ -789,8 +789,7 @@ final readonly class NumberHelper
 // exclude the other. Discount amount is the user inputed amount on the invoice
 // representing a cash discount. Discount percent is the user inputed
 // percentage on the invoice representing a cash percentage
-        $trimmed_total = $total - $discount_amount;
-        return $trimmed_total;
+        return $total - $discount_amount;
     }
 
     /**

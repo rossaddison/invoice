@@ -435,8 +435,7 @@ final class ProductClientController extends BaseController
         int $id) : ProductClient|null
     {
         if ($id) {
-            $productclient = $productclientRepository->repoProductClientQuery($id);
-            return $productclient;
+            return $productclientRepository->repoProductClientQuery($id);
         }
         return null;
     }

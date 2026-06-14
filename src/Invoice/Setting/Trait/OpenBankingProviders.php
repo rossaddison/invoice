@@ -244,7 +244,7 @@ trait OpenBankingProviders
 
     public function getOpenBankingProvidersWithAuthUrl(): array
     {
-        $names = array_keys(
+        return array_keys(
             array_filter(
                 $this->openBankingProviders,
                 /**
@@ -253,7 +253,6 @@ trait OpenBankingProviders
                 fn (array $provider): bool => isset($provider['authUrl']) && is_string($provider['authUrl']) && $provider['authUrl'] !== '',
             ),
         );
-        return $names;
     }
 
     /**
