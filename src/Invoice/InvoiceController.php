@@ -562,9 +562,28 @@ final class InvoiceController extends BaseController
                 "Authorization: Bearer $api_key_here",
                 'Content-Type: application/json']);
             curl_setopt($site, CURLOPT_HEADER, true);
-            // World ie. GB,  to Germany a.k.a "World to DE"
-            $dataWorldTo = '{
-                "legalEntityId": ' . (string) (int) $this->sR->getSetting('storecove_legal_entity_id') . ',
+            $legalEntityId = (string) (int) $this->sR->getSetting(
+                                                'storecove_legal_entity_id');
+            $dualArray = [
+                $this->storeCoveWorldToJson($legalEntityId),
+                $this->storeCoveMainJson(),
+            ];
+            curl_setopt($site, CURLOPT_POSTFIELDS, $dualArray[1]);
+            $message = curl_error($site) ?: $this->translator->translate(
+                          'curl.store.cove.api.setup.legal.entity.successful');
+            $parameters = [
+                'result' => curl_exec($site),
+                'message' => $message,
+                'status' => curl_error($site) ? 'warning' : 'success',
+            ];
+        }
+        return $this->webViewRenderer->render('curl/api_result', $parameters);
+    }
+
+    private function storeCoveWorldToJson(string $legalEntityId): string
+    {
+        return '{
+                "legalEntityId": ' . $legalEntityId . ',
                 "routing": {
                   "emails": [
                     "test@example.com"
@@ -631,6 +650,16 @@ final class InvoiceController extends BaseController
                   }
                 }
             }';
+    }
+
+    private function storeCoveMainJson(): string
+    {
+        return $this->storeCoveMainJsonPart1()
+             . $this->storeCoveMainJsonPart2();
+    }
+
+    private function storeCoveMainJsonPart1(): string
+    {
             $p = "JVBERi0xLjIgCjkgMCBvYmoKPDwKPj4Kc3RyZWFtCkJULyAzMiBUZiggIFlP";
             $q = "VVIgVEVYVCBIRVJFICAgKScgRVQKZW5kc3RyZWFtCmVuZG9iago0IDAgb2Jq";
             $r = "Cjw8Ci9UeXBlIC9QYWdlCi9QYXJlbnQgNSAwIFIKL0NvbnRlbnRzIDkgMCBS";
@@ -642,7 +671,7 @@ final class InvoiceController extends BaseController
             $x = "This may not be read by the receiver,";
             $y = "so it is not encouraged to use this.";
 
-            $data = '{
+        return '{
                 "legalEntityId": 100000099999,
                 "idempotencyGuid": "61b37456-5f9e-4d56-b63b-3b1a23fa5c73",
                 "routing": {
@@ -755,8 +784,12 @@ final class InvoiceController extends BaseController
                           "phone": "088-444444444"
                         }
                       }
-                    },
-                    "delivery": {
+                    },';
+    }
+
+    private function storeCoveMainJsonPart2(): string
+    {
+        return '                    "delivery": {
                       "deliveryPartyName": "Delivered To Name",
                       "actualDeliveryDate": "2020-11-01",
                       "deliveryLocation": {
@@ -853,18 +886,6 @@ final class InvoiceController extends BaseController
                   }
                 }
               }';
-            
-            $dualArray = [$dataWorldTo, $data];
-            curl_setopt($site, CURLOPT_POSTFIELDS, $dualArray[1]);
-            $message = curl_error($site) ?: $this->translator->translate(
-                          'curl.store.cove.api.setup.legal.entity.successful');
-            $parameters = [
-                'result' => curl_exec($site),
-                'message' => $message,
-                'status' => curl_error($site) ? 'warning' : 'success',
-            ];
-        }
-        return $this->webViewRenderer->render('curl/api_result', $parameters);
     }
 
     public function dashboard(DashboardDeps $d): \Psr\Http\Message\ResponseInterface
