@@ -175,6 +175,7 @@ trait QuoteToInvoice
             try {
                 $product_unit_id = $quote_item->getProductUnitId();
             } catch (\LogicException) {
+                // product_unit_id remains null when the item is not persisted
             }
             $inv_item = [
                 'inv_id' => $inv_id,

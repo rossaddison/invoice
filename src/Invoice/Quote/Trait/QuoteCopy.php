@@ -189,6 +189,7 @@ trait QuoteCopy
             try {
                 $product_unit_id = $quote_item->getProductUnitId();
             } catch (\LogicException) {
+                // product_unit_id remains null when the item is not persisted
             }
             $copy_item = [
                 'quote_id' => $new_quote_id,

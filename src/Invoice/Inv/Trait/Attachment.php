@@ -154,12 +154,10 @@ $original_file_name = preg_replace(
             if (null !== $upload) {
                 $url_key = $upload->getUrlKey();
                 $inv = $iR->repoUrlKeyGuestLoaded($url_key);
-                if (null!==$inv) {
-                    if (($this->rbacObserver($inv, $ucR, $uiR))
-                        || ($this->rbacAdmin())) {
-                    } else {
-                        exit;
-                    }
+                if (null !== $inv
+                    && !$this->rbacObserver($inv, $ucR, $uiR)
+                    && !$this->rbacAdmin()) {
+                    exit;
                 }
                 $aliases = $this->sR->getCustomerFilesFolderAliases();
                 $targetPath = $aliases->get('@customer_files');
@@ -170,16 +168,9 @@ $original_file_name = preg_replace(
                 $file_ext = $path_parts['extension'] ?? '';
                 if (file_exists($target_path_with_filename)) {
                     $file_size = filesize($target_path_with_filename);
-                    if ($file_size != false) {
-                        $allowed_content_type_array = $upR->getContentTypes();
-                        // Check extension against allowed content file types
-                        // Related logic: see UploadRepository getContentTypes
-                        $save_ctype =
-                            isset($allowed_content_type_array[$file_ext]);
+                    if ($file_size) {
                         /** @var string $ctype */
-                        $ctype = $save_ctype ?
-                            $allowed_content_type_array[$file_ext] :
-                                $upR->getContentTypeDefaultOctetStream();
+                        $ctype = $this->resolveContentType($file_ext, $upR);
                         // https://www.php.net/manual/en/function.header.php
                         // Remember that header() must be called before any
                         // actual output is sent, either by normal HTML tags,
@@ -199,6 +190,14 @@ $original_file_name = preg_replace(
             exit;
         } //null!==$upload_id
         exit;
+    }
+
+    private function resolveContentType(string $file_ext, UPR $upR): string
+    {
+        $allowed = $upR->getContentTypes();
+        return isset($allowed[$file_ext])
+            ? $allowed[$file_ext]
+            : $upR->getContentTypeDefaultOctetStream();
     }
 
     public function download(#[RouteArgument('invoice')] string $invoice): void
