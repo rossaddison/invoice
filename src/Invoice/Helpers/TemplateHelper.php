@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace App\Invoice\Helpers;
 
 use App\Infrastructure\Persistence\{
-    ClientCustom\ClientCustom, CustomField\CustomField,
-    CustomValue\CustomValue, Inv\Inv, UserInv\UserInv
+    CustomField\CustomField, Inv\Inv
 };
 use App\Invoice\Setting\SettingRepository as SRepo;
-use App\Invoice\Client\ClientRepository as CR;
 use App\Invoice\ClientCustom\ClientCustomRepository as ccR;
 use App\Invoice\CustomField\CustomFieldRepository as cfR;
 use App\Invoice\CustomValue\CustomValueRepository as cvR;
@@ -40,514 +38,194 @@ final readonly class TemplateHelper
     public function parseTemplate(int $pk, bool $isInvoice, string $body, ParseTemplateDeps $deps): string
     {
         $cvR = $deps->cvR;
-        $iR = $deps->iR;
+        $iR  = $deps->iR;
         $iaR = $deps->iaR;
-        $qR = $deps->qR;
+        $qR  = $deps->qR;
         $qaR = $deps->qaR;
         $soR = $deps->soR;
         $uiR = $deps->uiR;
         $template_vars = [];
         if (preg_match_all('/{{{([^{|}]*)}}}/', $body, $template_vars) > 0) {
             foreach ($template_vars[1] as $var) {
-                $userinv = new UserInv();
-                $replace = '';
-                switch ($var) {
-                    // client
-                    case 'client_name':
-                        $client = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvLoadedquery($pk) : null;
-                        if ($client) {
-                            $replace = $client->getClient()?->getClientName();
-                        }
-                        break;
-                    case 'client_surname':
-                        $client = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvLoadedquery($pk) : null;
-                        if ($client) {
-                            $replace = $client->getClient()?->getClientSurname();
-                        }
-                        break;
-                    case 'client_address_1':
-                        $client = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvLoadedquery($pk) : null;
-                        if ($client) {
-                            $replace = $client->getClient()?->getClientAddress1();
-                        }
-                        break;
-                    case 'client_address_2':
-                        $client = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvLoadedquery($pk) : null;
-                        if ($client) {
-                            $replace = $client->getClient()?->getClientAddress2();
-                        }
-                        break;
-                    case 'client_city':
-                        $client = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvLoadedquery($pk) : null;
-                        if ($client) {
-                            $replace = $client->getClient()?->getClientCity();
-                        }
-                        break;
-                    case 'client_zip':
-                        $client = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvLoadedquery($pk) : null;
-                        if ($client) {
-                            $replace = $client->getClient()?->getClientZip();
-                        }
-                        break;
-                    case 'client_state':
-                        $client = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvLoadedquery($pk) : null;
-                        if ($client) {
-                            $replace = $client->getClient()?->getClientState();
-                        }
-                        break;
-                    case 'client_country':
-                        $client = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvLoadedquery($pk) : null;
-                        if ($client) {
-                            $replace = $client->getClient()?->getClientCountry();
-                        }
-                        break;
-                    case 'client_phone':
-                        $client = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvLoadedquery($pk) : null;
-                        if ($client) {
-                            $replace = $client->getClient()?->getClientPhone();
-                        }
-                        break;
-                    case 'client_fax':
-                        $client = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvLoadedquery($pk) : null;
-                        if ($client) {
-                            $replace = $client->getClient()?->getClientFax();
-                        }
-                        break;
-                    case 'client_mobile':
-                        $client = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvLoadedquery($pk) : null;
-                        if ($client) {
-                            $replace = $client->getClient()?->getClientMobile();
-                        }
-                        break;
-                    case 'client_email':
-                        $client = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvLoadedquery($pk) : null;
-                        if ($client) {
-                            $replace = $client->getClient()?->getClientEmail();
-                        }
-                        break;
-                    case 'client_web':
-                        $client = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvLoadedquery($pk) : null;
-                        if ($client) {
-                            $replace = $client->getClient()?->getClientWeb();
-                        }
-                        break;
-                    case 'client_vat_id':
-                        $client = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvLoadedquery($pk) : null;
-                        if ($client) {
-                            $replace = $client->getClient()?->getClientVatId();
-                        }
-                        break;
-                    case 'client_tax_code':
-                        $client = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvLoadedquery($pk) : null;
-                        if ($client) {
-                            $replace = $client->getClient()?->getClientTaxCode();
-                        }
-                        break;
-                        // user
-                    case 'user_company':
-                        $invoice = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvUnloadedquery($pk) : null;
-                        if ($invoice) {
-                            $userinv = $uiR->repoUserInvUserIdCount($invoice->reqUserId()) > 0 ? $uiR->repoUserInvUserIdquery($invoice->reqUserId()) : null;
-                        }
-                        if ($userinv) {
-                            $replace = $userinv->getCompany();
-                        }
-                        break;
-                    case 'user_address_1':
-                        $invoice = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvUnloadedquery($pk) : null;
-                        if ($invoice) {
-                            $userinv = $uiR->repoUserInvUserIdCount($invoice->reqUserId()) > 0 ? $uiR->repoUserInvUserIdquery($invoice->reqUserId()) : null;
-                        }
-                        if ($userinv) {
-                            $replace = $userinv->getAddress1();
-                        }
-                        break;
-                    case 'user_address_2':
-                        $invoice = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvUnloadedquery($pk) : null;
-                        if ($invoice) {
-                            $userinv = $uiR->repoUserInvUserIdCount($invoice->reqUserId()) > 0 ? $uiR->repoUserInvUserIdquery($invoice->reqUserId()) : null;
-                        }
-                        if ($userinv) {
-                            $replace = $userinv->getAddress2();
-                        }
-                        break;
-                    case 'user_city':
-                        $invoice = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvUnloadedquery($pk) : null;
-                        if ($invoice) {
-                            $userinv = $uiR->repoUserInvUserIdCount($invoice->reqUserId()) > 0 ? $uiR->repoUserInvUserIdquery($invoice->reqUserId()) : null;
-                        }
-                        if ($userinv) {
-                            $replace = $userinv->getCity();
-                        }
-                        break;
-                    case 'user_state':
-                        $invoice = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvUnloadedquery($pk) : null;
-                        if ($invoice) {
-                            $userinv = $uiR->repoUserInvUserIdCount($invoice->reqUserId()) > 0 ? $uiR->repoUserInvUserIdquery($invoice->reqUserId()) : null;
-                        }
-                        if ($userinv) {
-                            $replace = $userinv->getState();
-                        }
-                        break;
-                    case 'user_zip':
-                        $invoice = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvUnloadedquery($pk) : null;
-                        if ($invoice) {
-                            $userinv = $uiR->repoUserInvUserIdCount($invoice->reqUserId()) > 0 ? $uiR->repoUserInvUserIdquery($invoice->reqUserId()) : null;
-                        }
-                        if ($userinv) {
-                            $replace = $userinv->getZip();
-                        }
-                        break;
-                    case 'user_country':
-                        $invoice = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvUnloadedquery($pk) : null;
-                        if ($invoice) {
-                            $userinv = $uiR->repoUserInvUserIdCount($invoice->reqUserId()) > 0 ? $uiR->repoUserInvUserIdquery($invoice->reqUserId()) : null;
-                        }
-                        if ($userinv) {
-                            $replace = $userinv->getCountry();
-                        }
-                        break;
-                    case 'user_phone':
-                        $invoice = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvUnloadedquery($pk) : null;
-                        if ($invoice) {
-                            $userinv = $uiR->repoUserInvUserIdCount($invoice->reqUserId()) > 0 ? $uiR->repoUserInvUserIdquery($invoice->reqUserId()) : null;
-                        }
-                        if ($userinv) {
-                            $replace = $userinv->getPhone();
-                        }
-                        break;
-                    case 'user_fax':
-                        $invoice = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvUnloadedquery($pk) : null;
-                        if ($invoice) {
-                            $userinv = $uiR->repoUserInvUserIdCount($invoice->reqUserId()) > 0 ? $uiR->repoUserInvUserIdquery($invoice->reqUserId()) : null;
-                        }
-                        if ($userinv) {
-                            $replace = $userinv->getFax();
-                        }
-                        break;
-                    case 'user_mobile':
-                        $invoice = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvUnloadedquery($pk) : null;
-                        if ($invoice) {
-                            $userinv = $uiR->repoUserInvUserIdCount($invoice->reqUserId()) > 0 ? $uiR->repoUserInvUserIdquery($invoice->reqUserId()) : null;
-                        }
-                        if ($userinv) {
-                            $replace = $userinv->getMobile();
-                        }
-                        break;
-                    case 'user_web':
-                        $invoice = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvUnloadedquery($pk) : null;
-                        if ($invoice) {
-                            $userinv = $uiR->repoUserInvUserIdCount($invoice->reqUserId()) > 0 ? $uiR->repoUserInvUserIdquery($invoice->reqUserId()) : null;
-                        }
-                        if ($userinv) {
-                            $replace = $userinv->getWeb();
-                        }
-                        break;
-                    case 'user_vat_id':
-                        $invoice = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvUnloadedquery($pk) : null;
-                        if ($invoice) {
-                            $userinv = $uiR->repoUserInvUserIdCount($invoice->reqUserId()) > 0 ? $uiR->repoUserInvUserIdquery($invoice->reqUserId()) : null;
-                        }
-                        if ($userinv) {
-                            $replace = $userinv->getVatId();
-                        }
-                        break;
-                    case 'user_tax_code':
-                        $invoice = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvUnloadedquery($pk) : null;
-                        if ($invoice) {
-                            $userinv = $uiR->repoUserInvUserIdCount($invoice->reqUserId()) > 0 ? $uiR->repoUserInvUserIdquery($invoice->reqUserId()) : null;
-                        }
-                        if ($userinv) {
-                            $replace = $userinv->getTaxCode();
-                        }
-                        break;
-                    case 'user_subscribernumber':
-                        $invoice = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvUnloadedquery($pk) : null;
-                        if ($invoice) {
-                            $userinv = $uiR->repoUserInvUserIdCount($invoice->reqUserId()) > 0 ? $uiR->repoUserInvUserIdquery($invoice->reqUserId()) : null;
-                        }
-                        if ($userinv) {
-                            $replace = $userinv->getSubscribernumber();
-                        }
-                        break;
-                    case 'user_iban':
-                        $invoice = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvUnloadedquery($pk) : null;
-                        if ($invoice) {
-                            $userinv = $uiR->repoUserInvUserIdCount($invoice->reqUserId()) > 0 ? $uiR->repoUserInvUserIdquery($invoice->reqUserId()) : null;
-                        }
-                        if ($userinv) {
-                            $replace = $userinv->getIban();
-                        }
-                        break;
-                    case 'user_gln':
-                        $invoice = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvUnloadedquery($pk) : null;
-                        if ($invoice) {
-                            $userinv = $uiR->repoUserInvUserIdCount($invoice->reqUserId()) > 0 ? $uiR->repoUserInvUserIdquery($invoice->reqUserId()) : null;
-                        }
-                        if ($userinv) {
-                            $replace = $userinv->getGln();
-                        }
-                        break;
-                    case 'user_rcc':
-                        $invoice = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvUnloadedquery($pk) : null;
-                        if ($invoice) {
-                            $userinv = $uiR->repoUserInvUserIdCount($invoice->reqUserId()) > 0 ? $uiR->repoUserInvUserIdquery($invoice->reqUserId()) : null;
-                        }
-                        if ($userinv) {
-                            $replace = $userinv->getRcc();
-                        }
-                        break;
-                        // quote
-                    case 'quote_item_subtotal':
-                        $quote_amount = $qaR->repoQuoteAmountCount($pk) > 0 ?
-                            $qaR->repoQuotequery($pk) : null;
-                        if ($quote_amount) {
-                            $replace = $this->n->formatCurrency($quote_amount->getItemSubtotal());
-                        }
-                        break;
-                    case 'quote_tax_total':
-                        $quote_amount = $qaR->repoQuoteAmountCount($pk) > 0 ?
-                            $qaR->repoQuotequery($pk) : null;
-                        if ($quote_amount) {
-                            $replace = $this->n->formatCurrency($quote_amount->getTaxTotal());
-                        }
-                        break;
-                    case 'quote_item_discount':
-                        $quote = $qR->repoCount($pk) > 0 ?
-                            $qR->repoQuoteUnloadedquery($pk) : null;
-                        if ($quote) {
-                            $replace = $this->n->formatCurrency($quote->getDiscountAmount());
-                        }
-                        break;
-                    case 'quote_total':
-                        $quote_amount = $qaR->repoQuoteAmountCount($pk) > 0 ?
-                            $qaR->repoQuotequery($pk) : null;
-                        if ($quote_amount) {
-                            $replace = $this->n->formatCurrency($quote_amount->getTotal());
-                        }
-                        break;
-                    case 'quote_date_created':
-                        $quote = $qR->repoCount($pk) > 0 ?
-                            $qR->repoQuoteUnloadedquery($pk) : null;
-                        if ($quote) {
-                            $replace = $quote->getDateCreated()->format($this->d->style());
-                        }
-                        break;
-                    case 'quote_date_expires':
-                        $quote = $qR->repoCount($pk) > 0 ?
-                            $qR->repoQuoteUnloadedquery($pk) : null;
-                        if ($quote) {
-                            $replace = $quote->getDateExpires()->format($this->d->style());
-                        }
-                        break;
-                    case 'quote_guest_url':
-                        $quote = $qR->repoCount($pk) > 0 ?
-                            $qR->repoQuoteUnloadedquery($pk) : null;
-                        if ($quote) {
-                            $replace = 'quote/url_key/' . $quote->getUrlKey();
-                        }
-                        break;
-                    case 'quote_number':
-                        $quote = $qR->repoCount($pk) > 0 ?
-                            $qR->repoQuoteUnloadedquery($pk) : null;
-                        if ($quote) {
-                            $replace = $quote->getNumber() ?? '';
-                        }
-                        break;
-                        // salesorder
-                    case 'salesorder_notes':
-                        $so = $soR->repoCount($pk) > 0 ?
-                            $soR->repoSalesOrderUnloadedquery($pk) : null;
-                        if ($so) {
-                            $replace = $so->getNotes() ?? '';
-                        }
-                        break;
-
-                        // invoice
-                    case 'invoice_guest_url':
-                        $invoice = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvUnloadedquery($pk) : null;
-                        if ($invoice) {
-                            $replace = 'inv/url_key/' . $invoice->getUrlKey();
-                        }
-                        break;
-                    case 'invoice_date_due':
-                        $invoice = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvUnloadedquery($pk) : null;
-                        if ($invoice) {
-                            $replace = $this->d->dateFromMysql($invoice->getDateDue());
-                        }
-                        break;
-                    case 'invoice_date_created':
-                        $invoice = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvUnloadedquery($pk) : null;
-                        if ($invoice) {
-                            $replace = $invoice->getDateCreated()->format($this->d->style());
-                        }
-                        break;
-                    case 'invoice_item_subtotal':
-                        $invoice_amount = $iaR->repoInvAmountCount($pk) > 0 ?
-                            $iaR->repoInvquery($pk) : null;
-                        if ($invoice_amount) {
-                            $replace = $this->n->formatCurrency(
-                                $invoice_amount->getItemSubtotal());
-                        }
-                        break;
-                    case 'invoice_item_tax_total':
-                        $invoice_amount = $iaR->repoInvAmountCount($pk) > 0 ?
-                            $iaR->repoInvquery($pk) : null;
-                        if ($invoice_amount) {
-                            $replace = $this->n->formatCurrency(
-                                $invoice_amount->getItemTaxTotal());
-                        }
-                        break;
-                    case 'invoice_total':
-                        $invoice_amount = $iaR->repoInvAmountCount($pk) > 0 ?
-                            $iaR->repoInvquery($pk) : null;
-                        if ($invoice_amount) {
-                            $replace = $this->n->formatCurrency($invoice_amount->getTotal());
-                        }
-                        break;
-                    case 'invoice_number':
-                        $invoice = $iR->repoCount($pk) > 0 ?
-                            $iR->repoInvUnloadedquery($pk) : null;
-                        if ($invoice) {
-                            $replace = $invoice->getNumber();
-                        }
-                        break;
-                    case 'invoice_paid':
-                        $invoice_amount = $iaR->repoInvAmountCount($pk) > 0 ?
-                            $iaR->repoInvquery($pk) : null;
-                        if ($invoice_amount) {
-                            $replace = $this->n->formatCurrency($invoice_amount->getPaid());
-                        }
-                        break;
-                    case 'invoice_balance':
-                        $invoice_amount = $iaR->repoInvAmountCount($pk) > 0 ?
-                            $iaR->repoInvquery($pk) : null;
-                        if ($invoice_amount) {
-                            $replace = $this->n->formatCurrency($invoice_amount->getBalance());
-                        }
-                        break;
-                    default:
-                        // Derive the custom_field_id from $var eg. 'cf_1' implies custom_field_id is 1.
-                        //  $cf_id = [];
-                        //$cf = '';
-                        $replace_custom = null;
-                        if (preg_match('/cf_(\d.*)/', $var, $cf_id)) {
-                            // Get the custom field
-                            /** @var CustomField $cf */
-                            $cf = $this->cfR->repoCustomFieldquery((int) $cf_id[1]);
-                            // Get the table from the custom field table
-                            $table = $cf->getTable();
-                            // If the table is eg. 'quote_custom' search the table with the custom_field_id
-                            // and retrieve the value for this particularly designed field
-                            switch ($table) {
-                                case 'quote_custom':
-                                    // $pk = quote id;
-                                    $quote = $qR->repoCount($pk) > 0 ?
-                                        $qR->repoQuoteLoadedquery($pk) : null;
-                                    if ($quote) {
-                                        $replace_custom =
-                                            $this->qcR->repoFormValuequery(
-                                                $quote->reqId(), (int) $cf_id[1]);
-                                    }
-                                    break;
-                                case 'salesorder_custom':
-                                    // $pk = so id;
-                                    $so = $soR->repoCount($pk) > 0 ?
-                                        $soR->repoSalesOrderLoadedquery($pk) : null;
-                                    if ($so) {
-                                        $replace_custom =
-                                            $this->socR->repoFormValuequery(
-                                                $so->reqId(), $cf_id[1]);
-                                    }
-                                    break;
-                                case 'inv_custom':
-                                    // $pk = inv id;
-                                    $invoice = $iR->repoCount($pk) > 0 ?
-                                        $iR->repoInvLoadedquery($pk) : null;
-                                    if ($invoice) {
-                                        $replace_custom =
-                                            $this->icR->repoFormValuequery(
-                                                $invoice->reqId(),
-                                                    (int) $cf_id[1]);
-                                    }
-                                    break;
-                                case 'client_custom':
-                                   // Client custom fields can be included on
-                                   // either an invoice or a quote
-
-                                   $entity = null;
-
-                                   if ($isInvoice && $iR->repoCount($pk) > 0) {
-                                       $entity = $iR->repoInvLoadedquery($pk);
-                                   } elseif (!$isInvoice && $qR->repoCount($pk) > 0) {
-                                       $entity = $qR->repoQuoteLoadedquery($pk);
-                                   }
-
-                                   if ($entity) {
-/** @var \App\Infrastructure\Persistence\ClientCustom\ClientCustom $replace_custom */
-                                       $replace_custom = $this->ccR->repoFormValuequery(
-                                           $entity->reqClientId(),
-                                           (int) $cf_id[1]
-                                       );
-                                   }
-
-                                   break;
-                                default:
-                                    break;
-                            }
-                            // All the different entities are represented by $replace_custom
-
-                            $custom_value_id = (null !== ($replace_custom) ?
-                                (int) $replace_custom->getValue() : 0);
-                            // Now search the custom value table that holds the real value
-                            $custom_value = $cvR->repoCount($custom_value_id) > 0 ?
-                                $cvR->repoCustomValuequery($custom_value_id) : null;
-                            /**
-                             * @var array<array-key, float|int|string>|string $replace
-                             */
-                            $replace = null !== $custom_value ? $custom_value->getValue() : '';
-                        } // if preg_match
-                } //  switch ($var)
-                /** @var array<array-key, float|int|string>|string $replace */
+                $prefix  = explode('_', $var, 2)[0];
+                $replace = match ($prefix) {
+                    'client'     => $this->resolveClientVar($var, $pk, $iR),
+                    'user'       => $this->resolveUserVar($var, $pk, $iR, $uiR),
+                    'quote'      => $this->resolveQuoteVar($var, $pk, $qR, $qaR),
+                    'salesorder' => $this->resolveSalesOrderVar($var, $pk, $soR),
+                    'invoice'    => $this->resolveInvoiceVar($var, $pk, $iR, $iaR),
+                    default      => $this->resolveCustomFieldVar($var, $pk, $isInvoice, $iR, $qR, $soR, $cvR),
+                };
                 $body = str_replace('{{{' . $var . '}}}', $replace, $body);
-            } // foreach ($template_vars[1] as $var)
-        } // if ((preg_match_all('/{{{([^{|}]*)}}}/', $body, $template_vars)))
+            }
+        }
         return $body;
+    }
+
+    private function resolveClientVar(string $var, int $pk, IR $iR): string
+    {
+        $inv    = $iR->repoCount($pk) > 0 ? $iR->repoInvLoadedquery($pk) : null;
+        $client = $inv?->getClient();
+        if ($client === null) {
+            return '';
+        }
+        return match ($var) {
+            'client_name'      => $client->getClientName(),
+            'client_surname'   => $client->getClientSurname()  ?? '',
+            'client_address_1' => $client->getClientAddress1() ?? '',
+            'client_address_2' => $client->getClientAddress2() ?? '',
+            'client_city'      => $client->getClientCity()     ?? '',
+            'client_zip'       => $client->getClientZip()      ?? '',
+            'client_state'     => $client->getClientState()    ?? '',
+            'client_country'   => $client->getClientCountry()  ?? '',
+            'client_phone'     => $client->getClientPhone()    ?? '',
+            'client_fax'       => $client->getClientFax()      ?? '',
+            'client_mobile'    => $client->getClientMobile()   ?? '',
+            'client_email'     => $client->getClientEmail(),
+            'client_web'       => $client->getClientWeb()      ?? '',
+            'client_vat_id'    => $client->getClientVatId(),
+            'client_tax_code'  => $client->getClientTaxCode()  ?? '',
+            default            => '',
+        };
+    }
+
+    private function resolveUserVar(string $var, int $pk, IR $iR, uiR $uiR): string
+    {
+        $invoice = $iR->repoCount($pk) > 0 ? $iR->repoInvUnloadedquery($pk) : null;
+        if ($invoice === null) {
+            return '';
+        }
+        $userId  = $invoice->reqUserId();
+        $userinv = $uiR->repoUserInvUserIdCount($userId) > 0
+            ? $uiR->repoUserInvUserIdquery($userId)
+            : null;
+        if ($userinv === null) {
+            return '';
+        }
+        return (string) match ($var) {
+            'user_company'          => $userinv->getCompany()          ?? '',
+            'user_address_1'        => $userinv->getAddress1()         ?? '',
+            'user_address_2'        => $userinv->getAddress2()         ?? '',
+            'user_city'             => $userinv->getCity()             ?? '',
+            'user_state'            => $userinv->getState()            ?? '',
+            'user_zip'              => $userinv->getZip()              ?? '',
+            'user_country'          => $userinv->getCountry()          ?? '',
+            'user_phone'            => $userinv->getPhone()            ?? '',
+            'user_fax'              => $userinv->getFax()              ?? '',
+            'user_mobile'           => $userinv->getMobile()           ?? '',
+            'user_web'              => $userinv->getWeb()              ?? '',
+            'user_vat_id'           => $userinv->getVatId(),
+            'user_tax_code'         => $userinv->getTaxCode()          ?? '',
+            'user_subscribernumber' => $userinv->getSubscribernumber() ?? '',
+            'user_iban'             => $userinv->getIban()             ?? '',
+            'user_gln'              => $userinv->getGln()              ?? '',
+            'user_rcc'              => $userinv->getRcc()              ?? '',
+            default                 => '',
+        };
+    }
+
+    private function resolveQuoteVar(string $var, int $pk, QR $qR, QAR $qaR): string
+    {
+        $quote  = $qR->repoCount($pk) > 0            ? $qR->repoQuoteUnloadedquery($pk) : null;
+        $amount = $qaR->repoQuoteAmountCount($pk) > 0 ? $qaR->repoQuotequery($pk)        : null;
+        return match ($var) {
+            'quote_item_subtotal' => $amount !== null ? $this->n->formatCurrency($amount->getItemSubtotal())         : '',
+            'quote_tax_total'     => $amount !== null ? $this->n->formatCurrency($amount->getTaxTotal())             : '',
+            'quote_total'         => $amount !== null ? $this->n->formatCurrency($amount->getTotal())                : '',
+            'quote_item_discount' => $quote  !== null ? $this->n->formatCurrency($quote->getDiscountAmount())        : '',
+            'quote_date_created'  => $quote  !== null ? $quote->getDateCreated()->format($this->d->style())          : '',
+            'quote_date_expires'  => $quote  !== null ? $quote->getDateExpires()->format($this->d->style())          : '',
+            'quote_guest_url'     => $quote  !== null ? 'quote/url_key/' . $quote->getUrlKey()                      : '',
+            'quote_number'        => $quote  !== null ? ($quote->getNumber() ?? '')                                  : '',
+            default               => '',
+        };
+    }
+
+    private function resolveSalesOrderVar(string $var, int $pk, SOR $soR): string
+    {
+        if ($var === 'salesorder_notes') {
+            $so = $soR->repoCount($pk) > 0 ? $soR->repoSalesOrderUnloadedquery($pk) : null;
+            return $so?->getNotes() ?? '';
+        }
+        return '';
+    }
+
+    private function resolveInvoiceVar(string $var, int $pk, IR $iR, IAR $iaR): string
+    {
+        $invoice = $iR->repoCount($pk) > 0            ? $iR->repoInvUnloadedquery($pk) : null;
+        $amount  = $iaR->repoInvAmountCount($pk) > 0  ? $iaR->repoInvquery($pk)        : null;
+        return match ($var) {
+            'invoice_guest_url'      => $invoice !== null ? 'inv/url_key/' . $invoice->getUrlKey()                : '',
+            'invoice_date_due'       => $invoice !== null ? $this->d->dateFromMysql($invoice->getDateDue())       : '',
+            'invoice_date_created'   => $invoice !== null ? $invoice->getDateCreated()->format($this->d->style()) : '',
+            'invoice_number'         => $invoice !== null ? ($invoice->getNumber() ?? '')                         : '',
+            'invoice_item_subtotal'  => $amount  !== null ? $this->n->formatCurrency($amount->getItemSubtotal())  : '',
+            'invoice_item_tax_total' => $amount  !== null ? $this->n->formatCurrency($amount->getItemTaxTotal())  : '',
+            'invoice_total'          => $amount  !== null ? $this->n->formatCurrency($amount->getTotal())         : '',
+            'invoice_paid'           => $amount  !== null ? $this->n->formatCurrency($amount->getPaid())          : '',
+            'invoice_balance'        => $amount  !== null ? $this->n->formatCurrency($amount->getBalance())       : '',
+            default                  => '',
+        };
+    }
+
+    private function resolveCustomFieldVar(
+        string $var,
+        int $pk,
+        bool $isInvoice,
+        IR $iR,
+        QR $qR,
+        SOR $soR,
+        cvR $cvR,
+    ): string {
+        if (!preg_match('/cf_(\d.*)/', $var, $cf_id)) {
+            return '';
+        }
+        /** @var CustomField $cf */
+        $cf    = $this->cfR->repoCustomFieldquery((int) $cf_id[1]);
+        $table = $cf->getTable();
+        $replace_custom = null;
+        switch ($table) {
+            case 'quote_custom':
+                $quote = $qR->repoCount($pk) > 0 ? $qR->repoQuoteLoadedquery($pk) : null;
+                if ($quote) {
+                    $replace_custom = $this->qcR->repoFormValuequery($quote->reqId(), (int) $cf_id[1]);
+                }
+                break;
+            case 'salesorder_custom':
+                $so = $soR->repoCount($pk) > 0 ? $soR->repoSalesOrderLoadedquery($pk) : null;
+                if ($so) {
+                    $replace_custom = $this->socR->repoFormValuequery($so->reqId(), $cf_id[1]);
+                }
+                break;
+            case 'inv_custom':
+                $invoice = $iR->repoCount($pk) > 0 ? $iR->repoInvLoadedquery($pk) : null;
+                if ($invoice) {
+                    $replace_custom = $this->icR->repoFormValuequery($invoice->reqId(), (int) $cf_id[1]);
+                }
+                break;
+            case 'client_custom':
+                $entity = null;
+                if ($isInvoice && $iR->repoCount($pk) > 0) {
+                    $entity = $iR->repoInvLoadedquery($pk);
+                } elseif (!$isInvoice && $qR->repoCount($pk) > 0) {
+                    $entity = $qR->repoQuoteLoadedquery($pk);
+                }
+                if ($entity) {
+                    /** @var \App\Infrastructure\Persistence\ClientCustom\ClientCustom $replace_custom */
+                    $replace_custom = $this->ccR->repoFormValuequery($entity->reqClientId(), (int) $cf_id[1]);
+                }
+                break;
+            default:
+                break;
+        }
+        $custom_value_id = null !== $replace_custom ? (int) $replace_custom->getValue() : 0;
+        $custom_value    = $cvR->repoCount($custom_value_id) > 0
+            ? $cvR->repoCustomValuequery($custom_value_id)
+            : null;
+        if ($custom_value === null) {
+            return '';
+        }
+        return $custom_value->getValue();
     }
 
     /**
