@@ -96,31 +96,17 @@ final class SignupController
                     ->withHeader('Location', $clientAuthUrl);
     }
 
-    /**
-     * Related logic: see src\ViewInjection\CommonViewInjection.php
-     * Related logic: see resources\views\site\signupfailed.php and
-     *  signupsuccess.php
-     *
-     * @param AuthService $authService
-     * @param CurrentRoute $currentRoute
-     * @param FormHydrator $formHydrator
-     * @param ServerRequestInterface $request
-     * @param SignupForm $signupForm
-     * @param tR $tR
-     * @param uiR $uiR
-     * @param uR $uR
-     * @return ResponseInterface
-     */
     public function signup(
         AuthService $authService,
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
         ServerRequestInterface $request,
         SignupForm $signupForm,
-        tR $tR,
-        uiR $uiR,
-        uR $uR,
+        SignupDeps $deps,
     ): ResponseInterface {
+        $tR = $deps->tR;
+        $uiR = $deps->uiR;
+        $uR = $deps->uR;
         if (!$authService->isGuest()) {
             return $this->webService->getRedirectResponse('site/index');
         }

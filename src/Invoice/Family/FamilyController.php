@@ -270,31 +270,14 @@ final class FamilyController extends BaseController
         return $this->factory->createResponse(Json::encode($parameters));
     }
 
-    /**
-     * @param string $id
-     * @param Request $request
-     * @param FamilyRepository $familyRepository
-     * @param fcR $fcR
-     * @param cfR $cfR
-     * @param cvR $cvR
-     * @param cpR $cpR
-     * @param csR $csR
-     * @param FormHydrator $formHydrator
-     * @return Response
-     */
     public function edit(
         #[RouteArgument('id')] string $id,
         Request $request,
-        fR $familyRepository,
-        fcR $fcR,
-        cfR $cfR,
-        cvR $cvR,
-        cpR $cpR,
-        csR $csR,
+        FamilyEditDeps $deps,
         FormHydrator $formHydrator
     ): Response
     {
-        $family = $this->family((int) $id, $familyRepository);
+        $family = $this->family((int) $id, $deps->fR);
         if ($family) {
             $form = FamilyForm::show($family);
             $familyCustomForm = new FamilyCustomForm();
@@ -302,15 +285,15 @@ final class FamilyController extends BaseController
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'family/edit',
                 'actionArguments' => ['id' => $familyId = $family->reqId()],
-                'categoryPrimaries' => $cpR->optionsDataCategoryPrimaries(),
-                'categorySecondaries' => $csR->optionsDataCategorySecondaries(),
+                'categoryPrimaries' => $deps->cpR->optionsDataCategoryPrimaries(),
+                'categorySecondaries' => $deps->csR->optionsDataCategorySecondaries(),
                 'errors' => [],
                 'errorsCustom' => [],
                 'family' => $family,
                 'form' => $form,
-                'customFields' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'family_custom')['customFields'],
-                'customValues' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'family_custom')['customValues'],
-                'familyCustomValues' => $this->familyCustomValues($familyId, $fcR),
+                'customFields' => $this->fetchCustomFieldsAndValues($deps->cfR, $deps->cvR, 'family_custom')['customFields'],
+                'customValues' => $this->fetchCustomFieldsAndValues($deps->cfR, $deps->cvR, 'family_custom')['customValues'],
+                'familyCustomValues' => $this->familyCustomValues($familyId, $deps->fcR),
                 'familyCustomForm' => $familyCustomForm,
             ];
             if ($request->getMethod() === Method::POST) {
