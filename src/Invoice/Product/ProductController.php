@@ -29,6 +29,7 @@ use App\Invoice\ProductCustom\ProductCustomService;
 use App\Invoice\ProductCustom\ProductCustomForm;
 use App\Invoice\ProductImage\ProductImageRepository as piR;
 // Quote
+use App\Invoice\QuoteItem\QiAddProductDeps;
 use App\Invoice\QuoteItem\QuoteItemForm;
 use App\Invoice\QuoteItem\QuoteItemService;
 use App\Invoice\QuoteItemAmount\QuoteItemAmountService as qiaS;
@@ -633,8 +634,8 @@ final class ProductController extends BaseController
         ];
         if ($formHydrator->populateAndValidate($form, $ajax_content)) {
             $this->quoteitemService->addQuoteItemProduct(
-                    $quoteItem, $ajax_content, (string) $quote_id, $deps->pR, $deps->qiaR, $deps->qiaS,
-                    $deps->uR, $deps->trR, $this->translator);
+                    $quoteItem, $ajax_content, (string) $quote_id,
+                    new QiAddProductDeps($deps->pR, $deps->qiaR, $deps->qiaS, $deps->uR, $deps->trR, $this->translator));
         }
     }
 

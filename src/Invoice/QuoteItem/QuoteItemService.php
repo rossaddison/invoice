@@ -76,30 +76,12 @@ final readonly class QuoteItemService
         }
     }
 
-    /**
-     * Related logic: QuoteController function quoteToQuoteItems
-     * @param QuoteItem $model
-     * @param array $array
-     * @param string $quote_id
-     * @param PR $pr
-     * @param taskR $taskR
-     * @param QIAR $qiar
-     * @param QIAS $qias
-     * @param UR $uR
-     * @param TRR $trr
-     * @param Translator $translator
-     */
+    // Related logic: QuoteController function quoteToQuoteItems
     public function addQuoteItemProductTask(
         QuoteItem $model,
         array $array,
         string $quote_id,
-        PR $pr,
-        TaskR $taskR,
-        QIAR $qiar,
-        QIAS $qias,
-        UR $uR,
-        TRR $trr,
-        Translator $translator
+        QiAddProductTaskDeps $deps
     ): void {
         $this->persist($array, $model);
 
@@ -109,14 +91,14 @@ final readonly class QuoteItemService
         $product_id =  (int) ($array['product_id'] ?? null);
         $task_id =  (int) ($array['task_id'] ?? null);
         $model->setQuoteId((int) $quote_id);
-        $product = $pr->repoProductquery(
+        $product = $deps->pr->repoProductquery(
             (int) $array['product_id']
         );
         $name = '';
         if ($product) {
             $model->setProductId($product_id);
             if (isset($array['product_id']) &&
-                $pr->repoCount($product_id) > 0) {
+                $deps->pr->repoCount($product_id) > 0) {
                 $name = $product->getProductName();
             }
             null !== $name ?
@@ -130,14 +112,14 @@ final readonly class QuoteItemService
             null !== $description ?
                 $model->setDescription($description) :
                 $model->setDescription(
-                    $translator->translate('not.available')
+                    $deps->translator->translate('not.available')
                 );
         }
-        $task = $taskR->repoTaskquery((int) $array['task_id']);
+        $task = $deps->taskR->repoTaskquery((int) $array['task_id']);
         if ($task) {
             $model->setTaskId($task_id);
             if (isset($array['task_id']) &&
-                $taskR->repoCount($task_id) > 0) {
+                $deps->taskR->repoCount($task_id) > 0) {
                 $name = $task->getName();
             }
             null !== $name ?
@@ -151,7 +133,7 @@ final readonly class QuoteItemService
             strlen($description) > 0 ?
                 $model->setDescription($description) :
                 $model->setDescription(
-                    $translator->translate('not.available')
+                    $deps->translator->translate('not.available')
                 );
         }
         isset($array['quantity']) ?
@@ -166,7 +148,7 @@ final readonly class QuoteItemService
             $model->setOrder((int) $array['order']) : '';
         // Product_unit is a string which we get from unit's
         // name field using the unit_id
-        $unit = $uR->repoUnitquery(
+        $unit = $deps->uR->repoUnitquery(
             (int) $array['product_unit_id']
         );
         if ($unit) {
@@ -177,7 +159,7 @@ final readonly class QuoteItemService
         // is zero percent.
         $tax_rate_percentage = $this->taxratePercentage(
             (int) $tax_rate_id,
-            $trr
+            $deps->trr
         );
         $this->repository->save($model);
         if (isset($array['quantity'], $array['price'],
@@ -195,51 +177,34 @@ final readonly class QuoteItemService
                 (float) $array['price'],
                 (float) $array['discount_amount'],
                 $tax_rate_percentage,
-                $qiar,
-                $qias
+                $deps->qiar,
+                $deps->qias
             );
         }
     }
 
-    /**
-     * @param QuoteItem $model
-     * @param array $array
-     * @param string $quote_id
-     * @param PR $pr
-     * @param QIAR $qiar
-     * @param QIAS $qias
-     * @param UR $uR
-     * @param TRR $trr
-     * @param Translator $translator
-     */
+    // Used in product/saveProductLookupItemQuote when adding a quote via the modal
     public function addQuoteItemProduct(
         QuoteItem $model,
         array $array,
         string $quote_id,
-        PR $pr,
-        QIAR $qiar,
-        QIAS $qias,
-        UR $uR,
-        TRR $trr,
-        Translator $translator
+        QiAddProductDeps $deps
     ): void {
         $this->persist($array, $model);
 
-        // This function is used in product/save_product_lookup_
-        // item_quote when adding a quote using the modal
         $tax_rate_id = ((isset($array['tax_rate_id'])) ?
             (int) $array['tax_rate_id'] : '');
         $model->setTaxRateId((int) $tax_rate_id);
         $product_id = (int) ($array['product_id'] ?? '');
         $model->setProductId($product_id);
         $model->setQuoteId((int) $quote_id);
-        $product = $pr->repoProductquery(
+        $product = $deps->pr->repoProductquery(
             (int) $array['product_id']
         );
         $name = '';
         if ($product) {
             if (isset($array['product_id']) &&
-                $pr->repoCount($product_id) > 0) {
+                $deps->pr->repoCount($product_id) > 0) {
                 $name = $product->getProductName();
             }
             null !== $name ?
@@ -253,7 +218,7 @@ final readonly class QuoteItemService
             null !== $description ?
                 $model->setDescription($description) :
                 $model->setDescription(
-                    $translator->translate('not.available')
+                    $deps->translator->translate('not.available')
                 );
         }
         isset($array['quantity']) ?
@@ -268,7 +233,7 @@ final readonly class QuoteItemService
             $model->setOrder((int) $array['order']) : '';
         // Product_unit is a string which we get from unit's
         // name field using the unit_id
-        $unit = $uR->repoUnitquery(
+        $unit = $deps->uR->repoUnitquery(
             (int) $array['product_unit_id']
         );
         if ($unit) {
@@ -279,7 +244,7 @@ final readonly class QuoteItemService
         // is zero percent.
         $tax_rate_percentage = $this->taxratePercentage(
             (int) $tax_rate_id,
-            $trr
+            $deps->trr
         );
         if ($product_id) {
             $this->repository->save($model);
@@ -298,8 +263,8 @@ final readonly class QuoteItemService
                     (float) $array['price'],
                     (float) $array['discount_amount'],
                     $tax_rate_percentage,
-                    $qiar,
-                    $qias
+                    $deps->qiar,
+                    $deps->qias
                 );
             }
         }

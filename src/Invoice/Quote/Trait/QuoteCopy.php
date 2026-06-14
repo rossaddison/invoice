@@ -15,6 +15,7 @@ use App\Invoice\{
     Quote\QuoteConvertItemDeps,
     Quote\QuoteConvertUserDeps,
     Quote\QuoteForm,
+    QuoteItem\QiAddProductTaskDeps,
     QuoteAllowanceCharge\QuoteAllowanceChargeRepository as ACQR,
     QuoteAllowanceCharge\QuoteAllowanceChargeForm,
     QuoteAmount\QuoteAmountRepository as QAR,
@@ -211,8 +212,7 @@ trait QuoteCopy
             if ($formHydrator->populateAndValidate($form, $copy_item)) {
                 $this->quote_item_service->addQuoteItemProductTask(
                     $newQuoteItem, $copy_item, (string) $new_quote_id,
-                    $items->pR, $items->taskR, $qiaR,
-                    $qiaS, $items->unR, $items->trR, $this->translator);
+                    new QiAddProductTaskDeps($items->pR, $items->taskR, $qiaR, $qiaS, $items->unR, $items->trR, $this->translator));
                 // All the original allowance charges associated with the quote
                 // item will have to be copied as well
                 $this->copyQuoteItemAllowanceCharges($origQuoteItemId,
