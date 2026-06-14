@@ -80,7 +80,7 @@ class GeneratorController extends BaseController
     // e.g. compare resources/messages/en.php with de.php with function rebuildLocale.
     // The missing keys in de.php are input into an array into an overwritable file
     // called _diff.php located at src\Invoice\Language\English
-    public const string _DIFF = '_diff_lang.php';
+    public const string DIFF_LANG = '_diff_lang.php';
 
     public function __construct(
         private Aliases $aliases,
@@ -520,7 +520,7 @@ class GeneratorController extends BaseController
  * false, false),
  */
             case 'diff':
-                $file = self::_DIFF;
+                $file = self::DIFF_LANG;
                 break;
             default:
                 break;
