@@ -412,7 +412,7 @@ final class PaymentInformationController
                     'message'     => 'Ref: ' . ($ref ?? 'No ref provided'),
                     'url'         => 'inv/urlKey',
                     'url_key'     => $urlKey,
-                    'gateway'     => 'Wonderful',
+                    'gateway'     => 'Tink',
                     'sandbox_url' => '',
                 ],
             ),

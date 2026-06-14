@@ -117,9 +117,7 @@ final class DeliveryRepository extends Select\Repository
      */
     public function repoInvoicequery(int $inv_id): ?Delivery
     {
-        $query = $this->select()
-                      ->where(['inv_id' => $inv_id]);
-        return  $query->fetchOne() ?: null;
+        return $this->repoPartyquery($inv_id);
     }
 
     /**

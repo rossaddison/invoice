@@ -1187,7 +1187,7 @@ final class SettingRepository extends Select\Repository
     // Append to uploads folder
     public static function getUploadsCustomerFilesRelativeUrl(): string
     {
-        return DIRECTORY_SEPARATOR . 'Customer_files';
+        return self::getCustomerfolderRelativeUrl();
     }
 
     // Append to uploads folder

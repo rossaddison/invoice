@@ -112,10 +112,7 @@ final class SalesOrderAmountRepository extends Select\Repository
      */
     public function repoSoquery(int $sales_order_id): ?SalesOrderAmount
     {
-        $query = $this->select()
-                      ->load('sales_order')
-                      ->where(['sales_order_id' => $sales_order_id]);
-        return  $query->fetchOne() ?: null;
+        return $this->repoSalesOrderAmountqueryTest($sales_order_id);
     }
 
     /**
@@ -127,10 +124,7 @@ final class SalesOrderAmountRepository extends Select\Repository
      */
     public function repoSalesOrderquery(int $sales_order_id): ?SalesOrderAmount
     {
-        $query = $this->select()
-                      ->load('sales_order')
-                      ->where(['sales_order_id' => $sales_order_id]);
-        return  $query->fetchOne() ?: null;
+        return $this->repoSalesOrderAmountqueryTest($sales_order_id);
     }
 
     /**

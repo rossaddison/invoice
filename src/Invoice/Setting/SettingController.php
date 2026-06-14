@@ -438,6 +438,11 @@ final class SettingController extends BaseController
      */
     public function invDraftHasNumberSwitch(CurrentRoute $currentRoute): Response
     {
+        return $this->toggleSettingToInvIndex($currentRoute);
+    }
+
+    private function toggleSettingToInvIndex(CurrentRoute $currentRoute): Response
+    {
         $setting = $this->setting($currentRoute);
         if ($setting) {
             if ($setting->getSettingValue() == '0') {
@@ -467,20 +472,7 @@ final class SettingController extends BaseController
      */
     public function markSent(CurrentRoute $currentRoute): Response
     {
-        $setting = $this->setting($currentRoute);
-        if ($setting) {
-            if ($setting->getSettingValue() == '0') {
-                $setting->setSettingValue('1');
-                $this->sR->save($setting);
-                return $this->webService->getRedirectResponse('inv/index');
-            }
-            if ($setting->getSettingValue() == '1') {
-                $setting->setSettingValue('0');
-                $this->sR->save($setting);
-                return $this->webService->getRedirectResponse('inv/index');
-            }
-        }
-        return $this->webService->getRedirectResponse('inv/index');
+        return $this->toggleSettingToInvIndex($currentRoute);
     }
 
     /**

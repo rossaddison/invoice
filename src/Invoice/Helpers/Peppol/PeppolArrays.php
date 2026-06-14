@@ -81,7 +81,7 @@ final class PeppolArrays
      */
     public function getChargesArray(): array
     {
-        return self::loadUncl7161();
+        return $this->getChargesArrayAsAtAugust2023();
     }
 
     /**

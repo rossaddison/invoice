@@ -605,10 +605,7 @@ final class InvRepository extends Select\Repository
      */
     public function byClient(int $client_id): EntityReader
     {
-        $query = $this->select()
-                      ->where(['client_id' => $client_id])
-                      ->where('deleted_at', null);
-        return $this->prepareDataReader($query);
+        return $this->findAllWithClient($client_id);
     }
 
     /**
@@ -1094,10 +1091,7 @@ final class InvRepository extends Select\Repository
      */
     public function repoClient(?int $client_id): EntityReader
     {
-        $query = $this->select()
-                      ->where(['client_id' => $client_id])
-                      ->where('deleted_at', null);
-        return $this->prepareDataReader($query);
+        return $this->findAllWithClient((int) $client_id);
     }
 
     /**

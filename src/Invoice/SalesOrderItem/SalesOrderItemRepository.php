@@ -113,10 +113,7 @@ final class SalesOrderItemRepository extends Select\Repository
      */
     public function repoSalesOrderquery(int $salesorder_id): EntityReader
     {
-        $query = $this->select()
-                      ->load(['tax_rate','product','sales_order'])
-                      ->where(['sales_order_id' => $salesorder_id]);
-        return $this->prepareDataReader($query);
+        return $this->repoSalesOrderItemIdquery($salesorder_id);
     }
 
     public function repoCount(int $salesorder_id): int

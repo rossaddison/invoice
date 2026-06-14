@@ -112,10 +112,7 @@ final class QuoteItemRepository extends Select\Repository
      */
     public function repoQuotequery(int $quote_id): EntityReader
     {
-        $query = $this->select()
-                      ->load(['tax_rate','product','quote'])
-                      ->where(['quote_id' => $quote_id]);
-        return $this->prepareDataReader($query);
+        return $this->repoQuoteItemIdquery($quote_id);
     }
 
     public function repoCount(int $quote_id): int

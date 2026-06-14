@@ -115,10 +115,7 @@ final class QuoteAmountRepository extends Select\Repository
      */
     public function repoQuoteAmountquery(int $quote_id): ?QuoteAmount
     {
-        $query = $this->select()
-                      ->load('quote')
-                      ->where(['quote_id' => $quote_id]);
-        return  $query->fetchOne() ?: null;
+        return $this->repoQuoteAmountqueryTest($quote_id);
     }
 
     /**
@@ -130,10 +127,7 @@ final class QuoteAmountRepository extends Select\Repository
      */
     public function repoQuotequery(int $quote_id): ?QuoteAmount
     {
-        $query = $this->select()
-                      ->load('quote')
-                      ->where(['quote_id' => $quote_id]);
-        return  $query->fetchOne() ?: null;
+        return $this->repoQuoteAmountqueryTest($quote_id);
     }
 
     /**
