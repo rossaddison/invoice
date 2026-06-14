@@ -21,6 +21,7 @@ use App\Invoice\{
     InvAllowanceCharge\InvAllowanceChargeForm,
     InvAmount\InvAmountForm,
     InvCustom\InvCustomForm,
+    InvItem\IiAddProductDeps,
     InvItem\InvItemForm,
     InvTaxRate\InvTaxRateForm,
     Quote\QuoteConvertCoreDeps,
@@ -198,8 +199,8 @@ trait QuoteToInvoice
             if ($formHydrator->populateAndValidate($form, $inv_item)) {
                 null !== $product_id && null === $task_id ?
                 $this->inv_item_service->addInvItemProduct($invItem, $inv_item,
-                    (string) $inv_id, $items->pR, $items->trR, $transfer->iiaS,
-                    $transfer->iiaR, $this->sR, $items->unR):
+                    (string) $inv_id,
+                    new IiAddProductDeps($items->pR, $items->trR, $transfer->iiaS, $transfer->iiaR, $this->sR, $items->unR)):
                 $this->inv_item_service->addInvItemTask($invItem, $inv_item,
                     (string) $inv_id, $items->taskR, $items->trR,
                     $transfer->iiaS, $transfer->iiaR);

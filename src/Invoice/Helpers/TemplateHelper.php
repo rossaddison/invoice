@@ -37,21 +37,15 @@ final readonly class TemplateHelper
         $this->n = new NHelp($this->s);
     }
 
-    /**
-     * @param int $pk
-     * @param bool $isInvoice
-     * @param string $body
-     * &param CVR $cvR
-     * @param IR $iR
-     * @param IAR $iaR
-     * @param QR $qR
-     * @param QAR $qaR
-     * @param SOR $soR
-     * @param uiR $uiR
-     * @return string
-     */
-    public function parseTemplate(int $pk, bool $isInvoice, string $body, cvR $cvR, IR $iR, IAR $iaR, QR $qR, QAR $qaR, SOR $soR, uiR $uiR)
+    public function parseTemplate(int $pk, bool $isInvoice, string $body, ParseTemplateDeps $deps): string
     {
+        $cvR = $deps->cvR;
+        $iR = $deps->iR;
+        $iaR = $deps->iaR;
+        $qR = $deps->qR;
+        $qaR = $deps->qaR;
+        $soR = $deps->soR;
+        $uiR = $deps->uiR;
         $template_vars = [];
         if (preg_match_all('/{{{([^{|}]*)}}}/', $body, $template_vars) > 0) {
             foreach ($template_vars[1] as $var) {

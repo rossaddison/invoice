@@ -12,7 +12,7 @@ use App\Infrastructure\Persistence\
 
 use App\Invoice\{
     InvAllowanceCharge\InvAllowanceChargeForm, InvCustom\InvCustomForm,
-    InvItem\InvItemForm, InvTaxRate\InvTaxRateForm,
+    InvItem\IiAddProductDeps, InvItem\InvItemForm, InvTaxRate\InvTaxRateForm,
     Inv\InvCopyDeps,
     Inv\InvForm
 };
@@ -335,8 +335,8 @@ trait MultipleCopy
                     if ($productId > 0) {
                         $newInvItemId =
                             $this->inv_item_service->addInvItemProduct(
-                                $invItem, $copy_item, (string) $copy_id, $d->pR, $d->trR, $d->iiaS,
-                                    $d->iiaR, $this->sR, $d->unR);
+                                $invItem, $copy_item, (string) $copy_id,
+                                new IiAddProductDeps($d->pR, $d->trR, $d->iiaS, $d->iiaR, $this->sR, $d->unR));
                         if (null !== $newInvItemId) {
                             $this->inv_item_service->addInvItemAllowanceCharges(
                                 (string) $copy_id, $originalInvItemId, $newInvItemId,

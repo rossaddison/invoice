@@ -34,6 +34,7 @@ use App\Invoice\QuoteItem\QuoteItemForm;
 use App\Invoice\QuoteItem\QuoteItemService;
 use App\Invoice\QuoteItemAmount\QuoteItemAmountService as qiaS;
 // Inv
+use App\Invoice\InvItem\IiAddProductDeps;
 use App\Invoice\InvItem\InvItemForm;
 use App\Invoice\InvItem\InvItemService;
 use App\Invoice\InvItemAmount\InvItemAmountService as iiaS;
@@ -668,8 +669,8 @@ final class ProductController extends BaseController
         ];
         if ($formHydrator->populateAndValidate($form, $ajax_content)) {
             $this->invitemService->addInvItemProduct(
-                    $invItem, $ajax_content, (string) $inv_id, $deps->pR, $deps->trR,
-                    new iiaS($deps->iiaR, $deps->iiR), $deps->iiaR, $this->sR, $deps->uR);
+                    $invItem, $ajax_content, (string) $inv_id,
+                    new IiAddProductDeps($deps->pR, $deps->trR, new iiaS($deps->iiaR, $deps->iiR), $deps->iiaR, $this->sR, $deps->uR));
         }
     }
 

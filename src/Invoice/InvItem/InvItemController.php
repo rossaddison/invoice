@@ -83,8 +83,8 @@ final class InvItemController extends BaseController
             $body = $request->getParsedBody() ?? [];
             if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                     $this->invitemService->addInvItemProduct($invitem,
-                            $body, $inv_id, $d->pR, $d->trR,
-                            new IIAS($d->iiar, $d->iiR), $d->iiar, $this->sR, $d->uR);
+                            $body, $inv_id,
+                            new IiAddProductDeps($d->pR, $d->trR, new IIAS($d->iiar, $d->iiR), $d->iiar, $this->sR, $d->uR));
                     $this->flashMessage('info',
                         $this->translator->translate('record.successfully.created'));
                     return $this->webService->getRedirectResponse('inv/view',

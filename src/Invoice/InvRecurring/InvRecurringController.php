@@ -23,6 +23,7 @@ use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\Helpers\Telegram\TelegramHelper;
 use App\User\UserService;
+use App\Invoice\InvItem\IiAddProductDeps;
 use App\Invoice\InvItem\InvItemService;
 use App\Invoice\InvAmount\InvAmountService;
 use App\Invoice\InvTaxRate\InvTaxRateService;
@@ -527,12 +528,7 @@ final class InvRecurringController extends BaseController
                         'product_unit_id' => $product->reqUnitId(),
                     ],
                     $invId,
-                    $d->pR,
-                    $d->trR,
-                    $d->iias,
-                    $d->iiar,
-                    $this->sR,
-                    $d->unR,
+                    new IiAddProductDeps($d->pR, $d->trR, $d->iias, $d->iiar, $this->sR, $d->unR),
                 );
             }
         }

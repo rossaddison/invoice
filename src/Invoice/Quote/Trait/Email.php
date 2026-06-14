@@ -12,7 +12,7 @@ use App\Invoice\Quote\{
     QuoteEmailStage2Deps,
     QuotePdfService,
 };
-use App\Invoice\Helpers\{MailerHelper, MailerHelperCustomDeps, MailerSendParams, TemplateHelper};
+use App\Invoice\Helpers\{MailerHelper, MailerHelperCustomDeps, MailerSendParams, ParseTemplateDeps, TemplateHelper};
 use Yiisoft\{
     Json\Json,
     Router\HydratorAttribute\RouteArgument,
@@ -165,24 +165,13 @@ trait Email
         if ($quote_entity) {
             $pdf_template_target_path = $quotePdfService->generate($quote_id, false, true);
             if ($pdf_template_target_path !== '') {
-                $mail_message = $template_helper->parseTemplate(
-                    $quote_id, false, $data->emailBody,
-                    $d->custom->cvR, $d->core->iR, $d->core->iaR, $d->relation->qR, $d->relation->qaR, $d->relation->soR, $d->core->uiR);
-                $mail_subject = $template_helper->parseTemplate(
-                    $quote_id, false, $data->subject,
-                    $d->custom->cvR, $d->core->iR, $d->core->iaR, $d->relation->qR, $d->relation->qaR, $d->relation->soR, $d->core->uiR);
-                $mail_cc = $template_helper->parseTemplate(
-                    $quote_id, false, $data->cc,
-                    $d->custom->cvR, $d->core->iR, $d->core->iaR, $d->relation->qR, $d->relation->qaR, $d->relation->soR, $d->core->uiR);
-                $mail_bcc = $template_helper->parseTemplate(
-                    $quote_id, false, $data->bcc,
-                    $d->custom->cvR, $d->core->iR, $d->core->iaR, $d->relation->qR, $d->relation->qaR, $d->relation->soR, $d->core->uiR);
-                $mail_from_email = $template_helper->parseTemplate(
-                    $quote_id, false, $data->fromEmail,
-                    $d->custom->cvR, $d->core->iR, $d->core->iaR, $d->relation->qR, $d->relation->qaR, $d->relation->soR, $d->core->uiR);
-                $mail_from_name = $template_helper->parseTemplate(
-                    $quote_id, false, $data->fromName,
-                    $d->custom->cvR, $d->core->iR, $d->core->iaR, $d->relation->qR, $d->relation->qaR, $d->relation->soR, $d->core->uiR);
+                $parseDeps = new ParseTemplateDeps($d->custom->cvR, $d->core->iR, $d->core->iaR, $d->relation->qR, $d->relation->qaR, $d->relation->soR, $d->core->uiR);
+                $mail_message    = $template_helper->parseTemplate($quote_id, false, $data->emailBody, $parseDeps);
+                $mail_subject    = $template_helper->parseTemplate($quote_id, false, $data->subject, $parseDeps);
+                $mail_cc         = $template_helper->parseTemplate($quote_id, false, $data->cc, $parseDeps);
+                $mail_bcc        = $template_helper->parseTemplate($quote_id, false, $data->bcc, $parseDeps);
+                $mail_from_email = $template_helper->parseTemplate($quote_id, false, $data->fromEmail, $parseDeps);
+                $mail_from_name  = $template_helper->parseTemplate($quote_id, false, $data->fromName, $parseDeps);
                 $mailerParams = new MailerSendParams($mail_from_email, $mail_from_name, $data->to, $mail_subject, $mail_message, $mail_cc, $mail_bcc);
                 return $mailer_helper->yiiMailerSend($mailerParams, $data->attachFiles, $pdf_template_target_path, $d->core->uiR);
             }

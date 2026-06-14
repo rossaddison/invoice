@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv;
 
-use App\Invoice\Helpers\{MailerHelper, MailerHelperCustomDeps, MailerSendParams, TemplateHelper};
+use App\Invoice\Helpers\{MailerHelper, MailerHelperCustomDeps, MailerSendParams, ParseTemplateDeps, TemplateHelper};
 use App\Invoice\Setting\SettingRepository as SR;
 use Psr\Log\LoggerInterface;
 use Yiisoft\Mailer\MailerInterface;
@@ -38,11 +38,8 @@ final readonly class InvEmailService
         }
         $templateHelper = $this->templateHelper();
         $d = $this->d;
-        $parse = fn(string $tpl): string => $templateHelper->parseTemplate(
-            $invId, true, $tpl,
-            $d->custom->cvR, $d->core->iR, $d->core->iaR,
-            $d->relation->qR, $d->relation->qaR, $d->relation->soR, $d->core->uiR,
-        );
+        $parseDeps = new ParseTemplateDeps($d->custom->cvR, $d->core->iR, $d->core->iaR, $d->relation->qR, $d->relation->qaR, $d->relation->soR, $d->core->uiR);
+        $parse = fn(string $tpl): string => $templateHelper->parseTemplate($invId, true, $tpl, $parseDeps);
         $params = new MailerSendParams(
             $parse($data->fromEmail),
             $parse($data->fromName),

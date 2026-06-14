@@ -60,7 +60,7 @@ final class InvItemHtmxController extends BaseController
                 if (is_array($body)) {
                     $this->invItemService->addInvItemProduct(
                         new InvItem(), $body, (string) $inv_id,
-                        $d->pR, $d->trR, new IIAS($d->iiaR, $d->iiR), $d->iiaR, $this->sR, $d->uR,
+                        new IiAddProductDeps($d->pR, $d->trR, new IIAS($d->iiaR, $d->iiR), $d->iiaR, $this->sR, $d->uR),
                     );
                     return $this->renderPartial($inv_id, $d);
                 }

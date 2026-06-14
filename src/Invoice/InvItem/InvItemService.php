@@ -71,30 +71,18 @@ final readonly class InvItemService
         }
     }
 
-    /**
-     * Related logic: see InvController function invToInvItems
-     * @param InvItem $model
-     * @param array $array
-     * @param string $inv_id
-     * @param PR $pr
-     * @param TRR $trr
-     * @param IIAS $iias
-     * @param IIAR $iiar
-     * @param SR $s
-     * @param UNR $unR
-     * @return int|null
-     */
     public function addInvItemProduct(
         InvItem $model,
         array $array,
         string $inv_id,
-        PR $pr,
-        TRR $trr,
-        IIAS $iias,
-        IIAR $iiar,
-        SR $s,
-        UNR $unR
+        IiAddProductDeps $deps,
     ): ?int {
+        $pr = $deps->pR;
+        $trr = $deps->trR;
+        $iias = $deps->iias;
+        $iiar = $deps->iiaR;
+        $s = $deps->sR;
+        $unR = $deps->uR;
         $this->persist($model, array_merge(
             $array,
             ['inv_id' => $inv_id]
