@@ -85,47 +85,47 @@ describe('AllowanceChargeToggleHandler — initial applyMode', () => {
 
     it('hides baseRow on init when the selected template has mfn = 0', () => {
         const { baseRow } = makeDOM('1');
-        new AllowanceChargeToggleHandler();
+        const _handler = new AllowanceChargeToggleHandler();
         expect(baseRow.style.display).toBe('none');
     });
 
     it('clears formulaHint on init when mfn = 0', () => {
         const { formulaHint } = makeDOM('1');
         formulaHint.textContent = 'leftover text';
-        new AllowanceChargeToggleHandler();
+        const _handler = new AllowanceChargeToggleHandler();
         expect(formulaHint.textContent).toBe('');
     });
 
     it('shows baseRow on init when the selected template has mfn > 0', () => {
         const { baseRow } = makeDOM('2');
-        new AllowanceChargeToggleHandler();
+        const _handler = new AllowanceChargeToggleHandler();
         expect(baseRow.style.display).toBe('');
     });
 
     it('pre-fills baseInput with template.base on init', () => {
         // VARIABLE: base = 500
         const { baseInput } = makeDOM('2');
-        new AllowanceChargeToggleHandler();
+        const _handler = new AllowanceChargeToggleHandler();
         expect(baseInput.value).toBe('500');
     });
 
     it('calculates amountInput on init — mfn=10, base=500 → 50.00', () => {
         // Math.round(10 * 500) / 100 = 50.00
         const { amountInput } = makeDOM('2');
-        new AllowanceChargeToggleHandler();
+        const _handler = new AllowanceChargeToggleHandler();
         expect(amountInput.value).toBe('50.00');
     });
 
     it('writes the formula hint on init', () => {
         const { formulaHint } = makeDOM('2');
-        new AllowanceChargeToggleHandler();
+        const _handler = new AllowanceChargeToggleHandler();
         expect(formulaHint.textContent).toBe('10 × 500 ÷ 100 = 50.00');
     });
 
     it('hides baseRow for an unknown select value (falls back to mfn=0)', () => {
         // value='99' not in TEMPLATES → getTemplate returns { mfn:0, base:0 }
         const { baseRow } = makeDOM('99');
-        new AllowanceChargeToggleHandler();
+        const _handler = new AllowanceChargeToggleHandler();
         expect(baseRow.style.display).toBe('none');
     });
 });
@@ -140,7 +140,7 @@ describe('AllowanceChargeToggleHandler — select change', () => {
 
     it('shows baseRow when changed from fixed to variable template', () => {
         const { select, baseRow } = makeDOM('1');
-        new AllowanceChargeToggleHandler();
+        const _handler = new AllowanceChargeToggleHandler();
         expect(baseRow.style.display).toBe('none');
 
         select.value = '2';
@@ -150,7 +150,7 @@ describe('AllowanceChargeToggleHandler — select change', () => {
 
     it('hides baseRow when changed from variable to fixed template', () => {
         const { select, baseRow } = makeDOM('2');
-        new AllowanceChargeToggleHandler();
+        const _handler = new AllowanceChargeToggleHandler();
         expect(baseRow.style.display).toBe('');
 
         select.value = '1';
@@ -161,7 +161,7 @@ describe('AllowanceChargeToggleHandler — select change', () => {
     it('resets baseInput to the new template.base on select change', () => {
         const templates = { '2': { mfn: 10, base: 500 }, '3': { mfn: 20, base: 300 } };
         const { select, baseInput } = makeDOM('2', templates);
-        new AllowanceChargeToggleHandler();
+        const _handler = new AllowanceChargeToggleHandler();
         expect(baseInput.value).toBe('500');
 
         select.value = '3';
@@ -172,7 +172,7 @@ describe('AllowanceChargeToggleHandler — select change', () => {
     it('updates amountInput and formulaHint on select change', () => {
         // Switch to variable: mfn=10, base=500 → 50.00
         const { select, amountInput, formulaHint } = makeDOM('1');
-        new AllowanceChargeToggleHandler();
+        const _handler = new AllowanceChargeToggleHandler();
 
         select.value = '2';
         select.dispatchEvent(new Event('change'));
@@ -183,7 +183,7 @@ describe('AllowanceChargeToggleHandler — select change', () => {
     it('clears formulaHint but does not zero amountInput when switched to fixed', () => {
         // Switch to variable first to set a real amount, then back to fixed
         const { select, amountInput, formulaHint } = makeDOM('2');
-        new AllowanceChargeToggleHandler();
+        const _handler = new AllowanceChargeToggleHandler();
         expect(amountInput.value).toBe('50.00');
 
         select.value = '1';
@@ -204,7 +204,7 @@ describe('AllowanceChargeToggleHandler — base input event', () => {
     it('recalculates amountInput when user types a new base value', () => {
         // mfn=10, user types 200 → Math.round(10 * 200) / 100 = 20.00
         const { baseInput, amountInput } = makeDOM('2');
-        new AllowanceChargeToggleHandler();
+        const _handler = new AllowanceChargeToggleHandler();
 
         baseInput.value = '200';
         baseInput.dispatchEvent(new Event('input'));
@@ -213,7 +213,7 @@ describe('AllowanceChargeToggleHandler — base input event', () => {
 
     it('updates formulaHint when user types a new base value', () => {
         const { baseInput, formulaHint } = makeDOM('2');
-        new AllowanceChargeToggleHandler();
+        const _handler = new AllowanceChargeToggleHandler();
 
         baseInput.value = '200';
         baseInput.dispatchEvent(new Event('input'));
@@ -222,7 +222,7 @@ describe('AllowanceChargeToggleHandler — base input event', () => {
 
     it('sets the userModified flag on baseInput after typing', () => {
         const { baseInput } = makeDOM('2');
-        new AllowanceChargeToggleHandler();
+        const _handler = new AllowanceChargeToggleHandler();
 
         baseInput.value = '999';
         baseInput.dispatchEvent(new Event('input'));
@@ -231,7 +231,7 @@ describe('AllowanceChargeToggleHandler — base input event', () => {
 
     it('treats an empty base as 0 — result is 0.00', () => {
         const { baseInput, amountInput } = makeDOM('2');
-        new AllowanceChargeToggleHandler();
+        const _handler = new AllowanceChargeToggleHandler();
 
         baseInput.value = '';
         baseInput.dispatchEvent(new Event('input'));
@@ -241,7 +241,7 @@ describe('AllowanceChargeToggleHandler — base input event', () => {
     it('does not update amountInput when the selected template has mfn = 0', () => {
         // Fixed template: recalculate returns early for mfn <= 0
         const { baseInput, amountInput } = makeDOM('1');
-        new AllowanceChargeToggleHandler();
+        const _handler = new AllowanceChargeToggleHandler();
         const before = amountInput.value;
 
         baseInput.value = '999';
@@ -262,7 +262,7 @@ describe('AllowanceChargeToggleHandler — DOMContentLoaded path', () => {
         const { baseRow } = makeDOM('1'); // fixed → should become 'none' after init
         Object.defineProperty(document, 'readyState', { value: 'loading', configurable: true });
 
-        new AllowanceChargeToggleHandler();
+        const _handler = new AllowanceChargeToggleHandler();
         // #init has not run yet — baseRow still has no inline style
         expect(baseRow.style.display).toBe('');
 
