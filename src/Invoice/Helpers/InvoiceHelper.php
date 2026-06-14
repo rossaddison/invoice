@@ -89,7 +89,7 @@ class InvoiceHelper
         $amountLine = sprintf('%010d', (float) $amount * 100.00);
         $checkSlAmount = $this->invoiceRecMod10($slipType . $amountLine);
 
-        if (!preg_match("/\d{2}-\d{1,6}-\d{1}/", (string) $subNumb)) {
+        if (!preg_match("/\d{2}-\d{1,6}-\d/", (string) $subNumb)) {
             $this->flash('danger', $this->translator->translate('invalid.subscriber.number'));
         }
 
