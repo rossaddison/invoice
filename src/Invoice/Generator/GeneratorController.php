@@ -286,7 +286,8 @@ class GeneratorController extends BaseController
                     // return to the Language dropdown under settings ... google translate
                     return $this->webService->getRedirectResponse('setting/tabIndex', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
                 } catch (\Exception $e) {
-                    throw $e;
+                    $this->flashMessage('danger', $e->getMessage());
+                    return $this->webService->getRedirectResponse('setting/tabIndex', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
                 }
             }
         }

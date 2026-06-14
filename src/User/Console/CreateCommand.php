@@ -63,13 +63,9 @@ final class CreateCommand extends Command
                 'passwordVerify' => $password,
             ], scope: '');
             $user = $this->signupForm->signup();
-        } catch (Throwable $t) {
-            /**
-             * Avoid Information Exposure
-             * Related logic: see https://cwe.mitre.org/data/definitions/200.html
-             * Previously: $io->error($t->getMessage() . ' ' . $t->getFile() . ' ' . $t->getLine());             *
-             */
-            throw $t;
+        } catch (Throwable) {
+            $io->error('User creation failed.');
+            return ExitCode::UNSPECIFIED_ERROR;
         }
 
         if (!$user instanceof User) {
