@@ -348,7 +348,7 @@ final class PrometheusMiddleware implements MiddlewareInterface
             return $segments[0] . '/' . $segments[1];
         }
 
-        if (count($segments) >= 1 && $segments[0] !== '') {
+        if ($segments[0] !== '') {
             return $segments[0];
         }
 
