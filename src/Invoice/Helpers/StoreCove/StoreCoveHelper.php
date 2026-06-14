@@ -1471,90 +1471,13 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
         StoreCoveHelperChargeDeps $charge,
     ): array {
         $invoice_id = $invoice->reqId();
-        $references = $this->buildReferencesArray($invoice, $net->contractRepo,
-                                                        $inv->cpR, $charge->soiR, $inv->soR);
-        $config_peppol = $this->s->getConfigPeppol();
-        /**
-         * @var array $config_peppol['PartyLegalEntity']
-         */
-        $legal_entity = $config_peppol['PartyLegalEntity'] ?? '';
-        /**
-         * @var string $legal_entity['CompanyID']
-         */
-        $legal_entity_id = $legal_entity[self::KEY_COMPANY_ID] ?? '';
-        if (empty($legal_entity_id)) {
-            throw new LegalEntityCompanyIdNotFoundException($this->t);
-        }
-        /**
-         * @var array $config_peppol['PartyTaxScheme']
-         */
-        $tax_scheme = $config_peppol['PartyTaxScheme'] ?? [];
-        /**
-         * @var string $tax_scheme['CompanyID']
-         */
-        $tax_scheme_id = $tax_scheme[self::KEY_COMPANY_ID] ?? '';
-        if (empty($tax_scheme_id)) {
-            throw new TaxSchemeCompanyIdNotFoundException($this->t);
-        }
-        // Currently a key number as an integer
-        /**
-         * Related logic:
-            http://yii3-i-4.myhost/invoice/setting/tab_index
-                                                        6.2 Sender identifier
-         */
-        $identifier = (int) $this->s->getSetting(
-                                             'storecove_sender_identifier');
-        // Get the complete array
-        $store_cove_sender_array =
-                      StoreCoveArrays::storeCoveSenderIdentifierArray();
-        /**
-         * Related logic: http://yii3-i/invoice/setting/tab_index
-         *                                       6.2 sender identifier basis
-         */
-        $identifier_basis = $this->s->getSetting(
-                                        'storecove_sender_identifier_basis');
-        $routing_scheme_identifier = '';
-        /**
-         * Search the array for the identifier to retrieve the sub array
-         * @var int $key
-         * @var string $value
-         */
-        foreach ($store_cove_sender_array as $key => $value) {
-            if ($key == $identifier) {
-// Use the identifier basis to retrieve either the legal or tax identifier
-                if ($identifier_basis === $this->t->translate(
-                                                        'storecove.tax')) {
-                    /**
-                     * @var string $value[$identifier_basis]
-                     */
-                    $routing_scheme_identifier = $value[$identifier_basis];
-                    continue;
-                }
-                if ($identifier_basis === $this->t->translate(
-                                                        'storecove.legal')) {
-                    /**
-                     * @var string $value[$identifier_basis]
-                     */
-                    $routing_scheme_identifier = $value[$identifier_basis];
-                }
-            }
-        }
+        $preamble = $this->resolveStoreCoveIdentifiers($invoice, $inv, $net, $charge);
+        $references = $preamble['references'];
+        $legal_entity_id = $preamble['legal_entity_id'];
+        $tax_scheme_id = $preamble['tax_scheme_id'];
+        $routing_scheme_identifier = $preamble['routing_scheme_identifier'];
         $contact = $this->supplierContact();
         $this->validateSupplierContact($contact);
-        $acp = $this->buildPeppolAccountingCustomerPartyArray(
-                                                        $invoice, $inv->paR, $inv->cpR);
-        $customer_partyTaxScheme = $this->buildCustomerPartyTaxScheme($acp);
-        $customer_partyLegalEntity = $this->buildCustomerLegalEntity($acp);
-        $customer_tax_scheme = $customer_partyTaxScheme->getTaxScheme();
-        $customer_tax_id = $customer_partyTaxScheme->getCompanyId();
-        $customer_legal_scheme =
-                $customer_partyLegalEntity->getCompanyIdAttributeSchemeId();
-        $customer_legal_id = $customer_partyLegalEntity->getCompanyId();
-        $customer_physical = $this->buildCustomerPhysicalLocation($acp);
-        $c_contact = $this->buildCustomerContact($acp);
-        $c_del_loc_address = $this->buildDeliveryLocationAddress();
-        $c_actual_del_datetime = $this->actualDeliveryDate($invoice, $net->delRepo);
-        $c_del_party = $this->deliveryParty($invoice, $net->delRepo, $net->delPartyRepo);
         $payment_means_array = $this->buildPeppolPaymentMeansArray();
         /**
          * @var array $payment_means_array['PayeeFinancialAccount']
@@ -1636,68 +1559,8 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
                             ],
                         ],
                     ],
-                    'accountingCustomerParty' => [
-                        'publicIdentifiers' => [
-                            // Legal Identifier
-                            0 => [
-                                'scheme' => $customer_legal_scheme,
-                                'id' => $customer_legal_id,
-                            ],
-                            // Tax Identifier
-                            1 => [
-                                'scheme' => $customer_tax_scheme,
-                                // vat id
-                                'id' => $customer_tax_id,
-                            ],
-                        ],
-                        'party' => [
-                            'companyName' => 'Receiver Company',
-                            'address' => [
-                                'street1' =>
-                                        $customer_physical->getStreetName(),
-                                'street2' =>
-                                $customer_physical->getAdditionalStreetName(),
-                                'city' => $customer_physical->getCityName(),
-                                'zip' => $customer_physical->getPostalZone(),
-                                'county' =>
-                                   $customer_physical->getCountrySubEntity(),
-                                'country' =>
-                  $customer_physical->getCountry()?->getIdentificationCode(),
-                            ],
-                            'contact' => [
-                                'email' => $c_contact->getElectronicMail(),
-                                'firstName' => $c_contact->getFirstName(),
-                                'lastName' => $c_contact->getLastName(),
-                                'phone' => $c_contact->getTelephone(),
-                            ],
-                        ],
-                    ],
-                    'delivery' => [
-                        'deliveryPartyName' =>
-                            null !== $c_del_party ?
-                            $c_del_party->getPartyName() :
-                            $this->t->translate('storecove.not.available'),
-                        'actualDeliveryDate' =>
-                                    $c_actual_del_datetime?->format('Y-m-d'),
-                        'deliveryLocation' => [
-                            'id' =>
-                      $this->deliveryLocation->getGlobalLocationNumber(),
-                            'schemeId' =>
-                      $this->deliveryLocation->getElectronicAddressScheme(),
-                            'address' => [
-                                'street1' =>
-                                $c_del_loc_address->getStreetName(),
-                                'street2' =>
-                               $c_del_loc_address->getAdditionalStreetName(),
-                                'city' => $c_del_loc_address->getCityName(),
-                                'zip' => $c_del_loc_address->getPostalZone(),
-                                'county' =>
-                                   $c_del_loc_address->getCountrySubEntity(),
-                                'country' =>
-                  $c_del_loc_address->getCountry()?->getIdentificationCode(),
-                            ],
-                        ],
-                    ],
+                    'accountingCustomerParty' => $this->buildStoreCoveAccountingCustomerParty($invoice, $inv),
+                    'delivery' => $this->buildStoreCoveDeliverySection($invoice, $net),
                     'paymentTerms' => [
                         'note' => $invoice->getTerms(),
                     ],
@@ -1732,6 +1595,179 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
                     'prepaidAmount' => 1,
                 ],
             ],
+        ];
+    }
+
+    /**
+     * @psalm-return array{references: array, legal_entity_id: string, tax_scheme_id: string, routing_scheme_identifier: string}
+     */
+    private function resolveStoreCoveIdentifiers(
+        Inv $invoice,
+        StoreCoveHelperInvDeps $inv,
+        StoreCoveHelperNetDeps $net,
+        StoreCoveHelperChargeDeps $charge,
+    ): array {
+        $references = $this->buildReferencesArray($invoice, $net->contractRepo,
+                                                        $inv->cpR, $charge->soiR, $inv->soR);
+        $config_peppol = $this->s->getConfigPeppol();
+        /**
+         * @var array $config_peppol['PartyLegalEntity']
+         */
+        $legal_entity = $config_peppol['PartyLegalEntity'] ?? '';
+        /**
+         * @var string $legal_entity['CompanyID']
+         */
+        $legal_entity_id = $legal_entity[self::KEY_COMPANY_ID] ?? '';
+        if (empty($legal_entity_id)) {
+            throw new LegalEntityCompanyIdNotFoundException($this->t);
+        }
+        /**
+         * @var array $config_peppol['PartyTaxScheme']
+         */
+        $tax_scheme = $config_peppol['PartyTaxScheme'] ?? [];
+        /**
+         * @var string $tax_scheme['CompanyID']
+         */
+        $tax_scheme_id = $tax_scheme[self::KEY_COMPANY_ID] ?? '';
+        if (empty($tax_scheme_id)) {
+            throw new TaxSchemeCompanyIdNotFoundException($this->t);
+        }
+        // Currently a key number as an integer
+        /**
+         * Related logic:
+            http://yii3-i-4.myhost/invoice/setting/tab_index
+                                                        6.2 Sender identifier
+         */
+        $identifier = (int) $this->s->getSetting(
+                                             'storecove_sender_identifier');
+        // Get the complete array
+        $store_cove_sender_array =
+                      StoreCoveArrays::storeCoveSenderIdentifierArray();
+        /**
+         * Related logic: http://yii3-i/invoice/setting/tab_index
+         *                                       6.2 sender identifier basis
+         */
+        $identifier_basis = $this->s->getSetting(
+                                        'storecove_sender_identifier_basis');
+        $routing_scheme_identifier = '';
+        /**
+         * Search the array for the identifier to retrieve the sub array
+         * @var int $key
+         * @var string $value
+         */
+        foreach ($store_cove_sender_array as $key => $value) {
+            if ($key == $identifier) {
+// Use the identifier basis to retrieve either the legal or tax identifier
+                if ($identifier_basis === $this->t->translate(
+                                                        'storecove.tax')) {
+                    /**
+                     * @var string $value[$identifier_basis]
+                     */
+                    $routing_scheme_identifier = $value[$identifier_basis];
+                    continue;
+                }
+                if ($identifier_basis === $this->t->translate(
+                                                        'storecove.legal')) {
+                    /**
+                     * @var string $value[$identifier_basis]
+                     */
+                    $routing_scheme_identifier = $value[$identifier_basis];
+                }
+            }
+        }
+        return [
+            'references' => $references,
+            'legal_entity_id' => $legal_entity_id,
+            'tax_scheme_id' => $tax_scheme_id,
+            'routing_scheme_identifier' => $routing_scheme_identifier,
+        ];
+    }
+
+    private function buildStoreCoveAccountingCustomerParty(
+        Inv $invoice,
+        StoreCoveHelperInvDeps $inv,
+    ): array {
+        $acp = $this->buildPeppolAccountingCustomerPartyArray(
+                                                        $invoice, $inv->paR, $inv->cpR);
+        $customer_partyTaxScheme = $this->buildCustomerPartyTaxScheme($acp);
+        $customer_partyLegalEntity = $this->buildCustomerLegalEntity($acp);
+        $customer_tax_scheme = $customer_partyTaxScheme->getTaxScheme();
+        $customer_tax_id = $customer_partyTaxScheme->getCompanyId();
+        $customer_legal_scheme =
+                $customer_partyLegalEntity->getCompanyIdAttributeSchemeId();
+        $customer_legal_id = $customer_partyLegalEntity->getCompanyId();
+        $customer_physical = $this->buildCustomerPhysicalLocation($acp);
+        $c_contact = $this->buildCustomerContact($acp);
+        return [
+                        'publicIdentifiers' => [
+                            // Legal Identifier
+                            0 => [
+                                'scheme' => $customer_legal_scheme,
+                                'id' => $customer_legal_id,
+                            ],
+                            // Tax Identifier
+                            1 => [
+                                'scheme' => $customer_tax_scheme,
+                                // vat id
+                                'id' => $customer_tax_id,
+                            ],
+                        ],
+                        'party' => [
+                            'companyName' => 'Receiver Company',
+                            'address' => [
+                                'street1' =>
+                                        $customer_physical->getStreetName(),
+                                'street2' =>
+                                $customer_physical->getAdditionalStreetName(),
+                                'city' => $customer_physical->getCityName(),
+                                'zip' => $customer_physical->getPostalZone(),
+                                'county' =>
+                                   $customer_physical->getCountrySubEntity(),
+                                'country' =>
+                  $customer_physical->getCountry()?->getIdentificationCode(),
+                            ],
+                            'contact' => [
+                                'email' => $c_contact->getElectronicMail(),
+                                'firstName' => $c_contact->getFirstName(),
+                                'lastName' => $c_contact->getLastName(),
+                                'phone' => $c_contact->getTelephone(),
+                            ],
+                        ],
+        ];
+    }
+
+    private function buildStoreCoveDeliverySection(
+        Inv $invoice,
+        StoreCoveHelperNetDeps $net,
+    ): array {
+        $c_del_loc_address = $this->buildDeliveryLocationAddress();
+        $c_actual_del_datetime = $this->actualDeliveryDate($invoice, $net->delRepo);
+        $c_del_party = $this->deliveryParty($invoice, $net->delRepo, $net->delPartyRepo);
+        return [
+                        'deliveryPartyName' =>
+                            null !== $c_del_party ?
+                            $c_del_party->getPartyName() :
+                            $this->t->translate('storecove.not.available'),
+                        'actualDeliveryDate' =>
+                                    $c_actual_del_datetime?->format('Y-m-d'),
+                        'deliveryLocation' => [
+                            'id' =>
+                      $this->deliveryLocation->getGlobalLocationNumber(),
+                            'schemeId' =>
+                      $this->deliveryLocation->getElectronicAddressScheme(),
+                            'address' => [
+                                'street1' =>
+                                $c_del_loc_address->getStreetName(),
+                                'street2' =>
+                               $c_del_loc_address->getAdditionalStreetName(),
+                                'city' => $c_del_loc_address->getCityName(),
+                                'zip' => $c_del_loc_address->getPostalZone(),
+                                'county' =>
+                                   $c_del_loc_address->getCountrySubEntity(),
+                                'country' =>
+                  $c_del_loc_address->getCountry()?->getIdentificationCode(),
+                            ],
+                        ],
         ];
     }
 
