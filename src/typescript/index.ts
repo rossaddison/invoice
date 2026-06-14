@@ -128,7 +128,7 @@ if (document.readyState === 'loading') {
         initStepPopovers();
     });
 } else {
-    new InvoiceApp();
+    const _app = new InvoiceApp();
     initStripePayment();
     initAmazonPayment();
     initBraintreePayment();
