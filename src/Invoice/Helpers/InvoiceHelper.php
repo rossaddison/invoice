@@ -80,9 +80,7 @@ class InvoiceHelper
             $amount = .5 * round((float) $amount / .5, 1);
         }
 
-        if (!$isEur && $amount > 99999999.95) {
-            $this->flash('danger', $this->translator->translate('invalid.amount'));
-        } elseif ($isEur && $amount > 99999999.99) {
+        if ((!$isEur && $amount > 99999999.95) || ($isEur && $amount > 99999999.99)) {
             $this->flash('danger', $this->translator->translate('invalid.amount'));
         }
 

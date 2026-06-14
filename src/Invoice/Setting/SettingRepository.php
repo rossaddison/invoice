@@ -2365,6 +2365,7 @@ final class SettingRepository extends Select\Repository
         $oneYear = \DateInterval::createFromDateString('12 months');
         $twoYears = \DateInterval::createFromDateString('24 months');
         switch ($period) {
+            default:
             case 'this-month':
                 $range['upper'] = $now;
                 $range['lower'] = $oneMonth
@@ -2389,10 +2390,6 @@ final class SettingRepository extends Select\Repository
             case 'last-year':
                 $range['upper'] = $oneYear ? $now->sub($oneYear) : $now;
                 $range['lower'] = $twoYears ? $now->sub($twoYears) : $now;
-                break;
-            default:
-                $range['upper'] = $now;
-                $range['lower'] = $oneMonth ? $now->sub($oneMonth) : $now;
                 break;
         }
         return $range;

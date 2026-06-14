@@ -521,6 +521,7 @@ class CustomValuesHelper
                 echo  new Br();
                 break;
             case 'SINGLE-CHOICE':
+            case 'RADIOLIST-CHOICE':
                 echo  new Label()
                 ->content((string) $this->selectedValue($entity_custom_values, $customFieldId, $this->cvR));
                 echo  new Br();
@@ -543,11 +544,6 @@ class CustomValuesHelper
                     }
                 }
                 break;
-            case 'RADIOLIST-CHOICE':
-                echo  new Label()
-                ->content((string) $this->selectedValue($entity_custom_values, $customFieldId, $this->cvR));
-                echo  new Br();
-                break;
             case 'BOOLEAN':
                 echo  new Label()
                 ->content(null !== $this->formValue($entity_custom_values, $customFieldId)
@@ -556,10 +552,6 @@ class CustomValuesHelper
                 echo  new Br();
                 break;
             case 'NUMBER':
-                echo  new Div()
-                ->content(Html::encode($fieldValue));
-                echo  new Br();
-                break;
             default:
                 echo  new Div()
                 ->content(Html::encode($fieldValue));
