@@ -9,10 +9,14 @@ interface ToggleSecretResponse {
 
 const TOGGLE_SECRET_PATH = '/ajaxShowSetup';
 
+function isToggleResponse(val: unknown): val is ToggleSecretResponse {
+    return val !== null && typeof val === 'object';
+}
+
 function parseToggleResponse(text: string): ToggleSecretResponse {
     try {
         const obj: unknown = JSON.parse(text);
-        return (obj !== null && typeof obj === 'object') ? obj as ToggleSecretResponse : {};
+        return isToggleResponse(obj) ? obj : {};
     } catch (e) {
         console.warn('JSON parse error in toggle response:', e);
         return {};
