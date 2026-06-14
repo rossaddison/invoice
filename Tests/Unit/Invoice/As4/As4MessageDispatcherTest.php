@@ -339,7 +339,7 @@ class As4MessageDispatcherTest extends TestCase
             httpTransport: $this->transportCapturing($url, $doc, $atts),
         )->dispatch($this->request());
         $this->assertNotNull($url);
-        $this->assertSame(self::ENDPOINT_URL, $url);
+        $this->assertSame($url, self::ENDPOINT_URL);
     }
 
     public function testAttachmentBodyMatchesPayloadXml(): void
