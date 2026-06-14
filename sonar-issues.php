@@ -33,6 +33,7 @@ $severity = null;
 $rule     = null;
 $file     = null;
 $hotspots = false;
+$grouped  = false;
 
 foreach ($args as $arg) {
     if (str_starts_with($arg, '--pr='))       { $pr       = substr($arg, 5); }
@@ -41,6 +42,7 @@ foreach ($args as $arg) {
     if (str_starts_with($arg, '--rule='))     { $rule     = substr($arg, 7); }
     if (str_starts_with($arg, '--file='))     { $file     = substr($arg, 7); }
     if ($arg === '--hotspots')                { $hotspots = true; }
+    if ($arg === '--grouped')                 { $grouped  = true; }
 }
 
 // ── Token ─────────────────────────────────────────────────────────────────────
@@ -156,15 +158,37 @@ if ($hotspots) {
     echo "\n" . count($items) . " hotspot(s)\n";
 } else {
     $items = fetchAllIssues($token, $pr, $type, $severity, $rule, $file);
-    foreach ($items as $issue) {
-        $sev     = $issue['severity'] ?? 'MAJOR';
-        $label   = $severityLabel[$sev] ?? $sev;
-        $rule    = $issue['rule'] ?? '';
-        $file    = $issue['component'] ?? '';
-        $file    = preg_replace('/^' . preg_quote(PROJECT_KEY, '/') . ':/', '', $file);
-        $line    = $issue['line'] ?? '?';
-        $message = $issue['message'] ?? '';
-        echo "$label: $rule - $file:$line - $message\n";
+    if ($grouped) {
+        /** @var array<string, array{count: int, message: string}> $byRule */
+        $byRule = [];
+        foreach ($items as $issue) {
+            $ruleKey = $issue['rule'] ?? 'unknown';
+            if (!isset($byRule[$ruleKey])) {
+                $byRule[$ruleKey] = ['count' => 0, 'message' => $issue['message'] ?? ''];
+            }
+            $byRule[$ruleKey]['count']++;
+        }
+        uasort($byRule, static fn(array $a, array $b): int => $b['count'] <=> $a['count']);
+        echo sprintf("%-24s %5s  %s\n", 'RULE', 'COUNT', 'EXAMPLE MESSAGE');
+        echo str_repeat('-', 90) . "\n";
+        foreach ($byRule as $ruleKey => $data) {
+            $msg = mb_strlen($data['message']) > 57
+                ? mb_substr($data['message'], 0, 54) . '...'
+                : $data['message'];
+            echo sprintf("%-24s %5d  %s\n", $ruleKey, $data['count'], $msg);
+        }
+        echo "\n" . count($items) . " issue(s) across " . count($byRule) . " rule(s)\n";
+    } else {
+        foreach ($items as $issue) {
+            $sev     = $issue['severity'] ?? 'MAJOR';
+            $label   = $severityLabel[$sev] ?? $sev;
+            $ruleKey = $issue['rule'] ?? '';
+            $file    = $issue['component'] ?? '';
+            $file    = preg_replace('/^' . preg_quote(PROJECT_KEY, '/') . ':/', '', $file);
+            $line    = $issue['line'] ?? '?';
+            $message = $issue['message'] ?? '';
+            echo "$label: $ruleKey - $file:$line - $message\n";
+        }
+        echo "\n" . count($items) . " issue(s)\n";
     }
-    echo "\n" . count($items) . " issue(s)\n";
 }

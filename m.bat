@@ -855,19 +855,25 @@ echo  [5]  Security hotspots
 echo  [6]  Combine type + severity filters
 echo  [7]  Filter by rule key    (e.g. php:S1192 / javascript:S7647 / typescript:S7785)
 echo  [8]  Filter by file path   (e.g. src/typescript/list-utils.test.ts)
+echo  [9]  Reliability issues    (BUG type — all, flat list)
+echo  [10] Reliability grouped by rule  ^<-- start here for 40+ issues^>
+echo  [11] All issues grouped by rule   ^<-- overall picture^>
 echo  [0]  Back to Main Menu
 echo.
-set /p sonar_choice="SonarCloud choice [0-8]: "
+set /p sonar_choice="SonarCloud choice [0-11]: "
 
-if "%sonar_choice%"=="0" goto menu
-if "%sonar_choice%"=="1" goto sonar_all
-if "%sonar_choice%"=="2" goto sonar_pr
-if "%sonar_choice%"=="3" goto sonar_type
-if "%sonar_choice%"=="4" goto sonar_severity
-if "%sonar_choice%"=="5" goto sonar_hotspots
-if "%sonar_choice%"=="6" goto sonar_combined
-if "%sonar_choice%"=="7" goto sonar_rule
-if "%sonar_choice%"=="8" goto sonar_file
+if "%sonar_choice%"=="0"  goto menu
+if "%sonar_choice%"=="1"  goto sonar_all
+if "%sonar_choice%"=="2"  goto sonar_pr
+if "%sonar_choice%"=="3"  goto sonar_type
+if "%sonar_choice%"=="4"  goto sonar_severity
+if "%sonar_choice%"=="5"  goto sonar_hotspots
+if "%sonar_choice%"=="6"  goto sonar_combined
+if "%sonar_choice%"=="7"  goto sonar_rule
+if "%sonar_choice%"=="8"  goto sonar_file
+if "%sonar_choice%"=="9"  goto sonar_reliability
+if "%sonar_choice%"=="10" goto sonar_reliability_grouped
+if "%sonar_choice%"=="11" goto sonar_all_grouped
 echo Invalid choice.
 pause
 goto sonar_menu
@@ -925,6 +931,29 @@ php sonar-issues.php --type=%sonar_comb_type% --severity=%sonar_comb_sev%
 pause
 goto sonar_menu
 
+:sonar_reliability
+echo.
+echo Fetching all Reliability (BUG) issues...
+php sonar-issues.php --type=BUG
+pause
+goto sonar_menu
+
+:sonar_reliability_grouped
+echo.
+echo Reliability (BUG) issues grouped by rule — copy the rule key into option [7] to drill down.
+echo.
+php sonar-issues.php --type=BUG --grouped
+pause
+goto sonar_menu
+
+:sonar_all_grouped
+echo.
+echo All open issues grouped by rule...
+echo.
+php sonar-issues.php --grouped
+pause
+goto sonar_menu
+
 :sonar_rule
 cls
 echo ======================================================================================
@@ -950,10 +979,17 @@ echo  [15] typescript:S7764  Use globalThis instead of window
 echo  [16] javascript:S7647  Lifecycle methods should not be empty (JS)
 echo  Shell
 echo  [17] shelldre:S1066    Merge this if statement with the enclosing one
+echo  PHP Reliability (BUG type) — run option [10] to discover your rule keys
+echo  [18] php:S2583   Conditions that are always true or false
+echo  [19] php:S905    Non-empty statements that are no-ops
+echo  [20] php:S2681   Multiline blocks should be enclosed in curly braces
+echo  [21] php:S2234   Arguments to a function should match the function's parameters
+echo  [22] php:S4144   Methods should not have identical implementations
+echo  [23] php:S1117   Local variables should not shadow class fields
 echo ======================================================================================
 echo  Enter a number above, or type a full rule key (e.g. php:S1848), or press Enter to cancel.
 echo ======================================================================================
-set /p sonar_rule_val="Rule [1-17 or custom key]: "
+set /p sonar_rule_val="Rule [1-23 or custom key]: "
 if "%sonar_rule_val%"=="" (goto sonar_menu)
 if "%sonar_rule_val%"=="1"  set sonar_rule_val=php:S1192
 if "%sonar_rule_val%"=="2"  set sonar_rule_val=php:S3776
@@ -972,6 +1008,12 @@ if "%sonar_rule_val%"=="14" set sonar_rule_val=typescript:S7647
 if "%sonar_rule_val%"=="15" set sonar_rule_val=typescript:S7764
 if "%sonar_rule_val%"=="16" set sonar_rule_val=javascript:S7647
 if "%sonar_rule_val%"=="17" set sonar_rule_val=shelldre:S1066
+if "%sonar_rule_val%"=="18" set sonar_rule_val=php:S2583
+if "%sonar_rule_val%"=="19" set sonar_rule_val=php:S905
+if "%sonar_rule_val%"=="20" set sonar_rule_val=php:S2681
+if "%sonar_rule_val%"=="21" set sonar_rule_val=php:S2234
+if "%sonar_rule_val%"=="22" set sonar_rule_val=php:S4144
+if "%sonar_rule_val%"=="23" set sonar_rule_val=php:S1117
 echo.
 echo Fetching issues for rule: %sonar_rule_val%
 echo.
