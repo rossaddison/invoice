@@ -58,7 +58,7 @@ final class Lang
                 // Recursive
                 $this->load($value, $idiom, $return, $add_suffix, $alt_path);
             }
-            return;
+            return null;
         }
 
         $langfile = str_replace('.php', '', $langfile);
@@ -95,7 +95,7 @@ final class Lang
             if ($return === true) {
                 return [];
             }
-            return;
+            return null;
         }
 
         $this->isLoaded[$langfile] = $idiom;
