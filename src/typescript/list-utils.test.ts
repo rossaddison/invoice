@@ -66,13 +66,13 @@ describe('AmountMagnifier', () => {
         });
     });
 
-    describe('addBehavior — event handlers', () => {
-        function initBadge(cls: string, containerId: string): HTMLElement {
-            const badge = makeBadge(cls, '100', containerId);
-            const _m = new AmountMagnifier(containerId);
-            return badge;
-        }
+    function initBadge(cls: string, containerId: string): HTMLElement {
+        const badge = makeBadge(cls, '100', containerId);
+        const _m = new AmountMagnifier(containerId);
+        return badge;
+    }
 
+    describe('addBehavior — event handlers', () => {
         it('mouseenter on a bg-success badge applies success colours', () => {
             const badge = initBadge(CLS_SUCCESS, 'evt-a');
             badge.dispatchEvent(new MouseEvent('mouseenter'));
@@ -229,26 +229,26 @@ describe('initGroupBySelect', () => {
     });
 });
 
+function makeGroupTable(chevronClass: string): { header: HTMLElement; row1: HTMLElement; row2: HTMLElement } {
+    document.body.innerHTML = `
+        <table>
+            <tr class="group-header">
+                <td><span class="group-toggle-icon ${chevronClass}"></span></td>
+            </tr>
+            <tr class="data-row"><td>Row 1</td></tr>
+            <tr class="data-row"><td>Row 2</td></tr>
+            <tr class="group-header"><td>Next group</td></tr>
+        </table>`;
+    const header = document.querySelector<HTMLElement>('.group-header')!;
+    const rows   = document.querySelectorAll<HTMLElement>('.data-row');
+    return { header, row1: rows[0], row2: rows[1] };
+}
+
 describe('initGroupCollapsible', () => {
     beforeEach(() => {
         document.body.innerHTML = '';
         initGroupCollapsible();
     });
-
-    function makeGroupTable(chevronClass: string): { header: HTMLElement; row1: HTMLElement; row2: HTMLElement } {
-        document.body.innerHTML = `
-            <table>
-                <tr class="group-header">
-                    <td><span class="group-toggle-icon ${chevronClass}"></span></td>
-                </tr>
-                <tr class="data-row"><td>Row 1</td></tr>
-                <tr class="data-row"><td>Row 2</td></tr>
-                <tr class="group-header"><td>Next group</td></tr>
-            </table>`;
-        const header = document.querySelector<HTMLElement>('.group-header')!;
-        const rows   = document.querySelectorAll<HTMLElement>('.data-row');
-        return { header, row1: rows[0], row2: rows[1] };
-    }
 
     it('toggleGroupRows collapses expanded rows and switches icon to chevron-right', () => {
         const { header, row1, row2 } = makeGroupTable('bi-chevron-down');

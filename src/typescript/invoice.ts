@@ -40,16 +40,15 @@ interface DeleteItemData extends RequestParams {
     id: string;
 }
 
-// Helper to set button loading state
-function setButtonLoading(button: HTMLElement, isLoading: boolean, originalHtml?: string): void {
-    if (isLoading) {
-        button.innerHTML = '<h2 class="text-center"><span class="spinner-border spinner-border-sm" role="status"></span></h2>';
-        (button as HTMLButtonElement).disabled = true;
-    } else {
-        button.innerHTML =
-            originalHtml || '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
-        (button as HTMLButtonElement).disabled = false;
-    }
+function setButtonLoadingOn(button: HTMLElement): void {
+    button.innerHTML = '<h2 class="text-center"><span class="spinner-border spinner-border-sm" role="status"></span></h2>';
+    (button as HTMLButtonElement).disabled = true;
+}
+
+function setButtonLoadingOff(button: HTMLElement, originalHtml?: string): void {
+    button.innerHTML =
+        originalHtml || '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
+    (button as HTMLButtonElement).disabled = false;
 }
 
 // Helper to get form field value safely
@@ -242,7 +241,7 @@ export class InvoiceHandler {
         const originalHtml = btn?.innerHTML;
 
         if (btn) {
-            setButtonLoading(btn, true);
+            setButtonLoadingOn(btn);
         }
 
         try {
@@ -262,7 +261,7 @@ export class InvoiceHandler {
         } catch (error) {
             console.error('mark_as_sent error', error);
             if (btn && originalHtml) {
-                setButtonLoading(btn, false, originalHtml);
+                setButtonLoadingOff(btn, originalHtml);
             }
             alert('An error occurred. See console for details.');
         }
@@ -273,7 +272,7 @@ export class InvoiceHandler {
         const originalHtml = btn?.innerHTML;
 
         if (btn) {
-            setButtonLoading(btn, true);
+            setButtonLoadingOn(btn);
         }
 
         try {
@@ -293,7 +292,7 @@ export class InvoiceHandler {
         } catch (error) {
             console.error('mark_sent_as_draft error', error);
             if (btn && originalHtml) {
-                setButtonLoading(btn, false, originalHtml);
+                setButtonLoadingOff(btn, originalHtml);
             }
             alert('An error occurred. See console for details.');
         }

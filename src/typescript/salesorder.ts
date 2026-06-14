@@ -211,17 +211,8 @@ export class SalesOrderHandler {
                     secureReload();
                 }
             } else {
-                // Handle validation errors or failures
                 if (response?.validation_errors) {
-                    document.querySelectorAll('.control-group').forEach(group => {
-                        group.classList.remove('error');
-                    });
-                    Object.entries(response.validation_errors).forEach(([key, error]) => {
-                        const field = document.getElementById(key);
-                        if (field?.parentElement) {
-                            field.parentElement.classList.add('has-error');
-                        }
-                    });
+                    this.applyValidationErrors(response.validation_errors);
                 }
                 if (btn) {
                     btn.innerHTML = '<h6 class="text-center"><i class="bi bi-check-lg"></i></h6>';
@@ -234,6 +225,18 @@ export class SalesOrderHandler {
             }
             alert('An error occurred during conversion. Please try again.');
         }
+    }
+
+    private applyValidationErrors(errors: Record<string, string>): void {
+        document.querySelectorAll('.control-group').forEach(group => {
+            group.classList.remove('error');
+        });
+        Object.entries(errors).forEach(([key]) => {
+            const field = document.getElementById(key);
+            if (field?.parentElement) {
+                field.parentElement.classList.add('has-error');
+            }
+        });
     }
 
     /**
@@ -311,7 +314,7 @@ export class SalesOrderHandler {
             // Convert FormData to URLSearchParams for GET request
             const params = new URLSearchParams();
             formData.forEach((value, key) => {
-                params.append(key, value.toString());
+                params.append(key, typeof value === 'string' ? value : value.name);
             });
 
             const url = `${action}?${params.toString()}`;

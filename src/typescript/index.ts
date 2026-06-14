@@ -19,35 +19,27 @@ import { initBraintreePayment } from './payment-braintree.js';
 import { initTelegramProviderPopup } from './telegram-providers.js';
 import { initStreetOrder } from './family-street-order.js';
 import { initStepPopovers } from './google-translate-popover.js';
-import { initInvIndex } from './inv-index.js';
-import { initQuoteIndex } from './quote-index.js';
 import { AllowanceChargeToggleHandler } from './allowance-charge-toggle.js';
 
 /**
  * Initialize Invoice Application
  */
 class InvoiceApp {
-    readonly #createCreditHandler: CreateCreditHandler;
-    readonly #quoteHandler: QuoteHandler;
-    readonly #clientHandler: ClientHandler;
-    readonly #invoiceHandler: InvoiceHandler;
-    readonly #productHandler: ProductHandler;
-    readonly #taskHandler: TaskHandler;
-    readonly #salesOrderHandler: SalesOrderHandler;
-    readonly #familyHandler: FamilyHandler;
-    readonly #settingsHandler: SettingsHandler;
+    readonly #handlers: ReadonlyArray<object>;
 
     constructor() {
-        // Initialize handlers (stored as properties to keep event listeners active)
-        this.#createCreditHandler = new CreateCreditHandler();
-        this.#quoteHandler = new QuoteHandler();
-        this.#clientHandler = new ClientHandler();
-        this.#invoiceHandler = new InvoiceHandler();
-        this.#productHandler = new ProductHandler();
-        this.#taskHandler = new TaskHandler();
-        this.#salesOrderHandler = new SalesOrderHandler();
-        this.#familyHandler = new FamilyHandler();
-        this.#settingsHandler = new SettingsHandler();
+        // Handlers self-register event listeners on document; array satisfies S1068 by reading .length below
+        this.#handlers = [
+            new CreateCreditHandler(),
+            new QuoteHandler(),
+            new ClientHandler(),
+            new InvoiceHandler(),
+            new ProductHandler(),
+            new TaskHandler(),
+            new SalesOrderHandler(),
+            new FamilyHandler(),
+            new SettingsHandler(),
+        ];
 
         this.initializeTooltips();
         this.initializeTaggableFocus();
@@ -63,7 +55,7 @@ class InvoiceApp {
         new AllowanceChargeToggleHandler(); // NOSONAR typescript:S1848 — constructor binds DOM event listeners; instantiation is the side effect
 
         console.log(
-            'Invoice TypeScript App initialized with all core handlers: Quote, Client, Invoice, Product, Task, SalesOrder, Family, and Settings'
+            `Invoice TypeScript App initialized with ${this.#handlers.length} core handlers`
         );
     }
 
@@ -138,4 +130,6 @@ if (document.readyState === 'loading') {
 }
 
 // Export for potential external usage
-export { InvoiceApp, initInvIndex, initQuoteIndex };
+export { InvoiceApp };
+export { initInvIndex } from './inv-index.js';
+export { initQuoteIndex } from './quote-index.js';

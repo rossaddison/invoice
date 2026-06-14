@@ -34,17 +34,16 @@ function createSecureUIElement(type: string = 'h6', className: string = 'text-ce
     return element;
 }
 
-// Helper to set button loading state securely
-function setButtonLoading(button: HTMLElement, isLoading: boolean, originalHtml?: string): void {
-    if (isLoading) {
-        button.textContent = '';
-        button.appendChild(createSecureUIElement('h6', 'text-center', 'spinner-border spinner-border-sm'));
-        (button as HTMLButtonElement).disabled = true;
-    } else {
-        button.textContent = '';
-        button.appendChild(createSecureUIElement('h6', 'text-center', 'bi bi-check-lg'));
-        (button as HTMLButtonElement).disabled = false;
-    }
+function setButtonLoadingOn(button: HTMLElement): void {
+    button.textContent = '';
+    button.appendChild(createSecureUIElement('h6', 'text-center', 'spinner-border spinner-border-sm'));
+    (button as HTMLButtonElement).disabled = true;
+}
+
+function setButtonLoadingOff(button: HTMLElement): void {
+    button.textContent = '';
+    button.appendChild(createSecureUIElement('h6', 'text-center', 'bi bi-check-lg'));
+    (button as HTMLButtonElement).disabled = false;
 }
 
 // Helper function to safely set button content
@@ -120,7 +119,7 @@ export class ClientHandler {
 
         // Set loading state
         if (btn) {
-            setButtonLoading(btn, true);
+            setButtonLoadingOn(btn);
         }
 
         try {
@@ -141,14 +140,14 @@ export class ClientHandler {
                 secureReload();
             } else {
                 if (btn) {
-                    setButtonLoading(btn, false);
+                    setButtonLoadingOff(btn);
                 }
                 console.warn('create_confirm response', data);
             }
         } catch (error) {
             console.warn(error);
             if (btn) {
-                setButtonLoading(btn, false);
+                setButtonLoadingOff(btn);
             }
             alert('An error occurred while creating client. See console for details.');
         }
@@ -159,7 +158,7 @@ export class ClientHandler {
         const btn = (document.querySelector('.save_client_note') as HTMLElement) || saveNoteBtn;
 
         if (btn) {
-            setButtonLoading(btn, true);
+            setButtonLoadingOn(btn);
         }
 
         try {
@@ -181,13 +180,13 @@ export class ClientHandler {
                 }
 
                 if (btn) {
-                    setButtonLoading(btn, false);
+                    setButtonLoadingOff(btn);
                 }
             }
         } catch (error) {
             console.warn(error);
             if (btn) {
-                setButtonLoading(btn, false);
+                setButtonLoadingOff(btn);
             }
             alert('An error occurred while saving client note. See console for details.');
         }
@@ -254,7 +253,7 @@ export class ClientHandler {
         const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement;
 
         if (submitButton) {
-            setButtonLoading(submitButton, true);
+            setButtonLoadingOn(submitButton);
         }
 
         // Show success indicator and close modal immediately
@@ -288,7 +287,7 @@ export class ClientHandler {
         const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement;
 
         if (submitButton) {
-            setButtonLoading(submitButton, true);
+            setButtonLoadingOn(submitButton);
         }
 
         // Show success indicator and close modal immediately

@@ -36,31 +36,29 @@ function escapeIdForQuerySelector(id: string): string {
         return (globalThis as any).CSS.escape(id);
     }
     // First escape backslash, then escape brackets and other CSS selector special chars
-    return id.replaceAll('\\', '\\\\').replace(/([\]#;.])/g, '\\$1');
+    return id.replaceAll('\\', '\\\\').replace(/([\]#;.])/g, String.raw`\$1`);
 }
 
-function setButtonWorkingState(button: HTMLElement, working: boolean) {
-    if (working) {
-        // Replace content with spinner
-        // Store the original HTML markup on a property, not as an attribute to avoid XSS risk
-        (button as any).__originalHTML = button.innerHTML;
-        button.setAttribute('aria-busy', 'true');
-        button.setAttribute('disabled', 'true');
-        button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
-    } else {
-        const original = (button as any).__originalHTML;
-        if (original) {
-            button.innerHTML = original;
-            delete (button as any).__originalHTML;
-        }
-        button.removeAttribute('aria-busy');
-        button.removeAttribute('disabled');
+function setButtonWorkingOn(button: HTMLElement): void {
+    (button as any).__originalHTML = button.innerHTML;
+    button.setAttribute('aria-busy', 'true');
+    button.setAttribute('disabled', 'true');
+    button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+}
+
+function setButtonWorkingOff(button: HTMLElement): void {
+    const original = (button as any).__originalHTML;
+    if (original) {
+        button.innerHTML = original;
+        delete (button as any).__originalHTML;
     }
+    button.removeAttribute('aria-busy');
+    button.removeAttribute('disabled');
 }
 
 async function handleGenerateClick(button: HTMLElement) {
     try {
-        setButtonWorkingState(button, true);
+        setButtonWorkingOn(button);
 
         // Generate a 48-character hex string (24 bytes) by default.
         const newKey = generateSecureHex(24);
@@ -98,7 +96,7 @@ async function handleGenerateClick(button: HTMLElement) {
         }
     } finally {
         // restore after a short delay so the user sees feedback
-        setTimeout(() => setButtonWorkingState(button, false), 700);
+        setTimeout(() => setButtonWorkingOff(button), 700);
     }
 }
 

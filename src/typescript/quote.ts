@@ -53,16 +53,15 @@ function getFieldValue(id: string): string {
     return element?.value || '';
 }
 
-// Helper to set button loading state
-function setButtonLoading(button: HTMLElement, isLoading: boolean, originalHtml?: string): void {
-    if (isLoading) {
-        button.innerHTML = '<h6 class="text-center"><span class="spinner-border spinner-border-sm" role="status"></span></h6>';
-        (button as HTMLButtonElement).disabled = true;
-    } else {
-        button.innerHTML =
-            originalHtml || '<h6 class="text-center"><i class="bi bi-check-lg"></i></h6>';
-        (button as HTMLButtonElement).disabled = false;
-    }
+function setButtonLoadingOn(button: HTMLElement): void {
+    button.innerHTML = '<h6 class="text-center"><span class="spinner-border spinner-border-sm" role="status"></span></h6>';
+    (button as HTMLButtonElement).disabled = true;
+}
+
+function setButtonLoadingOff(button: HTMLElement, originalHtml?: string): void {
+    button.innerHTML =
+        originalHtml || '<h6 class="text-center"><i class="bi bi-check-lg"></i></h6>';
+    (button as HTMLButtonElement).disabled = false;
 }
 
 // Quote handler class
@@ -220,7 +219,7 @@ export class QuoteHandler {
 
     private async handleDeleteMultipleItems(delMulti: HTMLElement): Promise<void> {
         const originalHtml = delMulti.innerHTML;
-        setButtonLoading(delMulti, true);
+        setButtonLoadingOn(delMulti);
 
         try {
             const itemCheckboxes = document.querySelectorAll(
@@ -241,11 +240,11 @@ export class QuoteHandler {
                 location.reload();
             } else {
                 console.warn('quoteitem/multiple failed', data);
-                setButtonLoading(delMulti, false, originalHtml);
+                setButtonLoadingOff(delMulti, originalHtml);
             }
         } catch (error) {
             console.error('quoteitem/multiple error', error);
-            setButtonLoading(delMulti, false, originalHtml);
+            setButtonLoadingOff(delMulti, originalHtml);
             alert('An error occurred while deleting items. See console for details.');
         }
     }
@@ -319,7 +318,7 @@ export class QuoteHandler {
         const originalHtml = btn?.innerHTML || '';
 
         if (btn) {
-            setButtonLoading(btn, true);
+            setButtonLoadingOn(btn);
         }
 
         try {
@@ -343,7 +342,7 @@ export class QuoteHandler {
         } catch (error) {
             console.error('create_confirm error', error);
             if (btn) {
-                setButtonLoading(btn, false, originalHtml);
+                setButtonLoadingOff(btn, originalHtml);
             }
             alert('An error occurred while creating quote. See console for details.');
         }
@@ -356,7 +355,7 @@ export class QuoteHandler {
             poConfirm;
 
         if (btn) {
-            setButtonLoading(btn, true);
+            setButtonLoadingOn(btn);
         }
 
         try {
@@ -376,7 +375,7 @@ export class QuoteHandler {
         } catch (error) {
             console.error('approve error', error);
             if (btn) {
-                setButtonLoading(btn, false);
+                setButtonLoadingOff(btn);
             }
             alert('An error occurred while approving quote. See console for details.');
         }
@@ -389,7 +388,7 @@ export class QuoteHandler {
         const originalHtml = btn?.innerHTML || '';
 
         if (btn) {
-            setButtonLoading(btn, true);
+            setButtonLoadingOn(btn);
         }
 
         try {
@@ -421,7 +420,7 @@ export class QuoteHandler {
         } catch (error) {
             console.error('quote_to_invoice_confirm error', error);
             if (btn) {
-                setButtonLoading(btn, false, originalHtml);
+                setButtonLoadingOff(btn, originalHtml);
             }
             alert('An error occurred while converting quote to invoice. See console for details.');
         }
@@ -433,7 +432,7 @@ export class QuoteHandler {
         const originalHtml = btn?.innerHTML || '';
 
         if (btn) {
-            setButtonLoading(btn, true);
+            setButtonLoadingOn(btn);
         }
 
         try {
@@ -464,7 +463,7 @@ export class QuoteHandler {
         } catch (error) {
             console.error('quote_to_so_confirm error', error);
             if (btn) {
-                setButtonLoading(btn, false, originalHtml);
+                setButtonLoadingOff(btn, originalHtml);
             }
             alert('An error occurred while converting quote to SO. See console for details.');
         }
@@ -476,7 +475,7 @@ export class QuoteHandler {
         const originalHtml = btn?.innerHTML || '';
 
         if (btn) {
-            setButtonLoading(btn, true);
+            setButtonLoadingOn(btn);
         }
 
         try {
@@ -498,7 +497,7 @@ export class QuoteHandler {
         } catch (error) {
             console.error('quote_to_quote_confirm error', error);
             if (btn) {
-                setButtonLoading(btn, false, originalHtml);
+                setButtonLoadingOff(btn, originalHtml);
             }
             alert('An error occurred while copying quote. See console for details.');
         }
@@ -622,7 +621,7 @@ export class QuoteHandler {
             (document.querySelector('.quote_tax_submit') as HTMLElement) || (submit as HTMLElement);
 
         if (btn) {
-            setButtonLoading(btn, true);
+            setButtonLoadingOn(btn);
         }
 
         try {

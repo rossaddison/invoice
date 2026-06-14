@@ -176,24 +176,24 @@ describe('initSimpleSelects', () => {
 
 // ─── initPasswordMeter ─────────────────────────────────────────────────────
 
+function makePasswordDOM(): {
+    input: HTMLInputElement;
+    m2: HTMLElement;
+    m3: HTMLElement;
+} {
+    document.body.innerHTML = `
+        <input class="passwordmeter-input" type="password">
+        <div class="passmeter-2"></div>
+        <div class="passmeter-3"></div>`;
+    return {
+        input: document.querySelector('.passwordmeter-input') as HTMLInputElement,
+        m2: document.querySelector('.passmeter-2') as HTMLElement,
+        m3: document.querySelector('.passmeter-3') as HTMLElement,
+    };
+}
+
 describe('initPasswordMeter', () => {
     beforeEach(() => { document.body.innerHTML = ''; });
-
-    function makePasswordDOM(): {
-        input: HTMLInputElement;
-        m2: HTMLElement;
-        m3: HTMLElement;
-    } {
-        document.body.innerHTML = `
-            <input class="passwordmeter-input" type="password">
-            <div class="passmeter-2"></div>
-            <div class="passmeter-3"></div>`;
-        return {
-            input: document.querySelector('.passwordmeter-input') as HTMLInputElement,
-            m2: document.querySelector('.passmeter-2') as HTMLElement,
-            m3: document.querySelector('.passmeter-3') as HTMLElement,
-        };
-    }
 
     it('returns early without error when no .passwordmeter-input exists', () => {
         expect(() => initPasswordMeter()).not.toThrow();
