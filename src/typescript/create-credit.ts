@@ -19,7 +19,7 @@ export class CreateCreditHandler {
     private async handleClick(event: MouseEvent): Promise<void> {
         const target = event.target as Element;
 
-        if (!target || target.id !== 'create-credit-confirm') {
+        if (target?.id !== 'create-credit-confirm') {
             return;
         }
 

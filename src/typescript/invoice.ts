@@ -86,7 +86,6 @@ export class InvoiceHandler {
         const userAllClients = target.closest('#user_all_clients') as HTMLInputElement;
         if (userAllClients) {
             this.handleAllClientsCheck();
-            return;
         }
     }
 
@@ -217,7 +216,6 @@ export class InvoiceHandler {
         const deleteItem = closestSafe<HTMLElement>(target, '.btn_delete_item');
         if (deleteItem) {
             this.handleDeleteSingleItem(deleteItem);
-            return;
         }
     }
 
@@ -617,7 +615,7 @@ export class InvoiceHandler {
 
         // Open the modal using Bootstrap
         try {
-            if (typeof (globalThis as any).bootstrap?.Modal !== 'undefined') {
+            if ((globalThis as any).bootstrap?.Modal !== undefined) {
                 const modalEl = document.getElementById('modal-layout-modal-pdf-inv');
                 if (modalEl) {
                     const modal = new (globalThis as any).bootstrap.Modal(modalEl);
@@ -705,7 +703,7 @@ export class InvoiceHandler {
                     try {
                         const doc = parser.parseFromString(html, 'text/html');
                         // Only append if parsing was successful and content is from trusted source
-                        if (doc && doc.body) {
+                        if (doc?.body) {
                             while (doc.body.firstChild) {
                                 fragment.appendChild(doc.body.firstChild);
                             }
@@ -738,7 +736,7 @@ export class InvoiceHandler {
     }
 
     private async handleDeleteSingleItem(deleteItem: HTMLElement): Promise<void> {
-        const itemId = deleteItem.getAttribute('data-id');
+        const itemId = deleteItem.dataset['id'];
 
         if (!itemId) {
             // If no ID, just remove the DOM element (unsaved item)
@@ -798,7 +796,7 @@ export class InvoiceHandler {
 
     private closeModal(modalId: string): void {
         try {
-            if (typeof (globalThis as any).bootstrap?.Modal !== 'undefined') {
+            if ((globalThis as any).bootstrap?.Modal !== undefined) {
                 const modalEl = document.getElementById(modalId);
                 if (modalEl) {
                     const modalInstance = (globalThis as any).bootstrap.Modal.getInstance(modalEl);

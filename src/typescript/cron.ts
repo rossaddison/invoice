@@ -36,7 +36,7 @@ function escapeIdForQuerySelector(id: string): string {
         return (globalThis as any).CSS.escape(id);
     }
     // First escape backslash, then escape brackets and other CSS selector special chars
-    return id.replace(/\\/g, '\\\\').replace(/([\[\]#;.])/g, '\\$1');
+    return id.replaceAll('\\', '\\\\').replace(/([\]#;.])/g, '\\$1');
 }
 
 function setButtonWorkingState(button: HTMLElement, working: boolean) {
@@ -80,7 +80,7 @@ async function handleGenerateClick(button: HTMLElement) {
                 } else {
                     // fallback: select the input text and attempt execCommand (legacy)
                     input.select();
-                    const ok = document.execCommand && document.execCommand('copy');
+                    const ok = document.execCommand?.('copy');
                     if (ok) {
                         button.innerHTML = '<i class="bi bi-check-lg" aria-hidden="true"></i>';
                     } else {
@@ -109,7 +109,7 @@ export function initGenerateCronKey(): void {
         return;
     }
 
-    const btn = document.getElementById('btn_generate_cron_key') as HTMLElement | null;
+    const btn = document.getElementById('btn_generate_cron_key');
     if (!btn) {
         // Button not present on the page; nothing to do.
         return;
@@ -132,7 +132,7 @@ export function initGenerateCronKey(): void {
 
 // If this script is included as a simple script tag (not module), auto-init
 // @ts-ignore-next-line: allow global check
-if (typeof globalThis.window !== 'undefined' && !(globalThis as any).module) {
+if (globalThis.window !== undefined && !(globalThis as any).module) {
     // Delay slightly to allow other scripts to wire up or to ensure DOM is ready
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
         initGenerateCronKey();

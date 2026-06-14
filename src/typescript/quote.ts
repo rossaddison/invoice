@@ -190,7 +190,7 @@ export class QuoteHandler {
     }
 
     private async handleDeleteItem(deleteBtn: HTMLElement): Promise<void> {
-        const id = deleteBtn.getAttribute('data-id');
+        const id = deleteBtn.dataset['id'];
 
         if (!id) {
             // Remove from DOM if no ID
@@ -549,7 +549,6 @@ export class QuoteHandler {
         if (target.closest('#quote_to_pdf_confirm_without_custom_fields')) {
             const url = `${location.origin}/invoice/quote/pdf/0`;
             globalThis.open(url, '_blank');
-            return;
         }
     }
 
@@ -656,8 +655,8 @@ export class QuoteHandler {
                     percentEl.value = '0.00';
                     percentEl.disabled = true;
                 }
-            } else {
-                if (percentEl) percentEl.disabled = false;
+            } else if (percentEl) {
+                percentEl.disabled = false;
             }
         }
 
@@ -669,8 +668,8 @@ export class QuoteHandler {
                     amountEl.value = '0.00';
                     amountEl.disabled = true;
                 }
-            } else {
-                if (amountEl) amountEl.disabled = false;
+            } else if (amountEl) {
+                amountEl.disabled = false;
             }
         }
     }
@@ -699,12 +698,12 @@ export class QuoteHandler {
     }
 
     private initializeTooltips(): void {
-        if (typeof (globalThis as any).bootstrap?.Tooltip !== 'undefined') {
+        if ((globalThis as any).bootstrap?.Tooltip !== undefined) {
             document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(element => {
                 try {
                     new (globalThis as any).bootstrap.Tooltip(element);
                 } catch (error) {
-                    // Ignore tooltip initialization errors
+                    console.warn('Tooltip init error:', error);
                 }
             });
         }

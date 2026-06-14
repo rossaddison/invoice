@@ -77,7 +77,7 @@ class InvoiceApp {
         if (!bs?.Tooltip) return;
         document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(element => {
             try {
-                bs.Tooltip.getOrCreateInstance(element as Element);
+                bs.Tooltip.getOrCreateInstance(element);
             } catch (error) {
                 console.warn('Tooltip initialization failed:', error);
             }

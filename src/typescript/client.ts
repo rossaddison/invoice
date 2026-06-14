@@ -73,16 +73,13 @@ export class ClientHandler {
             const form = document.getElementById(formId) as HTMLFormElement;
             if (form) {
                 form.addEventListener('submit', handler.bind(this));
-            } else {
-                // If form not found immediately, try again after DOM loads
-                if (document.readyState === 'loading') {
-                    document.addEventListener('DOMContentLoaded', () => {
-                        const laterForm = document.getElementById(formId) as HTMLFormElement;
-                        if (laterForm) {
-                            laterForm.addEventListener('submit', handler.bind(this));
-                        }
-                    });
-                }
+            } else if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => {
+                    const laterForm = document.getElementById(formId) as HTMLFormElement;
+                    if (laterForm) {
+                        laterForm.addEventListener('submit', handler.bind(this));
+                    }
+                });
             }
         };
 
@@ -112,7 +109,6 @@ export class ClientHandler {
         const deleteNoteBtn = target.closest('.client-note-delete-btn') as HTMLElement;
         if (deleteNoteBtn) {
             this.handleDeleteClientNote(deleteNoteBtn);
-            return;
         }
     }
 
@@ -198,7 +194,7 @@ export class ClientHandler {
     }
 
     private async handleDeleteClientNote(deleteBtn: HTMLElement): Promise<void> {
-        const noteId = deleteBtn.getAttribute('data-note-id');
+        const noteId = deleteBtn.dataset['noteId'];
         if (!noteId) {
             console.error('No note ID found on delete button');
             return;
@@ -256,7 +252,6 @@ export class ClientHandler {
 
         const form = event.target as HTMLFormElement;
         const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement;
-        const originalHtml = submitButton?.innerHTML;
 
         if (submitButton) {
             setButtonLoading(submitButton, true);
@@ -291,7 +286,6 @@ export class ClientHandler {
 
         const form = event.target as HTMLFormElement;
         const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement;
-        const originalHtml = submitButton?.innerHTML;
 
         if (submitButton) {
             setButtonLoading(submitButton, true);

@@ -8,14 +8,14 @@ export function initTooltips(): void {
         try {
             bs.Tooltip.getOrCreateInstance(el);
         } catch (e) {
-            // ignore init errors
+            console.warn('Tooltip init error:', e);
         }
     });
 }
 
 export function initSimpleSelects(root?: Document | Element): void {
     const TomSelect = (globalThis as any).TomSelect;
-    if (typeof TomSelect === 'undefined') return;
+    if (TomSelect === undefined) return;
 
     const container = root || document;
     const selectElements = container.querySelectorAll('.simple-select') as NodeListOf<HTMLSelectElement>;
@@ -95,7 +95,7 @@ function calculatePasswordStrength(password: string): number {
     if (password.length >= 8) strength++;
     if (/[a-z]/.test(password)) strength++;
     if (/[A-Z]/.test(password)) strength++;
-    if (/[0-9]/.test(password)) strength++;
+    if (/\d/.test(password)) strength++;
     if (/[^A-Za-z0-9]/.test(password)) strength++;
     return strength;
 }

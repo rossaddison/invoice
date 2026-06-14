@@ -97,7 +97,7 @@ describe('initGenerateCronKey', () => {
     it('ignores click when button is already disabled', async () => {
         const { btn, input } = makeDOM();
         initGenerateCronKey();
-        (btn as HTMLButtonElement).disabled = true;
+        btn.disabled = true;
         btn.click();
         await vi.runAllTimersAsync();
         expect(input.value).toBe(''); // no key written
@@ -120,10 +120,8 @@ describe('initGenerateCronKey', () => {
         vi.stubGlobal('navigator', { clipboard: undefined });
         const { btn } = makeDOM();
         initGenerateCronKey();
-        await expect(async () => {
-            btn.click();
-            await vi.runAllTimersAsync();
-        }).not.toThrow();
+        btn.click();
+        await vi.runAllTimersAsync();
         vi.unstubAllGlobals();
     });
 

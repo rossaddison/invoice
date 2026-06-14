@@ -55,7 +55,6 @@ export class TaskHandler {
         const resetButton = target.closest('#task-reset-button-inv');
         if (resetButton) {
             this.handleTaskReset();
-            return;
         }
     }
 
@@ -71,7 +70,7 @@ export class TaskHandler {
     private handleKeydown(event: KeyboardEvent): void {
         if (event.key === 'Enter') {
             const active = document.activeElement as HTMLElement;
-            if (active && active.id === 'filter_task_inv') {
+            if (active?.id === 'filter_task_inv') {
                 const btn = document.getElementById('filter-button-inv');
                 if (btn) {
                     btn.click();
@@ -124,12 +123,11 @@ export class TaskHandler {
             const idAttr = el.id || '';
             const idNum = Number.parseInt(idAttr.replace('task-id-', ''), 10);
 
-            if (!Number.Number.isNaN(idNum) && selectedTasks.includes(idNum)) {
+            if (!Number.isNaN(idNum) && selectedTasks.includes(idNum)) {
                 // Hide the row containing this modal-task-id
-                const row = el.closest('tr') ||
-                           (el.parentElement && el.parentElement.parentElement);
+                const row = el.closest<HTMLElement>('tr') ?? (el.parentElement?.parentElement as HTMLElement | undefined);
                 if (row) {
-                    (row as HTMLElement).style.display = 'none';
+                    row.style.display = 'none';
                     hiddenTasks++;
                 }
             }
@@ -232,7 +230,6 @@ export class TaskHandler {
 
         // Detect if we're on a quote or invoice page
         const isQuotePage = absoluteUrl.pathname.includes('/quote/');
-        const isInvoicePage = absoluteUrl.pathname.includes('/inv/');
 
         const taskIds = Array.from(
             document.querySelectorAll("input[name='task_ids[]']:checked")
@@ -281,6 +278,7 @@ export class TaskHandler {
             try {
                 data = JSON.parse(text);
             } catch (e) {
+                console.warn('JSON parse failed, using raw text:', e);
                 data = text;
             }
 
@@ -321,12 +319,12 @@ export class TaskHandler {
         Object.entries(tasks).toReversed().forEach(([key, task]) => {
             const currentTaxRateId = task.tax_rate_id;
 
-            if (!currentTaxRateId) {
+            if (currentTaxRateId) {
+                productDefaultTaxRateId = currentTaxRateId;
+            } else {
                 const defaultTaxEl = document.getElementById('default_item_tax_rate') as HTMLInputElement ||
                                    document.querySelector('#default_item_tax_rate') as HTMLInputElement;
                 productDefaultTaxRateId = defaultTaxEl ? defaultTaxEl.getAttribute('value') : '';
-            } else {
-                productDefaultTaxRateId = currentTaxRateId;
             }
 
             // Find last item row (matching original behaviour)

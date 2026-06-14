@@ -13,7 +13,7 @@ export function initializeCommalistPicker() {
 
   // Auto-show picker if there's existing data
   const textarea = document.getElementById('family_commalist') as HTMLTextAreaElement;
-  if (textarea && textarea.value.trim()) {
+  if (textarea?.value.trim()) {
     // Don't auto-show, let user decide
   }
 }
@@ -50,7 +50,7 @@ async function loadAngularApp() {
 
     // Find the info alert and insert after it
     const infoAlert = container.querySelector('.alert');
-    if (infoAlert && infoAlert.nextSibling) {
+    if (infoAlert?.nextSibling) {
       container.insertBefore(appRoot, infoAlert.nextSibling);
     } else {
       container.appendChild(appRoot);

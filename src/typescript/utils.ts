@@ -15,6 +15,7 @@ export function parsedata(data: unknown): ApiResponse | Record<string, any> {
         try {
             return JSON.parse(data) as Record<string, any>;
         } catch (e) {
+            console.warn('JSON parse failed:', e);
             return {};
         }
     }
@@ -74,6 +75,7 @@ export async function getJson<T = unknown>(
     try {
         return JSON.parse(text) as T;
     } catch (e) {
+        console.warn('Response is not JSON, returning as text:', e);
         return text as T;
     }
 }
@@ -98,7 +100,7 @@ export function closestSafe<T extends Element = Element>(
         // Fallback: walk up parents manually
         let node = element as Element | null;
         while (node) {
-            if (node.matches && node.matches(selector)) {
+            if (node.matches?.(selector)) {
                 return node as SafeElement<T>;
             }
             node = node.parentElement;

@@ -99,7 +99,6 @@ export class SalesOrderHandler {
         const saveBtn = target.closest('.salesorder-save') as HTMLElement;
         if (saveBtn) {
             this.handleSaveSalesOrder();
-            return;
         }
     }
 
@@ -107,7 +106,7 @@ export class SalesOrderHandler {
      * Initialize Tom Select if present for salesorder selects
      */
     private initSelects(): void {
-        if (typeof globalThis.TomSelect === 'undefined') return;
+        if ((globalThis as any).TomSelect === undefined) return;
 
         const selects = document.querySelectorAll(
             '.simple-select'
@@ -199,9 +198,9 @@ export class SalesOrderHandler {
 
         try {
             const url = location.origin + "/invoice/salesorder/soToInvoiceConfirm";
-            const response = await getJson(url, payload) as SalesOrderConversionResponse;
+            const response = await getJson<SalesOrderConversionResponse>(url, payload);
 
-            if (response && response.success === 1) {
+            if (response?.success === 1) {
                 if (btn) {
                     btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
                 }
@@ -280,11 +279,9 @@ export class SalesOrderHandler {
             const data = parsedata(response);
             if (data.success === 1) {
                 globalThis.location.reload();
-            } else {
-                if (btn && originalHtml) {
-                    btn.innerHTML = originalHtml;
-                    (btn as HTMLButtonElement).disabled = false;
-                }
+            } else if (btn && originalHtml) {
+                btn.innerHTML = originalHtml;
+                (btn as HTMLButtonElement).disabled = false;
             }
         } catch (error) {
             console.error('changeStatus error', error);

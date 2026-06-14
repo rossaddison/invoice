@@ -4,12 +4,12 @@
  */
 
 class FamilyCommalistPicker {
-    private container: HTMLElement;
-    private textarea: HTMLTextAreaElement;
+    private readonly container: HTMLElement;
+    private readonly textarea: HTMLTextAreaElement;
     private selectedNumbers: Set<number> = new Set();
     private currentPage: number = 1;
-    private numbersPerPage: number = 50;
-    private totalPages: number = 4; // 200 numbers / 50 per page
+    private readonly numbersPerPage: number = 50;
+    private readonly totalPages: number = 4; // 200 numbers / 50 per page
 
     constructor(containerId: string, textareaId: string) {
         this.container = document.getElementById(containerId)!;
@@ -262,7 +262,7 @@ function toggleCommalistPicker() {
             pickerDiv.id = 'number-picker';
 
             const infoAlert = container.querySelector('.alert');
-            if (infoAlert && infoAlert.nextSibling) {
+            if (infoAlert?.nextSibling) {
                 container.insertBefore(pickerDiv, infoAlert.nextSibling);
             } else {
                 container.appendChild(pickerDiv);

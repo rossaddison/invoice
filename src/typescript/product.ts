@@ -76,7 +76,7 @@ export class ProductHandler {
         // Listen for Bootstrap modal shown event to initialize components
         document.addEventListener('shown.bs.modal', (event) => {
             const target = event.target as HTMLElement;
-            if (target && target.id === 'modal-choose-items') {
+            if (target?.id === 'modal-choose-items') {
                 this.updateButtonStates();
             }
         });
@@ -179,7 +179,7 @@ export class ProductHandler {
 
     private initializeComponents(): void {
         // Initialize TomSelect (replaces jQuery select2)
-        if (typeof globalThis.TomSelect !== 'undefined') {
+        if ((globalThis as any).TomSelect !== undefined) {
             document.querySelectorAll('.simple-select').forEach((el: Element) => {
                 const tracked = el as Element & { _tomselect?: unknown };
                 if (!tracked._tomselect) {
@@ -221,17 +221,17 @@ export class ProductHandler {
         const rows = table.getElementsByTagName('tr');
 
         // Loop through all table rows, and hide those who don't match the search query
-        for (let i = 0; i < rows.length; i++) {
+        for (const row of Array.from(rows)) {
             // product_sku is 3rd column or index 2
-            const cell = rows[i].getElementsByTagName('td')[2];
+            const cell = row.getElementsByTagName('td')[2];
 
             if (cell) {
                 const textValue = cell.textContent || cell.innerText || '';
 
-                if (textValue.toUpperCase().indexOf(filter) > -1) {
-                    rows[i].style.display = '';
+                if (textValue.toUpperCase().includes(filter)) {
+                    row.style.display = '';
                 } else {
-                    rows[i].style.display = 'none';
+                    row.style.display = 'none';
                 }
             }
         }
@@ -296,7 +296,7 @@ export class ProductHandler {
         this.setSecureButtonContent(btn, 'h2', 'text-center', 'spinner-border spinner-border-sm');
         
         const productIds: number[] = [];
-        const quoteId = (absoluteUrl.pathname.split('/').at(-1) || '').replace(/[^0-9]/g, '');
+        const quoteId = (absoluteUrl.pathname.split('/').at(-1) || '').replace(/\D/g, '');
         
         document.querySelectorAll("input[name='product_ids[]']:checked").forEach((input: Element) => {
             const value = Number.parseInt((input as HTMLInputElement).value, 10);
@@ -379,11 +379,11 @@ export class ProductHandler {
             const currentTaxRateId = product.tax_rate_id;
             let productDefaultTaxRateId: string;
             
-            if (!currentTaxRateId) {
+            if (currentTaxRateId) {
+                productDefaultTaxRateId = currentTaxRateId;
+            } else {
                 const defaultTaxRateEl = document.getElementById('default_item_tax_rate') as HTMLInputElement;
                 productDefaultTaxRateId = defaultTaxRateEl ? defaultTaxRateEl.getAttribute('value') || '' : '';
-            } else {
-                productDefaultTaxRateId = currentTaxRateId;
             }
             
             // Get the last tbody element (matches original JavaScript exactly)
@@ -418,9 +418,7 @@ export class ProductHandler {
         if (!button) return;
         
         // Clear existing content safely
-        while (button.firstChild) {
-            button.removeChild(button.firstChild);
-        }
+        button.replaceChildren();
         
         // Create elements securely
         const element = document.createElement(tagName);

@@ -58,7 +58,7 @@ export function initStreetOrder(): void {
 
     const reorderUrl = list.dataset['reorderUrl'] ?? '';
     const csrfInput  = document.getElementById('street-order-csrf') as HTMLInputElement | null;
-    const statusEl   = document.getElementById('street-order-status') as HTMLElement | null;
+    const statusEl   = document.getElementById('street-order-status');
 
     if (!reorderUrl || !csrfInput || !statusEl) return;
 
