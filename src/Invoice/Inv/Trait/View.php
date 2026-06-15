@@ -56,7 +56,6 @@ trait View
                     $sales_order_number = $so->getNumber();
                 }
             }
-            $invoice = $inv->reqId();
             $invAllowanceChargeForm = new InvAllowanceChargeForm();
             $read_only = $inv->getIsReadOnly();
             $this->session->set('inv_id', $inv->reqId());
@@ -117,116 +116,15 @@ trait View
                     'showButtons' => $show_buttons,
                     'title' => $this->translator->translate('view'),
                     'add_inv_item_product' =>
-                        $this->webViewRenderer->renderPartialAsString(
-                            '//invoice/invitem/_item_form_product', [
-                        'actionName' => 'invitemhtmx/addProduct',
-                        'actionArguments' => ['_language' => $_language],
-                        'errors' => [],
-                        'form' => new InvItemForm(),
-                        'inv' => $service->core->iR->repoInvLoadedquery($invoice),
-                        'isRecurring' => $service->core->irR->repoCount($invoice) > 0,
-                        'inv_id' => $this->session->get('inv_id'),
-                        'invItemAllowancesCharges' => $service->allowance->aciiR->repoACIquery(
-                            (int) $this->session->get('inv_id')),
-                        'invItemAllowancesChargesCount' => $service->allowance->aciiR->repoInvcount(
-                            (int) $this->session->get('inv_id')),
-                        'taxRates' => $service->meta->trR->findAllPreloaded(),
-                        'products' => $service->items->pR->findAllPreloaded(),
-                        'units' => $service->meta->unR->findAllPreloaded(),
-                    ]),
+                        $this->viewBuildAddItemProductPartial($_language, $service),
                     'add_inv_item_task' =>
-                        $this->webViewRenderer->renderPartialAsString(
-                            '//invoice/invitem/_item_form_task', [
-                        'actionName' => 'invitemhtmx/addTask',
-                        'actionArguments' => ['_language' => $_language],
-                        'errors' => [],
-                        'form' => new InvItemForm(),
-                        'inv' => $service->core->iR->repoInvLoadedquery(
-                            (int) $this->session->get('inv_id')),
-                        'isRecurring' => $is_recurring,
-                        'inv_id' => (int) $this->session->get('inv_id'),
-                        'taxRates' => $service->meta->trR->findAllPreloaded(),
-                        'tasks' => $service->items->taskR->repoTaskStatusquery(3),
-                        'units' => $service->meta->unR->findAllPreloaded(),
-                    ]),
-                    'modal_choose_items' =>
-                        $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/product/modal_product_lookups_inv',
-                        [
-                            'families' => $service->allowance->fR->findAllPreloaded(),
-                            'default_item_tax_rate' =>
-                                $this->sR->getSetting('default_item_tax_rate')
-                                    !== '' ?: 0,
-                            'filter_product' => '',
-                            'filter_family' => '',
-                            'reset_table' => '',
-                            'products' => $service->items->pR->findAllPreloadedWithPrice(),
-                            'partial_product_table_modal' =>
-                                $this->webViewRenderer->renderPartialAsString(
-                                '//invoice/product/_partial_product_table_modal',
-                                [
-                                    'products' => $service->items->pR->findAllPreloadedWithPrice(),
-                                ],
-                            ),
-                        ],
-                    ),
-                    'modal_choose_tasks' =>
-                        $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/task/modal_task_lookups_inv',
-                        [
-                            'partial_task_table_modal' =>
-                            $this->webViewRenderer->renderPartialAsString(
-                                '//invoice/task/partial_task_table_modal', [
-                                'tasks' => $service->items->taskR->repoTaskStatusquery(3),
-                                'projectR' => $service->items->prjctR,
-                                'dateHelper' => $this->dateHelper,
-                                'numberHelper' => $this->numberHelper,
-                            ]),
-                            'default_item_tax_rate' =>
-                            $this->sR->getSetting('default_item_tax_rate')
-                                !== '' ?: 0,
-                            'tasks' => $service->items->taskR->findAllPreloaded(),
-                            'head' => $head,
-                        ],
-                    ),
-                    'modal_add_inv_tax' =>
-                        $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/inv/modal_add_inv_tax', [
-                            'taxRates' => $service->meta->trR->findAllPreloaded(),
-                        ]),
+                        $this->viewBuildAddItemTaskPartial($_language, $service, $is_recurring),
+                    'modal_choose_items' => $this->viewBuildModalChooseItemsPartial($service),
+                    'modal_choose_tasks' => $this->viewBuildModalChooseTasksPartial($head, $service),
+                    'modal_add_inv_tax' => $this->viewBuildModalAddInvTaxPartial($service),
                     'modal_add_allowance_charge' =>
-                        $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/inv/modal_add_allowance_charge', [
-                            'modal_add_allowance_charge_form' =>
-                            $this->webViewRenderer->renderPartialAsString(
-                                '//invoice/inv/modal_add_allowance_charge_form',
-                                [
-                                    'optionsDataAllowanceCharges' =>
-                                        $service->allowance->acR->optionsDataAllowanceCharges(),
-                                    'acTemplateData' =>
-                                        $service->allowance->acR->acTemplateDataForJs(),
-                                    'actionName' => 'invallowancecharge/add',
-                                    'actionArguments' => [
-                                        'inv_id' =>
-                                        (int) $this->session->get('inv_id')],
-                                    'errors' => [],
-                                    'title' =>
-                                        $this->translator->translate(
-                                            'allowance.or.charge.add'),
-                                    'form' => $invAllowanceChargeForm,
-                                ],
-                            ),
-                        ],
-                    ),
-                    'modal_copy_inv' =>
-                        $this->webViewRenderer->renderPartialAsString(
-                            '//invoice/inv/modal_copy_inv', [
-                        'inv' => $service->core->iR->repoInvLoadedquery(
-                            (int) $this->session->get('inv_id')),
-                        'clients' => $service->relation->cR->repoUserClient(
-                            $service->relation->ucR->getClientsWithUserAccounts()),
-                        'groups' => $service->core->gR->findAllPreloaded(),
-                    ]),
+                        $this->viewBuildModalAddAllowanceChargePartial($service, $invAllowanceChargeForm),
+                    'modal_copy_inv' => $this->viewBuildModalCopyInvPartial($service),
                     'partial_item_table' => $this->viewPartialItemTable(
                         $show_buttons,
                         $id,
@@ -284,6 +182,140 @@ trait View
             return $this->webService->getNotFoundResponse();
         }
         return $this->webService->getNotFoundResponse();
+    }
+
+    private function viewBuildAddItemProductPartial(
+        string $_language,
+        InvViewService $service,
+    ): string {
+        $invoice = (int) $this->session->get('inv_id');
+        return $this->webViewRenderer->renderPartialAsString(
+            '//invoice/invitem/_item_form_product', [
+            'actionName' => 'invitemhtmx/addProduct',
+            'actionArguments' => ['_language' => $_language],
+            'errors' => [],
+            'form' => new InvItemForm(),
+            'inv' => $service->core->iR->repoInvLoadedquery($invoice),
+            'isRecurring' => $service->core->irR->repoCount($invoice) > 0,
+            'inv_id' => $invoice,
+            'invItemAllowancesCharges' => $service->allowance->aciiR->repoACIquery($invoice),
+            'invItemAllowancesChargesCount' => $service->allowance->aciiR->repoInvcount($invoice),
+            'taxRates' => $service->meta->trR->findAllPreloaded(),
+            'products' => $service->items->pR->findAllPreloaded(),
+            'units' => $service->meta->unR->findAllPreloaded(),
+        ]);
+    }
+
+    private function viewBuildAddItemTaskPartial(
+        string $_language,
+        InvViewService $service,
+        bool $is_recurring,
+    ): string {
+        $invoice = (int) $this->session->get('inv_id');
+        return $this->webViewRenderer->renderPartialAsString(
+            '//invoice/invitem/_item_form_task', [
+            'actionName' => 'invitemhtmx/addTask',
+            'actionArguments' => ['_language' => $_language],
+            'errors' => [],
+            'form' => new InvItemForm(),
+            'inv' => $service->core->iR->repoInvLoadedquery($invoice),
+            'isRecurring' => $is_recurring,
+            'inv_id' => $invoice,
+            'taxRates' => $service->meta->trR->findAllPreloaded(),
+            'tasks' => $service->items->taskR->repoTaskStatusquery(3),
+            'units' => $service->meta->unR->findAllPreloaded(),
+        ]);
+    }
+
+    private function viewBuildModalChooseItemsPartial(
+        InvViewService $service,
+    ): string {
+        return $this->webViewRenderer->renderPartialAsString(
+            '//invoice/product/modal_product_lookups_inv',
+            [
+                'families' => $service->allowance->fR->findAllPreloaded(),
+                'default_item_tax_rate' =>
+                    $this->sR->getSetting('default_item_tax_rate') !== '' ?: 0,
+                'filter_product' => '',
+                'filter_family' => '',
+                'reset_table' => '',
+                'products' => $service->items->pR->findAllPreloadedWithPrice(),
+                'partial_product_table_modal' =>
+                    $this->webViewRenderer->renderPartialAsString(
+                        '//invoice/product/_partial_product_table_modal',
+                        ['products' => $service->items->pR->findAllPreloadedWithPrice()],
+                    ),
+            ],
+        );
+    }
+
+    private function viewBuildModalChooseTasksPartial(
+        WebViewRenderer $head,
+        InvViewService $service,
+    ): string {
+        return $this->webViewRenderer->renderPartialAsString(
+            '//invoice/task/modal_task_lookups_inv',
+            [
+                'partial_task_table_modal' =>
+                    $this->webViewRenderer->renderPartialAsString(
+                        '//invoice/task/partial_task_table_modal', [
+                        'tasks' => $service->items->taskR->repoTaskStatusquery(3),
+                        'projectR' => $service->items->prjctR,
+                        'dateHelper' => $this->dateHelper,
+                        'numberHelper' => $this->numberHelper,
+                    ]),
+                'default_item_tax_rate' =>
+                    $this->sR->getSetting('default_item_tax_rate') !== '' ?: 0,
+                'tasks' => $service->items->taskR->findAllPreloaded(),
+                'head' => $head,
+            ],
+        );
+    }
+
+    private function viewBuildModalAddInvTaxPartial(
+        InvViewService $service,
+    ): string {
+        return $this->webViewRenderer->renderPartialAsString(
+            '//invoice/inv/modal_add_inv_tax', [
+                'taxRates' => $service->meta->trR->findAllPreloaded(),
+            ]);
+    }
+
+    private function viewBuildModalAddAllowanceChargePartial(
+        InvViewService $service,
+        InvAllowanceChargeForm $invAllowanceChargeForm,
+    ): string {
+        return $this->webViewRenderer->renderPartialAsString(
+            '//invoice/inv/modal_add_allowance_charge', [
+                'modal_add_allowance_charge_form' =>
+                    $this->webViewRenderer->renderPartialAsString(
+                        '//invoice/inv/modal_add_allowance_charge_form',
+                        [
+                            'optionsDataAllowanceCharges' =>
+                                $service->allowance->acR->optionsDataAllowanceCharges(),
+                            'acTemplateData' =>
+                                $service->allowance->acR->acTemplateDataForJs(),
+                            'actionName' => 'invallowancecharge/add',
+                            'actionArguments' => ['inv_id' => (int) $this->session->get('inv_id')],
+                            'errors' => [],
+                            'title' => $this->translator->translate('allowance.or.charge.add'),
+                            'form' => $invAllowanceChargeForm,
+                        ],
+                    ),
+            ]);
+    }
+
+    private function viewBuildModalCopyInvPartial(
+        InvViewService $service,
+    ): string {
+        return $this->webViewRenderer->renderPartialAsString(
+            '//invoice/inv/modal_copy_inv', [
+            'inv' => $service->core->iR->repoInvLoadedquery(
+                (int) $this->session->get('inv_id')),
+            'clients' => $service->relation->cR->repoUserClient(
+                $service->relation->ucR->getClientsWithUserAccounts()),
+            'groups' => $service->core->gR->findAllPreloaded(),
+        ]);
     }
 
     // resources/views/invoice/inv/partial_item_table has this route
