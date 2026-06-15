@@ -2543,6 +2543,32 @@ $country_helper->getCountryIdentificationCodeWithLeague(
         // 'ISO 6523 ICD list',
         // 'Identifier' => 'ICD',
         //  'Agency' => 'The International Organization for Standardization (ISO)',
+        return array_merge(
+            $this->getIso6523IcdChunk1(),
+            $this->getIso6523IcdChunk2(),
+            $this->getIso6523IcdChunk3(),
+            $this->getIso6523IcdChunk4(),
+            $this->getIso6523IcdChunk5(),
+            $this->getIso6523IcdChunk6(),
+            $this->getIso6523IcdChunk7(),
+            $this->getIso6523IcdChunk8(),
+            $this->getIso6523IcdChunk9(),
+            $this->getIso6523IcdChunk10(),
+            $this->getIso6523IcdChunk11(),
+            $this->getIso6523IcdChunk12(),
+            $this->getIso6523IcdChunk13(),
+            $this->getIso6523IcdChunk14(),
+            $this->getIso6523IcdChunk15(),
+            $this->getIso6523IcdChunk16(),
+            $this->getIso6523IcdChunk17(),
+            $this->getIso6523IcdChunk18(),
+            $this->getIso6523IcdChunk19(),
+            $this->getIso6523IcdChunk20(),
+        );
+    }
+
+    private function getIso6523IcdChunk1(): array
+    {
         $notes = 'Notes on use of code: ';
         return [
             0 => [
@@ -2652,6 +2678,13 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 . 'addressing between the communicating partners. '
                 . 'Issuing agency: Verband der Automobilindustrie e.V., GERMANY.',
             ],
+        ];
+    }
+
+    private function getIso6523IcdChunk2(): array
+    {
+        $notes = 'Notes on use of code: ';
+        return [
             12 => [
                 'Id' => '0014',
                 'Name' => 'NIST/OSI Implememts\' Workshop',
@@ -2759,6 +2792,13 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 . 'described in ISO8348 Addendum 2. '
                 . 'Issuing agency: Digital Equipment (Europe) S.A.R.L. France.',
             ],
+        ];
+    }
+
+    private function getIso6523IcdChunk3(): array
+    {
+        $notes = 'Notes on use of code: ';
+        return [
             23 => [
                 'Id' => '0025',
                 'Name' => 'OSI ASIA-OCEANIA WORKSHOP',
@@ -2868,6 +2908,13 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 . 'organization. Characters are digits or capital letter. '
                 . 'Issuing agency: National Board of Taxes, FINLAND.',
             ],
+        ];
+    }
+
+    private function getIso6523IcdChunk4(): array
+    {
+        $notes = 'Notes on use of code: ';
+        return [
             36 => [
                 'Id' => '0038',
                 'Name' => 'The Australian GOSIP Network',
@@ -2974,6 +3021,13 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 . 'with binary syntax will be used. '
                 . 'Issuing agency: OSINZ, New Zealand.',
             ],
+        ];
+    }
+
+    private function getIso6523IcdChunk5(): array
+    {
+        $notes = 'Notes on use of code: ';
+        return [
             47 => [
                 'Id' => '0049',
                 'Name' => 'Auckland Area Health',
@@ -3079,6 +3133,13 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 . 'businesses and institutions. '
                 . 'Issuing agency: Dun and Bradstreet Ltd, UK.',
             ],
+        ];
+    }
+
+    private function getIso6523IcdChunk6(): array
+    {
+        $notes = 'Notes on use of code: ';
+        return [
             59 => [
                 'Id' => '0061',
                 'Name' => 'SOFFEX OSI',
@@ -3183,6 +3244,13 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 . 'and naming tree as specified in Addendum 2 to ISO 8348. '
                 . 'Issuing agency: International Truck & Engine Corp, USA.',
             ],
+        ];
+    }
+
+    private function getIso6523IcdChunk7(): array
+    {
+        $notes = 'Notes on use of code: ';
+        return [
             71 => [
                 'Id' => '0073',
                 'Name' => 'ICD Formatted ATM address',
@@ -3288,6 +3356,12 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                       addressing as specified in Addendum 2 to ISO 8348. '
                 . 'Issuing agency: ATM Ltd, ENGLAND.',
             ],
+        ];
+    }
+
+    private function getIso6523IcdChunk8(): array
+    {
+        return [
             82 => [
                 'Id' => '0084',
                 'Name' => 'Athens Chamber of Commerce & Industry Scheme '
@@ -3397,6 +3471,12 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 . 'Way, Durbanville 7550, South
                       Africa',
             ],
+        ];
+    }
+
+    private function getIso6523IcdChunk9(): array
+    {
+        return [
             99 => [
                 'Id' => '0102',
                 'Name' => 'HEAG',
@@ -3505,6 +3585,12 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 'Name' => 'Advantis',
                 'Description' => 'Issuing agency: Advantis, USA.',
             ],
+        ];
+    }
+
+    private function getIso6523IcdChunk10(): array
+    {
+        return [
             117 => [
                 'Id' => '0121',
                 'Name' => 'Affable Software Data Interchange Codes',
@@ -3601,6 +3687,12 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 . 'ATM switched connections Use to from globally unique Global '
                 . 'One ICD AESAs. Issuing agency: Global One, Belgium.',
             ],
+        ];
+    }
+
+    private function getIso6523IcdChunk11(): array
+    {
+        return [
             134 => [
                 'Id' => '0138',
                 'Name' => 'France Telecom ATM End System Address Plan',
@@ -3707,6 +3799,12 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 . 'Issuing agency: DoD (Unites States Department of Defense), '
                 . 'USA.',
             ],
+        ];
+    }
+
+    private function getIso6523IcdChunk12(): array
+    {
+        return [
             141 => [
                 'Id' => '0145',
                 'Name' => 'DGCP (Direction GÃ©nÃ©rale de la ComptabilitÃ© '
@@ -3817,6 +3915,12 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 . 'the AUNA Group. This code shall be used as an element of '
                 . 'NSAP addressing Issuing agency: AUNA, Spain.',
             ],
+        ];
+    }
+
+    private function getIso6523IcdChunk13(): array
+    {
+        return [
             153 => [
                 'Id' => '0157',
                 'Name' => 'ATM interconnection with the Dutch KPN Telecom',
@@ -3916,6 +4020,12 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 . ' scheme for SPVC connections within and between regions'
                 . ' Issuing agency: TELUS Corporation, Canada.',
             ],
+        ];
+    }
+
+    private function getIso6523IcdChunk14(): array
+    {
+        return [
             161 => [
                 'Id' => '0165',
                 'Name' => 'FIEIE Object identifiers',
@@ -4019,6 +4129,12 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 . 'Issuing agency: Project Group â€œLists of Propertiesâ€ '
                 . '(PROLISTÂ®) c/o Bayer Technology Services GmbH Geb., Germany.',
             ],
+        ];
+    }
+
+    private function getIso6523IcdChunk15(): array
+    {
+        return [
             169 => [
                 'Id' => '0173',
                 'Name' => 'eCI@ss',
@@ -4120,6 +4236,12 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 . 'shall be accessible to the public. Issuing agency: Swiss '
                 . 'Federal Statistical Office (FSO), Switzerland).',
             ],
+        ];
+    }
+
+    private function getIso6523IcdChunk16(): array
+    {
+        return [
             178 => [
                 'Id' => '0184',
                 'Name' => 'DIGSTORG',
@@ -4220,6 +4342,12 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 . 'organisations. Issuing agency: Centre of Registers and '
                 . 'Information Systems of the Ministry of Justice in Estonia.',
             ],
+        ];
+    }
+
+    private function getIso6523IcdChunk17(): array
+    {
+        return [
             186 => [
                 'Id' => '0192',
                 'Name' => 'Organisasjonsnummer',
@@ -4329,6 +4457,12 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 . 'to identify legal entities. Issuing agency: State Enterprise '
                 . 'Centre of Registers in Lithuania.',
             ],
+        ];
+    }
+
+    private function getIso6523IcdChunk18(): array
+    {
+        return [
             195 => [
                 'Id' => '0201',
                 'Name' => 'Codice Univoco UnitÃ  Organizzativa iPA',
@@ -4438,6 +4572,12 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 . 'Invoicing and e-procurement. '
                 . 'Issuing agency: Agenzia delle Entrate, Italy.',
             ],
+        ];
+    }
+
+    private function getIso6523IcdChunk19(): array
+    {
+        return [
             206 => [
                 'Id' => '0212',
                 'Name' => 'Finnish Organization Identifier',
@@ -4547,6 +4687,12 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 . ' which will be implemented on 1 October 2023. '
                 . 'Issuing agency: National Tax Agency Japan',
             ],
+        ];
+    }
+
+    private function getIso6523IcdChunk20(): array
+    {
+        return [
             216 => [
                 'Id' => '0222',
                 'Name' => 'Metadata Registry Support',
