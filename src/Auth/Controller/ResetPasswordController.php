@@ -59,60 +59,55 @@ final class ResetPasswordController
     ): Response {
         $unMaskedToken = TokenMask::remove($maskedToken);
         $positionFromUnderscore = strrpos($unMaskedToken, '_');
-        if ($positionFromUnderscore > -1) {
-            $timestamp = substr($unMaskedToken, $positionFromUnderscore + 1);
-            $lengthTimeStamp = strlen($timestamp);
-            $tokenRandomStringOnly = substr($unMaskedToken,
-                0, -($lengthTimeStamp + 1));
-            if ((int) $timestamp + 3600 >= time()) {
-                $identity = $tR->findIdentityByToken(
-                    $tokenRandomStringOnly,
-                    self::REQUEST_PASSWORD_RESET_TOKEN);
-                if (null !== $identity
-                    && null !== ($user = $identity->getUser())
-                    && ($identityId = (int) $identity->getId()) > 0) {
-                        if ($formHydrator->populateFromPostAndValidate(
-                                $resetPasswordForm, $request)) {
-/**
- * Following algorithm:
- * 1.) setPassword in User
- * 2.) nullify PasswordResetToken by setting the Token:token to null but
- *     retaining the Token:type
- *     so that the token(Random::string(32)) for this type can be reset
- * 3.) generateAuthKey in Identity
- * Related logic: see https://github.com/yiisoft/yii2-app-advanced/blob/master/
- *  frontend/models/ResetPasswordForm.php
- */
-                            // 1.)
-                            $user->setPassword(
-                                $resetPasswordForm->getNewPassword());
-                            // 2.)
-                            $tokenRecord = $tR->findTokenByIdentityIdAndType(
-                                $identityId,
-                                self::REQUEST_PASSWORD_RESET_TOKEN);
-                            if (null !== $tokenRecord) {
-                                $tokenRecord->setToken('');
-                                $tR->save($tokenRecord);
-                                // 3.)
-                                $identity->generateAuthKey();
-                                $idR->save($identity);
-                            }
-                            return $this->webService->getRedirectResponse(
-                                'site/resetpasswordsuccess');
-                        }
-                        return $this->webViewRenderer->render(
-                            'resetpassword',
-                            [
-                                'formModel' => $resetPasswordForm,
-                                'token' => $maskedToken,
-                            ]
-                        );
-                }
-            }
+        if ($positionFromUnderscore === false) {
+            return $this->failedReset();
         }
-        // ✅ Translate once — original code translated twice (bug)
-        $this->logger->error(
-            $this->translator->translate('password.reset.failed'));
+        $timestamp = substr($unMaskedToken, $positionFromUnderscore + 1);
+        $tokenRandomStringOnly = substr($unMaskedToken, 0, -(strlen($timestamp) + 1));
+        if ((int) $timestamp + 3600 < time()) {
+            return $this->failedReset();
+        }
+        $identity = $tR->findIdentityByToken(
+            $tokenRandomStringOnly,
+            self::REQUEST_PASSWORD_RESET_TOKEN);
+        if (null === $identity) {
+            return $this->failedReset();
+        }
+        $user = $identity->getUser();
+        if (null === $user) {
+            return $this->failedReset();
+        }
+        $identityId = (int) $identity->getId();
+        if ($identityId <= 0) {
+            return $this->failedReset();
+        }
+        if (!$formHydrator->populateFromPostAndValidate($resetPasswordForm, $request)) {
+            return $this->webViewRenderer->render(
+                'resetpassword',
+                ['formModel' => $resetPasswordForm, 'token' => $maskedToken],
+            );
+        }
+        // 1.) setPassword in User
+        $user->setPassword($resetPasswordForm->getNewPassword());
+        // 2.) nullify PasswordResetToken (retain Token:type so it can be reissued)
+        // Related logic: see https://github.com/yiisoft/yii2-app-advanced/blob/master/
+        //  frontend/models/ResetPasswordForm.php
+        $tokenRecord = $tR->findTokenByIdentityIdAndType(
+            $identityId,
+            self::REQUEST_PASSWORD_RESET_TOKEN);
+        if (null !== $tokenRecord) {
+            $tokenRecord->setToken('');
+            $tR->save($tokenRecord);
+            // 3.) generateAuthKey in Identity
+            $identity->generateAuthKey();
+            $idR->save($identity);
+        }
+        return $this->webService->getRedirectResponse('site/resetpasswordsuccess');
+    }
+
+    private function failedReset(): Response
+    {
+        $this->logger->error($this->translator->translate('password.reset.failed'));
         return $this->webService->getRedirectResponse('site/resetpasswordfailed');
     }
 }
