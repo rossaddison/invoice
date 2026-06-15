@@ -2155,6 +2155,16 @@ $country_helper->getCountryIdentificationCodeWithLeague(
      */
     private function getPeppolAllowancesArray(): array
     {
+        return array_merge(
+            $this->getPeppolAllowancesArrayChunk1(),
+            $this->getPeppolAllowancesArrayChunk2(),
+            $this->getPeppolAllowancesArrayChunk3(),
+            $this->getPeppolAllowancesArrayChunk4(),
+        );
+    }
+
+    private function getPeppolAllowancesArrayChunk1(): array
+    {
         return [
             'AA' => ['Advertising',
                 'The service of providing advertising.'],
@@ -2276,6 +2286,12 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 'The provision of a cash on delivery (COD) service.'],
             'AEL' => ['Small order processing service',
                 'A service related to the processing of small orders.'],
+        ];
+    }
+
+    private function getPeppolAllowancesArrayChunk2(): array
+    {
+        return [
             'AEM' => ['Clerical or administrative services',
                 'The provision of clerical or administrative services.'],
             'AEN' => ['Guarantee',
@@ -2395,6 +2411,12 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                   'An allowance or change related to the handling of returns.'],
             'DAN' => ['Minimum order not fulfilled charge',
     'Charge levied because the minimum order quantity could not be fulfilled.'],
+        ];
+    }
+
+    private function getPeppolAllowancesArrayChunk3(): array
+    {
+        return [
             'DAO' => ['Point of sales threshold allowance',
 'Allowance for reaching or exceeding an agreed sales threshold at the point'
                                                                 . ' of sales.'],
@@ -2514,6 +2536,12 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             'The service of providing third party billing for transportation.'],
             'TV' => ['Transportation by vendor',
                 'The service of providing transportation by the vendor.'],
+        ];
+    }
+
+    private function getPeppolAllowancesArrayChunk4(): array
+    {
+        return [
             'V1' => ['Drop yard',
                 'The service of delivering goods at the yard.'],
             'V2' => ['Drop dock',
