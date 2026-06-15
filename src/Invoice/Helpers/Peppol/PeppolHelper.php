@@ -16,6 +16,7 @@ use App\Infrastructure\Persistence\{
     InvItemAllowanceCharge\InvItemAllowanceCharge,
     InvAmount\InvAmount, InvItemAmount\InvItemAmount
 };
+use App\Infrastructure\Persistence\UnitPeppol\UnitPeppol;
 use App\Infrastructure\Persistence\Upload\Upload;
 use App\Invoice\Helpers\{CountryHelper, DateHelper, NumberHelper};
 use App\Invoice\Libraries\PeppolUblXml;
@@ -1182,25 +1183,14 @@ $country_helper->getCountryIdentificationCodeWithLeague(
 // Note: The following string interpolation,
 // ie. curly brackets within double quotes, conforms with php 8.2 requirements
 
-                        // Optional elements — only emit when the source value is non-empty
-                        // to avoid R008 "Document MUST not contain empty elements."
-                        $lineDesc = $item->getDescription() ?? '';
-                        $lineNote = $lineDesc !== ''
-                            ? [['name' => "{$b}Note", 'value' => $lineDesc]]
-                            : [];
-                        $itemDesc = $lineDesc !== ''
-                            ? [['name' => "{$b}Description", 'value' => $lineDesc]]
-                            : [];
-                        $originCode = $item->getProduct()?->getProductCountryOfOriginCode() ?? '';
-                        $originCountry = $originCode !== ''
-                            ? [['name' => "{$a}OriginCountry", 'value' => [['name' => "{$b}IdentificationCode", 'value' => $originCode]]]]
-                            : [];
-                        $orderLineRef = ($peppol_po_lineid !== null && $peppol_po_lineid !== '')
-                            ? [['name' => "{$a}OrderLineReference", 'value' => [['name' => "{$b}LineID", 'value' => $peppol_po_lineid]]]]
-                            : [];
-                        $buyersItemId = ($peppol_po_itemid !== null && $peppol_po_itemid !== '')
-                            ? [['name' => "{$a}BuyersItemIdentification", 'value' => [['name' => "{$b}ID", 'value' => $peppol_po_itemid]]]]
-                            : [];
+                        $optionals = $this->buildOptionalInvoiceLineElements(
+                            $item, $peppol_po_lineid, $peppol_po_itemid
+                        );
+                        $lineNote = $optionals['lineNote'];
+                        $itemDesc = $optionals['itemDesc'];
+                        $originCountry = $optionals['originCountry'];
+                        $orderLineRef = $optionals['orderLineRef'];
+                        $buyersItemId = $optionals['buyersItemId'];
 
             $invoiceLines[$item_id] =
                 [
@@ -1259,7 +1249,69 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                         ],
 // Inv Item Allowance Charges: Implemented 01/2026
                         $this->itemLineACs($aciiR, $item_id),
-                        [
+                        $this->buildInvoiceLineItemElement($item, $itemDesc, $buyersItemId, $originCountry),
+                        $this->buildInvoiceLinePriceElement($item, $unit_peppol, $price, $discount),
+                    ],
+                ];
+                            } // null!== $unit_peppol
+                        } // null!== $unit_peppol_id
+                    } // isset $inv_item_amount
+                } // foreach foreach ($invoice->getItems() as $item) {
+                return $invoiceLines;
+            }
+            throw new ClientNf($this->t);
+        } else {
+            throw new ClientNf($this->t);
+        }
+    }
+
+    /**
+     * @psalm-return array{lineNote: array, itemDesc: array, originCountry: array, orderLineRef: array, buyersItemId: array}
+     */
+    private function buildOptionalInvoiceLineElements(
+        InvItem $item,
+        ?string $peppol_po_lineid,
+        ?string $peppol_po_itemid,
+    ): array {
+        $a = Schema::CAC;
+        $b = Schema::CBC;
+                        // Optional elements — only emit when the source value is non-empty
+                        // to avoid R008 "Document MUST not contain empty elements."
+                        $lineDesc = $item->getDescription() ?? '';
+                        $lineNote = $lineDesc !== ''
+                            ? [['name' => "{$b}Note", 'value' => $lineDesc]]
+                            : [];
+                        $itemDesc = $lineDesc !== ''
+                            ? [['name' => "{$b}Description", 'value' => $lineDesc]]
+                            : [];
+                        $originCode = $item->getProduct()?->getProductCountryOfOriginCode() ?? '';
+                        $originCountry = $originCode !== ''
+                            ? [['name' => "{$a}OriginCountry", 'value' => [['name' => "{$b}IdentificationCode", 'value' => $originCode]]]]
+                            : [];
+                        $orderLineRef = ($peppol_po_lineid !== null && $peppol_po_lineid !== '')
+                            ? [['name' => "{$a}OrderLineReference", 'value' => [['name' => "{$b}LineID", 'value' => $peppol_po_lineid]]]]
+                            : [];
+                        $buyersItemId = ($peppol_po_itemid !== null && $peppol_po_itemid !== '')
+                            ? [['name' => "{$a}BuyersItemIdentification", 'value' => [['name' => "{$b}ID", 'value' => $peppol_po_itemid]]]]
+                            : [];
+        return [
+            'lineNote' => $lineNote,
+            'itemDesc' => $itemDesc,
+            'originCountry' => $originCountry,
+            'orderLineRef' => $orderLineRef,
+            'buyersItemId' => $buyersItemId,
+        ];
+    }
+
+    private function buildInvoiceLineItemElement(
+        InvItem $item,
+        array $itemDesc,
+        array $buyersItemId,
+        array $originCountry,
+    ): array {
+        $a = Schema::CAC;
+        $b = Schema::CBC;
+        return [
                             'name' => "{$a}Item",
                             'value' => [
                                 ...$itemDesc,
@@ -1349,8 +1401,18 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                                     ],
                                 ],
                             ],
-                        ],
-                        [
+        ];
+    }
+
+    private function buildInvoiceLinePriceElement(
+        InvItem $item,
+        UnitPeppol $unit_peppol,
+        float $price,
+        float $discount,
+    ): array {
+        $a = Schema::CAC;
+        $b = Schema::CBC;
+        return [
                             'name' => "{$a}Price",
                             'value' => [
                                 [
@@ -1404,19 +1466,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                                     ],
                                 ],
                             ],
-                        ],
-                    ],
-                ];
-                            } // null!== $unit_peppol
-                        } // null!== $unit_peppol_id
-                    } // isset $inv_item_amount
-                } // foreach foreach ($invoice->getItems() as $item) {
-                return $invoiceLines;
-            }
-            throw new ClientNf($this->t);
-        } else {
-            throw new ClientNf($this->t);
-        }
+        ];
     }
     
     private function itemLineACs(ACIIR $aciiR, int $itemId): array {
