@@ -8,11 +8,96 @@ class PeppolUneceRec2011e
 {
     public function getUNECERec2011e(): array
     {
-        //'CodeList'
-        //'Title' => 'Recommendation 20, including Recommendation 21 codes - prefixed with X (UN/ECE)',
-        //'Identifier' => 'UNECERec20',
-        //'Version' => 'Revision 11e',
-        //'Agency' => 'UN/ECE',
+        return array_merge(
+            $this->getUNECERec2011eChunk1(),
+            $this->getUNECERec2011eChunk2(),
+            $this->getUNECERec2011eChunk3(),
+            $this->getUNECERec2011eChunk4(),
+            $this->getUNECERec2011eChunk5(),
+            $this->getUNECERec2011eChunk6(),
+            $this->getUNECERec2011eChunk7(),
+            $this->getUNECERec2011eChunk8(),
+            $this->getUNECERec2011eChunk9(),
+            $this->getUNECERec2011eChunk10(),
+            $this->getUNECERec2011eChunk11(),
+            $this->getUNECERec2011eChunk12(),
+            $this->getUNECERec2011eChunk13(),
+            $this->getUNECERec2011eChunk14(),
+            $this->getUNECERec2011eChunk15(),
+            $this->getUNECERec2011eChunk16(),
+            $this->getUNECERec2011eChunk17(),
+            $this->getUNECERec2011eChunk18(),
+            $this->getUNECERec2011eChunk19(),
+            $this->getUNECERec2011eChunk20(),
+            $this->getUNECERec2011eChunk21(),
+            $this->getUNECERec2011eChunk22(),
+            $this->getUNECERec2011eChunk23(),
+            $this->getUNECERec2011eChunk24(),
+            $this->getUNECERec2011eChunk25(),
+            $this->getUNECERec2011eChunk26(),
+            $this->getUNECERec2011eChunk27(),
+            $this->getUNECERec2011eChunk28(),
+            $this->getUNECERec2011eChunk29(),
+            $this->getUNECERec2011eChunk30(),
+            $this->getUNECERec2011eChunk31(),
+            $this->getUNECERec2011eChunk32(),
+            $this->getUNECERec2011eChunk33(),
+            $this->getUNECERec2011eChunk34(),
+            $this->getUNECERec2011eChunk35(),
+            $this->getUNECERec2011eChunk36(),
+            $this->getUNECERec2011eChunk37(),
+            $this->getUNECERec2011eChunk38(),
+            $this->getUNECERec2011eChunk39(),
+            $this->getUNECERec2011eChunk40(),
+            $this->getUNECERec2011eChunk41(),
+            $this->getUNECERec2011eChunk42(),
+            $this->getUNECERec2011eChunk43(),
+            $this->getUNECERec2011eChunk44(),
+            $this->getUNECERec2011eChunk45(),
+            $this->getUNECERec2011eChunk46(),
+            $this->getUNECERec2011eChunk47(),
+            $this->getUNECERec2011eChunk48(),
+            $this->getUNECERec2011eChunk49(),
+            $this->getUNECERec2011eChunk50(),
+            $this->getUNECERec2011eChunk51(),
+            $this->getUNECERec2011eChunk52(),
+            $this->getUNECERec2011eChunk53(),
+            $this->getUNECERec2011eChunk54(),
+            $this->getUNECERec2011eChunk55(),
+            $this->getUNECERec2011eChunk56(),
+            $this->getUNECERec2011eChunk57(),
+            $this->getUNECERec2011eChunk58(),
+            $this->getUNECERec2011eChunk59(),
+            $this->getUNECERec2011eChunk60(),
+            $this->getUNECERec2011eChunk61(),
+            $this->getUNECERec2011eChunk62(),
+            $this->getUNECERec2011eChunk63(),
+            $this->getUNECERec2011eChunk64(),
+            $this->getUNECERec2011eChunk65(),
+            $this->getUNECERec2011eChunk66(),
+            $this->getUNECERec2011eChunk67(),
+            $this->getUNECERec2011eChunk68(),
+            $this->getUNECERec2011eChunk69(),
+            $this->getUNECERec2011eChunk70(),
+            $this->getUNECERec2011eChunk71(),
+            $this->getUNECERec2011eChunk72(),
+            $this->getUNECERec2011eChunk73(),
+            $this->getUNECERec2011eChunk74(),
+            $this->getUNECERec2011eChunk75(),
+            $this->getUNECERec2011eChunk76(),
+            $this->getUNECERec2011eChunk77(),
+            $this->getUNECERec2011eChunk78(),
+            $this->getUNECERec2011eChunk79(),
+            $this->getUNECERec2011eChunk80(),
+            $this->getUNECERec2011eChunk81(),
+            $this->getUNECERec2011eChunk82(),
+            $this->getUNECERec2011eChunk83(),
+            $this->getUNECERec2011eChunk84(),
+        );
+    }
+
+    private function getUNECERec2011eChunk1(): array
+    {
         return [
             0 => [
                 'Id' => '10',
@@ -145,6 +230,12 @@ class PeppolUneceRec2011e
                 'Name' => 'part per million',
                 'Description' => 'A unit of proportion equal to 10⁻⁶.',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk2(): array
+    {
+        return [
             24 => [
                 'Id' => '60',
                 'Name' => 'percent weight',
@@ -277,6 +368,12 @@ class PeppolUneceRec2011e
                 'Name' => 'megagram',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk3(): array
+    {
+        return [
             50 => [
                 'Id' => '2X',
                 'Name' => 'metre per minute',
@@ -411,6 +508,12 @@ class PeppolUneceRec2011e
                 'Name' => 'angstrom',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk4(): array
+    {
+        return [
             76 => [
                 'Id' => 'A12',
                 'Name' => 'astronomical unit',
@@ -542,6 +645,12 @@ class PeppolUneceRec2011e
                 'Name' => 'cubic centimetre per mole',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk5(): array
+    {
+        return [
             102 => [
                 'Id' => 'A37',
                 'Name' => 'cubic decimetre per mole',
@@ -677,6 +786,12 @@ class PeppolUneceRec2011e
                 'Name' => 'foot per second squared',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk6(): array
+    {
+        return [
             128 => [
                 'Id' => 'A74',
                 'Name' => 'foot pound-force per second',
@@ -812,6 +927,12 @@ class PeppolUneceRec2011e
                 'Name' => 'ampere per metre',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk7(): array
+    {
+        return [
             154 => [
                 'Id' => 'AH',
                 'Name' => 'additional minute',
@@ -945,6 +1066,12 @@ class PeppolUneceRec2011e
                 'Description' => 'A unit of count defining the number of entries made to the credit side of an
             account.',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk8(): array
+    {
+        return [
             179 => [
                 'Id' => 'B18',
                 'Name' => 'joule second',
@@ -1077,6 +1204,12 @@ class PeppolUneceRec2011e
                 'Name' => 'kilomole per cubic metre',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk9(): array
+    {
+        return [
             205 => [
                 'Id' => 'B47',
                 'Name' => 'kilonewton',
@@ -1209,6 +1342,12 @@ class PeppolUneceRec2011e
                 'Name' => 'meganewton',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk10(): array
+    {
+        return [
             231 => [
                 'Id' => 'B74',
                 'Name' => 'meganewton metre',
@@ -1340,6 +1479,12 @@ class PeppolUneceRec2011e
                 'Name' => 'microsecond',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk11(): array
+    {
+        return [
             257 => [
                 'Id' => 'B99',
                 'Name' => 'microsiemens',
@@ -1473,6 +1618,12 @@ class PeppolUneceRec2011e
                 'Name' => 'millinewton',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk12(): array
+    {
+        return [
             283 => [
                 'Id' => 'C21',
                 'Name' => 'kibibit',
@@ -1608,6 +1759,12 @@ class PeppolUneceRec2011e
                 'Name' => 'nanoohm metre',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk13(): array
+    {
+        return [
             310 => [
                 'Id' => 'C47',
                 'Name' => 'nanosecond',
@@ -1741,6 +1898,12 @@ class PeppolUneceRec2011e
                 'Name' => 'picocoulomb',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk14(): array
+    {
+        return [
             336 => [
                 'Id' => 'C72',
                 'Name' => 'picofarad per metre',
@@ -1875,6 +2038,12 @@ class PeppolUneceRec2011e
                 'Name' => 'reciprocal pascal or pascal to the power minus one',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk15(): array
+    {
+        return [
             362 => [
                 'Id' => 'C97',
                 'Name' => 'reciprocal second',
@@ -2007,6 +2176,12 @@ class PeppolUneceRec2011e
                 'Name' => 'lot [unit of weight]',
                 'Description' => 'A unit of weight equal to about 1/2 ounce or 15 grams.',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk16(): array
+    {
+        return [
             387 => [
                 'Id' => 'D1',
                 'Name' => 'reciprocal second per steradian',
@@ -2142,6 +2317,12 @@ class PeppolUneceRec2011e
                 'Description' => 'A unit of information equal to 10⁶ (1000000) bits (binary
             digits).',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk17(): array
+    {
+        return [
             413 => [
                 'Id' => 'D41',
                 'Name' => 'tonne per cubic metre',
@@ -2274,6 +2455,12 @@ class PeppolUneceRec2011e
                 'Description' => 'A unit of count defining the number of rounds (round: A circular or cylindrical
             object).',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk18(): array
+    {
+        return [
             439 => [
                 'Id' => 'D68',
                 'Name' => 'number of words',
@@ -2404,6 +2591,12 @@ class PeppolUneceRec2011e
                 'Name' => 'degree [unit of angle]',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk19(): array
+    {
+        return [
             465 => [
                 'Id' => 'DEC',
                 'Name' => 'decade',
@@ -2535,6 +2728,12 @@ class PeppolUneceRec2011e
                 'Description' => 'A unit of energy expressed as the load change in million watts that will cause
             a frequency shift of one hertz.',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk20(): array
+    {
+        return [
             489 => [
                 'Id' => 'E09',
                 'Name' => 'milliampere hour',
@@ -2665,6 +2864,12 @@ class PeppolUneceRec2011e
                 'Name' => 'petabyte',
                 'Description' => 'A unit of information equal to 10¹⁵ bytes.',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk21(): array
+    {
+        return [
             512 => [
                 'Id' => 'E37',
                 'Name' => 'pixel',
@@ -2797,6 +3002,12 @@ class PeppolUneceRec2011e
                 'Name' => 'exbibyte',
                 'Description' => 'A unit of information equal to 2⁶⁰ bytes.',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk22(): array
+    {
+        return [
             536 => [
                 'Id' => 'E60',
                 'Name' => 'pebibyte',
@@ -2928,6 +3139,12 @@ class PeppolUneceRec2011e
                 'Description' => 'A unit of information equal to 2⁵⁰ bits (binary digits) per cubic
             metre.',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk23(): array
+    {
+        return [
             559 => [
                 'Id' => 'E83',
                 'Name' => 'terabit',
@@ -3061,6 +3278,12 @@ class PeppolUneceRec2011e
                 'Name' => 'megapascal per bar',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk24(): array
+    {
+        return [
             584 => [
                 'Id' => 'F06',
                 'Name' => 'poise per bar',
@@ -3192,6 +3415,12 @@ class PeppolUneceRec2011e
                 'Name' => 'milligram per day',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk25(): array
+    {
+        return [
             610 => [
                 'Id' => 'F33',
                 'Name' => 'milligram per minute',
@@ -3327,6 +3556,12 @@ class PeppolUneceRec2011e
                 'Name' => 'milliampere per bar',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk26(): array
+    {
+        return [
             637 => [
                 'Id' => 'F60',
                 'Name' => 'degree Celsius per bar',
@@ -3459,6 +3694,12 @@ class PeppolUneceRec2011e
                 'Name' => 'megapascal per kelvin',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk27(): array
+    {
+        return [
             663 => [
                 'Id' => 'F86',
                 'Name' => 'poise per kelvin',
@@ -3592,6 +3833,12 @@ class PeppolUneceRec2011e
                 'Name' => 'foot per minute',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk28(): array
+    {
+        return [
             689 => [
                 'Id' => 'FS',
                 'Name' => 'foot per second',
@@ -3727,6 +3974,12 @@ class PeppolUneceRec2011e
                 'Name' => 'cubic centimetre per kelvin',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk29(): array
+    {
+        return [
             716 => [
                 'Id' => 'G28',
                 'Name' => 'litre per kelvin',
@@ -3862,6 +4115,12 @@ class PeppolUneceRec2011e
                 'Name' => 'cubic metre per minute',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk30(): array
+    {
+        return [
             743 => [
                 'Id' => 'G54',
                 'Name' => 'millilitre per day',
@@ -3997,6 +4256,12 @@ class PeppolUneceRec2011e
                 'Name' => 'cubic centimetre per minute bar',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk31(): array
+    {
+        return [
             770 => [
                 'Id' => 'G81',
                 'Name' => 'cubic centimetre per second bar',
@@ -4131,6 +4396,12 @@ class PeppolUneceRec2011e
                 'Description' => 'A unit of count defining the number of units in multiples of 1728 (12 x 12 x
             12).',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk32(): array
+    {
+        return [
             796 => [
                 'Id' => 'GIA',
                 'Name' => 'gill (US)',
@@ -4264,6 +4535,12 @@ class PeppolUneceRec2011e
                 'Name' => 'reciprocal hour',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk33(): array
+    {
+        return [
             822 => [
                 'Id' => 'H11',
                 'Name' => 'reciprocal month',
@@ -4395,6 +4672,12 @@ class PeppolUneceRec2011e
                 'Name' => 'megaohm per metre',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk34(): array
+    {
+        return [
             848 => [
                 'Id' => 'H38',
                 'Name' => 'megaampere',
@@ -4530,6 +4813,12 @@ class PeppolUneceRec2011e
                 'Name' => 'milligram per gram',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk35(): array
+    {
+        return [
             875 => [
                 'Id' => 'H65',
                 'Name' => 'millilitre per cubic metre',
@@ -4662,6 +4951,12 @@ class PeppolUneceRec2011e
                 'Description' => 'A unit of proportion, equal to 0.01, in relation to an angle of one
             degree.',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk36(): array
+    {
+        return [
             899 => [
                 'Id' => 'H91',
                 'Name' => 'percent per ten thousand',
@@ -4797,6 +5092,12 @@ class PeppolUneceRec2011e
                 'Name' => 'hectolitre of pure alcohol',
                 'Description' => 'A unit of volume equal to one hundred litres of pure alcohol.',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk37(): array
+    {
+        return [
             924 => [
                 'Id' => 'HTZ',
                 'Name' => 'hertz',
@@ -4932,6 +5233,12 @@ class PeppolUneceRec2011e
                 'Name' => 'degree Fahrenheit per hour',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk38(): array
+    {
+        return [
             949 => [
                 'Id' => 'J24',
                 'Name' => 'degree Fahrenheit per minute',
@@ -5066,6 +5373,12 @@ class PeppolUneceRec2011e
             Fahrenheit',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk39(): array
+    {
+        return [
             974 => [
                 'Id' => 'J50',
                 'Name' => 'British thermal unit (thermochemical) per pound degree Fahrenheit',
@@ -5197,6 +5510,12 @@ class PeppolUneceRec2011e
                 'Name' => 'calorie (mean)',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk40(): array
+    {
+        return [
             1000 => [
                 'Id' => 'J76',
                 'Name' => 'calorie (international table) per gram degree Celsius',
@@ -5329,6 +5648,12 @@ class PeppolUneceRec2011e
                 'Description' => 'A unit of measure defining the power load measured at predetermined
             intervals.',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk41(): array
+    {
+        return [
             1026 => [
                 'Id' => 'K10',
                 'Name' => 'ounce (US fluid) per hour',
@@ -5461,6 +5786,12 @@ class PeppolUneceRec2011e
                 'Name' => 'gill (US) per day',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk42(): array
+    {
+        return [
             1052 => [
                 'Id' => 'K37',
                 'Name' => 'gill (US) per hour',
@@ -5592,6 +5923,12 @@ class PeppolUneceRec2011e
                 'Name' => 'pound (avoirdupois) per degree Fahrenheit',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk43(): array
+    {
+        return [
             1078 => [
                 'Id' => 'K65',
                 'Name' => 'pound (avoirdupois) square foot',
@@ -5727,6 +6064,12 @@ class PeppolUneceRec2011e
                 'Name' => 'pound-force second per square inch',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk44(): array
+    {
+        return [
             1105 => [
                 'Id' => 'K93',
                 'Name' => 'reciprocal psi',
@@ -5858,6 +6201,12 @@ class PeppolUneceRec2011e
                 'Description' => 'A unit of proportion defining the percentage of dry lactic material in a
             product.',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk45(): array
+    {
+        return [
             1130 => [
                 'Id' => 'KLX',
                 'Name' => 'kilolux',
@@ -5991,6 +6340,12 @@ class PeppolUneceRec2011e
                 'Name' => 'kilogram per millimetre',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk46(): array
+    {
+        return [
             1155 => [
                 'Id' => 'KWH',
                 'Name' => 'kilowatt hour',
@@ -6123,6 +6478,12 @@ class PeppolUneceRec2011e
                 'Name' => 'mole per cubic metre bar',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk47(): array
+    {
+        return [
             1182 => [
                 'Id' => 'L30',
                 'Name' => 'mole per minute',
@@ -6258,6 +6619,12 @@ class PeppolUneceRec2011e
                 'Name' => 'pint (UK) per second',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk48(): array
+    {
+        return [
             1209 => [
                 'Id' => 'L57',
                 'Name' => 'pint (US liquid) per day',
@@ -6393,6 +6760,12 @@ class PeppolUneceRec2011e
                 'Name' => 'ton long per day',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk49(): array
+    {
+        return [
             1236 => [
                 'Id' => 'L86',
                 'Name' => 'ton (US shipping)',
@@ -6523,6 +6896,12 @@ class PeppolUneceRec2011e
                 'Description' => 'A unit of count defining the number of lots (lot: a collection of associated
             items).',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk50(): array
+    {
+        return [
             1261 => [
                 'Id' => 'LP',
                 'Name' => 'liquid pound',
@@ -6654,6 +7033,12 @@ class PeppolUneceRec2011e
                 'Name' => 'newton per centimetre',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk51(): array
+    {
+        return [
             1286 => [
                 'Id' => 'M24',
                 'Name' => 'ohm kilometre',
@@ -6786,6 +7171,12 @@ class PeppolUneceRec2011e
                 'Description' => 'Unit of an area, of which the size is given by a diameter of length of 1 mm
             (0,001 in) based on the formula: area = p·(diameter/2)².',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk52(): array
+    {
+        return [
             1310 => [
                 'Id' => 'M48',
                 'Name' => 'square mile (based on U.S. survey foot)',
@@ -6918,6 +7309,12 @@ class PeppolUneceRec2011e
                 'Name' => 'ton, register',
                 'Description' => 'Traditional unit of the cargo capacity.',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk53(): array
+    {
+        return [
             1334 => [
                 'Id' => 'M71',
                 'Name' => 'cubic metre per pascal',
@@ -7047,6 +7444,12 @@ class PeppolUneceRec2011e
             avoirdupois unit system divided by the avoirdupois pound according to the avoirdupois
             unit system.',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk54(): array
+    {
+        return [
             1356 => [
                 'Id' => 'M92',
                 'Name' => 'pound-force foot',
@@ -7178,6 +7581,12 @@ class PeppolUneceRec2011e
                 'Name' => 'thousand',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk55(): array
+    {
+        return [
             1379 => [
                 'Id' => 'MIN',
                 'Name' => 'minute [unit of time]',
@@ -7313,6 +7722,12 @@ class PeppolUneceRec2011e
                 'Id' => 'MTZ',
                 'Name' => 'milihertz',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk56(): array
+    {
+        return [
             1408 => [
                 'Id' => 'MVA',
                 'Name' => 'megavolt - ampere',
@@ -7447,6 +7862,12 @@ class PeppolUneceRec2011e
                 'Description' => 'Non SI-conforming unit of the pressure according to the Imperial system of
             units (poundal by square inch).',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk57(): array
+    {
+        return [
             1428 => [
                 'Id' => 'N27',
                 'Name' => 'foot to the fourth power',
@@ -7580,6 +8001,12 @@ class PeppolUneceRec2011e
                 'Description' => 'Unit of work (force multiplied by path) according to the Imperial system of
             units as a product unit inch multiplied by poundal.',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk58(): array
+    {
+        return [
             1450 => [
                 'Id' => 'N48',
                 'Name' => 'watt per square centimetre',
@@ -7709,6 +8136,12 @@ class PeppolUneceRec2011e
                 'Description' => 'Unit of head energy according to the Imperial system of units at a reference
             temperature of 60 °F.',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk59(): array
+    {
+        return [
             1471 => [
                 'Id' => 'N69',
                 'Name' => 'calorie (20 ºC)',
@@ -7842,6 +8275,12 @@ class PeppolUneceRec2011e
                 'Name' => 'kilofarad',
                 'Description' => '1000-fold of the derived SI unit farad.',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk60(): array
+    {
+        return [
             1493 => [
                 'Id' => 'N91',
                 'Name' => 'reciprocal joule',
@@ -7974,6 +8413,12 @@ class PeppolUneceRec2011e
                 'Name' => 'newton metre',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk61(): array
+    {
+        return [
             1517 => [
                 'Id' => 'NX',
                 'Name' => 'part per thousand',
@@ -8109,6 +8554,12 @@ class PeppolUneceRec2011e
                 'Description' => 'Quotient from the 1000-fold of the derived SI unit joule divided by the unit
             hour.',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk62(): array
+    {
+        return [
             1543 => [
                 'Id' => 'P21',
                 'Name' => 'kilojoule per day',
@@ -8243,6 +8694,12 @@ class PeppolUneceRec2011e
                 'Name' => 'bel per metre',
                 'Description' => 'Unit bel divided by the SI base unit metre.',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk63(): array
+    {
+        return [
             1566 => [
                 'Id' => 'P44',
                 'Name' => 'pound mole',
@@ -8377,6 +8834,12 @@ class PeppolUneceRec2011e
                 'Description' => '0,000 000 001-fold of the derived SI unit gray divided by the unit
             hour.',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk64(): array
+    {
+        return [
             1588 => [
                 'Id' => 'P65',
                 'Name' => 'sievert per second',
@@ -8508,6 +8971,12 @@ class PeppolUneceRec2011e
             Imperial system of units with the exponent 2) divided by the unit inch according to the
             Anglo-American and Imperial system of units .',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk65(): array
+    {
+        return [
             1610 => [
                 'Id' => 'P87',
                 'Name' => 'cubic metre per second square metre',
@@ -8641,6 +9110,12 @@ class PeppolUneceRec2011e
                 'Description' => 'A unit of count defining the number of pairs (pair: item described by
             two\'s).',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk66(): array
+    {
+        return [
             1632 => [
                 'Id' => 'PS',
                 'Name' => 'pound-force per square inch',
@@ -8776,6 +9251,12 @@ class PeppolUneceRec2011e
                 'Description' => 'Value of the quotient from two physical units of the same kind as a numerator
             and denominator whereas the units are shortened mutually.',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk67(): array
+    {
+        return [
             1654 => [
                 'Id' => 'Q27',
                 'Name' => 'newton metre per metre',
@@ -8907,6 +9388,12 @@ class PeppolUneceRec2011e
                 'Name' => 'liquid quart (US)',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk68(): array
+    {
+        return [
             1678 => [
                 'Id' => 'QTR',
                 'Name' => 'quarter (UK)',
@@ -9038,6 +9525,12 @@ class PeppolUneceRec2011e
                 'Description' => 'A unit of count defining the number of strips (strip: long narrow piece of an
             object).',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk69(): array
+    {
+        return [
             1702 => [
                 'Id' => 'STC',
                 'Name' => 'stick',
@@ -9173,6 +9666,12 @@ class PeppolUneceRec2011e
                 'Name' => 'trillion (EUR)',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk70(): array
+    {
+        return [
             1726 => [
                 'Id' => 'TST',
                 'Name' => 'ten set',
@@ -9308,6 +9807,12 @@ class PeppolUneceRec2011e
                 'Name' => 'yard',
                 'Description' => '',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk71(): array
+    {
+        return [
             1751 => [
                 'Id' => 'Z11',
                 'Name' => 'hanging container',
@@ -9442,6 +9947,12 @@ class PeppolUneceRec2011e
                 'Description' => 'A platform or open-ended box, made of wood, on which goods are retained for
             ease of mechanical handling during transport and storage.',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk72(): array
+    {
+        return [
             1781 => [
                 'Id' => 'X8B',
                 'Name' => 'Crate, wooden',
@@ -9575,6 +10086,12 @@ class PeppolUneceRec2011e
                 'Id' => 'XBJ',
                 'Name' => 'Bucket',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk73(): array
+    {
+        return [
             1809 => [
                 'Id' => 'XBK',
                 'Name' => 'Basket',
@@ -9709,6 +10226,12 @@ class PeppolUneceRec2011e
                 'Id' => 'XCO',
                 'Name' => 'Carboy, non-protected',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk74(): array
+    {
+        return [
             1840 => [
                 'Id' => 'XCP',
                 'Name' => 'Carboy, protected',
@@ -9844,6 +10367,12 @@ class PeppolUneceRec2011e
                 'Id' => 'XED',
                 'Name' => 'Case, with pallet base',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk75(): array
+    {
+        return [
             1873 => [
                 'Id' => 'XEE',
                 'Name' => 'Case, with pallet base, wooden',
@@ -9974,6 +10503,12 @@ class PeppolUneceRec2011e
                 'Id' => 'XHG',
                 'Name' => 'Hogshead',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk76(): array
+    {
+        return [
             1902 => [
                 'Id' => 'XHN',
                 'Name' => 'Hanger',
@@ -10109,6 +10644,12 @@ class PeppolUneceRec2011e
                 'Description' => 'Containment box made of metal for retaining substances or
             articles.',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk77(): array
+    {
+        return [
             1931 => [
                 'Id' => 'XMB',
                 'Name' => 'Bag, multiply',
@@ -10239,6 +10780,12 @@ class PeppolUneceRec2011e
                 'Description' => 'Australian standard pallet of dimensions 115.5 centimeters x 116.5
             centimeters.',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk78(): array
+    {
+        return [
             1960 => [
                 'Id' => 'XOE',
                 'Name' => 'Pallet, ISO T11',
@@ -10369,6 +10916,12 @@ class PeppolUneceRec2011e
                 'Description' => 'Standard sized pallet of dimensions 80 centimeters by 100 centimeters
             (cms).',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk79(): array
+    {
+        return [
             1989 => [
                 'Id' => 'XPE',
                 'Name' => 'Pallet, modular, collars 80cms * 120cms',
@@ -10502,6 +11055,12 @@ class PeppolUneceRec2011e
                 'Id' => 'XQP',
                 'Name' => 'Box, wooden, natural wood, ordinary',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk80(): array
+    {
+        return [
             2020 => [
                 'Id' => 'XQQ',
                 'Name' => 'Box, wooden, natural wood, with sift proof walls',
@@ -10635,6 +11194,12 @@ class PeppolUneceRec2011e
                 'Id' => 'XSY',
                 'Name' => 'Sleeve',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk81(): array
+    {
+        return [
             2050 => [
                 'Id' => 'XSZ',
                 'Name' => 'Sheets, in bundle/bunch/truss',
@@ -10766,6 +11331,12 @@ class PeppolUneceRec2011e
                 'Id' => 'XVQ',
                 'Name' => 'Bulk, liquefied gas (at abnormal temperature/pressure)',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk82(): array
+    {
+        return [
             2080 => [
                 'Id' => 'XVN',
                 'Name' => 'Vehicle',
@@ -10899,6 +11470,12 @@ class PeppolUneceRec2011e
                 'Id' => 'XXF',
                 'Name' => 'Bag, textile, without inner coat/liner',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk83(): array
+    {
+        return [
             2112 => [
                 'Id' => 'XXG',
                 'Name' => 'Bag, textile, sift proof',
@@ -11032,6 +11609,12 @@ class PeppolUneceRec2011e
                 'Id' => 'XZH',
                 'Name' => 'Intermediate bulk container, rigid plastic, freestanding, pressurised',
             ],
+        ];
+    }
+
+    private function getUNECERec2011eChunk84(): array
+    {
+        return [
             2145 => [
                 'Id' => 'XZJ',
                 'Name' => 'Intermediate bulk container, rigid plastic, with structural equipment, liquids',
