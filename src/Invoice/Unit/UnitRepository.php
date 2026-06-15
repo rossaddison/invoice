@@ -118,14 +118,16 @@ final class UnitRepository extends Select\Repository
         if ($unit_id === 0) {
             return '';
         }
+
         $unit = $this->repoUnitquery($unit_id);
-        if ($unit) {
-            if ($quantity == -1 || $quantity == 1) {
-                return $unit->getUnitName();
-            }
-            return $unit->getUnitNamePlrl();
+
+        if (!$unit) {
+            return null;
         }
-        return null;
+
+        return ($quantity === -1 || $quantity === 1)
+            ? $unit->getUnitName()
+            : $unit->getUnitNamePlrl();
     }
 
     /**
