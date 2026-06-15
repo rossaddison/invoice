@@ -681,7 +681,7 @@ final class AuthController
      * @param string $state
      * @psalm-return void
      */
-    private function blockInvalidState(string $idP, string $state): void
+    protected function blockInvalidState(string $idP, string $state): void
     {
         // Early return if state is empty
         if ($state === '') {
@@ -741,7 +741,7 @@ final class AuthController
      * @param string $provider e.g. github
      * @return string
      */
-    private function proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
+    protected function proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
             TranslatorInterface $translator,
             User $user,
             UserInvRepository $uiR,

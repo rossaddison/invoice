@@ -107,7 +107,7 @@ final class InvController extends BaseController
     }
 
     // Add, Credit, MultipleCopy
-    private function activeUser(int $client_id, UR $uR, UCR $ucR, UIR $uiR):
+    protected function activeUser(int $client_id, UR $uR, UCR $ucR, UIR $uiR):
         ?User
     {
         $user_client = $ucR->repoUserquery($client_id);
@@ -290,7 +290,7 @@ final class InvController extends BaseController
     }
     
     // deleteInvTaxRate
-    private function invtaxrate(int $id, ITRR $invtaxrateRepository): ?InvTaxRate
+    protected function invtaxrate(int $id, ITRR $invtaxrateRepository): ?InvTaxRate
     {
         if ($id) {
             $invtaxrate =
@@ -310,7 +310,7 @@ final class InvController extends BaseController
      * invoices.
      * Used in: Attachment, PdfTrait, View
      */
-    private function rbacObserver(Inv $inv, UCR $ucR, UIR $uiR) : bool {
+    protected function rbacObserver(Inv $inv, UCR $ucR, UIR $uiR) : bool {
         $statusId = $inv->reqStatusId();
         // has observer role
         if ($statusId > 0
@@ -334,14 +334,14 @@ final class InvController extends BaseController
     }
 
     // PdfTrait, View
-    private function rbacAccountant() : bool {
+    protected function rbacAccountant() : bool {
         return $this->userService->hasPermission(Permissions::VIEW_INV)
             && $this->userService->hasPermission(Permissions::VIEW_PAYMENT)
             && $this->userService->hasPermission(Permissions::EDIT_PAYMENT);
     }
 
     // Attachment, Edit, PdfTrait, View
-    private function rbacAdmin() : bool {
+    protected function rbacAdmin() : bool {
         return $this->userService->hasPermission(Permissions::VIEW_INV)
             && $this->userService->hasPermission(Permissions::EDIT_INV);
     }
@@ -351,7 +351,7 @@ final class InvController extends BaseController
      * only be ON during development
      * Use: Toggle Button on Flash message reminder
      */
-    private function markSentFlash(string $_language): void
+    protected function markSentFlash(string $_language): void
     {
         // Get the current mark_invoice_sent_copy setting
         $mark_sent = $this->sR->getSetting('mark_invoices_sent_copy');

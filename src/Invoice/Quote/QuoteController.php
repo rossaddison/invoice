@@ -129,7 +129,7 @@ final class QuoteController extends BaseController
         $this->numberHelper                = new NumberHelper($this->sR);
     }
 
-    private function activeUser(int $client_id, UR $uR, UCR $ucR,
+    protected function activeUser(int $client_id, UR $uR, UCR $ucR,
         UIR $uiR): ?User
     {
         $user_client = $ucR->repoUserquery($client_id);
@@ -292,7 +292,7 @@ final class QuoteController extends BaseController
         return null;
     }
 
-    private function quotetaxrate(int $id, QTRR $quotetaxrateRepository):
+    protected function quotetaxrate(int $id, QTRR $quotetaxrateRepository):
         ?QuoteTaxRate
     {
         if ($id) {
@@ -346,7 +346,7 @@ final class QuoteController extends BaseController
      * client requested quote and are an active current user for these client's
      * invoices.
      */
-    private function rbacObserver(Quote $quote, UCR $ucR, UIR $uiR) : bool {
+    protected function rbacObserver(Quote $quote, UCR $ucR, UIR $uiR) : bool {
         $statusId = $quote->reqStatusId();
         if ($statusId > 0
             // has observer role
@@ -368,14 +368,14 @@ final class QuoteController extends BaseController
         return false;
     }
 
-    private function rbacAccountant() : bool {
+    protected function rbacAccountant() : bool {
         // has accountant role
         return $this->userService->hasPermission(Permissions::VIEW_INV)
             && ($this->userService->hasPermission(Permissions::VIEW_PAYMENT))
             && ($this->userService->hasPermission(Permissions::EDIT_PAYMENT));
     }
 
-    private function rbacAdmin() : bool {
+    protected function rbacAdmin() : bool {
         // has observer role
         return $this->userService->hasPermission(Permissions::VIEW_INV)
             && ($this->userService->hasPermission(Permissions::EDIT_INV));

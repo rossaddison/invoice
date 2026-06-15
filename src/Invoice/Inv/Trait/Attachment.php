@@ -168,8 +168,7 @@ $original_file_name = preg_replace(
                 $file_ext = $path_parts['extension'] ?? '';
                 if (file_exists($target_path_with_filename)) {
                     $file_size = filesize($target_path_with_filename);
-                    if ($file_size) {
-                        /** @var string $ctype */
+                    if ($file_size !== false && $file_size > 0) {
                         $ctype = $this->resolveContentType($file_ext, $upR);
                         // https://www.php.net/manual/en/function.header.php
                         // Remember that header() must be called before any
