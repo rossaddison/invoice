@@ -67,54 +67,7 @@ public function index(
                 'id', 'status_id', 'number', 'date_created', 'date_due', 'client_id',
             ])->withOrderString($sortString);
 
-            $invs = $this->invsStatus($list->invRepo, $effectiveStatus);
-
-            if (isset($filter->filterInvNumber) && !empty($filter->filterInvNumber)) {
-                $invs = $list->invRepo->filterInvNumber($filter->filterInvNumber);
-            }
-            if (isset($filter->filterCreditInvNumber)
-                    && !empty($filter->filterCreditInvNumber)) {
-                $invs = $list->invRepo->filterCreditInvNumber($filter->filterCreditInvNumber);
-            }
-            if (isset($filter->filterFamilyName) && !empty($filter->filterFamilyName)) {
-                $invs = $list->invRepo->filterFamilyName($filter->filterFamilyName);
-            }
-            if (isset($filter->filterInvAmountTotal)
-                    && !empty($filter->filterInvAmountTotal)) {
-                $invs = $list->invRepo->filterInvAmountTotal(
-                    (float) $filter->filterInvAmountTotal);
-            }
-            if (isset($filter->filterInvAmountPaid)
-                    && !empty($filter->filterInvAmountPaid)) {
-                $invs = $list->invRepo->filterInvAmountPaid(
-                    (float) $filter->filterInvAmountPaid);
-            }
-            if (isset($filter->filterInvAmountBalance)
-                    && !empty($filter->filterInvAmountBalance)) {
-                $invs = $list->invRepo->filterInvAmountBalance(
-                    (float) $filter->filterInvAmountBalance);
-            }
-            if ((isset($filter->filterInvNumber) && !empty($filter->filterInvNumber))
-               && (isset($filter->filterInvAmountTotal)
-                       && !empty($filter->filterInvAmountTotal))) {
-                $invs = $list->invRepo->filterInvNumberAndInvAmountTotal(
-                    $filter->filterInvNumber, (float) $filter->filterInvAmountTotal);
-            }
-            if (isset($filter->filterClient) && !empty($filter->filterClient)) {
-                $invs = $list->invRepo->filterClient($filter->filterClient);
-            }
-            if (isset($filter->filterClientGroup) && !empty($filter->filterClientGroup)) {
-                $invs = $list->invRepo->filterClientGroup($filter->filterClientGroup);
-            }
-            if (isset($filter->filterClientAddress1)
-                    && !empty($filter->filterClientAddress1)) {
-                $invs = $list->invRepo->filterClientAddress1($filter->filterClientAddress1);
-            }
-            if (isset($filter->filterDateCreatedYearMonth)
-                    && !empty($filter->filterDateCreatedYearMonth)) {
-                $invs = $list->invRepo->filterDateCreatedLike(
-                    'Y-m', $filter->filterDateCreatedYearMonth);
-            }
+            $invs = $this->indexApplyFilters($filter, $list->invRepo, $effectiveStatus);
 
             $currentPage = max(1, (int) $page);
             $pageSize    = max(1, (int) ($this->sR->getSetting('default_list_limit') ?: 1));
@@ -131,29 +84,10 @@ public function index(
             $this->draftFlash($_language);
             $this->markSentFlash($_language);
 
-            $gridSummary = $this->sR->gridSummary(
-                $paginator,
-                $this->translator,
-                $pageSize,
-                $this->translator->translate('invoices'),
-                $label,
-            );
+            $gridSummary = $this->indexGridSummary($paginator, $pageSize, $label);
 
-            $notSet = $this->sR->getSetting('not.set');
-
-            $gRObj = $list->groupRepo->repoGroupquery(
-                (int) $this->sR->getSetting('default_invoice_group'));
-            $defaultInvoiceGroup = (null !== $gRObj
-                && strlen($gRObj->getName() ?? '') > 0)
-                ? ($gRObj->getName() ?? $notSet)
-                : $notSet;
-
-            $pmRObj = $nav->pmR->repoPaymentMethodquery(
-                (int) $this->sR->getSetting('invoice_default_payment_method'));
-            $defaultInvoicePaymentMethod = (null !== $pmRObj
-                && strlen($pmRObj->getName() ?? '') > 0)
-                ? ($pmRObj->getName() ?? $notSet)
-                : $notSet;
+            $defaultInvoiceGroup = $this->indexDefaultInvoiceGroup($list);
+            $defaultInvoicePaymentMethod = $this->indexDefaultInvoicePaymentMethod($nav);
 
             $parameters = [
                 'alert'              => $this->alert(),
@@ -246,6 +180,92 @@ public function index(
         $this->flashMessage('info',
             $this->translator->translate('user.client.active.no'));
         return $this->webService->getRedirectResponse('client/index');
+    }
+
+    private function indexApplyFilters(
+        InvIndexFilter $filter,
+        IR $invRepo,
+        int $effectiveStatus,
+    ): DRI {
+        $invs = $this->invsStatus($invRepo, $effectiveStatus);
+        if (isset($filter->filterInvNumber) && !empty($filter->filterInvNumber)) {
+            $invs = $invRepo->filterInvNumber($filter->filterInvNumber);
+        }
+        if (isset($filter->filterCreditInvNumber)
+                && !empty($filter->filterCreditInvNumber)) {
+            $invs = $invRepo->filterCreditInvNumber($filter->filterCreditInvNumber);
+        }
+        if (isset($filter->filterFamilyName) && !empty($filter->filterFamilyName)) {
+            $invs = $invRepo->filterFamilyName($filter->filterFamilyName);
+        }
+        if (isset($filter->filterInvAmountTotal)
+                && !empty($filter->filterInvAmountTotal)) {
+            $invs = $invRepo->filterInvAmountTotal((float) $filter->filterInvAmountTotal);
+        }
+        if (isset($filter->filterInvAmountPaid)
+                && !empty($filter->filterInvAmountPaid)) {
+            $invs = $invRepo->filterInvAmountPaid((float) $filter->filterInvAmountPaid);
+        }
+        if (isset($filter->filterInvAmountBalance)
+                && !empty($filter->filterInvAmountBalance)) {
+            $invs = $invRepo->filterInvAmountBalance((float) $filter->filterInvAmountBalance);
+        }
+        if ((isset($filter->filterInvNumber) && !empty($filter->filterInvNumber))
+           && (isset($filter->filterInvAmountTotal)
+                   && !empty($filter->filterInvAmountTotal))) {
+            $invs = $invRepo->filterInvNumberAndInvAmountTotal(
+                $filter->filterInvNumber, (float) $filter->filterInvAmountTotal);
+        }
+        if (isset($filter->filterClient) && !empty($filter->filterClient)) {
+            $invs = $invRepo->filterClient($filter->filterClient);
+        }
+        if (isset($filter->filterClientGroup) && !empty($filter->filterClientGroup)) {
+            $invs = $invRepo->filterClientGroup($filter->filterClientGroup);
+        }
+        if (isset($filter->filterClientAddress1)
+                && !empty($filter->filterClientAddress1)) {
+            $invs = $invRepo->filterClientAddress1($filter->filterClientAddress1);
+        }
+        if (isset($filter->filterDateCreatedYearMonth)
+                && !empty($filter->filterDateCreatedYearMonth)) {
+            $invs = $invRepo->filterDateCreatedLike(
+                'Y-m', $filter->filterDateCreatedYearMonth);
+        }
+        return $invs;
+    }
+
+    private function indexGridSummary(
+        OffsetPaginator $paginator,
+        int $pageSize,
+        string $label,
+    ): string {
+        return $this->sR->gridSummary(
+            $paginator,
+            $this->translator,
+            $pageSize,
+            $this->translator->translate('invoices'),
+            $label,
+        );
+    }
+
+    private function indexDefaultInvoiceGroup(InvIndexListDeps $list): string
+    {
+        $notSet = $this->sR->getSetting('not.set');
+        $gRObj = $list->groupRepo->repoGroupquery(
+            (int) $this->sR->getSetting('default_invoice_group'));
+        return (null !== $gRObj && strlen($gRObj->getName() ?? '') > 0)
+            ? ($gRObj->getName() ?? $notSet)
+            : $notSet;
+    }
+
+    private function indexDefaultInvoicePaymentMethod(InvIndexNavDeps $nav): string
+    {
+        $notSet = $this->sR->getSetting('not.set');
+        $pmRObj = $nav->pmR->repoPaymentMethodquery(
+            (int) $this->sR->getSetting('invoice_default_payment_method'));
+        return (null !== $pmRObj && strlen($pmRObj->getName() ?? '') > 0)
+            ? ($pmRObj->getName() ?? $notSet)
+            : $notSet;
     }
 
     private function disableReadOnlyStatusMessage(): void
