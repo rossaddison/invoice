@@ -72,9 +72,13 @@ final class ChangePasswordController
                             'validator.password.change'));
                     return $this->redirectToMain();
                 }
+                $errors = $changePasswordForm->isValidated()
+                    ? $changePasswordForm->getValidationResult()->getErrorMessagesIndexedByProperty()
+                    : [];
                 return $this->webViewRenderer->render('change', [
                     'formModel' => $changePasswordForm,
                     'login' => $login,
+                    'errors' => $errors,
                 ]);
             } // identity
         } // identityId

@@ -18,6 +18,7 @@ use Yiisoft\Html\Tag\Form;
  * @var bool $changePasswordForAnyUser
  *
  * @var string $csrf
+ * @var array<string, list<string>> $errors
  */
 $this->setTitle($translator->translate('password.change'));
 ?>
@@ -36,6 +37,12 @@ $this->setTitle($translator->translate('password.change'));
                         ->csrf($csrf)
                         ->id('changePasswordForm')
                         ->open() ?>
+                    
+<?= Field::errorSummary($formModel)
+    ->errors($errors)
+    ->header($translator->translate('error.summary'));
+?>                    
+    
                     <?= Field::text($formModel, 'login')
                         ->label($translator->translate('layout.login'))
                         ->addInputAttributes([
@@ -55,7 +62,7 @@ $this->setTitle($translator->translate('password.change'));
                     <?= Field::password($formModel, 'newPasswordVerify')
     ->addInputAttributes(['autocomplete' => 'verify-password'])
     ->label($translator->translate('layout.password-verify.new'))
-?>
+?>                
                     <?= Field::submitButton()
     ->buttonId('change-button')
     ->name('change-button')

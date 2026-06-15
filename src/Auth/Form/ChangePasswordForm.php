@@ -31,7 +31,9 @@ final class ChangePasswordForm extends FormModel implements RulesProviderInterfa
 
     public function change(): bool
     {
-        if ($this->validator->validate($this)->isValid()) {
+        $result = $this->validator->validate($this);
+        $this->processValidationResult($result);
+        if ($result->isValid()) {
             $user = $this->userRepository->findByLogin($this->getLogin());
             if (null !== $user) {
                 $user->setPassword($this->getNewPassword());
