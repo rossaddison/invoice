@@ -7,15 +7,12 @@ namespace App\Invoice\Helpers;
 // Entities
 use App\Infrastructure\Persistence\UserInv\UserInv;
 // Repositories
-use App\Invoice\Quote\QuoteRepository as QR;
 use App\Invoice\Setting\SettingRepository as SRepo;
 use App\Invoice\UserInv\UserInvRepository as UIR;
 //psr
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 //yiisoft
 use Yiisoft\Files\FileHelper;
-use Yiisoft\Router\UrlGeneratorInterface as UrlGenerator;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Translator\TranslatorInterface ;
@@ -51,50 +48,6 @@ class MailerHelper
         ;
     }
 
-    /**
-     * @param string $quote_id
-     * @param QR $qR
-     * @param UIR $uiR
-     * @param UrlGenerator $urlGenerator
-     * @return bool
-     */
-    private function emailQuoteStatus(string $quote_id,
-            QR $qR,
-            UIR $uiR,
-            UrlGenerator $urlGenerator): bool
-    {
-        if (!$this->mailerConfigured()) {
-            return false;
-        }
-        $quote = $qR->repoCount((int) $quote_id) > 0 ? $qR->repoQuoteLoadedquery((int) $quote_id) : null;
-        if ($quote) {
-            $url = $urlGenerator->generate('quote/view', ['id' => $quote_id]);
-            $user_id = $quote->getUser()?->reqId() ?? null;
-            $user_inv = null !== $user_id ?
-                $uiR->repoUserInvUserIdquery($user_id) : null;
-            if (null !== $user_inv && null !== $quote->getClient()?->getClientName()) {
-                    $from_email = $user_inv->getUser()?->getEmail() ?? '';
-                    $from_name = $user_inv->getName() ?? '';
-                    $subject = sprintf(
-                        $this->translator->translate('quote.status.email.subject'),
-                        $quote->getClient()?->getClientName() ?? '',
-                        $quote->getNumber() ?? '',
-                    );
-                    $body = sprintf(
-                        nl2br($this->translator->translate('quote.status.email.body')),
-                        $quote->getClient()?->getClientName() ?? '',
-                        $quote->getNumber() ?? '',
-                        $url,
-                    );
-
-                    if ($this->s->getSetting('email_send_method') == 'yiimail') {
-                        $mailerParams = new MailerSendParams($from_email, $from_name, $from_email, $subject, $body, null, null);
-                        return $this->yiiMailerSend($mailerParams, [], '', $uiR);
-                    }
-            }
-        }
-        return false;
-    }
 
     /**
      * @param MailerSendParams $params

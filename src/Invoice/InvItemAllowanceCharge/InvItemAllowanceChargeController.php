@@ -278,16 +278,6 @@ final class InvItemAllowanceChargeController extends BaseController
         return null;
     }
 
-    /**
-     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
-     *
-     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
-     */
-    private function aciis(InvItemAllowanceChargeRepository $aciiRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
-    {
-        return $aciiRepository->findAllPreloaded();
-    }
-
     public function view(
         CurrentRoute $currentRoute,
         InvItemAllowanceChargeRepository $aciiRepository,

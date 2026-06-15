@@ -250,17 +250,6 @@ final class QuoteController extends BaseController
         return null;
     }
 
-    /**
-     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
-     *
-     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
-     */
-    private function quotes(QR $quoteRepo, int $status):
-        \Yiisoft\Data\Cycle\Reader\EntityReader
-    {
-        return $quoteRepo->findAllWithStatus($status);
-    }
-
     public function quoteCustomValues(int $quote_id, QCR $qcR): array
     {
         // Get all the custom fields that have been registered with this
