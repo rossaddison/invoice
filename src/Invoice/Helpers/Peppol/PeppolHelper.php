@@ -245,61 +245,8 @@ class PeppolHelper
 
 // Buyer Reference https://docs.peppol.eu/poacc/billing/3.0/bis/#buyerref
         $buyerReference = $this->resolveInitialBuyerReference($invoice, $inv->soR);
-        $config_company_details = $this->s->getConfigCompanyDetails();
-/**
-* @var string $config_company_details['name']
-*/
-        $supplier_name = $config_company_details['name'];
-        $config_peppol = $this->s->getConfigPeppol();
-/**
-* @var string $config_peppol['SupplierPartyIdentificationId']
-* @var string $config_peppol['SupplierPartyIdentificationSchemeId']
-*/
-        $supplier_partyIdentificationId =
-            $config_peppol['SupplierPartyIdentificationId'];
-        $supplier_partyIdentificationSchemeId =
-                $config_peppol['SupplierPartyIdentificationSchemeId'];
-        $supplier_postalAddress = $this->SupplierPostalAddress();
-        $supplier_contact = $this->SupplierContact();
-        $supplier_partyTaxScheme = $this->SupplierPartyTaxScheme();
-        $supplier_partyLegalEntity = $this->SupplierPartyLegalEntity();
-        $supplier_endpointID = $this->SupplierEndpointID();
-        $supplier_endpointID_schemeID = $this->SupplierEndpointIDSchemeID();
-        $customer_name = $invoice->getClient()?->getClientFullName();
-        $party =
-    $this->buildPeppolAccountingCustomerPartyArray($invoice, $inv->paR, $inv->cpR);
-        /**
-         * @var array $party['Party']
-         * @var array $party['Party']['PartyIdentification']
-         * @var array $party['Party']['PartyIdentification']['ID']
-         * @var string $party['Party']['PartyIdentification']['ID']['value']
-         */
-        $customer_partyIdentificationId =
-            $party['Party']['PartyIdentification']['ID']['value'] ?? null;
-        /**
-         * @var string $party['Party']['PartyIdentification']['ID']['schemeID']
-         */
-        $customer_partyIdentificationSchemeId =
-            $party['Party']['PartyIdentification']['ID']['schemeID'] ?? null;
-        $customer_postalAddress =
-                                $this->buildCustomerPostalAddress($party);
-        $customer_contact =
-                                        $this->buildCustomerContact($party);
-        $customer_partyTaxScheme =
-                            $this->buildCustomerPartyTaxScheme($party);
-        $customer_partyLegalEntity =
-                                $this->buildCustomerLegalEntity($party);
-        /**
-         * @var array $party['Party]
-         * @var array $party['Party']['EndPointID']
-         * @var string $party['Party']['EndPointID']['value']
-         */
-        $customer_endpointID = $party['Party']['EndPointID']['value'] ?? '';
-        /**
-         * @var string $party['Party']['EndPointID']['schemeID']
-         */
-        $customer_endpointID_schemeID = $party
-                                ['Party']['EndPointID']['schemeID'] ?? '';
+        $supplierParty = $this->buildSupplierParty();
+        $customerParty = $this->buildCustomerParty($invoice, $inv->paR, $inv->cpR);
         $payment_means_array = $this->buildPeppolPaymentMeansArray();
         $payeeFinancialAccount = $this->buildFinancialAccount(
                                                         $payment_means_array);
@@ -386,32 +333,6 @@ class PeppolHelper
                 $supplierAssignedAccountID,
             ),
         );
-        $supplierParty = new Party(
-            $this->t,
-            $supplier_name,
-            $supplier_partyIdentificationId,
-            $supplier_partyIdentificationSchemeId,
-            $supplier_postalAddress,
-            null,
-            $supplier_contact,
-            $supplier_partyTaxScheme,
-            $supplier_partyLegalEntity,
-            $supplier_endpointID,
-            $supplier_endpointID_schemeID,
-        );
-        $customerParty = new Party(
-            $this->t,
-            $customer_name,
-            $customer_partyIdentificationId,
-            $customer_partyIdentificationSchemeId,
-            $customer_postalAddress,
-            null,
-            $customer_contact,
-            $customer_partyTaxScheme,
-            $customer_partyLegalEntity,
-            $customer_endpointID,
-            $customer_endpointID_schemeID,
-        );
         $peppolPayment = new PeppolPaymentData(
             new PaymentMeans($payeeFinancialAccount, $paymentId),
             new PaymentTerms($payment_terms),
@@ -448,6 +369,95 @@ class PeppolHelper
         fwrite($f, $peppol_ubl_xml->output($xml));
         fclose($f);
         return $path;
+    }
+
+    private function buildSupplierParty(): Party
+    {
+        $config_company_details = $this->s->getConfigCompanyDetails();
+/**
+* @var string $config_company_details['name']
+*/
+        $supplier_name = $config_company_details['name'];
+        $config_peppol = $this->s->getConfigPeppol();
+/**
+* @var string $config_peppol['SupplierPartyIdentificationId']
+* @var string $config_peppol['SupplierPartyIdentificationSchemeId']
+*/
+        $supplier_partyIdentificationId =
+            $config_peppol['SupplierPartyIdentificationId'];
+        $supplier_partyIdentificationSchemeId =
+                $config_peppol['SupplierPartyIdentificationSchemeId'];
+        $supplier_postalAddress = $this->SupplierPostalAddress();
+        $supplier_contact = $this->SupplierContact();
+        $supplier_partyTaxScheme = $this->SupplierPartyTaxScheme();
+        $supplier_partyLegalEntity = $this->SupplierPartyLegalEntity();
+        $supplier_endpointID = $this->SupplierEndpointID();
+        $supplier_endpointID_schemeID = $this->SupplierEndpointIDSchemeID();
+        return new Party(
+            $this->t,
+            $supplier_name,
+            $supplier_partyIdentificationId,
+            $supplier_partyIdentificationSchemeId,
+            $supplier_postalAddress,
+            null,
+            $supplier_contact,
+            $supplier_partyTaxScheme,
+            $supplier_partyLegalEntity,
+            $supplier_endpointID,
+            $supplier_endpointID_schemeID,
+        );
+    }
+
+    private function buildCustomerParty(Inv $invoice, paR $paR, cpR $cpR): Party
+    {
+        $customer_name = $invoice->getClient()?->getClientFullName();
+        $party =
+    $this->buildPeppolAccountingCustomerPartyArray($invoice, $paR, $cpR);
+        /**
+         * @var array $party['Party']
+         * @var array $party['Party']['PartyIdentification']
+         * @var array $party['Party']['PartyIdentification']['ID']
+         * @var string $party['Party']['PartyIdentification']['ID']['value']
+         */
+        $customer_partyIdentificationId =
+            $party['Party']['PartyIdentification']['ID']['value'] ?? null;
+        /**
+         * @var string $party['Party']['PartyIdentification']['ID']['schemeID']
+         */
+        $customer_partyIdentificationSchemeId =
+            $party['Party']['PartyIdentification']['ID']['schemeID'] ?? null;
+        $customer_postalAddress =
+                                $this->buildCustomerPostalAddress($party);
+        $customer_contact =
+                                        $this->buildCustomerContact($party);
+        $customer_partyTaxScheme =
+                            $this->buildCustomerPartyTaxScheme($party);
+        $customer_partyLegalEntity =
+                                $this->buildCustomerLegalEntity($party);
+        /**
+         * @var array $party['Party]
+         * @var array $party['Party']['EndPointID']
+         * @var string $party['Party']['EndPointID']['value']
+         */
+        $customer_endpointID = $party['Party']['EndPointID']['value'] ?? '';
+        /**
+         * @var string $party['Party']['EndPointID']['schemeID']
+         */
+        $customer_endpointID_schemeID = $party
+                                ['Party']['EndPointID']['schemeID'] ?? '';
+        return new Party(
+            $this->t,
+            $customer_name,
+            $customer_partyIdentificationId,
+            $customer_partyIdentificationSchemeId,
+            $customer_postalAddress,
+            null,
+            $customer_contact,
+            $customer_partyTaxScheme,
+            $customer_partyLegalEntity,
+            $customer_endpointID,
+            $customer_endpointID_schemeID,
+        );
     }
 
     /**
