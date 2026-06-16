@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "744c4479f85cd27ee6e3cd84e58479ca",
+    "content-hash": "115d5826a7cbae76d020f0dce1e10ff7",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -1969,16 +1969,16 @@
         },
         {
             "name": "cycle/orm",
-            "version": "v2.17.0",
+            "version": "v2.18.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cycle/orm.git",
-                "reference": "810963956cd19c4fcc5026232a009d5bed218d71"
+                "reference": "a7a1db351df8037ff7a1196e19688bfc7d35c63e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cycle/orm/zipball/810963956cd19c4fcc5026232a009d5bed218d71",
-                "reference": "810963956cd19c4fcc5026232a009d5bed218d71",
+                "url": "https://api.github.com/repos/cycle/orm/zipball/a7a1db351df8037ff7a1196e19688bfc7d35c63e",
+                "reference": "a7a1db351df8037ff7a1196e19688bfc7d35c63e",
                 "shasum": ""
             },
             "require": {
@@ -2002,6 +2002,11 @@
                 "vimeo/psalm": "^6.0"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-2.x": "2.x-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Cycle\\ORM\\": "src/"
@@ -2053,7 +2058,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-06-02T10:42:57+00:00"
+            "time": "2026-06-15T16:45:48+00:00"
         },
         {
             "name": "cycle/schema-builder",
