@@ -8,6 +8,7 @@ use App\Infrastructure\Persistence\Client\Client;
 use App\Infrastructure\Persistence\Quote\Quote;
 use App\Infrastructure\Persistence\QuoteAmount\QuoteAmount;
 use App\Invoice\Quote\QuoteRepository as QR;
+use App\Invoice\Quote\Widget\QuotesGroupingHelper;
 use App\Invoice\Quote\Widget\QuotesListWidget;
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
 use App\Invoice\Setting\SettingRepository as SR;
@@ -130,20 +131,6 @@ final class QuotesListWidgetTest extends TestCase
         $quote->method('getQuoteAmount')->willReturn($quoteAmount);
 
         return $quote;
-    }
-
-    /** Invoke a private method on a freshly created widget. */
-    private function callPrivate(string $method, mixed ...$args): mixed
-    {
-        return (new \ReflectionMethod(QuotesListWidget::class, $method))
-            ->invoke($this->makeWidget(), ...$args);
-    }
-
-    /** Invoke a private method on a given widget instance. */
-    private function callPrivateOn(QuotesListWidget $widget, string $method, mixed ...$args): mixed
-    {
-        return (new \ReflectionMethod(QuotesListWidget::class, $method))
-            ->invoke($widget, ...$args);
     }
 
     // -----------------------------------------------------------------------
@@ -385,12 +372,11 @@ final class QuotesListWidgetTest extends TestCase
     // value extracted from the Quote object.
     // -----------------------------------------------------------------------
 
-    /** Resolve a group key for a quote using the widget's private resolver. */
     private function resolveGroup(string $groupBy, Quote $quote, ?QR $qR = null): string
     {
         $qR ??= $this->makeQR();
         /** @var \Closure(Quote): string $resolver */
-        $resolver = $this->callPrivate('makeGroupValueResolver', $qR, $groupBy);
+        $resolver = QuotesGroupingHelper::makeGroupValueResolver($qR, $groupBy);
         return $resolver($quote);
     }
 
@@ -500,7 +486,7 @@ final class QuotesListWidgetTest extends TestCase
         $getGroupValue = static fn(Quote $_q): string => 'unused';
 
         /** @var array<string, array{count: int, total: float}> $result */
-        $result = $this->callPrivate('computeGroupTotals', $paginator, $getGroupValue);
+        $result = QuotesGroupingHelper::computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertSame([], $result);
     }
@@ -513,7 +499,7 @@ final class QuotesListWidgetTest extends TestCase
         $getGroupValue = static fn(Quote $_q): string => 'All';
 
         /** @var array<string, array{count: int, total: float}> $result */
-        $result = $this->callPrivate('computeGroupTotals', $paginator, $getGroupValue);
+        $result = QuotesGroupingHelper::computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertCount(1, $result);
         $this->assertSame(2,      $result['All']['count']);
@@ -526,14 +512,13 @@ final class QuotesListWidgetTest extends TestCase
         $q2 = $this->makeQuoteMock(clientFullName: 'Bob',   total: 200.00);
         $q3 = $this->makeQuoteMock(clientFullName: 'Alice', total: 150.00);
 
-        $paginator     = new OffsetPaginator(new IterableDataReader([$q1, $q2, $q3]));
-        $widget        = $this->makeWidget();
-        $qR            = $this->makeQR();
+        $paginator = new OffsetPaginator(new IterableDataReader([$q1, $q2, $q3]));
+        $qR        = $this->makeQR();
         /** @var \Closure(Quote): string $getGroupValue */
-        $getGroupValue = $this->callPrivateOn($widget, 'makeGroupValueResolver', $qR, 'client');
+        $getGroupValue = QuotesGroupingHelper::makeGroupValueResolver($qR, 'client');
 
         /** @var array<string, array{count: int, total: float}> $result */
-        $result = $this->callPrivateOn($widget, 'computeGroupTotals', $paginator, $getGroupValue);
+        $result = QuotesGroupingHelper::computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertCount(2, $result);
         $this->assertSame(2,      $result['Alice']['count']);
@@ -554,7 +539,7 @@ final class QuotesListWidgetTest extends TestCase
         $getGroupValue = static fn(Quote $_q): string => 'NullAmounts';
 
         /** @var array<string, array{count: int, total: float}> $result */
-        $result = $this->callPrivate('computeGroupTotals', $paginator, $getGroupValue);
+        $result = QuotesGroupingHelper::computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertSame(1,    $result['NullAmounts']['count']);
         $this->assertSame(0.00, $result['NullAmounts']['total']);
