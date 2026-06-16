@@ -73,7 +73,8 @@ final class ChangePasswordController
                     return $this->redirectToMain();
                 }
                 $errors = $changePasswordForm->isValidated()
-                    ? $changePasswordForm->getValidationResult()->getErrorMessagesIndexedByProperty()
+                    ? $changePasswordForm->getValidationResult()
+                                         ->getErrorMessagesIndexedByProperty()
                     : [];
                 return $this->webViewRenderer->render('change', [
                     'formModel' => $changePasswordForm,

@@ -21,6 +21,7 @@ use Yiisoft\Yii\AuthClient\Widget\AuthChoice;
  * @var string                                      $csrf
  * @var string                                      $fadeOutJS
  * @var string                                      $styleTagFadeOut
+ * @var array<string, list<string>>                 $errors
  */
 
 $styleTagFadeOut;
@@ -124,6 +125,9 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
     ->inputClass((string) $class[13])
     ->label($translator->translate('layout.remember'))
     ->inputLabelClass((string) $class[14]);
+    echo F::errorSummary($formModel)
+    ->errors($errors)
+    ->header($translator->translate('error.summary'));
     echo F::submitButton()
     ->buttonId('login-button')
     ->buttonClass((string) $class[15])

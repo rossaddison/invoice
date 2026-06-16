@@ -303,11 +303,15 @@ final class AuthController
         $this->session->set('code_verifier', $codeVerifier);
         $codeChallenge = strtr(rtrim(base64_encode(hash('sha256',
                 $codeVerifier, true)), '='), '+/', '-_');
+        $errors = $loginForm->isValidated()
+            ? $loginForm->getValidationResult()->getErrorMessagesIndexedByProperty()
+            : [];
         return $this->webViewRenderer->render(
             'login',
             [
                 'class' => $this->classList(),
                 'formModel' => $loginForm,
+                'errors' => $errors,
                 'openBankChoice' => $openBankChoice,
                 'noOpenBankingContinueButton' =>
                 $this->sR->getSetting('no_openbanking_continue_button') == '1' ?
