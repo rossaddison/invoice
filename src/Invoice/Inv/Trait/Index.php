@@ -10,6 +10,7 @@ use App\Invoice\{
     Inv\InvIndexNavDeps,
     Inv\InvForm,
     Inv\InvRepository as IR,
+    Inv\Widget\InvsFilterOptions,
     Inv\Widget\InvsListWidget,
     InvRecurring\InvRecurringRepository as IRR,
 };
@@ -157,20 +158,15 @@ public function index(
                         ->withGridSummary($gridSummary)
                         ->withSortString($sortString)
                         ->withLabel($label)
-                        ->withOptionsInvNumberDropDownFilter(
-                            $this->optionsDataInvNumberFilter($list->invRepo))
-                        ->withOptionsCreditInvNumberDropDownFilter(
-                            $this->optionsDataCreditInvNumberFilter($list->invRepo))
-                        ->withOptionsFamilyNameDropDownFilter(
-                            $this->optionsDataFamilyNameFilter($list->invRepo))
-                        ->withOptionsClientsDropDownFilter(
-                            $this->optionsDataClientsFilter($list->invRepo))
-                        ->withOptionsClientGroupDropDownFilter(
-                            $this->optionsDataClientGroupFilter($list->clientRepo))
-                        ->withOptionsYearMonthDropDownFilter(
-                            $this->optionsDataYearMonthFilter())
-                        ->withOptionsStatusDropDownFilter(
-                            $this->optionsDataStatusFilter($list->invRepo))
+                        ->withFilterOptions(new InvsFilterOptions(
+                            invNumber:       $this->optionsDataInvNumberFilter($list->invRepo),
+                            creditInvNumber: $this->optionsDataCreditInvNumberFilter($list->invRepo),
+                            familyName:      $this->optionsDataFamilyNameFilter($list->invRepo),
+                            clients:         $this->optionsDataClientsFilter($list->invRepo),
+                            clientGroup:     $this->optionsDataClientGroupFilter($list->clientRepo),
+                            yearMonth:       $this->optionsDataYearMonthFilter(),
+                            status:          $this->optionsDataStatusFilter($list->invRepo),
+                        ))
                         ->render()
                 );
             }

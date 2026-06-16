@@ -8,6 +8,8 @@ use App\Infrastructure\Persistence\Client\Client;
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\InvAmount\InvAmount;
 use App\Invoice\Inv\InvRepository as IR;
+use App\Invoice\Inv\Widget\InvsFilterOptions;
+use App\Invoice\Inv\Widget\InvsGroupingHelper;
 use App\Invoice\Inv\Widget\InvsListWidget;
 use App\Invoice\InvRecurring\InvRecurringRepository as IRR;
 use App\Invoice\InvSentLog\InvSentLogRepository as ISLR;
@@ -24,18 +26,13 @@ use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
 
 /**
- * Unit tests for InvsListWidget.
+ * Unit tests for InvsListWidget, InvsFilterOptions, and InvsGroupingHelper.
  *
- * Mirrors the QuotesListWidgetTest structure.  Key differences:
- *  - Constructor requires GridComponents (in addition to CurrentRoute /
- *    UrlGeneratorInterface / TranslatorInterface).
- *  - render() guard requires paginator + iR + irR + islR + sR (5 deps).
- *  - computeGroupTotals tracks paid and balance in addition to count/total.
- *  - makeGroupValueResolver takes only (string $groupBy) and asserts $this->iR.
+ * Group-by resolver and totals aggregation moved to InvsGroupingHelper (public
+ * static) — tests call those directly rather than via reflection.
  *
- * IR / IRR / ISLR / SR are final Cycle ORM repositories.  Instances for tests
- * that only need type-safe objects are created via
- * ReflectionClass::newInstanceWithoutConstructor().
+ * The seven individual withOptions*DropDownFilter() setters were replaced by a
+ * single withFilterOptions(InvsFilterOptions) setter — tests updated accordingly.
  */
 final class InvsListWidgetTest extends TestCase
 {
@@ -143,20 +140,6 @@ final class InvsListWidgetTest extends TestCase
         $inv->method('getInvAmount')->willReturn($invAmount);
 
         return $inv;
-    }
-
-    /** Invoke a private method on a freshly created widget. */
-    private function callPrivate(string $method, mixed ...$args): mixed
-    {
-        return (new \ReflectionMethod(InvsListWidget::class, $method))
-            ->invoke($this->makeWidget(), ...$args);
-    }
-
-    /** Invoke a private method on a given widget instance. */
-    private function callPrivateOn(InvsListWidget $widget, string $method, mixed ...$args): mixed
-    {
-        return (new \ReflectionMethod(InvsListWidget::class, $method))
-            ->invoke($widget, ...$args);
     }
 
     // -------------------------------------------------------------------------
@@ -414,26 +397,16 @@ final class InvsListWidgetTest extends TestCase
         $this->assertSame('Draft', $prop->getValue($new));
     }
 
-    public function testWithOptionsInvNumberDropDownFilterReturnsNewInstance(): void
+    public function testWithFilterOptionsReturnsNewInstanceAndOriginalUnchanged(): void
     {
-        $original = $this->makeWidget();
-        $new      = $original->withOptionsInvNumberDropDownFilter(['INV-001' => 'INV-001']);
+        $original   = $this->makeWidget();
+        $filterOpts = new InvsFilterOptions(invNumber: ['INV-001' => 'INV-001']);
+        $new        = $original->withFilterOptions($filterOpts);
 
         $this->assertNotSame($original, $new);
-        $prop = new \ReflectionProperty(InvsListWidget::class, 'optionsInvNumberDropDownFilter');
-        $this->assertSame([], $prop->getValue($original));
-        $this->assertSame(['INV-001' => 'INV-001'], $prop->getValue($new));
-    }
-
-    public function testWithOptionsStatusDropDownFilterReturnsNewInstance(): void
-    {
-        $original = $this->makeWidget();
-        $new      = $original->withOptionsStatusDropDownFilter([1 => 'Draft', 2 => 'Sent']);
-
-        $this->assertNotSame($original, $new);
-        $prop = new \ReflectionProperty(InvsListWidget::class, 'optionsStatusDropDownFilter');
-        $this->assertSame([], $prop->getValue($original));
-        $this->assertSame([1 => 'Draft', 2 => 'Sent'], $prop->getValue($new));
+        $prop = new \ReflectionProperty(InvsListWidget::class, 'filterOptions');
+        $this->assertNull($prop->getValue($original));
+        $this->assertSame($filterOpts, $prop->getValue($new));
     }
 
     // -------------------------------------------------------------------------
@@ -463,20 +436,43 @@ final class InvsListWidgetTest extends TestCase
     }
 
     // -------------------------------------------------------------------------
-    // makeGroupValueResolver
-    // The widget's private closure maps every documented groupBy key to the
-    // correct value extracted from the Inv object.
-    // makeGroupValueResolver asserts $this->iR !== null, so it is invoked on a
-    // widget that has iR injected.
+    // InvsFilterOptions value object
     // -------------------------------------------------------------------------
 
-    /** Resolve a group key for an invoice using the widget's private resolver. */
+    public function testInvsFilterOptionsDefaultsToEmptyArrays(): void
+    {
+        $opts = new InvsFilterOptions();
+        $this->assertSame([], $opts->invNumber);
+        $this->assertSame([], $opts->creditInvNumber);
+        $this->assertSame([], $opts->familyName);
+        $this->assertSame([], $opts->clients);
+        $this->assertSame([], $opts->clientGroup);
+        $this->assertSame([], $opts->yearMonth);
+        $this->assertSame([], $opts->status);
+    }
+
+    public function testInvsFilterOptionsStoresStatusArray(): void
+    {
+        $opts = new InvsFilterOptions(status: [1 => 'Draft', 2 => 'Sent']);
+        $this->assertSame([1 => 'Draft', 2 => 'Sent'], $opts->status);
+    }
+
+    public function testInvsFilterOptionsStoresInvNumberArray(): void
+    {
+        $opts = new InvsFilterOptions(invNumber: ['INV-001' => 'INV-001']);
+        $this->assertSame(['INV-001' => 'INV-001'], $opts->invNumber);
+    }
+
+    // -------------------------------------------------------------------------
+    // InvsGroupingHelper::makeGroupValueResolver
+    // -------------------------------------------------------------------------
+
+    /** Resolve a group key for an invoice using InvsGroupingHelper directly. */
     private function resolveGroup(string $groupBy, Inv $inv, ?IR $iR = null): string
     {
         $iR ??= $this->makeIR();
-        $widget = $this->makeWidget()->withIR($iR);
         /** @var \Closure(Inv): string $resolver */
-        $resolver = $this->callPrivateOn($widget, 'makeGroupValueResolver', $groupBy);
+        $resolver = InvsGroupingHelper::makeGroupValueResolver($groupBy, $iR);
         return $resolver($inv);
     }
 
@@ -573,7 +569,7 @@ final class InvsListWidgetTest extends TestCase
     }
 
     // -------------------------------------------------------------------------
-    // computeGroupTotals
+    // InvsGroupingHelper::computeGroupTotals
     // Unlike the quote equivalent, invoice totals include paid and balance.
     // IterableDataReader wraps in-memory Inv mocks — no database needed.
     // -------------------------------------------------------------------------
@@ -584,7 +580,7 @@ final class InvsListWidgetTest extends TestCase
         $getGroupValue = static fn(Inv $_inv): string => 'unused';
 
         /** @var array<string, array{count: int, total: float, paid: float, balance: float}> $result */
-        $result = $this->callPrivate('computeGroupTotals', $paginator, $getGroupValue);
+        $result = InvsGroupingHelper::computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertSame([], $result);
     }
@@ -598,7 +594,7 @@ final class InvsListWidgetTest extends TestCase
         $getGroupValue = static fn(Inv $_inv): string => 'All';
 
         /** @var array<string, array{count: int, total: float, paid: float, balance: float}> $result */
-        $result = $this->callPrivate('computeGroupTotals', $paginator, $getGroupValue);
+        $result = InvsGroupingHelper::computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertCount(1, $result);
         $this->assertSame(2,      $result['All']['count']);
@@ -614,12 +610,12 @@ final class InvsListWidgetTest extends TestCase
         $i3 = $this->makeInvMock(clientFullName: 'Alice', total: 150.00, paid: 75.00,  balance: 75.00);
 
         $paginator = new OffsetPaginator(new IterableDataReader([$i1, $i2, $i3]));
-        $widget    = $this->makeWidget()->withIR($this->makeIR());
+
         /** @var \Closure(Inv): string $getGroupValue */
-        $getGroupValue = $this->callPrivateOn($widget, 'makeGroupValueResolver', 'client');
+        $getGroupValue = InvsGroupingHelper::makeGroupValueResolver('client', $this->makeIR());
 
         /** @var array<string, array{count: int, total: float, paid: float, balance: float}> $result */
-        $result = $this->callPrivateOn($widget, 'computeGroupTotals', $paginator, $getGroupValue);
+        $result = InvsGroupingHelper::computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertCount(2, $result);
         $this->assertSame(2,      $result['Alice']['count']);
@@ -649,7 +645,7 @@ final class InvsListWidgetTest extends TestCase
         $getGroupValue = static fn(Inv $_i): string => 'NullAmounts';
 
         /** @var array<string, array{count: int, total: float, paid: float, balance: float}> $result */
-        $result = $this->callPrivate('computeGroupTotals', $paginator, $getGroupValue);
+        $result = InvsGroupingHelper::computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertSame(1,    $result['NullAmounts']['count']);
         $this->assertSame(0.00, $result['NullAmounts']['total']);
@@ -664,7 +660,7 @@ final class InvsListWidgetTest extends TestCase
         $getGroupValue = static fn(Inv $_i): string => 'Check';
 
         /** @var array<string, array{count: int, total: float, paid: float, balance: float}> $result */
-        $result = $this->callPrivate('computeGroupTotals', $paginator, $getGroupValue);
+        $result = InvsGroupingHelper::computeGroupTotals($paginator, $getGroupValue);
 
         // paid + balance = total
         $this->assertSame(

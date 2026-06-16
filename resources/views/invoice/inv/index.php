@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Invoice\Inv\Widget\InvsFilterOptions;
 use App\Invoice\Inv\Widget\InvsListWidget;
 use Yiisoft\Bootstrap5\Breadcrumbs;
 use Yiisoft\Bootstrap5\BreadcrumbLink;
@@ -165,13 +166,15 @@ echo InvsListWidget::widget()
     ->withGridSummary($gridSummary)
     ->withSortString($sortString)
     ->withLabel($label)
-    ->withOptionsInvNumberDropDownFilter($optionsInvNumberDropDownFilter)
-    ->withOptionsCreditInvNumberDropDownFilter($optionsCreditInvNumberDropDownFilter)
-    ->withOptionsFamilyNameDropDownFilter($optionsFamilyNameDropDownFilter)
-    ->withOptionsClientsDropDownFilter($optionsClientsDropDownFilter)
-    ->withOptionsClientGroupDropDownFilter($optionsClientGroupDropDownFilter)
-    ->withOptionsYearMonthDropDownFilter($optionsYearMonthDropDownFilter)
-    ->withOptionsStatusDropDownFilter($optionsStatusDropDownFilter)
+    ->withFilterOptions(new InvsFilterOptions(
+        invNumber:       $optionsInvNumberDropDownFilter,
+        creditInvNumber: $optionsCreditInvNumberDropDownFilter,
+        familyName:      $optionsFamilyNameDropDownFilter,
+        clients:         $optionsClientsDropDownFilter,
+        clientGroup:     $optionsClientGroupDropDownFilter,
+        yearMonth:       $optionsYearMonthDropDownFilter,
+        status:          $optionsStatusDropDownFilter,
+    ))
     ->render();
 
 echo $modal_add_inv;
