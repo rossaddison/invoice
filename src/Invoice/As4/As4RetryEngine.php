@@ -39,8 +39,8 @@ class As4RetryEngine
         try {
             foreach ($this->repository->findPendingRetries() as $message) {
                 $delay = $this->retryPolicy->delaySeconds(
-                    $message->getAttemptCount(),
-                    $message->getRetryIntervalSeconds()
+                    $message->getRetryState()->getAttemptCount(),
+                    $message->getRetryState()->getRetryIntervalSeconds()
                 );
                 if (!$message->isReadyForRetry($delay)) {
                     continue;
@@ -83,13 +83,13 @@ class As4RetryEngine
         try {
             $now = new DateTime();
             foreach ($this->repository->findAwaitingReceipts() as $message) {
-                $firstSent = $message->getFirstSentAt();
+                $firstSent = $message->getRetryState()->getFirstSentAt();
                 if ($firstSent === null) {
                     continue;
                 }
 
                 $receiptDeadline = (clone $firstSent)->modify(
-                    sprintf('+%d seconds', ($message->getMaxAttempts() + 1) * $message->getRetryIntervalSeconds())
+                    sprintf('+%d seconds', ($message->getRetryState()->getMaxAttempts() + 1) * $message->getRetryState()->getRetryIntervalSeconds())
                 );
 
                 if ($now > $receiptDeadline) {
@@ -140,15 +140,15 @@ class As4RetryEngine
             return false;
         }
 
-        if ($message->getAttemptCount() >= $message->getMaxAttempts()) {
+        if ($message->getRetryState()->getAttemptCount() >= $message->getRetryState()->getMaxAttempts()) {
             $message->markFailed(
                 'RETRY_EXCEEDED',
-                sprintf('Max retries (%d) exceeded without receipt', $message->getMaxAttempts())
+                sprintf('Max retries (%d) exceeded without receipt', $message->getRetryState()->getMaxAttempts())
             );
             $this->repository->save($message);
             $this->logger->warning('Message max retries exceeded', [
                 'messageId' => $message->getMessageId(),
-                'attempts'  => $message->getAttemptCount(),
+                'attempts'  => $message->getRetryState()->getAttemptCount(),
             ]);
             return false;
         }
@@ -160,12 +160,12 @@ class As4RetryEngine
     {
         $this->logger->info('Retrying AS4 message', [
             'messageId'   => $message->getMessageId(),
-            'attempt'     => $message->getAttemptCount() + 1,
-            'maxAttempts' => $message->getMaxAttempts(),
+            'attempt'     => $message->getRetryState()->getAttemptCount() + 1,
+            'maxAttempts' => $message->getRetryState()->getMaxAttempts(),
         ]);
 
         try {
-            $envelope = $this->parseEnvelope($message->getSoapMessage());
+            $envelope = $this->parseEnvelope($message->getPayload()->getSoapMessage());
         } catch (\UnexpectedValueException $e) {
             // Malformed persisted SOAP — cannot retry, permanent failure
             $message->markFailed('MALFORMED_SOAP', $e->getMessage());
@@ -185,7 +185,7 @@ class As4RetryEngine
 
         try {
             return $this->sender->send(
-                endpoint: $message->getReceiverEndpoint(),
+                endpoint: $message->getRouting()->getReceiverEndpoint(),
                 envelope: $envelope,
                 parts:    []
             );

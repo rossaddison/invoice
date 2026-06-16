@@ -6,6 +6,7 @@ namespace Tests\Unit\Invoice\As4;
 
 use App\Infrastructure\Persistence\As4Message\As4Message;
 use App\Infrastructure\Persistence\As4Message\As4MessageParams;
+use App\Infrastructure\Persistence\As4Message\As4RetryState;
 use App\Invoice\As4\As4ErrorCategory;
 use App\Invoice\As4\As4ErrorSeverity;
 use App\Invoice\As4\As4ErrorSignal;
@@ -90,10 +91,10 @@ class As4RetryEngineTest extends TestCase
     {
         $message = $this->makeMessage();
         $message->markSent();
-        (new \ReflectionProperty(As4Message::class, 'lastAttemptAt'))
-            ->setValue($message, new DateTime('-1 hour'));
-        (new \ReflectionProperty(As4Message::class, 'firstSentAt'))
-            ->setValue($message, new DateTime('-1 hour'));
+        (new \ReflectionProperty(As4RetryState::class, 'lastAttemptAt'))
+            ->setValue($message->getRetryState(), new DateTime('-1 hour'));
+        (new \ReflectionProperty(As4RetryState::class, 'firstSentAt'))
+            ->setValue($message->getRetryState(), new DateTime('-1 hour'));
         return $message;
     }
 
@@ -171,8 +172,8 @@ class As4RetryEngineTest extends TestCase
         $message = $this->makeMessage();
         $message->markSent();
         // Backdate firstSentAt 1 hour so the 20-min deadline is already past
-        (new \ReflectionProperty(As4Message::class, 'firstSentAt'))
-            ->setValue($message, new DateTime('-1 hour'));
+        (new \ReflectionProperty(As4RetryState::class, 'firstSentAt'))
+            ->setValue($message->getRetryState(), new DateTime('-1 hour'));
         $f->repository->method('findAwaitingReceipts')->willReturn([$message]);
         $f->repository->expects($this->once())->method('save');
 
@@ -180,7 +181,7 @@ class As4RetryEngineTest extends TestCase
 
         $this->assertSame(1, $count);
         $this->assertSame(As4MessageState::failed, $message->getState());
-        $this->assertSame('EBMS:0301', $message->getErrorCode());
+        $this->assertSame('EBMS:0301', $message->getErrorInfo()->getErrorCode());
     }
 
     // ── processRetries — concurrency protection ───────────────────────────────
@@ -249,7 +250,7 @@ class As4RetryEngineTest extends TestCase
         $this->assertSame(1, $stats['succeeded']);
         $this->assertSame(0, $stats['failed']);
         $this->assertSame(As4MessageState::receiptReceived, $message->getState());
-        $this->assertSame('receipt-001@ap.example.com', $message->getReceiptMessageId());
+        $this->assertSame('receipt-001@ap.example.com', $message->getReceiptInfo()->getReceiptMessageId());
     }
 
     // ── processRetries — 200 + failure error signal ───────────────────────────
@@ -272,7 +273,7 @@ class As4RetryEngineTest extends TestCase
         $this->assertSame(0, $stats['succeeded']);
         $this->assertSame(1, $stats['failed']);
         $this->assertSame(As4MessageState::failed, $message->getState());
-        $this->assertSame('EBMS:0202', $message->getErrorCode());
+        $this->assertSame('EBMS:0202', $message->getErrorInfo()->getErrorCode());
     }
 
     // ── processRetries — 200 + warning signal ────────────────────────────────
@@ -281,7 +282,7 @@ class As4RetryEngineTest extends TestCase
     {
         $f        = $this->createFixture();
         $message  = $this->makeSentReadyMessage();
-        $before   = $message->getAttemptCount(); // 1 from initial markSent()
+        $before   = $message->getRetryState()->getAttemptCount(); // 1 from initial markSent()
         $response = new As4HttpResponse(200, '<soap/>');
 
         $f->repository->method('findPendingRetries')->willReturn([$message]);
@@ -295,7 +296,7 @@ class As4RetryEngineTest extends TestCase
         $this->assertSame(1, $stats['succeeded']);
         $this->assertSame(As4MessageState::sent, $message->getState());
         // Attempt count incremented exactly once by recordAttempt() — NOT double-incremented
-        $this->assertSame($before + 1, $message->getAttemptCount());
+        $this->assertSame($before + 1, $message->getRetryState()->getAttemptCount());
     }
 
     // ── processRetries — 202 + no signal ─────────────────────────────────────
@@ -304,7 +305,7 @@ class As4RetryEngineTest extends TestCase
     {
         $f        = $this->createFixture();
         $message  = $this->makeSentReadyMessage();
-        $before   = $message->getAttemptCount();
+        $before   = $message->getRetryState()->getAttemptCount();
         $response = new As4HttpResponse(202, '');
 
         $f->repository->method('findPendingRetries')->willReturn([$message]);
@@ -317,7 +318,7 @@ class As4RetryEngineTest extends TestCase
 
         $this->assertSame(1, $stats['succeeded']);
         $this->assertSame(As4MessageState::sent, $message->getState());
-        $this->assertSame($before + 1, $message->getAttemptCount());
+        $this->assertSame($before + 1, $message->getRetryState()->getAttemptCount());
     }
 
     // ── processRetries — retriable HTTP error ────────────────────────────────
@@ -356,7 +357,7 @@ class As4RetryEngineTest extends TestCase
 
         $this->assertSame(1, $stats['failed']);
         $this->assertSame(As4MessageState::failed, $message->getState());
-        $this->assertSame('HTTP_400', $message->getErrorCode());
+        $this->assertSame('HTTP_400', $message->getErrorInfo()->getErrorCode());
     }
 
     // ── processRetries — malformed stored SOAP ────────────────────────────────
@@ -367,10 +368,10 @@ class As4RetryEngineTest extends TestCase
         // Truncated tag — DOMDocument::loadXML returns false (not well-formed)
         $message = $this->makeMessage('<truncated');
         $message->markSent();
-        (new \ReflectionProperty(As4Message::class, 'lastAttemptAt'))
-            ->setValue($message, new DateTime('-1 hour'));
-        (new \ReflectionProperty(As4Message::class, 'firstSentAt'))
-            ->setValue($message, new DateTime('-1 hour'));
+        (new \ReflectionProperty(As4RetryState::class, 'lastAttemptAt'))
+            ->setValue($message->getRetryState(), new DateTime('-1 hour'));
+        (new \ReflectionProperty(As4RetryState::class, 'firstSentAt'))
+            ->setValue($message->getRetryState(), new DateTime('-1 hour'));
 
         $f->repository->method('findPendingRetries')->willReturn([$message]);
         $f->sender->expects($this->never())->method('send');
@@ -380,7 +381,7 @@ class As4RetryEngineTest extends TestCase
 
         $this->assertSame(1, $stats['failed']);
         $this->assertSame(As4MessageState::failed, $message->getState());
-        $this->assertSame('MALFORMED_SOAP', $message->getErrorCode());
+        $this->assertSame('MALFORMED_SOAP', $message->getErrorInfo()->getErrorCode());
     }
 
     // ── getNextRetryDelay ─────────────────────────────────────────────────────

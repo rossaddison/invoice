@@ -224,7 +224,7 @@ class As4ReceiveControllerTest extends TestCase
 
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame(As4MessageState::failed, $outbound->getState());
-        $this->assertSame('EBMS:0202', $outbound->getErrorCode());
+        $this->assertSame('EBMS:0202', $outbound->getErrorInfo()->getErrorCode());
     }
 
     public function testReturns200ForErrorWithUnknownRef(): void

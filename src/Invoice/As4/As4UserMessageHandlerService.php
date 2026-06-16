@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\As4;
 
-use App\Infrastructure\Persistence\As4Message\As4Message;
+use App\Infrastructure\Persistence\As4Message\As4MessageFactory;
 use Psr\Log\LoggerInterface;
 
 final class As4UserMessageHandlerService implements As4UserMessageHandlerInterface
@@ -29,7 +29,7 @@ final class As4UserMessageHandlerService implements As4UserMessageHandlerInterfa
             return $this->receiptGenerator->generate($messageId, $message->xmlBody);
         }
 
-        $this->repository->save(As4Message::fromInbound($message));
+        $this->repository->save(As4MessageFactory::fromInbound($message));
 
         foreach ($message->payloads as $payloadXml) {
             $this->payloadHandler->handle(

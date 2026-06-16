@@ -59,18 +59,18 @@ class As4MessageEntityTest extends TestCase
         $msg = $this->makeMessage();
 
         $this->assertSame('msg-001@as4.example.com', $msg->getMessageId());
-        $this->assertSame('conv-001', $msg->getConversationId());
-        $this->assertSame('0088:1234567890123', $msg->getSenderPartyId());
-        $this->assertSame('Seller', $msg->getSenderRole());
-        $this->assertSame('0088:9876543210987', $msg->getReceiverPartyId());
-        $this->assertSame('Buyer', $msg->getReceiverRole());
-        $this->assertSame('urn:fdc:peppol.eu:2017:poacc:billing:01:1.0', $msg->getService());
+        $this->assertSame('conv-001', $msg->getRouting()->getConversationId());
+        $this->assertSame('0088:1234567890123', $msg->getRouting()->getSenderPartyId());
+        $this->assertSame('Seller', $msg->getRouting()->getSenderRole());
+        $this->assertSame('0088:9876543210987', $msg->getRouting()->getReceiverPartyId());
+        $this->assertSame('Buyer', $msg->getRouting()->getReceiverRole());
+        $this->assertSame('urn:fdc:peppol.eu:2017:poacc:billing:01:1.0', $msg->getRouting()->getService());
         $this->assertSame(
             'busdox-docid-qns::urn:oasis:names:specification:ubl:schema:xsd:Invoice-2',
-            $msg->getAction()
+            $msg->getRouting()->getAction()
         );
-        $this->assertSame('https://ap.example.com/as4', $msg->getReceiverEndpoint());
-        $this->assertSame('<env:Envelope/>', $msg->getSoapMessage());
+        $this->assertSame('https://ap.example.com/as4', $msg->getRouting()->getReceiverEndpoint());
+        $this->assertSame('<env:Envelope/>', $msg->getPayload()->getSoapMessage());
     }
 
     public function testDefaultStateIsPending(): void
@@ -80,26 +80,26 @@ class As4MessageEntityTest extends TestCase
 
     public function testDefaultAttemptCountIsZero(): void
     {
-        $this->assertSame(0, $this->makeMessage()->getAttemptCount());
+        $this->assertSame(0, $this->makeMessage()->getRetryState()->getAttemptCount());
     }
 
     public function testDefaultMaxAttemptsIsThree(): void
     {
-        $this->assertSame(3, $this->makeMessage()->getMaxAttempts());
+        $this->assertSame(3, $this->makeMessage()->getRetryState()->getMaxAttempts());
     }
 
     public function testNullableFieldsAreNullByDefault(): void
     {
         $msg = $this->makeMessage();
 
-        $this->assertNull($msg->getRefToMessageId());
-        $this->assertNull($msg->getPayloadPartIds());
-        $this->assertNull($msg->getLastAttemptAt());
-        $this->assertNull($msg->getReceiptMessageId());
-        $this->assertNull($msg->getReceiptDigest());
-        $this->assertNull($msg->getReceiptReceivedAt());
-        $this->assertNull($msg->getErrorCode());
-        $this->assertNull($msg->getErrorDescription());
+        $this->assertNull($msg->getRouting()->getRefToMessageId());
+        $this->assertNull($msg->getPayload()->getPayloadPartIds());
+        $this->assertNull($msg->getRetryState()->getLastAttemptAt());
+        $this->assertNull($msg->getReceiptInfo()->getReceiptMessageId());
+        $this->assertNull($msg->getReceiptInfo()->getReceiptDigest());
+        $this->assertNull($msg->getReceiptInfo()->getReceiptReceivedAt());
+        $this->assertNull($msg->getErrorInfo()->getErrorCode());
+        $this->assertNull($msg->getErrorInfo()->getErrorDescription());
     }
 
     public function testStateEnumValues(): void
@@ -115,15 +115,15 @@ class As4MessageEntityTest extends TestCase
     public function testSetRefToMessageId(): void
     {
         $msg = $this->makeMessage();
-        $msg->setRefToMessageId('ref-msg-001@as4.example.com');
-        $this->assertSame('ref-msg-001@as4.example.com', $msg->getRefToMessageId());
+        $msg->getRouting()->setRefToMessageId('ref-msg-001@as4.example.com');
+        $this->assertSame('ref-msg-001@as4.example.com', $msg->getRouting()->getRefToMessageId());
     }
 
     public function testSetPayloadPartIds(): void
     {
         $msg = $this->makeMessage();
-        $msg->setPayloadPartIds(['part1@example.com', 'part2@example.com']);
-        $this->assertSame('part1@example.com,part2@example.com', $msg->getPayloadPartIds());
+        $msg->getPayload()->setPayloadPartIds(['part1@example.com', 'part2@example.com']);
+        $this->assertSame('part1@example.com,part2@example.com', $msg->getPayload()->getPayloadPartIds());
     }
 
     public function testMarkSentIncrementsAttemptCountAndSetsState(): void
@@ -132,25 +132,25 @@ class As4MessageEntityTest extends TestCase
         $msg->markSent();
 
         $this->assertSame(As4MessageState::sent, $msg->getState());
-        $this->assertSame(1, $msg->getAttemptCount());
-        $this->assertInstanceOf(DateTime::class, $msg->getLastAttemptAt());
-        $this->assertInstanceOf(DateTime::class, $msg->getFirstSentAt());
+        $this->assertSame(1, $msg->getRetryState()->getAttemptCount());
+        $this->assertInstanceOf(DateTime::class, $msg->getRetryState()->getLastAttemptAt());
+        $this->assertInstanceOf(DateTime::class, $msg->getRetryState()->getFirstSentAt());
     }
 
     public function testMarkSentIncrementsTwice(): void
     {
         $msg = $this->makeMessage();
         $msg->markSent();
-        $firstSentAt = $msg->getFirstSentAt();
+        $firstSentAt = $msg->getRetryState()->getFirstSentAt();
         $msg->markSent();
 
-        $this->assertSame(2, $msg->getAttemptCount());
-        $this->assertSame($firstSentAt, $msg->getFirstSentAt(), 'firstSentAt must not change on subsequent markSent');
+        $this->assertSame(2, $msg->getRetryState()->getAttemptCount());
+        $this->assertSame($firstSentAt, $msg->getRetryState()->getFirstSentAt(), 'firstSentAt must not change on subsequent markSent');
     }
 
     public function testFirstSentAtIsNullBeforeMarkSent(): void
     {
-        $this->assertNull($this->makeMessage()->getFirstSentAt());
+        $this->assertNull($this->makeMessage()->getRetryState()->getFirstSentAt());
     }
 
     public function testRecordAttemptIncrementsCountAndSetsTimestamps(): void
@@ -158,8 +158,8 @@ class As4MessageEntityTest extends TestCase
         $msg = $this->makeMessage();
         $msg->recordAttempt();
 
-        $this->assertSame(1, $msg->getAttemptCount());
-        $this->assertInstanceOf(DateTime::class, $msg->getLastAttemptAt());
+        $this->assertSame(1, $msg->getRetryState()->getAttemptCount());
+        $this->assertInstanceOf(DateTime::class, $msg->getRetryState()->getLastAttemptAt());
     }
 
     public function testRecordAttemptDoesNotChangeState(): void
@@ -176,7 +176,7 @@ class As4MessageEntityTest extends TestCase
         $msg->recordAttempt();
         $msg->recordAttempt();
 
-        $this->assertSame(2, $msg->getAttemptCount());
+        $this->assertSame(2, $msg->getRetryState()->getAttemptCount());
     }
 
     public function testMarkReceiptReceived(): void
@@ -185,9 +185,9 @@ class As4MessageEntityTest extends TestCase
         $msg->markReceiptReceived('receipt-msg-001', 'abc123digest==');
 
         $this->assertSame(As4MessageState::receiptReceived, $msg->getState());
-        $this->assertSame('receipt-msg-001', $msg->getReceiptMessageId());
-        $this->assertSame('abc123digest==', $msg->getReceiptDigest());
-        $this->assertInstanceOf(DateTime::class, $msg->getReceiptReceivedAt());
+        $this->assertSame('receipt-msg-001', $msg->getReceiptInfo()->getReceiptMessageId());
+        $this->assertSame('abc123digest==', $msg->getReceiptInfo()->getReceiptDigest());
+        $this->assertInstanceOf(DateTime::class, $msg->getReceiptInfo()->getReceiptReceivedAt());
     }
 
     public function testMarkFailed(): void
@@ -196,8 +196,8 @@ class As4MessageEntityTest extends TestCase
         $msg->markFailed('EBMS:0202', 'Delivery failure');
 
         $this->assertSame(As4MessageState::failed, $msg->getState());
-        $this->assertSame('EBMS:0202', $msg->getErrorCode());
-        $this->assertSame('Delivery failure', $msg->getErrorDescription());
+        $this->assertSame('EBMS:0202', $msg->getErrorInfo()->getErrorCode());
+        $this->assertSame('Delivery failure', $msg->getErrorInfo()->getErrorDescription());
     }
 
     public function testIsReadyForRetryReturnsFalseWhenPending(): void
@@ -230,10 +230,10 @@ class As4MessageEntityTest extends TestCase
         $msg = $this->makeMessage();
         $after = new DateTime();
 
-        $this->assertGreaterThanOrEqual($before, $msg->getCreatedAt());
-        $this->assertLessThanOrEqual($after, $msg->getCreatedAt());
-        $this->assertGreaterThanOrEqual($before, $msg->getUpdatedAt());
-        $this->assertLessThanOrEqual($after, $msg->getUpdatedAt());
+        $this->assertGreaterThanOrEqual($before, $msg->getTimestamps()->getCreatedAt());
+        $this->assertLessThanOrEqual($after, $msg->getTimestamps()->getCreatedAt());
+        $this->assertGreaterThanOrEqual($before, $msg->getTimestamps()->getUpdatedAt());
+        $this->assertLessThanOrEqual($after, $msg->getTimestamps()->getUpdatedAt());
     }
 
     public function testReturnTypes(): void
@@ -243,20 +243,20 @@ class As4MessageEntityTest extends TestCase
 
         $this->assertIsInt($msg->reqId());
         $this->assertIsString($msg->getMessageId());
-        $this->assertIsString($msg->getConversationId());
-        $this->assertIsString($msg->getSenderPartyId());
-        $this->assertIsString($msg->getSenderRole());
-        $this->assertIsString($msg->getReceiverPartyId());
-        $this->assertIsString($msg->getReceiverRole());
-        $this->assertIsString($msg->getService());
-        $this->assertIsString($msg->getAction());
-        $this->assertIsString($msg->getReceiverEndpoint());
-        $this->assertIsString($msg->getSoapMessage());
+        $this->assertIsString($msg->getRouting()->getConversationId());
+        $this->assertIsString($msg->getRouting()->getSenderPartyId());
+        $this->assertIsString($msg->getRouting()->getSenderRole());
+        $this->assertIsString($msg->getRouting()->getReceiverPartyId());
+        $this->assertIsString($msg->getRouting()->getReceiverRole());
+        $this->assertIsString($msg->getRouting()->getService());
+        $this->assertIsString($msg->getRouting()->getAction());
+        $this->assertIsString($msg->getRouting()->getReceiverEndpoint());
+        $this->assertIsString($msg->getPayload()->getSoapMessage());
         $this->assertInstanceOf(As4MessageState::class, $msg->getState());
-        $this->assertIsInt($msg->getAttemptCount());
-        $this->assertIsInt($msg->getMaxAttempts());
-        $this->assertIsInt($msg->getRetryIntervalSeconds());
-        $this->assertInstanceOf(DateTime::class, $msg->getCreatedAt());
-        $this->assertInstanceOf(DateTime::class, $msg->getUpdatedAt());
+        $this->assertIsInt($msg->getRetryState()->getAttemptCount());
+        $this->assertIsInt($msg->getRetryState()->getMaxAttempts());
+        $this->assertIsInt($msg->getRetryState()->getRetryIntervalSeconds());
+        $this->assertInstanceOf(DateTime::class, $msg->getTimestamps()->getCreatedAt());
+        $this->assertInstanceOf(DateTime::class, $msg->getTimestamps()->getUpdatedAt());
     }
 }
