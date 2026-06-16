@@ -18,7 +18,7 @@ final class As4DispatchRequestFactory
     public static function fromPMode(PMode $pMode, string $payloadXml): As4DispatchRequest
     {
         return new As4DispatchRequest(
-            recipientPartyId: $pMode->getResponderParty(),
+            recipientPartyId: $pMode->getParties()->getResponderParty(),
             documentTypeId:   $pMode->getAction(),
             processId:        $pMode->getService(),
             payloadXml:       $payloadXml,

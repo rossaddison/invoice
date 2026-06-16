@@ -25,19 +25,19 @@ class PModeTest extends TestCase
     public function testConstructorSetsInitiatorParty(): void
     {
         $mode = new PMode(self::SENDER_ID, self::RECIPIENT_ID, self::ENDPOINT_URL, self::PROCESS, self::DOCTYPE);
-        $this->assertSame(self::SENDER_ID, $mode->getInitiatorParty());
+        $this->assertSame(self::SENDER_ID, $mode->getParties()->getInitiatorParty());
     }
 
     public function testConstructorSetsResponderParty(): void
     {
         $mode = new PMode(self::SENDER_ID, self::RECIPIENT_ID, self::ENDPOINT_URL, self::PROCESS, self::DOCTYPE);
-        $this->assertSame(self::RECIPIENT_ID, $mode->getResponderParty());
+        $this->assertSame(self::RECIPIENT_ID, $mode->getParties()->getResponderParty());
     }
 
     public function testConstructorSetsResponderProtocolAddress(): void
     {
         $mode = new PMode(self::SENDER_ID, self::RECIPIENT_ID, self::ENDPOINT_URL, self::PROCESS, self::DOCTYPE);
-        $this->assertSame(self::ENDPOINT_URL, $mode->getResponderProtocolAddress());
+        $this->assertSame(self::ENDPOINT_URL, $mode->getParties()->getResponderProtocolAddress());
     }
 
     public function testConstructorSetsService(): void
@@ -73,31 +73,31 @@ class PModeTest extends TestCase
     public function testSigningEnabledByDefault(): void
     {
         $mode = new PMode(self::SENDER_ID, self::RECIPIENT_ID, self::ENDPOINT_URL, self::PROCESS, self::DOCTYPE);
-        $this->assertTrue($mode->isSigningEnabled());
+        $this->assertTrue($mode->getSecurity()->isSigningEnabled());
     }
 
     public function testEncryptionEnabledByDefault(): void
     {
         $mode = new PMode(self::SENDER_ID, self::RECIPIENT_ID, self::ENDPOINT_URL, self::PROCESS, self::DOCTYPE);
-        $this->assertTrue($mode->isEncryptionEnabled());
+        $this->assertTrue($mode->getSecurity()->isEncryptionEnabled());
     }
 
     public function testReceptionAwarenessEnabledByDefault(): void
     {
         $mode = new PMode(self::SENDER_ID, self::RECIPIENT_ID, self::ENDPOINT_URL, self::PROCESS, self::DOCTYPE);
-        $this->assertTrue($mode->isReceptionAwarenessEnabled());
+        $this->assertTrue($mode->getReliability()->isReceptionAwarenessEnabled());
     }
 
     public function testDefaultMaxRetriesIsThree(): void
     {
         $mode = new PMode(self::SENDER_ID, self::RECIPIENT_ID, self::ENDPOINT_URL, self::PROCESS, self::DOCTYPE);
-        $this->assertSame(3, $mode->getMaxRetries());
+        $this->assertSame(3, $mode->getReliability()->getMaxRetries());
     }
 
     public function testSendReceiptEnabledByDefault(): void
     {
         $mode = new PMode(self::SENDER_ID, self::RECIPIENT_ID, self::ENDPOINT_URL, self::PROCESS, self::DOCTYPE);
-        $this->assertTrue($mode->shouldSendReceipt());
+        $this->assertTrue($mode->getReceiptConfig()->shouldSendReceipt());
     }
 
     // ── PMode toArray ─────────────────────────────────────────────────────────
@@ -151,19 +151,19 @@ class PModeTest extends TestCase
     public function testBillingInvoiceHasInitiatorParty(): void
     {
         $mode = PeppolPModeFactory::billingInvoice(self::SENDER_ID, self::RECIPIENT_ID, self::ENDPOINT_URL);
-        $this->assertSame(self::SENDER_ID, $mode->getInitiatorParty());
+        $this->assertSame(self::SENDER_ID, $mode->getParties()->getInitiatorParty());
     }
 
     public function testBillingInvoiceHasResponderParty(): void
     {
         $mode = PeppolPModeFactory::billingInvoice(self::SENDER_ID, self::RECIPIENT_ID, self::ENDPOINT_URL);
-        $this->assertSame(self::RECIPIENT_ID, $mode->getResponderParty());
+        $this->assertSame(self::RECIPIENT_ID, $mode->getParties()->getResponderParty());
     }
 
     public function testBillingInvoiceHasResponderAddress(): void
     {
         $mode = PeppolPModeFactory::billingInvoice(self::SENDER_ID, self::RECIPIENT_ID, self::ENDPOINT_URL);
-        $this->assertSame(self::ENDPOINT_URL, $mode->getResponderProtocolAddress());
+        $this->assertSame(self::ENDPOINT_URL, $mode->getParties()->getResponderProtocolAddress());
     }
 
     public function testBillingInvoiceHasOneWayMep(): void
@@ -181,13 +181,13 @@ class PModeTest extends TestCase
     public function testBillingInvoiceHasInitiatorRole(): void
     {
         $mode = PeppolPModeFactory::billingInvoice(self::SENDER_ID, self::RECIPIENT_ID, self::ENDPOINT_URL);
-        $this->assertSame(As4Constants::ROLE_INITIATOR, $mode->getInitiatorRole());
+        $this->assertSame(As4Constants::ROLE_INITIATOR, $mode->getParties()->getInitiatorRole());
     }
 
     public function testBillingInvoiceHasResponderRole(): void
     {
         $mode = PeppolPModeFactory::billingInvoice(self::SENDER_ID, self::RECIPIENT_ID, self::ENDPOINT_URL);
-        $this->assertSame(As4Constants::ROLE_RESPONDER, $mode->getResponderRole());
+        $this->assertSame(As4Constants::ROLE_RESPONDER, $mode->getParties()->getResponderRole());
     }
 
     public function testBillingCreditNoteHasCreditNoteDocType(): void

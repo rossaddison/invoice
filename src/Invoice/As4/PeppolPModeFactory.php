@@ -45,14 +45,16 @@ final class PeppolPModeFactory
         string $responderProtocolAddress,
         string $documentTypeId,
     ): PMode {
-        return (new PMode(
+        $pMode = new PMode(
             $senderPartyId,
             $recipientPartyId,
             $responderProtocolAddress,
             As4Constants::PEPPOL_PROCESS_BIS3,
             $documentTypeId,
-        ))
+        );
+        $pMode->getParties()
             ->setInitiatorRole(As4Constants::ROLE_INITIATOR)
             ->setResponderRole(As4Constants::ROLE_RESPONDER);
+        return $pMode;
     }
 }
