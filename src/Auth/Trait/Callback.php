@@ -112,60 +112,28 @@ trait Callback
          */
         $hmrcId = $userArray['userId'] ?? 0;
 
-        if ($hmrcId > 0) {
-            // the id will be removed in the logout button
-            $login = 'hmrc' . (string) $hmrcId;
-            /**
-             * Depending on the environment i.e. prod or dev, getApiBaseUrl1()
-             *  will vary between 'https://api.service.hmrc.gov.uk' or
-             *  'https://test-api.service.hmrc.gov.uk' respectively
-             *
-             * @var string $userArray['emailAddress']
-             */
-            $email = $userArray['emailAddress'] ?? 'noemail'
-                    . $login
-                    . '@'
-                    . str_replace('https://',
-                            '', $developerSandboxHmrc->getApiBaseUrl1());
-            $password = Random::string(32);
-            if ($this->authService->oauthLogin($login)) {
-                return $this->tfaCheckBeforeRedirects('developersandboxhmrc',
-                        $d->tR, $d->uiR);
-            }
-            $user = new User($login, $email, $password);
-            $d->uR->save($user);
-            $userId = $user->reqId();
-            if ($userId > 0) {
-                $role = $d->uR->repoCount() == 1 ? 'admin' : 'observer';
-                if (!$this->assignRoleAndVerify($userId, $role)) {
-                    return $this->redirectToMain();
-                }
-                /**
-                 * @var array $this->sR->localeLanguageArray()
-                 */
-                $languageArray = $this->sR->localeLanguageArray();
-                /**
-                 * @see Trait\Oauth2 function getAccessToken
-                 * @var string $language
-                 */
-                $language = $languageArray[$_language];
-                $randomAndTimeToken = $this->getAccessToken(
-                        $user, $d->tR, self::DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN);
-                /**
-                 * @see A new UserInv (extension table of user) for the user is created.
-                 */
-                $proceedToMenuButton =
-                    $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
-                        $d->translator, $user, $d->uiR, $language, $_language,
-                            $randomAndTimeToken, 'developersandboxhmrc');
-                return $this->webViewRenderer->render('proceed', [
-                    'proceedToMenuButton' => $proceedToMenuButton,
-                ]);
-            }
+        if ($hmrcId <= 0) {
+            $this->authService->logout();
+            return $this->redirectToMain();
         }
-
-        $this->authService->logout();
-        return $this->redirectToMain();
+        // the id will be removed in the logout button
+        $login = 'hmrc' . (string) $hmrcId;
+        /**
+         * Depending on the environment i.e. prod or dev, getApiBaseUrl1()
+         *  will vary between 'https://api.service.hmrc.gov.uk' or
+         *  'https://test-api.service.hmrc.gov.uk' respectively
+         *
+         * @var string $userArray['emailAddress']
+         */
+        $email = $userArray['emailAddress'] ?? 'noemail'
+                . $login
+                . '@'
+                . str_replace('https://',
+                        '', $developerSandboxHmrc->getApiBaseUrl1());
+        $password = Random::string(32);
+        return $this->oauthRegisterAndProceed(
+            'developersandboxhmrc', $login, $email, $password,
+            $_language, self::DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN, $d);
     }
 
     /**
@@ -248,60 +216,32 @@ trait Callback
          * @var int $userArray['id']
          */
         $facebookId = $userArray['id'] ?? 0;
-        if ($facebookId > 0) {
-            /**
-             * @var string $userArray['name']
-             */
-            $facebookLogin = strtolower($userArray['name'] ?? '');
-            if (strlen($facebookLogin) > 0) {
-                // the id will be removed in the logout button
-                $login = 'facebook' . (string) $facebookId . $facebookLogin;
-                /**
-                 * @var string $userArray['email']
-                 */
-                $email = $userArray['email'] ?? 'noemail'
-                        . $login . '@facebook.com';
-                $password = Random::string(32);
+        if ($facebookId <= 0) {
+            $this->authService->logout();
+            return $this->redirectToMain();
+        }
+        /**
+         * @var string $userArray['name']
+         */
+        $facebookLogin = strtolower($userArray['name'] ?? '');
+        if (strlen($facebookLogin) == 0) {
+            $this->authService->logout();
+            return $this->redirectToMain();
+        }
+        // the id will be removed in the logout button
+        $login = 'facebook' . (string) $facebookId . $facebookLogin;
+        /**
+         * @var string $userArray['email']
+         */
+        $email = $userArray['email'] ?? 'noemail' . $login . '@facebook.com';
+        $password = Random::string(32);
 // The password does not need to be validated here so use
 //  authService->oauthLogin($login) instead of
 //   authService->login($login, $password)
 // but it will be used later to build a passwordHash
-                if ($this->authService->oauthLogin($login)) {
-                    return $this->tfaCheckBeforeRedirects('facebook', $d->tR, $d->uiR);
-                }
-                $user = new User($login, $email, $password);
-                $d->uR->save($user);
-                $userId = $user->reqId();
-                if ($userId > 0) {
-                    $role = $d->uR->repoCount() == 1 ? 'admin' : 'observer';
-                    if (!$this->assignRoleAndVerify($userId, $role)) {
-                        return $this->redirectToMain();
-                    }
-                    /**
-                     * @var array $this->sR->localeLanguageArray()
-                     */
-                    $languageArray = $this->sR->localeLanguageArray();
-                    /**
-                     * @see Trait\Oauth2 function getFacebookAccessToken
-                     * @var string $language
-                     */
-                    $language = $languageArray[$_language];
-                    $randomAndTimeToken =
-                        $this->getAccessToken($user, $d->tR,
-                                self::FACEBOOK_ACCESS_TOKEN);
-/**
- * @see A new UserInv (extension table of user) for the user is created.
- */
-                    $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($d->translator, $user, $d->uiR, $language, $_language, $randomAndTimeToken, 'facebook');
-                    return $this->webViewRenderer->render('proceed', [
-                        'proceedToMenuButton' => $proceedToMenuButton,
-                    ]);
-                }
-            }
-        }
-
-        $this->authService->logout();
-        return $this->redirectToMain();
+        return $this->oauthRegisterAndProceed(
+            'facebook', $login, $email, $password,
+            $_language, self::FACEBOOK_ACCESS_TOKEN, $d);
     }
 
     /**
@@ -389,61 +329,25 @@ trait Callback
          * @var int $userArray['id']
          */
         $githubId = $userArray['id'] ?? 0;
-        if ($githubId > 0) {
-            $githubLogin = 'g';
-            if (strlen($githubLogin) > 0) {
-                // Append github in case user has used same login for other
-                //  identity providers the id will be removed in the logout button
-                $login = 'github' . (string) $githubId . $githubLogin;
-                /**
-                 * @var string $userArray['email']
-                 */
-                $email = $userArray['email'] ?? 'noemail'
-                        . $login . '@github.com';
-                $password = Random::string(32);
-                // The password does not need to be validated here so use
-                //  authService->oauthLogin($login) instead of
-                //   authService->login($login, $password)
-                // but it will be used later to build a passwordHash
-                if ($this->authService->oauthLogin($login)) {
-                    return $this->tfaCheckBeforeRedirects('github', $d->tR, $d->uiR);
-                }
-                $user = new User($login, $email, $password);
-                $d->uR->save($user);
-                $userId = $user->reqId();
-                if ($userId > 0) {
-                    $role = $d->uR->repoCount() == 1 ? 'admin' : 'observer';
-                    if (!$this->assignRoleAndVerify($userId, $role)) {
-                        return $this->redirectToMain();
-                    }
-                    /**
-                     * @var array $this->sR->localeLanguageArray()
-                     */
-                    $languageArray = $this->sR->localeLanguageArray();
-                    /**
-                     * @see Trait\Oauth2 function getAccessToken
-                     * @var string $language
-                     */
-                    $language = $languageArray[$_language];
-                    $randomAndTimeToken = $this->getAccessToken(
-                            $user, $d->tR, self::GITHUB_ACCESS_TOKEN);
-                    /**
-                     * @see A new UserInv (extension table of user) for the
-                        user is created.
-                     */
-                    $proceedToMenuButton =
-                        $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
-                            $d->translator, $user, $d->uiR, $language, $_language,
-                                $randomAndTimeToken, 'github');
-                    return $this->webViewRenderer->render('proceed', [
-                        'proceedToMenuButton' => $proceedToMenuButton,
-                    ]);
-                }
-            }
+        if ($githubId <= 0) {
+            $this->authService->logout();
+            return $this->redirectToMain();
         }
-
-        $this->authService->logout();
-        return $this->redirectToMain();
+        // Append github in case user has used same login for other identity providers
+        // the id will be removed in the logout button
+        $login = 'github' . (string) $githubId . 'g';
+        /**
+         * @var string $userArray['email']
+         */
+        $email = $userArray['email'] ?? 'noemail' . $login . '@github.com';
+        $password = Random::string(32);
+        // The password does not need to be validated here so use
+        //  authService->oauthLogin($login) instead of
+        //   authService->login($login, $password)
+        // but it will be used later to build a passwordHash
+        return $this->oauthRegisterAndProceed(
+            'github', $login, $email, $password,
+            $_language, self::GITHUB_ACCESS_TOKEN, $d);
     }
 
     /**
@@ -1046,60 +950,24 @@ trait Callback
          * @var int $data['id']
          */
         $xId = $data['id'] ?? 0;
-        if ($xId > 0) {
-            $xLogin = (string) $data['username'];
-            if (strlen($xLogin) > 0) {
-                $login = 'twitter' . (string) $xId . $xLogin;
-                /**
-                 * @var string $userArray['email']
-                 */
-                $email = $userArray['email'] ?? 'noemail' . $login . '@x.com';
-                $password = Random::string(32);
-                if ($this->authService->oauthLogin($login)) {
-                    return $this->tfaCheckBeforeRedirects('x', $d->tR, $d->uiR);
-                }
-                $user = new User($login, $email, $password);
-                $d->uR->save($user);
-                $userId = $user->reqId();
-                if ($userId > 0) {
-                    $role = $d->uR->repoCount() == 1 ? 'admin' : 'observer';
-                    if (!$this->assignRoleAndVerify($userId, $role)) {
-                        return $this->redirectToMain();
-                    }
-                    /**
-                     * @var array $this->sR->localeLanguageArray()
-                     */
-                    $languageArray = $this->sR->localeLanguageArray();
-                    /**
-                     * @see Trait\Oauth2 function getXAccessToken
-                     * @var string $language
-                     */
-                    $language = $languageArray[$_language];
-                    $randomAndTimeToken = $this->getAccessToken($user,
-                        $d->tR, self::X_ACCESS_TOKEN);
-                    /**
-                     * @see A new UserInv (extension table of user) for the
-                        user is created.
-                     */
-                    $proceedToMenuButton =
-                      $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
-                        $d->translator,
-                        $user,
-                        $d->uiR,
-                        $language,
-                        $_language,
-                        $randomAndTimeToken,
-                        'x',
-                    );
-                    return $this->webViewRenderer->render('proceed', [
-                        'proceedToMenuButton' => $proceedToMenuButton,
-                    ]);
-                }
-            }
+        if ($xId <= 0) {
+            $this->authService->logout();
+            return $this->redirectToMain();
         }
-
-        $this->authService->logout();
-        return $this->redirectToMain();
+        $xLogin = (string) $data['username'];
+        if (strlen($xLogin) == 0) {
+            $this->authService->logout();
+            return $this->redirectToMain();
+        }
+        $login = 'twitter' . (string) $xId . $xLogin;
+        /**
+         * @var string $userArray['email']
+         */
+        $email = $userArray['email'] ?? 'noemail' . $login . '@x.com';
+        $password = Random::string(32);
+        return $this->oauthRegisterAndProceed(
+            'x', $login, $email, $password,
+            $_language, self::X_ACCESS_TOKEN, $d);
     }
 
     public function callbackVKontakte(
@@ -1204,78 +1072,37 @@ trait Callback
          * @var int $user['user_id']
          */
         $id = $user['user_id'] ?? 0;
-        if ($id > 0) {
-            /**
-             * @var string $user['first_name']
-             */
-            $userFirstName = $user['first_name'] ?? 'unknown';
-            /**
-             * @var string $user['last_name']
-             */
-            $userLastName = $user['last_name'] ?? 'unknown';
-            if (strlen($userFirstName) > 0 && strlen($userLastName) > 0) {
-                $userName = $userFirstName . ' ' . $userLastName;
-            } else {
-                $userName = 'fullname unknown';
-            }
-            // Append the last four digits of the Id
-            $login = '' . $userName
-                    . substr((string) $id, strlen((string) $id) - 4,
-                            strlen((string) $id));
-            /**
-             * @var string $userArray['email']
-             */
-            $email = $userArray['email'] ?? 'noemail' . $login . '@vk.ru';
-            $password = Random::string(32);
-            // The password does not need to be validated here so use
-            //  authService->oauthLogin($login) instead of
-            //   authService->login($login, $password)
-            // but it will be used later to build a passwordHash
-            if ($this->authService->oauthLogin($login)) {
-                return $this->tfaCheckBeforeRedirects('vkontakte', $d->tR, $d->uiR);
-            }
-            $user = new User($login, $email, $password);
-            $d->uR->save($user);
-            $userId = $user->reqId();
-            if ($userId > 0) {
-                // avoid autoincrement issues and using predefined user id
-                //  of 1 ... and assign the first signed-up user ... admin rights
-                $role = $d->uR->repoCount() == 1 ? 'admin' : 'observer';
-                if (!$this->assignRoleAndVerify($userId, $role)) {
-                    return $this->redirectToMain();
-                }
-                /**
-                 * @var array $this->sR->localeLanguageArray()
-                 */
-                $languageArray = $this->sR->localeLanguageArray();
-                /**
-                 * @see Trait\Oauth2 function getYandexAccessToken
-                 * @var string $language
-                 */
-                $language = $languageArray[$_language];
-                $randomAndTimeToken = $this->getAccessToken($user,
-                        $d->tR, self::VKONTAKTE_ACCESS_TOKEN);
-                /**
-                 * @see A new UserInv (extension table of user) for the user is created.
-                 */
-                $proceedToMenuButton =
-                  $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
-                    $d->translator,
-                    $user,
-                    $d->uiR,
-                    $language,
-                    $_language,
-                    $randomAndTimeToken,
-                    'vkontakte',
-                );
-                return $this->webViewRenderer->render('proceed', [
-                    'proceedToMenuButton' => $proceedToMenuButton,
-                ]);
-            }
+        if ($id <= 0) {
+            $this->authService->logout();
+            return $this->redirectToMain();
         }
-
-        $this->authService->logout();
-        return $this->redirectToMain();
+        /**
+         * @var string $user['first_name']
+         */
+        $userFirstName = $user['first_name'] ?? 'unknown';
+        /**
+         * @var string $user['last_name']
+         */
+        $userLastName = $user['last_name'] ?? 'unknown';
+        $userName = (strlen($userFirstName) > 0 && strlen($userLastName) > 0)
+            ? $userFirstName . ' ' . $userLastName
+            : 'fullname unknown';
+        // Append the last four digits of the Id
+        $login = '' . $userName
+                . substr((string) $id, strlen((string) $id) - 4,
+                        strlen((string) $id));
+        /**
+         * @var string $userArray['email']
+         */
+        $email = $userArray['email'] ?? 'noemail' . $login . '@vk.ru';
+        $password = Random::string(32);
+        // The password does not need to be validated here so use
+        //  authService->oauthLogin($login) instead of
+        //   authService->login($login, $password)
+        // but it will be used later to build a passwordHash
+        return $this->oauthRegisterAndProceed(
+            'vkontakte', $login, $email, $password,
+            $_language, self::VKONTAKTE_ACCESS_TOKEN, $d);
     }
 
     public function callbackYandex(
@@ -1501,6 +1328,47 @@ public function tfaCheckBeforeRedirects(
             return false;
         }
         return true;
+    }
+
+    private function oauthRegisterAndProceed(
+        string $provider,
+        string $login,
+        string $email,
+        string $password,
+        string $_language,
+        string $tokenConst,
+        CallbackDeps $d,
+    ): ResponseInterface {
+        if ($this->authService->oauthLogin($login)) {
+            return $this->tfaCheckBeforeRedirects($provider, $d->tR, $d->uiR);
+        }
+        $oauthUser = new User($login, $email, $password);
+        $d->uR->save($oauthUser);
+        $userId = $oauthUser->reqId();
+        if ($userId <= 0) {
+            $this->authService->logout();
+            return $this->redirectToMain();
+        }
+        $role = $d->uR->repoCount() == 1 ? 'admin' : 'observer';
+        if (!$this->assignRoleAndVerify($userId, $role)) {
+            return $this->redirectToMain();
+        }
+        /**
+         * @var array $this->sR->localeLanguageArray()
+         */
+        $languageArray = $this->sR->localeLanguageArray();
+        /**
+         * @var string $language
+         */
+        $language = $languageArray[$_language];
+        $randomAndTimeToken = $this->getAccessToken($oauthUser, $d->tR, $tokenConst);
+        $proceedToMenuButton =
+            $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
+                $d->translator, $oauthUser, $d->uiR, $language, $_language,
+                    $randomAndTimeToken, $provider);
+        return $this->webViewRenderer->render('proceed', [
+            'proceedToMenuButton' => $proceedToMenuButton,
+        ]);
     }
 
     private function redirectToOauth2AuthError(string $message): ResponseInterface
