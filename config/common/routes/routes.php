@@ -7,7 +7,7 @@ use App\Auth\Controller\{
     ResetPasswordController, SignupController};
 use App\Auth\Permissions;
 use App\Contact\ContactController;
-use App\Controller\{Actions\ApiInfo, SiteController};
+use App\Controller\{Actions\ApiInfo, SiteAuthController, SiteController};
 use App\Invoice\{
     AllowanceCharge\AllowanceChargeController,
     CategoryPrimary\CategoryPrimaryController,
@@ -160,37 +160,37 @@ return [
         ->action([SiteController::class, 'usercancelledoauth2'])
         ->name('site/usercancelledoauth2'),
     Route::methods([$mG, $mP], '/forgotalert')
-        ->action([SiteController::class, 'forgotalert'])
+        ->action([SiteAuthController::class, 'forgotalert'])
         ->name('site/forgotalert'),
     Route::methods([$mG, $mP], '/forgotemailfailed')
-        ->action([SiteController::class, 'forgotemailfailed'])
+        ->action([SiteAuthController::class, 'forgotemailfailed'])
         ->name('site/forgotemailfailed'),
     Route::methods([$mG, $mP], '/forgotusernotfound')
-        ->action([SiteController::class, 'forgotusernotfound'])
+        ->action([SiteAuthController::class, 'forgotusernotfound'])
         ->name('site/forgotusernotfound'),
     Route::methods([$mG, $mP], '/onetimepassworderror')
-        ->action([SiteController::class, 'onetimepassworderror'])
+        ->action([SiteAuthController::class, 'onetimepassworderror'])
         ->name('site/onetimepassworderror'),
     Route::methods([$mG, $mP], '/onetimepasswordfailure')
-        ->action([SiteController::class, 'onetimepasswordfailure'])
+        ->action([SiteAuthController::class, 'onetimepasswordfailure'])
         ->name('site/onetimepasswordfailure'),
     Route::methods([$mG, $mP], '/onetimepasswordsuccess')
-        ->action([SiteController::class, 'onetimepasswordsuccess'])
+        ->action([SiteAuthController::class, 'onetimepasswordsuccess'])
         ->name('site/onetimepasswordsuccess'),
     Route::methods([$mG, $mP], '/privacypolicy')
         ->action([SiteController::class, 'privacypolicy'])
         ->name('site/privacypolicy'),
     Route::methods([$mG, $mP], '/resetpasswordfailed')
-        ->action([SiteController::class, 'resetpasswordfailed'])
+        ->action([SiteAuthController::class, 'resetpasswordfailed'])
         ->name('site/resetpasswordfailed'),
     Route::methods([$mG, $mP], '/resetpasswordsuccess')
-        ->action([SiteController::class, 'resetpasswordsuccess'])
+        ->action([SiteAuthController::class, 'resetpasswordsuccess'])
         ->name('site/resetpasswordsuccess'),
     Route::methods([$mG, $mP], '/signupfailed')
-        ->action([SiteController::class, 'signupfailed'])
+        ->action([SiteAuthController::class, 'signupfailed'])
         ->name('site/signupfailed'),
     Route::methods([$mG, $mP], '/signupsuccess')
-        ->action([SiteController::class, 'signupsuccess'])
+        ->action([SiteAuthController::class, 'signupsuccess'])
         ->name('site/signupsuccess'),
     Route::methods([$mG, $mP], '/termsofservice')
         ->action([SiteController::class, 'termsofservice'])
