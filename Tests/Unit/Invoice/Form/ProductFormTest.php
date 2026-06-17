@@ -15,12 +15,12 @@ class ProductFormTest extends TestCase
         $form = new ProductForm();
 
         $this->assertSame('ProductForm', $form->getFormName());
-        $this->assertSame(0.00, $form->getProductPrice());
-        $this->assertSame(1.00, $form->getProductPriceBaseQuantity());
-        $this->assertSame(0.00, $form->getPurchasePrice());
-        $this->assertNull($form->getId());
-        $this->assertNull($form->getTaxRateId());
-        $this->assertNull($form->getUnitId());
+        $this->assertSame(0.00, $form->product_price);
+        $this->assertSame(1.00, $form->product_price_base_quantity);
+        $this->assertSame(0.00, $form->purchase_price);
+        $this->assertNull($form->family_id);
+        $this->assertNull($form->tax_rate_id);
+        $this->assertNull($form->unit_id);
     }
 
     public function testGetFormNameReturnsProductForm(): void
@@ -54,16 +54,16 @@ class ProductFormTest extends TestCase
 
         $form = ProductForm::show($product);
 
-        $this->assertSame('SKU-001', $form->getProductSku());
-        $this->assertSame('Widget Pro', $form->getProductName());
-        $this->assertSame('A professional widget', $form->getProductDescription());
-        $this->assertSame(49.99, $form->getProductPrice());
-        $this->assertSame(1.00, $form->getProductPriceBaseQuantity());
-        $this->assertSame(25.00, $form->getPurchasePrice());
-        $this->assertSame('Acme Wholesale', $form->getProviderName());
-        $this->assertSame(1, $form->getTaxRateId());
-        $this->assertSame(2, $form->getUnitId());
-        $this->assertSame('GB', $form->getProductCountryOfOriginCode());
+        $this->assertSame('SKU-001', $form->product_sku);
+        $this->assertSame('Widget Pro', $form->product_name);
+        $this->assertSame('A professional widget', $form->product_description);
+        $this->assertSame(49.99, $form->product_price);
+        $this->assertSame(1.00, $form->product_price_base_quantity);
+        $this->assertSame(25.00, $form->purchase_price);
+        $this->assertSame('Acme Wholesale', $form->provider_name);
+        $this->assertSame(1, $form->tax_rate_id);
+        $this->assertSame(2, $form->unit_id);
+        $this->assertSame('GB', $form->product_country_of_origin_code);
     }
 
     public function testShowWithPeppolFields(): void
@@ -92,12 +92,12 @@ class ProductFormTest extends TestCase
 
         $form = ProductForm::show($product);
 
-        $this->assertSame('0088', $form->getProductSiiSchemeid());
-        $this->assertSame('4006381333931', $form->getProductSiiId());
-        $this->assertSame('STI', $form->getProductIccListid());
-        $this->assertSame('Colour', $form->getProductAdditionalItemPropertyName());
-        $this->assertSame('Blue', $form->getProductAdditionalItemPropertyValue());
-        $this->assertSame(5, $form->getUnitPeppolId());
+        $this->assertSame('0088', $form->product_sii_schemeid);
+        $this->assertSame('4006381333931', $form->product_sii_id);
+        $this->assertSame('STI', $form->product_icc_listid);
+        $this->assertSame('Colour', $form->product_additional_item_property_name);
+        $this->assertSame('Blue', $form->product_additional_item_property_value);
+        $this->assertSame(5, $form->unit_peppol_id);
     }
 
     public function testShowReturnsNewInstance(): void

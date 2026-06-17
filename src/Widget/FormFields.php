@@ -205,7 +205,7 @@ final readonly class FormFields
         return Field::select($form, 'family_id')
             ->label($this->translator->translate('family'))
             ->addInputAttributes(['class' => $cssClass])
-            ->value($form->getId())
+            ->value($form->family_id)
             ->prompt($this->translator->translate('none'))
             ->optionsData($familiesData)
             ->hint($this->translator->translate($hintKey))
@@ -227,7 +227,7 @@ final readonly class FormFields
         return Field::select($form, 'unit_id')
             ->label($this->translator->translate('unit'))
             ->addInputAttributes(['class' => $cssClass])
-            ->value($form->getUnitId())
+            ->value($form->unit_id)
             ->prompt($this->translator->translate('none'))
             ->optionsData($unitsData)
             ->hint($this->translator->translate($hintKey))
@@ -249,7 +249,7 @@ final readonly class FormFields
         return Field::select($form, 'tax_rate_id')
             ->label($this->translator->translate('tax.rate'))
             ->addInputAttributes(['class' => $cssClass])
-            ->value($form->getTaxRateId())
+            ->value($form->tax_rate_id)
             ->prompt($this->translator->translate('none'))
             ->optionsData($taxRatesData)
             ->hint($this->translator->translate($hintKey))
@@ -272,26 +272,23 @@ final readonly class FormFields
                 'form-control form-control-lg alert alert-success';
 
         // Handle specific field name mappings for ProductForm
+        /** @var string|float|int|bool|null $value */
         $value = match ($fieldName) {
-            'product_name' => $form->getProductName(),
-            'product_description' => $form->getProductDescription(),
-            'product_sku' => $form->getProductSku(),
-            'purchase_price' => $form->getPurchasePrice(),
-            'product_price' => $form->getProductPrice(),
-            'product_price_base_quantity' =>
-                    $form->getProductPriceBaseQuantity(),
-            'product_sii_id' => $form->getProductSiiId(),
-            'product_sii_schemeid' => $form->getProductSiiSchemeid(),
-            'product_icc_listid' => $form->getProductIccListid(),
-            'product_icc_listversionid' => $form->getProductIccListversionid(),
-            'product_icc_id' => $form->getProductIccId(),
-            'product_country_of_origin_code' =>
-                    $form->getProductCountryOfOriginCode(),
-            'product_additional_item_property_name' =>
-                    $form->getProductAdditionalItemPropertyName(),
-            'product_additional_item_property_value' =>
-                    $form->getProductAdditionalItemPropertyValue(),
-            'provider_name' => $form->getProviderName(),
+            'product_name' => $form->product_name,
+            'product_description' => $form->product_description,
+            'product_sku' => $form->product_sku,
+            'purchase_price' => $form->purchase_price,
+            'product_price' => $form->product_price,
+            'product_price_base_quantity' => $form->product_price_base_quantity,
+            'product_sii_id' => $form->product_sii_id,
+            'product_sii_schemeid' => $form->product_sii_schemeid,
+            'product_icc_listid' => $form->product_icc_listid,
+            'product_icc_listversionid' => $form->product_icc_listversionid,
+            'product_icc_id' => $form->product_icc_id,
+            'product_country_of_origin_code' => $form->product_country_of_origin_code,
+            'product_additional_item_property_name' => $form->product_additional_item_property_name,
+            'product_additional_item_property_value' => $form->product_additional_item_property_value,
+            'provider_name' => $form->provider_name,
             default => null,
         };
 
@@ -341,7 +338,7 @@ final readonly class FormFields
         return Field::select($form, 'unit_peppol_id')
             ->label($this->translator->translate('product.peppol.unit'))
             ->addInputAttributes(['class' => $cssClass])
-            ->value($form->getUnitPeppolId())
+            ->value($form->unit_peppol_id)
             ->prompt($this->translator->translate('none'))
             ->optionsData($unitPeppolsData)
             ->hint($this->translator->translate($hintKey))
