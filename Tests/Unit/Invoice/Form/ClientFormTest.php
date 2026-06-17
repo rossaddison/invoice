@@ -16,11 +16,11 @@ class ClientFormTest extends TestCase
         $form = new ClientForm();
 
         $this->assertSame('', $form->getFormName());
-        $this->assertSame('', $form->getClientName());
-        $this->assertSame('', $form->getClientEmail());
-        $this->assertFalse($form->getClientActive());
-        $this->assertNull($form->getClientAge());
-        $this->assertNull($form->getClientGender());
+        $this->assertSame('', $form->client_name);
+        $this->assertSame('', $form->client_email);
+        $this->assertFalse($form->client_active);
+        $this->assertNull($form->client_age);
+        $this->assertNull($form->client_gender);
     }
 
     public function testGetFormNameReturnsEmptyString(): void
@@ -47,19 +47,19 @@ class ClientFormTest extends TestCase
 
         $form = ClientForm::show($client);
 
-        $this->assertSame('Acme Corp', $form->getClientName());
-        $this->assertSame('Ltd', $form->getClientSurname());
-        $this->assertSame('billing@acme.co.uk', $form->getClientEmail());
-        $this->assertSame('+44 20 7946 0958', $form->getClientPhone());
-        $this->assertSame('123 High Street', $form->getClientAddress1());
-        $this->assertSame('Floor 2', $form->getClientAddress2());
-        $this->assertSame('London', $form->getClientCity());
-        $this->assertSame('England', $form->getClientState());
-        $this->assertSame('EC1A 1BB', $form->getClientZip());
-        $this->assertSame('GB', $form->getClientCountry());
-        $this->assertTrue($form->getClientActive());
-        $this->assertSame(35, $form->getClientAge());
-        $this->assertSame(1, $form->getClientGender());
+        $this->assertSame('Acme Corp', $form->client_name);
+        $this->assertSame('Ltd', $form->client_surname);
+        $this->assertSame('billing@acme.co.uk', $form->client_email);
+        $this->assertSame('+44 20 7946 0958', $form->client_phone);
+        $this->assertSame('123 High Street', $form->client_address_1);
+        $this->assertSame('Floor 2', $form->client_address_2);
+        $this->assertSame('London', $form->client_city);
+        $this->assertSame('England', $form->client_state);
+        $this->assertSame('EC1A 1BB', $form->client_zip);
+        $this->assertSame('GB', $form->client_country);
+        $this->assertTrue($form->client_active);
+        $this->assertSame(35, $form->client_age);
+        $this->assertSame(1, $form->client_gender);
     }
 
     public function testShowWithBirthdateFormatted(): void
@@ -73,7 +73,7 @@ class ClientFormTest extends TestCase
 
         $form = ClientForm::show($client);
 
-        $this->assertSame('1994-06-15', $form->getClientBirthdate());
+        $this->assertSame('1994-06-15', $form->client_birthdate);
     }
 
     public function testShowWithNullBirthdate(): void
@@ -87,7 +87,7 @@ class ClientFormTest extends TestCase
 
         $form = ClientForm::show($client);
 
-        $this->assertNull($form->getClientBirthdate());
+        $this->assertNull($form->client_birthdate);
     }
 
     public function testShowWithVatAndTaxFields(): void
@@ -103,9 +103,9 @@ class ClientFormTest extends TestCase
 
         $form = ClientForm::show($client);
 
-        $this->assertSame('GB123456789', $form->getClientVatId());
-        $this->assertSame('TC001', $form->getClientTaxCode());
-        $this->assertSame('en-GB', $form->getClientLanguage());
+        $this->assertSame('GB123456789', $form->client_vat_id);
+        $this->assertSame('TC001', $form->client_tax_code);
+        $this->assertSame('en-GB', $form->client_language);
     }
 
     public function testShowReturnsNewInstance(): void
@@ -123,9 +123,9 @@ class ClientFormTest extends TestCase
     {
         $form = new ClientForm();
 
-        $this->assertSame('', $form->getClientAddress1());
-        $this->assertSame('', $form->getClientCity());
-        $this->assertSame('', $form->getClientZip());
-        $this->assertSame('', $form->getClientPhone());
+        $this->assertSame('', $form->client_address_1);
+        $this->assertSame('', $form->client_city);
+        $this->assertSame('', $form->client_zip);
+        $this->assertSame('', $form->client_phone);
     }
 }

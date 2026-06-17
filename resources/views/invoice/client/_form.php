@@ -140,7 +140,7 @@ use Yiisoft\Html\Tag\Form;
   <?= Field::select($form, 'client_frequency')
     ->label($translator->translate('client.frequency'))
     ->addInputAttributes([
-        'value' => Html::encode($form->getClientFrequency() ?? ''),
+        'value' => Html::encode($form->client_frequency ?? ''),
         'placeholder' => $translator->translate('client.frequency'),
         'class' => 'form-select',
     ])
@@ -190,7 +190,7 @@ use Yiisoft\Html\Tag\Form;
       ->label($translator->translate('client.telegram.chat.id'))
       ->addInputAttributes([
           'placeholder' => $translator->translate('client.telegram.chat.id'),
-          'value' => Html::encode($form->getClientTelegramChatId() ?? ''),
+          'value' => Html::encode($form->client_telegram_chat_id ?? ''),
           'class' => 'form-control form-control-lg',
           'id' => 'client_telegram_chat_id',
       ])
@@ -204,7 +204,7 @@ use Yiisoft\Html\Tag\Form;
         ->label($translator->translate('client.postaladdress.available'))
         ->required(false)
         ->addInputAttributes([
-            'value' => Html::encode($form->getPostaladdressId() ?? ''),
+            'value' => Html::encode($form->postaladdress_id ?? ''),
             'class' => 'form-select alert alert-warning',
         ])
         ->optionsData($optionsDataPostalAddresses); ?>
@@ -230,7 +230,7 @@ use Yiisoft\Html\Tag\Form;
     ->label($translator->translate('gender'))
     ->addInputAttributes(['class' => 'form-select'])
     ->optionsData($optionsDataGender)
-    ->value(Html::encode($form->getClientGender() ?? 0)); ?>
+    ->value(Html::encode($form->client_gender ?? 0)); ?>
   <?= Field::date($form, 'client_birthdate')
     ->label($translator->translate('birthdate'))
     ->addInputAttributes([
@@ -241,13 +241,13 @@ use Yiisoft\Html\Tag\Form;
         'autocomplete' => 'off',
         'onclick'      => 'this.showPicker()',
     ])
-    ->value(Html::encode($form->getClientBirthdate() ?? ''))
+    ->value(Html::encode($form->client_birthdate ?? ''))
     ->required(false); ?>
   <?= Field::number($form, 'client_age')
     ->label($translator->translate('client.age'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('client.age'),
-        'value'       => Html::encode($form->getClientAge() ?? '18'),
+        'value'       => Html::encode($form->client_age ?? '18'),
         'class'       => 'form-control form-control-lg',
         'id'          => 'client_age',
     ])

@@ -360,18 +360,18 @@ final readonly class FormFields
 
         // Handle specific field name mappings for ClientForm
         $value = match ($fieldName) {
-            'client_name' => $form->getClientName(),
-            'client_surname' => $form->getClientSurname(),
-            'client_group' => $form->getClientGroup(),
-            'client_number' => $form->getClientNumber(),
-            'client_address_1' => $form->getClientAddress1(),
-            'client_address_2' => $form->getClientAddress2(),
-            'client_building_number' => $form->getClientBuildingNumber(),
-            'client_city' => $form->getClientCity(),
-            'client_state' => $form->getClientState(),
-            'client_zip' => $form->getClientZip(),
-            'client_vat_id' => $form->getClientVatId(),
-            'client_tax_code' => $form->getClientTaxCode(),
+            'client_name' => $form->client_name,
+            'client_surname' => $form->client_surname,
+            'client_group' => $form->client_group,
+            'client_number' => $form->client_number,
+            'client_address_1' => $form->client_address_1,
+            'client_address_2' => $form->client_address_2,
+            'client_building_number' => $form->client_building_number,
+            'client_city' => $form->client_city,
+            'client_state' => $form->client_state,
+            'client_zip' => $form->client_zip,
+            'client_vat_id' => $form->client_vat_id,
+            'client_tax_code' => $form->client_tax_code,
             default => null,
         };
 
@@ -402,7 +402,7 @@ final readonly class FormFields
             ->label($this->translator->translate('email'))
             ->addInputAttributes([
                 'placeholder'  => $this->translator->translate('email'),
-                'value'        => $form->getClientEmail() ?? '',
+                'value'        => $form->client_email ?? '',
                 'class'        => 'form-control form-control-lg',
                 'id'           => 'client_email',
                 'autocomplete' => 'email',
@@ -418,9 +418,9 @@ final readonly class FormFields
             string $labelKey): string
     {
         $value = match ($fieldName) {
-            'client_mobile' => $form->getClientMobile(),
-            'client_phone' => $form->getClientPhone(),
-            'client_fax' => $form->getClientFax(),
+            'client_mobile' => $form->client_mobile,
+            'client_phone' => $form->client_phone,
+            'client_fax' => $form->client_fax,
             default => null,
         };
 
@@ -445,7 +445,7 @@ final readonly class FormFields
             ->label($this->translator->translate('web'))
             ->addInputAttributes([
                 'placeholder' => $this->translator->translate('web'),
-                'value' => $form->getClientWeb() ?? '',
+                'value' => $form->client_web ?? '',
                 'class' => 'form-control form-control-lg',
                 'id' => 'client_web',
             ])
@@ -462,7 +462,7 @@ final readonly class FormFields
         return Field::select($form, 'client_title')
             ->label($this->translator->translate('client.title'))
             ->addInputAttributes(['class' => 'form-control form-control-lg'])
-            ->value($form->getClientTitle())
+            ->value($form->client_title)
             ->prompt($this->translator->translate('none'))
             ->optionsData($titleOptions)
             ->required(false)
@@ -480,8 +480,8 @@ final readonly class FormFields
             ->label($this->translator->translate('language'))
             ->addInputAttributes(['class' => 'form-control form-control-lg',
                 'id' => 'client_language'])
-            ->value(strlen($form->getClientLanguage() ?? '') > 0 ?
-                    $form->getClientLanguage() : $selectedLanguage)
+            ->value(strlen($form->client_language ?? '') > 0 ?
+                    $form->client_language : $selectedLanguage)
             ->optionsData($languageOptions)
             ->required(false)
             ->render();
@@ -500,7 +500,7 @@ final readonly class FormFields
                 'id' => 'client_country',
                 'class' => 'form-control form-control-lg',
             ])
-            ->value($form->getClientCountry() ?? $selectedCountry)
+            ->value($form->client_country ?? $selectedCountry)
             ->optionsData($countryOptions)
             ->required(false)
             ->render();
