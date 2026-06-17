@@ -249,11 +249,19 @@ final class InvsListWidget extends Widget
             $this->visible,
             $this->visibleInvSentLogColumn,
         );
-        $columns = $columnBuilder->buildColumns(
-            $this->iR, $this->irR, $this->islR, $this->sR,
-            $this->decimalPlaces, $totalAmount, $totalPaid, $totalBalance,
-            $this->qR, $this->soR, $this->dlR,
-        );
+        $columns = $columnBuilder->buildColumns(new InvsColumnParams(
+            iR:           $this->iR,
+            irR:          $this->irR,
+            islR:         $this->islR,
+            sR:           $this->sR,
+            dp:           $this->decimalPlaces,
+            totalAmount:  $totalAmount,
+            totalPaid:    $totalPaid,
+            totalBalance: $totalBalance,
+            qR:           $this->qR,
+            soR:          $this->soR,
+            dlR:          $this->dlR,
+        ));
 
         $columnCount = count(array_filter(
             $columns, static fn(ColumnInterface $col): bool => $col->isVisible()

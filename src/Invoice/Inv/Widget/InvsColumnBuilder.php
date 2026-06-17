@@ -60,19 +60,19 @@ final class InvsColumnBuilder
     /**
      * @return ColumnInterface[]
      */
-    public function buildColumns(
-        IR $iR,
-        IRR $irR,
-        ISLR $islR,
-        SR $sR,
-        int $dp,
-        float $totalAmount,
-        float $totalPaid,
-        float $totalBalance,
-        ?QR $qR = null,
-        ?SOR $soR = null,
-        ?DLR $dlR = null,
-    ): array {
+    public function buildColumns(InvsColumnParams $p): array
+    {
+        $iR           = $p->iR;
+        $irR          = $p->irR;
+        $islR         = $p->islR;
+        $sR           = $p->sR;
+        $dp           = $p->dp;
+        $totalAmount  = $p->totalAmount;
+        $totalPaid    = $p->totalPaid;
+        $totalBalance = $p->totalBalance;
+        $qR           = $p->qR;
+        $soR          = $p->soR;
+        $dlR          = $p->dlR;
         $t   = $this->translator;
         $ug  = $this->urlGenerator;
         $vis = $this->visible;
