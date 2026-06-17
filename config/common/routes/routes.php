@@ -46,7 +46,9 @@ use App\Invoice\{
     PurchaseEntry\PurchaseEntryController,
     PaymentPeppol\PaymentPeppolController,
     PostalAddress\PostalAddressController,
+    Product\ProductAttachmentController,
     Product\ProductController,
+    Product\ProductSelectionController,
     ProductClient\ProductClientController,
     ProductImage\ProductImageController,
     ProductProperty\ProductPropertyController,
@@ -1548,12 +1550,12 @@ return [
                 ->name('product/lookup'),
             Route::get('/product/selection_quote')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([ProductController::class, 'selectionQuote'])
+                ->action([ProductSelectionController::class, 'selectionQuote'])
                 ->name('product/selectionQuote'),
             Route::get('/product/selection_inv')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->middleware(JsonDataResponseMiddleware::class)
-                ->action([ProductController::class, 'selectionInv'])
+                ->action([ProductSelectionController::class, 'selectionInv'])
                 ->name('product/selectionInv'),
             Route::methods([$mG, $mP], '/product/edit/{id}')
                 ->name('product/edit')
@@ -1569,11 +1571,11 @@ return [
                 ->action([ProductController::class, 'view']),
             Route::methods([$mG, $mP], '/image/{product_image_id}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([ProductController::class, 'downloadImageFile'])
+                ->action([ProductAttachmentController::class, 'downloadImageFile'])
                 ->name('product/downloadImageFile'),
             Route::methods([$mG, $mP], '/image_attachment/{id}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([ProductController::class, 'imageAttachment'])
+                ->action([ProductAttachmentController::class, 'imageAttachment'])
                 ->name('product/imageAttachment'),
             // ProductClient
             Route::methods([$mG, $mP], '/productclient/add')
