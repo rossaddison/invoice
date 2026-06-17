@@ -14,12 +14,12 @@ class InvItemFormTest extends TestCase
     {
         $form = new InvItemForm();
 
-        $this->assertSame('', $form->getInvId());
-        $this->assertSame('', $form->getSoItemId());
-        $this->assertSame('', $form->getTaxRateId());
-        $this->assertNull($form->getQuantity());
-        $this->assertNull($form->getPrice());
-        $this->assertNull($form->getDate());
+        $this->assertSame('', $form->inv_id);
+        $this->assertSame('', $form->so_item_id);
+        $this->assertSame('', $form->tax_rate_id);
+        $this->assertNull($form->quantity);
+        $this->assertNull($form->price);
+        $this->assertNull($form->date);
         $this->assertSame('', $form->getFormName());
     }
 
@@ -36,8 +36,8 @@ class InvItemFormTest extends TestCase
 
         $form = InvItemForm::show($entity, 12);
 
-        $this->assertSame('12', $form->getInvId());
-        $this->assertSame('3', $form->getTaxRateId());
+        $this->assertSame('12', $form->inv_id);
+        $this->assertSame('3', $form->tax_rate_id);
     }
 
     public function testShowWithNullRelationsGivesNullProductAndTask(): void
@@ -48,8 +48,8 @@ class InvItemFormTest extends TestCase
 
         $form = InvItemForm::show($entity, 5);
 
-        $this->assertNull($form->getProductId());
-        $this->assertNull($form->getTaskId());
+        $this->assertNull($form->product_id);
+        $this->assertNull($form->task_id);
     }
 
     public function testShowDateIsFormattedFromEntityDateTimeImmutable(): void
@@ -61,8 +61,8 @@ class InvItemFormTest extends TestCase
 
         $form = InvItemForm::show($entity, 1);
 
-        $this->assertIsString($form->getDate());
-        $this->assertMatchesRegularExpression('/^\d{4}-\d{2}-\d{2}$/', (string) $form->getDate());
+        $this->assertIsString($form->date);
+        $this->assertMatchesRegularExpression('/^\d{4}-\d{2}-\d{2}$/', $form->date);
     }
 
     public function testShowWithDefaultBelongsToVatInvoiceIsZero(): void
@@ -73,7 +73,7 @@ class InvItemFormTest extends TestCase
 
         $form = InvItemForm::show($entity, 1);
 
-        $this->assertSame(0, $form->getBelongsToVatInvoice());
+        $this->assertSame(0, $form->belongs_to_vat_invoice);
     }
 
     public function testShowReturnsNewInstance(): void
@@ -98,11 +98,11 @@ class InvItemFormTest extends TestCase
 
         $form = InvItemForm::show($entity, 7);
 
-        $this->assertSame('7', $form->getInvId());
-        $this->assertSame('2', $form->getTaxRateId());
-        $this->assertSame('Widget A', $form->getName());
-        $this->assertSame('Standard widget', $form->getDescription());
-        $this->assertSame(5.0, $form->getQuantity());
-        $this->assertSame(10.0, $form->getPrice());
+        $this->assertSame('7', $form->inv_id);
+        $this->assertSame('2', $form->tax_rate_id);
+        $this->assertSame('Widget A', $form->name);
+        $this->assertSame('Standard widget', $form->description);
+        $this->assertSame(5.0, $form->quantity);
+        $this->assertSame(10.0, $form->price);
     }
 }

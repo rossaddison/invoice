@@ -107,7 +107,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                         ?>
                                 <?= Field::select($form, 'product_id')
                                 ->optionsData($optionsDataProduct)
-                                ->value(Html::encode($form->getProductId())); ?>
+                                ->value(Html::encode($form->product_id)); ?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td'); ?>
@@ -115,7 +115,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                 <?= Field::number($form, 'quantity')
                                     ->label($translator->translate('quantity'))
                                     ->value($numberHelper->formatAmount(
-                                            $form->getQuantity()))
+                                            $form->quantity))
                                     ->hint($translator->translate(
                                              'hint.greater.than.zero.please'));
                                 ?>
@@ -126,7 +126,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                 <?= Field::text($form, 'price')
                                     ->label($translator->translate('price'))
                                     ->value($numberHelper->formatAmount(
-                                            $form->getPrice() ?? 0.00))
+                                            $form->price ?? 0.00))
                                     ->hint($translator->translate(
                                            'hint.greater.than.zero.please')); ?>
                             <?= Html::closeTag('div'); ?>
@@ -145,7 +145,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                             . $translator->translate('per.item'),
                                     ])
                                     ->value($numberHelper->formatAmount(
-                                       $form->getDiscountAmount() ?? 0.00)); ?>
+                                       $form->discount_amount ?? 0.00)); ?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td td-vert-middle']); ?>
@@ -182,7 +182,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                     ->addInputAttributes(
                                         ['class' => 'form-select',])
                                     ->optionsData($optionsDataTaxRate)
-                                    ->value(Html::encode($form->getTaxRateId()))
+                                    ->value(Html::encode($form->tax_rate_id))
                                     ->hint($translator->translate(
                                                 'hint.this.field.is.required'));
                                 ?>
@@ -208,30 +208,30 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                             <?= Html::openTag('div'); ?>
                                 <?= Field::textarea($form, 'description')
                                     ->value(Html::encode(
-                                            $form->getDescription() ?? '')); ?>
+                                            $form->description ?? '')); ?>
                             <?= Html::closeTag('div'); ?>
                             <?= Html::openTag('div'); ?>
                                 <?= Field::textarea($form, 'note')
-                                    ->value(Html::encode($form->getNote() ?? ''));
+                                    ->value(Html::encode($form->note ?? ''));
                                 ?>
                             <?= Html::closeTag('div'); ?>
                             <?= Html::openTag('div'); ?>
                                 <?= Field::text($form, 'order')
                                     ->value(Html::encode(
-                                        $form->getOrder() ?? ''));
+                                        $form->order ?? ''));
                                 ?>
                             <?= Html::closeTag('div'); ?>
                             <?php if ($s->getSetting('enable_peppol') === '1') : ?>
                             <?= Html::openTag('div'); ?>
                                 <?= Field::text($form, 'peppol_po_itemid')
                                     ->label($translator->translate('client.peppol.po.item.id'))
-                                    ->value(Html::encode($form->getPeppolPoItemid() ?? ''));
+                                    ->value(Html::encode($form->peppol_po_itemid ?? ''));
                                 ?>
                             <?= Html::closeTag('div'); ?>
                             <?= Html::openTag('div'); ?>
                                 <?= Field::text($form, 'peppol_po_lineid')
                                     ->label($translator->translate('client.peppol.po.line.id'))
-                                    ->value(Html::encode($form->getPeppolPoLineid() ?? ''));
+                                    ->value(Html::encode($form->peppol_po_lineid ?? ''));
                                 ?>
                             <?= Html::closeTag('div'); ?>
                             <?php endif; ?>
@@ -264,7 +264,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                             ['class' => 'form-select',])
                                     ->optionsData($optionsDataProductUnit)
                                     ->value(Html::encode(
-                                        $form->getProductUnitId() ?? ''))
+                                        $form->product_unit_id ?? ''))
                                     ->hint($translator->translate(
                                         'hint.this.field.is.required'));
                                 ?>

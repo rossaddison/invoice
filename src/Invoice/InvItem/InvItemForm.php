@@ -14,46 +14,46 @@ use DateTimeImmutable;
 
 final class InvItemForm extends FormModel
 {
-    private ?string $inv_id = '';
-    private ?string $so_item_id = '';
+    public ?string $inv_id = '';
+    public ?string $so_item_id = '';
 
     #[Required]
-    private ?string $tax_rate_id = '';
+    public ?string $tax_rate_id = '';
 
-    private ?string $product_id = '';
+    public ?string $product_id = '';
 
-    private ?string $task_id = '';
+    public ?string $task_id = '';
     // Then name of the product is retrieved using the users product_id dropdown list choice
-    private ?string $name = '';
+    public ?string $name = '';
 
-    private ?string $description = '';
+    public ?string $description = '';
 
-    private ?string $note = '';
-
-    #[GreaterThan(0.00)]
-    private ?float $quantity = null;
+    public ?string $note = '';
 
     #[GreaterThan(0.00)]
-    private ?float $price = null;
+    public ?float $quantity = null;
 
-    private ?float $discount_amount = null;
+    #[GreaterThan(0.00)]
+    public ?float $price = null;
 
-    private ?int $order = null;
-    private ?string $product_unit = '';
+    public ?float $discount_amount = null;
+
+    public ?int $order = null;
+    public ?string $product_unit = '';
 
     /**
      * Not Required because will conflict with a task which does not require a product unit id.
      * To cause an error and test the InvController function invToInvItems use the inv/index checkbox Copy Invoice button
      * on an invoice that has both a task and a product and input a #[Required] here. Result: danger flash message in inv/index
      */
-    private ?int $product_unit_id = null;
+    public ?int $product_unit_id = null;
 
-    private ?string $date = null;
+    public ?string $date = null;
 
-    private ?int $belongs_to_vat_invoice = null;
-    private ?int $delivery_id = null;
-    private ?string $peppol_po_itemid = '';
-    private ?string $peppol_po_lineid = '';
+    public ?int $belongs_to_vat_invoice = null;
+    public ?int $delivery_id = null;
+    public ?string $peppol_po_itemid = '';
+    public ?string $peppol_po_lineid = '';
 
     public static function show(InvItem $invitem, int $inv_id): self
     {
@@ -81,101 +81,6 @@ final class InvItemForm extends FormModel
         $form->peppol_po_itemid = $invitem->getPeppolPoItemid();
         $form->peppol_po_lineid = $invitem->getPeppolPoLineid();
         return $form;
-    }
-
-    public function getDate(): ?string
-    {
-        return $this->date;
-    }
-
-    public function getInvId(): ?string
-    {
-        return $this->inv_id;
-    }
-
-    public function getSoItemId(): ?string
-    {
-        return $this->so_item_id;
-    }
-
-    public function getTaxRateId(): ?string
-    {
-        return $this->tax_rate_id;
-    }
-
-    public function getProductId(): ?string
-    {
-        return $this->product_id;
-    }
-
-    public function getTaskId(): ?string
-    {
-        return $this->task_id;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function getNote(): ?string
-    {
-        return $this->note;
-    }
-
-    public function getQuantity(): ?float
-    {
-        return $this->quantity;
-    }
-
-    public function getPrice(): ?float
-    {
-        return $this->price;
-    }
-
-    public function getDiscountAmount(): ?float
-    {
-        return $this->discount_amount;
-    }
-
-    public function getOrder(): ?int
-    {
-        return $this->order;
-    }
-
-    public function getProductUnit(): ?string
-    {
-        return $this->product_unit;
-    }
-
-    public function getProductUnitId(): ?int
-    {
-        return $this->product_unit_id;
-    }
-
-    public function getBelongsToVatInvoice(): ?int
-    {
-        return $this->belongs_to_vat_invoice;
-    }
-
-    public function getDeliveryId(): ?int
-    {
-        return $this->delivery_id;
-    }
-
-    public function getPeppolPoItemid(): ?string
-    {
-        return $this->peppol_po_itemid;
-    }
-
-    public function getPeppolPoLineid(): ?string
-    {
-        return $this->peppol_po_lineid;
     }
 
     /**
