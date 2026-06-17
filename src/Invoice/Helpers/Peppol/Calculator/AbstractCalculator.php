@@ -29,6 +29,9 @@ abstract class AbstractCalculator
      */
     protected array $errors = [];
 
+    /** @var array<int, array{message: string, line: int|null, xpath: string|null}> */
+    protected array $warnings = [];
+
     /**
      * What?  Maximum absolute difference that is still treated as equal when comparing two amounts.
      * Why?   Monetary values in UBL are rounded to 2 decimal places; floating-point arithmetic
@@ -56,6 +59,23 @@ abstract class AbstractCalculator
     public function getErrors(): array
     {
         return $this->errors;
+    }
+
+    /**
+     * @return array<int, array{message: string, line: int|null, xpath: string|null}>
+     */
+    public function getWarnings(): array
+    {
+        return $this->warnings;
+    }
+
+    protected function addWarning(string $message, ?DOMNode $node = null): void
+    {
+        $this->warnings[] = [
+            'message' => $message,
+            'line'    => $node !== null ? $node->getLineNo() : null,
+            'xpath'   => $node !== null ? $this->buildXPath($node) : null,
+        ];
     }
 
     /**
