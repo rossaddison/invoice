@@ -45,7 +45,10 @@ class GeneratorController extends BaseController
         GeneratorRepository $generatorRepository,
         GeneratorRelationRepository $grR,
     ): Response {
-        $this->rbac();
+        $rbacResult = $this->rbac();
+        if ($rbacResult instanceof Response) {
+            return $rbacResult;
+        }
         $generators = $this->generators($generatorRepository);
         $paginator = (new OffsetPaginator($generators));
         $parameters = [

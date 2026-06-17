@@ -249,4 +249,13 @@ final readonly class Button
         return $buttonHtml;
     }
 
+    public function openBanking(string $openBankingAuthUrl, string $selectedOpenBankingProvider): void
+    {
+        echo new A()
+            ->addClass('btn btn-primary')
+            ->content($selectedOpenBankingProvider)
+            ->href($openBankingAuthUrl)
+            ->render();
+    }
+
 }

@@ -142,7 +142,8 @@ final class GeneratorGoogleTranslateController extends BaseController
                             $prefixToFileAsLocaleWithFileTypeAndTimeStamp,
                         ),
                     );
-                    $this->buildAndSave($path, $file_content, $templateFile, $prefixToFileAsLocaleWithFileTypeAndTimeStamp);
+                    $build_file = new GenerateCodeFileHelper("$path/$prefixToFileAsLocaleWithFileTypeAndTimeStamp$templateFile", $file_content);
+                    $build_file->save();
                     return $this->webService->getRedirectResponse('setting/tabIndex', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
                 } catch (\Exception $e) {
                     $this->flashMessage('danger', $e->getMessage());
@@ -363,13 +364,6 @@ final class GeneratorGoogleTranslateController extends BaseController
                 break;
         }
         return $file;
-    }
-
-    private function buildAndSave(string $generated_dir_path, string $content, string $file, string $name): GenerateCodeFileHelper
-    {
-        $build_file = new GenerateCodeFileHelper("$generated_dir_path/$name$file", $content);
-        $build_file->save();
-        return $build_file;
     }
 
     private function setAliases(): Aliases
