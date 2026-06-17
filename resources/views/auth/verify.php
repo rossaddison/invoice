@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Widget\Button;
+use App\Widget\IdentityProviderButton;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
@@ -97,7 +98,7 @@ if (!empty($codes)) {
 }
 ?>
                     <?php
-    $button = new Button($translator, $urlGenerator);
+    $button = new IdentityProviderButton($translator, $urlGenerator);
 $regenerateCodesUrl = $urlGenerator->generate('auth/regenerateCodes');
 echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
 ?>

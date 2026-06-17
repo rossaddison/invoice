@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Widget\Button;
+use App\Widget\IdentityProviderButton;
 use Yiisoft\{FormModel\Field as F};
 use Yiisoft\Html\{Html as H, Tag\A, Tag\Img, Tag\Form, Tag\Span};
 use Yiisoft\Yii\AuthClient\Widget\AuthChoice;
@@ -65,7 +66,7 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
         }
     };
 
-    $btn = new Button($translator, $urlGenerator);
+    $btn = new IdentityProviderButton($translator, $urlGenerator);
     $tfaEnabled = 'two.factor.authentication.enabled';
     if ((strlen($openBankingAuthUrl ?: '') > 0)
             && !$noOpenBankingContinueButton

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Widget\Button;
+use App\Widget\PaymentGatewayButton;
 use Yiisoft\Bootstrap5\Breadcrumbs;
 use Yiisoft\Bootstrap5\BreadcrumbLink;
 use Yiisoft\Html\Html as H;
@@ -1012,10 +1013,10 @@ if ((in_array($inv->reqStatusId(), [2, 3])
              echo H::closeTag('i');
              echo $translator->translate('pay.now')
                 . '➡️'
-                . (ucfirst($gateway) == 'Braintree' ? Button::braintree() : '')
-                . (ucfirst($gateway) == 'Stripe' ? Button::stripe() : '')
-                . (ucfirst($gateway) == 'Amazon_Pay' ? Button::amazon() : '')
-                . (ucfirst($gateway) == 'Mollie' ? Button::mollie() : '');
+                . (ucfirst($gateway) == 'Braintree' ? PaymentGatewayButton::braintree() : '')
+                . (ucfirst($gateway) == 'Stripe' ? PaymentGatewayButton::stripe() : '')
+                . (ucfirst($gateway) == 'Amazon_Pay' ? PaymentGatewayButton::amazon() : '')
+                . (ucfirst($gateway) == 'Mollie' ? PaymentGatewayButton::mollie() : '');
 
             echo H::closeTag('a');
         }
