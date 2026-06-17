@@ -37,11 +37,16 @@ final class QuotesToolbar
         $currentRouteName = $currentRoute->getName() ?? self::ROUTE_INDEX;
         [$toolbarReset, $allVisible, $enabledAddBtn, $disabledAddBtn]
             = self::buildToolbarButtons($currentRouteName, $urlGenerator, $translator);
-        $changeStatusDropdown = self::buildChangeStatusDropdown($translator);
+        $buttons = new QuotesToolbarButtons(
+            toolbarReset:         $toolbarReset,
+            allVisible:           $allVisible,
+            enabledAddBtn:        $enabledAddBtn,
+            disabledAddBtn:       $disabledAddBtn,
+            changeStatusDropdown: self::buildChangeStatusDropdown($translator),
+        );
         return self::buildToolbarString(
             $translator, $urlGenerator, $csrf, $clientCount, $groupBy, $enableGrouping,
-            $toolbarReset, $allVisible, $enabledAddBtn, $disabledAddBtn,
-            $changeStatusDropdown,
+            $buttons,
         );
     }
 
@@ -156,11 +161,7 @@ final class QuotesToolbar
         int $clientCount,
         string $groupBy,
         bool $enableGrouping,
-        string $toolbarReset,
-        string $allVisible,
-        string $enabledAddBtn,
-        string $disabledAddBtn,
-        string $changeStatusDropdown,
+        QuotesToolbarButtons $buttons,
     ): string {
         $collapseExpandButtons = $enableGrouping
             ? (new Div())
@@ -219,11 +220,11 @@ final class QuotesToolbar
                     ->addClass('me-3 d-inline-block')
                     ->content($translator->translate('quote'))
                 . Html::openTag('div', ['class' => 'btn-group me-2', 'role' => 'group'])
-                . $allVisible
-                . $toolbarReset
-                . ($clientCount == 0 ? $disabledAddBtn : $enabledAddBtn)
+                . $buttons->allVisible
+                . $buttons->toolbarReset
+                . ($clientCount == 0 ? $buttons->disabledAddBtn : $buttons->enabledAddBtn)
                 . Html::closeTag('div')
-                . $changeStatusDropdown
+                . $buttons->changeStatusDropdown
                 . $groupBySelect
                 . $collapseExpandButtons
             )->encode(false)->render()
