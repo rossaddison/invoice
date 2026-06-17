@@ -7,6 +7,7 @@ namespace App\Invoice\Generator;
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Infrastructure\Persistence\Gentor\Gentor;
+use App\Invoice\Generator\Widget\GeneratorListWidget;
 use App\Invoice\GeneratorRelation\GeneratorRelationRepository;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
@@ -15,6 +16,8 @@ use Cycle\Database\DatabaseManager;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Reader\Sort;
+use Yiisoft\DataResponse\ResponseFactory\HtmlResponseFactory;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
@@ -42,6 +45,8 @@ class GeneratorController extends BaseController
     }
 
     public function index(
+        Request $request,
+        HtmlResponseFactory $htmlResponseFactory,
         GeneratorRepository $generatorRepository,
         GeneratorRelationRepository $grR,
     ): Response {
@@ -49,12 +54,39 @@ class GeneratorController extends BaseController
         if ($rbacResult instanceof Response) {
             return $rbacResult;
         }
-        $generators = $this->generators($generatorRepository);
-        $paginator = (new OffsetPaginator($generators));
+        $q = $request->getQueryParams();
+        /** @psalm-suppress MixedAssignment */
+        $sortString = isset($q['sort']) ? (string) $q['sort'] : '-id';
+        $sort = Sort::only(['id'])->withOrderString($sortString);
+        $currentPage = max(1, isset($q['page']) ? (int) $q['page'] : 1);
+        /** @psalm-suppress InvalidArgument */
+        $paginator = (new OffsetPaginator($this->generators($generatorRepository)))
+            ->withPageSize($this->sR->positiveListLimit())
+            ->withCurrentPage($currentPage)
+            ->withSort($sort);
+        $gridSummary = $this->sR->gridSummary(
+            $paginator,
+            $this->translator,
+            (int) $this->sR->getSetting('default_list_limit'),
+            $this->translator->translate('generators'),
+            '',
+        );
+        $body = $request->getParsedBody();
+        $widget = GeneratorListWidget::widget()
+            ->withPaginator($paginator)
+            ->withGrR($grR)
+            ->withCsrf((string) (is_array($body) ? ($body['_csrf'] ?? '') : ''))
+            ->withGridSummary($gridSummary)
+            ->withSortString($sortString);
+        if ($request->hasHeader('Hx-Request')) {
+            return $htmlResponseFactory->createResponse($widget->render());
+        }
         $parameters = [
-            'grR' => $grR,
-            'alert' => $this->alert(),
-            'paginator' => $paginator,
+            'alert'       => $this->alert(),
+            'grR'         => $grR,
+            'paginator'   => $paginator,
+            'gridSummary' => $gridSummary,
+            'sortString'  => $sortString,
         ];
         return $this->webViewRenderer->render('index', $parameters);
     }
