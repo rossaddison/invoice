@@ -27,6 +27,8 @@ use App\Invoice\{
     Family\FamilyController,
     FromDropDown\FromDropDownController,
     Generator\GeneratorController,
+    Generator\GeneratorCodeController,
+    Generator\GeneratorGoogleTranslateController,
     GeneratorRelation\GeneratorRelationController,
     Group\GroupController,
     Import\ImportController,
@@ -1051,15 +1053,15 @@ return [
             Route::methods([$mG, $mP], '/generator/entity/{id}')
                 ->name('generator/entity')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([GeneratorController::class, 'entity']),
+                ->action([GeneratorCodeController::class, 'entity']),
             Route::methods([$mG, $mP], '/generator/repo/{id}')
                 ->name('generator/repo')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([GeneratorController::class, 'repo']),
+                ->action([GeneratorCodeController::class, 'repo']),
             Route::methods([$mG, $mP], '/generator/service/{id}')
                 ->name('generator/service')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([GeneratorController::class, 'service']),
+                ->action([GeneratorCodeController::class, 'service']),
             Route::methods([$mG, $mP], '/generator/mapper/{id}')
                 ->name('generator/mapper')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
@@ -1067,11 +1069,11 @@ return [
             Route::methods([$mG, $mP], '/generator/controller/{id}')
                 ->name('generator/controller')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([GeneratorController::class, 'controller']),
+                ->action([GeneratorCodeController::class, 'controller']),
             Route::methods([$mG, $mP], '/generator/form/{id}')
                 ->name('generator/form')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([GeneratorController::class, 'form']),
+                ->action([GeneratorCodeController::class, 'form']),
             Route::methods([$mG, $mP], '/generator/scope/{id}')
                 ->name('generator/scope')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
@@ -1079,7 +1081,7 @@ return [
             Route::methods([$mG, $mP], '/generator/_index/{id}')
                 ->name('generator/_index')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([GeneratorController::class, '_index']),
+                ->action([GeneratorCodeController::class, 'generatorIndex']),
             Route::methods([$mG, $mP], '/generator/_index_adv_paginator/{id}')
                 ->name('generator/_index_adv_paginator')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
@@ -1093,15 +1095,15 @@ return [
             Route::methods([$mG, $mP], '/generator/_form/{id}')
                 ->name('generator/_form')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([GeneratorController::class, '_form']),
+                ->action([GeneratorCodeController::class, 'generatorForm']),
             Route::methods([$mG, $mP], '/generator/_view/{id}')
                 ->name('generator/_view')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([GeneratorController::class, '_view']),
+                ->action([GeneratorCodeController::class, 'generatorView']),
             Route::methods([$mG, $mP], '/generator/_route/{id}')
                 ->name('generator/_route')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([GeneratorController::class, '_route']),
+                ->action([GeneratorCodeController::class, 'generatorRoute']),
             Route::methods([$mG, $mP], '/generator/quickViewSchema')
                 ->name('generator/quickViewSchema')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
@@ -1113,13 +1115,13 @@ return [
             Route::methods([$mG, $mP], '/generator/googleTranslateLang/{type}')
                 ->name('generator/googleTranslateLang')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([GeneratorController::class, 'googleTranslateLang']),
+                ->action([GeneratorGoogleTranslateController::class, 'googleTranslateLang']),
 // Translate info documentation files like invoice.php
 // from resources/views/invoice/info/en/invoice.php to target language folder
             Route::methods([$mG, $mP], '/generator/googleTranslateInfo')
                 ->name('generator/googleTranslateInfo')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([GeneratorController::class, 'googleTranslateInfo']),
+                ->action([GeneratorGoogleTranslateController::class, 'googleTranslateInfo']),
             Route::get('/generatorrelation')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([GeneratorRelationController::class, 'index'])
