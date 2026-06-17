@@ -36,24 +36,16 @@ class As4Routing
     #[Cycle\Column(type: 'string', nullable: false)]
     private string $receiverEndpoint;
 
-    public function __construct(
-        string $conversationId,
-        string $senderPartyId,
-        string $senderRole,
-        string $receiverPartyId,
-        string $receiverRole,
-        string $service,
-        string $action,
-        string $receiverEndpoint,
-    ) {
-        $this->conversationId   = $conversationId;
-        $this->senderPartyId    = $senderPartyId;
-        $this->senderRole       = $senderRole;
-        $this->receiverPartyId  = $receiverPartyId;
-        $this->receiverRole     = $receiverRole;
-        $this->service          = $service;
-        $this->action           = $action;
-        $this->receiverEndpoint = $receiverEndpoint;
+    public function __construct(As4RoutingParams $params)
+    {
+        $this->conversationId   = $params->conversationId;
+        $this->senderPartyId    = $params->senderPartyId;
+        $this->senderRole       = $params->senderRole;
+        $this->receiverPartyId  = $params->receiverPartyId;
+        $this->receiverRole     = $params->receiverRole;
+        $this->service          = $params->service;
+        $this->action           = $params->action;
+        $this->receiverEndpoint = $params->receiverEndpoint;
     }
 
     public function getConversationId(): string { return $this->conversationId; }

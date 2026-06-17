@@ -44,7 +44,7 @@ class As4Message
     {
         $this->messageId   = $p->messageId;
         $this->state       = As4MessageState::pending->value;
-        $this->routing     = new As4Routing(
+        $this->routing     = new As4Routing(new As4RoutingParams(
             conversationId:   $p->conversationId,
             senderPartyId:    $p->senderPartyId,
             senderRole:       $p->senderRole,
@@ -53,7 +53,7 @@ class As4Message
             service:          $p->service,
             action:           $p->action,
             receiverEndpoint: $p->receiverEndpoint,
-        );
+        ));
         $this->payload     = new As4Payload($p->soapMessage);
         $this->retryState  = new As4RetryState();
         $this->receiptInfo = new As4ReceiptInfo();
