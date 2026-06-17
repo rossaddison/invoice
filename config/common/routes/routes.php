@@ -67,6 +67,7 @@ use App\Invoice\{
     SalesOrder\SalesOrderController,
     SalesOrderItem\SalesOrderItemController,
     Setting\SettingController,
+    Setting\SettingToggleController,
     Task\TaskController,
     TaxRate\TaxRateController,
     As4\As4ReceiveController,
@@ -481,7 +482,7 @@ return [
             Route::methods([$mG, $mP],
                     '/setting/listlimit/{setting_id}/{limit}/{origin}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([SettingController::class, 'listlimit'])
+                ->action([SettingToggleController::class, 'listlimit'])
                 ->name('setting/listlimit'),
 // *********************************** pEI's *********************************
             Route::get('')
@@ -2046,16 +2047,16 @@ return [
             Route::methods([$mG, $mP], '/setting/draft/{setting_id}')
                 ->name('setting/draft')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([SettingController::class,
+                ->action([SettingToggleController::class,
                     'invDraftHasNumberSwitch']),
             Route::methods([$mG, $mP], '/setting/autoClient')
                 ->name('setting/autoClient')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([SettingController::class, 'autoClient']),
+                ->action([SettingToggleController::class, 'autoClient']),
             Route::methods([$mG, $mP], '/setting/markSent/{setting_id}')
                 ->name('setting/markSent')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([SettingController::class, 'markSent']),
+                ->action([SettingToggleController::class, 'markSent']),
             Route::methods([$mG, $mP], '/setting/edit/{setting_id}')
                 ->name('setting/edit')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
@@ -2087,12 +2088,12 @@ return [
             Route::methods([$mG, $mP], '/setting/toggleinvsentlogcolumn')
                 ->name('setting/toggleinvsentlogcolumn')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([SettingController::class,
+                ->action([SettingToggleController::class,
                     'unhideOrHideToggleInvSentLogColumn']),
             Route::methods([$mG, $mP], '/setting/visible/{origin}')
                 ->name('setting/visible')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([SettingController::class, 'visible']),
+                ->action([SettingToggleController::class, 'visible']),
             Route::get('/task[/page/{page:\d+}]')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([TaskController::class, 'index'])
