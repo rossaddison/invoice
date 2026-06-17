@@ -9,9 +9,6 @@ use App\Invoice\Client\ClientRepository as cR;
 // Helpers
 use App\Invoice\Company\CompanyRepository as compR;
 // Entities
-use App\Invoice\CompanyPrivate\CompanyPrivateRepository as cPR;
-use App\Infrastructure\Persistence\Company\Company;
-use App\Infrastructure\Persistence\CompanyPrivate\CompanyPrivate;
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\InvAmount\InvAmount;
 use App\Infrastructure\Persistence\InvItem\InvItem;
@@ -27,6 +24,8 @@ use App\Invoice\InvItem\InvItemRepository as iiR;
 use App\Invoice\Libraries\Crypt;
 use App\Invoice\Merchant\MerchantService;
 use App\Invoice\Payment\PaymentService;
+use App\Invoice\PaymentInformation\PaymentInformationLogoRenderer;
+use App\Invoice\PaymentInformation\PaymentInformationQueryHelper;
 use App\Invoice\PaymentInformation\Service\AmazonPayPaymentService;
 use App\Invoice\PaymentInformation\Service\BraintreePaymentService;
 use App\Invoice\PaymentInformation\Service\OpenBankingPaymentService;
@@ -85,8 +84,8 @@ final class PaymentInformationController
         private WebViewRenderer $webViewRenderer,
         private WebControllerService $webService,
         private compR $compR,
-        private cPR $cPR,
         private Logger $logger,
+        private PaymentInformationLogoRenderer $logoRenderer,
     ) {
         $this->factory                   = $factory;
         $this->flash                     = $flash;
@@ -119,7 +118,6 @@ final class PaymentInformationController
         }
         $this->webService    = $webService;
         $this->compR         = $compR;
-        $this->cPR           = $cPR;
         $this->logger        = $logger;
         $this->telegramToken = $this->sR->getSetting('telegram_token');
     }
@@ -153,7 +151,7 @@ final class PaymentInformationController
         PaymentInformationGatewayContext $ctx,
         array $inv,
     ): Response {
-        $provider = $this->extractProviderLower($ctx->client_chosen_gateway);
+        $provider = PaymentInformationQueryHelper::extractProviderLower($ctx->client_chosen_gateway);
         $providerConfig = (null !== $provider) ?
                            $this->getOpenBankingProviderConfig($provider) : null;
         // Determine if provider is 'wonderful' by examining if the apiToken
@@ -175,7 +173,7 @@ final class PaymentInformationController
             'inv_url_key'            => $ctx->url_key,
             'is_overdue'             => $ctx->is_overdue,
             'json_encoded_items'     => Json::encode($ctx->items_array),
-            'companyLogo'            => $this->renderPartialAsStringCompanyLogo(),
+            'companyLogo'            => $this->logoRenderer->companyLogo(),
             'partial_client_address' =>
                                      $this->webViewRenderer->renderPartialAsString(
                 '//invoice/client/partial_client_address',
@@ -638,7 +636,7 @@ final class PaymentInformationController
             'inv_url_key'            => $ctx->url_key,
             'is_overdue'             => $ctx->is_overdue,
             'json_encoded_items'     => Json::encode($ctx->items_array),
-            'companyLogo'            => $this->renderPartialAsStringCompanyLogo(),
+            'companyLogo'            => $this->logoRenderer->companyLogo(),
             'partial_client_address' => $this->webViewRenderer
                 ->renderPartialAsString(
                     '//invoice/client/partial_client_address',
@@ -719,8 +717,8 @@ final class PaymentInformationController
             ['paymentinformation/form', [
                 'url_key' => $ctx->url_key,
                 'gateway' => 'Braintree']],
-            'companyLogo'    => $this->renderPartialAsStringCompanyLogo(),
-            'braintreeLogo'  => $this->renderPartialAsStringBraintreeLogo($merchantId),
+            'companyLogo'    => $this->logoRenderer->companyLogo(),
+            'braintreeLogo'  => $this->logoRenderer->braintreeLogo($merchantId),
             'title'          => 'Braintree - PCI Compliant - Version'
             . $this->braintreePaymentService->getVersion() . ' - is enabled. ',
         ];
@@ -860,7 +858,7 @@ final class PaymentInformationController
         $mollieClient = new MollieClient();
         // Return the view
         if ('1' === $this->sR->getSetting('gateway_mollie_enabled')
-                && (!$this->mollieSetTestOrLiveApiKey($mollieClient))) {
+                && (!PaymentInformationQueryHelper::mollieSetTestOrLiveApiKey($this->sR, $mollieClient))) {
             $this->flashMessage('warning',
                     $this->translator->translate(
                             'payment.gateway.mollie.api.key.needs.to.be.setup'));
@@ -868,7 +866,7 @@ final class PaymentInformationController
             return $this->webService->getNotFoundResponse();
         }
         if ('1' === $this->sR->getSetting('gateway_mollie_enabled')
-                && ($this->mollieSetTestOrLiveApiKey($mollieClient))) {
+                && (PaymentInformationQueryHelper::mollieSetTestOrLiveApiKey($this->sR, $mollieClient))) {
             $this->flashMessage('success',
                     $this->translator->translate(
                             'payment.gateway.mollie.api.key.has.been.setup'));
@@ -907,35 +905,14 @@ final class PaymentInformationController
             'invoice_payment_method' => $ctx->payment_method_for_this_invoice ?:
                 $this->translator->translate('none'),
             'total'                  => $ctx->total,
-            'companyLogo'            => $this->renderPartialAsStringCompanyLogo(),
-            'mollieLogo'             => $this->renderPartialAsStringMollieLogo(),
-            'title'                  => $this->mollieClientVersionString()
+            'companyLogo'            => $this->logoRenderer->companyLogo(),
+            'mollieLogo'             => $this->logoRenderer->mollieLogo(),
+            'title'                  => PaymentInformationQueryHelper::mollieClientVersionString()
                 . ' - PCI Compliant - is enabled. ',
         ];
 
         return $this->webViewRenderer->render('payment_information_mollie_pci',
             $mollie_pci_view_data);
-    }
-
-    private function mollieSetTestOrLiveApiKey(MollieClient $mollieClient): bool
-    {
-        /** @var string $testOrLiveApiKey */
-        $testOrLiveApiKey = !empty($this->sR->getSetting(
-                'gateway_mollie_testOrLiveApiKey')) ?
-                $this->sR->decode($this->sR->getSetting(
-                        'gateway_mollie_testOrLiveApiKey'))
-                       : '';
-        !empty($this->sR->getSetting('gateway_mollie_testOrLiveApiKey')) ?
-                $mollieClient->setApiKey($testOrLiveApiKey) : '';
-
-        return !empty($this->sR->getSetting('gateway_mollie_testOrLiveApiKey')) ?
-                true : false;
-    }
-
-    private function mollieClientVersionString(): string
-    {
-        $array_version =  new MollieClient()->getVersionStrings();
-        return implode($array_version);
     }
 
     /**
@@ -1004,7 +981,7 @@ final class PaymentInformationController
             // We will iterate through all the payments until the urlKey matches
             // with our metadata invoice_url_key stored by Mollie
             $lastPayment = new MolliePayment($mollie);
-            if ($this->mollieSetTestOrLiveApiKey($mollie)) {
+            if (PaymentInformationQueryHelper::mollieSetTestOrLiveApiKey($this->sR, $mollie)) {
                 // Get all the payments made on the Mollie Website by our customer
                 $payments = $mollie->payments->page();
                 /**
@@ -1174,7 +1151,7 @@ final class PaymentInformationController
                 ),
             'payment_method' => $ctx->payment_method_for_this_invoice ?: 'None',
             'total'          => $ctx->total,
-            'companyLogo'    => $this->renderPartialAsStringCompanyLogo(),
+            'companyLogo'    => $this->logoRenderer->companyLogo(),
             'title'          => Stripe::getApiVersion()
                                     . ' - PCI Compliant - is enabled. ',
         ];
@@ -1235,8 +1212,8 @@ final class PaymentInformationController
                     'render' => $this->webViewRenderer->renderPartialAsString(
                         '//invoice/paymentinformation/payment_message',
                         [
-                            'heading'     => $this->stripeCompleteHeading(
-                                $result, (string) $invoiceNumber, $redirectStatus),
+                            'heading'     => PaymentInformationQueryHelper::stripeCompleteHeading(
+                                $this->translator, $result, (string) $invoiceNumber, $redirectStatus),
                             'message'     =>
                                 $this->translator->translate('payment')
                                     . ':'
@@ -1257,51 +1234,6 @@ final class PaymentInformationController
         } // null!== $invoiceUrlKey
 
         return $this->webService->getNotFoundResponse();
-    }
-
-    public function stripeCompleteHeading(
-        array $result, string $invoiceNumber, string $redirectStatus): string
-    {
-        $message = (string) ($result['message'] ?? '');
-
-        if ($redirectStatus === 'succeeded') {
-            $heading = sprintf(
-                $this->translator->translate('online.payment.payment.successful'),
-                $invoiceNumber);
-        } else {
-            $heading = sprintf(
-                $this->translator->translate('online.payment.payment.failed'),
-                trim($invoiceNumber . ' ' . $message)
-            );
-        }
-        return $heading;
-    }
-
-    public function getStripePciClientSecret(array $yii_invoice): ?string
-    {
-        $payment_intent = \Stripe\PaymentIntent::create([
-            // convert the float amount to cents
-            'amount'   => (int) round(((float) $yii_invoice['balance'] ?: 0.00) * 100),
-            'currency' => (string) $yii_invoice['currency'],
-// include the payment methods you have chosen listed in dashboard.stripe.com eg.
-// card, bacs direct debit,
-            // googlepay etc.
-            'automatic_payment_methods' => [
-                'enabled' => true,
-            ],
-            // 'customer' => $yii_invoice['customer'],
-            // 'description' => $yii_invoice['description'],
-            'receipt_email' => (string) $yii_invoice['customer_email'],
-            'metadata'      => [
-                'invoice_id'             => (string) $yii_invoice['id'],
-                'invoice_customer_id'    => (string) $yii_invoice['customer_id'],
-                'invoice_number'         => (string) $yii_invoice['number'] ?: '',
-                'invoice_payment_method' => '',
-                'invoice_url_key'        => (string) $yii_invoice['url_key'],
-            ],
-        ]);
-
-        return $payment_intent->client_secret;
     }
 
     /** @psalm-suppress UnusedReturnValue */
@@ -1403,75 +1335,6 @@ final class PaymentInformationController
                 ],
             ),
         );
-    }
-
-    public function renderPartialAsStringCompanyLogo(): string
-    {
-        $companies           = $this->compR->findAllPreloaded();
-        $companyPrivates     = $this->cPR->findAllPreloaded();
-        $companyLogoFileName = '';
-        /**
-         * @var Company $company
-         */
-        foreach ($companies as $company) {
-            if ('1' == $company->getCurrent()) {
-                /**
-                 * @var CompanyPrivate $private
-                 */
-                foreach ($companyPrivates as $private) {
-                    if ($private->reqCompanyId() === $company->reqId()) {
-                        $companyLogoFileName = $private->getLogoFilename();
-                        $companyLogoWidth = $private->getLogoWidth() ?? 0;
-                        $companyLogoHeight = $private->getLogoHeight() ?? 0;
-                        $companyLogoMargin = $private->getLogoMargin() ?? 0;
-                    }
-                }
-            }
-            break;
-        }
-        $src = (null !== $companyLogoFileName ? '/logo/'
-                . $companyLogoFileName : '/site/logo.png');
-
-        return $this->webViewRenderer->renderPartialAsString(
-                '//invoice/paymentinformation/logo/companyLogo',
-        [
-            'src' => $src,
-            // if debug_mode == '1' => reveal the source in the tooltip
-            'tooltipTitle' => '1' == $this->sR->getSetting('debug_mode') ? $src : '',
-            'logoWidth' => $companyLogoWidth ?? 0,
-            'logoHeight' => $companyLogoHeight ?? 0,
-            'logoMargin' => $companyLogoMargin ?? 0,
-        ]);
-    }
-
-    public function renderPartialAsStringBraintreeLogo(string $merchantId): string
-    {
-        return $this->webViewRenderer->renderPartialAsString(
-                '//invoice/paymentinformation/logo/braintreeLogo',
-        [
-            'merchantId' => $merchantId,
-        ]);
-    }
-
-    public function renderPartialAsStringMollieLogo(): string
-    {
-        return $this->webViewRenderer->renderPartialAsString(
-                '//invoice/paymentinformation/logo/mollieLogo');
-    }
-
-    /*
-     * Extracts the provider name from a string like 'Open_Banking_With_Wonderful'
-     * and returns it in lowercase (e.g., 'wonderful').
-     *
-     * @param string $gateway
-     * @return string|null Lowercase provider name, or null if not found.
-     */
-    private function extractProviderLower(string $gateway): ?string
-    {
-        if (preg_match('/Open_Banking_With_([A-Za-z0-9]+)/', $gateway, $matches)) {
-            return strtolower($matches[1]);
-        }
-        return null;
     }
 
     private function updateInvoicePaymentMethod(string $urlKey): void {
