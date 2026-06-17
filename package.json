@@ -30,10 +30,10 @@
     "@angular/platform-browser": "22.0.1",
     "@eslint/js": "^10.0.1",
     "@types/node": "^25.9.3",
-    "@typescript-eslint/eslint-plugin": "^8.61.0",
-    "@typescript-eslint/parser": "^8.61.0",
-    "@typescript/native-preview": "^7.0.0-dev.20260613.1",
-    "@vitest/coverage-v8": "^4.1.8",
+    "@typescript-eslint/eslint-plugin": "^8.61.1",
+    "@typescript-eslint/parser": "^8.61.1",
+    "@typescript/native-preview": "^7.0.0-dev.20260617.2",
+    "@vitest/coverage-v8": "^4.1.9",
     "esbuild": "^0.28.1",
     "eslint": "^10.5.0",
     "eslint-plugin-deprecation": "^3.0.0",
@@ -47,7 +47,7 @@
     "typedoc": "^0.28.19",
     "typescript": "^6.0.3",
     "vitepress": "^2.0.0-alpha.17",
-    "vitest": "^4.1.8"
+    "vitest": "^4.1.9"
   },
   "scripts": {
     "//": "=== IMPORTANT WARNING ===",
@@ -105,7 +105,8 @@
   "overrides": {
     "webpack-dev-server": "^5.2.4",
     "uuid": ">=11.1.1",
-    "esbuild": "^0.28.1"
+    "esbuild": "^0.28.1",
+    "vite": ">7.3.4"
   },
   "license": "BSD-3-Clause",
   "engines": {
