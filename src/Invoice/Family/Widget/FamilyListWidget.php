@@ -14,7 +14,6 @@ use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
@@ -34,6 +33,7 @@ final class FamilyListWidget extends Widget
 {
     private const string DOM_ID = 'FamilyGridView';
     private const string ROUTE_INDEX = 'family/index';
+    private const string DIV_FLOAT = 'float-end m-3';
 
     private ?OffsetPaginator $paginator = null;
     private ?CategoryPrimaryRepository $cpR = null;
@@ -177,9 +177,9 @@ final class FamilyListWidget extends Widget
                 ->csrf($this->csrf)
                 ->open()
             . $addFamily
-            . (new Div())->addClass('float-end m-3')->content($generateProductsButton)->encode(false)->render()
-            . (new Div())->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render()
-            . (new Div())->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+            . (new Div())->addClass(self::DIV_FLOAT)->content($generateProductsButton)->encode(false)->render()
+            . (new Div())->addClass(self::DIV_FLOAT)->content($toolbarFilter)->encode(false)->render()
+            . (new Div())->addClass(self::DIV_FLOAT)->content($toolbarReset)->encode(false)->render()
             . (new Form())->close();
     }
 
@@ -198,8 +198,7 @@ final class FamilyListWidget extends Widget
                 content: static function (Checkbox $input, DataContext $context): string {
                     $family = $context->data;
                     if (($family instanceof Family) && (($id = $family->reqId()) > 0)) {
-                        return (new Input())
-                            ->type('checkbox')
+                        return $input
                             ->addAttributes([
                                 'id'             => $id,
                                 'name'           => 'family_ids[]',
