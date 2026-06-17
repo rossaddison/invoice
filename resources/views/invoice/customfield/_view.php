@@ -40,7 +40,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::text($form, 'table')
     ->addInputAttributes(['style' => 'background:lightblue'])
     ->label($translator->translate('table'))
-    ->value(Html::encode(strlen($table = $form->getTable() ?? '') > 0 ? ucfirst($s->lang((string) $custom_tables[$table])) : ''))
+    ->value(Html::encode(strlen($table = $form->table ?? '') > 0 ? ucfirst($s->lang((string) $custom_tables[$table])) : ''))
     ->readonly(true);
 ?>
             <?= Html::closeTag('div'); ?>
@@ -49,7 +49,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::text($form, 'label')
     ->addInputAttributes(['style' => 'background:lightblue'])
     ->label($translator->translate('label'))
-    ->value(Html::encode($form->getLabel() ?? ''))
+    ->value(Html::encode($form->label ?? ''))
     ->readonly(true);
 ?>
             <?= Html::closeTag('div'); ?>
@@ -58,7 +58,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::text($form, 'type')
     ->addInputAttributes(['style' => 'background:lightblue'])
     ->label($translator->translate('type'))
-    ->value(Html::encode($translator->translate('' . str_replace("-", "_", strtolower($form->getType() ?? '')) . '')))
+    ->value(Html::encode($translator->translate('' . str_replace("-", "_", strtolower($form->type ?? '')) . '')))
     ->readonly(true);
 ?>
             <?= Html::closeTag('div'); ?>
@@ -67,7 +67,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::text($form, 'location')
     ->addInputAttributes(['style' => 'background:lightblue'])
     ->label($translator->translate('custom.field.location'))
-    ->value(Html::encode($form->getLocation() ?? ''))
+    ->value(Html::encode($form->location ?? ''))
     ->readonly(true);
 ?>
             <?= Html::closeTag('div'); ?>
@@ -76,7 +76,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::text($form, 'order')
     ->addInputAttributes(['style' => 'background:lightblue'])
     ->label($translator->translate('order'))
-    ->value(Html::encode($form->getOrder() ?? ''))
+    ->value(Html::encode($form->order ?? ''))
     ->readonly(true);
 ?>
             <?= Html::closeTag('div'); ?>

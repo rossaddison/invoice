@@ -14,16 +14,16 @@ class CustomFieldFormTest extends TestCase
     {
         $form = new CustomFieldForm();
 
-        $this->assertSame('', $form->getTable());
-        $this->assertSame('', $form->getLabel());
-        $this->assertSame('', $form->getType());
-        $this->assertNull($form->getLocation());
-        $this->assertNull($form->getOrder());
-        $this->assertFalse($form->getRequired());
-        $this->assertNull($form->getEmailMinLength());
-        $this->assertNull($form->getEmailMaxLength());
-        $this->assertFalse($form->getEmailMultiple());
-        $this->assertSame('', $form->getTextAreaWrap());
+        $this->assertSame('', $form->table);
+        $this->assertSame('', $form->label);
+        $this->assertSame('', $form->type);
+        $this->assertNull($form->location);
+        $this->assertNull($form->order);
+        $this->assertFalse($form->required);
+        $this->assertNull($form->email_min_length);
+        $this->assertNull($form->email_max_length);
+        $this->assertFalse($form->email_multiple);
+        $this->assertSame('', $form->text_area_wrap);
         $this->assertSame('', $form->getFormName());
     }
 
@@ -46,14 +46,14 @@ class CustomFieldFormTest extends TestCase
 
         $form = CustomFieldForm::show($entity);
 
-        $this->assertSame('inv', $form->getTable());
-        $this->assertSame('Purchase Order Number', $form->getLabel());
-        $this->assertSame('TEXT', $form->getType());
-        $this->assertSame(1, $form->getLocation());
-        $this->assertSame(10, $form->getOrder());
-        $this->assertTrue($form->getRequired());
-        $this->assertSame(0, $form->getTextMinLength());
-        $this->assertSame(50, $form->getTextMaxLength());
+        $this->assertSame('inv', $form->table);
+        $this->assertSame('Purchase Order Number', $form->label);
+        $this->assertSame('TEXT', $form->type);
+        $this->assertSame(1, $form->location);
+        $this->assertSame(10, $form->order);
+        $this->assertTrue($form->required);
+        $this->assertSame(0, $form->text_min_length);
+        $this->assertSame(50, $form->text_max_length);
     }
 
     public function testShowPopulatesTextAreaField(): void
@@ -71,11 +71,11 @@ class CustomFieldFormTest extends TestCase
 
         $form = CustomFieldForm::show($entity);
 
-        $this->assertSame('TEXTAREA', $form->getType());
-        $this->assertSame(40, $form->getTextAreaCols());
-        $this->assertSame(5, $form->getTextAreaRows());
-        $this->assertSame('hard', $form->getTextAreaWrap());
-        $this->assertFalse($form->getRequired());
+        $this->assertSame('TEXTAREA', $form->type);
+        $this->assertSame(40, $form->text_area_cols);
+        $this->assertSame(5, $form->text_area_rows);
+        $this->assertSame('hard', $form->text_area_wrap);
+        $this->assertFalse($form->required);
     }
 
     public function testShowReturnsNewInstance(): void
@@ -106,12 +106,12 @@ class CustomFieldFormTest extends TestCase
 
         $form = CustomFieldForm::show($entity);
 
-        $this->assertIsString($form->getTable());
-        $this->assertIsString($form->getType());
-        $this->assertIsInt($form->getLocation());
-        $this->assertIsInt($form->getOrder());
-        $this->assertIsBool($form->getRequired());
-        $this->assertIsInt($form->getEmailMinLength());
-        $this->assertIsInt($form->getEmailMaxLength());
+        $this->assertIsString($form->table);
+        $this->assertIsString($form->type);
+        $this->assertIsInt($form->location);
+        $this->assertIsInt($form->order);
+        $this->assertIsBool($form->required);
+        $this->assertIsInt($form->email_min_length);
+        $this->assertIsInt($form->email_max_length);
     }
 }

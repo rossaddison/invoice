@@ -63,7 +63,7 @@ echo H::openTag('form', ['method' => 'post']);
              'disabled' => 'disabled',
              'id' => 'label',
              ])
-             ->value(H::encode($field_form->getLabel()))
+             ->value(H::encode($field_form->label))
              ->render();
           echo H::closeTag('div'); //10
           $optionsDataType = [];

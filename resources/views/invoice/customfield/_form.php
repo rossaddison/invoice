@@ -72,7 +72,7 @@ use Yiisoft\Html\Tag\Form;
             'class' => 'form-control form-control-lg',
             'id' => 'table',
         ])
-        ->value(Html::encode($form->getTable() ?? ''))
+        ->value(Html::encode($form->table ?? ''))
         ->optionsData($tables);
 ?>
             <?= Html::closeTag('div'); ?>
@@ -85,7 +85,7 @@ use Yiisoft\Html\Tag\Form;
             'class' => 'form-control form-control-lg',
             'id' => 'label',
         ])
-        ->value(Html::encode($form->getLabel() ?? ''))
+        ->value(Html::encode($form->label ?? ''))
         ->render();
 ?>
             <?= Html::closeTag('div'); ?>
@@ -114,7 +114,7 @@ foreach ($types as $type) {
                         'class' => 'form-control form-control-lg',
                         'id' => 'type',
                     ])
-                    ->value(Html::encode($form->getType() ?? ''))
+                    ->value(Html::encode($form->type ?? ''))
                     ->optionsData($optionsDataType)
                     ->render();
 ?>
@@ -136,7 +136,7 @@ foreach ($types as $type) {
         'type' => 'range',
         'min' => 1,
         'max' => 20,
-        'value' => Html::encode($form->getOrder() ?? ''),
+        'value' => Html::encode($form->order ?? ''),
         'class' => 'form-range',
         'id' => 'order',
     ])
@@ -154,7 +154,7 @@ foreach ($types as $type) {
             'style' => 'width:110px',
             'id' => 'email_min_length',
         ])
-        ->value($form->getEmailMinLength() ?? 0)
+        ->value($form->email_min_length ?? 0)
         ->render(); ?>
                 <?= Html::closeTag('div'); ?>
 
@@ -165,7 +165,7 @@ foreach ($types as $type) {
             'style' => 'width:110px',
             'id' => 'email_max_length',
         ])
-        ->value($form->getEmailMaxLength() ?? 150)
+        ->value($form->email_max_length ?? 150)
         ->render(); ?>
                 <?= Html::closeTag('div'); ?>
 
@@ -173,7 +173,7 @@ foreach ($types as $type) {
                     <?= Field::checkbox($form, 'email_multiple')
         ->inputLabelAttributes(['class' => 'form-check-label'])
         ->inputClass('form-check-input')
-        ->value($form->getEmailMultiple() ?? false)
+        ->value($form->email_multiple ?? false)
         ->render(); ?>
                 <?= Html::closeTag('div'); ?>
 
@@ -188,7 +188,7 @@ foreach ($types as $type) {
             'style' => 'width:110px',
             'id' => 'number_min',
         ])
-        ->value($form->getNumberMin() ?? 0)
+        ->value($form->number_min ?? 0)
         ->render(); ?>
                 <?= Html::closeTag('div'); ?>
 
@@ -199,7 +199,7 @@ foreach ($types as $type) {
             'style' => 'width:110px',
             'id' => 'number_max',
         ])
-        ->value($form->getNumberMax() ?? 100)
+        ->value($form->number_max ?? 100)
         ->render(); ?>
                 <?= Html::closeTag('div'); ?>
 
@@ -214,7 +214,7 @@ foreach ($types as $type) {
             'style' => 'width:110px',
             'id' => 'text_min_length',
         ])
-        ->value($form->getTextMinLength() ?? 0)
+        ->value($form->text_min_length ?? 0)
         ->render(); ?>
                 <?= Html::closeTag('div'); ?>
 
@@ -225,7 +225,7 @@ foreach ($types as $type) {
             'style' => 'width:110px',
             'id' => 'text_max_length',
         ])
-        ->value($form->getTextMaxLength() ?? 100)
+        ->value($form->text_max_length ?? 100)
         ->render(); ?>
                 <?= Html::closeTag('div'); ?>
 
@@ -240,7 +240,7 @@ foreach ($types as $type) {
             'style' => 'width:110px',
             'id' => 'text_area_min_length',
         ])
-        ->value($form->getTextAreaMinLength() ?? 0)
+        ->value($form->text_area_min_length ?? 0)
         ->render(); ?>
                 <?= Html::closeTag('div'); ?>
 
@@ -251,7 +251,7 @@ foreach ($types as $type) {
             'style' => 'width:110px',
             'id' => 'text_area_max_length',
         ])
-        ->value($form->getTextAreaMaxLength() ?? 150)
+        ->value($form->text_area_max_length ?? 150)
         ->render(); ?>
                 <?= Html::closeTag('div'); ?>
 
@@ -266,7 +266,7 @@ foreach ($types as $type) {
             'style' => 'width:110px',
             'id' => 'text_area_cols',
         ])
-        ->value($form->getTextAreaCols() ?? 10)
+        ->value($form->text_area_cols ?? 10)
         ->render(); ?>
                 <?= Html::closeTag('div'); ?>
 
@@ -277,7 +277,7 @@ foreach ($types as $type) {
             'style' => 'width:110px',
             'id' => 'text_area_rows',
         ])
-        ->value($form->getTextAreaRows() ?? 10)
+        ->value($form->text_area_rows ?? 10)
         ->render(); ?>
                 <?= Html::closeTag('div'); ?>
 
@@ -292,7 +292,7 @@ foreach ($types as $type) {
             'style' => 'width:110px',
             'id' => 'url_min_length',
         ])
-        ->value($form->getUrlMinLength() ?? 0)
+        ->value($form->url_min_length ?? 0)
         ->render(); ?>
                 <?= Html::closeTag('div'); ?>
 
@@ -303,14 +303,14 @@ foreach ($types as $type) {
             'style' => 'width:110px',
             'id' => 'url_max_length',
         ])
-        ->value($form->getUrlMaxLength() ?? 150)
+        ->value($form->url_max_length ?? 150)
         ->render(); ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
 
             <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <label for="location"><?= $translator->translate('position'); ?></label> 
-                <?php $valueSelected = Html::encode($form->getLocation() ??  ''); ?>
+                <?php $valueSelected = Html::encode($form->location ??  ''); ?>
                 <select name="location" id="location" class="form-control form-control-lg"></select>
             <?= Html::closeTag('div'); ?>
 
