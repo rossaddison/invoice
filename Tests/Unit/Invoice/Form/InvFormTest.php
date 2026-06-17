@@ -56,15 +56,15 @@ class InvFormTest extends TestCase
         $form = new InvForm();
 
         $this->assertSame('', $form->getFormName());
-        $this->assertSame('', $form->getNumber());
+        $this->assertSame('', $form->number);
         $this->assertNull($form->getGroupId());
         $this->assertNull($form->getClientId());
         $this->assertSame(1, $form->getStatusId());
         $this->assertSame(0.00, $form->getDiscountAmount());
-        $this->assertFalse($form->getIsReadOnly());
+        $this->assertFalse($form->is_read_only);
         $this->assertSame('', $form->getNote());
-        $this->assertSame('', $form->getTerms());
-        $this->assertNull($form->getClient());
+        $this->assertSame('', $form->terms);
+        $this->assertNull($form->client);
     }
 
     public function testGetFormNameReturnsEmptyString(): void
@@ -108,23 +108,23 @@ class InvFormTest extends TestCase
 
         $form = InvForm::show($inv);
 
-        $this->assertSame('INV-0001', $form->getNumber());
+        $this->assertSame('INV-0001', $form->number);
         $this->assertSame(3, $form->getClientId());
         $this->assertSame(1, $form->getGroupId());
         $this->assertSame(2, $form->getStatusId());
-        $this->assertSame('Net 30', $form->getTerms());
+        $this->assertSame('Net 30', $form->terms);
         $this->assertSame('Please pay promptly', $form->getNote());
-        $this->assertSame('PO-12345', $form->getClientPoNumber());
-        $this->assertSame('Jane Buyer', $form->getClientPoPerson());
-        $this->assertSame(1, $form->getPaymentMethod());
-        $this->assertFalse($form->getIsReadOnly());
+        $this->assertSame('PO-12345', $form->client_po_number);
+        $this->assertSame('Jane Buyer', $form->client_po_person);
+        $this->assertSame(1, $form->payment_method);
+        $this->assertFalse($form->is_read_only);
     }
 
     public function testShowWithReadOnlyFlag(): void
     {
         $form = InvForm::show($this->buildInvMock(clientId: 1, groupId: 1, statusId: 4, readOnly: true));
 
-        $this->assertTrue($form->getIsReadOnly());
+        $this->assertTrue($form->is_read_only);
         $this->assertSame(4, $form->getStatusId());
     }
 
@@ -139,7 +139,7 @@ class InvFormTest extends TestCase
     {
         $form = new InvForm();
 
-        $this->assertSame('', $form->getClientPoNumber());
-        $this->assertSame('', $form->getClientPoPerson());
+        $this->assertSame('', $form->client_po_number);
+        $this->assertSame('', $form->client_po_person);
     }
 }

@@ -15,19 +15,19 @@ use DateTimeImmutable;
 final class InvForm extends FormModel
 {
     #[Length(min: 0, max: 100, skipOnEmpty: true)]
-    private ?string $number = '';
+    public ?string $number = '';
     private mixed $date_created = '';
     // Countries with VAT systems will need these fields
-    private mixed $date_modified = '';
-    private mixed $date_supplied = '';
-    private mixed $date_paid_off = '';
-    private mixed $date_tax_point = '';
-    private mixed $date_due = '';
+    public string|DateTimeImmutable|null $date_modified = '';
+    public string|DateTimeImmutable|null $date_supplied = '';
+    public string|DateTimeImmutable|null $date_paid_off = '';
+    public string|DateTimeImmutable|null $date_tax_point = '';
+    public string|DateTimeImmutable|null $date_due = '';
     // stand_in_code/description_code
     #[Length(min: 0, max: 3, skipOnEmpty: true)]
-    private ?string $stand_in_code = '';
-    private ?int $quote_id = null;
-    private ?Client $client = null;
+    public ?string $stand_in_code = '';
+    public ?int $quote_id = null;
+    public ?Client $client = null;
 
     #[Required]
     private ?int $group_id = null;
@@ -35,30 +35,29 @@ final class InvForm extends FormModel
     #[Required]
     private ?int $client_id = null;
 
-    private ?int $so_id = null;
-    private ?int $creditinvoice_parent_id = null;
-    private ?int $delivery_id = null;
-    private ?int $delivery_location_id = null;
-    private ?int $postal_address_id = null;
-    private ?int $contract_id = null;
+    public ?int $so_id = null;
+    public ?int $creditinvoice_parent_id = null;
+    public ?int $delivery_id = null;
+    public ?int $delivery_location_id = null;
+    public ?int $postal_address_id = null;
+    public ?int $contract_id = null;
     private ?int $status_id = 1;
     private ?float $discount_amount = 0.00;
-    private ?float $discount_percent = 0.00;
     #[Length(min: 0, max: 32, skipOnEmpty: true)]
-    private ?string $url_key = '';
+    public ?string $url_key = '';
     #[Length(min: 0, max: 90, skipOnEmpty: true)]
     private ?string $password = '';
-    private ?int $payment_method = 0;
-    private ?string $terms = '';
+    public ?int $payment_method = 0;
+    public ?string $terms = '';
     private ?string $note = '';
     #[Length(min: 0, max: 32, skipOnEmpty: true)]
-    private ?string $document_description = '';
+    public ?string $document_description = '';
     #[Length(min: 0, max: 100, skipOnEmpty: true)]
-    private ?string $client_po_number = '';
+    public ?string $client_po_number = '';
     #[Length(min: 0, max: 100, skipOnEmpty: true)]
-    private ?string $client_po_person = '';
-    private bool $is_read_only = false;
-    private mixed $time_created = '';
+    public ?string $client_po_person = '';
+    public bool $is_read_only = false;
+    public string|DateTimeImmutable|null $time_created = '';
 
     public static function show(Inv $inv): self
     {
@@ -100,9 +99,24 @@ final class InvForm extends FormModel
         return $form;
     }
 
-    public function getClient(): ?Client
+    public function getClientId(): ?int
     {
-        return $this->client;
+        return $this->client_id;
+    }
+
+    public function getGroupId(): ?int
+    {
+        return $this->group_id;
+    }
+
+    public function getStatusId(): ?int
+    {
+        return $this->status_id;
+    }
+
+    public function getDiscountAmount(): ?float
+    {
+        return $this->discount_amount;
     }
 
     public function getDateCreated(): string|DateTimeImmutable|null
@@ -113,162 +127,14 @@ final class InvForm extends FormModel
         return $this->date_created;
     }
 
-    public function getDateModified(): string|DateTimeImmutable|null
-    {
-        /**
-         * @var DateTimeImmutable|string $this->date_modified
-         */
-        return $this->date_modified;
-    }
-
-    public function getDateSupplied(): string|DateTimeImmutable|null
-    {
-        /**
-         * @var DateTimeImmutable|string $this->date_supplied
-         */
-        return $this->date_supplied;
-    }
-
-    public function getDatePaidOff(): string|DateTimeImmutable|null
-    {
-        /**
-         * @var DateTimeImmutable|string $this->date_paid_off
-         */
-        return $this->date_paid_off;
-    }
-
-    public function getDateTaxPoint(): string|DateTimeImmutable|null
-    {
-        /**
-         * @var DateTimeImmutable|string $this->date_tax_point
-         */
-        return $this->date_tax_point;
-    }
-
-    public function getDateDue(): string|DateTimeImmutable|null
-    {
-        /**
-         * @var DateTimeImmutable|string $this->date_due
-         */
-        return $this->date_due;
-    }
-
-    public function getTimeCreated(): string|DateTimeImmutable|null
-    {
-        /**
-         * @var DateTimeImmutable|string $this->time_created
-         */
-        return $this->time_created;
-    }
-
-    public function getStandInCode(): ?string
-    {
-        return $this->stand_in_code;
-    }
-
-    public function getQuoteId(): ?int
-    {
-        return $this->quote_id;
-    }
-
-    public function getClientId(): ?int
-    {
-        return $this->client_id;
-    }
-
-    public function getSoId(): ?int
-    {
-        return $this->so_id;
-    }
-
-    public function getGroupId(): ?int
-    {
-        return $this->group_id;
-    }
-
-    public function getCreditinvoiceParentId(): ?int
-    {
-        return $this->creditinvoice_parent_id;
-    }
-
-    public function getDeliveryId(): ?int
-    {
-        return $this->delivery_id;
-    }
-
-    public function getDeliveryLocationId(): ?int
-    {
-        return $this->delivery_location_id;
-    }
-
-    public function getPostalAddressId(): ?int
-    {
-        return $this->postal_address_id;
-    }
-
-    public function getContractId(): ?int
-    {
-        return $this->contract_id;
-    }
-
-    public function getStatusId(): ?int
-    {
-        return $this->status_id;
-    }
-
-    public function getNumber(): ?string
-    {
-        return $this->number;
-    }
-
-    public function getDiscountAmount(): ?float
-    {
-        return $this->discount_amount;
-    }
-
-    public function getUrlKey(): ?string
-    {
-        return $this->url_key;
-    }
-
     public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    public function getPaymentMethod(): ?int
-    {
-        return $this->payment_method;
-    }
-
-    public function getTerms(): ?string
-    {
-        return $this->terms;
-    }
-
     public function getNote(): ?string
     {
         return $this->note;
-    }
-
-    public function getDocumentDescription(): ?string
-    {
-        return $this->document_description;
-    }
-
-    public function getClientPoNumber(): ?string
-    {
-        return $this->client_po_number;
-    }
-
-    public function getClientPoPerson(): ?string
-    {
-        return $this->client_po_person;
-    }
-
-    public function getIsReadOnly(): bool
-    {
-        return $this->is_read_only;
     }
 
     /**

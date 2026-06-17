@@ -76,8 +76,8 @@ use Yiisoft\Html\Tag\Form;
     ->hideLabel()
     ->label($translator->translate('date.modified'))
     ->addInputAttributes(['class' => 'form-control form-control-lg',])
-    ->value(Html::encode(!is_string($form->getDateModified()) && null !== $form->getDateModified()
-                                    ? $form->getDateModified()->format('Y-m-d') : ''))
+    ->value(Html::encode(!is_string($form->date_modified) && null !== $form->date_modified
+                                    ? $form->date_modified->format('Y-m-d') : ''))
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
@@ -93,8 +93,8 @@ use Yiisoft\Html\Tag\Form;
                                     <?= Field::text($form, 'time_created')
     ->label($translator->translate('time.created'))
     ->addInputAttributes(['class' => 'form-control form-control-lg',])
-    ->value(Html::encode(date('h:i:s', (!is_string($form->getTimeCreated()) && null !== $form->getTimeCreated()
-                                              ? $form->getTimeCreated()->getTimestamp() : null))))
+    ->value(Html::encode(date('h:i:s', (!is_string($form->time_created) && null !== $form->time_created
+                                              ? $form->time_created->getTimestamp() : null))))
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
@@ -102,15 +102,15 @@ use Yiisoft\Html\Tag\Form;
     ->hideLabel(true)
     ->label($translator->translate('tax.point'))
     ->addInputAttributes(['class' => 'form-control form-control-lg',])
-    ->value(Html::encode(!is_string($form->getDateTaxPoint()) && null !== $form->getDateTaxPoint()
-                                    ? $form->getDateTaxPoint()->format('Y-m-d') : ''));
+    ->value(Html::encode(!is_string($form->date_tax_point) && null !== $form->date_tax_point
+                                    ? $form->date_tax_point->format('Y-m-d') : ''));
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::hidden($form, 'stand_in_code')
     ->hideLabel(true)
     ->addInputAttributes(['class' => 'form-control form-control-lg',])
-    ->value(Html::encode($form->getStandInCode()))
+    ->value(Html::encode($form->stand_in_code))
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
@@ -118,8 +118,8 @@ use Yiisoft\Html\Tag\Form;
     ->hideLabel(true)
     ->label($translator->translate('date.supplied'))
     ->addInputAttributes(['class' => 'form-control form-control-lg',])
-    ->value(Html::encode(!is_string($form->getDateSupplied()) && null !== $form->getDateSupplied()
-                                    ? $form->getDateSupplied()->format('Y-m-d') : ''));
+    ->value(Html::encode(!is_string($form->date_supplied) && null !== $form->date_supplied
+                                    ? $form->date_supplied->format('Y-m-d') : ''));
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
@@ -127,8 +127,8 @@ use Yiisoft\Html\Tag\Form;
     ->hideLabel(true)
     ->label($translator->translate('date.due'))
     ->addInputAttributes(['class' => 'form-control form-control-lg',])
-    ->value(Html::encode(!is_string($form->getDateDue()) && null !== $form->getDateDue()
-                                    ? $form->getDateDue()->format('Y-m-d') : ''));
+    ->value(Html::encode(!is_string($form->date_due) && null !== $form->date_due
+                                    ? $form->date_due->format('Y-m-d') : ''));
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
@@ -136,7 +136,7 @@ use Yiisoft\Html\Tag\Form;
     ->hideLabel(true)
     ->label($translator->translate('number'))
     ->addInputAttributes(['class' => 'form-control form-control-lg',])
-    ->value(Html::encode($form->getNumber()))
+    ->value(Html::encode($form->number))
     //->placeholder($translator->translate('number'));
 ?>
                                 <?= Html::closeTag('div'); ?>
@@ -153,7 +153,7 @@ use Yiisoft\Html\Tag\Form;
     ->hideLabel(true)
     ->label($translator->translate('terms'))
     ->addInputAttributes(['class' => 'form-control form-control-lg',])
-    ->value(Html::encode($form->getTerms() ?? $s->getSetting('default_invoice_terms') ?: $translator->translate('payment.term.general')))
+    ->value(Html::encode($form->terms ?? $s->getSetting('default_invoice_terms') ?: $translator->translate('payment.term.general')))
     //->placeholder($translator->translate('terms'));
 ?>
                                 <?= Html::closeTag('div'); ?>
@@ -170,7 +170,7 @@ use Yiisoft\Html\Tag\Form;
                                     <?= Field::text($form, 'document_description')
     ->label($translator->translate('description.document'))
     ->addInputAttributes(['class' => 'form-control form-control-lg',])
-    ->value(Html::encode($form->getDocumentDescription()))
+    ->value(Html::encode($form->document_description))
     ->placeholder($translator->translate('description.document'))
     ->hint($translator->translate('hint.this.field.is.not.required'))
 ?>
@@ -180,7 +180,7 @@ use Yiisoft\Html\Tag\Form;
     ->hideLabel(true)
     ->label($translator->translate('url.key'))
     ->addInputAttributes(['class' => 'form-control form-control-lg',])
-    ->value(Html::encode($form->getUrlKey() ?? $urlKey))
+    ->value(Html::encode($form->url_key ?? $urlKey))
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
@@ -188,7 +188,7 @@ use Yiisoft\Html\Tag\Form;
     ->hideLabel(true)
     ->label($translator->translate('payment.method'))
     ->addInputAttributes(['class' => 'form-control form-control-lg',])
-    ->value(Html::encode($form->getPaymentMethod() ?? ($s->getSetting('invoice_default_payment_method') ?: 1)))
+    ->value(Html::encode($form->payment_method ?? ($s->getSetting('invoice_default_payment_method') ?: 1)))
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
@@ -196,7 +196,7 @@ use Yiisoft\Html\Tag\Form;
     ->hideLabel(true)
     ->label($translator->translate('contract.id'))
     ->addInputAttributes(['class' => 'form-control form-control-lg',])
-    ->value(Html::encode($form->getContractId() ?? 0))
+    ->value(Html::encode($form->contract_id ?? 0))
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
@@ -204,7 +204,7 @@ use Yiisoft\Html\Tag\Form;
     ->hideLabel(true)
     ->label($translator->translate('delivery'))
     ->addInputAttributes(['class' => 'form-control form-control-lg',])
-    ->value(Html::encode($form->getDeliveryId() ?? 0))
+    ->value(Html::encode($form->delivery_id ?? 0))
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
@@ -212,7 +212,7 @@ use Yiisoft\Html\Tag\Form;
     ->hideLabel(true)
     ->label($translator->translate('delivery.location'))
     ->addInputAttributes(['class' => 'form-control form-control-lg',])
-    ->value(Html::encode($form->getDeliveryLocationId() ?? 0))
+    ->value(Html::encode($form->delivery_location_id ?? 0))
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
@@ -220,7 +220,7 @@ use Yiisoft\Html\Tag\Form;
     ->hideLabel(true)
     ->label($translator->translate('postal.address'))
     ->addInputAttributes(['class' => 'form-control form-control-lg',])
-    ->value(Html::encode($form->getPostalAddressId() ?? 0))
+    ->value(Html::encode($form->postal_address_id ?? 0))
 ?>
                                 <?= Html::closeTag('div'); ?>
                             <?= Html::closeTag('div'); ?>

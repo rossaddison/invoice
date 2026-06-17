@@ -150,7 +150,7 @@ trait Edit
         $inputAttributesUrlKey = [
             'class' => 'form-control form-control-lg',
             'readonly' => 'readonly',
-            'value' => $form->getUrlKey(),
+            'value' => $form->url_key,
         ];
         // do not display the url key if it is a draft invoice otherwise
         // display the url key
@@ -165,7 +165,7 @@ trait Edit
 
     private function editInputAttributesPaymentMethod(InvForm $form): array
     {
-        if ($form->getIsReadOnly() && $form->getStatusId() == 4) {
+        if ($form->is_read_only && $form->getStatusId() == 4) {
             $inputAttributesPaymentMethod = [
                 'class' => 'form-control form-control-lg',
                 'disabled' => 'disabled',
@@ -173,7 +173,7 @@ trait Edit
         } else {
             $inputAttributesPaymentMethod = [
                 'class' => 'form-control form-control-lg',
-                'value' => $form->getPaymentMethod() ??
+                'value' => $form->payment_method ??
                 ($this->sR->getSetting('invoice_default_payment_method') ?: 1),
             ];
         }

@@ -79,7 +79,7 @@ if ($vat) {
                                              'class' => 'form-control form-control-lg',
                                              'readonly' => 'readonly',
                                          ])
-                                         ->value(Html::encode($form->getNumber()))
+                                         ->value(Html::encode($form->number))
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
@@ -95,7 +95,7 @@ if ($vat) {
 
     ->label($translator->translate('delivery'))
     ->addInputAttributes(['class' => 'form-control form-control-lg',])
-    ->value($form->getDeliveryId())
+    ->value($form->delivery_id)
     ->prompt($translator->translate('none'))
     ->optionsData($optionsData['delivery'])
     ->hint($translator->translate('hint.this.field.is.required'));
@@ -123,20 +123,20 @@ if ($vat) {
                                     <?= Field::select($form, 'delivery_location_id')
             ->label($translator->translate('delivery.location'))
             ->addInputAttributes(['class' => 'form-control form-control-lg',])
-            ->value($form->getDeliveryLocationId())
+            ->value($form->delivery_location_id)
             ->prompt($translator->translate('none'))
             ->disabled(false)
             ->optionsData($optionsData['deliveryLocation'])
             ->hint($translator->translate('hint.this.field.is.not.required'));
                                 ?>
                                 <?= Html::closeTag('div'); ?>
-                                <?php if (null !== $form->getDeliveryLocationId() && $form->getDeliveryLocationId() <> '0') { ?>
+                                <?php if (null !== $form->delivery_location_id && $form->delivery_location_id <> '0') { ?>
 
                                     <span class="btn btn-sm btn-outline-secondary mt-1">
                                     <a href="<?= $urlGenerator->generate(
                                         'del/edit',
                                         [
-                                            'id' => $form->getDeliveryLocationId(),
+                                            'id' => $form->delivery_location_id,
                                         ],
                                         [
                                             /**
@@ -175,11 +175,11 @@ if ($vat) {
                         <?php if ($contractCount > 0) { ?>
                             <?= Html::openTag('div'); ?>
                                 <?= Field::select($form, 'contract_id')
-        ->label($form->getContractId() === null
+        ->label($form->contract_id === null
                 ? $translator->translate('contract.none')
                 : $translator->translate('contract'))
         ->addInputAttributes(['class' => 'form-control form-control-lg',])
-        ->value($form->getContractId())
+        ->value($form->contract_id)
         ->prompt($translator->translate('none'))
         ->optionsData($optionsData['contract'])
         ->hint($translator->translate('hint.this.field.is.not.required'));
@@ -198,19 +198,19 @@ if ($vat) {
                                     <?= Field::select($form, 'postal_address_id')
                 ->label($translator->translate('client.postaladdress.available'))
                 ->addInputAttributes(['class' => 'form-control form-control-lg',])
-                ->value($form->getPostalAddressId())
+                ->value($form->postal_address_id)
                 ->prompt($translator->translate('none'))
                 ->optionsData($optionsData['postalAddress'])
                 ->disabled(false)
                 ->hint($translator->translate('hint.this.field.is.not.required'));
                             ?>
                                 <?= Html::closeTag('div'); ?>
-                                <?php if (null !== $form->getPostalAddressId() && $form->getPostalAddressId() <> '0') { ?>
+                                <?php if (null !== $form->postal_address_id && $form->postal_address_id <> '0') { ?>
                                     <span class="btn btn-sm btn-outline-secondary mt-1">
                                     <a href="<?= $urlGenerator->generate(
                                         'postaladdress/edit',
                                         [
-                                            'id' => $form->getPostalAddressId(),
+                                            'id' => $form->postal_address_id,
                                         ],
                                         [
                                             /**
@@ -250,7 +250,7 @@ if ($vat) {
                             <?= Field::hidden($form, 'creditinvoice_parent_id')
     ->hideLabel(true)
     ->addInputAttributes(['class' => 'form-control form-control-lg',])
-    ->value(Html::encode($form->getCreditinvoiceParentId()) ?: 0)
+    ->value(Html::encode($form->creditinvoice_parent_id) ?: 0)
 ?>
                         <?= Html::closeTag('div'); ?>
                         <?= Html::Tag('br'); ?>
@@ -261,7 +261,7 @@ if ($vat) {
                             <?= Field::date($form, 'date_supplied')
     ->label($translator->translate('date.supplied'))
     ->addInputAttributes(['onclick' => 'this.showPicker()'])
-    ->value(!is_string($form->getDateSupplied()) ? $form->getDateSupplied()?->format('Y-m-d') : '')
+    ->value(!is_string($form->date_supplied) ? $form->date_supplied?->format('Y-m-d') : '')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
                         <?= Html::closeTag('div'); ?>
@@ -269,7 +269,7 @@ if ($vat) {
                             <?= Field::date($form, 'date_tax_point')
     ->label($translator->translate('tax.point'))
     ->addInputAttributes(['onclick' => 'this.showPicker()'])
-    ->value(!is_string($form->getDateTaxPoint()) ? $form->getDateTaxPoint()?->format('Y-m-d') : '')
+    ->value(!is_string($form->date_tax_point) ? $form->date_tax_point?->format('Y-m-d') : '')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
                         <?= Html::closeTag('div'); ?>
@@ -283,7 +283,7 @@ if ($vat) {
                             <?= Field::select($form, 'payment_method')
     ->hideLabel(false)
     ->label($translator->translate('payment.method'))
-    ->value($form->getPaymentMethod())
+    ->value($form->payment_method)
     ->prompt($translator->translate('none'))
     ->optionsData($optionsData['paymentMethod'])
     ->addInputAttributes($editInputAttributesPaymentMethod)
@@ -303,7 +303,7 @@ if ($vat) {
                             <?= Field::select($form, 'terms')
                             ->label($translator->translate('terms'))
                             ->addInputAttributes(['class' => 'form-control form-control-lg',])
-                            ->value(Html::encode($form->getTerms()))
+                            ->value(Html::encode($form->terms))
                             ->prompt($translator->translate('none'))
                             ->optionsData($optionsData['paymentTerm'])
                             ->hint($translator->translate('hint.this.field.is.not.required'));
@@ -316,7 +316,7 @@ if ($vat) {
                             <?= Field::text($form, 'document_description')
     ->label($translator->translate('description.document'))
     ->addInputAttributes(['class' => 'form-control form-control-lg',])
-    ->value(Html::encode($form->getDocumentDescription()))
+    ->value(Html::encode($form->document_description))
     ->placeholder($translator->translate('description.document'))
     ->hint($translator->translate('hint.this.field.is.not.required'))
 ?>
@@ -325,7 +325,7 @@ if ($vat) {
                             <?= Field::text($form, 'client_po_number')
     ->label($translator->translate('client.po.number'))
     ->addInputAttributes(['class' => 'form-control form-control-lg',])
-    ->value(Html::encode($form->getClientPoNumber() ?? ''))
+    ->value(Html::encode($form->client_po_number ?? ''))
     ->placeholder($translator->translate('client.po.number'))
     ->hint($translator->translate('hint.this.field.is.not.required'))
 ?>
@@ -334,7 +334,7 @@ if ($vat) {
                             <?= Field::text($form, 'client_po_person')
     ->label($translator->translate('client.po.person'))
     ->addInputAttributes(['class' => 'form-control form-control-lg',])
-    ->value(Html::encode($form->getClientPoPerson() ?? ''))
+    ->value(Html::encode($form->client_po_person ?? ''))
     ->placeholder($translator->translate('client.po.person'))
     ->hint($translator->translate('hint.this.field.is.not.required'))
 ?>

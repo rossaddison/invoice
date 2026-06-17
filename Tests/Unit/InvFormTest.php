@@ -241,8 +241,8 @@ final class InvFormTest extends TestCase
     {
         $form = InvForm::show($this->inv);
         
-        $this->assertEquals('INV-001', $form->getNumber());
-        $this->assertEquals('Test terms', $form->getTerms());
+        $this->assertEquals('INV-001', $form->number);
+        $this->assertEquals('Test terms', $form->terms);
         $this->assertEquals('Test note', $form->getNote());
         $this->assertEquals(1, $form->getClientId());
         $this->assertEquals(1, $form->getGroupId());
