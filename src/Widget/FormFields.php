@@ -697,17 +697,17 @@ final readonly class FormFields
 
         // Handle specific field name mappings for CompanyForm
         $value = match ($fieldName) {
-            'name' => $form->getName(),
-            'address_1' => $form->getAddress1(),
-            'address_2' => $form->getAddress2(),
-            'city' => $form->getCity(),
-            'state' => $form->getState(),
-            'zip' => $form->getZip(),
-            'country' => $form->getCountry(),
-            'seo_description' => $form->getSeoDescription(),
-            'web' => $form->getWeb(),
-            'arbitrationBody' => $form->getArbitrationBody(),
-            'arbitrationJurisdiction' => $form->getArbitrationJurisdiction(),
+            'name' => $form->name,
+            'address_1' => $form->address_1,
+            'address_2' => $form->address_2,
+            'city' => $form->city,
+            'state' => $form->state,
+            'zip' => $form->zip,
+            'country' => $form->country,
+            'seo_description' => $form->seo_description,
+            'web' => $form->web,
+            'arbitrationBody' => $form->arbitration_body,
+            'arbitrationJurisdiction' => $form->arbitration_jurisdiction,
             default => null,
         };
 
@@ -739,7 +739,7 @@ final readonly class FormFields
             ->addInputAttributes([
                 'placeholder' => $this->translator->translate('email'),
                 'class' => 'form-control form-control-lg',
-                'value' => $form->getEmail() ?? '',
+                'value' => $form->email ?? '',
             ])
             ->required(true)
             ->hint($this->translator->translate('hint.this.field.is.required'))
@@ -753,8 +753,8 @@ final readonly class FormFields
             string $labelKey): string
     {
         $value = match ($fieldName) {
-            'phone' => $form->getPhone(),
-            'fax' => $form->getFax(),
+            'phone' => $form->phone,
+            'fax' => $form->fax,
             default => null,
         };
 

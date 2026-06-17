@@ -49,7 +49,7 @@ echo new Form()
             'class' => 'form-control form-control-lg',
          ])
          ->required(true)
-         ->value(Html::encode($form->getName() ?? ''))
+         ->value(Html::encode($form->name ?? ''))
          ->disabled(true);
    echo Html::closeTag('div'); //3
    echo Html::openTag('div', ['class' => 'mb-3']); //3
@@ -60,7 +60,7 @@ echo new Form()
             'class' => 'form-control form-control-lg',
          ])
          ->required(true)
-         ->value(Html::encode($form->getEmail() ?? ''))
+         ->value(Html::encode($form->email ?? ''))
          ->disabled(true);
    echo Html::closeTag('div'); //3
    echo Html::openTag('div', ['class' => 'mb-3']); //3
@@ -70,7 +70,7 @@ echo new Form()
             'placeholder' => $translator->translate('web'),
             'class' => 'form-control form-control-lg',
          ])
-         ->value(Html::encode($form->getWeb() ?? ''))
+         ->value(Html::encode($form->web ?? ''))
          ->disabled(true);
    echo Html::closeTag('div'); //3
    echo Html::openTag('div', ['class' => 'mb-3']); //3
@@ -80,7 +80,7 @@ echo new Form()
             'placeholder' => $translator->translate('street.address'),
             'class' => 'form-control form-control-lg',
          ])
-         ->value(Html::encode($form->getAddress1() ?? ''))
+         ->value(Html::encode($form->address_1 ?? ''))
          ->disabled(true);
    echo Html::closeTag('div'); //3
    echo Html::openTag('div', ['class' => 'mb-3']); //3
@@ -90,7 +90,7 @@ echo new Form()
             'placeholder' => $translator->translate('street.address.2'),
             'class' => 'form-control form-control-lg',
          ])
-         ->value(Html::encode($form->getAddress2() ?? ''))
+         ->value(Html::encode($form->address_2 ?? ''))
          ->disabled(true);
    echo Html::closeTag('div'); //3
    echo Html::openTag('div', ['class' => 'mb-3']); //3
@@ -100,7 +100,7 @@ echo new Form()
             'placeholder' => $translator->translate('city'),
             'class' => 'form-control form-control-lg',
          ])
-         ->value(Html::encode($form->getCity() ?? ''))
+         ->value(Html::encode($form->city ?? ''))
          ->disabled(true);
    echo Html::closeTag('div'); //3
    echo Html::openTag('div', ['class' => 'mb-3']);
@@ -110,7 +110,7 @@ echo new Form()
             'placeholder' => $translator->translate('state'),
             'class' => 'form-control form-control-lg',
          ])
-         ->value(Html::encode($form->getState() ?? ''))
+         ->value(Html::encode($form->state ?? ''))
          ->disabled(true);
    echo Html::closeTag('div'); //3
    echo Html::openTag('div', ['class' => 'mb-3']); //3
@@ -120,7 +120,7 @@ echo new Form()
             'placeholder' => $translator->translate('zip'),
             'class' => 'form-control form-control-lg',
          ])
-         ->value(Html::encode($form->getZip() ?? ''))
+         ->value(Html::encode($form->zip ?? ''))
          ->disabled(true);
    echo Html::closeTag('div'); //3
    echo Html::openTag('div', ['class' => 'mb-3']); //3
@@ -130,7 +130,7 @@ echo new Form()
            'placeholder' => $translator->translate('country'),
            'class' => 'form-control form-control-lg',
          ])
-         ->value(Html::encode($form->getCountry() ?? ''))
+         ->value(Html::encode($form->country ?? ''))
          ->disabled(true);
    echo Html::closeTag('div'); //3
    echo Html::openTag('div', ['class' => 'mb-3']);
@@ -140,7 +140,7 @@ echo new Form()
             'placeholder' => $translator->translate('phone'),
             'class' => 'form-control form-control-lg',
          ])
-         ->value(Html::encode($form->getPhone() ?? ''))
+         ->value(Html::encode($form->phone ?? ''))
          ->disabled(true);
    echo Html::closeTag('div'); //3
    echo Html::openTag('div', ['class' => 'mb-3']); //3
@@ -150,7 +150,7 @@ echo new Form()
             'placeholder' => $translator->translate('fax'),
              'class' => 'form-control form-control-lg',
          ])
-         ->value(Html::encode($form->getFax() ?? ''))
+         ->value(Html::encode($form->fax ?? ''))
          ->disabled(true);
    echo Html::closeTag('div'); //3
   echo Html::closeTag('div'); //2

@@ -14,18 +14,18 @@ class CompanyFormTest extends TestCase
     {
         $form = new CompanyForm();
 
-        $this->assertSame(0, $form->getCurrent());
-        $this->assertSame('', $form->getName());
-        $this->assertSame('', $form->getAddress1());
-        $this->assertSame('', $form->getAddress2());
-        $this->assertSame('', $form->getCity());
-        $this->assertSame('', $form->getState());
-        $this->assertSame('', $form->getZip());
-        $this->assertSame('', $form->getCountry());
-        $this->assertSame('', $form->getPhone());
-        $this->assertSame('', $form->getFax());
-        $this->assertSame('', $form->getEmail());
-        $this->assertSame('', $form->getWeb());
+        $this->assertSame(0, $form->current);
+        $this->assertSame('', $form->name);
+        $this->assertSame('', $form->address_1);
+        $this->assertSame('', $form->address_2);
+        $this->assertSame('', $form->city);
+        $this->assertSame('', $form->state);
+        $this->assertSame('', $form->zip);
+        $this->assertSame('', $form->country);
+        $this->assertSame('', $form->phone);
+        $this->assertSame('', $form->fax);
+        $this->assertSame('', $form->email);
+        $this->assertSame('', $form->web);
         $this->assertSame('', $form->getFormName());
     }
 
@@ -60,17 +60,17 @@ class CompanyFormTest extends TestCase
 
         $form = CompanyForm::show($entity);
 
-        $this->assertSame(1, $form->getCurrent());
-        $this->assertSame('Acme Ltd', $form->getName());
-        $this->assertSame('1 High Street', $form->getAddress1());
-        $this->assertSame('London', $form->getCity());
-        $this->assertSame('EC1A 1BB', $form->getZip());
-        $this->assertSame('GB', $form->getCountry());
-        $this->assertSame('info@acme.com', $form->getEmail());
-        $this->assertSame('https://acme.com', $form->getWeb());
-        $this->assertSame('acme-ltd', $form->getLinkedin());
-        $this->assertSame('LCIA', $form->getArbitrationBody());
-        $this->assertSame('England and Wales', $form->getArbitrationJurisdiction());
+        $this->assertSame(1, $form->current);
+        $this->assertSame('Acme Ltd', $form->name);
+        $this->assertSame('1 High Street', $form->address_1);
+        $this->assertSame('London', $form->city);
+        $this->assertSame('EC1A 1BB', $form->zip);
+        $this->assertSame('GB', $form->country);
+        $this->assertSame('info@acme.com', $form->email);
+        $this->assertSame('https://acme.com', $form->web);
+        $this->assertSame('acme-ltd', $form->linkedin);
+        $this->assertSame('LCIA', $form->arbitration_body);
+        $this->assertSame('England and Wales', $form->arbitration_jurisdiction);
     }
 
     public function testShowWithMinimalEntity(): void
@@ -81,9 +81,9 @@ class CompanyFormTest extends TestCase
 
         $form = CompanyForm::show($entity);
 
-        $this->assertSame('Solo', $form->getName());
-        $this->assertSame(0, $form->getCurrent());
-        $this->assertSame('', $form->getCity());
+        $this->assertSame('Solo', $form->name);
+        $this->assertSame(0, $form->current);
+        $this->assertSame('', $form->city);
     }
 
     public function testShowReturnsNewInstance(): void
