@@ -8,6 +8,7 @@ use App\Invoice\BaseController;
 use App\Infrastructure\Persistence\Family\Family;
 use App\Infrastructure\Persistence\FamilyCustom\FamilyCustom;
 use App\Infrastructure\Persistence\Product\Product;
+use App\Invoice\Family\Widget\FamilyListWidget;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\CategoryPrimary\CategoryPrimaryRepository as cpR;
 use App\Invoice\CategorySecondary\CategorySecondaryRepository as csR;
@@ -25,10 +26,12 @@ use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\HtmlResponseFactory;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
-use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Session\Flash\Flash;
@@ -62,44 +65,52 @@ final class FamilyController extends BaseController
         $this->urlGenerator = $urlGenerator;
     }
 
-    /**
-     * @param Request $request
-     * @param CurrentRoute $currentRoute
-     * @param fR $familyRepository
-     * @param cpR $cpR
-     * @param csR $csR
-     * @param trR $taxRateRepository
-     * @param uR $unitRepository
-     * @return \Psr\Http\Message\ResponseInterface
-     */
     public function index(
         Request $request,
-        CurrentRoute $currentRoute,
+        HtmlResponseFactory $htmlResponseFactory,
         fR $familyRepository,
         cpR $cpR,
         csR $csR,
         trR $taxRateRepository,
         uR $unitRepository,
-    ): \Psr\Http\Message\ResponseInterface {
-        $families = $this->familys($familyRepository);
-        $pageNum = (int) $currentRoute->getArgument('page', '1');
-        $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
-        $query_params = $request->getQueryParams();
+    ): Response {
+        $q = $request->getQueryParams();
+        /** @psalm-suppress MixedAssignment */
+        $sortString = isset($q['sort']) ? (string) $q['sort'] : '-id';
+        $sort = Sort::only(['id', 'family_name', 'family_commalist', 'family_productprefix'])
+            ->withOrderString($sortString);
+        $currentPage = max(1, isset($q['page']) ? (int) $q['page'] : 1);
+        /** @psalm-suppress InvalidArgument */
+        $paginator = (new OffsetPaginator($this->familys($familyRepository)))
+            ->withPageSize($this->sR->positiveListLimit())
+            ->withCurrentPage($currentPage)
+            ->withSort($sort);
+        $gridSummary = $this->sR->gridSummary(
+            $paginator,
+            $this->translator,
+            (int) $this->sR->getSetting('default_list_limit'),
+            $this->translator->translate('families'),
+            '',
+        );
+        $body = $request->getParsedBody();
+        $widget = FamilyListWidget::widget()
+            ->withPaginator($paginator)
+            ->withCpR($cpR)
+            ->withCsR($csR)
+            ->withCsrf((string) (is_array($body) ? ($body['_csrf'] ?? '') : ''))
+            ->withGridSummary($gridSummary)
+            ->withSortString($sortString);
+        if ($request->hasHeader('Hx-Request')) {
+            return $htmlResponseFactory->createResponse($widget->render());
+        }
         $parameters = [
-            'alert' => $this->alert(),
-            'families' => $families,
-            'page' => $currentPageNeverZero,
-            'sortString' => $query_params['sort'] ?? '-id',
-            /**
-             * The family repository does not include a loaded query
-             * because there are no relations (for backward compatibility purposes) therefore
-             * pass the dependent repositories so that we can identify
-             * the respective names of each repository.
-             */
-            'cpR' => $cpR,
-            'csR' => $csR,
+            'alert'                   => $this->alert(),
+            'cpR'                     => $cpR,
+            'csR'                     => $csR,
+            'paginator'               => $paginator,
+            'gridSummary'             => $gridSummary,
+            'sortString'              => $sortString,
             'modal_generate_products' => $this->indexModalGenerateProducts($taxRateRepository, $unitRepository),
-            'defaultPageSizeOffsetPaginator' => (int) $this->sR->getSetting('default_list_limit'),
         ];
         return $this->webViewRenderer->render('index', $parameters);
     }
