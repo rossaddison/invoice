@@ -292,17 +292,17 @@ final class InvsListWidget extends Widget
             )
             ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
             ->noResultsText($this->translator->translate('no.records'))
-            ->toolbar(InvsToolbar::build(
-                $this->translator,
-                $this->urlGenerator,
-                $this->currentRoute,
-                $this->csrf,
-                $this->iR,
-                $this->sR,
-                $this->clientCount,
-                $this->groupBy,
-                $enableGrouping,
-            ));
+            ->toolbar(InvsToolbar::build(new InvsToolbarParams(
+                translator:     $this->translator,
+                urlGenerator:   $this->urlGenerator,
+                currentRoute:   $this->currentRoute,
+                csrf:           $this->csrf,
+                iR:             $this->iR,
+                sR:             $this->sR,
+                clientCount:    $this->clientCount,
+                groupBy:        $this->groupBy,
+                enableGrouping: $enableGrouping,
+            )));
 
         if ($enableGrouping) {
             $gridView = InvsGroupingHelper::applyGrouping(

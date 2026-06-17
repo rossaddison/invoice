@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv\Widget;
 
-use App\Invoice\Inv\InvRepository as IR;
-use App\Invoice\Setting\SettingRepository as SR;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Button as HtmlButton;
@@ -15,9 +13,6 @@ use Yiisoft\Html\Tag\H4;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Label;
 use Yiisoft\Html\Tag\Select;
-use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Translator\TranslatorInterface;
 
 /**
  * Toolbar HTML builder extracted from InvsListWidget to stay within S1448 limit.
@@ -26,67 +21,58 @@ final class InvsToolbar
 {
     private const string ROUTE_INDEX = 'inv/index';
 
-    public static function build(
-        TranslatorInterface $t,
-        UrlGeneratorInterface $ug,
-        CurrentRoute $currentRoute,
-        string|\Stringable $csrf,
-        IR $iR,
-        SR $sR,
-        int $clientCount,
-        string $groupBy,
-        bool $enableGrouping,
-    ): string {
+    public static function build(InvsToolbarParams $p): string
+    {
         $toolbarReset = (new A())
             ->addAttributes(['type' => 'reset'])
             ->addClass('btn btn-primary me-1 ajax-loader')
             ->content(new I()->addClass('bi bi-bootstrap-reboot'))
-            ->href($ug->generate($currentRoute->getName() ?? self::ROUTE_INDEX))
+            ->href($p->urlGenerator->generate($p->currentRoute->getName() ?? self::ROUTE_INDEX))
             ->id('btn-reset')
             ->render();
 
         $allVisible = (new A())
             ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip',
-                'title' => $t->translate('hide.or.unhide.columns')])
+                'title' => $p->translator->translate('hide.or.unhide.columns')])
             ->addClass('btn btn-warning me-1 ajax-loader')
             ->content('↔️')
-            ->href($ug->generate('setting/visible', ['origin' => 'inv']))
+            ->href($p->urlGenerator->generate('setting/visible', ['origin' => 'inv']))
             ->id('btn-all-visible')
             ->render();
 
         $copyMultiple = (new A())
             ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'modal',
-                'title' => Html::encode($t->translate('copy.invoice'))])
+                'title' => Html::encode($p->translator->translate('copy.invoice'))])
             ->addClass('btn btn-success')
             ->href('#modal-copy-inv-multiple')
-            ->content('☑️' . $t->translate('copy.invoice'))
+            ->content('☑️' . $p->translator->translate('copy.invoice'))
             ->id('btn-modal-copy-inv-multipe')
             ->render();
 
         $markAsSent = (new A())
             ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip',
-                'title' => Html::encode($t->translate('sent'))])
+                'title' => Html::encode($p->translator->translate('sent'))])
             ->addClass('btn btn-success')
-            ->content('☑️' . $t->translate('sent') . $iR->getSpecificStatusArrayEmoji(2))
+            ->content('☑️' . $p->translator->translate('sent') . $p->iR->getSpecificStatusArrayEmoji(2))
             ->id('btn-mark-as-sent')
             ->render();
 
-        $markSentAsDraft = $sR->getSetting('disable_read_only') === '0'
+        $markSentAsDraft = $p->sR->getSetting('disable_read_only') === '0'
             ? (new A())
                 ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip',
                     'title' => Html::encode(
-                        $t->translate('security.disable.read.only.info')),
+                        $p->translator->translate('security.disable.read.only.info')),
                     'disabled' => 'disabled', 'style' => 'text-decoration:none'])
                 ->addClass('btn btn-success')
-                ->content('☑️' . $t->translate('draft') . $iR->getSpecificStatusArrayEmoji(1))
+                ->content('☑️' . $p->translator->translate('draft') . $p->iR->getSpecificStatusArrayEmoji(1))
                 ->id('btn-mark-sent-as-draft')
                 ->render()
             : (new A())
                 ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip',
-                    'title' => Html::encode($t->translate('draft')),
+                    'title' => Html::encode($p->translator->translate('draft')),
                     'style' => 'text-decoration:none'])
                 ->addClass('btn btn-success')
-                ->content('☑️' . $t->translate('draft') . $iR->getSpecificStatusArrayEmoji(1))
+                ->content('☑️' . $p->translator->translate('draft') . $p->iR->getSpecificStatusArrayEmoji(1))
                 ->id('btn-mark-sent-as-draft')
                 ->render();
 
@@ -94,10 +80,10 @@ final class InvsToolbar
             ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'modal'])
             ->addClass('btn btn-info')
             ->href('#create-recurring-multiple')
-            ->content('☑️' . $t->translate('recurring') . '♻️')
+            ->content('☑️' . $p->translator->translate('recurring') . '♻️')
             ->render();
 
-        $addBtn = $clientCount > 0
+        $addBtn = $p->clientCount > 0
             ? (new A())
                 ->addAttributes(['class' => 'btn btn-info', 'data-bs-toggle' => 'modal',
                     'style' => 'text-decoration:none'])
@@ -107,7 +93,7 @@ final class InvsToolbar
                 ->render()
             : (new A())
                 ->addAttributes(['class' => 'btn btn-info', 'data-bs-toggle' => 'tooltip',
-                    'title' => $t->translate('add.client'),
+                    'title' => $p->translator->translate('add.client'),
                     'disabled' => 'disabled', 'style' => 'text-decoration:none'])
                 ->content('➕')
                 ->href('#modal-add-inv')
@@ -120,30 +106,30 @@ final class InvsToolbar
             ->content(
                 (new Label())
                     ->addClass('btn btn-outline-secondary active bi bi-collection me-1')
-                    ->content(' ' . $t->translate('group.by') . ':')
+                    ->content(' ' . $p->translator->translate('group.by') . ':')
                 . (new Select())
                     ->addClass('form-select group-by-select')
                     ->addAttributes([
                         'style'         => 'max-width: 150px;',
-                        'data-base-url' => $ug->generate(self::ROUTE_INDEX),
+                        'data-base-url' => $p->urlGenerator->generate(self::ROUTE_INDEX),
                     ])
                     ->optionsData([
-                        'none'            => $t->translate('grouping.none'),
-                        'status'          => $t->translate('status'),
-                        'client'          => $t->translate('client'),
-                        'client_group'    => $t->translate('client.group'),
-                        'month'           => $t->translate('month'),
-                        'year'            => $t->translate('year'),
-                        'date'            => $t->translate('date'),
+                        'none'            => $p->translator->translate('grouping.none'),
+                        'status'          => $p->translator->translate('status'),
+                        'client'          => $p->translator->translate('client'),
+                        'client_group'    => $p->translator->translate('client.group'),
+                        'month'           => $p->translator->translate('month'),
+                        'year'            => $p->translator->translate('year'),
+                        'date'            => $p->translator->translate('date'),
                         'amount_range'    => 'Amount Range',
-                        'peppol_workflow' => $t->translate('peppol'),
+                        'peppol_workflow' => $p->translator->translate('peppol'),
                     ])
-                    ->value($groupBy)
+                    ->value($p->groupBy)
             )
             ->encode(false)
             ->render();
 
-        $collapseExpand = $enableGrouping
+        $collapseExpand = $p->enableGrouping
             ? (new Div())
                 ->addClass('btn-group ms-2')
                 ->addAttributes(['role' => 'group'])
@@ -166,13 +152,13 @@ final class InvsToolbar
             : '';
 
         return (new Form())
-                ->post($ug->generate(self::ROUTE_INDEX))
-                ->csrf($csrf)
+                ->post($p->urlGenerator->generate(self::ROUTE_INDEX))
+                ->csrf($p->csrf)
                 ->open()
             . (new Div())->addClass('float-start')->content(
                 (new H4())
                     ->addClass('me-3 d-inline-block')
-                    ->content($t->translate('invoice'))
+                    ->content($p->translator->translate('invoice'))
                 . Html::openTag('div', ['class' => 'btn-group me-2', 'role' => 'group'])
                 . $allVisible
                 . $toolbarReset
