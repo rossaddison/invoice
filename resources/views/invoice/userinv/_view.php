@@ -66,7 +66,7 @@ echo Field::select($form, 'user_id')
     'readonly' => 'readonly',
 ])
 ->optionsData($optionsDataUser)
-->value(Html::encode($form->getUserId() ?? ''))
+->value(Html::encode($form->user_id ?? ''))
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
@@ -89,7 +89,7 @@ echo Field::select($form, 'type')
     'readonly' => 'readonly',
 ])
 ->optionsData($optionsDataType)
-->value(Html::encode($form->getType()))
+->value(Html::encode($form->type))
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
@@ -125,7 +125,7 @@ echo Field::select($form, 'language')
     'readonly' => 'readonly',
 ])
 ->optionsData($optionsDataLanguage)
-->value(Html::encode($form->getLanguage()))
+->value(Html::encode($form->language))
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
@@ -136,7 +136,7 @@ echo Field::select($form, 'language')
         'id' => 'name',
         'readonly' => 'readonly',
     ])
-    ->value(Html::encode($form->getName() ?? ''))
+    ->value(Html::encode($form->name ?? ''))
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
@@ -147,7 +147,7 @@ echo Field::select($form, 'language')
         'id' => 'company',
         'readonly' => 'readonly',
     ])
-    ->value(Html::encode($form->getCompany() ?? ''))
+    ->value(Html::encode($form->company ?? ''))
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
@@ -158,7 +158,7 @@ echo Field::select($form, 'language')
         'id' => 'address_1',
         'readonly' => 'readonly',
     ])
-    ->value(Html::encode($form->getAddress1() ?? ''))
+    ->value(Html::encode($form->address_1 ?? ''))
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
@@ -169,7 +169,7 @@ echo Field::select($form, 'language')
         'id' => 'address_2',
         'readonly' => 'readonly',
     ])
-    ->value(Html::encode($form->getAddress2() ?? ''))
+    ->value(Html::encode($form->address_2 ?? ''))
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
@@ -180,7 +180,7 @@ echo Field::select($form, 'language')
         'id' => 'city',
         'readonly' => 'readonly',
     ])
-    ->value(Html::encode($form->getCity() ?? ''))
+    ->value(Html::encode($form->city ?? ''))
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
@@ -191,7 +191,7 @@ echo Field::select($form, 'language')
         'id' => 'state',
         'readonly' => 'readonly',
     ])
-    ->value(Html::encode($form->getState() ?? ''))
+    ->value(Html::encode($form->state ?? ''))
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
@@ -202,7 +202,7 @@ echo Field::select($form, 'language')
         'id' => 'zip',
         'readonly' => 'readonly',
     ])
-    ->value(Html::encode($form->getZip() ?? ''))
+    ->value(Html::encode($form->zip ?? ''))
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
@@ -213,7 +213,7 @@ echo Field::select($form, 'language')
         'id' => 'country',
         'readonly' => 'readonly',
     ])
-    ->value(Html::encode($form->getCountry() ?? ''))
+    ->value(Html::encode($form->country ?? ''))
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
@@ -224,7 +224,7 @@ echo Field::select($form, 'language')
         'id' => 'phone',
         'readonly' => 'readonly',
     ])
-    ->value(Html::encode($form->getPhone() ?? ''))
+    ->value(Html::encode($form->phone ?? ''))
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
@@ -234,7 +234,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control form-control-lg',
         'readonly' => 'readonly',
     ])
-    ->value(Html::encode($form->getFax() ?? ''))
+    ->value(Html::encode($form->fax ?? ''))
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
@@ -244,7 +244,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control form-control-lg',
         'readonly' => 'readonly',
     ])
-    ->value(Html::encode($form->getMobile() ?? ''))
+    ->value(Html::encode($form->mobile ?? ''))
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
@@ -255,7 +255,7 @@ echo Field::select($form, 'language')
         'id' => 'web',
         'readonly' => 'readonly',
     ])
-    ->value(Html::encode($form->getWeb() ?? ''))
+    ->value(Html::encode($form->web ?? ''))
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
@@ -266,7 +266,7 @@ echo Field::select($form, 'language')
         'id' => 'tax_code',
         'readonly' => 'readonly',
     ])
-    ->value(Html::encode($form->getTaxCode() ?? ''))
+    ->value(Html::encode($form->tax_code ?? ''))
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
@@ -277,7 +277,7 @@ echo Field::select($form, 'language')
         'id' => 'subscribernumber',
         'readonly' => 'readonly',
     ])
-    ->value(Html::encode($form->getSubscribernumber() ?? ''))
+    ->value(Html::encode($form->subscribernumber ?? ''))
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
@@ -288,7 +288,7 @@ echo Field::select($form, 'language')
         'id' => 'iban',
         'readonly' => 'readonly',
     ])
-    ->value(Html::encode($form->getSubscribernumber() ?? ''))
+    ->value(Html::encode($form->subscribernumber ?? ''))
 ?>
          <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
@@ -299,7 +299,7 @@ echo Field::select($form, 'language')
         'id' => 'gln',
         'readonly' => 'readonly',
     ])
-    ->value(Html::encode($form->getGln() ?? ''))
+    ->value(Html::encode($form->gln ?? ''))
 ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>

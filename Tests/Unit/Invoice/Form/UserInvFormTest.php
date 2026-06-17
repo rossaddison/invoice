@@ -14,17 +14,17 @@ class UserInvFormTest extends TestCase
     {
         $form = new UserInvForm();
 
-        $this->assertNull($form->getUserId());
-        $this->assertNull($form->getType());
-        $this->assertFalse($form->getActive());
-        $this->assertSame('', $form->getLanguage());
-        $this->assertSame('', $form->getName());
-        $this->assertSame('', $form->getCompany());
-        $this->assertFalse($form->getAllClients());
-        $this->assertSame(10, $form->getListLimit());
-        $this->assertFalse($form->getConsentPeriodicInvoice());
-        $this->assertFalse($form->getConsentTelegramOutstanding());
-        $this->assertNull($form->getTelegramChatId());
+        $this->assertNull($form->user_id);
+        $this->assertNull($form->type);
+        $this->assertFalse($form->active);
+        $this->assertSame('', $form->language);
+        $this->assertSame('', $form->name);
+        $this->assertSame('', $form->company);
+        $this->assertFalse($form->all_clients);
+        $this->assertSame(10, $form->list_limit);
+        $this->assertFalse($form->consent_periodic_invoice);
+        $this->assertFalse($form->consent_telegram_outstanding);
+        $this->assertNull($form->telegram_chat_id);
         $this->assertSame('', $form->getFormName());
     }
 
@@ -44,12 +44,12 @@ class UserInvFormTest extends TestCase
 
         $form = UserInvForm::show($entity);
 
-        $this->assertSame(12, $form->getUserId());
-        $this->assertSame(0, $form->getType());
-        $this->assertTrue($form->getActive());
-        $this->assertSame('en', $form->getLanguage());
-        $this->assertSame('Alice Admin', $form->getName());
-        $this->assertNull($form->getUser());
+        $this->assertSame(12, $form->user_id);
+        $this->assertSame(0, $form->type);
+        $this->assertTrue($form->active);
+        $this->assertSame('en', $form->language);
+        $this->assertSame('Alice Admin', $form->name);
+        $this->assertNull($form->user);
     }
 
     public function testShowPopulatesAddressFields(): void
@@ -63,10 +63,10 @@ class UserInvFormTest extends TestCase
 
         $form = UserInvForm::show($entity);
 
-        $this->assertSame('', $form->getAddress1());
-        $this->assertSame('', $form->getCity());
-        $this->assertSame('', $form->getCountry());
-        $this->assertNull($form->getGln());
+        $this->assertSame('', $form->address_1);
+        $this->assertSame('', $form->city);
+        $this->assertSame('', $form->country);
+        $this->assertNull($form->gln);
     }
 
     public function testShowReturnsNewInstance(): void
@@ -95,10 +95,10 @@ class UserInvFormTest extends TestCase
 
         $form = UserInvForm::show($entity);
 
-        $this->assertIsInt($form->getUserId());
-        $this->assertIsInt($form->getType());
-        $this->assertIsBool($form->getActive());
-        $this->assertIsString($form->getLanguage());
-        $this->assertIsString($form->getName());
+        $this->assertIsInt($form->user_id);
+        $this->assertIsInt($form->type);
+        $this->assertIsBool($form->active);
+        $this->assertIsString($form->language);
+        $this->assertIsString($form->name);
     }
 }

@@ -114,56 +114,56 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
             <?= Field::text($form, 'address_1')
     ->label($lAddr)
     ->addInputAttributes(['placeholder' => $lAddr, 'class' => $fc, 'id' => 'address_1'])
-    ->value(Html::encode($form->getAddress1() ?? ''));
+    ->value(Html::encode($form->address_1 ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'address_2')
     ->label($translator->translate('street.address.2'))
     ->addInputAttributes(['placeholder' => $lAddr, 'class' => $fc, 'id' => 'address_2'])
-    ->value(Html::encode($form->getAddress2() ?? ''));
+    ->value(Html::encode($form->address_2 ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'city')
     ->label($lCity)
     ->addInputAttributes(['placeholder' => $lCity, 'class' => $fc, 'id' => 'city'])
-    ->value(Html::encode($form->getCity() ?? ''));
+    ->value(Html::encode($form->city ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'state')
     ->label($lState)
     ->addInputAttributes(['placeholder' => $lState, 'class' => $fc, 'id' => 'state'])
-    ->value(Html::encode($form->getState() ?? ''));
+    ->value(Html::encode($form->state ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'zip')
     ->label($lZip)
     ->addInputAttributes(['placeholder' => $lZip, 'class' => $fc, 'id' => 'zip'])
-    ->value(Html::encode($form->getZip() ?? ''));
+    ->value(Html::encode($form->zip ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'country')
     ->label($lCountry)
     ->addInputAttributes(['placeholder' => $lCountry, 'class' => $fc, 'id' => 'country'])
-    ->value(Html::encode($form->getCountry() ?? ''));
+    ->value(Html::encode($form->country ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::telephone($form, 'phone')
     ->label($lPhone)
     ->addInputAttributes(['placeholder' => $lPhone, 'class' => $fc, 'id' => 'phone'])
-    ->value(Html::encode($form->getPhone() ?? ''));
+    ->value(Html::encode($form->phone ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::telephone($form, 'fax')
     ->label($lFax)
     ->addInputAttributes(['placeholder' => $lFax, 'class' => $fc, 'id' => 'fax'])
-    ->value(Html::encode($form->getFax() ?? ''));
+    ->value(Html::encode($form->fax ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
@@ -171,56 +171,56 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
     ->label($lEmail)
     ->addInputAttributes(['placeholder' => $lEmail, 'class' => $fc, 'id' => 'email'])
     ->disabled(true)
-    ->value(Html::encode($form->getUser()?->getEmail() ?? '#'));
+    ->value(Html::encode($form->user?->getEmail() ?? '#'));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
            <?= Field::telephone($form, 'mobile')
     ->label($lMob)
     ->addInputAttributes(['placeholder' => $lMob, 'class' => $fc, 'id' => 'mobile'])
-    ->value(Html::encode($form->getMobile() ?? ''));
+    ->value(Html::encode($form->mobile ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'web')
     ->label($lWeb)
     ->addInputAttributes(['placeholder' => $lWeb, 'class' => $fc, 'id' => 'web'])
-    ->value(Html::encode($form->getWeb() ?? ''));
+    ->value(Html::encode($form->web ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'tax_code')
     ->label($lTax)
     ->addInputAttributes(['placeholder' => $lTax, 'class' => $fc, 'id' => 'tax_code'])
-    ->value(Html::encode($form->getTaxCode() ?? ''));
+    ->value(Html::encode($form->tax_code ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'subscribernumber')
     ->label($lSub)
     ->addInputAttributes(['placeholder' => $lSub, 'class' => $fc, 'id' => 'subscribernumber'])
-    ->value(Html::encode($form->getSubscribernumber() ?? ''));
+    ->value(Html::encode($form->subscribernumber ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'iban')
     ->label($lIban)
     ->addInputAttributes(['placeholder' => $lIban, 'class' => $fc, 'id' => 'iban'])
-    ->value(Html::encode($form->getSubscribernumber() ?? ''));
+    ->value(Html::encode($form->subscribernumber ?? ''));
 ?>
          <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'gln')
     ->label($lGln)
     ->addInputAttributes(['placeholder' => $lGln, 'class' => $fc, 'id' => 'gln'])
-    ->value(Html::encode($form->getGln() ?? ''));
+    ->value(Html::encode($form->gln ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'listLimit')
     ->label($lLimit)
     ->addInputAttributes(['placeholder' => $lLimit, 'class' => $fc, 'id' => 'listLimit'])
-    ->value(Html::encode($form->getListLimit() ?? 10));
+    ->value(Html::encode($form->list_limit ?? 10));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 border-top pt-3']); ?>
@@ -239,7 +239,7 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
             <?= Field::text($form, 'telegram_chat_id')
     ->label($lChatId)
     ->addInputAttributes(['placeholder' => $lChatId, 'class' => $fc, 'id' => 'telegram_chat_id'])
-    ->value(Html::encode($form->getTelegramChatId() ?? ''));
+    ->value(Html::encode($form->telegram_chat_id ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>

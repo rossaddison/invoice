@@ -521,23 +521,23 @@ final readonly class FormFields
 
         // Handle specific field name mappings for UserInvForm
         $value = match ($fieldName) {
-            'name' => $form->getName(),
-            'company' => $form->getCompany(),
-            'address_1' => $form->getAddress1(),
-            'address_2' => $form->getAddress2(),
-            'city' => $form->getCity(),
-            'state' => $form->getState(),
-            'zip' => $form->getZip(),
-            'country' => $form->getCountry(),
-            'phone' => $form->getPhone(),
-            'fax' => $form->getFax(),
-            'mobile' => $form->getMobile(),
-            'web' => $form->getWeb(),
-            'vat_id' => $form->getVatId(),
-            'tax_code' => $form->getTaxCode(),
-            'subscribernumber' => $form->getSubscribernumber(),
-            'iban' => $form->getIban(),
-            'rcc' => $form->getRcc(),
+            'name' => $form->name,
+            'company' => $form->company,
+            'address_1' => $form->address_1,
+            'address_2' => $form->address_2,
+            'city' => $form->city,
+            'state' => $form->state,
+            'zip' => $form->zip,
+            'country' => $form->country,
+            'phone' => $form->phone,
+            'fax' => $form->fax,
+            'mobile' => $form->mobile,
+            'web' => $form->web,
+            'vat_id' => $form->vat_id,
+            'tax_code' => $form->tax_code,
+            'subscribernumber' => $form->subscribernumber,
+            'iban' => $form->iban,
+            'rcc' => $form->rcc,
             default => null,
         };
 
@@ -574,7 +574,7 @@ final readonly class FormFields
                 'id' => 'user_id',
             ])
             ->optionsData($userOptions)
-            ->value($form->getUserId() ?? '')
+            ->value($form->user_id ?? '')
             ->hint($this->translator->translate('hint.this.field.is.required'))
             ->render();
     }
@@ -591,7 +591,7 @@ final readonly class FormFields
                 'id' => 'user_id',
             ])
             ->readonly(true)
-            ->value($form->getUserId() ?? '')
+            ->value($form->user_id ?? '')
             ->hint($this->translator->translate('hint.this.field.is.required'))
             ->render();
     }
@@ -609,7 +609,7 @@ final readonly class FormFields
                 'id' => 'type',
             ])
             ->optionsData($typeOptions)
-            ->value($form->getType() ?? 1)
+            ->value($form->type ?? 1)
             ->hint($this->translator->translate('hint.this.field.is.required'))
             ->render();
     }
@@ -627,7 +627,7 @@ final readonly class FormFields
                 'id' => 'language',
             ])
             ->optionsData($languageOptions)
-            ->value($form->getLanguage() ?? '')
+            ->value($form->language ?? '')
             ->hint($this->translator->translate('hint.this.field.is.required'))
             ->render();
     }
@@ -656,8 +656,8 @@ final readonly class FormFields
                 'hint.this.field.is.not.required';
 
         $value = match ($fieldName) {
-            'gln' => $form->getGln(),
-            'listLimit' => $form->getListLimit(),
+            'gln' => $form->gln,
+            'listLimit' => $form->list_limit,
             default => null,
         };
 

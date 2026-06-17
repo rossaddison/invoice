@@ -107,12 +107,12 @@ final class UserInvController extends BaseController
                      * @var string $body['type']
                      */
                     $type = $body['type'];
-                    if (null !== $form->getUserId()) {
+                    if (null !== $form->user_id) {
                         // the user is not admin(1) and the guest dropdown type(1) has been selected
-                        if ($form->getUserId() != '1' && $type == '1') {
-                            $roles = $this->manager->getRolesByUserId($form->getUserId());
+                        if ($form->user_id != '1' && $type == '1') {
+                            $roles = $this->manager->getRolesByUserId($form->user_id);
                             if (!array_key_exists('observer', $roles)) {
-                                $this->manager->assign('observer', $form->getUserId());
+                                $this->manager->assign('observer', $form->user_id);
                                 $this->flashMessage('info', $this->translator->translate('user.inv.role.all.new'));
                             } else {
                                 $this->flashMessage('info', $this->translator->translate('user.inv.role.observer.assigned.already'));
@@ -120,15 +120,15 @@ final class UserInvController extends BaseController
                             $this->userinvService->saveUserInv($userinv, $body);
                         }
                         // the user is not admin(1) and the type administrator(0) was selected in the dropdown on the form
-                        if ($form->getUserId() != '1' && $type == '0') {
+                        if ($form->user_id != '1' && $type == '0') {
                             $this->flashMessage('warning', $this->translator->translate('user.inv.type.cannot.allocate.administrator.type.to.non.administrator'));
                         }
                         // the user is admin and the type administrator was selected in the dropdown on the form
-                        if ($form->getUserId() == '1' && $type == '0') {
+                        if ($form->user_id == '1' && $type == '0') {
                             // if the admin role has not yet been assigned, assign it now
-                            $roles = $this->manager->getRolesByUserId($form->getUserId());
+                            $roles = $this->manager->getRolesByUserId($form->user_id);
                             if (!array_key_exists('admin', $roles)) {
-                                $this->manager->assign('admin', $form->getUserId());
+                                $this->manager->assign('admin', $form->user_id);
                                 $this->flashMessage('info', $this->translator->translate('user.inv.role.administrator.assigned'));
                             } else {
                                 $this->flashMessage('info', $this->translator->translate('user.inv.role.administrator.already.assigned'));
@@ -136,11 +136,11 @@ final class UserInvController extends BaseController
                             $this->userinvService->saveUserInv($userinv, $body);
                         }
                         // the user is an admin and the type guest was selected in the dropdown on the form
-                        if ($form->getUserId() == '1' && $type == '1') {
+                        if ($form->user_id == '1' && $type == '1') {
                             $this->flashMessage('warning', $this->translator->translate('user.inv.type.cannot.allocate.guest.type.to.administrator'));
                         }
                         return $this->webService->getRedirectResponse('userinv/index');
-                    } // null!== $form->getUserId()
+                    } // null!== $form->user_id
                 } // is_array
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -363,12 +363,12 @@ final class UserInvController extends BaseController
                          * @var string $body['type']
                          */
                         $type = $body['type'];
-                        if (null !== $form->getUserId()) {
+                        if (null !== $form->user_id) {
                             // the user is not admin(1) and the guest dropdown type(1) has been selected
-                            if ($form->getUserId() != '1' && $type == '1') {
-                                $roles = $this->manager->getRolesByUserId($form->getUserId());
+                            if ($form->user_id != '1' && $type == '1') {
+                                $roles = $this->manager->getRolesByUserId($form->user_id);
                                 if (!array_key_exists('observer', $roles)) {
-                                    $this->manager->assign('observer', $form->getUserId());
+                                    $this->manager->assign('observer', $form->user_id);
                                     $this->flashMessage('info', $this->translator->translate('user.inv.role.all.new'));
                                 } else {
                                     $this->flashMessage('warning', $this->translator->translate('user.inv.role.observer.assigned.already'));
@@ -376,15 +376,15 @@ final class UserInvController extends BaseController
                                 $this->userinvService->saveUserInv($userinv, $body);
                             }
                             // the user is not admin(1) and the type administrator(0) was selected in the dropdown on the form
-                            if ($form->getUserId() != '1' && $type == '0') {
+                            if ($form->user_id != '1' && $type == '0') {
                                 $this->flashMessage('warning', $this->translator->translate('user.inv.type.cannot.allocate.administrator.type.to.non.administrator'));
                             }
                             // the user is admin and the type administrator was selected in the dropdown on the form
-                            if ($form->getUserId() == '1' && $type == '0') {
+                            if ($form->user_id == '1' && $type == '0') {
                                 // if the admin role has not yet been assigned, assign it now
-                                $roles = $this->manager->getRolesByUserId($form->getUserId());
+                                $roles = $this->manager->getRolesByUserId($form->user_id);
                                 if (!array_key_exists('admin', $roles)) {
-                                    $this->manager->assign('admin', $form->getUserId());
+                                    $this->manager->assign('admin', $form->user_id);
                                     $this->flashMessage('info', $this->translator->translate('user.inv.role.administrator.assigned'));
                                 } else {
                                     $this->flashMessage('warning', $this->translator->translate('user.inv.role.administrator.already.assigned'));
@@ -392,7 +392,7 @@ final class UserInvController extends BaseController
                                 $this->userinvService->saveUserInv($userinv, $body);
                             }
                             // the user is an admin and the type guest was selected in the dropdown on the form
-                            if ($form->getUserId() == '1' && $type == '1') {
+                            if ($form->user_id == '1' && $type == '1') {
                                 $this->flashMessage('warning', $this->translator->translate('user.inv.type.cannot.allocate.guest.type.to.administrator'));
                             }
                             return $this->webService->getRedirectResponse('userinv/index');

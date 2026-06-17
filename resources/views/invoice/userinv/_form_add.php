@@ -150,21 +150,21 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
             <?= Field::telephone($form, 'phone')
     ->label($lPhone)
     ->addInputAttributes(['placeholder' => $lPhone, 'class' => $fc, 'id' => 'phone'])
-    ->value(Html::encode($form->getPhone() ?? ''));
+    ->value(Html::encode($form->phone ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::telephone($form, 'fax')
     ->label($lFax)
     ->addInputAttributes(['placeholder' => $lFax, 'class' => $fc, 'id' => 'fax'])
-    ->value(Html::encode($form->getFax() ?? ''));
+    ->value(Html::encode($form->fax ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
            <?= Field::telephone($form, 'mobile')
     ->label($lMob)
     ->addInputAttributes(['placeholder' => $lMob, 'class' => $fc, 'id' => 'mobile'])
-    ->value(Html::encode($form->getMobile() ?? ''));
+    ->value(Html::encode($form->mobile ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
@@ -172,49 +172,49 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
     ->label($lEmail)
     ->addInputAttributes(['placeholder' => $lEmail, 'class' => $fc, 'id' => 'email'])
     ->disabled(true)
-    ->value(Html::encode($form->getUser()?->getEmail() ?? '#'));
+    ->value(Html::encode($form->user?->getEmail() ?? '#'));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'web')
     ->label($lWeb)
     ->addInputAttributes(['placeholder' => $lWeb, 'class' => $fc, 'id' => 'web'])
-    ->value(Html::encode($form->getWeb() ?? ''));
+    ->value(Html::encode($form->web ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'tax_code')
     ->label($lTax)
     ->addInputAttributes(['placeholder' => $lTax, 'class' => $fc, 'id' => 'tax_code'])
-    ->value(Html::encode($form->getTaxCode() ?? ''));
+    ->value(Html::encode($form->tax_code ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'subscribernumber')
     ->label($lSub)
     ->addInputAttributes(['placeholder' => $lSub, 'class' => $fc, 'id' => 'subscribernumber'])
-    ->value(Html::encode($form->getSubscribernumber() ?? ''));
+    ->value(Html::encode($form->subscribernumber ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'iban')
     ->label($lIban)
     ->addInputAttributes(['placeholder' => $lIban, 'class' => $fc, 'id' => 'iban'])
-    ->value(Html::encode($form->getSubscribernumber() ?? ''));
+    ->value(Html::encode($form->subscribernumber ?? ''));
 ?>
          <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'gln')
     ->label($lGln)
     ->addInputAttributes(['placeholder' => $lGln, 'class' => $fc, 'id' => 'gln'])
-    ->value(Html::encode($form->getGln() ?? ''));
+    ->value(Html::encode($form->gln ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'listLimit')
     ->label($lLimit)
     ->addInputAttributes(['placeholder' => $lLimit, 'class' => $fc, 'id' => 'listLimit'])
-    ->value(Html::encode($form->getListLimit() ?? 10));
+    ->value(Html::encode($form->list_limit ?? 10));
 ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>

@@ -64,7 +64,7 @@ use Yiisoft\Html\Tag\Form;
         'id' => 'user_id',
     ])
     ->hideLabel(true)
-    ->value(Html::encode($form->getUserId() ?? ''));
+    ->value(Html::encode($form->user_id ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
@@ -88,21 +88,21 @@ echo Field::select($form, 'type')
 ])
 ->hidelabel(true)
 ->optionsData($optionsDataType)
-->value(Html::encode($form->getType() ?? 1));
+->value(Html::encode($form->type ?? 1));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Html::openTag('div', ['class' => 'p-2']); ?>
                 <?= Field::hidden($form, 'active')
         ->hideLabel(true)
-        ->value(Html::encode($form->getActive()))
+        ->value(Html::encode($form->active))
 ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?><?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::hidden($form, 'all_clients')
 ->hideLabel(true)
-->value(Html::encode($form->getAllClients()));
+->value(Html::encode($form->all_clients));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'm-0']); ?>
@@ -125,7 +125,7 @@ echo Field::select($form, 'language')
     'id' => 'language',
 ])
 ->optionsData($optionsDataLanguage)
-->value(Html::encode($form->getLanguage()))
+->value(Html::encode($form->language))
 ->hint($translator->translate('hint.this.field.is.required'));
 ?>
         <?= Html::closeTag('div'); ?>
@@ -137,7 +137,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control form-control-lg',
         'id' => 'name',
     ])
-    ->value(Html::encode($form->getName() ?? ''))
+    ->value(Html::encode($form->name ?? ''))
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
         <?= Html::closeTag('div'); ?>
@@ -149,7 +149,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control form-control-lg',
         'id' => 'company',
     ])
-    ->value(Html::encode($form->getCompany() ?? ''))
+    ->value(Html::encode($form->company ?? ''))
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
@@ -161,7 +161,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control form-control-lg',
         'id' => 'address_1',
     ])
-    ->value(Html::encode($form->getAddress1() ?? ''))
+    ->value(Html::encode($form->address_1 ?? ''))
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
@@ -173,7 +173,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control form-control-lg',
         'id' => 'address_2',
     ])
-    ->value(Html::encode($form->getAddress2() ?? ''))
+    ->value(Html::encode($form->address_2 ?? ''))
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
@@ -185,7 +185,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control form-control-lg',
         'id' => 'city',
     ])
-    ->value(Html::encode($form->getCity() ?? ''))
+    ->value(Html::encode($form->city ?? ''))
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
@@ -197,7 +197,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control form-control-lg',
         'id' => 'state',
     ])
-    ->value(Html::encode($form->getState() ?? ''))
+    ->value(Html::encode($form->state ?? ''))
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
@@ -209,7 +209,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control form-control-lg',
         'id' => 'zip',
     ])
-    ->value(Html::encode($form->getZip() ?? ''))
+    ->value(Html::encode($form->zip ?? ''))
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
@@ -221,7 +221,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control form-control-lg',
         'id' => 'country',
     ])
-    ->value(Html::encode($form->getCountry() ?? ''))
+    ->value(Html::encode($form->country ?? ''))
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
@@ -233,7 +233,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control form-control-lg',
         'id' => 'phone',
     ])
-    ->value(Html::encode($form->getPhone() ?? ''))
+    ->value(Html::encode($form->phone ?? ''))
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
@@ -245,7 +245,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control form-control-lg',
         'id' => 'fax',
     ])
-    ->value(Html::encode($form->getFax() ?? ''))
+    ->value(Html::encode($form->fax ?? ''))
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
@@ -257,7 +257,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control form-control-lg',
         'id' => 'mobile',
     ])
-    ->value(Html::encode($form->getMobile() ?? ''))
+    ->value(Html::encode($form->mobile ?? ''))
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
@@ -270,7 +270,7 @@ echo Field::select($form, 'language')
         'id' => 'email',
     ])
     ->disabled(true)
-    ->value(Html::encode($form->getUser()?->getEmail() ?? ''))
+    ->value(Html::encode($form->user?->getEmail() ?? ''))
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
@@ -282,7 +282,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control form-control-lg',
         'id' => 'web',
     ])
-    ->value(Html::encode($form->getWeb() ?? ''))
+    ->value(Html::encode($form->web ?? ''))
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
@@ -294,7 +294,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control form-control-lg',
         'id' => 'tax_code',
     ])
-    ->value(Html::encode($form->getTaxCode() ?? ''))
+    ->value(Html::encode($form->tax_code ?? ''))
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
@@ -306,7 +306,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control form-control-lg',
         'id' => 'subscribernumber',
     ])
-    ->value(Html::encode($form->getSubscribernumber() ?? ''))
+    ->value(Html::encode($form->subscribernumber ?? ''))
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
@@ -318,7 +318,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control form-control-lg',
         'id' => 'iban',
     ])
-    ->value(Html::encode($form->getSubscribernumber() ?? ''))
+    ->value(Html::encode($form->subscribernumber ?? ''))
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
          <?= Html::closeTag('div'); ?>
@@ -330,7 +330,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control form-control-lg',
         'id' => 'gln',
     ])
-    ->value(Html::encode($form->getGln() ?? ''))
+    ->value(Html::encode($form->gln ?? ''))
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
@@ -342,7 +342,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control form-control-lg',
         'id' => 'listLimit',
     ])
-    ->value(Html::encode($form->getListLimit() ?? 10))
+    ->value(Html::encode($form->list_limit ?? 10))
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
@@ -366,7 +366,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control form-control-lg',
         'id' => 'telegram_chat_id',
     ])
-    ->value(Html::encode($form->getTelegramChatId() ?? ''))
+    ->value(Html::encode($form->telegram_chat_id ?? ''))
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>

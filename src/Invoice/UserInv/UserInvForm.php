@@ -13,65 +13,65 @@ use Yiisoft\Validator\Rule\Required;
 final class UserInvForm extends FormModel
 {
     #[Required]
-    private ?int $user_id = null;
+    public ?int $user_id = null;
 
     /**
      * Related logic: see Dropdown 0 = Admin, 1 = Not Admin i.e.
      * User with viewInv permission (not editInv Permission)
      */
     #[Required]
-    private ?int $type = null;
+    public ?int $type = null;
 
-    private ?bool $active = false;
-
-    #[Required]
-    private ?string $language = '';
+    public ?bool $active = false;
 
     #[Required]
-    private ?string $name = '';
+    public ?string $language = '';
+
+    #[Required]
+    public ?string $name = '';
 
     #[Length(min: 0, max: 50, skipOnEmpty: true)]
-    private ?string $company = '';
+    public ?string $company = '';
     #[Length(min: 0, max: 50, skipOnEmpty: true)]
-    private ?string $address_1 = '';
+    public ?string $address_1 = '';
     #[Length(min: 0, max: 50, skipOnEmpty: true)]
-    private ?string $address_2 = '';
+    public ?string $address_2 = '';
     #[Length(min: 0, max: 50, skipOnEmpty: true)]
-    private ?string $city = '';
+    public ?string $city = '';
     #[Length(min: 0, max: 50, skipOnEmpty: true)]
-    private ?string $state = '';
+    public ?string $state = '';
     #[Length(min: 0, max: 10, skipOnEmpty: true)]
-    private ?string $zip = '';
+    public ?string $zip = '';
     #[Length(min: 0, max: 50, skipOnEmpty: true)]
-    private ?string $country = '';
+    public ?string $country = '';
     #[Length(min: 0, max: 20, skipOnEmpty: true)]
-    private ?string $phone = '';
+    public ?string $phone = '';
     #[Length(min: 0, max: 20, skipOnEmpty: true)]
-    private ?string $fax = '';
+    public ?string $fax = '';
     #[Length(min: 0, max: 20, skipOnEmpty: true)]
-    private ?string $mobile = '';
+    public ?string $mobile = '';
     #[Length(min: 0, max: 100, skipOnEmpty: true)]
-    private ?string $web = '';
+    public ?string $web = '';
     #[Length(min: 0, max: 20, skipOnEmpty: true)]
-    private ?string $vat_id = '';
+    public ?string $vat_id = '';
     #[Length(min: 0, max: 15, skipOnEmpty: true)]
-    private ?string $tax_code = '';
-    private ?bool $all_clients = false;
+    public ?string $tax_code = '';
+    public ?bool $all_clients = false;
     #[Length(min: 0, max: 40, skipOnEmpty: true)]
-    private ?string $subscribernumber = '';
+    public ?string $subscribernumber = '';
     #[Length(min: 0, max: 34, skipOnEmpty: true)]
-    private ?string $iban = '';
-    private ?int $gln = null;
+    public ?string $iban = '';
+    public ?int $gln = null;
     #[Length(min: 0, max: 7, skipOnEmpty: true)]
-    private ?string $rcc = '';
-    private ?int $list_limit = 10;
+    public ?string $rcc = '';
+    public ?int $list_limit = 10;
 
-    private bool $consent_periodic_invoice = false;
-    private bool $consent_telegram_outstanding = false;
+    public bool $consent_periodic_invoice = false;
+    public bool $consent_telegram_outstanding = false;
     #[Length(min: 0, max: 100, skipOnEmpty: true)]
-    private ?string $telegram_chat_id = null;
+    public ?string $telegram_chat_id = null;
 
-    private ?User $user = null;
+    public ?User $user = null;
 
     public static function show(UserInv $userinv): self
     {
@@ -105,146 +105,6 @@ final class UserInvForm extends FormModel
         $form->telegram_chat_id = $userinv->getTelegramChatId();
         $form->user = $userinv->getUser();
         return $form;
-    }
-
-    public function getUserId(): ?int
-    {
-        return $this->user_id;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function getType(): ?int
-    {
-        return $this->type;
-    }
-
-    public function getActive(): ?bool
-    {
-        return $this->active;
-    }
-
-    public function getLanguage(): ?string
-    {
-        return $this->language;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function getCompany(): ?string
-    {
-        return $this->company;
-    }
-
-    public function getAddress1(): ?string
-    {
-        return $this->address_1;
-    }
-
-    public function getAddress2(): ?string
-    {
-        return $this->address_2;
-    }
-
-    public function getCity(): ?string
-    {
-        return $this->city;
-    }
-
-    public function getState(): ?string
-    {
-        return $this->state;
-    }
-
-    public function getZip(): ?string
-    {
-        return $this->zip;
-    }
-
-    public function getCountry(): ?string
-    {
-        return $this->country;
-    }
-
-    public function getPhone(): ?string
-    {
-        return $this->phone;
-    }
-
-    public function getFax(): ?string
-    {
-        return $this->fax;
-    }
-
-    public function getMobile(): ?string
-    {
-        return $this->mobile;
-    }
-
-    public function getWeb(): ?string
-    {
-        return $this->web;
-    }
-
-    public function getVatId(): ?string
-    {
-        return $this->vat_id;
-    }
-
-    public function getTaxCode(): ?string
-    {
-        return $this->tax_code;
-    }
-
-    public function getAllClients(): ?bool
-    {
-        return $this->all_clients;
-    }
-
-    public function getSubscribernumber(): ?string
-    {
-        return $this->subscribernumber;
-    }
-
-    public function getIban(): ?string
-    {
-        return $this->iban;
-    }
-
-    public function getGln(): ?int
-    {
-        return $this->gln;
-    }
-
-    public function getRcc(): ?string
-    {
-        return $this->rcc;
-    }
-
-    public function getListLimit(): ?int
-    {
-        return $this->list_limit;
-    }
-
-    public function getConsentPeriodicInvoice(): bool
-    {
-        return $this->consent_periodic_invoice;
-    }
-
-    public function getConsentTelegramOutstanding(): bool
-    {
-        return $this->consent_telegram_outstanding;
-    }
-
-    public function getTelegramChatId(): ?string
-    {
-        return $this->telegram_chat_id;
     }
 
     /**
