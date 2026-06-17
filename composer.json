@@ -157,7 +157,7 @@
         "friendsofphp/php-cs-fixer": "^3.95.8",
         "guzzlehttp/promises": ">=2.5.0",
         "phpunit/phpunit": ">=13",
-        "rector/rector": "^2.4.5",
+        "rector/rector": "^2.4.6",
         "roave/better-reflection": "^6.71",
         "roave/infection-static-analysis-plugin": ">=1.44",
         "roave/security-advisories": "dev-latest",
