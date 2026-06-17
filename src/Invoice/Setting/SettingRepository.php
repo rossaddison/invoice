@@ -463,9 +463,9 @@ final class SettingRepository extends Select\Repository
     {
         $product = $this->getProduct();
         return rawurlencode('client') . '='
-                . rawurlencode((string) $product['client'])
+                . rawurlencode((string) ($product['client'] ?? ''))
                 . '&' . rawurlencode('server')
-                . '=' . rawurlencode((string) $product['server']);
+                . '=' . rawurlencode((string) ($product['server'] ?? ''));
     }
 
     /**

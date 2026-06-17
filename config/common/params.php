@@ -109,8 +109,10 @@ return [
         'id' => 'invoice_BSD-3-Clause_20250511',
     ],
     'product' => [
-        'name' => 'RossAddison Invoice',
+        'name'    => 'RossAddison Invoice',
         'version' => 'pre-release',
+        'client'  => 'pre-release',
+        'server'  => PHP_VERSION,
     ],
     'mailer' => [
         'adminEmail' => ($_ENV['ADMIN_EMAIL'] ?? '') ?: 'info@yourhost.com',
