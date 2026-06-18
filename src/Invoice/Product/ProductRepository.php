@@ -65,12 +65,7 @@ final class ProductRepository extends Select\Repository
     public function getReader(): EntityReader
     {
         return (new EntityReader($this->select()))
-            ->withSort($this->getSort());
-    }
-
-    private function getSort(): Sort
-    {
-        return Sort::only(['id'])->withOrder(['id' => 'desc']);
+            ->withSort(Sort::only(['id'])->withOrder(['id' => 'desc']));
     }
 
     public function withFiltering(?string $product_sku): EntityReader
@@ -217,34 +212,19 @@ final class ProductRepository extends Select\Repository
             ->load('unit')
             ->where(['product_price' => ['>' => 0]]);
 
-        // Convert family_id to integer for proper comparison
         $family_id_int = (int) $family_id;
 
-        // Debug logging (remove in production)
-        error_log("repoProductwithfamilyquery - product_name: '$product_name', family_id: '$family_id', family_id_int: $family_id_int");
-
-        //lookup without filters eg. product/lookup
-        if (empty($product_name) && empty($family_id)) {
-            // Base query already excludes zero prices - return all products with price > 0
-            error_log("Query: All products with price > 0");
-        }
-
-        //eg. product/lookup?fp=Cleaning%20Services
         if (!empty($product_name) && empty($family_id)) {
             $query = $query->andWhere(['product_name' => ltrim(rtrim($product_name))]);
-            error_log("Query: Filter by product_name only");
         }
 
-        //eg. product/lookup?fp=Cleaning%20Services&ff=4
         if (!empty($product_name) && $family_id_int > 0) {
-            $query = $query->andWhere(['family_id' => $family_id_int])->andWhere(['product_name' => ltrim(rtrim($product_name))]);
-            error_log("Query: Filter by family_id ($family_id_int) AND product_name");
+            $query = $query->andWhere(['family_id' => $family_id_int])
+                           ->andWhere(['product_name' => ltrim(rtrim($product_name))]);
         }
 
-        //eg. product/lookup?ff=4
         if (empty($product_name) && $family_id_int > 0) {
             $query = $query->andWhere(['family_id' => $family_id_int]);
-            error_log("Query: Filter by family_id ($family_id_int) only");
         }
 
         return $this->prepareDataReader($query);
