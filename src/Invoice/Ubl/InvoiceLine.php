@@ -13,8 +13,6 @@ use Sabre\Xml\XmlSerializable;
 
 class InvoiceLine implements XmlSerializable
 {
-    private string $unitCode = UnitCode::UNIT;
-
     // See CreditNoteLine.php
     protected bool $isCreditNoteLine = false;
 
@@ -22,243 +20,113 @@ class InvoiceLine implements XmlSerializable
         private string $id,
         protected float $invoicedQuantity,
         private float $lineExtensionAmount,
-        private ?string $unitCodeListId,
         private ?TaxTotal $taxTotal,
         private ?InvoicePeriod $invoicePeriod,
         private ?string $note,
         private ?Item $item,
         private ?Price $price,
-        private ?string $accountingCostCode,
-        private ?string $accountingCost,
         private SettingRepository $s,
-    )
-    {
-    }
+        private InvoiceLineAccountingFields $accountingFields = new InvoiceLineAccountingFields(),
+    ) {}
 
-    /**
-     * @return string
-     */
     public function reqId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @param string $id
-     * @return InvoiceLine
-     */
     public function setId(string $id): self
     {
         $this->id = $id;
         return $this;
     }
 
-    /**
-     * @return float
-     */
     public function getInvoicedQuantity(): float
     {
         return $this->invoicedQuantity;
     }
 
-    /**
-     * @param float $invoicedQuantity
-     * @return InvoiceLine
-     */
     public function setInvoicedQuantity(float $invoicedQuantity): self
     {
         $this->invoicedQuantity = $invoicedQuantity;
         return $this;
     }
 
-    /**
-     * @return float
-     */
     public function getLineExtensionAmount(): float
     {
         return $this->lineExtensionAmount;
     }
 
-    /**
-     * @param float $lineExtensionAmount
-     * @return InvoiceLine
-     */
     public function setLineExtensionAmount(float $lineExtensionAmount): self
     {
         $this->lineExtensionAmount = $lineExtensionAmount;
         return $this;
     }
 
-    /**
-     * @return TaxTotal|null
-     */
     public function getTaxTotal(): ?TaxTotal
     {
         return $this->taxTotal;
     }
 
-    /**
-     * @param TaxTotal|null $taxTotal
-     * @return InvoiceLine
-     */
     public function setTaxTotal(?TaxTotal $taxTotal): self
     {
         $this->taxTotal = $taxTotal;
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getNote(): ?string
     {
         return $this->note;
     }
 
-    /**
-     * @param string|null $note
-     * @return InvoiceLine
-     */
     public function setNote(?string $note): self
     {
         $this->note = $note;
         return $this;
     }
 
-    /**
-     * @return InvoicePeriod|null
-     */
     public function getInvoicePeriod(): ?InvoicePeriod
     {
         return $this->invoicePeriod;
     }
 
-    /**
-     * @param InvoicePeriod|null $invoicePeriod
-     * @return InvoiceLine
-     */
-    public function setInvoicePeriod(?InvoicePeriod $invoicePeriod)
+    public function setInvoicePeriod(?InvoicePeriod $invoicePeriod): self
     {
         $this->invoicePeriod = $invoicePeriod;
         return $this;
     }
 
-    /**
-     * @return Item|null
-     */
     public function getItem(): ?Item
     {
         return $this->item;
     }
 
-    /**
-     * @param Item|null $item
-     * @return InvoiceLine
-     */
     public function setItem(?Item $item): self
     {
         $this->item = $item;
         return $this;
     }
 
-    /**
-     * @return Price|null
-     */
     public function getPrice(): ?Price
     {
         return $this->price;
     }
 
-    /**
-     * @param Price|null $price
-     * @return InvoiceLine
-     */
     public function setPrice(?Price $price): self
     {
         $this->price = $price;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getUnitCode(): string
+    public function getAccountingFields(): InvoiceLineAccountingFields
     {
-        return $this->unitCode;
+        return $this->accountingFields;
     }
 
-    /**
-     * @param string $unitCode
-     * @return InvoiceLine
-     */
-    public function setUnitCode(string $unitCode): self
-    {
-        $this->unitCode = $unitCode;
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getUnitCodeListId(): ?string
-    {
-        return $this->unitCodeListId;
-    }
-
-    /**
-     * @param string|null $unitCodeListId
-     * @return InvoiceLine
-     */
-    public function setUnitCodeListId(?string $unitCodeListId)
-    {
-        $this->unitCodeListId = $unitCodeListId;
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getAccountingCostCode(): ?string
-    {
-        return $this->accountingCostCode;
-    }
-
-    /**
-     * @param string|null $accountingCostCode
-     * @return InvoiceLine
-     */
-    public function setAccountingCostCode(?string $accountingCostCode): self
-    {
-        $this->accountingCostCode = $accountingCostCode;
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getAccountingCost(): ?string
-    {
-        return $this->accountingCost;
-    }
-
-    /**
-     * @param string|null $accountingCost
-     * @return InvoiceLine
-     */
-    public function setAccountingCost(?string $accountingCost): self
-    {
-        $this->accountingCost = $accountingCost;
-        return $this;
-    }
-
-    /**
-     * Related logic:
-     *  https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?q=InvoiceLine
-     * @param Writer $writer
-     */
     #[\Override]
     public function xmlSerialize(Writer $writer): void
     {
+        $af = $this->accountingFields;
+
         $writer->write([
             Schema::CBC . 'ID' => $this->id,
         ]);
@@ -270,12 +138,11 @@ class InvoiceLine implements XmlSerializable
         }
 
         $invoicedQuantityAttributes = [
-            'unitCode' => $this->unitCode,
+            'unitCode' => $af->getUnitCode(),
         ];
 
-        if ($this->getUnitCodeListId() !== null) {
-            $invoicedQuantityAttributes['unitCodeListID'] =
-                                                    $this->getUnitCodeListId();
+        if ($af->getUnitCodeListId() !== null) {
+            $invoicedQuantityAttributes['unitCodeListID'] = $af->getUnitCodeListId();
         }
 
         $writer->write([
@@ -298,14 +165,14 @@ class InvoiceLine implements XmlSerializable
             ],
         ]);
 
-        if ($this->accountingCostCode !== null) {
+        if ($af->getAccountingCostCode() !== null) {
             $writer->write([
-                Schema::CBC . 'AccountingCostCode' => $this->accountingCostCode,
+                Schema::CBC . 'AccountingCostCode' => $af->getAccountingCostCode(),
             ]);
         }
-        if ($this->accountingCost !== null) {
+        if ($af->getAccountingCost() !== null) {
             $writer->write([
-                Schema::CBC . 'AccountingCost' => $this->accountingCost,
+                Schema::CBC . 'AccountingCost' => $af->getAccountingCost(),
             ]);
         }
         if ($this->invoicePeriod !== null) {
