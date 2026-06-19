@@ -1391,7 +1391,21 @@ const ANSI_STYLES = {
 
 function ansiToHtml(raw) {
     const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    // Split on ESC[ — each part[0] is plain text, parts[1..] start with "params + letter + rest"
+
+    // OSC 8 hyperlinks: ESC ] 8 ; ; URL ST ... text ... ESC ] 8 ; ; ST
+    // ST = BEL (\x07) or String Terminator (ESC \).
+    // Replace with \x02URL\x02text\x03 markers — they contain no \x1b[ so
+    // the SGR split below won't corrupt them. The URL passes through esc()
+    // unchanged (& → &amp; is correct for HTML href attributes).
+    const ST = '(?:\x07|\x1b\\\\)';
+    raw = raw.replace(
+        new RegExp('\x1b\\]8;;([^\x07\x1b]*?)' + ST + '([\\s\\S]*?)\x1b\\]8;;' + ST, 'g'),
+        (_m, url, text) => url ? `\x02${url}\x02${text}\x03` : text
+    );
+    // Strip any remaining OSC sequences (window title, cursor colour, etc.)
+    raw = raw.replace(new RegExp('\x1b\\][^\x07\x1b]*?' + ST, 'g'), '');
+
+    // SGR (colour/style) — split on CSI ESC[
     const chunks = raw.split('\x1b[');
     let html = esc(chunks[0]);
     let depth = 0;
@@ -1413,14 +1427,22 @@ function ansiToHtml(raw) {
                 }
             }
         }
-        // All non-m ANSI sequences (cursor movement, erase, etc.) are silently dropped
+        // All non-m CSI sequences (cursor movement, erase, etc.) are silently dropped
 
-        // Handle carriage-return overwrites: CR followed by non-LF wipes the current line
+        // CR followed by non-LF overwrites the current line — normalise to newline
         const text = rest.replace(/\r[^\n]/g, '\n');
         html += esc(text);
     }
-
     while (depth-- > 0) html += '</span>';
+
+    // Restore hyperlink markers as clickable <a> tags.
+    // URL was already HTML-escaped by esc() in the SGR pass above.
+    html = html.replace(
+        /\x02([^\x02\x03]*)\x02([\s\S]*?)\x03/g,
+        (_m, url, linkHtml) =>
+            `<a href="${url}" target="_blank" rel="noopener" style="color:#79c0ff;text-decoration:underline">${linkHtml}</a>`
+    );
+
     return html;
 }
 
