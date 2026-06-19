@@ -66,13 +66,13 @@ echo [25] Performance Benchmarks                    [16]  invoice/salesorder/tru
 echo [26] SonarCloud Issues                         [17]  invoice/nonuserrelated/truncate4
 echo [27] Peppol Code-List Currency Check           [18]  invoice/userrelated/truncate5
 echo [99] System Info / Diagnostics                 [19]  invoice/autoincrementsettooneafter/truncate6
-echo                                                [20]  GitHub CLI: Install
-echo                                                [21]  GitHub CLI: Auth Status
-echo                                                [22]  GitHub CLI: Copilot Version
-echo                                                [23]  Exit
+echo [5t] Snyk: Install CLI                         [20]  GitHub CLI: Install
+echo [5u] Snyk: Authenticate (browser)              [21]  GitHub CLI: Auth Status
+echo [5v] Snyk: Auth Status (whoami)                [22]  GitHub CLI: Copilot Version
+echo [5w] Snyk: Code Scan (save report)             [23]  Exit
 echo                                                [24]  Exit to Current Directory
 echo =================================
-set /p choice="Enter your choice [0-27,99]: "
+set /p choice="Enter your choice [0-27,5t-5w,99]: "
 
 REM ======== MENU COMMAND ROUTING ========
 if "%choice%"=="1" goto c01
@@ -129,6 +129,10 @@ if "%choice%"=="5p" goto c05p
 if "%choice%"=="5q" goto c05q
 if "%choice%"=="5r" goto c05r
 if "%choice%"=="5s" goto c05s
+if "%choice%"=="5t" goto c05t
+if "%choice%"=="5u" goto c05u
+if "%choice%"=="5v" goto c05v
+if "%choice%"=="5w" goto c05w
 if "%choice%"=="6" goto c06
 if "%choice%"=="7" goto c07
 if "%choice%"=="8" goto c08
@@ -443,24 +447,28 @@ pause
 goto menu
 
 :c05f
+where snyk >nul 2>nul || (echo [ERROR] Snyk CLI not installed. Use option [5t] to install, then [5u] to authenticate.& pause& goto menu)
 echo Running Snyk Security Check (High Severity Issues Only)...
 npm run security:quick
 pause
 goto menu
 
 :c05g
+where snyk >nul 2>nul || (echo [ERROR] Snyk CLI not installed. Use option [5t] to install, then [5u] to authenticate.& pause& goto menu)
 echo Running Snyk Full Security Analysis (Code + Dependencies)...
 npm run security:full
 pause
 goto menu
 
 :c05h
+where snyk >nul 2>nul || (echo [ERROR] Snyk CLI not installed. Use option [5t] to install, then [5u] to authenticate.& pause& goto menu)
 echo Running Snyk Security Check on Dependencies...
 npm run security:deps
 pause
 goto menu
 
 :c05i
+where snyk >nul 2>nul || (echo [ERROR] Snyk CLI not installed. Use option [5t] to install, then [5u] to authenticate.& pause& goto menu)
 echo Running Snyk Code Security Check on Specific File...
 set /p file="File path (relative to root, e.g. src/Invoice/Inv/InvController.php): "
 if "%file%"=="" (echo No file specified.& pause& goto menu)
@@ -469,14 +477,50 @@ pause
 goto menu
 
 :c05j
+where snyk >nul 2>nul || (echo [ERROR] Snyk CLI not installed. Use option [5t] to install, then [5u] to authenticate.& pause& goto menu)
 echo Running Snyk Security Summary (Total Issues Count Only)...
 snyk code test | findstr /C:"Total issues"
 pause
 goto menu
 
 :c05k
+where snyk >nul 2>nul || (echo [ERROR] Snyk CLI not installed. Use option [5t] to install, then [5u] to authenticate.& pause& goto menu)
 echo Running Snyk Security Analysis with JSON Output...
 snyk code test --json
+pause
+goto menu
+
+:c05t
+echo Installing Snyk CLI globally via npm...
+npm install -g snyk
+echo.
+echo Installation complete. Run option [5u] to authenticate with your Snyk account.
+pause
+goto menu
+
+:c05u
+echo Opening Snyk authentication (browser will open)...
+echo If prompted, log in to your Snyk account and approve access.
+snyk auth
+pause
+goto menu
+
+:c05v
+where snyk >nul 2>nul || (echo [ERROR] Snyk CLI not installed. Use option [5t] to install, then [5u] to authenticate.& pause& goto menu)
+echo Checking Snyk authentication status...
+snyk whoami
+pause
+goto menu
+
+:c05w
+where snyk >nul 2>nul || (echo [ERROR] Snyk CLI not installed. Use option [5t] to install, then [5u] to authenticate.& pause& goto menu)
+echo Running Snyk Code scan -- results saved to snyk-report.txt...
+snyk code test > snyk-report.txt 2>&1
+echo.
+echo --- snyk-report.txt ---
+type snyk-report.txt
+echo.
+echo Report saved to snyk-report.txt
 pause
 goto menu
 
