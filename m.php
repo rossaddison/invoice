@@ -709,6 +709,11 @@ body{background:#0d1117;color:#e6edf3;min-height:100vh}
 .card-cat:hover{border-color:#58a6ff;transform:translateY(-2px);color:inherit}
 .card-cat h6{color:#58a6ff;margin-bottom:.2rem}
 .card-cat small{color:#8b949e}
+.cli-menu-pop .popover-header{background:#161b22;color:#58a6ff;border-bottom:1px solid #30363d;font-size:.82em}
+.cli-menu-pop .popover-body{background:#0d1117;color:#c9d1d9;font-size:.8em;line-height:1.6;padding:.45rem .6rem}
+.cli-menu-pop{border:1px solid #30363d!important;max-width:240px}
+.cli-menu-pop .popover-arrow::before{border-top-color:#30363d!important}
+.cli-menu-pop .popover-arrow::after{border-top-color:#0d1117!important}
 .btn-cmd{text-align:left;border-color:#30363d;color:#e6edf3;background:#161b22;width:100%;padding:.55rem 1rem}
 .btn-cmd:hover{border-color:#58a6ff;color:#58a6ff;background:#161b22}
 .btn-danger-cmd{text-align:left;border-color:#f85149;color:#f85149;background:#161b22;width:100%;padding:.55rem 1rem}
@@ -785,9 +790,13 @@ body.panel-open{padding-bottom:55vh}
     $iconFilter  = in_array($iconSlug, $noInvert, true)
                    ? 'opacity:.9'
                    : 'filter:brightness(0)invert(1);opacity:.8';
+    $subLabels   = array_column($MENUS[$key]['items'] ?? [], 0);
+    $menuTitle   = $MENUS[$key]['title'] ?? $label;
   ?>
   <div class="col-6 col-sm-4 col-md-3 col-lg-2">
-    <a href="?menu=<?= $key ?>" class="card-cat p-3 h-100">
+    <a href="?menu=<?= $key ?>" class="card-cat p-3 h-100"
+       data-menu-title="<?= htmlspecialchars($menuTitle, ENT_QUOTES) ?>"
+       data-submenu-items="<?= htmlspecialchars((string) json_encode($subLabels, JSON_UNESCAPED_UNICODE), ENT_QUOTES) ?>">
       <?php if ($hasIcon): ?>
       <img src="/<?= $iconRel ?>" height="48" alt=""
            class="mb-2 d-block" style="width:auto;max-width:100%;<?= $iconFilter ?>">
@@ -1200,6 +1209,7 @@ body.panel-open{padding-bottom:55vh}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/public/js/cli/menu-tooltips.js"></script>
 <script>
 const CMDS = <?= json_encode($jsCommands, JSON_HEX_TAG | JSON_HEX_AMP) ?>;
 let currentCmd = null;

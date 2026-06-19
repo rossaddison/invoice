@@ -71,6 +71,28 @@ WAMP Apache PHP. The setup page detects missing `pdo_sqlite` via
 `php_ini_loaded_file()`, and clearly labels the WAMP tray method as
 "Apache only — will not fix m.bat."
 
+### Card Tooltip Popovers
+
+Hovering or focusing any of the 16 main-menu category cards shows a Bootstrap 5
+popover listing every command available inside that section — restoring the
+at-a-glance discoverability of the previous flat-menu layout without sacrificing
+the card-based organisation.
+
+- **Data source** — each card's `<a>` element carries a `data-submenu-items`
+  JSON attribute (array of label strings extracted from `$MENUS[$key]['items']`
+  via `array_column`) and a `data-menu-title` attribute
+- **Trigger** — `hover focus` (keyboard navigable)
+- **Placement** — `top` with a 220 ms show / 80 ms hide delay to avoid
+  accidental flicker
+- **Styling** — custom `.cli-menu-pop` CSS class matches the dark GitHub-palette
+  theme (`#0d1117` body, `#58a6ff` header, `#30363d` border)
+- **Implementation** — `public/js/cli/menu-tooltips.ts` (TypeScript source),
+  compiled to `public/js/cli/menu-tooltips.js` with esbuild targeting ES2024;
+  loaded after the Bootstrap 5 bundle
+
+New submenu items added to `$MENUS` in `m.php` are automatically reflected in
+the popover with no additional changes needed.
+
 ### Menu Icons
 
 Each of the 16 main-menu category cards displays an SVG icon:
@@ -97,6 +119,8 @@ icons via `bin/download-cli-icons.php` (cURL with `file_get_contents` fallback).
 | `bin/download-cli-icons.php` | Downloads all 16 menu SVG icons into `public/img/cli/` |
 | `public/img/cli/` | Local icon files served statically by the built-in server |
 | `snyk-resolved.db` | SQLite vulnerability log; seeded from `.snyk`; committed to the repo |
+| `public/js/cli/menu-tooltips.ts` | TypeScript source for Bootstrap 5 Popover initialisation on main-menu cards |
+| `public/js/cli/menu-tooltips.js` | Compiled JS (esbuild ES2024); loaded by `m.php` after the Bootstrap bundle |
 
 ## Running
 
