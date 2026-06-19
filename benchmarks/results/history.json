@@ -1875,6 +1875,457 @@
                     "its": 7
                 }
             }
+        },
+        {
+            "id": "2026-06-19T10:59:22+00:00",
+            "date": "2026-06-19",
+            "commit": "11cc5744",
+            "commit_message": "fix(security): resolve all 15 Snyk Code findings",
+            "branch": "main",
+            "php_version": "8.4.15",
+            "os": "Windows NT AMD64",
+            "results": {
+                "strings::benchStartsWith": {
+                    "mean_μs": 1.45213,
+                    "stdev_μs": 0.0089,
+                    "min_μs": 1.43844,
+                    "max_μs": 1.46382,
+                    "ops_per_sec": 688643,
+                    "revs": 5000,
+                    "its": 7
+                },
+                "strings::benchEndsWith": {
+                    "mean_μs": 1.3933,
+                    "stdev_μs": 0.01057,
+                    "min_μs": 1.37374,
+                    "max_μs": 1.40382,
+                    "ops_per_sec": 717721,
+                    "revs": 5000,
+                    "its": 7
+                },
+                "strings::benchTruncateEnd": {
+                    "mean_μs": 2.90375,
+                    "stdev_μs": 0.02026,
+                    "min_μs": 2.8722,
+                    "max_μs": 2.93467,
+                    "ops_per_sec": 344382,
+                    "revs": 3000,
+                    "its": 7
+                },
+                "strings::benchCountWords": {
+                    "mean_μs": 2.30501,
+                    "stdev_μs": 0.01361,
+                    "min_μs": 2.28618,
+                    "max_μs": 2.32436,
+                    "ops_per_sec": 433837,
+                    "revs": 5000,
+                    "its": 7
+                },
+                "strings::benchToSnakeCase": {
+                    "mean_μs": 4.37179,
+                    "stdev_μs": 0.0138,
+                    "min_μs": 4.35,
+                    "max_μs": 4.38853,
+                    "ops_per_sec": 228739,
+                    "revs": 3000,
+                    "its": 7
+                },
+                "strings::benchToCamelCase": {
+                    "mean_μs": 18.83424,
+                    "stdev_μs": 0.23489,
+                    "min_μs": 18.6794,
+                    "max_μs": 19.30143,
+                    "ops_per_sec": 53095,
+                    "revs": 3000,
+                    "its": 7
+                },
+                "strings::benchToPascalCase": {
+                    "mean_μs": 16.96757,
+                    "stdev_μs": 0.09061,
+                    "min_μs": 16.87853,
+                    "max_μs": 17.086,
+                    "ops_per_sec": 58936,
+                    "revs": 3000,
+                    "its": 7
+                },
+                "strings::benchToPlural": {
+                    "mean_μs": 19.30364,
+                    "stdev_μs": 0.03595,
+                    "min_μs": 19.2419,
+                    "max_μs": 19.3486,
+                    "ops_per_sec": 51804,
+                    "revs": 2000,
+                    "its": 7
+                },
+                "strings::benchToSingular": {
+                    "mean_μs": 25.52244,
+                    "stdev_μs": 0.11083,
+                    "min_μs": 25.31745,
+                    "max_μs": 25.61135,
+                    "ops_per_sec": 39181,
+                    "revs": 2000,
+                    "its": 7
+                },
+                "strings::benchClassToTable": {
+                    "mean_μs": 22.96487,
+                    "stdev_μs": 0.13291,
+                    "min_μs": 22.7769,
+                    "max_μs": 23.18503,
+                    "ops_per_sec": 43545,
+                    "revs": 3000,
+                    "its": 7
+                },
+                "strings::benchWildcardMatch_hit": {
+                    "mean_μs": 2.06289,
+                    "stdev_μs": 0.01458,
+                    "min_μs": 2.05378,
+                    "max_μs": 2.09174,
+                    "ops_per_sec": 484757,
+                    "revs": 5000,
+                    "its": 7
+                },
+                "strings::benchWildcardMatch_miss": {
+                    "mean_μs": 2.0243,
+                    "stdev_μs": 0.01206,
+                    "min_μs": 2.0088,
+                    "max_μs": 2.0452,
+                    "ops_per_sec": 493997,
+                    "revs": 5000,
+                    "its": 7
+                },
+                "strings::benchCombinedRegexp_hit": {
+                    "mean_μs": 1.64607,
+                    "stdev_μs": 0.11024,
+                    "min_μs": 1.5445,
+                    "max_μs": 1.85397,
+                    "ops_per_sec": 607509,
+                    "revs": 3000,
+                    "its": 7
+                },
+                "strings::benchMemoizedRegexp_hit": {
+                    "mean_μs": 1.47241,
+                    "stdev_μs": 0.02426,
+                    "min_μs": 1.44497,
+                    "max_μs": 1.5014,
+                    "ops_per_sec": 679160,
+                    "revs": 3000,
+                    "its": 7
+                }
+            }
+        },
+        {
+            "id": "2026-06-19T12:39:29+00:00",
+            "date": "2026-06-19",
+            "commit": "11cc5744",
+            "commit_message": "fix(security): resolve all 15 Snyk Code findings",
+            "branch": "main",
+            "php_version": "8.4.15",
+            "os": "Windows NT AMD64",
+            "results": {
+                "di::benchSingletonGet": {
+                    "mean_μs": 1.12176,
+                    "stdev_μs": 0.00482,
+                    "min_μs": 1.11496,
+                    "max_μs": 1.12878,
+                    "ops_per_sec": 891453,
+                    "revs": 5000,
+                    "its": 7
+                },
+                "di::benchDeepChainGet": {
+                    "mean_μs": 1.12585,
+                    "stdev_μs": 0.00585,
+                    "min_μs": 1.11874,
+                    "max_μs": 1.13554,
+                    "ops_per_sec": 888219,
+                    "revs": 5000,
+                    "its": 7
+                },
+                "di::benchWideConstructorGet": {
+                    "mean_μs": 1.12963,
+                    "stdev_μs": 0.00856,
+                    "min_μs": 1.1189,
+                    "max_μs": 1.13906,
+                    "ops_per_sec": 885247,
+                    "revs": 5000,
+                    "its": 7
+                },
+                "di::benchContainerBuild": {
+                    "mean_μs": 45.66083,
+                    "stdev_μs": 0.25349,
+                    "min_μs": 45.318,
+                    "max_μs": 45.923,
+                    "ops_per_sec": 21901,
+                    "revs": 200,
+                    "its": 5
+                },
+                "di::benchHasDefinition": {
+                    "mean_μs": 1.97049,
+                    "stdev_μs": 0.01273,
+                    "min_μs": 1.95514,
+                    "max_μs": 1.99284,
+                    "ops_per_sec": 507487,
+                    "revs": 5000,
+                    "its": 7
+                }
+            }
+        },
+        {
+            "id": "2026-06-19T12:39:39+00:00",
+            "date": "2026-06-19",
+            "commit": "11cc5744",
+            "commit_message": "fix(security): resolve all 15 Snyk Code findings",
+            "branch": "main",
+            "php_version": "8.4.15",
+            "os": "Windows NT AMD64",
+            "results": {
+                "injector::benchInvokeOneDep_cached": {
+                    "mean_μs": 16.65219,
+                    "stdev_μs": 0.06689,
+                    "min_μs": 16.5674,
+                    "max_μs": 16.7295,
+                    "ops_per_sec": 60052,
+                    "revs": 2000,
+                    "its": 7
+                },
+                "injector::benchInvokeThreeDeps_cached": {
+                    "mean_μs": 36.73456,
+                    "stdev_μs": 0.10828,
+                    "min_μs": 36.62035,
+                    "max_μs": 36.89165,
+                    "ops_per_sec": 27222,
+                    "revs": 2000,
+                    "its": 7
+                },
+                "injector::benchInvokeClosure_cached": {
+                    "mean_μs": 36.96639,
+                    "stdev_μs": 0.58913,
+                    "min_μs": 36.5864,
+                    "max_μs": 38.1257,
+                    "ops_per_sec": 27052,
+                    "revs": 2000,
+                    "its": 7
+                },
+                "injector::benchInvokeThreeDeps_uncached": {
+                    "mean_μs": 36.62175,
+                    "stdev_μs": 0.13406,
+                    "min_μs": 36.47375,
+                    "max_μs": 36.7857,
+                    "ops_per_sec": 27306,
+                    "revs": 2000,
+                    "its": 7
+                },
+                "injector::benchMakeClass": {
+                    "mean_μs": 27.58516,
+                    "stdev_μs": 0.46072,
+                    "min_μs": 27.27315,
+                    "max_μs": 28.5018,
+                    "ops_per_sec": 36251,
+                    "revs": 2000,
+                    "its": 7
+                }
+            }
+        },
+        {
+            "id": "2026-06-19T12:39:50+00:00",
+            "date": "2026-06-19",
+            "commit": "11cc5744",
+            "commit_message": "fix(security): resolve all 15 Snyk Code findings",
+            "branch": "main",
+            "php_version": "8.4.15",
+            "os": "Windows NT AMD64",
+            "results": {
+                "router::benchMatchRoot": {
+                    "mean_μs": 121.67518,
+                    "stdev_μs": 0.73995,
+                    "min_μs": 120.6448,
+                    "max_μs": 122.6266,
+                    "ops_per_sec": 8219,
+                    "revs": 1000,
+                    "its": 7
+                },
+                "router::benchMatchStaticMid": {
+                    "mean_μs": 122.82452,
+                    "stdev_μs": 0.66206,
+                    "min_μs": 122.2651,
+                    "max_μs": 123.638,
+                    "ops_per_sec": 8142,
+                    "revs": 1000,
+                    "its": 7
+                },
+                "router::benchMatchParametrised": {
+                    "mean_μs": 124.067,
+                    "stdev_μs": 1.32001,
+                    "min_μs": 122.5897,
+                    "max_μs": 126.3789,
+                    "ops_per_sec": 8060,
+                    "revs": 1000,
+                    "its": 7
+                },
+                "router::benchMatchDeepParam": {
+                    "mean_μs": 127.76094,
+                    "stdev_μs": 2.14242,
+                    "min_μs": 125.5062,
+                    "max_μs": 131.0942,
+                    "ops_per_sec": 7827,
+                    "revs": 1000,
+                    "its": 7
+                },
+                "router::benchMatchWorstCase": {
+                    "mean_μs": 127.42922,
+                    "stdev_μs": 1.07278,
+                    "min_μs": 126.2628,
+                    "max_μs": 128.8531,
+                    "ops_per_sec": 7847,
+                    "revs": 1000,
+                    "its": 7
+                },
+                "router::benchMatch404": {
+                    "mean_μs": 127.2603,
+                    "stdev_μs": 2.18179,
+                    "min_μs": 125.3706,
+                    "max_μs": 130.2798,
+                    "ops_per_sec": 7858,
+                    "revs": 1000,
+                    "its": 7
+                }
+            }
+        },
+        {
+            "id": "2026-06-19T12:39:58+00:00",
+            "date": "2026-06-19",
+            "commit": "11cc5744",
+            "commit_message": "fix(security): resolve all 15 Snyk Code findings",
+            "branch": "main",
+            "php_version": "8.4.15",
+            "os": "Windows NT AMD64",
+            "results": {
+                "strings::benchStartsWith": {
+                    "mean_μs": 1.42352,
+                    "stdev_μs": 0.01459,
+                    "min_μs": 1.40032,
+                    "max_μs": 1.4442,
+                    "ops_per_sec": 702484,
+                    "revs": 5000,
+                    "its": 7
+                },
+                "strings::benchEndsWith": {
+                    "mean_μs": 1.38085,
+                    "stdev_μs": 0.01057,
+                    "min_μs": 1.36278,
+                    "max_μs": 1.39254,
+                    "ops_per_sec": 724193,
+                    "revs": 5000,
+                    "its": 7
+                },
+                "strings::benchTruncateEnd": {
+                    "mean_μs": 2.93047,
+                    "stdev_μs": 0.01586,
+                    "min_μs": 2.906,
+                    "max_μs": 2.95203,
+                    "ops_per_sec": 341243,
+                    "revs": 3000,
+                    "its": 7
+                },
+                "strings::benchCountWords": {
+                    "mean_μs": 2.34111,
+                    "stdev_μs": 0.01074,
+                    "min_μs": 2.3283,
+                    "max_μs": 2.35328,
+                    "ops_per_sec": 427147,
+                    "revs": 5000,
+                    "its": 7
+                },
+                "strings::benchToSnakeCase": {
+                    "mean_μs": 4.37264,
+                    "stdev_μs": 0.01169,
+                    "min_μs": 4.3522,
+                    "max_μs": 4.38753,
+                    "ops_per_sec": 228695,
+                    "revs": 3000,
+                    "its": 7
+                },
+                "strings::benchToCamelCase": {
+                    "mean_μs": 18.73679,
+                    "stdev_μs": 0.08639,
+                    "min_μs": 18.61743,
+                    "max_μs": 18.86733,
+                    "ops_per_sec": 53371,
+                    "revs": 3000,
+                    "its": 7
+                },
+                "strings::benchToPascalCase": {
+                    "mean_μs": 16.93463,
+                    "stdev_μs": 0.03133,
+                    "min_μs": 16.88483,
+                    "max_μs": 16.98347,
+                    "ops_per_sec": 59051,
+                    "revs": 3000,
+                    "its": 7
+                },
+                "strings::benchToPlural": {
+                    "mean_μs": 19.45127,
+                    "stdev_μs": 0.06785,
+                    "min_μs": 19.36445,
+                    "max_μs": 19.5465,
+                    "ops_per_sec": 51411,
+                    "revs": 2000,
+                    "its": 7
+                },
+                "strings::benchToSingular": {
+                    "mean_μs": 25.82452,
+                    "stdev_μs": 0.19758,
+                    "min_μs": 25.5476,
+                    "max_μs": 26.06595,
+                    "ops_per_sec": 38723,
+                    "revs": 2000,
+                    "its": 7
+                },
+                "strings::benchClassToTable": {
+                    "mean_μs": 23.05832,
+                    "stdev_μs": 0.28796,
+                    "min_μs": 22.58933,
+                    "max_μs": 23.44977,
+                    "ops_per_sec": 43368,
+                    "revs": 3000,
+                    "its": 7
+                },
+                "strings::benchWildcardMatch_hit": {
+                    "mean_μs": 2.04692,
+                    "stdev_μs": 0.00498,
+                    "min_μs": 2.04114,
+                    "max_μs": 2.05292,
+                    "ops_per_sec": 488539,
+                    "revs": 5000,
+                    "its": 7
+                },
+                "strings::benchWildcardMatch_miss": {
+                    "mean_μs": 2.03846,
+                    "stdev_μs": 0.01368,
+                    "min_μs": 2.01506,
+                    "max_μs": 2.055,
+                    "ops_per_sec": 490567,
+                    "revs": 5000,
+                    "its": 7
+                },
+                "strings::benchCombinedRegexp_hit": {
+                    "mean_μs": 1.54543,
+                    "stdev_μs": 0.01317,
+                    "min_μs": 1.521,
+                    "max_μs": 1.55917,
+                    "ops_per_sec": 647070,
+                    "revs": 3000,
+                    "its": 7
+                },
+                "strings::benchMemoizedRegexp_hit": {
+                    "mean_μs": 1.50135,
+                    "stdev_μs": 0.01404,
+                    "min_μs": 1.48597,
+                    "max_μs": 1.5235,
+                    "ops_per_sec": 666069,
+                    "revs": 3000,
+                    "its": 7
+                }
+            }
         }
     ]
 }
