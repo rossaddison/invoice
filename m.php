@@ -301,7 +301,7 @@ $CMDS = [
     'sonar_sev'         => ['cmd' => 'php sonar-issues.php --severity={sev}',             'env' => ['SONAR_TOKEN'], 'params' => ['sev' => 'BLOCKER / CRITICAL / MAJOR / MINOR / INFO']],
     'sonar_hotspots'    => ['cmd' => 'php sonar-issues.php --hotspots',                   'env' => ['SONAR_TOKEN']],
     'sonar_combined'    => ['cmd' => 'php sonar-issues.php --type={type} --severity={sev}','env' => ['SONAR_TOKEN'], 'params' => ['type' => 'Type', 'sev' => 'Severity']],
-    'sonar_rule'        => ['cmd' => 'php sonar-issues.php --rule={rule}',                'env' => ['SONAR_TOKEN'], 'params' => ['rule' => 'Rule number'], 'paramSelect' => ['rule' => ['php','typescript','javascript','css','xml']], 'paramSelectSuffix' => ['rule' => ':S']],
+    'sonar_rule'        => ['cmd' => 'php sonar-issues.php --rule={rule}',                'env' => ['SONAR_TOKEN'], 'params' => ['rule' => 'Rule']],
     'sonar_file'        => ['cmd' => 'php sonar-issues.php --file={file}',                'env' => ['SONAR_TOKEN'], 'params' => ['file' => 'File path (e.g. src/Invoice/Inv/InvController.php)']],
     'sonar_reliability' => ['cmd' => 'php sonar-issues.php --type=BUG',                  'env' => ['SONAR_TOKEN']],
     'sonar_rely_grp'    => ['cmd' => 'php sonar-issues.php --type=BUG --grouped',        'env' => ['SONAR_TOKEN']],
@@ -575,6 +575,14 @@ $SONAR_RULES = [
     'shelldre:S1066'   => 'Merge nested if statements',
 ];
 
+// Group $SONAR_RULES by language → ['php' => ['1192' => 'desc', ...], ...]
+$SONAR_RULES_BY_LANG = [];
+foreach ($SONAR_RULES as $ruleKey => $desc) {
+    [$lang, $code] = explode(':', $ruleKey, 2);
+    $num = ltrim($code, 'S');
+    $SONAR_RULES_BY_LANG[$lang][$num] = $desc;
+}
+
 // ── POST handler (AJAX command runner) ───────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: text/plain; charset=utf-8');
@@ -697,6 +705,13 @@ $isMain  = ($menu === 'main');
 $menuDef = $isMain ? null : ($MENUS[$menu] ?? null);
 $pageTitle = $menuDef ? $menuDef['title'] : 'Invoice System (Yii3-i)';
 
+// Cascade data keyed by command → param name.
+// ['rule' => ['php' => ['1192' => 'desc', ...], ...]]
+// Defined here (after $SONAR_RULES_BY_LANG) so PHP arrays are in scope.
+$PARAM_CASCADE = [
+    'sonar_rule' => ['rule' => $SONAR_RULES_BY_LANG],
+];
+
 // Build slim JS command map (only what JS needs — no cmd strings)
 $jsCommands = [];
 foreach ($CMDS as $k => $def) {
@@ -706,10 +721,11 @@ foreach ($CMDS as $k => $def) {
         'paramPrefix'       => $def['paramPrefix'] ?? [],
         'paramSelect'       => $def['paramSelect'] ?? [],
         'paramSelectSuffix' => $def['paramSelectSuffix'] ?? [],
-        'confirm'     => $def['confirm'] ?? null,
-        'bg'          => !empty($def['bg']),
-        'needsSonar'  => in_array('SONAR_TOKEN', $def['env'] ?? [], true),
-        'needsGithub' => in_array('GITHUB_TOKEN', $def['env'] ?? [], true),
+        'paramCascade'      => $PARAM_CASCADE[$k] ?? [],
+        'confirm'           => $def['confirm'] ?? null,
+        'bg'                => !empty($def['bg']),
+        'needsSonar'        => in_array('SONAR_TOKEN', $def['env'] ?? [], true),
+        'needsGithub'       => in_array('GITHUB_TOKEN', $def['env'] ?? [], true),
     ];
 }
 ?>
@@ -1261,6 +1277,33 @@ function showParamModal(key, def) {
     document.getElementById('paramModalTitle').textContent = key;
     const body = document.getElementById('paramModalBody');
     body.innerHTML = def.params.map(p => {
+        // Cascading dependent dropdowns: language → rule number
+        const cascadeData = def.paramCascade?.[p];
+        if (cascadeData) {
+            const langSelId = `p_${p}_lang`;
+            const numSelId  = `p_${p}_num`;
+            const langOpts  = Object.keys(cascadeData)
+                .map(l => `<option value="${l}">${l}</option>`).join('');
+            return `
+        <div class="mb-3">
+          <label class="form-label small text-secondary">${def.paramLabels[p]}</label>
+          <div class="d-flex gap-2 mb-2">
+            <select id="${langSelId}" class="form-select form-select-sm"
+                    style="background:#0d1117;border-color:#30363d;color:#e6edf3;width:auto"
+                    onchange="refreshCascadeNums('${langSelId}','${numSelId}',${JSON.stringify(cascadeData)})">
+              ${langOpts}
+            </select>
+            <span class="font-monospace text-secondary align-self-center">:S</span>
+            <select id="${numSelId}" class="form-select form-select-sm flex-grow-1"
+                    style="background:#0d1117;border-color:#30363d;color:#e6edf3">
+            </select>
+          </div>
+          <input type="hidden" data-pk="${p}"
+                 data-cascade-lang="${langSelId}" data-cascade-num="${numSelId}">
+        </div>`;
+        }
+
+        // Language-prefix select + number text input (paramSelect)
         const selOptions = def.paramSelect?.[p];
         const selSuffix  = def.paramSelectSuffix?.[p] ?? '';
         const prefix     = def.paramPrefix?.[p] ?? '';
@@ -1299,14 +1342,36 @@ function showParamModal(key, def) {
         </div>`;
     }).join('');
     document.getElementById('paramModal').addEventListener('shown.bs.modal', () => {
-        body.querySelector('input')?.focus();
+        // Populate the first cascade dropdown's dependent select on open
+        document.querySelectorAll('#paramModalBody [data-cascade-lang]').forEach(hidden => {
+            const langSel = document.getElementById(hidden.dataset.cascadeLang);
+            if (langSel) langSel.dispatchEvent(new Event('change'));
+        });
+        body.querySelector('select, input')?.focus();
     }, { once: true });
     paramModal.show();
+}
+
+function refreshCascadeNums(langSelId, numSelId, data) {
+    const lang   = document.getElementById(langSelId)?.value ?? '';
+    const numSel = document.getElementById(numSelId);
+    if (!numSel) return;
+    const nums = data[lang] ?? {};
+    numSel.innerHTML = Object.entries(nums)
+        .map(([n, d]) => `<option value="${n}">S${n} — ${d}</option>`)
+        .join('');
 }
 
 function submitParams() {
     const params = {};
     document.querySelectorAll('#paramModalBody [data-pk]').forEach(el => {
+        // Cascade: hidden input assembles lang:Snum
+        if (el.dataset.cascadeLang) {
+            const lang = document.getElementById(el.dataset.cascadeLang)?.value ?? '';
+            const num  = document.getElementById(el.dataset.cascadeNum)?.value ?? '';
+            params[el.dataset.pk] = `${lang}:S${num}`;
+            return;
+        }
         const selId = el.dataset.selId;
         let prefix;
         if (selId) {
