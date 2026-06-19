@@ -1205,7 +1205,10 @@ body.panel-open{padding-bottom:55vh}
 <div id="out-panel">
   <div class="out-hdr">
     <span id="out-title" class="small fw-bold"></span>
-    <button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="closePanel()">✕ close</button>
+    <div class="d-flex gap-2">
+      <button id="copy-btn" class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="copyOutput()">Copy</button>
+      <button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="closePanel()">✕ close</button>
+    </div>
   </div>
   <pre id="out-pre">Ready.</pre>
 </div>
@@ -1495,6 +1498,19 @@ function ansiToHtml(raw) {
     );
 
     return html;
+}
+
+function copyOutput() {
+    const text = document.getElementById('out-pre').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copy-btn');
+        btn.textContent = 'Copied!';
+        btn.classList.replace('btn-outline-secondary', 'btn-outline-success');
+        setTimeout(() => {
+            btn.textContent = 'Copy';
+            btn.classList.replace('btn-outline-success', 'btn-outline-secondary');
+        }, 1800);
+    });
 }
 
 function setGithubToken() {
