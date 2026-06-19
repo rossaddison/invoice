@@ -626,12 +626,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Force ANSI colour output in child processes.
-    // proc_open pipes are not a TTY, so tools suppress colour by default.
-    // FORCE_COLOR covers Node/npm tools; CLICOLOR_FORCE covers many Unix-style tools;
-    // Symfony Console (Psalm, Rector, PHP-CS-Fixer) respects FORCE_COLOR since v5.4.
-    putenv('FORCE_COLOR=1');
-    putenv('CLICOLOR_FORCE=1');
-    putenv('TERM=xterm-256color');
+    // proc_open pipes are not a TTY so tools suppress colour by default.
+    // putenv() only updates the CRT env block on Windows, not the Win32 env block
+    // that CreateProcess reads — so we must pass env explicitly as the 5th argument.
+    // FORCE_COLOR=1  → Node/npm tools + Symfony Console ≥ 5.4 (Composer/Psalm/Rector/Fixer)
+    // CLICOLOR_FORCE → many Unix-style CLIs
+    // TERM           → general terminal-type hint
+    $baseEnv = is_array($e = getenv()) ? $e : [];
+    $childEnv = array_merge($baseEnv, [
+        'FORCE_COLOR'    => '1',
+        'CLICOLOR_FORCE' => '1',
+        'TERM'           => 'xterm-256color',
+        'COLORTERM'      => 'truecolor',
+    ]);
 
     // Stream stdout to browser via proc_open.
     // stdin is explicitly closed (nul) so interactive tools can't block waiting for input.
@@ -649,7 +656,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         2 => ['file', 'nul', 'w'],  // stderr discarded — merged into stdout via 2>&1
     ];
 
-    $process = proc_open('cmd /c ' . $cmd . ' 2>&1', $descriptors, $pipes, __DIR__);
+    $process = proc_open('cmd /c ' . $cmd . ' 2>&1', $descriptors, $pipes, __DIR__, $childEnv);
     if (!is_resource($process)) {
         echo 'ERROR: Could not start process.';
         exit;
