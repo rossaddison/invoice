@@ -1,4 +1,4 @@
-import { parsedata, getJson, ApiResponse, RequestParams } from './utils.js';
+import { parsedata, getJson, ApiResponse, RequestParams, isSameOrigin } from './utils.js';
 
 // Family-specific interfaces
 interface FamilySecondaryRequest extends RequestParams {
@@ -429,7 +429,7 @@ export class FamilyHandler {
             }
         }
         setTimeout(() => {
-            if (data.redirect_url) {
+            if (data.redirect_url && isSameOrigin(data.redirect_url)) {
                 globalThis.location.href = data.redirect_url;
             } else {
                 globalThis.location.reload();

@@ -78,7 +78,7 @@ final class SchematronParser implements SchematronParserInterface
     {
         $dom = new DOMDocument();
         libxml_use_internal_errors(true);
-        $loaded = $dom->loadXML($xml);
+        $loaded = $dom->loadXML($xml, LIBXML_NONET);
         $errors = libxml_get_errors();
         libxml_clear_errors();
 

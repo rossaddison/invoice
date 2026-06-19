@@ -4,6 +4,18 @@ import type { ApiResponse, RequestParams, FetchOptions, SafeElement } from './ty
 export type { ApiResponse, RequestParams, FetchOptions, SafeElement } from './types.js';
 
 /**
+ * Validates that a URL is same-origin before using it for navigation.
+ * Prevents Open Redirect vulnerabilities when redirecting to server-supplied URLs.
+ */
+export function isSameOrigin(url: string): boolean {
+    try {
+        return new URL(url, globalThis.location.href).origin === globalThis.location.origin;
+    } catch {
+        return false;
+    }
+}
+
+/**
  * Safe JSON parser that always returns an object
  * @param data - Data to parse (can be string, object, or any type)
  * @returns Parsed object or empty object if parsing fails

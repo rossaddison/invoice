@@ -8,5 +8,71 @@ ignore:
         reason: False positive - ISO 3166-1 alpha-2 country codes in legitimate country reference data, not actual passwords
         expires: '2026-11-05T00:00:00.000Z'
 
+  # False positive: MD5 is mandated by the Peppol SML DNS lookup specification (RFC-compliant, not a security hash)
+  SNYK-CODE-ce50f6ff-6712-414c-9c98-0364f1e6fe44:
+    - src/Invoice/Peppol/SmpResolver.php:
+        reason: False positive - MD5 is required by the Peppol SML DNS spec for participant ID hashing; NOSONAR comment already present
+        expires: '2027-06-19T00:00:00.000Z'
+
+  # False positive: PHP 8.0+ disables external entity loading by default; project requires PHP 8.4+
+  SNYK-CODE-df6503fc-3e50-4b9f-b496-f7fb03985431:
+    - src/Invoice/Inv/Trait/Peppol.php:
+        reason: False positive - XXE disabled by default in PHP 8.0+; project minimum is PHP 8.4
+        expires: '2027-06-19T00:00:00.000Z'
+
+  # False positive: PHP 8.0+ disables external entity loading by default; project requires PHP 8.4+
+  SNYK-CODE-88498c5a-ad8f-4904-a307-fb408293928d:
+    - src/Invoice/Inv/Trait/Peppol.php:
+        reason: False positive - XXE disabled by default in PHP 8.0+; project minimum is PHP 8.4
+        expires: '2027-06-19T00:00:00.000Z'
+
+  # False positive: 'newlogin' is a test login name in a unit test, not a hardcoded credential
+  SNYK-CODE-ac3f0ded-f59b-4a8e-8fff-4fe5e073f542:
+    - Tests/Unit/Invoice/Entity/UserEntityTest.php:
+        reason: False positive - test fixture value used in assertSame, not a production credential
+        expires: '2027-06-19T00:00:00.000Z'
+
+  # False positive: benchmarks/run.php is a CLI-only tool never served over HTTP
+  SNYK-CODE-5f593a3f-ee1f-486b-ab02-e1b5ea879747:
+    - benchmarks/run.php:
+        reason: False positive - CLI benchmark script; exception message echoed to terminal stdout, not to a browser
+        expires: '2027-06-19T00:00:00.000Z'
+
+  # False positive: benchmarks/run.php is a CLI-only tool never served over HTTP
+  SNYK-CODE-816cf0ce-bb64-4b3c-8a4d-2dac8f88e723:
+    - benchmarks/run.php:
+        reason: False positive - CLI benchmark script; error string echoed to terminal stdout, not to a browser
+        expires: '2027-06-19T00:00:00.000Z'
+
+  # False positive: sonar-issues.php is a CLI-only developer tool never served over HTTP
+  SNYK-CODE-b8c80a7c-dfc0-4e89-9b8b-4b09dfe4341d:
+    - sonar-issues.php:
+        reason: False positive - CLI developer tool; output goes to terminal stdout, not rendered as HTML
+        expires: '2027-06-19T00:00:00.000Z'
+
+  # False positive: sonar-issues.php is a CLI-only developer tool never served over HTTP
+  SNYK-CODE-3b503f93-bacc-45e5-94fb-f57a7a74ee91:
+    - sonar-issues.php:
+        reason: False positive - CLI developer tool; output goes to terminal stdout, not rendered as HTML
+        expires: '2027-06-19T00:00:00.000Z'
+
+  # False positive: sonar-issues.php is a CLI-only developer tool never served over HTTP
+  SNYK-CODE-63aacd20-88fc-4892-a2ac-86b37eea41b6:
+    - sonar-issues.php:
+        reason: False positive - CLI developer tool; output goes to terminal stdout, not rendered as HTML
+        expires: '2027-06-19T00:00:00.000Z'
+
+  # False positive: file_get_contents echoes binary PDF data after Content-Disposition: attachment header
+  SNYK-CODE-11be5bd0-027f-4aea-8377-27b0d6192d5c:
+    - src/Invoice/Inv/Trait/PdfTrait.php:
+        reason: False positive - PDF binary served with Content-Disposition attachment and Content-Type application/pdf; browser cannot execute as HTML
+        expires: '2027-06-19T00:00:00.000Z'
+
+  # False positive: 'SupplierPartyIdentificationPostalAddress' is a Peppol config key name, not a secret
+  SNYK-CODE-0311cb06-61c1-4ec4-a45c-7e06061d896f:
+    - src/Invoice/Helpers/Peppol/PeppolHelper.php:
+        reason: False positive - string is a configuration array key name for a postal address structure, not a cryptographic secret
+        expires: '2027-06-19T00:00:00.000Z'
+
 # patches apply the minimum changes required to fix a vulnerability
 patch: {}

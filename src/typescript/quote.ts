@@ -1,4 +1,4 @@
-import { parsedata, getJson, ApiResponse, RequestParams } from './utils.js';
+import { parsedata, getJson, ApiResponse, RequestParams, isSameOrigin } from './utils.js';
 
 // Secure navigation helper to prevent Open Redirect vulnerabilities
 function secureReload(): void {
@@ -406,7 +406,7 @@ export class QuoteHandler {
             if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
 
             // Redirect to the created invoice if successful
-            if (data.success && data.redirect_url) {
+            if (data.success && data.redirect_url && isSameOrigin(data.redirect_url)) {
                 globalThis.location.href = data.redirect_url;
             } else if (data.success && data.new_invoice_id) {
                 // Fallback to old behavior for backward compatibility
@@ -452,7 +452,7 @@ export class QuoteHandler {
             if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
 
             // Redirect to the created sales order if successful
-            if (data.success && data.redirect_url) {
+            if (data.success && data.redirect_url && isSameOrigin(data.redirect_url)) {
                 globalThis.location.href = data.redirect_url;
             } else {
                 // Fallback to reload if no redirect URL is provided
