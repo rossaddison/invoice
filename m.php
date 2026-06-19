@@ -155,6 +155,12 @@ function seedVulnDb(PDO $db): void
          'src/Invoice/Helpers/Peppol/PeppolHelper.php',
          "'SupplierPartyIdentificationPostalAddress' is an array key name for a postal address structure, not a cryptographic secret",
          'https://cwe.mitre.org/data/definitions/798.html', 1, 0, 'Hardcoded Secrets'],
+        ['GH-114-web-token-jwt-framework',
+         'JWSVerifier algorithm confusion via unprotected header (web-token/jwt-framework <=4.2.99)',
+         'HIGH','False Positive — Transitive Dependency, Unreachable Code',
+         'composer.lock',
+         'Transitive dep via rossaddison/yii-auth-client; project uses phpseclib3 directly in GovUk.php — JWSVerifier and JWEDecrypter are never instantiated; no attack vector reachable. No patched version as at June 2026. Update snyk_id once Snyk assigns a SNYK-PHP-xxx ID.',
+         'https://cwe.mitre.org/data/definitions/290.html', 1, 0, 'Algorithm Confusion — JWT JWS/JWE'],
     ];
     $stmt = $db->prepare(
         'INSERT OR IGNORE INTO vuln_resolved
