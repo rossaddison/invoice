@@ -231,14 +231,14 @@ $CMDS = [
     'psalm_info'        => ['cmd' => 'php vendor/bin/psalm --show-info'],
 
     // Composer
-    'comp_outdated'     => ['cmd' => 'composer outdated'],
+    'comp_outdated'     => ['cmd' => 'composer outdated --ansi'],
     'comp_whynot'       => ['cmd' => 'composer why-not {package} {version}',
                             'params' => ['package' => 'Package (e.g. vendor/package)', 'version' => 'Version (e.g. ^1.0)']],
-    'comp_cache_lock'   => ['cmd' => 'composer clear-cache && composer update --lock'],
+    'comp_cache_lock'   => ['cmd' => 'composer clear-cache --ansi && composer update --lock --ansi'],
     'comp_validate'     => ['cmd' => 'composer validate --ansi --strict'],
-    'comp_dump'         => ['cmd' => 'composer dump-autoload -o'],
+    'comp_dump'         => ['cmd' => 'composer dump-autoload -o --ansi'],
     'comp_audit'        => ['cmd' => 'composer audit --ansi'],
-    'comp_update'       => ['cmd' => 'composer update'],
+    'comp_update'       => ['cmd' => 'composer update --ansi'],
     'comp_req_check'    => ['cmd' => 'php -d memory_limit=512M vendor/bin/composer-require-checker'],
 
     // Node
@@ -271,28 +271,28 @@ $CMDS = [
     'ang_lint'          => ['cmd' => 'npm run lint:angular'],
 
     // Testing
-    'test_entity'       => ['cmd' => 'php vendor/bin/phpunit Tests/Unit/Invoice/Entity/ --no-coverage --testdox'],
-    'test_unit'         => ['cmd' => 'php vendor/bin/phpunit Tests/Unit/ --no-coverage --testdox'],
-    'test_func'         => ['cmd' => 'php vendor/bin/phpunit Tests/Functional/ Tests/Integration/ Tests/PHPUnit/ --no-coverage --testdox'],
+    'test_entity'       => ['cmd' => 'php vendor/bin/phpunit Tests/Unit/Invoice/Entity/ --no-coverage --testdox --colors=always'],
+    'test_unit'         => ['cmd' => 'php vendor/bin/phpunit Tests/Unit/ --no-coverage --testdox --colors=always'],
+    'test_func'         => ['cmd' => 'php vendor/bin/phpunit Tests/Functional/ Tests/Integration/ Tests/PHPUnit/ --no-coverage --testdox --colors=always'],
     'test_cc_func'      => ['cmd' => 'php vendor/bin/codecept run Functional'],
     'test_cc_acc'       => ['cmd' => 'php vendor/bin/codecept run Acceptance'],
     'test_cc_all'       => ['cmd' => 'php vendor/bin/codecept run'],
 
     // PHP-CS-Fixer
-    'fixer_dry'         => ['cmd' => 'php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --show-progress=bar --verbose'],
-    'fixer_fix'         => ['cmd' => 'php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php'],
+    'fixer_dry'         => ['cmd' => 'php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --show-progress=bar --verbose --ansi'],
+    'fixer_fix'         => ['cmd' => 'php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --ansi'],
 
     // PHPCS
-    'phpcs_full'        => ['cmd' => 'php vendor/bin/phpcs -d memory_limit=1024M --standard=phpcs.xml.dist'],
-    'phpcs_file'        => ['cmd' => 'php vendor/bin/phpcs -d memory_limit=1024M --standard=Generic --sniffs=Generic.Files.LineLength --runtime-set lineLimit 85 --runtime-set absoluteLineLimit 85 {file}',
+    'phpcs_full'        => ['cmd' => 'php vendor/bin/phpcs -d memory_limit=1024M --standard=phpcs.xml.dist --colors'],
+    'phpcs_file'        => ['cmd' => 'php vendor/bin/phpcs -d memory_limit=1024M --standard=Generic --sniffs=Generic.Files.LineLength --runtime-set lineLimit 85 --runtime-set absoluteLineLimit 85 --colors {file}',
                             'params' => ['file' => 'File path (e.g. src/Invoice/Invoice.php)']],
-    'phpcs_dir'         => ['cmd' => 'php vendor/bin/phpcs -d memory_limit=1024M --standard=Generic --sniffs=Generic.Files.LineLength --runtime-set lineLimit 85 --runtime-set absoluteLineLimit 85 {dir}',
+    'phpcs_dir'         => ['cmd' => 'php vendor/bin/phpcs -d memory_limit=1024M --standard=Generic --sniffs=Generic.Files.LineLength --runtime-set lineLimit 85 --runtime-set absoluteLineLimit 85 --colors {dir}',
                             'params' => ['dir' => 'Directory path (e.g. src/Invoice/)']],
-    'phpcs_report'      => ['cmd' => 'php vendor/bin/phpcs -d memory_limit=1024M --standard=phpcs.xml.dist --report=full --report-width=120'],
+    'phpcs_report'      => ['cmd' => 'php vendor/bin/phpcs -d memory_limit=1024M --standard=phpcs.xml.dist --report=full --report-width=120 --colors'],
 
     // Rector
-    'rector_dry'        => ['cmd' => 'php vendor/bin/rector process --dry-run --output-format=console'],
-    'rector_apply'      => ['cmd' => 'php vendor/bin/rector'],
+    'rector_dry'        => ['cmd' => 'php vendor/bin/rector process --dry-run --output-format=console --ansi'],
+    'rector_apply'      => ['cmd' => 'php vendor/bin/rector --ansi'],
 
     // SonarCloud
     'sonar_all'         => ['cmd' => 'php sonar-issues.php',                              'env' => ['SONAR_TOKEN']],
@@ -624,6 +624,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         exit;
     }
+
+    // Force ANSI colour output in child processes.
+    // proc_open pipes are not a TTY, so tools suppress colour by default.
+    // FORCE_COLOR covers Node/npm tools; CLICOLOR_FORCE covers many Unix-style tools;
+    // Symfony Console (Psalm, Rector, PHP-CS-Fixer) respects FORCE_COLOR since v5.4.
+    putenv('FORCE_COLOR=1');
+    putenv('CLICOLOR_FORCE=1');
+    putenv('TERM=xterm-256color');
 
     // Stream stdout to browser via proc_open.
     // stdin is explicitly closed (nul) so interactive tools can't block waiting for input.
