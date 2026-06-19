@@ -3,25 +3,28 @@
 // Bootstrap 5 bundle is loaded via CDN before this script runs.
 
 declare const bootstrap: {
-    Popover: new (
-        element: HTMLElement,
-        options: {
-            trigger?: string;
-            placement?: string;
-            html?: boolean;
-            content?: string;
-            title?: string;
-            delay?: { show: number; hide: number };
-            customClass?: string;
-        }
-    ) => void;
+    Popover: {
+        new (
+            element: HTMLElement,
+            options: {
+                trigger?: string;
+                placement?: string;
+                html?: boolean;
+                content?: string;
+                title?: string;
+                delay?: { show: number; hide: number };
+                customClass?: string;
+            }
+        ): void;
+        getOrCreateInstance(element: Element, config?: object): void;
+    };
 };
 
 function esc(s: string): string {
     return s
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;');
 }
 
 document.addEventListener('DOMContentLoaded', (): void => {
@@ -38,7 +41,7 @@ document.addEventListener('DOMContentLoaded', (): void => {
             .map((item): string => `<li>${esc(item)}</li>`)
             .join('');
 
-        new bootstrap.Popover(card, {
+        bootstrap.Popover.getOrCreateInstance(card, {
             trigger:     'hover focus',
             placement:   'top',
             html:        true,

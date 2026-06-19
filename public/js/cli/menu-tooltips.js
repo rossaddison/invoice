@@ -1,6 +1,6 @@
 "use strict";
 function esc(s) {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  return s.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 }
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("[data-submenu-items]").forEach((card) => {
@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     if (items.length === 0) return;
     const listHtml = items.map((item) => `<li>${esc(item)}</li>`).join("");
-    new bootstrap.Popover(card, {
+    bootstrap.Popover.getOrCreateInstance(card, {
       trigger: "hover focus",
       placement: "top",
       html: true,
