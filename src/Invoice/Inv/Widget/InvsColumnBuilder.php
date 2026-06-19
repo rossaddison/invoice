@@ -34,9 +34,9 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 /**
  * Column builders extracted from InvsListWidget to stay within the S1448 limit.
  *
- * buildColumns() orchestrates all columns; the seven simplest column types are
- * inlined there rather than given their own methods, keeping this class at ≤ 20
- * methods.
+ * buildColumns() orchestrates all columns; simple column types that previously
+ * lived inline have been extracted into private methods to satisfy S138 (≤ 150
+ * lines per function).
  */
 final class InvsColumnBuilder
 {
@@ -76,123 +76,22 @@ final class InvsColumnBuilder
         $t   = $this->translator;
         $ug  = $this->urlGenerator;
         $vis = $this->visible;
-        $fo  = $this->filterOptions;
-
-        $ymHeader = $t->translate(
-            'datetime.immutable.date.created.mySql.format.year.month.filter');
 
         $columns = [
             $this->buildCheckboxColumn(),
-
-            // Workflow type (SO / Quote / Standard) — inline
-            new DataColumn(
-                header: (new Label())->content('🔀')
-                    ->addAttributes(['data-bs-toggle' => 'tooltip',
-                        'title' => $t->translate('invoice') . ' / '
-                            . $t->translate('quote') . ' → '
-                            . $t->translate('salesorder') . ' → '
-                            . $t->translate('invoice')])
-                    ->render(),
-                encodeHeader: false,
-                content: static function (Inv $model) use ($t): string {
-                    if ($model->getSoId() !== null) {
-                        return '<span class="badge bg-primary" data-bs-toggle="tooltip" title="'
-                            . Html::encode(
-                                $t->translate('quote') . ' → '
-                                . $t->translate('salesorder') . ' → '
-                                . $t->translate('invoice')
-                                . ' (' . $t->translate('peppol') . ')')
-                            . '">🔀</span>';
-                    }
-                    if ($model->getQuoteId() !== null) {
-                        return '<span class="badge bg-info text-dark" data-bs-toggle="tooltip" title="'
-                            . Html::encode(
-                                $t->translate('quote') . ' → '
-                                . $t->translate('invoice'))
-                            . '">💬→📄</span>';
-                    }
-                    return '<span class="badge bg-secondary" data-bs-toggle="tooltip" title="'
-                        . Html::encode($t->translate('invoice'))
-                        . '">📄</span>';
-                },
-                encodeContent: false,
-                withSorting: false,
-            ),
-
+            $this->buildWorkflowTypeColumn(),
             $this->buildEditColumn($sR),
             $this->buildPdfEmailColumn(),
             $this->buildInvNumberColumn(),
-
-            // Family name — inline
-            new DataColumn(
-                property: 'filterFamilyName',
-                header: $t->translate('family.name'),
-                content: static fn(Inv $model): string => $model->getFirstItemFamilyName(),
-                encodeContent: false,
-                filter: DropdownFilter::widget()
-                    ->addAttributes(['id' => 'filter-family-name', 'name' => 'number',
-                        'class' => self::FILTER_CLASS,
-                        'aria-label' => 'Filter by family name',
-                        'title' => $t->translate('family.name')])
-                    ->optionsData($fo->familyName),
-                withSorting: false,
-            ),
-
-            // Date created year-month — inline
-            new DataColumn(
-                property: 'filterDateCreatedYearMonth',
-                header: $ymHeader,
-                content: static fn(Inv $model): string =>
-                    $model->getDateCreated()->format('Y-m-d'),
-                filter: DropdownFilter::widget()
-                    ->addAttributes(['id' => 'filter-year-month', 'name' => 'number',
-                        'class' => self::FILTER_CLASS,
-                        'aria-label' => 'Filter by year-month',
-                        'title' => $ymHeader])
-                    ->optionsData($fo->yearMonth),
-                withSorting: false,
-                visible: $vis,
-            ),
-
+            $this->buildFamilyNameColumn(),
+            $this->buildYearMonthColumn(),
             $this->buildStatusColumn($iR, $irR, $sR),
-
-            // Client active indicator — inline
-            new DataColumn(
-                header: (new Label())->content('🔛️')
-                    ->addAttributes(['data-bs-toggle' => 'tooltip',
-                        'title' => $t->translate('active')])
-                    ->render(),
-                encodeHeader: false,
-                property: 'id',
-                content: static fn(Inv $model): A =>
-                    (new A())
-                        ->addAttributes(['style' => 'text-decoration:none'])
-                        ->href($ug->generate('client/edit', [
-                            'id' => $model->getClient()?->reqId(), 'origin' => 'inv',
-                        ]))
-                        ->content($model->getClient()?->getClientActive() ? '✅' : '❌'),
-            ),
-
+            $this->buildClientActiveColumn(),
             $this->buildCreditNoteColumn($iR),
             $this->buildSentLogToggleColumn($islR),
             $this->buildSentLogCountColumn($islR),
             $this->buildSentLogTableColumn($islR),
-
-            // Client full name — inline
-            new DataColumn(
-                property: 'filterClient',
-                header: $t->translate('client'),
-                content: static fn(Inv $model): string =>
-                    Html::encode($model->getClient()?->getClientFullName()),
-                encodeContent: false,
-                filter: DropdownFilter::widget()
-                    ->addAttributes(['id' => 'filter-client', 'name' => 'client_id',
-                        'class' => self::FILTER_CLASS,
-                        'aria-label' => 'Filter by client',
-                        'title' => $t->translate('client')])
-                    ->optionsData($fo->clients),
-                withSorting: false,
-            ),
+            $this->buildClientFullNameColumn(),
 
             new DataColumn('client_number',
                 header: $t->translate('client.number'),
@@ -218,20 +117,7 @@ final class InvsColumnBuilder
                     Html::encode($m->getClient()?->getClientAddress2()),
                 encodeContent: false),
 
-            // Client group — inline
-            new DataColumn(
-                property: 'filterClientGroup',
-                header: $t->translate('client.group'),
-                content: static fn(Inv $model): string =>
-                    $model->getClient()?->getClientGroup() ?? '',
-                filter: DropdownFilter::widget()
-                    ->addAttributes(['id' => 'filter-client-group', 'name' => 'number',
-                        'class' => self::FILTER_CLASS,
-                        'aria-label' => 'Filter by client group',
-                        'title' => $t->translate('client.group')])
-                    ->optionsData($fo->clientGroup),
-                withSorting: false,
-            ),
+            $this->buildClientGroupColumn(),
 
             new DataColumn('time_created',
                 header: $t->translate('datetime.immutable.time.created'),
@@ -239,37 +125,12 @@ final class InvsColumnBuilder
                     $m->getTimeCreated()->format('H:i:s'),
                 visible: $vis),
 
-            new DataColumn('date_modified',
-                header: $t->translate('datetime.immutable.date.modified'),
-                content: static function (Inv $m): Label {
-                    $cls = $m->getDateModified() <> $m->getDateCreated()
-                        ? 'badge bg-danger' : self::BDG_BG_SCS;
-                    return (new Label())
-                        ->attributes(['class' => $cls])
-                        ->content(Html::encode($m->getDateModified()->format('Y-m-d')));
-                },
-                encodeContent: false,
-                visible: $vis),
-
-            new DataColumn('date_due',
-                header: $t->translate('due.date'),
-                content: static function (Inv $m): Label {
-                    $now = new \DateTimeImmutable('now');
-                    $due = $m->getDateDue();
-                    return (new Label())
-                        ->attributes(['class' => $due > $now
-                            ? self::BDG_BG_SCS : self::BDG_TXT_DARK])
-                        ->content(Html::encode($due->format('Y-m-d')));
-                },
-                encodeContent: false,
-                withSorting: true,
-                visible: $vis),
-
+            $this->buildDateModifiedColumn(),
+            $this->buildDateDueColumn(),
             $this->buildTotalColumn($sR, $dp, $totalAmount),
             $this->buildPaidColumn($sR, $dp, $totalPaid),
             $this->buildBalanceColumn($sR, $dp, $totalBalance),
 
-            // Delivery add link — inline
             new DataColumn(
                 header: '🚚',
                 content: static fn(Inv $model): A =>
@@ -297,6 +158,175 @@ final class InvsColumnBuilder
         }
 
         return $columns;
+    }
+
+    private function buildWorkflowTypeColumn(): DataColumn
+    {
+        $t = $this->translator;
+        return new DataColumn(
+            header: (new Label())->content('🔀')
+                ->addAttributes(['data-bs-toggle' => 'tooltip',
+                    'title' => $t->translate('invoice') . ' / '
+                        . $t->translate('quote') . ' → '
+                        . $t->translate('salesorder') . ' → '
+                        . $t->translate('invoice')])
+                ->render(),
+            encodeHeader: false,
+            content: static function (Inv $model) use ($t): string {
+                if ($model->getSoId() !== null) {
+                    return '<span class="badge bg-primary" data-bs-toggle="tooltip" title="'
+                        . Html::encode(
+                            $t->translate('quote') . ' → '
+                            . $t->translate('salesorder') . ' → '
+                            . $t->translate('invoice')
+                            . ' (' . $t->translate('peppol') . ')')
+                        . '">🔀</span>';
+                }
+                if ($model->getQuoteId() !== null) {
+                    return '<span class="badge bg-info text-dark" data-bs-toggle="tooltip" title="'
+                        . Html::encode(
+                            $t->translate('quote') . ' → '
+                            . $t->translate('invoice'))
+                        . '">💬→📄</span>';
+                }
+                return '<span class="badge bg-secondary" data-bs-toggle="tooltip" title="'
+                    . Html::encode($t->translate('invoice'))
+                    . '">📄</span>';
+            },
+            encodeContent: false,
+            withSorting: false,
+        );
+    }
+
+    private function buildFamilyNameColumn(): DataColumn
+    {
+        $t = $this->translator;
+        return new DataColumn(
+            property: 'filterFamilyName',
+            header: $t->translate('family.name'),
+            content: static fn(Inv $model): string => $model->getFirstItemFamilyName(),
+            encodeContent: false,
+            filter: DropdownFilter::widget()
+                ->addAttributes(['id' => 'filter-family-name', 'name' => 'number',
+                    'class' => self::FILTER_CLASS,
+                    'aria-label' => 'Filter by family name',
+                    'title' => $t->translate('family.name')])
+                ->optionsData($this->filterOptions->familyName),
+            withSorting: false,
+        );
+    }
+
+    private function buildYearMonthColumn(): DataColumn
+    {
+        $t      = $this->translator;
+        $header = $t->translate(
+            'datetime.immutable.date.created.mySql.format.year.month.filter');
+        return new DataColumn(
+            property: 'filterDateCreatedYearMonth',
+            header: $header,
+            content: static fn(Inv $model): string =>
+                $model->getDateCreated()->format('Y-m-d'),
+            filter: DropdownFilter::widget()
+                ->addAttributes(['id' => 'filter-year-month', 'name' => 'number',
+                    'class' => self::FILTER_CLASS,
+                    'aria-label' => 'Filter by year-month',
+                    'title' => $header])
+                ->optionsData($this->filterOptions->yearMonth),
+            withSorting: false,
+            visible: $this->visible,
+        );
+    }
+
+    private function buildClientActiveColumn(): DataColumn
+    {
+        $ug = $this->urlGenerator;
+        $t  = $this->translator;
+        return new DataColumn(
+            header: (new Label())->content('🔛️')
+                ->addAttributes(['data-bs-toggle' => 'tooltip',
+                    'title' => $t->translate('active')])
+                ->render(),
+            encodeHeader: false,
+            property: 'id',
+            content: static fn(Inv $model): A =>
+                (new A())
+                    ->addAttributes(['style' => 'text-decoration:none'])
+                    ->href($ug->generate('client/edit', [
+                        'id' => $model->getClient()?->reqId(), 'origin' => 'inv',
+                    ]))
+                    ->content($model->getClient()?->getClientActive() ? '✅' : '❌'),
+        );
+    }
+
+    private function buildClientFullNameColumn(): DataColumn
+    {
+        $t = $this->translator;
+        return new DataColumn(
+            property: 'filterClient',
+            header: $t->translate('client'),
+            content: static fn(Inv $model): string =>
+                Html::encode($model->getClient()?->getClientFullName()),
+            encodeContent: false,
+            filter: DropdownFilter::widget()
+                ->addAttributes(['id' => 'filter-client', 'name' => 'client_id',
+                    'class' => self::FILTER_CLASS,
+                    'aria-label' => 'Filter by client',
+                    'title' => $t->translate('client')])
+                ->optionsData($this->filterOptions->clients),
+            withSorting: false,
+        );
+    }
+
+    private function buildClientGroupColumn(): DataColumn
+    {
+        $t = $this->translator;
+        return new DataColumn(
+            property: 'filterClientGroup',
+            header: $t->translate('client.group'),
+            content: static fn(Inv $model): string =>
+                $model->getClient()?->getClientGroup() ?? '',
+            filter: DropdownFilter::widget()
+                ->addAttributes(['id' => 'filter-client-group', 'name' => 'number',
+                    'class' => self::FILTER_CLASS,
+                    'aria-label' => 'Filter by client group',
+                    'title' => $t->translate('client.group')])
+                ->optionsData($this->filterOptions->clientGroup),
+            withSorting: false,
+        );
+    }
+
+    private function buildDateModifiedColumn(): DataColumn
+    {
+        $t = $this->translator;
+        return new DataColumn('date_modified',
+            header: $t->translate('datetime.immutable.date.modified'),
+            content: static function (Inv $m): Label {
+                $cls = $m->getDateModified() <> $m->getDateCreated()
+                    ? 'badge bg-danger' : self::BDG_BG_SCS;
+                return (new Label())
+                    ->attributes(['class' => $cls])
+                    ->content(Html::encode($m->getDateModified()->format('Y-m-d')));
+            },
+            encodeContent: false,
+            visible: $this->visible);
+    }
+
+    private function buildDateDueColumn(): DataColumn
+    {
+        $t = $this->translator;
+        return new DataColumn('date_due',
+            header: $t->translate('due.date'),
+            content: static function (Inv $m): Label {
+                $now = new \DateTimeImmutable('now');
+                $due = $m->getDateDue();
+                return (new Label())
+                    ->attributes(['class' => $due > $now
+                        ? self::BDG_BG_SCS : self::BDG_TXT_DARK])
+                    ->content(Html::encode($due->format('Y-m-d')));
+            },
+            encodeContent: false,
+            withSorting: true,
+            visible: $this->visible);
     }
 
     private function buildCheckboxColumn(): CheckboxColumn
