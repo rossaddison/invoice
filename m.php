@@ -736,6 +736,7 @@ body{background:#0d1117;color:#e6edf3;min-height:100vh}
 #out-panel{position:fixed;bottom:0;left:0;right:0;background:#0d1117;border-top:2px solid #30363d;z-index:1050;display:none;max-height:55vh}
 .out-hdr{padding:.4rem 1rem;border-bottom:1px solid #30363d;display:flex;justify-content:space-between;align-items:center;background:#161b22}
 #out-pre{margin:0;padding:1rem;font-size:.82em;font-family:'Courier New',monospace;overflow-y:auto;max-height:calc(55vh - 38px);color:#e6edf3;background:#0d1117;white-space:pre-wrap;word-break:break-word}
+#out-pre span[style*="background"]{padding:.1em .35em;border-radius:3px}
 body.panel-open{padding-bottom:55vh}
 .divider-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:#8b949e;margin:1rem 0 .4rem;padding-top:.8rem;border-top:1px solid #30363d}
 .rule-badge{cursor:pointer;font-size:.72em;font-family:monospace}
@@ -1380,13 +1381,23 @@ function clearSonarToken() {
 // ── ANSI colour codes → HTML ─────────────────────────────────────────────────
 // Maps SGR parameter numbers to inline CSS. null = reset.
 const ANSI_STYLES = {
-    '0':null,  '1':'font-weight:bold',  '3':'font-style:italic',
+    // Attributes
+    '0':null, '1':'font-weight:bold', '3':'font-style:italic', '4':'text-decoration:underline',
+    '22':null, '23':null, '24':null,
+    // Standard foreground (30-37) + default (39) + bright (90-97)
     '30':'color:#666',       '31':'color:#f85149',  '32':'color:#3fb950',
     '33':'color:#d29922',    '34':'color:#58a6ff',  '35':'color:#bc8cff',
     '36':'color:#56d364',    '37':'color:#e6edf3',  '39':null,
     '90':'color:#8b949e',    '91':'color:#ff7b72',  '92':'color:#7ee787',
     '93':'color:#ffa657',    '94':'color:#79c0ff',  '95':'color:#d2a8ff',
     '96':'color:#39c5cf',    '97':'color:#f0f6fc',
+    // Standard background (40-47) + default (49) + bright (100-107)
+    '40':'background:#000',      '41':'background:#c0392b',  '42':'background:#27ae60',
+    '43':'background:#b8860b',   '44':'background:#2980b9',  '45':'background:#8e44ad',
+    '46':'background:#16a085',   '47':'background:#bdc3c7',  '49':null,
+    '100':'background:#555',     '101':'background:#ff7b72', '102':'background:#7ee787',
+    '103':'background:#ffa657',  '104':'background:#79c0ff', '105':'background:#d2a8ff',
+    '106':'background:#39c5cf',  '107':'background:#f0f6fc',
 };
 
 function ansiToHtml(raw) {
