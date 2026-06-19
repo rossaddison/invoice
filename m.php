@@ -583,6 +583,39 @@ foreach ($SONAR_RULES as $ruleKey => $desc) {
     $SONAR_RULES_BY_LANG[$lang][$num] = $desc;
 }
 
+// ── API: live failing rules from SonarCloud ──────────────────────────────────
+// Returns JSON: {"php":{"1192":"String literals…"},  "typescript":{"7764":"globalThis…"}}
+if (isset($_GET['api']) && $_GET['api'] === 'failing_rules') {
+    header('Content-Type: application/json; charset=utf-8');
+    $token = $_SESSION['sonar_token'] ?? '';
+    if ($token === '') {
+        echo json_encode(['error' => 'no_token']);
+        exit;
+    }
+    $baseEnv  = is_array($e = getenv()) ? $e : [];
+    $childEnv = array_merge($baseEnv, ['SONAR_TOKEN' => $token]);
+    $descr    = [0 => ['file','nul','r'], 1 => ['pipe','w'], 2 => ['file','nul','w']];
+    $proc     = proc_open(
+        'php ' . escapeshellarg(__DIR__ . '/sonar-issues.php') . ' --grouped',
+        $descr, $pipes, __DIR__, $childEnv
+    );
+    $out = '';
+    if (is_resource($proc)) {
+        $out = stream_get_contents($pipes[1]);
+        fclose($pipes[1]);
+        proc_close($proc);
+    }
+    // Parse lines like: "php:S1192       42  String literals duplicated 3+"
+    $grouped = [];
+    foreach (explode("\n", $out) as $line) {
+        if (preg_match('/^([a-zA-Z]+):S(\d+)\s+\d+\s+(.+)$/', trim($line), $m)) {
+            $grouped[$m[1]][$m[2]] = trim($m[3]);
+        }
+    }
+    echo json_encode($grouped);
+    exit;
+}
+
 // ── POST handler (AJAX command runner) ───────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: text/plain; charset=utf-8');
@@ -1290,7 +1323,7 @@ function showParamModal(key, def) {
           <div class="d-flex gap-2 mb-2">
             <select id="${langSelId}" class="form-select form-select-sm"
                     style="background:#0d1117;border-color:#30363d;color:#e6edf3;width:auto"
-                    onchange="refreshCascadeNums('${langSelId}','${numSelId}','${p}')">
+                    onchange="refreshCascadeNums('${langSelId}','${numSelId}')">
               ${langOpts}
             </select>
             <span class="font-monospace text-secondary align-self-center">:S</span>
@@ -1342,25 +1375,50 @@ function showParamModal(key, def) {
         </div>`;
     }).join('');
     document.getElementById('paramModal').addEventListener('shown.bs.modal', () => {
-        // Populate the first cascade dropdown's dependent select on open
+        // For cascade params, fetch live failing rules from SonarCloud
         document.querySelectorAll('#paramModalBody [data-cascade-lang]').forEach(hidden => {
-            const langSel = document.getElementById(hidden.dataset.cascadeLang);
-            if (langSel) langSel.dispatchEvent(new Event('change'));
+            fetchFailingRules(hidden.dataset.cascadeLang, hidden.dataset.cascadeNum);
         });
         body.querySelector('select, input')?.focus();
     }, { once: true });
     paramModal.show();
 }
 
-function refreshCascadeNums(langSelId, numSelId, paramKey) {
-    const lang   = document.getElementById(langSelId)?.value ?? '';
-    const numSel = document.getElementById(numSelId);
-    if (!numSel) return;
-    const data = CMDS[currentCmd]?.paramCascade?.[paramKey] ?? {};
-    const nums = data[lang] ?? {};
-    numSel.innerHTML = Object.entries(nums)
-        .map(([n, d]) => `<option value="${n}">S${n} — ${d}</option>`)
-        .join('');
+function refreshCascadeNums(langSelId, numSelId) {
+    const langSel = document.getElementById(langSelId);
+    const numSel  = document.getElementById(numSelId);
+    if (!langSel || !numSel) return;
+    const data = langSel._liveData ?? {};
+    const nums = data[langSel.value] ?? {};
+    numSel.innerHTML = Object.keys(nums).length
+        ? Object.entries(nums).map(([n, d]) => `<option value="${n}">S${n} — ${d}</option>`).join('')
+        : '<option disabled>No failing rules for this language</option>';
+}
+
+async function fetchFailingRules(langSelId, numSelId) {
+    const langSel = document.getElementById(langSelId);
+    const numSel  = document.getElementById(numSelId);
+    if (!langSel || !numSel) return;
+    numSel.innerHTML = '<option disabled>Loading from SonarCloud…</option>';
+    try {
+        const res  = await fetch('?api=failing_rules');
+        const data = await res.json();
+        if (data.error === 'no_token') {
+            numSel.innerHTML = '<option disabled>Set SonarCloud token first</option>';
+            return;
+        }
+        const langs = Object.keys(data);
+        if (langs.length === 0) {
+            numSel.innerHTML = '<option disabled>No failing rules found</option>';
+            return;
+        }
+        // Store live data on the element so refreshCascadeNums can read it
+        langSel._liveData = data;
+        langSel.innerHTML = langs.map(l => `<option value="${l}">${l}</option>`).join('');
+        refreshCascadeNums(langSelId, numSelId);
+    } catch {
+        numSel.innerHTML = '<option disabled>Error contacting SonarCloud</option>';
+    }
 }
 
 function submitParams() {
