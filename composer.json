@@ -154,7 +154,7 @@
         "codeception/module-cli": "^2.0.1",
         "codeception/module-phpbrowser": "^4.0.0",
         "dg/bypass-finals": "^1.10.2",
-        "friendsofphp/php-cs-fixer": "^3.95.8",
+        "friendsofphp/php-cs-fixer": "^3.95.10",
         "google/protobuf": ">=5.35.1",
         "guzzlehttp/promises": ">=2.5.0",
         "phpunit/phpunit": ">=13",
