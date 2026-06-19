@@ -301,7 +301,7 @@ $CMDS = [
     'sonar_sev'         => ['cmd' => 'php sonar-issues.php --severity={sev}',             'env' => ['SONAR_TOKEN'], 'params' => ['sev' => 'BLOCKER / CRITICAL / MAJOR / MINOR / INFO']],
     'sonar_hotspots'    => ['cmd' => 'php sonar-issues.php --hotspots',                   'env' => ['SONAR_TOKEN']],
     'sonar_combined'    => ['cmd' => 'php sonar-issues.php --type={type} --severity={sev}','env' => ['SONAR_TOKEN'], 'params' => ['type' => 'Type', 'sev' => 'Severity']],
-    'sonar_rule'        => ['cmd' => 'php sonar-issues.php --rule={rule}',                'env' => ['SONAR_TOKEN'], 'params' => ['rule' => 'Rule number'], 'paramPrefix' => ['rule' => 'php:S']],
+    'sonar_rule'        => ['cmd' => 'php sonar-issues.php --rule={rule}',                'env' => ['SONAR_TOKEN'], 'params' => ['rule' => 'Rule number'], 'paramSelect' => ['rule' => ['php','typescript','javascript','css','xml']], 'paramSelectSuffix' => ['rule' => ':S']],
     'sonar_file'        => ['cmd' => 'php sonar-issues.php --file={file}',                'env' => ['SONAR_TOKEN'], 'params' => ['file' => 'File path (e.g. src/Invoice/Inv/InvController.php)']],
     'sonar_reliability' => ['cmd' => 'php sonar-issues.php --type=BUG',                  'env' => ['SONAR_TOKEN']],
     'sonar_rely_grp'    => ['cmd' => 'php sonar-issues.php --type=BUG --grouped',        'env' => ['SONAR_TOKEN']],
@@ -701,9 +701,11 @@ $pageTitle = $menuDef ? $menuDef['title'] : 'Invoice System (Yii3-i)';
 $jsCommands = [];
 foreach ($CMDS as $k => $def) {
     $jsCommands[$k] = [
-        'params'       => array_keys($def['params'] ?? []),
-        'paramLabels'  => $def['params'] ?? [],
-        'paramPrefix'  => $def['paramPrefix'] ?? [],
+        'params'            => array_keys($def['params'] ?? []),
+        'paramLabels'       => $def['params'] ?? [],
+        'paramPrefix'       => $def['paramPrefix'] ?? [],
+        'paramSelect'       => $def['paramSelect'] ?? [],
+        'paramSelectSuffix' => $def['paramSelectSuffix'] ?? [],
         'confirm'     => $def['confirm'] ?? null,
         'bg'          => !empty($def['bg']),
         'needsSonar'  => in_array('SONAR_TOKEN', $def['env'] ?? [], true),
@@ -1256,18 +1258,40 @@ function showParamModal(key, def) {
     document.getElementById('paramModalTitle').textContent = key;
     const body = document.getElementById('paramModalBody');
     body.innerHTML = def.params.map(p => {
-        const prefix = def.paramPrefix?.[p] ?? '';
-        const hint   = prefix
-            ? `<span class="d-block font-monospace small text-secondary mb-1">${prefix}<span style="color:#ffa657">####</span></span>`
-            : '';
+        const selOptions = def.paramSelect?.[p];
+        const selSuffix  = def.paramSelectSuffix?.[p] ?? '';
+        const prefix     = def.paramPrefix?.[p] ?? '';
+
+        let prefixHtml = '';
+        let selId      = '';
+        if (selOptions) {
+            selId = `p_${p}_sel`;
+            const opts = selOptions
+                .map(o => `<option value="${o}">${o}</option>`)
+                .join('');
+            prefixHtml = `
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <select id="${selId}" class="form-select form-select-sm"
+                    style="background:#0d1117;border-color:#30363d;color:#e6edf3;width:auto">
+              ${opts}
+            </select>
+            <span class="font-monospace text-secondary">${selSuffix}<span style="color:#ffa657">####</span></span>
+          </div>`;
+        } else if (prefix) {
+            prefixHtml = `<span class="d-block font-monospace small text-secondary mb-1">${prefix}<span style="color:#ffa657">####</span></span>`;
+        }
+
         return `
         <div class="mb-3">
           <label class="form-label small text-secondary">${def.paramLabels[p]}</label>
-          ${hint}
+          ${prefixHtml}
           <input type="text" class="form-control form-control-sm"
                  style="background:#0d1117;border-color:#30363d;color:#e6edf3"
-                 id="p_${p}" data-pk="${p}" data-prefix="${prefix}"
-                 placeholder="${prefix ? 'e.g. 1192' : ''}"
+                 id="p_${p}" data-pk="${p}"
+                 data-prefix="${prefix}"
+                 data-sel-id="${selId}"
+                 data-sel-suffix="${selSuffix}"
+                 placeholder="${selOptions || prefix ? 'e.g. 1192' : ''}"
                  onkeydown="if(event.key==='Enter')submitParams()">
         </div>`;
     }).join('');
@@ -1280,7 +1304,15 @@ function showParamModal(key, def) {
 function submitParams() {
     const params = {};
     document.querySelectorAll('#paramModalBody [data-pk]').forEach(el => {
-        params[el.dataset.pk] = (el.dataset.prefix ?? '') + el.value;
+        const selId = el.dataset.selId;
+        let prefix;
+        if (selId) {
+            const sel = document.getElementById(selId);
+            prefix = (sel ? sel.value : '') + (el.dataset.selSuffix ?? '');
+        } else {
+            prefix = el.dataset.prefix ?? '';
+        }
+        params[el.dataset.pk] = prefix + el.value;
     });
     paramModal.hide();
     runDirect(currentCmd, params);
