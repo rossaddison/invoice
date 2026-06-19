@@ -41,6 +41,9 @@ c3.php
 # Code Style
 php-cs-fixer.cache
 
+# Snyk
+snyk-report.txt
+
 # Angular
 .angular/
 
