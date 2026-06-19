@@ -1290,7 +1290,7 @@ function showParamModal(key, def) {
           <div class="d-flex gap-2 mb-2">
             <select id="${langSelId}" class="form-select form-select-sm"
                     style="background:#0d1117;border-color:#30363d;color:#e6edf3;width:auto"
-                    onchange="refreshCascadeNums('${langSelId}','${numSelId}',${JSON.stringify(cascadeData)})">
+                    onchange="refreshCascadeNums('${langSelId}','${numSelId}','${p}')">
               ${langOpts}
             </select>
             <span class="font-monospace text-secondary align-self-center">:S</span>
@@ -1352,10 +1352,11 @@ function showParamModal(key, def) {
     paramModal.show();
 }
 
-function refreshCascadeNums(langSelId, numSelId, data) {
+function refreshCascadeNums(langSelId, numSelId, paramKey) {
     const lang   = document.getElementById(langSelId)?.value ?? '';
     const numSel = document.getElementById(numSelId);
     if (!numSel) return;
+    const data = CMDS[currentCmd]?.paramCascade?.[paramKey] ?? {};
     const nums = data[lang] ?? {};
     numSel.innerHTML = Object.entries(nums)
         .map(([n, d]) => `<option value="${n}">S${n} — ${d}</option>`)
