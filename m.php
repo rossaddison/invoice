@@ -161,6 +161,12 @@ function seedVulnDb(PDO $db): void
          'composer.lock',
          'Transitive dep via rossaddison/yii-auth-client; project uses phpseclib3 directly in GovUk.php — JWSVerifier and JWEDecrypter are never instantiated; no attack vector reachable. No patched version as at June 2026. Update snyk_id once Snyk assigns a SNYK-PHP-xxx ID.',
          'https://cwe.mitre.org/data/definitions/290.html', 1, 0, 'Algorithm Confusion — JWT JWS/JWE'],
+        ['GHSA-3prj-6hqw-cm82',
+         'PBES2 p2c unbounded iteration count — CPU-amplification DoS (web-token/jwt-framework)',
+         'HIGH','Resolved — Fixed in installed version 4.1.7',
+         'composer.lock',
+         'Affected versions <= 4.1.6. Installed version is 4.1.7, which already contains the fix: DEFAULT_MAX_COUNT = 1_000_000 constant and p2c > max_count guard in PBES2AESKW::checkHeaderAdditionalParameters(). Additionally, the project never registers PBES2 algorithms — GovUk.php uses phpseclib3 directly. Both the installed vendor and the 4.2.x upstream branch contain the fix; no PR required.',
+         'https://cwe.mitre.org/data/definitions/400.html', 0, 0, 'Uncontrolled Resource Consumption — PBKDF2 DoS'],
     ];
     $stmt = $db->prepare(
         'INSERT OR IGNORE INTO vuln_resolved
