@@ -811,7 +811,7 @@ final class AuthController
         return $this->webService->getRedirectResponse('invoice/index');
     }
 
-    private function redirectToAdminMustMakeActive(): ResponseInterface
+    protected function redirectToAdminMustMakeActive(): ResponseInterface
     {
         return $this->webService->getRedirectResponse('site/adminmustmakeactive',
                 ['_language' => 'en']);

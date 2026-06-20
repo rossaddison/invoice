@@ -385,7 +385,7 @@ final class InvController extends BaseController
         $this->flashMessage($level, $message);
     }
 
-    private function displayEditDeleteButtons(bool $read_only): bool
+    protected function displayEditDeleteButtons(bool $read_only): bool
     {
         if (!$read_only
                 && ($this->sR->getSetting('disable_read_only') === (string) 0)) {
@@ -394,7 +394,7 @@ final class InvController extends BaseController
         return $this->sR->getSetting('disable_read_only') === (string) 1;
     }
 
-    private function flashNoEnabledGateways(
+    protected function flashNoEnabledGateways(
         array $enabled_gateways, string $message): void
     {
         if (empty(array_filter($enabled_gateways))) {
