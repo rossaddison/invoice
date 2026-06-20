@@ -278,6 +278,9 @@ $CMDS = [
     'test_cc_func'      => ['cmd' => 'php vendor/bin/codecept run Functional'],
     'test_cc_acc'       => ['cmd' => 'php vendor/bin/codecept run Acceptance'],
     'test_cc_all'       => ['cmd' => 'php vendor/bin/codecept run'],
+    'testo_all'         => ['cmd' => 'php vendor/bin/testo'],
+    'testo_unit'        => ['cmd' => 'php vendor/bin/testo --suite=Unit'],
+    'testo_sources'     => ['cmd' => 'php vendor/bin/testo --suite=Sources'],
 
     // PHP-CS-Fixer
     'fixer_dry'         => ['cmd' => 'php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --show-progress=bar --verbose --ansi'],
@@ -428,7 +431,7 @@ $MENUS = [
         ],
     ],
     'testing' => [
-        'title' => 'Testing — PHPUnit + Codeception',
+        'title' => 'Testing — PHPUnit + Codeception + Testo',
         'items' => [
             ['Entity Tests (Tests/Unit/Invoice/Entity/)', 'test_entity'],
             ['All Unit Tests (Tests/Unit/)',              'test_unit'],
@@ -436,6 +439,9 @@ $MENUS = [
             ['Codeception: Functional Suite',             'test_cc_func'],
             ['Codeception: Acceptance Suite',             'test_cc_acc'],
             ['Codeception: All Suites',                   'test_cc_all'],
+            ['Testo: All Suites (Tests/Testo/ + src/)',   'testo_all'],
+            ['Testo: Unit Suite (Tests/Testo/)',          'testo_unit'],
+            ['Testo: Sources Suite (inline tests)',       'testo_sources'],
         ],
     ],
     'fixer' => [
@@ -464,6 +470,7 @@ $MENUS = [
     'sonar' => [
         'title' => 'SonarCloud — rossaddison_invoice',
         'items' => [
+            ['CI Pipeline Progress',          '__nav__:ci_pipeline'],
             ['All Open Issues',              'sonar_all'],
             ['Issues on a Specific PR',      'sonar_pr'],
             ['Filter by Type',               'sonar_type'],
@@ -618,6 +625,109 @@ if (isset($_GET['api']) && $_GET['api'] === 'failing_rules') {
     exit;
 }
 
+// ── API: CI pipeline status ──────────────────────────────────────────────────
+// Polls GitHub Actions (invoice_build.yml) and SonarCloud CE task in one call.
+if (isset($_GET['api']) && $_GET['api'] === 'ci_status') {
+    header('Content-Type: application/json; charset=utf-8');
+    header('Cache-Control: no-cache, no-store');
+
+    $ghToken    = $_SESSION['github_token'] ?? '';
+    $sonarToken = $_SESSION['sonar_token']  ?? '';
+
+    $ciGet = static function(string $url, array $headers): array {
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => 8,
+            CURLOPT_HTTPHEADER     => $headers,
+            CURLOPT_USERAGENT      => 'rossaddison-invoice-devtools/1.0',
+            CURLOPT_FOLLOWLOCATION => true,
+        ]);
+        $raw = curl_exec($ch);
+        curl_close($ch);
+        if (!is_string($raw) || $raw === '') {
+            return [];
+        }
+        $data = json_decode($raw, true);
+        return is_array($data) ? $data : [];
+    };
+
+    $ghHeaders = [
+        'Accept: application/vnd.github+json',
+        'X-GitHub-Api-Version: 2022-11-28',
+    ];
+    if ($ghToken !== '') {
+        $ghHeaders[] = 'Authorization: Bearer ' . $ghToken;
+    }
+    $sonarHeaders = $sonarToken !== '' ? ['Authorization: Bearer ' . $sonarToken] : [];
+
+    // 1. Latest invoice_build run on main
+    $runs = $ciGet(
+        'https://api.github.com/repos/rossaddison/invoice/actions/workflows'
+        . '/invoice_build.yml/runs?per_page=1&branch=main',
+        $ghHeaders
+    );
+    $run    = $runs['workflow_runs'][0] ?? null;
+    $runOut = null;
+    $jobs   = [];
+
+    if ($run !== null) {
+        $runOut = [
+            'id'          => $run['id'],
+            'name'        => $run['name']                    ?? '',
+            'status'      => $run['status']                  ?? '',
+            'conclusion'  => $run['conclusion']              ?? null,
+            'html_url'    => $run['html_url']                ?? '',
+            'created_at'  => $run['created_at']              ?? '',
+            'head_commit' => $run['head_commit']['message']  ?? '',
+        ];
+        // 2. Jobs for this run
+        $jobData = $ciGet(
+            'https://api.github.com/repos/rossaddison/invoice/actions/runs/'
+            . (int) $run['id'] . '/jobs',
+            $ghHeaders
+        );
+        foreach ($jobData['jobs'] ?? [] as $j) {
+            $jobs[] = [
+                'name'       => $j['name']       ?? '',
+                'status'     => $j['status']     ?? '',
+                'conclusion' => $j['conclusion'] ?? null,
+                'html_url'   => $j['html_url']   ?? '',
+            ];
+        }
+    }
+
+    // 3. SonarCloud CE task (most recent)
+    $ceData = $ciGet(
+        'https://sonarcloud.io/api/ce/activity?component=rossaddison_invoice&ps=1',
+        $sonarHeaders
+    );
+    $ceTask = $ceData['tasks'][0] ?? null;
+    $ceOut  = $ceTask !== null ? [
+        'status'       => $ceTask['status']       ?? '',
+        'submittedAt'  => $ceTask['submittedAt']  ?? '',
+        'executedAt'   => $ceTask['executedAt']   ?? null,
+        'errorMessage' => $ceTask['errorMessage'] ?? null,
+    ] : null;
+
+    // 4. Quality gate
+    $gateData = $ciGet(
+        'https://sonarcloud.io/api/qualitygates/project_status?projectKey=rossaddison_invoice',
+        $sonarHeaders
+    );
+    $gateOut = isset($gateData['projectStatus']) ? [
+        'status' => $gateData['projectStatus']['status'] ?? 'NONE',
+    ] : null;
+
+    echo json_encode([
+        'run'        => $runOut,
+        'jobs'       => $jobs,
+        'sonar_ce'   => $ceOut,
+        'sonar_gate' => $gateOut,
+    ]);
+    exit;
+}
+
 // ── POST handler (AJAX command runner) ───────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: text/plain; charset=utf-8');
@@ -739,6 +849,7 @@ $menu    = $_GET['menu'] ?? 'main';
 $isMain  = ($menu === 'main');
 $menuDef = $isMain ? null : ($MENUS[$menu] ?? null);
 $pageTitle = $menuDef ? $menuDef['title'] : 'Invoice System (Yii3-i)';
+if ($menu === 'ci_pipeline') { $pageTitle = 'CI Pipeline Progress'; }
 
 // Cascade data keyed by command → param name.
 // ['rule' => ['php' => ['1192' => 'desc', ...], ...]]
@@ -821,7 +932,7 @@ body.panel-open{padding-bottom:55vh}
     ['node',       'Node',         'npm packages'],
     ['typescript', 'TypeScript',   'TS build tools'],
     ['angular',    'Angular',      'Angular CLI'],
-    ['testing',    'Testing',      'PHPUnit + Codeception'],
+    ['testing',    'Testing',      'PHPUnit + Codeception + Testo'],
     ['snyk',       'Snyk',         'Security scanning'],
     ['fixer',      'PHP-CS-Fixer', 'Code style fixer'],
     ['phpcs',      'PHPCS',        'Code style checker'],
@@ -1149,6 +1260,65 @@ body.panel-open{padding-bottom:55vh}
   </div>
 
 <?php endif; // sqliteAvailable() else ?>
+<?php elseif ($menu === 'ci_pipeline'):
+  $hasGhToken  = !empty($_SESSION['github_token']);
+  $hasSonarTok = !empty($_SESSION['sonar_token']);
+?>
+  <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <h5 class="mb-0">CI Pipeline — invoice build</h5>
+    <div class="d-flex gap-2 align-items-center flex-wrap">
+      <span id="cp-last-updated" class="text-secondary small"></span>
+      <span id="cp-auto-badge" class="badge bg-primary" style="cursor:pointer"
+            onclick="CiPipeline.toggleAuto()" title="Click to pause / resume">Auto ↺ 5s</span>
+      <button class="btn btn-sm btn-outline-primary" onclick="CiPipeline.refresh()">↺ Refresh</button>
+      <a href="?menu=sonar" class="btn btn-sm btn-outline-secondary">← SonarCloud</a>
+    </div>
+  </div>
+
+  <?php if (!$hasGhToken): ?>
+  <div class="p-2 mb-3 small" style="background:#1f1a00;border:1px solid #d29922;border-radius:6px;color:#d29922">
+    ⚠ No GitHub token — unauthenticated API is limited to 60 req/hr (polling uses ~720/hr at 5 s intervals).
+    Set one via <a href="?menu=peppol" style="color:#ffa657">Peppol → GitHub Token</a>.
+  </div>
+  <?php endif; ?>
+  <?php if (!$hasSonarTok): ?>
+  <div class="p-2 mb-3 small" style="background:#1f1a00;border:1px solid #d29922;border-radius:6px;color:#d29922">
+    ⚠ No SonarCloud token — CE task and quality gate status will be unavailable.
+    Set one in <a href="?menu=sonar" style="color:#ffa657">SonarCloud</a>.
+  </div>
+  <?php endif; ?>
+
+  <!-- Stage labels -->
+  <div class="d-flex mb-1" style="font-size:.72em;color:#8b949e;text-align:center">
+    <div style="flex:1">Queued</div>
+    <div style="flex:1">SonarCloud Job</div>
+    <div style="flex:1">PHP Tests ×4</div>
+    <div style="flex:1">CE Analysis</div>
+    <div style="flex:1">Gate</div>
+  </div>
+  <!-- 5-segment progress bar (flex, 2 px gaps, distinct colours per state) -->
+  <div class="d-flex gap-1 mb-4" style="height:30px">
+<?php foreach (range(1, 5) as $seg): ?>
+    <div id="cp-bar-<?= $seg ?>"
+         style="flex:1;border-radius:4px;background:#21262d;display:flex;align-items:center;
+                justify-content:center;font-size:.82em;font-weight:700;
+                transition:background .35s,color .35s">○</div>
+<?php endforeach; ?>
+  </div>
+
+  <!-- Last commit hint -->
+  <div id="cp-commit" class="mb-3 small" style="color:#8b949e;min-height:1.2em"></div>
+
+  <!-- GitHub Actions jobs -->
+  <div id="cp-jobs" class="mb-3 p-3" style="background:#161b22;border:1px solid #30363d;border-radius:6px;font-size:.82em">
+    <span class="text-secondary">Loading…</span>
+  </div>
+
+  <!-- SonarCloud CE task + quality gate -->
+  <div id="cp-gate" class="p-3" style="background:#161b22;border:1px solid #30363d;border-radius:6px;font-size:.82em">
+    <span class="text-secondary">Loading…</span>
+  </div>
+
 <?php elseif ($menuDef): ?>
 
   <h5 class="mb-3"><?= htmlspecialchars($pageTitle) ?></h5>
@@ -1638,6 +1808,203 @@ function copyOutput() {
         }, 1800);
     });
 }
+
+// ── CI Pipeline tracker ───────────────────────────────────────────────────────
+const CiPipeline = {
+    _timer: null,
+    _auto:  true,
+
+    init() {
+        this.refresh();
+        this._timer = setInterval(() => { if (this._auto) this.refresh(); }, 5000);
+    },
+
+    toggleAuto() {
+        this._auto = !this._auto;
+        const b = document.getElementById('cp-auto-badge');
+        if (!b) return;
+        if (this._auto) {
+            b.textContent = 'Auto ↺ 5s';
+            b.className   = 'badge bg-primary';
+        } else {
+            b.textContent = 'Paused';
+            b.className   = 'badge bg-secondary';
+        }
+    },
+
+    async refresh() {
+        try {
+            const res  = await fetch('?api=ci_status');
+            const data = await res.json();
+            this.render(data);
+        } catch { /* keep polling on transient network error */ }
+    },
+
+    render(d) {
+        const run  = d.run        ?? null;
+        const jobs = d.jobs       ?? [];
+        const ce   = d.sonar_ce   ?? null;
+        const gate = d.sonar_gate ?? null;
+
+        // ── Stage statuses ───────────────────────────────────────────────────
+        // s1: workflow queued/running
+        const s1 = run
+            ? (run.status === 'queued' ? 'running' : 'success')
+            : 'pending';
+
+        // s2: SonarCloud job (name === 'SonarCloud' in invoice_build.yml)
+        const sonarJob = jobs.find(j => j.name === 'SonarCloud');
+        const s2 = !sonarJob ? 'pending'
+            : sonarJob.status === 'completed'
+                ? (sonarJob.conclusion === 'success' ? 'success' : 'failed')
+                : 'running';
+
+        // s3: PHP test matrix (4 jobs named "PHP x.y-os")
+        const testJobs = jobs.filter(j => j.name.startsWith('PHP '));
+        const s3 = testJobs.length === 0 ? 'pending'
+            : testJobs.every(j => j.status === 'completed')
+                ? (testJobs.every(j => j.conclusion === 'success') ? 'success' : 'failed')
+                : 'running';
+
+        // s4: SonarCloud CE background task
+        const s4 = !ce ? 'pending'
+            : ce.status === 'SUCCESS' ? 'success'
+            : ce.status === 'FAILED'  ? 'failed'
+            : 'running';
+
+        // s5: quality gate
+        const s5 = !gate || gate.status === 'NONE' ? 'pending'
+            : gate.status === 'OK'    ? 'success'
+            : gate.status === 'ERROR' ? 'failed'
+            : gate.status === 'WARN'  ? 'warn'
+            : 'pending';
+
+        // ── Bar colours ──────────────────────────────────────────────────────
+        const palette = {
+            pending: { bg: '#21262d', fg: '#484f58' },
+            running: { bg: '#1b3a5c', fg: '#79c0ff' },
+            success: { bg: '#1a3a2a', fg: '#3fb950' },
+            failed:  { bg: '#3a1a1a', fg: '#f85149' },
+            warn:    { bg: '#2a2000', fg: '#d29922' },
+        };
+        const icons = { pending:'○', running:'⟳', success:'✓', failed:'✗', warn:'⚠' };
+
+        [s1, s2, s3, s4, s5].forEach((s, i) => {
+            const bar = document.getElementById(`cp-bar-${i + 1}`);
+            if (!bar) return;
+            const { bg, fg } = palette[s] ?? palette.pending;
+            bar.style.background = bg;
+            bar.style.color      = fg;
+            bar.textContent      = icons[s] ?? '○';
+        });
+
+        // ── Commit hint ──────────────────────────────────────────────────────
+        const commitEl = document.getElementById('cp-commit');
+        if (commitEl && run) {
+            const ts   = run.created_at ? new Date(run.created_at).toLocaleString() : '';
+            const link = run.html_url
+                ? ` — <a href="${this.esc(run.html_url)}" target="_blank" style="color:#58a6ff">view run ↗</a>`
+                : '';
+            const msg  = run.head_commit
+                ? `"${this.esc(run.head_commit.split('\n')[0].slice(0, 80))}" `
+                : '';
+            commitEl.innerHTML = msg + this.esc(ts) + link;
+        }
+
+        // ── Jobs table ───────────────────────────────────────────────────────
+        this.renderJobs(jobs, run);
+
+        // ── CE + Gate panel ──────────────────────────────────────────────────
+        this.renderGate(ce, gate);
+
+        // ── Timestamp ────────────────────────────────────────────────────────
+        const tsEl = document.getElementById('cp-last-updated');
+        if (tsEl) { tsEl.textContent = new Date().toLocaleTimeString(); }
+
+        // Stop auto-refresh once fully terminal (gate resolved and tests done)
+        const terminal = ['success', 'failed', 'warn'];
+        if (terminal.includes(s5) && terminal.includes(s3)) {
+            this._auto = false;
+            const b = document.getElementById('cp-auto-badge');
+            if (b) { b.textContent = 'Done'; b.className = 'badge bg-secondary'; }
+        }
+    },
+
+    renderJobs(jobs, run) {
+        const el = document.getElementById('cp-jobs');
+        if (!el) return;
+        if (!jobs.length) {
+            el.innerHTML = '<span class="text-secondary">No job data yet — workflow may be queued.</span>';
+            return;
+        }
+        const rows = jobs.map(j => {
+            const iconMap  = { completed: j.conclusion === 'success' ? '✓' : '✗', in_progress: '⟳', queued: '○', waiting: '○' };
+            const colorMap = { completed: j.conclusion === 'success' ? '#3fb950' : '#f85149', in_progress: '#79c0ff', queued: '#484f58', waiting: '#484f58' };
+            const icon  = iconMap[j.status]  ?? '○';
+            const color = colorMap[j.status] ?? '#484f58';
+            const conc  = j.conclusion ?? j.status ?? '';
+            const name  = j.html_url
+                ? `<a href="${this.esc(j.html_url)}" target="_blank" style="color:#e6edf3;text-decoration:none">${this.esc(j.name)}</a>`
+                : this.esc(j.name);
+            return `<tr style="border-bottom:1px solid #21262d">
+                <td style="padding:.3rem .5rem;width:1.4rem;color:${color}">${icon}</td>
+                <td style="padding:.3rem .5rem">${name}</td>
+                <td style="padding:.3rem .5rem;color:#8b949e">${this.esc(conc)}</td>
+            </tr>`;
+        }).join('');
+        const runLink = run?.html_url
+            ? ` — <a href="${this.esc(run.html_url)}" target="_blank" style="color:#58a6ff;font-size:.8em">workflow run ↗</a>`
+            : '';
+        el.innerHTML = `<div class="fw-bold mb-2" style="color:#8b949e;font-size:.75em;text-transform:uppercase;letter-spacing:.06em">
+            GitHub Actions${runLink}</div>
+            <table style="width:100%;border-collapse:collapse"><tbody>${rows}</tbody></table>`;
+    },
+
+    renderGate(ce, gate) {
+        const el = document.getElementById('cp-gate');
+        if (!el) return;
+        let html = '';
+
+        if (ce) {
+            const cmap  = { SUCCESS:'#3fb950', FAILED:'#f85149', IN_PROGRESS:'#79c0ff', PENDING:'#d29922' };
+            const ccol  = cmap[ce.status] ?? '#8b949e';
+            const ts    = (ce.executedAt ?? ce.submittedAt ?? '').replace('T', ' ').split('.')[0];
+            html += `<div class="mb-3">
+                <span class="fw-bold" style="color:#8b949e;font-size:.75em;text-transform:uppercase;letter-spacing:.06em">SonarCloud CE Task</span>
+                <span class="ms-2 px-2 rounded" style="background:${ccol}22;color:${ccol};font-size:.8em;font-weight:700">${this.esc(ce.status)}</span>
+                ${ts ? `<span class="text-secondary ms-2" style="font-size:.78em">${this.esc(ts)}</span>` : ''}
+                ${ce.errorMessage ? `<div class="mt-1" style="color:#f85149">${this.esc(ce.errorMessage)}</div>` : ''}
+            </div>`;
+        }
+
+        if (gate) {
+            const gmap   = { OK:'#3fb950', ERROR:'#f85149', WARN:'#d29922', NONE:'#8b949e' };
+            const gcol   = gmap[gate.status] ?? '#8b949e';
+            const glabel = { OK:'✓ PASSED', ERROR:'✗ FAILED', WARN:'⚠ WARNING', NONE:'— N/A' };
+            const gtxt   = glabel[gate.status] ?? this.esc(gate.status);
+            html += `<div>
+                <span class="fw-bold" style="color:#8b949e;font-size:.75em;text-transform:uppercase;letter-spacing:.06em">Quality Gate</span>
+                <span class="ms-2 px-3 py-1 rounded fw-bold" style="background:${gcol};color:#000;font-size:.88em">${gtxt}</span>
+            </div>`;
+        }
+
+        if (!ce && !gate) {
+            html = '<span class="text-secondary">Set a SonarCloud token to see CE task and gate status.</span>';
+        }
+
+        el.innerHTML = html;
+    },
+
+    esc(s) {
+        return String(s ?? '')
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    },
+};
+
+<?php if ($menu === 'ci_pipeline'): ?>
+document.addEventListener('DOMContentLoaded', () => CiPipeline.init());
+<?php endif; ?>
 
 function setGithubToken() {
     const t = prompt('Enter your GitHub token (blank = unauthenticated):');
