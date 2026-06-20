@@ -13,7 +13,6 @@ use Yiisoft\Html\Tag\Form;
  * @var App\Invoice\Client\ClientRepository $clientRepository
  * @var App\Invoice\Product\ProductRepository $productRepository
  * @var App\Widget\Button $button
- * @var App\Widget\FormFields $formFields
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator

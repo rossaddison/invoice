@@ -11,7 +11,7 @@ use App\Infrastructure\Persistence\CompanyPrivate\CompanyPrivate;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
 use App\User\UserService;
-use App\Widget\FormFields;
+use App\Widget\CompanyPrivateFormFields;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Paginator\OffsetPaginator;
@@ -30,7 +30,7 @@ final class CompanyPrivateController extends BaseController
 
     public function __construct(
         private CompanyPrivateService $companyPrivateService,
-        private FormFields $formFields,
+        private CompanyPrivateFormFields $formFields,
         SessionInterface $session,
         sR $sR,
         TranslatorInterface $translator,

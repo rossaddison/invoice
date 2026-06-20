@@ -39,7 +39,7 @@ final class UserInvController extends BaseController
     private Manager $manager;
     private UrlGenerator $urlGenerator;
     private UserInvService $userinvService;
-    private \App\Widget\FormFields $formFields;
+    private \App\Widget\UserInvFormFields $formFields;
 
     public function __construct(
         UserInvControllerDeps $d,

@@ -9,7 +9,7 @@ use Yiisoft\Html\Tag\Form;
 /**
  * @var App\Invoice\Company\CompanyForm $form
  * @var App\Widget\Button $button
- * @var App\Widget\FormFields $formFields
+ * @var App\Widget\CompanyFormFields $formFields
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var string $companyPublic

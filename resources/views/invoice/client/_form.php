@@ -10,7 +10,7 @@ use Yiisoft\Html\Tag\Form;
  * @var App\Invoice\Client\ClientForm $form
  * @var App\Invoice\ClientCustom\ClientCustomForm $clientCustomForm
  * @var App\Infrastructure\Persistence\Client\Client $client
- * @var App\Widget\FormFields $formFields
+ * @var App\Widget\ClientFormFields $formFields
  *
  * Related logic: see config\common\params.php 'cvH'
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH

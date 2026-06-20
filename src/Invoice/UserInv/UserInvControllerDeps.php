@@ -19,7 +19,7 @@ final class UserInvControllerDeps
         public readonly Rule $rule,
         public readonly UrlGenerator $urlGenerator,
         public readonly UserInvService $userinvService,
-        public readonly \App\Widget\FormFields $formFields,
+        public readonly \App\Widget\UserInvFormFields $formFields,
     ) {
     }
 }

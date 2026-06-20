@@ -6,9 +6,13 @@ namespace App\Invoice\Quote;
 
 use App\Infrastructure\Persistence\Quote\Quote;
 use App\Invoice\Group\GroupRepository as GR;
+use App\Invoice\Quote\Trait\QuoteClientTrait;
+use App\Invoice\Quote\Trait\QuoteFilterTrait;
+use App\Invoice\Quote\Trait\QuoteGuestTrait;
+use App\Invoice\Quote\Trait\QuoteStatusSelectTrait;
+use App\Invoice\Quote\Trait\QuoteStatusTrait;
 use Cycle\ORM\Select;
 use Throwable;
-use Cycle\Database\Injection\Parameter;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
@@ -20,6 +24,12 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class QuoteRepository extends Select\Repository
 {
+    use QuoteClientTrait;
+    use QuoteFilterTrait;
+    use QuoteGuestTrait;
+    use QuoteStatusSelectTrait;
+    use QuoteStatusTrait;
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -29,44 +39,6 @@ final class QuoteRepository extends Select\Repository
             private readonly Translator $translator)
     {
         parent::__construct($select);
-    }
-
-    public function filterQuoteNumber(string $quoteNumber): EntityReader
-    {
-        $select = $this->select();
-        $query = $select->where(['number' => ltrim(rtrim($quoteNumber))]);
-        return $this->prepareDataReader($query);
-    }
-
-    public function filterQuoteAmountTotal(string $quoteAmountTotal): EntityReader
-    {
-        $select = $this->select();
-        $query = $select
-                 ->load('quoteAmount')
-                 ->where(['quoteAmount.total' => $quoteAmountTotal]);
-        return $this->prepareDataReader($query);
-    }
-
-    public function filterQuoteNumberAndQuoteAmountTotal(string $quoteNumber, float $quoteAmountTotal): EntityReader
-    {
-        $select = $this->select();
-        $query = $select
-                 ->load('quoteAmount')
-                 ->where(['number' => $quoteNumber])
-                 ->andWhere(['quoteAmount.total' => $quoteAmountTotal]);
-        return $this->prepareDataReader($query);
-    }
-
-    public function filterClient(string $fullName): EntityReader
-    {
-        $nameParts = explode(' ', $fullName);
-        $firstName = $nameParts[0];
-        $secondName = $nameParts[1] ?? '';
-        $query = $this->select()
-                       ->load(['client'])
-                       ->where(['client.client_name' => $firstName])
-                       ->where(['client.client_surname' => $secondName]);
-        return $this->prepareDataReader($query);
     }
 
     /**
@@ -219,260 +191,12 @@ final class QuoteRepository extends Select\Repository
     }
 
     /**
-     * @param string $url_key
-     * @return Quote|null
-     */
-    public function repoUrlKeyGuestLoaded(string $url_key): ?Quote
-    {
-        $query = $this->select()
-                       ->load('client')
-                       ->where(['url_key' => $url_key]);
-        return  $query->fetchOne() ?: null;
-    }
-
-    /**
-     * @param string $url_key
-     * @return int
-     */
-    public function repoUrlKeyGuestCount(string $url_key): int
-    {
-        return $this->select()
-                      ->where(['url_key' => $url_key])
-                      ->count();
-    }
-
-    /**
-     * @param int $quote_id
-     * @param array $user_client
-     * @return int
-     */
-    public function repoClientGuestCount(int $quote_id, array $user_client = []): int
-    {
-        return $this->select()
-                      ->where(['id' => $quote_id])
-                      ->andWhere(['client_id' => ['in' => new Parameter($user_client)]])
-                      ->count();
-    }
-
-    /**
-     * @param int $status_id
-     * @param array $user_client
-     * @return EntityReader
-     */
-    public function repoGuestClientsSentViewedApprovedRejectedCancelled(int $status_id, array $user_client = []): EntityReader
-    {
-        // Get specific statuses
-        if ($status_id > 0) {
-            $query = $this->select()
-                    ->where(['status_id' => $status_id])
-                    ->andWhere(['client_id' => ['in' => new Parameter($user_client)]]);
-            return $this->prepareDataReader($query);
-        }   // Get all the quotes that are either sent, viewed, approved, or rejected, or cancelled
-        $query = $this->select()
-                     // sent = 2, viewed = 3, approved = 4, rejected = 5, cancelled = 6
-                     ->where(['client_id' => ['in' => new Parameter($user_client)]])
-                     ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6])]]);
-        return $this->prepareDataReader($query);
-    }
-
-    /**
-     * @return array
-     */
-    public function getStatuses(Translator $translator): array
-    {
-        return [
-            '0' => [
-                'label' => $translator->translate('all'),
-                'class' => 'secondary',
-                'href' => 0,
-            ],
-            '1' => [
-                'label' => $translator->translate('draft'),
-                'class' => 'secondary',
-                'href' => 1,
-            ],
-            '2' => [
-                'label' => $translator->translate('sent'),
-                'class' => 'primary',
-                'href' => 2,
-            ],
-            '3' => [
-                'label' => $translator->translate('viewed'),
-                'class' => 'warning',
-                'href' => 3,
-            ],
-            '4' => [
-                'label' => $translator->translate('approved'),
-                'class' => 'success',
-                'href' => 4,
-            ],
-            '5' => [
-                'label' => $translator->translate('rejected'),
-                'class' => 'danger',
-                'href' => 5,
-            ],
-            '6' => [
-                'label' => $translator->translate('canceled'),
-                'class' => 'secondary',
-                'href' => 6,
-            ],
-        ];
-    }
-
-    public function getSpecificStatusArrayLabel(string $key): string
-    {
-        $statuses_array = $this->getStatuses($this->translator);
-        /**
-         * @var array $statuses_array[$key]
-         * @var string $statuses_array[$key]['label']
-         */
-        return $statuses_array[$key]['label'];
-    }
-
-    public function getSpecificStatusArrayClass(string $key): string
-    {
-        $statuses_array = $this->getStatuses($this->translator);
-        /**
-         * @var array $statuses_array[$key]
-         * @var string $statuses_array[$key]['class']
-         */
-        return $statuses_array[$key]['class'];
-    }
-
-    /**
      * @param int $group_id
      * @return mixed
      */
     public function getQuoteNumber(int $group_id, GR $gR): mixed
     {
         return $gR->generateNumber($group_id);
-    }
-
-    /**
-     * @psalm-return Select<TEntity>
-     */
-    public function isDraft(): Select
-    {
-        return $this->select()->where(['status_id' => 1]);
-    }
-
-    /**
-     * @psalm-return Select<TEntity>
-     */
-    public function isSent(): Select
-    {
-        return $this->select()->where(['status_id' => 2]);
-    }
-
-    /**
-     * @psalm-return Select<TEntity>
-     */
-    public function isViewed(): Select
-    {
-        return $this->select()->where(['status_id' => 3]);
-    }
-
-    /**
-     * @psalm-return Select<TEntity>
-     */
-    public function isApproved(): Select
-    {
-        return $this->select()->where(['status_id' => 4]);
-    }
-
-    /**
-     * @psalm-return Select<TEntity>
-     */
-    public function isRejected(): Select
-    {
-        return $this->select()->where(['status_id' => 5]);
-    }
-
-    /**
-     * @psalm-return Select<TEntity>
-     */
-    public function isCanceled(): Select
-    {
-        return $this->select()->where(['status_id' => 6]);
-    }
-
-    /**
-     * Used by guest; includes only sent and viewed
-     *
-     * @psalm-return Select<TEntity>
-     */
-    public function isOpen(): Select
-    {
-        return $this->select()->where(['status_id' => ['in' => new Parameter([2,3])]]);
-    }
-
-    /**
-     * @psalm-return Select<TEntity>
-     */
-    public function guestVisible(): Select
-    {
-        return $this->select()->where(['status_id' => ['in' => new Parameter([2,3,4,5])]]);
-    }
-
-    /**
-     * @param int $client_id
-     *
-     * @psalm-return Select<TEntity>
-     */
-    public function byClient(int $client_id): Select
-    {
-        return $this->select()
-                      ->where(['client_id' => $client_id]);
-    }
-
-    /**
-     * @param $client_id
-     * @param $status_id
-     *
-     * @psalm-return EntityReader
-     */
-    public function byClientQuoteStatus(int $client_id, int $status_id): EntityReader
-    {
-        $query = $this->select()
-                      ->where(['client_id' => $client_id])
-                      ->andWhere(['status_id' => $status_id]);
-        return $this->prepareDataReader($query);
-    }
-
-    /**
-     * @param int $client_id
-     * @param int $status_id
-     * @return int
-     */
-    public function byClientQuoteStatusCount(int $client_id, int $status_id): int
-    {
-        return $this->select()
-                      ->where(['client_id' => $client_id])
-                      ->andWhere(['status_id' => $status_id])
-                      ->count();
-    }
-
-    /**
-     * @param string $url_key
-     *
-     * @psalm-return Select<TEntity>
-     */
-    public function approveOrRejectQuoteByKey(string $url_key): Select
-    {
-        return $this->select()
-                      ->where(['status_id' => ['in' => new Parameter([2,3,4,5])]])
-                      ->where(['url_key' => $url_key]);
-    }
-
-    /**
-     * @param int $id
-     * @return Select
-     */
-    public function approveOrRejectQuoteById(int $id): Select
-    {
-        return $this->select()
-                      ->where(['status_id' => ['in' => new Parameter([2,3,4,5])]])
-                      ->where(['id' => $id]);
     }
 
     /**
@@ -492,27 +216,5 @@ final class QuoteRepository extends Select\Repository
     {
         return $this->select()
                       ->count();
-    }
-
-    /**
-     * @param int $client_id
-     * @return int
-     */
-    public function repoCountByClient(int $client_id): int
-    {
-        return $this->select()
-                      ->where(['client_id' => $client_id])
-                      ->count();
-    }
-
-    /**
-     * @param int $client_id
-     * @return EntityReader
-     */
-    public function repoClient(int $client_id): EntityReader
-    {
-        $query = $this->select()
-                      ->where(['client_id' => $client_id]);
-        return $this->prepareDataReader($query);
     }
 }

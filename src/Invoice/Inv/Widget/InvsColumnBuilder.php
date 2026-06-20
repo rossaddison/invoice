@@ -32,11 +32,12 @@ use Yiisoft\Yii\DataView\GridView\Column\ColumnInterface;
 use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 
 /**
- * Column builders extracted from InvsListWidget to stay within the S1448 limit.
+ * Column builders extracted from InvsListWidget to stay within S1448 (≤ 20 methods)
+ * and S138 (≤ 150 lines per function).
  *
- * buildColumns() orchestrates all columns; simple column types that previously
- * lived inline have been extracted into private methods to satisfy S138 (≤ 150
- * lines per function).
+ * Methods that share a domain concern are grouped into array-returning helpers
+ * (buildSentLogColumns, buildAmountColumns, buildDateColumns,
+ * buildOptionalLinkColumns) and spread into the main $columns array.
  */
 final class InvsColumnBuilder
 {
@@ -70,9 +71,6 @@ final class InvsColumnBuilder
         $totalAmount  = $p->totalAmount;
         $totalPaid    = $p->totalPaid;
         $totalBalance = $p->totalBalance;
-        $qR           = $p->qR;
-        $soR          = $p->soR;
-        $dlR          = $p->dlR;
         $t   = $this->translator;
         $ug  = $this->urlGenerator;
         $vis = $this->visible;
@@ -88,9 +86,7 @@ final class InvsColumnBuilder
             $this->buildStatusColumn($iR, $irR, $sR),
             $this->buildClientActiveColumn(),
             $this->buildCreditNoteColumn($iR),
-            $this->buildSentLogToggleColumn($islR),
-            $this->buildSentLogCountColumn($islR),
-            $this->buildSentLogTableColumn($islR),
+            ...$this->buildSentLogColumns($islR),
             $this->buildClientFullNameColumn(),
 
             new DataColumn('client_number',
@@ -125,11 +121,8 @@ final class InvsColumnBuilder
                     $m->getTimeCreated()->format('H:i:s'),
                 visible: $vis),
 
-            $this->buildDateModifiedColumn(),
-            $this->buildDateDueColumn(),
-            $this->buildTotalColumn($sR, $dp, $totalAmount),
-            $this->buildPaidColumn($sR, $dp, $totalPaid),
-            $this->buildBalanceColumn($sR, $dp, $totalBalance),
+            ...$this->buildDateColumns(),
+            ...$this->buildAmountColumns($sR, $dp, $totalAmount, $totalPaid, $totalBalance),
 
             new DataColumn(
                 header: '🚚',
@@ -147,18 +140,322 @@ final class InvsColumnBuilder
             $this->buildDeleteColumn($sR),
         ];
 
-        if ($qR !== null) {
-            $columns[] = $this->buildQuoteLinkColumn($qR);
-        }
-        if ($soR !== null) {
-            $columns[] = $this->buildSoLinkColumn($soR);
-        }
-        if ($dlR !== null) {
-            $columns[] = $this->buildDeliveryLocationColumn($dlR);
-        }
+        array_push($columns, ...$this->buildOptionalLinkColumns($p));
 
         return $columns;
     }
+
+    // ── Grouped array-returning helpers ───────────────────────────────────────
+
+    /**
+     * Sent-log toggle, count, and inline-table columns.
+     *
+     * @return DataColumn[]
+     */
+    private function buildSentLogColumns(ISLR $islR): array
+    {
+        $ug             = $this->urlGenerator;
+        $gridComponents = $this->gridComponents;
+        $t              = $this->translator;
+
+        $toggleAnchor = (new A())
+            ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip',
+                'title' => $t->translate('hide.or.unhide.columns')])
+            ->addClass('btn btn-info me-1 ajax-loader')
+            ->content('↔️')
+            ->href($ug->generate('setting/toggleinvsentlogcolumn'))
+            ->id('btn-all-visible');
+
+        return [
+            new DataColumn(
+                'invsentlogs',
+                header: (new Label())->content('↔️')
+                    ->addAttributes(['data-bs-toggle' => 'tooltip', 'title' => 'toggle'])
+                    ->render(),
+                encodeHeader: false,
+                content: static function (Inv $model) use ($islR, $toggleAnchor): string|A {
+                    return $islR->repoInvSentLogEmailedCountForEachInvoice(
+                        $model->reqId()) > 0 ? $toggleAnchor : '0 📧';
+                },
+                encodeContent: false,
+            ),
+            new DataColumn(
+                'invsentlogs',
+                header: (new Label())->content('➡️📧')
+                    ->addAttributes(['data-bs-toggle' => 'tooltip',
+                        'title' => $t->translate('email.logs.with.filter')])
+                    ->render(),
+                encodeHeader: false,
+                content: static function (Inv $model) use ($islR, $ug, $t): string|A {
+                    $count = $islR->repoInvSentLogEmailedCountForEachInvoice(
+                        $model->reqId());
+                    if ($count > 0) {
+                        return (new A())
+                            ->addAttributes(['type' => 'reset',
+                                'data-bs-toggle' => 'tooltip',
+                                'title' => $t->translate('email.logs')])
+                            ->addClass('btn btn-success me-1')
+                            ->content((string) $count)
+                            ->href($ug->generate('invsentlog/index', [],
+                                ['filterInvNumber' => $model->getNumber()]))
+                            ->id('btn-all-visible');
+                    }
+                    return '0 📧';
+                },
+                encodeContent: false,
+                visible: $this->visible,
+            ),
+            new DataColumn(
+                header: (new Label())->content('|||')
+                    ->addAttributes(['data-bs-toggle' => 'tooltip',
+                        'title' => $t->translate('email.logs.table')])
+                    ->render(),
+                encodeHeader: false,
+                content: static function (Inv $model)
+                    use ($islR, $ug, $gridComponents): string {
+                    $modelId     = $model->reqId();
+                    $invSentLogs = $islR->repoInvSentLogForEachInvoice($modelId);
+                    $model->setInvSentLogs();
+                    /** @var InvSentLog $invSentLog */
+                    foreach ($invSentLogs as $invSentLog) {
+                        $model->addInvSentLog($invSentLog);
+                    }
+                    return $gridComponents->gridMiniTableOfInvSentLogsForInv(
+                        $model, 4, $ug);
+                },
+                visible: $this->visibleInvSentLogColumn,
+                encodeContent: false,
+            ),
+        ];
+    }
+
+    /**
+     * Total, paid, and balance amount columns with footer totals.
+     *
+     * @return DataColumn[]
+     */
+    private function buildAmountColumns(
+        SR $sR,
+        int $dp,
+        float $totalAmount,
+        float $totalPaid,
+        float $totalBalance,
+    ): array {
+        $t = $this->translator;
+        return [
+            new DataColumn(
+                property: 'filterInvAmountTotal',
+                header: $t->translate('total') . '➡️' . $sR->getSetting('currency_symbol'),
+                content: static function (Inv $model) use ($dp): Label {
+                    $total = $model->getInvAmount()->getTotal();
+                    return (new Label())
+                        ->attributes(['class' => $total > 0.00
+                            ? self::BDG_BG_SCS : self::BDG_TXT_DARK])
+                        ->content(Html::encode(null !== $total
+                            ? number_format($total, $dp)
+                            : number_format(0, $dp)));
+                },
+                encodeContent: false,
+                filter: TextInputFilter::widget()->addAttributes([
+                    'id' => 'filter-amount-total', 'class' => self::AMOUNT_FILTER_CLASS,
+                    'aria-label' => 'Filter by total amount',
+                    'title' => $t->translate('total'),
+                    'placeholder' => $t->translate('total')]),
+                withSorting: false,
+                footer: (new Span())->addClass('inv-footer-amount')
+                    ->addAttributes(['style' => self::AMOUNT_FILTER_STYLE])
+                    ->content(
+                        Html::tag('small', $t->translate('total') . ':',
+                            ['class' => 'inv-footer-label'])
+                        . ' ' . $sR->getSetting('currency_symbol')
+                        . ' ' . number_format($totalAmount, $dp))
+                    ->encode(false)->render(),
+            ),
+            new DataColumn(
+                property: 'filterInvAmountPaid',
+                header: $t->translate('paid') . '➡️' . $sR->getSetting('currency_symbol'),
+                content: static function (Inv $model) use ($dp): Label {
+                    $paid  = $model->getInvAmount()->getPaid();
+                    $value = (null !== $paid && $paid > 0.00) ? $paid : 0.00;
+                    $class = ($model->getInvAmount()->getPaid()
+                        < $model->getInvAmount()->getTotal())
+                        ? 'badge bg-danger' : self::BDG_BG_SCS;
+                    return (new Label())
+                        ->attributes(['class' => $class])
+                        ->content(Html::encode(number_format($value, $dp)));
+                },
+                encodeContent: false,
+                filter: TextInputFilter::widget()->addAttributes([
+                    'id' => 'filter-amount-paid', 'class' => self::AMOUNT_FILTER_CLASS,
+                    'aria-label' => 'Filter by paid amount',
+                    'title' => $t->translate('paid'),
+                    'placeholder' => $t->translate('paid')]),
+                withSorting: false,
+                footer: (new Span())->addClass('inv-footer-amount')
+                    ->addAttributes(['style' => self::AMOUNT_FILTER_STYLE])
+                    ->content(
+                        Html::tag('small', $t->translate('paid') . ':',
+                            ['class' => 'inv-footer-label'])
+                        . ' ' . $sR->getSetting('currency_symbol')
+                        . ' ' . number_format($totalPaid, $dp))
+                    ->encode(false)->render(),
+            ),
+            new DataColumn(
+                property: 'filterInvAmountBalance',
+                header: $t->translate('balance') . '➡️' . $sR->getSetting('currency_symbol'),
+                content: static function (Inv $model) use ($dp): Label {
+                    $bal   = $model->getInvAmount()->getBalance();
+                    $value = (null !== $bal && $bal > 0.00) ? $bal : 0.00;
+                    return (new Label())
+                        ->attributes(['class' => $bal > 0.00
+                            ? self::BDG_BG_SCS : self::BDG_TXT_DARK])
+                        ->content(Html::encode(number_format($value, $dp)));
+                },
+                encodeContent: false,
+                filter: TextInputFilter::widget()->addAttributes([
+                    'id' => 'filter-amount-balance', 'class' => self::AMOUNT_FILTER_CLASS,
+                    'aria-label' => 'Filter by balance amount',
+                    'title' => $t->translate('balance'),
+                    'placeholder' => $t->translate('balance')]),
+                withSorting: false,
+                footer: (new Span())->addClass('inv-footer-amount')
+                    ->addAttributes(['style' => self::AMOUNT_FILTER_STYLE])
+                    ->content(
+                        Html::tag('small', $t->translate('balance') . ':',
+                            ['class' => 'inv-footer-label'])
+                        . ' ' . $sR->getSetting('currency_symbol')
+                        . ' ' . number_format($totalBalance, $dp))
+                    ->encode(false)->render(),
+            ),
+        ];
+    }
+
+    /**
+     * Date-modified and date-due columns.
+     *
+     * @return DataColumn[]
+     */
+    private function buildDateColumns(): array
+    {
+        $t = $this->translator;
+        return [
+            new DataColumn('date_modified',
+                header: $t->translate('datetime.immutable.date.modified'),
+                content: static function (Inv $m): Label {
+                    $cls = $m->getDateModified() <> $m->getDateCreated()
+                        ? 'badge bg-danger' : self::BDG_BG_SCS;
+                    return (new Label())
+                        ->attributes(['class' => $cls])
+                        ->content(Html::encode($m->getDateModified()->format('Y-m-d')));
+                },
+                encodeContent: false,
+                visible: $this->visible),
+            new DataColumn('date_due',
+                header: $t->translate('due.date'),
+                content: static function (Inv $m): Label {
+                    $now = new \DateTimeImmutable('now');
+                    $due = $m->getDateDue();
+                    return (new Label())
+                        ->attributes(['class' => $due > $now
+                            ? self::BDG_BG_SCS : self::BDG_TXT_DARK])
+                        ->content(Html::encode($due->format('Y-m-d')));
+                },
+                encodeContent: false,
+                withSorting: true,
+                visible: $this->visible),
+        ];
+    }
+
+    /**
+     * Quote-link, sales-order-link, and delivery-location columns — only added
+     * when the matching repository is present in InvsColumnParams.
+     *
+     * @return DataColumn[]
+     */
+    private function buildOptionalLinkColumns(InvsColumnParams $p): array
+    {
+        $ug   = $this->urlGenerator;
+        $t    = $this->translator;
+        $cols = [];
+
+        $qR = $p->qR;
+        if ($qR !== null) {
+            $cols[] = new DataColumn(
+                'quote_id',
+                header: $t->translate('quote.number.status'),
+                content: static function (Inv $model) use ($qR, $ug): string|A {
+                    $quoteId = (int) $model->getQuoteId();
+                    $quote   = $qR->repoQuoteUnloadedquery($quoteId);
+                    if (null !== $quote) {
+                        $statusId = $quote->reqStatusId();
+                        return Html::a(
+                            ($quote->getNumber() ?? '#') . ' '
+                                . $qR->getSpecificStatusArrayLabel((string) $statusId),
+                            $ug->generate('quote/view', ['id' => $quoteId]),
+                            ['style' => 'text-decoration:none',
+                                'class' => 'label '
+                                    . $qR->getSpecificStatusArrayClass((string) $statusId)],
+                        );
+                    }
+                    return '';
+                },
+                visible: $this->visible,
+                withSorting: false,
+            );
+        }
+
+        $soR = $p->soR;
+        if ($soR !== null) {
+            $cols[] = new DataColumn(
+                'so_id',
+                header: $t->translate('salesorder.number.status'),
+                content: static function (Inv $model) use ($soR, $ug): string|A {
+                    $soId = $model->getSoId();
+                    $so   = $soR->repoSalesOrderUnloadedquery((int) $soId);
+                    if (null !== $so) {
+                        $statusId = $so->getStatusId();
+                        if (null !== $statusId) {
+                            return Html::a(
+                                ($so->getNumber() ?? '#') . ' '
+                                    . $soR->getSpecificStatusArrayLabel((string) $statusId),
+                                $ug->generate('salesorder/view', ['id' => $soId]),
+                                ['style' => 'text-decoration:none',
+                                    'class' => 'label '
+                                        . $soR->getSpecificStatusArrayClass($statusId)],
+                            );
+                        }
+                    }
+                    return '';
+                },
+                visible: $this->visible,
+                withSorting: false,
+            );
+        }
+
+        $dlR = $p->dlR;
+        if ($dlR !== null) {
+            $cols[] = new DataColumn(
+                'delivery_location_id',
+                header: $t->translate('delivery.location.global.location.number'),
+                content: static function (Inv $model) use ($dlR): string {
+                    $dlId = $model->getDeliveryLocationId();
+                    $dl   = ($dlId !== null && $dlR->repoCount($dlId) > 0)
+                        ? $dlR->repoDeliveryLocationquery($dlId)
+                        : null;
+                    return null !== $dl
+                        ? Html::encode($dl->getGlobalLocationNumber())
+                        : '';
+                },
+                encodeContent: false,
+                visible: $this->visible,
+                withSorting: false,
+            );
+        }
+
+        return $cols;
+    }
+
+    // ── Individual column builders ────────────────────────────────────────────
 
     private function buildWorkflowTypeColumn(): DataColumn
     {
@@ -293,40 +590,6 @@ final class InvsColumnBuilder
                 ->optionsData($this->filterOptions->clientGroup),
             withSorting: false,
         );
-    }
-
-    private function buildDateModifiedColumn(): DataColumn
-    {
-        $t = $this->translator;
-        return new DataColumn('date_modified',
-            header: $t->translate('datetime.immutable.date.modified'),
-            content: static function (Inv $m): Label {
-                $cls = $m->getDateModified() <> $m->getDateCreated()
-                    ? 'badge bg-danger' : self::BDG_BG_SCS;
-                return (new Label())
-                    ->attributes(['class' => $cls])
-                    ->content(Html::encode($m->getDateModified()->format('Y-m-d')));
-            },
-            encodeContent: false,
-            visible: $this->visible);
-    }
-
-    private function buildDateDueColumn(): DataColumn
-    {
-        $t = $this->translator;
-        return new DataColumn('date_due',
-            header: $t->translate('due.date'),
-            content: static function (Inv $m): Label {
-                $now = new \DateTimeImmutable('now');
-                $due = $m->getDateDue();
-                return (new Label())
-                    ->attributes(['class' => $due > $now
-                        ? self::BDG_BG_SCS : self::BDG_TXT_DARK])
-                    ->content(Html::encode($due->format('Y-m-d')));
-            },
-            encodeContent: false,
-            withSorting: true,
-            visible: $this->visible);
     }
 
     private function buildCheckboxColumn(): CheckboxColumn
@@ -635,267 +898,6 @@ final class InvsColumnBuilder
                 ->optionsData($this->filterOptions->creditInvNumber),
             withSorting: false,
             visible: $this->visible,
-        );
-    }
-
-    private function buildSentLogToggleColumn(ISLR $islR): DataColumn
-    {
-        $toggleAnchor = (new A())
-            ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip',
-                'title' => $this->translator->translate('hide.or.unhide.columns')])
-            ->addClass('btn btn-info me-1 ajax-loader')
-            ->content('↔️')
-            ->href($this->urlGenerator->generate('setting/toggleinvsentlogcolumn'))
-            ->id('btn-all-visible');
-        return new DataColumn(
-            'invsentlogs',
-            header: (new Label())->content('↔️')
-                ->addAttributes(['data-bs-toggle' => 'tooltip', 'title' => 'toggle'])
-                ->render(),
-            encodeHeader: false,
-            content: static function (Inv $model) use ($islR, $toggleAnchor): string|A {
-                return $islR->repoInvSentLogEmailedCountForEachInvoice(
-                    $model->reqId()) > 0 ? $toggleAnchor : '0 📧';
-            },
-            encodeContent: false,
-        );
-    }
-
-    private function buildSentLogCountColumn(ISLR $islR): DataColumn
-    {
-        $ug = $this->urlGenerator;
-        $t  = $this->translator;
-        return new DataColumn(
-            'invsentlogs',
-            header: (new Label())->content('➡️📧')
-                ->addAttributes(['data-bs-toggle' => 'tooltip',
-                    'title' => $t->translate('email.logs.with.filter')])
-                ->render(),
-            encodeHeader: false,
-            content: static function (Inv $model) use ($islR, $ug, $t): string|A {
-                $count = $islR->repoInvSentLogEmailedCountForEachInvoice(
-                    $model->reqId());
-                if ($count > 0) {
-                    return (new A())
-                        ->addAttributes(['type' => 'reset',
-                            'data-bs-toggle' => 'tooltip',
-                            'title' => $t->translate('email.logs')])
-                        ->addClass('btn btn-success me-1')
-                        ->content((string) $count)
-                        ->href($ug->generate('invsentlog/index', [],
-                            ['filterInvNumber' => $model->getNumber()]))
-                        ->id('btn-all-visible');
-                }
-                return '0 📧';
-            },
-            encodeContent: false,
-            visible: $this->visible,
-        );
-    }
-
-    private function buildSentLogTableColumn(ISLR $islR): DataColumn
-    {
-        $ug             = $this->urlGenerator;
-        $gridComponents = $this->gridComponents;
-        $t              = $this->translator;
-        return new DataColumn(
-            header: (new Label())->content('|||')
-                ->addAttributes(['data-bs-toggle' => 'tooltip',
-                    'title' => $t->translate('email.logs.table')])
-                ->render(),
-            encodeHeader: false,
-            content: static function (Inv $model)
-                use ($islR, $ug, $gridComponents): string {
-                $modelId     = $model->reqId();
-                $invSentLogs = $islR->repoInvSentLogForEachInvoice($modelId);
-                $model->setInvSentLogs();
-                /** @var InvSentLog $invSentLog */
-                foreach ($invSentLogs as $invSentLog) {
-                    $model->addInvSentLog($invSentLog);
-                }
-                return $gridComponents->gridMiniTableOfInvSentLogsForInv(
-                    $model, 4, $ug);
-            },
-            visible: $this->visibleInvSentLogColumn,
-            encodeContent: false,
-        );
-    }
-
-    private function buildTotalColumn(SR $sR, int $dp, float $totalAmount): DataColumn
-    {
-        $t = $this->translator;
-        return new DataColumn(
-            property: 'filterInvAmountTotal',
-            header: $t->translate('total') . '➡️' . $sR->getSetting('currency_symbol'),
-            content: static function (Inv $model) use ($dp): Label {
-                $total = $model->getInvAmount()->getTotal();
-                return (new Label())
-                    ->attributes(['class' => $total > 0.00
-                        ? self::BDG_BG_SCS : self::BDG_TXT_DARK])
-                    ->content(Html::encode(null !== $total
-                        ? number_format($total, $dp)
-                        : number_format(0, $dp)));
-            },
-            encodeContent: false,
-            filter: TextInputFilter::widget()->addAttributes([
-                'id' => 'filter-amount-total', 'class' => self::AMOUNT_FILTER_CLASS,
-                'aria-label' => 'Filter by total amount',
-                'title' => $t->translate('total'),
-                'placeholder' => $t->translate('total')]),
-            withSorting: false,
-            footer: (new Span())->addClass('inv-footer-amount')
-                ->addAttributes(['style' => self::AMOUNT_FILTER_STYLE])
-                ->content(
-                    Html::tag('small', $t->translate('total') . ':',
-                        ['class' => 'inv-footer-label'])
-                    . ' ' . $sR->getSetting('currency_symbol')
-                    . ' ' . number_format($totalAmount, $dp))
-                ->encode(false)->render(),
-        );
-    }
-
-    private function buildPaidColumn(SR $sR, int $dp, float $totalPaid): DataColumn
-    {
-        $t = $this->translator;
-        return new DataColumn(
-            property: 'filterInvAmountPaid',
-            header: $t->translate('paid') . '➡️' . $sR->getSetting('currency_symbol'),
-            content: static function (Inv $model) use ($dp): Label {
-                $paid  = $model->getInvAmount()->getPaid();
-                $value = (null !== $paid && $paid > 0.00) ? $paid : 0.00;
-                $class = ($model->getInvAmount()->getPaid()
-                    < $model->getInvAmount()->getTotal())
-                    ? 'badge bg-danger' : self::BDG_BG_SCS;
-                return (new Label())
-                    ->attributes(['class' => $class])
-                    ->content(Html::encode(number_format($value, $dp)));
-            },
-            encodeContent: false,
-            filter: TextInputFilter::widget()->addAttributes([
-                'id' => 'filter-amount-paid', 'class' => self::AMOUNT_FILTER_CLASS,
-                'aria-label' => 'Filter by paid amount',
-                'title' => $t->translate('paid'),
-                'placeholder' => $t->translate('paid')]),
-            withSorting: false,
-            footer: (new Span())->addClass('inv-footer-amount')
-                ->addAttributes(['style' => self::AMOUNT_FILTER_STYLE])
-                ->content(
-                    Html::tag('small', $t->translate('paid') . ':',
-                        ['class' => 'inv-footer-label'])
-                    . ' ' . $sR->getSetting('currency_symbol')
-                    . ' ' . number_format($totalPaid, $dp))
-                ->encode(false)->render(),
-        );
-    }
-
-    private function buildBalanceColumn(SR $sR, int $dp, float $totalBalance): DataColumn
-    {
-        $t = $this->translator;
-        return new DataColumn(
-            property: 'filterInvAmountBalance',
-            header: $t->translate('balance') . '➡️' . $sR->getSetting('currency_symbol'),
-            content: static function (Inv $model) use ($dp): Label {
-                $bal   = $model->getInvAmount()->getBalance();
-                $value = (null !== $bal && $bal > 0.00) ? $bal : 0.00;
-                return (new Label())
-                    ->attributes(['class' => $bal > 0.00
-                        ? self::BDG_BG_SCS : self::BDG_TXT_DARK])
-                    ->content(Html::encode(number_format($value, $dp)));
-            },
-            encodeContent: false,
-            filter: TextInputFilter::widget()->addAttributes([
-                'id' => 'filter-amount-balance', 'class' => self::AMOUNT_FILTER_CLASS,
-                'aria-label' => 'Filter by balance amount',
-                'title' => $t->translate('balance'),
-                'placeholder' => $t->translate('balance')]),
-            withSorting: false,
-            footer: (new Span())->addClass('inv-footer-amount')
-                ->addAttributes(['style' => self::AMOUNT_FILTER_STYLE])
-                ->content(
-                    Html::tag('small', $t->translate('balance') . ':',
-                        ['class' => 'inv-footer-label'])
-                    . ' ' . $sR->getSetting('currency_symbol')
-                    . ' ' . number_format($totalBalance, $dp))
-                ->encode(false)->render(),
-        );
-    }
-
-    private function buildQuoteLinkColumn(QR $qR): DataColumn
-    {
-        $ug = $this->urlGenerator;
-        $t  = $this->translator;
-        return new DataColumn(
-            'quote_id',
-            header: $t->translate('quote.number.status'),
-            content: static function (Inv $model) use ($qR, $ug): string|A {
-                $quoteId = (int) $model->getQuoteId();
-                $quote   = $qR->repoQuoteUnloadedquery($quoteId);
-                if (null !== $quote) {
-                    $statusId = $quote->reqStatusId();
-                    return Html::a(
-                        ($quote->getNumber() ?? '#') . ' '
-                            . $qR->getSpecificStatusArrayLabel((string) $statusId),
-                        $ug->generate('quote/view', ['id' => $quoteId]),
-                        ['style' => 'text-decoration:none',
-                            'class' => 'label '
-                                . $qR->getSpecificStatusArrayClass((string) $statusId)],
-                    );
-                }
-                return '';
-            },
-            visible: $this->visible,
-            withSorting: false,
-        );
-    }
-
-    private function buildSoLinkColumn(SOR $soR): DataColumn
-    {
-        $ug = $this->urlGenerator;
-        $t  = $this->translator;
-        return new DataColumn(
-            'so_id',
-            header: $t->translate('salesorder.number.status'),
-            content: static function (Inv $model) use ($soR, $ug): string|A {
-                $soId = $model->getSoId();
-                $so   = $soR->repoSalesOrderUnloadedquery((int) $soId);
-                if (null !== $so) {
-                    $statusId = $so->getStatusId();
-                    if (null !== $statusId) {
-                        return Html::a(
-                            ($so->getNumber() ?? '#') . ' '
-                                . $soR->getSpecificStatusArrayLabel((string) $statusId),
-                            $ug->generate('salesorder/view', ['id' => $soId]),
-                            ['style' => 'text-decoration:none',
-                                'class' => 'label '
-                                    . $soR->getSpecificStatusArrayClass($statusId)],
-                        );
-                    }
-                }
-                return '';
-            },
-            visible: $this->visible,
-            withSorting: false,
-        );
-    }
-
-    private function buildDeliveryLocationColumn(DLR $dlR): DataColumn
-    {
-        $t = $this->translator;
-        return new DataColumn(
-            'delivery_location_id',
-            header: $t->translate('delivery.location.global.location.number'),
-            content: static function (Inv $model) use ($dlR): string {
-                $dlId = $model->getDeliveryLocationId();
-                $dl   = ($dlId !== null && $dlR->repoCount($dlId) > 0)
-                    ? $dlR->repoDeliveryLocationquery($dlId)
-                    : null;
-                return null !== $dl
-                    ? Html::encode($dl->getGlobalLocationNumber())
-                    : '';
-            },
-            encodeContent: false,
-            visible: $this->visible,
-            withSorting: false,
         );
     }
 }

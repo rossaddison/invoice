@@ -81,7 +81,7 @@ final class ClientController extends BaseController
         private ClientService $clientService,
         private ClientCustomService $clientCustomService,
         private ClientCustomFieldProcessor $clientCustomFieldProcessor,
-        private \App\Widget\FormFields $formFields,
+        private \App\Widget\ClientFormFields $formFields,
         private DataResponseFactoryInterface $factory,
         SessionInterface $session,
         sR $sR,

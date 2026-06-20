@@ -14,7 +14,7 @@ use Yiisoft\Html\Tag\Form;
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\User\UserRepository $uR
  * @var App\Widget\Button $button
- * @var App\Widget\FormFields $formFields
+ * @var App\Widget\UserInvFormFields $formFields
  * @var Yiisoft\Aliases\Aliases $aliases
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\View\View $this

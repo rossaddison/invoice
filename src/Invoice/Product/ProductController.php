@@ -6,7 +6,7 @@ namespace App\Invoice\Product;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Widget\FormFields;
+use App\Widget\ProductFormFields;
 use App\Infrastructure\Persistence\Product\Product;
 use App\Infrastructure\Persistence\ProductCustom\ProductCustom;
 use App\Infrastructure\Persistence\ProductImage\ProductImage;
@@ -45,7 +45,7 @@ final class ProductController extends BaseController
 
     public function __construct(
         private DataResponseFactoryInterface $responseFactory,
-        private FormFields $formFields,
+        private ProductFormFields $formFields,
         private ProductService $productService,
         private ProductCustomService $productCustomService,
         private ProductFormDependencies $formDeps,

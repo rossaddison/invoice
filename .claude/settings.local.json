@@ -31,7 +31,9 @@
       "Bash(vendor/bin/psalm --no-cache src/Invoice/As4/WsSecuritySigner.php)",
       "Bash(vendor/bin/psalm --no-cache src/Invoice/As4/WsSecuritySigner.php Tests/Unit/Invoice/As4/WsSecuritySignerTest.php)",
       "Bash(vendor/bin/psalm --no-cache src/Invoice/As4/As4InboundMessage.php src/Invoice/As4/As4ParseException.php src/Invoice/As4/As4Receiver.php src/Invoice/As4/As4MessageState.php src/Invoice/As4/As4MessageBuilder.php src/Invoice/As4/As4ReceiptGeneratorInterface.php src/Invoice/As4/As4ReceiptGenerator.php src/Invoice/As4/As4DuplicateDetectorInterface.php src/Invoice/As4/As4DuplicateDetector.php src/Invoice/As4/As4ReceiveController.php src/Infrastructure/Persistence/As4Message/As4Message.php)",
-      "Bash(git checkout *)"
+      "Bash(git checkout *)",
+      "Bash(vendor/bin/psalm --no-cache src/Invoice/Inv/Widget/InvsColumnBuilder.php)",
+      "Bash(vendor/bin/psalm --no-cache src/Invoice/Helpers/StoreCove/StoreCoveHelper.php src/Invoice/Helpers/StoreCove/StoreCoveCustomerPartyParser.php src/Invoice/Helpers/StoreCove/StoreCoveDeliveryHelper.php src/Invoice/Helpers/StoreCove/StoreCoveInvoiceLineBuilder.php)"
     ],
     "additionalDirectories": [
       "c:\\wamp64\\www\\invoice\\src\\Invoice\\Helpers\\Peppol\\Emit"

@@ -10,7 +10,7 @@ use Yiisoft\Html\Tag\Form;
  * @var App\Invoice\CompanyPrivate\CompanyPrivateForm $form
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Widget\Button $button
- * @var App\Widget\FormFields $formFields
+ * @var App\Widget\CompanyPrivateFormFields $formFields
  * @var Yiisoft\View\View $this
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator

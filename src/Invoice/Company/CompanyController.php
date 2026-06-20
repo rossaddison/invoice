@@ -27,7 +27,7 @@ final class CompanyController extends BaseController
 
     public function __construct(
         private CompanyService $companyService,
-        private \App\Widget\FormFields $formFields,
+        private \App\Widget\CompanyFormFields $formFields,
         SessionInterface $session,
         sR $sR,
         TranslatorInterface $translator,

@@ -77,6 +77,8 @@ final class SalesOrderController extends BaseController
     private readonly InvTaxRateService $invTaxRateService;
     private readonly SalesOrderService $salesorderService;
     private readonly SalesOrderToolbar $salesOrderToolbar;
+    private readonly SalesOrderToInvoiceConverter $soToInvConverter;
+    private readonly SalesOrderRbacGuard $rbac;
 
     public function __construct(
         SoControllerBaseDeps $base,
@@ -95,6 +97,14 @@ final class SalesOrderController extends BaseController
         $this->invTaxRateService            = $inv->invTaxRateService;
         $this->salesorderService            = $misc->salesorderService;
         $this->salesOrderToolbar            = $misc->salesOrderToolbar;
+        $this->soToInvConverter = new SalesOrderToInvoiceConverter(
+            $this->invItemService,
+            $this->invTaxRateService,
+            $this->inv_custom_service,
+            $this->inv_allowance_charge_service,
+            $this->translator,
+        );
+        $this->rbac = new SalesOrderRbacGuard($this->userService);
     }
 
     /**
@@ -158,8 +168,8 @@ final class SalesOrderController extends BaseController
                 // they can view their salesorders when they log in
                 $user_clients = $ucR->getAssignedToUser($userId);
                 if (!empty($user_clients)) {
-                    $salesOrders = $this->salesordersStatusWithSortGuest(
-                        $soR, $status, $user_clients, $sort);
+                    $salesOrders = $soR->repoGuestStatuses($status, $user_clients)
+                        ->withSort($sort);
                     $soLimit = $userinv->getListLimit();
                     $paginator = (new OffsetPaginator($salesOrders))
                     ->withPageSize($soLimit !== null && $soLimit > 0
@@ -210,7 +220,7 @@ final class SalesOrderController extends BaseController
         $sort = Sort::only(['id', 'status_id', 'number', 'date_created', 'client_id'])
             /** @psalm-suppress MixedArgument */
             ->withOrderString($sortString);
-        $salesorders = $this->salesordersStatusWithSort($soR, $status, $sort);
+        $salesorders = $soR->findAllWithStatus($status)->withSort($sort);
         if (isset($queryFilterClient) && $queryFilterClient !== '') {
             $salesorders = $soR->filterClient($queryFilterClient)->withSort($sort);
         }
@@ -312,7 +322,7 @@ final class SalesOrderController extends BaseController
         $url_key = $currentRoute->getArgument('url_key');
         if (null !== $url_key && $soR->repoUrlKeyGuestCount($url_key) > 0) {
             $so = $soR->repoUrlKeyGuestLoaded($url_key);
-            if ($so && $this->rbacObserver($so, $ucR, $uiR)) {
+            if ($so && $this->rbac->isObserver($so, $ucR, $uiR)) {
                 $so_id = $so->reqId();
                 $so->setStatusId(3);
                 $soR->save($so);
@@ -351,7 +361,7 @@ final class SalesOrderController extends BaseController
             // Only the observer user can reject the salesorder
             // so check that the salesorder being rejected is linked to
             // the current user
-            if ($so && $this->rbacObserver($so, $ucR, $uiR)) {
+            if ($so && $this->rbac->isObserver($so, $ucR, $uiR)) {
                 $so_id = $so->reqId();
                 // see SalesOrderRepository getStatuses function
                 $so->setStatusId(9);
@@ -489,39 +499,6 @@ final class SalesOrderController extends BaseController
         );
     }
 
-    /**
-     * @param SalesOrderRepository $soRepo
-     * @param int $status
-     * @param Sort $sort
-     *
-     * @return DRI&SDI
-     *
-     * @psalm-return SDI&DRI<int, SalesOrder>
-     */
-    private function salesordersStatusWithSort(SoR $soRepo, int $status,
-        Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
-    {
-        return $soRepo->findAllWithStatus($status)
-                      ->withSort($sort);
-    }
-
-    /**
-     * @param SOR $soR
-     * @param int $status
-     * @param array $user_clients
-     * @param Sort $sort
-     *
-     * @return DRI&SDI
-     *
-     * @psalm-return SDI&DRI<int, SalesOrder>
-     */
-    private function salesordersStatusWithSortGuest(SoR $soR, int $status,
-    array $user_clients, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
-    {
-        return $soR->repoGuestStatuses($status, $user_clients)
-                     ->withSort($sort);
-    }
-
     public function edit(
         Request $request,
         CurrentRoute $currentRoute,
@@ -529,8 +506,8 @@ final class SalesOrderController extends BaseController
         SalesOrderEditDependencies $d,
     ): Response {
         $so = $this->salesorder($currentRoute, $d->soR);
-        if ($so && ($this->rbacObserver($so, $d->ucR, $d->uiR) || $this->rbacAdmin()
-                                                || $this->rbacAccountant())) {
+        if ($so && ($this->rbac->isObserver($so, $d->ucR, $d->uiR) || $this->rbac->isAdmin()
+                                                || $this->rbac->isAccountant())) {
             $form = SalesOrderForm::show($so);
             $dels = $d->delRepo->repoClientquery($so->reqClientId());
             $so_id = $so->reqId();
@@ -756,66 +733,19 @@ final class SalesOrderController extends BaseController
                             $_language, $service->relation->dR, $quote->getDeliveryLocationId())
                                 : '',
                 ];
-                if ($this->rbacObserver($so, $service->relation->ucR, $service->relation->uiR)) {
+                if ($this->rbac->isObserver($so, $service->relation->ucR, $service->relation->uiR)) {
                     return $this->webViewRenderer->render('view', $parameters);
                 }
-                if ($this->rbacAdmin()) {
+                if ($this->rbac->isAdmin()) {
                     return $this->webViewRenderer->render('view', $parameters);
                 }
-                if ($this->rbacAccountant()) {
+                if ($this->rbac->isAccountant()) {
                     return $this->webViewRenderer->render('view', $parameters);
                 }
             } // $so_amount
         } // $so->reqId()
         return $this->webService->getNotFoundResponse();
     }
-
-    /**
-     * Purpose:
-     * Prevent browser manipulation and ensure that views are only accessible
-     * to users 1. with the observer role's VIEW_INV permission and 2. supervise a
-     * client requested salesorder and are an active current user for these
-     * client's salesorders.
-     * @param SalesOrder $so
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @return bool
-     */
-    private function rbacObserver(SalesOrder $so, UCR $ucR, UIR $uiR) : bool {
-        $statusId = $so->getStatusId();
-        if (null !== $statusId
-            // has observer role
-            && $this->userService->hasPermission(Permissions::VIEW_INV)
-            && !$this->userService->hasPermission(Permissions::EDIT_INV)
-            // the salesorder has passed the 'draft' stage i.e sent / appears
-            // in the observer user's guest index
-            && $statusId !== 1
-            && (($soUserId = $so->reqUserId()) > 0)
-            // the salesorder is intended for the current user
-            && ($soUserId === $this->userService->getUser()?->reqId())
-            // the salesorder client is associated with the above user
-            && ($ucR->repoUserClientqueryCount($soUserId, $so->reqClientId()) > 0)) {
-            $userInv = $uiR->repoUserInvUserIdquery($soUserId);
-            // the current observer user is active
-            if (null !== $userInv && $userInv->getActive()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private function rbacAccountant() : bool {
-        return $this->userService->hasPermission(Permissions::VIEW_INV)
-            && $this->userService->hasPermission(Permissions::VIEW_PAYMENT)
-            && $this->userService->hasPermission(Permissions::EDIT_PAYMENT);
-    }
-
-    private function rbacAdmin() : bool {
-        return $this->userService->hasPermission(Permissions::VIEW_INV)
-            && $this->userService->hasPermission(Permissions::EDIT_INV);
-    }
-
-    //For rbac refer to AccessChecker
 
     /**
     * @param CurrentRoute $currentRoute
@@ -896,11 +826,11 @@ final class SalesOrderController extends BaseController
                         $this->invService->saveInv($user, $inv, $inv_body,
                                                                 $d->sR, $d->gR);
                         $inv_id = $inv->reqId();
-                        $this->soToInvoiceSoItems($so_id, $inv_id, $formHydrator, $d);
-                        $this->soToInvoiceSoTaxRates($so_id, $inv_id, $d, $formHydrator);
-                        $this->soToInvoiceSoCustom($so_id, $inv_id, $d, $formHydrator);
-                        $this->soToInvoiceSoAmount($so, $inv, $d);
-                        $this->soToInvoiceSoAllowanceCharges($so_id, $inv_id, $d, $formHydrator);
+                        $this->soToInvConverter->soToInvoiceSoItems($so_id, $inv_id, $formHydrator, $d);
+                        $this->soToInvConverter->soToInvoiceSoTaxRates($so_id, $inv_id, $d, $formHydrator);
+                        $this->soToInvConverter->soToInvoiceSoCustom($so_id, $inv_id, $d, $formHydrator);
+                        $this->soToInvConverter->soToInvoiceSoAmount($so, $inv, $d);
+                        $this->soToInvConverter->soToInvoiceSoAllowanceCharges($so_id, $inv_id, $d, $formHydrator);
                         $so->setInvId($inv_id);
                         $so->setStatusId(8);
                         $this->flashMessage('info',
@@ -948,201 +878,6 @@ final class SalesOrderController extends BaseController
             }
         }
         return $this->webService->getNotFoundResponse();
-    }
-
-    private function soToInvoiceSoItems(
-        int $so_id,
-        int $new_inv_id,
-        FormHydrator $formHydrator,
-        SoToInvoiceDependencies $d,
-    ): void {
-        $items = $d->soiR->repoSalesOrderItemIdquery($so_id);
-        /** @var SalesOrderItem $so_item */
-        foreach ($items as $so_item) {
-            $origSoItemId = $so_item->reqId();
-            $newInvItem = new InvItem();
-            $inv_item = [
-                'inv_id' => $new_inv_id,
-                'so_item_id' => $origSoItemId,
-                'tax_rate_id' => $so_item->getTaxRateId(),
-                'product_id' => $so_item->getProduct()?->reqId(),
-                'task_id' => $so_item->getTask()?->reqId(),
-                'product_unit' => $so_item->getProductUnit(),
-                'product_unit_id' => $so_item->getProductUnitId(),
-                'peppol_po_itemid' => $so_item->getPeppolPoItemid(),
-                'peppol_po_lineid' => $so_item->getPeppolPoLineid(),
-                'name' => $so_item->getName(),
-                'description' => $so_item->getDescription(),
-                'quantity' => $so_item->getQuantity(),
-                'price' => $so_item->getPrice(),
-                'discount_amount' => $so_item->getDiscountAmount(),
-                'order' => $so_item->getOrder(),
-                'is_recurring' => 0,
-                'date' => '',
-            ];
-            $form = new InvItemForm();
-            if ($formHydrator->populateAndValidate($form, $inv_item)) {
-                $savedInvItem = $this->invItemService->addInvItemProductTask(
-                    $newInvItem, $inv_item, (string) $new_inv_id,
-                    $d->pR, $d->taskR, $d->unR, $this->translator);
-                $this->copySoItemAllowanceChargesToInv(
-                        $origSoItemId, $d->acsoiR, $new_inv_id,
-                        $savedInvItem, $d->aciiR);
-                $tax_rate_percentage = $this->invItemService->taxratePercentage(
-                        (int) $inv_item['tax_rate_id'], $d->trR);
-                if (isset($inv_item['quantity'], $inv_item['price'],
-                    $inv_item['discount_amount'])
-                    && null !== $tax_rate_percentage
-                ) {
-                    $this->invItemService->saveInvItemAmount(
-                        $savedInvItem->reqId(),
-                        $inv_item['quantity'],
-                        $inv_item['price'],
-                        $inv_item['discount_amount'],
-                        $tax_rate_percentage,
-                        $d->iiaS,
-                        $d->iiaR
-                    );
-                }
-            }
-        }
-    }
-
-    private function copySoItemAllowanceChargesToInv(
-        int $origSoItemId, ACSOIR $acsoiR, int $new_inv_id,
-            InvItem $newInvItem, ACIIR $aciiR): void {
-
-        $all = $acsoiR->repoSalesOrderItemquery($origSoItemId);
-        /**
-         * @var SalesOrderItemAllowanceCharge $salesOrderItemAllowanceCharge
-         */
-        foreach ($all as $salesOrderItemAllowanceCharge) {
-            $acInvItem = new InvItemAllowanceCharge();
-            $acInvItem->setInv($newInvItem->getInv());
-            $acInvItem->setInvItem($newInvItem);
-            $acInvItem->setAllowanceCharge(
-                            $salesOrderItemAllowanceCharge->getAllowanceCharge());
-
-            // Also set FK IDs for consistency
-            $acInvItem->setInvId($new_inv_id);
-            $acInvItem->setInvItemId($newInvItem->reqId());
-            $acInvItem->setAllowanceChargeId(
-            (int) $salesOrderItemAllowanceCharge->getAllowanceCharge()?->reqId()
-            );
-
-            // Set other properties
-            $acInvItem->setAmount((float)
-                $salesOrderItemAllowanceCharge->getAmount());
-            $acInvItem->setVatOrTax((float)
-                $salesOrderItemAllowanceCharge->getVatOrTax() ?: 0.00);
-            $aciiR->save($acInvItem);
-        }
-    }
-
-    private function soToInvoiceSoTaxRates(
-        int $so_id,
-        int $inv_id,
-        SoToInvoiceDependencies $d,
-        FormHydrator $formHydrator,
-    ): void {
-        $so_tax_rates = $d->sotrR->repoSalesOrderquery($so_id);
-        /** @var SalesOrderTaxRate $so_tax_rate */
-        foreach ($so_tax_rates as $so_tax_rate) {
-            $inv_tax_rate = [
-                'inv_id' => $inv_id,
-                'tax_rate_id' => $so_tax_rate->reqTaxRateId(),
-                'include_item_tax' => $so_tax_rate->getIncludeItemTax(),
-                'inv_tax_rate_amount' =>
-                    $so_tax_rate->getSalesOrderTaxRateAmount(),
-            ];
-            $entity = new InvTaxRate();
-            $form = new InvTaxRateForm();
-            if ($formHydrator->populateAndValidate($form, $inv_tax_rate)) {
-                $this->invTaxRateService->saveInvTaxRate($entity, $inv_tax_rate);
-            }
-        }
-    }
-
-    private function soToInvoiceSoCustom(
-        int $so_id,
-        int $inv_id,
-        SoToInvoiceDependencies $d,
-        FormHydrator $formHydrator,
-    ): void {
-        $so_customs = $d->socR->repoFields($so_id);
-        /** @var SalesOrderCustom $so_custom */
-        foreach ($so_customs as $so_custom) {
-            /** @var CustomField $existing_custom_field */
-            $existing_custom_field = $d->cfR->repoCustomFieldquery(
-                $so_custom->reqCustomFieldId());
-            if ($d->cfR->repoTableAndLabelCountquery('inv_custom',
-                (string) $existing_custom_field->getLabel()) !== 0) {
-                $custom_field = new CustomField();
-                $custom_field->setTable('inv_custom');
-                $custom_field->setLabel(
-                    (string) $existing_custom_field->getLabel());
-                $custom_field->setType(
-                    $existing_custom_field->getType());
-                $custom_field->setLocation(
-                    (int) $existing_custom_field->getLocation());
-                $custom_field->setOrder(
-                    (int) $existing_custom_field->getOrder());
-                $d->cfR->save($custom_field);
-                $inv_custom = [
-                    'inv_id' => $inv_id,
-                    'custom_field_id' => $custom_field->reqId(),
-                    'value' => $so_custom->getValue(),
-                ];
-                $entity = new InvCustom();
-                $form = new InvCustomForm();
-                if ($formHydrator->populateAndValidate($form, $inv_custom)) {
-                    $this->inv_custom_service->saveInvCustom(
-                        $entity, $inv_custom);
-                }
-            }
-        }
-    }
-
-    private function soToInvoiceSoAmount(
-        SalesOrder $so,
-        Inv $inv,
-        SoToInvoiceDependencies $d,
-    ): void {
-        $soA = $so->getSalesOrderAmount();
-        $iA = $inv->getInvAmount();
-        $iA->setInvId($inv->reqId());
-        $iA->setItemSubtotal($soA->getItemSubtotal() ?? 0.00);
-        $iA->setItemTaxTotal($soA->getItemTaxTotal() ?? 0.00);
-        $iA->setPackhandleshipTotal($soA->getPackhandleshipTotal() ?: 0.00);
-        $iA->setPackhandleshipTax($soA->getPackhandleshipTax() ?: 0.00);
-        $iA->setTaxTotal($soA->getTaxTotal() ?? 0.00);
-        $iA->setTotal($soA->getTotal() ?? 0.00);
-        $d->iR->save($inv);
-    }
-
-    private function soToInvoiceSoAllowanceCharges(
-        int $so_id,
-        int $new_inv_id,
-        SoToInvoiceDependencies $d,
-        FormHydrator $formHydrator,
-    ): void {
-        $so_allowance_charges = $d->acsoR->repoACSOquery($so_id);
-        /** @var SalesOrderAllowanceCharge $so_allowance_charge */
-        foreach ($so_allowance_charges as $so_allowance_charge) {
-            $new_inv_ac = [
-                'inv_id' => $new_inv_id,
-                'allowance_charge_id' =>
-                    $so_allowance_charge->getAllowanceChargeId(),
-                'amount' => $so_allowance_charge->getAmount(),
-            ];
-            $invAllowanceCharge = new InvAllowanceCharge();
-            $form = InvAllowanceChargeForm::show($invAllowanceCharge, $new_inv_id);
-            if ($formHydrator->populateAndValidate($form, $new_inv_ac)) {
-                $this->inv_allowance_charge_service->saveInvAllowanceCharge(
-                    $invAllowanceCharge, $new_inv_ac
-                );
-            }
-        }
     }
 
     public function urlKey(CurrentRoute $currentRoute, CurrentUser $currentUser, SoUrlKeyDeps $deps): Response
