@@ -12,6 +12,8 @@ use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use Cycle\ORM\Entity\Behavior;
 use DateTimeImmutable;
+use App\Infrastructure\Persistence\DeliveryLocation\Trait\DeliveryLocationTrait1;
+use App\Infrastructure\Persistence\DeliveryLocation\Trait\DeliveryLocationTrait2;
 
 #[Entity(repository: DeliveryLocationRepository::class)]
 #[Behavior\CreatedAt(field: 'date_created', column: 'date_created')]
@@ -19,6 +21,8 @@ use DateTimeImmutable;
 class DeliveryLocation
 {
     use RequireId;
+    use DeliveryLocationTrait1;
+    use DeliveryLocationTrait2;
 
     #[Column(type: 'primary')]
     private ?int $id = null;
@@ -70,162 +74,5 @@ class DeliveryLocation
     {
         $this->date_created = new DateTimeImmutable();
         $this->date_modified = new DateTimeImmutable();
-    }
-
-    public function reqId(): int
-    {
-        return $this->requireId($this->id, 'DeliveryLocation');
-    }
-
-    public function hasIdentity(): bool
-    {
-        return $this->id !== null;
-    }
-
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    public function reqClientId(): int
-    {
-        return $this->requireId($this->client_id, 'Client');
-    }
-
-    public function setClientId(int $client_id): void
-    {
-        $this->client_id = $client_id;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(?string $name): void
-    {
-        $this->name = $name;
-    }
-
-    public function getAddress1(): ?string
-    {
-        return $this->address_1;
-    }
-
-    public function setAddress1(string $address_1): void
-    {
-        $this->address_1 = $address_1;
-    }
-
-    public function getAddress2(): ?string
-    {
-        return $this->address_2;
-    }
-
-    public function setAddress2(string $address_2): void
-    {
-        $this->address_2 = $address_2;
-    }
-
-    public function getBuildingNumber(): ?string
-    {
-        return $this->building_number;
-    }
-
-    public function setBuildingNumber(string $building_number): void
-    {
-        $this->building_number = $building_number;
-    }
-
-    public function getCity(): ?string
-    {
-        return $this->city;
-    }
-
-    public function setCity(string $city): void
-    {
-        $this->city = $city;
-    }
-
-    public function getState(): ?string
-    {
-        return $this->state;
-    }
-
-    public function setState(string $state): void
-    {
-        $this->state = $state;
-    }
-
-    public function getZip(): ?string
-    {
-        return $this->zip;
-    }
-
-    public function setZip(string $zip): void
-    {
-        $this->zip = $zip;
-    }
-
-    public function getCountry(): ?string
-    {
-        return $this->country;
-    }
-
-    public function setCountry(string $country): void
-    {
-        $this->country = $country;
-    }
-
-    public function getGlobalLocationNumber(): ?string
-    {
-        return $this->global_location_number;
-    }
-
-    public function setGlobalLocationNumber(?string $global_location_number): void
-    {
-        $this->global_location_number = $global_location_number;
-    }
-
-    public function getElectronicAddressScheme(): ?string
-    {
-        return $this->electronic_address_scheme;
-    }
-
-    public function setElectronicAddressScheme(
-        ?string $electronic_address_scheme
-    ): void
-    {
-        $this->electronic_address_scheme = $electronic_address_scheme;
-    }
-
-    public function getDateCreated(): DateTimeImmutable
-    {
-        return $this->date_created;
-    }
-
-    public function setDateCreated(DateTimeImmutable $date_created): void
-    {
-        $this->date_created = $date_created;
-    }
-
-    public function getDateModified(): DateTimeImmutable
-    {
-        return $this->date_modified;
-    }
-
-    public function setDateModified(DateTimeImmutable $date_modified): void
-    {
-        $this->date_modified = $date_modified;
-    }
-
-    public function getClient(): ?Client
-    {
-        return $this->client;
-    }
-
-    public function setClient(?Client $client): void
-    {
-        $this->client = $client;
     }
 }

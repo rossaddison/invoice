@@ -9,12 +9,16 @@ use App\Invoice\AllowanceCharge\AllowanceChargeRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
+use App\Infrastructure\Persistence\AllowanceCharge\Trait\AllowanceChargeTrait1;
+use App\Infrastructure\Persistence\AllowanceCharge\Trait\AllowanceChargeTrait2;
 
 #[Entity(repository: AllowanceChargeRepository::class)]
 
 class AllowanceCharge
 {
     use RequireId;
+    use AllowanceChargeTrait1;
+    use AllowanceChargeTrait2;
     
     #[BelongsTo(target: TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
@@ -50,110 +54,5 @@ class AllowanceCharge
         #[Column(type: 'integer(11)', nullable: false)]
         private int $tax_rate_id = 0)
     {
-    }
-
-    public function reqId(): int
-    {
-        return $this->requireId($this->id, 'AllowanceCharge');
-    }
-
-    public function hasIdentity(): bool
-    {
-        return $this->id !== null;
-    }
-    
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    public function getIdentifier(): bool
-    {
-        return $this->identifier;
-    }
-
-    public function setIdentifier(bool $identifier): void
-    {
-        $this->identifier = $identifier;
-    }
-
-    public function getLevel(): int
-    {
-        return $this->level;
-    }
-
-    public function setLevel(int $level): void
-    {
-        $this->level = $level;
-    }
-
-    public function getReasonCode(): string
-    {
-        return $this->reason_code;
-    }
-
-    public function setReasonCode(string $reason_code): void
-    {
-        $this->reason_code = $reason_code;
-    }
-
-    public function getReason(): string
-    {
-        return $this->reason;
-    }
-
-    public function setReason(string $reason): void
-    {
-        $this->reason = $reason;
-    }
-
-    public function getMultiplierFactorNumeric(): int
-    {
-        return $this->multiplier_factor_numeric;
-    }
-
-    public function setMultiplierFactorNumeric(int $multiplier_factor_numeric): void
-    {
-        $this->multiplier_factor_numeric = $multiplier_factor_numeric;
-    }
-
-    public function getAmount(): int
-    {
-        return $this->amount;
-    }
-
-    public function setAmount(int $amount): void
-    {
-        $this->amount = $amount;
-    }
-
-    public function getBaseAmount(): int
-    {
-        return $this->base_amount;
-    }
-
-    public function setBaseAmount(int $base_amount): void
-    {
-        $this->base_amount = $base_amount;
-    }
-
-    public function getTaxRate(): ?TaxRate
-    {
-        return $this->tax_rate;
-    }
-
-    public function setTaxRate(?TaxRate $taxRate): void
-    {
-        $this->tax_rate = $taxRate;
-    }
-
-    public function getTaxRateId(): int
-    {
-        return $this->requireId($this->tax_rate_id, 'TaxRate');
-    }
-
-    public function setTaxRateId(int $tax_rate_id): void
-    {
-        $this->tax_rate_id = $tax_rate_id;
     }
 }

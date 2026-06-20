@@ -12,11 +12,15 @@ use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use DateTime;
 use DateTimeImmutable;
+use App\Infrastructure\Persistence\Task\Trait\TaskTrait1;
+use App\Infrastructure\Persistence\Task\Trait\TaskTrait2;
 
 #[Entity(repository: TR::class)]
 class Task
 {
     use RequireId;
+    use TaskTrait1;
+    use TaskTrait2;
  
     #[BelongsTo(target: TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
@@ -42,116 +46,5 @@ class Task
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $tax_rate_id = null,
     ) {
-    }
-
-    public function reqId(): int
-    {
-        return $this->requireId($this->id, 'Task');
-    }
-
-    public function hasIdentity(): bool
-    {
-        return $this->id !== null;
-    }
-
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    public function getTaxRate(): ?TaxRate
-    {
-        return $this->tax_rate;
-    }
-
-    public function setTaxRate(?TaxRate $tax_rate): void
-    {
-        $this->tax_rate = $tax_rate;
-    }
-
-    public function getProject(): ?Project
-    {
-        return $this->project;
-    }
-
-    public function setProject(?Project $project): void
-    {
-        $this->project = $project;
-    }
-
-    public function reqProjectId(): int
-    {
-        return $this->requireId($this->project_id, 'Project');
-    }
-
-    public function setProjectId(int $project_id): void
-    {
-        $this->project_id = $project_id;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): void
-    {
-        $this->name = $name;
-    }
-
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(string $description): void
-    {
-        $this->description = $description;
-    }
-
-    public function getPrice(): ?float
-    {
-        return $this->price;
-    }
-
-    public function setPrice(float $price): void
-    {
-        $this->price = $price;
-    }
-
-    public function getFinishDate(): string|DateTimeImmutable
-    {
-        /** @var DateTimeImmutable|string $this->finish_date */
-        return $this->finish_date;
-    }
-
-    public function setFinishDate(?DateTime $finish_date): void
-    {
-        $this->finish_date = $finish_date;
-    }
-
-    public function getStatus(): ?int
-    {
-        return $this->status;
-    }
-
-    public function setStatus(int $status): void
-    {
-        $this->status = $status;
-    }
-
-    public function reqTaxRateId(): int
-    {
-        return $this->requireId($this->tax_rate_id, 'TaxRate');
-    }
-
-    public function setTaxRateId(int $tax_rate_id): void
-    {
-        $this->tax_rate_id = $tax_rate_id;
-    }
-
-    public function isOverdue(): bool
-    {
-        return $this->finish_date < new DateTime(date('Y-m-d')) ? false : true;
     }
 }

@@ -12,6 +12,9 @@ use Cycle\Annotated\Annotation\Relation\HasMany;
 use Cycle\ORM\Entity\Behavior;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Infrastructure\Persistence\Company\Trait\CompanyTrait1;
+use App\Infrastructure\Persistence\Company\Trait\CompanyTrait2;
+use App\Infrastructure\Persistence\Company\Trait\CompanyTrait3;
 
 #[Entity(repository: \App\Invoice\Company\CompanyRepository::class)]
 #[Behavior\CreatedAt(field: 'date_created', column: 'date_created')]
@@ -19,6 +22,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Company
 {
     use RequireId;
+    use CompanyTrait1;
+    use CompanyTrait2;
+    use CompanyTrait3;
 
     #[Column(type: 'datetime')]
     private readonly DateTimeImmutable $date_created;
@@ -79,237 +85,5 @@ class Company
         $this->date_created = new DateTimeImmutable();
         $this->date_modified = new DateTimeImmutable();
         $this->companyPrivates = new ArrayCollection();
-    }
-
-    public function getCompanyPrivates(): ArrayCollection
-    {
-        return $this->companyPrivates;
-    }
-
-    public function reqId(): int
-    {
-        return $this->requireId($this->id, 'Company');
-    }
-
-    public function hasIdentity(): bool
-    {
-        return $this->id !== null;
-    }
-    
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    public function getCurrent(): ?int
-    {
-        return $this->current;
-    }
-
-    public function setCurrent(int $current): void
-    {
-        $this->current = $current;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): void
-    {
-        $this->name = $name;
-    }
-
-    public function getAddress1(): ?string
-    {
-        return $this->address_1;
-    }
-
-    public function setAddress1(string $address_1): void
-    {
-        $this->address_1 = $address_1;
-    }
-
-    public function getAddress2(): ?string
-    {
-        return $this->address_2;
-    }
-
-    public function setAddress2(string $address_2): void
-    {
-        $this->address_2 = $address_2;
-    }
-
-    public function getCity(): ?string
-    {
-        return $this->city;
-    }
-
-    public function setCity(string $city): void
-    {
-        $this->city = $city;
-    }
-
-    public function getState(): ?string
-    {
-        return $this->state;
-    }
-
-    public function setState(string $state): void
-    {
-        $this->state = $state;
-    }
-
-    public function getZip(): ?string
-    {
-        return $this->zip;
-    }
-
-    public function setZip(string $zip): void
-    {
-        $this->zip = $zip;
-    }
-
-    public function getCountry(): ?string
-    {
-        return $this->country;
-    }
-
-    public function setCountry(string $country): void
-    {
-        $this->country = $country;
-    }
-
-    public function getPhone(): ?string
-    {
-        return $this->phone;
-    }
-
-    public function setPhone(string $phone): void
-    {
-        $this->phone = $phone;
-    }
-
-    public function getFax(): ?string
-    {
-        return $this->fax;
-    }
-
-    public function setFax(string $fax): void
-    {
-        $this->fax = $fax;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): void
-    {
-        $this->email = $email;
-    }
-
-    // Related logic: resources/views/layout/soletrader/main.php
-    // src/ViewInjection/CommonViewInjection
-    public function getSeoDescription(): ?string
-    {
-        return $this->seo_description;
-    }
-
-    public function setSeoDescription(string $seoDescription): void
-    {
-        $this->seo_description = $seoDescription;
-    }
-
-    public function getWeb(): ?string
-    {
-        return $this->web;
-    }
-
-    public function setWeb(string $web): void
-    {
-        $this->web = $web;
-    }
-
-    public function getSlack(): ?string
-    {
-        return $this->slack;
-    }
-
-    public function setSlack(string $slack): void
-    {
-        $this->slack = $slack;
-    }
-
-    public function getTwitter(): ?string
-    {
-        return $this->twitter;
-    }
-
-    public function setTwitter(string $twitter): void
-    {
-        $this->twitter = $twitter;
-    }
-
-    public function getFacebook(): ?string
-    {
-        return $this->facebook;
-    }
-
-    public function setFacebook(string $facebook): void
-    {
-        $this->facebook = $facebook;
-    }
-
-    public function getLinkedIn(): ?string
-    {
-        return $this->linkedin;
-    }
-
-    public function setLinkedIn(string $linkedin): void
-    {
-        $this->linkedin = $linkedin;
-    }
-
-    public function getWhatsapp(): ?string
-    {
-        return $this->whatsapp;
-    }
-
-    public function setWhatsapp(string $whatsapp): void
-    {
-        $this->whatsapp = $whatsapp;
-    }
-
-    public function getArbitrationBody(): ?string
-    {
-        return $this->arbitrationBody;
-    }
-
-    public function setArbitrationBody(string $arbitrationBody): void
-    {
-        $this->arbitrationBody = $arbitrationBody;
-    }
-
-    public function getArbitrationJurisdiction(): ?string
-    {
-        return $this->arbitrationJurisdiction;
-    }
-
-    public function setArbitrationJurisdiction(string $arbitrationJurisdiction): void
-    {
-        $this->arbitrationJurisdiction = $arbitrationJurisdiction;
-    }
-
-    public function getDateCreated(): DateTimeImmutable
-    {
-        return $this->date_created;
-    }
-
-    public function getDateModified(): DateTimeImmutable
-    {
-        return $this->date_modified;
     }
 }

@@ -12,12 +12,18 @@ use Cycle\ORM\Entity\Behavior;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use DateTime;
 use DateTimeImmutable;
+use App\Infrastructure\Persistence\CompanyPrivate\Trait\CompanyPrivateTrait1;
+use App\Infrastructure\Persistence\CompanyPrivate\Trait\CompanyPrivateTrait2;
+use App\Infrastructure\Persistence\CompanyPrivate\Trait\CompanyPrivateTrait3;
 
 #[Entity(repository: \App\Invoice\CompanyPrivate\CompanyPrivateRepository::class)]
 #[Behavior\UpdatedAt(field: 'date_modified', column: 'date_modified')]
 class CompanyPrivate
 {
     use RequireId;
+    use CompanyPrivateTrait1;
+    use CompanyPrivateTrait2;
+    use CompanyPrivateTrait3;
 
     #[BelongsTo(target: Company::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Company $company = null;
@@ -62,201 +68,5 @@ class CompanyPrivate
     ) {
         $this->date_created = new DateTimeImmutable();
         $this->date_modified = new DateTimeImmutable();
-    }
-
-    public function isActiveToday(): bool
-    {
-        $today = new \DateTimeImmutable('today');
-        $startDate = $this->getStartDate();
-        $endDate = $this->getEndDate();
-
-        if ($startDate === null || $endDate === null) {
-            return false;
-        }
-
-        return $today >= $startDate && $today <= $endDate;
-    }
-
-    //get relation $company
-    public function getCompany(): ?Company
-    {
-        return $this->company;
-    }
-
-    //set relation $company
-    public function setCompany(?Company $company): void
-    {
-        $this->company = $company;
-    }
-
-    public function reqId(): int
-    {
-        return $this->requireId($this->id, 'CompanyPrivate');
-    }
-
-    public function hasIdentity(): bool
-    {
-        return $this->id !== null;
-    }
-
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    public function reqCompanyId(): int
-    {
-        return $this->requireId($this->company_id, 'Company');
-    }
-
-    public function setCompanyId(int $company_id): void
-    {
-        $this->company_id = $company_id;
-    }
-
-    public function getVatId(): string
-    {
-        return (string) $this->vat_id;
-    }
-
-    public function setVatId(string $vat_id): void
-    {
-        $this->vat_id = $vat_id;
-    }
-
-    public function getTaxCode(): ?string
-    {
-        return $this->tax_code;
-    }
-
-    public function setTaxCode(string $tax_code): void
-    {
-        $this->tax_code = $tax_code;
-    }
-
-    public function getIban(): ?string
-    {
-        return $this->iban;
-    }
-
-    public function setIban(string $iban): void
-    {
-        $this->iban = $iban;
-    }
-
-    public function getBacsSortCode(): ?string
-    {
-        return $this->bacs_sort_code;
-    }
-
-    public function setBacsSortCode(string $bacs_sort_code): void
-    {
-        $this->bacs_sort_code = $bacs_sort_code;
-    }
-
-    public function getBacsAccountNumber(): ?string
-    {
-        return $this->bacs_account_number;
-    }
-
-    public function setBacsAccountNumber(string $bacs_account_number): void
-    {
-        $this->bacs_account_number = $bacs_account_number;
-    }
-
-    public function getGln(): ?string
-    {
-        return $this->gln;
-    }
-
-    public function setGln(string $gln): void
-    {
-        $this->gln = $gln;
-    }
-
-    public function getRcc(): ?string
-    {
-        return $this->rcc;
-    }
-
-    public function setRcc(string $rcc): void
-    {
-        $this->rcc = $rcc;
-    }
-
-    public function getLogoFilename(): ?string
-    {
-        return $this->logo_filename;
-    }
-
-    public function setLogoFilename(string $logo_filename): void
-    {
-        $this->logo_filename = $logo_filename;
-    }
-
-    public function getLogoWidth(): ?int
-    {
-        return $this->logo_width;
-    }
-
-    public function setLogoWidth(int $logo_width): void
-    {
-        $this->logo_width = $logo_width;
-    }
-
-    public function getLogoHeight(): ?int
-    {
-        return $this->logo_height;
-    }
-
-    public function setLogoHeight(int $logo_height): void
-    {
-        $this->logo_height = $logo_height;
-    }
-
-    public function getLogoMargin(): ?int
-    {
-        return $this->logo_margin;
-    }
-
-    public function setLogoMargin(int $logo_margin): void
-    {
-        $this->logo_margin = $logo_margin;
-    }
-
-    public function getDateCreated(): DateTimeImmutable
-    {
-        return $this->date_created;
-    }
-
-    public function getDateModified(): DateTimeImmutable
-    {
-        return $this->date_modified;
-    }
-
-    //cycle
-    public function getStartDate(): ?DateTimeImmutable
-    {
-        /** @var DateTimeImmutable|null $this->start_date */
-        return $this->start_date;
-    }
-
-    public function setStartDate(?DateTime $start_date): void
-    {
-        $this->start_date = $start_date !== null ?
-            DateTimeImmutable::createFromMutable($start_date) : null;
-    }
-
-    //cycle
-    public function getEndDate(): ?DateTimeImmutable
-    {
-        /** @var DateTimeImmutable|null $this->end_date */
-        return $this->end_date;
-    }
-
-    public function setEndDate(?DateTime $end_date): void
-    {
-        $this->end_date = $end_date !== null ?
-            DateTimeImmutable::createFromMutable($end_date) : null;
     }
 }
