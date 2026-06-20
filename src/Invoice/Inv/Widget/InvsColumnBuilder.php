@@ -470,7 +470,7 @@ final class InvsColumnBuilder
                 ->render(),
             encodeHeader: false,
             content: static function (Inv $model) use ($t): string {
-                if ($model->getSoId() !== null) {
+                if (($model->getSoId() ?? 0) > 0) {
                     return '<span class="badge bg-primary" data-bs-toggle="tooltip" title="'
                         . Html::encode(
                             $t->translate('quote') . ' → '
@@ -479,7 +479,7 @@ final class InvsColumnBuilder
                             . ' (' . $t->translate('peppol') . ')')
                         . '">🔀</span>';
                 }
-                if ($model->getQuoteId() !== null) {
+                if (($model->getQuoteId() ?? 0) > 0) {
                     return '<span class="badge bg-info text-dark" data-bs-toggle="tooltip" title="'
                         . Html::encode(
                             $t->translate('quote') . ' → '

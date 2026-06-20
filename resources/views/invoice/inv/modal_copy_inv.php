@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * Related logic: see id="inv-to-inv" triggered by <a href="#inv-to-inv" data-bs-toggle="modal" >
+ * Related logic: see id="inv-to-inv" triggered by <a href="#inv-to-inv" data-bs-toggle="modal">
  * Related logic: see InvController view function
  * @var App\Infrastructure\Persistence\Inv\Inv $inv
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -13,6 +13,8 @@ use Yiisoft\Html\Html;
  * @var array $clients
  * @var string $csrf
  */
+
+$currentClientId = $inv->reqClientId();
 
 ?>
 
@@ -35,24 +37,42 @@ use Yiisoft\Html\Html;
                            name="user_id"
                            id="user_id"
                            value="<?= $inv->reqUserId(); ?>">
-                    <div class="mb-3">
-                        <label for="create_inv_client_id">
-                            <?= $translator->translate('client'); ?>
-                        </label>
-                        <select name="create_inv_client_id"
-                                id="create_inv_client_id"
-                                class="form-control form-control-lg">
-                            <option value="">⏳</option>
-                                <?php
-/**
-* @var App\Infrastructure\Persistence\Client\Client $client
-*/
-                                    foreach ($clients as $client) { ?>
-                                    <option value="<?= $client->reqId(); ?>">
-                                        <?= Html::encode($client->getClientName()); ?>
-                                    </option>
-                                <?php } ?>
-                        </select>
+                    <div class="mb-2">
+                        <input type="text"
+                               id="copy-client-search"
+                               class="form-control form-control-sm"
+                               placeholder="<?= $translator->translate('search'); ?>…"
+                               autocomplete="off">
+                    </div>
+                    <div id="copy-client-list" style="max-height:280px;overflow-y:auto;">
+                        <?php
+                        /**
+                         * @var App\Infrastructure\Persistence\Client\Client $client
+                         */
+                        foreach ($clients as $client):
+                            $id    = $client->reqId();
+                            $isCurrent = ($id === $currentClientId);
+                        ?>
+                        <div class="form-check">
+                            <?php if ($isCurrent): ?>
+                            <input type="hidden"
+                                   name="copy_client_ids[]"
+                                   value="<?= $id ?>">
+                            <?php endif; ?>
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   name="copy_client_ids[]"
+                                   value="<?= $id ?>"
+                                   id="copy_client_<?= $id ?>"
+                                   <?= $isCurrent ? 'checked disabled' : '' ?>>
+                            <label class="form-check-label" for="copy_client_<?= $id ?>">
+                                <?= Html::encode($client->getClientName()); ?>
+                                <?php if ($isCurrent): ?>
+                                <small class="text-muted">(<?= $translator->translate('current'); ?>)</small>
+                                <?php endif; ?>
+                            </label>
+                        </div>
+                        <?php endforeach; ?>
                     </div>
                 </form>
             </div>
@@ -60,14 +80,14 @@ use Yiisoft\Html\Html;
                 <button type="button"
                         class="btn btn-secondary"
                         data-bs-dismiss="modal">
-                                <?= $translator->translate('cancel'); ?>
+                    <?= $translator->translate('cancel'); ?>
                 </button>
-                <!-- inv.js inv_to_inv_confirm, InvController function invToInvConfirm -->
+                <!-- invoice.ts handleCopySingleInvoice → InvController invToInvConfirm -->
                 <button type="button"
                         class="inv_to_inv_confirm btn btn-success"
                         id="inv_to_inv_confirm">
                     <i class="bi bi-check-lg"></i>
-                        <?= $translator->translate('submit'); ?>
+                    <?= $translator->translate('submit'); ?>
                 </button>
             </div>
         </div>

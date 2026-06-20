@@ -63,6 +63,26 @@ final class ProductClientService
     }
 
     /**
+     * Associate all product IDs from an invoice's items with a client,
+     * skipping pairs that already exist in product_client.
+     *
+     * @param int[] $productIds
+     */
+    public function syncFromInvItems(int $clientId, array $productIds): void
+    {
+        $today = (new \DateTimeImmutable())->format('Y-m-d');
+        foreach ($productIds as $productId) {
+            if (!$this->repository->isProductAssociatedWithClient($productId, $clientId)) {
+                $this->save(new ProductClient(), [
+                    'product_id' => $productId,
+                    'client_id'  => $clientId,
+                    'updated_at' => $today,
+                ]);
+            }
+        }
+    }
+
+    /**
      * @param ProductClient $model
      */
     public function delete(ProductClient $model): void

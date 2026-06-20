@@ -133,7 +133,11 @@ public function index(
                 'modal_create_recurring_multiple' =>
                     $this->indexModalCreateRecurringMultiple($list->irR),
                 'modal_copy_inv_multiple' =>
-                    $this->indexModalCopyInvMultiple(),
+                    $this->indexModalCopyInvMultiple(
+                        $list->clientRepo->repoUserClient(
+                            $nav->ucR->getClientsWithUserAccounts()
+                        )
+                    ),
             ];
 
             if ($request->hasHeader('Hx-Request')) {
@@ -284,10 +288,12 @@ public function index(
         ]);
     }
 
-    private function indexModalCopyInvMultiple(): string
+    private function indexModalCopyInvMultiple(iterable $clients): string
     {
         return $this->webViewRenderer->renderPartialAsString(
-            '//invoice/inv/modal_copy_inv_multiple');
+            '//invoice/inv/modal_copy_inv_multiple',
+            ['clients' => $clients]
+        );
     }
 
     /**

@@ -16,11 +16,12 @@ interface DeleteInvoiceItemsData extends RequestParams {
 interface CopyMultipleInvoicesData extends RequestParams {
     keylist: string[];
     modal_created_date: string;
+    client_ids: string[];
 }
 
 interface CopySingleInvoiceData extends RequestParams {
     inv_id: string;
-    client_id: string;
+    client_ids: string[];
     user_id: string;
 }
 
@@ -85,6 +86,18 @@ export class InvoiceHandler {
         const userAllClients = target.closest('#user_all_clients') as HTMLInputElement;
         if (userAllClients) {
             this.handleAllClientsCheck();
+        }
+
+        // Filter the copy-to-client checkbox list (inv/view modal)
+        const copySearch = target.closest('#copy-client-search') as HTMLInputElement | null;
+        if (copySearch) {
+            this.filterCopyClientList(copySearch.value);
+        }
+
+        // Filter the bulk-copy client checkbox list (inv/index modal)
+        const copyMultipleSearch = target.closest('#copy-inv-multiple-client-search') as HTMLInputElement | null;
+        if (copyMultipleSearch) {
+            this.filterCopyMultipleClientList(copyMultipleSearch.value);
         }
     }
 
@@ -379,9 +392,25 @@ export class InvoiceHandler {
                 return;
             }
 
+            const clientIds: string[] = Array.from(
+                document.querySelectorAll<HTMLInputElement>(
+                    'input[name="copy_inv_multiple_client_ids[]"]:checked'
+                )
+            ).map(cb => cb.value).filter(v => v !== '');
+
+            if (clientIds.length === 0) {
+                alert('Please select at least one client.');
+                if (btn && originalHtml) {
+                    btn.innerHTML = originalHtml;
+                    (btn as HTMLButtonElement).disabled = false;
+                }
+                return;
+            }
+
             const payload: CopyMultipleInvoicesData = {
                 keylist: selected,
                 modal_created_date: modalCreatedDate,
+                client_ids: clientIds,
             };
 
             const url = `${location.origin}/invoice/inv/multiplecopy`;
@@ -468,11 +497,22 @@ export class InvoiceHandler {
 
         try {
             const absoluteUrl = new URL(location.href);
-            const inv_id = absoluteUrl.pathname.split('/').at(-1) || '';
+            const inv_id = absoluteUrl.pathname.split('/').at(-1) ?? '';
+
+            // Collect all checked client checkboxes (multiselect modal)
+            const clientIds: string[] = Array.from(
+                document.querySelectorAll<HTMLInputElement>('input[name="copy_client_ids[]"]:checked')
+            ).map(cb => cb.value).filter(v => v !== '');
+
+            if (clientIds.length === 0) {
+                alert('Please select at least one client.');
+                this.restoreButton(btn, originalHtml);
+                return;
+            }
 
             const payload: CopySingleInvoiceData = {
-                inv_id: inv_id,
-                client_id: getFieldValue('create_inv_client_id'),
+                inv_id,
+                client_ids: clientIds,
                 user_id: getFieldValue('user_id'),
             };
 
@@ -482,12 +522,10 @@ export class InvoiceHandler {
 
             if (data.success === 1) {
                 if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
-
-                // Redirect to the newly created invoice
+                // Single client: redirect to new invoice; multiple: reload list
                 if (data.new_invoice_id) {
                     globalThis.location.href = `${location.origin}/invoice/inv/view/${data.new_invoice_id}`;
                 } else {
-                    // Fallback to reload current page if new_invoice_id not provided
                     globalThis.location.reload();
                 }
             } else {
@@ -502,6 +540,22 @@ export class InvoiceHandler {
             }
             alert('An error occurred. See console for details.');
         }
+    }
+
+    private filterCopyClientList(query: string): void {
+        const q = query.toLowerCase();
+        document.querySelectorAll<HTMLElement>('#copy-client-list .form-check').forEach(el => {
+            const label = el.querySelector('label');
+            el.style.display = !q || (label?.textContent?.toLowerCase().includes(q) ?? false) ? '' : 'none';
+        });
+    }
+
+    private filterCopyMultipleClientList(query: string): void {
+        const q = query.toLowerCase();
+        document.querySelectorAll<HTMLElement>('#copy-inv-multiple-client-list .form-check').forEach(el => {
+            const label = el.querySelector('label');
+            el.style.display = !q || (label?.textContent?.toLowerCase().includes(q) ?? false) ? '' : 'none';
+        });
     }
 
     private async handleDeleteInvoiceItems(deleteItemsConfirm: HTMLElement): Promise<void> {

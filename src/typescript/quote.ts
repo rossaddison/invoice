@@ -469,6 +469,14 @@ export class QuoteHandler {
         }
     }
 
+    private filterCopyQuoteClientList(query: string): void {
+        const q = query.toLowerCase();
+        document.querySelectorAll<HTMLElement>('#copy-quote-client-list .form-check').forEach(el => {
+            const label = el.querySelector('label');
+            el.style.display = !q || (label?.textContent?.toLowerCase().includes(q) ?? false) ? '' : 'none';
+        });
+    }
+
     private async handleQuoteToQuoteConfirm(toQuote: HTMLElement): Promise<void> {
         const url = `${location.origin}/invoice/quote/quoteToQuoteConfirm`;
         const btn = (document.querySelector('.quote_to_quote_confirm') as HTMLElement) || toQuote;
@@ -480,9 +488,20 @@ export class QuoteHandler {
 
         try {
             const quoteId = getQuoteIdFromUrl();
-            const payload: QuoteFormData = {
+
+            const clientIds: string[] = Array.from(
+                document.querySelectorAll<HTMLInputElement>('input[name="copy_quote_client_ids[]"]:checked')
+            ).map(cb => cb.value).filter(v => v !== '');
+
+            if (clientIds.length === 0) {
+                alert('Please select at least one client.');
+                setButtonLoadingOff(btn, originalHtml);
+                return;
+            }
+
+            const payload: QuoteFormData & { client_ids: string[] } = {
                 quote_id: quoteId,
-                client_id: getFieldValue('create_quote_client_id'),
+                client_ids: clientIds,
                 user_id: getFieldValue('user_id'),
             };
 
@@ -670,6 +689,11 @@ export class QuoteHandler {
             } else if (amountEl) {
                 amountEl.disabled = false;
             }
+        }
+
+        // Filter the copy-to-client checkbox list
+        if (target.id === 'copy-quote-client-search') {
+            this.filterCopyQuoteClientList(target.value);
         }
     }
 

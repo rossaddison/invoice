@@ -39,8 +39,11 @@ use Psr\{
 
 trait QuoteCopy
 {
-    // Data fed from quote.js->$(document).on('click',
-    // '#quote_to_quote_confirm', function () {
+    /**
+     * Copy a quote to one or more clients.
+     * Accepts client_ids[] from the multiselect modal; falls back to a single
+     * client_id for backward-compatibility. Syncs product_client after each copy.
+     */
     public function quoteToQuoteConfirm(
         Request $request,
         FormHydrator $formHydrator,
@@ -53,74 +56,87 @@ trait QuoteCopy
         $data_quote_js = $request->getQueryParams();
         $quote_id = (int) $data_quote_js['quote_id'];
         $original = $core->qR->repoQuoteUnloadedquery($quote_id);
-        if ($original) {
-            $group_id = $original->reqGroupId();
+        if (null === $original) {
+            return $this->factory->createResponse(Json::encode(['success' => 0]));
+        }
+
+        // Accept client_ids[] (multiselect) or fall back to single client_id
+        $rawIds = $data_quote_js['client_ids'] ?? [$data_quote_js['client_id'] ?? '0'];
+        /** @var int[] $clientIds */
+        $clientIds = array_values(array_filter(array_map('intval', (array) $rawIds)));
+
+        if (empty($clientIds)) {
+            return $this->factory->createResponse(Json::encode(['success' => 0]));
+        }
+
+        // Collect product IDs from the original quote's items once
+        $productIds = [];
+        foreach ($items->qiR->repoQuoteItemIdquery($quote_id) as $quoteItem) {
+            $pid = $quoteItem->getProduct()?->reqId();
+            if ($pid !== null && $pid > 0) {
+                $productIds[] = $pid;
+            }
+        }
+
+        $group_id = $original->reqGroupId();
+        $copyCount = 0;
+
+        foreach ($clientIds as $clientId) {
             $quote_body = [
-                'inv_id' => null,
-                'client_id' => $data_quote_js['client_id'],
-                'group_id' => $group_id,
-                'status_id' => 1,
-                'number' => $core->gR->generateNumber($group_id),
+                'inv_id'          => null,
+                'client_id'       => $clientId,
+                'group_id'        => $group_id,
+                'status_id'       => 1,
+                'number'          => $core->gR->generateNumber($group_id),
                 'discount_amount' => (float) $original->getDiscountAmount(),
-                'url_key' => '',
-                'password' => '',
-                'notes' => '',
+                'url_key'         => '',
+                'password'        => '',
+                'notes'           => '',
             ];
+
             $copy = new Quote();
             $form = new QuoteForm();
-            if ($formHydrator->populateAndValidate($form, $quote_body)) {
-                /**
-                 * @var string $quote_body['client_id']
-                 */
-                $client_id = (int) $quote_body['client_id'];
-                $user_client = $userDeps->ucR->repoUserquery($client_id);
-                $user_client_count = $userDeps->ucR->repoUserquerycount($client_id);
-                if (null !== $user_client && $user_client_count == 1) {
-                    // Only one user account per client
-                    $user_id = $user_client->reqUserId();
-                    $user = $userDeps->uR->findById($user_id);
-                    $user_inv = $userDeps->uiR->repoUserInvUserIdquery($user_id);
-                    if (null !== $user_inv && $user_inv->getActive()) {
-                        $this->quote_service->saveQuote($user, $copy,
-                            $quote_body, $this->sR, $core->gR);
-                        // Transfer each quote_item to quote_item and the
-                        // corresponding quote_item_amount to
-                        // quote_item_amount for each item
-                        $copy_id = $copy->reqId();
-                        $this->quoteToQuoteQuoteItems($quote_id,
-                            $copy_id, $qiaR, $qiaS, $core, $items, $formHydrator);
-                        $this->quoteToQuoteQuoteTaxRates($quote_id,
-                            $copy_id, $items->qtrR, $formHydrator);
-                        $this->quoteToQuoteQuoteCustom($quote_id,
-                            $copy_id, $core->qcR, $formHydrator);
-                        $this->quoteToQuoteQuoteAmount(
-                            $quote_id, $copy_id, $core->qaR);
-                        $this->quoteToQuoteQuoteAllowanceCharges(
-                            $quote_id, $copy_id, $core->acqR,
-                            $formHydrator);
-                        $core->qR->save($copy);
-                        $parameters = [
-                            'success' => 1,
-                            'flash_message' =>
-                                $this->translator->translate(
-                                    'quote.copied.to.quote'),
-                        ];
-                        //return response to quote.js to reload page at
-                        //location
-                        return $this->factory->createResponse(
-                            Json::encode($parameters));
-                    } // null!==$user_inv && $user_inv->getActive()
+            if (!$formHydrator->populateAndValidate($form, $quote_body)) {
+                continue;
+            }
 
-                } // null!==$user_client && $user_client_count==1
-            } // $formHydrator->populateAndValidate($form, $body)
-        } else {
-            $parameters = [
-                'success' => 0,
-            ];
-            //return response to quote.js to reload page at location
-            return $this->factory->createResponse(Json::encode($parameters));
+            $user_client = $userDeps->ucR->repoUserquery($clientId);
+            $user_client_count = $userDeps->ucR->repoUserquerycount($clientId);
+            if (null === $user_client || $user_client_count !== 1) {
+                continue;
+            }
+
+            $user_id = $user_client->reqUserId();
+            $user = $userDeps->uR->findById($user_id);
+            $user_inv = $userDeps->uiR->repoUserInvUserIdquery($user_id);
+            if (null === $user_inv || !$user_inv->getActive()) {
+                continue;
+            }
+
+            $this->quote_service->saveQuote($user, $copy, $quote_body, $this->sR, $core->gR);
+            $copy_id = $copy->reqId();
+            $this->quoteToQuoteQuoteItems($quote_id, $copy_id, $qiaR, $qiaS, $core, $items, $formHydrator);
+            $this->quoteToQuoteQuoteTaxRates($quote_id, $copy_id, $items->qtrR, $formHydrator);
+            $this->quoteToQuoteQuoteCustom($quote_id, $copy_id, $core->qcR, $formHydrator);
+            $this->quoteToQuoteQuoteAmount($quote_id, $copy_id, $core->qaR);
+            $this->quoteToQuoteQuoteAllowanceCharges($quote_id, $copy_id, $core->acqR, $formHydrator);
+            $core->qR->save($copy);
+
+            if (!empty($productIds)) {
+                $core->pcS->syncFromInvItems($clientId, $productIds);
+            }
+
+            $copyCount++;
         }
-        return $this->webService->getNotFoundResponse();
+
+        if ($copyCount > 0) {
+            return $this->factory->createResponse(Json::encode([
+                'success'       => 1,
+                'flash_message' => $this->translator->translate('quote.copied.to.quote'),
+            ]));
+        }
+
+        return $this->factory->createResponse(Json::encode(['success' => 0]));
     }
 
     /**

@@ -14,6 +14,7 @@ use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
 use App\Invoice\InvItemAmount\InvItemAmountService as IIAS;
 use App\Invoice\InvTaxRate\InvTaxRateRepository as ITRR;
 use App\Invoice\Product\ProductRepository as PR;
+use App\Invoice\ProductClient\ProductClientService as PCS;
 use App\Invoice\Task\TaskRepository as TASKR;
 use App\Invoice\TaxRate\TaxRateRepository as TRR;
 use App\Invoice\Unit\UnitRepository as UNR;
@@ -34,6 +35,7 @@ final class InvCopyDeps
         public readonly IIR $iiR,
         public readonly InvRepository $iR,
         public readonly ITRR $itrR,
+        public readonly PCS $pcS,
         public readonly PR $pR,
         public readonly TASKR $taskR,
         public readonly TRR $trR,
