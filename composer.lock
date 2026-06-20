@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "16a5fd9abeba7c134043ee5a252e187f",
+    "content-hash": "046bced39058303e9ed64e7fd5336e84",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -21069,6 +21069,128 @@
             "time": "2025-04-29T08:19:52+00:00"
         },
         {
+            "name": "internal/destroy",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-internal/destroy.git",
+                "reference": "93068c4f7da218034f5373e31407f564b74b4a06"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-internal/destroy/zipball/93068c4f7da218034f5373e31407f564b74b4a06",
+                "reference": "93068c4f7da218034f5373e31407f564b74b4a06",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "buggregator/trap": "^1.10",
+                "phpunit/phpunit": "^10.5",
+                "spiral/code-style": "^2.2.2",
+                "ta-tikoma/phpunit-architecture-test": "^0.8.4",
+                "vimeo/psalm": "^6.10"
+            },
+            "suggest": {
+                "ext-simplexml": "to support XML configs parsing"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Internal\\Destroy\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Aleksei Gagarin (roxblnfk)",
+                    "homepage": "https://github.com/roxblnfk"
+                }
+            ],
+            "keywords": [
+                "download binaries",
+                "memory"
+            ],
+            "support": {
+                "issues": "https://github.com/php-internal/destroy/issues",
+                "source": "https://github.com/php-internal/destroy/tree/1.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://patreon.com/roxblnfk",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2025-09-08T14:29:16+00:00"
+        },
+        {
+            "name": "internal/path",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-internal/path.git",
+                "reference": "ec0ddb060a204793f1ddfb5219bb024a754df0e0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-internal/path/zipball/ec0ddb060a204793f1ddfb5219bb024a754df0e0",
+                "reference": "ec0ddb060a204793f1ddfb5219bb024a754df0e0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "buggregator/trap": "^1.15",
+                "roxblnfk/unpoly": "^1.8.1",
+                "spiral/code-style": "^2.3.1",
+                "testo/testo": "^1.0@dev",
+                "vimeo/psalm": "^6.13"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Internal\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Aleksei Gagarin (roxblnfk)",
+                    "homepage": "https://github.com/roxblnfk"
+                }
+            ],
+            "description": "Type-safe, immutable file path library with cross-platform support and automatic normalization.",
+            "keywords": [
+                "cross-platform",
+                "file",
+                "filepath",
+                "filesystem",
+                "helper",
+                "path",
+                "unix",
+                "windows"
+            ],
+            "support": {
+                "issues": "https://github.com/php-internal/path/issues",
+                "source": "https://github.com/php-internal/path/tree/1.2.0"
+            },
+            "funding": [
+                {
+                    "url": "https://boosty.to/roxblnfk",
+                    "type": "boosty"
+                }
+            ],
+            "time": "2025-12-03T11:32:09+00:00"
+        },
+        {
             "name": "jetbrains/phpstorm-stubs",
             "version": "v2026.1",
             "source": {
@@ -25709,6 +25831,858 @@
                 }
             ],
             "time": "2026-05-29T05:06:50+00:00"
+        },
+        {
+            "name": "testo/assert",
+            "version": "0.1.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-testo/assert.git",
+                "reference": "edbbf1bbc7f7a5977d5229250bff21be04adf575"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-testo/assert/zipball/edbbf1bbc7f7a5977d5229250bff21be04adf575",
+                "reference": "edbbf1bbc7f7a5977d5229250bff21be04adf575",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2",
+                "testo/testo": "0.10.24 - 1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "Assert.php",
+                    "Expect.php"
+                ],
+                "psr-4": {
+                    "Testo\\Assert\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Aleksei Gagarin (roxblnfk)",
+                    "homepage": "https://github.com/roxblnfk"
+                }
+            ],
+            "description": "Assert plugin for the Testo testing framework.",
+            "keywords": [
+                "assert",
+                "testo"
+            ],
+            "support": {
+                "source": "https://github.com/php-testo/assert/tree/0.1.8"
+            },
+            "funding": [
+                {
+                    "url": "https://boosty.to/roxblnfk",
+                    "type": "boosty"
+                }
+            ],
+            "time": "2026-06-19T08:28:23+00:00"
+        },
+        {
+            "name": "testo/bench",
+            "version": "0.1.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-testo/bench.git",
+                "reference": "6691cee75e2bb1d207b3bfa261e830e69f9d2cdf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-testo/bench/zipball/6691cee75e2bb1d207b3bfa261e830e69f9d2cdf",
+                "reference": "6691cee75e2bb1d207b3bfa261e830e69f9d2cdf",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2",
+                "testo/data": "^0.1.6",
+                "testo/inline": "^0.1.5",
+                "testo/testo": "0.10.19 - 1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "Bench.php"
+                ],
+                "psr-4": {
+                    "Testo\\Bench\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Aleksei Gagarin (roxblnfk)",
+                    "homepage": "https://github.com/roxblnfk"
+                }
+            ],
+            "description": "Benchmark plugin for the Testo testing framework.",
+            "keywords": [
+                "benchmark",
+                "testo"
+            ],
+            "support": {
+                "source": "https://github.com/php-testo/bench/tree/0.1.5"
+            },
+            "funding": [
+                {
+                    "url": "https://boosty.to/roxblnfk",
+                    "type": "boosty"
+                }
+            ],
+            "time": "2026-06-07T19:39:00+00:00"
+        },
+        {
+            "name": "testo/bridge-symfony-console",
+            "version": "0.1.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-testo/bridge-symfony-console.git",
+                "reference": "09c1b59d7c94a161ff2df2ecc7223468436e167a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-testo/bridge-symfony-console/zipball/09c1b59d7c94a161ff2df2ecc7223468436e167a",
+                "reference": "09c1b59d7c94a161ff2df2ecc7223468436e167a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2",
+                "symfony/console": "^6.4 || ^7 || ^8.0",
+                "testo/testo": "0.10.24 - 1"
+            },
+            "bin": [
+                "bin/testo"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Testo\\Bridge\\Symfony\\Console\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Aleksei Gagarin (roxblnfk)",
+                    "homepage": "https://github.com/roxblnfk"
+                }
+            ],
+            "description": "Symfony Console bridge for the Testo testing framework.",
+            "keywords": [
+                "console",
+                "symfony",
+                "testo"
+            ],
+            "support": {
+                "source": "https://github.com/php-testo/bridge-symfony-console/tree/0.1.7"
+            },
+            "funding": [
+                {
+                    "url": "https://boosty.to/roxblnfk",
+                    "type": "boosty"
+                }
+            ],
+            "time": "2026-06-19T08:28:42+00:00"
+        },
+        {
+            "name": "testo/codecov",
+            "version": "0.1.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-testo/codecov.git",
+                "reference": "cbe59a3fea1ff4f32113da880e3173f915733ce3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-testo/codecov/zipball/cbe59a3fea1ff4f32113da880e3173f915733ce3",
+                "reference": "cbe59a3fea1ff4f32113da880e3173f915733ce3",
+                "shasum": ""
+            },
+            "require": {
+                "ext-xmlwriter": "*",
+                "php": ">=8.2",
+                "testo/data": "^0.1.6",
+                "testo/inline": "^0.1.5",
+                "testo/testo": "0.10.21 - 1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Testo\\Codecov\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Aleksei Gagarin (roxblnfk)",
+                    "homepage": "https://github.com/roxblnfk"
+                }
+            ],
+            "description": "Code coverage plugin for the Testo testing framework.",
+            "keywords": [
+                "code-coverage",
+                "testo"
+            ],
+            "support": {
+                "source": "https://github.com/php-testo/codecov/tree/0.1.10"
+            },
+            "funding": [
+                {
+                    "url": "https://boosty.to/roxblnfk",
+                    "type": "boosty"
+                }
+            ],
+            "time": "2026-06-09T09:39:51+00:00"
+        },
+        {
+            "name": "testo/convention",
+            "version": "0.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-testo/convention.git",
+                "reference": "b6c75c42db5e84bf446bcabd8c5c19fa37546f23"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-testo/convention/zipball/b6c75c42db5e84bf446bcabd8c5c19fa37546f23",
+                "reference": "b6c75c42db5e84bf446bcabd8c5c19fa37546f23",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2",
+                "testo/testo": "0.10.19 - 1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Testo\\Convention\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Aleksei Gagarin (roxblnfk)",
+                    "homepage": "https://github.com/roxblnfk"
+                }
+            ],
+            "description": "Naming convention plugin for the Testo testing framework.",
+            "keywords": [
+                "convention",
+                "testo"
+            ],
+            "support": {
+                "source": "https://github.com/php-testo/convention/tree/0.1.3"
+            },
+            "funding": [
+                {
+                    "url": "https://boosty.to/roxblnfk",
+                    "type": "boosty"
+                }
+            ],
+            "time": "2026-06-07T19:36:02+00:00"
+        },
+        {
+            "name": "testo/data",
+            "version": "0.1.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-testo/data.git",
+                "reference": "18f990382cf6e0d39c05ec060de2c4386d2c05de"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-testo/data/zipball/18f990382cf6e0d39c05ec060de2c4386d2c05de",
+                "reference": "18f990382cf6e0d39c05ec060de2c4386d2c05de",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2",
+                "testo/filter": "^0.1.2",
+                "testo/testo": "0.10.19 - 1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Testo\\Data\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Aleksei Gagarin (roxblnfk)",
+                    "homepage": "https://github.com/roxblnfk"
+                }
+            ],
+            "description": "Data provider plugin for the Testo testing framework.",
+            "keywords": [
+                "data-provider",
+                "testo"
+            ],
+            "support": {
+                "source": "https://github.com/php-testo/data/tree/0.1.6"
+            },
+            "funding": [
+                {
+                    "url": "https://boosty.to/roxblnfk",
+                    "type": "boosty"
+                }
+            ],
+            "time": "2026-06-07T19:36:52+00:00"
+        },
+        {
+            "name": "testo/facade",
+            "version": "0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-testo/facade.git",
+                "reference": "4922bb728b82a66cb26f940cf60f8eaeeed54460"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-testo/facade/zipball/4922bb728b82a66cb26f940cf60f8eaeeed54460",
+                "reference": "4922bb728b82a66cb26f940cf60f8eaeeed54460",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2",
+                "testo/testo": "0.10.22 - 1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "Testo.php"
+                ],
+                "psr-4": {
+                    "Testo\\Facade\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Aleksei Gagarin (roxblnfk)",
+                    "homepage": "https://github.com/roxblnfk"
+                }
+            ],
+            "description": "Static facade access to container services for the Testo testing framework.",
+            "keywords": [
+                "facade",
+                "test",
+                "testo"
+            ],
+            "support": {
+                "source": "https://github.com/php-testo/facade/tree/0.1.1"
+            },
+            "funding": [
+                {
+                    "url": "https://boosty.to/roxblnfk",
+                    "type": "boosty"
+                }
+            ],
+            "time": "2026-06-10T08:06:28+00:00"
+        },
+        {
+            "name": "testo/filter",
+            "version": "0.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-testo/filter.git",
+                "reference": "affdde71643b55a40824a1adf43a72581f92c6ab"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-testo/filter/zipball/affdde71643b55a40824a1adf43a72581f92c6ab",
+                "reference": "affdde71643b55a40824a1adf43a72581f92c6ab",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2",
+                "testo/testo": "0.10.24 - 1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "Filter.php"
+                ],
+                "psr-4": {
+                    "Testo\\Filter\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Aleksei Gagarin (roxblnfk)",
+                    "homepage": "https://github.com/roxblnfk"
+                }
+            ],
+            "description": "Test filtering plugin for the Testo testing framework.",
+            "keywords": [
+                "filter",
+                "testo"
+            ],
+            "support": {
+                "source": "https://github.com/php-testo/filter/tree/0.1.3"
+            },
+            "funding": [
+                {
+                    "url": "https://boosty.to/roxblnfk",
+                    "type": "boosty"
+                }
+            ],
+            "time": "2026-06-19T08:28:22+00:00"
+        },
+        {
+            "name": "testo/inline",
+            "version": "0.1.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-testo/inline.git",
+                "reference": "178cc399f7cd8861a375cc2b77233a5acad0d211"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-testo/inline/zipball/178cc399f7cd8861a375cc2b77233a5acad0d211",
+                "reference": "178cc399f7cd8861a375cc2b77233a5acad0d211",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2",
+                "testo/assert": "^0.1.7",
+                "testo/data": "^0.1.6",
+                "testo/filter": "^0.1.2",
+                "testo/testo": "0.10.19 - 1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Testo\\Inline\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Aleksei Gagarin (roxblnfk)",
+                    "homepage": "https://github.com/roxblnfk"
+                }
+            ],
+            "description": "Inline test plugin for the Testo testing framework.",
+            "keywords": [
+                "inline",
+                "testo"
+            ],
+            "support": {
+                "source": "https://github.com/php-testo/inline/tree/0.1.5"
+            },
+            "funding": [
+                {
+                    "url": "https://boosty.to/roxblnfk",
+                    "type": "boosty"
+                }
+            ],
+            "time": "2026-06-07T19:36:58+00:00"
+        },
+        {
+            "name": "testo/lifecycle",
+            "version": "0.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-testo/lifecycle.git",
+                "reference": "2ccab755eaedb6fa58b3226f7306280e09d8b552"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-testo/lifecycle/zipball/2ccab755eaedb6fa58b3226f7306280e09d8b552",
+                "reference": "2ccab755eaedb6fa58b3226f7306280e09d8b552",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2",
+                "testo/testo": "0.10.19 - 1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Testo\\Lifecycle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Aleksei Gagarin (roxblnfk)",
+                    "homepage": "https://github.com/roxblnfk"
+                }
+            ],
+            "description": "Lifecycle hooks plugin for the Testo testing framework.",
+            "keywords": [
+                "lifecycle",
+                "testo"
+            ],
+            "support": {
+                "source": "https://github.com/php-testo/lifecycle/tree/0.1.4"
+            },
+            "funding": [
+                {
+                    "url": "https://boosty.to/roxblnfk",
+                    "type": "boosty"
+                }
+            ],
+            "time": "2026-06-07T19:36:46+00:00"
+        },
+        {
+            "name": "testo/repeat",
+            "version": "0.1.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-testo/repeat.git",
+                "reference": "0e6a74716e34e7d85710189347ff14aaaac81d21"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-testo/repeat/zipball/0e6a74716e34e7d85710189347ff14aaaac81d21",
+                "reference": "0e6a74716e34e7d85710189347ff14aaaac81d21",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2",
+                "testo/testo": "0.10.19 - 1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "Repeat.php"
+                ],
+                "psr-4": {
+                    "Testo\\Repeat\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Aleksei Gagarin (roxblnfk)",
+                    "homepage": "https://github.com/roxblnfk"
+                }
+            ],
+            "description": "Repeat policy plugin for the Testo testing framework.",
+            "keywords": [
+                "repeat",
+                "test",
+                "testo"
+            ],
+            "support": {
+                "source": "https://github.com/php-testo/repeat/tree/0.1.8"
+            },
+            "funding": [
+                {
+                    "url": "https://boosty.to/roxblnfk",
+                    "type": "boosty"
+                }
+            ],
+            "time": "2026-06-07T19:36:04+00:00"
+        },
+        {
+            "name": "testo/retry",
+            "version": "0.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-testo/retry.git",
+                "reference": "4394270c794528b7967ee39bb5151ece52b4436b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-testo/retry/zipball/4394270c794528b7967ee39bb5151ece52b4436b",
+                "reference": "4394270c794528b7967ee39bb5151ece52b4436b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2",
+                "testo/testo": "0.10.19 - 1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "Retry.php"
+                ],
+                "psr-4": {
+                    "Testo\\Retry\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Aleksei Gagarin (roxblnfk)",
+                    "homepage": "https://github.com/roxblnfk"
+                }
+            ],
+            "description": "Retry policy plugin for the Testo testing framework.",
+            "keywords": [
+                "retry",
+                "testo"
+            ],
+            "support": {
+                "source": "https://github.com/php-testo/retry/tree/0.1.4"
+            },
+            "funding": [
+                {
+                    "url": "https://boosty.to/roxblnfk",
+                    "type": "boosty"
+                }
+            ],
+            "time": "2026-06-07T19:36:25+00:00"
+        },
+        {
+            "name": "testo/test",
+            "version": "0.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-testo/test.git",
+                "reference": "73ffd2d0c71c5e0e610f7d006e1f9831334f8986"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-testo/test/zipball/73ffd2d0c71c5e0e610f7d006e1f9831334f8986",
+                "reference": "73ffd2d0c71c5e0e610f7d006e1f9831334f8986",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2",
+                "testo/testo": "0.10.19 - 1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "Test.php"
+                ],
+                "psr-4": {
+                    "Testo\\Test\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Aleksei Gagarin (roxblnfk)",
+                    "homepage": "https://github.com/roxblnfk"
+                }
+            ],
+            "description": "Test attribute plugin for the Testo testing framework.",
+            "keywords": [
+                "test",
+                "testo"
+            ],
+            "support": {
+                "source": "https://github.com/php-testo/test/tree/0.1.4"
+            },
+            "funding": [
+                {
+                    "url": "https://boosty.to/roxblnfk",
+                    "type": "boosty"
+                }
+            ],
+            "time": "2026-06-07T19:36:41+00:00"
+        },
+        {
+            "name": "testo/testo",
+            "version": "0.10.24",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-testo/testo.git",
+                "reference": "9a616e5066c2ef3b99cab52c197cd5029e69312f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-testo/testo/zipball/9a616e5066c2ef3b99cab52c197cd5029e69312f",
+                "reference": "9a616e5066c2ef3b99cab52c197cd5029e69312f",
+                "shasum": ""
+            },
+            "require": {
+                "ext-tokenizer": "*",
+                "internal/destroy": "^1.0",
+                "internal/path": "^1.2",
+                "php": ">=8.2",
+                "psr/container": "1 - 2",
+                "psr/event-dispatcher": "^1.0",
+                "psr/log": "^2.0 || ^3.0",
+                "symfony/console": "^6.4 || ^7 || ^8.0",
+                "symfony/finder": "^6.4 || ^7 || ^8.0",
+                "testo/assert": "^0.1.8",
+                "testo/bench": "^0.1.5",
+                "testo/bridge-symfony-console": "^0.1.7",
+                "testo/codecov": "^0.1.10",
+                "testo/convention": "^0.1.3",
+                "testo/data": "^0.1.6",
+                "testo/filter": "^0.1.3",
+                "testo/inline": "^0.1.5",
+                "testo/lifecycle": "^0.1.4",
+                "testo/repeat": "^0.1.8",
+                "testo/retry": "^0.1.4",
+                "testo/test": "^0.1.4",
+                "yiisoft/injector": "^1.2"
+            },
+            "replace": {
+                "internal/container": "*"
+            },
+            "require-dev": {
+                "buggregator/trap": "^1.10",
+                "infection/infection": "dev-testo-bridge-82 as 0.32.6",
+                "internal/dload": "^1.6",
+                "llm/skills": "^1.3",
+                "roxblnfk/unpoly": "1.8.2",
+                "spiral/code-style": "^2.2.2",
+                "testo/bridge-infection": "^0.1.6",
+                "testo/facade": "^0.1.1",
+                "vimeo/psalm": "^7.0@dev"
+            },
+            "suggest": {
+                "llm/skills": "Ship Testo's bundled AI-agent skills into your project's skills directory automatically.",
+                "testo/bridge-infection": "Provides integration with Infection PHP mutation testing framework."
+            },
+            "type": "library",
+            "extra": {
+                "skills": {
+                    "source": "skills"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Testo\\": "core/",
+                    "Internal\\Container\\": "internal/container/src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Aleksei Gagarin (roxblnfk)",
+                    "homepage": "https://github.com/roxblnfk"
+                }
+            ],
+            "description": "A lightweight PHP testing framework.",
+            "homepage": "https://php-testo.github.io/",
+            "keywords": [
+                "dev",
+                "test",
+                "testing",
+                "tests"
+            ],
+            "support": {
+                "docs": "https://php-testo.github.io/",
+                "issues": "https://github.com/php-testo/testo/issues",
+                "source": "https://github.com/php-testo/testo"
+            },
+            "funding": [
+                {
+                    "url": "https://boosty.to/roxblnfk",
+                    "type": "boosty"
+                }
+            ],
+            "time": "2026-06-19T08:27:59+00:00"
         },
         {
             "name": "thecodingmachine/safe",

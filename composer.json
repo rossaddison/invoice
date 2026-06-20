@@ -148,7 +148,7 @@
         "yiisoft/yii-runner-http": "^3.2.1",
         "yiisoft/yii-view-renderer": "^7.4.1",
         "zircote/swagger-php": ">=6.2.0"
-    },    
+    },
     "require-dev": {
         "codeception/c3": "^2.9",
         "codeception/codeception": ">=5.3",
@@ -159,8 +159,8 @@
         "friendsofphp/php-cs-fixer": "^3.95.10",
         "google/protobuf": ">=5.35.1",
         "guzzlehttp/promises": ">=2.5.0",
-        "phpunit/phpunit": ">=13.1.4",
         "phpunit/php-code-coverage": ">=14.2.2",
+        "phpunit/phpunit": ">=13.1.4",
         "rector/rector": "^2.4.6",
         "roave/better-reflection": "^6.71",
         "roave/infection-static-analysis-plugin": ">=1.44",
@@ -169,11 +169,18 @@
         "shipmonk/composer-dependency-analyser": "^1.8.4",
         "spatie/phpunit-watcher": ">=1.24.4",
         "squizlabs/php_codesniffer": "^4.0.1",
+        "testo/facade": "*",
+        "testo/testo": "*",
         "vimeo/psalm": ">=6.16.1"
-    },      
+    },
     "autoload": {
         "psr-4": {
             "App\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Testo\\": "Tests/Testo"
         }
     },
     "scripts": {
@@ -194,7 +201,11 @@
         "sonar:pr": "php sonar-issues.php --pr=",
         "sonar:hotspots": "php sonar-issues.php --hotspots",
         "sonar:bugs": "php sonar-issues.php --type=BUG",
-        "sonar:security": "php sonar-issues.php --type=VULNERABILITY"
+        "sonar:security": "php sonar-issues.php --type=VULNERABILITY",
+        "test:unit": "vendor/bin/testo --suite=Unit",
+        "test:integration": "vendor/bin/testo --suite=Integration",
+        "test:functional": "vendor/bin/testo --suite=Functional",
+        "test:acceptance": "vendor/bin/testo --suite=Acceptance"
     },
     "extra": {
         "branch-alias": {
@@ -224,21 +235,21 @@
         }
     },
     "repositories": [
-    {
-        "type": "composer",
-        "url": "https://asset-packagist.org"
-    },
-    {
-        "type": "vcs",
-        "url": "https://github.com/rossaddison/data-cycle"
-    },
-    {
-        "type": "vcs",
-        "url": "https://github.com/rossaddison/translator-extractor"
-    },
-    {
-        "type": "vcs",
-        "url": "https://github.com/rossaddison/yii-gii"
-    }
-]
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/rossaddison/data-cycle"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/rossaddison/translator-extractor"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/rossaddison/yii-gii"
+        }
+    ]
 }
