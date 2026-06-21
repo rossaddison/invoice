@@ -215,53 +215,7 @@ final class ProductController extends BaseController
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
             if (is_array($body)) {
-                $returned_form = $this->saveFormFields($body, $form, $product, $formHydrator);
-                $parameters['body'] = $body;
-                if ($returned_form->isValid()) {
-                    $hasCustomErrors = false;
-                    if ($d->customFieldRepository->repoTableCountquery('product_custom') > 0
-                        && isset($body['custom'])
-                    ) {
-                        $custom       = (array) $body['custom'];
-                        $errorsCustom = [];
-                        /** @var array|string $value */
-                        foreach ($custom as $custom_field_id => $value) {
-                            $product_custom = $pcR->repoFormValuequery($product_id, (int) $custom_field_id);
-                            if (null === $product_custom) {
-                                $product_custom = new ProductCustom();
-                            }
-                            $product_custom_input = [
-                                'product_id'      => $product_id,
-                                'custom_field_id' => (int) $custom_field_id,
-                                'value'           => is_array($value) ? serialize($value) : $value,
-                            ];
-                            $productCustomForm = new ProductCustomForm();
-                            if ($formHydrator->populateAndValidate($productCustomForm, $product_custom_input)) {
-                                $this->productCustomService->saveProductCustom(
-                                    $product_custom, $product_custom_input
-                                );
-                            } else {
-                                $errorsCustom = array_merge(
-                                    $errorsCustom,
-                                    $productCustomForm->getValidationResult()->getErrorMessagesIndexedByProperty()
-                                );
-                            }
-                            $parameters['productCustomForm'] = $productCustomForm;
-                        }
-                        if (count($errorsCustom) > 0) {
-                            $parameters['errorsCustom'] = $errorsCustom;
-                            $hasCustomErrors = true;
-                        }
-                    }
-                    if (!$hasCustomErrors) {
-                        $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
-                        $redirect = $this->webService->getRedirectResponse('product/index');
-                    }
-                } else {
-                    $parameters['form']   = $returned_form;
-                    $parameters['errors'] =
-                        $returned_form->getValidationResult()->getErrorMessagesIndexedByProperty();
-                }
+                $redirect = $this->handleEditPost($body, $form, $product, $parameters, $formHydrator, $pcR);
             } else {
                 $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
                 $redirect = $this->webService->getRedirectResponse('product/index');
@@ -534,6 +488,76 @@ final class ProductController extends BaseController
     private function product(int $id, ProductRepository $pR): ?Product
     {
         return $pR->repoProductquery($id);
+    }
+
+    /** @param array<string, mixed> $parameters */
+    private function handleEditPost(
+        array $body,
+        ProductForm $form,
+        Product $product,
+        array &$parameters,
+        FormHydrator $formHydrator,
+        pcR $pcR,
+    ): ?Response {
+        $product_id    = $product->reqId();
+        $returned_form = $this->saveFormFields($body, $form, $product, $formHydrator);
+        $parameters['body'] = $body;
+        if (!$returned_form->isValid()) {
+            $parameters['form']   = $returned_form;
+            $parameters['errors'] =
+                $returned_form->getValidationResult()->getErrorMessagesIndexedByProperty();
+            return null;
+        }
+        $hasCustomErrors = $this->updateCustomFields($body, $product_id, $parameters, $formHydrator, $pcR);
+        if (!$hasCustomErrors) {
+            $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
+            return $this->webService->getRedirectResponse('product/index');
+        }
+        return null;
+    }
+
+    /** @param array<string, mixed> $parameters */
+    private function updateCustomFields(
+        array $body,
+        int $product_id,
+        array &$parameters,
+        FormHydrator $formHydrator,
+        pcR $pcR,
+    ): bool {
+        if ($this->formDeps->customFieldRepository->repoTableCountquery('product_custom') <= 0
+            || !isset($body['custom'])
+        ) {
+            return false;
+        }
+        $custom       = (array) $body['custom'];
+        $errorsCustom = [];
+        /** @var array|string $value */
+        foreach ($custom as $custom_field_id => $value) {
+            $product_custom = $pcR->repoFormValuequery($product_id, (int) $custom_field_id);
+            if (null === $product_custom) {
+                $product_custom = new ProductCustom();
+            }
+            $product_custom_input = [
+                'product_id'      => $product_id,
+                'custom_field_id' => (int) $custom_field_id,
+                'value'           => is_array($value) ? serialize($value) : $value,
+            ];
+            $productCustomForm = new ProductCustomForm();
+            if ($formHydrator->populateAndValidate($productCustomForm, $product_custom_input)) {
+                $this->productCustomService->saveProductCustom($product_custom, $product_custom_input);
+            } else {
+                $errorsCustom = array_merge(
+                    $errorsCustom,
+                    $productCustomForm->getValidationResult()->getErrorMessagesIndexedByProperty()
+                );
+            }
+            $parameters['productCustomForm'] = $productCustomForm;
+        }
+        if (count($errorsCustom) > 0) {
+            $parameters['errorsCustom'] = $errorsCustom;
+            return true;
+        }
+        return false;
     }
 
     private function viewPartialProductImage(string $_language, int $product_id, piR $piR): string

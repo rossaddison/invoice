@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv\Trait;
 
+use App\Infrastructure\Persistence\ClientPeppol\ClientPeppol;
+use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
 use App\Infrastructure\Persistence\Setting\Setting;
 
 use App\Invoice\{
@@ -180,96 +182,70 @@ trait Peppol
     
     private function peppolClientFullySetup(int $client_id, cpR $cpR): bool
     {
-        $passed = false;
         if ($cpR->repoClientCount($client_id) == 1) {
             $cp = $cpR->repoClientPeppolLoadedquery($client_id);
-            // check that each individual field has been completed otherwise
-            // raise a flash message
             if (null !== $cp) {
-                if (empty($cp->getEndpointid())) {
-                    $this->flashMessage('warning',
-                        '$cp->getEndpointid() '
-                            . $cp->getEndpointid());
-                }
-                if (empty($cp->getEndpointidSchemeid())) {
-                    $this->flashMessage('warning',
-                        '$cp->getEndpointidSchemeid() '
-                            . $cp->getEndpointidSchemeid());
-                }
-                if (empty($cp->getIdentificationid())) {
-                    $this->flashMessage('warning',
-                        '$cp->getIdentificationid() '
-                            . $cp->getIdentificationid());
-                }
-                if (empty($cp->getTaxschemecompanyid())) {
-                    $this->flashMessage('warning',
-                        '$cp->getTaxschemecompanyid() '
-                            . $cp->getTaxschemecompanyid());
-                }
-                if (empty($cp->getTaxschemeid())) {
-                    $this->flashMessage('warning',
-                        '$cp->getTaxschemeid() '
-                            . $cp->getTaxschemeid());
-                }
-                if (empty($cp->getLegalEntityRegistrationName())) {
-                    $this->flashMessage('warning',
-                        '$cp->getLegalEntityRegistrationName() '
-                            . $cp->getLegalEntityRegistrationName());
-                }
-                if (empty($cp->getLegalEntityCompanyid())) {
-                    $this->flashMessage('warning',
-                        '$cp->getLegalEntityCompanyid() '
-                            . $cp->getLegalEntityCompanyid());
-                }
-                if (empty($cp->getLegalEntityCompanyidSchemeid())) {
-                    $this->flashMessage('warning',
-                        '$cp->getLegalEntityCompanyidSchemeid() '
-                            . $cp->getLegalEntityCompanyidSchemeid());
-                }
-                if (empty($cp->getLegalEntityCompanyLegalForm())) {
-                    $this->flashMessage('warning',
-                        '$cp->getLegalEntityCompanyLegalForm() '
-                            . $cp->getLegalEntityCompanyLegalForm());
-                }
-                if (empty($cp->getFinancialInstitutionBranchid())) {
-                    $this->flashMessage('warning',
-                        '$cp->getFinancialInstitutionBranchid() '
-                            . $cp->getFinancialInstitutionBranchid());
-                }
-                if (empty($cp->getAccountingCost())) {
-                    $this->flashMessage('warning',
-                        '$cp->getAccountingCost() '
-                            . $cp->getAccountingCost());
-                }
+                return $this->validateClientPeppolSetup($cp);
+            }
+        }
+        return false;
+    }
 
-                if (empty($cp->getSupplierAssignedAccountId())) {
-                    $this->flashMessage('warning',
-                        '$cp->getSupplierAssignedAccountId() '
-                            . $cp->getSupplierAssignedAccountId());
-                }
-
-                if ($cp->getEndpointid()
-                  && $cp->getEndpointidSchemeid()
-                  && $cp->getIdentificationid()
-                  && $cp->getIdentificationidSchemeid()
-                  && $cp->getTaxschemecompanyid()
-                  && $cp->getTaxschemeid()
-                  && $cp->getLegalEntityRegistrationName()
-                  && $cp->getLegalEntityCompanyid()
-                  && $cp->getLegalEntityCompanyidSchemeid()
-                  && $cp->getLegalEntityCompanyLegalForm()
-                  && $cp->getFinancialInstitutionBranchid()
-                  && $cp->getAccountingCost()
-                  && $cp->getSupplierAssignedAccountId()) {
-                    $passed = true;
-                } else {
-                    $this->flashMessage('warning',
-                        $this->translator->translate('peppol.client.check'));
-                    $passed = false;
-                }
-            } // null!==$cp
-        } // $cpR->repoClientCount($client_id) == 1
-        return $passed;
+    private function validateClientPeppolSetup(ClientPeppol $cp): bool
+    {
+        if (empty($cp->getEndpointid())) {
+            $this->flashMessage('warning', '$cp->getEndpointid() ' . $cp->getEndpointid());
+        }
+        if (empty($cp->getEndpointidSchemeid())) {
+            $this->flashMessage('warning', '$cp->getEndpointidSchemeid() ' . $cp->getEndpointidSchemeid());
+        }
+        if (empty($cp->getIdentificationid())) {
+            $this->flashMessage('warning', '$cp->getIdentificationid() ' . $cp->getIdentificationid());
+        }
+        if (empty($cp->getTaxschemecompanyid())) {
+            $this->flashMessage('warning', '$cp->getTaxschemecompanyid() ' . $cp->getTaxschemecompanyid());
+        }
+        if (empty($cp->getTaxschemeid())) {
+            $this->flashMessage('warning', '$cp->getTaxschemeid() ' . $cp->getTaxschemeid());
+        }
+        if (empty($cp->getLegalEntityRegistrationName())) {
+            $this->flashMessage('warning', '$cp->getLegalEntityRegistrationName() ' . $cp->getLegalEntityRegistrationName());
+        }
+        if (empty($cp->getLegalEntityCompanyid())) {
+            $this->flashMessage('warning', '$cp->getLegalEntityCompanyid() ' . $cp->getLegalEntityCompanyid());
+        }
+        if (empty($cp->getLegalEntityCompanyidSchemeid())) {
+            $this->flashMessage('warning', '$cp->getLegalEntityCompanyidSchemeid() ' . $cp->getLegalEntityCompanyidSchemeid());
+        }
+        if (empty($cp->getLegalEntityCompanyLegalForm())) {
+            $this->flashMessage('warning', '$cp->getLegalEntityCompanyLegalForm() ' . $cp->getLegalEntityCompanyLegalForm());
+        }
+        if (empty($cp->getFinancialInstitutionBranchid())) {
+            $this->flashMessage('warning', '$cp->getFinancialInstitutionBranchid() ' . $cp->getFinancialInstitutionBranchid());
+        }
+        if (empty($cp->getAccountingCost())) {
+            $this->flashMessage('warning', '$cp->getAccountingCost() ' . $cp->getAccountingCost());
+        }
+        if (empty($cp->getSupplierAssignedAccountId())) {
+            $this->flashMessage('warning', '$cp->getSupplierAssignedAccountId() ' . $cp->getSupplierAssignedAccountId());
+        }
+        if ($cp->getEndpointid()
+          && $cp->getEndpointidSchemeid()
+          && $cp->getIdentificationid()
+          && $cp->getIdentificationidSchemeid()
+          && $cp->getTaxschemecompanyid()
+          && $cp->getTaxschemeid()
+          && $cp->getLegalEntityRegistrationName()
+          && $cp->getLegalEntityCompanyid()
+          && $cp->getLegalEntityCompanyidSchemeid()
+          && $cp->getLegalEntityCompanyLegalForm()
+          && $cp->getFinancialInstitutionBranchid()
+          && $cp->getAccountingCost()
+          && $cp->getSupplierAssignedAccountId()) {
+            return true;
+        }
+        $this->flashMessage('warning', $this->translator->translate('peppol.client.check'));
+        return false;
     }
 
     private function peppolStreamOutput(string $xml, PeppolValidator $pVal): Response
@@ -341,63 +317,71 @@ trait Peppol
                 $this->flashMessage('warning',
                     $this->translator->translate('delivery.location.peppol.output'));
             } else {
-                $peppolhelper = new PeppolHelper(
-                    $this->sR,
-                    $net->delRepo,
-                    $invoice->getInvAmount(),
-                    $delloc,
-                    $this->translator,
-                );
-                try {
-                    $xmlPath = $peppolhelper->generateInvoicePeppolUblXmlTempFile(
-                        $invoice,
-                        new PeppolHelperInvDeps(
-                            $core->soR, $inv->iaR, $core->iiaR,
-                            $inv->iiR, $core->paR, $core->cpR,
-                        ),
-                        new PeppolHelperNetDeps(
-                            $net->contractRepo, $net->delRepo,
-                            $net->delPartyRepo, $net->unpR, $net->upR,
-                        ),
-                        new PeppolHelperChargeDeps(
-                            $charge->aciR, $charge->aciiR,
-                            $charge->soiR, $charge->trR,
-                        ),
-                    );
-                    $ublXml = file_get_contents($xmlPath);
-                    if ($ublXml === false || strlen($ublXml) === 0) {
-                        $this->flashMessage('warning',
-                            $this->translator->translate('peppol.xml.generation.failed'));
-                    } else {
-                        $cp = $core->cpR->repoClientPeppolLoadedquery($client_id);
-                        if (null === $cp) {
-                            $this->flashMessage('warning',
-                                $this->translator->translate('peppol.client.check'));
-                        } else {
-                            $recipientId = $cp->getEndpointidSchemeid() . ':' . $cp->getEndpointid();
-                            $message = $peppolSendService->send($id, $ublXml, $recipientId);
-                            if ($message->getStatus() === 'SENT') {
-                                $this->flashMessage('info',
-                                    '📨 ' . $this->translator->translate('sent')
-                                    . ' — ' . $this->translator->translate('peppol.message.id')
-                                    . ': ' . ($message->getMessageId() ?? ''));
-                            } else {
-                                $this->flashMessage('warning',
-                                    '⚠️ ' . $this->translator->translate('peppol.send.failed')
-                                    . ': ' . ($message->getErrorMessage() ?? ''));
-                            }
-                        }
-                    }
-                } catch (\RuntimeException $e) {
-                    $msg = $e instanceof \Yiisoft\FriendlyException\FriendlyExceptionInterface
-                        ? $e->getName()
-                        : $e->getMessage();
-                    $this->flashMessage('warning', $msg);
-                }
+                $this->transmitPeppolDocument($invoice, $delloc, $core, $net, $charge, $inv, $peppolSendService);
             }
         }
 
         return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $id]);
+    }
+
+    private function transmitPeppolDocument(
+        \App\Infrastructure\Persistence\Inv\Inv $invoice,
+        DeliveryLocation $delloc,
+        InvPeppolCoreDeps $core,
+        InvPeppolNetworkDeps $net,
+        InvPeppolChargeDeps $charge,
+        InvPeppolInvDeps $inv,
+        PeppolSendService $peppolSendService,
+    ): void {
+        $peppolhelper = new PeppolHelper(
+            $this->sR, $net->delRepo, $invoice->getInvAmount(), $delloc, $this->translator);
+        try {
+            $xmlPath = $peppolhelper->generateInvoicePeppolUblXmlTempFile(
+                $invoice,
+                new PeppolHelperInvDeps(
+                    $core->soR, $inv->iaR, $core->iiaR,
+                    $inv->iiR, $core->paR, $core->cpR,
+                ),
+                new PeppolHelperNetDeps(
+                    $net->contractRepo, $net->delRepo,
+                    $net->delPartyRepo, $net->unpR, $net->upR,
+                ),
+                new PeppolHelperChargeDeps(
+                    $charge->aciR, $charge->aciiR,
+                    $charge->soiR, $charge->trR,
+                ),
+            );
+            $ublXml = file_get_contents($xmlPath);
+            if ($ublXml === false || strlen($ublXml) === 0) {
+                $this->flashMessage('warning',
+                    $this->translator->translate('peppol.xml.generation.failed'));
+            } else {
+                $client_id = $invoice->getClient()?->reqId() ?? 0;
+                $cp = $core->cpR->repoClientPeppolLoadedquery($client_id);
+                if (null === $cp) {
+                    $this->flashMessage('warning',
+                        $this->translator->translate('peppol.client.check'));
+                } else {
+                    $recipientId = $cp->getEndpointidSchemeid() . ':' . $cp->getEndpointid();
+                    $message = $peppolSendService->send($invoice->reqId(), $ublXml, $recipientId);
+                    if ($message->getStatus() === 'SENT') {
+                        $this->flashMessage('info',
+                            '📨 ' . $this->translator->translate('sent')
+                            . ' — ' . $this->translator->translate('peppol.message.id')
+                            . ': ' . ($message->getMessageId() ?? ''));
+                    } else {
+                        $this->flashMessage('warning',
+                            '⚠️ ' . $this->translator->translate('peppol.send.failed')
+                            . ': ' . ($message->getErrorMessage() ?? ''));
+                    }
+                }
+            }
+        } catch (\RuntimeException $e) {
+            $msg = $e instanceof \Yiisoft\FriendlyException\FriendlyExceptionInterface
+                ? $e->getName()
+                : $e->getMessage();
+            $this->flashMessage('warning', $msg);
+        }
     }
 
     private function peppolOutput(UPR $upR,

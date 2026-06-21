@@ -128,32 +128,15 @@ final class AuthController
         UserRepository $uR,
         string $_language,
     ): ResponseInterface {
-        $qp = $request->getQueryParams();
-        $authclient   = isset($qp['authclient'])
-                &&  is_string($qp['authclient'])
-                && $qp['authclient'] !== '' ?
-                $qp['authclient'] : null;
-        $code         = isset($qp['code'])
-                &&  is_string($qp['code'])
-                && $qp['code'] !== '' ? $qp['code'] : null;
-        $state        = isset($qp['state'])
-                &&  is_string($qp['state'])
-                && $qp['state'] !== '' ? $qp['state'] : null;
-        $error        = isset($qp['error'])
-                &&  is_string($qp['error'])
-                && $qp['error'] !== '' ? $qp['error'] : null;
-        $errorCode    = isset($qp['error_code'])
-                &&  is_string($qp['error_code'])
-                && $qp['error_code'] !== '' ? $qp['error_code'] : null;
-        $errorReason  = isset($qp['error_reason'])
-                &&  is_string($qp['error_reason'])
-                && $qp['error_reason'] !== '' ? $qp['error_reason'] : null;
-        $sessionState = isset($qp['session_state'])
-                &&  is_string($qp['session_state'])
-                && $qp['session_state'] !== '' ? $qp['session_state'] : null;
-        $deviceId     = isset($qp['device_id'])
-                &&  is_string($qp['device_id'])
-                && $qp['device_id'] !== '' ? $qp['device_id'] : null;
+        $qp           = $request->getQueryParams();
+        $authclient   = $this->getStringQueryParam($qp, 'authclient');
+        $code         = $this->getStringQueryParam($qp, 'code');
+        $state        = $this->getStringQueryParam($qp, 'state');
+        $error        = $this->getStringQueryParam($qp, 'error');
+        $errorCode    = $this->getStringQueryParam($qp, 'error_code');
+        $errorReason  = $this->getStringQueryParam($qp, 'error_reason');
+        $sessionState = $this->getStringQueryParam($qp, 'session_state');
+        $deviceId     = $this->getStringQueryParam($qp, 'device_id');
 
         if ($authclient === null) {
             throw new \InvalidArgumentException("Missing or invalid 'authclient'"
@@ -199,106 +182,12 @@ final class AuthController
             return $this->redirectToMain();
         }
         $loginForm = new LoginForm($this->authService, $translator);
-
-        $openBankingAuthUrl = '';
         $openBankChoice = $this->sR->getSetting('open_banking_provider');
-        // If a provider has been selected, configure the client accordingly
-        if (strlen($openBankChoice) > 0) {
-            $providerConfig = $this->getOpenBankingProviderConfig(
-                $openBankChoice);
-            if ($providerConfig !== null) {
-                $authChoice = AuthChoice::widget();
-                /** @var OpenBanking $openBanking */
-                $openBanking = $authChoice->getClient('openbanking');
-                $openBanking->setAuthUrl((string) $providerConfig['authUrl']);
-                $openBanking->setTokenUrl((string) $providerConfig['tokenUrl']);
-                $openBanking->setScope(isset($providerConfig['scope']) ?
-                        (string) $providerConfig['scope'] : null);
-                $codeVerifier = Random::string(128);
-                $hash = hash('sha256', $codeVerifier, true);
-                $rTrim = rtrim(base64_encode($hash), '=');
-                $codeChallenge = strtr($rTrim, '+/', '-_');
-                $this->session->set('code_verifier', $codeVerifier);
-                $openBankingAuthUrl = $openBanking->getAuthUrl()
-                        . '?'
-                        . http_build_query([
-                    'response_type' => 'code',
-                    'scope' => $openBanking->getScope(),
-                    'code_challenge' => $codeChallenge,
-                    'code_challenge_method' => 'S256',
-                ]);
-            }
-        }
+        $openBankingAuthUrl = $this->buildOpenBankingAuthUrl($openBankChoice);
 
         $response = null;
         if ($formHydrator->populateFromPostAndValidate($loginForm, $request)) {
-            $identity = $this->authService->getIdentity();
-            $userId = $identity->getId();
-            if (null !== $userId) {
-                $userInv = $uiR->repoUserInvUserIdquery((int) $userId);
-                if (null !== $userInv) {
-                    $user = $userInv->getUser();
-                    if (null !== $user) {
-                        // if using two-factor-authentication
-                        if ($this->sR->getSetting('enable_tfa') == '1') {
-                            $this->session->set('tfa_verified', false);
-                            $enabled = $user->is2FAEnabled();
-                            // setup if not enabled already
-                            if (!$enabled) {
-                                $this->session->set('pending_2fa_user_id', $userId);
-                                // show the setup form so that the user can register
-                                $response = $this->webService->getRedirectResponse('auth/showSetup');
-                            } else {
-                                $this->session->set('verified_2fa_user_id', $userId);
-                                $response = $this->webService->getRedirectResponse('auth/verifyLogin');
-                            }
-                        } else {
-                            $this->session->set('tfa_verified', true);
-/**
- * Related logic: see UserInvController function signup where the userinv
- * active field is made active i.e. true upon a positive email verification
- */
-                            $status = $userInv->getActive();
-/**
- * The admin does not automatically have a 'userinv account with status as active' IF
- * signing up NOT by email e.g by localhost  . The below code, if ($isAdminUser) {
-    }, => makes allowances for this.
- * Related logic: see UserInvController function signup which is triggered once
- *  user's email verification link is clicked in their user account
- * and the userinv account's status field is made active i.e. 1
- */
-                            $isAdminUser = $this->isAdminUser($userId);
-
-                            if ($status || $isAdminUser) {
-// Disable email verification token for admin users who don't need email verification
-                                if ($isAdminUser) {
-                                    $this->disableToken($tR, $userId, 'email-verification');
-                                }
-// Regenerate session ID on successful login
-                                $this->session->regenerateId();
-                                $this->session->set('tfa_verified', true);
-                                $response = ($identity instanceof CookieLoginIdentityInterface
-                                        && $loginForm->getPropertyValue('rememberMe'))
-                                    ? $cookieLogin->addCookie($identity, $this->redirectToInvoiceIndex())
-                                    : $this->redirectToInvoiceIndex();
-                            } else {
-/**
- * If the observer user is signing up WITHOUT email (=> userinv account status is 0),
- *  e.g. by console ... yii userinv/assignRole observer 2,
- * the admin will have to make the user active via Settings Invoice User Account
- *  AND assign the user an added client
- * Also the token that was originally assigned on signup, must now be 'disabled'
- *  because the admin is responsible for making the user active
- */
-                                $this->disableToken($tR, $userId,
-                                        $this->getTokenType('email-verification'));
-                                $response = $this->webService->getRedirectResponse(
-                                        'site/adminmustmakeactive', ['_language' => 'en']);
-                            }
-                        }
-                    }
-                }
-            }
+            $response = $this->resolveLoginResponse($loginForm, $cookieLogin, $uiR, $tR);
             if ($response === null) {
                 $this->logout($uR, $uiR);
             }
@@ -322,8 +211,7 @@ final class AuthController
                 'errors' => $errors,
                 'openBankChoice' => $openBankChoice,
                 'noOpenBankingContinueButton' =>
-                $this->sR->getSetting('no_openbanking_continue_button') == '1' ?
-                    true : false,
+                $this->sR->getSetting('no_openbanking_continue_button') == '1',
                 'openBankingAuthUrl' => $openBankingAuthUrl,
                 //Fade-out CSS for TFA badge
                 'styleTagFadeOut' =>  new Style()->content(
@@ -434,62 +322,11 @@ final class AuthController
         if ($this->secHelper->checkRateLimit($rateLimitKey)) {
             $pendingUserId = (int) $this->session->get('pending_2fa_user_id');
             $body = $request->getParsedBody() ?? [];
-            $tfa = 'two.factor.authentication';
-            $tfans = $tfa . '.no.secret.generated';
-            $tfaicf =  $tfa . '.invalid.code.format';
-            $tfaafms =  $tfa . '.attempt.failure.must.setup';
-            $tfaaf = $tfa . '.attempt.failure';
             if (is_array($body)) {
-                $inputCode = $this->tfaHelper->sanitizeAndValidateCode($body['code'] ?? '');
-                if ($inputCode !== null && $pendingUserId > 0) {
-                    $user = $userRepository->findById($pendingUserId);
-                    /** @var mixed $tempSecretRaw */
-                    $tempSecretRaw = $this->session->get('2fa_temp_secret');
-                    $tempSecret = (\is_string($tempSecretRaw)
-                            && $tempSecretRaw !== '') ? $tempSecretRaw : null;
-                    $error = null;
-                    if ($tempSecret === null) {
-                        $error = $translator->translate($tfans);
-                    } elseif (!$this->tfaHelper->isValidTotpCode($inputCode)) {
-                        $error = $translator->translate($tfaicf);
-                    } else {
-                        $totp = TOTP::create($tempSecret);
-                        if ($totp->verify($inputCode)) {
-                            $user->setTotpSecret($tempSecret);
-                            $user->set2FAEnabled(true);
-                            $userRepository->save($user);
-                            $this->session->remove('2fa_temp_secret');
-                            $this->session->remove('pending_2fa_user_id');
-                            // Regenerate session ID on successful setup
-                            $this->session->regenerateId();
-                            $this->session->set('verified_2fa_user_id', $pendingUserId);
-                            $response = $this->webService->getRedirectResponse('auth/verifyLogin');
-                        } else {
-                            $etwd = 'enable_tfa_with_disabling';
-                            $error = $translator->translate(
-                                $this->sR->getSetting($etwd) == '1' ? $tfaafms : $tfaaf);
-                        }
-                    }
-                    if ($error !== null) {
-                        // Re-render the setup page with error and QR code
-                        $safeSecret = $tempSecret ?? TOTP::create()->getSecret();
-                        $totp = TOTP::create($safeSecret);
-                        // Set the label again here!
-                        $userEmail = $user->getEmail();
-                        if ($userEmail !== '') {
-                            $totp->setLabel($userEmail);
-                        }
-                        $qrContent = $totp->getProvisioningUri();
-                        $qrDataUri = $this->tfaHelper->generateQrDataUri($qrContent);
-                        $tfasf = new TwoFactorAuthenticationSetupForm($translator);
-                        $response = $this->webViewRenderer->render('setup', [
-                            'class' => $this->classList(),
-                            'qrDataUri' => $qrDataUri,
-                            'totpSecret' => $totp->getSecret(),
-                            'error' => $error,
-                            'formModel' => $tfasf,
-                        ]);
-                    }
+                $result = $this->processSetupVerification(
+                    $pendingUserId, $body, $translator, $userRepository);
+                if ($result !== null) {
+                    $response = $result;
                 }
             }
         } else {
@@ -519,13 +356,6 @@ final class AuthController
         TranslatorInterface $translator,
         UserRepository $userRepository,
     ): ResponseInterface {
-        $tfa = 'two.factor.authentication';
-        $tfafvl = 'two.factor.authentication.form.verify.login';
-        $tfarlr = $tfa . '.rate.limit.reached';
-        $tfaaf = $tfa . '.attempt.failure';
-        $etwd = 'enable_tfa_with_disabling';
-        $tfaitc = $tfa . '.invalid.totp.code';
-        $tfaibrc = $tfa . '.invalid.backup.recovery.code';
         $vuid = (int) $this->session->get('verified_2fa_user_id');
         $form = new TwoFactorAuthenticationVerifyLoginForm($translator);
         $codes = [];
@@ -542,7 +372,7 @@ final class AuthController
             $this->session->set('regenerate_codes', false);
         }
         $parameters = [
-            'title' => $translator->translate($tfafvl),
+            'title' => $translator->translate('two.factor.authentication.form.verify.login'),
             'actionName' => 'auth/verifyLogin',
             'actionArguments' => [],
             'errors' => [],
@@ -551,83 +381,10 @@ final class AuthController
             // empty $codes => show button to regenerate
             'codes' => $codes,
         ];
-        $reached = 'Rate limit reached for 2FA verification from IP: ';
         $response = null;
         if ($request->getMethod() === Method::POST) {
-            // Apply rate limiting for authentication attempts
-            $clientIp = $this->secHelper->getClientIpAddress($request);
-            $rateLimitKey = 'auth_verify_' . hash('sha256', $clientIp);
-            /** Related logic: see config/web/di/rate-limit.php */
-            if (!$this->secHelper->checkRateLimit($rateLimitKey)) {
-                $this->logger->log(LogLevel::WARNING, $reached . $clientIp);
-                $response = $this->webViewRenderer->render('verify', [
-                    'error' => $translator->translate($tfarlr),
-                    'formModel' => $form,
-                    'codes' => $codes,
-                ]);
-            } else {
-                $body = $request->getParsedBody();
-                if (is_array($body)) {
-                    $inputCode = $this->tfaHelper->sanitizeAndValidateCode($body['code'] ?? '');
-                    if (null !== $inputCode && $vuid > 0) {
-                        $user = $userRepository->findById($vuid);
-                        $totpSecretRaw = $user->getTotpSecret();
-                        $totpSec = (\is_string($totpSecretRaw)
-                                && $totpSecretRaw !== '')
-                                ? $totpSecretRaw : null;
-                        $error = '';
-                        if ($totpSec !== null
-                                && $this->tfaHelper->isValidTotpCode($inputCode)) {
-                            $tokenApplySec = TokenMask::apply($totpSec);
-                            $totp = TOTP::create($totpSec);
-                            if ($totp->verify($inputCode)) {
-                                if ($this->sR->getSetting($etwd) == '1') {
-                                    $user->setTotpSecret('');
-                                    $user->set2FAEnabled(false);
-                                    $userRepository->save($user);
-                                }
-                                // Regenerate session ID on successful
-                                // authentication
-                                $this->session->regenerateId();
-                                $this->secHelper->remSessTempsPermitEntryBase($vuid);
-                                /**
-                                 * Related logic: HmrcController function
-                                 *  fphValidate
-                                 */
-                                $this->session->set('otp', $inputCode);
-                                $this->session->set('otpRef', $tokenApplySec);
-                                $response = $this->redirectToInvoiceIndex();
-                            } else {
-                                $error = $translator->translate($tfaitc);
-                            }
-                        } else {
-                            // The user has forgotten their $inputCode so
-                            // try a backup code
-                            if ($totpSec !== null
-                                    && $this->recoveryCodeService
-                                            ->validateAndMarkCodeAsUsed(
-                                                $user, $inputCode)) {
-                                $tokenApplySec = TokenMask::apply($totpSec);
-                                $this->secHelper->remSessTempsPermitEntryBase($vuid);
-                                $this->session->set('otp', $inputCode);
-                                $this->session->set('otpRef', $tokenApplySec);
-                                $response = $this->redirectToInvoiceIndex();
-                            } else {
-                                $error = $translator->translate($tfaibrc);
-                            }
-                        }
-                        if ($response === null) {
-                            $response = $this->webViewRenderer->render('verify', [
-                                'error' => $error,
-                                'formModel' => $form,
-                                'codes' => $codes,
-                            ]);
-                        }
-                    } else { // null!==$inputCode && $vuid > 0
-                        $parameters['error'] = $translator->translate($tfaaf);
-                    }
-                }
-            }
+            $response = $this->handleVerifyLoginPost(
+                $request, $translator, $userRepository, $vuid, $form, $codes);
         }
         return $response ?? $this->webViewRenderer->render('verify', $parameters);
     }
@@ -766,33 +523,14 @@ final class AuthController
     ): ResponseInterface {
         $identity = $this->authService->getIdentity();
         $userId = $identity->getId();
-
         // if enable_tfa_with_disabling setting has changed during login of admin
         // make sure this is reflected in the user setting.
-        if (($this->sR->getSetting('enable_tfa_with_disabling') == '1')
+        if ($this->sR->getSetting('enable_tfa_with_disabling') == '1'
                 && $this->sR->getSetting('enable_tfa') == '1') {
-            if (null !== $userId) {
-                $userInv = $uiR->repoUserInvUserIdquery((int) $userId);
-                if (null !== $userInv) {
-                    $user = $userInv->getUser();
-                    if (null !== $user && $this->sR->getSetting('enable_tfa') == '1') {
-                            $enabled = $user->is2FAEnabled();
-                            if ($enabled) {
-                                $user->set2FAEnabled(false);
-                                // Securely clear TOTP secret
-                                $totpSecret = $user->getTotpSecret();
-                                $user->setTotpSecret('');
-                                $uR->save($user);
-
-                                // Clear secret from memory
-                                $this->secHelper->secureClearSensitiveData([&$totpSecret]);
-                            }
-                    }
-                }
-            }
+            $this->clearTfaOnLogout($userId, $uR, $uiR);
             $this->session->remove('verified_2fa_user_id');
         }
-         // prevent session fixation
+        // prevent session fixation
         $this->session->regenerateId();
         // Current — only clears data, keeps session alive
         $this->session->clear();
@@ -869,5 +607,341 @@ final class AuthController
     {
         return $this->webService->getRedirectResponse('site/onetimepassworderror',
                 ['_language' => 'en']);
+    }
+
+    private function getStringQueryParam(array $qp, string $key): ?string
+    {
+        return (isset($qp[$key]) && is_string($qp[$key]) && $qp[$key] !== '')
+            ? $qp[$key]
+            : null;
+    }
+
+    private function buildOpenBankingAuthUrl(string $openBankChoice): string
+    {
+        if (strlen($openBankChoice) === 0) {
+            return '';
+        }
+        $providerConfig = $this->getOpenBankingProviderConfig($openBankChoice);
+        if ($providerConfig === null) {
+            return '';
+        }
+        $authChoice = AuthChoice::widget();
+        /** @var OpenBanking $openBanking */
+        $openBanking = $authChoice->getClient('openbanking');
+        $openBanking->setAuthUrl((string) $providerConfig['authUrl']);
+        $openBanking->setTokenUrl((string) $providerConfig['tokenUrl']);
+        $openBanking->setScope(isset($providerConfig['scope']) ?
+                (string) $providerConfig['scope'] : null);
+        $codeVerifier = Random::string(128);
+        $hash = hash('sha256', $codeVerifier, true);
+        $rTrim = rtrim(base64_encode($hash), '=');
+        $codeChallenge = strtr($rTrim, '+/', '-_');
+        $this->session->set('code_verifier', $codeVerifier);
+        return $openBanking->getAuthUrl()
+                . '?'
+                . http_build_query([
+            'response_type' => 'code',
+            'scope' => $openBanking->getScope(),
+            'code_challenge' => $codeChallenge,
+            'code_challenge_method' => 'S256',
+        ]);
+    }
+
+    private function resolveLoginResponse(
+        LoginForm $loginForm,
+        CookieLogin $cookieLogin,
+        UserInvRepository $uiR,
+        TokenRepository $tR,
+    ): ?ResponseInterface {
+        $identity = $this->authService->getIdentity();
+        $userId = $identity->getId();
+        if (null === $userId) {
+            return null;
+        }
+        $userInv = $uiR->repoUserInvUserIdquery((int) $userId);
+        if (null === $userInv) {
+            return null;
+        }
+        $user = $userInv->getUser();
+        if (null === $user) {
+            return null;
+        }
+        if ($this->sR->getSetting('enable_tfa') == '1') {
+            return $this->handleTfaPath($userId, $user);
+        }
+        return $this->handleNonTfaPath($userId, $userInv, $cookieLogin, $loginForm, $tR);
+    }
+
+    private function handleTfaPath(string $userId, User $user): ResponseInterface
+    {
+        $this->session->set('tfa_verified', false);
+        $enabled = $user->is2FAEnabled();
+        if (!$enabled) {
+            $this->session->set('pending_2fa_user_id', $userId);
+            return $this->webService->getRedirectResponse('auth/showSetup');
+        }
+        $this->session->set('verified_2fa_user_id', $userId);
+        return $this->webService->getRedirectResponse('auth/verifyLogin');
+    }
+
+    private function handleNonTfaPath(
+        string $userId,
+        UserInv $userInv,
+        CookieLogin $cookieLogin,
+        LoginForm $loginForm,
+        TokenRepository $tR,
+    ): ResponseInterface {
+        $this->session->set('tfa_verified', true);
+        $status = $userInv->getActive();
+        $isAdminUser = $this->isAdminUser($userId);
+        if ($status || $isAdminUser) {
+            if ($isAdminUser) {
+                $this->disableToken($tR, $userId, 'email-verification');
+            }
+            $this->session->regenerateId();
+            $this->session->set('tfa_verified', true);
+            $identity = $this->authService->getIdentity();
+            return ($identity instanceof CookieLoginIdentityInterface
+                    && $loginForm->getPropertyValue('rememberMe'))
+                ? $cookieLogin->addCookie($identity, $this->redirectToInvoiceIndex())
+                : $this->redirectToInvoiceIndex();
+        }
+/**
+ * If the observer user is signing up WITHOUT email (=> userinv account status is 0),
+ *  e.g. by console ... yii userinv/assignRole observer 2,
+ * the admin will have to make the user active via Settings Invoice User Account
+ *  AND assign the user an added client.
+ * Also the token that was originally assigned on signup, must now be 'disabled'
+ *  because the admin is responsible for making the user active.
+ */
+        $this->disableToken($tR, $userId, $this->getTokenType('email-verification'));
+        return $this->redirectToAdminMustMakeActive();
+    }
+
+    private function processSetupVerification(
+        int $pendingUserId,
+        array $body,
+        TranslatorInterface $translator,
+        UserRepository $userRepository,
+    ): ?ResponseInterface {
+        $tfa = 'two.factor.authentication';
+        $inputCode = $this->tfaHelper->sanitizeAndValidateCode($body['code'] ?? '');
+        if ($inputCode === null || $pendingUserId <= 0) {
+            return null;
+        }
+        $user = $userRepository->findById($pendingUserId);
+        /** @var mixed $tempSecretRaw */
+        $tempSecretRaw = $this->session->get('2fa_temp_secret');
+        $tempSecret = (is_string($tempSecretRaw) && $tempSecretRaw !== '')
+            ? $tempSecretRaw : null;
+        if ($tempSecret === null) {
+            $error = $translator->translate($tfa . '.no.secret.generated');
+        } elseif (!$this->tfaHelper->isValidTotpCode($inputCode)) {
+            $error = $translator->translate($tfa . '.invalid.code.format');
+        } else {
+            $result = $this->verifySetupTotp(
+                $inputCode, $tempSecret, $pendingUserId, $user, $userRepository, $translator);
+            if ($result === null) {
+                return $this->webService->getRedirectResponse('auth/verifyLogin');
+            }
+            $error = $result;
+        }
+        return $this->renderSetupWithError($error, $tempSecret, $user, $translator);
+    }
+
+    /**
+     * @param non-empty-string $tempSecret
+     */
+    private function verifySetupTotp(
+        string $inputCode,
+        string $tempSecret,
+        int $pendingUserId,
+        User $user,
+        UserRepository $userRepository,
+        TranslatorInterface $translator,
+    ): ?string {
+        $totp = TOTP::create($tempSecret);
+        if ($totp->verify($inputCode)) {
+            $user->setTotpSecret($tempSecret);
+            $user->set2FAEnabled(true);
+            $userRepository->save($user);
+            $this->session->remove('2fa_temp_secret');
+            $this->session->remove('pending_2fa_user_id');
+            // Regenerate session ID on successful setup
+            $this->session->regenerateId();
+            $this->session->set('verified_2fa_user_id', $pendingUserId);
+            return null;
+        }
+        $tfa = 'two.factor.authentication';
+        return $translator->translate(
+            $this->sR->getSetting('enable_tfa_with_disabling') == '1'
+                ? $tfa . '.attempt.failure.must.setup'
+                : $tfa . '.attempt.failure'
+        );
+    }
+
+    private function renderSetupWithError(
+        string $error,
+        ?string $tempSecret,
+        User $user,
+        TranslatorInterface $translator,
+    ): ResponseInterface {
+        /** @var non-empty-string $safeSecret */
+        $safeSecret = $tempSecret ?? TOTP::create()->getSecret();
+        $totp = TOTP::create($safeSecret);
+        $userEmail = $user->getEmail();
+        if ($userEmail !== '') {
+            $totp->setLabel($userEmail);
+        }
+        $qrContent = $totp->getProvisioningUri();
+        $qrDataUri = $this->tfaHelper->generateQrDataUri($qrContent);
+        $form = new TwoFactorAuthenticationSetupForm($translator);
+        return $this->webViewRenderer->render('setup', [
+            'class' => $this->classList(),
+            'qrDataUri' => $qrDataUri,
+            'totpSecret' => $totp->getSecret(),
+            'error' => $error,
+            'formModel' => $form,
+        ]);
+    }
+
+    private function handleVerifyLoginPost(
+        ServerRequestInterface $request,
+        TranslatorInterface $translator,
+        UserRepository $userRepository,
+        int $vuid,
+        TwoFactorAuthenticationVerifyLoginForm $form,
+        array $codes,
+    ): ?ResponseInterface {
+        $tfa = 'two.factor.authentication';
+        $clientIp = $this->secHelper->getClientIpAddress($request);
+        $rateLimitKey = 'auth_verify_' . hash('sha256', $clientIp);
+        /** Related logic: see config/web/di/rate-limit.php */
+        if (!$this->secHelper->checkRateLimit($rateLimitKey)) {
+            $this->logger->log(LogLevel::WARNING,
+                'Rate limit reached for 2FA verification from IP: ' . $clientIp);
+            return $this->webViewRenderer->render('verify', [
+                'error' => $translator->translate($tfa . '.rate.limit.reached'),
+                'formModel' => $form,
+                'codes' => $codes,
+            ]);
+        }
+        $body = $request->getParsedBody();
+        if (!is_array($body)) {
+            return null;
+        }
+        $inputCode = $this->tfaHelper->sanitizeAndValidateCode($body['code'] ?? '');
+        if (null === $inputCode || $vuid <= 0) {
+            return $this->webViewRenderer->render('verify', [
+                'error' => $translator->translate($tfa . '.attempt.failure'),
+                'formModel' => $form,
+                'codes' => $codes,
+            ]);
+        }
+        return $this->verifyLoginCode($inputCode, $vuid, $userRepository, $translator, $form, $codes);
+    }
+
+    private function verifyLoginCode(
+        string $inputCode,
+        int $vuid,
+        UserRepository $userRepository,
+        TranslatorInterface $translator,
+        TwoFactorAuthenticationVerifyLoginForm $form,
+        array $codes,
+    ): ResponseInterface {
+        $tfa = 'two.factor.authentication';
+        $user = $userRepository->findById($vuid);
+        $totpSecretRaw = $user->getTotpSecret();
+        $totpSec = (is_string($totpSecretRaw) && $totpSecretRaw !== '')
+            ? $totpSecretRaw : null;
+        if ($totpSec !== null && $this->tfaHelper->isValidTotpCode($inputCode)) {
+            $response = $this->tryTotpLogin($inputCode, $totpSec, $vuid, $user, $userRepository);
+            $error = ($response === null) ? $translator->translate($tfa . '.invalid.totp.code') : '';
+        } else {
+            $response = $this->tryBackupCodeLogin($inputCode, $totpSec, $vuid, $user);
+            $error = ($response === null)
+                ? $translator->translate($tfa . '.invalid.backup.recovery.code') : '';
+        }
+        if ($response !== null) {
+            return $response;
+        }
+        return $this->webViewRenderer->render('verify', [
+            'error' => $error,
+            'formModel' => $form,
+            'codes' => $codes,
+        ]);
+    }
+
+    /**
+     * @param non-empty-string $totpSec
+     */
+    private function tryTotpLogin(
+        string $inputCode,
+        string $totpSec,
+        int $vuid,
+        User $user,
+        UserRepository $userRepository,
+    ): ?ResponseInterface {
+        $totp = TOTP::create($totpSec);
+        if (!$totp->verify($inputCode)) {
+            return null;
+        }
+        if ($this->sR->getSetting('enable_tfa_with_disabling') == '1') {
+            $user->setTotpSecret('');
+            $user->set2FAEnabled(false);
+            $userRepository->save($user);
+        }
+        // Regenerate session ID on successful authentication
+        $this->session->regenerateId();
+        $this->secHelper->remSessTempsPermitEntryBase($vuid);
+        /**
+         * Related logic: HmrcController function fphValidate
+         */
+        $tokenApplySec = TokenMask::apply($totpSec);
+        $this->session->set('otp', $inputCode);
+        $this->session->set('otpRef', $tokenApplySec);
+        return $this->redirectToInvoiceIndex();
+    }
+
+    private function tryBackupCodeLogin(
+        string $inputCode,
+        ?string $totpSec,
+        int $vuid,
+        User $user,
+    ): ?ResponseInterface {
+        if ($totpSec === null
+                || !$this->recoveryCodeService->validateAndMarkCodeAsUsed($user, $inputCode)) {
+            return null;
+        }
+        $tokenApplySec = TokenMask::apply($totpSec);
+        $this->secHelper->remSessTempsPermitEntryBase($vuid);
+        $this->session->set('otp', $inputCode);
+        $this->session->set('otpRef', $tokenApplySec);
+        return $this->redirectToInvoiceIndex();
+    }
+
+    private function clearTfaOnLogout(?string $userId, UserRepository $uR, UserInvRepository $uiR): void
+    {
+        if (null === $userId) {
+            return;
+        }
+        $userInv = $uiR->repoUserInvUserIdquery((int) $userId);
+        if (null === $userInv) {
+            return;
+        }
+        $user = $userInv->getUser();
+        if (null === $user || $this->sR->getSetting('enable_tfa') !== '1') {
+            return;
+        }
+        if (!$user->is2FAEnabled()) {
+            return;
+        }
+        $user->set2FAEnabled(false);
+        // Securely clear TOTP secret
+        $totpSecret = $user->getTotpSecret();
+        $user->setTotpSecret('');
+        $uR->save($user);
+        // Clear secret from memory
+        $this->secHelper->secureClearSensitiveData([&$totpSecret]);
     }
 }

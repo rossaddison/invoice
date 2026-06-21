@@ -248,47 +248,12 @@ final class SettingController extends BaseController
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
             if (is_array($body)) {
+                /** @var array<string, string> $settings */
                 $settings = (array) $body['settings'];
-                /**
-                 * @var string $key
-                 * @var string $value
-                 */
-                foreach ($settings as $key => $value) {
-                    $key === 'tax_rate_decimal_places' && (int) $value !== 2 ?
-                           $this->tabIndexChangeDecimalColumn((int) $value) : '';
-                    // Deal with existing keys after first installation
-                    if ($this->sR->repoCount($key) > 0) {
-                        // Warn if duplicates
-                        if ($this->sR->repoCount($key) > 1) {
-                            $this->flashMessage('danger',
-                                $this->translator->translate('setting.duplicate.key') . $key);
-                            return $this->webService->getRedirectResponse('setting/tabIndex');
-                        }
-                        if (str_contains($key, 'field_is_password') || str_contains($key, 'field_is_amount')) {
-                            // Skip all meta fields
-                            continue;
-                        }
-                        if (isset($settings[$key . '_field_is_password']) && empty($value)) {
-                            // Password field, but empty value, let's skip it
-                            continue;
-                        }
-                        if (isset($settings[$key . '_field_is_password']) && $value !== '') {
-                            // Encrypt passwords but don't save empty passwords
-                            $this->tabIndexSettingsSave($key, (string) $this->sR->encode(trim($value)));
-                        } elseif (isset($settings[$key . '_field_is_amount'])) {
-                            // Format amount inputs
-                            $this->tabIndexSettingsSave($key, (string) $numberhelper->standardizeAmount($value));
-                        } else {
-                            $this->tabIndexSettingsSave($key, $value);
-                        }
-
-                        if (($key == 'number_format') && in_array($value, $this->sR->numberFormats())) {
-                            $this->tabIndexNumberFormat($value);
-                        }
-                    } else {
-                            $this->tabIndexDebugModeEnsureAllSettingsIncluded(true, $key, $value);
-                        }
-                    }
+                $errorResponse = $this->saveSubmittedSettings($settings, $numberhelper);
+                if ($errorResponse !== null) {
+                    return $errorResponse;
+                }
                 $this->flashMessage('info', $this->translator->translate('settings.successfully.saved'));
                 return $this->webService->getRedirectResponse('setting/tabIndex');
             }
@@ -584,5 +549,55 @@ final class SettingController extends BaseController
             }
         }
         return $optionsDataSettings;
+    }
+
+    /**
+     * @param array<string, string> $settings
+     */
+    private function saveSubmittedSettings(array $settings, NumberHelper $numberhelper): ?Response
+    {
+        foreach ($settings as $key => $value) {
+            if ($key === 'tax_rate_decimal_places' && (int) $value !== 2) {
+                $this->tabIndexChangeDecimalColumn((int) $value);
+            }
+            if ($this->sR->repoCount($key) > 0) {
+                if ($this->sR->repoCount($key) > 1) {
+                    $this->flashMessage('danger',
+                        $this->translator->translate('setting.duplicate.key') . $key);
+                    return $this->webService->getRedirectResponse('setting/tabIndex');
+                }
+                $this->saveOneSetting($key, $value, $settings, $numberhelper);
+            } else {
+                $this->tabIndexDebugModeEnsureAllSettingsIncluded(true, $key, $value);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param array<string, string> $settings
+     */
+    private function saveOneSetting(
+        string $key,
+        string $value,
+        array $settings,
+        NumberHelper $numberhelper,
+    ): void {
+        if (str_contains($key, 'field_is_password') || str_contains($key, 'field_is_amount')) {
+            return;
+        }
+        if (isset($settings[$key . '_field_is_password']) && empty($value)) {
+            return;
+        }
+        if (isset($settings[$key . '_field_is_password']) && $value !== '') {
+            $this->tabIndexSettingsSave($key, (string) $this->sR->encode(trim($value)));
+        } elseif (isset($settings[$key . '_field_is_amount'])) {
+            $this->tabIndexSettingsSave($key, (string) $numberhelper->standardizeAmount($value));
+        } else {
+            $this->tabIndexSettingsSave($key, $value);
+        }
+        if ($key == 'number_format' && in_array($value, $this->sR->numberFormats())) {
+            $this->tabIndexNumberFormat($value);
+        }
     }
 }

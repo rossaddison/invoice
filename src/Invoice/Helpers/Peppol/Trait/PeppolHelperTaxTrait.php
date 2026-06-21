@@ -145,26 +145,7 @@ trait PeppolHelperTaxTrait
                 if (!empty($id)) {
                     $taxable_amount_total = 0.00;
                     $tax_amount_total = 0.00;
-                    $items = $invoice->getItems();
-                    /**
-                     * @var InvItem $item
-                     */
-                    foreach ($items as $item) {
-                        $item_id = $item->reqId();
-                        if ($id == $item->getTaxRate()?->reqId()) {
-                            $item_amount = $iiaR->repoInvItemAmountquery($item_id);
-                            if (null !== $item_amount) {
-                                $item_sub_total = $item_amount->getSubtotal();
-                                if (null !== $item_sub_total) {
-                                    $taxable_amount_total += $item_sub_total;
-                                }
-                                $item_tax_total = $item_amount->getTaxTotal();
-                                if (null !== $item_tax_total) {
-                                    $tax_amount_total += $item_tax_total;
-                                }
-                            }
-                        }
-                    }
+                    $this->sumItemsForTaxRate($invoice, $id, $iiaR, $taxable_amount_total, $tax_amount_total);
                 }
 
                 /**
@@ -196,6 +177,31 @@ trait PeppolHelperTaxTrait
             }
         }
         return $array;
+    }
+
+    private function sumItemsForTaxRate(
+        Inv $invoice,
+        int $id,
+        IIAR $iiaR,
+        float &$taxable_amount_total,
+        float &$tax_amount_total,
+    ): void {
+        /** @var InvItem $item */
+        foreach ($invoice->getItems() as $item) {
+            if ($id == $item->getTaxRate()?->reqId()) {
+                $item_amount = $iiaR->repoInvItemAmountquery($item->reqId());
+                if (null !== $item_amount) {
+                    $item_sub_total = $item_amount->getSubtotal();
+                    if (null !== $item_sub_total) {
+                        $taxable_amount_total += $item_sub_total;
+                    }
+                    $item_tax_total = $item_amount->getTaxTotal();
+                    if (null !== $item_tax_total) {
+                        $tax_amount_total += $item_tax_total;
+                    }
+                }
+            }
+        }
     }
 
     /**

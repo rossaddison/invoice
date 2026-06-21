@@ -97,51 +97,13 @@ final class UserInvController extends BaseController
         ];
 
         if ($request->getMethod() === Method::POST) {
-            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                // assign the observer role by default to a new user inv if it is not admin
-                // and has not been assigned the observer role
-                // form dropdown type 0 => admin, type 1 => guest
-                $body = $request->getParsedBody() ?? [];
-                if (is_array($body)) {
-                    /**
-                     * @var string $body['type']
-                     */
-                    $type = $body['type'];
-                    if (null !== $form->user_id) {
-                        // the user is not admin(1) and the guest dropdown type(1) has been selected
-                        if ($form->user_id != '1' && $type == '1') {
-                            $roles = $this->manager->getRolesByUserId($form->user_id);
-                            if (!array_key_exists('observer', $roles)) {
-                                $this->manager->assign('observer', $form->user_id);
-                                $this->flashMessage('info', $this->translator->translate('user.inv.role.all.new'));
-                            } else {
-                                $this->flashMessage('info', $this->translator->translate('user.inv.role.observer.assigned.already'));
-                            }
-                            $this->userinvService->saveUserInv($userinv, $body);
-                        }
-                        // the user is not admin(1) and the type administrator(0) was selected in the dropdown on the form
-                        if ($form->user_id != '1' && $type == '0') {
-                            $this->flashMessage('warning', $this->translator->translate('user.inv.type.cannot.allocate.administrator.type.to.non.administrator'));
-                        }
-                        // the user is admin and the type administrator was selected in the dropdown on the form
-                        if ($form->user_id == '1' && $type == '0') {
-                            // if the admin role has not yet been assigned, assign it now
-                            $roles = $this->manager->getRolesByUserId($form->user_id);
-                            if (!array_key_exists('admin', $roles)) {
-                                $this->manager->assign('admin', $form->user_id);
-                                $this->flashMessage('info', $this->translator->translate('user.inv.role.administrator.assigned'));
-                            } else {
-                                $this->flashMessage('info', $this->translator->translate('user.inv.role.administrator.already.assigned'));
-                            }
-                            $this->userinvService->saveUserInv($userinv, $body);
-                        }
-                        // the user is an admin and the type guest was selected in the dropdown on the form
-                        if ($form->user_id == '1' && $type == '1') {
-                            $this->flashMessage('warning', $this->translator->translate('user.inv.type.cannot.allocate.guest.type.to.administrator'));
-                        }
-                        return $this->webService->getRedirectResponse('userinv/index');
-                    } // null!== $form->user_id
-                } // is_array
+            $body = $request->getParsedBody() ?? [];
+            if ($formHydrator->populateFromPostAndValidate($form, $request)
+                && is_array($body)
+                && null !== $form->user_id) {
+                /** @var string $body['type'] */
+                $this->applyRolePolicyOnAdd((string) $form->user_id, $body['type'], $userinv, $body);
+                return $this->webService->getRedirectResponse('userinv/index');
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
@@ -346,66 +308,33 @@ final class UserInvController extends BaseController
         $aliases = new Aliases(['@invoice' => dirname(__DIR__),
             '@language' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Language']);
         $userinv = $this->userinv($id, $userinvRepository);
-        if ($userinv) {
-            $form = UserInvForm::show($userinv);
-            $parameters = [
-                'title' => $this->translator->translate('edit'),
-                'actionName' => 'userinv/edit',
-                'actionArguments' => ['id' => $userinv->reqId()],
-                'errors' => [],
-                'form' => $form,
-                'formFields' => $this->formFields,
-                'aliases' => $aliases,
-                'uR' => $uR,
-            ];
-            if ($request->getMethod() === Method::POST) {
-                $body = $request->getParsedBody() ?? [];
-                if (is_array($body) && $formHydrator->populateFromPostAndValidate($form, $request)) {
-                        /**
-                         * @var string $body['type']
-                         */
-                        $type = $body['type'];
-                        if (null !== $form->user_id) {
-                            // the user is not admin(1) and the guest dropdown type(1) has been selected
-                            if ($form->user_id != '1' && $type == '1') {
-                                $roles = $this->manager->getRolesByUserId($form->user_id);
-                                if (!array_key_exists('observer', $roles)) {
-                                    $this->manager->assign('observer', $form->user_id);
-                                    $this->flashMessage('info', $this->translator->translate('user.inv.role.all.new'));
-                                } else {
-                                    $this->flashMessage('warning', $this->translator->translate('user.inv.role.observer.assigned.already'));
-                                }
-                                $this->userinvService->saveUserInv($userinv, $body);
-                            }
-                            // the user is not admin(1) and the type administrator(0) was selected in the dropdown on the form
-                            if ($form->user_id != '1' && $type == '0') {
-                                $this->flashMessage('warning', $this->translator->translate('user.inv.type.cannot.allocate.administrator.type.to.non.administrator'));
-                            }
-                            // the user is admin and the type administrator was selected in the dropdown on the form
-                            if ($form->user_id == '1' && $type == '0') {
-                                // if the admin role has not yet been assigned, assign it now
-                                $roles = $this->manager->getRolesByUserId($form->user_id);
-                                if (!array_key_exists('admin', $roles)) {
-                                    $this->manager->assign('admin', $form->user_id);
-                                    $this->flashMessage('info', $this->translator->translate('user.inv.role.administrator.assigned'));
-                                } else {
-                                    $this->flashMessage('warning', $this->translator->translate('user.inv.role.administrator.already.assigned'));
-                                }
-                                $this->userinvService->saveUserInv($userinv, $body);
-                            }
-                            // the user is an admin and the type guest was selected in the dropdown on the form
-                            if ($form->user_id == '1' && $type == '1') {
-                                $this->flashMessage('warning', $this->translator->translate('user.inv.type.cannot.allocate.guest.type.to.administrator'));
-                            }
-                            return $this->webService->getRedirectResponse('userinv/index');
-                        } // null!== user_id
-                } // is_array
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-                $parameters['form'] = $form;
-            }
-            return $this->webViewRenderer->render('_form_edit', $parameters);
+        if (!$userinv) {
+            return $this->webService->getRedirectResponse('userinv/index');
         }
-        return $this->webService->getRedirectResponse('userinv/index');
+        $form = UserInvForm::show($userinv);
+        $parameters = [
+            'title' => $this->translator->translate('edit'),
+            'actionName' => 'userinv/edit',
+            'actionArguments' => ['id' => $userinv->reqId()],
+            'errors' => [],
+            'form' => $form,
+            'formFields' => $this->formFields,
+            'aliases' => $aliases,
+            'uR' => $uR,
+        ];
+        if ($request->getMethod() === Method::POST) {
+            $body = $request->getParsedBody() ?? [];
+            if (is_array($body)
+                && $formHydrator->populateFromPostAndValidate($form, $request)
+                && null !== $form->user_id) {
+                /** @var string $body['type'] */
+                $this->applyRolePolicyOnEdit((string) $form->user_id, $body['type'], $userinv, $body);
+                return $this->webService->getRedirectResponse('userinv/index');
+            }
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+            $parameters['form'] = $form;
+        }
+        return $this->webViewRenderer->render('_form_edit', $parameters);
     }
 
     /**
@@ -481,78 +410,14 @@ final class UserInvController extends BaseController
         // A token consists of a random 32 length string concatenated with a timestamp and then Masked.
         $unMaskedToken = TokenMask::remove($tokenMasked);
         $positionFromUnderscore = strrpos($unMaskedToken, '_');
-        if ($positionFromUnderscore > -1) {
-            $timestamp = substr($unMaskedToken, $positionFromUnderscore + 1);
-            $lengthTimeStamp = strlen($timestamp);
-            $tokenWithoutTimestamp = substr($unMaskedToken, 0, -($lengthTimeStamp + 1));
-            if ((int) $timestamp + 3600 >= time()) {
-                $identity = $d->tR->findIdentityByToken($tokenWithoutTimestamp, $tokenType);
-                if (null !== $identity) {
-                    $userId = $identity->getUser()?->reqId();
-                    if (null !== $userId) {
-                        $userInv = $d->uiR->repoUserInvUserIdquery($userId);
-                        if (null !== $userInv) {
-                            $userInv->setActive(true);
-                            $d->uiR->save($userInv);
-                            $userId = $userInv->reqUserId();
-                            // the status is now active i.e. 1, now make sure the token cannot be used again
-                            $tokenEntity = $d->tR->findTokenByTokenAndType($tokenWithoutTimestamp, $tokenType);
-                            if (null !== $tokenEntity) {
-                                /**
-                                 * Related logic: see https://github.com/search?q=repo%3Ayiisoft%2Fyii2-app-advanced%20already_&type=code
-                                 */
-                                $tokenEntity->setToken('already_used_token_' . (string) time());
-                                $d->tR->save($tokenEntity);
-                                // $email address field in signup form and a field in the user table
-                                $email = $identity->getUser()?->getEmail();
-                                if (null !== $email) {
-                                    /**
-                                     * The client will have to be assigned to the user by the admin manually if this is not set
-                                     * Related logic: see InvoiceController 'signup_automatically_assign_client' => 0
-                                     */
-                                    if ($this->sR->getSetting('signup_automatically_assign_client') == '1') {
-                                        $client = new Client();
-                                        // set the client as active so that invoices can be created for the client
-                                        $client->setClientActive(true);
-                                        $client->setClientEmail($email);
-                                        $client->setClientLanguage($language);
-                                        $client->setClientAge($this->sR->getSetting('signup_default_age_minimum_eighteen') == '1' ? 18 : 0);
-                                        $d->cR->save($client);
-                                        $this->flashMessage('info', $this->translator->translate('assign.client.on.signup.done'));
-                                        $clientId = $client->reqId();
-                                        $userClient = new UserClient();
-                                        $userClient->setUserId($userInv->reqUserId());
-                                        $userClient->setClientId($clientId);
-                                        $d->ucR->save($userClient);
-
-                                        if ($userId > 0 && $userId > 1) {
-                                            $this->manager->revokeAll($userId);
-                                            $this->manager->assign('observer', $userId);
-                                            $this->flashMessage('info', $this->translator->translate('user.inv.role.observer.assigned'));
-                                        }
-                                        if ($userId > 0 && $userId == 1) {
-                                            $this->manager->revokeAll($userId);
-                                            $this->manager->assign('admin', $userId);
-                                            $this->flashMessage('info', $this->translator->translate('user.inv.role.admin.assigned'));
-                                        }
-                                    } else {
-                                        $this->flashMessage('warning', 'Client not signed up automatically because setting not on. As Admin you should click on this button to enable clients to be assigned to users automatically.' . ' '
-                                            . Button::setOrUnsetAssignClientToUserAutomatically($this->urlGenerator, $_language));
-                                    }
-                                }
-                            }
-                        } else {
-                            $this->flashMessage('warning', 'No User Inv');
-                        }
-                    } else {
-                        $this->flashMessage('warning', 'No User');
-                    }
-                } else {
-                    $this->flashMessage('warning', 'No token');
-                }
-            }
-        } else {
+        if ($positionFromUnderscore === false) {
             $this->flashMessage('warning', 'No separating underscore in token');
+            return $this->webService->getRedirectResponse('site/index');
+        }
+        $timestamp = substr($unMaskedToken, $positionFromUnderscore + 1);
+        $tokenWithoutTimestamp = substr($unMaskedToken, 0, -(strlen($timestamp) + 1));
+        if ((int) $timestamp + 3600 >= time()) {
+            $this->processValidToken($tokenWithoutTimestamp, $tokenType, $d, $language, $_language);
         }
         return $this->webService->getRedirectResponse('site/index');
     }
@@ -622,6 +487,148 @@ final class UserInvController extends BaseController
             return $userinvRepository->repoUserInvquery($id);
         }
         return null;
+    }
+
+    private function applyRolePolicyOnAdd(string $userId, string $type, UserInv $userinv, array $body): void
+    {
+        // non-admin user assigned guest type → observer role
+        if ($userId != '1' && $type == '1') {
+            $roles = $this->manager->getRolesByUserId($userId);
+            if (!array_key_exists('observer', $roles)) {
+                $this->manager->assign('observer', $userId);
+                $this->flashMessage('info', $this->translator->translate('user.inv.role.all.new'));
+            } else {
+                $this->flashMessage('info', $this->translator->translate('user.inv.role.observer.assigned.already'));
+            }
+            $this->userinvService->saveUserInv($userinv, $body);
+        }
+        if ($userId != '1' && $type == '0') {
+            $this->flashMessage('warning', $this->translator->translate('user.inv.type.cannot.allocate.administrator.type.to.non.administrator'));
+        }
+        // admin user assigned administrator type → admin role
+        if ($userId == '1' && $type == '0') {
+            $roles = $this->manager->getRolesByUserId($userId);
+            if (!array_key_exists('admin', $roles)) {
+                $this->manager->assign('admin', $userId);
+                $this->flashMessage('info', $this->translator->translate('user.inv.role.administrator.assigned'));
+            } else {
+                $this->flashMessage('info', $this->translator->translate('user.inv.role.administrator.already.assigned'));
+            }
+            $this->userinvService->saveUserInv($userinv, $body);
+        }
+        if ($userId == '1' && $type == '1') {
+            $this->flashMessage('warning', $this->translator->translate('user.inv.type.cannot.allocate.guest.type.to.administrator'));
+        }
+    }
+
+    private function applyRolePolicyOnEdit(string $userId, string $type, UserInv $userinv, array $body): void
+    {
+        if ($userId != '1' && $type == '1') {
+            $roles = $this->manager->getRolesByUserId($userId);
+            if (!array_key_exists('observer', $roles)) {
+                $this->manager->assign('observer', $userId);
+                $this->flashMessage('info', $this->translator->translate('user.inv.role.all.new'));
+            } else {
+                $this->flashMessage('warning', $this->translator->translate('user.inv.role.observer.assigned.already'));
+            }
+            $this->userinvService->saveUserInv($userinv, $body);
+        }
+        if ($userId != '1' && $type == '0') {
+            $this->flashMessage('warning', $this->translator->translate('user.inv.type.cannot.allocate.administrator.type.to.non.administrator'));
+        }
+        if ($userId == '1' && $type == '0') {
+            $roles = $this->manager->getRolesByUserId($userId);
+            if (!array_key_exists('admin', $roles)) {
+                $this->manager->assign('admin', $userId);
+                $this->flashMessage('info', $this->translator->translate('user.inv.role.administrator.assigned'));
+            } else {
+                $this->flashMessage('warning', $this->translator->translate('user.inv.role.administrator.already.assigned'));
+            }
+            $this->userinvService->saveUserInv($userinv, $body);
+        }
+        if ($userId == '1' && $type == '1') {
+            $this->flashMessage('warning', $this->translator->translate('user.inv.type.cannot.allocate.guest.type.to.administrator'));
+        }
+    }
+
+    private function processValidToken(
+        string $tokenWithoutTimestamp,
+        string $tokenType,
+        UserInvSignupDeps $d,
+        string $language,
+        string $_language,
+    ): void {
+        $identity = $d->tR->findIdentityByToken($tokenWithoutTimestamp, $tokenType);
+        if (null === $identity) {
+            $this->flashMessage('warning', 'No token');
+            return;
+        }
+        $userId = $identity->getUser()?->reqId();
+        if (null === $userId) {
+            $this->flashMessage('warning', 'No User');
+            return;
+        }
+        $userInv = $d->uiR->repoUserInvUserIdquery($userId);
+        if (null === $userInv) {
+            $this->flashMessage('warning', 'No User Inv');
+            return;
+        }
+        $userInv->setActive(true);
+        $d->uiR->save($userInv);
+        $userId = $userInv->reqUserId();
+        // invalidate the token so it cannot be used again
+        $tokenEntity = $d->tR->findTokenByTokenAndType($tokenWithoutTimestamp, $tokenType);
+        if (null === $tokenEntity) {
+            return;
+        }
+        $tokenEntity->setToken('already_used_token_' . (string) time());
+        $d->tR->save($tokenEntity);
+        $email = $identity->getUser()?->getEmail();
+        if (null !== $email) {
+            $this->handleSignupClientAssignment($email, $language, $_language, $userId, $userInv, $d);
+        }
+    }
+
+    private function handleSignupClientAssignment(
+        string $email,
+        string $language,
+        string $_language,
+        int $userId,
+        UserInv $userInv,
+        UserInvSignupDeps $d,
+    ): void {
+        if ($this->sR->getSetting('signup_automatically_assign_client') != '1') {
+            $this->flashMessage('warning', 'Client not signed up automatically because setting not on. As Admin you should click on this button to enable clients to be assigned to users automatically.' . ' '
+                . Button::setOrUnsetAssignClientToUserAutomatically($this->urlGenerator, $_language));
+            return;
+        }
+        $client = new Client();
+        $client->setClientActive(true);
+        $client->setClientEmail($email);
+        $client->setClientLanguage($language);
+        $client->setClientAge($this->sR->getSetting('signup_default_age_minimum_eighteen') == '1' ? 18 : 0);
+        $d->cR->save($client);
+        $this->flashMessage('info', $this->translator->translate('assign.client.on.signup.done'));
+        $userClient = new UserClient();
+        $userClient->setUserId($userInv->reqUserId());
+        $userClient->setClientId($client->reqId());
+        $d->ucR->save($userClient);
+        $this->assignSignupRole($userId);
+    }
+
+    private function assignSignupRole(int $userId): void
+    {
+        if ($userId <= 0) {
+            return;
+        }
+        $this->manager->revokeAll($userId);
+        if ($userId > 1) {
+            $this->manager->assign('observer', $userId);
+            $this->flashMessage('info', $this->translator->translate('user.inv.role.observer.assigned'));
+        } else {
+            $this->manager->assign('admin', $userId);
+            $this->flashMessage('info', $this->translator->translate('user.inv.role.admin.assigned'));
+        }
     }
 
     /**
