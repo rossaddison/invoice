@@ -280,23 +280,13 @@ final class PaymentInformationController
     public function amazonComplete(Request $request, CurrentRoute $currentRoute): \Psr\Http\Message\ResponseInterface
     {
         $invoice_url_key = $currentRoute->getArgument('url_key');
-        if (null === $invoice_url_key) {
-            return $this->webService->getNotFoundResponse();
-        }
-
-        $invoice = $this->iR->repoUrlKeyGuestCount($invoice_url_key) > 0
+        $invoice = null !== $invoice_url_key && $this->iR->repoUrlKeyGuestCount($invoice_url_key) > 0
             ? $this->iR->repoUrlKeyGuestLoaded($invoice_url_key)
             : null;
-
-        if (null === $invoice) {
-            return $this->webService->getNotFoundResponse();
-        }
-
         $query_params = $request->getQueryParams();
         /** @var string $query_params['amazonCheckoutSessionId'] */
         $checkout_session_id = $query_params['amazonCheckoutSessionId'] ?? null;
-
-        if (null === $checkout_session_id) {
+        if (null === $invoice_url_key || null === $invoice || null === $checkout_session_id) {
             return $this->webService->getNotFoundResponse();
         }
 
@@ -559,37 +549,20 @@ final class PaymentInformationController
     ): Response {
         if (null !== $ctx->invoice->getNumber()) {
             if ('1' === $this->sR->getSetting('gateway_' . $d . '_enabled')) {
-                switch ($ctx->client_chosen_gateway) {
-                    case 'Open_Banking_With_Wonderful':
-                    case 'Open_Banking_With_Tink':
-                        return $this->openBankingInForm(
-                            $ctx,
-                            $yii_invoice_array,
-                        );
-                    case 'Amazon_Pay':
-                        return $this->amazonInForm($ctx);
-                    case 'Stripe':
-                        return $this->stripeInForm($ctx, $yii_invoice_array);
-                    case 'Braintree':
-                        return $this->brainTreeInForm(
-                            $ctx,
-                            $request,
-                            $invoice_id,
-                            $sandbox_url_array,
-                        );
-                    case 'Mollie':
-                        // locale is in the format en_GB as opposed to default en
-                        $mollie_locale =
-                            $this->sR->getSetting('gateway_mollie_locale');
-
-                        return $this->mollieInForm(
-                            $ctx,
-                            $yii_invoice_array,
-                            'creditcard',
-                            $mollie_locale,
-                        );
-                    default:
-                        break;
+                $gateway = $ctx->client_chosen_gateway;
+                $gatewayResponse = match ($gateway) {
+                    'Open_Banking_With_Wonderful', 'Open_Banking_With_Tink'
+                                 => $this->openBankingInForm($ctx, $yii_invoice_array),
+                    'Amazon_Pay' => $this->amazonInForm($ctx),
+                    'Stripe'     => $this->stripeInForm($ctx, $yii_invoice_array),
+                    'Braintree'  => $this->brainTreeInForm($ctx, $request, $invoice_id, $sandbox_url_array),
+                    'Mollie'     => $this->mollieInForm(
+                                        $ctx, $yii_invoice_array, 'creditcard',
+                                        $this->sR->getSetting('gateway_mollie_locale')),
+                    default      => null,
+                };
+                if ($gatewayResponse !== null) {
+                    return $gatewayResponse;
                 }
             }
         } else {
@@ -1164,76 +1137,73 @@ final class PaymentInformationController
                         Request $request, CurrentRoute $currentRoute): Response
     {
         $invoiceUrlKey = $currentRoute->getArgument('url_key');
-        if (null !== $invoiceUrlKey) {
-            $sandboxUrlArray = $this->sR->sandboxUrlArray();
-            $invoice           =
-                        $this->iR->repoUrlKeyGuestLoaded($invoiceUrlKey);
-            if (null === $invoice) {
-                return $this->webService->getNotFoundResponse();
-            }
-            $invoiceNumber               = (null !== $invoice->getNumber()) ?:
-                                                                        'unknown';
-            $query_params                = $request->getQueryParams();
-            $redirectStatus =
-                                (string) ($query_params['redirect_status'] ?? '');
-            $result                      =
-                    $this->stripePaymentService->handleCompletion(
-                                        $invoice, $redirectStatus);
-            $invoice->setStatusId((int) $result['status_id']);
-            $invoice->setPaymentMethod(4);
-            $this->iR->save($invoice);
-            /** @var int $invoice->reqId() */
-            $invoice_amount_record = $this->iaR->repoInvquery($invoice->reqId());
-            /** @var InvAmount $invoice_amount_record */
-            $balance = $invoice_amount_record->getBalance();
-            if (null !== $balance) {
+        if (null === $invoiceUrlKey) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $sandboxUrlArray = $this->sR->sandboxUrlArray();
+        $invoice = $this->iR->repoUrlKeyGuestLoaded($invoiceUrlKey);
+        if (null === $invoice) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $invoiceNumber               = (null !== $invoice->getNumber()) ?:
+                                                                    'unknown';
+        $query_params                = $request->getQueryParams();
+        $redirectStatus =
+                            (string) ($query_params['redirect_status'] ?? '');
+        $result                      =
+                $this->stripePaymentService->handleCompletion(
+                                    $invoice, $redirectStatus);
+        $invoice->setStatusId((int) $result['status_id']);
+        $invoice->setPaymentMethod(4);
+        $this->iR->save($invoice);
+        /** @var int $invoice->reqId() */
+        $invoice_amount_record = $this->iaR->repoInvquery($invoice->reqId());
+        /** @var InvAmount $invoice_amount_record */
+        $balance = $invoice_amount_record->getBalance();
+        $view_data = null;
+        if (null !== $balance) {
 // The invoice amount has been paid => balance on the invoice is zero and the
 // paid amount is full
-                $invoice_amount_record->setBalance(0);
-                $invoice_amount_record->setPaid(
-                                    $invoice_amount_record->getTotal() ?? 0.00);
-                $this->iaR->save($invoice_amount_record);
-                $this->recordOnlinePaymentsAndMerchant(
-                    new PaymentRecordContext(
-                        reference: (string) $invoiceNumber . '-' . $redirectStatus,
-                        invoice_id: (string) $invoice_amount_record->reqInvId(),
-                        balance: $balance ?: 0.00,
-                        invoice_payment_method: (int) $result['payment_method'],
-                        invoice_number: (string) $invoiceNumber,
-                        driver: 'Stripe',
-                        d: 'stripe',
-                        invoice_url_key: $invoiceUrlKey,
-                        response: true,
-                        sandbox_url_array: $sandboxUrlArray,
-                    ),
-                );
+            $invoice_amount_record->setBalance(0);
+            $invoice_amount_record->setPaid(
+                                $invoice_amount_record->getTotal() ?? 0.00);
+            $this->iaR->save($invoice_amount_record);
+            $this->recordOnlinePaymentsAndMerchant(
+                new PaymentRecordContext(
+                    reference: (string) $invoiceNumber . '-' . $redirectStatus,
+                    invoice_id: (string) $invoice_amount_record->reqInvId(),
+                    balance: $balance ?: 0.00,
+                    invoice_payment_method: (int) $result['payment_method'],
+                    invoice_number: (string) $invoiceNumber,
+                    driver: 'Stripe',
+                    d: 'stripe',
+                    invoice_url_key: $invoiceUrlKey,
+                    response: true,
+                    sandbox_url_array: $sandboxUrlArray,
+                ),
+            );
 
-                $view_data = [
-                    'render' => $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/paymentinformation/payment_message',
-                        [
-                            'heading'     => PaymentInformationQueryHelper::stripeCompleteHeading(
-                                $this->translator, $result, (string) $invoiceNumber, $redirectStatus),
-                            'message'     =>
-                                $this->translator->translate('payment')
-                                    . ':'
-                                    . $this->translator->translate('complete'),
-                            'url'         => 'inv/urlKey',
-                            'url_key'     => $invoiceUrlKey,
-                            'gateway' => 'Stripe',
-                            'sandbox_url' => $sandboxUrlArray['stripe'],
-                        ],
-                    ),
-                ];
-
-                return $this->webViewRenderer->render('payment_completion_page',
-                    $view_data);
-            } // null!==$balance
-
-            return $this->webService->getNotFoundResponse();
-        } // null!== $invoiceUrlKey
-
-        return $this->webService->getNotFoundResponse();
+            $view_data = [
+                'render' => $this->webViewRenderer->renderPartialAsString(
+                    '//invoice/paymentinformation/payment_message',
+                    [
+                        'heading'     => PaymentInformationQueryHelper::stripeCompleteHeading(
+                            $this->translator, $result, (string) $invoiceNumber, $redirectStatus),
+                        'message'     =>
+                            $this->translator->translate('payment')
+                                . ':'
+                                . $this->translator->translate('complete'),
+                        'url'         => 'inv/urlKey',
+                        'url_key'     => $invoiceUrlKey,
+                        'gateway' => 'Stripe',
+                        'sandbox_url' => $sandboxUrlArray['stripe'],
+                    ],
+                ),
+            ];
+        }
+        return null !== $view_data
+            ? $this->webViewRenderer->render('payment_completion_page', $view_data)
+            : $this->webService->getNotFoundResponse();
     }
 
     /** @psalm-suppress UnusedReturnValue */

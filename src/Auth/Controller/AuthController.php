@@ -230,6 +230,7 @@ final class AuthController
             }
         }
 
+        $response = null;
         if ($formHydrator->populateFromPostAndValidate($loginForm, $request)) {
             $identity = $this->authService->getIdentity();
             $userId = $identity->getId();
@@ -246,19 +247,18 @@ final class AuthController
                             if (!$enabled) {
                                 $this->session->set('pending_2fa_user_id', $userId);
                                 // show the setup form so that the user can register
-                                return $this->webService->getRedirectResponse(
-                                        'auth/showSetup');
+                                $response = $this->webService->getRedirectResponse('auth/showSetup');
+                            } else {
+                                $this->session->set('verified_2fa_user_id', $userId);
+                                $response = $this->webService->getRedirectResponse('auth/verifyLogin');
                             }
-                            $this->session->set('verified_2fa_user_id', $userId);
-                            return $this->webService->getRedirectResponse(
-                                        'auth/verifyLogin');
-                        }
-                        $this->session->set('tfa_verified', true);
+                        } else {
+                            $this->session->set('tfa_verified', true);
 /**
  * Related logic: see UserInvController function signup where the userinv
  * active field is made active i.e. true upon a positive email verification
  */
-                        $status = $userInv->getActive();
+                            $status = $userInv->getActive();
 /**
  * The admin does not automatically have a 'userinv account with status as active' IF
  * signing up NOT by email e.g by localhost  . The below code, if ($isAdminUser) {
@@ -267,25 +267,21 @@ final class AuthController
  *  user's email verification link is clicked in their user account
  * and the userinv account's status field is made active i.e. 1
  */
-                        $isAdminUser = $this->isAdminUser($userId);
+                            $isAdminUser = $this->isAdminUser($userId);
 
-                        if ($status || $isAdminUser) {
+                            if ($status || $isAdminUser) {
 // Disable email verification token for admin users who don't need email verification
-                            if ($isAdminUser) {
-                                $this->disableToken($tR, $userId,
-                                        'email-verification');
-                            }
+                                if ($isAdminUser) {
+                                    $this->disableToken($tR, $userId, 'email-verification');
+                                }
 // Regenerate session ID on successful login
-                            $this->session->regenerateId();
-                    $this->session->set('tfa_verified', true);
-                            if ($identity instanceof CookieLoginIdentityInterface
-                                    && $loginForm->getPropertyValue('rememberMe')) {
-                                return $cookieLogin->addCookie($identity,
-                                        $this->redirectToInvoiceIndex());
-                            }
-                            return $this->redirectToInvoiceIndex();
-                        }
-
+                                $this->session->regenerateId();
+                                $this->session->set('tfa_verified', true);
+                                $response = ($identity instanceof CookieLoginIdentityInterface
+                                        && $loginForm->getPropertyValue('rememberMe'))
+                                    ? $cookieLogin->addCookie($identity, $this->redirectToInvoiceIndex())
+                                    : $this->redirectToInvoiceIndex();
+                            } else {
 /**
  * If the observer user is signing up WITHOUT email (=> userinv account status is 0),
  *  e.g. by console ... yii userinv/assignRole observer 2,
@@ -294,14 +290,21 @@ final class AuthController
  * Also the token that was originally assigned on signup, must now be 'disabled'
  *  because the admin is responsible for making the user active
  */
-                        $this->disableToken($tR, $userId,
-                                $this->getTokenType('email-verification'));
-                        return $this->webService->getRedirectResponse('site/adminmustmakeactive',
-                                ['_language' => 'en']);
+                                $this->disableToken($tR, $userId,
+                                        $this->getTokenType('email-verification'));
+                                $response = $this->webService->getRedirectResponse(
+                                        'site/adminmustmakeactive', ['_language' => 'en']);
+                            }
+                        }
                     }
                 }
             }
-            $this->logout($uR, $uiR);
+            if ($response === null) {
+                $this->logout($uR, $uiR);
+            }
+        }
+        if ($response !== null) {
+            return $response;
         }
 
         $codeVerifier = Random::string(128);
@@ -553,6 +556,7 @@ final class AuthController
             'codes' => $codes,
         ];
         $reached = 'Rate limit reached for 2FA verification from IP: ';
+        $response = null;
         if ($request->getMethod() === Method::POST) {
             // Apply rate limiting for authentication attempts
             $clientIp = $this->secHelper->getClientIpAddress($request);
@@ -560,22 +564,22 @@ final class AuthController
             /** Related logic: see config/web/di/rate-limit.php */
             if (!$this->secHelper->checkRateLimit($rateLimitKey)) {
                 $this->logger->log(LogLevel::WARNING, $reached . $clientIp);
-                $error = $translator->translate($tfarlr);
-                return $this->webViewRenderer->render('verify', [
-                    'error' => $error,
+                $response = $this->webViewRenderer->render('verify', [
+                    'error' => $translator->translate($tfarlr),
                     'formModel' => $form,
                     'codes' => $codes,
                 ]);
-            }
-            $body = $request->getParsedBody();
-            if (is_array($body)) {
-                $inputCode = $this->tfaHelper->sanitizeAndValidateCode($body['code'] ?? '');
-                if (null !== $inputCode && $vuid > 0) {
+            } else {
+                $body = $request->getParsedBody();
+                if (is_array($body)) {
+                    $inputCode = $this->tfaHelper->sanitizeAndValidateCode($body['code'] ?? '');
+                    if (null !== $inputCode && $vuid > 0) {
                         $user = $userRepository->findById($vuid);
                         $totpSecretRaw = $user->getTotpSecret();
                         $totpSec = (\is_string($totpSecretRaw)
                                 && $totpSecretRaw !== '')
                                 ? $totpSecretRaw : null;
+                        $error = '';
                         if ($totpSec !== null
                                 && $this->tfaHelper->isValidTotpCode($inputCode)) {
                             $tokenApplySec = TokenMask::apply($totpSec);
@@ -596,9 +600,10 @@ final class AuthController
                                  */
                                 $this->session->set('otp', $inputCode);
                                 $this->session->set('otpRef', $tokenApplySec);
-                                return $this->redirectToInvoiceIndex();
+                                $response = $this->redirectToInvoiceIndex();
+                            } else {
+                                $error = $translator->translate($tfaitc);
                             }
-                            $error = $translator->translate($tfaitc);
                         } else {
                             // The user has forgotten their $inputCode so
                             // try a backup code
@@ -610,20 +615,25 @@ final class AuthController
                                 $this->secHelper->remSessTempsPermitEntryBase($vuid);
                                 $this->session->set('otp', $inputCode);
                                 $this->session->set('otpRef', $tokenApplySec);
-                                return $this->redirectToInvoiceIndex();
+                                $response = $this->redirectToInvoiceIndex();
+                            } else {
+                                $error = $translator->translate($tfaibrc);
                             }
-                            $error = $translator->translate($tfaibrc);
                         }
-                        return $this->webViewRenderer->render('verify', [
-                            'error' => $error,
-                            'formModel' => $form,
-                            'codes' => $codes,
-                        ]);
-                } // null!==$inputCode && $vuid > 0
-                $parameters['error'] = $translator->translate($tfaaf);
+                        if ($response === null) {
+                            $response = $this->webViewRenderer->render('verify', [
+                                'error' => $error,
+                                'formModel' => $form,
+                                'codes' => $codes,
+                            ]);
+                        }
+                    } else { // null!==$inputCode && $vuid > 0
+                        $parameters['error'] = $translator->translate($tfaaf);
+                    }
+                }
             }
         }
-        return $this->webViewRenderer->render('verify', $parameters);
+        return $response ?? $this->webViewRenderer->render('verify', $parameters);
     }
 
     private function disableToken(

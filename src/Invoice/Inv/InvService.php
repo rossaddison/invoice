@@ -268,33 +268,18 @@ final readonly class InvService
             if ($date_created > $date_supplied
                 && null !== $date_created
                 && null !== $date_supplied) {
-                $diff = $date_supplied->diff($date_created)->format(
-                    '%R%a');
-                if ((int) $diff > 14) {
-                    // date supplied more than 14 days before invoice date
-                    return $date_supplied;
-                }
-// if the issue date (created) is within 14 days after the supply (basic) date
-// then use the issue/created date.
-                return $date_created;
+                $diff = $date_supplied->diff($date_created)->format('%R%a');
+                // if more than 14 days use supply date; otherwise use issue/created date
+                return ((int) $diff > 14) ? $date_supplied : $date_created;
             }
-            if ($date_created < $date_supplied) {
-                // normally set the tax point to the date_created
-                return $date_created;
-            }
-            if ($date_created === $date_supplied) {
+            if ($date_created < $date_supplied || $date_created === $date_supplied) {
                 // normally set the tax point to the date_created
                 return $date_created;
             }
         }
-        // If the client is not VAT registered, the tax point is the date supplied
-        if (null == $inv->getClient()?->getClientVatId()) {
-            return $date_supplied;
-        }
-        if (null == $date_supplied || null == $date_created) {
-            return null;
-        }
-        return null;
+        // If the client is not VAT registered, the tax point is the date supplied;
+        // if VAT-registered but fell through (one date is null), return null.
+        return (null === $inv->getClient()?->getClientVatId()) ? $date_supplied : null;
     }
 
     /**

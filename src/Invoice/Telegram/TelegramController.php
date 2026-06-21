@@ -210,38 +210,44 @@ final class TelegramController extends BaseController
         $token         = $this->sR->getSetting('telegram_token');
         $providerToken = $this->sR->getSetting('telegram_provider_token');
         $currency      = $this->sR->getSetting('peppol_document_currency') ?: 'GBP';
+        $redirectRoute = 'inv/view';
+        $redirectArgs  = ['id' => $inv_id];
         try {
             if ($this->sR->getSetting('enable_telegram') !== '1') {
                 $this->flashMessage('danger',
                     $this->translator->translate('telegram.bot.api.enabled.not'));
-                return $this->webService->getRedirectResponse('setting/tabIndex');
-            }
-            if (strlen($token) < 2) {
+                $redirectRoute = 'setting/tabIndex';
+                $redirectArgs  = [];
+            } elseif (strlen($token) < 2) {
                 $this->flashMessage('danger',
                     $this->translator->translate('telegram.bot.api.token.not.set'));
-                return $this->webService->getRedirectResponse('setting/tabIndex');
-            }
-            $inv = $this->iR->repoInvLoadedquery((int) $inv_id);
-            if ($inv === null) {
-                $this->flashMessage('danger', 'Invoice not found.');
-                return $this->webService->getRedirectResponse('inv/index');
-            }
-            $chatId = $inv->getClient()?->getClientTelegramChatId();
-            if ($chatId === null || $chatId === '') {
-                $this->flashMessage('danger',
-                    $this->translator->translate('telegram.invoice.client.chat.id.not.set'));
-                return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
-            }
-            $telegramHelper = new TelegramHelper($token, $this->logger);
-            $result = $telegramHelper->sendTelegramInvoice($chatId, $inv, $currency, $providerToken);
-            if (!$result instanceof FailResult) {
-                $this->flashMessage('success',
-                    $this->translator->translate('telegram.invoice.sent'));
+                $redirectRoute = 'setting/tabIndex';
+                $redirectArgs  = [];
             } else {
-                $this->flashMessage('danger',
-                    'Telegram sendInvoice failed: ' . ($result->description ?? ''));
-                if ($result->errorCode !== null) {
-                    $this->flashMessage('primary', 'Error code: ' . (string) $result->errorCode);
+                $inv = $this->iR->repoInvLoadedquery((int) $inv_id);
+                if ($inv === null) {
+                    $this->flashMessage('danger', 'Invoice not found.');
+                    $redirectRoute = 'inv/index';
+                    $redirectArgs  = [];
+                } else {
+                    $chatId = $inv->getClient()?->getClientTelegramChatId();
+                    if ($chatId === null || $chatId === '') {
+                        $this->flashMessage('danger',
+                            $this->translator->translate('telegram.invoice.client.chat.id.not.set'));
+                    } else {
+                        $telegramHelper = new TelegramHelper($token, $this->logger);
+                        $result = $telegramHelper->sendTelegramInvoice($chatId, $inv, $currency, $providerToken);
+                        if (!$result instanceof FailResult) {
+                            $this->flashMessage('success',
+                                $this->translator->translate('telegram.invoice.sent'));
+                        } else {
+                            $this->flashMessage('danger',
+                                'Telegram sendInvoice failed: ' . ($result->description ?? ''));
+                            if ($result->errorCode !== null) {
+                                $this->flashMessage('primary', 'Error code: ' . (string) $result->errorCode);
+                            }
+                        }
+                    }
                 }
             }
         } catch (TelegramParseResultException $e) {
@@ -251,7 +257,7 @@ final class TelegramController extends BaseController
             $this->logger->warning($e->getMessage());
             $this->flashMessage('danger', 'Failed to encode invoice payload: ' . $e->getMessage());
         }
-        return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
+        return $this->webService->getRedirectResponse($redirectRoute, $redirectArgs);
     }
 
     /**
@@ -316,14 +322,10 @@ final class TelegramController extends BaseController
     ): Response {
         $token = $this->sR->getSetting('telegram_token');
         try {
-            if ($this->sR->getSetting('enable_telegram') !== '1') {
-                $this->flashMessage('danger',
-                    $this->translator->translate('telegram.bot.api.enabled.not'));
-                return $this->webService->getRedirectResponse('setting/tabIndex');
-            }
-            if (strlen($token) < 2) {
-                $this->flashMessage('danger',
-                    $this->translator->translate('telegram.bot.api.token.not.set'));
+            if ($this->sR->getSetting('enable_telegram') !== '1' || strlen($token) < 2) {
+                $this->flashMessage('danger', $this->sR->getSetting('enable_telegram') !== '1'
+                    ? $this->translator->translate('telegram.bot.api.enabled.not')
+                    : $this->translator->translate('telegram.bot.api.token.not.set'));
                 return $this->webService->getRedirectResponse('setting/tabIndex');
             }
             $inv = $this->iR->repoInvLoadedquery((int) $inv_id);
@@ -335,34 +337,34 @@ final class TelegramController extends BaseController
             if ($chatId === null || $chatId === '') {
                 $this->flashMessage('danger',
                     $this->translator->translate('telegram.invoice.client.chat.id.not.set'));
-                return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
-            }
-            $number    = $inv->getNumber() ?? (string) $inv->reqId();
-            $archiveDir = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR
-                . 'Uploads' . DIRECTORY_SEPARATOR . 'Archive';
-            $globResult = glob($archiveDir . DIRECTORY_SEPARATOR . '*_' . $number . '.pdf');
-            /** @var list<string> $matches */
-            $matches = $globResult === false ? [] : $globResult;
-            if ($matches === []) {
-                $this->flashMessage('warning',
-                    $this->translator->translate('telegram.pdf.not.found'));
-                return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
-            }
-            // Most recently modified file wins
-            usort($matches, static fn(string $a, string $b): int => (int) filemtime($b) - (int) filemtime($a));
-            $pdfPath = $matches[0];
-            $telegramHelper = new TelegramHelper($token, $this->logger);
-            $result = $telegramHelper->sendInvoicePdf(
-                $chatId,
-                $pdfPath,
-                'Invoice #' . $number,
-            );
-            if (!$result instanceof FailResult) {
-                $this->flashMessage('success',
-                    $this->translator->translate('telegram.pdf.sent'));
             } else {
-                $this->flashMessage('danger',
-                    'Telegram sendDocument failed: ' . ($result->description ?? ''));
+                $number = $inv->getNumber() ?? (string) $inv->reqId();
+                $archiveDir = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR
+                    . 'Uploads' . DIRECTORY_SEPARATOR . 'Archive';
+                $globResult = glob($archiveDir . DIRECTORY_SEPARATOR . '*_' . $number . '.pdf');
+                /** @var list<string> $matches */
+                $matches = $globResult === false ? [] : $globResult;
+                if ($matches === []) {
+                    $this->flashMessage('warning',
+                        $this->translator->translate('telegram.pdf.not.found'));
+                } else {
+                    // Most recently modified file wins
+                    usort($matches, static fn(string $a, string $b): int => (int) filemtime($b) - (int) filemtime($a));
+                    $pdfPath = $matches[0];
+                    $telegramHelper = new TelegramHelper($token, $this->logger);
+                    $result = $telegramHelper->sendInvoicePdf(
+                        $chatId,
+                        $pdfPath,
+                        'Invoice #' . $number,
+                    );
+                    if (!$result instanceof FailResult) {
+                        $this->flashMessage('success',
+                            $this->translator->translate('telegram.pdf.sent'));
+                    } else {
+                        $this->flashMessage('danger',
+                            'Telegram sendDocument failed: ' . ($result->description ?? ''));
+                    }
+                }
             }
         } catch (TelegramParseResultException $e) {
             $this->logger->warning($e->getMessage());
@@ -431,45 +433,47 @@ final class TelegramController extends BaseController
         PR $pR,
     ): Response {
         $token = $this->sR->getSetting('telegram_token');
+        $redirectRoute = 'payment/index';
+        $redirectArgs  = [];
         try {
             if ($this->sR->getSetting('enable_telegram') !== '1') {
                 $this->flashMessage('danger',
                     $this->translator->translate('telegram.bot.api.enabled.not'));
-                return $this->webService->getRedirectResponse('setting/tabIndex');
-            }
-            if (strlen($token) < 2) {
+                $redirectRoute = 'setting/tabIndex';
+            } elseif (strlen($token) < 2) {
                 $this->flashMessage('danger',
                     $this->translator->translate('telegram.bot.api.token.not.set'));
-                return $this->webService->getRedirectResponse('setting/tabIndex');
-            }
-            $payment = $pR->repoPaymentquery((int) $payment_id);
-            if ($payment === null) {
-                $this->flashMessage('danger', 'Payment not found.');
-                return $this->webService->getRedirectResponse('payment/index');
-            }
-            $note = $payment->getNote();
-            // Expected format: "Telegram: {chargeId} | tguid:{userId}"
-            if (!preg_match('/Telegram:\s*(\S+)\s*\|\s*tguid:(\d+)/', $note, $m)) {
-                $this->flashMessage('warning',
-                    $this->translator->translate('telegram.stars.no.charge.id'));
-                return $this->webService->getRedirectResponse('payment/index');
-            }
-            $chargeId = $m[1];
-            $userId   = (int) $m[2];
-            $telegramHelper = new TelegramHelper($token, $this->logger);
-            $result = $telegramHelper->refundStarPayment($userId, $chargeId);
-            if ($result === true) {
-                $this->flashMessage('success',
-                    $this->translator->translate('telegram.stars.refunded'));
+                $redirectRoute = 'setting/tabIndex';
             } else {
-                $this->flashMessage('danger',
-                    'Telegram refundStarPayment failed: ' . ($result->description ?? ''));
+                $payment = $pR->repoPaymentquery((int) $payment_id);
+                if ($payment === null) {
+                    $this->flashMessage('danger', 'Payment not found.');
+                } else {
+                    $note = $payment->getNote();
+                    // Expected format: "Telegram: {chargeId} | tguid:{userId}"
+                    if (!preg_match('/Telegram:\s*(\S+)\s*\|\s*tguid:(\d+)/', $note, $m)) {
+                        $this->flashMessage('warning',
+                            $this->translator->translate('telegram.stars.no.charge.id'));
+                    } else {
+                        $chargeId = $m[1];
+                        $userId   = (int) $m[2];
+                        $telegramHelper = new TelegramHelper($token, $this->logger);
+                        $result = $telegramHelper->refundStarPayment($userId, $chargeId);
+                        if ($result === true) {
+                            $this->flashMessage('success',
+                                $this->translator->translate('telegram.stars.refunded'));
+                        } else {
+                            $this->flashMessage('danger',
+                                'Telegram refundStarPayment failed: ' . ($result->description ?? ''));
+                        }
+                    }
+                }
             }
         } catch (TelegramParseResultException $e) {
             $this->logger->warning($e->getMessage());
             $this->flashMessage('secondary', $e->getMessage());
         }
-        return $this->webService->getRedirectResponse('payment/index');
+        return $this->webService->getRedirectResponse($redirectRoute, $redirectArgs);
     }
 
     /**
@@ -486,16 +490,15 @@ final class TelegramController extends BaseController
         $token       = $this->sR->getSetting('telegram_token');
         $secretToken = $this->sR->getSetting('telegram_webhook_secret_token');
         $incoming    = $request->getHeaderLine('X-Telegram-Bot-Api-Secret-Token');
+        $tokenInvalid = strlen($token) < 2;
+        $secretMismatch = $secretToken !== '' && $incoming !== $secretToken;
 
-        if (strlen($token) < 2) {
-            $this->logger->warning(
-                $this->translator->translate('telegram.bot.api.token.not.set'));
+        if ($tokenInvalid || $secretMismatch) {
+            $this->logger->warning($tokenInvalid
+                ? $this->translator->translate('telegram.bot.api.token.not.set')
+                : 'Telegram webhook: secret token mismatch.');
             return $this->factory->createResponse(
-                Json::encode(['fail' => 'token not set']));
-        }
-        if ($secretToken !== '' && $incoming !== $secretToken) {
-            $this->logger->warning('Telegram webhook: secret token mismatch.');
-            return $this->factory->createResponse(Json::encode(['fail' => 'unauthorized']));
+                Json::encode($tokenInvalid ? ['fail' => 'token not set'] : ['fail' => 'unauthorized']));
         }
 
         $body = $request->getBody()->getContents();
@@ -506,45 +509,42 @@ final class TelegramController extends BaseController
             // pre_checkout_query — must answer within 10 seconds
             if ($update->preCheckoutQuery !== null) {
                 $telegramHelper->answerPreCheckoutQuery($update->preCheckoutQuery->id, true);
-                return $this->factory->createResponse(Json::encode(['ok' => true]));
-            }
-
-            // successful_payment — decode payload and record the payment
-            $successfulPayment = $update->message?->successfulPayment;
-            if ($successfulPayment !== null) {
-                try {
-                    /** @var array{inv_id?: int} $payload */
-                    $payload = Json::decode($successfulPayment->invoicePayload);
-                    $invId = $payload['inv_id'] ?? 0;
-                    if ($invId > 0) {
-                        $methodId = (int) ($this->sR->getSetting('telegram_payment_method_id') ?: 1);
-                        $buyerUserId = $update->message?->from?->id ?? 0;
-                        $chargeId    = $successfulPayment->telegramPaymentChargeId;
-                        $note = $buyerUserId > 0
-                            ? 'Telegram: ' . $chargeId . ' | tguid:' . $buyerUserId
-                            : 'Telegram: ' . $chargeId;
-                        $this->paymentService->addPaymentViaPaymentHandler(
-                            new Payment(),
-                            [
-                                'payment_method_id' => $methodId,
-                                'payment_date'      => new \DateTime(),
-                                'amount'            => $successfulPayment->totalAmount / 100.0,
-                                'note'              => $note,
-                                'inv_id'            => $invId,
-                            ],
-                        );
+            } else {
+                // successful_payment — decode payload and record the payment
+                $successfulPayment = $update->message?->successfulPayment;
+                if ($successfulPayment !== null) {
+                    try {
+                        /** @var array{inv_id?: int} $payload */
+                        $payload = Json::decode($successfulPayment->invoicePayload);
+                        $invId = $payload['inv_id'] ?? 0;
+                        if ($invId > 0) {
+                            $methodId = (int) ($this->sR->getSetting('telegram_payment_method_id') ?: 1);
+                            $buyerUserId = $update->message?->from?->id ?? 0;
+                            $chargeId    = $successfulPayment->telegramPaymentChargeId;
+                            $note = $buyerUserId > 0
+                                ? 'Telegram: ' . $chargeId . ' | tguid:' . $buyerUserId
+                                : 'Telegram: ' . $chargeId;
+                            $this->paymentService->addPaymentViaPaymentHandler(
+                                new Payment(),
+                                [
+                                    'payment_method_id' => $methodId,
+                                    'payment_date'      => new \DateTime(),
+                                    'amount'            => $successfulPayment->totalAmount / 100.0,
+                                    'note'              => $note,
+                                    'inv_id'            => $invId,
+                                ],
+                            );
+                        }
+                    } catch (JsonException $e) {
+                        $this->logger->warning('webhook: bad invoice payload – ' . $e->getMessage());
                     }
-                } catch (JsonException $e) {
-                    $this->logger->warning('webhook: bad invoice payload – ' . $e->getMessage());
                 }
-                return $this->factory->createResponse(Json::encode(['ok' => true]));
             }
-
-            return $this->factory->createResponse(Json::encode(['ok' => true]));
         } catch (TelegramParseResultException $e) {
             $this->logger->warning($e->getMessage());
             return $this->factory->createResponse(Json::encode(['fail' => $e->getMessage()]));
         }
+        return $this->factory->createResponse(Json::encode(['ok' => true]));
     }
 
     /**

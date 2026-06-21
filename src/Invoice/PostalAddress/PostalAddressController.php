@@ -212,19 +212,10 @@ final class PostalAddressController extends BaseController
                                             $url = $origin . '/' . $action;
 // Route::methods([Method::GET, Method::POST],
 //  '/postaladdress/edit/{client_id}[/{origin}/{origin_id}/{action}]')
-                        if ($origin_id) {
-/**
- * Related logic:
- *  see http://invoice.myhost/invoice/postaladdress/
- *          edit/1?origin=inv&origin_id=1&action=edit
- * @psalm-suppress MixedArgumentTypeCoercion
- */
-                            return $this->webService->getRedirectResponse($url, [
-                                'id' => $origin_id,
-                            ]);
-                        }
-                        // Redirect to inv/index
-                        return $this->webService->getRedirectResponse($url);
+/** @psalm-suppress MixedArgumentTypeCoercion */
+                        return $origin_id
+                            ? $this->webService->getRedirectResponse($url, ['id' => $origin_id])
+                            : $this->webService->getRedirectResponse($url);
                     }
                 }
                 $parameters['errors'] =

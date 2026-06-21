@@ -169,13 +169,9 @@ trait View
                         $service->meta->cfR->repoTableCountquery('payment_custom') > 0,
                     ),
                 ];
-                if ($this->rbacObserver($inv, $service->relation->ucR, $service->relation->uiR)) {
-                    return $this->webViewRenderer->render('view', $parameters);
-                }
-                if ($this->rbacAdmin()) {
-                    return $this->webViewRenderer->render('view', $parameters);
-                }
-                if ($this->rbacAccountant()) {
+                if ($this->rbacObserver($inv, $service->relation->ucR, $service->relation->uiR)
+                    || $this->rbacAdmin()
+                    || $this->rbacAccountant()) {
                     return $this->webViewRenderer->render('view', $parameters);
                 }
             }

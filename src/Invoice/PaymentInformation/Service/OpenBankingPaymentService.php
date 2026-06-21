@@ -99,71 +99,66 @@ final class OpenBankingPaymentService
     public function initiateTinkPayment(float $amount, Inv $invoice, Company $company, string $currency, string $recipientName, int $clientId, int $clientSecret): array
     {
         $providerConfig = $this->getOpenBankingProviderConfig('tink');
-        if (null !== $providerConfig) {
-            $activeCompanyPrivate = null;
-            /**
-             * @var CompanyPrivate $companyPrivate
-             */
-            foreach ($company->getCompanyPrivates() as $companyPrivate) {
-                if ($companyPrivate->isActiveToday()) {
-                    $activeCompanyPrivate = $companyPrivate;
-                    break; // Stop at the first active one
-                }
-            }
-            if (null !== $activeCompanyPrivate) {
-                if (null !== ($iban = $activeCompanyPrivate->getIban())) {
-                    $market = strtoupper(substr($iban, 0, 2));
-                    try {
-                        // Step 1: Get access token
-                        $client = new \GuzzleHttp\Client();
-                        $tokenResponse = $client->post((string) $providerConfig['token_url'], [
-                            'form_params' => [
-                                'client_id' => $clientId,
-                                'client_secret' => $clientSecret,
-                                'grant_type' => 'client_credentials',
-                                'scope' => 'payment:read payment:write',
-                            ],
-                        ]);
-                        $tokenData = (array) json_decode($tokenResponse->getBody()->getContents(), true);
-                        $accessToken = (string) ($tokenData['access_token'] ?? '');
-                        if (strlen($accessToken) == 0) {
-                            return ['success' => false, 'error' => 'Unable to fetch access token'];
-                        }
-
-                        // Step 2: Create payment request
-                        $response = $client->post((string) $providerConfig['paymentRequestUrl'], [
-                            'headers' => [
-                                'Authorization' => "Bearer $accessToken",
-                                'Content-Type' => 'application/json',
-                            ],
-                            'json' => [
-                                'recipient' => [
-                                    'accountNumber' => $iban,
-                                    'accountType' => 'iban',
-                                ],
-                                'amount' => $amount,
-                                'currency' => $currency,
-                                'market' => $market,
-                                'recipientName' => $recipientName,
-                                'sourceMessage' => 'Payment for Invoice ' . ($invoice->getNumber() ?? 'No Number'),
-                                'remittanceInformation' => [
-                                    'type' => 'UNSTRUCTURED',
-                                    'value' => 'CREDITOR REFERENCE',
-                                ],
-                                'paymentScheme' => 'SEPA_CREDIT_TRANSFER',
-                            ],
-                        ]);
-                        $body = (array) json_decode($response->getBody()->getContents(), true);
-                        return ['success' => true, 'data' => $body];
-                    } catch (\Throwable $e) {
-                        return ['success' => false, 'error' => $e->getMessage()];
-                    }
-                }
-                return ['success' => false, 'data' => []];
-            }
-            return ['success' => false, 'error' => 'CompanyPrivate: Today\'s date does not fall within Start Date and End Date'];
+        if (null === $providerConfig) {
+            return ['success' => false, 'data' => []];
         }
-        return ['success' => false, 'data' => []];
+        $activeCompanyPrivate = null;
+        /** @var CompanyPrivate $companyPrivate */
+        foreach ($company->getCompanyPrivates() as $companyPrivate) {
+            if ($companyPrivate->isActiveToday()) {
+                $activeCompanyPrivate = $companyPrivate;
+                break;
+            }
+        }
+        try {
+            if (null === $activeCompanyPrivate) {
+                throw new \RuntimeException('CompanyPrivate: Today\'s date does not fall within Start Date and End Date');
+            }
+            $iban = $activeCompanyPrivate->getIban() ?? throw new \RuntimeException('IBAN not configured');
+            $market = strtoupper(substr($iban, 0, 2));
+            // Step 1: Get access token
+            $client = new \GuzzleHttp\Client();
+            $tokenResponse = $client->post((string) $providerConfig['token_url'], [
+                'form_params' => [
+                    'client_id' => $clientId,
+                    'client_secret' => $clientSecret,
+                    'grant_type' => 'client_credentials',
+                    'scope' => 'payment:read payment:write',
+                ],
+            ]);
+            $tokenData = (array) json_decode($tokenResponse->getBody()->getContents(), true);
+            $accessToken = (string) ($tokenData['access_token'] ?? '');
+            if (strlen($accessToken) == 0) {
+                throw new \RuntimeException('Unable to fetch access token');
+            }
+            // Step 2: Create payment request
+            $response = $client->post((string) $providerConfig['paymentRequestUrl'], [
+                'headers' => [
+                    'Authorization' => "Bearer $accessToken",
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => [
+                    'recipient' => [
+                        'accountNumber' => $iban,
+                        'accountType' => 'iban',
+                    ],
+                    'amount' => $amount,
+                    'currency' => $currency,
+                    'market' => $market,
+                    'recipientName' => $recipientName,
+                    'sourceMessage' => 'Payment for Invoice ' . ($invoice->getNumber() ?? 'No Number'),
+                    'remittanceInformation' => [
+                        'type' => 'UNSTRUCTURED',
+                        'value' => 'CREDITOR REFERENCE',
+                    ],
+                    'paymentScheme' => 'SEPA_CREDIT_TRANSFER',
+                ],
+            ]);
+            $body = (array) json_decode($response->getBody()->getContents(), true);
+            return ['success' => true, 'data' => $body];
+        } catch (\Throwable $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
     }
 
     /**

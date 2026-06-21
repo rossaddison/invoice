@@ -76,18 +76,20 @@ final class ForgotPasswordController
     ): ResponseInterface {
         // only guests i.e. only unauthenticated users can access this function
         //  i.e NOT logged in before request
-        if (!$authService->isGuest()) {
-            return $this->webService->getRedirectResponse('site/index');
-        }
         // check that symfony and the config/common/params.php
         //  mailer->senderEmail have been setup
-        if (($this->sR->getSetting('email_send_method') !== 'symfony')
-                || (!$this->sR->mailerEnabled())
-                || empty($this->sR->getConfigSenderEmail())) {
-            return $this->webService->getRedirectResponse(
-                'site/forgotemailfailed');
+        $guard = match(true) {
+            !$authService->isGuest() => 'site/index',
+            $this->sR->getSetting('email_send_method') !== 'symfony'
+                || !$this->sR->mailerEnabled()
+                || empty($this->sR->getConfigSenderEmail()) => 'site/forgotemailfailed',
+            default => null,
+        };
+        if ($guard !== null) {
+            return $this->webService->getRedirectResponse($guard);
         }
         $requestPasswordResetToken = '';
+        $response = null;
         if ($formHydrator->populateFromPostAndValidate(
                 $requestPasswordResetTokenForm, $request)) {
             $user = $uR->findByEmail(
@@ -173,7 +175,7 @@ final class ForgotPasswordController
                                 $this->mailer->send($email);
                             } catch (\Exception $e) {
                                 $this->logger->error($e->getMessage());
-                                return $this->webService->getRedirectResponse(
+                                $response = $this->webService->getRedirectResponse(
                                     'site/forgotemailfailed');
                             }
                         }
@@ -182,7 +184,7 @@ final class ForgotPasswordController
             } else {
                 $this->logger->error(
                     $this->translator->translate('loginalert.user.not.found'));
-                return $this->webService->getRedirectResponse(
+                $response = $this->webService->getRedirectResponse(
                     'site/forgotusernotfound');
             }
 /**
@@ -194,7 +196,10 @@ final class ForgotPasswordController
  * 'You requested a new password for your installation. Please click the link
  *  in your inbox to reset your password:',
  */
-            return $this->webService->getRedirectResponse('site/forgotalert');
+            $response ??= $this->webService->getRedirectResponse('site/forgotalert');
+        }
+        if ($response !== null) {
+            return $response;
         }
         return $this->webViewRenderer->render('forgotpassword',
             ['formModel' => $requestPasswordResetTokenForm]);

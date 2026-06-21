@@ -151,23 +151,11 @@ final class CompanyPrivateController extends BaseController
     string $tmp,
     string $target_file_name,
     string $target_public_logo): bool {
-        if (!is_uploaded_file($tmp)) {
-            return true;
-        }
-        if (file_exists($target_file_name)) {
-            return true;
-        }
-        if (file_exists($target_public_logo)) {
-            return true;
-        }
-        if (!move_uploaded_file($tmp, $target_file_name)) {
-            return true;
-        }
-        if (!copy($target_file_name, $target_public_logo)) {
-            return true;
-        }
-
-        return false;
+        return !is_uploaded_file($tmp)
+            || file_exists($target_file_name)
+            || file_exists($target_public_logo)
+            || !move_uploaded_file($tmp, $target_file_name)
+            || !copy($target_file_name, $target_public_logo);
     }
 
     /**
@@ -186,80 +174,83 @@ final class CompanyPrivateController extends BaseController
         CompanyRepository $companyRepository,
     ): Response {
         $company_private = $this->companyprivate($currentRoute, $companyprivateRepository);
-        if ($company_private) {
-            $form = CompanyPrivateForm::show($company_private);
-            $parameters = [
-                'title' => $this->translator->translate('edit'),
-                'actionName' => 'companyprivate/edit',
-                'actionArguments' => ['id' => $company_private->reqId()],
-                'errors' => [],
-                'form' => $form,
-                'formFields' => $this->formFields,
-                'companies' => $companyRepository->findAllPreloaded(),
-                'company_public' => $this->translator->translate('setting.company'),
-            ];
-            $aliases = $this->sR->getCompanyPrivateLogosFolderAliases();
-            $targetPath = $aliases->get('@company_private_logos');
-            $targetPublicPath = $aliases->get('@public_logo');
-            if (!is_writable($targetPath)) {
-                $this->flashMessage('warning', $this->translator->translate('is.not.writable'));
-                return $this->webService->getRedirectResponse('companyprivate/index');
+        if (!$company_private) {
+            return $this->webService->getRedirectResponse('companyprivate/index');
+        }
+        $form = CompanyPrivateForm::show($company_private);
+        $parameters = [
+            'title' => $this->translator->translate('edit'),
+            'actionName' => 'companyprivate/edit',
+            'actionArguments' => ['id' => $company_private->reqId()],
+            'errors' => [],
+            'form' => $form,
+            'formFields' => $this->formFields,
+            'companies' => $companyRepository->findAllPreloaded(),
+            'company_public' => $this->translator->translate('setting.company'),
+        ];
+        $aliases = $this->sR->getCompanyPrivateLogosFolderAliases();
+        $targetPath = $aliases->get('@company_private_logos');
+        $targetPublicPath = $aliases->get('@public_logo');
+        if (!is_writable($targetPath)) {
+            $this->flashMessage('warning', $this->translator->translate('is.not.writable'));
+            return $this->webService->getRedirectResponse('companyprivate/index');
+        }
+        $redirect = null;
+        if ($request->getMethod() === Method::POST) {
+            $body = $request->getParsedBody() ?? [];
+            // the filename before it was changed
+            $existing_logo_filename = (string) ($body['existing_logo_filename'] ?? ($company_private->getLogoFilename() ?? ''));
+            // the file that has just been selected
+            /**
+             * @var array $_FILES['logo_filename']
+             * @var array $body
+             */
+            $body['logo_filename'] = !empty((string) $_FILES['logo_filename']['name'])
+            ? (string) $_FILES['logo_filename']['name']
+            : $existing_logo_filename;
+            if ($formHydrator->populateAndValidate($form, $body)) {
+                // Replace filename's spaces with underscore and add random string preventing overwrites
+                $modified_original_file_name = Random::string(4) . '_' . (string) preg_replace('/\s+/', '_', $body['logo_filename']);
+                // Build a unique target file name
+                $target_file_name = $targetPath . '/' . $modified_original_file_name;
+                $target_public_logo = $targetPublicPath . '/' . $modified_original_file_name;
+                // Save the body including the logo_filename field
+                $this->companyPrivateService->saveCompanyPrivate($company_private, $body);
+
+                // Prepare the after save for the logo_filename field
+                $after_save =
+                    $companyprivateRepository->repoCompanyPrivatequery(
+                        $company_private->reqId());
+                if ($after_save) {
+                    // A new file upload must replace the previous one or keep existing file
+                    /**
+                     * @var string $_FILES['logo_filename']['tmp_name']
+                     */
+                    $tmp_name = $_FILES['logo_filename']['tmp_name'];
+                    $after_save->setLogoFilename(
+                        // 1. tmp is an uploaded file and not a security risk
+                        // 2. the target file name does not exist
+                        // 3. tmp has been moved into the target destination
+                        !$this->fileUploadingErrors($tmp_name, $target_file_name, $target_public_logo)
+
+                        // New file upload
+                        ? $modified_original_file_name
+
+                        // or Existing database file name
+                        : $existing_logo_filename,
+                    );
+                    $companyprivateRepository->save($after_save);
+
+                    $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
+                    $redirect = $this->webService->getRedirectResponse('companyprivate/index');
+                } // after  save
             }
-            if ($request->getMethod() === Method::POST) {
-                $body = $request->getParsedBody() ?? [];
-                // the filename before it was changed
-                $existing_logo_filename = (string) ($body['existing_logo_filename'] ?? ($company_private->getLogoFilename() ?? ''));
-                // the file that has just been selected
-                /**
-                 * @var array $_FILES['logo_filename']
-                 * @var array $body
-                 */
-                $body['logo_filename'] = !empty((string) $_FILES['logo_filename']['name'])
-                ? (string) $_FILES['logo_filename']['name']
-                : $existing_logo_filename;
-                if ($formHydrator->populateAndValidate($form, $body)) {
-                    // Replace filename's spaces with underscore and add random string preventing overwrites
-                    $modified_original_file_name = Random::string(4) . '_' . (string) preg_replace('/\s+/', '_', $body['logo_filename']);
-                    // Build a unique target file name
-                    $target_file_name = $targetPath . '/' . $modified_original_file_name;
-                    $target_public_logo = $targetPublicPath . '/' . $modified_original_file_name;
-                    // Save the body including the logo_filename field
-                    $this->companyPrivateService->saveCompanyPrivate($company_private, $body);
-
-                    // Prepare the after save for the logo_filename field
-                    $after_save =
-                        $companyprivateRepository->repoCompanyPrivatequery(
-                            $company_private->reqId());
-                    if ($after_save) {
-                        // A new file upload must replace the previous one or keep existing file
-                        /**
-                         * @var string $_FILES['logo_filename']['tmp_name']
-                         */
-                        $tmp_name = $_FILES['logo_filename']['tmp_name'];
-                        $after_save->setLogoFilename(
-                            // 1. tmp is an uploaded file and not a security risk
-                            // 2. the target file name does not exist
-                            // 3. tmp has been moved into the target destination
-                            !$this->fileUploadingErrors($tmp_name, $target_file_name, $target_public_logo)
-
-                            // New file upload
-                            ? $modified_original_file_name
-
-                            // or Existing database file name
-                            : $existing_logo_filename,
-                        );
-                        $companyprivateRepository->save($after_save);
-
-                        $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
-                        return $this->webService->getRedirectResponse('companyprivate/index');
-                    } // after  save
-                }
+            if ($redirect === null) {
                 $parameters['form'] = $form;
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             }
-            return $this->webViewRenderer->render('_form', $parameters);
         }
-        return $this->webService->getRedirectResponse('companyprivate/index');
+        return $redirect ?? $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**

@@ -74,26 +74,24 @@ trait SettingGovMtdTrait
         }
 
         // Prefer HTTP_CLIENT_IP if set (rarely used, sometimes unreliable)
-        if (!empty($server['http_client_ip'])) {
-            return (string) $server['http_client_ip'];
-        }
+        $ip = !empty($server['http_client_ip']) ? (string) $server['http_client_ip'] : null;
 
         // Prefer the first valid IP from X-Forwarded-For
-        if (!empty($server['http_x_forwarded_for'])) {
+        if ($ip === null && !empty($server['http_x_forwarded_for'])) {
             // X-Forwarded-For can contain multiple IPs, pick the first one
             $ips = explode(',', (string) $server['http_x_forwarded_for']);
             $clientIp = trim(reset($ips));
             if (filter_var($clientIp, FILTER_VALIDATE_IP)) {
-                return $clientIp;
+                $ip = $clientIp;
             }
         }
 
         // Fallback to remote_addr
-        if (!empty($server['remote_addr'])) {
-            return (string) $server['remote_addr'];
+        if ($ip === null && !empty($server['remote_addr'])) {
+            $ip = (string) $server['remote_addr'];
         }
 
-        return null;
+        return $ip;
     }
 
     /**

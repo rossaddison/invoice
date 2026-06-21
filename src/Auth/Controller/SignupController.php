@@ -139,6 +139,7 @@ final class SignupController
             }
         }
 
+        $redirect = null;
         if ($formHydrator->populateFromPostAndValidate($signupForm, $request)) {
             $user = $signupForm->signup();
             $userId = $user->reqId();
@@ -149,66 +150,67 @@ final class SignupController
                 // assign() succeeds in memory but never persists to the DB
                 $role = $uR->repoCount() == 1 ? 'admin' : 'observer';
                 if (!$this->assignRoleAndVerify($userId, $role)) {
-                    return $this->webService->getRedirectResponse(
+                    $redirect = $this->webService->getRedirectResponse(
                         'site/signupfailed');
-                }
-                $to = $user->getEmail();
-                $login = $user->getLogin();
-                /**
-                 * @var array $this->sR->localeLanguageArray()
-                 */
-                $languageArray = $this->sR->localeLanguageArray();
-                $_language = $currentRoute->getArgument('_language');
-                /**
-                 * @var string $_language
-                 * @var string $language
-                 */
-                $language = $languageArray[$_language];
-                $randomAndTimeToken = $this->getEmailVerificationToken($user,
-                    $tR);
-                /**
-                 * Related logic: see A new UserInv (extension table of user)
-                 * for the user is created.
-                 * For additional headers to strengthen security refer to:
-                 * Related logic:
-                 *  see https://en.wikipedia.org/wiki/Email#Message_format
-                 * Related logic:
-                 *  see https://github.com/yiisoft/mailer/blob/1d3480bc26cbeba
-                 *   47b24e61f9ec0e717c244c0b7/tests/MessageTest.php#L217
-                 */
-                $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink(
-                    $user, $uiR, $language, $_language, $randomAndTimeToken,
-                    $signupForm->getConsentPeriodicInvoice(),
-                    $signupForm->getConsentTelegramOutstanding());
-                if (($this->sR->getSetting('email_send_method') == 'symfony')
-                        || ($this->sR->mailerEnabled())) {
-                    $configEmail = $this->sR->getConfigAdminEmail();
-                    $tta = $this->translator->translate('administrator');
-                    $email = new \Yiisoft\Mailer\Message(
-                        charset: 'utf-8',
-                        headers: [
-                            'X-Origin' => ['0', '1'],
-                            'X-Pass' => 'pass',
-                        ],
-                        subject: $login . ': <' . $to . '>',
-                        date: new \DateTimeImmutable('now'),
-                        from: [$configEmail => $tta],
-                        to: $to,
-                        htmlBody: $htmlBody,
-                    );
-                    $email->withAddedHeader(
-                        'Message-ID', $this->sR->getConfigAdminEmail()
-                    );
-                    $failed = 'site/signupfailed';
-                    try {
-                        $this->mailer->send($email);
-                    } catch (\Exception $e) {
-                        $this->logger->error($e->getMessage());
-                        return $this->webService->getRedirectResponse($failed);
+                } else {
+                    $to = $user->getEmail();
+                    $login = $user->getLogin();
+                    /**
+                     * @var array $this->sR->localeLanguageArray()
+                     */
+                    $languageArray = $this->sR->localeLanguageArray();
+                    $_language = $currentRoute->getArgument('_language');
+                    /**
+                     * @var string $_language
+                     * @var string $language
+                     */
+                    $language = $languageArray[$_language];
+                    $randomAndTimeToken = $this->getEmailVerificationToken($user,
+                        $tR);
+                    /**
+                     * Related logic: see A new UserInv (extension table of user)
+                     * for the user is created.
+                     * For additional headers to strengthen security refer to:
+                     * Related logic:
+                     *  see https://en.wikipedia.org/wiki/Email#Message_format
+                     * Related logic:
+                     *  see https://github.com/yiisoft/mailer/blob/1d3480bc26cbeba
+                     *   47b24e61f9ec0e717c244c0b7/tests/MessageTest.php#L217
+                     */
+                    $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink(
+                        $user, $uiR, $language, $_language, $randomAndTimeToken,
+                        $signupForm->getConsentPeriodicInvoice(),
+                        $signupForm->getConsentTelegramOutstanding());
+                    if (($this->sR->getSetting('email_send_method') == 'symfony')
+                            || ($this->sR->mailerEnabled())) {
+                        $configEmail = $this->sR->getConfigAdminEmail();
+                        $tta = $this->translator->translate('administrator');
+                        $email = new \Yiisoft\Mailer\Message(
+                            charset: 'utf-8',
+                            headers: [
+                                'X-Origin' => ['0', '1'],
+                                'X-Pass' => 'pass',
+                            ],
+                            subject: $login . ': <' . $to . '>',
+                            date: new \DateTimeImmutable('now'),
+                            from: [$configEmail => $tta],
+                            to: $to,
+                            htmlBody: $htmlBody,
+                        );
+                        $email->withAddedHeader(
+                            'Message-ID', $this->sR->getConfigAdminEmail()
+                        );
+                        try {
+                            $this->mailer->send($email);
+                        } catch (\Exception $e) {
+                            $this->logger->error($e->getMessage());
+                            $redirect = $this->webService->getRedirectResponse(
+                                'site/signupfailed');
+                        }
                     }
                 }
             }
-            return $this->webService->getRedirectResponse('site/signupsuccess');
+            $redirect = $redirect ?? $this->webService->getRedirectResponse('site/signupsuccess');
         }
 
         $codeVerifier = Random::string(128);
@@ -216,7 +218,7 @@ final class SignupController
         $rTrim = rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '=');
         $codeChallenge = strtr($rTrim, '+/', '-_');
         $nocb = $this->sR->getSetting('no_openbanking_continue_button');
-        return $this->webViewRenderer->render('signup', [
+        return $redirect ?? $this->webViewRenderer->render('signup', [
             'class' => $this->classList(),
             'formModel' => $signupForm,
             'selectedOpenBankingProvider' => $openBankChoice,

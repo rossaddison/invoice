@@ -171,31 +171,20 @@ final readonly class StoreCoveHelper
     {
         $dcI = 'Invoice Issue Date/Time ie. Date Created/Issued';
         $adS = 'Actual Delivery Date/Time ie. Date Supplied';
-        $ptd = 'Paid to Date';
         $uncl2005_subset_array = [
             $dcI => '3',
             $adS => '35',
-            $ptd => '432',
+            'Paid to Date' => '432',
         ];
-        if (null !== $inv->getClient()?->getClientVatId()) {
-            if ($date_created > $date_supplied) {
-                $diff = $date_supplied->diff($date_created)->format('%R%a');
-                if ((int) $diff > 14) {
-                    return $uncl2005_subset_array[$adS];
-                }
-                return $uncl2005_subset_array[$dcI];
-            }
-            if ($date_created < $date_supplied) {
-                return $uncl2005_subset_array[$dcI];
-            }
-            if ($date_created === $date_supplied) {
-                return $uncl2005_subset_array[$dcI];
+        if (null !== $inv->getClient()?->getClientVatId()
+            && $date_created > $date_supplied) {
+            $diff = $date_supplied->diff($date_created)->format('%R%a');
+            if ((int) $diff > 14) {
+                return $uncl2005_subset_array[$adS];
             }
         }
-        if (null == $inv->getClient()?->getClientVatId()) {
-            return $uncl2005_subset_array[$adS];
-        }
-        return $uncl2005_subset_array[$dcI];
+        $key = null === $inv->getClient()?->getClientVatId() ? $adS : $dcI;
+        return $uncl2005_subset_array[$key];
     }
 
     /**

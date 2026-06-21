@@ -69,17 +69,7 @@ final class SettingToggleController extends BaseController
     {
         $setting = $this->sR->withKey('columns_all_visible');
         if ($setting) {
-            if ($setting->getSettingValue() == '0') {
-                $setting->setSettingValue('1');
-                $this->sR->save($setting);
-                return $this->webService->getRedirectResponse($origin . '/index');
-            }
-            if ($setting->getSettingValue() == '1') {
-                $setting->setSettingValue('0');
-                $this->sR->save($setting);
-                return $this->webService->getRedirectResponse($origin . '/index');
-            }
-            $setting->setSettingValue('0');
+            $setting->setSettingValue($setting->getSettingValue() === '0' ? '1' : '0');
             $this->sR->save($setting);
             return $this->webService->getRedirectResponse($origin . '/index');
         }
@@ -93,17 +83,7 @@ final class SettingToggleController extends BaseController
     {
         $setting = $this->sR->withKey('column_inv_sent_log_visible');
         if ($setting) {
-            if ($setting->getSettingValue() == '0') {
-                $setting->setSettingValue('1');
-                $this->sR->save($setting);
-                return $this->webService->getRedirectResponse('inv/index');
-            }
-            if ($setting->getSettingValue() == '1') {
-                $setting->setSettingValue('0');
-                $this->sR->save($setting);
-                return $this->webService->getRedirectResponse('inv/index');
-            }
-            $setting->setSettingValue('0');
+            $setting->setSettingValue($setting->getSettingValue() === '0' ? '1' : '0');
             $this->sR->save($setting);
             return $this->webService->getRedirectResponse('inv/index');
         }

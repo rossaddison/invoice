@@ -122,75 +122,77 @@ final class UserClientController extends BaseController
         UIR $uiR,
     ): Response {
         $user_id = (int) $currentRoute->getArgument('user_id');
-        if ($user_id > 0) {
+        if (!($user_id > 0)) {
+            return $this->webService->getRedirectResponse('userinv/index');
+        }
         // Get possible client ids as an array that can be presented to this user
-            $availableClientIdList = $ucR->getNotAssignedToUser($user_id, $cR);
-            $user_client = new UserClient();
-            $form = new UserClientForm();
-            $parameters = [
-                'errors' => [],
-                'userinv' => $this->user($currentRoute, $uiR),
-                // Only provide clients NOT already included ie. available
-                'availableClientIdList' => $availableClientIdList,
-                'cR' => $cR,
+        $availableClientIdList = $ucR->getNotAssignedToUser($user_id, $cR);
+        $user_client = new UserClient();
+        $form = new UserClientForm();
+        $parameters = [
+            'errors' => [],
+            'userinv' => $this->user($currentRoute, $uiR),
+            // Only provide clients NOT already included ie. available
+            'availableClientIdList' => $availableClientIdList,
+            'cR' => $cR,
 // Initialize the checkbox to zero so that both 'all_clients' and dropdownbox
 // is presented on userclient/new.php
-                'form' => $form,
-            ];
-
-            if ($request->getMethod() === Method::POST) {
-                $body = $request->getParsedBody();
-                if (is_array($body)) {
-                    /** @var string $value */
-                    foreach ($body as $key => $value) {
+            'form' => $form,
+        ];
+        $redirect = null;
+        if ($request->getMethod() === Method::POST) {
+            $body = $request->getParsedBody();
+            if (is_array($body)) {
+                /** @var string $value */
+                foreach ($body as $key => $value) {
                   // If the user is allowed to see all clients eg. An Accountant
-                        if (((string) $key === 'user_all_clients')
-                                                          && ($value === '1')) {
-                            // Unassign currently assigned clients
-                            $ucR->unassignToUserClient($user_id);
-                            // Search for all clients, including new clients and
-                            // assign them aswell
-                            $ucR->resetUsersAllClients(
-                                                $uiR, $cR, $ucS, $formHydrator);
-                            return $this->webService->getRedirectResponse(
-                                                                'userinv/index');
+                    if (((string) $key === 'user_all_clients')
+                                                      && ($value === '1')) {
+                        // Unassign currently assigned clients
+                        $ucR->unassignToUserClient($user_id);
+                        // Search for all clients, including new clients and
+                        // assign them aswell
+                        $ucR->resetUsersAllClients(
+                                            $uiR, $cR, $ucS, $formHydrator);
+                        $redirect = $this->webService->getRedirectResponse(
+                                                            'userinv/index');
+                        break;
+                    }
+                    if ((string) $key === 'client_id') {
+                        $form_array = [
+                            'user_id' => $user_id,
+                            'client_id' => $value,
+                        ];
+                        if ($formHydrator->populateAndValidate($form, $form_array)
+                            // Check that the user client does not exist
+                            && $ucR->repoUserClientqueryCount(
+                                    $user_id, (int) $value) <= 0) {
+                            $this->userclientService->saveUserClient(
+                                    $user_client, $form_array);
+                            $this->flashMessage('info',
+                                    $this->translator->translate(
+                                            'record.successfully.updated'));
+                            $redirect = $this->webService->getRedirectResponse(
+                                                            'userinv/index');
+                            break;
                         }
-                        if ((string) $key === 'client_id') {
-                            $form_array = [
-                                'user_id' => $user_id,
-                                'client_id' => $value,
-                            ];
-                            if ($formHydrator->populateAndValidate($form, $form_array)
-                                // Check that the user client does not exist
-                                && $ucR->repoUserClientqueryCount(
-                                        $user_id, (int) $value) <= 0) {
-                                $this->userclientService->saveUserClient(
-                                        $user_client, $form_array);
-                                $this->flashMessage('info',
-                                        $this->translator->translate(
-                                                'record.successfully.updated'));
-                                return $this->webService->getRedirectResponse(
-                                                                'userinv/index');
-                            }
-
-                            if ($ucR->repoUserClientqueryCount($user_id, (int) $value) > 0) {
-                                $this->flashMessage('info',
-                                        $this->translator->translate(
-                                                      'client.already.exists'));
-                                return $this->webService->getRedirectResponse(
-                                                                'userinv/index');
-                            }
-                            $parameters['errors'] =
-                                    $form->getValidationResult()
-                                         ->getErrorMessagesIndexedByProperty();
-                            $parameters['form'] = $form;
+                        if ($ucR->repoUserClientqueryCount($user_id, (int) $value) > 0) {
+                            $this->flashMessage('info',
+                                    $this->translator->translate(
+                                                  'client.already.exists'));
+                            $redirect = $this->webService->getRedirectResponse(
+                                                            'userinv/index');
+                            break;
                         }
+                        $parameters['errors'] =
+                                $form->getValidationResult()
+                                     ->getErrorMessagesIndexedByProperty();
+                        $parameters['form'] = $form;
                     }
                 }
             }
-            return $this->webViewRenderer->render('new', $parameters);
         }
-        return $this->webService->getRedirectResponse('userinv/index');
+        return $redirect ?? $this->webViewRenderer->render('new', $parameters);
     }
 
     /**

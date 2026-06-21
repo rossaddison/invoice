@@ -204,16 +204,8 @@ final class InvSentLogController extends BaseController
                 'form' => $form,
             ];
             $inv = $invsentlog->getInv();
-            if (null!==$inv) {
-                if ($this->rbacObserver($inv, $ucR, $uiR)) {
-                    return $this->webViewRenderer->render('view', $parameters);
-                }
-                if ($this->rbacAdmin()) {
-                    return $this->webViewRenderer->render('view', $parameters);
-                }
-                if ($this->rbacAccountant()) {
-                    return $this->webViewRenderer->render('view', $parameters);
-                }
+            if (null !== $inv && ($this->rbacObserver($inv, $ucR, $uiR) || $this->rbacAdmin() || $this->rbacAccountant())) {
+                return $this->webViewRenderer->render('view', $parameters);
             }
         }
         return $this->webService->getRedirectResponse('invsentlog/index');

@@ -49,53 +49,38 @@ final class ProductAttachmentController extends BaseController
     ): Response {
         $aliases    = $this->sR->getProductimagesFilesFolderAliases();
         $targetPath = $aliases->get('@public_product_images');
-        $product_id = $id;
 
-        if ($product_id) {
-            if (!is_writable($targetPath)) {
-                return $this->responseFactory->createResponse(
-                    $this->imageAttachmentNotWritable((int) $product_id)
-                );
-            }
-
-            $product = $pR->repoProductquery((int) $product_id) ?: null;
-            if ($product instanceof Product) {
-                $product_id = $product->reqId();
-                if ($product_id) {
-                    if (!empty($_FILES)) {
-                        /** @var array $_FILES['ImageAttachForm'] */
-                        /** @var string $_FILES['ImageAttachForm']['tmp_name']['attachFile'] */
-                        $temporary_file = $_FILES['ImageAttachForm']['tmp_name']['attachFile'];
-                        /** @var string $_FILES['ImageAttachForm']['name']['attachFile'] */
-                        $original_file_name = preg_replace(
-                            '/\s+/', '_',
-                            $_FILES['ImageAttachForm']['name']['attachFile']
-                        );
-                        if (null !== $original_file_name) {
-                            $target_path_with_filename = $targetPath . '/' . $original_file_name;
-                            if ($this->imageAttachmentMoveTo(
-                                $temporary_file, $target_path_with_filename,
-                                $product_id, $original_file_name, $piR
-                            )) {
-                                return $this->responseFactory->createResponse(
-                                    $this->imageAttachmentSuccessfullyCreated($product_id)
-                                );
-                            }
-                            return $this->responseFactory->createResponse(
-                                $this->imageAttachmentNoFileUploaded($product_id)
-                            );
-                        }
-                    } else {
-                        return $this->responseFactory->createResponse(
-                            $this->imageAttachmentNoFileUploaded($product_id)
-                        );
-                    }
-                }
-                return $this->webService->getRedirectResponse('product/index');
-            }
+        $loaded     = $id ? $pR->repoProductquery((int) $id) : null;
+        $product    = $loaded ?: null;
+        $product_id = ($product instanceof Product) ? $product->reqId() : null;
+        if ($product_id === null) {
             return $this->webService->getRedirectResponse('product/index');
         }
-        return $this->webService->getRedirectResponse('product/index');
+
+        if (!is_writable($targetPath)) {
+            $content = $this->imageAttachmentNotWritable($product_id);
+        } elseif (empty($_FILES)) {
+            $content = $this->imageAttachmentNoFileUploaded($product_id);
+        } else {
+            /** @var string $_FILES['ImageAttachForm']['tmp_name']['attachFile'] */
+            $temporary_file = $_FILES['ImageAttachForm']['tmp_name']['attachFile'];
+            /** @var string $_FILES['ImageAttachForm']['name']['attachFile'] */
+            $original_file_name = preg_replace(
+                '/\s+/', '_',
+                $_FILES['ImageAttachForm']['name']['attachFile']
+            );
+            if ($original_file_name === null) {
+                return $this->webService->getRedirectResponse('product/index');
+            }
+            $moved = $this->imageAttachmentMoveTo(
+                $temporary_file, $targetPath . '/' . $original_file_name,
+                $product_id, $original_file_name, $piR
+            );
+            $content = $moved
+                ? $this->imageAttachmentSuccessfullyCreated($product_id)
+                : $this->imageAttachmentNoFileUploaded($product_id);
+        }
+        return $this->responseFactory->createResponse($content);
     }
 
     public function downloadImageFile(

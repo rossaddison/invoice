@@ -29,30 +29,21 @@ final readonly class AuthTfaHelper
 
     public function sanitizeAndValidateCode(mixed $input): ?string
     {
-        if (!is_string($input) && !is_numeric($input)) {
+        $code = (is_string($input) || is_numeric($input))
+            ? trim(preg_replace('/[^A-Za-z0-9]/', '', (string) $input) ?? '')
+            : '';
+        if ($code === '') {
             return null;
         }
-
-        $code = trim((string) $input);
-        $code = preg_replace('/[^A-Za-z0-9]/', '', $code);
-
-        if ($code === null || $code === '') {
-            return null;
-        }
-
         $length = strlen($code);
-        if ($length !== 6 && $length !== 8) {
+        $valid = match(true) {
+            $length === 6 => $this->isValidTotpCode($code),
+            $length === 8 => $this->isValidBackupCode($code),
+            default => false,
+        };
+        if (!$valid) {
             return null;
         }
-
-        if ($length === 6 && !$this->isValidTotpCode($code)) {
-            return null;
-        }
-
-        if ($length === 8 && !$this->isValidBackupCode($code)) {
-            return null;
-        }
-
         return $code;
     }
 

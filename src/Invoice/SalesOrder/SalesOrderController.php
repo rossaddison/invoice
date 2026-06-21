@@ -405,50 +405,31 @@ final class SalesOrderController extends BaseController
         $body = $request->getParsedBody();
         /** @var string|null $url_key */
         $url_key = $body['url_key'] ?? null;
+        $salesorder = null;
+        $errorMessage = null;
 
         if (null === $url_key) {
+            $errorMessage = $this->translator->translate('error.occurred');
+        } elseif ($soR->repoUrlKeyGuestCount($url_key) < 1) {
+            $errorMessage = $this->translator->translate('salesorder.not.found');
+        } else {
+            $salesorder = $soR->repoUrlKeyGuestLoaded($url_key);
+            if (!$salesorder) {
+                $errorMessage = $this->translator->translate('salesorder.not.found');
+            } elseif (!in_array($salesorder->getStatusId(), [3, 4])) {
+                // Only allow updates when status is 3 (Client Agreed to Terms) or 4
+                // (Delivery/Completion)
+                $errorMessage = $this->translator->translate('salesorder.peppol.invalid.status');
+            }
+        }
+
+        if ($errorMessage !== null) {
             return $this->factory->createResponse(
-                Json::encode([
-                    'success' => 0,
-                    'message' => $this->translator->translate('error.occurred')
-                ])
+                Json::encode(['success' => 0, 'message' => $errorMessage])
             );
         }
 
-        // Verify the sales order exists and is accessible
-        if ($soR->repoUrlKeyGuestCount($url_key) < 1) {
-            return $this->factory->createResponse(
-                Json::encode([
-                    'success' => 0,
-                    'message' =>
-                            $this->translator->translate('salesorder.not.found')
-                ])
-            );
-        }
-
-        $salesorder = $soR->repoUrlKeyGuestLoaded($url_key);
-        if (!$salesorder) {
-            return $this->factory->createResponse(
-                Json::encode([
-                    'success' => 0,
-                    'message' =>
-                            $this->translator->translate('salesorder.not.found')
-                ])
-            );
-        }
-
-        // Only allow updates when status is 3 (Client Agreed to Terms) or 4
-        // (Delivery/Completion)
-        if (!in_array($salesorder->getStatusId(), [3, 4])) {
-            return $this->factory->createResponse(
-                Json::encode([
-                    'success' => 0,
-                    'message' =>
-                $this->translator->translate('salesorder.peppol.invalid.status')
-                ])
-            );
-        }
-
+        assert($salesorder instanceof SalesOrder);
         /** @var array<string, string> $item_ids */
         $item_ids = $body['item_id'] ?? [];
         /** @var array<string, string> $peppol_po_itemids */
@@ -464,38 +445,26 @@ final class SalesOrderController extends BaseController
             if ($item && $item->reqSalesOrderId() === $salesorder->reqId()) {
                 $peppol_po_itemid = $peppol_po_itemids[$item_id] ?? '';
                 $peppol_po_lineid = $peppol_po_lineids[$item_id] ?? '';
-
-                // Update the item with Peppol data
                 $array = [
                     'peppol_po_itemid' => trim($peppol_po_itemid),
                     'peppol_po_lineid' => trim($peppol_po_lineid)
                 ];
-
                 if ($soiS->savePeppolPoItemid($item, $array)) {
                     $updated_count++;
                 }
-                if ($soiS->savePeppolPoLineid($item, $array)) {
-                    // Already counted above
-                }
+                $soiS->savePeppolPoLineid($item, $array);
             }
         }
 
-        if ($updated_count > 0) {
-            return $this->factory->createResponse(
-                Json::encode([
-                    'success' => 1,
-                    'message' =>
-              $this->translator->translate('invoice.peppol.saved.successfully'),
-                    'updated_items' => $updated_count
-                ])
-            );
-        }
-
         return $this->factory->createResponse(
-            Json::encode([
-                'success' => 0,
-                'message' => $this->translator->translate('no.changes.made')
-            ])
+            Json::encode($updated_count > 0
+                ? [
+                    'success' => 1,
+                    'message' => $this->translator->translate('invoice.peppol.saved.successfully'),
+                    'updated_items' => $updated_count,
+                  ]
+                : ['success' => 0, 'message' => $this->translator->translate('no.changes.made')]
+            )
         );
     }
 
@@ -733,13 +702,7 @@ final class SalesOrderController extends BaseController
                             $_language, $service->relation->dR, $quote->getDeliveryLocationId())
                                 : '',
                 ];
-                if ($this->rbac->isObserver($so, $service->relation->ucR, $service->relation->uiR)) {
-                    return $this->webViewRenderer->render('view', $parameters);
-                }
-                if ($this->rbac->isAdmin()) {
-                    return $this->webViewRenderer->render('view', $parameters);
-                }
-                if ($this->rbac->isAccountant()) {
+                if ($this->rbac->isObserver($so, $service->relation->ucR, $service->relation->uiR) || $this->rbac->isAdmin() || $this->rbac->isAccountant()) {
                     return $this->webViewRenderer->render('view', $parameters);
                 }
             } // $so_amount
@@ -789,95 +752,89 @@ final class SalesOrderController extends BaseController
         $body = $request->getQueryParams();
         $so_id = $id !== '' ? (int) $id : (int) ($body['so_id'] ?? '');
         $so = $d->soR->repoSalesOrderUnloadedquery($so_id);
-        if ($so) {
-            $client_id = ($so->reqClientId() ?: (int) ($body['client_id'] ?? ''));
-            $group_id = $d->sR->getSetting('default_invoice_group');
+        if (!$so) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $client_id = ($so->reqClientId() ?: (int) ($body['client_id'] ?? ''));
+        $group_id = $d->sR->getSetting('default_invoice_group');
 
-            $inv_body = [
-                'client_id' => $client_id,
-                'group_id' => $group_id,
-                'quote_id' => $so->reqQuoteId(),
-                'so_id' => $so->reqId(),
-                'status_id' => 2,
-                'password' => $body['password'] ?? '',
-                'number' => $d->gR->generateNumber((int) $group_id),
-                'discount_amount' => (float) $so->getDiscountAmount(),
-                'url_key' => $so->getUrlKey(),
-                'payment_method' => 0,
-                'terms' => '',
-                'creditinvoice_parent_id' => '',
-            ];
-            $inv = new Inv();
-            $form = new InvForm();
-            if ($formHydrator->populateAndValidate($form, $inv_body)
-                  && ($so->reqInvId() === 0)
-            ) {
-                /**
-                 * @var string $inv_body['client_id']
-                 */
-                $client_id = (int) $inv_body['client_id'];
-                $user_client = $d->ucR->repoUserquery($client_id);
-                $user_client_count = $d->ucR->repoUserquerycount($client_id);
-                if (null !== $user_client && $user_client_count == 1) {
-                    $user_id = $user_client->reqUserId();
-                    $user = $d->uR->findById($user_id);
-                    $user_inv = $d->uiR->repoUserInvUserIdquery($user_id);
-                    if (null !== $user_inv && $user_inv->getActive()) {
-                        $this->invService->saveInv($user, $inv, $inv_body,
-                                                                $d->sR, $d->gR);
-                        $inv_id = $inv->reqId();
-                        $this->soToInvConverter->soToInvoiceSoItems($so_id, $inv_id, $formHydrator, $d);
-                        $this->soToInvConverter->soToInvoiceSoTaxRates($so_id, $inv_id, $d, $formHydrator);
-                        $this->soToInvConverter->soToInvoiceSoCustom($so_id, $inv_id, $d, $formHydrator);
-                        $this->soToInvConverter->soToInvoiceSoAmount($so, $inv, $d);
-                        $this->soToInvConverter->soToInvoiceSoAllowanceCharges($so_id, $inv_id, $d, $formHydrator);
-                        $so->setInvId($inv_id);
-                        $so->setStatusId(8);
-                        $this->flashMessage('info',
-                            $this->translator->translate(
-                                'salesorder.invoice.generated'));
-                        $d->soR->save($so);
-
-                        $isAjax = $request->getHeaderLine(
-                            'X-Requested-With') === 'XMLHttpRequest';
-
-                        if ($isAjax) {
-                            $parameters = [
-                                'success' => 1,
-                                'flash_message' =>
-                                    $this->translator->translate(
-                                        'salesorder.copied.to.invoice'),
-                                'inv_id' => $inv_id,
-                            ];
-                            return $this->factory->createResponse(
-                                Json::encode($parameters));
-                        } else {
-                            return $this->webService->getRedirectResponse(
-                                'inv/view', ['id' => $inv_id]);
-                        }
-                    }
-                }
-            } else {
-                $isAjax = $request->getHeaderLine(
-                    'X-Requested-With') === 'XMLHttpRequest';
-
-                if ($isAjax) {
-                    $parameters = [
-                        'success' => 0,
-                        'flash_message' => $this->translator->translate(
-                            'salesorder.copied.to.invoice.not'),
-                    ];
-                    return $this->factory->createResponse(Json::encode($parameters));
-                } else {
-                    $this->flashMessage('danger',
+        $inv_body = [
+            'client_id' => $client_id,
+            'group_id' => $group_id,
+            'quote_id' => $so->reqQuoteId(),
+            'so_id' => $so->reqId(),
+            'status_id' => 2,
+            'password' => $body['password'] ?? '',
+            'number' => $d->gR->generateNumber((int) $group_id),
+            'discount_amount' => (float) $so->getDiscountAmount(),
+            'url_key' => $so->getUrlKey(),
+            'payment_method' => 0,
+            'terms' => '',
+            'creditinvoice_parent_id' => '',
+        ];
+        $inv = new Inv();
+        $form = new InvForm();
+        $response = null;
+        if ($formHydrator->populateAndValidate($form, $inv_body)
+              && ($so->reqInvId() === 0)
+        ) {
+            /**
+             * @var string $inv_body['client_id']
+             */
+            $client_id = (int) $inv_body['client_id'];
+            $user_client = $d->ucR->repoUserquery($client_id);
+            $user_client_count = $d->ucR->repoUserquerycount($client_id);
+            if (null !== $user_client && $user_client_count == 1) {
+                $user_id = $user_client->reqUserId();
+                $user = $d->uR->findById($user_id);
+                $user_inv = $d->uiR->repoUserInvUserIdquery($user_id);
+                if (null !== $user_inv && $user_inv->getActive()) {
+                    $this->invService->saveInv($user, $inv, $inv_body,
+                                                            $d->sR, $d->gR);
+                    $inv_id = $inv->reqId();
+                    $this->soToInvConverter->soToInvoiceSoItems($so_id, $inv_id, $formHydrator, $d);
+                    $this->soToInvConverter->soToInvoiceSoTaxRates($so_id, $inv_id, $d, $formHydrator);
+                    $this->soToInvConverter->soToInvoiceSoCustom($so_id, $inv_id, $d, $formHydrator);
+                    $this->soToInvConverter->soToInvoiceSoAmount($so, $inv, $d);
+                    $this->soToInvConverter->soToInvoiceSoAllowanceCharges($so_id, $inv_id, $d, $formHydrator);
+                    $so->setInvId($inv_id);
+                    $so->setStatusId(8);
+                    $this->flashMessage('info',
                         $this->translator->translate(
-                            'salesorder.copied.to.invoice.not'));
-                    return $this->webService->getRedirectResponse(
-                        'salesorder/view', ['id' => $so_id]);
+                            'salesorder.invoice.generated'));
+                    $d->soR->save($so);
+
+                    $isAjax = $request->getHeaderLine(
+                        'X-Requested-With') === 'XMLHttpRequest';
+                    $response = $isAjax
+                        ? $this->factory->createResponse(Json::encode([
+                            'success' => 1,
+                            'flash_message' => $this->translator->translate(
+                                'salesorder.copied.to.invoice'),
+                            'inv_id' => $inv_id,
+                        ]))
+                        : $this->webService->getRedirectResponse(
+                            'inv/view', ['id' => $inv_id]);
                 }
             }
+        } else {
+            $isAjax = $request->getHeaderLine(
+                'X-Requested-With') === 'XMLHttpRequest';
+            if ($isAjax) {
+                $response = $this->factory->createResponse(Json::encode([
+                    'success' => 0,
+                    'flash_message' => $this->translator->translate(
+                        'salesorder.copied.to.invoice.not'),
+                ]));
+            } else {
+                $this->flashMessage('danger',
+                    $this->translator->translate(
+                        'salesorder.copied.to.invoice.not'));
+                $response = $this->webService->getRedirectResponse(
+                    'salesorder/view', ['id' => $so_id]);
+            }
         }
-        return $this->webService->getNotFoundResponse();
+        return $response ?? $this->webService->getNotFoundResponse();
     }
 
     public function urlKey(CurrentRoute $currentRoute, CurrentUser $currentUser, SoUrlKeyDeps $deps): Response
@@ -894,14 +851,8 @@ final class SalesOrderController extends BaseController
         // Get the url key from the browser
         $url_key = $currentRoute->getArgument('key');
 
-        // If there is no quote with such a url_key, issue a not found response
-        if ($url_key === null) {
-            return $this->webService->getNotFoundResponse();
-        }
-
-        // If there is a salesorder with the url key ... continue or else issue
-        // not found response
-        if ($soR->repoUrlKeyGuestCount($url_key) < 1) {
+        // If there is no salesorder with such a url_key, issue a not found response
+        if ($url_key === null || $soR->repoUrlKeyGuestCount($url_key) < 1) {
             return $this->webService->getNotFoundResponse();
         }
         $salesorder = $soR->repoUrlKeyGuestLoaded($url_key);

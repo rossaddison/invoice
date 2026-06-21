@@ -221,33 +221,35 @@ final class UserInvController extends BaseController
     ): Response {
         $aliases = new Aliases(['@invoice' => dirname(__DIR__),
             '@language' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Language']);
-        if (null !== $this->userService->getUser()) {
-            $id = $this->userService->getUser()?->reqId();
-            $userinv = $uiR->repoUserInvUserIdquery((int) $id);
-            if ($userinv) {
-                $form = UserInvForm::show($userinv);
-                $parameters = [
-                    'title' => $this->translator->translate('edit'),
-                    'actionName' => 'userinv/guest',
-                    'actionArguments' => [],
-                    'errors' => [],
-                    'form' => $form,
-                    'aliases' => $aliases,
-                ];
-                if ($request->getMethod() === Method::POST) {
-                    $body = $request->getParsedBody() ?? [];
-                    if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
-                            $this->userinvService->saveUserInv($userinv, $body);
-                            return $this->webService->getRedirectResponse('invoice/index');
-                    }
-                    $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-                    $parameters['form'] = $form;
-                }
-                return $this->webViewRenderer->render('_form_guest', $parameters);
-            }
+        if (null === $this->userService->getUser()) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $id = $this->userService->getUser()?->reqId();
+        $userinv = $uiR->repoUserInvUserIdquery((int) $id);
+        if (!$userinv) {
             return $this->webService->getRedirectResponse('invoice/index');
-        } // null!==$this->userService->getUser()
-        return $this->webService->getNotFoundResponse();
+        }
+        $form = UserInvForm::show($userinv);
+        $parameters = [
+            'title' => $this->translator->translate('edit'),
+            'actionName' => 'userinv/guest',
+            'actionArguments' => [],
+            'errors' => [],
+            'form' => $form,
+            'aliases' => $aliases,
+        ];
+        $redirect = null;
+        if ($request->getMethod() === Method::POST) {
+            $body = $request->getParsedBody() ?? [];
+            if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
+                $this->userinvService->saveUserInv($userinv, $body);
+                $redirect = $this->webService->getRedirectResponse('invoice/index');
+            } else {
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+                $parameters['form'] = $form;
+            }
+        }
+        return $redirect ?? $this->webViewRenderer->render('_form_guest', $parameters);
     }
 
     /**

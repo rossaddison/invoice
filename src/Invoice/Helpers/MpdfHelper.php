@@ -180,21 +180,18 @@ class MpdfHelper
         if ($ctx->isInvoice) {
             $this->isInvoice($filename, $mpdf, $aliases, $sR);
         }
+        $output = '';
         if ($stream) {
             // send the file inline to the browser. The plug-in is used if available.
             $mpdf->Output($filename . '.pdf', self::DEST_BROWSER);
-            if ($sR->getSetting('pdf_archive_inv') === '1') {
-                $mpdf->Output($aliases->get('@uploads') . $sR::getUploadsArchiveholderRelativeUrl() . '' . date('Y-m-d') . '_' . $filename . '.pdf', self::DEST_FILE);
-                return $aliases->get('@uploads') . $sR::getUploadsArchiveholderRelativeUrl() . '' . date('Y-m-d') . '_' . $filename . '.pdf';
-            }
-            return 'streamed_not_saved';
-        }      // save to a local file with the name given by $filename (may include a path).
-        if ($sR->getSetting('pdf_archive_inv') === '1') {
-            $mpdf->Output($aliases->get('@uploads') . $sR::getUploadsArchiveholderRelativeUrl() . '' . date('Y-m-d') . '_' . $filename . '.pdf', self::DEST_FILE);
-            return $aliases->get('@uploads') . $sR::getUploadsArchiveholderRelativeUrl() . '' . date('Y-m-d') . '_' . $filename . '.pdf';
+            $output = 'streamed_not_saved';
         }
-
-        return '';
+        if ($sR->getSetting('pdf_archive_inv') === '1') {
+            $archivePath = $aliases->get('@uploads') . $sR::getUploadsArchiveholderRelativeUrl() . '' . date('Y-m-d') . '_' . $filename . '.pdf';
+            $mpdf->Output($archivePath, self::DEST_FILE);
+            $output = $archivePath;
+        }
+        return $output;
     }
 
     /**

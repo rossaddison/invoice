@@ -749,39 +749,21 @@ class PeppolHelper
             'Actual Delivery Date/Time ie. Date Supplied' => '35',
             'Paid to Date' => '432',
         ];
-        if (null !== $inv->getClient()?->getClientVatId()) {
-            if ($date_created > $date_supplied) {
-                $diff = $date_supplied->diff($date_created)->format('%R%a');
-                if ((int) $diff > 14) {
-// date supplied more than 14 days before invoice date => use date supplied
-                    return $uncl2005_subset_array[
-                                'Actual Delivery Date/Time ie. Date Supplied'];
-                }
-// if the issue date (created) is within 14 days after the supply (basic) date
-// then use the issue/created date.
-                return $uncl2005_subset_array[
-                    self::ICD_ISSUE_INVOICE_DATE];
-            }
-            if ($date_created < $date_supplied) {
-                // normally set the tax point to the date_created
-                return $uncl2005_subset_array[
-                    self::ICD_ISSUE_INVOICE_DATE];
-            }
-            if ($date_created === $date_supplied) {
-                // normally set the tax point to the date_created
-                return $uncl2005_subset_array[
-                    self::ICD_ISSUE_INVOICE_DATE];
+        // For VAT-registered clients: use delivery date only when invoice date is
+        // more than 14 days after supply date; otherwise use invoice/created date.
+        if (null !== $inv->getClient()?->getClientVatId()
+            && $date_created > $date_supplied) {
+            $diff = $date_supplied->diff($date_created)->format('%R%a');
+            if ((int) $diff > 14) {
+                // date supplied more than 14 days before invoice date => use date supplied
+                return $uncl2005_subset_array['Actual Delivery Date/Time ie. Date Supplied'];
             }
         }
-        // If the client is not VAT registered, the tax point is the date
-        //  supplied
-        if (null == $inv->getClient()?->getClientVatId()) {
-            return $uncl2005_subset_array[
-                'Actual Delivery Date/Time ie. Date Supplied'];
-        }
-        // Default to date created
-        return $uncl2005_subset_array[
-            self::ICD_ISSUE_INVOICE_DATE];
+        // Non-VAT-registered clients use date supplied; all other cases use date created
+        $key = null === $inv->getClient()?->getClientVatId()
+            ? 'Actual Delivery Date/Time ie. Date Supplied'
+            : self::ICD_ISSUE_INVOICE_DATE;
+        return $uncl2005_subset_array[$key];
     }
 
     /**

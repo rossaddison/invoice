@@ -92,10 +92,7 @@ final class Lang
 
         // $lang is declared in basepath
         if (!is_array($lang)) {
-            if ($return === true) {
-                return [];
-            }
-            return null;
+            return $return === true ? [] : null;
         }
 
         $this->isLoaded[$langfile] = $idiom;

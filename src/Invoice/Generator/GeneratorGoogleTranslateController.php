@@ -189,13 +189,11 @@ final class GeneratorGoogleTranslateController extends BaseController
             $translationClient = new TranslationServiceClient([]);
             $sourceFile = dirname(__DIR__, 3) . '/resources/views/invoice/info/en/invoice.php';
             if (!file_exists($sourceFile)) {
-                $this->flashMessage('danger', 'Source file not found: ' . $sourceFile);
-                return $this->webService->getRedirectResponse('setting/tabIndex', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
+                throw new \LogicException('Source file not found: ' . $sourceFile);
             }
             $htmlContent = file_get_contents($sourceFile);
             if ($htmlContent === false || strlen($htmlContent) === 0) {
-                $this->flashMessage('danger', 'Failed to read source file.');
-                return $this->webService->getRedirectResponse('setting/tabIndex', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
+                throw new \LogicException('Failed to read source file.');
             }
             $segments = $this->extractTranslatableSegments($htmlContent);
             $batchSize = 5;
@@ -241,11 +239,12 @@ final class GeneratorGoogleTranslateController extends BaseController
                     $targetFile
                 )
             );
-            return $this->webService->getRedirectResponse('setting/tabIndex', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
+        } catch (\LogicException $e) {
+            $this->flashMessage('danger', $e->getMessage());
         } catch (\Exception $e) {
             $this->flashMessage('danger', 'Translation error: ' . $e->getMessage());
-            return $this->webService->getRedirectResponse('setting/tabIndex', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
         }
+        return $this->webService->getRedirectResponse('setting/tabIndex', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
     }
 
     public function ensureJsonExtension(string $filepath): bool

@@ -177,93 +177,97 @@ final class QuoteItemAllowanceChargeController extends BaseController
         QiacEditDeps $deps,
     ): Response {
         $acqi = $this->acqi($currentRoute, $deps->acqiR);
-        if ($acqi) {
-            $quote_item_id = $acqi->reqQuoteItemId();
-            $quote_item = $acqi->getQuoteItem();
-            $quote_id = $quote_item?->reqQuoteId();
-            $form = QuoteItemAllowanceChargeForm::show($acqi, $quote_item_id);
-            $parameters = [
-                'title' => $this->translator->translate('edit'),
-                'actionName' => 'quoteitemallowancecharge/edit',
-                'actionArguments' => ['id' => $acqi->reqId()],
-                'errors' => [],
-                'form' => $form,
-                'allowance_charges' => $deps->acR->findAllPreloaded(),
-                'quote_id' => $quote_id,
-                'quote_item_id' => $quote_item_id,
-            ];
-            $body = $request->getParsedBody() ?? [];
-            if (is_array($body)) {
-                $allowance_charge_id = (int) ($body['allowance_charge_id'] ?? '');
-                $amount = (float) ($body['amount'] ?? 0.00);
-                if ($request->getMethod() === Method::POST) {
-                    if ($allowance_charge_id) {
-                        $allowance_charge = $deps->acR->repoAllowanceChargequery($allowance_charge_id);
-                        if ($allowance_charge) {
-                            $percent = $allowance_charge->getTaxRate()?->getTaxRatePercent() ?? 0.00;
-                            $vat = $amount * $percent / 100.00;
-                            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                                // Add missing IDs to body array for service
-                                $body['quote_item_id'] = $quote_item_id;
-                                $body['quote_id'] = $quote_id;
-                                $this->acqiService->saveQuoteItemAllowanceCharge($acqi, $body, $vat);
-                                $all_charges = 0.00;
-                                $all_allowances = 0.00;
-                                $all_allowances_vat = 0.00;
-                                $all_charges_vat = 0.00;
-                                $acqis = $deps->acqiR->repoQuoteItemquery($quote_item_id);
-                                $quote_item_amount = $deps->qiaR->repoQuoteItemAmountquery($quote_item_id);
-                                if (null !== $quote_item_amount) {
-                                    /** @var QuoteItemAllowanceCharge $acqi */
-                                    foreach ($acqis as $acqi) {
-                                        // charge add
-                                        $ac = $acqi->getAllowanceCharge();
-                                        if ($ac?->getIdentifier() == '1') {
-                                            $all_charges += (float) $acqi->getAmount();
-                                            $all_charges_vat += (float) $acqi->getVatOrTax();
-                                        } else {
-                                            // allowance subtract
-                                            $all_allowances += (float) $acqi->getAmount();
-                                            $all_allowances_vat += (float) $acqi->getVatOrTax();
-                                        }
-                                    }
-                                    // Record the charges and allowances in the QuoteItemAmount Entity
-                                    $quote_item_amount->setCharge($all_charges);
-                                    $quote_item_amount->setAllowance($all_allowances);
-                                    $all_vat = $all_charges_vat - $all_allowances_vat;
-                                    $qi = $quote_item_amount->getQuoteItem();
-                                    $current_item_quantity = $qi?->getQuantity() ?? 0.00;
-                                    $current_item_price = $qi?->getPrice() ?? 0.00;
-                                    $discount_per_item = $qi?->getDiscountAmount() ?? 0.00;
-                                    $quantity_price = $current_item_quantity * $current_item_price;
-                                    $current_discount_item_total = $current_item_quantity * $discount_per_item;
-                                    $tax_percent = $qi?->getTaxRate()?->getTaxRatePercent();
-                                    $qpIncAc = $quantity_price + $all_charges - $all_allowances;
-                                    $current_tax_total = ($qpIncAc - $current_discount_item_total) * ($tax_percent ?? 0.00) / 100.00;
-                                    $new_tax_total = $current_tax_total + ($this->sR->getSetting('enable_vat_registration') == '0' ? 0.00 : $all_vat);
-                                    // include all item allowance charges in the subtotal
-                                    $quote_item_amount->setSubtotal($qpIncAc);
-                                    $quote_item_amount->setDiscount($current_discount_item_total);
-                                    $quote_item_amount->setTaxTotal($new_tax_total);
-                                    $overall_total = $qpIncAc - $current_discount_item_total + $new_tax_total;
-                                    $quote_item_amount->setTotal($overall_total);
-                                    $deps->qiaR->save($quote_item_amount);
-                                    // update the quote amount
-                                    $this->quoteAmountService->updateQuoteAmount((int) $quote_id, $deps->qaR, $deps->qiaR, $deps->qtrR, $this->numberHelper);
-                                    return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
-                                } //null !==$quote_item_amount
-                                return $this->webService->getNotFoundResponse();
-                            } // $form
-                            return $this->webService->getNotFoundResponse();
-                        } //allowance_charge
-                        return $this->webService->getNotFoundResponse();
-                    } // allowance_charge_id
+        if (!$acqi) {
+            return $this->webService->getRedirectResponse('index');
+        }
+        $quote_item_id = $acqi->reqQuoteItemId();
+        $quote_item = $acqi->getQuoteItem();
+        $quote_id = $quote_item?->reqQuoteId();
+        $form = QuoteItemAllowanceChargeForm::show($acqi, $quote_item_id);
+        $parameters = [
+            'title' => $this->translator->translate('edit'),
+            'actionName' => 'quoteitemallowancecharge/edit',
+            'actionArguments' => ['id' => $acqi->reqId()],
+            'errors' => [],
+            'form' => $form,
+            'allowance_charges' => $deps->acR->findAllPreloaded(),
+            'quote_id' => $quote_id,
+            'quote_item_id' => $quote_item_id,
+        ];
+        $body = $request->getParsedBody() ?? [];
+        $response = null;
+        if (is_array($body)) {
+            $allowance_charge_id = (int) ($body['allowance_charge_id'] ?? '');
+            $amount = (float) ($body['amount'] ?? 0.00);
+            if ($request->getMethod() === Method::POST) {
+                if ($allowance_charge_id) {
+                    $allowance_charge = $deps->acR->repoAllowanceChargequery($allowance_charge_id);
+                    if ($allowance_charge === null || !$formHydrator->populateFromPostAndValidate($form, $request)) {
+                        $response = $this->webService->getNotFoundResponse();
+                    } else {
+                        $percent = $allowance_charge->getTaxRate()?->getTaxRatePercent() ?? 0.00;
+                        $vat = $amount * $percent / 100.00;
+                        // Add missing IDs to body array for service
+                        $body['quote_item_id'] = $quote_item_id;
+                        $body['quote_id'] = $quote_id;
+                        $this->acqiService->saveQuoteItemAllowanceCharge($acqi, $body, $vat);
+                        $all_charges = 0.00;
+                        $all_allowances = 0.00;
+                        $all_allowances_vat = 0.00;
+                        $all_charges_vat = 0.00;
+                        $acqis = $deps->acqiR->repoQuoteItemquery($quote_item_id);
+                        $quote_item_amount = $deps->qiaR->repoQuoteItemAmountquery($quote_item_id);
+                        if (null !== $quote_item_amount) {
+                            /** @var QuoteItemAllowanceCharge $acqi */
+                            foreach ($acqis as $acqi) {
+                                // charge add
+                                $ac = $acqi->getAllowanceCharge();
+                                if ($ac?->getIdentifier() == '1') {
+                                    $all_charges += (float) $acqi->getAmount();
+                                    $all_charges_vat += (float) $acqi->getVatOrTax();
+                                } else {
+                                    // allowance subtract
+                                    $all_allowances += (float) $acqi->getAmount();
+                                    $all_allowances_vat += (float) $acqi->getVatOrTax();
+                                }
+                            }
+                            // Record the charges and allowances in the QuoteItemAmount Entity
+                            $quote_item_amount->setCharge($all_charges);
+                            $quote_item_amount->setAllowance($all_allowances);
+                            $all_vat = $all_charges_vat - $all_allowances_vat;
+                            $qi = $quote_item_amount->getQuoteItem();
+                            $current_item_quantity = $qi?->getQuantity() ?? 0.00;
+                            $current_item_price = $qi?->getPrice() ?? 0.00;
+                            $discount_per_item = $qi?->getDiscountAmount() ?? 0.00;
+                            $quantity_price = $current_item_quantity * $current_item_price;
+                            $current_discount_item_total = $current_item_quantity * $discount_per_item;
+                            $tax_percent = $qi?->getTaxRate()?->getTaxRatePercent();
+                            $qpIncAc = $quantity_price + $all_charges - $all_allowances;
+                            $current_tax_total = ($qpIncAc - $current_discount_item_total) * ($tax_percent ?? 0.00) / 100.00;
+                            $new_tax_total = $current_tax_total + ($this->sR->getSetting('enable_vat_registration') == '0' ? 0.00 : $all_vat);
+                            // include all item allowance charges in the subtotal
+                            $quote_item_amount->setSubtotal($qpIncAc);
+                            $quote_item_amount->setDiscount($current_discount_item_total);
+                            $quote_item_amount->setTaxTotal($new_tax_total);
+                            $overall_total = $qpIncAc - $current_discount_item_total + $new_tax_total;
+                            $quote_item_amount->setTotal($overall_total);
+                            $deps->qiaR->save($quote_item_amount);
+                            // update the quote amount
+                            $this->quoteAmountService->updateQuoteAmount((int) $quote_id, $deps->qaR, $deps->qiaR, $deps->qtrR, $this->numberHelper);
+                        }
+                        $response = null !== $quote_item_amount
+                            ? $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id])
+                            : $this->webService->getNotFoundResponse();
+                    }
+                } else {
                     $parameters['form'] = $form;
-                } // request
-                return $this->webViewRenderer->render('_form', $parameters);
-            } // is_array
-        } // if acii
-        return $this->webService->getRedirectResponse('index');
+                }
+            }
+        }
+        if ($response !== null) {
+            return $response;
+        }
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     //For rbac refer to AccessChecker

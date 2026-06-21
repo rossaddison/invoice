@@ -163,13 +163,7 @@ trait View
                         $this->viewPartialDeliveryLocation(
                             $_language, $ui->dlR, $quote->getDeliveryLocationId()),
                     ];
-                    if ($this->rbacObserver($quote, $core->ucR, $core->uiR)) {
-                        return $this->webViewRenderer->render('view', $parameters);
-                    }
-                    if ($this->rbacAdmin()) {
-                        return $this->webViewRenderer->render('view', $parameters);
-                    }
-                    if ($this->rbacAccountant()) {
+                    if ($this->rbacObserver($quote, $core->ucR, $core->uiR) || $this->rbacAdmin() || $this->rbacAccountant()) {
                         return $this->webViewRenderer->render('view', $parameters);
                     }
                 } // quote_amount

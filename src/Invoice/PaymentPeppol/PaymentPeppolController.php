@@ -246,16 +246,8 @@ final class PaymentPeppolController extends BaseController
                 ),
             ];
             $inv = $paymentPeppol->getInv();
-            if (null!==$inv) {
-                if ($this->rbacObserver($inv, $ucR, $uiR)) {
-                    return $this->webViewRenderer->render('_view', $parameters);
-                }
-                if ($this->rbacAdmin()) {
-                    return $this->webViewRenderer->render('_view', $parameters);
-                }
-                if ($this->rbacAccountant()) {
-                    return $this->webViewRenderer->render('_view', $parameters);
-                }
+            if (null !== $inv && ($this->rbacObserver($inv, $ucR, $uiR) || $this->rbacAdmin() || $this->rbacAccountant())) {
+                return $this->webViewRenderer->render('_view', $parameters);
             }
         }
         return $this->webService->getRedirectResponse('paymentpeppol/index');

@@ -181,90 +181,94 @@ final class InvItemAllowanceChargeController extends BaseController
         IiacEditDeps $deps,
     ): Response {
         $acii = $this->acii($currentRoute, $deps->aciiR);
-        if ($acii) {
-            $inv_item_id = $acii->reqInvItemId();
-            $inv_item = $acii->getInvItem();
-            $inv_id = $inv_item?->reqInvId();
-            $form = InvItemAllowanceChargeForm::show($acii, $inv_item_id);
-            $parameters = [
-                'title' => $this->translator->translate('edit'),
-                'actionName' => 'invitemallowancecharge/edit',
-                'actionArguments' => ['id' => $acii->reqId()],
-                'errors' => [],
-                'form' => $form,
-                'allowance_charges' => $deps->acR->findAllPreloaded(),
-                'inv_id' => $inv_id,
-                'inv_item_id' => $inv_item_id,
-            ];
-            $body = $request->getParsedBody() ?? [];
-            if (is_array($body)) {
-                /** @var string $body['allowance_charge_id'] */
-                $allowance_charge_id = (int) ($body['allowance_charge_id'] ?? 0);
-                /** @var float $body['amount'] */
-                $amount = $body['amount'] ?? 0.00;
-                if ($request->getMethod() === Method::POST) {
-                    if ($allowance_charge_id > 0) {
-                        $ac = $deps->acR->repoAllowanceChargequery($allowance_charge_id);
-                        if ($ac) {
-                            $percent = $ac->getTaxRate()?->getTaxRatePercent() ?? 0.00;
-                            $vat = $amount * $percent / 100.00;
-                            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                                $this->aciiService->saveInvItemAllowanceCharge($acii, $body, $vat);
-                                $all_charges = 0.00;
-                                $all_allowances = 0.00;
-                                $all_allowances_vat = 0.00;
-                                $all_charges_vat = 0.00;
-                                $aciis = $deps->aciiR->repoInvItemquery($inv_item_id);
-                                $inv_item_amount = $deps->iiaR->repoInvItemAmountquery($inv_item_id);
-                                if (null !== $inv_item_amount) {
-                                    /** @var InvItemAllowanceCharge $acii */
-                                    foreach ($aciis as $acii) {
-                                        // charge add
-                                        if ($acii->getAllowanceCharge()?->getIdentifier() == '1') {
-                                            $all_charges += (float) $acii->getAmount();
-                                            $all_charges_vat += (float) $acii->getVatOrTax();
-                                        } else {
-                                            // allowance subtract
-                                            $all_allowances += (float) $acii->getAmount();
-                                            $all_allowances_vat += (float) $acii->getVatOrTax();
-                                        }
-                                    }
-                                    // Record the charges and allowances in the InvItemAmount Entity
-                                    $inv_item_amount->setCharge($all_charges);
-                                    $inv_item_amount->setAllowance($all_allowances);
-                                    $all_vat = $all_charges_vat - $all_allowances_vat;
-                                    $current_item_quantity = $inv_item_amount->getInvItem()?->getQuantity() ?? 0.00;
-                                    $current_item_price = $inv_item_amount->getInvItem()?->getPrice() ?? 0.00;
-                                    $discount_per_item = $inv_item_amount->getInvItem()?->getDiscountAmount() ?? 0.00;
-                                    $quantity_price = $current_item_quantity * $current_item_price;
-                                    $current_discount_item_total = $current_item_quantity * $discount_per_item;
-                                    $tax_percent = $inv_item_amount->getInvItem()?->getTaxRate()?->getTaxRatePercent();
-                                    $qpIncAc = $quantity_price + $all_charges - $all_allowances;
-                                    $current_tax_total = ($qpIncAc - $current_discount_item_total) * ($tax_percent ?? 0.00) / 100.00;
-                                    $new_tax_total = $current_tax_total + ($this->sR->getSetting('enable_vat_registration') == '0' ? 0.00 : $all_vat);
-                                    // include all item allowance charges in the subtotal
-                                    $inv_item_amount->setSubtotal($qpIncAc);
-                                    $inv_item_amount->setDiscount($current_discount_item_total);
-                                    $inv_item_amount->setTaxTotal($new_tax_total);
-                                    $overall_total = $qpIncAc - $current_discount_item_total + $new_tax_total;
-                                    $inv_item_amount->setTotal($overall_total);
-                                    $deps->iiaR->save($inv_item_amount);
-                                    // update the inv amount
-                                    $this->invAmountService->updateInvAmount((int) $inv_id, $deps->iaR, $deps->iiaR, $deps->itrR, $this->numberHelper);
-                                    return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
-                                } //null !==$inv_item_amount
-                                return $this->webService->getNotFoundResponse();
-                            } // $form
-                            return $this->webService->getNotFoundResponse();
-                        } //allowance_charge
-                        return $this->webService->getNotFoundResponse();
-                    } // allowance_charge_id
+        if (!$acii) {
+            return $this->webService->getRedirectResponse('index');
+        }
+        $inv_item_id = $acii->reqInvItemId();
+        $inv_item = $acii->getInvItem();
+        $inv_id = $inv_item?->reqInvId();
+        $form = InvItemAllowanceChargeForm::show($acii, $inv_item_id);
+        $parameters = [
+            'title' => $this->translator->translate('edit'),
+            'actionName' => 'invitemallowancecharge/edit',
+            'actionArguments' => ['id' => $acii->reqId()],
+            'errors' => [],
+            'form' => $form,
+            'allowance_charges' => $deps->acR->findAllPreloaded(),
+            'inv_id' => $inv_id,
+            'inv_item_id' => $inv_item_id,
+        ];
+        $body = $request->getParsedBody() ?? [];
+        $response = null;
+        if (is_array($body)) {
+            /** @var string $body['allowance_charge_id'] */
+            $allowance_charge_id = (int) ($body['allowance_charge_id'] ?? 0);
+            /** @var float $body['amount'] */
+            $amount = $body['amount'] ?? 0.00;
+            if ($request->getMethod() === Method::POST) {
+                if ($allowance_charge_id > 0) {
+                    $ac = $deps->acR->repoAllowanceChargequery($allowance_charge_id);
+                    if ($ac === null || !$formHydrator->populateFromPostAndValidate($form, $request)) {
+                        $response = $this->webService->getNotFoundResponse();
+                    } else {
+                        $percent = $ac->getTaxRate()?->getTaxRatePercent() ?? 0.00;
+                        $vat = $amount * $percent / 100.00;
+                        $this->aciiService->saveInvItemAllowanceCharge($acii, $body, $vat);
+                        $all_charges = 0.00;
+                        $all_allowances = 0.00;
+                        $all_allowances_vat = 0.00;
+                        $all_charges_vat = 0.00;
+                        $aciis = $deps->aciiR->repoInvItemquery($inv_item_id);
+                        $inv_item_amount = $deps->iiaR->repoInvItemAmountquery($inv_item_id);
+                        if (null !== $inv_item_amount) {
+                            /** @var InvItemAllowanceCharge $acii */
+                            foreach ($aciis as $acii) {
+                                // charge add
+                                if ($acii->getAllowanceCharge()?->getIdentifier() == '1') {
+                                    $all_charges += (float) $acii->getAmount();
+                                    $all_charges_vat += (float) $acii->getVatOrTax();
+                                } else {
+                                    // allowance subtract
+                                    $all_allowances += (float) $acii->getAmount();
+                                    $all_allowances_vat += (float) $acii->getVatOrTax();
+                                }
+                            }
+                            // Record the charges and allowances in the InvItemAmount Entity
+                            $inv_item_amount->setCharge($all_charges);
+                            $inv_item_amount->setAllowance($all_allowances);
+                            $all_vat = $all_charges_vat - $all_allowances_vat;
+                            $current_item_quantity = $inv_item_amount->getInvItem()?->getQuantity() ?? 0.00;
+                            $current_item_price = $inv_item_amount->getInvItem()?->getPrice() ?? 0.00;
+                            $discount_per_item = $inv_item_amount->getInvItem()?->getDiscountAmount() ?? 0.00;
+                            $quantity_price = $current_item_quantity * $current_item_price;
+                            $current_discount_item_total = $current_item_quantity * $discount_per_item;
+                            $tax_percent = $inv_item_amount->getInvItem()?->getTaxRate()?->getTaxRatePercent();
+                            $qpIncAc = $quantity_price + $all_charges - $all_allowances;
+                            $current_tax_total = ($qpIncAc - $current_discount_item_total) * ($tax_percent ?? 0.00) / 100.00;
+                            $new_tax_total = $current_tax_total + ($this->sR->getSetting('enable_vat_registration') == '0' ? 0.00 : $all_vat);
+                            // include all item allowance charges in the subtotal
+                            $inv_item_amount->setSubtotal($qpIncAc);
+                            $inv_item_amount->setDiscount($current_discount_item_total);
+                            $inv_item_amount->setTaxTotal($new_tax_total);
+                            $overall_total = $qpIncAc - $current_discount_item_total + $new_tax_total;
+                            $inv_item_amount->setTotal($overall_total);
+                            $deps->iiaR->save($inv_item_amount);
+                            // update the inv amount
+                            $this->invAmountService->updateInvAmount((int) $inv_id, $deps->iaR, $deps->iiaR, $deps->itrR, $this->numberHelper);
+                        }
+                        $response = null !== $inv_item_amount
+                            ? $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id])
+                            : $this->webService->getNotFoundResponse();
+                    }
+                } else {
                     $parameters['form'] = $form;
-                } // request
-                return $this->webViewRenderer->render('_form', $parameters);
-            } // is_array
-        } // if acii
-        return $this->webService->getRedirectResponse('index');
+                }
+            }
+        }
+        if ($response !== null) {
+            return $response;
+        }
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     //For rbac refer to AccessChecker

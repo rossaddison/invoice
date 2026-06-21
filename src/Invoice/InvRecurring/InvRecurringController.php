@@ -117,39 +117,36 @@ final class InvRecurringController extends BaseController
         IR $iR,
     ): Response {
         $inv_id = (int) $currentRoute->getArgument('inv_id');
+        $baseInvoice = $inv_id > 0 ? $iR->repoInvUnloadedquery($inv_id) : null;
+        if (null === $baseInvoice) {
+            return $this->webService->getNotFoundResponse();
+        }
+        if ($baseInvoice->reqStatusId() != 2) {
+            $this->flashMessage('danger', $this->translator->translate('recurring.status.sent.only') . '❗');
+            return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
+        }
         $invRecurring = new InvRecurring();
         $form = new InvRecurringForm();
-        if ($inv_id > 0) {
-            $baseInvoice = $iR->repoInvUnloadedquery($inv_id);
-            if (null !== $baseInvoice) {
-                // Only invoices with a status of sent can be  made recurring
-                if ($baseInvoice->reqStatusId() == 2) {
-                    $invDateCreated = $baseInvoice->getDateCreated();
-                    $parameters = [
-                        'title' => $this->translator->translate('add'),
-                        'actionName' => 'invrecurring/add',
-                        'actionArguments' => ['inv_id' => $inv_id],
-                        'errors' => [],
-                        'invDateCreated' => $invDateCreated,
-                        'form' => $form,
-                    ];
-                    if ($request->getMethod() === Method::POST) {
-                        $body = $request->getParsedBody() ?? [];
-                        if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
-                                $this->invrecurringService->saveInvRecurring($invRecurring, $body);
-                                return $this->webService->getRedirectResponse('invrecurring/index');
-                        }
-                        $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-                        $parameters['form'] = $form;
-                    }
-                    return $this->webViewRenderer->render('_form', $parameters);
-                }
-                $this->flashMessage('danger', $this->translator->translate('recurring.status.sent.only') . '❗');
-                // Redirect back to the invoice view instead of showing 404
-                return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
+        $parameters = [
+            'title' => $this->translator->translate('add'),
+            'actionName' => 'invrecurring/add',
+            'actionArguments' => ['inv_id' => $inv_id],
+            'errors' => [],
+            'invDateCreated' => $baseInvoice->getDateCreated(),
+            'form' => $form,
+        ];
+        $redirect = null;
+        if ($request->getMethod() === Method::POST) {
+            $body = $request->getParsedBody() ?? [];
+            if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
+                $this->invrecurringService->saveInvRecurring($invRecurring, $body);
+                $redirect = $this->webService->getRedirectResponse('invrecurring/index');
+            } else {
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+                $parameters['form'] = $form;
             }
         }
-        return $this->webService->getNotFoundResponse();
+        return $redirect ?? $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**

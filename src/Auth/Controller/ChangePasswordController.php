@@ -42,20 +42,21 @@ final class ChangePasswordController
             return $this->redirectToMain();
         }
         $identityId = $this->currentUser->getIdentity()->getId();
-        if (null !== $identityId) {
-            $identity = $identityRepository->findIdentity($identityId);
-            if (null !== $identity) {
+        $identity = null !== $identityId ? $identityRepository->findIdentity($identityId) : null;
+        if (null === $identity) {
+            return $this->redirectToMain();
+        }
 /**
  * Identity and User are in a HasOne relationship so no null value
  * Get the username or emailaddress of the current user
  * Related logic: see src\User\User function getLogin()
  */
-                $login = $identity->getUser()?->getLogin();
-                if ($request->getMethod() === Method::POST
-                    && $formHydrator->populate($changePasswordForm,
-                            $request->getParsedBody())
-                    && $changePasswordForm->change()
-                ) {
+        $login = $identity->getUser()?->getLogin();
+        $successRedirect = null;
+        if ($request->getMethod() === Method::POST
+            && $formHydrator->populate($changePasswordForm, $request->getParsedBody())
+            && $changePasswordForm->change()
+        ) {
 // Identity implements CookieLoginIdentityInterface: ensure the regeneration of
 //  the cookie auth key by means of $authService->logout();
 // Related logic: see vendor\yiisoft\user\src\Login\Cookie\
@@ -66,24 +67,18 @@ final class ChangePasswordController
 //  for old sessions.
 // The authService logout function will regenerate the auth key here =>
 //  overwriting any auth key
-                    $authService->logout();
-                    $this->flashMessage('success',
-                        $this->translator->translate(
-                            'validator.password.change'));
-                    return $this->redirectToMain();
-                }
-                $errors = $changePasswordForm->isValidated()
-                    ? $changePasswordForm->getValidationResult()
-                                         ->getErrorMessagesIndexedByProperty()
-                    : [];
-                return $this->webViewRenderer->render('change', [
-                    'formModel' => $changePasswordForm,
-                    'login' => $login,
-                    'errors' => $errors,
-                ]);
-            } // identity
-        } // identityId
-        return $this->redirectToMain();
+            $authService->logout();
+            $this->flashMessage('success', $this->translator->translate('validator.password.change'));
+            $successRedirect = $this->redirectToMain();
+        }
+        $errors = $changePasswordForm->isValidated()
+            ? $changePasswordForm->getValidationResult()->getErrorMessagesIndexedByProperty()
+            : [];
+        return $successRedirect ?? $this->webViewRenderer->render('change', [
+            'formModel' => $changePasswordForm,
+            'login' => $login,
+            'errors' => $errors,
+        ]);
     } // change
 
     /**

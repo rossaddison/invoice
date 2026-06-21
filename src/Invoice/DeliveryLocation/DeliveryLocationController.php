@@ -218,17 +218,11 @@ final class DeliveryLocationController extends BaseController
                         $url = $origin . '/' . $action;
 // Route::methods([Method::GET, Method::POST],
 //  '/del/edit/{client_id}[/{origin}/{origin_id}/{action}]')
-                        if ($origin_id) {
-// Redirect to client/view: invoice.myhost/invoice/del/add/25/client/25/view
-                            /**
-                             * @psalm-suppress MixedArgumentTypeCoercion
-                             */
-                            return $this->webService->getRedirectResponse($url, [
-                                'id' => $origin_id,
-                            ]);
-                        }
-                        // Redirect to inv/index
-                        return $this->webService->getRedirectResponse($url);
+// Redirect to client/view or inv/index
+                        /** @psalm-suppress MixedArgumentTypeCoercion */
+                        return $origin_id
+                            ? $this->webService->getRedirectResponse($url, ['id' => $origin_id])
+                            : $this->webService->getRedirectResponse($url);
                 }
                 $parameters['errors'] =
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();

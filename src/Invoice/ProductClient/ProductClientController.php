@@ -98,6 +98,9 @@ final class ProductClientController extends BaseController
 
         // Get current processing index
         $currentIndex = (int)($queryParams['index'] ?? 0);
+        $currentProductId = 0;
+        $product = null;
+        $redirect = null;
 
         if ($currentIndex >= count($productIds)) {
             // All products processed
@@ -107,71 +110,61 @@ final class ProductClientController extends BaseController
                     'product.client.associations.completed'),
                 true
             );
-            return $this->webService->getRedirectResponse('productclient/index');
-        }
+            $redirect = $this->webService->getRedirectResponse('productclient/index');
+        } else {
+            $currentProductId = $productIds[$currentIndex];
+            $product = $productRepository->repoProductQuery($currentProductId);
 
-        $currentProductId = $productIds[$currentIndex];
-        $product = $productRepository->repoProductQuery($currentProductId);
-
-        if (!$product) {
-            $this->flash->add(
-                'danger',
-                $this->translator->translate('product.not.found') .
-                    ': ' . $currentProductId,
-                true
-            );
-            return $this->webService->getRedirectResponse('family/index');
-        }
-
-        // Handle form submission
-        if ($request->getMethod() === Method::POST && is_array($body)) {
-            /** @var array<string, mixed> $body */
-            $associationType = (string) ($body['association_type'] ?? 'existing');
-            $suggestedClientGroup = $this->getClientGroupFromSession();
-
-            if ($associationType === 'existing') {
-                // Associate with existing client
-                $clientId = (int)($body['client_id'] ?? 0);
-                if ($clientRepository->repoClientCount($clientId) > 0) {
-                    $client = $clientRepository->repoClientQuery($clientId);
-                    // Save client group for future suggestions
-                    if (strlen($clientGroup = ($client->getClientGroup() ?? '')) > 0) {
-                        $this->saveClientGroupToSession($clientGroup);
-                    }
-
-                    // Create association
-                    $this->createProductClientAssociation(
-                        $currentProductId, $clientId);
-
-                    // Move to next product
-                    return $this->redirectToNextProduct(
-                        $productIds, $currentIndex + 1);
-                }
-            } else {
-                // Create new client
-                $newClient = $this->createNewClient($body, $suggestedClientGroup);
-
-                if ($newClient) {
-                    // Save client group for future suggestions
-                    if (strlen($clientGroup = ($newClient->getClientGroup() ?? '')) > 0) {
-                        $this->saveClientGroupToSession($clientGroup);
-                    }
-
-                    // Create association
-                    $clientId = $newClient->reqId();
-                    $this->createProductClientAssociation($currentProductId,
-                        $clientId);
-
-                    // Move to next product
-                    return $this->redirectToNextProduct($productIds, $currentIndex + 1);
-                }
-
+            if (!$product) {
                 $this->flash->add(
                     'danger',
-                    $this->translator->translate('failed.to.create.client'),
+                    $this->translator->translate('product.not.found') .
+                        ': ' . $currentProductId,
                     true
                 );
+                $redirect = $this->webService->getRedirectResponse('family/index');
+            } elseif ($request->getMethod() === Method::POST && is_array($body)) {
+                // Handle form submission
+                /** @var array<string, mixed> $body */
+                $associationType = (string) ($body['association_type'] ?? 'existing');
+                $suggestedClientGroup = $this->getClientGroupFromSession();
+
+                if ($associationType === 'existing') {
+                    // Associate with existing client
+                    $clientId = (int)($body['client_id'] ?? 0);
+                    if ($clientRepository->repoClientCount($clientId) > 0) {
+                        $client = $clientRepository->repoClientQuery($clientId);
+                        // Save client group for future suggestions
+                        if (strlen($clientGroup = ($client->getClientGroup() ?? '')) > 0) {
+                            $this->saveClientGroupToSession($clientGroup);
+                        }
+                        $this->createProductClientAssociation($currentProductId, $clientId);
+                        $redirect = $this->redirectToNextProduct($productIds, $currentIndex + 1);
+                    }
+                } else {
+                    // Create new client
+                    $newClient = $this->createNewClient($body, $suggestedClientGroup);
+                    if ($newClient) {
+                        // Save client group for future suggestions
+                        if (strlen($clientGroup = ($newClient->getClientGroup() ?? '')) > 0) {
+                            $this->saveClientGroupToSession($clientGroup);
+                        }
+                        $clientId = $newClient->reqId();
+                        $this->createProductClientAssociation($currentProductId, $clientId);
+                        $redirect = $this->redirectToNextProduct($productIds, $currentIndex + 1);
+                    } else {
+                        $this->flash->add(
+                            'danger',
+                            $this->translator->translate('failed.to.create.client'),
+                            true
+                        );
+                    }
+                }
             }
+        }
+
+        if ($redirect !== null) {
+            return $redirect;
         }
 
         // Show association form for current product

@@ -58,27 +58,21 @@ final class ResetPasswordController
         tR $tR,
     ): Response {
         $unMaskedToken = TokenMask::remove($maskedToken);
-        $positionFromUnderscore = strrpos($unMaskedToken, '_');
-        if ($positionFromUnderscore === false) {
-            return $this->failedReset();
-        }
-        $timestamp = substr($unMaskedToken, $positionFromUnderscore + 1);
-        $tokenRandomStringOnly = substr($unMaskedToken, 0, -(strlen($timestamp) + 1));
-        if ((int) $timestamp + 3600 < time()) {
-            return $this->failedReset();
-        }
-        $identity = $tR->findIdentityByToken(
-            $tokenRandomStringOnly,
-            self::REQUEST_PASSWORD_RESET_TOKEN);
-        if (null === $identity) {
-            return $this->failedReset();
-        }
-        $user = $identity->getUser();
-        if (null === $user) {
-            return $this->failedReset();
-        }
-        $identityId = (int) $identity->getId();
-        if ($identityId <= 0) {
+        $pos = strrpos($unMaskedToken, '_');
+        $timestamp = $pos !== false ? substr($unMaskedToken, $pos + 1) : '0';
+        $tokenRand = $pos !== false ? substr($unMaskedToken, 0, -(strlen($timestamp) + 1)) : '';
+        $identity = ($pos !== false && (int) $timestamp + 3600 >= time())
+            ? $tR->findIdentityByToken($tokenRand, self::REQUEST_PASSWORD_RESET_TOKEN)
+            : null;
+        $user = $identity?->getUser();
+        $identityId = $identity !== null ? (int) $identity->getId() : 0;
+
+        if ($pos === false
+            || (int) $timestamp + 3600 < time()
+            || $identity === null
+            || $user === null
+            || $identityId <= 0
+        ) {
             return $this->failedReset();
         }
         if (!$formHydrator->populateFromPostAndValidate($resetPasswordForm, $request)) {
@@ -92,9 +86,7 @@ final class ResetPasswordController
         // 2.) nullify PasswordResetToken (retain Token:type so it can be reissued)
         // Related logic: see https://github.com/yiisoft/yii2-app-advanced/blob/master/
         //  frontend/models/ResetPasswordForm.php
-        $tokenRecord = $tR->findTokenByIdentityIdAndType(
-            $identityId,
-            self::REQUEST_PASSWORD_RESET_TOKEN);
+        $tokenRecord = $tR->findTokenByIdentityIdAndType($identityId, self::REQUEST_PASSWORD_RESET_TOKEN);
         if (null !== $tokenRecord) {
             $tokenRecord->setToken('');
             $tR->save($tokenRecord);

@@ -58,102 +58,102 @@ trait QuoteToInvoice
         $body = $request->getQueryParams();
         $quote_id = (int) $body['quote_id'];
         $quote = $core->qR->repoQuoteUnloadedquery($quote_id);
-        if ($quote) {
-            // Check if quote has already been converted to an invoice
-            if ($quote->getInvId() !== 0) {
-                $parameters = [
-                    'success' => 0,
-                    'flash_message' => $this->translator->translate(
-                        'quote.invoice.already.created.from.quote'),
-                ];
-                return $this->factory->createResponse(Json::encode($parameters));
-            }
-            $ajax_body = [
-                'client_id' => $body['client_id'],
-                'group_id' => $body['group_id'],
-                'status_id' => 1,
-                'quote_id' => $quote->reqId(),
-                'is_read_only' => 0,
-                'date_created' =>
-                    (new \DateTimeImmutable('now'))->format('Y-m-d'),
-                'password' => $body['password'] ?? '',
-                'number' => '',
-                'discount_amount' => (float) $quote->getDiscountAmount(),
-                'url_key' => $quote->getUrlKey(),
-                'payment_method' => 0,
-                'terms' => '',
-                'creditinvoice_parent_id' => '',
+        if (!$quote) {
+            return $this->webService->getNotFoundResponse();
+        }
+        // Check if quote has already been converted to an invoice
+        if ($quote->getInvId() !== 0) {
+            $parameters = [
+                'success' => 0,
+                'flash_message' => $this->translator->translate(
+                    'quote.invoice.already.created.from.quote'),
             ];
-            $inv = new \App\Infrastructure\Persistence\Inv\Inv();
-            $form = new InvForm();
-            if ($formHydrator->populateAndValidate($form, $ajax_body)) {
-                /**
-                 * @var string $ajax_body['client_id']
-                 */
-                $client_id = (int) $ajax_body['client_id'];
-                $user_client = $userDeps->ucR->repoUserquery($client_id);
-                $user_client_count = $userDeps->ucR->repoUserquerycount($client_id);
-                if (null !== $user_client && $user_client_count == 1) {
-                    // Only one user account per client
-                    $user_id = $user_client->reqUserId();
-                    $user = $userDeps->uR->findById($user_id);
-                    $user_inv = $userDeps->uiR->repoUserInvUserIdquery($user_id);
-                    if (null !== $user_inv && $user_inv->getActive()) {
-                        // Generate number only after validation passes
-                        $ajax_body['number'] =
-                            (string) $core->gR->generateNumber((int) $body['group_id']);
-                        $this->inv_service->saveInv($user, $inv, $ajax_body,
-                            $this->sR, $core->gR);
-                        $inv_id = $inv->reqId();
-                        // Transfer each quote_item to inv_item and the
-                        // corresponding quote_item_amount to
-                        // inv_item_amount for each item
-                        $this->quoteToInvoiceQuoteItems(
-                            $quote_id, $inv_id, $formHydrator,
-                            $core, $items, $transfer);
-                        $this->quoteToInvoiceQuoteTaxRates(
-                            $quote_id, $inv_id, $items->qtrR, $formHydrator);
-                        $this->quoteToInvoiceQuoteCustom(
-                            $quote_id, $inv_id, $core->qcR,
-                            $transfer->cfR, $formHydrator);
-                        $this->quoteToInvoiceQuoteAmount(
-                            $quote_id, $inv_id, $core->qaR, $formHydrator);
-                        $this->quoteToInvoiceQuoteAllowanceCharges(
-                            $quote_id, $inv_id, $core->acqR, $formHydrator);
-                        // Update the quotes inv_id.
-                        $quote->setInvId($inv_id);
-                        $core->qR->save($quote);
-                        // Update the quote amounts after conversion
-                        $this->quote_amount_service->updateQuoteAmount(
-                            $quote_id, $core->qaR, $transfer->qiaR, $items->qtrR,
-                            $this->numberHelper);
-                        $parameters = [
-                            'success' => 1,
-                            'flash_message' =>
-                                $this->translator->translate(
-                                    'quote.copied.to.invoice'),
-                            'redirect_url' =>
-                            $this->url_generator->generate('inv/view',
-                                    ['_language' =>
-                                        (string) $this->session->get('_language'),
-                                        'id' => $inv_id]),
-                        ];
-                        return $this->factory->createResponse(
-                            Json::encode($parameters));
-                    } // null!==$user_inv && $user_inv->getActive()
-                } // null!==$user_client && $user_client_count==1
-            } else {
-                $parameters = [
-                    'success' => 0,
-                    'flash_message' => $this->translator->translate(
-                        'quote.not.copied.to.invoice'),
-                ];
-                //return response to quote.js to reload page at location
-                return $this->factory->createResponse(
-                    Json::encode($parameters));
-            }
-        } // quote
-        return $this->webService->getNotFoundResponse();
+            return $this->factory->createResponse(Json::encode($parameters));
+        }
+        $ajax_body = [
+            'client_id' => $body['client_id'],
+            'group_id' => $body['group_id'],
+            'status_id' => 1,
+            'quote_id' => $quote->reqId(),
+            'is_read_only' => 0,
+            'date_created' =>
+                (new \DateTimeImmutable('now'))->format('Y-m-d'),
+            'password' => $body['password'] ?? '',
+            'number' => '',
+            'discount_amount' => (float) $quote->getDiscountAmount(),
+            'url_key' => $quote->getUrlKey(),
+            'payment_method' => 0,
+            'terms' => '',
+            'creditinvoice_parent_id' => '',
+        ];
+        $inv = new \App\Infrastructure\Persistence\Inv\Inv();
+        $form = new InvForm();
+        $result = null;
+        if ($formHydrator->populateAndValidate($form, $ajax_body)) {
+            /**
+             * @var string $ajax_body['client_id']
+             */
+            $client_id = (int) $ajax_body['client_id'];
+            $user_client = $userDeps->ucR->repoUserquery($client_id);
+            $user_client_count = $userDeps->ucR->repoUserquerycount($client_id);
+            if (null !== $user_client && $user_client_count == 1) {
+                // Only one user account per client
+                $user_id = $user_client->reqUserId();
+                $user = $userDeps->uR->findById($user_id);
+                $user_inv = $userDeps->uiR->repoUserInvUserIdquery($user_id);
+                if (null !== $user_inv && $user_inv->getActive()) {
+                    // Generate number only after validation passes
+                    $ajax_body['number'] =
+                        (string) $core->gR->generateNumber((int) $body['group_id']);
+                    $this->inv_service->saveInv($user, $inv, $ajax_body,
+                        $this->sR, $core->gR);
+                    $inv_id = $inv->reqId();
+                    // Transfer each quote_item to inv_item and the
+                    // corresponding quote_item_amount to
+                    // inv_item_amount for each item
+                    $this->quoteToInvoiceQuoteItems(
+                        $quote_id, $inv_id, $formHydrator,
+                        $core, $items, $transfer);
+                    $this->quoteToInvoiceQuoteTaxRates(
+                        $quote_id, $inv_id, $items->qtrR, $formHydrator);
+                    $this->quoteToInvoiceQuoteCustom(
+                        $quote_id, $inv_id, $core->qcR,
+                        $transfer->cfR, $formHydrator);
+                    $this->quoteToInvoiceQuoteAmount(
+                        $quote_id, $inv_id, $core->qaR, $formHydrator);
+                    $this->quoteToInvoiceQuoteAllowanceCharges(
+                        $quote_id, $inv_id, $core->acqR, $formHydrator);
+                    // Update the quotes inv_id.
+                    $quote->setInvId($inv_id);
+                    $core->qR->save($quote);
+                    // Update the quote amounts after conversion
+                    $this->quote_amount_service->updateQuoteAmount(
+                        $quote_id, $core->qaR, $transfer->qiaR, $items->qtrR,
+                        $this->numberHelper);
+                    $result = [
+                        'success' => 1,
+                        'flash_message' =>
+                            $this->translator->translate(
+                                'quote.copied.to.invoice'),
+                        'redirect_url' =>
+                        $this->url_generator->generate('inv/view',
+                                ['_language' =>
+                                    (string) $this->session->get('_language'),
+                                    'id' => $inv_id]),
+                    ];
+                } // null!==$user_inv && $user_inv->getActive()
+            } // null!==$user_client && $user_client_count==1
+        } else {
+            $result = [
+                'success' => 0,
+                'flash_message' => $this->translator->translate(
+                    'quote.not.copied.to.invoice'),
+            ];
+        }
+        //return response to quote.js to reload page at location
+        return $result !== null
+            ? $this->factory->createResponse(Json::encode($result))
+            : $this->webService->getNotFoundResponse();
     }
 
     private function quoteToInvoiceQuoteItems(
