@@ -210,9 +210,10 @@ final class OpenBankingPaymentService
                     ],
                 ]);
                 $body = (array) json_decode((string) $response->getBody(), true);
+                $data = $body ?: [];
                 $result = (isset($body['status']) && $body['status'] === 'paid')
                     ? ['success' => true, 'data' => $body]
-                    : ['success' => false, 'data' => $body ?: []];
+                    : ['success' => false, 'data' => $data];
             } catch (\Throwable $e) {
                 $result = ['success' => false, 'error' => $e->getMessage()];
             }

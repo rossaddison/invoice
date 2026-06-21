@@ -97,7 +97,8 @@ trait Attachment
         if (!is_writable($targetPath) && $inv_id) {
             return $this->attachmentNotWritable($inv_id);
         }
-        $invoice = $inv_id ? ($iR->repoInvLoadedquery($inv_id) ?: null) : null;
+        $loaded = $inv_id ? $iR->repoInvLoadedquery($inv_id) : null;
+        $invoice = $loaded ?: null;
         $client_id = ($invoice instanceof Inv) ? $invoice->getClient()?->reqId() : null;
         if (!($invoice instanceof Inv) || null === $client_id) {
             return $this->webService->getRedirectResponse('inv/index');
