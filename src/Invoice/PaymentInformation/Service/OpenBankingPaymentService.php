@@ -66,7 +66,7 @@ final class OpenBankingPaymentService
      * @param array{authUrl:non-empty-string,tokenUrl:non-empty-string,scope?:string}|null $providerConfig
      * @param non-empty-string                                                             $url_key
      *
-     * @throws \RuntimeException
+     * @throws OpenBankingPaymentException
      */
     public function fetchToken(
         ServerRequestInterface $request,
@@ -112,9 +112,9 @@ final class OpenBankingPaymentService
         }
         try {
             if (null === $activeCompanyPrivate) {
-                throw new \RuntimeException('CompanyPrivate: Today\'s date does not fall within Start Date and End Date');
+                throw new OpenBankingPaymentException('CompanyPrivate: Today\'s date does not fall within Start Date and End Date');
             }
-            $iban = $activeCompanyPrivate->getIban() ?? throw new \RuntimeException('IBAN not configured');
+            $iban = $activeCompanyPrivate->getIban() ?? throw new OpenBankingPaymentException('IBAN not configured');
             $market = strtoupper(substr($iban, 0, 2));
             // Step 1: Get access token
             $client = new \GuzzleHttp\Client();
@@ -129,7 +129,7 @@ final class OpenBankingPaymentService
             $tokenData = (array) json_decode($tokenResponse->getBody()->getContents(), true);
             $accessToken = (string) ($tokenData['access_token'] ?? '');
             if (strlen($accessToken) == 0) {
-                throw new \RuntimeException('Unable to fetch access token');
+                throw new OpenBankingPaymentException('Unable to fetch access token');
             }
             // Step 2: Create payment request
             $response = $client->post((string) $providerConfig['paymentRequestUrl'], [
