@@ -122,7 +122,7 @@ final class UserClientController extends BaseController
         UIR $uiR,
     ): Response {
         $user_id = (int) $currentRoute->getArgument('user_id');
-        if (!($user_id > 0)) {
+        if ($user_id <= 0) {
             return $this->webService->getRedirectResponse('userinv/index');
         }
         // Get possible client ids as an array that can be presented to this user
