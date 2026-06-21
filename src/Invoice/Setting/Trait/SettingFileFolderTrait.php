@@ -98,7 +98,7 @@ trait SettingFileFolderTrait
      */
     public function getImg(): Aliases
     {
-        return new Aliases(['@base' => dirname(__DIR__, 3),
+        return new Aliases(['@base' => dirname(__DIR__, 4),
             '@img' => '@base/public/img',
         ]);
     }
@@ -109,7 +109,7 @@ trait SettingFileFolderTrait
      */
     public function getInvoiceTemplates(string $type = 'pdf'): array
     {
-        $aliases = new Aliases(['@base' => dirname(__DIR__, 3),
+        $aliases = new Aliases(['@base' => dirname(__DIR__, 4),
             '@pdf' => '@base/resources/views/invoice/template/invoice/pdf',
             '@public' => '@base/resources/views/invoice/template/invoice/public',
         ]);
@@ -130,7 +130,7 @@ trait SettingFileFolderTrait
      */
     public function getQuoteTemplates(string $type = 'pdf'): array
     {
-        $aliases = new Aliases(['@base' => dirname(__DIR__, 3),
+        $aliases = new Aliases(['@base' => dirname(__DIR__, 4),
             '@pdf' => '@base/resources/views/invoice/template/quote/pdf',
             '@public' => '@base/resources/views/invoice/template/quote/public',
         ]);
@@ -150,7 +150,7 @@ trait SettingFileFolderTrait
      */
     public function getInvoiceArchivedFolderAliases(): Aliases
     {
-        return new Aliases(['@base' => dirname(__DIR__, 3),
+        return new Aliases(['@base' => dirname(__DIR__, 4),
             '@archive_invoice' => '@base/src/Invoice/Uploads'
             . self::getUploadsArchiveholderRelativeUrl() . '',
         ]);
@@ -161,7 +161,7 @@ trait SettingFileFolderTrait
      */
     public function getCustomerFilesFolderAliases(): Aliases
     {
-        return new Aliases(['@base' => dirname(__DIR__, 3),
+        return new Aliases(['@base' => dirname(__DIR__, 4),
             '@customer_files' => '@base/src/Invoice/Uploads'
             . self::getUploadsCustomerFilesRelativeUrl(),
             '@public' => '@base/public',
@@ -173,7 +173,7 @@ trait SettingFileFolderTrait
      */
     public function getCompanyPrivateLogosFolderAliases(): Aliases
     {
-        return new Aliases(['@base' => dirname(__DIR__, 3),
+        return new Aliases(['@base' => dirname(__DIR__, 4),
             '@company_private_logos' => '@base/src/Invoice/Uploads'
             . self::getCompanyPrivateLogosRelativefolderUrl(),
             '@public' => '@base/public',
@@ -188,7 +188,7 @@ trait SettingFileFolderTrait
      */
     public function getGoogleTranslateJsonFileAliases(): Aliases
     {
-        return new Aliases(['@base' => dirname(__DIR__, 3),
+        return new Aliases(['@base' => dirname(__DIR__, 4),
             '@google_translate_json_file_folder' => '@base/src/Invoice'
             . self::getGoogleTranslateJsonFileFolder(),
         ]);
@@ -199,7 +199,7 @@ trait SettingFileFolderTrait
      */
     public function getProductimagesFilesFolderAliases(): Aliases
     {
-        return new Aliases(['@base' => dirname(__DIR__, 3),
+        return new Aliases(['@base' => dirname(__DIR__, 4),
             // Internal folder not normally used for storage
             '@productimages_files' => '@base/src/Invoice/Uploads'
             . self::getUploadsProductImagesRelativeUrl(),
@@ -232,7 +232,7 @@ trait SettingFileFolderTrait
      */
     public function getAmazonPemFileFolderAliases(): Aliases
     {
-        return new Aliases(['@base' => dirname(__DIR__, 3),
+        return new Aliases(['@base' => dirname(__DIR__, 4),
             '@pem_file_unique_folder' => '@base/src/Invoice'
             . self::getPemFileFolder(),
         ]);
