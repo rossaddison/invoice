@@ -33,7 +33,16 @@ declare(strict_types=1);
  <b>10. Restoring a specific file from the stash:</b>
         git checkout stash@{0} -- .env
  <b>11. Pull from the repository:
-         git pull origin main
+     git pull origin main</b>
+ <b>11 a. Verify that the .env file exists at the root otherwise you are likely to get
+     a 500 error. If not restore with point 10.</b>
+ <b>11 b. Verify that the static or unchanging items.php exists at 
+        resources/rbac/items.php</b>
+ <b>11 c. Verify role assignments with: 
+     mysql -u root -p yii3_i -e "SELECT * FROM yii_rbac_assignment;" </b>
+ <b>11 c. If they do not exist do the following at the root: 
+       php yii user/assignRole admin 1
+       php yii user/assignRole observer 2</b>
  <b>12 a. Accessing the Apline mySql/mariaDB database:
          mysql -u root -p</b>
  <b>12 b. Advisable to make sure the phpMyAdmin endpoint is not visible and that
