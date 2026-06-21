@@ -124,15 +124,6 @@ trait Add
                                     'record.successfully.created')
                                     . '➡️ '
                                     . $client_fullname);
-                            if ($origin == 'main' || $origin == 'quote') {
-                                return $this->webService->getRedirectResponse(
-                                    'quote/view', ['id' => $model_id]);
-                            }
-                            if ($origin == 'dashboard') {
-                                return $this->webService->getRedirectResponse(
-                                    'quote/view', ['id' => $model_id]);
-                            }
-                            // otherwise return to new quote view (client origin)
                             return $this->webService->getRedirectResponse(
                                 'quote/view', ['id' => $model_id]);
                         }
@@ -155,29 +146,17 @@ trait Add
             return $this->webViewRenderer->render(
                 'modal_add_quote_form', $parameters);
         }
-        // show the form inside a modal when engaging with a view
-        if ($origin == 'quote') {
-            return $this->webViewRenderer->render('modal_layout', [
-                // use type to id the quote\modal_layout.php eg.
-                // ->options(['id' => 'modal-add-'.$type,
-                'type' => 'quote',
-                'form' =>
-                    $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString(
-                        $origin, $errors),
-                'return_url_action' => 'add',
-            ]);
-        }
-        // Otherwise return to client
-        if (($origin != 'main') && ($origin != 'quote')) {
-            return $this->webViewRenderer->render('modal_layout', [
-                'type' => 'client',
-                'form' =>
-                    $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString(
-                        $origin, $errors),
-                'return_url_action' => 'add',
-            ]);
-        }
-        return $this->webService->getNotFoundResponse();
+        // show the form inside a modal when engaging with a view (quote or client origin)
+        $type = ($origin == 'quote') ? 'quote' : 'client';
+        return $this->webViewRenderer->render('modal_layout', [
+            // use type to id the quote\modal_layout.php eg.
+            // ->options(['id' => 'modal-add-'.$type,
+            'type' => $type,
+            'form' =>
+                $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString(
+                    $origin, $errors),
+            'return_url_action' => 'add',
+        ]);
     }
 
     /**
@@ -213,6 +192,7 @@ trait Add
             $this->translator->translate('quote.creation.unsuccessful');
         $quote = new Quote();
         $ajax_content = QuoteForm::show($quote);
+        $successful = false;
         if ($formHydrator->populate($ajax_content, $ajax_body)
             && $ajax_content->isValid()) {
             $client_id = $ajax_body['client_id'];
@@ -239,7 +219,6 @@ trait Add
                     $this->quote_amount_service->initializeQuoteAmount(
                         new QuoteAmount(), $model_id);
                     $this->defaultTaxes($quote, $trR, $formHydrator);
-                    $parameters = ['success' => 1];
                     // Inform the user of generated invoice number for
                     // draft setting
                     $this->flashMessage(
@@ -255,30 +234,20 @@ trait Add
                             . '=>'
                             . $this->translator->translate('no'),
                     );
-                    //return response to quote.js to reload page at
-                    //location
-                    return $this->factory->createResponse(
-                        Json::encode($parameters));
-                } // null!==$user_inv && $user_inv->getActive()
-                return $this->factory->createResponse(
-                    Json::encode([
-                        'success' => 0,
-                        'message' => $unsuccessful]));
-            } // null!== $user_client && $user_client_count==1
+                    $successful = true;
+                }
             // In the event of the database being manually edited
             // (highly unlikely) present this warning anyway
-            if ($user_client_count > 1) {
+            } elseif ($user_client_count > 1) {
                 $this->flashMessage('warning', $this->translator->translate(
                     'user.inv.more.than.one.assigned'));
             }
-            return $this->factory->createResponse(
-                Json::encode(['success' => 0, 'message' => $unsuccessful]));
         }
-        $parameters = [
-            'success' => 0,
-            'message' => $unsuccessful,
-        ];
         //return response to quote.js to reload page at location
-        return $this->factory->createResponse(Json::encode($parameters));
+        return $this->factory->createResponse(
+            $successful
+                ? Json::encode(['success' => 1])
+                : Json::encode(['success' => 0, 'message' => $unsuccessful])
+        );
     }
 }

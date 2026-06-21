@@ -122,15 +122,6 @@ $user = $this->activeUser($client_id, $d->uR, $d->ucR, $d->uiR);
                         $this->flashMessage('success',
                                 $this->translator->translate(
                             'record.successfully.created'));
-                        if (($origin == 'main') || ($origin == 'inv')) {
-                            return $this->webService->getRedirectResponse(
-                                'inv/view', ['id' => $model_id]);
-                        }
-                        if ($origin == 'dashboard') {
-                            return $this->webService->getRedirectResponse(
-                                'inv/view', ['id' => $model_id]);
-                        }
-                        // otherwise return to new invoice view (client origin)
                         return $this->webService->getRedirectResponse(
                                 'inv/view', ['id' => $model_id]);
                     }
@@ -154,27 +145,15 @@ $user = $this->activeUser($client_id, $d->uR, $d->ucR, $d->uiR);
              */
             return $this->webViewRenderer->render('modal_add_inv_form', $parameters);
         }
-        // show the form inside a modal when engaging with a view
-        if ($origin == 'inv') {
-            return $this->webViewRenderer->render('modal_layout', [
-                // use type to id the inv\modal_layout.php eg.
-                // ->options(['id' => 'modal-add-'.$type,
-                'type' => 'inv',
-                'form' => $bootstrap5ModalInv->renderPartialLayoutWithFormAsString(
-                    $origin, $errors),
-                'return_url_action' => 'add',
-            ]);
-        }
-        // Otherwise return to client
-        if (($origin != 'main') && ($origin != 'inv') && ($origin != 'dashboard')) {
-            return $this->webViewRenderer->render('modal_layout', [
-                'type' => 'client',
-                'form' =>
-                $bootstrap5ModalInv->renderPartialLayoutWithFormAsString(
-                    $origin, $errors),
-                'return_url_action' => 'add',
-            ]);
-        }
-        return $this->webService->getNotFoundResponse();
+        // show the form inside a modal when engaging with a view (inv or client origin)
+        $type = ($origin == 'inv') ? 'inv' : 'client';
+        return $this->webViewRenderer->render('modal_layout', [
+            // use type to id the inv\modal_layout.php eg.
+            // ->options(['id' => 'modal-add-'.$type,
+            'type' => $type,
+            'form' => $bootstrap5ModalInv->renderPartialLayoutWithFormAsString(
+                $origin, $errors),
+            'return_url_action' => 'add',
+        ]);
     }
 }

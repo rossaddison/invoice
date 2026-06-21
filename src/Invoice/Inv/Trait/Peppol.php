@@ -43,105 +43,46 @@ trait Peppol
         InvPeppolChargeDeps $charge,
         InvPeppolInvDeps $inv,
     ): Response {
-        if ($currentUser->isGuest()) {
+        $invoice = $id ? $core->invRepo->repoInvLoadInvAmountquery($id) : null;
+        $client_id = $invoice?->getClient()?->reqId() ?? 0;
+        if ($currentUser->isGuest() || null === $invoice || $client_id <= 0) {
             return $this->webService->getNotFoundResponse();
         }
+        $delLocId = $invoice->getDeliveryLocationId();
+        $fullySetup = $this->peppolClientFullySetup($client_id, $core->cpR);
+        $delloc = $fullySetup
+            ? $core->dlR->repoDeliveryLocationquery((int) $delLocId)
+            : null;
+        if (null === $delloc) {
+            if ($fullySetup) {
+                $this->flashMessage('warning',
+                    $this->translator->translate('delivery.location.peppol.output'));
+            }
+            $this->flashMessage('warning', 'Peppol has not been setup for this client');
+            return $this->webService->getRedirectResponse('client/index');
+        }
         // Load the inv's HASONE relation 'invAmount'
-        if ($id) {
-            $invoice = $core->invRepo->repoInvLoadInvAmountquery($id);
-            if ($invoice) {
-                $client_id = $invoice->getClient()?->reqId();
-                $delLocId = $invoice->getDeliveryLocationId();
-                if ($client_id > 0) {
-                    if ($this->peppolClientFullySetup($client_id, $core->cpR)) {
-                        $delloc = $core->dlR->repoDeliveryLocationquery((int) $delLocId);
-                        if (null !== $delloc) {
-                            $inv_amount = $invoice->getInvAmount();
-                            $peppolhelper = new PeppolHelper(
-                                $this->sR,
-                                $net->delRepo,
-                                $inv_amount,
-                                $delloc,
-                                $this->translator,
-                            );
-                            $uploads_temp_peppol_absolute_path_dot_xml =
-                        $peppolhelper->generateInvoicePeppolUblXmlTempFile(
-                                $invoice,
-                                new PeppolHelperInvDeps(
-                                    $core->soR, $inv->iaR, $core->iiaR,
-                                    $inv->iiR, $core->paR, $core->cpR,
-                                ),
-                                new PeppolHelperNetDeps(
-                                    $net->contractRepo, $net->delRepo,
-                                    $net->delPartyRepo, $net->unpR, $net->upR,
-                                ),
-                                new PeppolHelperChargeDeps(
-                                    $charge->aciR, $charge->aciiR,
-                                    $charge->soiR, $charge->trR,
-                                ),
-                            );
-                            $xml = $this->peppolOutput($net->upR,
-                                    $uploads_temp_peppol_absolute_path_dot_xml);
-                            $pVal = new PeppolValidator($this->translator);
-                            // Not saving to file. Showing in Browser
-                            if ($this->sR->getSetting('peppol_xml_stream') == '1') {
-                                if (($xml !==false) && (strlen($xml) > 0)) { // NOSONAR - outer if has code after this block
-                                    if ($this->sR->getSetting(
-                               'peppol_debug_with_internal_validator') == '1') {
-                                        $pVal->loadXML($xml);
-                                        // show the e-invoice if it passes
-                                        if ($pVal->validate()) {
-                                            return $this->webService->getHtmlResponse(
-                                                '<pre>' . Html::encode($xml) . '</pre>');
-                                        // display all the errors
-                                        } else {
-                                            $parameters = [
-                                                'xmlContent' => $xml,
-                                                'errors' =>
-                                                    $pVal->getErrors(),
-                                            ];
-                                            return $this->webViewRenderer->render(
-                                                'peppolerrors', $parameters);
-                                        }
-                                    } else {
-                                        $pVal->loadXML($xml);
-                                        return $this->factory->createResponse(
-                                           '<pre>'. Html::encode($xml) . '</pre>');
-                                    }
-                                }
-                            }
-                            /**
-                             * Previously: echo $this->peppolOutput($upR,
-                             * $uploads_temp_peppol_absolute_path_dot_xml);
-                             * Related logic:
-                             * see https://cwe.mitre.org/data/definitions/79.html
-                             *
-                             * Unsanitized input from data from a remote
-                             * resource flows into the echo statement, where it
-                             * is used to render an HTML page returned to the
-                             * user. This may result in a Cross-Site Scripting
-                             * attack (XSS). Courtesy of Snyk
-                             */
-                            $this->flashMessage('info', '📁 ' .
-                            $uploads_temp_peppol_absolute_path_dot_xml
-                            .   Html::a(' Ecosio Validator',
-                    'https://ecosio.com/en/peppol-and-xml-document-validator/',
-                                    ['target' => '_blank'])
-                            );
-                            return $this->webService->getRedirectResponse(
-                                self::ROUTE_INV_VIEW, ['id' => $id]);
-                        } // null!== $delivery_location
-                        $this->flashMessage('warning',
-                            $this->translator->translate(
-                                'delivery.location.peppol.output'));
-                    } // client_peppol fully setup
-                    $this->flashMessage('warning',
-                        'Peppol has not been setup for this client');
-                    return $this->webService->getRedirectResponse('client/index');
-                } // null!== $client_id
-            } // invoice
-        } // null !==id
-        return $this->webService->getNotFoundResponse();
+        $peppolhelper = new PeppolHelper(
+            $this->sR, $net->delRepo, $invoice->getInvAmount(), $delloc, $this->translator);
+        $uploads_temp_peppol_absolute_path_dot_xml =
+            $peppolhelper->generateInvoicePeppolUblXmlTempFile(
+                $invoice,
+                new PeppolHelperInvDeps(
+                    $core->soR, $inv->iaR, $core->iiaR,
+                    $inv->iiR, $core->paR, $core->cpR,
+                ),
+                new PeppolHelperNetDeps(
+                    $net->contractRepo, $net->delRepo,
+                    $net->delPartyRepo, $net->unpR, $net->upR,
+                ),
+                new PeppolHelperChargeDeps(
+                    $charge->aciR, $charge->aciiR,
+                    $charge->soiR, $charge->trR,
+                ),
+            );
+        $xml = $this->peppolOutput($net->upR, $uploads_temp_peppol_absolute_path_dot_xml);
+        return $this->peppolRespond($id, $xml,
+            $uploads_temp_peppol_absolute_path_dot_xml, new PeppolValidator($this->translator));
     }
 
     /**
@@ -330,7 +271,39 @@ trait Peppol
         } // $cpR->repoClientCount($client_id) == 1
         return $passed;
     }
-    
+
+    private function peppolStreamOutput(string $xml, PeppolValidator $pVal): Response
+    {
+        $pVal->loadXML($xml);
+        if ($this->sR->getSetting('peppol_debug_with_internal_validator') == '1') {
+            if ($pVal->validate()) {
+                return $this->webService->getHtmlResponse('<pre>' . Html::encode($xml) . '</pre>');
+            }
+            return $this->webViewRenderer->render('peppolerrors', [
+                'xmlContent' => $xml,
+                'errors'     => $pVal->getErrors(),
+            ]);
+        }
+        return $this->factory->createResponse('<pre>' . Html::encode($xml) . '</pre>');
+    }
+
+    private function peppolRespond(
+        int $id,
+        false|string $xml,
+        string $uploadsPath,
+        PeppolValidator $pVal,
+    ): Response {
+        if ($this->sR->getSetting('peppol_xml_stream') == '1' && $xml !== false && strlen($xml) > 0) {
+            return $this->peppolStreamOutput($xml, $pVal);
+        }
+        // see https://cwe.mitre.org/data/definitions/79.html — output sanitised via Html::encode in peppolStreamOutput
+        $this->flashMessage('info', '📁 ' . $uploadsPath
+            . Html::a(' Ecosio Validator',
+                'https://ecosio.com/en/peppol-and-xml-document-validator/',
+                ['target' => '_blank']));
+        return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $id]);
+    }
+
     /**
      * Generate UBL XML for an invoice and transmit it to the recipient's
      * Peppol access point via the local Oxalis AS4 gateway.
@@ -350,96 +323,78 @@ trait Peppol
         InvPeppolInvDeps $inv,
         PeppolSendService $peppolSendService,
     ): Response {
-        if ($currentUser->isGuest()) {
-            return $this->webService->getNotFoundResponse();
-        }
-        if (!$id) {
-            return $this->webService->getNotFoundResponse();
-        }
-
-        $invoice = $core->invRepo->repoInvLoadInvAmountquery($id);
-        if (null === $invoice) {
+        $invoice = $id ? $core->invRepo->repoInvLoadInvAmountquery($id) : null;
+        if ($currentUser->isGuest() || null === $invoice) {
             return $this->webService->getNotFoundResponse();
         }
 
         $client    = $invoice->getClient();
-        $client_id = $client?->reqId();
+        $client_id = $client?->reqId() ?? 0;
+
         if ($client_id <= 0) {
             $this->flashMessage('warning',
                 $this->translator->translate('peppol.client.check'));
-            return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $id]);
-        }
-
-        if (!$this->peppolClientFullySetup($client_id, $core->cpR)) {
-            return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $id]);
-        }
-
-        $delLocId = $invoice->getDeliveryLocationId();
-        $delloc   = $core->dlR->repoDeliveryLocationquery((int) $delLocId);
-        if (null === $delloc) {
-            $this->flashMessage('warning',
-                $this->translator->translate('delivery.location.peppol.output'));
-            return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $id]);
-        }
-
-        $peppolhelper = new PeppolHelper(
-            $this->sR,
-            $net->delRepo,
-            $invoice->getInvAmount(),
-            $delloc,
-            $this->translator,
-        );
-
-        try {
-            $xmlPath = $peppolhelper->generateInvoicePeppolUblXmlTempFile(
-                $invoice,
-                new PeppolHelperInvDeps(
-                    $core->soR, $inv->iaR, $core->iiaR,
-                    $inv->iiR, $core->paR, $core->cpR,
-                ),
-                new PeppolHelperNetDeps(
-                    $net->contractRepo, $net->delRepo,
-                    $net->delPartyRepo, $net->unpR, $net->upR,
-                ),
-                new PeppolHelperChargeDeps(
-                    $charge->aciR, $charge->aciiR,
-                    $charge->soiR, $charge->trR,
-                ),
-            );
-        } catch (\RuntimeException $e) {
-            $msg = $e instanceof \Yiisoft\FriendlyException\FriendlyExceptionInterface
-                ? $e->getName()
-                : $e->getMessage();
-            $this->flashMessage('warning', $msg);
-            return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $id]);
-        }
-
-        $ublXml = file_get_contents($xmlPath);
-        if ($ublXml === false || strlen($ublXml) === 0) {
-            $this->flashMessage('warning',
-                $this->translator->translate('peppol.xml.generation.failed'));
-            return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $id]);
-        }
-
-        $cp = $core->cpR->repoClientPeppolLoadedquery($client_id);
-        if (null === $cp) {
-            $this->flashMessage('warning',
-                $this->translator->translate('peppol.client.check'));
-            return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $id]);
-        }
-        $recipientId = $cp->getEndpointidSchemeid() . ':' . $cp->getEndpointid();
-
-        $message = $peppolSendService->send($id, $ublXml, $recipientId);
-
-        if ($message->getStatus() === 'SENT') {
-            $this->flashMessage('info',
-                '📨 ' . $this->translator->translate('sent')
-                . ' — ' . $this->translator->translate('peppol.message.id')
-                . ': ' . ($message->getMessageId() ?? ''));
-        } else {
-            $this->flashMessage('warning',
-                '⚠️ ' . $this->translator->translate('peppol.send.failed')
-                . ': ' . ($message->getErrorMessage() ?? ''));
+        } elseif ($this->peppolClientFullySetup($client_id, $core->cpR)) {
+            $delLocId = $invoice->getDeliveryLocationId();
+            $delloc   = $core->dlR->repoDeliveryLocationquery((int) $delLocId);
+            if (null === $delloc) {
+                $this->flashMessage('warning',
+                    $this->translator->translate('delivery.location.peppol.output'));
+            } else {
+                $peppolhelper = new PeppolHelper(
+                    $this->sR,
+                    $net->delRepo,
+                    $invoice->getInvAmount(),
+                    $delloc,
+                    $this->translator,
+                );
+                try {
+                    $xmlPath = $peppolhelper->generateInvoicePeppolUblXmlTempFile(
+                        $invoice,
+                        new PeppolHelperInvDeps(
+                            $core->soR, $inv->iaR, $core->iiaR,
+                            $inv->iiR, $core->paR, $core->cpR,
+                        ),
+                        new PeppolHelperNetDeps(
+                            $net->contractRepo, $net->delRepo,
+                            $net->delPartyRepo, $net->unpR, $net->upR,
+                        ),
+                        new PeppolHelperChargeDeps(
+                            $charge->aciR, $charge->aciiR,
+                            $charge->soiR, $charge->trR,
+                        ),
+                    );
+                    $ublXml = file_get_contents($xmlPath);
+                    if ($ublXml === false || strlen($ublXml) === 0) {
+                        $this->flashMessage('warning',
+                            $this->translator->translate('peppol.xml.generation.failed'));
+                    } else {
+                        $cp = $core->cpR->repoClientPeppolLoadedquery($client_id);
+                        if (null === $cp) {
+                            $this->flashMessage('warning',
+                                $this->translator->translate('peppol.client.check'));
+                        } else {
+                            $recipientId = $cp->getEndpointidSchemeid() . ':' . $cp->getEndpointid();
+                            $message = $peppolSendService->send($id, $ublXml, $recipientId);
+                            if ($message->getStatus() === 'SENT') {
+                                $this->flashMessage('info',
+                                    '📨 ' . $this->translator->translate('sent')
+                                    . ' — ' . $this->translator->translate('peppol.message.id')
+                                    . ': ' . ($message->getMessageId() ?? ''));
+                            } else {
+                                $this->flashMessage('warning',
+                                    '⚠️ ' . $this->translator->translate('peppol.send.failed')
+                                    . ': ' . ($message->getErrorMessage() ?? ''));
+                            }
+                        }
+                    }
+                } catch (\RuntimeException $e) {
+                    $msg = $e instanceof \Yiisoft\FriendlyException\FriendlyExceptionInterface
+                        ? $e->getName()
+                        : $e->getMessage();
+                    $this->flashMessage('warning', $msg);
+                }
+            }
         }
 
         return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $id]);
