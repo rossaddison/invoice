@@ -43,10 +43,9 @@ trait MultipleCopy
         }
 
         // Accept client_ids[] (multiselect modal); fall back to each invoice's own client
-        $rawClientIds = $data['client_ids'] ?? [];
         /** @var int[] $selectedClientIds */
         $selectedClientIds = array_values(
-            array_filter(array_map('intval', (array) $rawClientIds))
+            array_filter(array_map('intval', (array)($data['client_ids'] ?? [])))
         );
 
         $anySuccess = false;
@@ -63,6 +62,7 @@ trait MultipleCopy
 
             // Collect product IDs from this invoice once (for ProductClient sync)
             $productIds = [];
+            /** @var InvItem $item */
             foreach ($d->iiR->repoInvItemIdquery($invId) as $item) {
                 $pid = $item->getProductId();
                 if ($pid !== null && $pid > 0) {
@@ -220,21 +220,20 @@ trait MultipleCopy
         $data_inv_js = $request->getQueryParams();
         $inv_id = (int) $data_inv_js['inv_id'];
         $original = $d->iR->repoInvUnloadedquery($inv_id);
-        if (null === $original) {
-            return $this->webService->getNotFoundResponse();
-        }
-
         // Accept client_ids[] (multiselect) or fall back to single client_id
-        $rawIds = $data_inv_js['client_ids'] ?? [$data_inv_js['client_id'] ?? '0'];
         /** @var int[] $clientIds */
-        $clientIds = array_values(array_filter(array_map('intval', (array) $rawIds)));
+        $clientIds = array_values(array_filter(array_map('intval',
+            (array)($data_inv_js['client_ids'] ?? [$data_inv_js['client_id'] ?? '0']))));
 
-        if (empty($clientIds)) {
-            return $this->factory->createResponse(Json::encode(['success' => 0]));
+        if (null === $original || empty($clientIds)) {
+            return null === $original
+                ? $this->webService->getNotFoundResponse()
+                : $this->factory->createResponse(Json::encode(['success' => 0]));
         }
 
         // Collect product IDs from the original invoice once (task items are excluded)
         $productIds = [];
+        /** @var InvItem $item */
         foreach ($d->iiR->repoInvItemIdquery($inv_id) as $item) {
             $pid = $item->getProductId();
             if ($pid !== null && $pid > 0) {

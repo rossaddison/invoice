@@ -65,101 +65,66 @@ trait QuoteToSo
         $url_key = (string) $body['url_key'];
         $purchase_order_number = (string) $body['client_po_number'];
         $purchase_order_person = (string) $body['client_po_person'];
-        if (!empty($url_key)) {
-            if ($core->qR->repoUrlKeyGuestCount($url_key) > 0) {
-                $quote = $core->qR->repoUrlKeyGuestLoaded($url_key);
-                // default_invoice_group 1,
-                // default_quote_group 2,
-                // default_sales_order_group 3, default_
-                $number = $core->gR->generateNumber(
-                    (int) $this->sR->getSetting(
-                        'default_sales_order_group'), true);
-                if (null !== $number) {
-                    if ($quote) {
-                        $quote_id = $quote->reqId();
-                        $so_body = [
-                            'quote_id' => $quote_id,
-                            'inv_id' => 0,
-                            'client_id' => $quote->reqClientId(),
-                            'group_id' => (int) $this->sR->getSetting(
-                                'default_sales_order_group'),
-                            'status_id' => 4,
-                            'client_po_number' => $purchase_order_number,
-                            'client_po_person' => $purchase_order_person,
-                            'number' => $number,
-                            'discount_amount' =>
-                                (float) $quote->getDiscountAmount(),
-                            // The quote's url will be the same for the
-                            // po allowing for a trace
-                            'url_key' => $quote->getUrlKey(),
-                            'password' => $quote->getPassword() ?? '',
-                            'notes' => $quote->getNotes(),
-                        ];
-                        $this->flashMessage('info',
-                            $this->translator->translate(
-                                'salesorder.agree.to.terms'));
-                        $new_so = new SoEntity();
-                        $form = new SoForm();
-                        if ($formHydrator->populateAndValidate($form, $so_body)
-                            && $quote->getSoId() === 0) {
-                            $client_id = $so_body['client_id'];
-                            $user = $this->activeUser(
-                                $client_id, $userDeps->uR, $userDeps->ucR, $userDeps->uiR);
-                            if (null !== $user) {
-                                $this->so_service->addSo(
-                                    $user, $new_so, $so_body);
-                                // Ensure that the quote has a specific po and
-                                // therefore cannot be copied again.
-                                $new_so_id = $new_so->reqId();
-                                // Transfer each quote_item to so_item and the
-                                // corresponding so_item_amount to
-                                // so_item_amount for each item
-                                if ($quote_id > 0) {
-                                    $this->quoteToSoQuoteItems(
-                                        $quote_id, $new_so_id,
-                                        $formHydrator, $core, $items, $transfer);
-                                    $this->quoteToSoQuoteTaxRates(
-                                        $quote_id, $new_so_id,
-                                        $items->qtrR, $formHydrator);
-                                    $this->quoteToSoQuoteCustom($quote_id,
-                                        $new_so_id, $core->qcR,
-                                        $transfer->cfR, $formHydrator);
-                                    $this->quoteToSoQuoteAmount($quote_id,
-                                        $new_so_id, $core->qaR, $transfer->soR);
-                                    $this->quoteToSoQuoteAllowanceCharges($quote_id,
-                                        $new_so_id, $core->acqR, $formHydrator);
-                                    // Set the quote's sales order id so that
-                                    // it cannot be copied in the future
-                                    $quote->setSoId($new_so_id);
-                                    // The quote has been approved with purchase
-                                    // order number
-                                    $quote->setStatusId(4);
-                                    $core->qR->save($quote);
-                                    $parameters = ['success' => 1];
-                                    //return response to quote.js to reload page
-                                    //at location
-                                    return $this->factory->createResponse(
-                                        Json::encode($parameters));
-                                } // null!==$new_so_id
-                            } // null!==$user
-                        } else {
-                            $parameters = [
-                                'success' => 0,
-                            ];
-                            //return response to quote.js to reload page at
-                            //location
-                            return $this->factory->createResponse(
-                                Json::encode($parameters));
-                        }
-                    } // quote
-                    return $this->webService->getNotFoundResponse();
-                }
-                throw new GroupException($this->translator);
-            } // if $qR
+        $quote = !empty($url_key) && $core->qR->repoUrlKeyGuestCount($url_key) > 0
+            ? $core->qR->repoUrlKeyGuestLoaded($url_key)
+            : null;
+        if ($quote === null) {
             return $this->webService->getNotFoundResponse();
-        } // null!==$url_key
-        return $this->webService->getNotFoundResponse();
-    } // approve_with
+        }
+        // default_invoice_group 1, default_quote_group 2, default_sales_order_group 3
+        /** @var string|null $number */
+        $number = $core->gR->generateNumber(
+            (int) $this->sR->getSetting('default_sales_order_group'), true);
+        if ($number === null) {
+            throw new GroupException($this->translator);
+        }
+        $quote_id = $quote->reqId();
+        $so_body = [
+            'quote_id' => $quote_id,
+            'inv_id' => 0,
+            'client_id' => $quote->reqClientId(),
+            'group_id' => (int) $this->sR->getSetting('default_sales_order_group'),
+            'status_id' => 4,
+            'client_po_number' => $purchase_order_number,
+            'client_po_person' => $purchase_order_person,
+            'number' => $number,
+            'discount_amount' => (float) $quote->getDiscountAmount(),
+            // The quote's url will be the same for the po allowing for a trace
+            'url_key' => $quote->getUrlKey(),
+            'password' => $quote->getPassword() ?? '',
+            'notes' => $quote->getNotes(),
+        ];
+        $this->flashMessage('info',
+            $this->translator->translate('salesorder.agree.to.terms'));
+        $new_so = new SoEntity();
+        $form = new SoForm();
+        $success = 0;
+        if ($formHydrator->populateAndValidate($form, $so_body) && $quote->getSoId() === 0) {
+            $client_id = $so_body['client_id'];
+            $user = $this->activeUser(
+                $client_id, $userDeps->uR, $userDeps->ucR, $userDeps->uiR);
+            if (null !== $user) {
+                $this->so_service->addSo($user, $new_so, $so_body);
+                $new_so_id = $new_so->reqId();
+                $this->quoteToSoQuoteItems(
+                    $quote_id, $new_so_id, $formHydrator, $core, $items, $transfer);
+                $this->quoteToSoQuoteTaxRates(
+                    $quote_id, $new_so_id, $items->qtrR, $formHydrator);
+                $this->quoteToSoQuoteCustom(
+                    $quote_id, $new_so_id, $core->qcR, $transfer->cfR, $formHydrator);
+                $this->quoteToSoQuoteAmount(
+                    $quote_id, $new_so_id, $core->qaR, $transfer->soR);
+                $this->quoteToSoQuoteAllowanceCharges(
+                    $quote_id, $new_so_id, $core->acqR, $formHydrator);
+                // Set the quote's sales order id so that it cannot be copied in the future
+                $quote->setSoId($new_so_id);
+                $quote->setStatusId(4);
+                $core->qR->save($quote);
+                $success = 1;
+            }
+        }
+        return $this->factory->createResponse(Json::encode(['success' => $success]));
+    }
 
     public function reject(#[RouteArgument('url_key')] string $url_key, QR $qR,
             UCR $ucR, UIR $uiR):
@@ -196,97 +161,96 @@ trait QuoteToSo
         $body = $request->getQueryParams();
         $quote_id = (int) $body['quote_id'];
         $quote = $core->qR->repoQuoteUnloadedquery($quote_id);
-        if ($quote) {
-            // Check if quote has already been converted to a sales order
-            if ($quote->getSoId() !== 0) {
-                $parameters = [
-                    'success' => 0,
-                    'flash_message' => $this->translator->translate(
-                        'quote.sales.order.already.created.from.quote'),
-                ];
-                return $this->factory->createResponse(Json::encode($parameters));
-            }
-            $so_body = [
-                'quote_id' => $quote_id,
-                'inv_id' => null,
-                'client_id' => $body['client_id'],
-                'group_id' => $body['group_id'],
-                'client_po_number' => $body['po_number'],
-                'client_po_person' => $body['po_person'],
-                'status_id' => 1,
-                'number' => '',
-                'discount_amount' => (float) $quote->getDiscountAmount(),
-                // The quote's url will be the same for the so allowing
-                // for a trace
-                'url_key' => $quote->getUrlKey(),
-                'password' => $body['password'] ?? '',
-                'notes' => '',
+        if (!$quote) {
+            return $this->webService->getNotFoundResponse();
+        }
+        // Check if quote has already been converted to a sales order
+        if ($quote->getSoId() !== 0) {
+            $parameters = [
+                'success' => 0,
+                'flash_message' => $this->translator->translate(
+                    'quote.sales.order.already.created.from.quote'),
             ];
-            $new_so = new SoEntity();
-            $form = new SoForm();
-            if ($formHydrator->populateAndValidate($form, $so_body)) {
-                /**
-                 * @var string $so_body['client_id']
-                 */
-                $client_id = (int) $so_body['client_id'];
-                $user_client = $userDeps->ucR->repoUserquery($client_id);
-                $user_client_count = $userDeps->ucR->repoUserquerycount($client_id);
-                if (null !== $user_client && $user_client_count == 1) {
-                    // Only one user account per client
-                    $user_id = $user_client->reqUserId();
-                    $user = $userDeps->uR->findById($user_id);
-                    // Generate number only after validation passes
-                    $so_body['number'] =
-                            (string) $core->gR->generateNumber(
-                                (int) $body['group_id'], true);
-                    $so = $this->so_service->addSo($user, $new_so, $so_body);
-                    $new_so_id = $so->reqId();
-                    // Ensure that the quote has a specific po and therefore
-                    // cannot be copied again.
-                    // Transfer each quote_item to so_item and the
-                    // corresponding so_item_amount to so_item_amount
-                    // for each item
-                    $this->quoteToSoQuoteItems($quote_id,
-                        $new_so_id, $formHydrator, $core, $items, $transfer);
-                    $this->quoteToSoQuoteTaxRates($quote_id,
-                        $new_so_id, $items->qtrR, $formHydrator);
-                    $this->quoteToSoQuoteCustom($quote_id,
-                        $new_so_id, $core->qcR, $transfer->cfR, $formHydrator);
-                    $this->quoteToSoQuoteAmount($quote_id,
-                        $new_so_id, $core->qaR, $transfer->soR);
-                    $this->quoteToSoQuoteAllowanceCharges($quote_id,
-                        $new_so_id, $core->acqR, $formHydrator);
-                    // Set the quote's sales order id so that it
-                    // cannot be copied in the future
-                    $quote->setSoId($new_so_id);
-                    $core->qR->save($quote);
-                    $parameters = [
-                        'success' => 1,
-                        'flash_message' => $this->translator->translate(
-                            'quote.sales.order.created.from.quote'),
-                        'redirect_url' => $this->url_generator->generate(
-                            'salesorder/view',
-                                ['_language' =>
-                                    (string) $this->session->get(
-                                            '_language'),
-                                    'id' => $new_so_id]),
-                    ];
-                    //return response to quote.js to reload page at
-                    //location
-                    return $this->factory->createResponse(
-                        Json::encode($parameters));
-                } // null!==$user_client && $user_client_count==1
-            } else {
-                $parameters = [
-                    'success' => 0,
+            return $this->factory->createResponse(Json::encode($parameters));
+        }
+        $so_body = [
+            'quote_id' => $quote_id,
+            'inv_id' => null,
+            'client_id' => $body['client_id'],
+            'group_id' => $body['group_id'],
+            'client_po_number' => $body['po_number'],
+            'client_po_person' => $body['po_person'],
+            'status_id' => 1,
+            'number' => '',
+            'discount_amount' => (float) $quote->getDiscountAmount(),
+            // The quote's url will be the same for the so allowing
+            // for a trace
+            'url_key' => $quote->getUrlKey(),
+            'password' => $body['password'] ?? '',
+            'notes' => '',
+        ];
+        $new_so = new SoEntity();
+        $form = new SoForm();
+        $result = null;
+        if ($formHydrator->populateAndValidate($form, $so_body)) {
+            /**
+             * @var string $so_body['client_id']
+             */
+            $client_id = (int) $so_body['client_id'];
+            $user_client = $userDeps->ucR->repoUserquery($client_id);
+            $user_client_count = $userDeps->ucR->repoUserquerycount($client_id);
+            if (null !== $user_client && $user_client_count == 1) {
+                // Only one user account per client
+                $user_id = $user_client->reqUserId();
+                $user = $userDeps->uR->findById($user_id);
+                // Generate number only after validation passes
+                $so_body['number'] =
+                        (string) $core->gR->generateNumber(
+                            (int) $body['group_id'], true);
+                $so = $this->so_service->addSo($user, $new_so, $so_body);
+                $new_so_id = $so->reqId();
+                // Ensure that the quote has a specific po and therefore
+                // cannot be copied again.
+                // Transfer each quote_item to so_item and the
+                // corresponding so_item_amount to so_item_amount
+                // for each item
+                $this->quoteToSoQuoteItems($quote_id,
+                    $new_so_id, $formHydrator, $core, $items, $transfer);
+                $this->quoteToSoQuoteTaxRates($quote_id,
+                    $new_so_id, $items->qtrR, $formHydrator);
+                $this->quoteToSoQuoteCustom($quote_id,
+                    $new_so_id, $core->qcR, $transfer->cfR, $formHydrator);
+                $this->quoteToSoQuoteAmount($quote_id,
+                    $new_so_id, $core->qaR, $transfer->soR);
+                $this->quoteToSoQuoteAllowanceCharges($quote_id,
+                    $new_so_id, $core->acqR, $formHydrator);
+                // Set the quote's sales order id so that it
+                // cannot be copied in the future
+                $quote->setSoId($new_so_id);
+                $core->qR->save($quote);
+                $result = [
+                    'success' => 1,
                     'flash_message' => $this->translator->translate(
-                        'quote.sales.order.not.created.from.quote'),
+                        'quote.sales.order.created.from.quote'),
+                    'redirect_url' => $this->url_generator->generate(
+                        'salesorder/view',
+                            ['_language' =>
+                                (string) $this->session->get(
+                                        '_language'),
+                                'id' => $new_so_id]),
                 ];
-                //return response to quote.js to reload page at location
-                return $this->factory->createResponse(Json::encode($parameters));
-            }
-        } // original
-        return $this->webService->getNotFoundResponse();
+            } // null!==$user_client && $user_client_count==1
+        } else {
+            $result = [
+                'success' => 0,
+                'flash_message' => $this->translator->translate(
+                    'quote.sales.order.not.created.from.quote'),
+            ];
+        }
+        //return response to quote.js to reload page at location
+        return $result !== null
+            ? $this->factory->createResponse(Json::encode($result))
+            : $this->webService->getNotFoundResponse();
     }
 
     private function quoteToSoQuoteTaxRates(

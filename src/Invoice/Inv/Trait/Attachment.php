@@ -94,45 +94,38 @@ trait Attachment
     {
         $aliases = $this->sR->getCustomerFilesFolderAliases();
         $targetPath = $aliases->get('@customer_files');
-        if ($inv_id) {
-            if (!is_writable($targetPath)) {
-                return $this->attachmentNotWritable($inv_id);
-            }
-            $invoice = $iR->repoInvLoadedquery($inv_id) ?: null;
-            if ($invoice instanceof Inv) {
-                $client_id = $invoice->getClient()?->reqId();
-                if (null !== $client_id) {
-                    $url_key = $invoice->getUrlKey();
-                    if (!empty($_FILES)) {
-// Related logic:
-//  see https://github.com/vimeo/psalm/issues/5458
-/** @var array $_FILES['InvAttachmentsForm'] */
-/** @var string $_FILES['InvAttachmentsForm']['tmp_name']['attachFile'] */
-$temporary_file = $_FILES['InvAttachmentsForm']['tmp_name']['attachFile'];
-/** @var string $_FILES['InvAttachmentsForm']['name']['attachFile'] */
-$original_file_name = preg_replace(
-    '/\s+/', '_', $_FILES['InvAttachmentsForm']['name']['attachFile']);
-                        if (null!==($originalFileName = $original_file_name) && (strlen($originalFileName) > 0)
-                            && (strlen($temporary_file) > 0)) {
-                            $target_path_with_filename =
-                                $targetPath . '/' . $url_key . '_'
-                                    . $originalFileName;
-                            if ($this->attachmentMoveTo($temporary_file,
-                                    $target_path_with_filename, $client_id,
-                                        $url_key,
-                                    $originalFileName, $uPR)) {
-                                return $this->attachmentSuccessfullyCreated($inv_id);
-                            }
-                            return $this->attachmentNoFileUploaded($inv_id);
-                        }
-                    } else {
-                        return $this->attachmentNoFileUploaded($inv_id);
-                    }
-                } // $client_id
-            } // $invoice
+        if (!is_writable($targetPath) && $inv_id) {
+            return $this->attachmentNotWritable($inv_id);
+        }
+        $invoice = $inv_id ? ($iR->repoInvLoadedquery($inv_id) ?: null) : null;
+        $client_id = ($invoice instanceof Inv) ? $invoice->getClient()?->reqId() : null;
+        if (!($invoice instanceof Inv) || null === $client_id) {
             return $this->webService->getRedirectResponse('inv/index');
-        } //null!==$inv_id
-        return $this->webService->getRedirectResponse('inv/index');
+        }
+        $url_key = $invoice->getUrlKey();
+        // see https://github.com/vimeo/psalm/issues/5458 — annotate each intermediate array variable so
+        // Psalm accepts string key 'attachFile' on what it otherwise infers as array<int, string>
+        /** @var array<string, string> $tmpNames */
+        $tmpNames = $_FILES['InvAttachmentsForm']['tmp_name'] ?? [];
+        $temporary_file = !empty($_FILES) ? ($tmpNames['attachFile'] ?? '') : '';
+        /** @var array<string, string> $fileNames */
+        $fileNames = $_FILES['InvAttachmentsForm']['name'] ?? [];
+        $original_file_name = !empty($_FILES)
+            ? (preg_replace('/\s+/', '_', $fileNames['attachFile'] ?? '') ?? '')
+            : '';
+        $originalFileName = (strlen($original_file_name) > 0 && strlen($temporary_file) > 0)
+            ? $original_file_name : null;
+        $moved = null !== $originalFileName && $this->attachmentMoveTo(
+            $temporary_file,
+            $targetPath . '/' . $url_key . '_' . $originalFileName,
+            $client_id,
+            $url_key,
+            $originalFileName,
+            $uPR
+        );
+        return $moved
+            ? $this->attachmentSuccessfullyCreated($inv_id)
+            : $this->attachmentNoFileUploaded($inv_id);
     }
     
     /**

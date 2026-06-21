@@ -56,21 +56,18 @@ trait QuoteCopy
         $data_quote_js = $request->getQueryParams();
         $quote_id = (int) $data_quote_js['quote_id'];
         $original = $core->qR->repoQuoteUnloadedquery($quote_id);
-        if (null === $original) {
-            return $this->factory->createResponse(Json::encode(['success' => 0]));
-        }
-
         // Accept client_ids[] (multiselect) or fall back to single client_id
-        $rawIds = $data_quote_js['client_ids'] ?? [$data_quote_js['client_id'] ?? '0'];
         /** @var int[] $clientIds */
-        $clientIds = array_values(array_filter(array_map('intval', (array) $rawIds)));
+        $clientIds = array_values(array_filter(array_map('intval',
+            (array)($data_quote_js['client_ids'] ?? [$data_quote_js['client_id'] ?? '0']))));
 
-        if (empty($clientIds)) {
+        if (null === $original || empty($clientIds)) {
             return $this->factory->createResponse(Json::encode(['success' => 0]));
         }
 
         // Collect product IDs from the original quote's items once
         $productIds = [];
+        /** @var QuoteItem $quoteItem */
         foreach ($items->qiR->repoQuoteItemIdquery($quote_id) as $quoteItem) {
             $pid = $quoteItem->getProduct()?->reqId();
             if ($pid !== null && $pid > 0) {

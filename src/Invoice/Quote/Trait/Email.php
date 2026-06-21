@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Quote\Trait;
 
 use App\Infrastructure\Persistence\EmailTemplate\EmailTemplate;
+use App\Infrastructure\Persistence\Quote\Quote;
 use App\Invoice\Quote\{
     MailerQuoteForm,
     QuoteEmailStage0Deps,
@@ -48,73 +49,80 @@ trait Email
             return $this->webService->getRedirectResponse('quote/index');
         }
         $quote_entity = $this->quote($id, $d->entity->qR, true);
-        if ($quote_entity) {
-            $quote_id = $quote_entity->reqId();
-            $quote = $d->entity->qR->repoQuoteUnLoadedquery($quote_id);
-            if ($quote) {
-                $custom_fields = [];
-                $custom_tables = [
-                    'client_custom' => 'client',
-                    'inv_custom' => 'invoice',
-                    'payment_custom' => 'payment',
-                    'quote_custom' => 'quote',
-                    'salesorder_custom' => 'salesorder',
-                ];
-                foreach (array_keys($custom_tables) as $table) {
-                    $custom_fields[$table] = $d->custom->cfR->repoTablequery($table);
-                }
-                if ($template_helper->selectEmailQuoteTemplate() == '') {
-                    $this->flashMessage('warning',
-                        $this->translator->translate('quote.email.templates.not.configured'));
-                    return $this->webService->getRedirectResponse(
-                        'setting/tabIndex', ['_language' => 'en'],
-                            ['active' => 'quotes'], 'settings[email_quote_template]');
-                }
-                $setting_status_email_template =
-                    $d->entity->etR->repoEmailTemplatequery((int) $template_helper->selectEmailQuoteTemplate()) ?: null;
-                null === $setting_status_email_template ? $this->flashMessage(
-                    'info',
-                    $this->translator->translate('default.email.template') . '=>'
-                    . $this->translator->translate('not.set'),
-                ) : '';
-                empty($template_helper->selectPdfQuoteTemplate()) ? $this->flashMessage(
-                    'info',
-                    $this->translator->translate('default.pdf.template') . '=>'
-                    . $this->translator->translate('not.set'),
-                ) : '';
-                $parameters = [
-                    'head' => $head,
-                    'actionName' => 'quote/emailStage2',
-                    'actionArguments' => ['id' => $quote_id],
-                    'alert' => $this->alert(),
-                    'autoTemplate' => null !== $setting_status_email_template
-                        ? $this->getInjectEmailTemplateArray($setting_status_email_template)
-                        : [],
-                    'settingStatusPdfTemplate' => $template_helper->selectPdfQuoteTemplate(),
-                    'email_templates' => $d->entity->etR->repoEmailTemplateType('quote'),
-                    'dropdownTitlesOfEmailTemplates' => $this->emailTemplates($d->entity->etR),
-                    'userInv' => $d->entity->uiR->repoUserInvUserIdcount($quote->reqUserId()) > 0
-                        ? $d->entity->uiR->repoUserInvUserIdquery($quote->reqUserId())
-                        : null,
-                    'quote' => $quote,
-                    'pdfTemplates' => $this->emailGetQuoteTemplates('pdf'),
-                    'templateTags' => $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/emailtemplate/template-tags', [
-                            'custom_fields' => $custom_fields,
-                            'template_tags_inv' => '',
-                            'template_tags_quote' => $this->webViewRenderer->renderPartialAsString(
-                                '//invoice/emailtemplate/template-tags-quote', [
-                                    'custom_fields_quote_custom' => $custom_fields['quote_custom'],
-                                ]),
-                        ]),
-                    'form' => new MailerQuoteForm(),
-                    'custom_fields' => $custom_fields,
-                ];
-                return $this->webViewRenderer->render('mailer_quote', $parameters);
-            }
+        $quote_id = null !== $quote_entity ? $quote_entity->reqId() : null;
+        $quote = null !== $quote_id ? $d->entity->qR->repoQuoteUnLoadedquery($quote_id) : null;
+        if ($quote_id === null || !($quote instanceof Quote)) {
             return $this->webService->getRedirectResponse('quote/index');
         }
-        return $this->webService->getRedirectResponse('quote/index');
+        return $this->renderEmailStage0Quote($head, $quote, $quote_id, $d, $template_helper);
+    }
+
+    private function renderEmailStage0Quote(
+        WebViewRenderer $head,
+        Quote $quote,
+        int $quote_id,
+        QuoteEmailStage0Deps $d,
+        TemplateHelper $template_helper,
+    ): Response {
+        $custom_fields = [];
+        $custom_tables = [
+            'client_custom' => 'client',
+            'inv_custom' => 'invoice',
+            'payment_custom' => 'payment',
+            'quote_custom' => 'quote',
+            'salesorder_custom' => 'salesorder',
+        ];
+        foreach (array_keys($custom_tables) as $table) {
+            $custom_fields[$table] = $d->custom->cfR->repoTablequery($table);
+        }
+        if ($template_helper->selectEmailQuoteTemplate() == '') {
+            $this->flashMessage('warning',
+                $this->translator->translate('quote.email.templates.not.configured'));
+            return $this->webService->getRedirectResponse(
+                'setting/tabIndex', ['_language' => 'en'],
+                    ['active' => 'quotes'], 'settings[email_quote_template]');
+        }
+        $setting_status_email_template =
+            $d->entity->etR->repoEmailTemplatequery((int) $template_helper->selectEmailQuoteTemplate()) ?: null;
+        null === $setting_status_email_template ? $this->flashMessage(
+            'info',
+            $this->translator->translate('default.email.template') . '=>'
+            . $this->translator->translate('not.set'),
+        ) : '';
+        empty($template_helper->selectPdfQuoteTemplate()) ? $this->flashMessage(
+            'info',
+            $this->translator->translate('default.pdf.template') . '=>'
+            . $this->translator->translate('not.set'),
+        ) : '';
+        $parameters = [
+            'head' => $head,
+            'actionName' => 'quote/emailStage2',
+            'actionArguments' => ['id' => $quote_id],
+            'alert' => $this->alert(),
+            'autoTemplate' => null !== $setting_status_email_template
+                ? $this->getInjectEmailTemplateArray($setting_status_email_template)
+                : [],
+            'settingStatusPdfTemplate' => $template_helper->selectPdfQuoteTemplate(),
+            'email_templates' => $d->entity->etR->repoEmailTemplateType('quote'),
+            'dropdownTitlesOfEmailTemplates' => $this->emailTemplates($d->entity->etR),
+            'userInv' => $d->entity->uiR->repoUserInvUserIdcount($quote->reqUserId()) > 0
+                ? $d->entity->uiR->repoUserInvUserIdquery($quote->reqUserId())
+                : null,
+            'quote' => $quote,
+            'pdfTemplates' => $this->emailGetQuoteTemplates('pdf'),
+            'templateTags' => $this->webViewRenderer->renderPartialAsString(
+                '//invoice/emailtemplate/template-tags', [
+                    'custom_fields' => $custom_fields,
+                    'template_tags_inv' => '',
+                    'template_tags_quote' => $this->webViewRenderer->renderPartialAsString(
+                        '//invoice/emailtemplate/template-tags-quote', [
+                            'custom_fields_quote_custom' => $custom_fields['quote_custom'],
+                        ]),
+                ]),
+            'form' => new MailerQuoteForm(),
+            'custom_fields' => $custom_fields,
+        ];
+        return $this->webViewRenderer->render('mailer_quote', $parameters);
     }
 
     public function getInjectEmailTemplateArray(EmailTemplate $email_template): array
@@ -185,6 +193,7 @@ trait Email
         QuoteEmailStage2Deps $d,
         QuotePdfService $quotePdfService,
     ): Response {
+        $sent = false;
         if ($quote_id) {
             $mailerDeps = new MailerHelperCustomDeps(
                 $d->custom->ccR, $d->custom->qcR, $d->custom->icR,
@@ -200,18 +209,9 @@ trait Email
                 }
                 /** @var array $body['MailerQuoteForm'] */
                 $to = (string) ($body['MailerQuoteForm']['to_email'] ?? '');
-                if (empty($to)) {
-                    return $this->factory->createResponse(
-                        $this->webViewRenderer->renderPartialAsString(
-                            '//invoice/setting/quote_message',
-                            ['heading' => '', 'message' =>
-                                $this->translator->translate('email.to.address.missing'),
-                             'url' => 'quote/view', 'id' => $quote_id],
-                        ));
-                }
                 $from_email = (string) ($body['MailerQuoteForm']['from_email'] ?? '');
                 $from_name = (string) ($body['MailerQuoteForm']['from_name'] ?? '');
-                if (empty($from_email)) {
+                if (empty($to) || empty($from_email)) {
                     return $this->factory->createResponse(
                         $this->webViewRenderer->renderPartialAsString(
                             '//invoice/setting/quote_message',
@@ -237,11 +237,13 @@ trait Email
                 )) {
                     $this->sR->quoteMarkSent($quote_id, $d->relation->qR);
                     $this->flashMessage('success', $this->translator->translate('email.successfully.sent'));
-                    return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
+                    $sent = true;
                 }
             }
         }
-        $this->flashMessage('danger', $this->translator->translate('email.not.sent.successfully'));
+        if (!$sent) {
+            $this->flashMessage('danger', $this->translator->translate('email.not.sent.successfully'));
+        }
         return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
     }
 }
