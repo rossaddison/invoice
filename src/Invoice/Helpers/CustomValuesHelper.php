@@ -638,56 +638,45 @@ class CustomValuesHelper
         if ('N;' === $data) {
             return true;
         }
-        if (strlen($data) < 4) {
+        return $this->isSerializedData($data, $strict);
+    }
+
+    private function isSerializedData(string $data, bool $strict): bool
+    {
+        if (strlen($data) < 4 || ':' !== $data[1]) {
             return false;
         }
-        if (':' !== $data[1]) {
+        if (!$this->isSerializedEnding($data, $strict)) {
             return false;
         }
+        return $this->matchesSerializedToken($data[0], $data, $strict);
+    }
+
+    private function isSerializedEnding(string $data, bool $strict): bool
+    {
         if ($strict) {
             $lastc = substr($data, -1);
-            if (';' !== $lastc && '}' !== $lastc) {
-                return false;
-            }
-        } else {
-            $semicolon = strpos($data, ';');
-            $brace = strpos($data, '}');
-            // Either ; or } must exist.
-            if (false === $semicolon && false === $brace) {
-                return false;
-            }
-            // But neither must be in the first X characters.
-            if (false !== $semicolon && $semicolon < 3) {
-                return false;
-            }
-            if (false !== $brace && $brace < 4) {
-                return false;
-            }
+            return ';' === $lastc || '}' === $lastc;
         }
-        $token = $data[0];
-        switch ($token) {
-            case 's':
-                if ($strict) {
-                    if ('"' !== substr($data, -2, 1)) {
-                        return false;
-                    }
-                } elseif (!str_contains($data, '"')) {
-                    return false;
-                }
-                // Or else fall through.
-                // no break
-            case 'a':
-            case 'O':
-            case 'E':
-                return (bool) preg_match("/^{$token}:[0-9]+:/s", $data);
-            case 'b':
-            case 'i':
-            case 'd':
-                $end = $strict ? '$' : '';
-                return (bool) preg_match("/^{$token}:[0-9.E+-]+;$end/", $data);
-            default:
-                return false;
-        }
+        $semicolon = strpos($data, ';');
+        $brace = strpos($data, '}');
+        return !(
+            (false === $semicolon && false === $brace)
+            || (false !== $semicolon && $semicolon < 3)
+            || (false !== $brace && $brace < 4)
+        );
+    }
+
+    private function matchesSerializedToken(string $token, string $data, bool $strict): bool
+    {
+        $end = $strict ? '$' : '';
+        $sQuoteValid = $token !== 's'
+            || ($strict ? '"' === substr($data, -2, 1) : str_contains($data, '"'));
+        return $sQuoteValid && match ($token) {
+            's', 'a', 'O', 'E' => (bool) preg_match("/^{$token}:[0-9]+:/s", $data),
+            'b', 'i', 'd'       => (bool) preg_match("/^{$token}:[0-9.E+-]+;$end/", $data),
+            default             => false,
+        };
     }
 
     /**

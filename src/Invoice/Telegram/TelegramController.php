@@ -276,22 +276,22 @@ final class TelegramController extends BaseController
         $token         = $this->sR->getSetting('telegram_token');
         $providerToken = $this->sR->getSetting('telegram_provider_token');
         $currency      = $this->sR->getSetting('peppol_document_currency') ?: 'GBP';
+        $configError = null;
+        if ($this->sR->getSetting('enable_telegram') !== '1') {
+            $configError = $this->translator->translate('telegram.bot.api.enabled.not');
+        } elseif (strlen($token) < 2) {
+            $configError = $this->translator->translate('telegram.bot.api.token.not.set');
+        }
+        if ($configError !== null) {
+            $this->flashMessage('danger', $configError);
+            return $this->webService->getRedirectResponse('setting/tabIndex');
+        }
+        $inv = $this->iR->repoInvLoadedquery((int) $inv_id);
+        if ($inv === null) {
+            $this->flashMessage('danger', 'Invoice not found.');
+            return $this->webService->getRedirectResponse('inv/index');
+        }
         try {
-            if ($this->sR->getSetting('enable_telegram') !== '1') {
-                $this->flashMessage('danger',
-                    $this->translator->translate('telegram.bot.api.enabled.not'));
-                return $this->webService->getRedirectResponse('setting/tabIndex');
-            }
-            if (strlen($token) < 2) {
-                $this->flashMessage('danger',
-                    $this->translator->translate('telegram.bot.api.token.not.set'));
-                return $this->webService->getRedirectResponse('setting/tabIndex');
-            }
-            $inv = $this->iR->repoInvLoadedquery((int) $inv_id);
-            if ($inv === null) {
-                $this->flashMessage('danger', 'Invoice not found.');
-                return $this->webService->getRedirectResponse('inv/index');
-            }
             $telegramHelper = new TelegramHelper($token, $this->logger);
             $result = $telegramHelper->createTelegramInvoiceLink($inv, $currency, $providerToken);
             if (!$result instanceof FailResult) {
@@ -384,38 +384,34 @@ final class TelegramController extends BaseController
         $chatId    = $this->sR->getSetting('telegram_chat_id');
         $latString = $this->sR->getSetting('company_latitude');
         $lngString = $this->sR->getSetting('company_longitude');
-        try {
-            if ($this->sR->getSetting('enable_telegram') !== '1') {
-                $this->flashMessage('danger',
-                    $this->translator->translate('telegram.bot.api.enabled.not'));
-                return $this->webService->getRedirectResponse('setting/tabIndex');
+        if ($this->sR->getSetting('enable_telegram') !== '1') {
+            $this->flashMessage('danger',
+                $this->translator->translate('telegram.bot.api.enabled.not'));
+        } elseif (strlen($token) < 2) {
+            $this->flashMessage('danger',
+                $this->translator->translate('telegram.bot.api.token.not.set'));
+        } elseif ($latString === '' || $lngString === '') {
+            $this->flashMessage('warning',
+                $this->translator->translate('telegram.location.not.configured'));
+        } else {
+            try {
+                $telegramHelper = new TelegramHelper($token, $this->logger);
+                $result = $telegramHelper->sendCompanyLocation(
+                    $chatId,
+                    (float) $latString,
+                    (float) $lngString,
+                );
+                if (!$result instanceof FailResult) {
+                    $this->flashMessage('success',
+                        $this->translator->translate('telegram.location.sent'));
+                } else {
+                    $this->flashMessage('danger',
+                        'Telegram sendLocation failed: ' . ($result->description ?? ''));
+                }
+            } catch (TelegramParseResultException $e) {
+                $this->logger->warning($e->getMessage());
+                $this->flashMessage('secondary', $e->getMessage());
             }
-            if (strlen($token) < 2) {
-                $this->flashMessage('danger',
-                    $this->translator->translate('telegram.bot.api.token.not.set'));
-                return $this->webService->getRedirectResponse('setting/tabIndex');
-            }
-            if ($latString === '' || $lngString === '') {
-                $this->flashMessage('warning',
-                    $this->translator->translate('telegram.location.not.configured'));
-                return $this->webService->getRedirectResponse('setting/tabIndex');
-            }
-            $telegramHelper = new TelegramHelper($token, $this->logger);
-            $result = $telegramHelper->sendCompanyLocation(
-                $chatId,
-                (float) $latString,
-                (float) $lngString,
-            );
-            if (!$result instanceof FailResult) {
-                $this->flashMessage('success',
-                    $this->translator->translate('telegram.location.sent'));
-            } else {
-                $this->flashMessage('danger',
-                    'Telegram sendLocation failed: ' . ($result->description ?? ''));
-            }
-        } catch (TelegramParseResultException $e) {
-            $this->logger->warning($e->getMessage());
-            $this->flashMessage('secondary', $e->getMessage());
         }
         return $this->webService->getRedirectResponse('setting/tabIndex');
     }

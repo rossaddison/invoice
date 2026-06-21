@@ -40,81 +40,80 @@ trait Edit
         QuoteEditFormDeps $form,
     ): Response {
         $quote = $this->quote($id, $core->quoteRepo, true);
-        if (null !== $quote) {
-            $quoteForm = QuoteForm::show($quote);
-            $quoteCustomForm = new QuoteCustomForm();
-            $quote_id = $quote->reqId();
-            $client_id = $quote->reqClientId();
-            $dels = $loc->delRepo->repoClientquery($quote->reqClientId());
-            $parameters = [
-                'title' => '',
-                'alert' => $this->alert(),
-                'actionName' => 'quote/edit',
-                'actionArguments' => ['id' => $quote_id],
-                'errors' => [],
-                'form' => $quoteForm,
-                'optionsData' => $this->editOptionsData(
-                    $quote,
-                    $client_id,
-                    $core,
-                    $loc,
-                ),
-                'invs' => $core->invRepo->findAllPreloaded(),
-                'clients' => $core->clientRepo->findAllPreloaded(),
-                'dels' => $dels,
-                'groups' => $core->groupRepo->findAllPreloaded(),
-                'numberhelper' => new NumberHelper($this->sR),
-                'quote_statuses' => $core->quoteRepo->getStatuses($this->translator),
-                'cvH' => new CVH($this->sR, $form->cvR),
-                'customFields' => $this->fetchCustomFieldsAndValues(
-                    $form->cfR, $form->cvR, 'quote_custom')['customFields'],
-                // Applicable to normally building up permanent selection lists
-                // eg. dropdowns
-                'customValues' => $this->fetchCustomFieldsAndValues(
-                    $form->cfR, $form->cvR, 'quote_custom')['customValues'],
-                // There will initially be no custom_values attached to this
-                // quote until they are filled in the field on the form
-                'quoteCustomValues' => $this->quoteCustomValues($quote_id, $form->qcR),
-                'quote' => $quote,
-                'quoteCustomForm' => $quoteCustomForm,
-                'delCount' => $loc->delRepo->repoClientCount($quote->reqClientId()),
-                'returnUrlAction' => 'edit',
-                'formFields' => $this->formFields,
-            ];
-            $loc->delRepo->repoClientCount($quote->reqClientId()) > 0 ? '' :
-                $this->flashMessage('warning', $this->translator->translate(
-                    'quote.delivery.location.none'));
-            if ($request->getMethod() === Method::POST) {
-                $body = (array) $request->getParsedBody();
-                $quote = $this->quote($id, $core->quoteRepo, false);
-                if ($quote) {
-                    $quoteForm = QuoteForm::show($quote);
-                    $client_id = $quote->reqClientId();
-                    $user = $this->activeUser($client_id, $form->uR, $core->ucR, $core->uiR);
-                    if (null !== $user) {
-                        if ($formHydrator->populateAndValidate($quoteForm, $body)) {
-                            $this->quote_service->saveQuote($user, $quote,
-                                $body, $this->sR, $core->groupRepo);
-                            $this->processCustomFields($body, $formHydrator,
-                                $this->quoteCustomFieldProcessor,
-                                    $quote_id);
-                            $this->flashMessage('success',
-                                $this->translator->translate(
-                                    'record.successfully.updated'));
-                            return $this->webService->getRedirectResponse(
-                                'quote/view', ['id' => $quote_id]);
-                        }
-                        $parameters['form'] = $quoteForm;
-                        $parameters['errors'] =
-                            $quoteForm->getValidationResult()
-                                 ->getErrorMessagesIndexedByProperty();
-                        return $this->webViewRenderer->render('_form', $parameters);
+        if (null === $quote) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $quoteForm = QuoteForm::show($quote);
+        $quoteCustomForm = new QuoteCustomForm();
+        $quote_id = $quote->reqId();
+        $client_id = $quote->reqClientId();
+        $dels = $loc->delRepo->repoClientquery($quote->reqClientId());
+        $parameters = [
+            'title' => '',
+            'alert' => $this->alert(),
+            'actionName' => 'quote/edit',
+            'actionArguments' => ['id' => $quote_id],
+            'errors' => [],
+            'form' => $quoteForm,
+            'optionsData' => $this->editOptionsData(
+                $quote,
+                $client_id,
+                $core,
+                $loc,
+            ),
+            'invs' => $core->invRepo->findAllPreloaded(),
+            'clients' => $core->clientRepo->findAllPreloaded(),
+            'dels' => $dels,
+            'groups' => $core->groupRepo->findAllPreloaded(),
+            'numberhelper' => new NumberHelper($this->sR),
+            'quote_statuses' => $core->quoteRepo->getStatuses($this->translator),
+            'cvH' => new CVH($this->sR, $form->cvR),
+            'customFields' => $this->fetchCustomFieldsAndValues(
+                $form->cfR, $form->cvR, 'quote_custom')['customFields'],
+            // Applicable to normally building up permanent selection lists
+            // eg. dropdowns
+            'customValues' => $this->fetchCustomFieldsAndValues(
+                $form->cfR, $form->cvR, 'quote_custom')['customValues'],
+            // There will initially be no custom_values attached to this
+            // quote until they are filled in the field on the form
+            'quoteCustomValues' => $this->quoteCustomValues($quote_id, $form->qcR),
+            'quote' => $quote,
+            'quoteCustomForm' => $quoteCustomForm,
+            'delCount' => $loc->delRepo->repoClientCount($quote->reqClientId()),
+            'returnUrlAction' => 'edit',
+            'formFields' => $this->formFields,
+        ];
+        $loc->delRepo->repoClientCount($quote->reqClientId()) > 0 ? '' :
+            $this->flashMessage('warning', $this->translator->translate(
+                'quote.delivery.location.none'));
+        if ($request->getMethod() === Method::POST) {
+            $body = (array) $request->getParsedBody();
+            $quote = $this->quote($id, $core->quoteRepo, false);
+            if ($quote) {
+                $quoteForm = QuoteForm::show($quote);
+                $client_id = $quote->reqClientId();
+                $user = $this->activeUser($client_id, $form->uR, $core->ucR, $core->uiR);
+                if (null !== $user) {
+                    if ($formHydrator->populateAndValidate($quoteForm, $body)) {
+                        $this->quote_service->saveQuote($user, $quote,
+                            $body, $this->sR, $core->groupRepo);
+                        $this->processCustomFields($body, $formHydrator,
+                            $this->quoteCustomFieldProcessor,
+                                $quote_id);
+                        $this->flashMessage('success',
+                            $this->translator->translate(
+                                'record.successfully.updated'));
+                        return $this->webService->getRedirectResponse(
+                            'quote/view', ['id' => $quote_id]);
                     }
+                    $parameters['form'] = $quoteForm;
+                    $parameters['errors'] =
+                        $quoteForm->getValidationResult()
+                             ->getErrorMessagesIndexedByProperty();
                 }
             }
-            return $this->webViewRenderer->render('_form', $parameters);
-        } // $quote
-        return $this->webService->getNotFoundResponse();
+        }
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     // '#quote_tax_submit' => quote.js

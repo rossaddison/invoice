@@ -33,17 +33,13 @@ class ClassifiedTaxCategory implements XmlSerializable
         if (null !== $this->id) {
             return $this->id;
         }
-
-        if ($this->percent !== null) {
-            if ($this->percent >= 21) {
-                return 'S';
+        return $this->percent !== null
+            ? match (true) {
+                $this->percent >= 21 => 'S',
+                $this->percent >= 6  => 'AA',
+                default              => 'Z',
             }
-            if ($this->percent <= 21 && $this->percent >= 6) {
-                return 'AA';
-            }
-            return 'Z';
-        }
-        return null;
+            : null;
     }
 
     /**

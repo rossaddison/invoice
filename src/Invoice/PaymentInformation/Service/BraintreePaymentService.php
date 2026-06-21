@@ -49,15 +49,15 @@ class BraintreePaymentService
         $customerGateway = new CustomerGateway($gateway);
         $clientId = $invoice->reqClientId();
 
+        $found = false;
         try {
             // Try to find existing customer
             $customerGateway->find((string) $clientId);
             $this->logger->info('Braintree customer found', ['client_id' => $clientId]);
-            return true;
+            $found = true;
         } catch (\Braintree\Exception\NotFound $e) {
             // Customer not found, create new one
             $this->logger->info('Braintree customer not found, creating new one', ['client_id' => $clientId]);
-
             try {
                 $result = $customerGateway->create([
                     'id' => $clientId,
@@ -65,23 +65,21 @@ class BraintreePaymentService
                     'lastName' => $invoice->getClient()?->getClientSurname(),
                     'email' => $invoice->getClient()?->getClientEmail(),
                 ]);
-
                 if ($result->success) {
                     $this->logger->info('Braintree customer created successfully', ['client_id' => $clientId]);
-                    return true;
+                    $found = true;
+                } else {
+                    $this->logger->error('Failed to create Braintree customer', [
+                        'client_id' => $clientId,
+                        'errors' => $result->message ?? 'Unknown error',
+                    ]);
                 }
-                $this->logger->error('Failed to create Braintree customer', [
-                    'client_id' => $clientId,
-                    'errors' => $result->message ?? 'Unknown error',
-                ]);
-                return false;
             } catch (\Throwable $e) {
                 $this->logger->error('Exception occurred while creating Braintree customer', [
                     'client_id' => $clientId,
                     'error' => $e->getMessage(),
                     'trace' => $e->getTraceAsString(),
                 ]);
-                return false;
             }
         } catch (\Throwable $e) {
             $this->logger->error('Exception occurred while finding Braintree customer', [
@@ -89,8 +87,8 @@ class BraintreePaymentService
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);
-            return false;
         }
+        return $found;
     }
 
     /**

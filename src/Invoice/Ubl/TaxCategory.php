@@ -44,16 +44,12 @@ class TaxCategory implements XmlSerializable
         if (null !== $this->id) {
             return $this->id;
         }
-        if ($this->percent >= 21) {
-            return 'S';
-        }
-        if ($this->percent <= 21 && $this->percent >= 6) {
-            return 'AA';
-        }
-        if ($this->percent == 0) {
-            return 'Z';
-        }
-        return null;
+        return match (true) {
+            $this->percent >= 21 => 'S',
+            $this->percent >= 6  => 'AA',
+            $this->percent == 0  => 'Z',
+            default              => null,
+        };
     }
 
     /**

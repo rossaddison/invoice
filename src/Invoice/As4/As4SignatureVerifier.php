@@ -20,24 +20,25 @@ class As4SignatureVerifier
         try {
             $xpath = new \DOMXPath($doc);
             $xpath->registerNamespace('ds', As4Constants::XMLDSIG_NS);
-
             $signatures = $xpath->query('//ds:Signature');
             if ($signatures === false || $signatures->length === 0) {
                 return false;
             }
-
-            foreach ($signatures as $sig) {
-                if (!$sig instanceof DOMElement) {
-                    return false;
-                }
-                if (!$this->verifySignatureElement($sig, $doc)) {
-                    return false;
-                }
-            }
-            return true;
+            /** @psalm-suppress InvalidArgument */
+            return $this->verifySignatures($signatures, $doc);
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    private function verifySignatures(\DOMNodeList $signatures, DOMDocument $doc): bool
+    {
+        foreach ($signatures as $sig) {
+            if (!$sig instanceof DOMElement || !$this->verifySignatureElement($sig, $doc)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private function verifySignatureElement(DOMElement $sigElem, DOMDocument $doc): bool

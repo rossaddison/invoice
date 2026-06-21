@@ -430,55 +430,47 @@ final class AuthController
         $clientIp = $this->secHelper->getClientIpAddress($request);
         $rateLimitKey = 'auth_setup_' . hash('sha256', $clientIp);
 
-        if (!$this->secHelper->checkRateLimit($rateLimitKey)) {
-            $this->logger->log(LogLevel::WARNING,
-                    'Rate limit reached for 2FA setup from IP: ' . $clientIp);
-            return $this->redirectToOneTimePasswordError();
-        }
-
-        $pendingUserId = (int) $this->session->get('pending_2fa_user_id');
-        $body = $request->getParsedBody() ?? [];
-        $tfa = 'two.factor.authentication';
-        $tfans = $tfa . '.no.secret.generated';
-        $tfaicf =  $tfa . '.invalid.code.format';
-        $tfaafms =  $tfa . '.attempt.failure.must.setup';
-        $tfaaf = $tfa . '.attempt.failure';
-        if (is_array($body)) {
-            $inputCode = $this->tfaHelper->sanitizeAndValidateCode($body['code'] ?? '');
-            if ($inputCode !== null && $pendingUserId > 0) {
+        $response = $this->redirectToOneTimePasswordError();
+        if ($this->secHelper->checkRateLimit($rateLimitKey)) {
+            $pendingUserId = (int) $this->session->get('pending_2fa_user_id');
+            $body = $request->getParsedBody() ?? [];
+            $tfa = 'two.factor.authentication';
+            $tfans = $tfa . '.no.secret.generated';
+            $tfaicf =  $tfa . '.invalid.code.format';
+            $tfaafms =  $tfa . '.attempt.failure.must.setup';
+            $tfaaf = $tfa . '.attempt.failure';
+            if (is_array($body)) {
+                $inputCode = $this->tfaHelper->sanitizeAndValidateCode($body['code'] ?? '');
+                if ($inputCode !== null && $pendingUserId > 0) {
                     $user = $userRepository->findById($pendingUserId);
                     /** @var mixed $tempSecretRaw */
-                        $tempSecretRaw = $this->session->get('2fa_temp_secret');
-                        $tempSecret = (\is_string($tempSecretRaw)
-                                && $tempSecretRaw !== '') ? $tempSecretRaw : null;
-                        if ($tempSecret === null) {
-                            $error = $translator->translate($tfans);
-                        } elseif (!$this->tfaHelper->isValidTotpCode($inputCode)) {
-                            $error = $translator->translate($tfaicf);
+                    $tempSecretRaw = $this->session->get('2fa_temp_secret');
+                    $tempSecret = (\is_string($tempSecretRaw)
+                            && $tempSecretRaw !== '') ? $tempSecretRaw : null;
+                    $error = null;
+                    if ($tempSecret === null) {
+                        $error = $translator->translate($tfans);
+                    } elseif (!$this->tfaHelper->isValidTotpCode($inputCode)) {
+                        $error = $translator->translate($tfaicf);
+                    } else {
+                        $totp = TOTP::create($tempSecret);
+                        if ($totp->verify($inputCode)) {
+                            $user->setTotpSecret($tempSecret);
+                            $user->set2FAEnabled(true);
+                            $userRepository->save($user);
+                            $this->session->remove('2fa_temp_secret');
+                            $this->session->remove('pending_2fa_user_id');
+                            // Regenerate session ID on successful setup
+                            $this->session->regenerateId();
+                            $this->session->set('verified_2fa_user_id', $pendingUserId);
+                            $response = $this->webService->getRedirectResponse('auth/verifyLogin');
                         } else {
-                            $totp = TOTP::create($tempSecret);
-                            if ($totp->verify($inputCode)) {
-                                $user->setTotpSecret($tempSecret);
-                                $user->set2FAEnabled(true);
-                                $userRepository->save($user);
-                                $this->session->remove('2fa_temp_secret');
-                                $this->session->remove('pending_2fa_user_id');
-                                // Regenerate session ID on successful setup
-                                $this->session->regenerateId();
-                                $this->session->set('verified_2fa_user_id',
-                                                                 $pendingUserId);
-                                $avl = 'auth/verifyLogin';
-                                return $this->webService
-                                            ->getRedirectResponse($avl);
-                            }
                             $etwd = 'enable_tfa_with_disabling';
-                            if ($this->sR->getSetting($etwd) == '1') {
-                                $error = $translator->translate($tfaafms);
-                            } else {
-                                $error = $translator->translate($tfaaf);
-                            }
+                            $error = $translator->translate(
+                                $this->sR->getSetting($etwd) == '1' ? $tfaafms : $tfaaf);
                         }
-
+                    }
+                    if ($error !== null) {
                         // Re-render the setup page with error and QR code
                         $safeSecret = $tempSecret ?? TOTP::create()->getSecret();
                         $totp = TOTP::create($safeSecret);
@@ -487,20 +479,24 @@ final class AuthController
                         if ($userEmail !== '') {
                             $totp->setLabel($userEmail);
                         }
-
                         $qrContent = $totp->getProvisioningUri();
                         $qrDataUri = $this->tfaHelper->generateQrDataUri($qrContent);
                         $tfasf = new TwoFactorAuthenticationSetupForm($translator);
-                        return $this->webViewRenderer->render('setup', [
+                        $response = $this->webViewRenderer->render('setup', [
                             'class' => $this->classList(),
                             'qrDataUri' => $qrDataUri,
                             'totpSecret' => $totp->getSecret(),
                             'error' => $error,
                             'formModel' => $tfasf,
                         ]);
+                    }
+                }
             }
+        } else {
+            $this->logger->log(LogLevel::WARNING,
+                'Rate limit reached for 2FA setup from IP: ' . $clientIp);
         }
-        return $this->redirectToOneTimePasswordError();
+        return $response;
     }
 
     /**

@@ -29,13 +29,7 @@ trait UrlKey
         QuoteUrlKeyUserDeps $ud,
     ): Response {
         // If there is no quote with such a url_key, issue a not found response
-        if ($urlKey === '') {
-            return $this->webService->getNotFoundResponse();
-        }
-
-        // If there is a quote with the url key ... continue or else issue
-        // not found response
-        if ($repos->qR->repoUrlKeyGuestCount($urlKey) < 1) {
+        if ($urlKey === '' || $repos->qR->repoUrlKeyGuestCount($urlKey) < 1) {
             return $this->webService->getNotFoundResponse();
         }
 

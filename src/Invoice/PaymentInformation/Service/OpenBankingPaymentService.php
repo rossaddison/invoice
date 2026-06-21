@@ -183,6 +183,7 @@ final class OpenBankingPaymentService
         $customer_email_address = $invoice->getClient()?->getClientEmail();
         $apiKey               = $this->sR->getSetting('gateway_open_banking_with_wonderful_apiToken');
         $providerConfig       = $this->getOpenBankingProviderConfig('wonderful');
+        $result = ['success' => false, 'data' => []];
         if (null !== $providerConfig) {
             try {
                 $client = new GuzzleClient();
@@ -209,16 +210,13 @@ final class OpenBankingPaymentService
                     ],
                 ]);
                 $body = (array) json_decode((string) $response->getBody(), true);
-
-                if (isset($body['status']) && $body['status'] === 'paid') {
-                    // Mark invoice as paid, update DB, etc.
-                    return ['success' => true, 'data' => $body];
-                }
-                return ['success' => false, 'data' => $body ?: []];
+                $result = (isset($body['status']) && $body['status'] === 'paid')
+                    ? ['success' => true, 'data' => $body]
+                    : ['success' => false, 'data' => $body ?: []];
             } catch (\Throwable $e) {
-                return ['success' => false, 'error' => $e->getMessage()];
+                $result = ['success' => false, 'error' => $e->getMessage()];
             }
         }
-        return ['success' => false, 'data' => []];
+        return $result;
     }
 }
