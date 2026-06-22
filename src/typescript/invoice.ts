@@ -385,10 +385,7 @@ export class InvoiceHandler {
 
             if (selected.length === 0) {
                 alert('Please select invoices to copy.');
-                if (btn && originalHtml) {
-                    btn.innerHTML = originalHtml;
-                    (btn as HTMLButtonElement).disabled = false;
-                }
+                this.restoreButton(btn, originalHtml);
                 return;
             }
 
@@ -400,10 +397,7 @@ export class InvoiceHandler {
 
             if (clientIds.length === 0) {
                 alert('Please select at least one client.');
-                if (btn && originalHtml) {
-                    btn.innerHTML = originalHtml;
-                    (btn as HTMLButtonElement).disabled = false;
-                }
+                this.restoreButton(btn, originalHtml);
                 return;
             }
 
@@ -426,10 +420,7 @@ export class InvoiceHandler {
             }
         } catch (error) {
             console.error('multiplecopy error', error);
-            if (btn && originalHtml) {
-                btn.innerHTML = originalHtml;
-                (btn as HTMLButtonElement).disabled = false;
-            }
+            this.restoreButton(btn, originalHtml);
             alert('An error occurred. See console for details.');
         }
     }
