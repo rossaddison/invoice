@@ -41,126 +41,109 @@ trait PeppolHelperInvoiceLineTrait
                                                 ACIIR $aciiR, unpR $unpR): array
     {
         $client = $invoice->getClient();
-        if ($client) {
-            $client_peppol = $cpR->repoClientPeppolLoadedquery($client->reqId());
-            if ($client_peppol) {
-                $invoiceLines = [];
-                $b = Schema::CBC;
-                $a = Schema::CAC;
-                /**
-                 * @var InvItem $item
-                 */
-                foreach ($invoice->getItems() as $item) {
-                    $product = $item->getProduct();
-                    if (null !== $product && $product->getUnitPeppolId() <= 0) {
-                        throw new ProductUnitCodeNf($this->t, $product);
-                    }
-                    $peppol_po_itemid = $this->PeppolPoItemid($item, $soiR);
-                    if (null == $peppol_po_itemid && $item->getSoItemId() > 0) {
-                        throw new SOIPOINNe($this->t);
-                    }
-
-                    $peppol_po_lineid = $this->PeppolPoLineid($item, $soiR);
-                    if (null == $peppol_po_lineid && $item->getSoItemId() > 0) {
-                        throw new SOIPOLNNe($this->t);
-                    }
-                    $listid = $product?->getProductIccListid();
-                    if (null == $listid && null !== $product) {
-                        throw new PICCSINf($this->t, $product);
-                    }
-                    $price = ($item->getPrice() ?? 0.00);
-                    $discount = ($item->getDiscountAmount() ?? 0.00);
-
-                    $item_id = $item->reqId();
-                    $inv_item_amount = $this->getInvItemAmount($item_id, $iiaR);
-                    if (isset($inv_item_amount)) {
-                        $sub_total = $inv_item_amount->getSubtotal() ?? 0;
-                        $convert_sub_total =
-                            $this->s->currencyConverter($sub_total);
-                        $unit_peppol_id = $item->getProduct()?->getUnitPeppolId();
-                        if (null !== $unit_peppol_id) {
-                            $unit_peppol = $unpR->repoUnitPeppolLoadedquery(
-                                                                $unit_peppol_id);
-                            if (null !== $unit_peppol) {
-                        $optionals = $this->buildOptionalInvoiceLineElements(
-                            $item, $peppol_po_lineid, $peppol_po_itemid
-                        );
-                        $lineNote = $optionals['lineNote'];
-                        $itemDesc = $optionals['itemDesc'];
-                        $originCountry = $optionals['originCountry'];
-                        $orderLineRef = $optionals['orderLineRef'];
-                        $buyersItemId = $optionals['buyersItemId'];
-
-            $invoiceLines[$item_id] =
-                [
-                    'name' => "{$a}InvoiceLine",
-                    'value' => [
-                        [
-                            'name' => "{$b}ID",
-                            'value' => (string) $item_id
-                        ],
-                        ...$lineNote,
-                        [
-                            'name' => "{$b}InvoicedQuantity",
-                            'value' => (string) $item->getQuantity(),
-                            'attributes' => [
-                                'unitCode' => $unit_peppol->getCode()
-                            ]
-                        ],
-                        [
-                            'name' => "{$b}LineExtensionAmount",
-                            'value' => $convert_sub_total,
-                            'attributes' => [
-                                'currencyID' =>
-                                        $this->documentCurrency
-                            ]
-                        ],
-                        [
-                            'name' => "{$b}AccountingCost",
-                            'value' => $client_peppol->getAccountingCost()
-                        ],
-                        [
-                            'name' => "{$a}InvoicePeriod",
-                            'value' => [
-                                [
-                                    'name' => "{$b}StartDate",
-                                    'value' => $invoice_period->getStartDate()
-                                ],
-                                [
-                                    'name' => "{$b}EndDate",
-                                    'value' => $invoice_period->getEndDate()
-                                ],
-                            ]
-                        ],
-                        ...$orderLineRef,
-                        [
-                            'name' => "{$a}DocumentReference",
-                            'value' => [
-                                [
-                                    'name' => "{$b}ID",
-                                    'value' => $invoice->getNumber()
-                                ],
-                                [
-                                    'name' => "{$b}DocumentTypeCode",
-                                    'value' => '130'
-                                ],
-                            ],
-                        ],
-                        $this->itemLineACs($aciiR, $item_id),
-                        $this->buildInvoiceLineItemElement($item, $itemDesc, $buyersItemId, $originCountry),
-                        $this->buildInvoiceLinePriceElement($item, $unit_peppol, $price, $discount),
-                    ],
-                ];
-                            } // null!== $unit_peppol
-                        } // null!== $unit_peppol_id
-                    } // isset $inv_item_amount
-                } // foreach
-                return $invoiceLines;
-            }
-            throw new ClientNf($this->t);
-        } else {
+        if (!$client) {
             throw new ClientNf($this->t);
         }
+        $client_peppol = $cpR->repoClientPeppolLoadedquery($client->reqId());
+        if (!$client_peppol) {
+            throw new ClientNf($this->t);
+        }
+        $invoiceLines = [];
+        $b = Schema::CBC;
+        $a = Schema::CAC;
+        /** @var InvItem $item */
+        foreach ($invoice->getItems() as $item) {
+            [$peppol_po_itemid, $peppol_po_lineid] = $this->validateInvItem($item, $soiR);
+            $item_id = $item->reqId();
+            $inv_item_amount = $this->getInvItemAmount($item_id, $iiaR);
+            if (!isset($inv_item_amount)) {
+                continue;
+            }
+            $sub_total = $inv_item_amount->getSubtotal() ?? 0;
+            $convert_sub_total = $this->s->currencyConverter($sub_total);
+            $unit_peppol_id = $item->getProduct()?->getUnitPeppolId();
+            if (null === $unit_peppol_id) {
+                continue;
+            }
+            $unit_peppol = $unpR->repoUnitPeppolLoadedquery($unit_peppol_id);
+            if (null === $unit_peppol) {
+                continue;
+            }
+            $price = $item->getPrice() ?? 0.00;
+            $discount = $item->getDiscountAmount() ?? 0.00;
+            $optionals = $this->buildOptionalInvoiceLineElements(
+                $item, $peppol_po_lineid, $peppol_po_itemid
+            );
+            $lineNote = $optionals['lineNote'];
+            $itemDesc = $optionals['itemDesc'];
+            $originCountry = $optionals['originCountry'];
+            $orderLineRef = $optionals['orderLineRef'];
+            $buyersItemId = $optionals['buyersItemId'];
+            $invoiceLines[$item_id] = [
+                'name' => "{$a}InvoiceLine",
+                'value' => [
+                    ['name' => "{$b}ID", 'value' => (string) $item_id],
+                    ...$lineNote,
+                    [
+                        'name' => "{$b}InvoicedQuantity",
+                        'value' => (string) $item->getQuantity(),
+                        'attributes' => ['unitCode' => $unit_peppol->getCode()],
+                    ],
+                    [
+                        'name' => "{$b}LineExtensionAmount",
+                        'value' => $convert_sub_total,
+                        'attributes' => ['currencyID' => $this->documentCurrency],
+                    ],
+                    ['name' => "{$b}AccountingCost", 'value' =>
+                        $client_peppol->getAccountingCost()],
+                    [
+                        'name' => "{$a}InvoicePeriod",
+                        'value' => [
+                            ['name' => "{$b}StartDate", 'value' =>
+                                $invoice_period->getStartDate()],
+                            ['name' => "{$b}EndDate", 'value' =>
+                                $invoice_period->getEndDate()],
+                        ],
+                    ],
+                    ...$orderLineRef,
+                    [
+                        'name' => "{$a}DocumentReference",
+                        'value' => [
+                            ['name' => "{$b}ID", 'value' => $invoice->getNumber()],
+                            ['name' => "{$b}DocumentTypeCode", 'value' => '130'],
+                        ],
+                    ],
+                    $this->itemLineACs($aciiR, $item_id),
+                    $this->buildInvoiceLineItemElement($item, $itemDesc,
+                        $buyersItemId, $originCountry),
+                    $this->buildInvoiceLinePriceElement($item, $unit_peppol,
+                        $price, $discount),
+                ],
+            ];
+        }
+        return $invoiceLines;
+    }
+
+    /** @return array{0: ?string, 1: ?string} */
+    private function validateInvItem(InvItem $item, SOIR $soiR): array
+    {
+        $product = $item->getProduct();
+        if (null !== $product && $product->getUnitPeppolId() <= 0) {
+            throw new ProductUnitCodeNf($this->t, $product);
+        }
+        $peppol_po_itemid = $this->peppolPoItemid($item, $soiR);
+        if (null == $peppol_po_itemid && $item->getSoItemId() > 0) {
+            throw new SOIPOINNe($this->t);
+        }
+        $peppol_po_lineid = $this->peppolPoLineid($item, $soiR);
+        if (null == $peppol_po_lineid && $item->getSoItemId() > 0) {
+            throw new SOIPOLNNe($this->t);
+        }
+        $listid = $product?->getProductIccListid();
+        if (null == $listid && null !== $product) {
+            throw new PICCSINf($this->t, $product);
+        }
+        return [$peppol_po_itemid, $peppol_po_lineid];
     }
 
     /**
@@ -182,13 +165,19 @@ trait PeppolHelperInvoiceLineTrait
             : [];
         $originCode = $item->getProduct()?->getProductCountryOfOriginCode() ?? '';
         $originCountry = $originCode !== ''
-            ? [['name' => "{$a}OriginCountry", 'value' => [['name' => "{$b}IdentificationCode", 'value' => $originCode]]]]
+            ? [['name' => "{$a}OriginCountry",
+                'value' => [['name' => "{$b}IdentificationCode",
+                             'value' => $originCode]]]]
             : [];
         $orderLineRef = ($peppol_po_lineid !== null && $peppol_po_lineid !== '')
-            ? [['name' => "{$a}OrderLineReference", 'value' => [['name' => "{$b}LineID", 'value' => $peppol_po_lineid]]]]
+            ? [['name' => "{$a}OrderLineReference",
+                'value' => [['name' => "{$b}LineID",
+                             'value' => $peppol_po_lineid]]]]
             : [];
         $buyersItemId = ($peppol_po_itemid !== null && $peppol_po_itemid !== '')
-            ? [['name' => "{$a}BuyersItemIdentification", 'value' => [['name' => "{$b}ID", 'value' => $peppol_po_itemid]]]]
+            ? [['name' => "{$a}BuyersItemIdentification",
+                'value' => [['name' => "{$b}ID",
+                             'value' => $peppol_po_itemid]]]]
             : [];
         return [
             'lineNote' => $lineNote,

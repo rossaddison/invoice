@@ -38,43 +38,34 @@ trait Guest
         string $status = '0',
     ): Response {
         $page = $filter->page ?? $page;
-        // Get the current user and determine from (Related logic: see Settings
-        // ...User Account) whether they have been given either guest or admin
-        // rights. These rights are unrelated to rbac and serve as a second
-        // 'line of defense' to support role based admin control. Retrieve the
-        // user from Yii-Demo's list of users in the User Table
         $user = $this->userService->getUser();
-        if (!($user instanceof User)) {
-            return $this->webService->getNotFoundResponse();
-        }
-        // Use this user's id to see whether a user has been setup under
-        // UserInv ie. yii-invoice's list of users
-        $user_id = $user->reqId();
+        $user_id = ($user instanceof User) ? $user->reqId() : 0;
         if ($user_id <= 0) {
             return $this->webService->getNotFoundResponse();
         }
         $userInv = $d->uiR->repoUserInvUserIdcount($user_id) > 0
             ? $d->uiR->repoUserInvUserIdquery($user_id) : null;
-        if (null === $userInv || !$userInv->getActive()) {
-            $this->flashMessage('info',
-                $this->translator->translate('user.inv.active.not'));
-            return $this->webService->getNotFoundResponse();
-        }
-        // Determine what clients have been allocated to this user
-        // (Related logic: see Settings...User Account) by looking at
-        // UserClient table eg. If the user is a guest-accountant, they
-        // will have been allocated certain clients.
-        $user_clients = $d->ucR->getAssignedToUser($user_id);
-        if (empty($user_clients)) {
-            $this->flashMessage('warning',
-                $this->translator->translate('user.clients.assigned.not'));
-            $this->flashMessage('info',
-                $this->translator->translate('user.inv.active.not'));
+        $user_clients = (null !== $userInv && $userInv->getActive())
+            ? $d->ucR->getAssignedToUser($user_id) : [];
+        $this->flashGuestAccessWarnings($userInv, $user_clients);
+        if (null === $userInv || !$userInv->getActive() || empty($user_clients)) {
             return $this->webService->getNotFoundResponse();
         }
         return $this->renderGuestView($d, $filter, $page, $status, $user_id, $userInv, $user_clients);
     }
-    
+
+    private function flashGuestAccessWarnings(?UserInv $userInv, array $user_clients): void
+    {
+        if (null === $userInv || !$userInv->getActive()) {
+            $this->flashMessage('info', $this->translator->translate('user.inv.active.not'));
+            return;
+        }
+        if (empty($user_clients)) {
+            $this->flashMessage('warning', $this->translator->translate('user.clients.assigned.not'));
+            $this->flashMessage('info', $this->translator->translate('user.inv.active.not'));
+        }
+    }
+
     private function renderGuestView(
         InvGuestDeps $d,
         InvGuestFilter $filter,

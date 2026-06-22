@@ -188,48 +188,58 @@ public function index(
         int $effectiveStatus,
     ): DRI {
         $invs = $this->invsStatus($invRepo, $effectiveStatus);
+        $invs = $this->applyBasicFilters($filter, $invs, $invRepo);
+        $invs = $this->applyAmountFilters($filter, $invs, $invRepo);
+        $invs = $this->applyClientFilters($filter, $invs, $invRepo);
+        return $invs;
+    }
+
+    private function applyBasicFilters(InvIndexFilter $filter, DRI $invs, IR $invRepo): DRI
+    {
         if (isset($filter->filterInvNumber) && !empty($filter->filterInvNumber)) {
             $invs = $invRepo->filterInvNumber($filter->filterInvNumber);
         }
-        if (isset($filter->filterCreditInvNumber)
-                && !empty($filter->filterCreditInvNumber)) {
+        if (isset($filter->filterCreditInvNumber) && !empty($filter->filterCreditInvNumber)) {
             $invs = $invRepo->filterCreditInvNumber($filter->filterCreditInvNumber);
         }
         if (isset($filter->filterFamilyName) && !empty($filter->filterFamilyName)) {
             $invs = $invRepo->filterFamilyName($filter->filterFamilyName);
         }
-        if (isset($filter->filterInvAmountTotal)
-                && !empty($filter->filterInvAmountTotal)) {
-            $invs = $invRepo->filterInvAmountTotal((float) $filter->filterInvAmountTotal);
-        }
-        if (isset($filter->filterInvAmountPaid)
-                && !empty($filter->filterInvAmountPaid)) {
-            $invs = $invRepo->filterInvAmountPaid((float) $filter->filterInvAmountPaid);
-        }
-        if (isset($filter->filterInvAmountBalance)
-                && !empty($filter->filterInvAmountBalance)) {
-            $invs = $invRepo->filterInvAmountBalance((float) $filter->filterInvAmountBalance);
-        }
         if ((isset($filter->filterInvNumber) && !empty($filter->filterInvNumber))
-           && (isset($filter->filterInvAmountTotal)
-                   && !empty($filter->filterInvAmountTotal))) {
+            && (isset($filter->filterInvAmountTotal) && !empty($filter->filterInvAmountTotal))) {
             $invs = $invRepo->filterInvNumberAndInvAmountTotal(
                 $filter->filterInvNumber, (float) $filter->filterInvAmountTotal);
         }
+        return $invs;
+    }
+
+    private function applyAmountFilters(InvIndexFilter $filter, DRI $invs, IR $invRepo): DRI
+    {
+        if (isset($filter->filterInvAmountTotal) && !empty($filter->filterInvAmountTotal)) {
+            $invs = $invRepo->filterInvAmountTotal((float) $filter->filterInvAmountTotal);
+        }
+        if (isset($filter->filterInvAmountPaid) && !empty($filter->filterInvAmountPaid)) {
+            $invs = $invRepo->filterInvAmountPaid((float) $filter->filterInvAmountPaid);
+        }
+        if (isset($filter->filterInvAmountBalance) && !empty($filter->filterInvAmountBalance)) {
+            $invs = $invRepo->filterInvAmountBalance((float) $filter->filterInvAmountBalance);
+        }
+        return $invs;
+    }
+
+    private function applyClientFilters(InvIndexFilter $filter, DRI $invs, IR $invRepo): DRI
+    {
         if (isset($filter->filterClient) && !empty($filter->filterClient)) {
             $invs = $invRepo->filterClient($filter->filterClient);
         }
         if (isset($filter->filterClientGroup) && !empty($filter->filterClientGroup)) {
             $invs = $invRepo->filterClientGroup($filter->filterClientGroup);
         }
-        if (isset($filter->filterClientAddress1)
-                && !empty($filter->filterClientAddress1)) {
+        if (isset($filter->filterClientAddress1) && !empty($filter->filterClientAddress1)) {
             $invs = $invRepo->filterClientAddress1($filter->filterClientAddress1);
         }
-        if (isset($filter->filterDateCreatedYearMonth)
-                && !empty($filter->filterDateCreatedYearMonth)) {
-            $invs = $invRepo->filterDateCreatedLike(
-                'Y-m', $filter->filterDateCreatedYearMonth);
+        if (isset($filter->filterDateCreatedYearMonth) && !empty($filter->filterDateCreatedYearMonth)) {
+            $invs = $invRepo->filterDateCreatedLike('Y-m', $filter->filterDateCreatedYearMonth);
         }
         return $invs;
     }

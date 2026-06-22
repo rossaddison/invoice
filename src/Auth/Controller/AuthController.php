@@ -655,15 +655,9 @@ final class AuthController
     ): ?ResponseInterface {
         $identity = $this->authService->getIdentity();
         $userId = $identity->getId();
-        if (null === $userId) {
-            return null;
-        }
-        $userInv = $uiR->repoUserInvUserIdquery((int) $userId);
-        if (null === $userInv) {
-            return null;
-        }
-        $user = $userInv->getUser();
-        if (null === $user) {
+        $userInv = null !== $userId ? $uiR->repoUserInvUserIdquery((int) $userId) : null;
+        $user = null !== $userInv ? $userInv->getUser() : null;
+        if (null === $userId || null === $userInv || null === $user) {
             return null;
         }
         if ($this->sR->getSetting('enable_tfa') == '1') {
@@ -812,7 +806,7 @@ final class AuthController
         int $vuid,
         TwoFactorAuthenticationVerifyLoginForm $form,
         array $codes,
-    ): ?ResponseInterface {
+    ): ResponseInterface {
         $tfa = 'two.factor.authentication';
         $clientIp = $this->secHelper->getClientIpAddress($request);
         $rateLimitKey = 'auth_verify_' . hash('sha256', $clientIp);
@@ -827,10 +821,9 @@ final class AuthController
             ]);
         }
         $body = $request->getParsedBody();
-        if (!is_array($body)) {
-            return null;
-        }
-        $inputCode = $this->tfaHelper->sanitizeAndValidateCode($body['code'] ?? '');
+        $inputCode = is_array($body)
+            ? $this->tfaHelper->sanitizeAndValidateCode($body['code'] ?? '')
+            : null;
         if (null === $inputCode || $vuid <= 0) {
             return $this->webViewRenderer->render('verify', [
                 'error' => $translator->translate($tfa . '.attempt.failure'),
@@ -922,18 +915,12 @@ final class AuthController
 
     private function clearTfaOnLogout(?string $userId, UserRepository $uR, UserInvRepository $uiR): void
     {
-        if (null === $userId) {
-            return;
-        }
-        $userInv = $uiR->repoUserInvUserIdquery((int) $userId);
+        $userInv = null !== $userId ? $uiR->repoUserInvUserIdquery((int) $userId) : null;
         if (null === $userInv) {
             return;
         }
         $user = $userInv->getUser();
-        if (null === $user || $this->sR->getSetting('enable_tfa') !== '1') {
-            return;
-        }
-        if (!$user->is2FAEnabled()) {
+        if (null === $user || $this->sR->getSetting('enable_tfa') !== '1' || !$user->is2FAEnabled()) {
             return;
         }
         $user->set2FAEnabled(false);

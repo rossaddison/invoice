@@ -186,60 +186,74 @@ final readonly class NumberHelper
             $this->quoteIncludeCustomerDiscountRequest(
                 $quote_id, $final_discountable_and_chargeable_total, $qR);
 
-        //-----------------------------------------------------------------
-        // Give the Quote its summary of amounts at the bottom of the quote
-        //-----------------------------------------------------------------
         $count = $qiR->repoCount($quote_id);
         $count_quote_amount = $qaR->repoQuoteAmountCount($quote_id);
-        //At least one item and a preexisting quote amount record exists =>
-        // Update the Quote Amount Record
-        if (($count > 0) && ($count_quote_amount > 0)) {
-            $quote_amount = $qaR->repoQuotequery($quote_id);
-            if ($quote_amount) {
-                $quote_amount->setQuoteId($quote_id);
-                $quote_amount->setItemSubtotal(
-                    $quote_item_subtotal_discount_inclusive ?: 0.00
-                );
-                $quote_amount->setItemTaxTotal(
-                    (float) $quote_item_amounts['tax_total'] ?: 0.00
-                );
-                /** Overall i.e. not line item total */
-                $quote_amount->setPackhandleshipTotal(
-                                          $quote_allowance_charge_amount_total);
-                /** Overall i.e. not line item tax e.g. vat or gst */
-                $quote_amount->setPackhandleshipTax(
-                                             $quote_allowance_charge_tax_total);
-                $quote_amount->setTaxTotal(
-                    $quote_tax_rate_total ?: 0.00
-                );
-                $quote_amount->setTotal($quote_total ?: 0.00);
-                $qaR->save($quote_amount);
+        $totals = [
+            'item_subtotal'       => $quote_item_subtotal_discount_inclusive,
+            'item_tax_total'      => (float) $quote_item_amounts['tax_total'],
+            'packhandleship_total' => $quote_allowance_charge_amount_total,
+            'packhandleship_tax'  => $quote_allowance_charge_tax_total,
+            'tax_total'           => $quote_tax_rate_total,
+            'total'               => $quote_total,
+        ];
+        $this->saveQuoteAmountTotals($quote_id, $count, $count_quote_amount, $qaR, $totals);
+    }
+
+    /**
+     * @param array<string, float> $totals
+     */
+    private function saveQuoteAmountTotals(
+        int $quoteId,
+        int $count,
+        int $countQuoteAmount,
+        QAR $qaR,
+        array $totals,
+    ): void {
+        if ($count > 0 && $countQuoteAmount > 0) {
+            $quoteAmount = $qaR->repoQuotequery($quoteId);
+            if ($quoteAmount) {
+                $this->setQuoteAmountFields($quoteAmount, $quoteId, $qaR, $totals);
             }
         }
-        // There are no longer any items on the quote so initialize the Quote
-        //  Amount Record to zero
-        if (($count === 0) && ($count_quote_amount > 0)) {
-            $quote_amount = $qaR->repoQuotequery($quote_id);
-            if ($quote_amount) {
-                $quote_amount->setQuoteId($quote_id);
-                $quote_amount->setItemSubtotal(0.00);
-                $quote_amount->setItemTaxTotal(0.00);
-                $quote_amount->setTaxTotal(0.00);
-                $quote_amount->setTotal(0.00);
-                $qaR->save($quote_amount);
+        if ($count === 0 && $countQuoteAmount > 0) {
+            $quoteAmount = $qaR->repoQuotequery($quoteId);
+            if ($quoteAmount) {
+                $quoteAmount->setQuoteId($quoteId);
+                $quoteAmount->setItemSubtotal(0.00);
+                $quoteAmount->setItemTaxTotal(0.00);
+                $quoteAmount->setTaxTotal(0.00);
+                $quoteAmount->setTotal(0.00);
+                $qaR->save($quoteAmount);
             }
         }
-        if (($count === 0) && ($count_quote_amount === 0)) {
-            // Create a Quote Amount Record for this quote if it does not exist
-            // even if there are no items
-            $quote_amount = new QuoteAmount();
-            $quote_amount->setQuoteId($quote_id);
-            $quote_amount->setItemSubtotal(0.00);
-            $quote_amount->setItemTaxTotal(0.00);
-            $quote_amount->setTaxTotal(0.00);
-            $quote_amount->setTotal(0.00);
-            $qaR->save($quote_amount);
+        if ($count === 0 && $countQuoteAmount === 0) {
+            $quoteAmount = new QuoteAmount();
+            $quoteAmount->setQuoteId($quoteId);
+            $quoteAmount->setItemSubtotal(0.00);
+            $quoteAmount->setItemTaxTotal(0.00);
+            $quoteAmount->setTaxTotal(0.00);
+            $quoteAmount->setTotal(0.00);
+            $qaR->save($quoteAmount);
         }
+    }
+
+    /**
+     * @param array<string, float> $totals
+     */
+    private function setQuoteAmountFields(
+        QuoteAmount $quoteAmount,
+        int $quoteId,
+        QAR $qaR,
+        array $totals,
+    ): void {
+        $quoteAmount->setQuoteId($quoteId);
+        $quoteAmount->setItemSubtotal($totals['item_subtotal'] ?: 0.00);
+        $quoteAmount->setItemTaxTotal($totals['item_tax_total'] ?: 0.00);
+        $quoteAmount->setPackhandleshipTotal($totals['packhandleship_total']);
+        $quoteAmount->setPackhandleshipTax($totals['packhandleship_tax']);
+        $quoteAmount->setTaxTotal($totals['tax_total'] ?: 0.00);
+        $quoteAmount->setTotal($totals['total'] ?: 0.00);
+        $qaR->save($quoteAmount);
     }
 
     /**
@@ -314,58 +328,74 @@ final readonly class NumberHelper
             $this->salesorderIncludeCustomerDiscountRequest(
                 $salesorder_id, $final_discountable_and_chargeable_total, $soR);
 
-        //-----------------------------------------------------------------
-        // Give the SalesOrder its summary of amounts at the bottom of the
-        // salesorder
-        //-----------------------------------------------------------------
         $count = $soiR->repoCount($salesorder_id);
-        $count_salesorder_amount = $soaR->repoSalesOrderAmountCount(
-            $salesorder_id);
-        //At least one item and a preexisting salesorder amount record exists =>
-        //Update the SalesOrder Amount Record
-        if (($count > 0) && ($count_salesorder_amount > 0)) {
-            $salesorder_amount = $soaR->repoSalesOrderquery($salesorder_id);
-            if ($salesorder_amount) {
-                $salesorder_amount->setSalesOrderId($salesorder_id);
-                $salesorder_amount->setItemSubtotal(
-                    $salesorder_item_subtotal_discount_inclusive ?: 0.00
-                );
-                $salesorder_amount->setItemTaxTotal(
-                    (float) $salesorder_item_amounts['tax_total'] ?: 0.00
-                );
-                /** Overall i.e. not line item total */
-                $salesorder_amount->setPackhandleshipTotal(
-                                     $salesorder_allowance_charge_amount_total);
-                /** Overall i.e. not line item tax e.g. vat or gst */
-                $salesorder_amount->setPackhandleshipTax(
-                                        $salesorder_allowance_charge_tax_total);
-                $salesorder_amount->setTaxTotal(
-                    $salesorder_tax_rate_total ?: 0.00
-                );
-                $salesorder_amount->setTotal($salesorder_total ?: 0.00);
-                $soaR->save($salesorder_amount);
+        $count_salesorder_amount = $soaR->repoSalesOrderAmountCount($salesorder_id);
+        $totals = [
+            'item_subtotal'       => $salesorder_item_subtotal_discount_inclusive,
+            'item_tax_total'      => (float) $salesorder_item_amounts['tax_total'],
+            'packhandleship_total' => $salesorder_allowance_charge_amount_total,
+            'packhandleship_tax'  => $salesorder_allowance_charge_tax_total,
+            'tax_total'           => $salesorder_tax_rate_total,
+            'total'               => $salesorder_total,
+        ];
+        $this->saveSoAmountTotals($salesorder_id, $count, $count_salesorder_amount, $soaR, $totals);
+    }
+
+    /**
+     * @param array<string, float> $totals
+     */
+    private function saveSoAmountTotals(
+        int $soId,
+        int $count,
+        int $countSoAmount,
+        SOAR $soaR,
+        array $totals,
+    ): void {
+        if ($count > 0 && $countSoAmount > 0) {
+            $soAmount = $soaR->repoSalesOrderquery($soId);
+            if ($soAmount) {
+                $this->setSoAmountFields($soAmount, $soId, $soaR, $totals);
             }
         }
-        if (($count === 0) && ($count_salesorder_amount > 0)) {
-            $salesorder_amount = $soaR->repoSalesOrderquery($salesorder_id);
-            if ($salesorder_amount) {
-                $salesorder_amount->setSalesOrderId($salesorder_id);
-                $salesorder_amount->setItemSubtotal(0.00);
-                $salesorder_amount->setItemTaxTotal(0.00);
-                $salesorder_amount->setTaxTotal(0.00);
-                $salesorder_amount->setTotal(0.00);
-                $soaR->save($salesorder_amount);
+        if ($count === 0 && $countSoAmount > 0) {
+            $soAmount = $soaR->repoSalesOrderquery($soId);
+            if ($soAmount) {
+                $soAmount->setSalesOrderId($soId);
+                $soAmount->setItemSubtotal(0.00);
+                $soAmount->setItemTaxTotal(0.00);
+                $soAmount->setTaxTotal(0.00);
+                $soAmount->setTotal(0.00);
+                $soaR->save($soAmount);
             }
         }
-        if (($count === 0) && ($count_salesorder_amount === 0)) {
-            $salesorder_amount = new SalesOrderAmount();
-            $salesorder_amount->setSalesOrderId($salesorder_id);
-            $salesorder_amount->setItemSubtotal(0.00);
-            $salesorder_amount->setItemTaxTotal(0.00);
-            $salesorder_amount->setTaxTotal(0.00);
-            $salesorder_amount->setTotal(0.00);
-            $soaR->save($salesorder_amount);
+        if ($count === 0 && $countSoAmount === 0) {
+            $soAmount = new SalesOrderAmount();
+            $soAmount->setSalesOrderId($soId);
+            $soAmount->setItemSubtotal(0.00);
+            $soAmount->setItemTaxTotal(0.00);
+            $soAmount->setTaxTotal(0.00);
+            $soAmount->setTotal(0.00);
+            $soaR->save($soAmount);
         }
+    }
+
+    /**
+     * @param array<string, float> $totals
+     */
+    private function setSoAmountFields(
+        SalesOrderAmount $soAmount,
+        int $soId,
+        SOAR $soaR,
+        array $totals,
+    ): void {
+        $soAmount->setSalesOrderId($soId);
+        $soAmount->setItemSubtotal($totals['item_subtotal'] ?: 0.00);
+        $soAmount->setItemTaxTotal($totals['item_tax_total'] ?: 0.00);
+        $soAmount->setPackhandleshipTotal($totals['packhandleship_total']);
+        $soAmount->setPackhandleshipTax($totals['packhandleship_tax']);
+        $soAmount->setTaxTotal($totals['tax_total'] ?: 0.00);
+        $soAmount->setTotal($totals['total'] ?: 0.00);
+        $soaR->save($soAmount);
     }
 
     public function calculateInv(int $inv_id, CalcInvDeps $deps): void
@@ -376,7 +406,6 @@ final readonly class NumberHelper
         $itrR = $deps->itrR;
         $iaR = $deps->iaR;
         $iR = $deps->iR;
-        $pymR = $deps->pymR;
         $inv_allowance_charge_amount_total = 0.00;
         $inv_allowance_charge_tax_total = 0.00;
         // Get all items that belong to a specific invoice by accessing $iiR
@@ -460,24 +489,7 @@ final readonly class NumberHelper
                                                $inv_allowance_charge_tax_total);
                 $inv_amount->setTaxTotal($inv_tax_rate_total ?: 0.00);
                 $inv_amount->setTotal($inv_total ?: 0.00);
-                // The balance will be reduced with each payment
-                $payments = ($pymR->repoCount($inv_id) > 0 ?
-                                             $pymR->repoInvquery($inv_id) : []);
-                $total_paid = 0.00;
-                /** @var Payment $payment */
-                foreach ($payments as $payment) {
-                    $paid = (float) $payment->getAmount();
-                    $total_paid = $total_paid + $paid;
-                }
-                $inv_amount->setPaid($total_paid);
-                $balance = $inv_total - $total_paid;
-                $inv_amount->setBalance($balance);
-                $iaR->save($inv_amount);
-                $invoice = $iR->repoInvUnLoadedquery($inv_id) ?? null;
-                if ($inv_total > 0.00 && $total_paid > 0.00) {
-                    $this->invBalanceZeroSetToReadOnlyIfFullyPaid(
-                                             $iR, $this->s, $invoice, $balance);
-                }
+                $this->calculateAndSetBalance($inv_amount, $inv_id, $inv_total, $deps);
             }
         }
         // There are no longer any items on the invoice so initialize the
@@ -503,6 +515,31 @@ final readonly class NumberHelper
             $inv_amount->setTaxTotal(0.00);
             $inv_amount->setTotal(0.00);
             $iaR->save($inv_amount);
+        }
+    }
+
+    private function calculateAndSetBalance(
+        InvAmount $inv_amount,
+        int $inv_id,
+        float $inv_total,
+        CalcInvDeps $deps,
+    ): void {
+        $payments = $deps->pymR->repoCount($inv_id) > 0
+            ? $deps->pymR->repoInvquery($inv_id)
+            : [];
+        $total_paid = 0.00;
+        /** @var Payment $payment */
+        foreach ($payments as $payment) {
+            $total_paid += (float) $payment->getAmount();
+        }
+        $inv_amount->setPaid($total_paid);
+        $balance = $inv_total - $total_paid;
+        $inv_amount->setBalance($balance);
+        $deps->iaR->save($inv_amount);
+        $invoice = $deps->iR->repoInvUnLoadedquery($inv_id) ?? null;
+        if ($inv_total > 0.00 && $total_paid > 0.00) {
+            $this->invBalanceZeroSetToReadOnlyIfFullyPaid($deps->iR, $this->s,
+                $invoice, $balance);
         }
     }
 
@@ -900,36 +937,27 @@ final readonly class NumberHelper
         $total_inv_tax_rate_amount = 0.00;
         $inv_tax_rates = $itrR->repoInvquery($inv_id);
         $inv_tax_rates_count = $itrR->repoCount($inv_id);
-// At least one invoice tax rate has been set and the invoice has amounts that
-//  invoice tax rates can be applied to
-        if (($inv_tax_rates_count > 0) && $iaR->repoInvAmountCount($inv_id) > 0) {
-            // There are invoice taxes applied
-            $inv_amount = $iaR->repoInvquery($inv_id);
-            if ($inv_amount) {
-// Loop through the invoice taxes and update inv_tax_rate_amount for each of
-//  the applied inv taxes
-                /** @var InvTaxRate  $inv_tax_rate */
-                foreach ($inv_tax_rates as $inv_tax_rate) {
-// If the include item tax has been checked ie. value is 1
-                    $item_subtotal = $inv_amount->getItemSubtotal() ?: 0.00;
-                    $tax_rate_percent = $inv_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00;
-// 'Apply after item tax' => The inv tax rate should include the applied item tax
-                    if (null !== $inv_tax_rate->getIncludeItemTax()
-                        && $inv_tax_rate->getIncludeItemTax() === 1) {
-                        $item_tax_total = $inv_amount->getItemTaxTotal() ?: 0.00;
-                        $inv_tax_rate_amount = ($item_subtotal + $item_tax_total)
-                            * $tax_rate_percent / 100.00;
-                    } else {
-// The invoice tax rate should not include the applied item tax so get the
-// general tax rate from Tax Rate table
-                        $inv_tax_rate_amount = $item_subtotal * ($tax_rate_percent / 100.00);
-                    }
-                    // Update the invoice tax rate amount
-                    $inv_tax_rate->setInvTaxRateAmount($inv_tax_rate_amount);
-                    $itrR->save($inv_tax_rate);
-                    $total_inv_tax_rate_amount += $inv_tax_rate_amount;
-                }
+        if ($inv_tax_rates_count <= 0 || $iaR->repoInvAmountCount($inv_id) <= 0) {
+            return $total_inv_tax_rate_amount;
+        }
+        $inv_amount = $iaR->repoInvquery($inv_id);
+        if (!$inv_amount) {
+            return $total_inv_tax_rate_amount;
+        }
+        /** @var InvTaxRate $inv_tax_rate */
+        foreach ($inv_tax_rates as $inv_tax_rate) {
+            $item_subtotal = $inv_amount->getItemSubtotal() ?: 0.00;
+            $tax_rate_percent = $inv_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00;
+            if (null !== $inv_tax_rate->getIncludeItemTax()
+                && $inv_tax_rate->getIncludeItemTax() === 1) {
+                $item_tax_total = $inv_amount->getItemTaxTotal() ?: 0.00;
+                $inv_tax_rate_amount = ($item_subtotal + $item_tax_total) * $tax_rate_percent / 100.00;
+            } else {
+                $inv_tax_rate_amount = $item_subtotal * ($tax_rate_percent / 100.00);
             }
+            $inv_tax_rate->setInvTaxRateAmount($inv_tax_rate_amount);
+            $itrR->save($inv_tax_rate);
+            $total_inv_tax_rate_amount += $inv_tax_rate_amount;
         }
         return $total_inv_tax_rate_amount;
     }

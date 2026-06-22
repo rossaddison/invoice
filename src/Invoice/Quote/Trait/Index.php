@@ -17,6 +17,7 @@ use App\Widget\Bootstrap5ModalQuote;
 use Yiisoft\{
     Data\Paginator\OffsetPaginator as DataOffsetPaginator,
     Data\Paginator\PageToken,
+    Data\Reader\DataReaderInterface as DRI,
     Data\Reader\Sort,
     Data\Reader\OrderHelper,
     Html\Html,
@@ -82,31 +83,9 @@ trait Index
             $effectiveStatus = isset($filter->filterStatus)
                 && !empty($filter->filterStatus) ?
                     $filter->filterStatus : $status;
-            /**
-             * @psalm-var \Yiisoft\Data\Reader\ReadableDataInterface<array-key, array<array-key, mixed>|object>&\Yiisoft\Data\Reader\LimitableDataInterface&\Yiisoft\Data\Reader\OffsetableDataInterface&\Yiisoft\Data\Reader\CountableDataInterface $quotes
-             */
+            /** @var DRI<array-key, array<array-key, mixed>|object> $quotes */
             $quotes = $this->quotesStatusWithSort($d->quoteRepo, (int) $effectiveStatus, $sort);
-            if (isset($query_params['filterQuoteNumber'])
-                && !empty($query_params['filterQuoteNumber'])) {
-                $quotes = $d->quoteRepo->filterQuoteNumber(
-                    (string) $query_params['filterQuoteNumber']);
-            }
-            if (isset($query_params['filterQuoteAmountTotal'])
-                && !empty($query_params['filterQuoteAmountTotal'])) {
-                $quotes = $d->quoteRepo->filterQuoteAmountTotal(
-                    (string) $query_params['filterQuoteAmountTotal']);
-            }
-            if (isset($filter->filterClient) && !empty($filter->filterClient)) {
-                $quotes = $d->quoteRepo->filterClient($filter->filterClient);
-            }
-            if ((isset($query_params['filterQuoteNumber'])
-                && !empty($query_params['filterQuoteNumber']))
-                && (isset($query_params['filterQuoteAmountTotal'])
-                && !empty($query_params['filterQuoteAmountTotal']))) {
-                $quotes = $d->quoteRepo->filterQuoteNumberAndQuoteAmountTotal(
-                    (string) $query_params['filterQuoteNumber'],
-                        (float) $query_params['filterQuoteAmountTotal']);
-            }
+            $quotes = $this->indexApplyFilters($query_params, $filter, $d->quoteRepo, $quotes);
             $paginator = (new DataOffsetPaginator($quotes))
             ->withPageSize($this->sR->positiveListLimit())
             ->withCurrentPage($currentPageNeverZero)
@@ -266,5 +245,30 @@ trait Index
         \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         return $quoteRepo->findAllWithStatus($status);
+    }
+
+    /** @param array<array-key, mixed> $query_params */
+    private function indexApplyFilters(
+        array $query_params,
+        QuoteIndexFilter $filter,
+        QR $quoteRepo,
+        DRI $quotes,
+    ): DRI {
+        if (isset($query_params['filterQuoteNumber']) && !empty($query_params['filterQuoteNumber'])) {
+            $quotes = $quoteRepo->filterQuoteNumber((string) $query_params['filterQuoteNumber']);
+        }
+        if (isset($query_params['filterQuoteAmountTotal']) && !empty($query_params['filterQuoteAmountTotal'])) {
+            $quotes = $quoteRepo->filterQuoteAmountTotal((string) $query_params['filterQuoteAmountTotal']);
+        }
+        if (isset($filter->filterClient) && !empty($filter->filterClient)) {
+            $quotes = $quoteRepo->filterClient($filter->filterClient);
+        }
+        if ((isset($query_params['filterQuoteNumber']) && !empty($query_params['filterQuoteNumber']))
+            && (isset($query_params['filterQuoteAmountTotal']) && !empty($query_params['filterQuoteAmountTotal']))) {
+            $quotes = $quoteRepo->filterQuoteNumberAndQuoteAmountTotal(
+                (string) $query_params['filterQuoteNumber'],
+                (float) $query_params['filterQuoteAmountTotal']);
+        }
+        return $quotes;
     }
 }

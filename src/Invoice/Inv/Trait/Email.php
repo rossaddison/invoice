@@ -206,16 +206,7 @@ trait Email
                     new InvEmailStage1Data($from_email, $from_name, $to, $subject, $email_body, $cc, $bcc, $attachFiles),
                     $invEmailService,
                 )) {
-                    $invoice = $d->core->iR->repoInvUnloadedquery($inv_id);
-                    if ($invoice) {
-                        $invoice->setStatusId(2);
-                        if (($this->sR->getSetting('read_only_toggle') == '2')
-                            && ($this->sR->getSetting('disable_read_only') == '0')) {
-                            $invoice->setIsReadOnly(true);
-                        }
-                        $this->emailedThereforeAddLog($invoice, $d->core->islR);
-                        $d->core->iR->save($invoice);
-                    }
+                    $this->updateInvoiceAfterEmail($invEmailService, $inv_id);
                     $messageKey = 'email.successfully.sent';
                 }
             }
@@ -232,6 +223,22 @@ trait Email
                  'url' => 'inv/view', 'id' => $inv_id],
             )
         );
+    }
+
+    private function updateInvoiceAfterEmail(InvEmailService $invEmailService, int $inv_id): void
+    {
+        $d = $invEmailService->d;
+        $invoice = $d->core->iR->repoInvUnloadedquery($inv_id);
+        if (!$invoice) {
+            return;
+        }
+        $invoice->setStatusId(2);
+        if (($this->sR->getSetting('read_only_toggle') == '2')
+            && ($this->sR->getSetting('disable_read_only') == '0')) {
+            $invoice->setIsReadOnly(true);
+        }
+        $this->emailedThereforeAddLog($invoice, $d->core->islR);
+        $d->core->iR->save($invoice);
     }
 
     private function emailedThereforeAddLog(Inv $invoice, ISLR $islR): void

@@ -559,18 +559,14 @@ final class UserInvController extends BaseController
         string $_language,
     ): void {
         $identity = $d->tR->findIdentityByToken($tokenWithoutTimestamp, $tokenType);
+        $userId = $identity?->getUser()?->reqId();
+        $userInv = null !== $userId ? $d->uiR->repoUserInvUserIdquery($userId) : null;
         if (null === $identity) {
             $this->flashMessage('warning', 'No token');
             return;
         }
-        $userId = $identity->getUser()?->reqId();
-        if (null === $userId) {
-            $this->flashMessage('warning', 'No User');
-            return;
-        }
-        $userInv = $d->uiR->repoUserInvUserIdquery($userId);
-        if (null === $userInv) {
-            $this->flashMessage('warning', 'No User Inv');
+        if (null === $userId || null === $userInv) {
+            $this->flashMessage('warning', null === $userId ? 'No User' : 'No User Inv');
             return;
         }
         $userInv->setActive(true);

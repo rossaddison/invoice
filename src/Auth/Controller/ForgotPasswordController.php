@@ -88,121 +88,94 @@ final class ForgotPasswordController
         if ($guard !== null) {
             return $this->webService->getRedirectResponse($guard);
         }
-        $requestPasswordResetToken = '';
         $response = null;
-        if ($formHydrator->populateFromPostAndValidate(
-                $requestPasswordResetTokenForm, $request)) {
-            $user = $uR->findByEmail(
-                $requestPasswordResetTokenForm->getEmail());
-            if (null !== $user) {
-                $identityId = (int) $user->getIdentity()->getId();
-                if ($identityId > 0) {
-                    $tokenRecord = $tR->findTokenByIdentityIdAndType(
-                        $identityId, self::REQUEST_PASSWORD_RESET_TOKEN);
-                    if (null == $tokenRecord) {
-                        $requestPasswordResetToken =
-                            $this->requestPasswordResetToken($identityId, $tR);
-                    } else {
-                        $tokenString = $tokenRecord->getToken();
-                        if (null !== $tokenString) {
-                            $timeStamp =
-                                $tokenRecord->getCreatedAt()->getTimestamp();
-                            // check if token Random string is still valid
-                            // by checking the timestamp
-                            if ($timeStamp + 3600 >= time()) {
-                                $requestPasswordResetToken = $tokenString
-                                    . '_'
-                                    . (string) $timeStamp;
-                            } else {
-/**
- * This new Token will be nullified when the password is actually reset in the
- *  Token extension table i.e. by searching the user ... identity ... token
- *  belonging to the user named 'request-password-reset'
- * Related logic: see PasswordResetController.php
- * Related logic: see https://github.com/yiisoft/yii2-app-advanced/blob/master/
- * common/models/User.php function removePasswordResetToken
- */
-                                $requestPasswordResetToken =
-                                    $this->requestPasswordResetToken(
-                                        $identityId, $tR);
-                            }
-                        }
-                    }
-                    if (strlen($requestPasswordResetToken) > 0) {
-                        $to = $user->getEmail();
-                        $login = $user->getLogin();
-                        /**
-                         * @var array $this->sR->localeLanguageArray()
-                         */
-                        $_language = $currentRoute->getArgument('_language');
-                        /**
-                         * Related logic: see A new UserInv
-                         *  (extension table of user) for the user is created.
-                         * For additional headers to strengthen security refer
-                         *  to:
-                         * Related logic:
-                         *  see https://en.wikipedia.org/wiki/Email#Message_format
-                         * Related logic:
-                         *  see https://github.com/yiisoft/mailer/blob/
-                         * 1d3480bc26cbeba47b24e61f9ec0e717c244c0b7/tests/
-                         * MessageTest.php#L217
-                         * @var string $_language
-                         */
-                        $htmlBody =
-                            $this->htmlBodyWithMaskedRandomAndTimeTokenLink(
-                                $_language, $requestPasswordResetToken);
-                        if (($this->sR->getSetting('email_send_method')
-                                == 'symfony')
-                                || $this->sR->mailerEnabled()) {
-                            $email = new \Yiisoft\Mailer\Message(
-                                charset: 'utf-8',
-                                headers: [
-                                    'X-Origin' => ['0', '1'],
-                                    'X-Pass' => 'pass',
-                                ],
-                                subject: $login . ': <' . $to . '>',
-                                date: new \DateTimeImmutable('now'),
-                                from: [
-                                    $this->sR->getConfigAdminEmail() =>
-                                    $this->translator->translate('administrator')
-                                ],
-                                to: $to,
-                                htmlBody: $htmlBody,
-                            );
-                            $email->withAddedHeader('Message-ID',
-                                $this->sR->getConfigAdminEmail());
-                            try {
-                                $this->mailer->send($email);
-                            } catch (\Exception $e) {
-                                $this->logger->error($e->getMessage());
-                                $response = $this->webService->getRedirectResponse(
-                                    'site/forgotemailfailed');
-                            }
-                        }
-                    }
-                }
-            } else {
-                $this->logger->error(
-                    $this->translator->translate('loginalert.user.not.found'));
-                $response = $this->webService->getRedirectResponse(
-                    'site/forgotusernotfound');
-            }
-/**
- * Once the user has presented their email address and submitted the form,
- *  show this message
- * Related logic: see resources/messages/en/app.php
- * Related logic: see resources/views/site/forgotalert.php
- * 'i.password_reset_email' .....
- * 'You requested a new password for your installation. Please click the link
- *  in your inbox to reset your password:',
- */
+        if ($formHydrator->populateFromPostAndValidate($requestPasswordResetTokenForm, $request)) {
+            $user = $uR->findByEmail($requestPasswordResetTokenForm->getEmail());
+            $response = $this->handleForgotUser($user, $currentRoute, $tR);
             $response ??= $this->webService->getRedirectResponse('site/forgotalert');
         }
         if ($response !== null) {
             return $response;
         }
-        return $this->webViewRenderer->render('forgotpassword',
-            ['formModel' => $requestPasswordResetTokenForm]);
+        return $this->webViewRenderer->render('forgotpassword', ['formModel' =>    $requestPasswordResetTokenForm]);
+    }
+
+    private function handleForgotUser(?User $user, CurrentRoute $currentRoute, tR $tR): ?ResponseInterface
+    {
+        if (null === $user) {
+            $this->logger->error($this->translator->translate('loginalert.user.not.found'));
+            return $this->webService->getRedirectResponse('site/forgotusernotfound');
+        }
+        $identityId = (int) $user->getIdentity()->getId();
+        if ($identityId <= 0) {
+            return null;
+        }
+        return $this->handleValidIdentity($identityId, $user, $currentRoute, $tR);
+    }
+
+    private function handleValidIdentity(
+        int $identityId,
+        User $user,
+        CurrentRoute $currentRoute,
+        tR $tR,
+    ): ?ResponseInterface {
+        $token = $this->resolvePasswordResetToken($identityId, $tR);
+        if (strlen($token) <= 0) {
+            return null;
+        }
+        $_language = (string) $currentRoute->getArgument('_language');
+        return $this->trySendEmail($user, $token, $_language);
+    }
+
+    private function resolvePasswordResetToken(int $identityId, tR $tR): string
+    {
+        $tokenRecord = $tR->findTokenByIdentityIdAndType(
+            $identityId, self::REQUEST_PASSWORD_RESET_TOKEN);
+        if (null == $tokenRecord) {
+            return $this->requestPasswordResetToken($identityId, $tR);
+        }
+        $tokenString = $tokenRecord->getToken();
+        if (null === $tokenString) {
+            return '';
+        }
+        $timeStamp = $tokenRecord->getCreatedAt()->getTimestamp();
+        if ($timeStamp + 3600 >= time()) {
+            return $tokenString . '_' . (string) $timeStamp;
+        }
+        return $this->requestPasswordResetToken($identityId, $tR);
+    }
+
+    private function trySendEmail(User $user, string $token, string $_language): ?ResponseInterface
+    {
+        if (!($this->sR->getSetting('email_send_method') === 'symfony'
+                || $this->sR->mailerEnabled())) {
+            return null;
+        }
+        $to = $user->getEmail();
+        $login = $user->getLogin();
+        $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink($_language, $token);
+        $email = new \Yiisoft\Mailer\Message(
+            charset: 'utf-8',
+            headers: [
+                'X-Origin' => ['0', '1'],
+                'X-Pass' => 'pass',
+            ],
+            subject: $login . ': <' . $to . '>',
+            date: new \DateTimeImmutable('now'),
+            from: [
+                $this->sR->getConfigAdminEmail() => $this->translator->translate('administrator'),
+            ],
+            to: $to,
+            htmlBody: $htmlBody,
+        );
+        $email->withAddedHeader('Message-ID', $this->sR->getConfigAdminEmail());
+        try {
+            $this->mailer->send($email);
+            return null;
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            return $this->webService->getRedirectResponse('site/forgotemailfailed');
+        }
     }
 
     /**

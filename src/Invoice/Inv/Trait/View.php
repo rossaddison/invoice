@@ -52,9 +52,7 @@ trait View
             $sales_order_number = '';
             if (null !== $inv->getSoId()) {
                 $so = $service->relation->soR->repoSalesOrderUnloadedquery((int) $inv->getSoId());
-                if ($so) {
-                    $sales_order_number = $so->getNumber();
-                }
+                $sales_order_number = $so?->getNumber() ?? '';
             }
             $invAllowanceChargeForm = new InvAllowanceChargeForm();
             $read_only = $inv->getIsReadOnly();

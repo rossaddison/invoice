@@ -161,7 +161,7 @@
         "guzzlehttp/promises": ">=2.5.0",
         "phpunit/php-code-coverage": ">=14.2.2",
         "phpunit/phpunit": ">=13.1.4",
-        "rector/rector": "^2.5.0",
+        "rector/rector": "^2.5.2",
         "roave/better-reflection": "^6.71",
         "roave/infection-static-analysis-plugin": ">=1.44",
         "roave/security-advisories": "dev-latest",
@@ -170,7 +170,7 @@
         "spatie/phpunit-watcher": ">=1.24.4",
         "squizlabs/php_codesniffer": "^4.0.1",
         "testo/facade": ">=0.1.1",
-        "testo/testo": ">=0.10.24",
+        "testo/testo": ">=0.10.26",
         "vimeo/psalm": ">=6.16.1"
     },
     "autoload": {

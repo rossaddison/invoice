@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "33e8e4ac25e7b59327d8e4778b232627",
+    "content-hash": "95e67b7baca2c2b26c8b41bf368e3cbd",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -55,16 +55,16 @@
         },
         {
             "name": "amphp/amp",
-            "version": "v3.1.1",
+            "version": "v3.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/amp.git",
-                "reference": "fa0ab33a6f47a82929c38d03ca47ebb71086a93f"
+                "reference": "2f3ebed5a4f663968a0590dbb7654a8b32cb63cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/amp/zipball/fa0ab33a6f47a82929c38d03ca47ebb71086a93f",
-                "reference": "fa0ab33a6f47a82929c38d03ca47ebb71086a93f",
+                "url": "https://api.github.com/repos/amphp/amp/zipball/2f3ebed5a4f663968a0590dbb7654a8b32cb63cb",
+                "reference": "2f3ebed5a4f663968a0590dbb7654a8b32cb63cb",
                 "shasum": ""
             },
             "require": {
@@ -74,7 +74,7 @@
             "require-dev": {
                 "amphp/php-cs-fixer-config": "^2",
                 "phpunit/phpunit": "^9",
-                "psalm/phar": "5.23.1"
+                "psalm/phar": "6.16.1"
             },
             "type": "library",
             "autoload": {
@@ -124,7 +124,7 @@
             ],
             "support": {
                 "issues": "https://github.com/amphp/amp/issues",
-                "source": "https://github.com/amphp/amp/tree/v3.1.1"
+                "source": "https://github.com/amphp/amp/tree/v3.1.2"
             },
             "funding": [
                 {
@@ -132,7 +132,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-08-27T21:42:00+00:00"
+            "time": "2026-06-21T13:59:44+00:00"
         },
         {
             "name": "amphp/byte-stream",
@@ -3410,16 +3410,16 @@
         },
         {
             "name": "google/gax",
-            "version": "v1.43.1",
+            "version": "v1.43.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/gax-php.git",
-                "reference": "9ee87e3b9fa9f71b13d64544a05b483d4460fa9c"
+                "reference": "274943381e30ec88aea9f486de27a11054ee27fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/9ee87e3b9fa9f71b13d64544a05b483d4460fa9c",
-                "reference": "9ee87e3b9fa9f71b13d64544a05b483d4460fa9c",
+                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/274943381e30ec88aea9f486de27a11054ee27fb",
+                "reference": "274943381e30ec88aea9f486de27a11054ee27fb",
                 "shasum": ""
             },
             "require": {
@@ -3444,10 +3444,17 @@
                 "phpunit/phpunit": "^9.6"
             },
             "type": "library",
+            "extra": {
+                "component": {
+                    "id": "gax",
+                    "path": "Gax",
+                    "entry": "README.md",
+                    "target": "googleapis/gax-php.git"
+                }
+            },
             "autoload": {
                 "psr-4": {
-                    "Google\\ApiCore\\": "src",
-                    "GPBMetadata\\ApiCore\\": "metadata/ApiCore"
+                    "Google\\ApiCore\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3461,9 +3468,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/gax-php/issues",
-                "source": "https://github.com/googleapis/gax-php/tree/v1.43.1"
+                "source": "https://github.com/googleapis/gax-php/tree/v1.43.2"
             },
-            "time": "2026-06-09T18:21:06+00:00"
+            "time": "2026-06-17T23:07:32+00:00"
         },
         {
             "name": "google/grpc-gcp",
@@ -22846,16 +22853,16 @@
         },
         {
             "name": "rector/rector",
-            "version": "2.5.0",
+            "version": "2.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "7526beadb3da0b88cfa9e8290d74944799d1f3a4"
+                "reference": "49ff6339174bdbdf50b0b35ecbcff14a05ac9e24"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/7526beadb3da0b88cfa9e8290d74944799d1f3a4",
-                "reference": "7526beadb3da0b88cfa9e8290d74944799d1f3a4",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/49ff6339174bdbdf50b0b35ecbcff14a05ac9e24",
+                "reference": "49ff6339174bdbdf50b0b35ecbcff14a05ac9e24",
                 "shasum": ""
             },
             "require": {
@@ -22894,7 +22901,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/2.5.0"
+                "source": "https://github.com/rectorphp/rector/tree/2.5.2"
             },
             "funding": [
                 {
@@ -22902,7 +22909,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-06-20T17:02:36+00:00"
+            "time": "2026-06-22T11:39:33+00:00"
         },
         {
             "name": "roave/better-reflection",
@@ -23036,12 +23043,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "bfdbd26a02c71b3b00586f056c8cf5efea22a27a"
+                "reference": "55f7461997e52f12c93d307ccdcb0ee8e89f336a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/bfdbd26a02c71b3b00586f056c8cf5efea22a27a",
-                "reference": "bfdbd26a02c71b3b00586f056c8cf5efea22a27a",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/55f7461997e52f12c93d307ccdcb0ee8e89f336a",
+                "reference": "55f7461997e52f12c93d307ccdcb0ee8e89f336a",
                 "shasum": ""
             },
             "conflict": {
@@ -23652,6 +23659,7 @@
                 "paragonie/random_compat": "<2",
                 "paragonie/sodium_compat": "<1.24|>=2,<2.5",
                 "passbolt/passbolt_api": "<4.6.2",
+                "paymenter/paymenter": "<1.2.11",
                 "paypal/adaptivepayments-sdk-php": "<=3.9.2",
                 "paypal/invoice-sdk-php": "<=3.9",
                 "paypal/merchant-sdk-php": "<3.12",
@@ -24135,7 +24143,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-06-19T21:28:22+00:00"
+            "time": "2026-06-22T17:34:25+00:00"
         },
         {
             "name": "rossaddison/translator-extractor",
@@ -26013,16 +26021,16 @@
         },
         {
             "name": "testo/codecov",
-            "version": "0.1.10",
+            "version": "0.1.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/codecov.git",
-                "reference": "cbe59a3fea1ff4f32113da880e3173f915733ce3"
+                "reference": "cfa3d7cf66318379bac9cb9500b014e61053bfce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/codecov/zipball/cbe59a3fea1ff4f32113da880e3173f915733ce3",
-                "reference": "cbe59a3fea1ff4f32113da880e3173f915733ce3",
+                "url": "https://api.github.com/repos/php-testo/codecov/zipball/cfa3d7cf66318379bac9cb9500b014e61053bfce",
+                "reference": "cfa3d7cf66318379bac9cb9500b014e61053bfce",
                 "shasum": ""
             },
             "require": {
@@ -26030,7 +26038,7 @@
                 "php": ">=8.2",
                 "testo/data": "^0.1.6",
                 "testo/inline": "^0.1.5",
-                "testo/testo": "0.10.21 - 1"
+                "testo/testo": "0.10.26 - 1"
             },
             "type": "library",
             "extra": {
@@ -26059,7 +26067,7 @@
                 "testo"
             ],
             "support": {
-                "source": "https://github.com/php-testo/codecov/tree/0.1.10"
+                "source": "https://github.com/php-testo/codecov/tree/0.1.11"
             },
             "funding": [
                 {
@@ -26067,7 +26075,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-06-09T09:39:51+00:00"
+            "time": "2026-06-21T15:50:34+00:00"
         },
         {
             "name": "testo/convention",
@@ -26587,16 +26595,16 @@
         },
         {
             "name": "testo/testo",
-            "version": "0.10.24",
+            "version": "0.10.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/testo.git",
-                "reference": "9a616e5066c2ef3b99cab52c197cd5029e69312f"
+                "reference": "70389677b9409cabe6b2b336743bb5f450f13863"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/testo/zipball/9a616e5066c2ef3b99cab52c197cd5029e69312f",
-                "reference": "9a616e5066c2ef3b99cab52c197cd5029e69312f",
+                "url": "https://api.github.com/repos/php-testo/testo/zipball/70389677b9409cabe6b2b336743bb5f450f13863",
+                "reference": "70389677b9409cabe6b2b336743bb5f450f13863",
                 "shasum": ""
             },
             "require": {
@@ -26612,7 +26620,7 @@
                 "testo/assert": "^0.1.8",
                 "testo/bench": "^0.1.5",
                 "testo/bridge-symfony-console": "^0.1.7",
-                "testo/codecov": "^0.1.10",
+                "testo/codecov": "^0.1.11",
                 "testo/convention": "^0.1.3",
                 "testo/data": "^0.1.6",
                 "testo/filter": "^0.1.3",
@@ -26682,7 +26690,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-06-19T08:27:59+00:00"
+            "time": "2026-06-21T15:50:09+00:00"
         },
         {
             "name": "thecodingmachine/safe",

@@ -392,6 +392,7 @@ final readonly class ButtonsToolbarFull
         array $attributes = [],
     ): array {
         $attributes['data-bs-toggle'] = 'modal';
+        $attributes['data-bs-target'] = $target;
         return [
             'type' => 'modal',
             'id' => $id,

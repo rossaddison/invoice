@@ -179,48 +179,51 @@ final class FamilyController extends BaseController
             'familyCustomValues' => [],
             'familyCustomForm' => $familyCustomForm,
         ];
-        if ($request->getMethod() === Method::POST) {
-            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                $body = $request->getParsedBody() ?? [];
-                if (is_array($body)) {
-                    $family = new Family();
-                    $this->familyService->saveFamily($family, $body);
-                    if ($family->hasIdentity()) {
-                        $family_id = $family->reqId();
-                        if (isset($body['custom'])) {
-                            // Retrieve the custom array
-                            /** @var array $custom */
-                            $custom = $body['custom'];
-                            /**
-                             * @var int $custom_field_id
-                             * @var array|string $value
-                             */
-                            foreach ($custom as $custom_field_id => $value) {
-                                $familyCustom = new FamilyCustom();
-                                $familyCustomForm = new FamilyCustomForm();
-                                $family_custom = [];
-                                $family_custom['family_id'] = $family_id;
-                                $family_custom['custom_field_id'] = $custom_field_id;
-                                $family_custom['value'] = is_array($value) ? serialize($value) : $value;
-                                if ($formHydrator->populateAndValidate($familyCustomForm, $family_custom)) {
-                                    $this->familyCustomService->saveFamilyCustom($familyCustom, $family_custom);
-                                }
-    // These two can be used to create customised labels for custom field error validation on the form
-    // Currently not used.
-                                $parameters['familyCustomForm'] = $familyCustomForm;
-                                $parameters['errorsCustom'] = $familyCustomForm->getValidationResult()->getErrorMessagesIndexedByProperty();
-                            }
-                        }
-                        $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
-                        return $this->webService->getRedirectResponse('family/index');
-                    }
-                }
-            } else {
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+        if ($request->getMethod() !== Method::POST) {
+            return $this->webViewRenderer->render('_form', $parameters);
+        }
+        if (!$formHydrator->populateFromPostAndValidate($form, $request)) {
+            $parameters['errors'] =
+                $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+            return $this->webViewRenderer->render('_form', $parameters);
+        }
+        $body = $request->getParsedBody() ?? [];
+        if (!is_array($body)) {
+            return $this->webViewRenderer->render('_form', $parameters);
+        }
+        $family = new Family();
+        $this->familyService->saveFamily($family, $body);
+        if (!$family->hasIdentity()) {
+            return $this->webViewRenderer->render('_form', $parameters);
+        }
+        $family_id = $family->reqId();
+        if (isset($body['custom'])) {
+            /** @var array $custom */
+            $custom = $body['custom'];
+            $this->saveFamilyCustomFields($family_id, $custom, $formHydrator);
+        }
+        $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
+        return $this->webService->getRedirectResponse('family/index');
+    }
+
+    private function saveFamilyCustomFields(
+        int $familyId,
+        array $custom,
+        FormHydrator $formHydrator,
+    ): void {
+        /** @psalm-suppress MixedAssignment */
+        foreach ($custom as $customFieldId => $value) {
+            $familyCustom = new FamilyCustom();
+            $familyCustomForm = new FamilyCustomForm();
+            $familyCustomArray = [
+                'family_id'       => $familyId,
+                'custom_field_id' => $customFieldId,
+                'value'           => is_array($value) ? serialize($value) : $value,
+            ];
+            if ($formHydrator->populateAndValidate($familyCustomForm, $familyCustomArray)) {
+                $this->familyCustomService->saveFamilyCustom($familyCustom, $familyCustomArray);
             }
         }
-        $parameters['form'] = $form;
-        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -304,8 +307,10 @@ final class FamilyController extends BaseController
             'errorsCustom' => [],
             'family' => $family,
             'form' => $form,
-            'customFields' => $this->fetchCustomFieldsAndValues($deps->cfR, $deps->cvR, 'family_custom')['customFields'],
-            'customValues' => $this->fetchCustomFieldsAndValues($deps->cfR, $deps->cvR, 'family_custom')['customValues'],
+            'customFields' => $this->fetchCustomFieldsAndValues(
+                    $deps->cfR, $deps->cvR, 'family_custom')['customFields'],
+            'customValues' => $this->fetchCustomFieldsAndValues(
+                    $deps->cfR, $deps->cvR, 'family_custom')['customValues'],
             'familyCustomValues' => $this->familyCustomValues($familyId, $deps->fcR),
             'familyCustomForm' => $familyCustomForm,
         ];
@@ -511,7 +516,9 @@ final class FamilyController extends BaseController
         }
 
         $generatedCount = 0;
+        /** @var string[] $errors */
         $errors         = [];
+        /** @var string[] $newProductIds */
         $newProductIds  = [];
 
         try {
@@ -522,71 +529,19 @@ final class FamilyController extends BaseController
                     $errors[] = "Family with ID $familyId not found";
                     continue;
                 }
-
                 if (strlen($cl = $family->getFamilyCommalist() ?? '') === 0
                     || strlen($pp = $family->getFamilyProductprefix() ?? '') === 0
                 ) {
                     $errors[] = "Family '{$family->getFamilyName()}' missing comma list or product prefix";
                     continue;
                 }
-
-                foreach (array_filter(array_map('trim', explode(',', $cl))) as $item) {
-                    $productName = $pp . ' ' . $item;
-
-                    if ($productRepository->repoProductWithFamilyIdQuery($productName, (int) $familyId)->count() > 0) {
-                        $errors[] = "Product '$productName' already exists";
-                        continue;
-                    }
-
-                    $newProduct = new Product();
-                    $productService->saveProduct($newProduct, [
-                        'ProductForm' => [
-                            'product_name'        => $productName,
-                            'product_description' => $productName,
-                            'product_sku'         => $item,
-                            'product_price'       => 0.00,
-                            'family_id'           => $familyId,
-                            'tax_rate_id'         => $taxRateId,
-                            'unit_id'             => $unitId,
-                        ],
-                    ]);
-
-                    if ($newProduct->hasIdentity()) {
-                        $newProductIds[] = (string) $newProduct->reqId();
-                    }
-                    $generatedCount++;
-                }
+                $result = $this->createProductsFromCommalist(
+                    $cl, $pp, (int) $familyId, $taxRateId, $unitId, $productRepository, $productService);
+                $generatedCount += $result['count'];
+                $newProductIds   = array_merge($newProductIds, $result['productIds']);
+                $errors          = array_merge($errors, $result['errors']);
             }
-
-            if ($generatedCount > 0 && !empty($newProductIds)) {
-                $redirectUrl  =
-                        $this->urlGenerator->generate(
-                                'productclient/associate-multiple', [
-                    'product_ids' => implode(',', $newProductIds),
-                    'index'       => '0',
-                ]);
-                $responseData = [
-                    'success'      => true,
-                    'count'        => $generatedCount,
-                    'message'      =>
-                        "Generated $generatedCount products."
-                        . " Redirecting to client association.",
-                    'redirect_url' => $redirectUrl,
-                ];
-            } else {
-                $responseData = [
-                    'success' => true,
-                    'count'   => $generatedCount,
-                    'message' =>
-                        $generatedCount === 0 ?
-                            'No products generated' :
-                                "Generated $generatedCount products",
-                ];
-            }
-
-            if (!empty($errors)) {
-                $responseData['warnings'] = $errors;
-            }
+            $responseData = $this->buildGenerateResponse($generatedCount, $newProductIds, $errors);
         } catch (\Throwable $e) {
             $responseData = [
                 'success' => false,
@@ -595,6 +550,79 @@ final class FamilyController extends BaseController
         }
         return $this->factory->createResponse(Json::encode($responseData))
             ->withHeader('Content-Type', 'application/json');
+    }
+
+    /**
+     * @param string[] $newProductIds
+     * @param string[] $errors
+     * @return array<string, mixed>
+     */
+    private function buildGenerateResponse(int $count, array $newProductIds, array $errors): array
+    {
+        if ($count > 0 && !empty($newProductIds)) {
+            $redirectUrl = $this->urlGenerator->generate(
+                'productclient/associate-multiple', [
+                    'product_ids' => implode(',', $newProductIds),
+                    'index'       => '0',
+                ]);
+            $data = [
+                'success'      => true,
+                'count'        => $count,
+                'message'      => "Generated $count products. Redirecting to client association.",
+                'redirect_url' => $redirectUrl,
+            ];
+        } else {
+            $data = [
+                'success' => true,
+                'count'   => $count,
+                'message' => $count === 0 ? 'No products generated' : "Generated $count products",
+            ];
+        }
+        if (!empty($errors)) {
+            $data['warnings'] = $errors;
+        }
+        return $data;
+    }
+
+    /**
+     * @return array{count: int, productIds: string[], errors: string[]}
+     */
+    private function createProductsFromCommalist(
+        string $commalist,
+        string $prefix,
+        int $familyId,
+        string $taxRateId,
+        string $unitId,
+        pR $productRepository,
+        ProductService $productService,
+    ): array {
+        $count      = 0;
+        $productIds = [];
+        $errors     = [];
+        foreach (array_filter(array_map('trim', explode(',', $commalist))) as $item) {
+            $productName = $prefix . ' ' . $item;
+            if ($productRepository->repoProductWithFamilyIdQuery($productName, $familyId)->count() > 0) {
+                $errors[] = "Product '$productName' already exists";
+                continue;
+            }
+            $newProduct = new Product();
+            $productService->saveProduct($newProduct, [
+                'ProductForm' => [
+                    'product_name'        => $productName,
+                    'product_description' => $productName,
+                    'product_sku'         => $item,
+                    'product_price'       => 0.00,
+                    'family_id'           => (string) $familyId,
+                    'tax_rate_id'         => $taxRateId,
+                    'unit_id'             => $unitId,
+                ],
+            ]);
+            if ($newProduct->hasIdentity()) {
+                $productIds[] = (string) $newProduct->reqId();
+            }
+            $count++;
+        }
+        return ['count' => $count, 'productIds' => $productIds, 'errors' => $errors];
     }
 
     /**

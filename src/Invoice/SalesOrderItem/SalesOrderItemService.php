@@ -103,80 +103,66 @@ final readonly class SalesOrderItemService
         $product_id = (int) ($array['product_id'] ?? null);
         $task_id = (int) ($array['task_id'] ?? null);
         if (isset($array['product_id'])) {
-            $product = $pr->repoProductquery((int) $array['product_id']
-            );
-            $name = '';
-            if ($product) {
-            if (isset($array['product_id'])
-                && $pr->repoCount($product_id) > 0
-            ) {
-                $name = $product->getProductName();
-            }
-            null !== $name
-                ? $model->setName($name)
-                : $model->setName('');
-            // If the user has changed the description on the form
-            // => override default product description
-            $description = ((isset($array['description']))
-                ? (string) $array['description']
-                : $product->getProductDescription());
-            null !== $description
-                ? $model->setDescription($description)
-                : $model->setDescription(
-                    $translator->translate('not.available')
-                );
-        }
+            $this->applyProductNameAndDescription($model, $array, $product_id, $pr, $translator);
         }
         if (isset($array['task_id'])) {
-            $task = $taskR->repoTaskquery((int) $array['task_id']);
-            if ($task) {
-                $name = '';
-                if (isset($array['task_id'])
-                    && $taskR->repoCount($task_id) > 0
-                ) {
-                    $name = $task->getName();
-                }
-                null !== $name
-                    ? $model->setName($name)
-                    : $model->setName('');
-            // If the user has changed the description on the form
-            // => override default product description
-            $description = (isset($array['description'])
-                ? (string) $array['description']
-                : $task->getDescription());
-
-            strlen($description) > 0
-                ? $model->setDescription($description)
-                : $model->setDescription(
-                    $translator->translate('not.available')
-                );
-            }
+            $this->applyTaskNameAndDescription($model, $array, $task_id, $taskR, $translator);
         }
-        isset($array['quantity'])
-            ? $model->setQuantity((float) $array['quantity'])
-            : $model->setQuantity(0);
-        isset($array['price'])
-            ? $model->setPrice((float) $array['price'])
-            : $model->setPrice(0.00);
+        isset($array['quantity']) ? $model->setQuantity((float) $array['quantity']) : $model->setQuantity(0);
+        isset($array['price']) ? $model->setPrice((float) $array['price']) : $model->setPrice(0.00);
         isset($array['discount_amount'])
-            ? $model->setDiscountAmount(
-                (float) $array['discount_amount']
-            )
+            ? $model->setDiscountAmount((float) $array['discount_amount'])
             : $model->setDiscountAmount(0.00);
-        isset($array['order'])
-            ? $model->setOrder((int) $array['order'])
-            : $model->setOrder(0);
-        // Product_unit is a string which we get from unit's name
-        // field using the unit_id
-        $unit = $uR->repoUnitquery(
-            (int) $array['product_unit_id']
-        );
+        isset($array['order']) ? $model->setOrder((int) $array['order']) : $model->setOrder(0);
+        $unit = $uR->repoUnitquery((int) $array['product_unit_id']);
         if ($unit) {
             $model->setProductUnit($unit->getUnitName());
         }
         $model->setProductUnitId((int) $array['product_unit_id']);
         $this->repository->save($model);
         return $model;
+    }
+
+    private function applyProductNameAndDescription(
+        SalesOrderItem $model,
+        array $array,
+        int $product_id,
+        PR $pr,
+        Translator $translator,
+    ): void {
+        $product = $pr->repoProductquery($product_id);
+        if (!$product) {
+            return;
+        }
+        $name = ($pr->repoCount($product_id) > 0) ? $product->getProductName() : '';
+        null !== $name ? $model->setName($name) : $model->setName('');
+        $description = isset($array['description'])
+            ? (string) $array['description']
+            : $product->getProductDescription();
+        null !== $description
+            ? $model->setDescription($description)
+            : $model->setDescription($translator->translate('not.available'));
+    }
+
+    private function applyTaskNameAndDescription(
+        SalesOrderItem $model,
+        array $array,
+        int $task_id,
+        taskR $taskR,
+        Translator $translator,
+    ): void {
+        $task = $taskR->repoTaskquery($task_id);
+        if (!$task) {
+            return;
+        }
+        $name = ($taskR->repoCount($task_id) > 0) ? $task->getName() : '';
+        null !== $name ? $model->setName($name) : $model->setName('');
+        $description = isset($array['description'])
+            ? (string) $array['description']
+            : $task->getDescription();
+        strlen($description) > 0
+            ? $model->setDescription($description)
+            : $model->setDescription($translator->translate('not.available'));
     }
 
     /**

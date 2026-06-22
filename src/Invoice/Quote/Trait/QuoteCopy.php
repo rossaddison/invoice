@@ -65,16 +65,7 @@ trait QuoteCopy
             return $this->factory->createResponse(Json::encode(['success' => 0]));
         }
 
-        // Collect product IDs from the original quote's items once
-        $productIds = [];
-        /** @var QuoteItem $quoteItem */
-        foreach ($items->qiR->repoQuoteItemIdquery($quote_id) as $quoteItem) {
-            $pid = $quoteItem->getProduct()?->reqId();
-            if ($pid !== null && $pid > 0) {
-                $productIds[] = $pid;
-            }
-        }
-
+        $productIds = $this->collectProductIds($quote_id, $items);
         $group_id = $original->reqGroupId();
         $copyCount = 0;
 
@@ -296,6 +287,20 @@ trait QuoteCopy
                     $copy_tax_rate);
             }
         }
+    }
+
+    /** @return int[] */
+    private function collectProductIds(int $quote_id, QuoteConvertItemDeps $items): array
+    {
+        $productIds = [];
+        /** @var QuoteItem $quoteItem */
+        foreach ($items->qiR->repoQuoteItemIdquery($quote_id) as $quoteItem) {
+            $pid = $quoteItem->getProduct()?->reqId();
+            if ($pid !== null && $pid > 0) {
+                $productIds[] = $pid;
+            }
+        }
+        return $productIds;
     }
 
     private function quoteToQuoteQuoteAllowanceCharges(int $quote_id,

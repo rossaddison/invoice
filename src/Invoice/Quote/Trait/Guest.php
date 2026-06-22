@@ -14,6 +14,7 @@ use App\Invoice\{
 use Yiisoft\{
     Data\Paginator\OffsetPaginator as DataOffsetPaginator,
     Data\Paginator\PageToken,
+    Data\Reader\DataReaderInterface as DRI,
     Data\Reader\Sort,
     Data\Reader\OrderHelper,
     Router\HydratorAttribute\RouteArgument,
@@ -54,102 +55,60 @@ trait Guest
         $sort = Sort::only(['status_id','number','date_created','date_expires',
             'id','client_id'])->withOrderString($sortString);
 
-        // Get the current user and determine from (Related logic: see
-        // Settings...User Account) whether they have been given
-        // either guest or admin rights. These rights are unrelated to rbac and
-        // serve as a second line of defense' to support role based admin
-        // control.
-
-        // Retrieve the user from Yii-Demo's list of users in the User Table
         $user = $this->userService->getUser();
-        if ($user) {
-            $userId = $user->reqId();
-            // Use this user's id to see whether a user has been setup under
-            // UserInv ie. yii-invoice's list of users
-            $userinv = ($uiR->repoUserInvUserIdcount($userId) > 0
-                     ? $uiR->repoUserInvUserIdquery($userId)
-                     : null);
-            if ($userinv && $userinv->getActive()) {
-                // Determine what clients have been allocated to this user
-                // (Related logic: see Settings...User Account)
-                // by looking at UserClient table
-
-                // eg. If the user is a guest-accountant, they will have been
-                // allocated certain clients
-                // A user-quest-accountant will be allocated a series of clients
-                // A user-guest-client will be allocated their client number by
-                // the administrator so that they can view their quotes when
-                // they log in
-                $user_clients = $ucR->getAssignedToUser(
-                    $userId);
-                if (!empty($user_clients)) {
-/**
- * @psalm-var \Yiisoft\Data\Reader\ReadableDataInterface<array-key, array<array-key, mixed>|object>&\Yiisoft\Data\Reader\LimitableDataInterface&\Yiisoft\Data\Reader\OffsetableDataInterface&\Yiisoft\Data\Reader\CountableDataInterface $quotes
- */
-                    $quotes = $this->quotesStatusWithSortGuest($qR,
-                            $status, $user_clients, $sort);
-                    if (isset($query_params['filterQuoteNumber'])
-                        && !empty($query_params['filterQuoteNumber'])) {
-                        $quotes = $qR->filterQuoteNumber(
-                            (string) $query_params['filterQuoteNumber']);
-                    }
-                    if (isset($query_params['filterQuoteAmountTotal'])
-                        && !empty($query_params['filterQuoteAmountTotal'])) {
-                        $quotes = $qR->filterQuoteAmountTotal(
-                            (string) $query_params['filterQuoteAmountTotal']);
-                    }
-                    if ((isset($query_params['filterQuoteNumber'])
-                        && !empty($query_params['filterQuoteNumber']))
-                        && (isset($query_params['filterQuoteAmountTotal'])
-                        && !empty($query_params['filterQuoteAmountTotal']))) {
-                        $quotes = $qR->filterQuoteNumberAndQuoteAmountTotal(
-                            (string) $query_params['filterQuoteNumber'],
-                                (float) $query_params['filterQuoteAmountTotal']);
-                    }
-                    $userInvLimit = $userinv->getListLimit();
-                    $paginator = (new DataOffsetPaginator($quotes))
-                    ->withPageSize($userInvLimit !== null && $userInvLimit > 0
-                        ? $userInvLimit
-                        : $this->sR->positiveListLimit())
-                    ->withCurrentPage($currentPageNeverZero)
-                    ->withSort($sort)
-                    ->withToken(PageToken::next((string) $pageMixed));
-                    $quote_statuses = $qR->getStatuses($this->translator);
-                    $parameters = [
-                        'alert' => $this->alert(),
-                        'qR' => $qR,
-                        'qaR' => $qaR,
-                        'quotes' => $quotes,
-                        // guests will not have access to the pageListLimiter
-                        'editInv' => $this->userService->hasPermission(
-                            Permissions::EDIT_INV),
-                        'gridSummary' => $this->sR->gridSummary(
-                            $paginator,
-                            $this->translator,
-                            (int) $this->sR->getSetting('default_list_limit'),
-                            $this->translator->translate('quotes'),
-                            $qR->getSpecificStatusArrayLabel((string) $status),
-                        ),
-                        'defaultPageSizeOffsetPaginator' =>
-                            $this->sR->getSetting('default_list_limit')
-                            ? (int) $this->sR->getSetting('default_list_limit')
-                            : 1,
-                        'quoteStatuses' => $quote_statuses,
-                        'max' => (int)
-                            $this->sR->getSetting('default_list_limit'),
-                        'page' => (string) $pageMixed,
-                        'paginator' => $paginator,
-                        'sortOrder' => $sortString,
-                        'status' => $status,
-                        'urlCreator' => $urlCreator,
-                    ];
-                    return $this->webViewRenderer->render('guest', $parameters);
-                } // empty user client
-                $this->flashMessage('warning',
-                            $this->translator->translate('user.clients.assigned.not'));
-            } // userinv
-        } //user
-        return $this->webService->getNotFoundResponse();
+        if (!$user) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $userId = $user->reqId();
+        $userinv = $uiR->repoUserInvUserIdcount($userId) > 0
+            ? $uiR->repoUserInvUserIdquery($userId)
+            : null;
+        if (!$userinv || !$userinv->getActive()) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $user_clients = $ucR->getAssignedToUser($userId);
+        if (empty($user_clients)) {
+            $this->flashMessage('warning', $this->translator->translate('user.clients.assigned.not'));
+            return $this->webService->getNotFoundResponse();
+        }
+        /** @var DRI<array-key, array<array-key, mixed>|object> $quotes */
+        $quotes = $this->quotesStatusWithSortGuest($qR, $status, $user_clients, $sort);
+        $quotes = $this->guestApplyFilters($query_params, $qR, $quotes);
+        $userInvLimit = $userinv->getListLimit();
+        $paginator = (new DataOffsetPaginator($quotes))
+            ->withPageSize($userInvLimit !== null && $userInvLimit > 0
+                ? $userInvLimit
+                : $this->sR->positiveListLimit())
+            ->withCurrentPage($currentPageNeverZero)
+            ->withSort($sort)
+            ->withToken(PageToken::next((string) $pageMixed));
+        $quote_statuses = $qR->getStatuses($this->translator);
+        $parameters = [
+            'alert' => $this->alert(),
+            'qR' => $qR,
+            'qaR' => $qaR,
+            'quotes' => $quotes,
+            'editInv' => $this->userService->hasPermission(Permissions::EDIT_INV),
+            'gridSummary' => $this->sR->gridSummary(
+                $paginator,
+                $this->translator,
+                (int) $this->sR->getSetting('default_list_limit'),
+                $this->translator->translate('quotes'),
+                $qR->getSpecificStatusArrayLabel((string) $status),
+            ),
+            'defaultPageSizeOffsetPaginator' =>
+                $this->sR->getSetting('default_list_limit')
+                ? (int) $this->sR->getSetting('default_list_limit')
+                : 1,
+            'quoteStatuses' => $quote_statuses,
+            'max' => (int) $this->sR->getSetting('default_list_limit'),
+            'page' => (string) $pageMixed,
+            'paginator' => $paginator,
+            'sortOrder' => $sortString,
+            'status' => $status,
+            'urlCreator' => $urlCreator,
+        ];
+        return $this->webViewRenderer->render('guest', $parameters);
     }
 
     /**
@@ -166,5 +125,23 @@ trait Guest
         return $qR->repoGuestClientsSentViewedApprovedRejectedCancelled(
             $status, $user_clients)
                      ->withSort($sort);
+    }
+
+    /** @param array<array-key, mixed> $query_params */
+    private function guestApplyFilters(array $query_params, QR $qR, DRI $quotes): DRI
+    {
+        if (isset($query_params['filterQuoteNumber']) && !empty($query_params['filterQuoteNumber'])) {
+            $quotes = $qR->filterQuoteNumber((string) $query_params['filterQuoteNumber']);
+        }
+        if (isset($query_params['filterQuoteAmountTotal']) && !empty($query_params['filterQuoteAmountTotal'])) {
+            $quotes = $qR->filterQuoteAmountTotal((string) $query_params['filterQuoteAmountTotal']);
+        }
+        if ((isset($query_params['filterQuoteNumber']) && !empty($query_params['filterQuoteNumber']))
+            && (isset($query_params['filterQuoteAmountTotal']) && !empty($query_params['filterQuoteAmountTotal']))) {
+            $quotes = $qR->filterQuoteNumberAndQuoteAmountTotal(
+                (string) $query_params['filterQuoteNumber'],
+                (float) $query_params['filterQuoteAmountTotal']);
+        }
+        return $quotes;
     }
 }

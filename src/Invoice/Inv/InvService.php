@@ -99,84 +99,67 @@ final readonly class InvService
         $model->setUrlKey(Random::string(32));
         $model->setStandInCode($s->getSetting('stand_in_code'));
 
-        /**
-         * The following fields can be edited and set on the form
-         * with a value that is not null.
-         */
-        isset($array['client_id']) ?
-            $model->setClientId((int) $array['client_id']) : '';
-        isset($array['group_id']) ?
-            $model->setGroupId((int) $array['group_id']) : '';
-        /** user_id set on adding */
+        $this->setOptionalArrayFields($model, $array);
+        if (!$model->hasIdentity()) {
+            $this->initNewInvFields($model, $s, $gR, $user, $array);
+        }
+        $this->repository->save($model);
+        return $model;
+    }
 
-        isset($array['so_id']) ?
-            $model->setSoId((int) $array['so_id']) : '';
-        isset($array['quote_id']) ?
-            $model->setQuoteId((int) $array['quote_id']) : '';
-        isset($array['status_id']) ?
-            $model->setStatusId((int) $array['status_id']) : '';
-        isset($array['delivery_id']) ?
-            $model->setDeliveryId((int) $array['delivery_id']) : '';
+    private function setOptionalArrayFields(Inv $model, array $array): void
+    {
+        isset($array['client_id']) ? $model->setClientId((int) $array['client_id']) : '';
+        isset($array['group_id']) ? $model->setGroupId((int) $array['group_id']) : '';
+        isset($array['so_id']) ? $model->setSoId((int) $array['so_id']) : '';
+        isset($array['quote_id']) ? $model->setQuoteId((int) $array['quote_id']) : '';
+        isset($array['status_id']) ? $model->setStatusId((int) $array['status_id']) : '';
+        isset($array['delivery_id']) ? $model->setDeliveryId((int) $array['delivery_id']) : '';
         isset($array['delivery_location_id']) ?
-            $model->setDeliveryLocationId(
-                (int) $array['delivery_location_id']) : '';
+            $model->setDeliveryLocationId((int) $array['delivery_location_id']) : '';
         isset($array['postal_address_id']) ?
-            $model->setPostalAddressId(
-                (int) $array['postal_address_id']) : '';
+            $model->setPostalAddressId((int) $array['postal_address_id']) : '';
         isset($array['discount_amount']) ?
-            $model->setDiscountAmount(
-                (float) $array['discount_amount']) : '';
-        isset($array['password']) ?
-            $model->setPassword((string) $array['password']) : '';
+            $model->setDiscountAmount((float) $array['discount_amount']) : '';
+        isset($array['password']) ? $model->setPassword((string) $array['password']) : '';
         isset($array['payment_method']) ?
-            $model->setPaymentMethod(
-                (int) $array['payment_method']) : '';
+            $model->setPaymentMethod((int) $array['payment_method']) : '';
         isset($array['terms']) ?
             $model->setTerms((string) $array['terms']) :
             $this->translator->translate('payment.term.general');
-        isset($array['note']) ?
-            $model->setNote((string) $array['note']) : '';
+        isset($array['note']) ? $model->setNote((string) $array['note']) : '';
         isset($array['document_description']) ?
-            $model->setDocumentDescription(
-                (string) $array['document_description']) : '';
+            $model->setDocumentDescription((string) $array['document_description']) : '';
         if (isset($array['creditinvoice_parent_id'])) {
             $model->setCreditinvoiceParentId((int) $array['creditinvoice_parent_id'] ?: 0);
         }
-        isset($array['contract_id']) ?
-            $model->setContractId((int) $array['contract_id']) : '';
+        isset($array['contract_id']) ? $model->setContractId((int) $array['contract_id']) : '';
         isset($array['client_po_number']) ?
             $model->setClientPoNumber((string) $array['client_po_number']) : '';
         isset($array['client_po_person']) ?
             $model->setClientPoPerson((string) $array['client_po_person']) : '';
+    }
 
-        if (!$model->hasIdentity()) {
-            if ($s->getSetting('mark_invoices_sent_copy') === '1') {
-// mark the copy as sent and make it read-only
-                $model->setStatusId(2);
-                $model->setIsReadOnly(true);
-            } else {
-// mark the invoice as a draft copy and make it editable i.e. not is read only
-                $model->setStatusId(1);
-                $model->setIsReadOnly(false);
-            }
-// if draft invoices must get invoice numbers
-            if ($s->getSetting('generate_invoice_number_for_draft') === '1') {
-                $model->setNumber(
-                 (string) $gR->generateNumber((int) $array['group_id'], true));
-            } else {
-                $model->setNumber('');
-            }
-            $model->setUserId($user->reqId());
-            $model->setTimeCreated(
-                                (new DateTimeImmutable('now'))->format('H:i:s'));
-            $model->setPaymentMethod(
-                    (int) $s->getSetting('invoice_default_payment_method') ?: 4);
-            if (!isset($array['discount_amount'])) {
-                $model->setDiscountAmount(0.00);
-            }
+    private function initNewInvFields(Inv $model, SR $s, GR $gR, User $user, array $array): void
+    {
+        if ($s->getSetting('mark_invoices_sent_copy') === '1') {
+            $model->setStatusId(2);
+            $model->setIsReadOnly(true);
+        } else {
+            $model->setStatusId(1);
+            $model->setIsReadOnly(false);
         }
-        $this->repository->save($model);
-        return $model;
+        if ($s->getSetting('generate_invoice_number_for_draft') === '1') {
+            $model->setNumber((string) $gR->generateNumber((int) $array['group_id'], true));
+        } else {
+            $model->setNumber('');
+        }
+        $model->setUserId($user->reqId());
+        $model->setTimeCreated((new DateTimeImmutable('now'))->format('H:i:s'));
+        $model->setPaymentMethod((int) $s->getSetting('invoice_default_payment_method') ?: 4);
+        if (!isset($array['discount_amount'])) {
+            $model->setDiscountAmount(0.00);
+        }
     }
 
     private function persist(Inv $model, array $array): void

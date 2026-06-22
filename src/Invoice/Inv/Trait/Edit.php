@@ -119,25 +119,7 @@ trait Edit
                         'url' => 'inv/view', 'id' => $inv_id],
                 ));
             } else {
-                $ret_form = $this->editSaveFormFields($body, $id, $formHydrator, $core);
-                if ($ret_form instanceof InvForm) {
-                    $parameters['form'] = $ret_form;
-                    if (!$ret_form->isValid()) {
-                        $parameters['errors'] =
-                            $ret_form->getValidationResult()
-                                     ->getErrorMessagesIndexedByProperty();
-                        $response = $this->webViewRenderer->render('_form_edit', $parameters);
-                    } else {
-                        $this->processCustomFields($body, $formHydrator,
-                                $this->customFieldProcessor, $inv_id);
-                        $this->flashMessage('success',
-                            $this->translator->translate('record.successfully.updated'));
-                        $response = $this->webService->getRedirectResponse('inv/view',
-                            ['id' => $inv_id]);
-                    }
-                } else {
-                    $response = $this->webService->getRedirectResponse('inv/index');
-                }
+                $response = $this->handleEditPost($body, $id, $inv_id, $parameters, $formHydrator, $core);
             }
         }
         if ($response !== null) {
@@ -148,6 +130,29 @@ trait Edit
             : $this->webService->getRedirectResponse('inv/index');
     }
     
+    /** @param array<string, mixed> $parameters */
+    private function handleEditPost(
+        array $body,
+        int $id,
+        int $inv_id,
+        array $parameters,
+        FormHydrator $formHydrator,
+        InvEditCoreDeps $core,
+    ): Response {
+        $ret_form = $this->editSaveFormFields($body, $id, $formHydrator, $core);
+        if (!($ret_form instanceof InvForm)) {
+            return $this->webService->getRedirectResponse('inv/index');
+        }
+        $parameters['form'] = $ret_form;
+        if (!$ret_form->isValid()) {
+            $parameters['errors'] = $ret_form->getValidationResult()->getErrorMessagesIndexedByProperty();
+            return $this->webViewRenderer->render('_form_edit', $parameters);
+        }
+        $this->processCustomFields($body, $formHydrator, $this->customFieldProcessor, $inv_id);
+        $this->flashMessage('success', $this->translator->translate('record.successfully.updated'));
+        return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
+    }
+
     private function editInputAttributesUrlKey(InvForm $form): array
     {
         $inputAttributesUrlKey = [

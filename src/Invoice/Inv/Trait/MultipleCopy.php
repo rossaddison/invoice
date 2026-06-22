@@ -60,101 +60,114 @@ trait MultipleCopy
                 continue;
             }
 
-            // Collect product IDs from this invoice once (for ProductClient sync)
-            $productIds = [];
-            /** @var InvItem $item */
-            foreach ($d->iiR->repoInvItemIdquery($invId) as $item) {
-                $pid = $item->getProductId();
-                if ($pid !== null && $pid > 0) {
-                    $productIds[] = $pid;
-                }
-            }
+            $productIds = $this->collectInvProductIds($invId, $d);
 
-            // Use selected clients, or fall back to the invoice's own client
             $targets = !empty($selectedClientIds)
                 ? $selectedClientIds
                 : [$original->reqClientId()];
 
             foreach ($targets as $targetClientId) {
-                $invoice_body = [
-                    'client_id' => $targetClientId,
-                    'group_id' => $original->reqGroupId(),
-                    'so_id' => $original->getSoId(),
-                    'quote_id' => $original->getQuoteId(),
-                    'status_id' =>
-                    $this->sR->getSetting('mark_invoices_sent_copy') ===
-                        '1' ? 2 : 1,
-                    'is_read_only' => $this->sR->getSetting(
-                        'mark_invoices_sent_copy') === '1',
-                    'password' => '',
-                    'date_supplied' => new \DateTimeImmutable('now'),
-                    'date_tax_point' => new \DateTimeImmutable('now'),
-                    'time_created' =>
-                        (new \DateTimeImmutable('now'))->format('H:i:s'),
-                    'stand_in_code' => $this->sR->getSetting('stand_in_code'),
-                    'number' => $this->sR->getSetting(
-                        'generate_invoice_number_for_draft') === '1' ?
-                            (string) $d->gR->generateNumber(
-                                $original->reqGroupId(), true) : '',
-                    'discount_amount' =>
-                        (float) $original->getDiscountAmount(),
-                    'terms' => $original->getTerms(),
-                    'note' => $original->getNote(),
-                    'document_description' =>
-                        $original->getDocumentDescription(),
-                    'url_key' => Random::string(32),
-                    'payment_method' => $original->getPaymentMethod(),
-                    'creditinvoice_parent_id' => null,
-                    'delivery_id' => $original->getDeliveryId(),
-                    'delivery_location_id' =>
-                        $original->getDeliveryLocationId(),
-                    'postal_address_id' => $original->getPostalAddressId(),
-                    'contract_id' => $original->getContractId(),
-                ];
-                $copy = new Inv();
-                $form = new InvForm();
-                if (!$formHydrator->populateAndValidate($form, $invoice_body)) {
-                    continue;
+                if ($this->copyInvToClient(
+                    $invId, $original, $targetClientId, $d, $formHydrator,
+                    $productIds, (string) ($data['modal_created_date'] ?? ''))) {
+                    $anySuccess = true;
                 }
-                $user = $this->activeUser($targetClientId, $d->uR, $d->ucR, $d->uiR);
-                if (null === $user) {
-                    continue;
-                }
-                $this->inv_service->withTransaction(
-                    function () use (
-                        $user, $copy, $invoice_body, $data, $invId,
-                        $d, $formHydrator, $productIds, $targetClientId
-                    ): void {
-                        $copied = $this->inv_service->copyInv(
-                            $user, $copy, $invoice_body, $this->sR);
-                        $copied->setDateCreated(
-                            (string) ($data['modal_created_date'] ?? ''));
-                        $d->iR->save($copied);
-                        $copied_id = $copied->reqId();
-                        if ($copied_id > 0) {
-                            $this->invToInvInvItems($invId,
-                                $copied_id, $d, $formHydrator);
-                            $this->invToInvInvTaxRates($invId,
-                                $copied_id, $d, $formHydrator);
-                            $this->invToInvInvCustom($invId,
-                                $copied_id, $d, $formHydrator);
-                            $this->invToInvInvAmount($invId,
-                                $copied_id, $d);
-                            $d->iR->save($copy);
-                            if (!empty($productIds)) {
-                                $d->pcS->syncFromInvItems(
-                                    $targetClientId, $productIds);
-                            }
-                        }
-                    }
-                );
-                $anySuccess = true;
             }
         }
 
         return $this->factory->createResponse(
             Json::encode(['success' => $anySuccess ? 1 : 0])
         );
+    }
+
+    /**
+     * @return int[]
+     */
+    private function collectInvProductIds(int $invId, InvCopyDeps $d): array
+    {
+        $productIds = [];
+        /** @var InvItem $item */
+        foreach ($d->iiR->repoInvItemIdquery($invId) as $item) {
+            $pid = $item->getProductId();
+            if ($pid !== null && $pid > 0) {
+                $productIds[] = $pid;
+            }
+        }
+        return $productIds;
+    }
+
+    /**
+     * @param int[] $productIds
+     */
+    private function copyInvToClient(
+        int $invId,
+        Inv $original,
+        int $targetClientId,
+        InvCopyDeps $d,
+        FormHydrator $formHydrator,
+        array $productIds,
+        string $createdDate,
+    ): bool {
+        $sentCopy = $this->sR->getSetting('mark_invoices_sent_copy') === '1';
+        $invoice_body = [
+            'client_id'               => $targetClientId,
+            'group_id'                => $original->reqGroupId(),
+            'so_id'                   => $original->getSoId(),
+            'quote_id'                => $original->getQuoteId(),
+            'status_id'               => $sentCopy ? 2 : 1,
+            'is_read_only'            => $sentCopy,
+            'password'                => '',
+            'date_supplied'           => new \DateTimeImmutable('now'),
+            'date_tax_point'          => new \DateTimeImmutable('now'),
+            'time_created'            => (new \DateTimeImmutable('now'))->format('H:i:s'),
+            'stand_in_code'           => $this->sR->getSetting('stand_in_code'),
+            'number'                  => $this->sR->getSetting('generate_invoice_number_for_draft') === '1'
+                ? (string) $d->gR->generateNumber($original->reqGroupId(), true)
+                : '',
+            'discount_amount'         => (float) $original->getDiscountAmount(),
+            'terms'                   => $original->getTerms(),
+            'note'                    => $original->getNote(),
+            'document_description'    => $original->getDocumentDescription(),
+            'url_key'                 => Random::string(32),
+            'payment_method'          => $original->getPaymentMethod(),
+            'creditinvoice_parent_id' => null,
+            'delivery_id'             => $original->getDeliveryId(),
+            'delivery_location_id'    => $original->getDeliveryLocationId(),
+            'postal_address_id'       => $original->getPostalAddressId(),
+            'contract_id'             => $original->getContractId(),
+        ];
+        $copy = new Inv();
+        $form = new InvForm();
+        if (!$formHydrator->populateAndValidate($form, $invoice_body)) {
+            return false;
+        }
+        $user = $this->activeUser($targetClientId, $d->uR, $d->ucR, $d->uiR);
+        if (null === $user) {
+            return false;
+        }
+        $this->inv_service->withTransaction(
+            function () use (
+                $user, $copy, $invoice_body, $createdDate, $invId,
+                $d, $formHydrator, $productIds, $targetClientId
+            ): void {
+                $copied = $this->inv_service->copyInv(
+                    $user, $copy, $invoice_body, $this->sR);
+                $copied->setDateCreated($createdDate);
+                $d->iR->save($copied);
+                $copied_id = $copied->reqId();
+                if ($copied_id > 0) {
+                    $this->invToInvInvItems($invId, $copied_id, $d, $formHydrator);
+                    $this->invToInvInvTaxRates($invId, $copied_id, $d, $formHydrator);
+                    $this->invToInvInvCustom($invId, $copied_id, $d, $formHydrator);
+                    $this->invToInvInvAmount($invId, $copied_id, $d);
+                    $d->iR->save($copy);
+                    if (!empty($productIds)) {
+                        $d->pcS->syncFromInvItems($targetClientId, $productIds);
+                    }
+                }
+            }
+        );
+        return true;
     }
 
     private function invToInvInvAllowanceCharges(
@@ -231,80 +244,23 @@ trait MultipleCopy
                 : $this->factory->createResponse(Json::encode(['success' => 0]));
         }
 
-        // Collect product IDs from the original invoice once (task items are excluded)
-        $productIds = [];
-        /** @var InvItem $item */
-        foreach ($d->iiR->repoInvItemIdquery($inv_id) as $item) {
-            $pid = $item->getProductId();
-            if ($pid !== null && $pid > 0) {
-                $productIds[] = $pid;
-            }
-        }
+        $productIds = $this->collectInvProductIds($inv_id, $d);
 
-        $group_id = $original->reqGroupId();
         $copyCount = 0;
         $lastCopyId = 0;
 
         foreach ($clientIds as $clientId) {
-            $ajax_body = [
-                'quote_id'               => null,
-                'client_id'              => $clientId,
-                'group_id'               => $group_id,
-                'status_id'              => $this->sR->getSetting('mark_invoices_sent_copy') === '1' ? 2 : 1,
-                'number'                 => $d->gR->generateNumber($group_id),
-                'creditinvoice_parent_id'=> null,
-                'discount_amount'        => (float) $original->getDiscountAmount(),
-                'url_key'                => Random::string(32),
-                'password'               => '',
-                'payment_method'         => $original->getPaymentMethod(),
-                'terms'                  => $original->getTerms(),
-                'document_description'   => $original->getDocumentDescription(),
-                'note'                   => $original->getNote(),
-                'stand_in_code'          => $this->sR->getSetting('stand_in_code'),
-            ];
-
-            $copy = new Inv();
-            $form = new InvForm();
-            if (!$formHydrator->populateAndValidate($form, $ajax_body)) {
-                continue;
-            }
-
-            $user = $this->activeUser($clientId, $d->uR, $d->ucR, $d->uiR);
-            if (null === $user) {
-                continue;
-            }
-
-            $copy_id = 0;
-            $this->inv_service->withTransaction(
-                function () use (
-                    $user, $copy, $ajax_body, $inv_id, $d, $formHydrator, &$copy_id
-                ): void {
-                    $this->inv_service->saveInv($user, $copy, $ajax_body, $this->sR, $d->gR);
-                    $copy_id = $copy->reqId();
-                    if ($copy_id > 0) {
-                        $this->invToInvInvItems($inv_id, $copy_id, $d, $formHydrator);
-                        $this->invToInvInvTaxRates($inv_id, $copy_id, $d, $formHydrator);
-                        $this->invToInvInvCustom($inv_id, $copy_id, $d, $formHydrator);
-                        $this->invToInvInvAllowanceCharges($inv_id, $copy_id, $d, $formHydrator);
-                        $this->invToInvInvAmount($inv_id, $copy_id, $d);
-                        $d->iR->save($copy);
-                    }
-                }
-            );
-
+            $copy_id = $this->saveInvConfirmCopy(
+                $clientId, $inv_id, $original, $d, $formHydrator, $productIds);
             if ($copy_id > 0) {
                 $copyCount++;
                 $lastCopyId = $copy_id;
-                if (!empty($productIds)) {
-                    $d->pcS->syncFromInvItems($clientId, $productIds);
-                }
             }
         }
 
         if ($copyCount > 0) {
             $this->flashMessage('info', $this->translator->translate('draft.guest'));
             $parameters = ['success' => 1];
-            // Only redirect to the new invoice when exactly one client was selected
             if ($copyCount === 1) {
                 $parameters['new_invoice_id'] = $lastCopyId;
             }
@@ -312,6 +268,66 @@ trait MultipleCopy
         }
 
         return $this->factory->createResponse(Json::encode(['success' => 0]));
+    }
+
+    /**
+     * @param int[] $productIds
+     */
+    private function saveInvConfirmCopy(
+        int $clientId,
+        int $invId,
+        Inv $original,
+        InvCopyDeps $d,
+        FormHydrator $formHydrator,
+        array $productIds,
+    ): int {
+        $groupId = $original->reqGroupId();
+        $ajax_body = [
+            'quote_id'                => null,
+            'client_id'               => $clientId,
+            'group_id'                => $groupId,
+            'status_id'               => $this->sR->getSetting('mark_invoices_sent_copy') === '1' ? 2 : 1,
+            'number'                  => $d->gR->generateNumber($groupId),
+            'creditinvoice_parent_id' => null,
+            'discount_amount'         => (float) $original->getDiscountAmount(),
+            'url_key'                 => Random::string(32),
+            'password'                => '',
+            'payment_method'          => $original->getPaymentMethod(),
+            'terms'                   => $original->getTerms(),
+            'document_description'    => $original->getDocumentDescription(),
+            'note'                    => $original->getNote(),
+            'stand_in_code'           => $this->sR->getSetting('stand_in_code'),
+        ];
+        $copy = new Inv();
+        $form = new InvForm();
+        if (!$formHydrator->populateAndValidate($form, $ajax_body)) {
+            return 0;
+        }
+        $user = $this->activeUser($clientId, $d->uR, $d->ucR, $d->uiR);
+        if (null === $user) {
+            return 0;
+        }
+        $copy_id = 0;
+        $this->inv_service->withTransaction(
+            function () use (
+                $user, $copy, $ajax_body, $invId, $d, $formHydrator, &$copy_id
+            ): void {
+                $this->inv_service->saveInv($user, $copy, $ajax_body, $this->sR, $d->gR);
+                $copy_id = $copy->reqId();
+                if ($copy_id > 0) {
+                    $this->invToInvInvItems($invId, $copy_id, $d, $formHydrator);
+                    $this->invToInvInvTaxRates($invId, $copy_id, $d, $formHydrator);
+                    $this->invToInvInvCustom($invId, $copy_id, $d, $formHydrator);
+                    $this->invToInvInvAllowanceCharges($invId, $copy_id, $d, $formHydrator);
+                    $this->invToInvInvAmount($invId, $copy_id, $d);
+                    $d->iR->save($copy);
+                }
+            }
+        );
+        if ($copy_id > 0 && !empty($productIds)) {
+            $d->pcS->syncFromInvItems($clientId, $productIds);
+        }
+        return $copy_id;
     }
 
     private function invToInvInvCustom(

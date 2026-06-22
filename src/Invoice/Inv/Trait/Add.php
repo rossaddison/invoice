@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv\Trait;
 
-use App\Infrastructure\Persistence\Inv\Inv;
+use App\Infrastructure\Persistence\{Inv\Inv, User\User};
 use App\Invoice\{
     Inv\InvAddDeps,
     Inv\InvForm,
@@ -82,48 +82,7 @@ trait Add
 
 $user = $this->activeUser($client_id, $d->uR, $d->ucR, $d->uiR);
                     if (null !== $user) {
-                        $saved_model = null;
-                        $this->inv_service->withTransaction(
-                            function () use (
-                                $user, $inv, $body, $d, $formHydrator,
-                                &$saved_model
-                            ): void {
-                                $saved_model = $this->inv_service->saveInv(
-                                    $user, $inv, $body, $this->sR, $d->gR);
-                                if ($saved_model->hasIdentity()) {
-                                    $this->defaultTaxes(
-                                        $saved_model, $d->trR, $formHydrator);
-                                }
-                            }
-                        );
-                        /**
-                         * The InvAmount entity is created automatically during
-                         * the above saveInv
-                         * Related logic: see src\Invoice\Entity\Inv ...
-                         * New InvAmount();
-                         */
-                        $model_id = $saved_model?->reqId() ?? 0;
-                        if ($model_id > 0) {
-                            // Inform the user of generated invoice number for
-                            // draft setting
-                            $this->flashMessage('info', $this->sR->getSetting(
-                                'generate_invoice_number_for_draft') === '1'
-                            ? $this->translator->translate(
-                                    'generate.invoice.number.for.draft')
-                                    . '=>' . $this->translator->translate('yes')
-                            : $this->translator->translate(
-                                    'generate.invoice.number.for.draft')
-                                    . '=>' . $this->translator->translate('no'));
-                            $this->sR->getSetting('mark_invoices_sent_copy') === '1'
-                            ? $this->flashMessage('danger',
-                                $this->translator->translate('mark.sent.copy.on'))
-                            : '';
-                        } //$model_id
-                        $this->flashMessage('success',
-                                $this->translator->translate(
-                            'record.successfully.created'));
-                        return $this->webService->getRedirectResponse(
-                                'inv/view', ['id' => $model_id]);
+                        return $this->handleSaveForUser($user, $inv, $body, $formHydrator, $d);
                     }
                     $this->flashMessage('warning', $this->translator->translate(
                             'user.client.active.no'));
@@ -155,5 +114,38 @@ $user = $this->activeUser($client_id, $d->uR, $d->ucR, $d->uiR);
                 $origin, $errors),
             'return_url_action' => 'add',
         ]);
+    }
+
+    /** @param array<array-key, mixed> $body */
+    private function handleSaveForUser(
+        User $user,
+        Inv $inv,
+        array $body,
+        FormHydrator $formHydrator,
+        InvAddDeps $d,
+    ): Response {
+        $saved_model = null;
+        $this->inv_service->withTransaction(
+            function () use ($user, $inv, $body, $d, $formHydrator, &$saved_model): void {
+                $saved_model = $this->inv_service->saveInv($user, $inv, $body, $this->sR, $d->gR);
+                if ($saved_model->hasIdentity()) {
+                    $this->defaultTaxes($saved_model, $d->trR, $formHydrator);
+                }
+            }
+        );
+        $model_id = $saved_model?->reqId() ?? 0;
+        if ($model_id > 0) {
+            $this->flashMessage('info', $this->sR->getSetting(
+                'generate_invoice_number_for_draft') === '1'
+                ? $this->translator->translate('generate.invoice.number.for.draft')
+                    . '=>' . $this->translator->translate('yes')
+                : $this->translator->translate('generate.invoice.number.for.draft')
+                    . '=>' . $this->translator->translate('no'));
+            $this->sR->getSetting('mark_invoices_sent_copy') === '1'
+                ? $this->flashMessage('danger', $this->translator->translate('mark.sent.copy.on'))
+                : '';
+        }
+        $this->flashMessage('success', $this->translator->translate('record.successfully.created'));
+        return $this->webService->getRedirectResponse('inv/view', ['id' => $model_id]);
     }
 }
