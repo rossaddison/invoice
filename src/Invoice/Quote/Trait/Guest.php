@@ -63,12 +63,12 @@ trait Guest
         $userinv = $uiR->repoUserInvUserIdcount($userId) > 0
             ? $uiR->repoUserInvUserIdquery($userId)
             : null;
-        if (!$userinv || !$userinv->getActive()) {
-            return $this->webService->getNotFoundResponse();
-        }
-        $user_clients = $ucR->getAssignedToUser($userId);
-        if (empty($user_clients)) {
-            $this->flashMessage('warning', $this->translator->translate('user.clients.assigned.not'));
+        $activeInv = $userinv && $userinv->getActive();
+        $user_clients = $activeInv ? $ucR->getAssignedToUser($userId) : [];
+        if (!$activeInv || empty($user_clients)) {
+            if ($activeInv) {
+                $this->flashMessage('warning', $this->translator->translate('user.clients.assigned.not'));
+            }
             return $this->webService->getNotFoundResponse();
         }
         /** @var DRI<array-key, array<array-key, mixed>|object> $quotes */

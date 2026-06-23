@@ -194,18 +194,19 @@ trait Add
             return null;
         }
         $saved_model = $this->quote_service->saveQuote($user, $quote, $body, $this->sR, $d->gR);
-        if (!$saved_model->hasIdentity()) {
-            return null;
+        $model_id = $saved_model->hasIdentity() ? $saved_model->reqId() : 0;
+        if ($model_id > 0) {
+            $this->defaultTaxes($quote, $d->trR, $formHydrator);
+            $this->flashMessage('info',
+                $this->sR->getSetting('generate_quote_number_for_draft') === '1'
+                    ? $this->translator->translate('generate.quote.number.for.draft') . '=>' . $this->translator->translate('yes')
+                    : $this->translator->translate('generate.quote.number.for.draft') . '=>' . $this->translator->translate('no'));
+            $this->flashMessage('success',
+                $this->translator->translate('record.successfully.created') . '➡️ ' . $client_fullname);
         }
-        $model_id = $saved_model->reqId();
-        $this->defaultTaxes($quote, $d->trR, $formHydrator);
-        $this->flashMessage('info',
-            $this->sR->getSetting('generate_quote_number_for_draft') === '1'
-                ? $this->translator->translate('generate.quote.number.for.draft') . '=>' . $this->translator->translate('yes')
-                : $this->translator->translate('generate.quote.number.for.draft') . '=>' . $this->translator->translate('no'));
-        $this->flashMessage('success',
-            $this->translator->translate('record.successfully.created') . '➡️ ' . $client_fullname);
-        return $this->webService->getRedirectResponse('quote/view', ['id' => $model_id]);
+        return $model_id > 0
+            ? $this->webService->getRedirectResponse('quote/view', ['id' => $model_id])
+            : null;
     }
 
     /** @param array<array-key, mixed> $ajax_body */

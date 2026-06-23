@@ -153,12 +153,11 @@ final class SalesOrderController extends BaseController
         $userinv = $uiR->repoUserInvUserIdcount($userId) > 0
             ? $uiR->repoUserInvUserIdquery($userId)
             : null;
-        if (!$userinv) {
-            return $this->webService->getNotFoundResponse();
-        }
-        $user_clients = $ucR->getAssignedToUser($userId);
-        if (empty($user_clients)) {
-            $this->flashMessage('warning', $this->translator->translate('user.clients.assigned.not'));
+        $user_clients = $userinv ? $ucR->getAssignedToUser($userId) : [];
+        if (!$userinv || empty($user_clients)) {
+            if ($userinv) {
+                $this->flashMessage('warning', $this->translator->translate('user.clients.assigned.not'));
+            }
             return $this->webService->getNotFoundResponse();
         }
         $salesOrders = $soR->repoGuestStatuses($status, $user_clients)->withSort($sort);
@@ -661,11 +660,10 @@ final class SalesOrderController extends BaseController
                 ? $this->viewPartialDeliveryLocation($_language, $service->relation->dR, $quote->getDeliveryLocationId())
                 : '',
         ];
-        if ($this->rbac->isObserver($so, $service->relation->ucR, $service->relation->uiR)
-            || $this->rbac->isAdmin() || $this->rbac->isAccountant()) {
-            return $this->webViewRenderer->render('view', $parameters);
-        }
-        return $this->webService->getNotFoundResponse();
+        return ($this->rbac->isObserver($so, $service->relation->ucR, $service->relation->uiR)
+            || $this->rbac->isAdmin() || $this->rbac->isAccountant())
+            ? $this->webViewRenderer->render('view', $parameters)
+            : $this->webService->getNotFoundResponse();
     }
 
     /**
@@ -818,16 +816,14 @@ final class SalesOrderController extends BaseController
         /**
          * @psalm-suppress PossiblyNullArgument $this->userService->getUser()?->reqId()
          */
+        $result = null;
         if (in_array($salesorder->getStatusId(), [2,3,4,5,6,7,8,9,10])
             && $uiR->repoUserInvUserIdcount((int)
                     $this->userService->getUser()?->reqId()) === 1) {
             $result = $this->renderSalesOrderForGuest(
                 $salesorder, $deps, $salesorder_tax_rates, $url_key, $currentUser);
-            if ($result !== null) {
-                return $result;
-            }
         }
-        return $this->webService->getNotFoundResponse();
+        return $result ?? $this->webService->getNotFoundResponse();
     }
 
     private function renderSalesOrderForGuest(

@@ -139,10 +139,9 @@ final class ForgotPasswordController
             return '';
         }
         $timeStamp = $tokenRecord->getCreatedAt()->getTimestamp();
-        if ($timeStamp + 3600 >= time()) {
-            return $tokenString . '_' . (string) $timeStamp;
-        }
-        return $this->requestPasswordResetToken($identityId, $tR);
+        return ($timeStamp + 3600 >= time())
+            ? $tokenString . '_' . (string) $timeStamp
+            : $this->requestPasswordResetToken($identityId, $tR);
     }
 
     private function trySendEmail(User $user, string $token, string $_language): ?ResponseInterface

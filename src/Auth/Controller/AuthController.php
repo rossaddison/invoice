@@ -455,12 +455,6 @@ final class AuthController
         return $isAdminUser;
     }
 
-    private function redirectToOneTimePasswordError(): ResponseInterface
-    {
-        return $this->webService->getRedirectResponse('site/onetimepassworderror',
-                ['_language' => 'en']);
-    }
-
     private function getStringQueryParam(array $qp, string $key): ?string
     {
         return (isset($qp[$key]) && is_string($qp[$key]) && $qp[$key] !== '')

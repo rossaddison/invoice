@@ -341,6 +341,12 @@ trait TwoFactorAuth
         return $this->redirectToInvoiceIndex();
     }
 
+    private function redirectToOneTimePasswordError(): ResponseInterface
+    {
+        return $this->webService->getRedirectResponse('site/onetimepassworderror',
+            ['_language' => 'en']);
+    }
+
     private function clearTfaOnLogout(?string $userId, UserRepository $uR, UserInvRepository $uiR): void
     {
         $userInv = null !== $userId ? $uiR->repoUserInvUserIdquery((int) $userId) : null;

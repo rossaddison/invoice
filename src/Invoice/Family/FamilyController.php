@@ -179,21 +179,21 @@ final class FamilyController extends BaseController
             'familyCustomValues' => [],
             'familyCustomForm' => $familyCustomForm,
         ];
-        if ($request->getMethod() !== Method::POST) {
-            return $this->webViewRenderer->render('_form', $parameters);
-        }
-        if (!$formHydrator->populateFromPostAndValidate($form, $request)) {
-            $parameters['errors'] =
-                $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+        if ($request->getMethod() !== Method::POST
+            || !$formHydrator->populateFromPostAndValidate($form, $request)
+        ) {
+            if ($request->getMethod() === Method::POST) {
+                $parameters['errors'] =
+                    $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+            }
             return $this->webViewRenderer->render('_form', $parameters);
         }
         $body = $request->getParsedBody() ?? [];
-        if (!is_array($body)) {
-            return $this->webViewRenderer->render('_form', $parameters);
-        }
         $family = new Family();
-        $this->familyService->saveFamily($family, $body);
-        if (!$family->hasIdentity()) {
+        if (is_array($body)) {
+            $this->familyService->saveFamily($family, $body);
+        }
+        if (!is_array($body) || !$family->hasIdentity()) {
             return $this->webViewRenderer->render('_form', $parameters);
         }
         $family_id = $family->reqId();

@@ -37,11 +37,8 @@ trait View
         QuoteViewUIDeps $ui,
     ): Response {
         $quote = $this->quote($id, $core->qR, false);
-        if (null === $quote) {
-            return $this->webService->getNotFoundResponse();
-        }
-        $quote_id = $quote->reqId();
-        if ($quote_id <= 0) {
+        $quote_id = ($quote !== null) ? $quote->reqId() : 0;
+        if ($quote === null || $quote_id <= 0) {
             return $this->webService->getNotFoundResponse();
         }
         $quoteAllowanceChargeForm = new QuoteAllowanceChargeForm();
@@ -152,10 +149,9 @@ trait View
                 $this->viewPartialDeliveryLocation(
                     $_language, $ui->dlR, $quote->getDeliveryLocationId()),
         ];
-        if ($this->rbacObserver($quote, $core->ucR, $core->uiR) || $this->rbacAdmin() || $this->rbacAccountant()) {
-            return $this->webViewRenderer->render('view', $parameters);
-        }
-        return $this->webService->getNotFoundResponse();
+        return ($this->rbacObserver($quote, $core->ucR, $core->uiR) || $this->rbacAdmin() || $this->rbacAccountant())
+            ? $this->webViewRenderer->render('view', $parameters)
+            : $this->webService->getNotFoundResponse();
     }
 
     private function viewBuildProductTaskTabs(

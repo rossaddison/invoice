@@ -142,6 +142,18 @@ final class PaymentController extends BaseController
             $params['form'] = $form;
             return $this->webViewRenderer->render('_form', $params);
         }
+        return $this->handlePaymentAddBody($request, $payment, $pcForm, $params, $fmHyd, $deps);
+    }
+
+    /** @param array<string, mixed> $params */
+    private function handlePaymentAddBody(
+        Request $request,
+        Payment $payment,
+        PaymentCustomForm $pcForm,
+        array $params,
+        FormHydrator $fmHyd,
+        PaymentAddDeps $deps,
+    ): Response {
         $body = $request->getParsedBody() ?? [];
         if (!is_array($body)) {
             return $this->webViewRenderer->render('_form', $params);
@@ -356,6 +368,19 @@ final class PaymentController extends BaseController
         if ($request->getMethod() !== Method::POST) {
             return $this->webViewRenderer->render('_form', $params);
         }
+        return $this->handlePaymentEditBody($request, $currentRoute, $fmHyd, $deps, $params, $payment_id, $inv_id);
+    }
+
+    /** @param array<string, mixed> $params */
+    private function handlePaymentEditBody(
+        Request $request,
+        CurrentRoute $currentRoute,
+        FormHydrator $fmHyd,
+        PaymentEditDeps $deps,
+        array $params,
+        int $payment_id,
+        int $inv_id,
+    ): Response {
         $body = $request->getParsedBody() ?? [];
         if (!is_array($body)) {
             return $this->webViewRenderer->render('_form', $params);
