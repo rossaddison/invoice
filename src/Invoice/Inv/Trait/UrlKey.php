@@ -92,8 +92,7 @@ trait UrlKey
         $is_overdue = (
             $inv_amount->getBalance() > 0
                 && $inv->getDateDue()
-                    < (new \DateTimeImmutable('now')) ?
-                        true : false);
+                    < (new \DateTimeImmutable('now')));
         $parameters = [
             'renderTemplate' =>
                 $this->webViewRenderer->renderPartialAsString(

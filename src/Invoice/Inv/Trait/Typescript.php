@@ -55,14 +55,11 @@ trait Typescript
  * Related logic: see 'read_only_toggle' Settings ....
  * Invoices ... Other Settings ... Disable the read only button on ... {status}
  */
-                    if (($this->sR->getSetting('read_only_toggle') == '2')
-                      &&  ($this->sR->getSetting('disable_read_only') == '0')) {
+                    if ($this->shouldMarkReadOnly('0')) {
                         $inv->setIsReadOnly(true);
                     }
                     $iR->save($inv);
                     $parameters['success'] = 1;
-                } else {
-                    $parameters['success'] = 0;
                 }
             }
             $this->flashMessage('info',
@@ -102,8 +99,7 @@ trait Typescript
                      * and the ability to mark invoices as 'read only' has now
                      * been disabled
                      */
-                    if (($this->sR->getSetting('read_only_toggle') == '2')
-                     &&  ($this->sR->getSetting('disable_read_only') == '1')) {
+                    if ($this->shouldMarkReadOnly('1')) {
                         /**
                          * The invoice is now a draft and so now must be
                          * editable i.e. not 'read-only'
@@ -112,8 +108,6 @@ trait Typescript
                     }
                     $iR->save($inv);
                     $parameters['success'] = 1;
-                } else {
-                    $parameters['success'] = 0;
                 }
             }
             $this->flashMessage('info',
@@ -122,6 +116,12 @@ trait Typescript
              $this->translator->translate('security.disable.read.only.success'));
         }
         return $this->factory->createResponse(Json::encode($parameters));
+    }
+
+    private function shouldMarkReadOnly(string $disableReadOnlyValue): bool
+    {
+        return $this->sR->getSetting('read_only_toggle') == '2'
+            && $this->sR->getSetting('disable_read_only') == $disableReadOnlyValue;
     }
 
     // invoice\src\typescript\invoice.ts handleAddInvoiceTax

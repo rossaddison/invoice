@@ -344,25 +344,13 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
          * Related logic: see .env.php $_ENV['YII_DEBUG'] and $_ENV['BUILD_DATABASE'] in root folder
          * Related logic: see {root} autoload.php
          */
-        $debugMode = $_ENV['YII_DEBUG'] == 'true' ? true : false;
-        $buildDatabase = $_ENV['BUILD_DATABASE'] == 'true' ? true : false;
+        $debugMode = $_ENV['YII_DEBUG'] == 'true';
+        $buildDatabase = $_ENV['BUILD_DATABASE'] == 'true';
         $this->settingRepository->debugMode($debugMode);
 
         $status = '';
         if (null !== $user) {
-            $userId = $user->reqId();
-            if ($this->manager->getPermissionsByUserId($userId)
-                  === $this->manager->getPermissionsByRoleName('observer')) {
-                $status = 'observer';
-            }
-            if ($this->manager->getPermissionsByUserId($userId)
-                  === $this->manager->getPermissionsByRoleName('admin')) {
-                $status = 'admin';
-            }
-            if ($this->manager->getPermissionsByUserId($userId)
-                  === $this->manager->getPermissionsByRoleName('accountant')) {
-                $status = 'accountant';
-            }
+            $status = $this->resolveUserStatus($user->reqId());
         }
 
         $guestPageSizeUrlTemplate = '';
@@ -393,6 +381,23 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
             'guestPageSizeUrlTemplate' => $guestPageSizeUrlTemplate,
             'guestCurrentPageSize' => $guestCurrentPageSize,
         ];
+    }
+
+    private function resolveUserStatus(int $userId): string
+    {
+        if ($this->manager->getPermissionsByUserId($userId)
+              === $this->manager->getPermissionsByRoleName('observer')) {
+            return 'observer';
+        }
+        if ($this->manager->getPermissionsByUserId($userId)
+              === $this->manager->getPermissionsByRoleName('admin')) {
+            return 'admin';
+        }
+        if ($this->manager->getPermissionsByUserId($userId)
+              === $this->manager->getPermissionsByRoleName('accountant')) {
+            return 'accountant';
+        }
+        return '';
     }
 
     /**

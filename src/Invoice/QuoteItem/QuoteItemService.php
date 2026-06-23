@@ -483,17 +483,13 @@ final readonly class QuoteItemService
 
         /** @var Task $task */
         $task = $taskR->repoTaskquery((int) $array['task_id']);
-        if (isset($array['name'])) {
-            $model->setName($task->getName() ?? '');
-        }
+        $model->setName($task->getName() ?? '');
 
         // If the user has changed the description on the
         // form => override default task description
-        if (isset($array['description'])) {
-            $description = (string) $array['description'];
-        } else {
-            $description = $task->getDescription();
-        }
+        $description = isset($array['description'])
+            ? (string) $array['description']
+            : $task->getDescription();
         $model->setDescription($description ?: '');
 
         isset($array['quantity']) ?
