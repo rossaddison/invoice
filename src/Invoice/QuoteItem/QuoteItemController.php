@@ -178,32 +178,31 @@ final class QuoteItemController extends BaseController
                 'numberHelper' => new NumberHelper($this->sR),
             ];
             if ($request->getMethod() === Method::POST) {
+                /** @var array $body */
                 $body = $request->getParsedBody();
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     $quantity = (float) ($body['quantity'] ?? 0.00);
                     $price = (float) ($body['price'] ?? 0.00);
                     $discount = (float) ($body['discount_amount'] ?? 0.00);
-                    if (is_array($body)) {
-                        $tax_rate_id = $this->quoteitemService->saveQuoteItemProduct($quoteItem, $body, $quote_id, $deps->pR, $deps->uR, $this->translator) ?: 1;
-                        $tax_rate_percentage = $this->taxratePercentage($tax_rate_id, $deps->trR);
-                        if (null !== $tax_rate_percentage) {
-                            /**
-                             * @psalm-suppress PossiblyNullReference getId
-                             */
-                            $request_quote_item = $this->quoteitem($currentRoute, $deps->qiR)->reqId();
-                            $this->quoteitemService->saveQuoteItemAmount(
-                                $request_quote_item,
-                                $quantity,
-                                $price,
-                                $discount,
-                                $tax_rate_percentage,
-                                $deps->qiar,
-                                $deps->qias
-                            );
-                            $this->flashMessage('success', $this->translator->translate('record.successfully.updated'));
-                            return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
-                        }
-                    } // is_array
+                    $tax_rate_id = $this->quoteitemService->saveQuoteItemProduct($quoteItem, $body, $quote_id, $deps->pR, $deps->uR, $this->translator) ?: 1;
+                    $tax_rate_percentage = $this->taxratePercentage($tax_rate_id, $deps->trR);
+                    if (null !== $tax_rate_percentage) {
+                        /**
+                         * @psalm-suppress PossiblyNullReference getId
+                         */
+                        $request_quote_item = $this->quoteitem($currentRoute, $deps->qiR)->reqId();
+                        $this->quoteitemService->saveQuoteItemAmount(
+                            $request_quote_item,
+                            $quantity,
+                            $price,
+                            $discount,
+                            $tax_rate_percentage,
+                            $deps->qiar,
+                            $deps->qias
+                        );
+                        $this->flashMessage('success', $this->translator->translate('record.successfully.updated'));
+                        return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
+                    }
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
@@ -235,32 +234,31 @@ final class QuoteItemController extends BaseController
                 'numberHelper' => new NumberHelper($this->sR),
             ];
             if ($request->getMethod() === Method::POST) {
+                /** @var array $body */
                 $body = $request->getParsedBody();
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     $quantity = (float) ($body['quantity'] ?? 0.00);
                     $price = (float) ($body['price'] ?? 0.00);
                     $discount = (float) ($body['discount_amount'] ?? 0.00);
-                    if (is_array($body)) {
-                        $tax_rate_id = $this->quoteitemService->saveQuoteItemTask($quoteItem, $body, $quote_id, $deps->taskR) ?: 1;
-                        $tax_rate_percentage = $this->taxratePercentage($tax_rate_id, $deps->trR);
-                        if (null !== $tax_rate_percentage) {
-                            /**
-                             * @psalm-suppress PossiblyNullReference getId
-                             */
-                            $request_quote_item = $this->quoteitem($currentRoute, $deps->qiR)->reqId();
-                            $this->quoteitemService->saveQuoteItemAmount(
-                                $request_quote_item,
-                                $quantity,
-                                $price,
-                                $discount,
-                                $tax_rate_percentage,
-                                $deps->qiar,
-                                $deps->qias
-                            );
-                            $this->flashMessage('success', $this->translator->translate('record.successfully.updated'));
-                            return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
-                        }
-                    } // is_array
+                    $tax_rate_id = $this->quoteitemService->saveQuoteItemTask($quoteItem, $body, $quote_id, $deps->taskR) ?: 1;
+                    $tax_rate_percentage = $this->taxratePercentage($tax_rate_id, $deps->trR);
+                    if (null !== $tax_rate_percentage) {
+                        /**
+                         * @psalm-suppress PossiblyNullReference getId
+                         */
+                        $request_quote_item = $this->quoteitem($currentRoute, $deps->qiR)->reqId();
+                        $this->quoteitemService->saveQuoteItemAmount(
+                            $request_quote_item,
+                            $quantity,
+                            $price,
+                            $discount,
+                            $tax_rate_percentage,
+                            $deps->qiar,
+                            $deps->qias
+                        );
+                        $this->flashMessage('success', $this->translator->translate('record.successfully.updated'));
+                        return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
+                    }
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
