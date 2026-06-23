@@ -140,23 +140,21 @@ final class ClientController extends BaseController
                                              ->getErrorMessagesIndexedByProperty();
                 return $this->webViewRenderer->render('_form', $parameters);
             }
+            /** @var array<string, mixed> $body */
             $body = $request->getParsedBody() ?? [];
-            if (is_array($body)) {
-                /** @var array<string, mixed> $body */
-                $formName = $form->getFormName();
-                /** @var array<string, mixed> $saveBody */
-                $saveBody = isset($body[$formName]) && is_array($body[$formName])
-                    ? $body[$formName]
-                    : $body;
-                $cId = $this->clientService->saveClient($new_client, $saveBody);
-                if (null !== $cId) {
-                    $this->saveNewClientCustomFields($saveBody, $cId, $formHydrator);
-                    $this->flashMessage('info',
-                        $this->translator->translate('record.successfully.created'));
-                    $redirect = $this->redirectAfterAdd($origin);
-                    if (null !== $redirect) {
-                        return $redirect;
-                    }
+            $formName = $form->getFormName();
+            /** @var array<string, mixed> $saveBody */
+            $saveBody = isset($body[$formName]) && is_array($body[$formName])
+                ? $body[$formName]
+                : $body;
+            $cId = $this->clientService->saveClient($new_client, $saveBody);
+            if (null !== $cId) {
+                $this->saveNewClientCustomFields($saveBody, $cId, $formHydrator);
+                $this->flashMessage('info',
+                    $this->translator->translate('record.successfully.created'));
+                $redirect = $this->redirectAfterAdd($origin);
+                if (null !== $redirect) {
+                    return $redirect;
                 }
             }
         }

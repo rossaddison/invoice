@@ -251,7 +251,7 @@ final class InvRecurringController extends BaseController
         $created = 0;
         $reminded = 0;
         $token = $this->sR->getSetting('telegram_token');
-        $telegramEnabled = $this->sR->getSetting('enable_telegram') === '1';
+        $telegramActive = $this->sR->getSetting('enable_telegram') === '1' && strlen($token) > 1;
 
         /** @var InvRecurring $invRecurring */
         foreach ($irR->active() as $invRecurring) {
@@ -262,11 +262,7 @@ final class InvRecurringController extends BaseController
             }
             $clientId = $baseInv->reqClientId();
 
-            $userClient = $cronDeps->uclR->repoUserquery($clientId);
-            if (null === $userClient) {
-                continue;
-            }
-            $userInv = $cronDeps->uiR->repoUserInvUserIdquery($userClient->reqUserId());
+            $userInv = $this->resolveRecurringUser($clientId, $cronDeps);
             if (null === $userInv) {
                 continue;
             }
@@ -289,7 +285,7 @@ final class InvRecurringController extends BaseController
 
             $this->advanceRecurringDate($invRecurring, $irR);
 
-            if ($telegramEnabled && strlen($token) > 1) {
+            if ($telegramActive) {
                 $reminded += $this->sendTelegramReminderIfNeeded($prevInvId, $userInv, $cronDeps, $token);
             }
         }
@@ -299,6 +295,15 @@ final class InvRecurringController extends BaseController
             'created'  => $created,
             'reminded' => $reminded,
         ]));
+    }
+
+    private function resolveRecurringUser(int $clientId, InvCronUserDeps $cronDeps): ?UserInv
+    {
+        $userClient = $cronDeps->uclR->repoUserquery($clientId);
+        if (null === $userClient) {
+            return null;
+        }
+        return $cronDeps->uiR->repoUserInvUserIdquery($userClient->reqUserId());
     }
 
     //inv.js create_recurring_confirm_multiple function calls this function

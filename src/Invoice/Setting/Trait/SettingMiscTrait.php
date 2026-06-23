@@ -92,31 +92,35 @@ trait SettingMiscTrait
             default:
             case 'this-month':
                 $range['upper'] = $now;
-                $range['lower'] = $oneMonth
-                                  ? $now->sub($oneMonth) : $now;
+                $range['lower'] = $this->subInterval($now, $oneMonth);
                 break;
             case 'last-month':
-                $range['upper'] = $oneMonth ? $now->sub($oneMonth) : $now;
-                $range['lower'] = $twoMonths ? $now->sub($twoMonths) : $now;
+                $range['upper'] = $this->subInterval($now, $oneMonth);
+                $range['lower'] = $this->subInterval($now, $twoMonths);
                 break;
             case 'this-quarter':
                 $range['upper'] = $now;
-                $range['lower'] = $threeMonths ? $now->sub($threeMonths) : $now;
+                $range['lower'] = $this->subInterval($now, $threeMonths);
                 break;
             case 'last-quarter':
-                $range['upper'] = $threeMonths ? $now->sub($threeMonths) : $now;
-                $range['lower'] = $sixMonths ? $now->sub($sixMonths) : $now;
+                $range['upper'] = $this->subInterval($now, $threeMonths);
+                $range['lower'] = $this->subInterval($now, $sixMonths);
                 break;
             case 'this-year':
                 $range['upper'] = $now;
-                $range['lower'] = $oneYear ? $now->sub($oneYear) : $now;
+                $range['lower'] = $this->subInterval($now, $oneYear);
                 break;
             case 'last-year':
-                $range['upper'] = $oneYear ? $now->sub($oneYear) : $now;
-                $range['lower'] = $twoYears ? $now->sub($twoYears) : $now;
+                $range['upper'] = $this->subInterval($now, $oneYear);
+                $range['lower'] = $this->subInterval($now, $twoYears);
                 break;
         }
         return $range;
+    }
+
+    private function subInterval(\DateTimeImmutable $now, \DateInterval|false $interval): \DateTimeImmutable
+    {
+        return $interval !== false ? $now->sub($interval) : $now;
     }
 
     /**

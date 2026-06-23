@@ -207,28 +207,30 @@ trait QuoteToInvoice
                     $transfer->iiaS, $transfer->iiaR);
                 $invItemId = $invItem->reqId();
                 // Copy the quote item amounts to the invoice item amounts
-                $quoteItemAmount = $transfer->qiaR->repoQuoteItemAmountquery(
-                    $origQuoteItemId);
-                if (null !== $quoteItemAmount) {
-                    $invItemAmount = $transfer->iiaR->repoInvItemAmountquery(
-                        $invItemId);
-                    if (null !== $invItemAmount) {
-                        $invItemAmount->setSubtotal(
-                            $quoteItemAmount->getSubtotal() ?? 0.00);
-                        $invItemAmount->setTaxTotal(
-                            $quoteItemAmount->getTaxTotal() ?? 0.00);
-                        $invItemAmount->setDiscount(
-                            $quoteItemAmount->getDiscount() ?? 0.00);
-                        $invItemAmount->setTotal(
-                            $quoteItemAmount->getTotal() ?? 0.00);
-                        $transfer->iiaR->save($invItemAmount);
-                    }
-                }
+                $this->copyQuoteItemAmountsToInvItem($origQuoteItemId, $invItemId, $transfer);
                 $this->inv_item_service->addInvItemAllowanceChargesFromQuote(
                     (string) $inv_id, $origQuoteItemId, $invItemId,
                     $core->acqiR, $transfer->aciiR);
             }
         } // items
+    }
+
+    private function copyQuoteItemAmountsToInvItem(
+        int $origQuoteItemId,
+        int $invItemId,
+        QuoteToInvTransferDeps $transfer
+    ): void {
+        $quoteItemAmount = $transfer->qiaR->repoQuoteItemAmountquery($origQuoteItemId);
+        if (null !== $quoteItemAmount) {
+            $invItemAmount = $transfer->iiaR->repoInvItemAmountquery($invItemId);
+            if (null !== $invItemAmount) {
+                $invItemAmount->setSubtotal($quoteItemAmount->getSubtotal() ?? 0.00);
+                $invItemAmount->setTaxTotal($quoteItemAmount->getTaxTotal() ?? 0.00);
+                $invItemAmount->setDiscount($quoteItemAmount->getDiscount() ?? 0.00);
+                $invItemAmount->setTotal($quoteItemAmount->getTotal() ?? 0.00);
+                $transfer->iiaR->save($invItemAmount);
+            }
+        }
     }
 
     private function quoteToInvoiceQuoteTaxRates(int $quote_id,

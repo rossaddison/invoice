@@ -208,16 +208,10 @@ final class GeneratorGoogleTranslateController extends BaseController
                 $request->setContents($batch);
                 $request->setTargetLanguageCode($targetLanguage);
                 $request->setMimeType('text/html');
-                $response = $translationClient->translateText($request);
-                /** @var \Google\Cloud\Translate\V3\TranslateTextResponse $response_get_translations */
-                $response_get_translations = $response->getTranslations();
-                /**
-                 * @psalm-suppress RawObjectIteration $response_get_translations
-                 * @var \Google\Cloud\Translate\V3\Translation $translation
-                 */
-                foreach ($response_get_translations as $translation) {
-                    $translatedSegments[] = $translation->getTranslatedText();
-                }
+                $translatedSegments = array_merge(
+                    $translatedSegments,
+                    $this->collectTranslations($translationClient, $request)
+                );
                 if ($batchNumber % 5 == 0 || $batchNumber == $totalBatches) {
                     error_log(sprintf('Translated batch %d of %d', $batchNumber, $totalBatches));
                 }
@@ -245,6 +239,25 @@ final class GeneratorGoogleTranslateController extends BaseController
             $this->flashMessage('danger', 'Translation error: ' . $e->getMessage());
         }
         return $this->webService->getRedirectResponse('setting/tabIndex', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
+    }
+
+    /** @return list<string> */
+    private function collectTranslations(
+        TranslationServiceClient $translationClient,
+        TranslateTextRequest $request
+    ): array {
+        $response = $translationClient->translateText($request);
+        /** @var \Google\Cloud\Translate\V3\TranslateTextResponse $response_get_translations */
+        $response_get_translations = $response->getTranslations();
+        $translated = [];
+        /**
+         * @psalm-suppress RawObjectIteration $response_get_translations
+         * @var \Google\Cloud\Translate\V3\Translation $translation
+         */
+        foreach ($response_get_translations as $translation) {
+            $translated[] = $translation->getTranslatedText();
+        }
+        return $translated;
     }
 
     public function ensureJsonExtension(string $filepath): bool

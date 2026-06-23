@@ -137,9 +137,8 @@ final readonly class StoreCoveInvoiceLineBuilder
                 return $invoiceLines;
             }
             throw new PeppolClientNotFoundException($this->t);
-        } else {
-            throw new PeppolClientNotFoundException($this->t);
         }
+        throw new PeppolClientNotFoundException($this->t);
     }
 
     /**

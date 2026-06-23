@@ -201,8 +201,9 @@ final class DeliveryController extends BaseController
                         'dels' => $dels,
                     ];
                     if ($request->getMethod() === Method::POST) {
+                        /** @var array $body */
                         $body = $request->getParsedBody() ?? [];
-                        if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
+                        if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                                 $this->deliveryService->saveDelivery($delivery, $body);
                                 return $this->webService->getRedirectResponse('delivery/index');
                         }
