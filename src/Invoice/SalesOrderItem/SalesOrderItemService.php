@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderItem;
 
+use App\Infrastructure\Persistence\Product\Product;
 use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
 use App\Infrastructure\Persistence\SalesOrderItemAllowanceCharge\{
     SalesOrderItemAllowanceCharge,
@@ -165,6 +166,24 @@ final readonly class SalesOrderItemService
             : $model->setDescription($translator->translate('not.available'));
     }
 
+    private function applyProductDetails(
+        SalesOrderItem $model,
+        array $array,
+        Product $product,
+        PR $pr
+    ): void {
+        $name = ($pr->repoCount($product->reqId()) > 0)
+            ? $product->getProductName()
+            : '';
+        $model->setName($name ?? '');
+        // If the user has changed the description on the form
+        // => override default product description
+        $description = isset($array['description'])
+            ? (string) $array['description']
+            : $product->getProductDescription();
+        $model->setDescription($description ?? '');
+    }
+
     /**
      * @param SalesOrderItem $model
      * @param array $array
@@ -191,17 +210,7 @@ final readonly class SalesOrderItemService
                 (int) $array['product_id']
             );
             if ($product) {
-                $name = (((isset($array['product_id']))
-                    && ($pr->repoCount($product->reqId()) > 0))
-                    ? $product->getProductName()
-                    : '');
-                $model->setName($name ?? '');
-                // If the user has changed the description on the form
-                // => override default product description
-                $description = ((isset($array['description']))
-                    ? (string) $array['description']
-                    : $product->getProductDescription());
-                $model->setDescription($description ?? '');
+                $this->applyProductDetails($model, $array, $product, $pr);
             }
         }
         isset($array['quantity'])

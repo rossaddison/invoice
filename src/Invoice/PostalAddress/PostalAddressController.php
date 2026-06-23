@@ -59,9 +59,8 @@ final class PostalAddressController extends BaseController
         $postalAddress = new PostalAddress();
         $form = PostalAddressForm::show($postalAddress, $client_id);
         $parameters = [
-            'canEdit' => ($this->userService->hasPermission(Permissions::VIEW_INV)
-                && $this->userService->hasPermission(Permissions::EDIT_INV)) ?
-                    true : false,
+            'canEdit' => $this->userService->hasPermission(Permissions::VIEW_INV)
+                && $this->userService->hasPermission(Permissions::EDIT_INV),
             'client_id' => $client_id,
             'title' => $this->translator->translate('add'),
             'actionName' => 'postaladdress/add',

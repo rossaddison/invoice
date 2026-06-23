@@ -245,10 +245,7 @@ final class CompanyPrivateController extends BaseController
                     $redirect = $this->webService->getRedirectResponse('companyprivate/index');
                 } // after  save
             }
-            if ($redirect === null) {
-                $parameters['form'] = $form;
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-            }
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         }
         return $redirect ?? $this->webViewRenderer->render('_form', $parameters);
     }

@@ -127,31 +127,34 @@ final readonly class QuoteService
         isset($array['notes']) ?
             $model->setNotes((string) $array['notes']) : '';
         if (!$model->hasIdentity()) {
-            $model->setInvId(0);
-            $model->setSoId(0);
-            // if draft quotes must get quote numbers
-            if ($s->getSetting(
-                'generate_quote_number_for_draft'
-            ) === '1') {
-                $model->setNumber(
-                    (string) $gR->generateNumber(
-                        (int) $array['group_id'],
-                        true
-                    )
-                );
-            } else {
-                $model->setNumber('');
-            }
-            $model->setStatusId(1);
-            $model->setUser($user);
-            $model->setUserId($user->reqId());
-            $model->setUrlKey(Random::string(32));
-            $model->setDateCreated(new \DateTimeImmutable('now'));
-            $model->setDateExpires($s);
-            $model->setDiscountAmount(0.00);
+            $this->initNewQuote($model, $array, $s, $gR, $user);
         }
         $this->repository->save($model);
         return $model;
+    }
+
+    private function initNewQuote(
+        Quote $model,
+        array $array,
+        SR $s,
+        GR $gR,
+        User $user
+    ): void {
+        $model->setInvId(0);
+        $model->setSoId(0);
+        // if draft quotes must get quote numbers
+        $model->setNumber(
+            $s->getSetting('generate_quote_number_for_draft') === '1'
+                ? (string) $gR->generateNumber((int) $array['group_id'], true)
+                : ''
+        );
+        $model->setStatusId(1);
+        $model->setUser($user);
+        $model->setUserId($user->reqId());
+        $model->setUrlKey(Random::string(32));
+        $model->setDateCreated(new \DateTimeImmutable('now'));
+        $model->setDateExpires($s);
+        $model->setDiscountAmount(0.00);
     }
     
     public function deleteQuote(Quote $quote): void

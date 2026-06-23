@@ -79,18 +79,15 @@ final class SalesOrderItemController extends BaseController
                 ];
                 if ($request->getMethod() === Method::POST) {
                     if ($d->formHydrator->populateFromPostAndValidate($form, $request)) {
+                        /** @var array $body */
                         $body = $request->getParsedBody() ?? [];
-                        if (is_array($body)) {
-    // The only item that is different from the quote is the customer's purchase
-    // order number
-                            $this->salesorderitemService->savePeppolPoItemid(
-                                                                    $so_item, $body);
-                            $this->salesorderitemService->savePeppolPoLineid(
-                                                                    $so_item, $body);
-                            $this->flashMessage('success', $this->translator->translate(                                                      'record.successfully.updated'));
-                            return $this->webService->getRedirectResponse(
-                                'salesorder/view', ['id' => $so_id]);
-                        } // is_array
+                        // The only item that is different from the quote is the customer's purchase
+                        // order number
+                        $this->salesorderitemService->savePeppolPoItemid($so_item, $body);
+                        $this->salesorderitemService->savePeppolPoLineid($so_item, $body);
+                        $this->flashMessage('success', $this->translator->translate('record.successfully.updated'));
+                        return $this->webService->getRedirectResponse(
+                            'salesorder/view', ['id' => $so_id]);
                     }
                     $parameters['errors'] =
                             $form->getValidationResult()
