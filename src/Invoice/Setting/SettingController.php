@@ -19,6 +19,7 @@ use App\Invoice\Helpers\Peppol\PeppolArrays;
 use App\Invoice\Helpers\StoreCove\StoreCoveArrays;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Setting\Trait\OpenBankingProviders;
+use App\Invoice\Setting\Trait\SettingOptionsDataTrait;
 use App\Invoice\Setting\Trait\SettingsTabBootstrap5;
 use App\Invoice\TaxRate\TaxRateRepository as TR;
 use App\Service\WebControllerService;
@@ -53,6 +54,7 @@ use DateTimeZone;
 final class SettingController extends BaseController
 {
     use OpenBankingProviders;
+    use SettingOptionsDataTrait;
     use SettingsTabBootstrap5;
 
     protected string $controllerName = 'invoice/setting';
@@ -515,40 +517,6 @@ final class SettingController extends BaseController
             'cronkey' => Random::string(32),
         ];
         return $this->factory->createResponse(Json::encode($parameters));
-    }
-
-    public function optionsDataSettingsKey(sR $sR): array
-    {
-        $optionsDataSettings = [];
-        $settings = $sR->findAllPreloaded();
-        /**
-         * @var Setting $setting
-         */
-        foreach ($settings as $setting) {
-            $settingKey = $setting->getSettingKey();
-            // Remove repeats
-            if (!in_array($setting->getSettingKey(), $optionsDataSettings)) {
-                $optionsDataSettings[$settingKey] = $setting->getSettingKey();
-            }
-        }
-        return $optionsDataSettings;
-    }
-
-    public function optionsDataSettingsValue(sR $sR): array
-    {
-        $optionsDataSettings = [];
-        $settings = $sR->findAllPreloaded();
-        /**
-         * @var Setting $setting
-         */
-        foreach ($settings as $setting) {
-            $settingValue = $setting->getSettingValue();
-            // Remove repeats
-            if (!in_array($setting->getSettingValue(), $optionsDataSettings)) {
-                $optionsDataSettings[$settingValue] = $setting->getSettingValue();
-            }
-        }
-        return $optionsDataSettings;
     }
 
     /**
