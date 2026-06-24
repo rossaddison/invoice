@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\QuoteItem;
 
 use App\Infrastructure\Persistence\{
-    QuoteItemAmount\QuoteItemAmount, Task\Task, QuoteItem\QuoteItem
+    QuoteItemAmount\QuoteItemAmount, Product\Product, Task\Task, QuoteItem\QuoteItem
 };
 use App\Invoice\
 {
@@ -84,94 +84,32 @@ final readonly class QuoteItemService
         QiAddProductTaskDeps $deps
     ): void {
         $this->persist($array, $model);
-
-        $tax_rate_id = ((isset($array['tax_rate_id'])) ?
-            (int) $array['tax_rate_id'] : '');
+        $tax_rate_id = isset($array['tax_rate_id']) ? (int) $array['tax_rate_id'] : '';
         $model->setTaxRateId((int) $tax_rate_id);
-        $product_id =  (int) ($array['product_id'] ?? null);
-        $task_id =  (int) ($array['task_id'] ?? null);
+        $product_id = (int) ($array['product_id'] ?? null);
+        $task_id = (int) ($array['task_id'] ?? null);
         $model->setQuoteId((int) $quote_id);
-        $product = $deps->pr->repoProductquery(
-            (int) $array['product_id']
-        );
-        $name = '';
+        $product = $deps->pr->repoProductquery($product_id);
         if ($product) {
             $model->setProductId($product_id);
-            if (isset($array['product_id']) &&
-                $deps->pr->repoCount($product_id) > 0) {
-                $name = $product->getProductName();
-            }
-            null !== $name ?
-                $model->setName($name) : $model->setName('');
-            // If the user has changed the description on the
-            // form => override default product description
-            $description = (isset($array['description'])
-                ? (string) $array['description']
-                : $product->getProductDescription());
-
-            null !== $description ?
-                $model->setDescription($description) :
-                $model->setDescription(
-                    $deps->translator->translate('not.available')
-                );
+            $this->applyProductNameDescription(
+                $model, $array, $product_id, $product, $deps->pr, $deps->translator
+            );
         }
-        $task = $deps->taskR->repoTaskquery((int) $array['task_id']);
+        $task = $deps->taskR->repoTaskquery($task_id);
         if ($task) {
             $model->setTaskId($task_id);
-            if (isset($array['task_id']) &&
-                $deps->taskR->repoCount($task_id) > 0) {
-                $name = $task->getName();
-            }
-            null !== $name ?
-                $model->setName($name) : $model->setName('');
-            // If the user has changed the description on the
-            // form => override default product description
-            $description = (isset($array['description'])
-                ? (string) $array['description']
-                : $task->getDescription());
-
-            strlen($description) > 0 ?
-                $model->setDescription($description) :
-                $model->setDescription(
-                    $deps->translator->translate('not.available')
-                );
+            $this->applyTaskNameDescription(
+                $model, $array, $task_id, $task, $deps->taskR, $deps->translator
+            );
         }
-        isset($array['quantity']) ?
-            $model->setQuantity((float) $array['quantity']) : '';
-        isset($array['price']) ?
-            $model->setPrice((float) $array['price']) : '';
-        isset($array['discount_amount']) ?
-            $model->setDiscountAmount(
-                (float) $array['discount_amount']
-            ) : '';
-        isset($array['order']) ?
-            $model->setOrder((int) $array['order']) : '';
-        // Product_unit is a string which we get from unit's
-        // name field using the unit_id
-        $unit = $deps->uR->repoUnitquery(
-            (int) $array['product_unit_id']
-        );
-        if ($unit) {
-            $model->setProductUnit($unit->getUnitName());
-        }
-        $model->setProductUnitId((int) $array['product_unit_id']);
-        // Users are required to enter a tax rate even if it
-        // is zero percent.
-        $tax_rate_percentage = $this->taxratePercentage(
-            (int) $tax_rate_id,
-            $deps->trr
-        );
+        $this->applyQuantityPriceDiscountOrder($model, $array);
+        $this->applyProductUnit($model, $array, $deps->uR);
+        $tax_rate_percentage = $this->taxratePercentage((int) $tax_rate_id, $deps->trr);
         $this->repository->save($model);
-        if (isset($array['quantity'], $array['price'],
-            $array['discount_amount']) &&
+        if (isset($array['quantity'], $array['price'], $array['discount_amount']) &&
             null !== $tax_rate_percentage) {
             $this->saveQuoteItemAmount(
-                /**
-                 * Note: Although, at first glance, the allowances and charges
-                 * do not appear to be here, they are in fact worked out with a
-                 * $this->acqiR in the function below which creates their
-                 * accumulative totals and saves it using the $qiar.
-                 */
                 $model->reqId(),
                 (float) $array['quantity'],
                 (float) $array['price'],
@@ -191,72 +129,24 @@ final readonly class QuoteItemService
         QiAddProductDeps $deps
     ): void {
         $this->persist($array, $model);
-
-        $tax_rate_id = ((isset($array['tax_rate_id'])) ?
-            (int) $array['tax_rate_id'] : '');
+        $tax_rate_id = isset($array['tax_rate_id']) ? (int) $array['tax_rate_id'] : '';
         $model->setTaxRateId((int) $tax_rate_id);
         $product_id = (int) ($array['product_id'] ?? '');
         $model->setProductId($product_id);
         $model->setQuoteId((int) $quote_id);
-        $product = $deps->pr->repoProductquery(
-            (int) $array['product_id']
-        );
-        $name = '';
+        $product = $deps->pr->repoProductquery($product_id);
         if ($product) {
-            if (isset($array['product_id']) &&
-                $deps->pr->repoCount($product_id) > 0) {
-                $name = $product->getProductName();
-            }
-            null !== $name ?
-                $model->setName($name) : $model->setName('');
-            // If the user has changed the description on the
-            // form => override default product description
-            $description = (isset($array['description'])
-                ? (string) $array['description']
-                : $product->getProductDescription());
-
-            null !== $description ?
-                $model->setDescription($description) :
-                $model->setDescription(
-                    $deps->translator->translate('not.available')
-                );
+            $this->applyProductNameDescription(
+                $model, $array, $product_id, $product, $deps->pr, $deps->translator
+            );
         }
-        isset($array['quantity']) ?
-            $model->setQuantity((float) $array['quantity']) : '';
-        isset($array['price']) ?
-            $model->setPrice((float) $array['price']) : '';
-        isset($array['discount_amount']) ?
-            $model->setDiscountAmount(
-                (float) $array['discount_amount']
-            ) : '';
-        isset($array['order']) ?
-            $model->setOrder((int) $array['order']) : '';
-        // Product_unit is a string which we get from unit's
-        // name field using the unit_id
-        $unit = $deps->uR->repoUnitquery(
-            (int) $array['product_unit_id']
-        );
-        if ($unit) {
-            $model->setProductUnit($unit->getUnitName());
-        }
-        $model->setProductUnitId((int) $array['product_unit_id']);
-        // Users are required to enter a tax rate even if it
-        // is zero percent.
-        $tax_rate_percentage = $this->taxratePercentage(
-            (int) $tax_rate_id,
-            $deps->trr
-        );
+        $this->applyQuantityPriceDiscountOrder($model, $array);
+        $this->applyProductUnit($model, $array, $deps->uR);
+        $tax_rate_percentage = $this->taxratePercentage((int) $tax_rate_id, $deps->trr);
         if ($product_id) {
             $this->repository->save($model);
-            if (isset($array['quantity'], $array['price'],
-                $array['discount_amount']) &&
+            if (isset($array['quantity'], $array['price'], $array['discount_amount']) &&
                 null !== $tax_rate_percentage) {
-                /**
-                 * Note: Although, at first glance, the allowances and charges
-                 * do not appear to be here, they are in fact worked out with a
-                 * $this->acqiR in the function below which creates their
-                 * accumulative totals and saves it using the $qiar.
-                 */
                 $this->saveQuoteItemAmount(
                     $model->reqId(),
                     (float) $array['quantity'],
@@ -373,9 +263,6 @@ final readonly class QuoteItemService
         Translator $translator
     ): int {
         $this->persist($array, $model);
-
-        // This function is used in quoteitem/edit when editing
-        // a product item on the quote view
         // see https://github.com/cycle/orm/issues/348
         if (isset($array['tax_rate_id'])) {
             $currentTaxRate = $model->getTaxRate();
@@ -391,54 +278,24 @@ final readonly class QuoteItemService
                 $currentProduct?->reqId() == (int) $array['product_id'] ? $currentProduct : null
             );
         }
-        $product_id = (isset($array['product_id']) ?
-            (int) $array['product_id'] : '');
+        $product_id = isset($array['product_id']) ? (int) $array['product_id'] : '';
         $model->setProductId((int) $product_id);
         $model->setQuote(
-            $model->getQuote()?->reqId() == $quote_id ?
-                $model->getQuote() : null
+            $model->getQuote()?->reqId() == $quote_id ? $model->getQuote() : null
         );
         $model->setQuoteId((int) $quote_id);
-        $product = $pr->repoProductquery(
-            (int) $array['product_id']
-        );
+        $product = $pr->repoProductquery((int) $product_id);
         if (null !== $product && isset($array['product_id'])) {
-            $name = ($pr->repoCount((int) $array['product_id']) > 0 ?
-                $product->getProductName() : '');
-            $model->setName($name ?? '');
-            // If the user has changed the description on the
-            // form => override default product description
-            $description = ((isset($array['description']))
-                ? (string) $array['description']
-                : ($product->getProductDescription() ??
-                    $translator->translate('not.available')));
-            $model->setDescription($description);
+            $this->applyProductNameDescription(
+                $model, $array, (int) $product_id, $product, $pr, $translator
+            );
         }
-
-        isset($array['quantity']) ?
-            $model->setQuantity((float) $array['quantity']) : '';
-        isset($array['price']) ?
-            $model->setPrice((float) $array['price']) : '';
-        isset($array['discount_amount']) ?
-            $model->setDiscountAmount(
-                (float) $array['discount_amount']
-            ) : $model->setDiscountAmount(0.00);
-        isset($array['order']) ?
-            $model->setOrder((int) $array['order']) : '';
-        // Product_unit is a string which we get from unit's
-        // name field using the unit_id
-        $unit = $uR->repoUnitquery(
-            (int) $array['product_unit_id']
-        );
-        if ($unit) {
-            $model->setProductUnit($unit->getUnitName());
-        }
-        $model->setProductUnitId((int) $array['product_unit_id']);
+        $this->applyQuantityPriceDiscountOrder($model, $array);
+        $model->setDiscountAmount((float) ($array['discount_amount'] ?? 0.00));
+        $this->applyProductUnit($model, $array, $uR);
         if (isset($array['product_id'])) {
             $this->repository->save($model);
         }
-        // pass the tax_rate_id so that we can save the quote
-        // item amount
         return (int) $tax_rate_id;
     }
 
@@ -511,6 +368,67 @@ final readonly class QuoteItemService
         // pass the tax_rate_id so that we can save the quote
         // item amount
         return (int) $tax_rate_id;
+    }
+
+    private function applyProductNameDescription(
+        QuoteItem $model,
+        array $array,
+        int $product_id,
+        Product $product,
+        PR $pr,
+        Translator $translator
+    ): void {
+        $name = $pr->repoCount($product_id) > 0 ? $product->getProductName() : null;
+        $model->setName($name ?? '');
+        $description = isset($array['description'])
+            ? (string) $array['description']
+            : ($product->getProductDescription() ?? '');
+        $model->setDescription(
+            $description !== '' ? $description : $translator->translate('not.available')
+        );
+    }
+
+    private function applyTaskNameDescription(
+        QuoteItem $model,
+        array $array,
+        int $task_id,
+        Task $task,
+        TaskR $taskR,
+        Translator $translator
+    ): void {
+        $name = $taskR->repoCount($task_id) > 0 ? $task->getName() : null;
+        $model->setName($name ?? '');
+        $description = isset($array['description'])
+            ? (string) $array['description']
+            : $task->getDescription();
+        $model->setDescription(
+            $description !== '' ? $description : $translator->translate('not.available')
+        );
+    }
+
+    private function applyQuantityPriceDiscountOrder(QuoteItem $model, array $array): void
+    {
+        if (isset($array['quantity'])) {
+            $model->setQuantity((float) $array['quantity']);
+        }
+        if (isset($array['price'])) {
+            $model->setPrice((float) $array['price']);
+        }
+        if (isset($array['discount_amount'])) {
+            $model->setDiscountAmount((float) $array['discount_amount']);
+        }
+        if (isset($array['order'])) {
+            $model->setOrder((int) $array['order']);
+        }
+    }
+
+    private function applyProductUnit(QuoteItem $model, array $array, UR $uR): void
+    {
+        $unit = $uR->repoUnitquery((int) $array['product_unit_id']);
+        if ($unit) {
+            $model->setProductUnit($unit->getUnitName());
+        }
+        $model->setProductUnitId((int) $array['product_unit_id']);
     }
 
     /**
