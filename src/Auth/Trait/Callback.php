@@ -952,15 +952,6 @@ public function tfaCheckBeforeRedirects(
     return $this->redirectToMain();
 }
 
-    /**
-     * Assign a role to a newly created OAuth2 user and verify the assignment
-     * persisted correctly. Guards against silent failures where assign()
-     * succeeds in memory but never reaches the yii_rbac_assignment DB table.
-     *
-     * @param int $userId
-     * @param string $role e.g. 'admin' or 'observer'
-     * @return bool True if assignment persisted, false if it failed silently
-     */
     private function yandexCodeGuard(
         object $yandex,
         ServerRequestInterface $request,
