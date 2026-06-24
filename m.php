@@ -1426,7 +1426,8 @@ body.panel-open{padding-bottom:55vh}
 <div id="out-panel">
   <div class="out-hdr">
     <span id="out-title" class="small fw-bold"></span>
-    <div class="d-flex gap-2">
+    <div class="d-flex gap-2 align-items-center">
+      <span id="psalm-status" style="display:none" class="badge py-1 px-2"></span>
       <button id="copy-btn" class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="copyOutput()">Copy</button>
       <button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="closePanel()">✕ close</button>
     </div>
@@ -1640,6 +1641,8 @@ async function runDirect(key, params) {
     title.textContent = '⏳ ' + key;
     panel.style.display = 'block';
     document.body.classList.add('panel-open');
+    const psalmBadge = document.getElementById('psalm-status');
+    if (psalmBadge) psalmBadge.style.display = 'none';
 
     try {
         const response = await fetch(location.pathname + location.search,
@@ -1673,10 +1676,25 @@ async function runDirect(key, params) {
             pre.textContent = '(no output)';
         }
         title.textContent = '✓ ' + key;
+        if (key === 'psalm_full') setPsalmStatusBadge(fullText);
     } catch (err) {
         title.textContent = '✗ ' + key;
         pre.textContent += '\n[Error: ' + err.message + ']';
     }
+}
+
+function setPsalmStatusBadge(text) {
+    const badge = document.getElementById('psalm-status');
+    if (!badge) return;
+    if (/No errors found/i.test(text)) {
+        badge.textContent = '✓ No errors';
+        badge.className = 'badge py-1 px-2 bg-success';
+    } else {
+        const m = text.match(/(\d+)\s+errors?\s+found/i);
+        badge.textContent = m ? ('✗ ' + m[1] + (m[1] === '1' ? ' error' : ' errors')) : '✗ Errors';
+        badge.className = 'badge py-1 px-2 bg-danger';
+    }
+    badge.style.display = 'inline-block';
 }
 
 function showPanel(title, content) {

@@ -107,44 +107,24 @@ class ReportController extends BaseController
         $clienthelper = new ClientHelper($this->sR);
         $numberhelper = new NumberHelper($this->sR);
         $clients = $cR->count() > 0 ? $cR->findAllPreloaded() : null;
+        if (null === $clients) {
+            return [];
+        }
         $fifteens = $iaR->AgingCount(1, 15) > 0 ? $iaR->Aging(1, 15) : null;
         $thirties = $iaR->AgingCount(16, 30) > 0 ? $iaR->Aging(16, 30) : null;
         $overthirties = $iaR->AgingCount(31, 365) > 0 ? $iaR->Aging(31, 365) : null;
         $one_to_year = $iaR->AgingCount(1, 365) > 0 ? $iaR->Aging(1, 365) : null;
         $results = [];
-        $row = [
-            'client' => '',
-            'range_1' => 0.00,
-            'range_2' => 0.00,
-            'range_3' => 0.00,
-            'total_balance' => 0.00,
-        ];
-        if (null !== $clients) {
-            /** @var Client $client */
-            foreach ($clients as $client) {
-                $row['client'] = $clienthelper->formatClient($client);
-                if (null !== $fifteens) {
-                    $row['range_1'] = $numberhelper->formatAmount($this->invoiceAgingSum($fifteens, $client->reqId()));
-                } else {
-                    $row['range_1'] = 0.00;
-                }
-                if (null !== $thirties) {
-                    $row['range_2'] = $numberhelper->formatAmount($this->invoiceAgingSum($thirties, $client->reqId()));
-                } else {
-                    $row['range_2'] = 0.00;
-                }
-                if (null !== $overthirties) {
-                    $row['range_3'] = $numberhelper->formatAmount($this->invoiceAgingSum($overthirties, $client->reqId()));
-                } else {
-                    $row['range_3'] = 0.00;
-                }
-                if (null !== $one_to_year) {
-                    $row['total_balance'] = $numberhelper->formatAmount($this->invoiceAgingSum($one_to_year, $client->reqId()));
-                } else {
-                    $row['total_balance'] = 0.00;
-                }
-                $results[] = $row;
-            }
+        /** @var Client $client */
+        foreach ($clients as $client) {
+            $clientId = $client->reqId();
+            $results[] = [
+                'client' => $clienthelper->formatClient($client),
+                'range_1' => $this->agingFormatted($fifteens, $clientId, $numberhelper),
+                'range_2' => $this->agingFormatted($thirties, $clientId, $numberhelper),
+                'range_3' => $this->agingFormatted($overthirties, $clientId, $numberhelper),
+                'total_balance' => $this->agingFormatted($one_to_year, $clientId, $numberhelper),
+            ];
         }
         return $results;
     }
@@ -220,6 +200,13 @@ class ReportController extends BaseController
             }
         }
         return $sum;
+    }
+
+    private function agingFormatted(?\Yiisoft\Data\Reader\DataReaderInterface $reader, int $clientId, NumberHelper $nh): float|string|null
+    {
+        return null !== $reader
+            ? $nh->formatAmount($this->invoiceAgingSum($reader, $clientId))
+            : 0.00;
     }
 
     /**
@@ -802,102 +789,51 @@ class ReportController extends BaseController
         $client = $cc->client;
         $clienthelper = $cc->clienthelper;
         $client_id = $cc->client_id;
-        if ($client_id) {
-            $quarters = ['first' => 3, 'second' => 6, 'third' => 9, 'fourth' => 12];
-            // Develop all the quarters from ONE immutable (unchangeable) start date
-            // Each immutable date is presented in the mysql Y-m-d format for comparison with the mysql dates
-            $immutable_from_start_date = $immutable_from;
-
-            foreach ($quarters as $quarter => $month_ending) {
-                $quarter_from = $immutable_from_start_date->add(new \DateInterval('P' . (string) $month_ending . 'M'))
-                                                          ->sub(new \DateInterval('P3M'))
-                                                          ->add(new \DateInterval('P1D'))
-                                                          ->format('Y-m-d');
-
-                $quarter_to = $immutable_from_start_date->add(new \DateInterval('P' . (string) $month_ending . 'M'))
-                                                          ->format('Y-m-d');
-
-                $year['quarters'][$quarter]['beginning'] = $quarter_from;
-                $year['quarters'][$quarter]['end'] = $quarter_to;
-
-                $sales_no_tax = $iR->repoCountByClient($client_id) > 0
-                              ? $iR->withItemSubtotalFromTo(
-                                  $client_id,
-                                  $quarter_from,
-                                  $quarter_to,
-                                  $iaR,
-                              )
-                              : 0.00;
-                $year['quarters'][$quarter]['sales_no_tax'] = $sales_no_tax;
-
-                $item_tax_total = $iR->repoCountByClient($client_id) > 0
-                                ? $iR->withItemTaxTotalFromTo(
-                                    $client_id,
-                                    $quarter_from,
-                                    $quarter_to,
-                                    $iaR,
-                                )
-                                : 0.00;
-                $year['quarters'][$quarter]['item_tax_total'] = $item_tax_total;
-
-                $tax_total = $iR->repoCountByClient($client_id) > 0
-                              ? $iR->withTaxTotalFromTo(
-                                  $client_id,
-                                  $quarter_from,
-                                  $quarter_to,
-                                  $iaR,
-                              )
-                              : 0.00;
-                $year['quarters'][$quarter]['tax_total'] = $tax_total;
-
-                $sales_with_tax = $iR->repoCountByClient($client_id) > 0
-                              ? $iR->withTotalFromTo(
-                                  $client_id,
-                                  $quarter_from,
-                                  $quarter_to,
-                                  $iaR,
-                              )
-                              : 0.00;
-                $year['quarters'][$quarter]['sales_with_tax'] = $sales_with_tax;
-
-                $paid = $iR->repoCountByClient($client_id) > 0
-                              ? $iR->withPaidFromTo(
-                                  $client_id,
-                                  $quarter_from,
-                                  $quarter_to,
-                                  $iaR,
-                              )
-                              : 0.00;
-                $year['quarters'][$quarter]['paid'] = $paid;
-            }
-            $from = $year['quarters']['first']['beginning'];
-            $to = $year['quarters']['fourth']['end'];
-            $year['year'] = $current_year->format('Y');
-            // Client Name and Surname
-            $year['Name'] = $clienthelper->formatClient($client);
-            // Item subtotal = Sales without taxes
-            $year['VAT_ID'] = $client->getClientVatId();
-            $year['period_sales_no_tax'] = $iR->repoCountByClient($client_id) > 0
-                          ? $iR->withItemSubtotalFromTo($client_id, $from, $to, $iaR)
-                          : 0.00;
-            // plus
-            $year['period_item_tax_total'] = $iR->repoCountByClient($client_id) > 0
-                          ? $iR->withItemTaxTotalFromTo($client_id, $from, $to, $iaR)
-                          : 0.00;
-            // plus
-            $year['period_tax_total'] = $iR->repoCountByClient($client_id) > 0
-                          ? $iR->withTaxTotalFromTo($client_id, $from, $to, $iaR)
-                          : 0.00;
-            // equals
-            $year['period_sales_with_tax'] = $iR->repoCountByClient($client_id) > 0
-                          ? $iR->withTotalFromTo($client_id, $from, $to, $iaR)
-                          : 0.00;
-            // what the customer has actually paid towards the annual sales with tax
-            $year['period_total_paid'] = $iR->repoCountByClient($client_id) > 0
-                          ? $iR->withPaidFromTo($client_id, $from, $to, $iaR)
-                          : 0.00;
-            return $year;
+        if (!$client_id) {
+            return [];
         }
-        return [];
+        $quarterDefs = ['first' => 3, 'second' => 6, 'third' => 9, 'fourth' => 12];
+        foreach ($quarterDefs as $quarter => $month_ending) {
+            $year['quarters'][$quarter] = $this->buildQuarterData($month_ending, $immutable_from, $client_id, $iR, $iaR);
+        }
+        /** @var array{first: array{beginning: string, end: string}, fourth: array{beginning: string, end: string}} $yearQuarters */
+        $yearQuarters = $year['quarters'];
+        $from = $yearQuarters['first']['beginning'];
+        $to = $yearQuarters['fourth']['end'];
+        $year['year'] = $current_year->format('Y');
+        $year['Name'] = $clienthelper->formatClient($client);
+        $year['VAT_ID'] = $client->getClientVatId();
+        $hasInvoices = $iR->repoCountByClient($client_id) > 0;
+        $year['period_sales_no_tax'] = $hasInvoices ? $iR->withItemSubtotalFromTo($client_id, $from, $to, $iaR) : 0.00;
+        $year['period_item_tax_total'] = $hasInvoices ? $iR->withItemTaxTotalFromTo($client_id, $from, $to, $iaR) : 0.00;
+        $year['period_tax_total'] = $hasInvoices ? $iR->withTaxTotalFromTo($client_id, $from, $to, $iaR) : 0.00;
+        $year['period_sales_with_tax'] = $hasInvoices ? $iR->withTotalFromTo($client_id, $from, $to, $iaR) : 0.00;
+        $year['period_total_paid'] = $hasInvoices ? $iR->withPaidFromTo($client_id, $from, $to, $iaR) : 0.00;
+        return $year;
+    }
+
+    private function buildQuarterData(
+        int $month_ending,
+        \DateTimeImmutable $immutable_from,
+        int $client_id,
+        InvRepository $iR,
+        InvAmountRepository $iaR,
+    ): array {
+        $quarter_from = $immutable_from->add(new \DateInterval('P' . (string) $month_ending . 'M'))
+                                       ->sub(new \DateInterval('P3M'))
+                                       ->add(new \DateInterval('P1D'))
+                                       ->format('Y-m-d');
+        $quarter_to = $immutable_from->add(new \DateInterval('P' . (string) $month_ending . 'M'))
+                                     ->format('Y-m-d');
+        $hasInvoices = $iR->repoCountByClient($client_id) > 0;
+        return [
+            'beginning' => $quarter_from,
+            'end' => $quarter_to,
+            'sales_no_tax' => $hasInvoices ? $iR->withItemSubtotalFromTo($client_id, $quarter_from, $quarter_to, $iaR) : 0.00,
+            'item_tax_total' => $hasInvoices ? $iR->withItemTaxTotalFromTo($client_id, $quarter_from, $quarter_to, $iaR) : 0.00,
+            'tax_total' => $hasInvoices ? $iR->withTaxTotalFromTo($client_id, $quarter_from, $quarter_to, $iaR) : 0.00,
+            'sales_with_tax' => $hasInvoices ? $iR->withTotalFromTo($client_id, $quarter_from, $quarter_to, $iaR) : 0.00,
+            'paid' => $hasInvoices ? $iR->withPaidFromTo($client_id, $quarter_from, $quarter_to, $iaR) : 0.00,
+        ];
     }
 }
