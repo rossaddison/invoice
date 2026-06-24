@@ -335,101 +335,42 @@ trait Callback
 
         $this->blockInvalidState('google', $state);
         $google = (AuthChoice::widget())->getClient('google');
-        $response = null;
+
         /**
          * @psalm-suppress DocblockTypeContradiction $code
+         * @psalm-suppress DocblockTypeContradiction $state
          */
-        if (strlen($code) == 0) {
-            $authorizationUrl = $google->buildAuthUrl($d->request, []);
-            $response = $this->webService->getRedirectResponse($authorizationUrl);
-        } elseif ($code == 401) {
-            $response = $this->redirectToOauth2CallbackResultUnAuthorised();
-        } elseif (strlen($state) == 0) {
-            /**
-             * @psalm-suppress DocblockTypeContradiction $state
-             * State is invalid, possible cross-site request forgery.
-             */
-            $response = $this->redirectToOauth2AuthError(
+        if (strlen($code) == 0 || $code == 401 || strlen($state) == 0) {
+            return match(true) {
+                strlen($code) == 0 => $this->webService->getRedirectResponse(
+                    $google->buildAuthUrl($d->request, [])),
+                $code == 401 => $this->redirectToOauth2CallbackResultUnAuthorised(),
+                default => $this->redirectToOauth2AuthError(
                     $d->translator->translate(
-                        'oauth2.missing.state.parameter.possible.csrf.attack'));
-        } else {
-            /** @psalm-var \Yiisoft\Yii\AuthClient\Client\Google $google */
-            $oAuthTokenType = $google->fetchAccessToken($d->request, $code, [
-                'grant_type' => 'authorization_code',
-            ]);
-
-            $userArray = $google->getCurrentUserJsonArray($oAuthTokenType);
-
-            /**
-             * @var int $userArray['id']
-             */
-            $googleId = $userArray['id'] ?? 0;
-
-            /**
-             * VarDumper::dump($userArray) produces normally
-             *
-             * 'id' =>  google will produce an id here
-             * 'email' => this is the email associated with google
-             * 'verified_email' => true
-             * 'name' => this is your name in lower case letters
-             * 'given_name' => this is your first name
-             * 'family_name' => this is your surname
-             * 'picture' =>
-             *  'https://lh3.googleusercontent.com/a/
-             * ACg8ocZiJZ8a-fpCKx-H4Dh8k-upEqQV3jSyQGH02--kLP_xZWQqrg=s96-c'
-             */
-
-            if ($googleId > 0) {
-                // the id will be removed in the logout button
-                $login = 'google' . (string) $googleId;
-                /**
-                 * @var string $userArray['email']
-                 */
-                $email = $userArray['email'] ?? 'noemail' . $login . '@google.com';
-                $password = Random::string(32);
-                if ($this->authService->oauthLogin($login)) {
-                    $response = $this->tfaCheckBeforeRedirects('google', $d->tR, $d->uiR);
-                } else {
-                    $user = new User($login, $email, $password);
-                    $d->uR->save($user);
-                    $userId = $user->reqId();
-                    if ($userId > 0) {
-                        $role = $d->uR->repoCount() == 1 ? 'admin' : 'observer';
-                        if (!$this->assignRoleAndVerify($userId, $role)) {
-                            $response = $this->redirectToMain();
-                        } else {
-                            /**
-                             * @var array $this->sR->localeLanguageArray()
-                             */
-                            $languageArray = $this->sR->localeLanguageArray();
-                            /**
-                             * @see Trait\Oauth2 function getGoogleAccessToken
-                             * @var string $language
-                             */
-                            $language = $languageArray[$_language];
-                            $randomAndTimeToken = $this->getAccessToken($user,
-                                    $d->tR, self::GOOGLE_ACCESS_TOKEN);
-                            /**
-                             * @see A new UserInv (extension table of user) for the user
-                             *  is created.
-                             */
-                            $proceedToMenuButton =
-                                $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
-                                    $d->translator, $user, $d->uiR, $language, $_language,
-                                        $randomAndTimeToken, 'google');
-                            $response = $this->webViewRenderer->render('proceed', [
-                                'proceedToMenuButton' => $proceedToMenuButton,
-                            ]);
-                        }
-                    }
-                }
-            }
+                        'oauth2.missing.state.parameter.possible.csrf.attack')),
+            };
         }
-        if ($response !== null) {
-            return $response;
+
+        /** @psalm-var \Yiisoft\Yii\AuthClient\Client\Google $google */
+        $oAuthTokenType = $google->fetchAccessToken($d->request, $code, [
+            'grant_type' => 'authorization_code',
+        ]);
+        $userArray = $google->getCurrentUserJsonArray($oAuthTokenType);
+        /** @var int $userArray['id'] */
+        $googleId = $userArray['id'] ?? 0;
+        if ($googleId <= 0) {
+            $this->authService->logout();
         }
-        $this->authService->logout();
-        return $this->redirectToMain();
+        // the id will be removed in the logout button
+        $login = 'google' . (string) $googleId;
+        /** @var string $userArray['email'] */
+        $email = $userArray['email'] ?? 'noemail' . $login . '@google.com';
+        $password = Random::string(32);
+        return $googleId <= 0
+            ? $this->redirectToMain()
+            : $this->oauthRegisterAndProceed(
+                'google', $login, $email, $password,
+                $_language, self::GOOGLE_ACCESS_TOKEN, $d);
     }
 
     public function callbackGovUk(
@@ -449,85 +390,40 @@ trait Callback
 
         $govUk = (AuthChoice::widget())->getClient('govuk');
         $this->blockInvalidState('govUk', $state);
-        $response = null;
 
         /**
          * @psalm-suppress DocblockTypeContradiction $code
+         * @psalm-suppress DocblockTypeContradiction $state
          */
-        if (strlen($code) == 0) {
-            $authorizationUrl = $govUk->buildAuthUrl($d->request, []);
-            $response = $this->webService->getRedirectResponse($authorizationUrl);
-        } elseif ($code == 401) {
-            $response = $this->redirectToOauth2CallbackResultUnAuthorised();
-        } elseif (strlen($state) == 0) {
-            /**
-             * @psalm-suppress DocblockTypeContradiction $state
-             * State is invalid, possible cross-site request forgery.
-             */
-            $response = $this->redirectToOauth2AuthError(
-                $d->translator->translate('oauth2.missing.state.parameter.'
-                        . 'possible.csrf.attack'));
-        } else {
-            /** @psalm-var \App\Auth\Client\GovUk $govUk */
-            $oAuthTokenType = $govUk->fetchAccessToken($d->request, $code, []);
-            $userArray = $govUk->getCurrentUserJsonArray($oAuthTokenType);
-            /**
-             * @var int $userArray['id']
-             */
-            $govUkId = $userArray['id'] ?? 0;
-            if ($govUkId > 0) {
-                // the id will be removed in the logout button
-                $login = 'govuk' . (string) $govUkId;
-                /**
-                 * @var string $userArray['email']
-                 */
-                $email = $userArray['email'] ?? 'noemail' . $login . '@gov.uk';
-                $password = Random::string(32);
-                if ($this->authService->oauthLogin($login)) {
-                    $response = $this->tfaCheckBeforeRedirects('govuk', $d->tR, $d->uiR);
-                } else {
-                    $user = new User($login, $email, $password);
-                    $d->uR->save($user);
-                    $userId = $user->reqId();
-                    if ($userId > 0) {
-                        // avoid autoincrement issues and using predefined user id
-                        //  of 1 ... and assign the first signed-up user
-                        //   ... admin rights
-                        $role = $d->uR->repoCount() == 1 ? 'admin' : 'observer';
-                        if (!$this->assignRoleAndVerify($userId, $role)) {
-                            $response = $this->redirectToMain();
-                        } else {
-                            /**
-                             * @var array $this->sR->localeLanguageArray()
-                             */
-                            $languageArray = $this->sR->localeLanguageArray();
-                            /**
-                             * @see Trait\Oauth2 function getAccessToken
-                             * @var string $language
-                             */
-                            $language = $languageArray[$_language];
-                            $randomAndTimeToken = $this->getAccessToken($user, $d->tR,
-                                self::GOVUK_ACCESS_TOKEN);
-                            /**
-                             * @see A new UserInv (extension table of user) for the user is created.
-                             */
-                            $proceedToMenuButton =
-                                $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
-                                    $d->translator, $user, $d->uiR, $language, $_language,
-                                        $randomAndTimeToken, 'govuk');
-                            $response = $this->webViewRenderer->render('proceed', [
-                                'proceedToMenuButton' => $proceedToMenuButton,
-                            ]);
-                        }
-                    }
-                }
-            }
+        if (strlen($code) == 0 || $code == 401 || strlen($state) == 0) {
+            return match(true) {
+                strlen($code) == 0 => $this->webService->getRedirectResponse(
+                    $govUk->buildAuthUrl($d->request, [])),
+                $code == 401 => $this->redirectToOauth2CallbackResultUnAuthorised(),
+                default => $this->redirectToOauth2AuthError(
+                    $d->translator->translate(
+                        'oauth2.missing.state.parameter.possible.csrf.attack')),
+            };
         }
-        if ($response !== null) {
-            return $response;
+
+        /** @psalm-var \App\Auth\Client\GovUk $govUk */
+        $oAuthTokenType = $govUk->fetchAccessToken($d->request, $code, []);
+        $userArray = $govUk->getCurrentUserJsonArray($oAuthTokenType);
+        /** @var int $userArray['id'] */
+        $govUkId = $userArray['id'] ?? 0;
+        if ($govUkId <= 0) {
+            $this->authService->logout();
         }
-        $this->authService->logout();
-        return $this->redirectToMain();
+        // the id will be removed in the logout button
+        $login = 'govuk' . (string) $govUkId;
+        /** @var string $userArray['email'] */
+        $email = $userArray['email'] ?? 'noemail' . $login . '@gov.uk';
+        $password = Random::string(32);
+        return $govUkId <= 0
+            ? $this->redirectToMain()
+            : $this->oauthRegisterAndProceed(
+                'govuk', $login, $email, $password,
+                $_language, self::GOVUK_ACCESS_TOKEN, $d);
     }
 
     public function callbackLinkedIn(
@@ -547,106 +443,48 @@ trait Callback
 
         $this->blockInvalidState('linkedIn', $state);
         $linkedIn = (AuthChoice::widget())->getClient('linkedin');
-        $response = null;
 
         /**
          * @psalm-suppress DocblockTypeContradiction $code
+         * @psalm-suppress DocblockTypeContradiction $state
          */
-        if (strlen($code) == 0) {
-            $authorizationUrl = $linkedIn->buildAuthUrl($d->request, []);
-            $response = $this->webService->getRedirectResponse($authorizationUrl);
-        } elseif ($code == 401) {
-            $response = $this->redirectToOauth2CallbackResultUnAuthorised();
-        } elseif (strlen($state) == 0) {
-            /**
-             * @psalm-suppress DocblockTypeContradiction $state
-             * State is invalid, possible cross-site request forgery.
-             */
-            $response = $this->redirectToOauth2AuthError(
-                $d->translator->translate('oauth2.missing.state.parameter.'
-                        . 'possible.csrf.attack'));
-        } else {
-            $params = [
-                'grant_type' => 'authorization_code',
-                'redirect_uri' => $linkedIn->getOauth2ReturnUrl(),
-            ];
-            /** @psalm-var \Yiisoft\Yii\AuthClient\Client\LinkedIn $linkedIn */
-            $oAuthTokenType = $linkedIn->fetchAccessToken($d->request, $code, $params);
-            $userArray = $linkedIn->getCurrentUserJsonArray(
-                    $oAuthTokenType,
-                    $this->configWebDiAuthGuzzle,
-                    $this->requestFactory);
-            /**
-             * eg. [
-             *      'sub' => 'P1c9jkRFSy',
-             *      'email_verified' => true,
-             *      'name' => 'Joe Bloggs',
-             *      'locale' => ['country' => 'UK', 'language' => 'en'],
-             *      'given_name' => 'Joe',
-             *      'family_name' => 'Bloggs',
-             *      'email' => 'joe.bloggs@website.com'
-             *      ]
-             *
-             * @var string $userArray['sub'] e.g. P1c9jkRFSy
-                 ... A sub string is returned instead of an id
-             */
-            $linkedInSub = $userArray['sub'] ?? '';
-            if (strlen($linkedInSub) > 0) {
-                /**
-                 * @var string $userArray['name']
-                 */
-                $linkedInName = $userArray['name'] ?? 'unknown';
-                $login = 'linkedIn' . $linkedInName;
-                /**
-                 * @var string $userArray['email']
-                 */
-                $email = $userArray['email'] ?? 'noemail' . $login . '@linkedin.com';
-                $password = Random::string(32);
-                if ($this->authService->oauthLogin($login)) {
-                    $response = $this->tfaCheckBeforeRedirects('linkedin', $d->tR, $d->uiR);
-                } else {
-                    $user = new User($login, $email, $password);
-                    $d->uR->save($user);
-                    $userId = $user->reqId();
-                    if ($userId > 0) {
-                        // avoid autoincrement issues and using predefined user id
-                        //  of 1 ... and assign the first signed-up user
-                        //   ... admin rights
-                        $role = $d->uR->repoCount() == 1 ? 'admin' : 'observer';
-                        if (!$this->assignRoleAndVerify($userId, $role)) {
-                            $response = $this->redirectToMain();
-                        } else {
-                            /**
-                             * @var array $this->sR->localeLanguageArray()
-                             */
-                            $languageArray = $this->sR->localeLanguageArray();
-                            /**
-                             * @see Trait\Oauth2 function getLinkedInAccessToken
-                             * @var string $language
-                             */
-                            $language = $languageArray[$_language];
-                            $randomAndTimeToken = $this->getAccessToken(
-                                    $user, $d->tR, self::LINKEDIN_ACCESS_TOKEN);
-                            /**
-                             * @see A new UserInv (extension table of user) for the user is created.
-                             */
-                            $proceedToMenuButton =
-                                $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
-                                    $d->translator, $user, $d->uiR, $language, $_language,
-                                        $randomAndTimeToken, 'linkedin');
-                            $response = $this->webViewRenderer->render('proceed', [
-                                'proceedToMenuButton' => $proceedToMenuButton,
-                            ]);
-                        }
-                    }
-                }
-            }
+        if (strlen($code) == 0 || $code == 401 || strlen($state) == 0) {
+            return match(true) {
+                strlen($code) == 0 => $this->webService->getRedirectResponse(
+                    $linkedIn->buildAuthUrl($d->request, [])),
+                $code == 401 => $this->redirectToOauth2CallbackResultUnAuthorised(),
+                default => $this->redirectToOauth2AuthError(
+                    $d->translator->translate(
+                        'oauth2.missing.state.parameter.possible.csrf.attack')),
+            };
         }
-        if ($response !== null) {
-            return $response;
+
+        $params = [
+            'grant_type' => 'authorization_code',
+            'redirect_uri' => $linkedIn->getOauth2ReturnUrl(),
+        ];
+        /** @psalm-var \Yiisoft\Yii\AuthClient\Client\LinkedIn $linkedIn */
+        $oAuthTokenType = $linkedIn->fetchAccessToken($d->request, $code, $params);
+        $userArray = $linkedIn->getCurrentUserJsonArray(
+                $oAuthTokenType,
+                $this->configWebDiAuthGuzzle,
+                $this->requestFactory);
+        /** @var string $userArray['sub'] e.g. P1c9jkRFSy — sub is returned instead of an id */
+        $linkedInSub = $userArray['sub'] ?? '';
+        if (strlen($linkedInSub) == 0) {
+            $this->authService->logout();
         }
-        $this->authService->logout();
-        return $this->redirectToMain();
+        /** @var string $userArray['name'] */
+        $linkedInName = $userArray['name'] ?? 'unknown';
+        $login = 'linkedIn' . $linkedInName;
+        /** @var string $userArray['email'] */
+        $email = $userArray['email'] ?? 'noemail' . $login . '@linkedin.com';
+        $password = Random::string(32);
+        return strlen($linkedInSub) == 0
+            ? $this->redirectToMain()
+            : $this->oauthRegisterAndProceed(
+                'linkedin', $login, $email, $password,
+                $_language, self::LINKEDIN_ACCESS_TOKEN, $d);
     }
 
     public function callbackMicrosoftOnline(
@@ -668,107 +506,50 @@ trait Callback
 
         $this->blockInvalidState('microsoftonline', $state);
         $microsoftOnline = (AuthChoice::widget())->getClient('microsoftonline');
-        $response = null;
 
         /**
          * @psalm-suppress DocblockTypeContradiction $code
+         * @psalm-suppress DocblockTypeContradiction $state
+         * @psalm-suppress DocblockTypeContradiction $sessionState
          */
-        if (strlen($code) == 0) {
-            $authorizationUrl =
-                $microsoftOnline->buildAuthUrl($d->request,
-                    [
-                        'redirect_uri' =>
-                            'https://yii3i.online/callbackMicrosoftOnline']);
-            $response = $this->webService->getRedirectResponse($authorizationUrl);
-        } elseif ($code == '401') {
-            /**
-             * @psalm-suppress DocblockTypeContradiction $state
-             */
-            $response = $this->redirectToOauth2CallbackResultUnAuthorised();
-        } elseif (strlen($state) == 0 || strlen($sessionState) == 0) {
-            /**
-             * @psalm-suppress DocblockTypeContradiction $state
-             * @psalm-suppress DocblockTypeContradiction $sessionState
-             * State is invalid, possible cross-site request forgery.
-             */
-            $response = $this->redirectToOauth2AuthError(
-                $d->translator->translate('oauth2.missing.state.parameter'
-                        . '.possible.csrf.attack'));
-        } else {
-            /** @psalm-var \Yiisoft\Yii\AuthClient\Client\MicrosoftOnline $microsoftOnline */
-            $oAuthTokenType = $microsoftOnline->fetchAccessToken($d->request,
-                    $code, [
-                'grant_type' => 'authorization_code',
-                'redirect_uri' => 'https://yii3i.online/callbackMicrosoftOnline',
-            ]);
-            $userArray = $microsoftOnline->getCurrentUserJsonArray(
-                    $oAuthTokenType,
-                    $this->configWebDiAuthGuzzle,
-                    $this->requestFactory
-            );
-            /**
-             * @var int $userArray['id']
-             */
-            $microsoftOnlineId = $userArray['id'] ?? 0;
-            if ($microsoftOnlineId > 0) {
-                // Append the last four digits of the Id
-                $login = 'ms' . substr(
-                        (string) $microsoftOnlineId,
-                        strlen((string) $microsoftOnlineId) - 4,
-                        strlen((string) $microsoftOnlineId));
-                /**
-                 * @var string $userArray['email']
-                 */
-                $email = $userArray['email'] ?? 'noemail'
-                        . $login
-                        . '@microsoftonline.com';
-                $password = Random::string(32);
-                if ($this->authService->oauthLogin($login)) {
-                    $response = $this->tfaCheckBeforeRedirects('microsoftonline', $d->tR, $d->uiR);
-                } else {
-                    $user = new User($login, $email, $password);
-                    $d->uR->save($user);
-                    $userId = $user->reqId();
-                    if ($userId > 0) {
-                        // avoid autoincrement issues and using predefined user id of 1
-                        //  ... and assign the first signed-up user ... admin rights
-                        $role = $d->uR->repoCount() == 1 ? 'admin' : 'observer';
-                        if (!$this->assignRoleAndVerify($userId, $role)) {
-                            $response = $this->redirectToMain();
-                        } else {
-                            /**
-                             * @var array $this->sR->localeLanguageArray()
-                             */
-                            $languageArray = $this->sR->localeLanguageArray();
-                            /**
-                             * @see Trait\Oauth2 function getMicrosoftOnlineAccessToken
-                             * @var string $language
-                             */
-                            $language = $languageArray[$_language];
-                            $randomAndTimeToken =
-                                    $this->getAccessToken($user, $d->tR,
-                                            self::MICROSOFTONLINE_ACCESS_TOKEN);
-                            /**
-                             * @see A new UserInv (extension table of user) for the
-                                user is created.
-                             */
-                            $proceedToMenuButton =
-                                $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
-                                    $d->translator, $user, $d->uiR, $language, $_language,
-                                        $randomAndTimeToken, 'microsoftonline');
-                            $response = $this->webViewRenderer->render('proceed', [
-                                'proceedToMenuButton' => $proceedToMenuButton,
-                            ]);
-                        }
-                    }
-                }
-            }
+        if (strlen($code) == 0 || $code == '401' || strlen($state) == 0 || strlen($sessionState) == 0) {
+            return match(true) {
+                strlen($code) == 0 => $this->webService->getRedirectResponse(
+                    $microsoftOnline->buildAuthUrl($d->request,
+                        ['redirect_uri' => 'https://yii3i.online/callbackMicrosoftOnline'])),
+                $code == '401' => $this->redirectToOauth2CallbackResultUnAuthorised(),
+                default => $this->redirectToOauth2AuthError(
+                    $d->translator->translate(
+                        'oauth2.missing.state.parameter.possible.csrf.attack')),
+            };
         }
-        if ($response !== null) {
-            return $response;
+
+        /** @psalm-var \Yiisoft\Yii\AuthClient\Client\MicrosoftOnline $microsoftOnline */
+        $oAuthTokenType = $microsoftOnline->fetchAccessToken($d->request, $code, [
+            'grant_type' => 'authorization_code',
+            'redirect_uri' => 'https://yii3i.online/callbackMicrosoftOnline',
+        ]);
+        $userArray = $microsoftOnline->getCurrentUserJsonArray(
+                $oAuthTokenType,
+                $this->configWebDiAuthGuzzle,
+                $this->requestFactory
+        );
+        /** @var int $userArray['id'] */
+        $microsoftOnlineId = $userArray['id'] ?? 0;
+        if ($microsoftOnlineId <= 0) {
+            $this->authService->logout();
         }
-        $this->authService->logout();
-        return $this->redirectToMain();
+        // Append the last four digits of the Id
+        $idStr = (string) $microsoftOnlineId;
+        $login = 'ms' . substr($idStr, strlen($idStr) - 4, strlen($idStr));
+        /** @var string $userArray['email'] */
+        $email = $userArray['email'] ?? 'noemail' . $login . '@microsoftonline.com';
+        $password = Random::string(32);
+        return $microsoftOnlineId <= 0
+            ? $this->redirectToMain()
+            : $this->oauthRegisterAndProceed(
+                'microsoftonline', $login, $email, $password,
+                $_language, self::MICROSOFTONLINE_ACCESS_TOKEN, $d);
     }
 
     // Untested
@@ -1072,123 +853,40 @@ trait Callback
 
         $this->blockInvalidState('yandex', $state);
         $yandex = (AuthChoice::widget())->getClient('yandex');
-        $response = null;
 
         /**
          * @psalm-suppress DocblockTypeContradiction $code
+         * @psalm-suppress DocblockTypeContradiction $state
          */
-        if (strlen($code) == 0) {
-            $codeVerifier = Random::string(128);
-            $codeChallenge = strtr(rtrim(base64_encode(hash('sha256',
-                    $codeVerifier, true)), '='), '+/', '-_');
-
-            // Store code_verifier in session or other storage
-            $this->session->set('code_verifier', $codeVerifier);
-
-            $authorizationUrl = $yandex->buildAuthUrl(
-                $d->request,
-                [
-                    'code_challenge' => $codeChallenge,
-                    'code_challenge_method' => 'S256',
-                ],
-            );
-            $response = $this->webService->getRedirectResponse($authorizationUrl);
-        } elseif ($code == 401) {
-            $response = $this->redirectToOauth2CallbackResultUnAuthorised();
-        } elseif (strlen($state) == 0) {
-            /**
-             * @psalm-suppress DocblockTypeContradiction $state
-             */
-            $response = $this->redirectToOauth2AuthError(
-                $d->translator->translate('oauth2.missing.state.parameter.'
-                        . 'possible.csrf.attack'));
-        } else {
-            $codeVerifier = (string) $this->session->get('code_verifier');
-            $params = [
-                'grant_type' => 'authorization_code',
-                'redirect_uri' => $yandex->getOauth2ReturnUrl(),
-                'code_verifier' => $codeVerifier,
-            ];
-            $oAuthTokenType = $yandex->fetchAccessTokenWithCodeVerifier($d->request,
-                    $code, $params);
-            /**
-             * @psalm-var \Yiisoft\Yii\AuthClient\Client\Yandex $yandex
-             */
-            $userArray =
-                $yandex->getCurrentUserJsonArray($oAuthTokenType,
-                        $this->configWebDiAuthGuzzle, $this->requestFactory);
-            /**
-             * @var int $userArray['id']
-             */
-            $id = $userArray['id'] ?? 0;
-            if ($id > 0) {
-                /**
-                 * @var string $userArray['login'] e.g john.doe.com
-                 */
-                $userName = $userArray['login'];
-                // Append the last four digits of the Id
-                $login = 'yx'
-                        . $userName
-                        . substr((string) $id, strlen((string) $id) - 4,
-                                strlen((string) $id));
-                $email = 'noemail' . $login . '@yandex.com';
-                $password = Random::string(32);
-                // The password does not need to be validated here so use
-                //  authService->oauthLogin($login) instead of
-                //   authService->login($login, $password)
-                // but it will be used later to build a passwordHash
-                if ($this->authService->oauthLogin($login)) {
-                    $response = $this->tfaCheckBeforeRedirects('yandex', $d->tR, $d->uiR);
-                } else {
-                    $user = new User($login, $email, $password);
-                    $d->uR->save($user);
-                    $userId = $user->reqId();
-                    if ($userId > 0) {
-                        // avoid autoincrement issues and using predefined user
-                        //  id of 1 ... and assign the first signed-up user ...
-                        //   admin rights
-                        $role = $d->uR->repoCount() == 1 ? 'admin' : 'observer';
-                        if (!$this->assignRoleAndVerify($userId, $role)) {
-                            $response = $this->redirectToMain();
-                        } else {
-                            /**
-                             * @var array $this->sR->localeLanguageArray()
-                             */
-                            $languageArray = $this->sR->localeLanguageArray();
-                            /**
-                             * @see Trait\Oauth2 function getYandexAccessToken
-                             * @var string $language
-                             */
-                            $language = $languageArray[$_language];
-                            $randomAndTimeToken =
-                                    $this->getAccessToken($user,
-                                            $d->tR, self::YANDEX_ACCESS_TOKEN);
-                            /**
-                             * @see A new UserInv (extension table of user) for the user is created.
-                             */
-                            $proceedToMenuButton =
-                              $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
-                                $d->translator,
-                                $user,
-                                $d->uiR,
-                                $language,
-                                $_language,
-                                $randomAndTimeToken,
-                                'yandex',
-                            );
-                            $response = $this->webViewRenderer->render('proceed', [
-                                'proceedToMenuButton' => $proceedToMenuButton,
-                            ]);
-                        }
-                    }
-                }
-            }
+        if (strlen($code) == 0 || $code == 401 || strlen($state) == 0) {
+            return $this->yandexCodeGuard($yandex, $d->request, $code, $d->translator);
         }
-        if ($response !== null) {
-            return $response;
+
+        $codeVerifier = (string) $this->session->get('code_verifier');
+        $params = [
+            'grant_type' => 'authorization_code',
+            'redirect_uri' => $yandex->getOauth2ReturnUrl(),
+            'code_verifier' => $codeVerifier,
+        ];
+        /** @psalm-var \Yiisoft\Yii\AuthClient\Client\Yandex $yandex */
+        $oAuthTokenType = $yandex->fetchAccessTokenWithCodeVerifier($d->request, $code, $params);
+        $userArray = $yandex->getCurrentUserJsonArray(
+                $oAuthTokenType, $this->configWebDiAuthGuzzle, $this->requestFactory);
+        /** @var int $userArray['id'] */
+        $id = $userArray['id'] ?? 0;
+        if ($id <= 0) {
+            $this->authService->logout();
         }
-        $this->authService->logout();
-        return $this->redirectToMain();
+        /** @var string $userArray['login'] e.g. john.doe.com */
+        $idStr = (string) $id;
+        $login = 'yx' . $userArray['login'] . substr($idStr, strlen($idStr) - 4, strlen($idStr));
+        $email = 'noemail' . $login . '@yandex.com';
+        $password = Random::string(32);
+        return $id <= 0
+            ? $this->redirectToMain()
+            : $this->oauthRegisterAndProceed(
+                'yandex', $login, $email, $password,
+                $_language, self::YANDEX_ACCESS_TOKEN, $d);
     }
 
     /**
@@ -1263,6 +961,34 @@ public function tfaCheckBeforeRedirects(
      * @param string $role e.g. 'admin' or 'observer'
      * @return bool True if assignment persisted, false if it failed silently
      */
+    private function yandexCodeGuard(
+        object $yandex,
+        ServerRequestInterface $request,
+        string $code,
+        TranslatorInterface $translator,
+    ): ResponseInterface {
+        if (strlen($code) == 0) {
+            /** @psalm-var \Yiisoft\Yii\AuthClient\Client\Yandex $yandex */
+            $codeVerifier = Random::string(128);
+            $codeChallenge = strtr(
+                rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='),
+                '+/', '-_'
+            );
+            $this->session->set('code_verifier', $codeVerifier);
+            return $this->webService->getRedirectResponse(
+                $yandex->buildAuthUrl($request, [
+                    'code_challenge' => $codeChallenge,
+                    'code_challenge_method' => 'S256',
+                ])
+            );
+        }
+        return $code == 401
+            ? $this->redirectToOauth2CallbackResultUnAuthorised()
+            : $this->redirectToOauth2AuthError(
+                $translator->translate(
+                    'oauth2.missing.state.parameter.possible.csrf.attack'));
+    }
+
     private function assignRoleAndVerify(
         int $userId,
         string $role,
