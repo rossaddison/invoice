@@ -242,6 +242,7 @@ $CMDS = [
     'comp_req_check'    => ['cmd' => 'php -d memory_limit=512M vendor/bin/composer-require-checker'],
 
     // Node
+    'node_install'      => ['cmd' => 'npm install'],
     'node_ncu'          => ['cmd' => 'npx npm-check-updates -u && npm install'],
     'node_nvm'          => ['cmd' => 'echo Download nvm-windows from: https://github.com/coreybutler/nvm-windows/releases'],
     'node_audit'        => ['cmd' => 'npm audit && npm cache clean --force && npm list --depth=0'],
@@ -397,6 +398,7 @@ $MENUS = [
     'node' => [
         'title' => 'Node — npm Packages',
         'items' => [
+            ['Install (npm install)',               'node_install'],
             ['Update Modules (npm-check-updates)', 'node_ncu'],
             ['nvm-windows Download Link',          'node_nvm'],
             ['Audit + Clean + List',               'node_audit'],
