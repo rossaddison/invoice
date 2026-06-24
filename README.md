@@ -8,6 +8,7 @@
 ![Psalm Level](https://img.shields.io/static/v1?label=Psalm%20Level&message=1&color=66ff00)
 [![type-coverage](https://shepherd.dev/github/rossaddison/invoice/coverage.svg)](https://shepherd.dev/github/rossaddison/invoice)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=rossaddison_invoice&metric=coverage)](https://sonarcloud.io/summary/new_code?id=rossaddison_invoice)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=rossaddison_invoice&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=rossaddison_invoice)
 [![PHP-CS-Fixer](https://img.shields.io/badge/php--cs--fixer-enabled-blue?logo=php)](https://github.com/FriendsOfPHP/PHP-CS-Fixer)
 ![Stats](https://github-readme-stats.vercel.app/api?username=rossaddison)
 ![Hosted by Vultr](https://img.shields.io/badge/hosting-vultr%20(yii3i.online)-blue?logo=vultr&style=flat-square)
