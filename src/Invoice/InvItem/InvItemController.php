@@ -192,88 +192,92 @@ final class InvItemController extends BaseController
     ): \Psr\Http\Message\ResponseInterface {
         $inv_id = (int) $this->session->get('inv_id');
         $inv_item = $this->invitem($currentRoute, $d->iiR);
-        $is_recurring = ($d->irR->repoCount($inv_id) > 0 ? true : false);
-        if (null !== $inv_item) {
-            $form = InvItemForm::show($inv_item, $inv_id);
-            $inv_item_id = $inv_item->reqId();
-            $this->session->set('inv_item_id', $inv_item_id);
-            // How many allowances or charges does this specific item have?
-            $inv_item_allowances_charges_count = $d->aciiR->repoInvItemcount($inv_item_id);
-            $inv_item_allowances_charges = $d->aciiR->repoInvItemquery($inv_item_id);
-            $parameters = [
-                'title' => $this->translator->translate('product.edit'),
-                'actionName' => 'invitem/editProduct',
-                'actionArguments' => ['id' => $currentRoute->getArgument('id')],
-                'addItemActionName' => 'invitemallowancecharge/add',
-                'addItemActionArguments' => ['inv_item_id' => $inv_item_id],
-                'indexItemActionName' => 'invitemallowancecharge/index',
-                'indexItemActionArguments' => ['inv_item_id' => $inv_item_id],
-                'errors' => [],
-                'form' => $form,
-                'inv_id' => $inv_id,
-                'inv_item_id' => $inv_item_id,
-                'invItemAllowancesChargesCount' => $inv_item_allowances_charges_count,
-                'invItemAllowancesCharges' => $inv_item_allowances_charges,
-                'isRecurring' => $is_recurring,
-                'taxRates' => $d->trR->findAllPreloaded(),
-                'products' => $d->pR->findAllPreloaded(),
-                'invs' => $d->iR->findAllPreloaded(),
-                'units' => $d->uR->findAllPreloaded(),
-            ];
-            if ($request->getMethod() === Method::POST) {
-                $body = $request->getParsedBody();
-                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    // Goal: Use the invitem/item_edit_product form data
-                    // to build invitemamount->subtotal=(form[quantity]*form[price])
-                    // to build invitemamount->discount=(quantity*form[discount])
-                    // Preparation here: Collect the data for this purpose
-                    // form[quantity]
-                    $quantity = (float) ($body['quantity'] ?? 0.00);
-                    // form[price]
-                    $price = (float) ($body['price'] ?? 0.00);
-                    // form[discount]
-                    $discount = (float) ($body['discount_amount'] ?? 0.00);
-                    // Goal: Accumulate all charges from invitemallowancecharge
-                    // and save in invitemamount->charge
-                    $charge = $this->accumulativeCharges($inv_item_allowances_charges) ?: 0.00;
-                    // Goal: Accumulate all allowances from invitemallowancecharge
-                    // and save in invitemamount->allowance
-                    $allowance = $this->accumulativeAllowances($inv_item_allowances_charges) ?: 0.00;
-                    if (is_array($body)) {
-                        $tax_rate_id = $this->invitemService->saveInvItemProduct($inv_item, $body, (string) $inv_id, $d->pR, $d->uR) ?: 1;
-                        $tax_rate_percentage = $this->taxratePercentage($tax_rate_id, $d->trR);
-                        if (null !== $tax_rate_percentage) {
-                            /**
-                             * @psalm-suppress PossiblyNullReference getId
-                             */
-                            $request_inv_item = $this->invitem($currentRoute, $d->iiR)->reqId();
-                            $this->saveInvItemAmount(
-                                new InvItemAmountData(
-                                    inv_item_id: $request_inv_item,
-                                    quantity: $quantity,
-                                    price: $price,
-                                    discount: $discount,
-                                    charge: $charge,
-                                    allowance: $allowance,
-                                    tax_rate_percentage: $tax_rate_percentage,
-                                ),
-                                $d->iias,
-                                $d->iiaR,
-                                $this->sR,
-                            );
-                            $numberHelper = new NumberHelper($this->sR);
-                            $numberHelper->calculateInv($inv_id, new CalcInvDeps($d->aciR, $d->iiR, $d->iiaR, $d->itrR, $d->iaR, $d->iR, $d->pymR));
-                            $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
-                            return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
-                        }
-                    }
-                }
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-                $parameters['form'] = $form;
-            }
-            return $this->webViewRenderer->render('_item_edit_product', $parameters);
+        if (null === $inv_item) {
+            return $this->webService->getNotFoundResponse();
         }
-        return $this->webService->getNotFoundResponse();
+        $is_recurring = $d->irR->repoCount($inv_id) > 0;
+        $form = InvItemForm::show($inv_item, $inv_id);
+        $inv_item_id = $inv_item->reqId();
+        $this->session->set('inv_item_id', $inv_item_id);
+        $inv_item_allowances_charges_count = $d->aciiR->repoInvItemcount($inv_item_id);
+        $inv_item_allowances_charges = $d->aciiR->repoInvItemquery($inv_item_id);
+        $parameters = [
+            'title' => $this->translator->translate('product.edit'),
+            'actionName' => 'invitem/editProduct',
+            'actionArguments' => ['id' => $currentRoute->getArgument('id')],
+            'addItemActionName' => 'invitemallowancecharge/add',
+            'addItemActionArguments' => ['inv_item_id' => $inv_item_id],
+            'indexItemActionName' => 'invitemallowancecharge/index',
+            'indexItemActionArguments' => ['inv_item_id' => $inv_item_id],
+            'errors' => [],
+            'form' => $form,
+            'inv_id' => $inv_id,
+            'inv_item_id' => $inv_item_id,
+            'invItemAllowancesChargesCount' => $inv_item_allowances_charges_count,
+            'invItemAllowancesCharges' => $inv_item_allowances_charges,
+            'isRecurring' => $is_recurring,
+            'taxRates' => $d->trR->findAllPreloaded(),
+            'products' => $d->pR->findAllPreloaded(),
+            'invs' => $d->iR->findAllPreloaded(),
+            'units' => $d->uR->findAllPreloaded(),
+        ];
+        if ($request->getMethod() === Method::POST) {
+            $body = $request->getParsedBody();
+            if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
+                $redirect = $this->processProductSave(
+                    $inv_item, $inv_item_id, $body, $inv_id, $inv_item_allowances_charges, $d
+                );
+                if (null !== $redirect) {
+                    return $redirect;
+                }
+            }
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+            $parameters['form'] = $form;
+        }
+        return $this->webViewRenderer->render('_item_edit_product', $parameters);
+    }
+
+    private function processProductSave(
+        InvItem $inv_item,
+        int $inv_item_id,
+        array $body,
+        int $inv_id,
+        EntityReader $inv_item_allowances_charges,
+        InvItemEditDeps $d,
+    ): ?\Psr\Http\Message\ResponseInterface {
+        $quantity = (float) ($body['quantity'] ?? 0.00);
+        $price = (float) ($body['price'] ?? 0.00);
+        $discount = (float) ($body['discount_amount'] ?? 0.00);
+        $charge = $this->accumulativeCharges($inv_item_allowances_charges) ?: 0.00;
+        $allowance = $this->accumulativeAllowances($inv_item_allowances_charges) ?: 0.00;
+        $tax_rate_id = $this->invitemService->saveInvItemProduct(
+            $inv_item, $body, (string) $inv_id, $d->pR, $d->uR
+        ) ?: 1;
+        $tax_rate_percentage = $this->taxratePercentage($tax_rate_id, $d->trR);
+        if (null === $tax_rate_percentage) {
+            return null;
+        }
+        $this->saveInvItemAmount(
+            new InvItemAmountData(
+                inv_item_id: $inv_item_id,
+                quantity: $quantity,
+                price: $price,
+                discount: $discount,
+                charge: $charge,
+                allowance: $allowance,
+                tax_rate_percentage: $tax_rate_percentage,
+            ),
+            $d->iias,
+            $d->iiaR,
+            $this->sR,
+        );
+        $numberHelper = new NumberHelper($this->sR);
+        $numberHelper->calculateInv(
+            $inv_id,
+            new CalcInvDeps($d->aciR, $d->iiR, $d->iiaR, $d->itrR, $d->iaR, $d->iR, $d->pymR)
+        );
+        $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
+        return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
     }
 
     /**
@@ -353,69 +357,78 @@ final class InvItemController extends BaseController
     ): \Psr\Http\Message\ResponseInterface {
         $inv_id = (int) $this->session->get('inv_id');
         $inv_item = $this->invitem($currentRoute, $d->iiR);
-        if ($inv_item) {
-            $is_recurring = ($d->irR->repoCount($inv_id) > 0 ? true : false);
-            $form = InvItemForm::show($inv_item, $inv_id);
-            $parameters = [
-                'title' => $this->translator->translate('edit'),
-                'actionName' => 'invitem/editTask',
-                'actionArguments' => ['id' => $currentRoute->getArgument('id')],
-                'errors' => [],
-                // if null inv_item, initialize it => prevent psalm PossiblyNullArgument error
-                'form' => $form,
-                'inv_id' => $inv_id,
-                'isRecurring' => $is_recurring,
-                'taxRates' => $d->trR->findAllPreloaded(),
-                // Only tasks that are complete are put on the invoice
-                'tasks' => $d->taskR->repoTaskStatusquery(3),
-                'invs' => $d->iR->findAllPreloaded(),
-                'units' => $d->uR->findAllPreloaded(),
-            ];
-            if ($request->getMethod() === Method::POST) {
-                $body = $request->getParsedBody() ?? [];
-                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    $quantity = (float) ($body['quantity'] ?? 0.00);
-                    $price = (float) ($body['price'] ?? 0.00);
-                    $discount = (float) ($body['discount_amount'] ?? 0.00);
-                    // Goal: Accumulate all charges from invitemallowancecharge
-                    // and save in invitemamount->charge
-                    $inv_item_allowances_charges = $d->aciiR->repoInvItemquery($inv_item->reqId());
-                    $charge = $this->accumulativeCharges($inv_item_allowances_charges) ?: 0.00;
-                    // Goal: Accumulate all allowances from invitemallowancecharge
-                    // and save in invitemamount->allowance
-                    $allowance = $this->accumulativeAllowances($inv_item_allowances_charges) ?: 0.00;
-                    if (is_array($body)) {
-                        $tax_rate_id = $this->invitemService->saveInvItemTask($inv_item, $body, (string) $inv_id, $d->taskR) ?: 1;
-                        $tax_rate_percentage = $this->taxratePercentage($tax_rate_id, $d->trR);
-                        if (null !== $tax_rate_percentage) {
-                            $request_inv_item = $inv_item->reqId();
-                            $this->saveInvItemAmount(
-                                new InvItemAmountData(
-                                    inv_item_id: $request_inv_item,
-                                    quantity: $quantity,
-                                    price: $price,
-                                    discount: $discount,
-                                    charge: $charge,
-                                    allowance: $allowance,
-                                    tax_rate_percentage: $tax_rate_percentage,
-                                ),
-                                $d->iias,
-                                $d->iiaR,
-                                $this->sR,
-                            );
-                            $numberHelper = new NumberHelper($this->sR);
-                            $numberHelper->calculateInv($inv_id, new CalcInvDeps($d->aciR, $d->iiR, $d->iiaR, $d->itrR, $d->iaR, $d->iR, $d->pymR));
-                            $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
-                            return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
-                        }
-                    }
+        if (!$inv_item) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $is_recurring = $d->irR->repoCount($inv_id) > 0;
+        $form = InvItemForm::show($inv_item, $inv_id);
+        $parameters = [
+            'title' => $this->translator->translate('edit'),
+            'actionName' => 'invitem/editTask',
+            'actionArguments' => ['id' => $currentRoute->getArgument('id')],
+            'errors' => [],
+            'form' => $form,
+            'inv_id' => $inv_id,
+            'isRecurring' => $is_recurring,
+            'taxRates' => $d->trR->findAllPreloaded(),
+            'tasks' => $d->taskR->repoTaskStatusquery(3),
+            'invs' => $d->iR->findAllPreloaded(),
+            'units' => $d->uR->findAllPreloaded(),
+        ];
+        if ($request->getMethod() === Method::POST) {
+            $body = $request->getParsedBody() ?? [];
+            if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
+                $redirect = $this->processTaskSave($inv_item, $body, $inv_id, $d);
+                if (null !== $redirect) {
+                    return $redirect;
                 }
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-                $parameters['form'] = $form;
             }
-            return $this->webViewRenderer->render('_item_form_task', $parameters);
-        } // $inv_item
-        return $this->webService->getNotFoundResponse();
+            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+            $parameters['form'] = $form;
+        }
+        return $this->webViewRenderer->render('_item_form_task', $parameters);
+    }
+
+    private function processTaskSave(
+        InvItem $inv_item,
+        array $body,
+        int $inv_id,
+        InvItemEditDeps $d,
+    ): ?\Psr\Http\Message\ResponseInterface {
+        $quantity = (float) ($body['quantity'] ?? 0.00);
+        $price = (float) ($body['price'] ?? 0.00);
+        $discount = (float) ($body['discount_amount'] ?? 0.00);
+        $inv_item_allowances_charges = $d->aciiR->repoInvItemquery($inv_item->reqId());
+        $charge = $this->accumulativeCharges($inv_item_allowances_charges) ?: 0.00;
+        $allowance = $this->accumulativeAllowances($inv_item_allowances_charges) ?: 0.00;
+        $tax_rate_id = $this->invitemService->saveInvItemTask(
+            $inv_item, $body, (string) $inv_id, $d->taskR
+        ) ?: 1;
+        $tax_rate_percentage = $this->taxratePercentage($tax_rate_id, $d->trR);
+        if (null === $tax_rate_percentage) {
+            return null;
+        }
+        $this->saveInvItemAmount(
+            new InvItemAmountData(
+                inv_item_id: $inv_item->reqId(),
+                quantity: $quantity,
+                price: $price,
+                discount: $discount,
+                charge: $charge,
+                allowance: $allowance,
+                tax_rate_percentage: $tax_rate_percentage,
+            ),
+            $d->iias,
+            $d->iiaR,
+            $this->sR,
+        );
+        $numberHelper = new NumberHelper($this->sR);
+        $numberHelper->calculateInv(
+            $inv_id,
+            new CalcInvDeps($d->aciR, $d->iiR, $d->iiaR, $d->itrR, $d->iaR, $d->iR, $d->pymR)
+        );
+        $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
+        return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
     }
 
     /**

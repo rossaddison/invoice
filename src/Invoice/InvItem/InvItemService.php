@@ -8,6 +8,7 @@ use App\Infrastructure\Persistence\InvItem\InvItem;
 use App\Infrastructure\Persistence\InvItemAmount\InvItemAmount;
 use App\Infrastructure\Persistence\InvItemAllowanceCharge\InvItemAllowanceCharge;
 use App\Infrastructure\Persistence\QuoteItemAllowanceCharge\QuoteItemAllowanceCharge;
+use App\Infrastructure\Persistence\Product\Product;
 use App\Infrastructure\Persistence\Task\Task;
 use App\Invoice\QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository
     as ACQIR;
@@ -83,78 +84,26 @@ final readonly class InvItemService
         $iiar = $deps->iiaR;
         $s = $deps->sR;
         $unR = $deps->uR;
-        $this->persist($model, array_merge(
-            $array,
-            ['inv_id' => $inv_id]
-        ));
-        // This function is used in product/save_product_lookup_item_product
-        // when adding a product using the modal
-        $tax_rate_id =
-            ((isset($array['tax_rate_id'])) ? (int) $array['tax_rate_id'] : 0);
-        // The form is required to have a tax value even if it is a zero rate
+        $this->persist($model, array_merge($array, ['inv_id' => $inv_id]));
+        $tax_rate_id = (int) ($array['tax_rate_id'] ?? 0);
         $model->setTaxRateId($tax_rate_id);
         $model->setInvId((int) $inv_id);
-        $so_item_id =
-            ((isset($array['so_item_id'])) ? (int) $array['so_item_id'] : 0);
-        $model->setSoItemId($so_item_id);
-        isset($array['peppol_po_itemid']) ?
-            $model->setPeppolPoItemid((string) $array['peppol_po_itemid']) : '';
-        isset($array['peppol_po_lineid']) ?
-            $model->setPeppolPoLineid((string) $array['peppol_po_lineid']) : '';
-        $product_id =
-            ((isset($array['product_id'])) ? (int) $array['product_id'] : 0);
+        $model->setSoItemId((int) ($array['so_item_id'] ?? 0));
+        $this->applyPeppolIds($model, $array);
+        $product_id = (int) ($array['product_id'] ?? 0);
         $model->setProductId($product_id);
         $product = $pr->repoProductquery($product_id);
-
         if (null !== $product) {
-            $name = (((isset($array['product_id']))
-                    && ($pr->repoCount($product_id) > 0)) ?
-                    $product->getProductName() : '');
-            $model->setName($name ?? '');
-
-            $productDescription = $product->getProductDescription();
-            if (null !== $productDescription) {
-                isset($array['description']) ?
-                    $model->setDescription(
-                        (string) $array['description']) :
-                    $model->setDescription($productDescription);
-            }
+            $this->applyInvItemProductNameDesc($model, $array, $product_id, $product, $pr);
         }
-
-        isset($array['note']) ?
-            $model->setNote((string) $array['note']) : '';
-        isset($array['quantity']) ?
-            $model->setQuantity((float) $array['quantity']) : '';
-        isset($array['price']) ?
-            $model->setPrice((float) $array['price']) : '';
-        isset($array['discount_amount']) ?
-            $model->setDiscountAmount(
-                (float) $array['discount_amount']) : '';
-        isset($array['order']) ? $model->setOrder((int) $array['order']) : '';
-
+        $this->applyOptionalInvItemFields($model, $array);
         $model->setDate(new \DateTimeImmutable('now'));
-
-        // Product_unit is a string which we get from unit's name field using
-        // the unit_id
-        $unit = $unR->repoUnitquery((int) $array['product_unit_id']);
-        if ($unit) {
-            $model->setProductUnit($unit->getUnitName());
-        }
-        $model->setProductUnitId((int) $array['product_unit_id']);
-        $tax_rate_percentage =
-            $this->taxratePercentage($tax_rate_id, $trr);
-        // Users are required to enter a tax rate even if it is zero percent.
-
-        $model->setBelongsToVatInvoice(
-            (int) ($s->getSetting('enable_vat_registration') ?: '0'));
+        $this->applyInvItemUnit($model, $array, $unR);
+        $tax_rate_percentage = $this->taxratePercentage($tax_rate_id, $trr);
+        $model->setBelongsToVatInvoice((int) ($s->getSetting('enable_vat_registration') ?: '0'));
         if ($product_id > 0) {
             $this->repository->save($model);
-            // Peppol Allowances / charges can only be added
-            // on an existing product => zero for allowances
-            // or charges
-            if (isset($array['quantity'],
-                      $array['price'],
-                      $array['discount_amount'])
+            if (isset($array['quantity'], $array['price'], $array['discount_amount'])
                 && null !== $tax_rate_percentage) {
                 $this->saveInvItemAmount(
                     $model->reqId(),
@@ -163,7 +112,8 @@ final readonly class InvItemService
                     (float) $array['discount_amount'],
                     $tax_rate_percentage,
                     $iias,
-                    $iiar);
+                    $iiar
+                );
             }
         }
         return $model->reqId();
@@ -270,59 +220,24 @@ final readonly class InvItemService
     public function saveInvItemProduct(InvItem $model, array $array,
                                 string $inv_id, PR $pr, UNR $unR): int
     {
-        // This function is used in product/save_product_lookup_item_product
-        // when adding a product using the modal
-        $tax_rate_id = ((isset($array['tax_rate_id'])) ?
-                (int) $array['tax_rate_id'] : '');
-        // The form is required to have a tax value even if it is a zero rate
-        $model->setTaxRateId((int) $tax_rate_id);
+        $tax_rate_id = (int) ($array['tax_rate_id'] ?? 0);
+        $model->setTaxRateId($tax_rate_id);
         $model->setInvId((int) $inv_id);
-        $so_item_id = ((isset($array['so_item_id'])) ?
-                (int) $array['so_item_id'] : '');
-        $model->setSoItemId((int) $so_item_id);
-        isset($array['peppol_po_itemid']) ?
-            $model->setPeppolPoItemid((string) $array['peppol_po_itemid']) : '';
-        isset($array['peppol_po_lineid']) ?
-            $model->setPeppolPoLineid((string) $array['peppol_po_lineid']) : '';
-        $product_id = ((isset($array['product_id'])) ?
-                (int) $array['product_id'] : '');
-        $model->setProductId((int) $product_id);
-        $product = $pr->repoProductquery((int) $product_id);
-
+        $model->setSoItemId((int) ($array['so_item_id'] ?? 0));
+        $this->applyPeppolIds($model, $array);
+        $product_id = (int) ($array['product_id'] ?? 0);
+        $model->setProductId($product_id);
+        $product = $pr->repoProductquery($product_id);
         if (null !== $product) {
-            $name = (((isset($array['product_id']))
-                    && ($pr->repoCount((int) $product_id) > 0)) ?
-                    $product->getProductName() : '');
-            $model->setName($name ?? '');
-
-            $productDescription = $product->getProductDescription();
-            if (null !== $productDescription) {
-                isset($array['description']) ?
-                $model->setDescription((string) $array['description']) :
-                    $model->setDescription($productDescription);
-            }
+            $this->applyInvItemProductNameDesc($model, $array, $product_id, $product, $pr);
         }
-        isset($array['note']) ? $model->setNote((string) $array['note']) : '';
-
-        isset($array['quantity']) ?
-            $model->setQuantity((float) $array['quantity']) : '';
-
-        isset($array['price']) ? $model->setPrice((float) $array['price']) : '';
-        isset($array['discount_amount']) ?
-            $model->setDiscountAmount((float) $array['discount_amount']) : '';
-        isset($array['order']) ? $model->setOrder((int) $array['order']) : '';
-
+        $this->applyOptionalInvItemFields($model, $array);
         $model->setDate(new \DateTimeImmutable('now'));
-
-        // Product_unit is a string which we get from unit's name field using
-        // the unit_id
-        $unit = $unR->repoUnitquery((int) $array['product_unit_id']);
-        if ($unit) {
-            $model->setProductUnit($unit->getUnitName());
+        $this->applyInvItemUnit($model, $array, $unR);
+        if ($product_id > 0) {
+            $this->repository->save($model);
         }
-        $model->setProductUnitId((int) $array['product_unit_id']);
-        $product_id > 0 ? $this->repository->save($model) : '';
-        return (int) $tax_rate_id;
+        return $tax_rate_id;
     }
 
     /**
@@ -402,57 +317,101 @@ final readonly class InvItemService
     public function saveInvItemTask(InvItem $model, array $array,
                                     string $inv_id, taskR $taskR): int
     {
-        // This function is used in invitem/edit_task when editing an item on
-        // the inv view. Related logic: https://github.com/cycle/orm/issues/348
+        $tax_rate_id = $this->applyTaskTaxRate($model, $array);
+        $model->setTaxRateId($tax_rate_id);
+        $this->applyTaskRef($model, $array);
+        $model->setInvId((int) $inv_id);
+        /** @var Task $task */
+        $task = $taskR->repoTaskquery((int) ($array['task_id'] ?? 0));
+        if (isset($array['name'])) {
+            $model->setName($task->getName() ?? '');
+        }
+        $description = isset($array['description'])
+            ? (string) $array['description']
+            : $task->getDescription();
+        $model->setDescription($description ?: '');
+        $model->setNote(isset($array['note']) ? (string) $array['note'] : '');
+        $this->applyTaskQuantityPriceDiscountOrder($model, $array);
+        $model->setProductUnit('');
+        $model->setDate(new \DateTimeImmutable('now'));
+        if ((int) ($array['task_id'] ?? 0) > 0) {
+            $this->repository->save($model);
+        }
+        return $tax_rate_id;
+    }
+
+    private function applyPeppolIds(InvItem $model, array $array): void
+    {
+        if (isset($array['peppol_po_itemid'])) {
+            $model->setPeppolPoItemid((string) $array['peppol_po_itemid']);
+        }
+        if (isset($array['peppol_po_lineid'])) {
+            $model->setPeppolPoLineid((string) $array['peppol_po_lineid']);
+        }
+    }
+
+    private function applyInvItemProductNameDesc(
+        InvItem $model, array $array, int $product_id,
+        Product $product, PR $pr
+    ): void {
+        $name = (isset($array['product_id']) && $pr->repoCount($product_id) > 0)
+            ? $product->getProductName()
+            : '';
+        $model->setName($name ?? '');
+        $productDescription = $product->getProductDescription();
+        if (null !== $productDescription) {
+            $model->setDescription(isset($array['description'])
+                ? (string) $array['description']
+                : $productDescription);
+        }
+    }
+
+    private function applyOptionalInvItemFields(InvItem $model, array $array): void
+    {
+        if (isset($array['note'])) { $model->setNote((string) $array['note']); }
+        if (isset($array['quantity'])) { $model->setQuantity((float) $array['quantity']); }
+        if (isset($array['price'])) { $model->setPrice((float) $array['price']); }
+        if (isset($array['discount_amount'])) { $model->setDiscountAmount((float) $array['discount_amount']); }
+        if (isset($array['order'])) { $model->setOrder((int) $array['order']); }
+    }
+
+    private function applyInvItemUnit(InvItem $model, array $array, UNR $unR): void
+    {
+        $unit = $unR->repoUnitquery((int) $array['product_unit_id']);
+        if ($unit) {
+            $model->setProductUnit($unit->getUnitName());
+        }
+        $model->setProductUnitId((int) $array['product_unit_id']);
+    }
+
+    private function applyTaskTaxRate(InvItem $model, array $array): int
+    {
         if (isset($array['tax_rate_id'])) {
             $currentTaxRate = $model->getTaxRate();
             $model->setTaxRate(
                 $currentTaxRate?->reqId() == (int) $array['tax_rate_id'] ? $currentTaxRate : null
             );
         }
-        $tax_rate_id = isset($array['tax_rate_id']) ? (int) $array['tax_rate_id'] : '';
-        $model->setTaxRateId((int) $tax_rate_id);
+        return (int) ($array['tax_rate_id'] ?? 0);
+    }
 
+    private function applyTaskRef(InvItem $model, array $array): void
+    {
         if (isset($array['task_id'])) {
             $currentTask = $model->getTask();
             $model->setTask(
                 $currentTask?->reqId() == (int) $array['task_id'] ? $currentTask : null
             );
         }
-        $task_id = isset($array['task_id']) ? (int) $array['task_id'] : '';
-        // Product id and task id are mutually exclusive
-        $model->setTaskId((int) $task_id);
+        $model->setTaskId((int) ($array['task_id'] ?? 0));
+    }
 
-        $model->setInvId((int) $inv_id);
-
-        /** @var Task $task */
-        $task = $taskR->repoTaskquery((int) $array['task_id']);
-        if (isset($array['name'])) {
-            $model->setName($task->getName() ?? '');
-        }
-
-        // If the user has changed the description on the form => override
-        //  default task description
-        if (isset($array['description'])) {
-            $description = (string) $array['description'];
-        } else {
-            $description = $task->getDescription();
-        }
-        $model->setDescription($description ?: '');
-        $note = ((isset($array['note'])) ? (string) $array['note'] : '');
-        $model->setNote($note ?: '');
-        $model->setQuantity((float) $array['quantity'] ?: 1);
-        $model->setProductUnit('');
+    private function applyTaskQuantityPriceDiscountOrder(InvItem $model, array $array): void
+    {
+        $model->setQuantity((float) $array['quantity'] ?: 1.00);
         $model->setPrice((float) $array['price'] ?: 0.00);
         $model->setDiscountAmount((float) $array['discount_amount'] ?: 0.00);
         $model->setOrder((int) $array['order'] ?: 0);
-
-        $datetimeimmutable = new \DateTimeImmutable('now');
-        $model->setDate($datetimeimmutable);
-        if ($task_id > 0) {
-            $this->repository->save($model);
-        }
-        return (int) $tax_rate_id;
     }
 
     /**
