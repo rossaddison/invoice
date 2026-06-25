@@ -1665,9 +1665,12 @@ async function runDirect(key, params) {
             const { done, value } = await reader.read();
             if (done) break;
             fullText += decoder.decode(value, { stream: true });
-            // Show raw text while streaming; strip CR-overwrites so progress
-            // lines don't pile up visibly during the run
-            pre.textContent = fullText.replace(/\r[^\n]/g, '');
+            // Show plain text while streaming: strip ANSI CSI escape sequences
+            // (prevents ESC chars appearing as squares) and collapse CR-overwrite
+            // progress lines so only the final state of each line is visible.
+            pre.textContent = fullText
+                .replace(/\x1b\[[0-9;?]*[A-Za-z]/g, '')
+                .replace(/[^\n]*\r(?!\n)/g, '');
             pre.scrollTop = pre.scrollHeight;
         }
 
@@ -1799,8 +1802,9 @@ function ansiToHtml(raw) {
         }
         // All non-m CSI sequences (cursor movement, erase, etc.) are silently dropped
 
-        // CR followed by non-LF overwrites the current line — normalise to newline
-        const text = rest.replace(/\r[^\n]/g, '\n');
+        // CR followed by non-LF overwrites the current line — keep only the
+        // final content after the last bare \r on each line.
+        const text = rest.replace(/[^\n]*\r(?!\n)/g, '');
         html += esc(text);
     }
     while (depth-- > 0) html += '</span>';

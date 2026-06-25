@@ -72,82 +72,65 @@ final class ProductClientController extends BaseController
         ClientRepository $clientRepository,
         ProductRepository $productRepository
     ): Response {
-        $body = $request->getParsedBody();
         $queryParams = $request->getQueryParams();
-
-        // Get product IDs from query parameters (coming from Family controller)
         /** @var array<int> $productIds */
         $productIds = [];
-        if (isset($queryParams['product_ids']) &&
-                is_string($queryParams['product_ids'])) {
-            $productIds = array_map('intval',
-                    explode(',', $queryParams['product_ids']));
-            $productIds = array_filter($productIds,
-                    fn(int $id): bool => $id > 0);
-        }
-
-        if (empty($productIds)) {
-            $this->flash->add(
-                'danger',
-                $this->translator->translate(
-                    'no.products.specified.for.association'),
-                true
+        if (isset($queryParams['product_ids']) && is_string($queryParams['product_ids'])) {
+            $productIds = array_filter(
+                array_map('intval', explode(',', $queryParams['product_ids'])),
+                fn(int $id): bool => $id > 0
             );
+        }
+        if (empty($productIds)) {
+            $this->flash->add('danger', $this->translator->translate('no.products.specified.for.association'), true);
             return $this->webService->getRedirectResponse('family/index');
         }
+        return $this->processAssociation($request, $productIds, (int)($queryParams['index'] ?? 0), $clientRepository, $productRepository);
+    }
 
-        // Get current processing index
-        $currentIndex = (int)($queryParams['index'] ?? 0);
-
+    /**
+     * @param array<int> $productIds
+     */
+    private function processAssociation(
+        Request $request,
+        array $productIds,
+        int $currentIndex,
+        ClientRepository $clientRepository,
+        ProductRepository $productRepository,
+    ): Response {
         if ($currentIndex >= count($productIds)) {
             $this->flash->add('success', $this->translator->translate('product.client.associations.completed'), true);
             return $this->webService->getRedirectResponse('productclient/index');
         }
-
         $currentProductId = $productIds[$currentIndex];
         $product = $productRepository->repoProductQuery($currentProductId);
-
         if (!$product) {
             $this->flash->add('danger', $this->translator->translate('product.not.found') . ': ' . $currentProductId, true);
             return $this->webService->getRedirectResponse('family/index');
         }
-
+        $body = $request->getParsedBody();
         $redirect = null;
         if ($request->getMethod() === Method::POST && is_array($body)) {
             /** @var array<string, mixed> $body */
             $redirect = $this->handlePostSubmission($body, $productIds, $currentIndex, $currentProductId, $clientRepository);
         }
-
-        if ($redirect !== null) {
-            return $redirect;
-        }
-
-        // Show association form for current product
-        $suggestedClientGroup = $this->getClientGroupFromSession();
-
         $parameters = [
             'title' => $this->translator->translate('associate.product.with.client'),
             'actionName' => 'productclient/associate-multiple',
-            'actionArguments' => [
-                'product_ids' => implode(',', $productIds),
-                'index' => $currentIndex
-            ],
+            'actionArguments' => ['product_ids' => implode(',', $productIds), 'index' => $currentIndex],
             'errors' => [],
-            'form' => ProductClientForm::show(
-                new ProductClient(), $currentProductId, null),
-            'clients' => $this->buildClientOptionsArray(
-                $clientRepository->findAllPreloaded()),
+            'form' => ProductClientForm::show(new ProductClient(), $currentProductId, null),
+            'clients' => $this->buildClientOptionsArray($clientRepository->findAllPreloaded()),
             'product' => $product,
             'productRepository' => $productRepository,
             'productId' => $currentProductId,
             'showClientCreation' => true,
-            'suggestedClientGroup' => $suggestedClientGroup,
+            'suggestedClientGroup' => $this->getClientGroupFromSession(),
             'currentIndex' => $currentIndex + 1,
             'totalProducts' => count($productIds),
             'remainingProducts' => count($productIds) - $currentIndex,
         ];
-
-        return $this->webViewRenderer->render('_form', $parameters);
+        return $redirect ?? $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**

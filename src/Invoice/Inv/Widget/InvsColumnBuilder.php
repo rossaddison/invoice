@@ -87,7 +87,20 @@ final class InvsColumnBuilder
             $this->buildClientActiveColumn(),
             $this->buildCreditNoteColumn($iR),
             ...$this->buildSentLogColumns($islR),
-            $this->buildClientFullNameColumn(),
+            new DataColumn(
+                property: 'filterClient',
+                header: $t->translate('client'),
+                content: static fn(Inv $model): string =>
+                    Html::encode($model->getClient()?->getClientFullName()),
+                encodeContent: false,
+                filter: DropdownFilter::widget()
+                    ->addAttributes(['id' => 'filter-client', 'name' => 'client_id',
+                        'class' => self::FILTER_CLASS,
+                        'aria-label' => 'Filter by client',
+                        'title' => $t->translate('client')])
+                    ->optionsData($this->filterOptions->clients),
+                withSorting: false,
+            ),
 
             new DataColumn('client_number',
                 header: $t->translate('client.number'),
@@ -113,7 +126,19 @@ final class InvsColumnBuilder
                     Html::encode($m->getClient()?->getClientAddress2()),
                 encodeContent: false),
 
-            $this->buildClientGroupColumn(),
+            new DataColumn(
+                property: 'filterClientGroup',
+                header: $t->translate('client.group'),
+                content: static fn(Inv $model): string =>
+                    $model->getClient()?->getClientGroup() ?? '',
+                filter: DropdownFilter::widget()
+                    ->addAttributes(['id' => 'filter-client-group', 'name' => 'number',
+                        'class' => self::FILTER_CLASS,
+                        'aria-label' => 'Filter by client group',
+                        'title' => $t->translate('client.group')])
+                    ->optionsData($this->filterOptions->clientGroup),
+                withSorting: false,
+            ),
 
             new DataColumn('time_created',
                 header: $t->translate('datetime.immutable.time.created'),
@@ -563,43 +588,6 @@ final class InvsColumnBuilder
                         'id' => $model->getClient()?->reqId(), 'origin' => 'inv',
                     ]))
                     ->content($model->getClient()?->getClientActive() ? '✅' : '❌'),
-        );
-    }
-
-    private function buildClientFullNameColumn(): DataColumn
-    {
-        $t = $this->translator;
-        return new DataColumn(
-            property: 'filterClient',
-            header: $t->translate('client'),
-            content: static fn(Inv $model): string =>
-                Html::encode($model->getClient()?->getClientFullName()),
-            encodeContent: false,
-            filter: DropdownFilter::widget()
-                ->addAttributes(['id' => 'filter-client', 'name' => 'client_id',
-                    'class' => self::FILTER_CLASS,
-                    'aria-label' => 'Filter by client',
-                    'title' => $t->translate('client')])
-                ->optionsData($this->filterOptions->clients),
-            withSorting: false,
-        );
-    }
-
-    private function buildClientGroupColumn(): DataColumn
-    {
-        $t = $this->translator;
-        return new DataColumn(
-            property: 'filterClientGroup',
-            header: $t->translate('client.group'),
-            content: static fn(Inv $model): string =>
-                $model->getClient()?->getClientGroup() ?? '',
-            filter: DropdownFilter::widget()
-                ->addAttributes(['id' => 'filter-client-group', 'name' => 'number',
-                    'class' => self::FILTER_CLASS,
-                    'aria-label' => 'Filter by client group',
-                    'title' => $t->translate('client.group')])
-                ->optionsData($this->filterOptions->clientGroup),
-            withSorting: false,
         );
     }
 

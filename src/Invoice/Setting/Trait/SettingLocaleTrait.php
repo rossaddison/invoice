@@ -151,6 +151,24 @@ trait SettingLocaleTrait
     }
 
     /**
+     * Primary locale → ISO 4217 currency for each Tink Open Banking market.
+     * in_array() searches values, so the existing currency-check call is unchanged.
+     *
+     * @return array<string, string>
+     * @psalm-return array{en:'GBP', sv:'SEK', 'nb-NO':'NOK', da:'DKK', de:'EUR'}
+     */
+    public function tinkSupportedCurrencies(): array
+    {
+        return [
+            'en'    => 'GBP',   // United Kingdom
+            'sv'    => 'SEK',   // Sweden
+            'nb-NO' => 'NOK',   // Norway
+            'da'    => 'DKK',   // Denmark
+            'de'    => 'EUR',   // Germany (primary EUR market)
+        ];
+    }
+
+    /**
      * @return array<string, string> locale code =>
      *  ISO 3166-1 alpha-2 country code (lowercase)
      */

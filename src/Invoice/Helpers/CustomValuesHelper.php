@@ -624,29 +624,22 @@ class CustomValuesHelper
         if (strlen($data) < 4 || ':' !== $data[1]) {
             return false;
         }
-        if (!$this->isSerializedEnding($data, $strict)) {
-            return false;
-        }
-        return $this->matchesSerializedToken($data[0], $data, $strict);
-    }
-
-    private function isSerializedEnding(string $data, bool $strict): bool
-    {
         if ($strict) {
             $lastc = substr($data, -1);
-            return ';' === $lastc || '}' === $lastc;
+            $validEnding = ';' === $lastc || '}' === $lastc;
+        } else {
+            $semicolon = strpos($data, ';');
+            $brace = strpos($data, '}');
+            $validEnding = !(
+                (false === $semicolon && false === $brace)
+                || (false !== $semicolon && $semicolon < 3)
+                || (false !== $brace && $brace < 4)
+            );
         }
-        $semicolon = strpos($data, ';');
-        $brace = strpos($data, '}');
-        return !(
-            (false === $semicolon && false === $brace)
-            || (false !== $semicolon && $semicolon < 3)
-            || (false !== $brace && $brace < 4)
-        );
-    }
-
-    private function matchesSerializedToken(string $token, string $data, bool $strict): bool
-    {
+        if (!$validEnding) {
+            return false;
+        }
+        $token = $data[0];
         $end = $strict ? '$' : '';
         $sQuoteValid = $token !== 's'
             || ($strict ? '"' === substr($data, -2, 1) : str_contains($data, '"'));

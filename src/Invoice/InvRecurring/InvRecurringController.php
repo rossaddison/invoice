@@ -86,7 +86,7 @@ final class InvRecurringController extends BaseController
     {
         $pageNum = (int) $currentRoute->getArgument('page', '1');
         $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
-        $paginator = (new OffsetPaginator($this->invrecurrings($irR)))
+        $paginator = (new OffsetPaginator($irR->findAllPreloaded()))
         ->withPageSize($this->sR->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero);
         $numberhelper = new NumberHelper($this->sR);
@@ -97,7 +97,7 @@ final class InvRecurringController extends BaseController
             'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
                                                       ? (int) $this->sR->getSetting('default_list_limit') : 1,
             'recur_frequencies' => $numberhelper->recurFrequencies(),
-            'invrecurrings' => $this->invrecurrings($irR),
+            'invrecurrings' => $irR->findAllPreloaded(),
             'alert' => $this->alert(),
         ];
         return $this->webViewRenderer->render('index', $parameters);
@@ -611,15 +611,6 @@ final class InvRecurringController extends BaseController
             // InvRecurring/null can be returned here
         }
         return $invrecurring;
-    }
-
-    /**
-     * @param IRR $invrecurringRepository
-     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
-     */
-    private function invrecurrings(IRR $invrecurringRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
-    {
-        return $invrecurringRepository->findAllPreloaded();
     }
 
     /**

@@ -249,32 +249,30 @@ final class PaymentInformationController
         }
         $clientId     = $this->sR->getSetting('gateway_open_banking_with_tink_client_id');
         $clientSecret = $this->sR->getSetting('gateway_open_banking_with_tink_client_secret');
+        $invCurrency  = strtoupper((string) $inv['currency']);
         if (strlen($clientId) === 0 || strlen($clientSecret) === 0) {
             $viewData['alert'] = 'Missing Credentials Client Id and Client Secret';
-            return $viewData;
-        }
-        $invCurrency = strtoupper((string) $inv['currency']);
-        if (!in_array($invCurrency, ['SEK', 'EUR', 'NOK', 'DKK', 'GBP'])) {
+        } elseif (!in_array($invCurrency, $this->sR->tinkSupportedCurrencies(), true)) {
             $viewData['alert'] = 'Currency not supported.';
-            return $viewData;
+        } else {
+            $details = $this->openBankingPaymentService->initiateTinkPayment(
+                $amount, $ctx->invoice, $company, $invCurrency,
+                $recipientName, (int) $clientId, (int) $clientSecret,
+            );
+            $singleKeyArray   = (array) ($details['data'] ?? []);
+            $data             = (array) ($singleKeyArray['data'] ?? []);
+            $paymentRequestId = (string) ($data['id'] ?? '');
+            $market           = (string) ($data['market'] ?? '');
+            $locale           = 'en_GB';
+            $redirectUri      = urlencode($this->urlGenerator->generate(
+                'paymentinformation/tinkCcomplete',
+                ['url_key' => $ctx->url_key, 'payment_request_id' => $paymentRequestId],
+            ));
+            $viewData['authToken'] = false;
+            $viewData['authUrl']   = "https://link.tink.com/1.0/pay/direct"
+                . "/?client_id={$clientId}&redirect_uri={$redirectUri}"
+                . "&market={$market}&locale={$locale}&payment_request_id={$paymentRequestId}";
         }
-        $details = $this->openBankingPaymentService->initiateTinkPayment(
-            $amount, $ctx->invoice, $company, $invCurrency,
-            $recipientName, (int) $clientId, (int) $clientSecret,
-        );
-        $singleKeyArray   = (array) ($details['data'] ?? []);
-        $data             = (array) ($singleKeyArray['data'] ?? []);
-        $paymentRequestId = (string) ($data['id'] ?? '');
-        $market           = (string) ($data['market'] ?? '');
-        $locale           = 'en_GB';
-        $redirectUri      = urlencode($this->urlGenerator->generate(
-            'paymentinformation/tinkCcomplete',
-            ['url_key' => $ctx->url_key, 'payment_request_id' => $paymentRequestId],
-        ));
-        $viewData['authToken'] = false;
-        $viewData['authUrl']   = "https://link.tink.com/1.0/pay/direct"
-            . "/?client_id={$clientId}&redirect_uri={$redirectUri}"
-            . "&market={$market}&locale={$locale}&payment_request_id={$paymentRequestId}";
         return $viewData;
     }
 
@@ -447,28 +445,18 @@ final class PaymentInformationController
                                         cR $cR, iiR $iiR, pmR $pmR): Response
     {
         $client_chosen_gateway = $currentRoute->getArgument('gateway');
-        if (null === $client_chosen_gateway) {
+        $url_key               = $currentRoute->getArgument('url_key');
+        $invoice               = null !== $url_key ? $this->iR->repoUrlKeyGuestLoaded($url_key) : null;
+        $invoice_id            = null !== $invoice ? $invoice->reqId() : 0;
+        $invoice_amount_record = null !== $invoice ? $this->iaR->repoInvquery($invoice_id) : null;
+        if (null === $client_chosen_gateway || null === $url_key || null === $invoice || null === $invoice_amount_record) {
             return $this->webService->getNotFoundResponse();
         }
-        $url_key = $currentRoute->getArgument('url_key');
-        if (null === $url_key) {
-            return $this->webService->getNotFoundResponse();
-        }
-        $invoice = $this->iR->repoUrlKeyGuestLoaded($url_key);
-        if (null === $invoice) {
-            return $this->webService->getNotFoundResponse();
-        }
-        $invoice_id = $invoice->reqId();
-        /** @psalm-suppress PossiblyNullArgument $invoice_id */
         $items = $iiR->repoInvquery($invoice_id);
         $items_array = [];
         /** @var InvItem $item */
         foreach ($items as $item) {
             $items_array[] = (string) $item->reqId() . ' ' . ($item->getName() ?? '');
-        }
-        $invoice_amount_record = $this->iaR->repoInvquery($invoice_id);
-        if (null === $invoice_amount_record) {
-            return $this->webService->getNotFoundResponse();
         }
         $balance = $invoice_amount_record->getBalance();
         $total   = $invoice_amount_record->getTotal();
@@ -614,44 +602,25 @@ final class PaymentInformationController
                                                         $amazon_pci_view_data);
     }
 
-    /**
-     * @return array{clientToken: string, merchantId: string}|null
-     */
-    private function initializeBraintree(PaymentInformationGatewayContext $ctx): ?array
-    {
-        if (!$this->braintreePaymentService->isConfigured()) {
-            $this->flashMessage('warning',
-                'Braintree payment gateway is not properly configured.');
-            return null;
-        }
-        if (!$this->braintreePaymentService->findOrCreateCustomer($ctx->invoice)) {
-            $this->flashMessage('warning',
-                'Unable to create or find customer in Braintree.');
-        }
-        $clientToken = $this->braintreePaymentService->generateClientToken();
-        if (empty($clientToken)) {
-            $this->flashMessage('warning',
-                'Unable to generate Braintree client token.');
-            return null;
-        }
-        return [
-            'clientToken' => $clientToken,
-            'merchantId'  => $this->braintreePaymentService->getMerchantId(),
-        ];
-    }
-
     public function brainTreeInForm(
         PaymentInformationGatewayContext $ctx,
         Request $request,
         int $invoice_id,
         array $sandbox_url_array,
     ): Response {
-        $init = $this->initializeBraintree($ctx);
-        if (null === $init) {
+        if (!$this->braintreePaymentService->isConfigured()) {
+            $this->flashMessage('warning', 'Braintree payment gateway is not properly configured.');
             return $this->webService->getNotFoundResponse();
         }
-        $clientToken = $init['clientToken'];
-        $merchantId  = $init['merchantId'];
+        if (!$this->braintreePaymentService->findOrCreateCustomer($ctx->invoice)) {
+            $this->flashMessage('warning', 'Unable to create or find customer in Braintree.');
+        }
+        $clientToken = $this->braintreePaymentService->generateClientToken();
+        if (empty($clientToken)) {
+            $this->flashMessage('warning', 'Unable to generate Braintree client token.');
+            return $this->webService->getNotFoundResponse();
+        }
+        $merchantId = $this->braintreePaymentService->getMerchantId();
 
         // Return the view
         $braintree_pci_view_data = [
@@ -990,23 +959,22 @@ final class PaymentInformationController
                         sandbox_url_array: $sandbox_url_array,
                     ),
                 );
-                $view_data = [
-                    'render' => $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/paymentinformation/payment_message',
-                        [
-                            'heading'     => $heading,
-                            'message'     => $this->translator->translate('payment')
-                                            . ':' . $this->translator->translate('complete')
-                                            . 'Payment Id: ' . $paymentId,
-                            'url'         => 'inv/urlKey',
-                            'url_key'     => $metadataInvoiceUrlKey,
-                            'gateway'     => 'Mollie',
-                            'sandbox_url' => $sandbox_url_array['mollie'],
-                        ],
-                    ),
-                ];
-                return $this->webViewRenderer->render('payment_completion_page', $view_data);
             }
+            $view_data = [
+                'render' => $this->webViewRenderer->renderPartialAsString(
+                    '//invoice/paymentinformation/payment_message',
+                    [
+                        'heading'     => $heading,
+                        'message'     => $this->translator->translate('payment')
+                                        . ':' . $this->translator->translate('complete')
+                                        . 'Payment Id: ' . $paymentId,
+                        'url'         => 'inv/urlKey',
+                        'url_key'     => $metadataInvoiceUrlKey,
+                        'gateway'     => 'Mollie',
+                        'sandbox_url' => $sandbox_url_array['mollie'],
+                    ],
+                ),
+            ];
         } else {
             // all-0, draft-1, sent-2, viewed-3, paid-4, overdue-5, unpaid-6
             $invoice->setStatusId(6);
@@ -1032,9 +1000,8 @@ final class PaymentInformationController
                     ],
                 ),
             ];
-            return $this->webViewRenderer->render('payment_completion_page', $view_data);
         }
-        return $this->webService->getNotFoundResponse();
+        return $this->webViewRenderer->render('payment_completion_page', $view_data);
     }
 
     public function stripeInForm(
