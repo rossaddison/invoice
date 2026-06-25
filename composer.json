@@ -156,7 +156,7 @@
         "codeception/module-cli": "^2.0.1",
         "codeception/module-phpbrowser": "^4.0.0",
         "dg/bypass-finals": "^1.10.2",
-        "friendsofphp/php-cs-fixer": "^3.95.10",
+        "friendsofphp/php-cs-fixer": "^3.95.11",
         "google/protobuf": ">=5.35.1",
         "guzzlehttp/promises": ">=2.5.0",
         "phpunit/php-code-coverage": ">=14.2.2",
@@ -170,7 +170,7 @@
         "spatie/phpunit-watcher": ">=1.24.4",
         "squizlabs/php_codesniffer": "^4.0.1",
         "testo/facade": ">=0.1.1",
-        "testo/testo": ">=0.10.27",
+        "testo/testo": ">=0.10.28",
         "vimeo/psalm": ">=6.16.1"
     },
     "autoload": {

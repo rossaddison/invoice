@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "29917447988cd073b09879852af9251f",
+    "content-hash": "b464bfa794862372c2a364eb41ca2d73",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -10345,16 +10345,16 @@
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v20.2.1",
+            "version": "v20.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "c628cfa0b3de4ef5110b2c2bfbf881a33a52fdd5"
+                "reference": "266f0b05890172184cca66a0688abaf1a96b08d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/c628cfa0b3de4ef5110b2c2bfbf881a33a52fdd5",
-                "reference": "c628cfa0b3de4ef5110b2c2bfbf881a33a52fdd5",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/266f0b05890172184cca66a0688abaf1a96b08d8",
+                "reference": "266f0b05890172184cca66a0688abaf1a96b08d8",
                 "shasum": ""
             },
             "require": {
@@ -10401,9 +10401,9 @@
             ],
             "support": {
                 "issues": "https://github.com/stripe/stripe-php/issues",
-                "source": "https://github.com/stripe/stripe-php/tree/v20.2.1"
+                "source": "https://github.com/stripe/stripe-php/tree/v20.3.0"
             },
-            "time": "2026-06-12T22:41:56+00:00"
+            "time": "2026-06-24T22:45:28+00:00"
         },
         {
             "name": "symfony/cache",
@@ -19842,12 +19842,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/Codeception.git",
-                "reference": "a0c973e23c52ed9cdb5e66cf798850955165232f"
+                "reference": "eb7a6a2ace3a1f404853ac5808b2bcf1293ad1fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/a0c973e23c52ed9cdb5e66cf798850955165232f",
-                "reference": "a0c973e23c52ed9cdb5e66cf798850955165232f",
+                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/eb7a6a2ace3a1f404853ac5808b2bcf1293ad1fd",
+                "reference": "eb7a6a2ace3a1f404853ac5808b2bcf1293ad1fd",
                 "shasum": ""
             },
             "require": {
@@ -19962,7 +19962,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2026-06-17T12:37:47+00:00"
+            "time": "2026-06-24T19:56:06+00:00"
         },
         {
             "name": "codeception/lib-asserts",
@@ -20602,16 +20602,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v3.95.10",
+            "version": "v3.95.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "93e1ab3e1f153024bd3ab23c8a349556063c6f17"
+                "reference": "35f98e1293283397824d7f349ce5afb8747c3cd5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/93e1ab3e1f153024bd3ab23c8a349556063c6f17",
-                "reference": "93e1ab3e1f153024bd3ab23c8a349556063c6f17",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/35f98e1293283397824d7f349ce5afb8747c3cd5",
+                "reference": "35f98e1293283397824d7f349ce5afb8747c3cd5",
                 "shasum": ""
             },
             "require": {
@@ -20645,7 +20645,7 @@
             "require-dev": {
                 "facile-it/paraunit": "^1.3.1 || ^2.11.0",
                 "infection/infection": "^0.32.7",
-                "justinrainbow/json-schema": "^6.9.0",
+                "justinrainbow/json-schema": "^6.10.0",
                 "keradus/cli-executor": "^2.3",
                 "mikey179/vfsstream": "^1.6.12",
                 "php-coveralls/php-coveralls": "^2.9.1",
@@ -20695,7 +20695,7 @@
             ],
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/issues",
-                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.95.10"
+                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.95.11"
             },
             "funding": [
                 {
@@ -20703,7 +20703,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-06-19T14:45:22+00:00"
+            "time": "2026-06-25T14:17:04+00:00"
         },
         {
             "name": "infection/abstract-testframework-adapter",
@@ -26597,16 +26597,16 @@
         },
         {
             "name": "testo/testo",
-            "version": "0.10.27",
+            "version": "0.10.28",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/testo.git",
-                "reference": "7704aff9f34f86fa7c470425ae4cdb10299c3c1c"
+                "reference": "9d01f22add1cbd95efa3974e89291af74b7db5f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/testo/zipball/7704aff9f34f86fa7c470425ae4cdb10299c3c1c",
-                "reference": "7704aff9f34f86fa7c470425ae4cdb10299c3c1c",
+                "url": "https://api.github.com/repos/php-testo/testo/zipball/9d01f22add1cbd95efa3974e89291af74b7db5f1",
+                "reference": "9d01f22add1cbd95efa3974e89291af74b7db5f1",
                 "shasum": ""
             },
             "require": {
@@ -26692,7 +26692,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-06-24T07:41:24+00:00"
+            "time": "2026-06-24T19:41:17+00:00"
         },
         {
             "name": "thecodingmachine/safe",
