@@ -170,7 +170,7 @@ class CustomValuesHelper
                 ->hint($custom_field->getRequired() == 1
                    ? $translator->translate('hint.this.field.is.required')
                    : $translator->translate('hint.this.field.is.not.required'))
-                ->value(Html::encode((string) $fieldValue ?: '')) . $upArrowCfEditableAt;
+                ->value($this->htmlEncodeOrEmpty($fieldValue)) . $upArrowCfEditableAt;
                 break;
 
             case 'NUMBER':
@@ -197,7 +197,7 @@ class CustomValuesHelper
                    ? $translator->translate('hint.this.field.is.required')
                    : $translator->translate('hint.this.field.is.not.required'))
                 ->disabled(false)
-                ->value(Html::encode((string) $fieldValue ?: '')) . $upArrowCfEditableAt;
+                ->value($this->htmlEncodeOrEmpty($fieldValue)) . $upArrowCfEditableAt;
                 break;
 
             default:
@@ -216,7 +216,7 @@ class CustomValuesHelper
                    ? $translator->translate('hint.this.field.is.required')
                    : $translator->translate('hint.this.field.is.not.required'))
                 ->disabled(false)
-                ->value(Html::encode((string) $fieldValue ?: '')) . $upArrowCfEditableAt;
+                ->value($this->htmlEncodeOrEmpty($fieldValue)) . $upArrowCfEditableAt;
         }
     }
 
@@ -393,7 +393,7 @@ class CustomValuesHelper
                 ->hint($custom_field->getRequired() == 1
                    ? $translator->translate('hint.this.field.is.required')
                    : $translator->translate('hint.this.field.is.not.required'))
-                ->value(Html::encode((string) $fieldValue ?: '')) . $upArrowCfEditableAt;
+                ->value($this->htmlEncodeOrEmpty($fieldValue)) . $upArrowCfEditableAt;
     }
 
     /**
@@ -437,29 +437,7 @@ class CustomValuesHelper
 
                 break;
             case 'MULTIPLE-CHOICE':
-                $selChoices = $this->isSerialized($fieldValue, true) ? (array) unserialize((string) $fieldValue) : [];
-
-                $fieldValues = '';
-                /**
-                 * @var string $value
-                 */
-                foreach ($selChoices as $value) {
-                    $printValue = $this->cvR->repoCustomValueDropDown((int)
-                            $value, $customFieldId);
-                    if (null !== $printValue) {
-                        $fieldValues .= ($printValue->getValue()) . ', ';
-                    }
-                }
-
-                echo Field::text($formModel, 'custom_field_id')
-                ->addInputAttributes([
-                    'name' => $customBracketCustomField,
-                    'id' => $customFieldId,
-                ])
-                ->disabled(true)
-                ->label($custom_field->getLabel())
-                ->value(Html::encode($fieldValues ?: ''));
-
+                $this->printMultipleChoiceViewField($formModel, $customBracketCustomField, $customFieldId, $fieldValue, $custom_field);
                 break;
             case 'RADIOLIST-CHOICE':
                 $groupName = $customBracketCustomField;
@@ -509,7 +487,7 @@ class CustomValuesHelper
                     'id' => $customFieldId,
                 ])
                 ->disabled(true)
-                ->value(Html::encode((string) $fieldValue ?: ''));
+                ->value($this->htmlEncodeOrEmpty($fieldValue));
 
                 break;
             case 'NUMBER':
@@ -531,7 +509,7 @@ class CustomValuesHelper
                 ])
                 ->disabled(true)
                 ->label($custom_field->getLabel())
-                ->value(Html::encode((string) $fieldValue ?: ''));
+                ->value($this->htmlEncodeOrEmpty($fieldValue));
 
                 break;
             case 'URL':
@@ -542,7 +520,7 @@ class CustomValuesHelper
                     'id' => $customFieldId,
                 ])
                 ->disabled(true)
-                ->value(Html::encode((string) $fieldValue ?: ''));
+                ->value($this->htmlEncodeOrEmpty($fieldValue));
 
                 break;
             default:
@@ -553,7 +531,7 @@ class CustomValuesHelper
                 ])
                 ->disabled(true)
                 ->label($custom_field->getLabel())
-                ->value(Html::encode((string) $fieldValue ?: ''));
+                ->value($this->htmlEncodeOrEmpty($fieldValue));
         }
     }
 
@@ -713,5 +691,33 @@ class CustomValuesHelper
             return $custom_value->getValue();
         }
         return '';
+    }
+
+    private function htmlEncodeOrEmpty(mixed $v): string
+    {
+        return Html::encode((string) $v ?: '');
+    }
+
+    private function printMultipleChoiceViewField(
+        FormModel $formModel,
+        string $customBracketCustomField,
+        int $customFieldId,
+        mixed $fieldValue,
+        CustomField $custom_field,
+    ): void {
+        $selChoices = $this->isSerialized($fieldValue, true) ? (array) unserialize((string) $fieldValue) : [];
+        $fieldValues = '';
+        /** @var string $value */
+        foreach ($selChoices as $value) {
+            $printValue = $this->cvR->repoCustomValueDropDown((int) $value, $customFieldId);
+            if (null !== $printValue) {
+                $fieldValues .= ($printValue->getValue()) . ', ';
+            }
+        }
+        echo Field::text($formModel, 'custom_field_id')
+        ->addInputAttributes(['name' => $customBracketCustomField, 'id' => $customFieldId])
+        ->disabled(true)
+        ->label($custom_field->getLabel())
+        ->value(Html::encode($fieldValues ?: ''));
     }
 }

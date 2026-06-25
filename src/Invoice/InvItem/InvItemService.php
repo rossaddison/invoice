@@ -36,42 +36,6 @@ final readonly class InvItemService
     ) {
     }
 
-    private function persist(
-        InvItem $model,
-        array $array
-    ): void {
-        $inv = 'inv_id';
-        if (isset($array[$inv])) {
-            $invEntity = $this->iR->repoInvUnLoadedquery(
-                (int) $array[$inv]);
-            if ($invEntity) {
-                $model->setInv($invEntity);
-            }
-        }
-        $tax_rate = 'tax_rate_id';
-        if (isset($array[$tax_rate])) {
-            $model->setTaxRate(
-                $this->trR->repoTaxRatequery(
-                    (int) $array[$tax_rate]));
-        }
-        $product = 'product_id';
-        if (isset($array[$product])) {
-            $productEntity = $this->pR->repoProductquery(
-                (int) $array[$product]);
-            if ($productEntity) {
-                $model->setProduct($productEntity);
-            }
-        }
-        $task = 'task_id';
-        if (isset($array[$task])) {
-            $taskEntity = $this->taskR->repoTaskquery(
-                (int) $array[$task]);
-            if ($taskEntity) {
-                $model->setTask($taskEntity);
-            }
-        }
-    }
-
     public function addInvItemProduct(
         InvItem $model,
         array $array,
@@ -84,7 +48,25 @@ final readonly class InvItemService
         $iiar = $deps->iiaR;
         $s = $deps->sR;
         $unR = $deps->uR;
-        $this->persist($model, array_merge($array, ['inv_id' => $inv_id]));
+        $invEntity = $this->iR->repoInvUnLoadedquery((int) $inv_id);
+        if ($invEntity) {
+            $model->setInv($invEntity);
+        }
+        if (isset($array['tax_rate_id'])) {
+            $model->setTaxRate($this->trR->repoTaxRatequery((int) $array['tax_rate_id']));
+        }
+        if (isset($array['product_id'])) {
+            $productEntity = $this->pR->repoProductquery((int) $array['product_id']);
+            if ($productEntity) {
+                $model->setProduct($productEntity);
+            }
+        }
+        if (isset($array['task_id'])) {
+            $taskEntity = $this->taskR->repoTaskquery((int) $array['task_id']);
+            if ($taskEntity) {
+                $model->setTask($taskEntity);
+            }
+        }
         $tax_rate_id = (int) ($array['tax_rate_id'] ?? 0);
         $model->setTaxRateId($tax_rate_id);
         $model->setInvId((int) $inv_id);
@@ -317,9 +299,21 @@ final readonly class InvItemService
     public function saveInvItemTask(InvItem $model, array $array,
                                     string $inv_id, taskR $taskR): int
     {
-        $tax_rate_id = $this->applyTaskTaxRate($model, $array);
+        if (isset($array['tax_rate_id'])) {
+            $currentTaxRate = $model->getTaxRate();
+            $model->setTaxRate(
+                $currentTaxRate?->reqId() == (int) $array['tax_rate_id'] ? $currentTaxRate : null
+            );
+        }
+        $tax_rate_id = (int) ($array['tax_rate_id'] ?? 0);
         $model->setTaxRateId($tax_rate_id);
-        $this->applyTaskRef($model, $array);
+        if (isset($array['task_id'])) {
+            $currentTask = $model->getTask();
+            $model->setTask(
+                $currentTask?->reqId() == (int) $array['task_id'] ? $currentTask : null
+            );
+        }
+        $model->setTaskId((int) ($array['task_id'] ?? 0));
         $model->setInvId((int) $inv_id);
         /** @var Task $task */
         $task = $taskR->repoTaskquery((int) ($array['task_id'] ?? 0));
@@ -331,7 +325,10 @@ final readonly class InvItemService
             : $task->getDescription();
         $model->setDescription($description ?: '');
         $model->setNote(isset($array['note']) ? (string) $array['note'] : '');
-        $this->applyTaskQuantityPriceDiscountOrder($model, $array);
+        $model->setQuantity((float) $array['quantity'] ?: 1.00);
+        $model->setPrice((float) $array['price'] ?: 0.00);
+        $model->setDiscountAmount((float) $array['discount_amount'] ?: 0.00);
+        $model->setOrder((int) $array['order'] ?: 0);
         $model->setProductUnit('');
         $model->setDate(new \DateTimeImmutable('now'));
         if ((int) ($array['task_id'] ?? 0) > 0) {
@@ -384,34 +381,48 @@ final readonly class InvItemService
         $model->setProductUnitId((int) $array['product_unit_id']);
     }
 
-    private function applyTaskTaxRate(InvItem $model, array $array): int
-    {
-        if (isset($array['tax_rate_id'])) {
-            $currentTaxRate = $model->getTaxRate();
-            $model->setTaxRate(
-                $currentTaxRate?->reqId() == (int) $array['tax_rate_id'] ? $currentTaxRate : null
-            );
+    private function applyProductItemBlock(
+        InvItem $model,
+        array $array,
+        int $product_id,
+        Product $product,
+        PR $pr,
+        Translator $translator,
+    ): void {
+        $model->setProductId($product_id);
+        $name = null;
+        if (isset($array['product_id']) && $pr->repoCount($product_id) > 0) {
+            $name = $product->getProductName();
         }
-        return (int) ($array['tax_rate_id'] ?? 0);
+        null !== $name ? $model->setName($name) : $model->setName('');
+        $description = isset($array['description'])
+            ? (string) $array['description']
+            : $product->getProductDescription();
+        $model->setDescription($description ?? $translator->translate('not.available'));
     }
 
-    private function applyTaskRef(InvItem $model, array $array): void
-    {
-        if (isset($array['task_id'])) {
-            $currentTask = $model->getTask();
-            $model->setTask(
-                $currentTask?->reqId() == (int) $array['task_id'] ? $currentTask : null
-            );
+    private function applyTaskItemBlock(
+        InvItem $model,
+        array $array,
+        int $task_id,
+        Task $task,
+        taskR $taskR,
+        Translator $translator,
+    ): void {
+        $model->setTaskId($task_id);
+        $name = null;
+        if (isset($array['task_id']) && $taskR->repoCount($task_id) > 0) {
+            $name = $task->getName();
         }
-        $model->setTaskId((int) ($array['task_id'] ?? 0));
-    }
-
-    private function applyTaskQuantityPriceDiscountOrder(InvItem $model, array $array): void
-    {
-        $model->setQuantity((float) $array['quantity'] ?: 1.00);
-        $model->setPrice((float) $array['price'] ?: 0.00);
-        $model->setDiscountAmount((float) $array['discount_amount'] ?: 0.00);
-        $model->setOrder((int) $array['order'] ?: 0);
+        null !== $name ? $model->setName($name) : $model->setName('');
+        $description = isset($array['description'])
+            ? (string) $array['description']
+            : $task->getDescription();
+        if (strlen($description) > 0) {
+            $model->setDescription($description);
+        } else {
+            $model->setDescription($translator->translate('not.available'));
+        }
     }
 
     /**
@@ -431,68 +442,25 @@ final readonly class InvItemService
             string $inv_id, PR $pr, taskR $taskR,
             UNR $uR, Translator $translator): InvItem
     {
-        $tax_rate_id = ((isset($array['tax_rate_id'])) ?
-            (int) $array['tax_rate_id'] : '');
-        $model->setTaxRateId((int) $tax_rate_id);
-        $product_id = (int) ($array['product_id'] ?? null);
-        $task_id = (int) ($array['task_id'] ?? null);
+        $tax_rate_id = isset($array['tax_rate_id']) ? (int) $array['tax_rate_id'] : 0;
+        $model->setTaxRateId($tax_rate_id);
+        $product_id = (int) ($array['product_id'] ?? 0);
+        $task_id = (int) ($array['task_id'] ?? 0);
         $model->setInvId((int) $inv_id);
-        $so_item_id = ((isset($array['so_item_id'])) ?
-            (int) $array['so_item_id'] : '');
-        $model->setSoItemId((int)$so_item_id);
-        isset($array['peppol_po_itemid']) ?
-            $model->setPeppolPoItemid((string) $array['peppol_po_itemid']) : '';
-        isset($array['peppol_po_lineid']) ?
-            $model->setPeppolPoLineid((string) $array['peppol_po_lineid']) : '';
-        $product = $pr->repoProductquery((int) $array['product_id']);
-        $name = '';
+        $model->setSoItemId(isset($array['so_item_id']) ? (int) $array['so_item_id'] : 0);
+        $this->applyPeppolIds($model, $array);
+        $product = $pr->repoProductquery($product_id);
         if ($product) {
-            $model->setProductId($product_id);
-            if (isset($array['product_id'])
-                    && $pr->repoCount($product_id) > 0) {
-                $name = $product->getProductName();
-            }
-            null !== $name ? $model->setName($name) : $model->setName('');
-            // If the user has changed the description on the form =>
-            //  override default product description
-            $description = ((isset($array['description']))
-                                   ? (string) $array['description']
-                                   : $product->getProductDescription());
-            null !== $description ?
-                $model->setDescription($description) :
-                $model->setDescription($translator->translate('not.available')) ;
+            $this->applyProductItemBlock($model, $array, $product_id, $product, $pr, $translator);
         }
-        $task = $taskR->repoTaskquery((int) $array['task_id']);
+        $task = $taskR->repoTaskquery($task_id);
         if ($task) {
-            $model->setTaskId($task_id);
-            if (isset($array['task_id'])
-                    && $taskR->repoCount($task_id) > 0) {
-                $name = $task->getName();
-            }
-            null !== $name ? $model->setName($name) : $model->setName('');
-            // If the user has changed the description on the form => override
-            // default product description
-            $description = (isset($array['description'])
-                                      ? (string) $array['description']
-                                      : $task->getDescription());
-
-            strlen($description) > 0 ? $model->setDescription($description) :
-                $model->setDescription($translator->translate('not.available'));
+            $this->applyTaskItemBlock($model, $array, $task_id, $task, $taskR, $translator);
         }
-        isset($array['quantity']) ?
-            $model->setQuantity((float) $array['quantity']) :
-                $model->setQuantity(0);
-        isset($array['price']) ?
-            $model->setPrice((float) $array['price']) :
-                $model->setPrice(0.00);
-        isset($array['discount_amount']) ?
-            $model->setDiscountAmount((float) $array['discount_amount']) :
-                $model->setDiscountAmount(0.00);
-        isset($array['order']) ?
-            $model->setOrder((int) $array['order']) :
-                $model->setOrder(0) ;
-        // Product_unit is a string which we get from unit's name field using
-        //  the unit_id
+        $model->setQuantity(isset($array['quantity']) ? (float) $array['quantity'] : 0.0);
+        $model->setPrice(isset($array['price']) ? (float) $array['price'] : 0.00);
+        $model->setDiscountAmount(isset($array['discount_amount']) ? (float) $array['discount_amount'] : 0.00);
+        $model->setOrder(isset($array['order']) ? (int) $array['order'] : 0);
         $unit = $uR->repoUnitquery((int) $array['product_unit_id']);
         if ($unit) {
             $model->setProductUnit($unit->getUnitName());

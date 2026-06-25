@@ -98,69 +98,24 @@ final class ProductClientController extends BaseController
 
         // Get current processing index
         $currentIndex = (int)($queryParams['index'] ?? 0);
-        $currentProductId = 0;
-        $product = null;
-        $redirect = null;
 
         if ($currentIndex >= count($productIds)) {
-            // All products processed
-            $this->flash->add(
-                'success',
-                $this->translator->translate(
-                    'product.client.associations.completed'),
-                true
-            );
-            $redirect = $this->webService->getRedirectResponse('productclient/index');
-        } else {
-            $currentProductId = $productIds[$currentIndex];
-            $product = $productRepository->repoProductQuery($currentProductId);
+            $this->flash->add('success', $this->translator->translate('product.client.associations.completed'), true);
+            return $this->webService->getRedirectResponse('productclient/index');
+        }
 
-            if (!$product) {
-                $this->flash->add(
-                    'danger',
-                    $this->translator->translate('product.not.found') .
-                        ': ' . $currentProductId,
-                    true
-                );
-                $redirect = $this->webService->getRedirectResponse('family/index');
-            } elseif ($request->getMethod() === Method::POST && is_array($body)) {
-                // Handle form submission
-                /** @var array<string, mixed> $body */
-                $associationType = (string) ($body['association_type'] ?? 'existing');
-                $suggestedClientGroup = $this->getClientGroupFromSession();
+        $currentProductId = $productIds[$currentIndex];
+        $product = $productRepository->repoProductQuery($currentProductId);
 
-                if ($associationType === 'existing') {
-                    // Associate with existing client
-                    $clientId = (int)($body['client_id'] ?? 0);
-                    if ($clientRepository->repoClientCount($clientId) > 0) {
-                        $client = $clientRepository->repoClientQuery($clientId);
-                        // Save client group for future suggestions
-                        if (strlen($clientGroup = ($client->getClientGroup() ?? '')) > 0) {
-                            $this->saveClientGroupToSession($clientGroup);
-                        }
-                        $this->createProductClientAssociation($currentProductId, $clientId);
-                        $redirect = $this->redirectToNextProduct($productIds, $currentIndex + 1);
-                    }
-                } else {
-                    // Create new client
-                    $newClient = $this->createNewClient($body, $suggestedClientGroup);
-                    if ($newClient) {
-                        // Save client group for future suggestions
-                        if (strlen($clientGroup = ($newClient->getClientGroup() ?? '')) > 0) {
-                            $this->saveClientGroupToSession($clientGroup);
-                        }
-                        $clientId = $newClient->reqId();
-                        $this->createProductClientAssociation($currentProductId, $clientId);
-                        $redirect = $this->redirectToNextProduct($productIds, $currentIndex + 1);
-                    } else {
-                        $this->flash->add(
-                            'danger',
-                            $this->translator->translate('failed.to.create.client'),
-                            true
-                        );
-                    }
-                }
-            }
+        if (!$product) {
+            $this->flash->add('danger', $this->translator->translate('product.not.found') . ': ' . $currentProductId, true);
+            return $this->webService->getRedirectResponse('family/index');
+        }
+
+        $redirect = null;
+        if ($request->getMethod() === Method::POST && is_array($body)) {
+            /** @var array<string, mixed> $body */
+            $redirect = $this->handlePostSubmission($body, $productIds, $currentIndex, $currentProductId, $clientRepository);
         }
 
         if ($redirect !== null) {
@@ -193,6 +148,61 @@ final class ProductClientController extends BaseController
         ];
 
         return $this->webViewRenderer->render('_form', $parameters);
+    }
+
+    /**
+     * @param array<string, mixed> $body
+     * @param array<int> $productIds
+     */
+    private function handlePostSubmission(
+        array $body,
+        array $productIds,
+        int $currentIndex,
+        int $currentProductId,
+        ClientRepository $clientRepository,
+    ): ?Response {
+        $associationType = (string)($body['association_type'] ?? 'existing');
+        $suggestedClientGroup = $this->getClientGroupFromSession();
+
+        if ($associationType === 'existing') {
+            return $this->handleExistingClientAssociation($body, $productIds, $currentIndex, $currentProductId, $clientRepository);
+        }
+
+        $newClient = $this->createNewClient($body, $suggestedClientGroup);
+        if ($newClient) {
+            $clientGroup = $newClient->getClientGroup() ?? '';
+            if (strlen($clientGroup) > 0) {
+                $this->saveClientGroupToSession($clientGroup);
+            }
+            $this->createProductClientAssociation($currentProductId, $newClient->reqId());
+            return $this->redirectToNextProduct($productIds, $currentIndex + 1);
+        }
+        $this->flash->add('danger', $this->translator->translate('failed.to.create.client'), true);
+        return null;
+    }
+
+    /**
+     * @param array<string, mixed> $body
+     * @param array<int> $productIds
+     */
+    private function handleExistingClientAssociation(
+        array $body,
+        array $productIds,
+        int $currentIndex,
+        int $currentProductId,
+        ClientRepository $clientRepository,
+    ): ?Response {
+        $clientId = (int)($body['client_id'] ?? 0);
+        if ($clientRepository->repoClientCount($clientId) > 0) {
+            $client = $clientRepository->repoClientQuery($clientId);
+            $clientGroup = $client->getClientGroup() ?? '';
+            if (strlen($clientGroup) > 0) {
+                $this->saveClientGroupToSession($clientGroup);
+            }
+            $this->createProductClientAssociation($currentProductId, $clientId);
+            return $this->redirectToNextProduct($productIds, $currentIndex + 1);
+        }
+        return null;
     }
 
     /**
