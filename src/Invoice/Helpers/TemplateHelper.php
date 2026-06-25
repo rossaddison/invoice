@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace App\Invoice\Helpers;
 
 use App\Infrastructure\Persistence\{
-    CustomField\CustomField, Inv\Inv
+    ClientCustom\ClientCustom,
+    CustomField\CustomField,
+    Inv\Inv,
+    InvCustom\InvCustom,
 };
 use App\Invoice\Setting\SettingRepository as SRepo;
 use App\Invoice\ClientCustom\ClientCustomRepository as ccR;
@@ -198,22 +201,10 @@ final readonly class TemplateHelper
                 }
                 break;
             case 'inv_custom':
-                $invoice = $iR->repoCount($pk) > 0 ? $iR->repoInvLoadedquery($pk) : null;
-                if ($invoice) {
-                    $replace_custom = $this->icR->repoFormValuequery($invoice->reqId(), (int) $cf_id[1]);
-                }
+                $replace_custom = $this->resolveInvCustom($pk, (int) $cf_id[1], $iR);
                 break;
             case 'client_custom':
-                $entity = null;
-                if ($isInvoice && $iR->repoCount($pk) > 0) {
-                    $entity = $iR->repoInvLoadedquery($pk);
-                } elseif (!$isInvoice && $qR->repoCount($pk) > 0) {
-                    $entity = $qR->repoQuoteLoadedquery($pk);
-                }
-                if ($entity) {
-                    /** @var \App\Infrastructure\Persistence\ClientCustom\ClientCustom $replace_custom */
-                    $replace_custom = $this->ccR->repoFormValuequery($entity->reqClientId(), (int) $cf_id[1]);
-                }
+                $replace_custom = $this->resolveClientCustom($pk, $isInvoice, (int) $cf_id[1], $iR, $qR);
                 break;
             default:
                 break;
@@ -226,6 +217,28 @@ final readonly class TemplateHelper
             return '';
         }
         return $custom_value->getValue();
+    }
+
+    private function resolveInvCustom(int $pk, int $cfId, IR $iR): ?InvCustom
+    {
+        $invoice = $iR->repoCount($pk) > 0 ? $iR->repoInvLoadedquery($pk) : null;
+        if ($invoice === null) {
+            return null;
+        }
+        return $this->icR->repoFormValuequery($invoice->reqId(), $cfId);
+    }
+
+    private function resolveClientCustom(int $pk, bool $isInvoice, int $cfId, IR $iR, QR $qR): ?ClientCustom
+    {
+        if ($isInvoice) {
+            $entity = $iR->repoCount($pk) > 0 ? $iR->repoInvLoadedquery($pk) : null;
+        } else {
+            $entity = $qR->repoCount($pk) > 0 ? $qR->repoQuoteLoadedquery($pk) : null;
+        }
+        if ($entity === null) {
+            return null;
+        }
+        return $this->ccR->repoFormValuequery($entity->reqClientId(), $cfId);
     }
 
     /**

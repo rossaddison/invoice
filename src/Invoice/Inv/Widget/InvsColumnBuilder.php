@@ -374,85 +374,96 @@ final class InvsColumnBuilder
      */
     private function buildOptionalLinkColumns(InvsColumnParams $p): array
     {
-        $ug   = $this->urlGenerator;
-        $t    = $this->translator;
         $cols = [];
+        if ($p->qR !== null) {
+            $cols[] = $this->buildQuoteLinkColumn($p->qR);
+        }
+        if ($p->soR !== null) {
+            $cols[] = $this->buildSoLinkColumn($p->soR);
+        }
+        if ($p->dlR !== null) {
+            $cols[] = $this->buildDeliveryLocationColumn($p->dlR);
+        }
+        return $cols;
+    }
 
-        $qR = $p->qR;
-        if ($qR !== null) {
-            $cols[] = new DataColumn(
-                'quote_id',
-                header: $t->translate('quote.number.status'),
-                content: static function (Inv $model) use ($qR, $ug): string|A {
-                    $quoteId = (int) $model->getQuoteId();
-                    $quote   = $qR->repoQuoteUnloadedquery($quoteId);
-                    if (null !== $quote) {
-                        $statusId = $quote->reqStatusId();
+    private function buildQuoteLinkColumn(QR $qR): DataColumn
+    {
+        $ug = $this->urlGenerator;
+        $t  = $this->translator;
+        return new DataColumn(
+            'quote_id',
+            header: $t->translate('quote.number.status'),
+            content: static function (Inv $model) use ($qR, $ug): string|A {
+                $quoteId = (int) $model->getQuoteId();
+                $quote   = $qR->repoQuoteUnloadedquery($quoteId);
+                if (null !== $quote) {
+                    $statusId = $quote->reqStatusId();
+                    return Html::a(
+                        ($quote->getNumber() ?? '#') . ' '
+                            . $qR->getSpecificStatusArrayLabel((string) $statusId),
+                        $ug->generate('quote/view', ['id' => $quoteId]),
+                        ['style' => 'text-decoration:none',
+                            'class' => 'label '
+                                . $qR->getSpecificStatusArrayClass((string) $statusId)],
+                    );
+                }
+                return '';
+            },
+            visible: $this->visible,
+            withSorting: false,
+        );
+    }
+
+    private function buildSoLinkColumn(SOR $soR): DataColumn
+    {
+        $ug = $this->urlGenerator;
+        $t  = $this->translator;
+        return new DataColumn(
+            'so_id',
+            header: $t->translate('salesorder.number.status'),
+            content: static function (Inv $model) use ($soR, $ug): string|A {
+                $soId = $model->getSoId();
+                $so   = $soR->repoSalesOrderUnloadedquery((int) $soId);
+                if (null !== $so) {
+                    $statusId = $so->getStatusId();
+                    if (null !== $statusId) {
                         return Html::a(
-                            ($quote->getNumber() ?? '#') . ' '
-                                . $qR->getSpecificStatusArrayLabel((string) $statusId),
-                            $ug->generate('quote/view', ['id' => $quoteId]),
+                            ($so->getNumber() ?? '#') . ' '
+                                . $soR->getSpecificStatusArrayLabel((string) $statusId),
+                            $ug->generate('salesorder/view', ['id' => $soId]),
                             ['style' => 'text-decoration:none',
                                 'class' => 'label '
-                                    . $qR->getSpecificStatusArrayClass((string) $statusId)],
+                                    . $soR->getSpecificStatusArrayClass($statusId)],
                         );
                     }
-                    return '';
-                },
-                visible: $this->visible,
-                withSorting: false,
-            );
-        }
+                }
+                return '';
+            },
+            visible: $this->visible,
+            withSorting: false,
+        );
+    }
 
-        $soR = $p->soR;
-        if ($soR !== null) {
-            $cols[] = new DataColumn(
-                'so_id',
-                header: $t->translate('salesorder.number.status'),
-                content: static function (Inv $model) use ($soR, $ug): string|A {
-                    $soId = $model->getSoId();
-                    $so   = $soR->repoSalesOrderUnloadedquery((int) $soId);
-                    if (null !== $so) {
-                        $statusId = $so->getStatusId();
-                        if (null !== $statusId) {
-                            return Html::a(
-                                ($so->getNumber() ?? '#') . ' '
-                                    . $soR->getSpecificStatusArrayLabel((string) $statusId),
-                                $ug->generate('salesorder/view', ['id' => $soId]),
-                                ['style' => 'text-decoration:none',
-                                    'class' => 'label '
-                                        . $soR->getSpecificStatusArrayClass($statusId)],
-                            );
-                        }
-                    }
-                    return '';
-                },
-                visible: $this->visible,
-                withSorting: false,
-            );
-        }
-
-        $dlR = $p->dlR;
-        if ($dlR !== null) {
-            $cols[] = new DataColumn(
-                'delivery_location_id',
-                header: $t->translate('delivery.location.global.location.number'),
-                content: static function (Inv $model) use ($dlR): string {
-                    $dlId = $model->getDeliveryLocationId();
-                    $dl   = ($dlId !== null && $dlR->repoCount($dlId) > 0)
-                        ? $dlR->repoDeliveryLocationquery($dlId)
-                        : null;
-                    return null !== $dl
-                        ? Html::encode($dl->getGlobalLocationNumber())
-                        : '';
-                },
-                encodeContent: false,
-                visible: $this->visible,
-                withSorting: false,
-            );
-        }
-
-        return $cols;
+    private function buildDeliveryLocationColumn(DLR $dlR): DataColumn
+    {
+        $t = $this->translator;
+        return new DataColumn(
+            'delivery_location_id',
+            header: $t->translate('delivery.location.global.location.number'),
+            content: static function (Inv $model) use ($dlR): string {
+                $dlId = $model->getDeliveryLocationId();
+                $dl   = ($dlId !== null && $dlR->repoCount($dlId) > 0)
+                    ? $dlR->repoDeliveryLocationquery($dlId)
+                    : null;
+                return null !== $dl
+                    ? Html::encode($dl->getGlobalLocationNumber())
+                    : '';
+            },
+            encodeContent: false,
+            visible: $this->visible,
+            withSorting: false,
+        );
     }
 
     // ── Individual column builders ────────────────────────────────────────────

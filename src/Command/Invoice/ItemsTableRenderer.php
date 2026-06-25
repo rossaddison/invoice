@@ -220,65 +220,9 @@ final class ItemsTableRenderer
             ],
         );
 
-        $itemAllowanceAmount = 0.0;
-        $itemAllowanceTax = 0.0;
-        $itemChargeAmount = 0.0;
-        $itemChargeTax = 0.0;
-
-        foreach ($this->invItemAllowanceCharges as $invItemAllowanceCharge) {
-            if ($invItemAllowanceCharge->reqInvItemId() != $itemId) {
-                continue;
-            }
-            $allowanceChargeId = $invItemAllowanceCharge->reqAllowanceChargeId();
-            $allowanceCharge = $this->allowanceCharges[$allowanceChargeId - 1] ?? null;
-            $isCharge = $allowanceCharge?->getIdentifier() ?? false;
-            $reason = $allowanceCharge?->getReason() ?? 'N/A';
-            $amount = (float) $invItemAllowanceCharge->getAmount();
-            $vatOrTax = (float) $invItemAllowanceCharge->getVatOrTax();
-            $taxRateId = $allowanceCharge?->getTaxRateId() ?? 1;
-            $taxRatePercent = 0;
-            foreach ($this->taxRates as $taxRate) {
-                if ($taxRate->reqId() === $taxRateId) {
-                    $taxRatePercent = $taxRate->getTaxRatePercent();
-                    break;
-                }
-            }
-            if ($isCharge) {
-                $itemChargeAmount += $amount;
-                $itemChargeTax += $vatOrTax;
-                $chargeTotal = $amount + $vatOrTax;
-                $table->addRow([
-                    '  -> ' . $reason,
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    "\033[32m" . $this->format($amount) . "\033[0m",
-                    $this->format((float) ($taxRatePercent ?? 0.00)),
-                    $this->format($vatOrTax),
-                    "\033[32m" . $this->format($chargeTotal) . "\033[0m",
-                ]);
-            } else {
-                $itemAllowanceAmount += $amount;
-                $itemAllowanceTax += $vatOrTax;
-                $allowanceTotal = $amount + $vatOrTax;
-                $table->addRow([
-                    '  -> ' . $reason,
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    "\033[31m" . $this->formatBracketed($amount) . "\033[0m",
-                    $this->format((float) ($taxRatePercent ?? 0.00)),
-                    "\033[31m" . $this->formatBracketed($vatOrTax) . "\033[0m",
-                    "\033[31m" . $this->formatBracketed($allowanceTotal) . "\033[0m",
-                ]);
-            }
-        }
+        ['allowanceAmount' => $itemAllowanceAmount, 'allowanceTax' => $itemAllowanceTax,
+         'chargeAmount'    => $itemChargeAmount,    'chargeTax'    => $itemChargeTax]
+            = $this->applyItemAllowanceCharges($table, $itemId);
 
         $grandTotal = $itemTotal;
         if ($itemAllowanceAmount > 0 || $itemChargeAmount > 0) {
@@ -308,6 +252,67 @@ final class ItemsTableRenderer
             'discountedSubTotal' => $netDiscount + $itemChargeAmount - $itemAllowanceAmount,
             'itemTaxTotal' => $itemTax + $itemChargeTax - $itemAllowanceTax,
             'grandTotal' => $grandTotal,
+        ];
+    }
+
+    /**
+     * @return array{allowanceAmount: float, allowanceTax: float, chargeAmount: float, chargeTax: float}
+     */
+    private function applyItemAllowanceCharges(Table $table, int $itemId): array
+    {
+        $itemAllowanceAmount = 0.0;
+        $itemAllowanceTax    = 0.0;
+        $itemChargeAmount    = 0.0;
+        $itemChargeTax       = 0.0;
+
+        foreach ($this->invItemAllowanceCharges as $invItemAllowanceCharge) {
+            if ($invItemAllowanceCharge->reqInvItemId() != $itemId) {
+                continue;
+            }
+            $allowanceChargeId = $invItemAllowanceCharge->reqAllowanceChargeId();
+            $allowanceCharge   = $this->allowanceCharges[$allowanceChargeId - 1] ?? null;
+            $isCharge          = $allowanceCharge?->getIdentifier() ?? false;
+            $reason            = $allowanceCharge?->getReason() ?? 'N/A';
+            $amount            = (float) $invItemAllowanceCharge->getAmount();
+            $vatOrTax          = (float) $invItemAllowanceCharge->getVatOrTax();
+            $taxRateId         = $allowanceCharge?->getTaxRateId() ?? 1;
+            $taxRatePercent    = 0;
+            foreach ($this->taxRates as $taxRate) {
+                if ($taxRate->reqId() === $taxRateId) {
+                    $taxRatePercent = $taxRate->getTaxRatePercent();
+                    break;
+                }
+            }
+            if ($isCharge) {
+                $itemChargeAmount += $amount;
+                $itemChargeTax    += $vatOrTax;
+                $chargeTotal       = $amount + $vatOrTax;
+                $table->addRow([
+                    '  -> ' . $reason, '', '', '', '', '', '',
+                    "\033[32m" . $this->format($amount) . "\033[0m",
+                    $this->format((float) ($taxRatePercent ?? 0.00)),
+                    $this->format($vatOrTax),
+                    "\033[32m" . $this->format($chargeTotal) . "\033[0m",
+                ]);
+            } else {
+                $itemAllowanceAmount += $amount;
+                $itemAllowanceTax    += $vatOrTax;
+                $allowanceTotal       = $amount + $vatOrTax;
+                $table->addRow([
+                    '  -> ' . $reason, '', '', '', '', '', '',
+                    "\033[31m" . $this->formatBracketed($amount) . "\033[0m",
+                    $this->format((float) ($taxRatePercent ?? 0.00)),
+                    "\033[31m" . $this->formatBracketed($vatOrTax) . "\033[0m",
+                    "\033[31m" . $this->formatBracketed($allowanceTotal) . "\033[0m",
+                ]);
+            }
+        }
+
+        return [
+            'allowanceAmount' => $itemAllowanceAmount,
+            'allowanceTax'    => $itemAllowanceTax,
+            'chargeAmount'    => $itemChargeAmount,
+            'chargeTax'       => $itemChargeTax,
         ];
     }
 

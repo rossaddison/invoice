@@ -77,53 +77,9 @@ final readonly class QuoteToolbar
                 );
         }
 
-        // Quote to SO button - show enabled if approved, disabled if not approved
-        if ($quoteEdit && $quote->getSoId() === 0 && null !== $quoteAmountTotal && $quoteAmountTotal > 0) {
-            if ($quote->reqStatusId() === 4) {
-                // Quote is approved - show enabled button
-                $buttons[] = $this->createModalButton(
-                    'quote-to-so',
-                    '#quote-to-so',
-                    'bi-arrow-repeat',
-                    'btn-outline-warning',
-                    $this->translator->translate('quote.to.so'),
-                );
-            } else {
-                // Quote not approved - show disabled button with indicator
-                $buttons[] = $this->createDisabledButton(
-                    'quote-to-so-disabled',
-                    'bi-arrow-repeat',
-                    'btn-outline-secondary',
-                    $this->translator->translate('quote.to.so') . ' (' . $this->translator->translate('approval.required') . ')',
-                    $this->translator->translate('quote.must.be.approved.first'),
-                );
-            }
-        }
-
-        // Quote to Invoice button - show enabled if approved, disabled if not approved (but don't show if already converted)
-        if ($quoteEdit && $quote->getInvId() === 0 && null !== $quoteAmountTotal && $quoteAmountTotal > 0) {
-            if ($quote->reqStatusId() === 4) {
-                // Quote is approved - show enabled button
-                $buttons[] = [
-                    'type' => 'modal',
-                    'id' => 'quote-to-invoice',
-                    'href' => '#quote-to-invoice',
-                    'icon' => 'bi-arrow-repeat',
-                    'class' => '',
-                    'title' => $this->translator->translate('quote.to.invoice'),
-                    'style' => 'background-color: #ffffff !important; border: 2px solid #b19cd9 !important; color: #b19cd9 !important; font-weight: 500;'
-                ];
-            } else {
-                // Quote not approved - show disabled button with indicator
-                $buttons[] = $this->createDisabledButton(
-                    'quote-to-invoice-disabled',
-                    'bi-arrow-repeat',
-                    'btn-outline-secondary',
-                    $this->translator->translate('quote.to.invoice') . ' (' . $this->translator->translate('approval.required') . ')',
-                    $this->translator->translate('quote.must.be.approved.first'),
-                );
-            }
-        }
+        // Quote to SO / Quote to Invoice buttons (extracted to reduce cognitive complexity)
+        $buttons = [...$buttons, ...$this->buildQuoteToSoButtons($quoteEdit, $quote, $quoteAmountTotal)];
+        $buttons = [...$buttons, ...$this->buildQuoteToInvButtons($quoteEdit, $quote, $quoteAmountTotal)];
 
         if ($quoteEdit) {
             $buttons[] = $this->createModalButton(
@@ -169,6 +125,44 @@ final readonly class QuoteToolbar
         }
 
         return $buttons;
+    }
+
+    private function buildQuoteToSoButtons(bool $quoteEdit, Quote $quote, ?float $quoteAmountTotal): array
+    {
+        if (!$quoteEdit || $quote->getSoId() !== 0 || null === $quoteAmountTotal || $quoteAmountTotal <= 0) {
+            return [];
+        }
+        if ($quote->reqStatusId() === 4) {
+            return [$this->createModalButton(
+                'quote-to-so', '#quote-to-so', 'bi-arrow-repeat', 'btn-outline-warning',
+                $this->translator->translate('quote.to.so'),
+            )];
+        }
+        return [$this->createDisabledButton(
+            'quote-to-so-disabled', 'bi-arrow-repeat', 'btn-outline-secondary',
+            $this->translator->translate('quote.to.so') . ' (' . $this->translator->translate('approval.required') . ')',
+            $this->translator->translate('quote.must.be.approved.first'),
+        )];
+    }
+
+    private function buildQuoteToInvButtons(bool $quoteEdit, Quote $quote, ?float $quoteAmountTotal): array
+    {
+        if (!$quoteEdit || $quote->getInvId() !== 0 || null === $quoteAmountTotal || $quoteAmountTotal <= 0) {
+            return [];
+        }
+        if ($quote->reqStatusId() === 4) {
+            return [[
+                'type' => 'modal', 'id' => 'quote-to-invoice', 'href' => '#quote-to-invoice',
+                'icon' => 'bi-arrow-repeat', 'class' => '',
+                'title' => $this->translator->translate('quote.to.invoice'),
+                'style' => 'background-color: #ffffff !important; border: 2px solid #b19cd9 !important; color: #b19cd9 !important; font-weight: 500;',
+            ]];
+        }
+        return [$this->createDisabledButton(
+            'quote-to-invoice-disabled', 'bi-arrow-repeat', 'btn-outline-secondary',
+            $this->translator->translate('quote.to.invoice') . ' (' . $this->translator->translate('approval.required') . ')',
+            $this->translator->translate('quote.must.be.approved.first'),
+        )];
     }
 
     private function createLinkButton(string $id, string $href, string $icon,

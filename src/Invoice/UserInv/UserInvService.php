@@ -31,77 +31,56 @@ final readonly class UserInvService
     public function saveUserInv(UserInv $model, array $array): void
     {
         $this->persist($model, $array);
-        isset($array['type'])
-            ? $model->setType((int) $array['type'])
-            : '';
-        $model->setActive(
-            $array['active'] === '1' ? true : false
-        );
-        isset($array['language'])
-            ? $model->setLanguage((string) $array['language'])
-            : '';
-        $model->setAllClients(
-            $array['all_clients'] === '1' ? true : false
-        );
-        isset($array['name'])
-            ? $model->setName((string) $array['name'])
-            : '';
-        isset($array['company'])
-            ? $model->setCompany((string) $array['company'])
-            : '';
-        isset($array['address_1'])
-            ? $model->setAddress1((string) $array['address_1'])
-            : '';
-        isset($array['address_2 '])
-            ? $model->setAddress2((string) $array['address_2'])
-            : '';
-        isset($array['city'])
-            ? $model->setCity((string) $array['city'])
-            : '';
-        isset($array['state'])
-            ? $model->setState((string) $array['state'])
-            : '';
-        isset($array['zip'])
-            ? $model->setZip((string) $array['zip'])
-            : '';
-        isset($array['country'])
-            ? $model->setCountry((string) $array['country'])
-            : '';
-        isset($array['phone'])
-            ? $model->setPhone((string) $array['phone'])
-            : '';
-        isset($array['fax'])
-            ? $model->setFax((string) $array['fax'])
-            : '';
-        isset($array['mobile'])
-            ? $model->setMobile((string) $array['mobile'])
-            : '';
-        isset($array['web'])
-            ? $model->setWeb((string) $array['web'])
-            : '';
-        isset($array['vat_id'])
-            ? $model->setVatId((string) $array['vat_id'])
-            : '';
-        isset($array['tax_code'])
-            ? $model->setTaxCode((string) $array['tax_code'])
-            : '';
-        isset($array['subscribernumber'])
-            ? $model->setSubscribernumber(
-                (string) $array['subscribernumber']
-            )
-            : '';
-        isset($array['iban'])
-            ? $model->setIban((string) $array['iban'])
-            : '';
-        isset($array['gln'])
-            ? $model->setGln((int) $array['gln'])
-            : '';
-        isset($array['rcc'])
-            ? $model->setRcc((string) $array['rcc'])
-            : '';
-        isset($array['listLimit'])
-            ? $model->setListLimit((int) $array['listLimit'])
-            : '';
+        $this->applyUserInvProfileFields($model, $array);
+        $this->applyUserInvAddressFields($model, $array);
+        $this->applyUserInvContactFields($model, $array);
+        $this->applyUserInvFinancialFields($model, $array);
+        $this->applyUserInvConsentFields($model, $array);
+        $this->repository->save($model);
+    }
+
+    private function applyUserInvProfileFields(UserInv $model, array $array): void
+    {
+        isset($array['type']) ? $model->setType((int) $array['type']) : '';
+        $model->setActive($array['active'] === '1' ? true : false);
+        isset($array['language']) ? $model->setLanguage((string) $array['language']) : '';
+        $model->setAllClients($array['all_clients'] === '1' ? true : false);
+        isset($array['name']) ? $model->setName((string) $array['name']) : '';
+        isset($array['company']) ? $model->setCompany((string) $array['company']) : '';
+        isset($array['listLimit']) ? $model->setListLimit((int) $array['listLimit']) : '';
+    }
+
+    private function applyUserInvAddressFields(UserInv $model, array $array): void
+    {
+        isset($array['address_1']) ? $model->setAddress1((string) $array['address_1']) : '';
+        isset($array['address_2 ']) ? $model->setAddress2((string) $array['address_2']) : '';
+        isset($array['city']) ? $model->setCity((string) $array['city']) : '';
+        isset($array['state']) ? $model->setState((string) $array['state']) : '';
+        isset($array['zip']) ? $model->setZip((string) $array['zip']) : '';
+        isset($array['country']) ? $model->setCountry((string) $array['country']) : '';
+    }
+
+    private function applyUserInvContactFields(UserInv $model, array $array): void
+    {
+        isset($array['phone']) ? $model->setPhone((string) $array['phone']) : '';
+        isset($array['fax']) ? $model->setFax((string) $array['fax']) : '';
+        isset($array['mobile']) ? $model->setMobile((string) $array['mobile']) : '';
+        isset($array['web']) ? $model->setWeb((string) $array['web']) : '';
+    }
+
+    private function applyUserInvFinancialFields(UserInv $model, array $array): void
+    {
+        isset($array['vat_id']) ? $model->setVatId((string) $array['vat_id']) : '';
+        isset($array['tax_code']) ? $model->setTaxCode((string) $array['tax_code']) : '';
+        isset($array['subscribernumber']) ?
+            $model->setSubscribernumber((string) $array['subscribernumber']) : '';
+        isset($array['iban']) ? $model->setIban((string) $array['iban']) : '';
+        isset($array['gln']) ? $model->setGln((int) $array['gln']) : '';
+        isset($array['rcc']) ? $model->setRcc((string) $array['rcc']) : '';
+    }
+
+    private function applyUserInvConsentFields(UserInv $model, array $array): void
+    {
         $model->setConsentPeriodicInvoice(
             isset($array['consent_periodic_invoice']) && $array['consent_periodic_invoice'] === '1'
         );
@@ -113,7 +92,6 @@ final readonly class UserInvService
                 ? (string) $array['telegram_chat_id']
                 : null
         );
-        $this->repository->save($model);
     }
 
     /**

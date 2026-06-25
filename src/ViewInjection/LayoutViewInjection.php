@@ -385,17 +385,11 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
 
     private function resolveUserStatus(int $userId): string
     {
-        if ($this->manager->getPermissionsByUserId($userId)
-              === $this->manager->getPermissionsByRoleName('observer')) {
-            return 'observer';
-        }
-        if ($this->manager->getPermissionsByUserId($userId)
-              === $this->manager->getPermissionsByRoleName('admin')) {
-            return 'admin';
-        }
-        if ($this->manager->getPermissionsByUserId($userId)
-              === $this->manager->getPermissionsByRoleName('accountant')) {
-            return 'accountant';
+        $userPermissions = $this->manager->getPermissionsByUserId($userId);
+        foreach (['observer', 'admin', 'accountant'] as $role) {
+            if ($userPermissions === $this->manager->getPermissionsByRoleName($role)) {
+                return $role;
+            }
         }
         return '';
     }

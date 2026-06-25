@@ -201,28 +201,8 @@ final readonly class StoreCoveInvoiceLineBuilder
                 throw new PeppolTaxCategoryPercentNotFoundException($this->t);
             }
 
-            $taxable_amount_total = 0.00;
-            $tax_amount_total = 0.00;
-            $items = $invoice->getItems();
-            /**
-             * @var InvItem $item
-             */
-            foreach ($items as $item) {
-                $item_id = $item->reqId();
-                if ($id === $item->getTaxRate()?->reqId()) {
-                    $item_amount = $iiaR->repoInvItemAmountquery($item_id);
-                    if (null !== $item_amount) {
-                        $item_sub_total = $item_amount->getSubtotal();
-                        if (null !== $item_sub_total) {
-                            $taxable_amount_total += $item_sub_total;
-                        }
-                        $item_tax_total = $item_amount->getTaxTotal();
-                        if (null !== $item_tax_total) {
-                            $tax_amount_total += $item_tax_total;
-                        }
-                    }
-                }
-            }
+            ['taxable' => $taxable_amount_total, 'tax' => $tax_amount_total]
+                = $this->accumulateTaxAmounts($id, $invoice, $iiaR);
 
             /**
              * @var array $array[$id]
@@ -253,6 +233,24 @@ final readonly class StoreCoveInvoiceLineBuilder
             $array[$id] = $sub_array;
         }
         return $array;
+    }
+
+    /**
+     * @return array{taxable: float, tax: float}
+     */
+    private function accumulateTaxAmounts(int $taxRateId, Inv $invoice, IIAR $iiaR): array
+    {
+        $taxable = 0.0;
+        $tax = 0.0;
+        /** @var InvItem $item */
+        foreach ($invoice->getItems() as $item) {
+            if ($taxRateId === $item->getTaxRate()?->reqId()) {
+                $itemAmount = $iiaR->repoInvItemAmountquery($item->reqId());
+                $taxable += $itemAmount?->getSubtotal() ?? 0.0;
+                $tax += $itemAmount?->getTaxTotal() ?? 0.0;
+            }
+        }
+        return ['taxable' => $taxable, 'tax' => $tax];
     }
 
     /**

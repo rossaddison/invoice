@@ -22,6 +22,20 @@ final readonly class ClientService
      */
     public function saveClient(Client $model, array $body): ?int
     {
+        $this->applyClientIdentityFields($model, $body);
+        $this->applyClientAddressFields($model, $body);
+        $this->applyClientContactFields($model, $body);
+        $this->applyClientSpecialFields($model, $body);
+        if ($model->hasIdentity()) {
+            $model->setClientActive(true);
+            $model->setPostaladdressId(0);
+        }
+        $this->repository->save($model);
+        return $model->hasIdentity() ? $model->reqId() : null;
+    }
+
+    private function applyClientIdentityFields(Client $model, array $body): void
+    {
         isset($body['client_title']) ? $model->setClientTitle((string) $body['client_title']) : '';
         isset($body['client_name']) ? $model->setClientName((string) $body['client_name']) : '';
         isset($body['client_surname']) ? $model->setClientSurname((string) $body['client_surname']) : '';
@@ -29,6 +43,10 @@ final readonly class ClientService
         isset($body['client_frequency']) ? $model->setClientFrequency((string) $body['client_frequency']) : '';
         isset($body['client_group']) ? $model->setClientGroup((string) $body['client_group']) : '';
         isset($body['client_number']) ? $model->setClientNumber((string) $body['client_number']) : '';
+    }
+
+    private function applyClientAddressFields(Client $model, array $body): void
+    {
         isset($body['client_address_1']) ? $model->setClientAddress1((string) $body['client_address_1']) : '';
         isset($body['client_address_2']) ? $model->setClientAddress2((string) $body['client_address_2']) : '';
         isset($body['client_building_number']) ? $model->setClientBuildingNumber((string) $body['client_building_number']) : '';
@@ -36,6 +54,10 @@ final readonly class ClientService
         isset($body['client_state']) ? $model->setClientState((string) $body['client_state']) : '';
         isset($body['client_zip']) ? $model->setClientZip((string) $body['client_zip']) : '';
         isset($body['client_country']) ? $model->setClientCountry((string) $body['client_country']) : '';
+    }
+
+    private function applyClientContactFields(Client $model, array $body): void
+    {
         isset($body['client_phone']) ? $model->setClientPhone((string) $body['client_phone']) : '';
         isset($body['client_fax']) ? $model->setClientFax((string) $body['client_fax']) : '';
         isset($body['client_mobile']) ? $model->setClientMobile((string) $body['client_mobile']) : '';
@@ -44,23 +66,20 @@ final readonly class ClientService
         isset($body['client_vat_id']) ? $model->setClientVatId((string) $body['client_vat_id']) : '';
         isset($body['client_tax_code']) ? $model->setClientTaxCode((string) $body['client_tax_code']) : '';
         isset($body['client_language']) ? $model->setClientLanguage((string) $body['client_language']) : '';
+    }
+
+    private function applyClientSpecialFields(Client $model, array $body): void
+    {
         $model->setClientActive($body['client_active'] === '1' ? true : false);
         $datetime = new \DateTimeImmutable();
         if (isset($body['client_birthdate'])) {
             $birthdate = \DateTimeImmutable::createFromFormat('Y-m-d', (string) $body['client_birthdate']) ?: $datetime;
             $model->setClientBirthdate($birthdate);
         }
-
         isset($body['client_age']) ? $model->setClientAge((int) $body['client_age']) : '';
         isset($body['client_gender']) ? $model->setClientGender((int) $body['client_gender']) : '';
         isset($body['postaladdress_id']) ? $model->setPostaladdressId((int) $body['postaladdress_id']) : '';
         $model->setClientTelegramChatId(isset($body['client_telegram_chat_id']) ? (string) $body['client_telegram_chat_id'] : null);
-        if ($model->hasIdentity()) {
-            $model->setClientActive(true);
-            $model->setPostaladdressId(0);
-        }
-        $this->repository->save($model);
-        return $model->hasIdentity() ? $model->reqId() : null;
     }
 
     /**

@@ -404,74 +404,87 @@ trait MultipleCopy
                 'note' => $inv_item->getNote(),
             ];
             $originalInvItemId = $inv_item->reqId();
-            {
-                $invItem = new InvItem();
-                $form = new InvItemForm();
-                if ($formHydrator->populateAndValidate($form, $copy_item)) {
-                    $productId = (int) $inv_item->getProductId();
-                    if ($productId > 0) {
-                        $newInvItemId =
-                            $this->inv_item_service->addInvItemProduct(
-                                $invItem, $copy_item, (string) $copy_id,
-                                new IiAddProductDeps($d->pR, $d->trR, $d->iiaS, $d->iiaR, $this->sR, $d->unR));
-                        if (null !== $newInvItemId) {
-                            $this->inv_item_service->addInvItemAllowanceCharges(
-                                (string) $copy_id, $originalInvItemId, $newInvItemId,
-                                    $d->aciiR);
-                            if (($invItem->getQuantity() >=  0.00)
-                                && ($invItem->getPrice() >= 0.00)
-                                && ($invItem->getDiscountAmount() >= 0.00)
-                                && ($inv_item->getTaxRate()?->getTaxRatePercent()
-                                    >= 0.00)) {
-                                $this->inv_item_service->saveInvItemAmount(
-                                    $newInvItemId,
-                                    $invItem->getQuantity() ?? 0.00,
-                                    $invItem->getPrice() ?? 0.00,
-                                    $invItem->getDiscountAmount() ?? 0.00,
-                                    $inv_item->getTaxRate()?->getTaxRatePercent()
-                                        ?? 0.00,
-                                    $d->iiaS,
-                                    $d->iiaR
-                                );
-                            }
-                        }
-                    }
-                    $taskId = (int) $inv_item->getTaskId();
-                    if ($taskId > 0) {
-                        $newInvItemId = $this->inv_item_service->addInvItemTask(
-                            $invItem, $copy_item, (string) $copy_id, $d->taskR, $d->trR, $d->iiaS,
-                                $d->iiaR);
-                        if (null !== $newInvItemId) {
-                            $this->inv_item_service->addInvItemAllowanceCharges(
-                            (string) $copy_id, $originalInvItemId, $newInvItemId, $d->aciiR);
-                            if (($invItem->getQuantity() >=  0.00)
-                                && ($invItem->getPrice() >= 0.00)
-                                && ($invItem->getDiscountAmount() >= 0.00)
-                                && ($inv_item->getTaxRate()?->getTaxRatePercent()
-                                    >= 0.00)) {
-                                $this->inv_item_service->saveInvItemAmount(
-                                    $newInvItemId,
-                                    $invItem->getQuantity() ?? 0.00,
-                                    $invItem->getPrice() ?? 0.00,
-                                    $invItem->getDiscountAmount() ?? 0.00,
-                                    $inv_item->getTaxRate()?->getTaxRatePercent()
-                                        ?? 0.00,
-                                    $d->iiaS,
-                                    $d->iiaR
-                                );
-                            }
-                        }
-                    }
-                } else {
-                    if (!empty(
-                        $form->getValidationResult()
-                             ->getErrorMessagesIndexedByProperty())) {
-                        $this->flashMessage('danger',
-                            'You have validation errors on '
-                                . (string) $inv_item->reqId());
-                    }
+            $invItem = new InvItem();
+            $form = new InvItemForm();
+            if (!$formHydrator->populateAndValidate($form, $copy_item)) {
+                if (!empty($form->getValidationResult()->getErrorMessagesIndexedByProperty())) {
+                    $this->flashMessage('danger',
+                        'You have validation errors on ' . (string) $inv_item->reqId());
                 }
+                continue;
             }
+            $this->copyProductItem($invItem, $inv_item, $copy_item, $copy_id, $originalInvItemId, $d);
+            $this->copyTaskItem($invItem, $inv_item, $copy_item, $copy_id, $originalInvItemId, $d);
+        }
+    }
+
+    private function copyProductItem(
+        InvItem $invItem,
+        InvItem $origItem,
+        array $copyItem,
+        int $copyId,
+        int $originalInvItemId,
+        InvCopyDeps $d,
+    ): void {
+        $productId = (int) $origItem->getProductId();
+        if ($productId <= 0) {
+            return;
+        }
+        $newInvItemId = $this->inv_item_service->addInvItemProduct(
+            $invItem, $copyItem, (string) $copyId,
+            new IiAddProductDeps($d->pR, $d->trR, $d->iiaS, $d->iiaR, $this->sR, $d->unR));
+        if (null === $newInvItemId) {
+            return;
+        }
+        $this->inv_item_service->addInvItemAllowanceCharges(
+            (string) $copyId, $originalInvItemId, $newInvItemId, $d->aciiR);
+        $this->saveInvItemAmountIfValid($newInvItemId, $invItem, $origItem, $d);
+    }
+
+    private function copyTaskItem(
+        InvItem $invItem,
+        InvItem $origItem,
+        array $copyItem,
+        int $copyId,
+        int $originalInvItemId,
+        InvCopyDeps $d,
+    ): void {
+        $taskId = (int) $origItem->getTaskId();
+        if ($taskId <= 0) {
+            return;
+        }
+        $newInvItemId = $this->inv_item_service->addInvItemTask(
+            $invItem, $copyItem, (string) $copyId,
+            $d->taskR, $d->trR, $d->iiaS, $d->iiaR);
+        if (null === $newInvItemId) {
+            return;
+        }
+        $this->inv_item_service->addInvItemAllowanceCharges(
+            (string) $copyId, $originalInvItemId, $newInvItemId, $d->aciiR);
+        $this->saveInvItemAmountIfValid($newInvItemId, $invItem, $origItem, $d);
+    }
+
+    private function saveInvItemAmountIfValid(
+        int $newInvItemId,
+        InvItem $invItem,
+        InvItem $origItem,
+        InvCopyDeps $d,
+    ): void {
+        $taxRatePercent = $origItem->getTaxRate()?->getTaxRatePercent();
+        if ($invItem->getQuantity() >= 0.00
+            && $invItem->getPrice() >= 0.00
+            && $invItem->getDiscountAmount() >= 0.00
+            && $taxRatePercent >= 0.00
+        ) {
+            $this->inv_item_service->saveInvItemAmount(
+                $newInvItemId,
+                $invItem->getQuantity() ?? 0.00,
+                $invItem->getPrice() ?? 0.00,
+                $invItem->getDiscountAmount() ?? 0.00,
+                $taxRatePercent ?? 0.00,
+                $d->iiaS,
+                $d->iiaR
+            );
         }
     }
 

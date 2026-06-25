@@ -214,48 +214,7 @@ final class PaymentInformationController
                 break;
 
             case 'tink':
-                $recipientName = ((null !== ($company =
-                    $this->compR->repoCompanyActivequery())) ?
-                        $company->getName() : 'Unknown');
-                if (null !== $company && null !== $company->getName()) {
-                    $clientId = $this->sR->getSetting(
-                                    'gateway_open_banking_with_tink_client_id');
-                    $clientSecret = $this->sR->getSetting(
-                                'gateway_open_banking_with_tink_client_secret');
-                    if (strlen($clientId) > 0 && strlen($clientSecret) > 0) {
-                        if (in_array((string) $inv['currency'], [
-                                          'SEK', 'EUR', 'NOK', 'DKK', 'GBP'])) {
-                            $invCurrency = strtoupper((string) $inv['currency']);
-                            $details =
-                            $this->openBankingPaymentService->initiateTinkPayment(
-                                $amount, $ctx->invoice, $company, $invCurrency,
-                                (string) $recipientName, (int) $clientId,
-                                    (int) $clientSecret);
-                            $singleKeyArray = (array) ($details['data'] ?? []);
-                            $data = (array) ($singleKeyArray['data'] ?? []);
-                            $paymentRequestId = (string) ($data['id'] ?? '');
-                            $viewData['authToken'] = false;
-                            $market = (string) ($data['market'] ?? '');
-                            $locale = 'en_GB';
-                            $redirectUri = urlencode(
-                                $this->urlGenerator->generate(
-                                    'paymentinformation/tinkCcomplete',
-                                    ['url_key' => $ctx->url_key,
-                                     'payment_request_id' => $paymentRequestId]));
-                            $viewData['authUrl'] =
-                                "https://link.tink.com/1.0/pay/direct"
-                                    . "/?client_id={$clientId}&redirect"
-                                    . "_uri={$redirectUri}&market={$market}"
-                                    . "&locale={$locale}"
-                                    . "&payment_request_id={$paymentRequestId}";
-                        } else {
-                            $viewData['alert'] = 'Currency not supported.';
-                        }
-                    } else {
-                        $viewData['alert']
-                            = 'Missing Credentials Client Id and Client Secret';
-                    }
-                }
+                $viewData = $this->applyTinkProviderData($viewData, $amount, $ctx, $inv);
                 break;
 
             default:
@@ -270,6 +229,53 @@ final class PaymentInformationController
         }
         return $this->webViewRenderer->render(
         '//invoice/paymentinformation/payment_information_openbanking', $viewData);
+    }
+
+    /**
+     * @param array<string, mixed> $viewData
+     * @param array<array-key, mixed> $inv
+     * @return array<string, mixed>
+     */
+    private function applyTinkProviderData(
+        array $viewData,
+        float $amount,
+        PaymentInformationGatewayContext $ctx,
+        array $inv,
+    ): array {
+        $company = $this->compR->repoCompanyActivequery();
+        $recipientName = $company?->getName() ?? 'Unknown';
+        if (null === $company || null === $company->getName()) {
+            return $viewData;
+        }
+        $clientId     = $this->sR->getSetting('gateway_open_banking_with_tink_client_id');
+        $clientSecret = $this->sR->getSetting('gateway_open_banking_with_tink_client_secret');
+        if (strlen($clientId) === 0 || strlen($clientSecret) === 0) {
+            $viewData['alert'] = 'Missing Credentials Client Id and Client Secret';
+            return $viewData;
+        }
+        $invCurrency = strtoupper((string) $inv['currency']);
+        if (!in_array($invCurrency, ['SEK', 'EUR', 'NOK', 'DKK', 'GBP'])) {
+            $viewData['alert'] = 'Currency not supported.';
+            return $viewData;
+        }
+        $details = $this->openBankingPaymentService->initiateTinkPayment(
+            $amount, $ctx->invoice, $company, $invCurrency,
+            $recipientName, (int) $clientId, (int) $clientSecret,
+        );
+        $singleKeyArray   = (array) ($details['data'] ?? []);
+        $data             = (array) ($singleKeyArray['data'] ?? []);
+        $paymentRequestId = (string) ($data['id'] ?? '');
+        $market           = (string) ($data['market'] ?? '');
+        $locale           = 'en_GB';
+        $redirectUri      = urlencode($this->urlGenerator->generate(
+            'paymentinformation/tinkCcomplete',
+            ['url_key' => $ctx->url_key, 'payment_request_id' => $paymentRequestId],
+        ));
+        $viewData['authToken'] = false;
+        $viewData['authUrl']   = "https://link.tink.com/1.0/pay/direct"
+            . "/?client_id={$clientId}&redirect_uri={$redirectUri}"
+            . "&market={$market}&locale={$locale}&payment_request_id={$paymentRequestId}";
+        return $viewData;
     }
 
 /**
@@ -441,99 +447,81 @@ final class PaymentInformationController
                                         cR $cR, iiR $iiR, pmR $pmR): Response
     {
         $client_chosen_gateway = $currentRoute->getArgument('gateway');
-        if (null !== $client_chosen_gateway) {
-            $url_key = $currentRoute->getArgument('url_key');
-            if (null !== $url_key) {
-                $sandbox_url_array = $this->sR->sandboxUrlArray();
-                $d                 = strtolower($client_chosen_gateway);
-                // initialize disable_form variable
-                $disable_form = false;
-                $invoice = $this->iR->repoUrlKeyGuestLoaded($url_key);
-                if (null == $invoice) {
-                    return $this->webService->getNotFoundResponse();
-                }
-                $invoice_id = $invoice->reqId();
-                // Json encode items
-                /** @psalm-suppress PossiblyNullArgument $invoice_id */
-                $items       = $iiR->repoInvquery($invoice_id);
-                $items_array = [];
-                /** @var InvItem $item */
-                foreach ($items as $item) {
-                    $items_array[] = (string) $item->reqId()
-                                                . ' ' . ($item->getName() ?? '');
-                }
-                $invoice_amount_record = $this->iaR->repoInvquery($invoice_id);
-                if (null !== $invoice_amount_record) {
-                    $balance = $invoice_amount_record->getBalance();
-                    $total   = $invoice_amount_record->getTotal();
-                    $yii_invoice_array = [
-                        'id'          => $invoice_id,
-                        'balance'     => $balance,
-                        'customer_id' => $invoice->reqClientId(),
-                        'customer'    =>
-                        ($invoice->getClient()?->getClientName() ?? '')
-                        . ' ' . ($invoice->getClient()?->getClientSurname() ?? ''),
-                        // Default currency is needed to generate a payment intent
-                        'currency'       =>
-                        !empty($this->sR->getSetting('currency_code')) ?
-                        strtolower($this->sR->getSetting('currency_code'))
-                            : 'gbp',
-                        'customer_email' => $invoice->getClient()?->getClientEmail(),
-                        // Keep a record of the invoice items in description
-                        'description' => Json::encode($items_array),
-                        'number'      => $invoice->getNumber(),
-                        'url_key'     => $invoice->getUrlKey(),
-                    ];
-                    // Check if the invoice is payable
-                    if (0.00 == $balance) {
-                        $this->flashMessage('warning',
-                                $this->translator->translate('already.paid'));
-                        $disable_form = true;
-                    }
-                    // Get additional invoice information.
-                    // NOTE: $payment_method_for_this_invoice may be null when
-                    // the invoice has no previously recorded payment method
-                    // (payment_method = 0 or null on an unpaid invoice).
-                    // This must NOT gate routing to the gateway payment form;
-                    // it is only used to display the prior payment method in
-                    // the form — fall back to '' when absent.
-                    $payment_method_for_this_invoice =
-                        $pmR->repoPaymentMethodquery((int) $invoice->getPaymentMethod());
-                    $is_overdue = ($balance > 0.00
-                            && strtotime(
-                                    $invoice->getDateDue()->format('Y-m-d'))
-                                                    < time() ? true : false);
-                    if ($balance > 0 && $total > 0) {
-                        $payment_method_name = (null !== $payment_method_for_this_invoice)
-                            ? ($payment_method_for_this_invoice->getName() ?? '')
-                            : '';
-                        $ctx = new PaymentInformationGatewayContext(
-                            client_chosen_gateway: $client_chosen_gateway,
-                            url_key: $url_key,
-                            balance: $balance,
-                            cR: $cR,
-                            invoice: $invoice,
-                            items_array: $items_array,
-                            disable_form: $disable_form,
-                            is_overdue: $is_overdue,
-                            payment_method_for_this_invoice: $payment_method_name,
-                            total: $total,
-                        );
-                        return $this->pciCompliantGatewayInForms(
-                            $ctx,
-                            $d,
-                            $request,
-                            $invoice_id,
-                            $yii_invoice_array,
-                            $sandbox_url_array,
-                        );
-                    } // $balance
-                } // null!==$invoice_amount_record
-                // !$invoice else line 319
-            } // null!==$url_key line 312
-        } // null!==$client_chosen_gateway line 310
-
-        return $this->webService->getNotFoundResponse();
+        if (null === $client_chosen_gateway) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $url_key = $currentRoute->getArgument('url_key');
+        if (null === $url_key) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $invoice = $this->iR->repoUrlKeyGuestLoaded($url_key);
+        if (null === $invoice) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $invoice_id = $invoice->reqId();
+        /** @psalm-suppress PossiblyNullArgument $invoice_id */
+        $items = $iiR->repoInvquery($invoice_id);
+        $items_array = [];
+        /** @var InvItem $item */
+        foreach ($items as $item) {
+            $items_array[] = (string) $item->reqId() . ' ' . ($item->getName() ?? '');
+        }
+        $invoice_amount_record = $this->iaR->repoInvquery($invoice_id);
+        if (null === $invoice_amount_record) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $balance = $invoice_amount_record->getBalance();
+        $total   = $invoice_amount_record->getTotal();
+        $disable_form = false;
+        if (0.00 == $balance) {
+            $this->flashMessage('warning', $this->translator->translate('already.paid'));
+            $disable_form = true;
+        }
+        if ($balance <= 0 || $total <= 0) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $client = $invoice->getClient();
+        $yii_invoice_array = [
+            'id'             => $invoice_id,
+            'balance'        => $balance,
+            'customer_id'    => $invoice->reqClientId(),
+            'customer'       => ($client?->getClientName() ?? '') . ' ' . ($client?->getClientSurname() ?? ''),
+            'currency'       => !empty($this->sR->getSetting('currency_code'))
+                                ? strtolower($this->sR->getSetting('currency_code'))
+                                : 'gbp',
+            'customer_email' => $client?->getClientEmail(),
+            'description'    => Json::encode($items_array),
+            'number'         => $invoice->getNumber(),
+            'url_key'        => $invoice->getUrlKey(),
+        ];
+        // NOTE: $payment_method_for_this_invoice may be null when the invoice has no
+        // previously recorded payment method (payment_method = 0 or null on an unpaid
+        // invoice). Fall back to '' — must NOT gate routing to the gateway form.
+        $payment_method_for_this_invoice = $pmR->repoPaymentMethodquery((int) $invoice->getPaymentMethod());
+        $is_overdue = $balance > 0.00 && strtotime($invoice->getDateDue()->format('Y-m-d')) < time();
+        $payment_method_name = null !== $payment_method_for_this_invoice
+            ? ($payment_method_for_this_invoice->getName() ?? '')
+            : '';
+        $ctx = new PaymentInformationGatewayContext(
+            client_chosen_gateway: $client_chosen_gateway,
+            url_key: $url_key,
+            balance: $balance,
+            cR: $cR,
+            invoice: $invoice,
+            items_array: $items_array,
+            disable_form: $disable_form,
+            is_overdue: $is_overdue,
+            payment_method_for_this_invoice: $payment_method_name,
+            total: $total,
+        );
+        return $this->pciCompliantGatewayInForms(
+            $ctx,
+            strtolower($client_chosen_gateway),
+            $request,
+            $invoice_id,
+            $yii_invoice_array,
+            $this->sR->sandboxUrlArray(),
+        );
     }
 
     /**
@@ -941,155 +929,111 @@ final class PaymentInformationController
     public function mollieComplete(CurrentRoute $currentRoute):
         \Psr\Http\Message\ResponseInterface
     {
-        // Redirect to the invoice using the url key
-        $url_key               = $currentRoute->getArgument('url_key');
+        $url_key = $currentRoute->getArgument('url_key');
+        if (null === $url_key) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $sandbox_url_array = $this->sR->sandboxUrlArray();
+        /** @var Inv $invoice */
+        $invoice       = $this->iR->repoUrlKeyGuestLoaded($url_key);
+        $invoiceNumber = null !== $invoice->getNumber() ?: 'unknown';
+        $mollie        = new MollieClient();
+        $lastPayment   = new MolliePayment($mollie);
+        if (!PaymentInformationQueryHelper::mollieSetTestOrLiveApiKey($this->sR, $mollie)) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $payments = $mollie->payments->page();
         $metadataInvoiceUrlKey = '';
-        if (null !== $url_key) {
-            $sandbox_url_array = $this->sR->sandboxUrlArray();
-            // Get the invoice data
-            /** @var Inv $invoice */
-            $invoice       = $this->iR->repoUrlKeyGuestLoaded($url_key);
-            $invoiceNumber = null !== $invoice->getNumber() ?: 'unknown';
-            $mollie        = new MollieClient();
-            // We will iterate through all the payments until the urlKey matches
-            // with our metadata invoice_url_key stored by Mollie
-            $lastPayment = new MolliePayment($mollie);
-            if (PaymentInformationQueryHelper::mollieSetTestOrLiveApiKey($this->sR, $mollie)) {
-                // Get all the payments made on the Mollie Website by our customer
-                $payments = $mollie->payments->page();
-                /**
-                 * @var MolliePayment $payment
-                 */
-                foreach ($payments as $payment) {
-/**
- * Related logic: see https://www.php.net/manual/en/class.stdclass.php
- * Related logic: see .\vendor\mollie\mollie-api-php\src\Resources\Payment.php.
- *
- * @var \stdClass $payment->metadata
- */
-                    $metaData = $payment->metadata;
-
-                    $metadataInvoiceUrlKey = (string) $metaData->invoice_url_key;
-                    if ($metadataInvoiceUrlKey === $url_key) {
-                        $lastPayment = $payment;
-                        break;
-                    }
-                }
-
-                $paymentId = $lastPayment->id;
-
-/*
- * Related logic: see vendor\mollie\mollie-api-php\examples\payments\webhook.php
- */
-                if ($lastPayment->isPaid() && !$lastPayment->hasRefunds() && !$lastPayment->hasChargebacks()) {
-                    $invoice->setStatusId(4);
-// 1 None,
-//  2 Cash,
-//   3 Cheque,
-//    4 Card / Direct-debit - Succeeded,
-//     5 Card / Direct-debit - Processing,
-//      6 Card / Direct-debit - Customer Ready
-                    $payment_method = 4;
-                    $invoice->setPaymentMethod(4);
-                    $heading = sprintf($this->translator->translate(
-                            'online.payment.payment.successful'),
-                                (string) $invoiceNumber);
-                    $this->iR->save($invoice);
-                    /** @var int $invoice->reqId() */
-                    $invoice_amount_record = $this->iaR->repoInvquery(
-                                                        $invoice->reqId());
-                    /** @var InvAmount $invoice_amount_record */
-                    $balance = $invoice_amount_record->getBalance();
-                    if (null !== $balance) {
-// The invoice amount has been paid => balance on the invoice is zero and the
-//  paid amount is full
-                        $invoice_amount_record->setBalance(0);
-                        $invoice_amount_record->setPaid(
-                                $invoice_amount_record->getTotal() ?? 0.00);
-                        $this->iaR->save($invoice_amount_record);
-                        $this->recordOnlinePaymentsAndMerchant(
-                            new PaymentRecordContext(
-                                reference: (string) $invoiceNumber . '-' . $lastPayment->status,
-                                invoice_id: (string) $invoice_amount_record->reqInvId(),
-                                balance: $balance > 0.00 ? $balance : 0.00,
-                                invoice_payment_method: $payment_method,
-                                invoice_number: (string) $invoiceNumber,
-                                driver: 'Mollie',
-                                d: 'mollie',
-                                invoice_url_key: $metadataInvoiceUrlKey,
-                                response: true,
-                                sandbox_url_array: $sandbox_url_array,
-                            ),
-                        );
-
-                        $view_data = [
-                            'render' => $this->webViewRenderer->renderPartialAsString(
-                                '//invoice/paymentinformation/payment_message',
-                                [
-                                    'heading'     => $heading,
-                                    'message'     =>
-                                        $this->translator->translate('payment')
-                                        . ':'
-                                        . $this->translator->translate('complete')
-                                        . 'Payment Id: ' . $paymentId,
-                                    'url'         => 'inv/urlKey',
-                                    'url_key'     => $metadataInvoiceUrlKey,
-                                    'gateway' => 'Mollie',
-                                    'sandbox_url' => $sandbox_url_array['mollie'],
-                                ],
-                            ),
-                        ];
-                        return $this->webViewRenderer->render(
-                                'payment_completion_page', $view_data);
-                    } // null!==$balance
-                } else {
-/*
- * all-0, draft-1, sent-2, viewed-3, paid-4, overdue-5, unpaid-6, reminder-7,
- * letter-8, claim-9, judgement-10, enforcement-11, write-off-12
- * Related logic: see src\Invoice\Inv\InvRepository
- */
-                    $invoice->setStatusId(6);
-
-// 1 None,
-//  2 Cash,
-//   3 Cheque,
-//    4 Card / Direct-debit - Succeeded,
-//     5 Card / Direct-debit - Processing,
-//      6 Card / Direct-debit - Customer Ready
-                    $invoice->setPaymentMethod(5);
-                    $heading = sprintf(
-                        $this->translator->translate(
-                                'online.payment.payment.failed'),
-                        (string) $invoiceNumber
-                        . ' '
-                        . $this->translator->translate(
-                                'payment.gateway.mollie.api.payment.id')
-                        . $paymentId,
-                    );
-                    $this->iR->save($invoice);
-                    $view_data = [
-                        'render' => $this->webViewRenderer->renderPartialAsString(
-                            '//invoice/paymentinformation/payment_message',
-                            [
-                                'heading'     => $heading,
-                                'message'     =>
-                                    $this->translator->translate('payment')
-                                    . ':'
-                                    . $this->translator->translate('complete'),
-                                'url'         => 'inv/urlKey',
-                                'url_key'     => $metadataInvoiceUrlKey,
-                                'gateway' => 'Mollie',
-                                'sandbox_url' => $sandbox_url_array['mollie'],
-                            ],
-                        ),
-                    ];
-
-                    return $this->webViewRenderer->render('payment_completion_page',
-                            $view_data);
-                }
+        /**
+         * @var MolliePayment $payment
+         */
+        foreach ($payments as $payment) {
+            /**
+             * Related logic: see https://www.php.net/manual/en/class.stdclass.php
+             * Related logic: see .\vendor\mollie\mollie-api-php\src\Resources\Payment.php.
+             * @var \stdClass $payment->metadata
+             */
+            $metaData = $payment->metadata;
+            $metadataInvoiceUrlKey = (string) $metaData->invoice_url_key;
+            if ($metadataInvoiceUrlKey === $url_key) {
+                $lastPayment = $payment;
+                break;
             }
-        } // null!==$metadataInvoiceUrlKey
-
+        }
+        $paymentId = $lastPayment->id;
+        // Related logic: see vendor\mollie\mollie-api-php\examples\payments\webhook.php
+        if ($lastPayment->isPaid() && !$lastPayment->hasRefunds() && !$lastPayment->hasChargebacks()) {
+            $invoice->setStatusId(4);
+            $payment_method = 4;
+            $invoice->setPaymentMethod(4);
+            $heading = sprintf($this->translator->translate('online.payment.payment.successful'), (string) $invoiceNumber);
+            $this->iR->save($invoice);
+            /** @var int $invoice->reqId() */
+            $invoice_amount_record = $this->iaR->repoInvquery($invoice->reqId());
+            /** @var InvAmount $invoice_amount_record */
+            $balance = $invoice_amount_record->getBalance();
+            if (null !== $balance) {
+                $invoice_amount_record->setBalance(0);
+                $invoice_amount_record->setPaid($invoice_amount_record->getTotal() ?? 0.00);
+                $this->iaR->save($invoice_amount_record);
+                $this->recordOnlinePaymentsAndMerchant(
+                    new PaymentRecordContext(
+                        reference: (string) $invoiceNumber . '-' . $lastPayment->status,
+                        invoice_id: (string) $invoice_amount_record->reqInvId(),
+                        balance: $balance > 0.00 ? $balance : 0.00,
+                        invoice_payment_method: $payment_method,
+                        invoice_number: (string) $invoiceNumber,
+                        driver: 'Mollie',
+                        d: 'mollie',
+                        invoice_url_key: $metadataInvoiceUrlKey,
+                        response: true,
+                        sandbox_url_array: $sandbox_url_array,
+                    ),
+                );
+                $view_data = [
+                    'render' => $this->webViewRenderer->renderPartialAsString(
+                        '//invoice/paymentinformation/payment_message',
+                        [
+                            'heading'     => $heading,
+                            'message'     => $this->translator->translate('payment')
+                                            . ':' . $this->translator->translate('complete')
+                                            . 'Payment Id: ' . $paymentId,
+                            'url'         => 'inv/urlKey',
+                            'url_key'     => $metadataInvoiceUrlKey,
+                            'gateway'     => 'Mollie',
+                            'sandbox_url' => $sandbox_url_array['mollie'],
+                        ],
+                    ),
+                ];
+                return $this->webViewRenderer->render('payment_completion_page', $view_data);
+            }
+        } else {
+            // all-0, draft-1, sent-2, viewed-3, paid-4, overdue-5, unpaid-6
+            $invoice->setStatusId(6);
+            $invoice->setPaymentMethod(5);
+            $heading = sprintf(
+                $this->translator->translate('online.payment.payment.failed'),
+                (string) $invoiceNumber . ' '
+                    . $this->translator->translate('payment.gateway.mollie.api.payment.id')
+                    . $paymentId,
+            );
+            $this->iR->save($invoice);
+            $view_data = [
+                'render' => $this->webViewRenderer->renderPartialAsString(
+                    '//invoice/paymentinformation/payment_message',
+                    [
+                        'heading'     => $heading,
+                        'message'     => $this->translator->translate('payment')
+                                        . ':' . $this->translator->translate('complete'),
+                        'url'         => 'inv/urlKey',
+                        'url_key'     => $metadataInvoiceUrlKey,
+                        'gateway'     => 'Mollie',
+                        'sandbox_url' => $sandbox_url_array['mollie'],
+                    ],
+                ),
+            ];
+            return $this->webViewRenderer->render('payment_completion_page', $view_data);
+        }
         return $this->webService->getNotFoundResponse();
     }
 

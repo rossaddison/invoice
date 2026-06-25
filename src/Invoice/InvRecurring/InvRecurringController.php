@@ -267,21 +267,8 @@ final class InvRecurringController extends BaseController
                 continue;
             }
 
-            if ($userInv->getConsentPeriodicInvoice()) {
-                /** @var array<int,\App\Infrastructure\Persistence\ProductClient\ProductClient> $productClients */
-                $productClients = $pcR->findByClientId($clientId);
-                if (count($productClients) > 0) {
-                    $savedInv = $this->iS->saveInv($user, new Inv(), [
-                        'client_id'     => $clientId,
-                        'group_id'      => 1,
-                        'status_id'     => 1,
-                        'date_created'  => (new \DateTimeImmutable())->format('Y-m-d'),
-                        'date_supplied' => (new \DateTimeImmutable())->format('Y-m-d'),
-                    ], $this->sR, $gR);
-                    $this->addProductItemsToInv($productClients, (string) $savedInv->reqId(), $itemDeps);
-                    ++$created;
-                }
-            }
+            $created += $this->createIfConsentedWithProducts(
+                $userInv, $clientId, $user, $gR, $itemDeps, $pcR);
 
             $this->advanceRecurringDate($invRecurring, $irR);
 
@@ -304,6 +291,33 @@ final class InvRecurringController extends BaseController
             return null;
         }
         return $cronDeps->uiR->repoUserInvUserIdquery($userClient->reqUserId());
+    }
+
+    private function createIfConsentedWithProducts(
+        UserInv $userInv,
+        int $clientId,
+        \App\Infrastructure\Persistence\User\User $user,
+        GR $gR,
+        InvItemDeps $itemDeps,
+        PCR $pcR,
+    ): int {
+        if (!$userInv->getConsentPeriodicInvoice()) {
+            return 0;
+        }
+        /** @var array<int,\App\Infrastructure\Persistence\ProductClient\ProductClient> $productClients */
+        $productClients = $pcR->findByClientId($clientId);
+        if (count($productClients) === 0) {
+            return 0;
+        }
+        $savedInv = $this->iS->saveInv($user, new Inv(), [
+            'client_id'     => $clientId,
+            'group_id'      => 1,
+            'status_id'     => 1,
+            'date_created'  => (new \DateTimeImmutable())->format('Y-m-d'),
+            'date_supplied' => (new \DateTimeImmutable())->format('Y-m-d'),
+        ], $this->sR, $gR);
+        $this->addProductItemsToInv($productClients, (string) $savedInv->reqId(), $itemDeps);
+        return 1;
     }
 
     //inv.js create_recurring_confirm_multiple function calls this function

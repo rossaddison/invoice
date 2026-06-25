@@ -19,6 +19,7 @@ use Yiisoft\Translator\TranslatorInterface ;
 // Mailer
 use Yiisoft\Mailer\File;
 use Yiisoft\Mailer\MailerInterface;
+use Yiisoft\Mailer\Message;
 
 class MailerHelper
 {
@@ -63,26 +64,9 @@ class MailerHelper
         ?string $pdf_template_target_path,
         ?UIR $uiR,
     ): bool {
-        $cc = $params->cc;
-        $bcc = $params->bcc;
-        if (null !== $cc && is_string($cc) && (strlen($cc) > 4) && !is_array($cc)) {
-            // Allow multiple CC's delimited by comma or semicolon
-            $cc = (strpos($cc, ',') > 0) ? explode(',', $cc) : explode(';', $cc);
-        }
-
-        if (null !== $bcc && is_string($bcc) && (strlen($bcc) > 4) && !is_array($bcc)) {
-            // Allow multiple BCC's delimited by comma or semicolon
-            $bcc = (strpos($bcc, ',') > 0) ? explode(',', $bcc) : explode(';', $bcc);
-        }
-
-        // Bcc mails to admin && the admin email account has been setup under userinv which is an extension table of user
-        if (null !== $uiR && ($this->s->getSetting('bcc_mails_to_admin') == 1)
-                    && ($uiR->repoUserInvUserIdcount(1) > 0)) {
-            $user_inv = $uiR->repoUserInvUserIdquery(1) ?: null;
-            $email = null !== $user_inv ? $user_inv->getUser()?->getEmail() : '';
-            // $bcc should be an array after the explode
-            is_array($bcc) && $email !== '' ? array_unshift($bcc, $email) : '';
-        }
+        $cc  = $this->normalizeEmailList($params->cc);
+        $bcc = $this->normalizeEmailList($params->bcc);
+        $bcc = $this->maybeAddAdminBcc($bcc, $uiR);
 
         $email = new \Yiisoft\Mailer\Message(
             charset: 'utf-8',
@@ -98,25 +82,7 @@ class MailerHelper
         /** @var array<array-key, string>|string $bcc */
         is_array($bcc) && !empty($bcc) ? $email->withBcc($bcc) : '';
 
-        /** @var array $attachFile */
-        foreach ($attachFiles as $attachFile) {
-            /**
-             * @var array $file
-             * @psalm-suppress MixedMethodCall
-             */
-            foreach ($attachFile as $file) {
-                if ($file[0]?->getError() === UPLOAD_ERR_OK && (null !== $file[0]?->getStream())) {
-                    /** @psalm-suppress MixedAssignment $email */
-                    $email = $email->withAttachments(
-                        File::fromContent(
-                            (string) $file[0]?->getStream(),
-                            (string) $file[0]?->getClientFilename(),
-                            (string) $file[0]?->getClientMediaType(),
-                        ),
-                    );
-                }
-            }
-        }
+        $email = $this->attachUploadedFiles($email, $attachFiles);
 
         if (null !== $pdf_template_target_path) {
             $path_info = pathinfo($pdf_template_target_path);
@@ -152,6 +118,54 @@ class MailerHelper
             $this->logger->error($e->getMessage());
         }
         return false;
+    }
+
+    private function normalizeEmailList(array|string|null $value): array|string|null
+    {
+        if (null !== $value && is_string($value) && strlen($value) > 4 && !is_array($value)) {
+            return strpos($value, ',') > 0 ? explode(',', $value) : explode(';', $value);
+        }
+        return $value;
+    }
+
+    private function maybeAddAdminBcc(array|string|null $bcc, ?UIR $uiR): array|string|null
+    {
+        if (null === $uiR
+            || $this->s->getSetting('bcc_mails_to_admin') != 1
+            || $uiR->repoUserInvUserIdcount(1) == 0
+        ) {
+            return $bcc;
+        }
+        $user_inv = $uiR->repoUserInvUserIdquery(1) ?: null;
+        $adminEmail = null !== $user_inv ? $user_inv->getUser()?->getEmail() : '';
+        if (is_array($bcc) && $adminEmail !== '') {
+            array_unshift($bcc, $adminEmail);
+        }
+        return $bcc;
+    }
+
+    private function attachUploadedFiles(Message $email, array $attachFiles): Message
+    {
+        /** @var array $attachFile */
+        foreach ($attachFiles as $attachFile) {
+            /**
+             * @var array $file
+             * @psalm-suppress MixedMethodCall
+             */
+            foreach ($attachFile as $file) {
+                if ($file[0]?->getError() === UPLOAD_ERR_OK && null !== $file[0]?->getStream()) {
+                    /** @psalm-suppress MixedAssignment */
+                    $email = $email->withAttachments(
+                        File::fromContent(
+                            (string) $file[0]?->getStream(),
+                            (string) $file[0]?->getClientFilename(),
+                            (string) $file[0]?->getClientMediaType(),
+                        ),
+                    );
+                }
+            }
+        }
+        return $email;
     }
 
     /**

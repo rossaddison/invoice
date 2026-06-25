@@ -109,31 +109,51 @@ final readonly class InvService
 
     private function setOptionalArrayFields(Inv $model, array $array): void
     {
+        $this->applyInvReferenceIds($model, $array);
+        $this->applyInvLocationIds($model, $array);
+        $this->applyInvFinancialFields($model, $array);
+        $this->applyInvTextFields($model, $array);
+    }
+
+    private function applyInvReferenceIds(Inv $model, array $array): void
+    {
         isset($array['client_id']) ? $model->setClientId((int) $array['client_id']) : '';
         isset($array['group_id']) ? $model->setGroupId((int) $array['group_id']) : '';
         isset($array['so_id']) ? $model->setSoId((int) $array['so_id']) : '';
         isset($array['quote_id']) ? $model->setQuoteId((int) $array['quote_id']) : '';
         isset($array['status_id']) ? $model->setStatusId((int) $array['status_id']) : '';
+        isset($array['contract_id']) ? $model->setContractId((int) $array['contract_id']) : '';
+    }
+
+    private function applyInvLocationIds(Inv $model, array $array): void
+    {
         isset($array['delivery_id']) ? $model->setDeliveryId((int) $array['delivery_id']) : '';
         isset($array['delivery_location_id']) ?
             $model->setDeliveryLocationId((int) $array['delivery_location_id']) : '';
         isset($array['postal_address_id']) ?
             $model->setPostalAddressId((int) $array['postal_address_id']) : '';
+    }
+
+    private function applyInvFinancialFields(Inv $model, array $array): void
+    {
         isset($array['discount_amount']) ?
             $model->setDiscountAmount((float) $array['discount_amount']) : '';
-        isset($array['password']) ? $model->setPassword((string) $array['password']) : '';
         isset($array['payment_method']) ?
             $model->setPaymentMethod((int) $array['payment_method']) : '';
+        if (isset($array['creditinvoice_parent_id'])) {
+            $model->setCreditinvoiceParentId((int) $array['creditinvoice_parent_id'] ?: 0);
+        }
+    }
+
+    private function applyInvTextFields(Inv $model, array $array): void
+    {
+        isset($array['password']) ? $model->setPassword((string) $array['password']) : '';
         isset($array['terms']) ?
             $model->setTerms((string) $array['terms']) :
             $this->translator->translate('payment.term.general');
         isset($array['note']) ? $model->setNote((string) $array['note']) : '';
         isset($array['document_description']) ?
             $model->setDocumentDescription((string) $array['document_description']) : '';
-        if (isset($array['creditinvoice_parent_id'])) {
-            $model->setCreditinvoiceParentId((int) $array['creditinvoice_parent_id'] ?: 0);
-        }
-        isset($array['contract_id']) ? $model->setContractId((int) $array['contract_id']) : '';
         isset($array['client_po_number']) ?
             $model->setClientPoNumber((string) $array['client_po_number']) : '';
         isset($array['client_po_person']) ?

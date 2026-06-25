@@ -8,6 +8,7 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
 // Entities
 use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation as DL;
 use App\Infrastructure\Persistence\Inv\Inv;
+use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
 use App\Infrastructure\Persistence\InvItem\InvItem;
 use App\Infrastructure\Persistence\PaymentPeppol\PaymentPeppol;
 use App\Infrastructure\Persistence\Upload\Upload;
@@ -220,84 +221,68 @@ final readonly class StoreCoveHelper
     public function buildReferencesArray(Inv $invoice,
             ContractRepo $contractRepo, cpR $cpR, SOIR $soiR, SOR $soR): array
     {
-        $invoice_id = $invoice->reqId();
         $sales_order_id = $invoice->getSoId();
         if ($sales_order_id > 0) {
             $sales_order = $soR->repoSalesOrderUnLoadedquery($sales_order_id);
             if ($sales_order) {
-                $sales_order_number = ($sales_order->getNumber() ??
-                    $this->t->translate(
-                        'storecove.salesorder.number.not.exist')) ;
-                $inv_items = $invoice->getItems();
-                $contract_id = $invoice->getContractId();
-                $contract_reference = '';
-                if (null!== $contract_id) {
-                    $contract = $contractRepo->repoContractquery($contract_id);
-                    $contract_reference = $contract?->getReference() ??
-                        $this->t->translate(
-                            'storecove.no.contract.exists');
-                }
-                $incrementor = 0;
-                $line_number = 1;
-                $references = [];
-                /**
-                 * @var InvItem $item
-                 */
-                foreach ($inv_items as $item) {
-                    $so_item_id = $item->getSoItemId();
-                    $so_item = $soiR->repoSalesOrderItemquery((int) $so_item_id);
-                    if (null !== $so_item) {
-                        $po_itemid = $so_item->getPeppolPoItemid() ??
-                            $this->t->translate(
-                                'storecove.purchase.order.item.id.null');
-                        $references[$incrementor] = [
-                            self::KEY_DOCUMENT_TYPE => 'purchase_order',
-                            self::KEY_DOCUMENT_ID => 'So_item_id/Po_item_id - '
-                                        . (string) $so_item_id . '/' . $po_itemid,
-                            'lineId' => 'Seller Inv Line - '
-                                        . (string) $line_number,
-                            'issueDate' => $invoice->getDateCreated(),
-                        ];
-                        $incrementor += 1;
-                        $line_number += 1;
-                    }
-                }
-                $references[$incrementor] = [
-                    self::KEY_DOCUMENT_TYPE => 'buyer_reference',
-                    self::KEY_DOCUMENT_ID => $this->buyerReference($invoice, $cpR),
-                ];
-                $incrementor += 1;
-                $references[$incrementor] = [
-                    self::KEY_DOCUMENT_TYPE => 'sales_order',
-                    self::KEY_DOCUMENT_ID => $sales_order_number,
-                ];
-                $incrementor += 1;
-                $references[$incrementor] = [
-                    self::KEY_DOCUMENT_TYPE => 'billing',
-                    self::KEY_DOCUMENT_ID => 'refers to a previous invoice',
-                ];
-                $incrementor += 1;
-                $references[$incrementor] = [
-                    self::KEY_DOCUMENT_TYPE => 'contract',
-                    self::KEY_DOCUMENT_ID => $contract_reference,
-                ];
-                if (null !== $invoice->getNumber()) {
-                    $ref = $invoice->getNumber();
-                } else {
-                    $ref = $this->t->translate(
-                            'number.missing.therefore.use.invoice.id')
-                            . $invoice_id;
-                }
-                $incrementor += 1;
-                $references[$incrementor] = [
-                    self::KEY_DOCUMENT_TYPE => 'originator',
-                    self::KEY_DOCUMENT_ID => null !== $ref ? $this->t->translate(
-                            'storecove.invoice') . $ref : '',
-                ];
-                return $references;
+                return $this->buildSalesOrderReferences($invoice, $sales_order, $contractRepo, $cpR, $soiR);
             }
         }
         return [];
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function buildSalesOrderReferences(
+        Inv $invoice,
+        SalesOrder $salesOrder,
+        ContractRepo $contractRepo,
+        cpR $cpR,
+        SOIR $soiR,
+    ): array {
+        $salesOrderNumber = $salesOrder->getNumber()
+            ?? $this->t->translate('storecove.salesorder.number.not.exist');
+        $contractId = $invoice->getContractId();
+        $contractReference = '';
+        if (null !== $contractId) {
+            $contract = $contractRepo->repoContractquery($contractId);
+            $contractReference = $contract?->getReference()
+                ?? $this->t->translate('storecove.no.contract.exists');
+        }
+        $incrementor = 0;
+        $lineNumber = 1;
+        $references = [];
+        /** @var InvItem $item */
+        foreach ($invoice->getItems() as $item) {
+            $soItemId = $item->getSoItemId();
+            $soItem = $soiR->repoSalesOrderItemquery((int) $soItemId);
+            if (null !== $soItem) {
+                $poItemId = $soItem->getPeppolPoItemid()
+                    ?? $this->t->translate('storecove.purchase.order.item.id.null');
+                $references[$incrementor] = [
+                    self::KEY_DOCUMENT_TYPE => 'purchase_order',
+                    self::KEY_DOCUMENT_ID   => 'So_item_id/Po_item_id - ' . (string) $soItemId . '/' . $poItemId,
+                    'lineId'                => 'Seller Inv Line - ' . (string) $lineNumber,
+                    'issueDate'             => $invoice->getDateCreated(),
+                ];
+                $incrementor += 1;
+                $lineNumber += 1;
+            }
+        }
+        $references[$incrementor++] = [self::KEY_DOCUMENT_TYPE => 'buyer_reference', self::KEY_DOCUMENT_ID => $this->buyerReference($invoice, $cpR)];
+        $references[$incrementor++] = [self::KEY_DOCUMENT_TYPE => 'sales_order',     self::KEY_DOCUMENT_ID => $salesOrderNumber];
+        $references[$incrementor++] = [self::KEY_DOCUMENT_TYPE => 'billing',         self::KEY_DOCUMENT_ID => 'refers to a previous invoice'];
+        $references[$incrementor++] = [self::KEY_DOCUMENT_TYPE => 'contract',        self::KEY_DOCUMENT_ID => $contractReference];
+        $number = $invoice->getNumber();
+        $invoiceRef = $number !== null
+            ? $number
+            : $this->t->translate('number.missing.therefore.use.invoice.id') . $invoice->reqId();
+        $references[$incrementor] = [
+            self::KEY_DOCUMENT_TYPE => 'originator',
+            self::KEY_DOCUMENT_ID   => $this->t->translate('storecove.invoice') . $invoiceRef,
+        ];
+        return $references;
     }
 
     /**

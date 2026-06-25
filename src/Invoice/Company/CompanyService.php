@@ -20,30 +20,48 @@ final readonly class CompanyService
     {
         $model->setCurrent($array['current'] === '1' ? 1 : 0);
         isset($array['name']) ? $model->setName((string) $array['name']) : '';
+        $this->applyAddressFields($model, $array);
+        $this->applyContactFields($model, $array);
+        $this->applySocialMediaFields($model, $array);
+        $this->applyArbitrationFields($model, $array);
+        $this->repository->save($model);
+    }
+
+    private function applyAddressFields(Company $model, array $array): void
+    {
         isset($array['address_1']) ? $model->setAddress1((string) $array['address_1']) : '';
         isset($array['address_2']) ? $model->setAddress2((string) $array['address_2']) : '';
         isset($array['city']) ? $model->setCity((string) $array['city']) : '';
         isset($array['state']) ? $model->setState((string) $array['state']) : '';
         isset($array['zip']) ? $model->setZip((string) $array['zip']) : '';
         isset($array['country']) ? $model->setCountry((string) $array['country']) : '';
+    }
+
+    private function applyContactFields(Company $model, array $array): void
+    {
         isset($array['phone']) ? $model->setPhone((string) $array['phone']) : '';
         isset($array['fax']) ? $model->setFax((string) $array['fax']) : '';
         isset($array['email']) ? $model->setEmail((string) $array['email']) : '';
         isset($array['web']) ? $model->setWeb((string) $array['web']) : '';
         isset($array['seo_description']) ?
             $model->setSeoDescription((string) $array['seo_description']) : '';
-        // Social media fields
+    }
+
+    private function applySocialMediaFields(Company $model, array $array): void
+    {
         isset($array['slack']) ? $model->setSlack((string) $array['slack']) : '';
         isset($array['facebook']) ? $model->setFacebook((string) $array['facebook']) : '';
         isset($array['twitter']) ? $model->setTwitter((string) $array['twitter']) : '';
         isset($array['linkedin']) ? $model->setLinkedIn((string) $array['linkedin']) : '';
         isset($array['whatsapp']) ? $model->setWhatsapp((string) $array['whatsapp']) : '';
+    }
 
-        // Arbitration fields (fixed method calls)
-        isset($array['arbitrationBody']) ? $model->setArbitrationBody((string) $array['arbitrationBody']) : '';
-        isset($array['arbitrationJurisdiction']) ? $model->setArbitrationJurisdiction((string) $array['arbitrationJurisdiction']) : '';
-
-        $this->repository->save($model);
+    private function applyArbitrationFields(Company $model, array $array): void
+    {
+        isset($array['arbitrationBody']) ?
+            $model->setArbitrationBody((string) $array['arbitrationBody']) : '';
+        isset($array['arbitrationJurisdiction']) ?
+            $model->setArbitrationJurisdiction((string) $array['arbitrationJurisdiction']) : '';
     }
 
     /**

@@ -77,81 +77,78 @@ final class GeneratorGoogleTranslateController extends BaseController
                 throw new GoogleTranslateJsonFileNotFoundException();
             }
             $data = file_get_contents(FileHelper::normalizePath($path_and_filename));
-            if ($data != false) {
-                /** @var array $json */
-                $json = Json::decode($data, true);
-                $projectId = (string) $json['project_id'];
-                putenv("GOOGLE_APPLICATION_CREDENTIALS=$path_and_filename");
-                try {
-                    $translationClient = new TranslationServiceClient([]);
-                    $lang = new Lang();
-                    $lang->load($type, 'English');
-                    /** @var array<array-key, string> $content */
-                    $content = $lang->uLanguage;
-                    $targetLanguage = $this->sR->getSetting('google_translate_locale');
-                    if (empty($targetLanguage)) {
-                        throw new GoogleTranslateLocaleSettingNotFoundException();
-                    }
-                    $batchSize = 100;
-                    $keys = array_keys($content);
-                    $values = array_values($content);
-                    $numItems = count($content);
-                    $result_array = [];
-                    for ($i = 0; $i < $numItems; $i += $batchSize) {
-                        $batchValues = array_slice($values, $i, $batchSize);
-                        $request = new TranslateTextRequest();
-                        $request->setParent('projects/' . $projectId);
-                        $request->setContents($batchValues);
-                        $request->setTargetLanguageCode($targetLanguage);
-                        $response = $translationClient->translateText($request);
-                        /**
-                         * @var \Google\Cloud\Translate\V3\TranslateTextResponse $response_get_translations
-                         * @psalm-suppress DeprecatedClass
-                         */
-                        $response_get_translations = $response->getTranslations();
-                        /**
-                         * @psalm-suppress RawObjectIteration $response_get_translations
-                         * @var \Google\Cloud\Translate\V3\Translation $translation
-                         */
-                        foreach ($response_get_translations as $translation) {
-                            $result_array[] = $translation->getTranslatedText();
-                        }
-                    }
-                    if (count($result_array) !== $numItems) {
-                        throw new GeneratorException('Total translation count mismatch.');
-                    }
-                    $combined_array = array_combine($keys, $result_array);
-                    $templateFile = $this->googleTranslateGetFileFromType($type);
-                    $path = $this->aliases->get('@generated');
-                    $content_params = [
-                        'combined_array' => $combined_array,
-                    ];
-                    $file_content = $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/generator/templates_protected/' . $templateFile,
-                        $content_params,
-                    );
-                    $prefixToFileAsLocaleWithFileTypeAndTimeStamp = $targetLanguage . '_' . $type . '_' . (string) time();
-                    $this->flashMessage(
-                        'success',
-                        sprintf(
-                            '%s: %d keys translated in batches of %d. Output: %s/%s',
-                            $templateFile,
-                            $numItems,
-                            $batchSize,
-                            $path,
-                            $prefixToFileAsLocaleWithFileTypeAndTimeStamp,
-                        ),
-                    );
-                    $build_file = new GenerateCodeFileHelper("$path/$prefixToFileAsLocaleWithFileTypeAndTimeStamp$templateFile", $file_content);
-                    $build_file->save();
-                    return $this->webService->getRedirectResponse('setting/tabIndex', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
-                } catch (\Exception $e) {
-                    $this->flashMessage('danger', $e->getMessage());
-                    return $this->webService->getRedirectResponse('setting/tabIndex', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
-                }
+            if ($data !== false) {
+                return $this->performGoogleTranslation($data, $type, $path_and_filename);
             }
         }
         $this->flashMessage('info', $this->translator->translate('generator.file.type.not.found'));
+        return $this->webService->getRedirectResponse('setting/tabIndex', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
+    }
+
+    /**
+     * @throws GoogleTranslateLocaleSettingNotFoundException
+     */
+    private function performGoogleTranslation(string $data, string $type, string $pathAndFilename): Response
+    {
+        /** @var array $json */
+        $json = Json::decode($data, true);
+        $projectId = (string) $json['project_id'];
+        putenv("GOOGLE_APPLICATION_CREDENTIALS=$pathAndFilename");
+        try {
+            $translationClient = new TranslationServiceClient([]);
+            $lang = new Lang();
+            $lang->load($type, 'English');
+            /** @var array<array-key, string> $content */
+            $content = $lang->uLanguage;
+            $targetLanguage = $this->sR->getSetting('google_translate_locale');
+            if (empty($targetLanguage)) {
+                throw new GoogleTranslateLocaleSettingNotFoundException();
+            }
+            $batchSize = 100;
+            $keys = array_keys($content);
+            $values = array_values($content);
+            $numItems = count($content);
+            $result_array = [];
+            for ($i = 0; $i < $numItems; $i += $batchSize) {
+                $batchValues = array_slice($values, $i, $batchSize);
+                $request = new TranslateTextRequest();
+                $request->setParent('projects/' . $projectId);
+                $request->setContents($batchValues);
+                $request->setTargetLanguageCode($targetLanguage);
+                $response = $translationClient->translateText($request);
+                /**
+                 * @var \Google\Cloud\Translate\V3\TranslateTextResponse $response_get_translations
+                 * @psalm-suppress DeprecatedClass
+                 */
+                $response_get_translations = $response->getTranslations();
+                /**
+                 * @psalm-suppress RawObjectIteration $response_get_translations
+                 * @var \Google\Cloud\Translate\V3\Translation $translation
+                 */
+                foreach ($response_get_translations as $translation) {
+                    $result_array[] = $translation->getTranslatedText();
+                }
+            }
+            if (count($result_array) !== $numItems) {
+                throw new GeneratorException('Total translation count mismatch.');
+            }
+            $combined_array = array_combine($keys, $result_array);
+            $templateFile = $this->googleTranslateGetFileFromType($type);
+            $path = $this->aliases->get('@generated');
+            $file_content = $this->webViewRenderer->renderPartialAsString(
+                '//invoice/generator/templates_protected/' . $templateFile,
+                ['combined_array' => $combined_array],
+            );
+            $prefix = $targetLanguage . '_' . $type . '_' . (string) time();
+            $this->flashMessage(
+                'success',
+                sprintf('%s: %d keys translated in batches of %d. Output: %s/%s', $templateFile, $numItems, $batchSize, $path, $prefix),
+            );
+            $build_file = new GenerateCodeFileHelper("$path/$prefix$templateFile", $file_content);
+            $build_file->save();
+        } catch (\Exception $e) {
+            $this->flashMessage('danger', $e->getMessage());
+        }
         return $this->webService->getRedirectResponse('setting/tabIndex', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
     }
 

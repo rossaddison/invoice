@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Inv\Trait;
 
 use App\Infrastructure\Persistence\{
-    Group\Group, Inv\Inv, InvAmount\InvAmount
+    Group\Group, Inv\Inv, InvAmount\InvAmount, User\User
 };
 
 use App\Invoice\{
@@ -56,83 +56,88 @@ trait Credit
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
             if (is_array($body) && $formHydrator->populateFromPostAndValidate($form, $request)) {
-                    // Only clients that were assigned to user accounts were
-                    // made available in dropdown therefore use the 'user client'
-                    // user id
-
-                    /**
-                     * @var string $body['client_id']
-                     */
-                    $client_id = (int) $body['client_id'];
-                    $user_client = $d->ucR->repoUserquery($client_id);
-                    if (null !== $user_client
-                            && null !== $user_client->getClient()) {
-                        $client_first_name =
-                                $user_client->getClient()?->getClientName();
-                        $client_surname =
-                                $user_client->getClient()?->getClientSurname();
-                        $client_fullname = ($client_first_name ?? '')
-                                         . ' '
-                                         . ($client_surname ?? '');
-                    } else {
-                        $this->flashMessage('warning',
-                        $this->translator->translate('user.client.no.account'));
-                    }
-                    // Ensure that the client has only one (paying) user account
-                    // otherwise reject this invoice
-                    // Related logic: see UserClientRepository function
-                    // get_not_assigned_to_user which ensures that only
-                    // clients that have   NOT   been assigned to a user account
-                    // are presented in the dropdown box for available clients
-                    // So this line is an extra measure to ensure that the
-                    // invoice is being made out to the correct payer
-                    // ie. not more than one user is associated with the client.
-                    $user = $this->activeUser($client_id, $d->uR, $d->ucR, $d->uiR);
-                    if (null !== $user) {
-                        $model_id = 0;
-                        $this->inv_service->withTransaction(
-                            function () use (
-                                $user, $inv, $body, $d, $formHydrator,
-                                $invAmount, &$model_id
-                            ): void {
-                                $saved_model = $this->inv_service->saveInv(
-                                    $user, $inv, $body, $this->sR, $d->gR);
-                                $model_id = $saved_model->reqId();
-                                if ($model_id > 0) {
-                                    $this->inv_amount_service->initializeInvAmount(
-                                        $invAmount, $model_id);
-                                    $this->defaultTaxes(
-                                        $saved_model, $d->trR, $formHydrator);
-                                }
-                            }
-                        );
-                        if ($model_id > 0) {
-                            $this->flashMessage('info', $this->sR->getSetting(
-                                    'generate_invoice_number_for_draft') === '1'
-                            ? $this->translator->translate(
-                                    'generate.invoice.number.for.draft')
-                                    . '=>' . $this->translator->translate('yes')
-                            : $this->translator->translate(
-                                    'generate.invoice.number.for.draft')
-                                    . '=>' . $this->translator->translate('no'));
-                        } //$model_id
-                        return $this->webService->getRedirectResponse('inv/index');
-                    } //null!==$user
-                    // In the event of the database being manually edited
-                    // (highly unlikely) present this warning anyway
-                    if (!empty($client_fullname)) {
-                        $message = $this->translator->translate(
-                            'user.inv.more.than.one.assigned')
-                                . ' ' . (string) $client_fullname;
-                        $this->flashMessage('warning', $message);
-                    }
-                    return $this->webService->getRedirectResponse('inv/index');
+                return $this->handleCreditPost($body, $inv, $invAmount, $formHydrator, $d);
             }
             $parameters['errors'] =
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
         return $this->webViewRenderer->render('_form_create_confirm', $parameters);
+    }
+
+    private function resolveClientFullname(int $clientId, InvCreditDeps $d): string
+    {
+        $userClient = $d->ucR->repoUserquery($clientId);
+        if (null === $userClient || null === $userClient->getClient()) {
+            $this->flashMessage('warning',
+                $this->translator->translate('user.client.no.account'));
+            return '';
+        }
+        return ($userClient->getClient()?->getClientName() ?? '')
+             . ' '
+             . ($userClient->getClient()?->getClientSurname() ?? '');
+    }
+
+    private function saveCreditInv(
+        User $user,
+        Inv $inv,
+        InvAmount $invAmount,
+        array $body,
+        FormHydrator $formHydrator,
+        InvCreditDeps $d,
+    ): int {
+        $modelId = 0;
+        $this->inv_service->withTransaction(
+            function () use ($user, $inv, $body, $d, $formHydrator, $invAmount, &$modelId): void {
+                $saved = $this->inv_service->saveInv($user, $inv, $body, $this->sR, $d->gR);
+                $modelId = $saved->reqId();
+                if ($modelId > 0) {
+                    $this->inv_amount_service->initializeInvAmount($invAmount, $modelId);
+                    $this->defaultTaxes($saved, $d->trR, $formHydrator);
+                }
+            }
+        );
+        return $modelId;
+    }
+
+    private function flashDraftNumberSetting(): void
+    {
+        $key = 'generate_invoice_number_for_draft';
+        $label = $this->translator->translate($key);
+        $value = $this->sR->getSetting($key) === '1'
+            ? $this->translator->translate('yes')
+            : $this->translator->translate('no');
+        $this->flashMessage('info', $label . '=>' . $value);
+    }
+
+    private function handleCreditPost(
+        array $body,
+        Inv $inv,
+        InvAmount $invAmount,
+        FormHydrator $formHydrator,
+        InvCreditDeps $d,
+    ): Response {
+        /**
+         * @var string $body['client_id']
+         */
+        $clientId = (int) $body['client_id'];
+        $clientFullname = $this->resolveClientFullname($clientId, $d);
+        $user = $this->activeUser($clientId, $d->uR, $d->ucR, $d->uiR);
+        if (null !== $user) {
+            $modelId = $this->saveCreditInv($user, $inv, $invAmount, $body, $formHydrator, $d);
+            if ($modelId > 0) {
+                $this->flashDraftNumberSetting();
+            }
+            return $this->webService->getRedirectResponse('inv/index');
+        }
+        // In the event of the database being manually edited
+        // (highly unlikely) present this warning anyway
+        if (!empty($clientFullname)) {
+            $this->flashMessage('warning',
+                $this->translator->translate('user.inv.more.than.one.assigned')
+                    . ' ' . $clientFullname);
+        }
+        return $this->webService->getRedirectResponse('inv/index');
     }
 
     /**

@@ -30,6 +30,15 @@ final readonly class ClientPeppolService
         isset($array['buyer_reference']) ?
             $model->setBuyerReference(
                 (string) $array['buyer_reference']) : '';
+        $this->applyEndpointFields($model, $array);
+        $this->applyIdentificationFields($model, $array);
+        $this->applyLegalEntityFields($model, $array);
+        $this->applyTaxSchemeFields($model, $array);
+        $this->repository->save($model);
+    }
+
+    private function applyEndpointFields(ClientPeppol $model, array $array): void
+    {
         isset($array['endpointid']) ?
             $model->setEndpointid(
                 (string) $array['endpointid']) : '';
@@ -40,12 +49,24 @@ final readonly class ClientPeppolService
             $model->setFinancialInstitutionBranchid(
                 (string) $array['financial_institution_branchid'])
             : '';
+    }
+
+    private function applyIdentificationFields(ClientPeppol $model, array $array): void
+    {
         isset($array['identificationid']) ?
             $model->setIdentificationid(
                 (string) $array['identificationid']) : '';
         isset($array['identificationid_schemeid']) ?
             $model->setIdentificationidSchemeid(
                 (string) $array['identificationid_schemeid']) : '';
+        isset($array['supplier_assigned_accountid']) ?
+            $model->setSupplierAssignedAccountId(
+                (string) $array['supplier_assigned_accountid'])
+            : '';
+    }
+
+    private function applyLegalEntityFields(ClientPeppol $model, array $array): void
+    {
         isset($array['legal_entity_companyid']) ?
             $model->setLegalEntityCompanyid(
                 (string) $array['legal_entity_companyid']) : '';
@@ -61,17 +82,16 @@ final readonly class ClientPeppolService
             $model->setLegalEntityRegistrationName(
                 (string) $array['legal_entity_registration_name'])
             : '';
-        isset($array['supplier_assigned_accountid']) ?
-            $model->setSupplierAssignedAccountId(
-                (string) $array['supplier_assigned_accountid'])
-            : '';
+    }
+
+    private function applyTaxSchemeFields(ClientPeppol $model, array $array): void
+    {
         isset($array['taxschemecompanyid']) ?
             $model->setTaxschemecompanyid(
                 (string) $array['taxschemecompanyid']) : '';
         isset($array['taxschemeid']) ?
             $model->setTaxschemeid(
                 (string) $array['taxschemeid']) : '';
-        $this->repository->save($model);
     }
 
     private function persist(
