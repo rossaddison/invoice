@@ -65,95 +65,38 @@ final class NonUserRelatedTruncate4Command extends Command
                 ->run();
         }
 
-        if (0 === count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(ProductCustom::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(ProductImage::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(ProductProperty::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(Product::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(Task::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(TaxRate::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(UnitPeppol::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(Unit::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(Family::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(Group::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(Profile::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(CompanyPrivate::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(Company::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(ClientNote::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(Contract::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(EmailTemplate::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(FromDropDown::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(DeliveryParty::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(Delivery::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(DeliveryLocation::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(Project::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(Upload::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(PostalAddress::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(ClientCustom::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(ClientPeppol::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(Client::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(CustomValue::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(CustomField::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-        ) {
+        if ($this->countRemainingRecords() === 0) {
             $io->success('Done');
             return ExitCode::OK;
         }
         $io->error('Unspecified error');
         return ExitCode::UNSPECIFIED_ERROR;
+    }
+
+    /** @param class-string $class */
+    private function repoCount(string $class): int
+    {
+        $findAll = $this->promise->getORM()->getRepository($class)->findAll();
+        return count(is_array($findAll) ? $findAll : iterator_to_array($findAll));
+    }
+
+    private function countRemainingRecords(): int
+    {
+        $classes = [
+            ProductCustom::class, ProductImage::class, ProductProperty::class,
+            Product::class, Task::class, TaxRate::class, UnitPeppol::class,
+            Unit::class, Family::class, Group::class,
+            Profile::class, CompanyPrivate::class, Company::class,
+            ClientNote::class, Contract::class, EmailTemplate::class,
+            FromDropDown::class, DeliveryParty::class, Delivery::class,
+            DeliveryLocation::class, Project::class, Upload::class,
+            PostalAddress::class, ClientCustom::class, ClientPeppol::class,
+            Client::class, CustomValue::class, CustomField::class,
+        ];
+        $total = 0;
+        foreach ($classes as $class) {
+            $total += $this->repoCount($class);
+        }
+        return $total;
     }
 }

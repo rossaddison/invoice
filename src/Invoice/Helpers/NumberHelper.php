@@ -417,51 +417,15 @@ final readonly class NumberHelper
         //---------------------------------------------------------------------
         $count = $iiR->repoCount($inv_id);
         $count_inv_amount = $iaR->repoInvAmountCount($inv_id);
-        //At least one item and a preexisting invoice amount record exists =>
-        //Update the Invoice Amount Record
-        if (($count > 0) && ($count_inv_amount > 0)) {
-            $inv_amount = $iaR->repoInvquery($inv_id);
-            if ($inv_amount) {
-                $inv_amount->setInvId($inv_id);
-                $inv_amount->setItemSubtotal(
-                                           $inv_item_subtotal_discount ?: 0.00);
-                $inv_amount->setItemTaxTotal(
-                                (float) $inv_item_amounts['tax_total'] ?: 0.00);
-                /** Overall i.e. not line item total */
-                $inv_amount->setPackhandleshipTotal(
-                                            $inv_allowance_charge_amount_total);
-                /** Overall i.e. not line item tax e.g. vat or gst */
-                $inv_amount->setPackhandleshipTax(
-                                               $inv_allowance_charge_tax_total);
-                $inv_amount->setTaxTotal($inv_tax_rate_total ?: 0.00);
-                $inv_amount->setTotal($inv_total ?: 0.00);
-                $this->calculateAndSetBalance($inv_amount, $inv_id, $inv_total, $deps);
-            }
-        }
-        // There are no longer any items on the invoice so initialize the
-        // Invoice Amount Record to zero
-        if (($count === 0) && ($count_inv_amount > 0)) {
-            $inv_amount = $iaR->repoInvquery($inv_id);
-            if ($inv_amount) {
-                $inv_amount->setInvId($inv_id);
-                $inv_amount->setItemSubtotal(0.00);
-                $inv_amount->setItemTaxTotal(0.00);
-                $inv_amount->setTaxTotal(0.00);
-                $inv_amount->setTotal(0.00);
-                $iaR->save($inv_amount);
-            }
-        }
-        if (($count === 0) && ($count_inv_amount === 0)) {
-            // Create an Invoice  Amount Record for this invoice if it does not
-            // exist even if there are no items
-            $inv_amount = new InvAmount();
-            $inv_amount->setInvId($inv_id);
-            $inv_amount->setItemSubtotal(0.00);
-            $inv_amount->setItemTaxTotal(0.00);
-            $inv_amount->setTaxTotal(0.00);
-            $inv_amount->setTotal(0.00);
-            $iaR->save($inv_amount);
-        }
+        $totals = [
+            'item_subtotal'        => $inv_item_subtotal_discount,
+            'item_tax_total'       => (float) $inv_item_amounts['tax_total'],
+            'packhandleship_total' => $inv_allowance_charge_amount_total,
+            'packhandleship_tax'   => $inv_allowance_charge_tax_total,
+            'tax_total'            => $inv_tax_rate_total,
+            'total'                => $inv_total,
+        ];
+        $this->saveInvAmountTotals($inv_id, $count, $count_inv_amount, $totals, $deps);
     }
 
     private function calculateAndSetBalance(
@@ -487,6 +451,64 @@ final readonly class NumberHelper
             $this->invBalanceZeroSetToReadOnlyIfFullyPaid($deps->iR, $this->s,
                 $invoice, $balance);
         }
+    }
+
+    /**
+     * @param array<string, float> $totals
+     */
+    private function saveInvAmountTotals(
+        int $inv_id,
+        int $count,
+        int $countInvAmount,
+        array $totals,
+        CalcInvDeps $deps,
+    ): void {
+        $iaR = $deps->iaR;
+        if ($count > 0 && $countInvAmount > 0) {
+            $inv_amount = $iaR->repoInvquery($inv_id);
+            if ($inv_amount) {
+                $this->setInvAmountFields($inv_amount, $inv_id, $totals, $deps);
+            }
+        }
+        if ($count === 0 && $countInvAmount > 0) {
+            $inv_amount = $iaR->repoInvquery($inv_id);
+            if ($inv_amount) {
+                $inv_amount->setInvId($inv_id);
+                $inv_amount->setItemSubtotal(0.00);
+                $inv_amount->setItemTaxTotal(0.00);
+                $inv_amount->setTaxTotal(0.00);
+                $inv_amount->setTotal(0.00);
+                $iaR->save($inv_amount);
+            }
+        }
+        if ($count === 0 && $countInvAmount === 0) {
+            $inv_amount = new InvAmount();
+            $inv_amount->setInvId($inv_id);
+            $inv_amount->setItemSubtotal(0.00);
+            $inv_amount->setItemTaxTotal(0.00);
+            $inv_amount->setTaxTotal(0.00);
+            $inv_amount->setTotal(0.00);
+            $iaR->save($inv_amount);
+        }
+    }
+
+    /**
+     * @param array<string, float> $totals
+     */
+    private function setInvAmountFields(
+        InvAmount $inv_amount,
+        int $inv_id,
+        array $totals,
+        CalcInvDeps $deps,
+    ): void {
+        $inv_amount->setInvId($inv_id);
+        $inv_amount->setItemSubtotal($totals['item_subtotal'] ?: 0.00);
+        $inv_amount->setItemTaxTotal($totals['item_tax_total'] ?: 0.00);
+        $inv_amount->setPackhandleshipTotal($totals['packhandleship_total']);
+        $inv_amount->setPackhandleshipTax($totals['packhandleship_tax']);
+        $inv_amount->setTaxTotal($totals['tax_total'] ?: 0.00);
+        $inv_amount->setTotal($totals['total'] ?: 0.00);
+        $this->calculateAndSetBalance($inv_amount, $inv_id, $totals['total'], $deps);
     }
 
     /**

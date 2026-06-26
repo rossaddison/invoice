@@ -104,110 +104,25 @@ final class SignupController
         SignupForm $signupForm,
         SignupDeps $deps,
     ): ResponseInterface {
-        $tR = $deps->tR;
-        $uiR = $deps->uiR;
         $uR = $deps->uR;
         if (!$authService->isGuest()) {
             return $this->webService->getRedirectResponse('site/index');
         }
 
-        $openBankingAuthUrl = '';
         $openBankChoice = $this->sR->getSetting('open_banking_provider');
-        // If a provider has been selected, configure the client accordingly
-        if (strlen($openBankChoice) > 0) {
-            $providerConfig = $this->getOpenBankingProviderConfig($openBankChoice);
-            if ($providerConfig !== null) {
-                /** @var OpenBanking $openBanking */
-                $openBanking = (AuthChoice::widget())->getClient('openbanking');
-                $openBanking->setAuthUrl((string) $providerConfig['authUrl']);
-                $openBanking->setTokenUrl((string) $providerConfig['tokenUrl']);
-                $openBanking->setScope(isset($providerConfig['scope']) ?
-                    (string) $providerConfig['scope'] : null);
-                $codeVerifier = Random::string(128);
-                $hash = hash('sha256', $codeVerifier, true);
-                $rTrim = rtrim(base64_encode($hash), '=');
-                $codeChallenge = strtr($rTrim, '+/', '-_');
-                $this->session->set('code_verifier', $codeVerifier);
-                $openBankingAuthUrl = $openBanking->getAuthUrl()
-                        . '?'
-                        . http_build_query([
-                    'response_type' => 'code',
-                    'scope' => $openBanking->getScope(),
-                    'code_challenge' => $codeChallenge,
-                    'code_challenge_method' => 'S256',
-                ]);
-            }
-        }
+        $openBankingAuthUrl = $this->buildOpenBankingAuthUrl($openBankChoice);
 
         $redirect = null;
         if ($formHydrator->populateFromPostAndValidate($signupForm, $request)) {
             $user = $signupForm->signup();
             $userId = $user->reqId();
             if ($userId > 0) {
-                // Avoid autoincrement issues and using predefined user id of
-                // 1 ... and assign the first signed-up user ... admin rights.
-                // assignRoleAndVerify guards against silent failures where
-                // assign() succeeds in memory but never persists to the DB
                 $role = $uR->repoCount() == 1 ? 'admin' : 'observer';
                 if (!$this->assignRoleAndVerify($userId, $role)) {
-                    $redirect = $this->webService->getRedirectResponse(
-                        'site/signupfailed');
+                    $redirect = $this->webService->getRedirectResponse('site/signupfailed');
                 } else {
-                    $to = $user->getEmail();
-                    $login = $user->getLogin();
-                    /**
-                     * @var array $this->sR->localeLanguageArray()
-                     */
-                    $languageArray = $this->sR->localeLanguageArray();
-                    $_language = $currentRoute->getArgument('_language');
-                    /**
-                     * @var string $_language
-                     * @var string $language
-                     */
-                    $language = $languageArray[$_language];
-                    $randomAndTimeToken = $this->getEmailVerificationToken($user,
-                        $tR);
-                    /**
-                     * Related logic: see A new UserInv (extension table of user)
-                     * for the user is created.
-                     * For additional headers to strengthen security refer to:
-                     * Related logic:
-                     *  see https://en.wikipedia.org/wiki/Email#Message_format
-                     * Related logic:
-                     *  see https://github.com/yiisoft/mailer/blob/1d3480bc26cbeba
-                     *   47b24e61f9ec0e717c244c0b7/tests/MessageTest.php#L217
-                     */
-                    $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink(
-                        $user, $uiR, $language, $_language, $randomAndTimeToken,
-                        $signupForm->getConsentPeriodicInvoice(),
-                        $signupForm->getConsentTelegramOutstanding());
-                    if (($this->sR->getSetting('email_send_method') == 'symfony')
-                            || ($this->sR->mailerEnabled())) {
-                        $configEmail = $this->sR->getConfigAdminEmail();
-                        $tta = $this->translator->translate('administrator');
-                        $email = new \Yiisoft\Mailer\Message(
-                            charset: 'utf-8',
-                            headers: [
-                                'X-Origin' => ['0', '1'],
-                                'X-Pass' => 'pass',
-                            ],
-                            subject: $login . ': <' . $to . '>',
-                            date: new \DateTimeImmutable('now'),
-                            from: [$configEmail => $tta],
-                            to: $to,
-                            htmlBody: $htmlBody,
-                        );
-                        $email->withAddedHeader(
-                            'Message-ID', $this->sR->getConfigAdminEmail()
-                        );
-                        try {
-                            $this->mailer->send($email);
-                        } catch (\Exception $e) {
-                            $this->logger->error($e->getMessage());
-                            $redirect = $this->webService->getRedirectResponse(
-                                'site/signupfailed');
-                        }
-                    }
+                    $redirect = $this->processSendSignupEmail(
+                        $user, $currentRoute, $deps, $signupForm);
                 }
             }
             $redirect = $redirect ?? $this->webService->getRedirectResponse('site/signupsuccess');
@@ -229,6 +144,82 @@ final class SignupController
             'request' => $request,
             'idpList' => $this->idpList($codeChallenge),
         ]);
+    }
+
+    private function buildOpenBankingAuthUrl(string $openBankChoice): string
+    {
+        if (strlen($openBankChoice) > 0) {
+            $providerConfig = $this->getOpenBankingProviderConfig($openBankChoice);
+            if ($providerConfig !== null) {
+                /** @var OpenBanking $openBanking */
+                $openBanking = (AuthChoice::widget())->getClient('openbanking');
+                $openBanking->setAuthUrl((string) $providerConfig['authUrl']);
+                $openBanking->setTokenUrl((string) $providerConfig['tokenUrl']);
+                $openBanking->setScope(isset($providerConfig['scope']) ?
+                    (string) $providerConfig['scope'] : null);
+                $codeVerifier = Random::string(128);
+                $hash = hash('sha256', $codeVerifier, true);
+                $rTrim = rtrim(base64_encode($hash), '=');
+                $codeChallenge = strtr($rTrim, '+/', '-_');
+                $this->session->set('code_verifier', $codeVerifier);
+                return $openBanking->getAuthUrl()
+                    . '?'
+                    . http_build_query([
+                        'response_type' => 'code',
+                        'scope' => $openBanking->getScope(),
+                        'code_challenge' => $codeChallenge,
+                        'code_challenge_method' => 'S256',
+                    ]);
+            }
+        }
+        return '';
+    }
+
+    private function processSendSignupEmail(
+        User $user,
+        CurrentRoute $currentRoute,
+        SignupDeps $deps,
+        SignupForm $signupForm,
+    ): ?ResponseInterface {
+        $to = $user->getEmail();
+        $login = $user->getLogin();
+        $languageArray = $this->sR->localeLanguageArray();
+        $_language = $currentRoute->getArgument('_language');
+        /**
+         * @var string $_language
+         * @var string $language
+         */
+        $language = $languageArray[$_language];
+        $randomAndTimeToken = $this->getEmailVerificationToken($user, $deps->tR);
+        $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink(
+            $user, $deps->uiR, $language, $_language, $randomAndTimeToken,
+            $signupForm->getConsentPeriodicInvoice(),
+            $signupForm->getConsentTelegramOutstanding());
+        if (($this->sR->getSetting('email_send_method') == 'symfony')
+                || ($this->sR->mailerEnabled())) {
+            $configEmail = $this->sR->getConfigAdminEmail();
+            $tta = $this->translator->translate('administrator');
+            $email = new \Yiisoft\Mailer\Message(
+                charset: 'utf-8',
+                headers: [
+                    'X-Origin' => ['0', '1'],
+                    'X-Pass' => 'pass',
+                ],
+                subject: $login . ': <' . $to . '>',
+                date: new \DateTimeImmutable('now'),
+                from: [$configEmail => $tta],
+                to: $to,
+                htmlBody: $htmlBody,
+            );
+            $email->withAddedHeader('Message-ID', $this->sR->getConfigAdminEmail());
+            try {
+                $this->mailer->send($email);
+            } catch (\Exception $e) {
+                $this->logger->error($e->getMessage());
+                return $this->webService->getRedirectResponse('site/signupfailed');
+            }
+        }
+        return null;
     }
 
     /**

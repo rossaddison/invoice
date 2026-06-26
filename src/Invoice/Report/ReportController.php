@@ -136,49 +136,22 @@ class ReportController extends BaseController
     private function invoiceAgingDueInvoices(InvAmountRepository $iaR): array
     {
         $numberhelper = new NumberHelper($this->sR);
-        $fifteens = $iaR->AgingCount(1, 15) > 0 ? $iaR->Aging(1, 15) : null;
-        $thirties = $iaR->AgingCount(16, 30) > 0 ? $iaR->Aging(16, 30) : null;
-        $overthirties = $iaR->AgingCount(31, 365) > 0 ? $iaR->Aging(31, 365) : null;
+        $fifteens     = $iaR->AgingCount(1, 15) > 0    ? $iaR->Aging(1, 15)   : null;
+        $thirties     = $iaR->AgingCount(16, 30) > 0   ? $iaR->Aging(16, 30)  : null;
+        $overthirties = $iaR->AgingCount(31, 365) > 0  ? $iaR->Aging(31, 365) : null;
         $results = [];
-        $row = [
-            'range_index' => 0,
-            'invoice_number' => '',
-            'invoice_balance' => 0.00,
-        ];
-        if (null !== $fifteens) {
-            /** @var InvAmount $fifteen */
-            foreach ($fifteens as $fifteen) {
-                if ($fifteen->getBalance() > 0) {
-                    $row = [
-                        'range_index' => 1,
-                        'invoice_number' => $fifteen->getInv()?->getNumber(),
-                        'invoice_balance' => $numberhelper->formatAmount($fifteen->getBalance()),
-                    ];
-                }
-                $results[] = $row;
+        $row = ['range_index' => 0, 'invoice_number' => '', 'invoice_balance' => 0.00];
+        foreach ([[1, $fifteens], [2, $thirties], [3, $overthirties]] as [$rangeIndex, $reader]) {
+            if ($reader === null) {
+                continue;
             }
-        }
-        if (null !== $thirties) {
-            /** @var InvAmount $thirty */
-            foreach ($thirties as $thirty) {
-                if ($thirty->getBalance() > 0) {
+            /** @var mixed $invAmount */
+            foreach ($reader as $invAmount) {
+                if ($invAmount instanceof InvAmount && $invAmount->getBalance() > 0) {
                     $row = [
-                        'range_index' => 2,
-                        'invoice_number' => $thirty->getInv()?->getNumber(),
-                        'invoice_balance' => $numberhelper->formatAmount($thirty->getBalance()),
-                    ];
-                }
-                $results[] = $row;
-            }
-        }
-        if (null !== $overthirties) {
-            /** @var InvAmount $overthirty */
-            foreach ($overthirties as $overthirty) {
-                if ($overthirty->getBalance() > 0) {
-                    $row = [
-                        'range_index' => 3,
-                        'invoice_number' => $overthirty->getInv()?->getNumber(),
-                        'invoice_balance' => $numberhelper->formatAmount($overthirty->getBalance()),
+                        'range_index'     => $rangeIndex,
+                        'invoice_number'  => $invAmount->getInv()?->getNumber(),
+                        'invoice_balance' => $numberhelper->formatAmount($invAmount->getBalance()),
                     ];
                 }
                 $results[] = $row;

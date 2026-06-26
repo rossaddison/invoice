@@ -104,41 +104,39 @@ final class CompanyPrivateController extends BaseController
             $originalFileName = basename($logoFileName); // Extract original file name
             $spaceToUnderscore = preg_replace('/\s+/', '_', $originalFileName); // Replace spaces with underscores
 
-            if (null !== $spaceToUnderscore) {
-                // Handle filename and extension
-                $fileInfo = pathinfo($spaceToUnderscore);
-                $extension = isset($fileInfo['extension']) ? '.' . $fileInfo['extension'] : '';
-                $modified_original_file_name = Random::string(4) . '_' . $fileInfo['filename'] . $extension;
-
-                // Build target paths
-                $target_file_name = $targetPath . '/' . $modified_original_file_name;
-                $target_public_logo = $targetPublicPath . '/' . $modified_original_file_name;
-
-                if (is_array($body)) {
-                    $body['logo_filename'] = $modified_original_file_name;
-
-                    // Move the uploaded file
-                    if (!move_uploaded_file($tmp, $target_file_name)) {
-                        throw new CompanyPrivateException('Failed to move uploaded file.');
-                    }
-
-                    // Copy the file to the public folder
-                    if (!copy($target_file_name, $target_public_logo)) {
-                        throw new CompanyPrivateException('Failed to copy file to public folder.');
-                    }
-
-                    // Process form data
-                    if ($formHydrator->populateAndValidate($form, $body)) {
-                        $this->companyPrivateService->saveCompanyPrivate($company_private, $body);
-                        $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
-                        return $this->webService->getRedirectResponse('companyprivate/index');
-                    }
-                    $parameters['form'] = $form;
-                    $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+            if ($spaceToUnderscore !== null && is_array($body)) {
+                $body['logo_filename'] = $this->processLogoFileUpload(
+                    $tmp, $targetPath, $targetPublicPath, $spaceToUnderscore);
+                if ($formHydrator->populateAndValidate($form, $body)) {
+                    $this->companyPrivateService->saveCompanyPrivate($company_private, $body);
+                    $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
+                    return $this->webService->getRedirectResponse('companyprivate/index');
                 }
+                $parameters['form'] = $form;
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             }
         }
         return $this->webViewRenderer->render('_form', $parameters);
+    }
+
+    private function processLogoFileUpload(
+        string $tmp,
+        string $targetPath,
+        string $targetPublicPath,
+        string $spaceToUnderscore,
+    ): string {
+        $fileInfo = pathinfo($spaceToUnderscore);
+        $extension = isset($fileInfo['extension']) ? '.' . $fileInfo['extension'] : '';
+        $modified_original_file_name = Random::string(4) . '_' . $fileInfo['filename'] . $extension;
+        $target_file_name = $targetPath . '/' . $modified_original_file_name;
+        $target_public_logo = $targetPublicPath . '/' . $modified_original_file_name;
+        if (!move_uploaded_file($tmp, $target_file_name)) {
+            throw new CompanyPrivateException('Failed to move uploaded file.');
+        }
+        if (!copy($target_file_name, $target_public_logo)) {
+            throw new CompanyPrivateException('Failed to copy file to public folder.');
+        }
+        return $modified_original_file_name;
     }
 
     /**

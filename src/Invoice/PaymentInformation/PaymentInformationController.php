@@ -653,73 +653,67 @@ final class PaymentInformationController
             . $this->braintreePaymentService->getVersion() . ' - is enabled. ',
         ];
 
-        if (Method::POST === $request->getMethod()) {
-            $body               = $request->getParsedBody() ?? [];
-            $paymentMethodNonce = (string) ($body['payment_method_nonce'] ?? '');
+        return Method::POST === $request->getMethod()
+            ? $this->renderBraintreePostResponse($ctx, $request, $invoice_id, $sandbox_url_array)
+            : $this->webViewRenderer->render('payment_information_braintree_pci', $braintree_pci_view_data);
+    }
 
-            // Process transaction using service
-            $transactionResult =
-                    $this->braintreePaymentService->processTransaction(
-                            $ctx->balance, $paymentMethodNonce);
-
-            if ($transactionResult['success']) {
-                $ctx->invoice->setPaymentMethod(4);
-                $ctx->invoice->setStatusId(4);
-
-                /** @var InvAmount $invoice_amount_record */
-                $invoice_amount_record =
-                        $this->iaR->repoInvquery($ctx->invoice->reqId());
-                if (null !== $invoice_amount_record->getTotal()) {
-                    // The invoice amount has been paid => balance on the
-                    //  invoice is zero and the paid amount is full
-                    $invoice_amount_record->setBalance(0.00);
-                    $invoice_amount_record->setPaid(
-                                    $invoice_amount_record->getTotal() ?? 0.00);
-                    $this->iaR->save($invoice_amount_record);
-                    $this->recordOnlinePaymentsAndMerchant(
-                        new PaymentRecordContext(
-                            reference: $ctx->invoice->getNumber() ??
-                                $this->translator->translate('number.no'),
-                            invoice_id: (string) $invoice_id,
-                            balance: $ctx->balance ?: 0.00,
-                            invoice_payment_method: 4,
-                            invoice_number: $ctx->invoice->getNumber() ??
-                                $this->translator->translate('number.no'),
-                            driver: 'Braintree',
-                            d: 'braintree',
-                            invoice_url_key: $ctx->url_key,
-                            response: true,
-                            sandbox_url_array: $sandbox_url_array,
-                        ),
-                    );
-                } // null!==$invoice
+    private function renderBraintreePostResponse(
+        PaymentInformationGatewayContext $ctx,
+        Request $request,
+        int $invoice_id,
+        array $sandbox_url_array,
+    ): Response {
+        $body               = $request->getParsedBody() ?? [];
+        $paymentMethodNonce = (string) ($body['payment_method_nonce'] ?? '');
+        $transactionResult  = $this->braintreePaymentService->processTransaction(
+            $ctx->balance, $paymentMethodNonce);
+        if ($transactionResult['success']) {
+            $ctx->invoice->setPaymentMethod(4);
+            $ctx->invoice->setStatusId(4);
+            /** @var InvAmount $invoice_amount_record */
+            $invoice_amount_record = $this->iaR->repoInvquery($ctx->invoice->reqId());
+            if (null !== $invoice_amount_record->getTotal()) {
+                $invoice_amount_record->setBalance(0.00);
+                $invoice_amount_record->setPaid($invoice_amount_record->getTotal() ?? 0.00);
+                $this->iaR->save($invoice_amount_record);
+                $this->recordOnlinePaymentsAndMerchant(
+                    new PaymentRecordContext(
+                        reference: $ctx->invoice->getNumber() ??
+                            $this->translator->translate('number.no'),
+                        invoice_id: (string) $invoice_id,
+                        balance: $ctx->balance ?: 0.00,
+                        invoice_payment_method: 4,
+                        invoice_number: $ctx->invoice->getNumber() ??
+                            $this->translator->translate('number.no'),
+                        driver: 'Braintree',
+                        d: 'braintree',
+                        invoice_url_key: $ctx->url_key,
+                        response: true,
+                        sandbox_url_array: $sandbox_url_array,
+                    ),
+                );
             }
-
-            $view_data = [
-                'render' => $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/setting/payment_message', ['heading' => '',
-                    // https://developer.paypal.com/braintree/docs/reference/general/result-objects
-                    'message' => $transactionResult['success']
+        }
+        $view_data = [
+            'render' => $this->webViewRenderer->renderPartialAsString(
+                '//invoice/setting/payment_message', [
+                    'heading'     => '',
+                    'message'     => $transactionResult['success']
                         ? sprintf($this->translator->translate(
                             'online.payment.payment.successful'),
-                                $ctx->invoice->getNumber() ?? '')
+                            $ctx->invoice->getNumber() ?? '')
                         : sprintf($this->translator->translate(
                             'online.payment.payment.failed'),
-                                $ctx->invoice->getNumber() ?? ''),
+                            $ctx->invoice->getNumber() ?? ''),
                     'url'         => 'inv/urlKey',
                     'url_key'     => $ctx->url_key,
                     'gateway'     => 'Braintree',
                     'sandbox_url' => $sandbox_url_array['braintree'],
                 ]),
-            ];
-            $this->iR->save($ctx->invoice);
-
-            return $this->webViewRenderer->render('payment_completion_page',
-                    $view_data);
-        } // request->getMethod Braintree
-
-        return $this->webViewRenderer->render('payment_information_braintree_pci',
-                $braintree_pci_view_data);
+        ];
+        $this->iR->save($ctx->invoice);
+        return $this->webViewRenderer->render('payment_completion_page', $view_data);
     }
 
 /**

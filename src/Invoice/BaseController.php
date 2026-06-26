@@ -231,57 +231,19 @@ abstract class BaseController
  */
     private function normalizeCustomFieldData(array $custom): array
     {
-// If the custom data is already in the format we expect
-//  (direct array with field_id => value)
         if (!isset($custom[0]) || !is_array($custom[0])) {
             /** @var array<string, mixed> */
             return $custom;
         }
-
-        // Handle AJAX format: array of objects with 'name' and 'value' keys
         /** @var array<string, mixed> $values */
         $values = [];
-
+        /** @var mixed $rawItem */
         foreach ($custom as $rawItem) {
-            // Type guard: ensure $rawItem is an array with the expected structure
-            if (!is_array($rawItem)
-                    || !isset($rawItem['name'])
-                        || !isset($rawItem['value'])) {
-                continue;
-            }
-
-            $item = $rawItem;
-
-            // Type guard: ensure name is convertible to string
-            if (!is_string($item['name']) && !is_numeric($item['name'])) {
-                continue;
-            }
-
-            $name = (string) $item['name'];
-
-            // Type the value explicitly
-            /** @var string|int|float|bool|array<mixed>|null $itemValue */
-            $itemValue = $item['value'];
-
-            if (preg_match("/^(.*)\[\]$/i", $name, $matches)) {
-                $arrayKey = $matches[1];
-                if (!isset($values[$arrayKey])) {
-                    $values[$arrayKey] = [];
-                }
-                if (is_array($values[$arrayKey])) {
-                    $values[$arrayKey][] = $itemValue;
-                }
-            } else {
-                $values[$name] = $itemValue;
-            }
+            $this->processAjaxRawItem($rawItem, $values);
         }
-
         /** @var array<string, mixed> $processedCustom */
         $processedCustom = [];
-
-        /**
-         * @var string|int|float|bool|array<mixed>|null $value
-         */
+        /** @var string|int|float|bool|array<mixed>|null $value */
         foreach ($values as $key => $value) {
             if (preg_match("/^custom\[(.*?)\](?:\[\]|)$/", $key, $matches)) {
                 $fieldId = preg_match('/\d+/', $key, $m) ? $m[0] : '';
@@ -290,8 +252,34 @@ abstract class BaseController
                 }
             }
         }
-
         return $processedCustom;
+    }
+
+    /**
+     * @param array<string, mixed> $values
+     */
+    private function processAjaxRawItem(mixed $rawItem, array &$values): void
+    {
+        if (!is_array($rawItem) || !isset($rawItem['name']) || !isset($rawItem['value'])) {
+            return;
+        }
+        if (!is_string($rawItem['name']) && !is_numeric($rawItem['name'])) {
+            return;
+        }
+        $name = (string) $rawItem['name'];
+        /** @var string|int|float|bool|array<mixed>|null $itemValue */
+        $itemValue = $rawItem['value'];
+        if (preg_match("/^(.*)\[\]$/i", $name, $matches)) {
+            $arrayKey = $matches[1];
+            if (!isset($values[$arrayKey])) {
+                $values[$arrayKey] = [];
+            }
+            if (is_array($values[$arrayKey])) {
+                $values[$arrayKey][] = $itemValue;
+            }
+        } else {
+            $values[$name] = $itemValue;
+        }
     }
     
     /**

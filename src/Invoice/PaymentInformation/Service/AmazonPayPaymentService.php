@@ -38,90 +38,58 @@ class AmazonPayPaymentService
     public function handleCallback(array $payload): array
     {
         $sessionId = (string) $payload['amazonCheckoutSessionId'];
+        if (!$sessionId) {
+            return ['success' => false, 'message' => 'Amazon Checkout Session ID missing.', 'details' => null];
+        }
         /** @var Inv $invoice */
         $invoice = $payload['invoice'];
-        /** @var InvRepository */
+        /** @var InvRepository $invoiceRepository */
         $invoiceRepository = $payload['iR'];
-        /** @var InvAmountRepository */
+        /** @var InvAmountRepository $invoiceAmountRepository */
         $invoiceAmountRepository = $payload['iaR'];
-
-        $result = [
-            'success' => false,
-            'message' => 'Amazon Checkout Session ID missing.',
-            'details' => null,
-        ];
-
-        if ($sessionId) {
-            $sandboxOrLive = '';
-            try {
-                if ($this->sR->getSetting('gateway_amazon_pay_sandbox') === '1') {
-                    $sandboxOrLive = 'SANDBOX-';
-                } else {
-                    $sandboxOrLive = 'LIVE-';
-                }
-                $amazonpayConfig = [
-                    'public_key_id' => $sandboxOrLive
-                    . (string) $this->sR->decode($this->sR->getSetting(
-                            'gateway_amazon_pay_publicKeyId')),
-                    'private_key' => $this->getAmazonPrivateKeyFile(),
-                    'region' => $this->getAmazonRegion(),
-                    'algorithm' => 'AMZN-PAY-RSASSA-PSS-V2'
-                ];
-                $client = new Client($amazonpayConfig);
-
-                $apiResponse = (array) $client->getCheckoutSession(
-                        ['checkoutSessionId' => $sessionId]);
-                $responseData = (array) $apiResponse['response'];
-                $statusDetails = (array) $responseData['statusDetails'];
-                /** @var string|null $paymentState */
-                $paymentState = $statusDetails['state'] ?? null;
-
-                if ($paymentState !== 'Completed') {
-                    $result = [
-                        'success' => false,
-                        'message' => 'Amazon Pay session not completed.',
-                        'details' => $responseData,
-                    ];
-                } elseif (!($invoice instanceof Inv)) {
-                    $result = [
-                        'success' => false,
-                        'message' => 'Invoice not found.',
-                        'details' => $responseData,
-                    ];
-                } else {
-                    $invoice->setPaymentMethod(4); // 4 = Card/Direct Debit
-                    $invoice->setStatusId(4);      // 4 = Paid
-                    $invoiceRepository->save($invoice);
-
-                    $invoiceAmountRecord =
-                        $invoiceAmountRepository->repoInvquery($invoice->reqId());
-                    if ($invoiceAmountRecord) {
-                        $balance = $invoiceAmountRecord->getBalance();
-                        if (null !== $balance) {
-                            $total = $invoiceAmountRecord->getTotal();
-                            $invoiceAmountRecord->setBalance(0);
-                            if ($total !== null) {
-                                $invoiceAmountRecord->setPaid($total);
-                            }
-                            $invoiceAmountRepository->save($invoiceAmountRecord);
-                        }
-                    }
-
-                    $result = [
-                        'success' => true,
-                        'message' => 'Amazon Pay session completed and invoice updated.',
-                        'details' => $responseData,
-                    ];
-                }
-            } catch (\Throwable $e) {
-                $result = [
-                    'success' => false,
-                    'message' => 'Amazon Pay callback error: ' . $e->getMessage(),
-                    'details' => null,
-                ];
-            }
+        try {
+            return $this->processAmazonCheckoutSession($sessionId, $invoice, $invoiceRepository, $invoiceAmountRepository);
+        } catch (\Throwable $e) {
+            return ['success' => false, 'message' => 'Amazon Pay callback error: ' . $e->getMessage(), 'details' => null];
         }
-        return $result;
+    }
+
+    private function processAmazonCheckoutSession(
+        string $sessionId,
+        Inv $invoice,
+        InvRepository $invoiceRepository,
+        InvAmountRepository $invoiceAmountRepository,
+    ): array {
+        $sandboxOrLive = $this->sR->getSetting('gateway_amazon_pay_sandbox') === '1' ? 'SANDBOX-' : 'LIVE-';
+        $amazonpayConfig = [
+            'public_key_id' => $sandboxOrLive
+                . (string) $this->sR->decode($this->sR->getSetting('gateway_amazon_pay_publicKeyId')),
+            'private_key' => $this->getAmazonPrivateKeyFile(),
+            'region' => $this->getAmazonRegion(),
+            'algorithm' => 'AMZN-PAY-RSASSA-PSS-V2',
+        ];
+        $client = new Client($amazonpayConfig);
+        $apiResponse = (array) $client->getCheckoutSession(['checkoutSessionId' => $sessionId]);
+        $responseData = (array) $apiResponse['response'];
+        $statusDetails = (array) $responseData['statusDetails'];
+        /** @var string|null $paymentState */
+        $paymentState = $statusDetails['state'] ?? null;
+        if ($paymentState !== 'Completed') {
+            return ['success' => false, 'message' => 'Amazon Pay session not completed.', 'details' => $responseData];
+        }
+        $invoice->setPaymentMethod(4); // 4 = Card/Direct Debit
+        $invoice->setStatusId(4);      // 4 = Paid
+        $invoiceRepository->save($invoice);
+        $invoiceAmountRecord = $invoiceAmountRepository->repoInvquery($invoice->reqId());
+        if ($invoiceAmountRecord !== null && $invoiceAmountRecord->getBalance() !== null) {
+            $total = $invoiceAmountRecord->getTotal();
+            $invoiceAmountRecord->setBalance(0);
+            if ($total !== null) {
+                $invoiceAmountRecord->setPaid($total);
+            }
+            $invoiceAmountRepository->save($invoiceAmountRecord);
+        }
+        return ['success' => true, 'message' => 'Amazon Pay session completed and invoice updated.', 'details' => $responseData];
     }
 
     public function checkPrivatePemFile(): ?array

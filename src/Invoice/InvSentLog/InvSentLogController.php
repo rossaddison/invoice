@@ -16,6 +16,7 @@ use App\User\UserService;
 use App\Infrastructure\Persistence\User\User;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
+use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
@@ -66,53 +67,56 @@ final class InvSentLogController extends BaseController
         ?int $queryFilterClientId = null,
     ): Response {
         $user = $this->userService->getUser();
-        if ($user instanceof User && (($userId = $user->reqId()) > 0)) {
-            // Use this user's id to see whether a user has been setup under
-            //  UserInv ie. yii-invoice's list of users
-            $userinv = ($uiR->repoUserInvUserIdcount($userId) > 0 ?
-                    $uiR->repoUserInvUserIdquery($userId) : null);
-            if (null!==$userinv && $userinv->getActive()) {
-                $userInvListLimit = $userinv->getListLimit();
-                $invsentlogs = $islR->withUser($userId);
-                $finalPage = $queryPage ?? $page;
-                /** @psalm-var positive-int $currentPageNeverZero */
-                $currentPageNeverZero = (int) $finalPage > 0 ? (int) $finalPage : 1;
-                if (isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) {
-                    $invsentlogs = $islR->filterInvNumber($queryFilterInvNumber);
-                }
-                if (isset($queryFilterClientId) && ($queryFilterClientId > 0)) {
-                    $invsentlogs = $islR->filterClient($queryFilterClientId);
-                }
-                if ((isset($queryFilterInvNumber) && !empty($queryFilterInvNumber))
-                && (isset($queryFilterClientId) && ($queryFilterClientId > 0))) {
-                    $invsentlogs = $islR->filterInvNumberWithClient(
-                                    $queryFilterInvNumber, $queryFilterClientId);
-                }
-                $paginator = (new OffsetPaginator($invsentlogs))
-                ->withPageSize($userInvListLimit > 0 ? $userInvListLimit : 10)
-                ->withCurrentPage($currentPageNeverZero)
-                ->withToken(PageToken::next($finalPage));
-                $parameters = [
-                    'paginator' => $paginator,
-                    'alert' => $this->alert(),
-                    'viewInv' =>
-                        $this->userService->hasPermission(Permissions::VIEW_INV),
-                    'userInv' => $userinv,
-                    'defaultPageSizeOffsetPaginator' =>
-                                                $userinv->getListLimit() ?? 10,
-                    'optionsDataGuestInvNumberDropDownFilter' =>
-                    $this->optionsDataGuestInvNumberFilter($islR, $userId),
-                    // Get all the clients that have been assigned to this user
-                    'optionsDataGuestClientDropDownFilter' =>
-                        $this->optionsDataGuestClientsFilter($islR, $userId),
-                ];
-                return $this->webViewRenderer->render('guest', $parameters);
-            }
-            $this->flashMessage('info',
-                        $this->translator->translate('user.inv.active.not'));
+        if (!($user instanceof User) || ($userId = $user->reqId()) <= 0) {
             return $this->webService->getNotFoundResponse();
         }
-        return $this->webService->getNotFoundResponse();
+        $userinv = $uiR->repoUserInvUserIdcount($userId) > 0
+            ? $uiR->repoUserInvUserIdquery($userId)
+            : null;
+        if ($userinv === null || !$userinv->getActive()) {
+            $this->flashMessage('info', $this->translator->translate('user.inv.active.not'));
+            return $this->webService->getNotFoundResponse();
+        }
+        $userInvListLimit = $userinv->getListLimit();
+        $finalPage = $queryPage ?? $page;
+        /** @psalm-var positive-int $currentPageNeverZero */
+        $currentPageNeverZero = (int) $finalPage > 0 ? (int) $finalPage : 1;
+        $invsentlogs = $this->applyGuestFilters($islR, $userId, $queryFilterInvNumber, $queryFilterClientId);
+        $paginator = (new OffsetPaginator($invsentlogs))
+            ->withPageSize($userInvListLimit > 0 ? $userInvListLimit : 10)
+            ->withCurrentPage($currentPageNeverZero)
+            ->withToken(PageToken::next($finalPage));
+        $parameters = [
+            'paginator' => $paginator,
+            'alert' => $this->alert(),
+            'viewInv' => $this->userService->hasPermission(Permissions::VIEW_INV),
+            'userInv' => $userinv,
+            'defaultPageSizeOffsetPaginator' => $userinv->getListLimit() ?? 10,
+            'optionsDataGuestInvNumberDropDownFilter' =>
+                $this->optionsDataGuestInvNumberFilter($islR, $userId),
+            'optionsDataGuestClientDropDownFilter' =>
+                $this->optionsDataGuestClientsFilter($islR, $userId),
+        ];
+        return $this->webViewRenderer->render('guest', $parameters);
+    }
+
+    private function applyGuestFilters(
+        ISLR $islR,
+        int $userId,
+        ?string $queryFilterInvNumber,
+        ?int $queryFilterClientId,
+    ): EntityReader {
+        if ($queryFilterInvNumber !== null && $queryFilterInvNumber !== ''
+            && $queryFilterClientId !== null && $queryFilterClientId > 0) {
+            return $islR->filterInvNumberWithClient($queryFilterInvNumber, $queryFilterClientId);
+        }
+        if ($queryFilterInvNumber !== null && $queryFilterInvNumber !== '') {
+            return $islR->filterInvNumber($queryFilterInvNumber);
+        }
+        if ($queryFilterClientId !== null && $queryFilterClientId > 0) {
+            return $islR->filterClient($queryFilterClientId);
+        }
+        return $islR->withUser($userId);
     }
 
     /**
@@ -185,7 +189,7 @@ final class InvSentLogController extends BaseController
     }
 
     /**
-     * @param int id
+     * @param int $id
      * @param ISLR $islR
      * @param UCR $ucR
      * @param UIR $uiR
