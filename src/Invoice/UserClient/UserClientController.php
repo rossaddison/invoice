@@ -127,7 +127,6 @@ final class UserClientController extends BaseController
         }
         // Get possible client ids as an array that can be presented to this user
         $availableClientIdList = $ucR->getNotAssignedToUser($user_id, $cR);
-        $user_client = new UserClient();
         $form = new UserClientForm();
         $parameters = [
             'errors' => [],
@@ -143,7 +142,7 @@ final class UserClientController extends BaseController
             return $this->webViewRenderer->render('new', $parameters);
         }
         return $this->processClientAssignment(
-            $request, $user_id, $uiR, $cR, $ucR, $ucS, $formHydrator, $form, $user_client, $parameters);
+            $request, $user_id, $uiR, $ucR, $ucS, $formHydrator, $parameters);
     }
 
     /**
@@ -153,14 +152,16 @@ final class UserClientController extends BaseController
         Request $request,
         int $user_id,
         UIR $uiR,
-        ClientRepository $cR,
         UserClientRepository $ucR,
         UserClientService $ucS,
         FormHydrator $formHydrator,
-        UserClientForm $form,
-        UserClient $user_client,
         array $parameters,
     ): Response {
+        /** @var ClientRepository $cR */
+        $cR = $parameters['cR'];
+        /** @var UserClientForm $form */
+        $form = $parameters['form'];
+        $user_client = new UserClient();
         $body = $request->getParsedBody();
         if (is_array($body)) {
             /** @var string $value */
