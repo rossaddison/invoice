@@ -113,10 +113,9 @@ final class InvSentLogController extends BaseController
         if ($queryFilterInvNumber !== null && $queryFilterInvNumber !== '') {
             return $islR->filterInvNumber($queryFilterInvNumber);
         }
-        if ($queryFilterClientId !== null && $queryFilterClientId > 0) {
-            return $islR->filterClient($queryFilterClientId);
-        }
-        return $islR->withUser($userId);
+        return $queryFilterClientId !== null && $queryFilterClientId > 0
+            ? $islR->filterClient($queryFilterClientId)
+            : $islR->withUser($userId);
     }
 
     /**

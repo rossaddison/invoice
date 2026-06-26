@@ -142,36 +142,54 @@ final class UserClientController extends BaseController
         if ($request->getMethod() !== Method::POST) {
             return $this->webViewRenderer->render('new', $parameters);
         }
+        return $this->processClientAssignment(
+            $request, $user_id, $uiR, $cR, $ucR, $ucS, $formHydrator, $form, $user_client, $parameters);
+    }
+
+    /**
+     * @param array<string, mixed> $parameters
+     */
+    private function processClientAssignment(
+        Request $request,
+        int $user_id,
+        UIR $uiR,
+        ClientRepository $cR,
+        UserClientRepository $ucR,
+        UserClientService $ucS,
+        FormHydrator $formHydrator,
+        UserClientForm $form,
+        UserClient $user_client,
+        array $parameters,
+    ): Response {
         $body = $request->getParsedBody();
-        if (!is_array($body)) {
-            return $this->webViewRenderer->render('new', $parameters);
-        }
-        /** @var string $value */
-        foreach ($body as $key => $value) {
-            if ((string) $key === 'user_all_clients' && $value === '1') {
-                $ucR->unassignToUserClient($user_id);
-                $ucR->resetUsersAllClients($uiR, $cR, $ucS, $formHydrator);
+        if (is_array($body)) {
+            /** @var string $value */
+            foreach ($body as $key => $value) {
+                if ((string) $key === 'user_all_clients' && $value === '1') {
+                    $ucR->unassignToUserClient($user_id);
+                    $ucR->resetUsersAllClients($uiR, $cR, $ucS, $formHydrator);
+                    return $this->webService->getRedirectResponse('userinv/index');
+                }
+                if ((string) $key !== 'client_id') {
+                    continue;
+                }
+                $form_array    = ['user_id' => $user_id, 'client_id' => $value];
+                $existingCount = $ucR->repoUserClientqueryCount($user_id, (int) $value);
+                if ($existingCount > 0) {
+                    $this->flashMessage('info',
+                        $this->translator->translate('client.already.exists'));
+                } elseif ($formHydrator->populateAndValidate($form, $form_array)) {
+                    $this->userclientService->saveUserClient($user_client, $form_array);
+                    $this->flashMessage('info',
+                        $this->translator->translate('record.successfully.updated'));
+                } else {
+                    $parameters['errors'] =
+                        $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+                    $parameters['form'] = $form;
+                    continue;
+                }
                 return $this->webService->getRedirectResponse('userinv/index');
             }
-            if ((string) $key !== 'client_id') {
-                continue;
-            }
-            $form_array = ['user_id' => $user_id, 'client_id' => $value];
-            if ($formHydrator->populateAndValidate($form, $form_array)
-                && $ucR->repoUserClientqueryCount($user_id, (int) $value) <= 0) {
-                $this->userclientService->saveUserClient($user_client, $form_array);
-                $this->flashMessage('info',
-                    $this->translator->translate('record.successfully.updated'));
-                return $this->webService->getRedirectResponse('userinv/index');
-            }
-            if ($ucR->repoUserClientqueryCount($user_id, (int) $value) > 0) {
-                $this->flashMessage('info',
-                    $this->translator->translate('client.already.exists'));
-                return $this->webService->getRedirectResponse('userinv/index');
-            }
-            $parameters['errors'] =
-                $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-            $parameters['form'] = $form;
         }
         return $this->webViewRenderer->render('new', $parameters);
     }
