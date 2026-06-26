@@ -103,6 +103,12 @@ declare(strict_types=1);
         Test and restart Apache2:
         httpd -t && rc-service apache2 restart
  </b>
+ <b>24. Making sure that mariadb is running (in case of connection errors):
+        rc-service mariadb status
+ </b>
+ <b>25. Restarting mariadb:
+        rc-service mariadb restart
+ </b>       
 </p>
 </pre>
 </div>

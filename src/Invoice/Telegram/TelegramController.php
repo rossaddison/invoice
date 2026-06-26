@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\Telegram;
 
 use App\Infrastructure\Persistence\Inv\Inv;
-use App\Infrastructure\Persistence\Payment\Payment;
 use App\Invoice\BaseController;
 use App\Invoice\Helpers\Telegram\TelegramHelper;
 use App\Invoice\Inv\InvRepository as IR;
@@ -39,6 +38,8 @@ final class TelegramController extends BaseController
     // Not injected via DI — requires a runtime token from settings;
     // set lazily by action methods via TelegramHelper::getBotApi().
     private ?TelegramBotApi $telegramBotApi = null;
+    
+    protected string $controllerName = 'invoice/telegram';
 
     public function __construct(
         SessionInterface $session,
