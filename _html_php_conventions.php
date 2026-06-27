@@ -20,6 +20,14 @@
  *    wrapped with H::encode() to prevent XSS.
  *  - $body['settings[key]'] is always assigned from $s->getSetting('key')
  *    immediately before the widget that uses it.
+ *  - If two or more H:: calls appear on the same line, the second (and any
+ *    further) H:: call must move to the next line indented one extra space:
+ *      // WRONG — two H:: on one line:
+ *      echo H::tag('td', H::encode($val), $tdEnd);
+ *      // CORRECT — last H:: on its own line, one extra space of indent:
+ *      echo H::tag('td',
+ *       H::encode($val),
+ *       $tdEnd);
  */
 
 declare(strict_types=1);

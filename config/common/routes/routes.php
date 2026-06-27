@@ -919,6 +919,10 @@ return [
                 ->name('emailtemplate/getContent')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([EmailTemplateController::class, 'getContent']),
+            Route::get('/emailtemplate/bodyPreview')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([EmailTemplateController::class, 'bodyPreview'])
+                ->name('emailtemplate/bodyPreview'),
             Route::methods([$mG, $mP],
                     '/emailtemplate/preview/{email_template_id}')
                 ->name('emailtemplate/preview')

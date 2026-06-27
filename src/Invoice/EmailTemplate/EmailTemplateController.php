@@ -9,6 +9,7 @@ use App\Invoice\BaseController;
 use App\Infrastructure\Persistence\EmailTemplate\EmailTemplate;
 use App\Invoice\FromDropDown\FromDropDownRepository;
 use App\Invoice\CustomField\CustomFieldRepository;
+use App\Invoice\Helpers\{ParseTemplateDeps, TemplateHelper};
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
 use App\User\UserService;
@@ -328,6 +329,22 @@ final class EmailTemplateController extends BaseController
             ],
                 'success' => 1]
             : ['success' => 0]));
+    }
+
+    public function bodyPreview(Request $request, BodyPreviewDeps $d): Response
+    {
+        $params = $request->getQueryParams();
+        $body = (string) ($params['body'] ?? '');
+        $id = (int) ($params['id'] ?? 0);
+        $type = (string) ($params['type'] ?? 'invoice');
+        if ($id <= 0 || $body === '') {
+            return $this->factory->createResponse(['success' => 0]);
+        }
+        $templateHelper = new TemplateHelper(
+            $d->sR, $d->ccR, $d->qcR, $d->icR, $d->pcR, $d->socR, $d->cfR, $d->cvR);
+        $parseDeps = new ParseTemplateDeps($d->cvR, $d->iR, $d->iaR, $d->qR, $d->qaR, $d->soR, $d->uiR);
+        $parsed = $templateHelper->parseTemplate($id, $type !== 'quote', $body, $parseDeps);
+        return $this->factory->createResponse(['success' => 1, 'body' => $parsed]);
     }
 
     /**

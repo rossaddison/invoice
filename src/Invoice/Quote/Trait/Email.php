@@ -15,7 +15,6 @@ use App\Invoice\Quote\{
 };
 use App\Invoice\Helpers\{MailerHelper, MailerHelperCustomDeps, MailerSendParams, ParseTemplateDeps, TemplateHelper};
 use Yiisoft\{
-    Json\Json,
     Router\HydratorAttribute\RouteArgument,
     Yii\View\Renderer\WebViewRenderer,
 };
@@ -128,7 +127,7 @@ trait Email
     public function getInjectEmailTemplateArray(EmailTemplate $email_template): array
     {
         return [
-            'body' => Json::htmlEncode($email_template->getEmailTemplateBody()),
+            'body' => $email_template->getEmailTemplateBody(),
             'subject' => $email_template->getEmailTemplateSubject() ?? '',
             'from_name' => $email_template->getEmailTemplateFromName() ?? '',
             'from_email' => $email_template->getEmailTemplateFromEmail() ?? '',
@@ -212,13 +211,8 @@ trait Email
                 $from_email = (string) ($body['MailerQuoteForm']['from_email'] ?? '');
                 $from_name = (string) ($body['MailerQuoteForm']['from_name'] ?? '');
                 if (empty($to) || empty($from_email)) {
-                    return $this->factory->createResponse(
-                        $this->webViewRenderer->renderPartialAsString(
-                            '//invoice/setting/quote_message',
-                            ['heading' => '', 'message' =>
-                                $this->translator->translate('email.to.address.missing'),
-                             'url' => 'quote/view', 'id' => $quote_id],
-                        ));
+                    $this->flashMessage('warning', $this->translator->translate('email.to.address.missing'));
+                    return $this->webService->getRedirectResponse('quote/index');
                 }
                 /** @var string $subject */
                 $subject = $body['MailerQuoteForm']['subject'] ?? '';
@@ -244,6 +238,6 @@ trait Email
         if (!$sent) {
             $this->flashMessage('danger', $this->translator->translate('email.not.sent.successfully'));
         }
-        return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
+        return $this->webService->getRedirectResponse('quote/index');
     }
 }

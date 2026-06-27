@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Yiisoft\Html\Html as H;
+
 /**
  * Related logic: see App\Invoice\Helpers\PdfHelper function generateInvHtml
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH
@@ -10,17 +12,15 @@ declare(strict_types=1);
  * @var array $custom_fields
  * @var array $inv_custom_values
  */
-
-?>
-<?php
+$location = 1;
 /**
  * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
  */
-foreach ($custom_fields as $custom_field) : ?>
-    <?php if ($custom_field->getLocation() !== 1) {
-        continue;
-    } ?>
-    <?php echo '<td>'; ?>
-    <?php  $cvH->printFieldForPdf($translator, $inv_custom_values, $custom_field); ?>
-    <?php echo '</td>'; ?>
-<?php endforeach;
+foreach ($custom_fields as $custom_field) {
+ if ($custom_field->getLocation() !== $location) {
+  continue;
+ }
+ echo H::openTag('td'); //0
+  $cvH->printFieldForPdf($translator, $inv_custom_values, $custom_field);
+ echo H::closeTag('td'); //0
+}

@@ -20,7 +20,7 @@ use App\Invoice\{
 };
 
 use Yiisoft\{
-    Json\Json, Router\HydratorAttribute\RouteArgument,
+    Router\HydratorAttribute\RouteArgument,
     Yii\View\Renderer\WebViewRenderer
 };
 
@@ -135,7 +135,7 @@ trait Email
     public function getInjectEmailTemplateArray(EmailTemplate $email_template): array
     {
         return [
-            'body' => Json::htmlEncode($email_template->getEmailTemplateBody()),
+            'body' => $email_template->getEmailTemplateBody(),
             'subject' => $email_template->getEmailTemplateSubject() ?? '',
             'from_name' => $email_template->getEmailTemplateFromName() ?? '',
             'from_email' => $email_template->getEmailTemplateFromEmail() ?? '',
@@ -176,7 +176,8 @@ trait Email
         InvEmailService $invEmailService,
     ): Response {
         if (!$inv_id) {
-            return $this->invMessageResponse($inv_id, 'email.not.sent');
+            $this->flashMessage('warning', $this->translator->translate('email.not.sent'));
+            return $this->webService->getRedirectResponse('inv/index');
         }
         $d = $invEmailService->d;
         if (!$invEmailService->mailerConfigured()) {
@@ -211,7 +212,11 @@ trait Email
                 }
             }
         }
-        return $this->invMessageResponse($inv_id, $messageKey);
+        $this->flashMessage(
+            $messageKey === 'email.successfully.sent' ? 'success' : 'warning',
+            $this->translator->translate($messageKey),
+        );
+        return $this->webService->getRedirectResponse('inv/index');
     }
 
     private function invMessageResponse(int $inv_id, string $messageKey): Response

@@ -57,12 +57,6 @@
                 <directory name="resources" />
             </errorLevel>
         </UnusedProperty>
-        <UnusedFunctionCall>
-            <errorLevel type="suppress">
-                <directory name="src" />
-                <directory name="resources" />
-            </errorLevel>
-        </UnusedFunctionCall>   
         <PropertyNotSetInConstructor>
             <errorLevel type="suppress">
                 <directory name="src/Auth/Client" />

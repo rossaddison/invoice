@@ -134,6 +134,60 @@
         }
     }
 
+    // Render the body textarea content into the preview iframe, substituting template variables via AJAX
+    var previewDebounceTimer = null;
+    var previewAbortController = null;
+
+    function update_email_template_preview() {
+        var iframe = document.getElementById('email-template-preview');
+        var bodyEl = document.querySelector('.email-template-body');
+        if (!iframe || !bodyEl) return;
+
+        var meta = document.getElementById('email-preview-meta');
+        var entityId = meta ? (meta.getAttribute('data-id') || '') : '';
+        var entityType = meta ? (meta.getAttribute('data-type') || 'invoice') : 'invoice';
+        var previewUrl = meta ? (meta.getAttribute('data-preview-url') || '') : '';
+
+        if (!entityId || !previewUrl || !bodyEl.value) {
+            iframe.srcdoc = bodyEl.value;
+            return;
+        }
+
+        if (previewDebounceTimer !== null) {
+            clearTimeout(previewDebounceTimer);
+        }
+        previewDebounceTimer = setTimeout(function () {
+            previewDebounceTimer = null;
+            if (previewAbortController) {
+                previewAbortController.abort();
+            }
+            previewAbortController = new AbortController();
+            var params = new URLSearchParams({
+                body: bodyEl.value,
+                id: entityId,
+                type: entityType,
+            });
+            var url = location.origin + previewUrl + '?' + params.toString();
+            fetch(url, {
+                method: 'GET',
+                credentials: 'same-origin',
+                cache: 'no-store',
+                signal: previewAbortController.signal,
+            })
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (data && data.success === 1 && typeof data.body === 'string') {
+                        iframe.srcdoc = data.body;
+                    } else {
+                        iframe.srcdoc = bodyEl.value;
+                    }
+                })
+                .catch(function () {
+                    iframe.srcdoc = bodyEl.value;
+                });
+        }, 300);
+    }
+
     // Toggle SMTP settings visibility
     function toggle_smtp_settings() {
         var emailSendMethodEl = document.getElementById('email_send_method');
@@ -281,6 +335,20 @@
                 return false;
             }, false);
         });
+
+        // Preview reload button
+        var previewReload = document.getElementById('email-template-preview-reload');
+        if (previewReload) {
+            previewReload.addEventListener('click', update_email_template_preview, { passive: true });
+        }
+
+        // Live preview: update whenever the body textarea changes
+        var previewBodyEl = document.querySelector('.email-template-body');
+        if (previewBodyEl) {
+            previewBodyEl.addEventListener('input', update_email_template_preview, { passive: true });
+            // Initial preview after module scripts have set the textarea value
+            setTimeout(update_email_template_preview, 200);
+        }
 
         // html-tag click -> insert tag into email template body
         Array.from(document.querySelectorAll('.html-tag')).forEach(function (el) {
