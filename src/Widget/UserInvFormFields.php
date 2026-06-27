@@ -99,7 +99,7 @@ final readonly class UserInvFormFields
                 'id' => 'user_id',
             ])
             ->readonly(true)
-            ->value($form->user_id ?? '')
+            ->value($form->user_id !== null ? (string) $form->user_id : null)
             ->hint($this->translator->translate('hint.this.field.is.required'))
             ->render();
     }

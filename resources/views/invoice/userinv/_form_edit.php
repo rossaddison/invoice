@@ -217,10 +217,10 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-            <?= Field::text($form, 'listLimit')
+            <?= Field::text($form, 'list_limit')
     ->label($lLimit)
-    ->addInputAttributes(['placeholder' => $lLimit, 'class' => $fc, 'id' => 'listLimit'])
-    ->value(Html::encode($form->list_limit ?? 10));
+    ->addInputAttributes(['placeholder' => $lLimit, 'class' => $fc, 'id' => 'list_limit'])
+    ->value($form->list_limit !== null ? (string) $form->list_limit : null);
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 border-top pt-3']); ?>

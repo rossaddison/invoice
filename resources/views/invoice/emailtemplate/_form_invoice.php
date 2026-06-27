@@ -25,7 +25,7 @@ use Yiisoft\Html\Tag\Span;
  * @var string $sender_email
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  * @psalm-var array<string,list<string>> $errors
- * @psalm-var array<array-key, array<array-key, string>|string> $invoiceTemplates
+ * @psalm-var array<array-key, string> $invoiceTemplates
  */
 
 $htmlTagBtnSec = 'html-tag btn btn-secondary';
@@ -73,7 +73,7 @@ $htmlTagBtnSec = 'html-tag btn btn-secondary';
         'email_template_from_email',
         'email_template_cc',
         'email_template_bcc',
-        'email_template_pdf_tempalte',
+        'email_template_pdf_template',
     ])
     ->onlyCommonErrors()
 ?>
