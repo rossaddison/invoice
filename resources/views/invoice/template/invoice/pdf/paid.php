@@ -180,15 +180,17 @@ if (strlen($inv->getClient()?->getClientPhone() ?? '') > 0) {
                 $price = $item->getPrice();
                 $taxPercent = ($item->getTaxRate()?->getTaxRatePercent() ?? 0.00) / 100;
                 echo (null !== $quantity && null !== $price && $taxPercent)
-                    ? Html::encode($s->formatCurrency($quantity * $price * $taxPercent))
+                    ? Html::encode($s->formatCurrency($price * $taxPercent))
                 : Html::encode($s->formatCurrency(0.00));
                 ?>
                         </td>
+                        <?php if ($vat === '0') : ?>
                         <?= $tdEnd ?>
                             <?php
                 echo Html::encode($s->formatCurrency($inv_item_amount?->getTaxTotal()));
                 ?>
-
+                        </td>
+                        <?php endif; ?>
                         <?= $tdEnd ?>
                             <?php
                     echo Html::encode($item->getTaxRate()?->getTaxRatePercent());
