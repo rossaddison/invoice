@@ -338,7 +338,7 @@ final class EmailTemplateController extends BaseController
     {
         $email_template = $this->emailtemplate($currentRoute, $emailtemplateRepository);
         if ($email_template) {
-            $form = new EmailTemplateForm();
+            $form = EmailTemplateForm::show($email_template);
             $parameters = [
                 'title' => $this->translator->translate('preview'),
                 'actionName' => 'emailtemplate/preview',

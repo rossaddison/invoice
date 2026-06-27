@@ -41,7 +41,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div'); ?>
             <?= Html::openTag('body'); ?>
-                <?= $form->getEmailTemplateBody(); ?>
+                <?= $form->email_template_body; ?>
         <?= Html::closeTag('body'); ?>
         <?=  new Br(); ?>
     <?= Html::closeTag('div'); ?>

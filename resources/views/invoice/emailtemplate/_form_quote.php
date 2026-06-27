@@ -92,7 +92,7 @@ $htmlTagBtnSec = 'html-tag btn btn-secondary';
             ->addInputAttributes([
                 'class' => 'form-control form-control-lg',
             ])
-            ->value(Html::encode($form->getEmailTemplateTitle() ?? ''))
+            ->value(Html::encode($form->email_template_title ?? ''))
             ->placeholder($translator->translate('title'))
             ->hint($translator->translate('hint.this.field.is.required')); ?>
     <?= Html::closeTag('div'); ?>
@@ -103,7 +103,7 @@ $htmlTagBtnSec = 'html-tag btn btn-secondary';
             ->addInputAttributes([
                 'class' => 'form-control form-control-lg',
             ])
-            ->value(Html::encode($form->getEmailTemplateFromName() ?? ''))
+            ->value(Html::encode($form->email_template_from_name ?? ''))
             ->placeholder($translator->translate('from.name'))
             ->hint($translator->translate('hint.this.field.is.required')); ?>
     <?= Html::closeTag('div'); ?>
@@ -160,7 +160,7 @@ $htmlTagBtnSec = 'html-tag btn btn-secondary';
                             ->addInputAttributes([
                                 'class' => 'form-control form-control-lg',
                             ])
-                            ->value(Html::encode($form->getEmailTemplateFromEmail() ?? ''))
+                            ->value(Html::encode($form->email_template_from_email ?? ''))
                             ->placeholder($translator->translate('from.email'))
                             ->hint($translator->translate('hint.this.field.is.required')); ?>
                     <?= Html::closeTag('div'); ?>
@@ -175,7 +175,7 @@ $htmlTagBtnSec = 'html-tag btn btn-secondary';
             ->addInputAttributes([
                 'class' => 'form-control taggable',
             ])
-            ->value(Html::encode($form->getEmailTemplateCc() ?? ''))
+            ->value(Html::encode($form->email_template_cc ?? ''))
             ->placeholder($translator->translate('cc'))
             ->hint($translator->translate('hint.this.field.is.not.required')); ?>
     <?= Html::closeTag('div'); ?>
@@ -186,7 +186,7 @@ $htmlTagBtnSec = 'html-tag btn btn-secondary';
             ->addInputAttributes([
                 'class' => 'form-control taggable',
             ])
-            ->value(Html::encode($form->getEmailTemplateBcc() ?? ''))
+            ->value(Html::encode($form->email_template_bcc ?? ''))
             ->placeholder($translator->translate('bcc'))
             ->hint($translator->translate('hint.this.field.is.not.required')); ?>
     <?= Html::closeTag('div'); ?>
@@ -197,7 +197,7 @@ $htmlTagBtnSec = 'html-tag btn btn-secondary';
             ->addInputAttributes([
                 'class' => 'form-control taggable',
             ])
-            ->value(Html::encode($form->getEmailTemplateSubject() ?? ''))
+            ->value(Html::encode($form->email_template_subject ?? ''))
             ->placeholder($translator->translate('subject'))
             ->hint($translator->translate('hint.this.field.is.required')); ?>
     <?= Html::closeTag('div'); ?>
@@ -207,7 +207,7 @@ $htmlTagBtnSec = 'html-tag btn btn-secondary';
                 'class' => 'form-control form-control-lg',
             ])
             ->name('email_template_pdf_template')
-            ->value(Html::encode($form->getEmailTemplatePdfTemplate() ?? 'quote'))
+            ->value(Html::encode($form->email_template_pdf_template ?? 'quote'))
             ->form('EmailTemplateForm')
             ->optionsData($quoteTemplates)
             ->prompt($translator->translate('none'))
@@ -297,7 +297,7 @@ $htmlTagBtnSec = 'html-tag btn btn-secondary';
     'class' => 'email-template-body form-control taggable',
     'rows' => '20',
 ])
-->value($form->getEmailTemplateBody() ?? '')
+->value($form->email_template_body ?? '')
 ->hint($translator->translate('hint.this.field.is.required')); ?>
     <?= Html::closeTag('div'); ?>
     <?php

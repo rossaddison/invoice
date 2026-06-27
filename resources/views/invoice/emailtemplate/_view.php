@@ -43,7 +43,7 @@ use Yiisoft\Html\Tag\Form;
             ->addInputAttributes([
                 'class' => 'form-control form-control-lg',
             ])
-            ->value(Html::encode($form->getEmailTemplateTitle()))
+            ->value(Html::encode($form->email_template_title))
             ->readonly(true)
             ->placeholder($translator->translate('title'))
 ?>
@@ -54,7 +54,7 @@ use Yiisoft\Html\Tag\Form;
    ->addInputAttributes([
        'class' => 'form-control form-control-lg',
    ])
-   ->value(Html::encode($form->getEmailTemplateType()))
+   ->value(Html::encode($form->email_template_type))
    ->readonly(true)
    ->placeholder($translator->translate('type'))
 ?>
@@ -65,7 +65,7 @@ use Yiisoft\Html\Tag\Form;
    ->addInputAttributes([
        'class' => 'form-control form-control-lg',
    ])
-   ->value($form->getEmailTemplateBody())
+   ->value($form->email_template_body)
    ->readonly(true)
    ->placeholder($translator->translate('body'))
 ?>
@@ -76,7 +76,7 @@ use Yiisoft\Html\Tag\Form;
    ->addInputAttributes([
        'class' => 'form-control form-control-lg',
    ])
-   ->value(Html::encode($form->getEmailTemplateSubject()))
+   ->value(Html::encode($form->email_template_subject))
    ->readonly(true)
    ->placeholder($translator->translate('subject'))
 ?>
@@ -87,7 +87,7 @@ use Yiisoft\Html\Tag\Form;
    ->addInputAttributes([
        'class' => 'form-control form-control-lg',
    ])
-   ->value(Html::encode($form->getEmailTemplateFromName()))
+   ->value(Html::encode($form->email_template_from_name))
    ->readonly(true)
    ->placeholder($translator->translate('from.name'))
 ?>
@@ -98,7 +98,7 @@ use Yiisoft\Html\Tag\Form;
    ->addInputAttributes([
        'class' => 'form-control form-control-lg',
    ])
-   ->value(Html::encode($form->getEmailTemplateFromEmail()))
+   ->value(Html::encode($form->email_template_from_email))
    ->readonly(true)
    ->placeholder($translator->translate('from.email'))
 ?>
@@ -109,7 +109,7 @@ use Yiisoft\Html\Tag\Form;
    ->addInputAttributes([
        'class' => 'form-control form-control-lg',
    ])
-   ->value(Html::encode($form->getEmailTemplateCc()))
+   ->value(Html::encode($form->email_template_cc))
    ->readonly(true)
    ->placeholder($translator->translate('cc'))
 ?>
@@ -120,7 +120,7 @@ use Yiisoft\Html\Tag\Form;
    ->addInputAttributes([
        'class' => 'form-control form-control-lg',
    ])
-   ->value(Html::encode($form->getEmailTemplateBcc()))
+   ->value(Html::encode($form->email_template_bcc))
    ->readonly(true)
    ->placeholder($translator->translate('bcc'))
 ?>
@@ -131,7 +131,7 @@ use Yiisoft\Html\Tag\Form;
    ->addInputAttributes([
        'class' => 'form-control form-control-lg',
    ])
-   ->value(Html::encode($form->getEmailTemplatePdfTemplate()))
+   ->value(Html::encode($form->email_template_pdf_template))
    ->readonly(true)
    ->placeholder($translator->translate('pdf.template'))
 ?>
