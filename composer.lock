@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b464bfa794862372c2a364eb41ca2d73",
+    "content-hash": "4f0d144745e11c3473ee66cbecafd61b",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -25844,21 +25844,21 @@
         },
         {
             "name": "testo/assert",
-            "version": "0.1.8",
+            "version": "0.1.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/assert.git",
-                "reference": "edbbf1bbc7f7a5977d5229250bff21be04adf575"
+                "reference": "0af32d13ba28bdd64156eb9d6e87a1e8b6512e80"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/assert/zipball/edbbf1bbc7f7a5977d5229250bff21be04adf575",
-                "reference": "edbbf1bbc7f7a5977d5229250bff21be04adf575",
+                "url": "https://api.github.com/repos/php-testo/assert/zipball/0af32d13ba28bdd64156eb9d6e87a1e8b6512e80",
+                "reference": "0af32d13ba28bdd64156eb9d6e87a1e8b6512e80",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.2",
-                "testo/testo": "0.10.24 - 1"
+                "testo/testo": "0.10.29 - 1"
             },
             "type": "library",
             "extra": {
@@ -25891,7 +25891,7 @@
                 "testo"
             ],
             "support": {
-                "source": "https://github.com/php-testo/assert/tree/0.1.8"
+                "source": "https://github.com/php-testo/assert/tree/0.1.9"
             },
             "funding": [
                 {
@@ -25899,7 +25899,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-06-19T08:28:23+00:00"
+            "time": "2026-06-26T18:45:40+00:00"
         },
         {
             "name": "testo/bench",
@@ -26597,16 +26597,16 @@
         },
         {
             "name": "testo/testo",
-            "version": "0.10.28",
+            "version": "0.10.29",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/testo.git",
-                "reference": "9d01f22add1cbd95efa3974e89291af74b7db5f1"
+                "reference": "5320bd68b509a6598314f304dabfcb3b29403d5f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/testo/zipball/9d01f22add1cbd95efa3974e89291af74b7db5f1",
-                "reference": "9d01f22add1cbd95efa3974e89291af74b7db5f1",
+                "url": "https://api.github.com/repos/php-testo/testo/zipball/5320bd68b509a6598314f304dabfcb3b29403d5f",
+                "reference": "5320bd68b509a6598314f304dabfcb3b29403d5f",
                 "shasum": ""
             },
             "require": {
@@ -26619,7 +26619,7 @@
                 "psr/log": "^2.0 || ^3.0",
                 "symfony/console": "^6.4 || ^7 || ^8.0",
                 "symfony/finder": "^6.4 || ^7 || ^8.0",
-                "testo/assert": "^0.1.8",
+                "testo/assert": "^0.1.9",
                 "testo/bench": "^0.1.5",
                 "testo/bridge-symfony-console": "^0.1.7",
                 "testo/codecov": "^0.1.11",
@@ -26692,7 +26692,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-06-24T19:41:17+00:00"
+            "time": "2026-06-26T18:45:17+00:00"
         },
         {
             "name": "thecodingmachine/safe",
@@ -26922,5 +26922,5 @@
         "ext-zend-opcache": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
