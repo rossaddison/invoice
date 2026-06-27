@@ -282,12 +282,13 @@ $invItemAllowanceCharge->getAllowanceCharge()?->getTaxRate()?->getTaxRatePercent
                 : Html::encode($s->formatCurrency(0.00));
                 ?>
                         </td>
+                        <?php if ($vat === '0') : ?>
                         <td class="text-end">
-<?= Html::encode($s->formatCurrency($inv_item_amount?->getTaxTotal()));
-                ?>
+                            <?= Html::encode($s->formatCurrency($inv_item_amount?->getTaxTotal())); ?>
+                        </td>
+                        <?php endif; ?>
                         <td class="text-end">
-    <?= Html::encode($item->getTaxRate()?->getTaxRatePercent());
-                ?>
+                            <?= Html::encode($item->getTaxRate()?->getTaxRatePercent()); ?>
                         </td>
                         <td class="text-end">
                             <b>
