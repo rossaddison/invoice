@@ -137,6 +137,7 @@ final readonly class FormFields
         return Html::openTag('div')
             . Field::date($form, 'date_created')
                 ->label($this->translator->translate($labelKey))
+                ->addInputAttributes(['onclick' => 'this.showPicker()'])
                 ->value($dateValue)
                 ->hint($this->translator->translate('hint.this.field.is.required'))
                 ->render()

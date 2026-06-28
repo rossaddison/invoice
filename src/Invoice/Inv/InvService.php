@@ -84,15 +84,24 @@ final readonly class InvService
                 $date_supplied) ?: new DateTimeImmutable('1901/01/01'));
 
 
-        $datetimeimmutable_tax_point = $this->setTaxPoint(
-            $model,
-            $datetime_supplied::createFromFormat('Y-m-d', $date_supplied) ?:
-                new DateTimeImmutable('1901/01/01'),
-            $datetime_created::createFromFormat('Y-m-d', $date_created) ?:
-                new DateTimeImmutable('1901/01/01'),
-        );
-        null !== $datetimeimmutable_tax_point ?
-                $model->setDateTaxPoint($datetimeimmutable_tax_point) : '';
+        $date_tax_point_raw = (string) ($array['date_tax_point'] ?? '');
+        if ($date_tax_point_raw !== '') {
+            $model->setDateTaxPoint(
+                DateTimeImmutable::createFromFormat('Y-m-d', $date_tax_point_raw)
+                    ?: new DateTimeImmutable('1901/01/01')
+            );
+        } else {
+            $datetimeimmutable_tax_point = $this->setTaxPoint(
+                $model,
+                $datetime_supplied::createFromFormat('Y-m-d', $date_supplied) ?:
+                    new DateTimeImmutable('1901/01/01'),
+                $datetime_created::createFromFormat('Y-m-d', $date_created) ?:
+                    new DateTimeImmutable('1901/01/01'),
+            );
+            if (null !== $datetimeimmutable_tax_point) {
+                $model->setDateTaxPoint($datetimeimmutable_tax_point);
+            }
+        }
 
         $model->setDateDue($s);
 

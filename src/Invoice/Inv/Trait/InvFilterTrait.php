@@ -93,7 +93,7 @@ trait InvFilterTrait
     {
         $nameParts = explode(' ', $fullName);
         $firstName = $nameParts[0];
-        $secondName = $nameParts[1];
+        $secondName = $nameParts[1] ?? '';
         $query = $this->select()
                        ->load(['client'])
                        ->where(['client.client_name' => $firstName])
@@ -119,7 +119,7 @@ trait InvFilterTrait
     {
         $nameParts = explode(' ', $fullName);
         $firstName = $nameParts[0];
-        $secondName = $nameParts[1];
+        $secondName = $nameParts[1] ?? '';
         $query = $this->select()
                        ->load(['client'])
                        ->where(['client.client_name' => $firstName])
