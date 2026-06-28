@@ -1,4 +1,4 @@
-import { parsedata, getJson, ApiResponse, RequestParams, closestSafe } from './utils.js';
+import { parsedata, getJson, postJson, ApiResponse, RequestParams, closestSafe } from './utils.js';
 
 // Invoice-specific interfaces
 interface RecurringInvoiceData extends RequestParams {
@@ -17,6 +17,19 @@ interface CopyMultipleInvoicesData extends RequestParams {
     keylist: string[];
     modal_created_date: string;
     client_ids: string[];
+}
+
+interface CopyInvSpreadsheetRow {
+    date_created: string;
+    note: string;
+    same_amount: string;
+    payment_date: string;
+}
+
+interface CopyInvSpreadsheetPayload extends RequestParams {
+    keylist: string[];
+    client_ids: string[];
+    rows_json: string;
 }
 
 interface CopySingleInvoiceData extends RequestParams {
@@ -99,6 +112,12 @@ export class InvoiceHandler {
         if (copyMultipleSearch) {
             this.filterCopyMultipleClientList(copyMultipleSearch.value);
         }
+
+        // Parse CSV file for spreadsheet copy
+        const csvFile = target.closest('#copy_inv_csv_file') as HTMLInputElement | null;
+        if (csvFile) {
+            void this.handleCopyCsvFileChange(csvFile);
+        }
     }
 
     private handleClick(event: Event): void {
@@ -134,6 +153,13 @@ export class InvoiceHandler {
             closestSafe<HTMLElement>(target, '#delete-items-confirm-inv');
         if (deleteItemsConfirm) {
             this.handleDeleteInvoiceItems(deleteItemsConfirm);
+            return;
+        }
+
+        // Copy multiple invoices (spreadsheet import)
+        const copySpreadsheet = closestSafe<HTMLElement>(target, '#modal_copy_inv_spreadsheet_confirm');
+        if (copySpreadsheet) {
+            void this.handleCopyInvoicesSpreadsheet();
             return;
         }
 
@@ -420,6 +446,126 @@ export class InvoiceHandler {
             }
         } catch (error) {
             console.error('multiplecopy error', error);
+            this.restoreButton(btn, originalHtml);
+            alert('An error occurred. See console for details.');
+        }
+    }
+
+    private parseCopyCsv(text: string): CopyInvSpreadsheetRow[] {
+        const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
+        if (lines.length < 2) {
+            return [];
+        }
+        const header = lines[0];
+        const delimiter = header.includes(';') ? ';' : ',';
+        const splitLine = (line: string): string[] =>
+            line.split(delimiter).map(c => c.trim().replace(/^"|"$/g, ''));
+        const rows: CopyInvSpreadsheetRow[] = [];
+        for (let i = 1; i < lines.length; i++) {
+            const cols = splitLine(lines[i]);
+            rows.push({
+                date_created: cols[0] ?? '',
+                note:         cols[1] ?? '',
+                same_amount:  cols[2] ?? '1',
+                payment_date: cols[3] ?? '',
+            });
+        }
+        return rows;
+    }
+
+    private async handleCopyCsvFileChange(input: HTMLInputElement): Promise<void> {
+        const file = input.files?.[0];
+        const preview = document.getElementById('copy_inv_csv_preview');
+        const tbody   = document.getElementById('copy_inv_csv_tbody');
+        const importBtn = document.getElementById('modal_copy_inv_spreadsheet_confirm') as HTMLButtonElement | null;
+
+        if (!file || !preview || !tbody || !importBtn) {
+            return;
+        }
+
+        const text = await file.text();
+        const rows = this.parseCopyCsv(text);
+
+        tbody.innerHTML = '';
+        rows.forEach(row => {
+            const tr = document.createElement('tr');
+            (['date_created', 'note', 'same_amount', 'payment_date'] as const).forEach(key => {
+                const td = document.createElement('td');
+                td.textContent = row[key];
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+
+        if (rows.length > 0) {
+            preview.style.display = 'block';
+            importBtn.style.display = 'inline-block';
+        } else {
+            preview.style.display = 'none';
+            importBtn.style.display = 'none';
+        }
+    }
+
+    private async handleCopyInvoicesSpreadsheet(): Promise<void> {
+        const btn = document.getElementById('modal_copy_inv_spreadsheet_confirm') as HTMLButtonElement | null;
+        const originalHtml = btn?.innerHTML ?? '';
+
+        if (btn) {
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>';
+            btn.disabled = true;
+        }
+
+        try {
+            const selected = this.getCheckedInvoiceIds();
+            if (selected.length === 0) {
+                alert('Please select invoices to copy.');
+                this.restoreButton(btn, originalHtml);
+                return;
+            }
+
+            const clientIds: string[] = Array.from(
+                document.querySelectorAll<HTMLInputElement>(
+                    'input[name="copy_inv_multiple_client_ids[]"]:checked'
+                )
+            ).map(cb => cb.value).filter(v => v !== '');
+
+            const tbody = document.getElementById('copy_inv_csv_tbody');
+            const rows: CopyInvSpreadsheetRow[] = [];
+            tbody?.querySelectorAll('tr').forEach(tr => {
+                const cells = tr.querySelectorAll('td');
+                rows.push({
+                    date_created: (cells[0]?.textContent ?? '').trim(),
+                    note:         (cells[1]?.textContent ?? '').trim(),
+                    same_amount:  (cells[2]?.textContent ?? '1').trim(),
+                    payment_date: (cells[3]?.textContent ?? '').trim(),
+                });
+            });
+
+            if (rows.length === 0) {
+                alert('No spreadsheet rows found. Please upload a CSV file first.');
+                this.restoreButton(btn, originalHtml);
+                return;
+            }
+
+            const payload: CopyInvSpreadsheetPayload = {
+                keylist:    selected,
+                client_ids: clientIds,
+                rows_json:  JSON.stringify(rows),
+            };
+
+            const url = `${location.origin}/invoice/inv/multiplecopyspreadsheet`;
+            const response = await getJson<ApiResponse>(url, payload);
+            const data = parsedata(response);
+
+            if (data.success === 1) {
+                if (btn) btn.innerHTML = '<i class="bi bi-check-lg"></i>';
+                globalThis.location.reload();
+            } else {
+                if (btn) btn.innerHTML = '<i class="bi bi-x-lg"></i>';
+                globalThis.location.reload();
+            }
+        } catch (error) {
+            console.error('multiplecopyspreadsheet error', error);
             this.restoreButton(btn, originalHtml);
             alert('An error occurred. See console for details.');
         }

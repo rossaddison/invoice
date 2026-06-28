@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv\Trait;
 
+use App\Infrastructure\Persistence\Inv\Inv;
 use Cycle\Database\Injection\Parameter;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 
@@ -41,6 +42,7 @@ trait InvFilterTrait
     {
         $trimmed = ltrim(rtrim($invFamilyName));
         $ids = [];
+        /** @var Inv $inv */
         foreach ($this->findAllPreloaded() as $inv) {
             if ($inv->getFirstItemFamilyName() === $trimmed) {
                 $ids[] = (string) $inv->reqId();

@@ -92,6 +92,36 @@ export async function getJson<T = unknown>(
     }
 }
 
+export async function postJson<T = unknown>(url: string, body: unknown, csrfToken?: string): Promise<T> {
+    const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+    };
+    if (csrfToken) {
+        headers['X-CSRF-Token'] = csrfToken;
+    }
+    const response = await fetch(url, {
+        method: 'POST',
+        credentials: 'same-origin',
+        cache: 'no-store',
+        headers,
+        body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+        throw new Error(`Network response not ok: ${response.status}`);
+    }
+
+    const text = await response.text();
+
+    try {
+        return JSON.parse(text) as T;
+    } catch (e) {
+        console.warn('Response is not JSON, returning as text:', e);
+        return text as T;
+    }
+}
+
 /**
  * Safe closest element finder with fallback for older browsers
  * @param element - Starting element

@@ -658,6 +658,7 @@ return [
   'documentation' => 'Documentation',
   'download' => 'Download',
   'download.pdf' => 'Download PDF',
+  'download.template' => 'Download Template',
   'draft' => 'Draft',
   'draft.guest' => 'Draft invoices are not viewable by Clients.',
   'draft.number.off' => 'New draft Invoices'
@@ -1065,6 +1066,7 @@ return [
   'import' => 'Import',
   'import.data' => 'Import Data',
   'import.from.csv' => 'Import from CSV',
+  'import.spreadsheet' => 'Import Spreadsheet',
   'in.progress' => 'In progress',
   'inactive' => 'Inactive',
   'index.checkbox.add.some.items.to.enable' =>
@@ -2462,6 +2464,7 @@ prior to importing and no existing documents e.g. Invoices.',
     'Config params'
     . ' Accounting Supplier Party Tax Scheme Company Id not found.',
   'stream' => 'Stream Pdf in Browser / Modal',
+  'spreadsheet.import' => 'Spreadsheet Import',
   'street.address' => 'Street Address',
   'street.address.2' => 'Street Address (cont.)',
   'subject' => 'Subject',

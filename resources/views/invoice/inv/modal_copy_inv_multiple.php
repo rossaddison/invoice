@@ -76,6 +76,41 @@ echo H::openTag('div', ['id' => 'modal-copy-inv-multiple', 'class' => 'modal',
        echo H::closeTag('div'); //6
       }
      echo H::closeTag('div'); //5
+     echo H::tag('hr');
+     echo H::openTag('div', ['class' => 'mb-2']); //5 spreadsheet section
+      echo H::openTag('div', ['class' => 'd-flex align-items-center justify-content-between mb-1']); //6
+       echo H::openTag('small', ['class' => 'text-muted fw-semibold']); //7
+        echo $translator->translate('spreadsheet.import');
+       echo H::closeTag('small'); //7
+       echo H::openTag('a', [
+        'href'   => '/invoice/inv/copycsvtemplate',
+        'class'  => 'btn btn-outline-secondary btn-sm',
+        'target' => '_blank',
+       ]); //7
+        echo H::tag('i', '', ['class' => 'bi bi-download']);
+        echo ' ' . $translator->translate('download.template');
+       echo H::closeTag('a'); //7
+      echo H::closeTag('div'); //6
+      echo H::tag('input', '', [
+       'type'   => 'file',
+       'id'     => 'copy_inv_csv_file',
+       'accept' => '.csv',
+       'class'  => 'form-control form-control-sm mb-2',
+      ]);
+      echo H::openTag('div', ['id' => 'copy_inv_csv_preview', 'style' => 'display:none;max-height:160px;overflow-y:auto;']); //6
+       echo H::openTag('table', ['class' => 'table table-sm table-bordered mb-0']); //7
+        echo H::openTag('thead'); //8
+         echo H::openTag('tr'); //9
+          echo H::tag('th', 'date_created');
+          echo H::tag('th', 'note');
+          echo H::tag('th', 'same_amount');
+          echo H::tag('th', 'payment_date');
+         echo H::closeTag('tr'); //9
+        echo H::closeTag('thead'); //8
+        echo H::tag('tbody', '', ['id' => 'copy_inv_csv_tbody']);
+       echo H::closeTag('table'); //7
+      echo H::closeTag('div'); //6
+     echo H::closeTag('div'); //5
     echo H::closeTag('form'); //4
    echo H::closeTag('div'); //3
    echo H::openTag('div', ['class' => 'modal-footer']); //3
@@ -84,6 +119,15 @@ echo H::openTag('div', ['id' => 'modal-copy-inv-multiple', 'class' => 'modal',
      'class'           => 'btn btn-secondary',
      'data-bs-dismiss' => 'modal',
     ]);
+    echo H::openTag('button', [
+     'type'  => 'button',
+     'class' => 'btn btn-primary',
+     'id'    => 'modal_copy_inv_spreadsheet_confirm',
+     'style' => 'display:none;',
+    ]); //3
+     echo H::tag('i', '', ['class' => 'bi bi-table']);
+     echo ' ' . $translator->translate('import.spreadsheet');
+    echo H::closeTag('button'); //3
     echo H::openTag('button', [
      'type'  => 'button',
      'class' => 'modal_copy_inv_multiple_confirm btn btn-success',

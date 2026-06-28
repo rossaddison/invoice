@@ -1299,6 +1299,14 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvController::class, 'multiplecopy'])
                 ->name('inv/multiplecopy'),
+            Route::methods([$mG, $mP], '/inv/multiplecopyspreadsheet')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([InvController::class, 'multiplecopyspreadsheet'])
+                ->name('inv/multiplecopyspreadsheet'),
+            Route::methods([$mG], '/inv/copycsvtemplate')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([InvController::class, 'csvTemplateInvCopy'])
+                ->name('inv/copycsvtemplate'),
             Route::methods([$mG, $mP], '/inv/confirm')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvController::class, 'confirm'])

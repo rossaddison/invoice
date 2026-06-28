@@ -35,8 +35,8 @@ final readonly class PaymentService
          * @var string $array['payment_date']
          */
         $payment_date = $array['payment_date'] ?? '';
-        $model->setPaymentDate(
-            $datetime::createFromFormat('Y-m-d', $payment_date));
+        $parsed = $datetime::createFromFormat('Y-m-d', $payment_date);
+        $model->setPaymentDate($parsed !== false ? $parsed : null);
 
         isset($array['amount']) ?
             $model->setAmount((float) $array['amount']) : '';

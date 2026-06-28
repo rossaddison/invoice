@@ -7,16 +7,20 @@ namespace App\Invoice\Inv\Trait;
 use App\Infrastructure\Persistence\
 {
     Inv\Inv, InvAllowanceCharge\InvAllowanceCharge,
-    InvItem\InvItem, InvCustom\InvCustom, InvTaxRate\InvTaxRate
+    InvItem\InvItem, InvCustom\InvCustom, InvTaxRate\InvTaxRate,
+    Payment\Payment
 };
 
 use App\Invoice\{
     InvAllowanceCharge\InvAllowanceChargeForm, InvCustom\InvCustomForm,
     InvItem\IiAddProductDeps, InvItem\InvItemForm, InvTaxRate\InvTaxRateForm,
+    Inv\CsvDateNormaliser,
     Inv\InvCopyDeps,
-    Inv\InvForm
+    Inv\InvForm,
+    Payment\PaymentService,
 };
 
+use Psr\Http\Message\{ResponseFactoryInterface, StreamFactoryInterface};
 use Yiisoft\{
     FormModel\FormHydrator, Json\Json, Security\Random
 };
@@ -107,6 +111,10 @@ trait MultipleCopy
         FormHydrator $formHydrator,
         array $productIds,
         string $createdDate,
+        string $note = '',
+        bool $sameAmount = true,
+        string $paymentDate = '',
+        ?PaymentService $paymentService = null,
     ): bool {
         $sentCopy = $this->sR->getSetting('mark_invoices_sent_copy') === '1';
         $createdDt = $createdDate !== ''
@@ -129,7 +137,7 @@ trait MultipleCopy
                 : '',
             'discount_amount'         => (float) $original->getDiscountAmount(),
             'terms'                   => $original->getTerms(),
-            'note'                    => $original->getNote(),
+            'note'                    => $note !== '' ? $note : ($original->getNote() ?? ''),
             'document_description'    => $original->getDocumentDescription(),
             'url_key'                 => Random::string(32),
             'payment_method'          => $original->getPaymentMethod(),
@@ -151,7 +159,8 @@ trait MultipleCopy
         $this->inv_service->withTransaction(
             function () use (
                 $user, $copy, $invoice_body, $createdDate, $invId,
-                $d, $formHydrator, $productIds, $targetClientId
+                $d, $formHydrator, $productIds, $targetClientId,
+                $sameAmount, $paymentDate, $paymentService
             ): void {
                 $copied = $this->inv_service->copyInv(
                     $user, $copy, $invoice_body, $this->sR);
@@ -162,15 +171,115 @@ trait MultipleCopy
                     $this->invToInvInvItems($invId, $copied_id, $d, $formHydrator);
                     $this->invToInvInvTaxRates($invId, $copied_id, $d, $formHydrator);
                     $this->invToInvInvCustom($invId, $copied_id, $d, $formHydrator);
-                    $this->invToInvInvAmount($invId, $copied_id, $d);
+                    if ($sameAmount) {
+                        $this->invToInvInvAmount($invId, $copied_id, $d);
+                    }
                     $d->iR->save($copy);
                     if (!empty($productIds)) {
                         $d->pcS->syncFromInvItems($targetClientId, $productIds);
+                    }
+                    if ($sameAmount && $paymentDate !== '' && null !== $paymentService) {
+                        $invAmount = $d->iaR->repoInvquery($copied_id);
+                        if (null !== $invAmount) {
+                            $paymentService->savePayment(new Payment(), [
+                                'inv_id'            => $copied_id,
+                                'payment_date'      => $paymentDate,
+                                'amount'            => $invAmount->getTotal() ?? 0.00,
+                                'note'              => $invoice_body['note'] ?? '',
+                                'payment_method_id' => $copied->getPaymentMethod() ?? 0,
+                            ]);
+                        }
                     }
                 }
             }
         );
         return true;
+    }
+
+    public function multiplecopyspreadsheet(
+        Request $request,
+        FormHydrator $formHydrator,
+        InvCopyDeps $d,
+        PaymentService $paymentService,
+    ): Response {
+        $data = $request->getQueryParams();
+
+        /** @var list<string> $keyList */
+        $keyList = (array) ($data['keylist'] ?? []);
+        /** @var int[] $clientIds */
+        $clientIds = array_values(
+            array_filter(array_map('intval', (array) ($data['client_ids'] ?? [])))
+        );
+        /** @var list<array{date_created: string, note: string, same_amount: string, payment_date: string}> $rows */
+        $rows = (array) json_decode((string) ($data['rows_json'] ?? '[]'), true);
+
+        if ($keyList === [] || $rows === []) {
+            return $this->factory->createResponse(Json::encode(['success' => 0]));
+        }
+
+        $anySuccess = false;
+
+        foreach ($keyList as $value) {
+            $invId    = (int) $value;
+            $original = $d->iR->repoInvUnloadedquery($invId);
+            if (!$original) {
+                continue;
+            }
+
+            $productIds = $this->collectInvProductIds($invId, $d);
+            $targets    = $clientIds !== [] ? $clientIds : [$original->reqClientId()];
+
+            foreach ($rows as $row) {
+                $dateCreated = CsvDateNormaliser::normalise(ltrim(rtrim($row['date_created'] ?? '')));
+                $note        = ltrim(rtrim($row['note'] ?? ''));
+                $sameAmount  = ($row['same_amount'] ?? '1') !== '0';
+                $paymentDate = CsvDateNormaliser::normalise(ltrim(rtrim($row['payment_date'] ?? '')));
+
+                foreach ($targets as $targetClientId) {
+                    if ($this->copyInvToClient(
+                        $invId, $original, $targetClientId, $d,
+                        $formHydrator, $productIds, $dateCreated, $note,
+                        $sameAmount, $paymentDate, $paymentService
+                    )) {
+                        $anySuccess = true;
+                    }
+                }
+            }
+        }
+
+        return $this->factory->createResponse(
+            Json::encode(['success' => $anySuccess ? 1 : 0])
+        );
+    }
+
+    public function csvTemplateInvCopy(
+        ResponseFactoryInterface $responseFactory,
+        StreamFactoryInterface $streamFactory,
+    ): Response {
+        $rows = [
+            ['date_created', 'note', 'same_amount', 'payment_date'],
+            ['2026-07-01', 'Invoice for services rendered in June', '1', '2026-07-15'],
+            ['2026-07-15', 'Second monthly invoice', '1', '2026-07-30'],
+            ['2026-08-01', 'August invoice no payment yet', '1', ''],
+        ];
+
+        $handle = fopen('php://temp', 'r+');
+        if ($handle === false) {
+            return $responseFactory->createResponse(500);
+        }
+        foreach ($rows as $row) {
+            fputcsv($handle, $row);
+        }
+        rewind($handle);
+        $csv = (string) stream_get_contents($handle);
+        fclose($handle);
+
+        return $responseFactory
+            ->createResponse(200)
+            ->withHeader('Content-Type', 'text/csv; charset=UTF-8')
+            ->withHeader('Content-Disposition', 'attachment; filename="invoice-copy-template.csv"')
+            ->withHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
+            ->withBody($streamFactory->createStream($csv));
     }
 
     private function invToInvInvAllowanceCharges(
@@ -516,4 +625,5 @@ trait MultipleCopy
             }
         }
     }
+
 }
