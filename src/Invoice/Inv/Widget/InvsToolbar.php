@@ -86,7 +86,8 @@ final class InvsToolbar
             . Html::tag('label', Html::encode($t->translate('payment.date')),
                 ['class' => 'form-label', 'for' => 'bulk-quick-pay-date'])
             . Html::tag('input', '', ['type' => 'date', 'id' => 'bulk-quick-pay-date',
-                'class' => 'form-control', 'value' => $today, 'required' => true])
+                'class' => 'form-control', 'value' => $today, 'required' => true,
+                'onclick' => 'this.showPicker()'])
             . Html::closeTag('div')
             . Html::openTag('div', ['class' => 'mb-3'])
             . Html::tag('label', Html::encode($t->translate('bank.ref')),
