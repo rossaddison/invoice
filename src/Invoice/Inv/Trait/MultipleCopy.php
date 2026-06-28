@@ -109,6 +109,9 @@ trait MultipleCopy
         string $createdDate,
     ): bool {
         $sentCopy = $this->sR->getSetting('mark_invoices_sent_copy') === '1';
+        $createdDt = $createdDate !== ''
+            ? (\DateTimeImmutable::createFromFormat('Y-m-d', $createdDate) ?: new \DateTimeImmutable('now'))
+            : new \DateTimeImmutable('now');
         $invoice_body = [
             'client_id'               => $targetClientId,
             'group_id'                => $original->reqGroupId(),
@@ -117,8 +120,8 @@ trait MultipleCopy
             'status_id'               => $sentCopy ? 2 : 1,
             'is_read_only'            => $sentCopy,
             'password'                => '',
-            'date_supplied'           => new \DateTimeImmutable('now'),
-            'date_tax_point'          => new \DateTimeImmutable('now'),
+            'date_supplied'           => $createdDt,
+            'date_tax_point'          => $createdDt,
             'time_created'            => (new \DateTimeImmutable('now'))->format('H:i:s'),
             'stand_in_code'           => $this->sR->getSetting('stand_in_code'),
             'number'                  => $this->sR->getSetting('generate_invoice_number_for_draft') === '1'
