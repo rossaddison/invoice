@@ -1307,6 +1307,10 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvController::class, 'csvTemplateInvCopy'])
                 ->name('inv/copycsvtemplate'),
+            Route::methods([$mG], '/inv/bulkquickpay')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([InvController::class, 'bulkquickpay'])
+                ->name('inv/bulkquickpay'),
             Route::methods([$mG], '/inv/quickpayform')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvController::class, 'quickpayform'])

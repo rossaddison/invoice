@@ -84,6 +84,38 @@ final class InvsColumnBuilder
             $this->buildFamilyNameColumn(),
             $this->buildYearMonthColumn(),
             $this->buildStatusColumn($iR, $irR, $sR),
+            new DataColumn(
+                header: (new Label())->content('💰')
+                    ->addAttributes(['data-bs-toggle' => 'tooltip',
+                        'title' => $t->translate('quick.pay')])
+                    ->render(),
+                encodeHeader: false,
+                content: static function (Inv $model) use ($ug, $t): string {
+                    $invId    = $model->reqId();
+                    $statusId = $model->reqStatusId();
+                    $paid     = $model->getInvAmount()->getPaid() ?? 0.0;
+                    $total    = $model->getInvAmount()->getTotal() ?? 0.0;
+                    if ($statusId === 4 || ($total > 0.0 && $paid >= $total)) {
+                        return '<span class="badge bg-success" data-bs-toggle="tooltip" title="'
+                            . Html::encode($t->translate('paid')) . '">✅</span>';
+                    }
+                    if (!in_array($statusId, [2, 3, 5, 6], true) || $total <= 0.0) {
+                        return '';
+                    }
+                    $qpId = 'qp-' . $invId;
+                    return '<div id="' . $qpId . '">'
+                        . '<button class="btn btn-outline-success btn-sm"'
+                        . ' hx-get="' . Html::encode(
+                            $ug->generate('inv/quickpayform', [], ['inv_id' => $invId])
+                        ) . '"'
+                        . ' hx-target="#' . $qpId . '" hx-swap="innerHTML"'
+                        . ' data-bs-toggle="tooltip" title="'
+                        . Html::encode($t->translate('quick.pay')) . '">💰</button>'
+                        . '</div>';
+                },
+                encodeContent: false,
+                withSorting: false,
+            ),
             $this->buildClientActiveColumn(),
             $this->buildCreditNoteColumn($iR),
             ...$this->buildSentLogColumns($islR),
@@ -162,7 +194,6 @@ final class InvsColumnBuilder
                 withSorting: false,
             ),
 
-            $this->buildQuickPayColumn(),
             $this->buildDeleteColumn($sR),
         ];
 
@@ -781,46 +812,6 @@ final class InvsColumnBuilder
                 ),
             ],
             visible: $this->visible,
-        );
-    }
-
-    private function buildQuickPayColumn(): DataColumn
-    {
-        $ug = $this->urlGenerator;
-        $t  = $this->translator;
-        return new DataColumn(
-            header: (new Label())->content('💰')
-                ->addAttributes(['data-bs-toggle' => 'tooltip',
-                    'title' => $t->translate('quick.pay')])
-                ->render(),
-            encodeHeader: false,
-            content: static function (Inv $model) use ($ug, $t): string {
-                $invId    = $model->reqId();
-                $statusId = $model->reqStatusId();
-                $paid     = $model->getInvAmount()->getPaid() ?? 0.0;
-                $total    = $model->getInvAmount()->getTotal() ?? 0.0;
-
-                if ($statusId === 4 || ($total > 0.0 && $paid >= $total)) {
-                    return '<span class="badge bg-success" data-bs-toggle="tooltip" title="'
-                        . Html::encode($t->translate('paid')) . '">✅</span>';
-                }
-                if (!in_array($statusId, [2, 3, 5, 6], true) || $total <= 0.0) {
-                    return '';
-                }
-                $qpId = 'qp-' . $invId;
-                return '<div id="' . $qpId . '">'
-                    . '<button class="btn btn-outline-success btn-sm"'
-                    . ' hx-get="' . Html::encode(
-                        $ug->generate('inv/quickpayform', [], ['inv_id' => $invId])
-                    ) . '"'
-                    . ' hx-target="#' . $qpId . '" hx-swap="innerHTML"'
-                    . ' data-bs-toggle="tooltip" title="'
-                    . Html::encode($t->translate('quick.pay')) . '">'
-                    . '💰</button>'
-                    . '</div>';
-            },
-            encodeContent: false,
-            withSorting: false,
         );
     }
 

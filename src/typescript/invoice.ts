@@ -156,6 +156,13 @@ export class InvoiceHandler {
             return;
         }
 
+        // Bulk quick pay (modal confirm)
+        const bulkQuickPay = closestSafe(target, '#bulk-quick-pay-confirm');
+        if (bulkQuickPay) {
+            void this.handleBulkQuickPay();
+            return;
+        }
+
         // Copy multiple invoices (spreadsheet import)
         const copySpreadsheet = closestSafe<HTMLElement>(target, '#modal_copy_inv_spreadsheet_confirm');
         if (copySpreadsheet) {
@@ -297,6 +304,40 @@ export class InvoiceHandler {
             if (btn && originalHtml) {
                 setButtonLoadingOff(btn, originalHtml);
             }
+            alert('An error occurred. See console for details.');
+        }
+    }
+
+    private async handleBulkQuickPay(): Promise<void> {
+        const selected = this.getCheckedInvoiceIds();
+        if (selected.length === 0) {
+            alert('No invoices selected.');
+            return;
+        }
+        const dateInput = document.getElementById('bulk-quick-pay-date') as HTMLInputElement | null;
+        const noteInput = document.getElementById('bulk-quick-pay-note') as HTMLInputElement | null;
+        const date = dateInput?.value ?? '';
+        const note = noteInput?.value ?? '';
+        if (date === '') {
+            alert('Please enter a payment date.');
+            return;
+        }
+        const btn = document.getElementById('bulk-quick-pay-confirm');
+        const originalHtml = btn?.innerHTML;
+        if (btn) { setButtonLoadingOn(btn); }
+        try {
+            const url = `${location.origin}/invoice/inv/bulkquickpay`;
+            const response = await getJson<ApiResponse>(url, { keylist: selected, date, note });
+            const data = parsedata(response);
+            if (data.success === 1) {
+                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
+            } else {
+                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-x-lg"></i></h2>';
+            }
+            globalThis.location.reload();
+        } catch (error) {
+            console.error('bulk_quick_pay error', error);
+            if (btn && originalHtml) { setButtonLoadingOff(btn, originalHtml); }
             alert('An error occurred. See console for details.');
         }
     }

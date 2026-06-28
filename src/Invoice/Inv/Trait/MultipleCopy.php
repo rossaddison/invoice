@@ -284,23 +284,61 @@ trait MultipleCopy
             ->withBody($streamFactory->createStream($csv));
     }
 
+    public function bulkquickpay(
+        Request $request,
+        InvCopyDeps $d,
+        PaymentService $paymentService,
+        InvRecalculator $invRecalculator,
+    ): Response {
+        $params  = $request->getQueryParams();
+        /** @var list<string> $keyList */
+        $keyList = (array) ($params['keylist'] ?? []);
+        $date    = CsvDateNormaliser::normalise(trim($params['date'] ?? ''));
+        $note    = trim($params['note'] ?? '');
+
+        if ($keyList === [] || $date === '') {
+            return $this->factory->createResponse(Json::encode(['success' => 0]));
+        }
+
+        $anySuccess = false;
+        foreach ($keyList as $value) {
+            $invId     = (int) $value;
+            $invAmount = $d->iaR->repoInvquery($invId);
+            if (null === $invAmount) {
+                continue;
+            }
+            $paymentService->savePayment(new Payment(), [
+                'inv_id'       => $invId,
+                'payment_date' => $date,
+                'amount'       => $invAmount->getTotal() ?? 0.00,
+                'note'         => $note,
+            ]);
+            $invRecalculator->recalculate($invId);
+            $anySuccess = true;
+        }
+
+        return $this->factory->createResponse(Json::encode(['success' => $anySuccess ? 1 : 0]));
+    }
+
     public function quickpayform(
         Request $request,
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory,
         UrlGeneratorInterface $urlGenerator,
     ): Response {
-        $params = $request->getQueryParams();
-        $invId  = (int) ($params['inv_id'] ?? 0);
-        $cancel = ($params['cancel'] ?? '') === '1';
-        $qpId   = 'qp-' . $invId;
+        $params   = $request->getQueryParams();
+        $invId    = (int) ($params['inv_id'] ?? 0);
+        $cancel   = ($params['cancel'] ?? '') === '1';
+        $qpId     = 'qp-' . $invId;
+        $hxTarget = ' hx-target="#' . $qpId . '"';
+        $hxSwap   = ' hx-swap="innerHTML"';
 
         if ($cancel) {
             $html = '<button class="btn btn-outline-success btn-sm"'
                 . ' hx-get="' . Html::encode(
                     $urlGenerator->generate('inv/quickpayform', [], ['inv_id' => $invId])
                 ) . '"'
-                . ' hx-target="#' . $qpId . '" hx-swap="innerHTML"'
+                . $hxTarget . $hxSwap
                 . ' data-bs-toggle="tooltip" title="Quick Pay">💰</button>';
         } else {
             $cancelUrl = Html::encode(
@@ -309,7 +347,7 @@ trait MultipleCopy
             $submitUrl = Html::encode($urlGenerator->generate('inv/quickpay'));
             $today     = (new \DateTimeImmutable())->format('Y-m-d');
             $html = '<form hx-get="' . $submitUrl . '"'
-                . ' hx-target="#' . $qpId . '" hx-swap="innerHTML"'
+                . $hxTarget . $hxSwap
                 . ' class="d-flex gap-1 align-items-center">'
                 . '<input type="hidden" name="inv_id" value="' . $invId . '">'
                 . '<input type="date" name="date" value="' . $today . '"'
@@ -320,7 +358,7 @@ trait MultipleCopy
                 . '<button type="submit" class="btn btn-success btn-sm">✓</button>'
                 . '<button type="button"'
                 . ' hx-get="' . $cancelUrl . '"'
-                . ' hx-target="#' . $qpId . '" hx-swap="innerHTML"'
+                . $hxTarget . $hxSwap
                 . ' class="btn btn-secondary btn-sm">✕</button>'
                 . '</form>';
         }

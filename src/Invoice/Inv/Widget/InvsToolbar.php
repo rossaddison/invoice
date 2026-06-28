@@ -57,6 +57,56 @@ final class InvsToolbar
             ->id('btn-mark-as-sent')
             ->render();
 
+        $today = (new \DateTimeImmutable())->format('Y-m-d');
+        $t     = $p->translator;
+
+        $bulkQuickPay = (new A())
+            ->addAttributes(['type' => 'button', 'data-bs-toggle' => 'modal',
+                'data-bs-target' => '#modal-bulk-quick-pay',
+                'title' => Html::encode($t->translate('quick.pay')),
+                'style' => 'text-decoration:none'])
+            ->addClass('btn btn-success')
+            ->content('☑️💰 ' . $t->translate('quick.pay'))
+            ->id('btn-bulk-quick-pay')
+            ->render();
+
+        $bulkQuickPayModal =
+            Html::openTag('div', ['class' => 'modal fade', 'id' => 'modal-bulk-quick-pay',
+                'tabindex' => '-1', 'aria-hidden' => 'true'])
+            . Html::openTag('div', ['class' => 'modal-dialog'])
+            . Html::openTag('div', ['class' => 'modal-content'])
+            . Html::openTag('div', ['class' => 'modal-header'])
+            . Html::tag('h5', '💰 ' . Html::encode($t->translate('quick.pay')),
+                ['class' => 'modal-title'])
+            . Html::tag('button', '', ['type' => 'button', 'class' => 'btn-close',
+                'data-bs-dismiss' => 'modal', 'aria-label' => 'Close'])
+            . Html::closeTag('div')
+            . Html::openTag('div', ['class' => 'modal-body'])
+            . Html::openTag('div', ['class' => 'mb-3'])
+            . Html::tag('label', Html::encode($t->translate('payment.date')),
+                ['class' => 'form-label', 'for' => 'bulk-quick-pay-date'])
+            . Html::tag('input', '', ['type' => 'date', 'id' => 'bulk-quick-pay-date',
+                'class' => 'form-control', 'value' => $today, 'required' => true])
+            . Html::closeTag('div')
+            . Html::openTag('div', ['class' => 'mb-3'])
+            . Html::tag('label', Html::encode($t->translate('bank.ref')),
+                ['class' => 'form-label', 'for' => 'bulk-quick-pay-note'])
+            . Html::tag('input', '', ['type' => 'text', 'id' => 'bulk-quick-pay-note',
+                'class' => 'form-control', 'placeholder' => Html::encode($t->translate('bank.ref'))])
+            . Html::closeTag('div')
+            . Html::closeTag('div')
+            . Html::openTag('div', ['class' => 'modal-footer'])
+            . Html::tag('button', Html::encode($t->translate('cancel')),
+                ['type' => 'button', 'class' => 'btn btn-secondary',
+                    'data-bs-dismiss' => 'modal'])
+            . Html::tag('button', '💰 ' . Html::encode($t->translate('quick.pay')),
+                ['type' => 'button', 'class' => 'btn btn-success',
+                    'id' => 'bulk-quick-pay-confirm'])
+            . Html::closeTag('div')
+            . Html::closeTag('div')
+            . Html::closeTag('div')
+            . Html::closeTag('div');
+
         $markSentAsDraft = $p->sR->getSetting('disable_read_only') === '0'
             ? (new A())
                 ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip',
@@ -165,12 +215,14 @@ final class InvsToolbar
                 . $copyMultiple
                 . $markAsSent
                 . $markSentAsDraft
+                . $bulkQuickPay
                 . $markRecurring
                 . $addBtn
                 . Html::closeTag('div')
                 . $groupBySelect
                 . $collapseExpand
             )->encode(false)->render()
-            . (new Form())->close();
+            . (new Form())->close()
+            . $bulkQuickPayModal;
     }
 }
