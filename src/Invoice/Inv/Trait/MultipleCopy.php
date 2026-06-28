@@ -303,16 +303,19 @@ trait MultipleCopy
         $anySuccess = false;
         foreach ($keyList as $value) {
             $invId     = (int) $value;
+            $inv       = $d->iR->repoInvUnloadedquery($invId);
             $invAmount = $d->iaR->repoInvquery($invId);
-            if (null === $invAmount) {
+            if (null === $inv || null === $invAmount) {
                 continue;
             }
-            $paymentService->savePayment(new Payment(), [
-                'inv_id'       => $invId,
-                'payment_date' => $date,
-                'amount'       => $invAmount->getTotal() ?? 0.00,
-                'note'         => $note,
-            ]);
+            $pmId = $inv->getPaymentMethod() ?? 0;
+            $paymentService->savePayment(new Payment(), array_filter([
+                'inv_id'            => $invId,
+                'payment_date'      => $date,
+                'amount'            => $invAmount->getTotal() ?? 0.00,
+                'note'              => $note,
+                'payment_method_id' => $pmId > 0 ? $pmId : null,
+            ], static fn (mixed $v): bool => $v !== null));
             $invRecalculator->recalculate($invId);
             $anySuccess = true;
         }
@@ -385,14 +388,17 @@ trait MultipleCopy
         $html = '<span class="badge bg-danger">✗</span>';
 
         if ($invId > 0 && $date !== '') {
+            $inv       = $d->iR->repoInvUnloadedquery($invId);
             $invAmount = $d->iaR->repoInvquery($invId);
-            if (null !== $invAmount) {
-                $paymentService->savePayment(new Payment(), [
-                    'inv_id'       => $invId,
-                    'payment_date' => $date,
-                    'amount'       => $invAmount->getTotal() ?? 0.00,
-                    'note'         => $note,
-                ]);
+            if (null !== $inv && null !== $invAmount) {
+                $pmId = $inv->getPaymentMethod() ?? 0;
+                $paymentService->savePayment(new Payment(), array_filter([
+                    'inv_id'            => $invId,
+                    'payment_date'      => $date,
+                    'amount'            => $invAmount->getTotal() ?? 0.00,
+                    'note'              => $note,
+                    'payment_method_id' => $pmId > 0 ? $pmId : null,
+                ], static fn (mixed $v): bool => $v !== null));
                 $invRecalculator->recalculate($invId);
                 $html = '<span class="badge bg-success" data-bs-toggle="tooltip" title="'
                     . Html::encode($date) . '">✅ ' . Html::encode($date) . '</span>';

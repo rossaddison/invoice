@@ -21,7 +21,7 @@ class Payment
     #[BelongsTo(target: Inv::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Inv $inv = null;
 
-    #[BelongsTo(target: PaymentMethod::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: PaymentMethod::class, nullable: true, fkAction: 'NO ACTION')]
     private ?PaymentMethod $payment_method = null;
 
     #[Column(type: 'date', nullable: false)]

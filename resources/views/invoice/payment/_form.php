@@ -123,7 +123,7 @@ if ($openInvsCount > 0) {
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::date($form, 'payment_date')
-    ->label($translator->translate('date'))
+    ->label($translator->translate('payment.date'))
     ->required(true)
     ->addInputAttributes(['onclick' => 'this.showPicker()'])
     ->value($form->getPaymentDate() instanceof DateTimeImmutable ? $form->getPaymentDate()->format('Y-m-d') : '')
