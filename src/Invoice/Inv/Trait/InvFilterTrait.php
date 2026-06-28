@@ -91,13 +91,9 @@ trait InvFilterTrait
 
     public function filterGuestClient(string $fullName): EntityReader
     {
-        $nameParts = explode(' ', $fullName);
-        $firstName = $nameParts[0];
-        $secondName = $nameParts[1] ?? '';
         $query = $this->select()
                        ->load(['client'])
-                       ->where(['client.client_name' => $firstName])
-                       ->where(['client.client_surname' => $secondName])
+                       ->where(['client.client_full_name' => ltrim(rtrim($fullName))])
                        ->andWhere(['status_id' => ['in' =>
                             new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
                        ->where('deleted_at', null);
@@ -117,13 +113,9 @@ trait InvFilterTrait
 
     public function filterClient(string $fullName): EntityReader
     {
-        $nameParts = explode(' ', $fullName);
-        $firstName = $nameParts[0];
-        $secondName = $nameParts[1] ?? '';
         $query = $this->select()
                        ->load(['client'])
-                       ->where(['client.client_name' => $firstName])
-                       ->where(['client.client_surname' => $secondName])
+                       ->where(['client.client_full_name' => ltrim(rtrim($fullName))])
                        ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
