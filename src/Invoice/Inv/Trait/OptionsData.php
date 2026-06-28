@@ -159,9 +159,7 @@ trait OptionsData
         foreach ($invs as $inv) {
             $client = $inv->getClient();
             if (null !== $client && strlen($client->getClientFullName()) > 0) {
-                $fullName = $client->getClientFullName();
-                $optionsDataClients[$client->getClientFullName()] =
-                    !empty($fullName) ? $fullName : '';
+                $optionsDataClients[(string) $client->reqId()] = $client->getClientFullName();
             }
         }
         return $optionsDataClients;
@@ -180,9 +178,7 @@ trait OptionsData
         foreach ($userClients as $userClient) {
             $client = $userClient->getClient();
             if (null !== $client && strlen($client->getClientFullName()) > 0) {
-                $fullName = $client->getClientFullName();
-                $optionsDataClients[$client->getClientFullName()] =
-                    !empty($fullName) ? $fullName : '';
+                $optionsDataClients[(string) $client->reqId()] = $client->getClientFullName();
             }
         }
         return $optionsDataClients;

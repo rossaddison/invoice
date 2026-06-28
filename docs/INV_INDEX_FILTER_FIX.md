@@ -89,14 +89,67 @@ return [
 It only activates for parameters whose type implements `RequestInputInterface`, so there
 is no risk to any other controller parameter resolution.
 
-### 2. `src/Invoice/Inv/Trait/InvFilterTrait.php`
+### 2. `filterClient` / `filterGuestClient` — ID-based matching
 
-`filterGuestClient()` (line 96) and `filterClient()` (line 122) both called
-`explode(' ', $fullName)` and then accessed `$nameParts[1]` without a guard.
-A single-word client name produced an undefined array key. Fixed with `?? ''`:
+**Problem (post-resolver fix):** Both methods split `getClientFullName()` on the first space and
+matched `client_name` + `client_surname` separately. This failed in two cases:
+
+- A client whose entire name is stored in `client_name` with no surname (e.g. name = `"Non Foreign"`,
+  surname = null) — the split produced `$firstName = "Non"`, `$secondName = "Foreign"`, but the
+  query `WHERE client_name = 'Non' AND client_surname = 'Foreign'` found nothing.
+- Any case mismatch between `client_full_name` stored in the DB and the individual fields.
+
+**Fix:** The dropdown option key was changed from `getClientFullName()` to `(string) $client->reqId()`
+in `optionsDataClientsFilter()` and `optionsDataUserClientsFilter()`. Both filter methods now receive
+the client ID string and query `WHERE client.id = N` — unambiguous regardless of how names are stored
+or capitalised.
 
 ```php
-$secondName = $nameParts[1] ?? '';
+// optionsDataClientsFilter — key is now the ID, value is the display name
+$optionsDataClients[(string) $client->reqId()] = $client->getClientFullName();
+
+// filterClient — query by ID
+public function filterClient(string $clientId): EntityReader
+{
+    $query = $this->select()
+        ->load(['client'])
+        ->where(['client.id' => (int) $clientId])
+        ->where('deleted_at', null);
+    return $this->prepareDataReader($query);
+}
+```
+
+### 3. `filterFamilyName` — PHP-side ID collection
+
+**Problem:** The original query used `->load('items')` then filtered with:
+
+```php
+->where(['items.product.family.family_name' => $invFamilyName])
+```
+
+Cycle ORM cannot resolve a three-level nested relation path (`items → product → family`) in a
+WHERE clause when only the top-level relation is loaded via `load()`. The filter silently matched
+no rows.
+
+**Fix:** Iterate all invoices with `findAllPreloaded()`, use the existing PHP-side
+`getFirstItemFamilyName()` method (which traverses the lazy-loaded chain correctly), collect
+matching IDs, then query `WHERE id IN (...)` — the same pattern used by `filterCreditInvNumber`.
+
+```php
+public function filterFamilyName(string $invFamilyName): EntityReader
+{
+    $trimmed = ltrim(rtrim($invFamilyName));
+    $ids = [];
+    foreach ($this->findAllPreloaded() as $inv) {
+        if ($inv->getFirstItemFamilyName() === $trimmed) {
+            $ids[] = (string) $inv->reqId();
+        }
+    }
+    $query = $ids === []
+        ? $this->select()->where(['id' => '0'])->where('deleted_at', null)
+        : $this->select()->where(['id' => ['in' => new Parameter($ids)]])->where('deleted_at', null);
+    return $this->prepareDataReader($query);
+}
 ```
 
 ---
@@ -106,7 +159,10 @@ $secondName = $nameParts[1] ?? '';
 | File | Change |
 |---|---|
 | `config/web/di/middleware-dispatcher.php` | Add `RequestInputParametersResolver` to composite |
-| `src/Invoice/Inv/Trait/InvFilterTrait.php` | Guard `$nameParts[1]` with `?? ''` (×2) |
+| `src/Invoice/Inv/Trait/InvFilterTrait.php` | Fix `filterClient`, `filterGuestClient`, `filterFamilyName` |
+| `src/Invoice/Inv/Trait/OptionsData.php` | Use client ID (not full name) as dropdown option key |
+| `src/Invoice/Inv/InvService.php` | Honour user-supplied `date_tax_point` before auto-calculating |
+| `src/Widget/FormFields.php` | Add `onclick => this.showPicker()` to `dateCreatedField` |
 
 ---
 
@@ -122,7 +178,8 @@ without the matching resolver registration.
 
 ## Verification
 
-- Psalm errorLevel 1: zero errors on both changed files.
-- `?filterInvNumber=INV251` now correctly returns only the INV251 row.
-- All other filter fields (`filterClient`, `filterStatus`, `filterDateCreatedYearMonth`, etc.)
-  confirmed working via the same mechanism.
+- Psalm errorLevel 1: zero errors across all changed files.
+- `?filterInvNumber=INV251` correctly returns only the INV251 row.
+- Client filter confirmed working for clients with combined first+surname names and for
+  clients whose full name is stored entirely in `client_name`.
+- Family name filter confirmed working via PHP-side ID collection.

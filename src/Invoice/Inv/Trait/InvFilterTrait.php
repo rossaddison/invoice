@@ -39,11 +39,16 @@ trait InvFilterTrait
 
     public function filterFamilyName(string $invFamilyName): EntityReader
     {
-        $select = $this->select();
-        $query = $select
-                ->load('items')
-                ->where(['items.product.family.family_name' => $invFamilyName])
-                ->where('deleted_at', null);
+        $trimmed = ltrim(rtrim($invFamilyName));
+        $ids = [];
+        foreach ($this->findAllPreloaded() as $inv) {
+            if ($inv->getFirstItemFamilyName() === $trimmed) {
+                $ids[] = (string) $inv->reqId();
+            }
+        }
+        $query = $ids === []
+            ? $this->select()->where(['id' => '0'])->where('deleted_at', null)
+            : $this->select()->where(['id' => ['in' => new Parameter($ids)]])->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
@@ -89,11 +94,11 @@ trait InvFilterTrait
         return $this->prepareDataReader($query);
     }
 
-    public function filterGuestClient(string $fullName): EntityReader
+    public function filterGuestClient(string $clientId): EntityReader
     {
         $query = $this->select()
                        ->load(['client'])
-                       ->where(['client.client_full_name' => ltrim(rtrim($fullName))])
+                       ->where(['client.id' => (int) $clientId])
                        ->andWhere(['status_id' => ['in' =>
                             new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
                        ->where('deleted_at', null);
@@ -111,11 +116,11 @@ trait InvFilterTrait
         return $this->prepareDataReader($query);
     }
 
-    public function filterClient(string $fullName): EntityReader
+    public function filterClient(string $clientId): EntityReader
     {
         $query = $this->select()
                        ->load(['client'])
-                       ->where(['client.client_full_name' => ltrim(rtrim($fullName))])
+                       ->where(['client.id' => (int) $clientId])
                        ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
