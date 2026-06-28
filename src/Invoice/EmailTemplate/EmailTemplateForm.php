@@ -34,6 +34,16 @@ final class EmailTemplateForm extends FormModel
     #[Length(min: 0, max: 151, skipOnEmpty: true)]
     public ?string $email_template_pdf_template = null;
 
+    public function getEmailTemplateTitle(): ?string { return $this->email_template_title; }
+    public function getEmailTemplateType(): ?string { return $this->email_template_type; }
+    public function getEmailTemplateBody(): ?string { return $this->email_template_body; }
+    public function getEmailTemplateSubject(): ?string { return $this->email_template_subject; }
+    public function getEmailTemplateFromName(): ?string { return $this->email_template_from_name; }
+    public function getEmailTemplateFromEmail(): ?string { return $this->email_template_from_email; }
+    public function getEmailTemplateCc(): ?string { return $this->email_template_cc; }
+    public function getEmailTemplateBcc(): ?string { return $this->email_template_bcc; }
+    public function getEmailTemplatePdfTemplate(): ?string { return $this->email_template_pdf_template; }
+
     public static function show(EmailTemplate $emailtemplate): self
     {
         $form = new self();
