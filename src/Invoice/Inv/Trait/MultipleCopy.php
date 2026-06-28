@@ -17,13 +17,15 @@ use App\Invoice\{
     Inv\CsvDateNormaliser,
     Inv\InvCopyDeps,
     Inv\InvForm,
+    Helpers\InvRecalculator,
     Payment\PaymentService,
 };
 
 use Psr\Http\Message\{ResponseFactoryInterface, StreamFactoryInterface};
 use Yiisoft\{
-    FormModel\FormHydrator, Json\Json, Security\Random
+    FormModel\FormHydrator, Html\Html, Json\Json, Security\Random
 };
+use Yiisoft\Router\UrlGeneratorInterface;
 use Psr\{Http\Message\ResponseInterface as Response,
     Http\Message\ServerRequestInterface as Request,
 };
@@ -280,6 +282,89 @@ trait MultipleCopy
             ->withHeader('Content-Disposition', 'attachment; filename="invoice-copy-template.csv"')
             ->withHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
             ->withBody($streamFactory->createStream($csv));
+    }
+
+    public function quickpayform(
+        Request $request,
+        ResponseFactoryInterface $responseFactory,
+        StreamFactoryInterface $streamFactory,
+        UrlGeneratorInterface $urlGenerator,
+    ): Response {
+        $params = $request->getQueryParams();
+        $invId  = (int) ($params['inv_id'] ?? 0);
+        $cancel = ($params['cancel'] ?? '') === '1';
+        $qpId   = 'qp-' . $invId;
+
+        if ($cancel) {
+            $html = '<button class="btn btn-outline-success btn-sm"'
+                . ' hx-get="' . Html::encode(
+                    $urlGenerator->generate('inv/quickpayform', [], ['inv_id' => $invId])
+                ) . '"'
+                . ' hx-target="#' . $qpId . '" hx-swap="innerHTML"'
+                . ' data-bs-toggle="tooltip" title="Quick Pay">💰</button>';
+        } else {
+            $cancelUrl = Html::encode(
+                $urlGenerator->generate('inv/quickpayform', [], ['inv_id' => $invId, 'cancel' => '1'])
+            );
+            $submitUrl = Html::encode($urlGenerator->generate('inv/quickpay'));
+            $today     = (new \DateTimeImmutable())->format('Y-m-d');
+            $html = '<form hx-get="' . $submitUrl . '"'
+                . ' hx-target="#' . $qpId . '" hx-swap="innerHTML"'
+                . ' class="d-flex gap-1 align-items-center">'
+                . '<input type="hidden" name="inv_id" value="' . $invId . '">'
+                . '<input type="date" name="date" value="' . $today . '"'
+                . ' class="form-control form-control-sm" style="width:140px" required>'
+                . '<input type="text" name="note"'
+                . ' class="form-control form-control-sm" style="width:100px"'
+                . ' placeholder="Bank ref">'
+                . '<button type="submit" class="btn btn-success btn-sm">✓</button>'
+                . '<button type="button"'
+                . ' hx-get="' . $cancelUrl . '"'
+                . ' hx-target="#' . $qpId . '" hx-swap="innerHTML"'
+                . ' class="btn btn-secondary btn-sm">✕</button>'
+                . '</form>';
+        }
+
+        $stream = $streamFactory->createStream($html);
+        return $responseFactory->createResponse()
+            ->withBody($stream)
+            ->withHeader('Content-Type', 'text/html; charset=UTF-8');
+    }
+
+    public function quickpay(
+        Request $request,
+        InvCopyDeps $d,
+        PaymentService $paymentService,
+        InvRecalculator $invRecalculator,
+        ResponseFactoryInterface $responseFactory,
+        StreamFactoryInterface $streamFactory,
+    ): Response {
+        $params = $request->getQueryParams();
+        $invId  = (int) ($params['inv_id'] ?? 0);
+        $date   = CsvDateNormaliser::normalise(trim($params['date'] ?? ''));
+        $note   = trim($params['note'] ?? '');
+
+        $html = '<span class="badge bg-danger">✗</span>';
+
+        if ($invId > 0 && $date !== '') {
+            $invAmount = $d->iaR->repoInvquery($invId);
+            if (null !== $invAmount) {
+                $paymentService->savePayment(new Payment(), [
+                    'inv_id'       => $invId,
+                    'payment_date' => $date,
+                    'amount'       => $invAmount->getTotal() ?? 0.00,
+                    'note'         => $note,
+                ]);
+                $invRecalculator->recalculate($invId);
+                $html = '<span class="badge bg-success" data-bs-toggle="tooltip" title="'
+                    . Html::encode($date) . '">✅ ' . Html::encode($date) . '</span>';
+            }
+        }
+
+        $stream = $streamFactory->createStream($html);
+        return $responseFactory->createResponse()
+            ->withBody($stream)
+            ->withHeader('Content-Type', 'text/html; charset=UTF-8');
     }
 
     private function invToInvInvAllowanceCharges(

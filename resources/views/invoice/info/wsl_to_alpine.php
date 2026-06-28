@@ -108,7 +108,14 @@ declare(strict_types=1);
  </b>
  <b>25. Restarting mariadb:
         rc-service mariadb restart
- </b>       
+ </b>
+ <b>26. After git pull, clear the Yii3 route cache so new routes are picked up immediately.
+        Yii3 compiles routes.php into a cache file in runtime/cache/ on first boot.
+        A git pull updates the PHP files on disk but the stale cache keeps being served
+        until cleared — new routes return 404 until this is done:
+        rm -rf /var/www/invoice/runtime/cache/*
+        Yii3 rebuilds the cache automatically on the next request.
+ </b>
 </p>
 </pre>
 </div>
