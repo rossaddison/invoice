@@ -129,7 +129,7 @@ $translator->setLocale($cldr);
        H::encode(!is_string($dateDueNext = $inv->getDateDue()) ?
         $dateDueNext->format($dateFmt) : ''));
      echo H::closeTag('tr'); //5
-     echo H::tag('tr', $show_custom_fields ? $top_custom_fields : '');
+     echo H::tag('tr', $show_custom_fields ? $top_custom_fields : '')->encode(false);
     echo H::closeTag('table'); //4
    echo H::closeTag('div'); //3
    echo H::openTag('h3', $invTitle); //3
@@ -384,7 +384,16 @@ $translator->setLocale($cldr);
     echo H::closeTag('div'); //3
     echo H::tag('br', '');
    endif;
-   echo H::tag('div', $show_custom_fields ? $view_custom_fields : '');
+   if ($inv->getNote()) :
+    echo H::openTag('div'); //3
+     echo H::tag('b',
+      H::encode($translator->translate('note')));
+     echo H::tag('br', '');
+     echo nl2br(H::encode($inv->getNote()));
+    echo H::closeTag('div'); //3
+    echo H::tag('br', '');
+   endif;
+   echo H::tag('div', $show_custom_fields ? $view_custom_fields : '')->encode(false);
   echo H::closeTag('footer'); //2
  echo H::closeTag('body'); //1
 echo H::closeTag('html'); //0

@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Widget\Button;
 use App\Widget\PaymentGatewayButton;
 use Yiisoft\Bootstrap5\Breadcrumbs;
 use Yiisoft\Bootstrap5\BreadcrumbLink;
@@ -1334,7 +1333,7 @@ if ($inv->reqStatusId() === 1
      }
      echo '<br>';
     echo H::closeTag('div');
-
+    
     echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none']);
      echo '<br>';
     echo H::closeTag('div');
@@ -1361,6 +1360,26 @@ if ($inv->reqStatusId() === 1
              'placeholder' => (strlen($inv->getNumber() ?? '') > 0 ?
                 null : H::encode($translator->translate('not.set')))
          ]);
+        echo H::closeTag('div');
+        echo H::openTag('div', ['class' => $invProp]);
+         echo H::openTag('div', ['class' => 'mb-3']);
+          echo H::openTag('label', ['for' => 'inv-note']);
+           echo H::openTag('b');
+            echo H::encode($translator->translate('note'));
+           echo H::closeTag('b');
+          echo H::closeTag('label');
+          echo H::openTag('div');
+           echo H::tag('input', '', [
+               'type' => 'text',
+               'id' => 'inv-note',
+               'name' => 'inv-note',
+               'disabled' => true,
+               'readonly' => true,
+               'class' => 'form-control',
+               'value' => $inv->getNote()
+           ]);
+          echo H::closeTag('div');
+         echo H::closeTag('div');
         echo H::closeTag('div');
         echo H::openTag('div');
          echo H::openTag('label', ['for' => 'date_created']);
@@ -1657,5 +1676,5 @@ if (null !== $inv->getSoId()) {
    echo H::openTag('div', ['id' => 'view_partial_inv_attachments']);
     echo $partial_inv_attachments;
    echo H::closeTag('div');
-   echo $modal_add_allowance_charge;
+   echo $modal_add_allowance_charge;   
   echo H::closeTag('div');

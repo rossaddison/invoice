@@ -276,6 +276,9 @@ final readonly class InvPdfService
             $vatOrHeadingTitle = $this->translator->translate($key);
             $print .= "{$allowanceOrCharge}: {$amountTitle} {$amount}, {$vatOrHeadingTitle}: {$vatOrTax}<br>";
         }
+        if ($print === '') {
+            return '';
+        }
         return $this->webViewRenderer->renderPartialAsString(
             '//invoice/inv/partial_inv_allowance_charges',
             ['title' => $this->translator->translate($aOrC . 'inv'), 'inv_allowance_charges' => $print],
