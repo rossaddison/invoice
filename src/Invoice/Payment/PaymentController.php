@@ -337,10 +337,9 @@ final class PaymentController extends BaseController
             return $this->webService->getRedirectResponse('payment/index');
         }
         $form = PaymentForm::show($payment);
-        $paymentCustom = new PaymentCustom();
-        $pcForm = PaymentCustomForm::show($paymentCustom);
+        $pcForm = new PaymentCustomForm();
         $payment_id = $payment->reqId();
-        $inv_id = $payment->reqId();
+        $inv_id = $payment->reqInvId();
         $open = $deps->invR->open();
         $params = [
             'title' => $this->translator->translate('edit'),
