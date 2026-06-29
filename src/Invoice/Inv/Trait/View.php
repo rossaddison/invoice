@@ -96,6 +96,8 @@ trait View
                     'inv_statuses' => $service->core->iR->getStatuses($this->translator),
                     'paymentCfExist' =>
                         $service->meta->cfR->repoTableCountquery('payment_custom') > 0,
+                    'paymentEdit' => $this->userService->hasPermission(
+                        Permissions::EDIT_PAYMENT),
                     'paymentView' => $this->userService->hasPermission(
                         Permissions::VIEW_PAYMENT),
                     'email_templates_invoice' => $service->meta->etR->findAllPreloaded(),

@@ -33,6 +33,7 @@ use Yiisoft\Html\Tag\Option;
  * @var array $payment_methods
  * @var bool $invEdit
  * @var bool $isRecurring
+ * @var bool $paymentEdit
  * @var bool $paymentView
  * @var bool $paymentCfExist
  * @var bool $readOnly
@@ -658,6 +659,14 @@ if (!empty($payments)) {
         echo H::openTag('th');
          echo H::encode($translator->translate('note'));
         echo H::closeTag('th');
+        if ($paymentEdit) {
+            echo H::openTag('th');
+             echo H::encode($translator->translate('edit'));
+            echo H::closeTag('th');
+            echo H::openTag('th');
+             echo H::encode($translator->translate('delete'));
+            echo H::closeTag('th');
+        }
        echo H::closeTag('tr');
       echo H::closeTag('thead');
       echo H::closeTag('tbody');
@@ -677,6 +686,26 @@ if (!empty($payments)) {
          echo H::openTag('td');
           echo H::encode($payment->getNote());
          echo H::closeTag('td');
+         if ($paymentEdit) {
+             echo H::openTag('td');
+              echo H::a(
+                  H::tag('i', '', ['class' => 'bi-pencil-square']),
+                  $urlGenerator->generate('payment/edit', ['id' => $payment->reqId()]),
+                  ['class' => 'text-decoration-none'],
+              );
+             echo H::closeTag('td');
+             echo H::openTag('td');
+              echo H::a(
+                  H::tag('i', '', ['class' => 'bi-trash']),
+                  $urlGenerator->generate('payment/delete', ['id' => $payment->reqId()]),
+                  [
+                      'onclick' => "return confirm('"
+                          . H::encode($translator->translate('delete.record.warning'))
+                          . "');",
+                  ],
+              );
+             echo H::closeTag('td');
+         }
         echo H::closeTag('tr');
       }
       echo H::closeTag('tbody');

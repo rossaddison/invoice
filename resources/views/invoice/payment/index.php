@@ -136,46 +136,28 @@ $columns = [
     new DataColumn(
         header: $translator->translate('edit'),
         visible: $canEdit,
-        content: static function (Payment $model) use ($s, $urlGenerator): A|string {
-            return $model->getInv()?->getIsReadOnly() === false
-                   && $s->getSetting('disable_read_only') === (string) 0
-                   ? Html::a(
-                       Html::tag(
-                           'i',
-                           '',
-                           ['class' => 'bi-pencil-square'],
-                       ),
-                       $urlGenerator->generate(
-                           'payment/edit',
-                           ['id' => $model->reqId()],
-                       ),
-                       [],
-                   ) : '';
+        content: static function (Payment $model) use ($urlGenerator): A {
+            return Html::a(
+                Html::tag('i', '', ['class' => 'bi-pencil-square']),
+                $urlGenerator->generate('payment/edit', ['id' => $model->reqId()]),
+                [],
+            );
         },
         encodeContent: false,
     ),
     new DataColumn(
         header: $translator->translate('delete'),
         visible: $canEdit,
-        content: static function (Payment $model) use ($translator, $s, $urlGenerator): string|A {
-            return $model->getInv()?->getIsReadOnly() === false
-                    && $s->getSetting('disable_read_only') === (string) 0 ?
-                    Html::a(
-                Html::tag(
-                    'button',
-                    Html::tag('i', '', ['class' => 'bi-trash']),
-                    [
-                        'type' => 'submit',
-                        'class' => 'dropdown-item',
-                        'onclick' => "return confirm("
-                        . "'"
+        content: static function (Payment $model) use ($translator, $urlGenerator): A {
+            return Html::a(
+                Html::tag('i', '', ['class' => 'bi-trash']),
+                $urlGenerator->generate('payment/delete', ['id' => $model->reqId()]),
+                [
+                    'onclick' => "return confirm('"
                         . $translator->translate('delete.record.warning')
                         . "');",
-                    ],
-                ),
-                $urlGenerator->generate('payment/delete', ['id' => $model->reqId()]),
-                [],
-            ) : '';
+                ],
+            );
         },
         encodeContent: false,
     ),
