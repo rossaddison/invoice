@@ -1,4 +1,4 @@
-import { parsedata, getJson, postJson, ApiResponse, RequestParams, closestSafe } from './utils.js';
+import { parsedata, getJson, ApiResponse, RequestParams, closestSafe } from './utils.js';
 
 // Invoice-specific interfaces
 interface RecurringInvoiceData extends RequestParams {
@@ -331,8 +331,8 @@ export class InvoiceHandler {
             const data = parsedata(response);
             if (data.success === 1) {
                 if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
-            } else {
-                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-x-lg"></i></h2>';
+            } else if (btn) {
+                btn.innerHTML = '<h2 class="text-center"><i class="bi bi-x-lg"></i></h2>';
             }
             globalThis.location.reload();
         } catch (error) {

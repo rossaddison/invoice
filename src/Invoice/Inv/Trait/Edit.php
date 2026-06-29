@@ -10,6 +10,7 @@ use App\Invoice\{
     Inv\InvEditCoreDeps,
     Inv\InvEditFormDeps,
     Inv\InvEditLocationDeps,
+    Inv\InvEditPaymentDeps,
     Inv\InvForm,
     InvAmount\InvAmountRepository as IAR,
     InvCustom\InvCustomForm,
@@ -37,8 +38,7 @@ trait Edit
         InvEditCoreDeps $core,
         InvEditLocationDeps $loc,
         InvEditFormDeps $form,
-        PaymentService $paymentService,
-        InvRecalculator $invRecalculator,
+        InvEditPaymentDeps $pay,
     ): Response {
         $inv = $this->inv($id, $core->invRepo, true);
         if (!$inv) {
@@ -109,7 +109,7 @@ trait Edit
             } else {
                 if ((int) ($body['status_id'] ?? 0) === 4) {
                     $this->settleBalanceOnStatusPaid(
-                        $inv_id, $form->iaR, $core, $paymentService, $invRecalculator,
+                        $inv_id, $form->iaR, $core, $pay->paymentService, $pay->invRecalculator,
                     );
                 }
                 $response = $this->handleEditPost($body, $id, $inv_id, $parameters, $formHydrator, $core);

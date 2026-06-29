@@ -14,6 +14,7 @@ use App\Infrastructure\Persistence\
 use App\Invoice\{
     InvAllowanceCharge\InvAllowanceChargeForm, InvCustom\InvCustomForm,
     InvItem\IiAddProductDeps, InvItem\InvItemForm, InvTaxRate\InvTaxRateForm,
+    Inv\CopyInvOptions,
     Inv\CsvDateNormaliser,
     Inv\InvCopyDeps,
     Inv\InvForm,
@@ -72,10 +73,11 @@ trait MultipleCopy
                 ? $selectedClientIds
                 : [$original->reqClientId()];
 
+            $opts = new CopyInvOptions(createdDate: (string) ($data['modal_created_date'] ?? ''));
             foreach ($targets as $targetClientId) {
                 if ($this->copyInvToClient(
                     $invId, $original, $targetClientId, $d, $formHydrator,
-                    $productIds, (string) ($data['modal_created_date'] ?? ''))) {
+                    $productIds, $opts)) {
                     $anySuccess = true;
                 }
             }
@@ -102,6 +104,39 @@ trait MultipleCopy
         return $productIds;
     }
 
+    private function resolveCopyCreatedDate(string $createdDate): \DateTimeImmutable
+    {
+        if ($createdDate === '') {
+            return new \DateTimeImmutable('now');
+        }
+        $parsed = \DateTimeImmutable::createFromFormat('Y-m-d', $createdDate);
+        return $parsed !== false ? $parsed : new \DateTimeImmutable('now');
+    }
+
+    /** @param array<string, mixed> $invoiceBody */
+    private function createPaymentForCopyIfRequired(
+        Inv $copied,
+        int $copiedId,
+        array $invoiceBody,
+        InvCopyDeps $d,
+        CopyInvOptions $opts,
+    ): void {
+        if (!$opts->sameAmount || $opts->paymentDate === '' || null === $opts->paymentService) {
+            return;
+        }
+        $invAmount = $d->iaR->repoInvquery($copiedId);
+        if (null === $invAmount) {
+            return;
+        }
+        $opts->paymentService->savePayment(new Payment(), [
+            'inv_id'            => $copiedId,
+            'payment_date'      => $opts->paymentDate,
+            'amount'            => $invAmount->getTotal() ?? 0.00,
+            'note'              => $invoiceBody['note'] ?? '',
+            'payment_method_id' => $copied->getPaymentMethod() ?? 0,
+        ]);
+    }
+
     /**
      * @param int[] $productIds
      */
@@ -112,16 +147,10 @@ trait MultipleCopy
         InvCopyDeps $d,
         FormHydrator $formHydrator,
         array $productIds,
-        string $createdDate,
-        string $note = '',
-        bool $sameAmount = true,
-        string $paymentDate = '',
-        ?PaymentService $paymentService = null,
+        CopyInvOptions $opts,
     ): bool {
         $sentCopy = $this->sR->getSetting('mark_invoices_sent_copy') === '1';
-        $createdDt = $createdDate !== ''
-            ? (\DateTimeImmutable::createFromFormat('Y-m-d', $createdDate) ?: new \DateTimeImmutable('now'))
-            : new \DateTimeImmutable('now');
+        $createdDt = $this->resolveCopyCreatedDate($opts->createdDate);
         $invoice_body = [
             'client_id'               => $targetClientId,
             'group_id'                => $original->reqGroupId(),
@@ -139,7 +168,7 @@ trait MultipleCopy
                 : '',
             'discount_amount'         => (float) $original->getDiscountAmount(),
             'terms'                   => $original->getTerms(),
-            'note'                    => $note !== '' ? $note : ($original->getNote() ?? ''),
+            'note'                    => $opts->note !== '' ? $opts->note : ($original->getNote() ?? ''),
             'document_description'    => $original->getDocumentDescription(),
             'url_key'                 => Random::string(32),
             'payment_method'          => $original->getPaymentMethod(),
@@ -160,39 +189,28 @@ trait MultipleCopy
         }
         $this->inv_service->withTransaction(
             function () use (
-                $user, $copy, $invoice_body, $createdDate, $invId,
-                $d, $formHydrator, $productIds, $targetClientId,
-                $sameAmount, $paymentDate, $paymentService
+                $user, $copy, $invoice_body, $opts, $invId,
+                $d, $formHydrator, $productIds, $targetClientId
             ): void {
                 $copied = $this->inv_service->copyInv(
                     $user, $copy, $invoice_body, $this->sR);
-                $copied->setDateCreated($createdDate);
+                $copied->setDateCreated($opts->createdDate);
                 $d->iR->save($copied);
                 $copied_id = $copied->reqId();
-                if ($copied_id > 0) {
-                    $this->invToInvInvItems($invId, $copied_id, $d, $formHydrator);
-                    $this->invToInvInvTaxRates($invId, $copied_id, $d, $formHydrator);
-                    $this->invToInvInvCustom($invId, $copied_id, $d, $formHydrator);
-                    if ($sameAmount) {
-                        $this->invToInvInvAmount($invId, $copied_id, $d);
-                    }
-                    $d->iR->save($copy);
-                    if (!empty($productIds)) {
-                        $d->pcS->syncFromInvItems($targetClientId, $productIds);
-                    }
-                    if ($sameAmount && $paymentDate !== '' && null !== $paymentService) {
-                        $invAmount = $d->iaR->repoInvquery($copied_id);
-                        if (null !== $invAmount) {
-                            $paymentService->savePayment(new Payment(), [
-                                'inv_id'            => $copied_id,
-                                'payment_date'      => $paymentDate,
-                                'amount'            => $invAmount->getTotal() ?? 0.00,
-                                'note'              => $invoice_body['note'] ?? '',
-                                'payment_method_id' => $copied->getPaymentMethod() ?? 0,
-                            ]);
-                        }
-                    }
+                if ($copied_id <= 0) {
+                    return;
                 }
+                $this->invToInvInvItems($invId, $copied_id, $d, $formHydrator);
+                $this->invToInvInvTaxRates($invId, $copied_id, $d, $formHydrator);
+                $this->invToInvInvCustom($invId, $copied_id, $d, $formHydrator);
+                if ($opts->sameAmount) {
+                    $this->invToInvInvAmount($invId, $copied_id, $d);
+                }
+                $d->iR->save($copy);
+                if (!empty($productIds)) {
+                    $d->pcS->syncFromInvItems($targetClientId, $productIds);
+                }
+                $this->createPaymentForCopyIfRequired($copied, $copied_id, $invoice_body, $d, $opts);
             }
         );
         return true;
@@ -228,30 +246,51 @@ trait MultipleCopy
                 continue;
             }
 
-            $productIds = $this->collectInvProductIds($invId, $d);
-            $targets    = $clientIds !== [] ? $clientIds : [$original->reqClientId()];
-
-            foreach ($rows as $row) {
-                $dateCreated = CsvDateNormaliser::normalise(ltrim(rtrim($row['date_created'] ?? '')));
-                $note        = ltrim(rtrim($row['note'] ?? ''));
-                $sameAmount  = ($row['same_amount'] ?? '1') !== '0';
-                $paymentDate = CsvDateNormaliser::normalise(ltrim(rtrim($row['payment_date'] ?? '')));
-
-                foreach ($targets as $targetClientId) {
-                    if ($this->copyInvToClient(
-                        $invId, $original, $targetClientId, $d,
-                        $formHydrator, $productIds, $dateCreated, $note,
-                        $sameAmount, $paymentDate, $paymentService
-                    )) {
-                        $anySuccess = true;
-                    }
-                }
+            if ($this->copyInvForSpreadsheetRows(
+                $invId, $original, $clientIds, $rows, $d, $formHydrator, $paymentService
+            )) {
+                $anySuccess = true;
             }
         }
 
         return $this->factory->createResponse(
             Json::encode(['success' => $anySuccess ? 1 : 0])
         );
+    }
+
+    /**
+     * @param int[] $clientIds
+     * @param list<array{date_created: string, note: string, same_amount: string, payment_date: string}> $rows
+     */
+    private function copyInvForSpreadsheetRows(
+        int $invId,
+        Inv $original,
+        array $clientIds,
+        array $rows,
+        InvCopyDeps $d,
+        FormHydrator $formHydrator,
+        PaymentService $paymentService,
+    ): bool {
+        $productIds = $this->collectInvProductIds($invId, $d);
+        $targets    = $clientIds !== [] ? $clientIds : [$original->reqClientId()];
+        $anySuccess = false;
+
+        foreach ($rows as $row) {
+            $opts = new CopyInvOptions(
+                createdDate: CsvDateNormaliser::normalise(ltrim(rtrim($row['date_created'] ?? ''))),
+                note: ltrim(rtrim($row['note'] ?? '')),
+                sameAmount: ($row['same_amount'] ?? '1') !== '0',
+                paymentDate: CsvDateNormaliser::normalise(ltrim(rtrim($row['payment_date'] ?? ''))),
+                paymentService: $paymentService,
+            );
+            foreach ($targets as $targetClientId) {
+                if ($this->copyInvToClient($invId, $original, $targetClientId, $d, $formHydrator, $productIds, $opts)) {
+                    $anySuccess = true;
+                }
+            }
+        }
+
+        return $anySuccess;
     }
 
     public function csvTemplateInvCopy(

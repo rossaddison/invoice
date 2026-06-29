@@ -13,6 +13,7 @@ use Yiisoft\Html\Tag\H4;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Label;
 use Yiisoft\Html\Tag\Select;
+use Yiisoft\Translator\TranslatorInterface;
 
 /**
  * Toolbar HTML builder extracted from InvsListWidget to stay within S1448 limit.
@@ -70,8 +71,48 @@ final class InvsToolbar
             ->id('btn-bulk-quick-pay')
             ->render();
 
-        $bulkQuickPayModal =
-            Html::openTag('div', ['class' => 'modal fade', 'id' => 'modal-bulk-quick-pay',
+        $bulkQuickPayModal = self::buildBulkQuickPayModal($t, $today);
+        $markSentAsDraft = self::buildMarkSentAsDraft($p);
+
+        $markRecurring = (new A())
+            ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'modal'])
+            ->addClass('btn btn-info')
+            ->href('#create-recurring-multiple')
+            ->content('☑️' . $p->translator->translate('recurring') . '♻️')
+            ->render();
+
+        $addBtn = self::buildAddBtn($p);
+        $groupBySelect = self::buildGroupBySelect($p);
+        $collapseExpand = self::buildCollapseExpand($p);
+
+        return (new Form())
+                ->post($p->urlGenerator->generate(self::ROUTE_INDEX))
+                ->csrf($p->csrf)
+                ->open()
+            . (new Div())->addClass('float-start')->content(
+                (new H4())
+                    ->addClass('me-3 d-inline-block')
+                    ->content($p->translator->translate('invoice'))
+                . Html::openTag('div', ['class' => 'btn-group me-2', 'role' => 'group'])
+                . $allVisible
+                . $toolbarReset
+                . $copyMultiple
+                . $markAsSent
+                . $markSentAsDraft
+                . $bulkQuickPay
+                . $markRecurring
+                . $addBtn
+                . Html::closeTag('div')
+                . $groupBySelect
+                . $collapseExpand
+            )->encode(false)->render()
+            . (new Form())->close()
+            . $bulkQuickPayModal;
+    }
+
+    private static function buildBulkQuickPayModal(TranslatorInterface $t, string $today): string
+    {
+        return Html::openTag('div', ['class' => 'modal fade', 'id' => 'modal-bulk-quick-pay',
                 'tabindex' => '-1', 'aria-hidden' => 'true'])
             . Html::openTag('div', ['class' => 'modal-dialog'])
             . Html::openTag('div', ['class' => 'modal-content'])
@@ -107,8 +148,11 @@ final class InvsToolbar
             . Html::closeTag('div')
             . Html::closeTag('div')
             . Html::closeTag('div');
+    }
 
-        $markSentAsDraft = $p->sR->getSetting('disable_read_only') === '0'
+    private static function buildMarkSentAsDraft(InvsToolbarParams $p): string
+    {
+        return $p->sR->getSetting('disable_read_only') === '0'
             ? (new A())
                 ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip',
                     'title' => Html::encode(
@@ -126,15 +170,11 @@ final class InvsToolbar
                 ->content('☑️' . $p->translator->translate('draft') . $p->iR->getSpecificStatusArrayEmoji(1))
                 ->id('btn-mark-sent-as-draft')
                 ->render();
+    }
 
-        $markRecurring = (new A())
-            ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'modal'])
-            ->addClass('btn btn-info')
-            ->href('#create-recurring-multiple')
-            ->content('☑️' . $p->translator->translate('recurring') . '♻️')
-            ->render();
-
-        $addBtn = $p->clientCount > 0
+    private static function buildAddBtn(InvsToolbarParams $p): string
+    {
+        return $p->clientCount > 0
             ? (new A())
                 ->addAttributes(['class' => 'btn btn-info', 'data-bs-toggle' => 'modal',
                     'style' => 'text-decoration:none'])
@@ -150,8 +190,11 @@ final class InvsToolbar
                 ->href('#modal-add-inv')
                 ->id('btn-disabled-invoice-add-button')
                 ->render();
+    }
 
-        $groupBySelect = (new Div())
+    private static function buildGroupBySelect(InvsToolbarParams $p): string
+    {
+        return (new Div())
             ->addClass('btn-group ms-3')
             ->addAttributes(['role' => 'group'])
             ->content(
@@ -179,8 +222,11 @@ final class InvsToolbar
             )
             ->encode(false)
             ->render();
+    }
 
-        $collapseExpand = $p->enableGrouping
+    private static function buildCollapseExpand(InvsToolbarParams $p): string
+    {
+        return $p->enableGrouping
             ? (new Div())
                 ->addClass('btn-group ms-2')
                 ->addAttributes(['role' => 'group'])
@@ -201,29 +247,5 @@ final class InvsToolbar
                 ->encode(false)
                 ->render()
             : '';
-
-        return (new Form())
-                ->post($p->urlGenerator->generate(self::ROUTE_INDEX))
-                ->csrf($p->csrf)
-                ->open()
-            . (new Div())->addClass('float-start')->content(
-                (new H4())
-                    ->addClass('me-3 d-inline-block')
-                    ->content($p->translator->translate('invoice'))
-                . Html::openTag('div', ['class' => 'btn-group me-2', 'role' => 'group'])
-                . $allVisible
-                . $toolbarReset
-                . $copyMultiple
-                . $markAsSent
-                . $markSentAsDraft
-                . $bulkQuickPay
-                . $markRecurring
-                . $addBtn
-                . Html::closeTag('div')
-                . $groupBySelect
-                . $collapseExpand
-            )->encode(false)->render()
-            . (new Form())->close()
-            . $bulkQuickPayModal;
     }
 }
