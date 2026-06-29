@@ -389,7 +389,7 @@ $translator->setLocale($cldr);
     echo H::closeTag('div'); //3
     echo H::tag('br', '');
    endif;
-   if ($inv->getNote()) :
+   if (strlen($inv->getNote() ?? '') > 0) :
     echo H::openTag('div'); //3
      echo H::tag('b',
       H::encode($translator->translate('note')));

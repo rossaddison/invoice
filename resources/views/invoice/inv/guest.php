@@ -112,7 +112,7 @@ $columns = [
             $invAmountTotal = $model->getInvAmount()->getTotal();
             $paid    = $invAmountPaid  ?? 0.00;
             $total   = $invAmountTotal ?? 0.00;
-            $isPaid  = $paid >= $total;
+            $isPaid  = $model->reqStatusId() === 4 || ($total > 0.00 && $paid >= $total);
             $paidFormatted = Html::encode(
                 number_format($paid > 0.00 ? $paid : 0.00, $decimalPlaces)
             );

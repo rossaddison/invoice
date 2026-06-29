@@ -293,8 +293,8 @@ trait MultipleCopy
         $params  = $request->getQueryParams();
         /** @var list<string> $keyList */
         $keyList = (array) ($params['keylist'] ?? []);
-        $date    = CsvDateNormaliser::normalise(trim($params['date'] ?? ''));
-        $note    = trim($params['note'] ?? '');
+        $date    = CsvDateNormaliser::normalise(trim((string) ($params['date'] ?? '')));
+        $note    = trim((string) ($params['note'] ?? ''));
 
         if ($keyList === [] || $date === '') {
             return $this->factory->createResponse(Json::encode(['success' => 0]));
@@ -382,8 +382,8 @@ trait MultipleCopy
     ): Response {
         $params = $request->getQueryParams();
         $invId  = (int) ($params['inv_id'] ?? 0);
-        $date   = CsvDateNormaliser::normalise(trim($params['date'] ?? ''));
-        $note   = trim($params['note'] ?? '');
+        $date   = CsvDateNormaliser::normalise(trim((string) ($params['date'] ?? '')));
+        $note   = trim((string) ($params['note'] ?? ''));
 
         $html = '<span class="badge bg-danger">✗</span>';
 
