@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Inv\Trait;
 
 use App\Auth\Permissions;
+use App\Infrastructure\Persistence\Payment\Payment;
 use App\Invoice\{
     Inv\InvEditCoreDeps,
     Inv\InvEditFormDeps,
@@ -12,9 +13,10 @@ use App\Invoice\{
     Inv\InvForm,
     InvAmount\InvAmountRepository as IAR,
     InvCustom\InvCustomForm,
+    Payment\PaymentService,
 };
 use App\Invoice\Helpers\{
-    CustomValuesHelper as CVH, Peppol\PeppolArrays
+    CustomValuesHelper as CVH, InvRecalculator, Peppol\PeppolArrays
 };
 use Yiisoft\{
     FormModel\FormHydrator, Http\Method,
@@ -35,6 +37,8 @@ trait Edit
         InvEditCoreDeps $core,
         InvEditLocationDeps $loc,
         InvEditFormDeps $form,
+        PaymentService $paymentService,
+        InvRecalculator $invRecalculator,
     ): Response {
         $inv = $this->inv($id, $core->invRepo, true);
         if (!$inv) {
@@ -102,23 +106,12 @@ trait Edit
              */
             if (!is_array($body)) {
                 $response = $this->webService->getRedirectResponse('inv/index');
-            } elseif (!$this->editCheckStatusReconcilingWithBalance($form->iaR, $inv_id)
-                    && $body['status_id'] === 4) {
-                // If the status has changed to 'paid', check that the
-                // balance on the invoice is zero
-                $response = $this->factory->createResponse(
-                    $this->webViewRenderer->renderPartialAsString(
-                    '//invoice/setting/inv_message',
-                    [
-                        'heading' =>
-                            $this->translator->translate('errors'),
-                        'message' =>
-                            $this->translator->translate('error')
-                            . $this->translator->translate(
-                                    'balance.does.not.equal.zero'),
-                        'url' => 'inv/view', 'id' => $inv_id],
-                ));
             } else {
+                if ((int) ($body['status_id'] ?? 0) === 4) {
+                    $this->settleBalanceOnStatusPaid(
+                        $inv_id, $form->iaR, $core, $paymentService, $invRecalculator,
+                    );
+                }
                 $response = $this->handleEditPost($body, $id, $inv_id, $parameters, $formHydrator, $core);
             }
         }
@@ -188,16 +181,31 @@ trait Edit
         return $inputAttributesPaymentMethod;
     }
 
-    public function editCheckStatusReconcilingWithBalance(IAR $iaR,
-        int $inv_id): bool
-    {
-        $invoice_amount = $iaR->repoInvquery($inv_id);
-        if (null !== $invoice_amount) {
-            // If the invoice is fully paid up allow the status
-            // to change to 'paid'
-            return $invoice_amount->getBalance() == 0.00;
+    private function settleBalanceOnStatusPaid(
+        int $invId,
+        IAR $iaR,
+        InvEditCoreDeps $core,
+        PaymentService $paymentService,
+        InvRecalculator $invRecalculator,
+    ): void {
+        $invAmount = $iaR->repoInvquery($invId);
+        if (null === $invAmount) {
+            return;
         }
-        return false;
+        $balance = $invAmount->getBalance() ?? 0.00;
+        if ($balance <= 0.00) {
+            return;
+        }
+        $inv = $core->invRepo->repoInvUnLoadedquery($invId);
+        $pmId = $inv?->getPaymentMethod() ?? 0;
+        $paymentService->savePayment(new Payment(), array_filter([
+            'inv_id'            => $invId,
+            'payment_date'      => (new \DateTimeImmutable())->format('Y-m-d'),
+            'amount'            => $balance,
+            'note'              => '',
+            'payment_method_id' => $pmId > 0 ? $pmId : null,
+        ], static fn (mixed $v): bool => $v !== null));
+        $invRecalculator->recalculate($invId);
     }
 
     public function editSaveFormFields(array|object|null $body, int $id,
