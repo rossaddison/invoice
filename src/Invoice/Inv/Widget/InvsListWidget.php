@@ -14,6 +14,7 @@ use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
 use App\Invoice\Setting\SettingRepository as SR;
 use App\Widget\GridComponents;
 use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
@@ -226,19 +227,29 @@ final class InvsListWidget extends Widget
         $urlCreator = new UrlCreator($this->urlGenerator);
         $urlCreator->__invoke([], OrderHelper::stringToArray($this->sortString));
 
+        $getGroupValue = InvsGroupingHelper::makeGroupValueResolver($groupBy, $this->iR);
+
+        // Computed groupings (quick_pay, amount_range, peppol_workflow) derive their
+        // group key from runtime values, not DB columns, so rows arrive in an order
+        // that scatters same-group items. Load all items, sort by group key in PHP,
+        // then re-paginate so beforeRow sees adjacent same-group rows.
+        /** @var OffsetPaginator<array-key, array<array-key, mixed>|object> $gridDataReader */
+        $gridDataReader = $enableGrouping && InvsGroupingHelper::isComputedGrouping($groupBy)
+            ? $this->buildSortedPaginator($this->paginator, $groupBy, $getGroupValue)
+            : $this->paginator;
+
         $totalAmount  = 0.0;
         $totalPaid    = 0.0;
         $totalBalance = 0.0;
-        foreach ($this->paginator->read() as $invoice) {
+        foreach ($gridDataReader->read() as $invoice) {
             /** @var Inv $invoice */
             $totalAmount  += $invoice->getInvAmount()->getTotal()   ?? 0.0;
             $totalPaid    += $invoice->getInvAmount()->getPaid()    ?? 0.0;
             $totalBalance += $invoice->getInvAmount()->getBalance() ?? 0.0;
         }
 
-        $getGroupValue = InvsGroupingHelper::makeGroupValueResolver($groupBy, $this->iR);
-        $groupTotals   = $enableGrouping
-            ? InvsGroupingHelper::computeGroupTotals($this->paginator, $getGroupValue)
+        $groupTotals = $enableGrouping
+            ? InvsGroupingHelper::computeGroupTotals($gridDataReader, $getGroupValue)
             : [];
 
         $columnBuilder = new InvsColumnBuilder(
@@ -276,7 +287,7 @@ final class InvsListWidget extends Widget
             ->tableAttributes(['class' => $tableClass, 'id' => 'table-invoice'])
             ->columns(...$columns)
             ->columnGrouping(true)
-            ->dataReader($this->paginator)
+            ->dataReader($gridDataReader)
             ->urlCreator($urlCreator)
             ->paginationWidget($pagination)
             ->sortableLinkAttributes(['hx-boost' => 'true', ...$htmxAttrs])
@@ -328,5 +339,38 @@ final class InvsListWidget extends Widget
             $output .= '</div>';
         }
         return $output;
+    }
+
+    /**
+     * Loads all filtered items, sorts them by computed group key in PHP, and
+     * returns a fresh OffsetPaginator over the sorted list — keeping the original
+     * page size and current page so pagination UI remains correct.
+     *
+     * @param OffsetPaginator<array-key, array<array-key, mixed>|object> $paginator
+     * @param callable(Inv): string $getGroupValue
+     * @return OffsetPaginator<array-key, array<array-key, mixed>|object>
+     */
+    private function buildSortedPaginator(
+        OffsetPaginator $paginator,
+        string $groupBy,
+        callable $getGroupValue,
+    ): OffsetPaginator {
+        $total = $paginator->getTotalItems();
+        if ($total > 0) {
+            /** @var list<Inv> $allItems */
+            $allItems = iterator_to_array($paginator->withPageSize($total)->read());
+            usort($allItems, static fn (Inv $a, Inv $b): int =>
+                strcmp(
+                    InvsGroupingHelper::groupSortKey($groupBy, $getGroupValue($a)),
+                    InvsGroupingHelper::groupSortKey($groupBy, $getGroupValue($b)),
+                )
+            );
+        } else {
+            $allItems = [];
+        }
+
+        return (new OffsetPaginator(new IterableDataReader($allItems)))
+            ->withPageSize($paginator->getPageSize())
+            ->withCurrentPage($paginator->getCurrentPage());
     }
 }

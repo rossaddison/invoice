@@ -80,6 +80,29 @@ final class InvsGroupingHelper
         return $groupTotals;
     }
 
+    /** @return string[] */
+    public static function computedGroupings(): array
+    {
+        return ['quick_pay', 'amount_range', 'peppol_workflow'];
+    }
+
+    public static function isComputedGrouping(string $groupBy): bool
+    {
+        return in_array($groupBy, self::computedGroupings(), true);
+    }
+
+    public static function groupSortKey(string $groupBy, string $groupValue): string
+    {
+        return match ($groupBy) {
+            'quick_pay' => match ($groupValue) {
+                '💰 Quick Pay'  => '0',
+                '✅ Paid'       => '1',
+                default         => '2',
+            },
+            default => $groupValue,
+        };
+    }
+
     /**
      * @param callable(Inv): string $getGroupValue
      * @param array<string, array{count: int, total: float, paid: float, balance: float}> $groupTotals
