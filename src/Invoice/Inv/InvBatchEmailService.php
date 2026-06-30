@@ -59,32 +59,28 @@ final readonly class InvBatchEmailService
             return false;
         }
 
-        /** @var array<int, list<Inv>> $groups */
-        $groups = [];
+        $anySuccess = false;
         foreach ($invIds as $invId) {
             $inv = $this->d->iR->repoInvLoadedquery($invId);
             if ($inv === null) {
                 continue;
             }
-            $groups[$inv->reqClientId()][] = $inv;
-        }
 
-        $anySuccess = false;
-        foreach ($groups as $clientId => $invoices) {
-            $to = $this->resolveEmail($clientId, $invoices[0]);
+            $clientId = $inv->reqClientId();
+            $to       = $this->resolveEmail($clientId, $inv);
             if ($to === '') {
                 continue;
             }
 
-            $firstInvId = $invoices[0]->reqId();
-            $userId     = $invoices[0]->reqUserId();
-            $userInv    = $this->d->uiR->repoUserInvUserIdCount($userId) > 0
+            $reqId  = $inv->reqId();
+            $userId = $inv->reqUserId();
+            $userInv = $this->d->uiR->repoUserInvUserIdCount($userId) > 0
                 ? $this->d->uiR->repoUserInvUserIdquery($userId)
                 : null;
 
             $bodyWithTable = str_replace(
                 '{{{invoice_table}}}',
-                $this->buildInvoiceTable($invoices),
+                $this->buildInvoiceTable([$inv]),
                 $emailTemplate->getEmailTemplateBody(),
             );
 
@@ -99,7 +95,7 @@ final readonly class InvBatchEmailService
             );
             $th    = $this->templateHelper();
             $parse = static fn (string $tpl): string =>
-                $th->parseTemplate($firstInvId, true, $tpl, $parseDeps);
+                $th->parseTemplate($reqId, true, $tpl, $parseDeps);
 
             $fromEmail = $selectedFromEmail !== ''
                 ? $selectedFromEmail
@@ -110,7 +106,7 @@ final readonly class InvBatchEmailService
                 ?? $emailTemplate->getEmailTemplateFromName()
                 ?? '';
 
-            $params = new MailerSendParams(
+            $mailParams = new MailerSendParams(
                 $parse($fromEmail),
                 $parse($fromName),
                 $to,
@@ -120,21 +116,14 @@ final readonly class InvBatchEmailService
                 $parse($emailTemplate->getEmailTemplateBcc()     ?? ''),
             );
 
-            $pdfPaths = [];
-            foreach ($invoices as $inv) {
-                $path = $this->invPdfService->generate($inv->reqId(), false, true);
-                if ($path !== '') {
-                    $pdfPaths[] = $path;
-                }
-            }
+            $path     = $this->invPdfService->generate($reqId, false, true);
+            $pdfPaths = $path !== '' ? [$path] : [];
 
-            $sent = $this->mailerHelper()->yiiMailerSend($params, [], $pdfPaths, $this->d->uiR);
+            $sent = $this->mailerHelper()->yiiMailerSend($mailParams, [], $pdfPaths, $this->d->uiR);
             if ($sent) {
-                foreach ($invoices as $inv) {
-                    $inv->setStatusId(2);
-                    $this->d->iR->save($inv);
-                    $this->logSent($inv);
-                }
+                $inv->setStatusId(2);
+                $this->d->iR->save($inv);
+                $this->logSent($inv);
                 $anySuccess = true;
             }
         }
