@@ -1049,15 +1049,21 @@ export class InvoiceHandler {
         try {
             const url = `${location.origin}/invoice/inv/batchEmailPreview`;
             type PreviewRow = { client: string; email: string; source: string; invoice_count: number };
-            const rows = await getJson<PreviewRow[]>(url, { keylist: selected });
-            if (bodyEl && Array.isArray(rows)) {
+            const raw = await getJson<unknown>(url, { keylist: selected });
+            // DataResponseFactory double-encodes JSON; unwrap if the result is a string
+            const rows: PreviewRow[] = Array.isArray(raw)
+                ? (raw as PreviewRow[])
+                : typeof raw === 'string'
+                    ? (JSON.parse(raw) as PreviewRow[])
+                    : [];
+            if (bodyEl) {
                 bodyEl.innerHTML = rows.map(r =>
                     `<tr><td>${r.client}</td><td>${r.email}</td><td>${r.source}</td><td>${String(r.invoice_count)}</td></tr>`
                 ).join('');
             }
             if (loadingEl) { loadingEl.classList.add('d-none'); }
             if (previewEl) { previewEl.classList.remove('d-none'); }
-            if (confirmBtn && Array.isArray(rows) && rows.length > 0) {
+            if (confirmBtn && rows.length > 0) {
                 confirmBtn.classList.remove('d-none');
             }
         } catch (error) {
