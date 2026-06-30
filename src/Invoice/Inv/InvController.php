@@ -385,9 +385,9 @@ final class InvController extends BaseController
         $this->flashMessage($level, $message);
     }
 
-    protected function displayEditDeleteButtons(bool $read_only): bool
+    protected function displayEditDeleteButtons(bool $inv_is_read_only): bool
     {
-        if (!$read_only
+        if (!$inv_is_read_only
                 && ($this->sR->getSetting('disable_read_only') === (string) 0)) {
             return true;
         }

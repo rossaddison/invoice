@@ -155,16 +155,17 @@ trait Credit
         $basis_inv = $core->iR->repoInvLoadedquery((int) $body['inv_id']);
         if (null !== $basis_inv) {
             $basis_inv_id = (int) $body['inv_id'];
+            $groupId = (int) ($body['group_id'] ?? 0);
             // Set the basis_inv to read-only;
             $basis_inv->setIsReadOnly(true);
             // Credit Note's details
             $ajax_body = [
                 'client_id' => $body['client_id'],
-                'group_id' => 4,
+                'group_id' => $groupId,
                 'user_id' => $body['user_id'],
                 'status_id' => $basis_inv->reqStatusId(),
                 'is_read_only' => true,
-                'number' => $core->gR->generateNumber(4, true),
+                'number' => $core->gR->generateNumber($groupId, true),
                 'discount_amount' => $basis_inv->getDiscountAmount(),
                 'url_key' => '',
                 'password' => $body['password'],

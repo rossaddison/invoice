@@ -86,8 +86,13 @@ final class GroupRepository extends Select\Repository
      */
     public function generateNumber(int $id, bool $set_next = false): mixed
     {
-        /** @var Group $group */
         $group = $this->repoGroupquery($id);
+        if ($group === null) {
+            throw new \RuntimeException(
+                "Cannot generate invoice number: no Group found with id={$id}. "
+                . 'Check that Settings → Invoice Group is configured and the group exists.'
+            );
+        }
         $my_result = $this->parseIdentifierFormat(
             (string) $group->getIdentifierFormat(),
             (int) $group->getNextId(),
