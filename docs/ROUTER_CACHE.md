@@ -115,6 +115,19 @@ rm -rf runtime/cache/*
 Add this as a step in your deploy script **before** restarting PHP-FPM /
 Apache so the first real request after deploy rebuilds a fresh dispatch table.
 
+### Symptom when cache is stale
+
+New routes added in `config/common/routes/routes.php` return **404 Not Found**
+even though `git pull` has run and the PHP files are on disk.  The browser
+console shows the full URL with correct path and query string, but the server
+finds no matching route.
+
+**Real example (June 2026):** after adding `inv/batchEmailPreview` and
+`inv/batchEmail`, every fetch to those endpoints returned 404 on production
+while localhost (which runs with `YII_ENV=dev` / cache disabled) worked
+perfectly.  Clearing `runtime/cache/*` on the production server fixed it
+immediately with no other changes required.
+
 ---
 
 ## Testing the cache locally
