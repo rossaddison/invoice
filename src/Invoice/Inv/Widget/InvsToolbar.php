@@ -252,7 +252,7 @@ final class InvsToolbar
         /** @var EmailTemplate $tpl */
         foreach ($p->etR->repoEmailTemplateType('invoice') as $tpl) {
             $options .= Html::tag('option',
-                Html::encode($tpl->getEmailTemplateTitle() ?? ''),
+                $tpl->getEmailTemplateTitle() ?? '',
                 ['value' => (string) $tpl->reqEmailTemplateId()],
             )->render();
         }
@@ -273,14 +273,14 @@ final class InvsToolbar
             . Html::closeTag('div')
             . Html::openTag('div', ['id' => 'batch-email-preview', 'class' => 'd-none'])
             . Html::openTag('table', ['class' => 'table table-sm table-bordered mb-3'])
-            . Html::tag('thead',
-                Html::tag('tr',
-                    Html::tag('th', Html::encode($t->translate('client')))
-                    . Html::tag('th', 'Email')
-                    . Html::tag('th', 'Source')
-                    . Html::tag('th', Html::encode($t->translate('invoice')))
-                )
-            )
+            . Html::openTag('thead')
+            . Html::openTag('tr')
+            . Html::tag('th', Html::encode($t->translate('client')))
+            . Html::tag('th', 'Email')
+            . Html::tag('th', 'Source')
+            . Html::tag('th', Html::encode($t->translate('invoice')))
+            . Html::closeTag('tr')
+            . Html::closeTag('thead')
             . Html::openTag('tbody', ['id' => 'batch-email-preview-body'])
             . Html::closeTag('tbody')
             . Html::closeTag('table')
@@ -288,8 +288,9 @@ final class InvsToolbar
             . Html::tag('label',
                 Html::encode($t->translate('email.template')),
                 ['class' => 'form-label', 'for' => 'batch-email-template'])
-            . Html::tag('select', $options,
-                ['id' => 'batch-email-template', 'class' => 'form-select'])
+            . Html::openTag('select', ['id' => 'batch-email-template', 'class' => 'form-select'])
+            . $options
+            . Html::closeTag('select')
             . Html::closeTag('div')
             . Html::closeTag('div')
             . Html::closeTag('div')
