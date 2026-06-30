@@ -40,6 +40,17 @@ final class InvsGroupingHelper
                     $invoice->getQuoteId() !== null => 'Quote → Invoice',
                     default                         => 'Standard Invoice',
                 },
+                'quick_pay' => match (true) {
+                    $invoice->reqStatusId() === 4
+                        || (($invoice->getInvAmount()->getTotal() ?? 0.0) > 0.0
+                            && ($invoice->getInvAmount()->getPaid() ?? 0.0)
+                                >= ($invoice->getInvAmount()->getTotal() ?? 0.0))
+                        => '✅ Paid',
+                    in_array($invoice->reqStatusId(), [2, 3, 5, 6], true)
+                        && ($invoice->getInvAmount()->getTotal() ?? 0.0) > 0.0
+                        => '💰 Quick Pay',
+                    default => '— Not Payable',
+                },
                 default => 'No Group',
             };
         };

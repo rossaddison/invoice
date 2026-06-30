@@ -217,6 +217,7 @@ final class InvsToolbar
                         'date'            => $p->translator->translate('date'),
                         'amount_range'    => 'Amount Range',
                         'peppol_workflow' => $p->translator->translate('peppol'),
+                        'quick_pay'       => '💰 ' . $p->translator->translate('quick.pay'),
                     ])
                     ->value($p->groupBy)
             )
