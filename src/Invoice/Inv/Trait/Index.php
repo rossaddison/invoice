@@ -139,6 +139,7 @@ public function index(
                         )
                     ),
                 'etR'                => $nav->etR,
+                'fdR'                => $nav->fdR,
             ];
 
             if ($request->hasHeader('Hx-Request')) {
@@ -153,6 +154,7 @@ public function index(
                         ->withDlR($nav->dlR)
                         ->withSR($this->sR)
                         ->withEtR($nav->etR)
+                        ->withFdR($nav->fdR)
                         ->withCsrf((string) ($request->getParsedBody()['_csrf'] ?? ''))
                         ->withDecimalPlaces(
                             (int) $this->sR->getSetting('tax_rate_decimal_places'))

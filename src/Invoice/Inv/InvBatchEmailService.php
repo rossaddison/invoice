@@ -52,7 +52,7 @@ final readonly class InvBatchEmailService
     /**
      * @param list<int> $invIds
      */
-    public function sendBatch(array $invIds, int $emailTemplateId, ETR $etR): bool
+    public function sendBatch(array $invIds, int $emailTemplateId, ETR $etR, string $selectedFromEmail = ''): bool
     {
         $emailTemplate = $etR->repoEmailTemplatequery($emailTemplateId);
         if ($emailTemplate === null) {
@@ -101,9 +101,11 @@ final readonly class InvBatchEmailService
             $parse = static fn (string $tpl): string =>
                 $th->parseTemplate($firstInvId, true, $tpl, $parseDeps);
 
-            $fromEmail = $userInv?->getUser()?->getEmail()
-                ?? $emailTemplate->getEmailTemplateFromEmail()
-                ?? '';
+            $fromEmail = $selectedFromEmail !== ''
+                ? $selectedFromEmail
+                : ($userInv?->getUser()?->getEmail()
+                    ?? $emailTemplate->getEmailTemplateFromEmail()
+                    ?? '');
             $fromName  = $userInv?->getName()
                 ?? $emailTemplate->getEmailTemplateFromName()
                 ?? '';

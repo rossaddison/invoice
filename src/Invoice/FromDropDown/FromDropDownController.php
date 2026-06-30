@@ -47,20 +47,30 @@ final class FromDropDownController extends BaseController
      */
     public function add(Request $request, FormHydrator $formHydrator): Response
     {
+        $queryParams = $request->getQueryParams();
+        $returnUrl   = isset($queryParams['returnUrl']) ? (string) $queryParams['returnUrl'] : null;
         $entity = new FromDropDown();
         $form = new FromDropDownForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'from/add',
-            'actionArguments' => [],
+            'actionArguments' => $returnUrl !== null ? ['returnUrl' => $returnUrl] : [],
             'errors' => [],
             'form' => $form,
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
             if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
-                    $this->fromService->saveFromDropDown($entity, $body);
-                    return $this->webService->getRedirectResponse('from/index');
+                $this->fromService->saveFromDropDown($entity, $body);
+                if ($returnUrl === 'batchEmail') {
+                    $language = (string) ($this->session->get('_language') ?? 'en');
+                    return $this->webService->getRedirectResponse(
+                        'inv/index',
+                        ['_language' => $language],
+                        ['openModal' => 'batchEmail'],
+                    );
+                }
+                return $this->webService->getRedirectResponse('from/index');
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
@@ -100,12 +110,12 @@ final class FromDropDownController extends BaseController
             if ($from) {
                 $this->fromService->deleteFromDropDown($from);
                 $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
-                return $this->webService->getRedirectResponse('index');
+                return $this->webService->getRedirectResponse('from/index');
             }
-            return $this->webService->getRedirectResponse('index');
+            return $this->webService->getRedirectResponse('from/index');
         } catch (Exception $e) {
             $this->flashMessage('danger', $e->getMessage());
-            return $this->webService->getRedirectResponse('index');
+            return $this->webService->getRedirectResponse('from/index');
         }
     }
 
@@ -136,14 +146,14 @@ final class FromDropDownController extends BaseController
                 $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                         $this->fromService->saveFromDropDown($from, $body);
-                        return $this->webService->getRedirectResponse('index');
+                        return $this->webService->getRedirectResponse('from/index');
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
             return $this->webViewRenderer->render('_form', $parameters);
         }
-        return $this->webService->getRedirectResponse('index');
+        return $this->webService->getRedirectResponse('from/index');
     }
 
     //For rbac refer to AccessChecker
@@ -188,6 +198,6 @@ final class FromDropDownController extends BaseController
             ];
             return $this->webViewRenderer->render('_view', $parameters);
         }
-        return $this->webService->getRedirectResponse('index');
+        return $this->webService->getRedirectResponse('from/index');
     }
 }

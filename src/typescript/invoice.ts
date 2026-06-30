@@ -92,6 +92,15 @@ export class InvoiceHandler {
                 void this.handleBatchEmailPreview();
             }
         });
+
+        // Auto-open batch email modal when returning from the from/add form.
+        if (new URLSearchParams(location.search).get('openModal') === 'batchEmail') {
+            const modal = document.getElementById('modal-batch-email');
+            if (modal) {
+                (globalThis as any).bootstrap?.Modal?.getOrCreateInstance(modal)?.show();
+                history.replaceState({}, '', location.pathname);
+            }
+        }
     }
 
     private handleChange(event: Event): void {
@@ -1074,10 +1083,11 @@ export class InvoiceHandler {
     }
 
     private async handleBatchEmail(): Promise<void> {
-        const selected   = this.getCheckedInvoiceIds();
-        const selectEl   = document.getElementById('batch-email-template') as HTMLSelectElement | null;
-        const confirmBtn = document.getElementById('batch-email-confirm');
-        const originalHtml = confirmBtn?.innerHTML;
+        const selected      = this.getCheckedInvoiceIds();
+        const selectEl      = document.getElementById('batch-email-template') as HTMLSelectElement | null;
+        const fromSelectEl  = document.getElementById('batch-email-from') as HTMLSelectElement | null;
+        const confirmBtn    = document.getElementById('batch-email-confirm');
+        const originalHtml  = confirmBtn?.innerHTML;
 
         if (selected.length === 0 || !selectEl?.value) {
             alert('Please select invoices and an email template.');
@@ -1091,6 +1101,7 @@ export class InvoiceHandler {
             const response = await getJson<ApiResponse>(url, {
                 keylist: selected,
                 email_template_id: selectEl.value,
+                from_dropdown_id: fromSelectEl?.value ?? '',
             });
             const data = parsedata(response);
             if (data.success === 1) {

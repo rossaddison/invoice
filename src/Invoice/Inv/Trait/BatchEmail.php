@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Inv\Trait;
 
 use App\Invoice\EmailTemplate\EmailTemplateRepository as ETR;
+use App\Invoice\FromDropDown\FromDropDownRepository as FDR;
 use App\Invoice\Inv\InvBatchEmailService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -37,6 +38,7 @@ trait BatchEmail
         Request $request,
         InvBatchEmailService $batchEmailService,
         ETR $etR,
+        FDR $fdR,
     ): Response {
         $params          = $request->getQueryParams();
         /** @var list<string> $raw */
@@ -48,7 +50,12 @@ trait BatchEmail
             return $this->factory->createResponse(Json::encode(['success' => 0]));
         }
 
-        $success = $batchEmailService->sendBatch($invIds, $emailTemplateId, $etR);
+        $fromDropDownId    = (int) ($params['from_dropdown_id'] ?? 0);
+        $selectedFromEmail = $fromDropDownId > 0
+            ? ($fdR->repoFromDropDownLoadedquery($fromDropDownId)?->getEmail() ?? '')
+            : '';
+
+        $success = $batchEmailService->sendBatch($invIds, $emailTemplateId, $etR, $selectedFromEmail);
         return $this->factory->createResponse(Json::encode(['success' => $success ? 1 : 0]));
     }
 }

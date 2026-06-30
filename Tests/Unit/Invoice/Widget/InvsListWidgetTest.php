@@ -7,6 +7,7 @@ namespace Tests\Unit\Invoice\Widget;
 use App\Infrastructure\Persistence\Client\Client;
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\InvAmount\InvAmount;
+use App\Invoice\FromDropDown\FromDropDownRepository as FDR;
 use App\Invoice\Inv\InvRepository as IR;
 use App\Invoice\Inv\Widget\InvsFilterOptions;
 use App\Invoice\Inv\Widget\InvsGroupingHelper;
@@ -203,6 +204,18 @@ final class InvsListWidgetTest extends TestCase
             ->withIR($this->makeIR())
             ->withIrR($this->makeIRR())
             ->withIslR($this->makeISLR());
+
+        $this->assertSame('', $widget->render());
+    }
+
+    public function testRenderReturnsEmptyWhenFdRNotSet(): void
+    {
+        $widget = $this->makeWidget()
+            ->withPaginator($this->makeEmptyPaginator())
+            ->withIR($this->makeIR())
+            ->withIrR($this->makeIRR())
+            ->withIslR($this->makeISLR())
+            ->withSR($this->makeSR());
 
         $this->assertSame('', $widget->render());
     }
@@ -407,6 +420,19 @@ final class InvsListWidgetTest extends TestCase
         $prop = new \ReflectionProperty(InvsListWidget::class, 'filterOptions');
         $this->assertNull($prop->getValue($original));
         $this->assertSame($filterOpts, $prop->getValue($new));
+    }
+
+    public function testWithFdRReturnsNewInstanceAndOriginalUnchanged(): void
+    {
+        $original = $this->makeWidget();
+        /** @var FDR $fdR */
+        $fdR = (new \ReflectionClass(FDR::class))->newInstanceWithoutConstructor();
+        $new = $original->withFdR($fdR);
+
+        $this->assertNotSame($original, $new);
+        $prop = new \ReflectionProperty(InvsListWidget::class, 'fdR');
+        $this->assertNull($prop->getValue($original));
+        $this->assertSame($fdR, $prop->getValue($new));
     }
 
     // -------------------------------------------------------------------------

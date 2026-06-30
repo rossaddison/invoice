@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Inv\Widget;
 
 use App\Infrastructure\Persistence\EmailTemplate\EmailTemplate;
+use App\Infrastructure\Persistence\FromDropDown\FromDropDown;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Button as HtmlButton;
@@ -248,14 +249,45 @@ final class InvsToolbar
 
     private static function buildBatchEmailModal(InvsToolbarParams $p, TranslatorInterface $t): string
     {
-        $options = '';
+        $templateOptions = '';
         /** @var EmailTemplate $tpl */
         foreach ($p->etR->repoEmailTemplateType('invoice') as $tpl) {
-            $options .= Html::tag('option',
+            $templateOptions .= Html::tag('option',
                 $tpl->getEmailTemplateTitle() ?? '',
                 ['value' => (string) $tpl->reqEmailTemplateId()],
             )->render();
         }
+
+        $fromOptions = '';
+        /** @var FromDropDown $from */
+        foreach ($p->fdR->findAllPreloaded() as $from) {
+            $fromOptions .= Html::tag('option',
+                Html::encode($from->getEmail()),
+                ['value' => (string) $from->reqId()],
+            )->render();
+        }
+
+        $fromAddUrl = $p->urlGenerator->generate('from/add', ['returnUrl' => 'batchEmail']);
+
+        $fromRow = Html::openTag('div', ['class' => 'mb-3'])
+            . Html::tag('label', Html::encode($t->translate('from.email.address')),
+                ['class' => 'form-label', 'for' => 'batch-email-from'])
+            . Html::openTag('div', ['class' => 'd-flex gap-2 align-items-center'])
+            . Html::openTag('select', ['id' => 'batch-email-from', 'class' => 'form-select'])
+            . $fromOptions
+            . Html::closeTag('select')
+            . Html::tag('a', '➕',
+                ['href' => $fromAddUrl, 'class' => 'btn btn-outline-secondary flex-shrink-0',
+                    'title' => Html::encode($t->translate('add'))])
+            . Html::closeTag('div')
+            . ($fromOptions === ''
+                ? Html::tag('small',
+                    Html::encode($t->translate('from.email.address')) . ': '
+                    . Html::encode($t->translate('not.set')) . ' — '
+                    . Html::encode($t->translate('add')) . ' ➕',
+                    ['class' => 'text-warning'])
+                : '')
+            . Html::closeTag('div');
 
         return Html::openTag('div', ['class' => 'modal fade', 'id' => 'modal-batch-email',
                 'tabindex' => '-1', 'aria-hidden' => 'true'])
@@ -284,12 +316,13 @@ final class InvsToolbar
             . Html::openTag('tbody', ['id' => 'batch-email-preview-body'])
             . Html::closeTag('tbody')
             . Html::closeTag('table')
+            . $fromRow
             . Html::openTag('div', ['class' => 'mb-3'])
             . Html::tag('label',
                 Html::encode($t->translate('email.template')),
                 ['class' => 'form-label', 'for' => 'batch-email-template'])
             . Html::openTag('select', ['id' => 'batch-email-template', 'class' => 'form-select'])
-            . $options
+            . $templateOptions
             . Html::closeTag('select')
             . Html::closeTag('div')
             . Html::closeTag('div')
