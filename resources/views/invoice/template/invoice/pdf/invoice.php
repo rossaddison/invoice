@@ -76,10 +76,10 @@ $translator->setLocale($cldr);
        H::encode($clientTaxCode));
     }
     echo H::tag('div',
-     H::encode(strlen($inv->getClient()?->getClientAddress1() ?? '') > 0 ?:
+     H::encode($inv->getClient()?->getClientAddress1() ?:
       $translator->translate('street.address')));
     echo H::tag('div',
-     H::encode(strlen($inv->getClient()?->getClientAddress2() ?? '') > 0 ?:
+     H::encode($inv->getClient()?->getClientAddress2() ?:
       $translator->translate('street.address.2')));
     if (strlen($inv->getClient()?->getClientCity() ?? '') > 0 ||
         strlen($inv->getClient()?->getClientState() ?? '') > 0 ||

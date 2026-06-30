@@ -75,10 +75,11 @@ $translator->setLocale($cldr);
       $translator->translate('tax.code.short') . ': ' . H::encode($clientTaxCode));
     }
     echo H::tag('div',
-     H::encode(strlen($inv->getClient()?->getClientAddress1() ?? '') > 0 ?:
+     H::encode($inv->getClient()?->getClientAddress1() ?:
       $translator->translate('street.address')));
     echo H::tag('div',
-     H::encode(strlen($inv->getClient()?->getClientAddress2() ?? '') > 0 ?: $translator->translate('street.address.2')));
+     H::encode($inv->getClient()?->getClientAddress2() ?:
+      $translator->translate('street.address.2')));
     if (strlen($inv->getClient()?->getClientCity() ?? '') > 0 || strlen($inv->getClient()?->getClientState() ?? '') > 0 || strlen($inv->getClient()?->getClientZip() ?? '') > 0) {
      echo H::openTag('div'); //4
       if (strlen($inv->getClient()?->getClientCity() ?? '') > 0) {

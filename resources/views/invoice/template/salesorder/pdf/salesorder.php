@@ -68,9 +68,9 @@ $translator->setLocale($cldr);
       $translator->translate('tax.code.short') . ': ' . H::encode($clientTaxCode));
     }
     echo H::tag('div',
-     H::encode(strlen($salesorder->getClient()?->getClientAddress1() ?? '') > 0 ?: $translator->translate('street.address')));
+     H::encode($salesorder->getClient()?->getClientAddress1() ?: $translator->translate('street.address')));
     echo H::tag('div',
-     H::encode(strlen($salesorder->getClient()?->getClientAddress2() ?? '') > 0 ?: $translator->translate('street.address.2')));
+     H::encode($salesorder->getClient()?->getClientAddress2() ?: $translator->translate('street.address.2')));
     if (strlen($salesorder->getClient()?->getClientCity() ?? '') > 0 || strlen($salesorder->getClient()?->getClientState() ?? '') > 0 || strlen($salesorder->getClient()?->getClientZip() ?? '') > 0) {
      echo H::openTag('div'); //4
       if (strlen($salesorder->getClient()?->getClientCity() ?? '') > 0) {
