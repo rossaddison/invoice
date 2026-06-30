@@ -76,6 +76,44 @@ Both routes require the same `editInv` permission as other `inv` actions.
 
 - `email.client` → `Email Client`
 
+## Known Pitfalls Fixed During Development
+
+### `Html::tag()` encodes string content by default
+
+`Html::tag('thead', $htmlString)` and `Html::tag('select', $optionHtml)` encode
+their content, turning inner tags into escaped text visible in the browser.
+
+**Fix:** use `Html::openTag()` / `Html::closeTag()` pairs for any element whose
+content is already-rendered HTML. Affects `buildBatchEmailModal()` in
+`InvsToolbar.php`.
+
+### `DataResponseFactory` double-encodes JSON arrays
+
+`$this->factory->createResponse(Json::encode($array))` wraps the JSON string
+in a second encoding layer. `getJson<T>()` calls `JSON.parse()` once and
+returns a string, not the array. `Array.isArray()` then fails and the preview
+table body stays empty.
+
+**Fix:** unwrap in TypeScript before the array check:
+
+```typescript
+const raw = await getJson<unknown>(url, { keylist: selected });
+const rows: PreviewRow[] = Array.isArray(raw)
+    ? (raw as PreviewRow[])
+    : typeof raw === 'string'
+        ? (JSON.parse(raw) as PreviewRow[])
+        : [];
+```
+
+This matches the `parsedata()` pattern used by all other TypeScript handlers
+that call `factory->createResponse(Json::encode(...))`.
+
+### Quote `Trait/Email.php` `yiiMailerSend` call site
+
+Changing `MailerHelper::yiiMailerSend` from `?string` to `array $pdfPaths`
+also required updating `src/Invoice/Quote/Trait/Email.php` to wrap the single
+path: `[$pdf_template_target_path]`.
+
 ## Psalm
 
 Psalm errorLevel 1: zero errors (June 2026).
