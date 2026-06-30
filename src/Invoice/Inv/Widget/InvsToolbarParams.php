@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv\Widget;
 
+use App\Invoice\EmailTemplate\EmailTemplateRepository;
 use App\Invoice\Inv\InvRepository;
 use App\Invoice\Setting\SettingRepository;
 use Yiisoft\Router\CurrentRoute;
@@ -22,5 +23,6 @@ final readonly class InvsToolbarParams
         public int $clientCount,
         public string $groupBy,
         public bool $enableGrouping,
+        public EmailTemplateRepository $etR,
     ) {}
 }

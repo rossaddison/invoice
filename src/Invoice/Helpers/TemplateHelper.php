@@ -106,6 +106,7 @@ final readonly class TemplateHelper
             return '';
         }
         return (string) match ($var) {
+            'user_name'             => $userinv->getName()             ?? '',
             'user_company'          => $userinv->getCompany()          ?? '',
             'user_address_1'        => $userinv->getAddress1()         ?? '',
             'user_address_2'        => $userinv->getAddress2()         ?? '',

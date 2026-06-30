@@ -1239,6 +1239,14 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvController::class, 'markSentAsDraft'])
                 ->name('inv/markSentAsDraft'),
+            Route::methods([$mG], '/inv/batchEmailPreview')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([InvController::class, 'batchEmailPreview'])
+                ->name('inv/batchEmailPreview'),
+            Route::methods([$mG], '/inv/batchEmail')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([InvController::class, 'batchEmail'])
+                ->name('inv/batchEmail'),
             Route::methods([$mG, $mP], '/inv/modalChangeClient')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvController::class, 'modalChangeClient'])

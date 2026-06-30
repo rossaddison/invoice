@@ -138,6 +138,7 @@ public function index(
                             $nav->ucR->getClientsWithUserAccounts()
                         )
                     ),
+                'etR'                => $nav->etR,
             ];
 
             if ($request->hasHeader('Hx-Request')) {
@@ -151,6 +152,7 @@ public function index(
                         ->withSoR($nav->soR)
                         ->withDlR($nav->dlR)
                         ->withSR($this->sR)
+                        ->withEtR($nav->etR)
                         ->withCsrf((string) ($request->getParsedBody()['_csrf'] ?? ''))
                         ->withDecimalPlaces(
                             (int) $this->sR->getSetting('tax_rate_decimal_places'))

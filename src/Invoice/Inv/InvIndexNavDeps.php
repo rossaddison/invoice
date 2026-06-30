@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Inv;
 
 use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
+use App\Invoice\EmailTemplate\EmailTemplateRepository as ETR;
 use App\Invoice\PaymentMethod\PaymentMethodRepository as PMR;
 use App\Invoice\Quote\QuoteRepository as QR;
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
@@ -18,6 +19,7 @@ final class InvIndexNavDeps
         public readonly SOR $soR,
         public readonly DLR $dlR,
         public readonly UCR $ucR,
+        public readonly ETR $etR,
     ) {
     }
 }

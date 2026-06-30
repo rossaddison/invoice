@@ -83,6 +83,14 @@ export class InvoiceHandler {
 
         // Initialize all clients check on page load
         this.initializeAllClientsCheck();
+
+        // Batch email modal: fetch preview when modal opens
+        const batchEmailModal = document.getElementById('modal-batch-email');
+        if (batchEmailModal) {
+            batchEmailModal.addEventListener('show.bs.modal', () => {
+                void this.handleBatchEmailPreview();
+            });
+        }
     }
 
     private handleChange(event: Event): void {
@@ -160,6 +168,13 @@ export class InvoiceHandler {
         const bulkQuickPay = closestSafe(target, '#bulk-quick-pay-confirm');
         if (bulkQuickPay) {
             void this.handleBulkQuickPay();
+            return;
+        }
+
+        // Batch email (modal confirm)
+        const batchEmailConfirm = closestSafe(target, '#batch-email-confirm');
+        if (batchEmailConfirm) {
+            void this.handleBatchEmail();
             return;
         }
 
@@ -1012,6 +1027,77 @@ export class InvoiceHandler {
             }
         } catch (e) {
             console.warn('Failed to close modal:', e);
+        }
+    }
+
+    private async handleBatchEmailPreview(): Promise<void> {
+        const loadingEl  = document.getElementById('batch-email-loading');
+        const previewEl  = document.getElementById('batch-email-preview');
+        const bodyEl     = document.getElementById('batch-email-preview-body');
+        const confirmBtn = document.getElementById('batch-email-confirm');
+
+        if (loadingEl)  { loadingEl.classList.remove('d-none'); }
+        if (previewEl)  { previewEl.classList.add('d-none'); }
+        if (confirmBtn) { confirmBtn.classList.add('d-none'); }
+
+        const selected = this.getCheckedInvoiceIds();
+        if (selected.length === 0) {
+            if (loadingEl) { loadingEl.classList.add('d-none'); }
+            return;
+        }
+
+        try {
+            const url = `${location.origin}/invoice/inv/batchEmailPreview`;
+            type PreviewRow = { client: string; email: string; source: string; invoice_count: number };
+            const rows = await getJson<PreviewRow[]>(url, { keylist: selected });
+            if (bodyEl && Array.isArray(rows)) {
+                bodyEl.innerHTML = rows.map(r =>
+                    `<tr><td>${r.client}</td><td>${r.email}</td><td>${r.source}</td><td>${String(r.invoice_count)}</td></tr>`
+                ).join('');
+            }
+            if (loadingEl) { loadingEl.classList.add('d-none'); }
+            if (previewEl) { previewEl.classList.remove('d-none'); }
+            if (confirmBtn && Array.isArray(rows) && rows.length > 0) {
+                confirmBtn.classList.remove('d-none');
+            }
+        } catch (error) {
+            console.error('batch_email_preview error', error);
+            if (loadingEl) { loadingEl.classList.add('d-none'); }
+        }
+    }
+
+    private async handleBatchEmail(): Promise<void> {
+        const selected   = this.getCheckedInvoiceIds();
+        const selectEl   = document.getElementById('batch-email-template') as HTMLSelectElement | null;
+        const confirmBtn = document.getElementById('batch-email-confirm');
+        const originalHtml = confirmBtn?.innerHTML;
+
+        if (selected.length === 0 || !selectEl?.value) {
+            alert('Please select invoices and an email template.');
+            return;
+        }
+
+        if (confirmBtn) { setButtonLoadingOn(confirmBtn); }
+
+        try {
+            const url = `${location.origin}/invoice/inv/batchEmail`;
+            const response = await getJson<ApiResponse>(url, {
+                keylist: selected,
+                email_template_id: selectEl.value,
+            });
+            const data = parsedata(response);
+            if (data.success === 1) {
+                if (confirmBtn) {
+                    confirmBtn.innerHTML = '<i class="bi bi-check-lg"></i>';
+                }
+            } else if (confirmBtn) {
+                confirmBtn.innerHTML = '<i class="bi bi-x-lg"></i>';
+            }
+            globalThis.location.reload();
+        } catch (error) {
+            console.error('batch_email error', error);
+            if (confirmBtn && originalHtml) { setButtonLoadingOff(confirmBtn, originalHtml); }
+            alert('An error occurred sending batch email. See console for details.');
         }
     }
 }

@@ -696,6 +696,7 @@ return [
   'email.send.method.phpmail' => 'PHP Mail',
   'email.send.method.sendmail' => 'Sendmail',
   'email.send.method.smtp' => 'SMTP',
+  'email.client' => 'Email Client',
   'email.settings' => 'Email Settings',
   'email.source.email.template' =>
     ' Retrieved from Settings ... Email Template',

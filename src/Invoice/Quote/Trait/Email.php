@@ -180,7 +180,7 @@ trait Email
                 $mail_from_email = $template_helper->parseTemplate($quote_id, false, $data->fromEmail, $parseDeps);
                 $mail_from_name  = $template_helper->parseTemplate($quote_id, false, $data->fromName, $parseDeps);
                 $mailerParams = new MailerSendParams($mail_from_email, $mail_from_name, $data->to, $mail_subject, $mail_message, $mail_cc, $mail_bcc);
-                return $mailer_helper->yiiMailerSend($mailerParams, $data->attachFiles, $pdf_template_target_path, $d->core->uiR);
+                return $mailer_helper->yiiMailerSend($mailerParams, $data->attachFiles, [$pdf_template_target_path], $d->core->uiR);
             }
         }
         return false;

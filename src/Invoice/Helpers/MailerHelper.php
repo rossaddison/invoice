@@ -53,15 +53,14 @@ class MailerHelper
     /**
      * @param MailerSendParams $params
      * @param array $attachFiles
-     * @param string|null $pdf_template_target_path
+     * @param list<string> $pdfPaths
      * @param UIR|null $uiR
      * @return bool
      */
     public function yiiMailerSend(
         MailerSendParams $params,
         array $attachFiles,
-        // $target_path of pdfs generated
-        ?string $pdf_template_target_path,
+        array $pdfPaths,
         ?UIR $uiR,
     ): bool {
         $cc  = $this->normalizeEmailList($params->cc);
@@ -84,18 +83,16 @@ class MailerHelper
 
         $email = $this->attachUploadedFiles($email, $attachFiles);
 
-        if (null !== $pdf_template_target_path) {
-            $path_info = pathinfo($pdf_template_target_path);
-            $path_info_file_name = $path_info['filename'];
-            $email_attachments_with_pdf_template = $email->withAttachments(
+        $email_attachments_with_pdf_template = $email;
+        foreach ($pdfPaths as $pdfPath) {
+            $path_info_file_name = pathinfo($pdfPath, PATHINFO_FILENAME);
+            $email_attachments_with_pdf_template = $email_attachments_with_pdf_template->withAttachments(
                 File::fromPath(
-                    FileHelper::normalizePath($pdf_template_target_path),
+                    FileHelper::normalizePath($pdfPath),
                     $path_info_file_name,
                     'application/pdf',
                 ),
             );
-        } else {
-            $email_attachments_with_pdf_template = $email;
         }
         // Ensure that the administrator exists in the userinv extension table. If the email is blank generate a flash
         if (null !== $uiR && $uiR->repoUserInvUserIdcount(1) == 0) {

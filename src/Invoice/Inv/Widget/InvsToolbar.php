@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv\Widget;
 
+use App\Infrastructure\Persistence\EmailTemplate\EmailTemplate;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Button as HtmlButton;
@@ -24,7 +25,7 @@ final class InvsToolbar
 
     public static function build(InvsToolbarParams $p): string
     {
-        $toolbarReset = (new A())
+        $toolbarReset = new A()
             ->addAttributes(['type' => 'reset'])
             ->addClass('btn btn-primary me-1 ajax-loader')
             ->content(new I()->addClass('bi bi-bootstrap-reboot'))
@@ -32,7 +33,7 @@ final class InvsToolbar
             ->id('btn-reset')
             ->render();
 
-        $allVisible = (new A())
+        $allVisible = new A()
             ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip',
                 'title' => $p->translator->translate('hide.or.unhide.columns')])
             ->addClass('btn btn-warning me-1 ajax-loader')
@@ -41,7 +42,7 @@ final class InvsToolbar
             ->id('btn-all-visible')
             ->render();
 
-        $copyMultiple = (new A())
+        $copyMultiple = new A()
             ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'modal',
                 'title' => Html::encode($p->translator->translate('copy.invoice'))])
             ->addClass('btn btn-success')
@@ -50,7 +51,7 @@ final class InvsToolbar
             ->id('btn-modal-copy-inv-multipe')
             ->render();
 
-        $markAsSent = (new A())
+        $markAsSent = new A()
             ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip',
                 'title' => Html::encode($p->translator->translate('sent'))])
             ->addClass('btn btn-success')
@@ -61,7 +62,7 @@ final class InvsToolbar
         $today = (new \DateTimeImmutable())->format('Y-m-d');
         $t     = $p->translator;
 
-        $bulkQuickPay = (new A())
+        $bulkQuickPay = new A()
             ->addAttributes(['type' => 'button', 'data-bs-toggle' => 'modal',
                 'data-bs-target' => '#modal-bulk-quick-pay',
                 'title' => Html::encode($t->translate('quick.pay')),
@@ -71,10 +72,12 @@ final class InvsToolbar
             ->id('btn-bulk-quick-pay')
             ->render();
 
-        $bulkQuickPayModal = self::buildBulkQuickPayModal($t, $today);
-        $markSentAsDraft = self::buildMarkSentAsDraft($p);
+        $bulkQuickPayModal  = self::buildBulkQuickPayModal($t, $today);
+        $batchEmailBtn      = self::buildBatchEmailButton($t);
+        $batchEmailModal    = self::buildBatchEmailModal($p, $t);
+        $markSentAsDraft    = self::buildMarkSentAsDraft($p);
 
-        $markRecurring = (new A())
+        $markRecurring = new A()
             ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'modal'])
             ->addClass('btn btn-info')
             ->href('#create-recurring-multiple')
@@ -85,12 +88,12 @@ final class InvsToolbar
         $groupBySelect = self::buildGroupBySelect($p);
         $collapseExpand = self::buildCollapseExpand($p);
 
-        return (new Form())
+        return new Form()
                 ->post($p->urlGenerator->generate(self::ROUTE_INDEX))
                 ->csrf($p->csrf)
                 ->open()
-            . (new Div())->addClass('float-start')->content(
-                (new H4())
+            . new Div()->addClass('float-start')->content(
+                new H4()
                     ->addClass('me-3 d-inline-block')
                     ->content($p->translator->translate('invoice'))
                 . Html::openTag('div', ['class' => 'btn-group me-2', 'role' => 'group'])
@@ -100,14 +103,16 @@ final class InvsToolbar
                 . $markAsSent
                 . $markSentAsDraft
                 . $bulkQuickPay
+                . $batchEmailBtn
                 . $markRecurring
                 . $addBtn
                 . Html::closeTag('div')
                 . $groupBySelect
                 . $collapseExpand
             )->encode(false)->render()
-            . (new Form())->close()
-            . $bulkQuickPayModal;
+            . new Form()->close()
+            . $bulkQuickPayModal
+            . $batchEmailModal;
     }
 
     private static function buildBulkQuickPayModal(TranslatorInterface $t, string $today): string
@@ -153,7 +158,7 @@ final class InvsToolbar
     private static function buildMarkSentAsDraft(InvsToolbarParams $p): string
     {
         return $p->sR->getSetting('disable_read_only') === '0'
-            ? (new A())
+            ? new A()
                 ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip',
                     'title' => Html::encode(
                         $p->translator->translate('security.disable.read.only.info')),
@@ -162,7 +167,7 @@ final class InvsToolbar
                 ->content('☑️' . $p->translator->translate('draft') . $p->iR->getSpecificStatusArrayEmoji(1))
                 ->id('btn-mark-sent-as-draft')
                 ->render()
-            : (new A())
+            : new A()
                 ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip',
                     'title' => Html::encode($p->translator->translate('draft')),
                     'style' => 'text-decoration:none'])
@@ -175,14 +180,14 @@ final class InvsToolbar
     private static function buildAddBtn(InvsToolbarParams $p): string
     {
         return $p->clientCount > 0
-            ? (new A())
+            ? new A()
                 ->addAttributes(['class' => 'btn btn-info', 'data-bs-toggle' => 'modal',
                     'style' => 'text-decoration:none'])
                 ->content('➕')
                 ->href('#modal-add-inv')
                 ->id('btn-enabled-invoice-add-button')
                 ->render()
-            : (new A())
+            : new A()
                 ->addAttributes(['class' => 'btn btn-info', 'data-bs-toggle' => 'tooltip',
                     'title' => $p->translator->translate('add.client'),
                     'disabled' => 'disabled', 'style' => 'text-decoration:none'])
@@ -194,14 +199,14 @@ final class InvsToolbar
 
     private static function buildGroupBySelect(InvsToolbarParams $p): string
     {
-        return (new Div())
+        return new Div()
             ->addClass('btn-group ms-3')
             ->addAttributes(['role' => 'group'])
             ->content(
-                (new Label())
+                new Label()
                     ->addClass('btn btn-outline-secondary active bi bi-collection me-1')
                     ->content(' ' . $p->translator->translate('group.by') . ':')
-                . (new Select())
+                . new Select()
                     ->addClass('form-select group-by-select')
                     ->addAttributes([
                         'style'         => 'max-width: 150px;',
@@ -225,20 +230,96 @@ final class InvsToolbar
             ->render();
     }
 
+    private static function buildBatchEmailButton(TranslatorInterface $t): string
+    {
+        return new A()
+            ->addAttributes([
+                'type'             => 'button',
+                'data-bs-toggle'   => 'modal',
+                'data-bs-target'   => '#modal-batch-email',
+                'title'            => Html::encode($t->translate('email.client')),
+                'style'            => 'text-decoration:none',
+            ])
+            ->addClass('btn btn-info')
+            ->content('☑️📧 ' . $t->translate('email.client'))
+            ->id('btn-batch-email')
+            ->render();
+    }
+
+    private static function buildBatchEmailModal(InvsToolbarParams $p, TranslatorInterface $t): string
+    {
+        $options = '';
+        /** @var EmailTemplate $tpl */
+        foreach ($p->etR->repoEmailTemplateType('invoice') as $tpl) {
+            $options .= Html::tag('option',
+                Html::encode($tpl->getEmailTemplateTitle() ?? ''),
+                ['value' => (string) $tpl->reqEmailTemplateId()],
+            )->render();
+        }
+
+        return Html::openTag('div', ['class' => 'modal fade', 'id' => 'modal-batch-email',
+                'tabindex' => '-1', 'aria-hidden' => 'true'])
+            . Html::openTag('div', ['class' => 'modal-dialog modal-lg'])
+            . Html::openTag('div', ['class' => 'modal-content'])
+            . Html::openTag('div', ['class' => 'modal-header'])
+            . Html::tag('h5', '📧 ' . Html::encode($t->translate('email.client')),
+                ['class' => 'modal-title'])
+            . Html::tag('button', '', ['type' => 'button', 'class' => 'btn-close',
+                'data-bs-dismiss' => 'modal', 'aria-label' => 'Close'])
+            . Html::closeTag('div')
+            . Html::openTag('div', ['class' => 'modal-body'])
+            . Html::openTag('div', ['id' => 'batch-email-loading', 'class' => 'text-center py-3'])
+            . Html::tag('span', '', ['class' => 'spinner-border text-primary', 'role' => 'status'])
+            . Html::closeTag('div')
+            . Html::openTag('div', ['id' => 'batch-email-preview', 'class' => 'd-none'])
+            . Html::openTag('table', ['class' => 'table table-sm table-bordered mb-3'])
+            . Html::tag('thead',
+                Html::tag('tr',
+                    Html::tag('th', Html::encode($t->translate('client')))
+                    . Html::tag('th', 'Email')
+                    . Html::tag('th', 'Source')
+                    . Html::tag('th', Html::encode($t->translate('invoice')))
+                )
+            )
+            . Html::openTag('tbody', ['id' => 'batch-email-preview-body'])
+            . Html::closeTag('tbody')
+            . Html::closeTag('table')
+            . Html::openTag('div', ['class' => 'mb-3'])
+            . Html::tag('label',
+                Html::encode($t->translate('email.template')),
+                ['class' => 'form-label', 'for' => 'batch-email-template'])
+            . Html::tag('select', $options,
+                ['id' => 'batch-email-template', 'class' => 'form-select'])
+            . Html::closeTag('div')
+            . Html::closeTag('div')
+            . Html::closeTag('div')
+            . Html::openTag('div', ['class' => 'modal-footer'])
+            . Html::tag('button', Html::encode($t->translate('cancel')),
+                ['type' => 'button', 'class' => 'btn btn-secondary',
+                    'data-bs-dismiss' => 'modal'])
+            . Html::tag('button', '📧 ' . Html::encode($t->translate('email.client')),
+                ['type' => 'button', 'class' => 'btn btn-primary d-none',
+                    'id' => 'batch-email-confirm'])
+            . Html::closeTag('div')
+            . Html::closeTag('div')
+            . Html::closeTag('div')
+            . Html::closeTag('div');
+    }
+
     private static function buildCollapseExpand(InvsToolbarParams $p): string
     {
         return $p->enableGrouping
-            ? (new Div())
+            ? new Div()
                 ->addClass('btn-group ms-2')
                 ->addAttributes(['role' => 'group'])
                 ->content(
-                    (new HtmlButton())
+                    new HtmlButton()
                         ->type('button')
                         ->addClass('btn btn-outline-secondary btn-sm')
                         ->addAttributes(['onclick' => 'toggleAllGroups(false)',
                             'title' => 'Collapse All Groups'])
                         ->content(new I()->addClass('bi bi-chevron-up'))
-                    . (new HtmlButton())
+                    . new HtmlButton()
                         ->type('button')
                         ->addClass('btn btn-outline-secondary btn-sm')
                         ->addAttributes(['onclick' => 'toggleAllGroups(true)',

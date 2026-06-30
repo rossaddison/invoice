@@ -6,6 +6,7 @@ namespace App\Invoice\Inv\Widget;
 
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
+use App\Invoice\EmailTemplate\EmailTemplateRepository as ETR;
 use App\Invoice\Inv\InvRepository as IR;
 use App\Invoice\InvRecurring\InvRecurringRepository as IRR;
 use App\Invoice\InvSentLog\InvSentLogRepository as ISLR;
@@ -48,6 +49,7 @@ final class InvsListWidget extends Widget
     private ?SOR $soR = null;
     private ?DLR $dlR = null;
     private ?SR $sR = null;
+    private ?ETR $etR = null;
     private string|\Stringable $csrf = '';
     private int $decimalPlaces = 2;
     private bool $visible = false;
@@ -123,6 +125,13 @@ final class InvsListWidget extends Widget
     {
         $new = clone $this;
         $new->sR = $sR;
+        return $new;
+    }
+
+    public function withEtR(ETR $etR): static
+    {
+        $new = clone $this;
+        $new->etR = $etR;
         return $new;
     }
 
@@ -204,7 +213,8 @@ final class InvsListWidget extends Widget
     public function render(): string
     {
         if ($this->paginator === null || $this->iR === null
-            || $this->irR === null || $this->islR === null || $this->sR === null) {
+            || $this->irR === null || $this->islR === null || $this->sR === null
+            || $this->etR === null) {
             return '';
         }
 
@@ -321,6 +331,7 @@ final class InvsListWidget extends Widget
                 clientCount:    $this->clientCount,
                 groupBy:        $this->groupBy,
                 enableGrouping: $enableGrouping,
+                etR:            $this->etR,
             )));
 
         if ($enableGrouping) {

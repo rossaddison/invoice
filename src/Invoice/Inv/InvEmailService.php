@@ -49,7 +49,7 @@ final readonly class InvEmailService
             $parse($data->cc),
             $parse($data->bcc),
         );
-        return $this->mailerHelper()->yiiMailerSend($params, $data->attachFiles, $pdfPath, $this->d->core->uiR);
+        return $this->mailerHelper()->yiiMailerSend($params, $data->attachFiles, [$pdfPath], $this->d->core->uiR);
     }
 
     private function mailerDeps(): MailerHelperCustomDeps
