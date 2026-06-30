@@ -97,7 +97,7 @@ export class AmountMagnifier {
 export function initGroupBySelect(): void {
     const select = document.querySelector<HTMLSelectElement>('.group-by-select');
     if (!select) return;
-    const allowed = new Set(['none', 'status', 'client', 'client_group', 'month', 'year', 'date', 'amount_range']);
+    const allowed = new Set(['none', 'status', 'client', 'client_group', 'month', 'year', 'date', 'amount_range', 'peppol_workflow', 'quick_pay']);
     select.addEventListener('change', function () {
         if (allowed.has(this.value)) {
             const base = this.dataset['baseUrl'] ?? '';
