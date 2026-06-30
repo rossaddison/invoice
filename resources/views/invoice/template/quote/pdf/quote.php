@@ -72,11 +72,11 @@ $translator->setLocale($cldr);
        H::encode($clientTaxCode));
     }
     echo H::tag('div',
-     H::encode($quote->getClient()?->getClientAddress1() ?:
-      $translator->translate('street.address')));
+     H::encode(($addr1 = $quote->getClient()?->getClientAddress1() ?? '') !== ''
+      ? $addr1 : $translator->translate('street.address')));
     echo H::tag('div',
-     H::encode($quote->getClient()?->getClientAddress2() ?:
-      $translator->translate('street.address.2')));
+     H::encode(($addr2 = $quote->getClient()?->getClientAddress2() ?? '') !== ''
+      ? $addr2 : $translator->translate('street.address.2')));
     if (strlen($quote->getClient()?->getClientCity() ?? '') > 0 ||
      strlen($quote->getClient()?->getClientState() ?? '') > 0 ||
             strlen($quote->getClient()?->getClientZip() ?? '') > 0) {
