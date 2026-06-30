@@ -60,7 +60,6 @@ final class InvsListWidget extends Widget
     private int $clientCount = 0;
     private string $gridSummary = '';
     private string $sortString = '-id';
-    private string $label = '';
     private ?InvsFilterOptions $filterOptions = null;
 
     public function __construct(
@@ -102,23 +101,11 @@ final class InvsListWidget extends Widget
         return $new;
     }
 
-    public function withQR(QR $qR): static
+    public function withRelationRepositories(?QR $qR = null, ?SOR $soR = null, ?DLR $dlR = null): static
     {
         $new = clone $this;
-        $new->qR = $qR;
-        return $new;
-    }
-
-    public function withSoR(SOR $soR): static
-    {
-        $new = clone $this;
+        $new->qR  = $qR;
         $new->soR = $soR;
-        return $new;
-    }
-
-    public function withDlR(DLR $dlR): static
-    {
-        $new = clone $this;
         $new->dlR = $dlR;
         return $new;
     }
@@ -197,13 +184,6 @@ final class InvsListWidget extends Widget
     {
         $new = clone $this;
         $new->sortString = $sortString;
-        return $new;
-    }
-
-    public function withLabel(string $label): static
-    {
-        $new = clone $this;
-        $new->label = $label;
         return $new;
     }
 

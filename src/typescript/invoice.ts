@@ -1060,12 +1060,7 @@ export class InvoiceHandler {
             const url = `${location.origin}/invoice/inv/batchEmailPreview`;
             type PreviewRow = { client: string; email: string; source: string; invoice_count: number };
             const raw = await getJson<unknown>(url, { keylist: selected });
-            // DataResponseFactory double-encodes JSON; unwrap if the result is a string
-            const rows: PreviewRow[] = Array.isArray(raw)
-                ? (raw as PreviewRow[])
-                : typeof raw === 'string'
-                    ? (JSON.parse(raw) as PreviewRow[])
-                    : [];
+            const rows = this.decodePreviewRows<PreviewRow>(raw);
             if (bodyEl) {
                 bodyEl.innerHTML = rows.map(r =>
                     `<tr><td>${r.client}</td><td>${r.email}</td><td>${r.source}</td><td>${String(r.invoice_count)}</td></tr>`
@@ -1117,5 +1112,11 @@ export class InvoiceHandler {
             if (confirmBtn && originalHtml) { setButtonLoadingOff(confirmBtn, originalHtml); }
             alert('An error occurred sending batch email. See console for details.');
         }
+    }
+
+    private decodePreviewRows<T>(raw: unknown): T[] {
+        if (Array.isArray(raw)) { return raw as T[]; }
+        if (typeof raw === 'string') { return JSON.parse(raw) as T[]; }
+        return [];
     }
 }

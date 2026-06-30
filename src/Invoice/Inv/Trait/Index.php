@@ -103,7 +103,7 @@ public function index(
                 'irR'                => $list->irR,
                 'islR'               => $list->islR,
                 'inv_statuses'       => $inv_statuses,
-                'label'              => $label,
+
                 'paginator'          => $paginator,
                 'qR'                 => $nav->qR,
                 'dlR'                => $nav->dlR,
@@ -149,9 +149,7 @@ public function index(
                         ->withIR($list->invRepo)
                         ->withIrR($list->irR)
                         ->withIslR($list->islR)
-                        ->withQR($nav->qR)
-                        ->withSoR($nav->soR)
-                        ->withDlR($nav->dlR)
+                        ->withRelationRepositories($nav->qR, $nav->soR, $nav->dlR)
                         ->withSR($this->sR)
                         ->withEtR($nav->etR)
                         ->withFdR($nav->fdR)
@@ -165,7 +163,6 @@ public function index(
                         ->withClientCount($list->clientRepo->count())
                         ->withGridSummary($gridSummary)
                         ->withSortString($sortString)
-                        ->withLabel($label)
                         ->withFilterOptions(new InvsFilterOptions(
                             invNumber:       $this->optionsDataInvNumberFilter($list->invRepo),
                             creditInvNumber: $this->optionsDataCreditInvNumberFilter($list->invRepo),

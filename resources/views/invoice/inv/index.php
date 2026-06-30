@@ -31,7 +31,7 @@ use Yiisoft\Html\Html;
  * @var string|null $defaultInvoicePaymentMethod
  * @var string $gridSummary
  * @var string|null $groupBy
- * @var string $label
+
  * @var string $modal_add_inv
  * @var string $modal_copy_inv_multiple
  * @var string $modal_create_recurring_multiple
@@ -155,9 +155,7 @@ echo InvsListWidget::widget()
     ->withIR($iR)
     ->withIrR($irR)
     ->withIslR($islR)
-    ->withQR($qR)
-    ->withSoR($soR)
-    ->withDlR($dlR)
+    ->withRelationRepositories($qR, $soR, $dlR)
     ->withSR($s)
     ->withEtR($etR)
     ->withFdR($fdR)
@@ -169,7 +167,6 @@ echo InvsListWidget::widget()
     ->withClientCount($clientCount)
     ->withGridSummary($gridSummary)
     ->withSortString($sortString)
-    ->withLabel($label)
     ->withFilterOptions(new InvsFilterOptions(
         invNumber:       $optionsInvNumberDropDownFilter,
         creditInvNumber: $optionsCreditInvNumberDropDownFilter,
