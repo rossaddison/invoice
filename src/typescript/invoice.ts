@@ -84,13 +84,14 @@ export class InvoiceHandler {
         // Initialize all clients check on page load
         this.initializeAllClientsCheck();
 
-        // Batch email modal: fetch preview when modal opens
-        const batchEmailModal = document.getElementById('modal-batch-email');
-        if (batchEmailModal) {
-            batchEmailModal.addEventListener('show.bs.modal', () => {
+        // Batch email modal: fetch preview when modal opens.
+        // Document-level delegation so this fires even if #modal-batch-email is
+        // injected after init (e.g. HTMX swap) or replaced during a grid refresh.
+        document.addEventListener('show.bs.modal', (event: Event) => {
+            if ((event.target as HTMLElement)?.id === 'modal-batch-email') {
                 void this.handleBatchEmailPreview();
-            });
-        }
+            }
+        });
     }
 
     private handleChange(event: Event): void {
