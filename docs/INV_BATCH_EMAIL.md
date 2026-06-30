@@ -108,6 +108,20 @@ const rows: PreviewRow[] = Array.isArray(raw)
 This matches the `parsedata()` pattern used by all other TypeScript handlers
 that call `factory->createResponse(Json::encode(...))`.
 
+### `pdf_stream_inv` setting silently blocks email sending
+
+`InvPdfService::generate(int $invId, bool $stream, bool $custom)` — when
+`$stream` is `true` the PDF is written directly to the HTTP response buffer
+(browser download) and the method returns `''`.  If `pdf_stream_inv = '1'`
+in Settings, passing that flag into the batch loop meant `$pdfPaths` stayed
+empty, `yiiMailerSend` sent a mail with no attachment, and the underlying
+`mailer->send()` threw (or silently returned false).
+
+**Fix:** always pass `false` for `$stream` when generating PDFs for email
+attachment — the setting only applies to the PDF-download button, never to
+server-side file creation for attachments.  `Quote/Trait/Email.php` already
+hardcodes `false`; batch email must match.
+
 ### Quote `Trait/Email.php` `yiiMailerSend` call site
 
 Changing `MailerHelper::yiiMailerSend` from `?string` to `array $pdfPaths`

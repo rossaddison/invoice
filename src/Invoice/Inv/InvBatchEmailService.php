@@ -119,9 +119,8 @@ final readonly class InvBatchEmailService
             );
 
             $pdfPaths = [];
-            $stream   = $this->sR->getSetting('pdf_stream_inv') === '1';
             foreach ($invoices as $inv) {
-                $path = $this->invPdfService->generate($inv->reqId(), $stream, true);
+                $path = $this->invPdfService->generate($inv->reqId(), false, true);
                 if ($path !== '') {
                     $pdfPaths[] = $path;
                 }
