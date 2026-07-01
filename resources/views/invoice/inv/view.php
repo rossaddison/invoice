@@ -651,7 +651,7 @@ if (!empty($payments)) {
       echo H::openTag('thead');
        echo H::openTag('tr');
         echo H::openTag('th');
-         echo H::encode($translator->translate('date'));
+         echo H::encode($translator->translate('payment.date'));
         echo H::closeTag('th');
         echo H::openTag('th');
          echo H::encode($translator->translate('amount'));
