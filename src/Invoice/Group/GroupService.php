@@ -33,11 +33,13 @@ final readonly class GroupService
      */
     public function deleteGroup(Group $model): void
     {
-        // The first three default groups i.e. quote, salesorder, and invoice cannot be deleted
-        if (($model->getName() != 'Quote Group')
-                && ($model->getName() != 'Invoice Group')
-                    && ($model->getName() != 'Sales Order Group')) {
-            $this->repository->delete($model);
+        // The four default system groups cannot be deleted
+        if (($model->getName() === 'Quote Group')
+                || ($model->getName() === 'Invoice Group')
+                || ($model->getName() === 'Sales Order Group')
+                || ($model->getName() === 'Credit Note Group')) {
+            throw new \RuntimeException('System group "' . ($model->getName() ?? '') . '" cannot be deleted.');
         }
+        $this->repository->delete($model);
     }
 }
