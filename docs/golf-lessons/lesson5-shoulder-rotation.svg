@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 600 450" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif">
+  <rect width="600" height="450" fill="#f0f7f0" rx="6"/>
+
+  <!-- Header -->
+  <rect width="600" height="56" fill="#1a3a1a" rx="6"/>
+  <rect y="50" width="600" height="6" fill="#1a3a1a"/>
+  <text x="300" y="26" text-anchor="middle" fill="white" font-size="16" font-weight="bold">LESSON 5: SHOULDER ROTATION UNDER THE CHIN</text>
+  <text x="300" y="46" text-anchor="middle" fill="#8fbc8f" font-size="11">Left shoulder down &amp; under (back) · Right shoulder down &amp; under (through) · Handshake finish</text>
+
+  <!-- Three-stage sequence labels -->
+  <text x="100" y="78" text-anchor="middle" fill="#dc3545" font-size="12" font-weight="bold">① BACKSWING</text>
+  <text x="300" y="78" text-anchor="middle" fill="#6c757d" font-size="12" font-weight="bold">② IMPACT</text>
+  <text x="500" y="78" text-anchor="middle" fill="#0d6efd" font-size="12" font-weight="bold">③ FOLLOW-THROUGH</text>
+
+  <!-- Spine axis (vertical through all three figures) -->
+  <!-- Spine line for fig 1 -->
+  <line x1="100" y1="98" x2="100" y2="360" stroke="#4a8a4a" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.5"/>
+  <!-- Spine line for fig 2 -->
+  <line x1="300" y1="98" x2="300" y2="360" stroke="#4a8a4a" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.5"/>
+  <!-- Spine line for fig 3 -->
+  <line x1="500" y1="98" x2="500" y2="360" stroke="#4a8a4a" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.5"/>
+
+  <!-- Ground lines -->
+  <line x1="50" y1="378" x2="550" y2="378" stroke="#aaa" stroke-width="1.5"/>
+
+  <!-- ========== FIGURE 1: BACKSWING — Left shoulder under chin ========== -->
+  <!-- Head - tilted slightly right (away from target) -->
+  <circle cx="100" cy="125" r="24" fill="#f5c5a0" stroke="#5a3a1a" stroke-width="2"/>
+  <!-- Chin (important reference) -->
+  <line x1="100" y1="149" x2="100" y2="158" stroke="#5a3a1a" stroke-width="2.5"/>
+  <!-- Chin indicator -->
+  <text x="70" y="162" fill="#6c757d" font-size="9">chin</text>
+  <line x1="88" y1="158" x2="98" y2="158" stroke="#6c757d" stroke-width="1" stroke-dasharray="2,2"/>
+
+  <!-- Shoulders — left (lead) shoulder has dipped DOWN under chin -->
+  <line x1="62" y1="195" x2="138" y2="165" stroke="#dc3545" stroke-width="5" stroke-linecap="round"/>
+  <!-- Left shoulder is low (at 195) — right is high (at 165) -->
+  <circle cx="62" cy="195" r="8" fill="#dc3545" opacity="0.8"/>
+  <text x="30" y="212" fill="#dc3545" font-size="10" font-weight="bold">L</text>
+  <circle cx="138" cy="165" r="8" fill="#2d6a4f" opacity="0.8"/>
+  <text x="144" y="170" fill="#2d6a4f" font-size="10" font-weight="bold">R</text>
+
+  <!-- Arrow: Left shoulder DOWN under chin -->
+  <path d="M 55 175 Q 72 185 70 195" fill="none" stroke="#dc3545" stroke-width="2.5"/>
+  <polygon points="70,197 62,188 74,188" fill="#dc3545"/>
+  <text x="16" y="183" fill="#dc3545" font-size="9">LEFT shoulder</text>
+  <text x="16" y="194" fill="#dc3545" font-size="9">DOWN under chin</text>
+
+  <!-- Torso / spine (tilted with shoulder turn) -->
+  <line x1="100" y1="158" x2="100" y2="310" stroke="#2d6a4f" stroke-width="4"/>
+  <!-- Hips — relatively stable -->
+  <line x1="78" y1="310" x2="122" y2="310" stroke="#2d6a4f" stroke-width="4"/>
+  <!-- Left arm goes UP with shoulder turn -->
+  <line x1="62" y1="195" x2="58" y2="145" stroke="#2d6a4f" stroke-width="3"/>
+  <!-- Right arm comes across body -->
+  <line x1="138" y1="165" x2="115" y2="230" stroke="#2d6a4f" stroke-width="3"/>
+  <!-- Club going back (trail direction) -->
+  <line x1="115" y1="230" x2="148" y2="178" stroke="#8B4513" stroke-width="4"/>
+  <!-- Club shaft direction arrow -->
+  <polygon points="150,176 140,170 145,180" fill="#8B4513"/>
+  <!-- Legs -->
+  <line x1="85" y1="310" x2="78" y2="378" stroke="#2d6a4f" stroke-width="3.5"/>
+  <line x1="115" y1="310" x2="122" y2="378" stroke="#2d6a4f" stroke-width="3.5"/>
+
+  <!-- Rotation arc (spine axis) -->
+  <path d="M 78 165 A 22 22 0 0 1 62 182" fill="none" stroke="#dc3545" stroke-width="2" stroke-dasharray="3,2"/>
+
+  <!-- ========== FIGURE 2: IMPACT — Shoulders square ========== -->
+  <circle cx="300" cy="125" r="24" fill="#f5c5a0" stroke="#5a3a1a" stroke-width="2"/>
+  <line x1="300" y1="149" x2="300" y2="158" stroke="#5a3a1a" stroke-width="2.5"/>
+  <!-- Shoulders — back to square at impact -->
+  <line x1="265" y1="175" x2="335" y2="175" stroke="#6c757d" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="265" cy="175" r="8" fill="#6c757d" opacity="0.8"/>
+  <text x="248" y="192" fill="#6c757d" font-size="10">L</text>
+  <circle cx="335" cy="175" r="8" fill="#6c757d" opacity="0.8"/>
+  <text x="340" y="192" fill="#6c757d" font-size="10">R</text>
+  <!-- Torso -->
+  <line x1="300" y1="158" x2="300" y2="310" stroke="#2d6a4f" stroke-width="4"/>
+  <line x1="278" y1="310" x2="322" y2="310" stroke="#2d6a4f" stroke-width="4"/>
+  <!-- Arms at impact (extended toward ball) -->
+  <line x1="265" y1="178" x2="280" y2="250" stroke="#2d6a4f" stroke-width="3"/>
+  <line x1="335" y1="178" x2="320" y2="250" stroke="#2d6a4f" stroke-width="3"/>
+  <!-- Club at impact -->
+  <line x1="300" y1="252" x2="275" y2="375" stroke="#8B4513" stroke-width="4"/>
+  <!-- Ball at impact -->
+  <circle cx="272" cy="380" r="8" fill="white" stroke="#555" stroke-width="2"/>
+  <!-- Impact flash -->
+  <circle cx="272" cy="378" r="14" fill="none" stroke="#fd7e14" stroke-width="2" stroke-dasharray="4,2" opacity="0.8"/>
+  <text x="295" y="388" fill="#fd7e14" font-size="10" font-weight="bold">IMPACT</text>
+  <!-- Legs -->
+  <line x1="285" y1="310" x2="278" y2="378" stroke="#2d6a4f" stroke-width="3.5"/>
+  <line x1="315" y1="310" x2="322" y2="378" stroke="#2d6a4f" stroke-width="3.5"/>
+  <text x="300" y="405" text-anchor="middle" fill="#6c757d" font-size="9">Shoulders square</text>
+
+  <!-- ========== FIGURE 3: FOLLOW-THROUGH — Handshake / Right shoulder under ========== -->
+  <circle cx="500" cy="125" r="24" fill="#f5c5a0" stroke="#5a3a1a" stroke-width="2"/>
+  <line x1="500" y1="149" x2="500" y2="158" stroke="#5a3a1a" stroke-width="2.5"/>
+  <!-- Right shoulder now low (has come down under chin) -->
+  <line x1="462" y1="165" x2="538" y2="195" stroke="#0d6efd" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="462" cy="165" r="8" fill="#2d6a4f" opacity="0.8"/>
+  <text x="444" y="182" fill="#2d6a4f" font-size="10">L</text>
+  <circle cx="538" cy="195" r="8" fill="#0d6efd" opacity="0.8"/>
+  <text x="542" y="200" fill="#0d6efd" font-size="10" font-weight="bold">R</text>
+  <!-- Arrow: RIGHT shoulder DOWN under chin -->
+  <path d="M 545 175 Q 545 185 540 195" fill="none" stroke="#0d6efd" stroke-width="2.5"/>
+  <polygon points="540,197 533,186 545,188" fill="#0d6efd"/>
+  <text x="548" y="168" fill="#0d6efd" font-size="9">RIGHT shoulder</text>
+  <text x="548" y="179" fill="#0d6efd" font-size="9">DOWN under chin</text>
+  <!-- Torso -->
+  <line x1="500" y1="158" x2="500" y2="310" stroke="#2d6a4f" stroke-width="4"/>
+  <line x1="478" y1="310" x2="522" y2="310" stroke="#2d6a4f" stroke-width="4"/>
+  <!-- Arms in "HANDSHAKE" position -->
+  <line x1="462" y1="165" x2="440" y2="240" stroke="#2d6a4f" stroke-width="3"/>
+  <line x1="538" y1="195" x2="470" y2="260" stroke="#2d6a4f" stroke-width="3"/>
+  <!-- Club (pointing toward target after impact) -->
+  <line x1="455" y1="250" x2="425" y2="200" stroke="#8B4513" stroke-width="4"/>
+  <!-- HANDSHAKE annotation -->
+  <ellipse cx="455" cy="253" rx="16" ry="12" fill="none" stroke="#fd7e14" stroke-width="2.5"/>
+  <text x="415" y="275" fill="#fd7e14" font-size="11" font-weight="bold">HANDSHAKE</text>
+  <text x="415" y="288" fill="#fd7e14" font-size="9">right hand extends</text>
+  <text x="415" y="299" fill="#fd7e14" font-size="9">toward target</text>
+  <!-- Legs -->
+  <line x1="485" y1="310" x2="478" y2="378" stroke="#2d6a4f" stroke-width="3.5"/>
+  <line x1="515" y1="310" x2="522" y2="378" stroke="#2d6a4f" stroke-width="3.5"/>
+
+  <!-- Key points -->
+  <rect x="10" y="398" width="580" height="48" fill="white" stroke="#c8e6c9" stroke-width="1.5" rx="5" opacity="0.9"/>
+  <text x="22" y="413" fill="#1a3a1a" font-size="11" font-weight="bold">KEY POINTS</text>
+  <text x="22" y="428" fill="#dc3545" font-size="10">BACK: Left shoulder turns DOWN and UNDER the chin, rotating around the spine. Chin stays still — it acts as a gate.</text>
+  <text x="22" y="443" fill="#0d6efd" font-size="10">THROUGH: Right shoulder drives DOWN and UNDER the chin. The right hand extends to a "handshake" — the swing's natural finish.</text>
+</svg>

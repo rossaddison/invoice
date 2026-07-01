@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 600 450" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif">
+  <rect width="600" height="450" fill="#f0f7f0" rx="6"/>
+
+  <!-- Header -->
+  <rect width="600" height="56" fill="#1a3a1a" rx="6"/>
+  <rect y="50" width="600" height="6" fill="#1a3a1a"/>
+  <text x="300" y="26" text-anchor="middle" fill="white" font-size="16" font-weight="bold">LESSON 3: GRIP VARIATIONS</text>
+  <text x="300" y="46" text-anchor="middle" fill="#8fbc8f" font-size="11">Weak grip restricts rotation (Cut/Fade) · Strong grip allows rotation (Draw)</text>
+
+  <!-- Divider -->
+  <line x1="300" y1="65" x2="300" y2="370" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="150" y="82" text-anchor="middle" fill="#dc3545" font-size="13" font-weight="bold">WEAK GRIP → CUT / FADE</text>
+  <text x="450" y="82" text-anchor="middle" fill="#0d6efd" font-size="13" font-weight="bold">STRONG GRIP → DRAW</text>
+
+  <!-- ===== LEFT PANEL: WEAK GRIP ===== -->
+  <!-- Grip handle (left panel) -->
+  <rect x="115" y="95" width="70" height="220" rx="12" fill="#8B4513" stroke="#5a2a0a" stroke-width="2"/>
+
+  <!-- Left hand (lead/top hand) - WEAK = rotated CCW, knuckles mostly hidden -->
+  <ellipse cx="150" cy="140" rx="36" ry="22" fill="#f5c5a0" stroke="#5a3a1a" stroke-width="2" transform="rotate(-20,150,140)"/>
+  <!-- Knuckles on top — only 1 visible (weak) -->
+  <circle cx="142" cy="122" r="5" fill="#e8b090" stroke="#c0906a" stroke-width="1"/>
+  <!-- V marker pointing LEFT (toward chin/target side) — weak -->
+  <line x1="150" y1="125" x2="100" y2="100" stroke="#dc3545" stroke-width="2.5"/>
+  <polygon points="96,98 104,92 108,104" fill="#dc3545"/>
+  <text x="70" y="92" fill="#dc3545" font-size="11" font-weight="bold">"V" → chin</text>
+  <text x="70" y="105" fill="#dc3545" font-size="10">(weak position)</text>
+
+  <!-- Right hand (trail/bottom hand) - WEAK -->
+  <ellipse cx="150" cy="225" rx="36" ry="22" fill="#f5c5a0" stroke="#5a3a1a" stroke-width="2" transform="rotate(-15,150,225)"/>
+  <circle cx="142" cy="207" r="5" fill="#e8b090" stroke="#c0906a" stroke-width="1"/>
+  <line x1="150" y1="210" x2="100" y2="188" stroke="#dc3545" stroke-width="2.5"/>
+  <polygon points="96,186 104,180 108,192" fill="#dc3545"/>
+  <text x="70" y="182" fill="#dc3545" font-size="10">"V" → chin</text>
+
+  <!-- Club face result — WEAK (open face) -->
+  <rect x="118" y="305" width="64" height="20" rx="3" fill="#666" stroke="#444" stroke-width="2"
+        transform="rotate(15,150,315)"/>
+  <text x="150" y="345" text-anchor="middle" fill="#dc3545" font-size="11" font-weight="bold">OPEN face → CUT</text>
+  <text x="150" y="360" text-anchor="middle" fill="#dc3545" font-size="10">Restricts hand rotation</text>
+
+  <!-- WEAK GRIP label under face -->
+  <text x="150" y="378" text-anchor="middle" fill="#dc3545" font-size="10" font-style="italic">hands turned to target side</text>
+
+  <!-- ===== RIGHT PANEL: STRONG GRIP ===== -->
+  <!-- Grip handle (right panel) -->
+  <rect x="415" y="95" width="70" height="220" rx="12" fill="#8B4513" stroke="#5a2a0a" stroke-width="2"/>
+
+  <!-- Left hand (top) — STRONG = rotated CW, 2-3 knuckles visible -->
+  <ellipse cx="450" cy="140" rx="36" ry="22" fill="#f5c5a0" stroke="#5a3a1a" stroke-width="2" transform="rotate(20,450,140)"/>
+  <!-- 3 knuckles visible (strong) -->
+  <circle cx="435" cy="124" r="5" fill="#e8b090" stroke="#c0906a" stroke-width="1"/>
+  <circle cx="448" cy="120" r="5" fill="#e8b090" stroke="#c0906a" stroke-width="1"/>
+  <circle cx="461" cy="124" r="5" fill="#e8b090" stroke="#c0906a" stroke-width="1"/>
+  <!-- V marker pointing RIGHT (toward trail shoulder) — strong -->
+  <line x1="450" y1="125" x2="510" y2="98" stroke="#0d6efd" stroke-width="2.5"/>
+  <polygon points="514,96 506,90 510,102" fill="#0d6efd"/>
+  <text x="480" y="88" fill="#0d6efd" font-size="11" font-weight="bold">"V" → right</text>
+  <text x="480" y="101" fill="#0d6efd" font-size="10">shoulder (strong)</text>
+
+  <!-- Right hand — STRONG -->
+  <ellipse cx="450" cy="225" rx="36" ry="22" fill="#f5c5a0" stroke="#5a3a1a" stroke-width="2" transform="rotate(20,450,225)"/>
+  <circle cx="435" cy="210" r="5" fill="#e8b090" stroke="#c0906a" stroke-width="1"/>
+  <circle cx="448" cy="206" r="5" fill="#e8b090" stroke="#c0906a" stroke-width="1"/>
+  <line x1="450" y1="210" x2="510" y2="185" stroke="#0d6efd" stroke-width="2.5"/>
+  <polygon points="514,183 506,177 510,189" fill="#0d6efd"/>
+  <text x="480" y="176" fill="#0d6efd" font-size="10">"V" → right shoulder</text>
+
+  <!-- Club face result — STRONG (closed/square face) -->
+  <rect x="418" y="305" width="64" height="20" rx="3" fill="#666" stroke="#444" stroke-width="2"
+        transform="rotate(-8,450,315)"/>
+  <text x="450" y="345" text-anchor="middle" fill="#0d6efd" font-size="11" font-weight="bold">CLOSED face → DRAW</text>
+  <text x="450" y="360" text-anchor="middle" fill="#0d6efd" font-size="10">Allows hand rotation</text>
+  <text x="450" y="378" text-anchor="middle" fill="#0d6efd" font-size="10" font-style="italic">hands turned to trail side</text>
+
+  <!-- Key points -->
+  <rect x="10" y="390" width="580" height="52" fill="white" stroke="#c8e6c9" stroke-width="1.5" rx="5" opacity="0.9"/>
+  <text x="22" y="408" fill="#1a3a1a" font-size="11" font-weight="bold">KEY POINTS</text>
+  <text x="22" y="425" fill="#dc3545" font-size="10">WEAK: 1 knuckle visible, V's to chin — restricts closing, ball curves left→right (fade/cut)</text>
+  <text x="22" y="440" fill="#0d6efd" font-size="10">STRONG: 2–3 knuckles visible, V's to trail shoulder — promotes closing, ball curves right→left (draw)</text>
+</svg>

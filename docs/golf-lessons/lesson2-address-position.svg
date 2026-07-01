@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 600 450" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif">
+  <rect width="600" height="450" fill="#f0f7f0" rx="6"/>
+
+  <!-- Header -->
+  <rect width="600" height="56" fill="#1a3a1a" rx="6"/>
+  <rect y="50" width="600" height="6" fill="#1a3a1a"/>
+  <text x="300" y="26" text-anchor="middle" fill="white" font-size="16" font-weight="bold">LESSON 2: ADDRESS POSITION</text>
+  <text x="300" y="46" text-anchor="middle" fill="#8fbc8f" font-size="11">Arms hang naturally · Shoulders parallel to target · Feet aligned</text>
+
+  <!-- Target line (ground, horizontal) -->
+  <line x1="40" y1="405" x2="560" y2="405" stroke="#fd7e14" stroke-width="2.5" stroke-dasharray="10,5"/>
+  <polygon points="560,405 548,399 548,411" fill="#fd7e14"/>
+  <text x="554" y="396" fill="#fd7e14" font-size="10" font-weight="bold">TARGET</text>
+  <text x="40" y="420" fill="#fd7e14" font-size="10">Target line</text>
+
+  <!-- GOLFER — front view at address -->
+  <!-- Head -->
+  <circle cx="300" cy="112" r="28" fill="#f5c5a0" stroke="#5a3a1a" stroke-width="2"/>
+  <!-- Neck -->
+  <line x1="300" y1="140" x2="300" y2="158" stroke="#5a3a1a" stroke-width="3"/>
+  <!-- Shoulder line (parallel to target line) -->
+  <line x1="235" y1="168" x2="365" y2="168" stroke="#2d6a4f" stroke-width="5" stroke-linecap="round"/>
+
+  <!-- GRAVITY ARROWS showing arms hanging naturally -->
+  <!-- Left arm hang -->
+  <line x1="248" y1="168" x2="262" y2="275" stroke="#2d6a4f" stroke-width="3.5"/>
+  <polygon points="262,280 256,265 268,265" fill="#2d6a4f"/>
+  <!-- Gravity label left -->
+  <text x="195" y="225" fill="#6c757d" font-size="10" font-style="italic">gravity</text>
+  <line x1="215" y1="222" x2="245" y2="230" stroke="#6c757d" stroke-width="1" stroke-dasharray="3,2"/>
+
+  <!-- Right arm hang -->
+  <line x1="352" y1="168" x2="338" y2="275" stroke="#2d6a4f" stroke-width="3.5"/>
+  <polygon points="338,280 332,265 344,265" fill="#2d6a4f"/>
+
+  <!-- Hands / Grip -->
+  <ellipse cx="300" cy="284" rx="14" ry="9" fill="#f5c5a0" stroke="#5a3a1a" stroke-width="1.5"/>
+
+  <!-- Club shaft -->
+  <line x1="300" y1="293" x2="300" y2="398" stroke="#8B4513" stroke-width="4"/>
+  <!-- Club head (iron) -->
+  <rect x="288" y="398" width="24" height="8" rx="2" fill="#666" stroke="#444" stroke-width="1.5"/>
+
+  <!-- Torso / Spine -->
+  <line x1="300" y1="158" x2="300" y2="318" stroke="#2d6a4f" stroke-width="4.5"/>
+  <!-- Hips -->
+  <line x1="272" y1="318" x2="328" y2="318" stroke="#2d6a4f" stroke-width="4.5"/>
+
+  <!-- Left leg -->
+  <line x1="278" y1="318" x2="268" y2="395" stroke="#2d6a4f" stroke-width="3.5"/>
+  <!-- Left foot (parallel to target line) -->
+  <line x1="248" y1="405" x2="285" y2="405" stroke="#2d6a4f" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- Right leg -->
+  <line x1="322" y1="318" x2="332" y2="395" stroke="#2d6a4f" stroke-width="3.5"/>
+  <!-- Right foot (slightly flared) -->
+  <line x1="315" y1="405" x2="355" y2="405" stroke="#2d6a4f" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- Ball -->
+  <circle cx="300" cy="406" r="0"/><!-- ball is at ground level on club head -->
+
+  <!-- SHOULDER ALIGNMENT indicator -->
+  <line x1="180" y1="168" x2="420" y2="168" stroke="#0d6efd" stroke-width="1.5" stroke-dasharray="6,3" opacity="0.7"/>
+  <text x="170" y="162" fill="#0d6efd" font-size="10">Shoulder line</text>
+  <text x="170" y="175" fill="#0d6efd" font-size="10">parallel to target</text>
+
+  <!-- "HANG" annotation -->
+  <text x="148" y="248" text-anchor="middle" fill="#dc3545" font-size="13" font-weight="bold">HANG</text>
+  <text x="148" y="264" text-anchor="middle" fill="#dc3545" font-size="10">arms naturally</text>
+  <text x="148" y="277" text-anchor="middle" fill="#dc3545" font-size="10">from shoulders</text>
+
+  <!-- NO reach annotation -->
+  <line x1="155" y1="248" x2="235" y2="230" stroke="#dc3545" stroke-width="1.5" stroke-dasharray="4,2"/>
+
+  <!-- Feet alignment indicator -->
+  <line x1="220" y1="415" x2="380" y2="415" stroke="#0d6efd" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.7"/>
+  <text x="300" y="432" text-anchor="middle" fill="#0d6efd" font-size="10">Feet line — parallel to target</text>
+
+  <!-- Key points -->
+  <rect x="10" y="358" width="190" height="82" fill="white" stroke="#c8e6c9" stroke-width="1.5" rx="5" opacity="0.9"/>
+  <text x="22" y="374" fill="#1a3a1a" font-size="11" font-weight="bold">KEY POINTS</text>
+  <text x="22" y="390" fill="#dc3545" font-size="10">● Arms HANG — don't reach</text>
+  <text x="22" y="405" fill="#0d6efd" font-size="10">● Shoulders PARALLEL target</text>
+  <text x="22" y="420" fill="#0d6efd" font-size="10">● Feet PARALLEL target</text>
+  <text x="22" y="435" fill="#1a3a1a" font-size="10">● Weight evenly balanced</text>
+</svg>
