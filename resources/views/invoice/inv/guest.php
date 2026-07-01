@@ -118,7 +118,8 @@ $columns = [
             );
             $labelClass = $isPaid ? 'text-success' : 'text-danger';
             $html = '<span class="' . $labelClass . '">' . $paidFormatted . '</span>';
-            if (!$isPaid && !empty($enabledGateways)) {
+            $payableStatus = in_array($model->reqStatusId(), [2, 3, 5, 6], true);
+            if ($payableStatus && !empty($enabledGateways)) {
                 $dropdownId = 'pay-drop-' . Html::encode((string) $model->reqId());
                 $items = '';
                 foreach ($enabledGateways as $gateway) {
