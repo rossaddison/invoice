@@ -166,6 +166,18 @@ final class GroupRepository extends Select\Repository
     }
 
     /**
+     * @return Group|null
+     *
+     * @psalm-return TEntity|null
+     */
+    public function repoGroupByName(string $name): ?Group
+    {
+        return $this->select()
+                      ->where(['name' => $name])
+                      ->fetchOne() ?: null;
+    }
+
+    /**
      * @param $id
      * @psalm-suppress PossiblyUnusedReturnValue
      */

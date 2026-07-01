@@ -11,6 +11,7 @@ use Yiisoft\Html\Html;
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var array $invoice_groups
+ * @var int $creditNoteGroupId
  * @var string $csrf
  */
 
@@ -55,11 +56,11 @@ echo $credit_date; ?>">
       */
      foreach ($invoice_groups as $invoice_group) { ?>
                                 <option value="<?= $invoice_group->reqId(); ?>"
-                                    <?php if ($s->getSetting('default_invoice_group') === (string) $invoice_group->reqId()) {
+                                    <?php if ($creditNoteGroupId === $invoice_group->reqId()) {
                                         echo 'selected="selected"';
                                         $credit_invoice_group = Html::encode($invoice_group->getName() ?? '');
                                     } ?>>
-                                    <?php if ($s->getSetting('default_invoice_group') === (string) $invoice_group->reqId()) {
+                                    <?php if ($creditNoteGroupId === $invoice_group->reqId()) {
                                         echo $credit_invoice_group;
                                     } else {
                                         echo '';
@@ -87,7 +88,7 @@ echo $credit_date; ?>">
                     <button class="create-credit-confirm btn btn-success" id="create-credit-confirm" type="button">
                         <i class="bi bi-check-lg"></i> <?= $translator->translate('confirm'); ?>
                     </button>
-                    <button class="btn btn-danger" type="button" data-bs-dismiss"modal">
+                    <button class="btn btn-danger" type="button" data-bs-dismiss="modal">
                         <i class="bi bi-x-lg"></i> <?= $translator->translate('cancel'); ?>
                     </button>
                 </div>

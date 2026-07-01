@@ -356,10 +356,11 @@ trait View
 
     private function viewModalCreateCredit(int $id, GR $gR, IR $iR): string
     {
+        $creditNoteGroup = $gR->repoGroupByName('Credit Note Group');
         return $this->webViewRenderer->renderPartialAsString(
             '//invoice/inv/modal_create_credit', [
-            'invoice_groups' => $gR->repoCountAll() > 0 ? $gR->findAllPreloaded()
-                : null,
+            'invoice_groups' => $gR->repoCountAll() > 0 ? $gR->findAllPreloaded() : null,
+            'creditNoteGroupId' => $creditNoteGroup !== null ? $creditNoteGroup->reqId() : 0,
             'inv' => $this->inv($id, $iR, false),
         ]);
     }

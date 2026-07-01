@@ -85,7 +85,7 @@ alignment automatically.
 3. The modal (`modal_create_credit.php`) shows the client, date, and selected
    invoice group (defaults to `default_invoice_group` setting).
 4. On confirm, `createCreditConfirm()` in `Trait/Credit.php`:
-   - Reads `group_id` from the request (not hardcoded — fixed July 2026).
+   - Resolves the Credit Note Group by name (`GroupRepository::repoGroupByName('Credit Note Group')`), never trusting the request body for the group.
    - Creates the new credit invoice via `InvService::saveInv()`.
    - Copies items, amounts, and tax rates from the original.
    - Sets `creditinvoice_parent_id` on the **original** invoice to the new
@@ -105,10 +105,11 @@ Paid. Fixed by widening the condition to `>= 2`.
 
 `GroupRepository::generateNumber(int $id)` called with a group ID that has no
 matching DB record produced `Call to a member function getIdentifierFormat() on null`.
-The old code hardcoded `group_id = 4`; the fix reads `group_id` from the
-request body (the modal's group selector). A `\RuntimeException` with a
-descriptive message is now thrown when the group is missing, rather than a
-cryptic null-dereference.
+The fix: `createCreditConfirm()` resolves Credit Note Group by name via
+`repoGroupByName('Credit Note Group')` and returns a JSON error response if the
+group is missing, rather than passing a stale or wrong ID to `generateNumber()`.
+A `\RuntimeException` with a descriptive message is also thrown inside
+`generateNumber()` itself as a final safety net.
 
 ### `read_only_toggle` changed without DB alignment
 

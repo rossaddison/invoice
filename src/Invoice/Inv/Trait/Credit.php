@@ -155,7 +155,14 @@ trait Credit
         $basis_inv = $core->iR->repoInvLoadedquery((int) $body['inv_id']);
         if (null !== $basis_inv) {
             $basis_inv_id = (int) $body['inv_id'];
-            $groupId = (int) ($body['group_id'] ?? 0);
+            $creditNoteGroup = $core->gR->repoGroupByName('Credit Note Group');
+            if ($creditNoteGroup === null) {
+                return $this->factory->createResponse(Json::encode([
+                    'success' => 0,
+                    'message' => $this->translator->translate('credit.note.creation.unsuccessful'),
+                ]));
+            }
+            $groupId = $creditNoteGroup->reqId();
             // Set the basis_inv to read-only;
             $basis_inv->setIsReadOnly(true);
             // Credit Note's details
