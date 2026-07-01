@@ -82,8 +82,7 @@ alignment automatically.
 
 1. Open an invoice at status Sent / Viewed / Paid (or `is_read_only = true`).
 2. Click **Create Credit Invoice** on the toolbar.
-3. The modal (`modal_create_credit.php`) shows the client, date, and selected
-   invoice group (defaults to `default_invoice_group` setting).
+3. The modal (`modal_create_credit.php`) shows the client, date, and the Credit Note Group (pre-selected by name via `repoGroupByName('Credit Note Group')`, **not** by the `default_invoice_group` setting).
 4. On confirm, `createCreditConfirm()` in `Trait/Credit.php`:
    - Resolves the Credit Note Group by name (`GroupRepository::repoGroupByName('Credit Note Group')`), never trusting the request body for the group.
    - Creates the new credit invoice via `InvService::saveInv()`.
@@ -110,6 +109,20 @@ The fix: `createCreditConfirm()` resolves Credit Note Group by name via
 group is missing, rather than passing a stale or wrong ID to `generateNumber()`.
 A `\RuntimeException` with a descriptive message is also thrown inside
 `generateNumber()` itself as a final safety net.
+
+### Credit note created with `INV` identifier instead of `CN` (regression July 2026)
+
+When the original crash (`getIdentifierFormat() on null`) was fixed by removing the
+hardcoded `group_id = 4`, the replacement read `group_id` from the request body.
+The modal's hidden `<select name="inv_group_id">` was pre-selecting by the
+`default_invoice_group` setting (typically Invoice Group, id = 1, format
+`INV{{{id}}}`), so `$body['group_id']` was `1`, and `generateNumber(1)` produced
+`INV` identifiers on credit notes.
+
+**Lesson:** never trust the request body for the credit note group. Always resolve
+it server-side by name (`repoGroupByName('Credit Note Group')`). The modal select
+is for display only and must also be pre-selected by name, not by
+`default_invoice_group`.
 
 ### `read_only_toggle` changed without DB alignment
 
