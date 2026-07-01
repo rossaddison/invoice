@@ -407,7 +407,7 @@ $sortedAndPagedPaginator = (new OffsetPaginator($invs))
                     ->withToken(PageToken::next((string) $page));
 
 
-$bacsButton = ($bacsPaymentService->isCompanyPrivateActive() && $inv->reqStatusId() !== 4)
+$bacsButton = $bacsPaymentService->isCompanyPrivateActive()
     ? '<button type="button" class="btn btn-outline-success ms-2"'
       . ' data-bs-toggle="modal" data-bs-target="#bacsQuickPayModal">'
       . '🏦 ' . Html::encode($translator->translate('bacs.pay.by.bank.transfer'))
