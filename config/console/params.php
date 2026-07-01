@@ -18,6 +18,7 @@ use App\Invoice\As4\Console\As4MonitorCommand;
 use App\Invoice\As4\Console\As4ResendCommand;
 use App\Invoice\As4\Console\As4RetryCommand;
 use App\Invoice\As4\Console\As4StatusCommand;
+use App\Invoice\As4\Console\As4TestSendCommand;
 use App\Invoice\Peppol\Console\RetryFailedCommand;
 use App\User\Console\CreateCommand;
 use App\User\Console\AssignRoleCommand;
@@ -36,6 +37,7 @@ return [
             'as4/status'          => As4StatusCommand::class,
             'as4/resend'          => As4ResendCommand::class,
             'as4/monitor'         => As4MonitorCommand::class,
+            'as4/test-send'       => As4TestSendCommand::class,
             'peppol/retry-failed' => RetryFailedCommand::class,
             'user/create' => CreateCommand::class,
             'user/assignRole' => AssignRoleCommand::class,
