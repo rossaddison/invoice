@@ -3011,6 +3011,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'bacs.payment.instructions' => 'Use the sort code, account number, and reference shown above when making a bank transfer. The reference helps us match your payment to your account.',
   'bacs.not.yet.configured' => 'Bank transfer details not yet available.',
   'bacs.not.yet.configured.hint' => 'Please contact us directly for payment details.',
+  'bacs.mobile.tip' => 'On mobile, tap the copy icons next to each field to paste the details directly into your banking app.',
 
   // === PROMETHEUS MONITORING ===
   'monitoring.health.database' => 'Database Connection',

@@ -164,8 +164,8 @@ echo H::openTag('div', [
           echo H::closeTag('p'); //7
          echo H::closeTag('div'); //6
 
-         // ── QR code column ────────────────────────────────────────────────
-         echo H::openTag('div', ['class' => 'text-center flex-shrink-0']); //6
+         // ── QR code column (hidden on mobile — can't scan your own screen) ──
+         echo H::openTag('div', ['class' => 'text-center flex-shrink-0 d-none d-md-block']); //6
           echo H::tag('img', '', [
            'src'    => H::encode($qrUri),
            'width'  => $qrSize,
@@ -179,6 +179,16 @@ echo H::openTag('div', [
            echo H::closeTag('small'); //8
            echo H::openTag('small', ['class' => 'text-muted d-block']); //8
             echo $translator->translate('bacs.scan.qr.hint');
+           echo H::closeTag('small'); //8
+          echo H::closeTag('div'); //7
+         echo H::closeTag('div'); //6
+
+         // ── Mobile tip (shown instead of QR on small screens) ────────────
+         echo H::openTag('div', ['class' => 'flex-shrink-0 d-block d-md-none']); //6
+          echo H::openTag('div', ['class' => 'alert alert-info mb-0 p-2']); //7
+           echo H::openTag('small'); //8
+            echo H::tag('i', '', ['class' => 'bi bi-phone me-1']);
+            echo H::encode($translator->translate('bacs.mobile.tip'));
            echo H::closeTag('small'); //8
           echo H::closeTag('div'); //7
          echo H::closeTag('div'); //6
