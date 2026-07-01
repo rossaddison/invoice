@@ -1046,13 +1046,13 @@ export class InvoiceHandler {
         const bodyEl     = document.getElementById('batch-email-preview-body');
         const confirmBtn = document.getElementById('batch-email-confirm');
 
-        if (loadingEl)  { loadingEl.classList.remove('d-none'); }
-        if (previewEl)  { previewEl.classList.add('d-none'); }
-        if (confirmBtn) { confirmBtn.classList.add('d-none'); }
+        loadingEl?.classList.remove('d-none');
+        previewEl?.classList.add('d-none');
+        confirmBtn?.classList.add('d-none');
 
         const selected = this.getCheckedInvoiceIds();
         if (selected.length === 0) {
-            if (loadingEl) { loadingEl.classList.add('d-none'); }
+            loadingEl?.classList.add('d-none');
             return;
         }
 
@@ -1066,14 +1066,14 @@ export class InvoiceHandler {
                     `<tr><td>${r.client}</td><td>${r.email}</td><td>${r.source}</td><td>${String(r.invoice_count)}</td></tr>`
                 ).join('');
             }
-            if (loadingEl) { loadingEl.classList.add('d-none'); }
-            if (previewEl) { previewEl.classList.remove('d-none'); }
-            if (confirmBtn && rows.length > 0) {
-                confirmBtn.classList.remove('d-none');
+            loadingEl?.classList.add('d-none');
+            previewEl?.classList.remove('d-none');
+            if (rows.length > 0) {
+                confirmBtn?.classList.remove('d-none');
             }
         } catch (error) {
             console.error('batch_email_preview error', error);
-            if (loadingEl) { loadingEl.classList.add('d-none'); }
+            loadingEl?.classList.add('d-none');
         }
     }
 

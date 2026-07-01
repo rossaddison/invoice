@@ -147,12 +147,10 @@ public function index(
                     InvsListWidget::widget()
                         ->withPaginator($paginator)
                         ->withIR($list->invRepo)
-                        ->withIrR($list->irR)
-                        ->withIslR($list->islR)
+                        ->withLogRepositories($list->irR, $list->islR)
                         ->withRelationRepositories($nav->qR, $nav->soR, $nav->dlR)
                         ->withSR($this->sR)
-                        ->withEtR($nav->etR)
-                        ->withFdR($nav->fdR)
+                        ->withEmailRepositories($nav->etR, $nav->fdR)
                         ->withCsrf((string) ($request->getParsedBody()['_csrf'] ?? ''))
                         ->withDecimalPlaces(
                             (int) $this->sR->getSetting('tax_rate_decimal_places'))
@@ -161,8 +159,7 @@ public function index(
                             $visibleToggleInvSentLogColumn !== '0')
                         ->withGroupBy($filter->groupBy ?? 'none')
                         ->withClientCount($list->clientRepo->count())
-                        ->withGridSummary($gridSummary)
-                        ->withSortString($sortString)
+                        ->withGridDisplayOptions($gridSummary, $sortString)
                         ->withFilterOptions(new InvsFilterOptions(
                             invNumber:       $this->optionsDataInvNumberFilter($list->invRepo),
                             creditInvNumber: $this->optionsDataCreditInvNumberFilter($list->invRepo),

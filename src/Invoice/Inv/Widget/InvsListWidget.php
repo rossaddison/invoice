@@ -87,16 +87,10 @@ final class InvsListWidget extends Widget
         return $new;
     }
 
-    public function withIrR(IRR $irR): static
+    public function withLogRepositories(IRR $irR, ISLR $islR): static
     {
         $new = clone $this;
-        $new->irR = $irR;
-        return $new;
-    }
-
-    public function withIslR(ISLR $islR): static
-    {
-        $new = clone $this;
+        $new->irR  = $irR;
         $new->islR = $islR;
         return $new;
     }
@@ -117,16 +111,10 @@ final class InvsListWidget extends Widget
         return $new;
     }
 
-    public function withEtR(ETR $etR): static
+    public function withEmailRepositories(ETR $etR, FDR $fdR): static
     {
         $new = clone $this;
         $new->etR = $etR;
-        return $new;
-    }
-
-    public function withFdR(FDR $fdR): static
-    {
-        $new = clone $this;
         $new->fdR = $fdR;
         return $new;
     }
@@ -173,17 +161,11 @@ final class InvsListWidget extends Widget
         return $new;
     }
 
-    public function withGridSummary(string $gridSummary): static
+    public function withGridDisplayOptions(string $gridSummary, string $sortString): static
     {
         $new = clone $this;
         $new->gridSummary = $gridSummary;
-        return $new;
-    }
-
-    public function withSortString(string $sortString): static
-    {
-        $new = clone $this;
-        $new->sortString = $sortString;
+        $new->sortString  = $sortString;
         return $new;
     }
 
