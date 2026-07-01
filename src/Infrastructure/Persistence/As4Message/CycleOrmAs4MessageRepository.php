@@ -10,7 +10,9 @@ use App\Invoice\As4\As4MessageState;
 use Cycle\Database\DatabaseInterface;
 use Cycle\ORM\Select;
 use DateTime;
+use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
+use Yiisoft\Data\Reader\Sort;
 
 /**
  * Cycle ORM implementation of As4MessageRepositoryInterface.
@@ -121,5 +123,23 @@ final class CycleOrmAs4MessageRepository extends Select\Repository implements As
     public function save(As4Message $message): void
     {
         $this->entityWriter->write([$message]);
+    }
+
+    public function findAllMessages(): EntityReader
+    {
+        return $this->prepareDataReader($this->select());
+    }
+
+    public function repoFind(int $id): ?As4Message
+    {
+        /** @var As4Message|null */
+        return $this->select()->where(['id' => $id])->fetchOne() ?: null;
+    }
+
+    private function prepareDataReader(Select $query): EntityReader
+    {
+        return (new EntityReader($query))->withSort(
+            Sort::only(['id'])->withOrder(['id' => 'desc'])
+        );
     }
 }

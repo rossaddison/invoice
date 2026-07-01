@@ -71,7 +71,9 @@ use App\Invoice\{
     Task\TaskController,
     TaxRate\TaxRateController,
     As4\As4ReceiveController,
+    As4\As4MessageController,
     Peppol\PeppolInboundController,
+    Peppol\PeppolMessageController,
     Telegram\TelegramController,
     Unit\UnitController,
     UnitPeppol\UnitPeppolController,
@@ -2194,6 +2196,22 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([TelegramController::class, 'getUpdates'])
                 ->name('telegram/getUpdates'),
+            Route::get('/as4/messages')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([As4MessageController::class, 'index'])
+                ->name('as4message/index'),
+            Route::get('/as4/messages/view/{id:\d+}')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([As4MessageController::class, 'view'])
+                ->name('as4message/view'),
+            Route::get('/peppol/messages')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([PeppolMessageController::class, 'index'])
+                ->name('peppol/messages/index'),
+            Route::get('/peppol/messages/view/{id:\d+}')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([PeppolMessageController::class, 'view'])
+                ->name('peppol/messages/view'),
             // No auth middleware: bilateral AS4 trading partners POST directly here.
             Route::methods([$mP], '/as4/receive')
                 ->action([As4ReceiveController::class, 'receive'])
