@@ -130,7 +130,7 @@ final readonly class ButtonsToolbarFull
         }
 
         // Credit Invoice Creation
-        if (($read_only === true || $inv->reqStatusId() === 4)
+        if (($read_only === true || $inv->reqStatusId() >= 2)
                 && $invEdit
                 && !(int) $inv->getCreditinvoiceParentId() > 0) {
             $primaryButtons[] = $this->createModalButton(
