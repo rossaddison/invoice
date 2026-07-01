@@ -864,7 +864,7 @@ echo H::openTag('div', $row); //1
           $body[$srot] == '2'
          )
          ->content(
-          $translator->translate('sent')
+          $translator->translate('sent') . ' (Peppol Requirement)'
          );
         echo  new Option()
          ->value('3')
@@ -880,7 +880,7 @@ echo H::openTag('div', $row); //1
           $body[$srot] == '4'
          )
          ->content(
-          $translator->translate('paid')
+          $translator->translate('paid') . ' (Relaxed / General Use)'
          );
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
