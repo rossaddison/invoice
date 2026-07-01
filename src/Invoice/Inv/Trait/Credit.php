@@ -170,7 +170,7 @@ trait Credit
                 'client_id' => $body['client_id'],
                 'group_id' => $groupId,
                 'user_id' => $body['user_id'],
-                'status_id' => $basis_inv->reqStatusId(),
+                'status_id' => 12, // credit.invoice.for.invoice
                 'is_read_only' => true,
                 'number' => $core->gR->generateNumber($groupId, true),
                 'discount_amount' => $basis_inv->getDiscountAmount(),
