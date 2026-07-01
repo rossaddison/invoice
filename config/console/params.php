@@ -14,8 +14,9 @@ use App\Command\Invoice\SalesOrderTruncate3Command;
 use App\Command\Invoice\UserRelatedTruncate5Command;
 use App\Command\Router\ListCommand;
 use App\Command\Translation\TranslateCommand;
-use App\Invoice\As4\Console\As4RetryCommand;
+use App\Invoice\As4\Console\As4MonitorCommand;
 use App\Invoice\As4\Console\As4ResendCommand;
+use App\Invoice\As4\Console\As4RetryCommand;
 use App\Invoice\As4\Console\As4StatusCommand;
 use App\Invoice\Peppol\Console\RetryFailedCommand;
 use App\User\Console\CreateCommand;
@@ -34,6 +35,7 @@ return [
             'as4/retry'           => As4RetryCommand::class,
             'as4/status'          => As4StatusCommand::class,
             'as4/resend'          => As4ResendCommand::class,
+            'as4/monitor'         => As4MonitorCommand::class,
             'peppol/retry-failed' => RetryFailedCommand::class,
             'user/create' => CreateCommand::class,
             'user/assignRole' => AssignRoleCommand::class,
