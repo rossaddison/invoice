@@ -554,16 +554,25 @@ trait SettingTooltipTrait
                 . ' InvoiceController/dashboard function',
             ],
             'read_only_toggle' => [
-                'why' => 'To prevent an invoice from being edited i.e.'
-                . ' is read only. By default set to read only if sent. ',
+                'why' => 'Controls when an invoice becomes read-only (non-editable). '
+                . 'SENT: locks the invoice the moment it is emailed. '
+                . 'This creates an immutable audit trail from first dispatch and is '
+                . 'required for Peppol / EN16931 / UBL 2.4 e-invoicing compliance '
+                . '(a transmitted invoice must not be altered; use a Credit Note to correct it). '
+                . 'The Credit Invoice button appears immediately on sent invoices. '
+                . 'PAID: keeps the invoice editable after sending, so minor corrections '
+                . '(wrong amount, typo, wrong client) can be made before payment arrives. '
+                . 'The Credit Invoice button only appears once the invoice is fully paid. '
+                . 'Recommended for general use where strict immutability is not yet required. '
+                . 'NOTE: whichever option is chosen, the invoice group used for credit notes '
+                . 'must exist in Settings otherwise a fatal error will occur. ',
                 'where' => 'Sent:'
-                . ' src/Invoice/Setting/SettingRepository/invoice_mark_sent'
-                . ' with InvController (several places) '
-                . 'View:'
-                . ' src/Invoice/Setting/SettingRepository/invoice_mark_viewed'
-                . ' InvController/url_key (when users view their invoices online) '
+                . ' src/Invoice/Setting/Trait/SettingInvoiceMarkTrait/invoiceMarkSent '
+                . 'Viewed:'
+                . ' src/Invoice/Setting/Trait/SettingInvoiceMarkTrait/invoiceMarkViewed '
+                . '(triggered when client views invoice online via url_key) '
                 . 'Paid:'
-    . ' src/Invoice/Helpers/NumberHelper/inv_balance_zero_set_to_read_only_if_fully_paid. ',
+                . ' src/Invoice/Helpers/NumberHelper/inv_balance_zero_set_to_read_only_if_fully_paid. ',
             ],
             'stand_in_code' => [
                 'why' => 'If a tax point date cannot be determined because a'
