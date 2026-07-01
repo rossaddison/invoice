@@ -162,7 +162,7 @@ final class InvoiceController extends BaseController
                 //        '//invoice/info/en/invoice'));
             }
         }
-        $d->gR->repoCountAll() === 0 ?
+        $d->gR->repoCountAll() < 4 ?
                 $this->installDefaultInvoiceAndQuoteGroup($d->gR) : '';
         $d->pmR->count() === 0 ?
                 $this->installDefaultPaymentMethods($d->pmR) : '';

@@ -158,6 +158,13 @@ final class GroupRepository extends Select\Repository
                       ->count();
     }
 
+    public function repoCountByName(string $name): int
+    {
+        return $this->select()
+                      ->where(['name' => $name])
+                      ->count();
+    }
+
     /**
      * @param $id
      * @psalm-suppress PossiblyUnusedReturnValue

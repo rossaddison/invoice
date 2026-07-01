@@ -462,33 +462,21 @@ trait InvoiceInstallTrait
     private function installDefaultInvoiceAndQuoteGroup(
                                                     GroupRepository $gR): void
     {
-        $i_group = new Group();
-        $i_group->setName('Invoice Group');
-        $i_group->setIdentifierFormat('INV{{{id}}}');
-        $i_group->setNextId(1);
-        $i_group->setLeftPad(0);
-        $gR->save($i_group);
-
-        $q_group = new Group();
-        $q_group->setName('Quote Group');
-        $q_group->setIdentifierFormat('QUO{{{id}}}');
-        $q_group->setNextId(1);
-        $q_group->setLeftPad(0);
-        $gR->save($q_group);
-
-        $so_group = new Group();
-        $so_group->setName('Sales Order Group');
-        $so_group->setIdentifierFormat('SO{{{id}}}');
-        $so_group->setNextId(1);
-        $so_group->setLeftPad(0);
-        $gR->save($so_group);
-
-        $icn_group = new Group();
-        $icn_group->setName('Credit Note Group');
-        $icn_group->setIdentifierFormat('CN{{{id}}}');
-        $icn_group->setNextId(1);
-        $icn_group->setLeftPad(0);
-        $gR->save($icn_group);
+        foreach ([
+            ['Invoice Group',    'INV{{{id}}}'],
+            ['Quote Group',      'QUO{{{id}}}'],
+            ['Sales Order Group','SO{{{id}}}'],
+            ['Credit Note Group','CN{{{id}}}'],
+        ] as [$name, $format]) {
+            if ($gR->repoCountByName($name) === 0) {
+                $group = new Group();
+                $group->setName($name);
+                $group->setIdentifierFormat($format);
+                $group->setNextId(1);
+                $group->setLeftPad(0);
+                $gR->save($group);
+            }
+        }
     }
 
     /**
