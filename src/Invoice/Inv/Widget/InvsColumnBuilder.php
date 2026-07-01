@@ -99,6 +99,9 @@ final class InvsColumnBuilder
                         return '<span class="badge bg-success" data-bs-toggle="tooltip" title="'
                             . Html::encode($t->translate('paid')) . '">✅</span>';
                     }
+                    if ((int) $model->getCreditinvoiceParentId() > 0) {
+                        return '';
+                    }
                     if (!in_array($statusId, [2, 3, 5, 6], true) || $total <= 0.0) {
                         return '';
                     }
