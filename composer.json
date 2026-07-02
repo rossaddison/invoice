@@ -33,7 +33,7 @@
         "ext-pdo": "*",
         "ext-sodium": "*",
         "ext-zend-opcache": "*",
-        "amzn/amazon-pay-api-sdk-php": "^2.7.1",
+        "amzn/amazon-pay-api-sdk-php": "^2.7.2",
         "braintree/braintree_php": ">=6.36.0",
         "brick/math": ">=0.17.2",
         "brick/money": ">=0.13",
@@ -147,7 +147,7 @@
         "yiisoft/yii-runner-console": "^2.2.1",
         "yiisoft/yii-runner-http": "^3.2.1",
         "yiisoft/yii-view-renderer": "^7.4.1",
-        "zircote/swagger-php": ">=6.2.0"
+        "zircote/swagger-php": ">=6.3.0"
     },
     "require-dev": {
         "codeception/c3": "^2.9",
@@ -170,7 +170,7 @@
         "spatie/phpunit-watcher": ">=1.24.4",
         "squizlabs/php_codesniffer": "^4.0.1",
         "testo/facade": ">=0.1.1",
-        "testo/testo": ">=0.10.33",
+        "testo/testo": ">=0.10.35",
         "vimeo/psalm": ">=6.16.1"
     },
     "autoload": {
