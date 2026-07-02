@@ -66,7 +66,8 @@ echo H::openTag('div', $row); //1
     echo H::openTag('br');
     echo H::openTag('label');
      echo H::openTag('h4');
-      echo $translator->translate('mtd.gov.client.connection.method');
+      echo $translator->translate('mtd.gov.client.connection.method') .
+        ' (Default: WEB_APP_VIA_SERVER)';
      echo H::closeTag('h4');
     echo H::closeTag('label');
     echo H::openTag('div', $row); //5

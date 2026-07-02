@@ -103,6 +103,7 @@ trait InvoiceInstallTrait
             // The pdf is sent along with the attachment to the invoice on the
             // view/invoice.
             'email_pdf_attachment' => 1,
+            'fph_connection_method' => 'WEB_APP_VIA_SERVER',
             'generate_invoice_number_for_draft' => 1,
             'generate_quote_number_for_draft' => 1,
             'generate_so_number_for_draft' => 1,
