@@ -36,7 +36,6 @@ use Yiisoft\Db\Mysql\Dsn;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Input\Http\Attribute\Parameter\Query;
-use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\FastRoute\UrlGenerator as FastRouteGenerator;
 use Yiisoft\Security\Random;
@@ -277,19 +276,19 @@ final class SettingController extends BaseController
 
         $randomUserIdVersion4 = Uuid::uuid4();
         $userUuid = $randomUserIdVersion4->toString();
-        return $this->factory->createResponse(Json::encode([
+        return $this->factory->createResponse([
             'success' => 1,
-            'userAgent' => $query_params['userAgent'],
+            'userAgent' => $query_params['userAgent'] ?? '',
             'deviceId' => $deviceId,
-            'width' => $query_params['width'],
-            'height' => $query_params['height'],
-            'scalingFactor' => $query_params['scalingFactor'],
-            'colourDepth' => $query_params['colourDepth'],
-            'timestamp' =>  new DateTimeImmutable()->getTimestamp(),
-            'windowSize' => (string) $query_params['windowInnerWidth']
-                . 'x' . (string) $query_params['windowInnerHeight'],
+            'width' => $query_params['width'] ?? '',
+            'height' => $query_params['height'] ?? '',
+            'scalingFactor' => $query_params['scalingFactor'] ?? '',
+            'colourDepth' => $query_params['colourDepth'] ?? '',
+            'timestamp' => new DateTimeImmutable()->getTimestamp(),
+            'windowSize' => (string) ($query_params['windowInnerWidth'] ?? '')
+                . 'x' . (string) ($query_params['windowInnerHeight'] ?? ''),
             'userUuid' => $userUuid,
-        ]));
+        ]);
     }
 
     /**
@@ -516,7 +515,7 @@ final class SettingController extends BaseController
             'success' => 1,
             'cronkey' => Random::string(32),
         ];
-        return $this->factory->createResponse(Json::encode($parameters));
+        return $this->factory->createResponse($parameters);
     }
 
     /**
