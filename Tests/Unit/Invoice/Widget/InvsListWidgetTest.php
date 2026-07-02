@@ -7,6 +7,7 @@ namespace Tests\Unit\Invoice\Widget;
 use App\Infrastructure\Persistence\Client\Client;
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\InvAmount\InvAmount;
+use App\Invoice\EmailTemplate\EmailTemplateRepository as ETR;
 use App\Invoice\FromDropDown\FromDropDownRepository as FDR;
 use App\Invoice\Inv\InvRepository as IR;
 use App\Invoice\Inv\Widget\InvsFilterOptions;
@@ -34,6 +35,13 @@ use Yiisoft\Translator\TranslatorInterface;
  *
  * The seven individual withOptions*DropDownFilter() setters were replaced by a
  * single withFilterOptions(InvsFilterOptions) setter — tests updated accordingly.
+ *
+ * Consolidated setters (S1448 fix):
+ *   withIrR() + withIslR()  → withLogRepositories($irR, $islR)
+ *   withQR() + withSoR()    → withRelationRepositories($qR, $soR, $dlR)
+ *   withGridSummary() + withSortString() → withGridDisplayOptions($summary, $sort)
+ *   withEtR() + withFdR()   → withEmailRepositories($etR, $fdR)
+ *   withLabel()             → removed
  */
 final class InvsListWidgetTest extends TestCase
 {
@@ -116,6 +124,12 @@ final class InvsListWidgetTest extends TestCase
         return (new \ReflectionClass(SR::class))->newInstanceWithoutConstructor();
     }
 
+    private function makeETR(): ETR
+    {
+        /** @var ETR */
+        return (new \ReflectionClass(ETR::class))->newInstanceWithoutConstructor();
+    }
+
     private function makeInvMock(
         string $clientFullName = 'Test Client',
         ?string $clientGroup = 'Group A',
@@ -145,7 +159,7 @@ final class InvsListWidgetTest extends TestCase
 
     // -------------------------------------------------------------------------
     // render() guard — returns '' when any required dependency is absent
-    // Required: paginator, iR, irR, islR, sR
+    // Required: paginator, iR, irR, islR, sR, etR, fdR
     // -------------------------------------------------------------------------
 
     public function testRenderReturnsEmptyStringWhenAllDepsAbsent(): void
@@ -157,8 +171,7 @@ final class InvsListWidgetTest extends TestCase
     {
         $widget = $this->makeWidget()
             ->withIR($this->makeIR())
-            ->withIrR($this->makeIRR())
-            ->withIslR($this->makeISLR())
+            ->withLogRepositories($this->makeIRR(), $this->makeISLR())
             ->withSR($this->makeSR());
 
         $this->assertSame('', $widget->render());
@@ -168,30 +181,17 @@ final class InvsListWidgetTest extends TestCase
     {
         $widget = $this->makeWidget()
             ->withPaginator($this->makeEmptyPaginator())
-            ->withIrR($this->makeIRR())
-            ->withIslR($this->makeISLR())
+            ->withLogRepositories($this->makeIRR(), $this->makeISLR())
             ->withSR($this->makeSR());
 
         $this->assertSame('', $widget->render());
     }
 
-    public function testRenderReturnsEmptyWhenIrRNotSet(): void
+    public function testRenderReturnsEmptyWhenLogRepositoriesNotSet(): void
     {
         $widget = $this->makeWidget()
             ->withPaginator($this->makeEmptyPaginator())
             ->withIR($this->makeIR())
-            ->withIslR($this->makeISLR())
-            ->withSR($this->makeSR());
-
-        $this->assertSame('', $widget->render());
-    }
-
-    public function testRenderReturnsEmptyWhenIslRNotSet(): void
-    {
-        $widget = $this->makeWidget()
-            ->withPaginator($this->makeEmptyPaginator())
-            ->withIR($this->makeIR())
-            ->withIrR($this->makeIRR())
             ->withSR($this->makeSR());
 
         $this->assertSame('', $widget->render());
@@ -202,19 +202,17 @@ final class InvsListWidgetTest extends TestCase
         $widget = $this->makeWidget()
             ->withPaginator($this->makeEmptyPaginator())
             ->withIR($this->makeIR())
-            ->withIrR($this->makeIRR())
-            ->withIslR($this->makeISLR());
+            ->withLogRepositories($this->makeIRR(), $this->makeISLR());
 
         $this->assertSame('', $widget->render());
     }
 
-    public function testRenderReturnsEmptyWhenFdRNotSet(): void
+    public function testRenderReturnsEmptyWhenEmailRepositoriesNotSet(): void
     {
         $widget = $this->makeWidget()
             ->withPaginator($this->makeEmptyPaginator())
             ->withIR($this->makeIR())
-            ->withIrR($this->makeIRR())
-            ->withIslR($this->makeISLR())
+            ->withLogRepositories($this->makeIRR(), $this->makeISLR())
             ->withSR($this->makeSR());
 
         $this->assertSame('', $widget->render());
@@ -249,28 +247,20 @@ final class InvsListWidgetTest extends TestCase
         $this->assertSame($iR, $prop->getValue($new));
     }
 
-    public function testWithIrRReturnsNewInstanceAndOriginalUnchanged(): void
+    public function testWithLogRepositoriesReturnsNewInstanceAndSetsBothProps(): void
     {
         $original = $this->makeWidget();
         $irR      = $this->makeIRR();
-        $new      = $original->withIrR($irR);
-
-        $this->assertNotSame($original, $new);
-        $prop = new \ReflectionProperty(InvsListWidget::class, 'irR');
-        $this->assertNull($prop->getValue($original));
-        $this->assertSame($irR, $prop->getValue($new));
-    }
-
-    public function testWithIslRReturnsNewInstanceAndOriginalUnchanged(): void
-    {
-        $original = $this->makeWidget();
         $islR     = $this->makeISLR();
-        $new      = $original->withIslR($islR);
+        $new      = $original->withLogRepositories($irR, $islR);
 
         $this->assertNotSame($original, $new);
-        $prop = new \ReflectionProperty(InvsListWidget::class, 'islR');
-        $this->assertNull($prop->getValue($original));
-        $this->assertSame($islR, $prop->getValue($new));
+        $propIrR  = new \ReflectionProperty(InvsListWidget::class, 'irR');
+        $propIslR = new \ReflectionProperty(InvsListWidget::class, 'islR');
+        $this->assertNull($propIrR->getValue($original));
+        $this->assertNull($propIslR->getValue($original));
+        $this->assertSame($irR,  $propIrR->getValue($new));
+        $this->assertSame($islR, $propIslR->getValue($new));
     }
 
     public function testWithSRReturnsNewInstanceAndOriginalUnchanged(): void
@@ -285,12 +275,12 @@ final class InvsListWidgetTest extends TestCase
         $this->assertSame($sR, $prop->getValue($new));
     }
 
-    public function testWithQRReturnsNewInstanceAndOriginalUnchanged(): void
+    public function testWithRelationRepositoriesReturnsNewInstanceAndSetsQR(): void
     {
         $original = $this->makeWidget();
         /** @var QR $qR */
         $qR  = (new \ReflectionClass(QR::class))->newInstanceWithoutConstructor();
-        $new = $original->withQR($qR);
+        $new = $original->withRelationRepositories($qR);
 
         $this->assertNotSame($original, $new);
         $prop = new \ReflectionProperty(InvsListWidget::class, 'qR');
@@ -298,12 +288,12 @@ final class InvsListWidgetTest extends TestCase
         $this->assertSame($qR, $prop->getValue($new));
     }
 
-    public function testWithSoRReturnsNewInstanceAndOriginalUnchanged(): void
+    public function testWithRelationRepositoriesReturnsNewInstanceAndSetsSoR(): void
     {
         $original = $this->makeWidget();
         /** @var SOR $soR */
         $soR = (new \ReflectionClass(SOR::class))->newInstanceWithoutConstructor();
-        $new = $original->withSoR($soR);
+        $new = $original->withRelationRepositories(null, $soR);
 
         $this->assertNotSame($original, $new);
         $prop = new \ReflectionProperty(InvsListWidget::class, 'soR');
@@ -377,37 +367,18 @@ final class InvsListWidgetTest extends TestCase
         $this->assertSame(7, $prop->getValue($new));
     }
 
-    public function testWithGridSummaryReturnsNewInstance(): void
+    public function testWithGridDisplayOptionsReturnsNewInstanceAndSetsBothProps(): void
     {
         $original = $this->makeWidget();
-        $new      = $original->withGridSummary('Showing 1–10 of 50');
+        $new      = $original->withGridDisplayOptions('Showing 1–10 of 50', 'id');
 
         $this->assertNotSame($original, $new);
-        $prop = new \ReflectionProperty(InvsListWidget::class, 'gridSummary');
-        $this->assertSame('', $prop->getValue($original));
-        $this->assertSame('Showing 1–10 of 50', $prop->getValue($new));
-    }
-
-    public function testWithSortStringReturnsNewInstance(): void
-    {
-        $original = $this->makeWidget();
-        $new      = $original->withSortString('id');
-
-        $this->assertNotSame($original, $new);
-        $prop = new \ReflectionProperty(InvsListWidget::class, 'sortString');
-        $this->assertSame('-id', $prop->getValue($original));
-        $this->assertSame('id', $prop->getValue($new));
-    }
-
-    public function testWithLabelReturnsNewInstance(): void
-    {
-        $original = $this->makeWidget();
-        $new      = $original->withLabel('Draft');
-
-        $this->assertNotSame($original, $new);
-        $prop = new \ReflectionProperty(InvsListWidget::class, 'label');
-        $this->assertSame('', $prop->getValue($original));
-        $this->assertSame('Draft', $prop->getValue($new));
+        $propSummary = new \ReflectionProperty(InvsListWidget::class, 'gridSummary');
+        $propSort    = new \ReflectionProperty(InvsListWidget::class, 'sortString');
+        $this->assertSame('',    $propSummary->getValue($original));
+        $this->assertSame('-id', $propSort->getValue($original));
+        $this->assertSame('Showing 1–10 of 50', $propSummary->getValue($new));
+        $this->assertSame('id',  $propSort->getValue($new));
     }
 
     public function testWithFilterOptionsReturnsNewInstanceAndOriginalUnchanged(): void
@@ -422,12 +393,13 @@ final class InvsListWidgetTest extends TestCase
         $this->assertSame($filterOpts, $prop->getValue($new));
     }
 
-    public function testWithFdRReturnsNewInstanceAndOriginalUnchanged(): void
+    public function testWithEmailRepositoriesReturnsNewInstanceAndSetsFdR(): void
     {
         $original = $this->makeWidget();
         /** @var FDR $fdR */
         $fdR = (new \ReflectionClass(FDR::class))->newInstanceWithoutConstructor();
-        $new = $original->withFdR($fdR);
+        $etR = $this->makeETR();
+        $new = $original->withEmailRepositories($etR, $fdR);
 
         $this->assertNotSame($original, $new);
         $prop = new \ReflectionProperty(InvsListWidget::class, 'fdR');
