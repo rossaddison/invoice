@@ -133,9 +133,13 @@ final class SignupController
         $rTrim = rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '=');
         $codeChallenge = strtr($rTrim, '+/', '-_');
         $nocb = $this->sR->getSetting('no_openbanking_continue_button');
+        $errors = $signupForm->isValidated()
+            ? $signupForm->getValidationResult()->getErrorMessagesIndexedByProperty()
+            : [];
         return $redirect ?? $this->webViewRenderer->render('signup', [
             'class' => $this->classList(),
             'formModel' => $signupForm,
+            'errors' => $errors,
             'selectedOpenBankingProvider' => $openBankChoice,
             'noOpenBankingContinueButton' => $nocb == '1' ? true : false,
             'openBankingAuthUrl' => $openBankingAuthUrl,

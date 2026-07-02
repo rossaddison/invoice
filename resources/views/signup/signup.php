@@ -21,6 +21,7 @@ use Yiisoft\{FormModel\Field as F, Html\Html as H, Html\Tag\Form,
  * @var bool                                    $noOpenBankingContinueButton
  * @var string                                  $openBankingAuthUrl
  * @var string                                  $selectedOpenBankingProvider
+ * @var array<string, list<string>>             $errors
  */
 $this->setTitle($translator->translate('menu.signup'));
 echo H::openTag('div', ['class' => (string) $class[1]]);
@@ -80,6 +81,9 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
     ->label($translator->translate('consent.periodic.invoice'));
     echo F::checkbox($formModel, 'consentTelegramOutstanding')
     ->label($translator->translate('consent.telegram.outstanding'));
+    echo F::errorSummary($formModel)
+    ->errors($errors)
+    ->header($translator->translate('error.summary'));
     echo F::submitButton()
     ->buttonId('register-button')
     ->buttonClass((string) $class[15])
