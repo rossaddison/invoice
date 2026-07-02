@@ -873,6 +873,11 @@ final class InvsColumnBuilder
             content: static function (Inv $model)
                 use ($iR, $irR, $sR, $t): string {
                 $statusId = $model->reqStatusId();
+                $paid     = $model->getInvAmount()->getPaid() ?? 0.0;
+                $total    = $model->getInvAmount()->getTotal() ?? 0.0;
+                if ($total > 0.0 && $paid >= $total && $statusId !== 4) {
+                    $statusId = 4;
+                }
                 $emoji    = $iR->getSpecificStatusArrayEmoji($statusId);
                 $label    = $iR->getSpecificStatusArrayLabel((string) $statusId);
                 if ($model->getIsReadOnly()
