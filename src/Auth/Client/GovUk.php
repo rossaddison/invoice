@@ -70,7 +70,7 @@ class GovUk extends OAuth2 // NOSONAR
                 [
                     'Authorization' => 'Bearer ' . $tokenString,
 
-                    'Host' => $this->endPoint,
+                    'Host' => parse_url($this->endPoint, PHP_URL_HOST) ?? $this->endPoint,
 
                     'Content-length' => 0,
                 ],
@@ -197,8 +197,8 @@ class GovUk extends OAuth2 // NOSONAR
      */
     protected function decodeJwtHeaderIntoArray(string $jwtHeader): array
     {
-        // Base64-decode the JWT header
-        $decodedHeader = base64_decode($jwtHeader, true); // Use strict decoding
+        // Base64-decode the JWT header (JWT uses Base64URL encoding — convert first)
+        $decodedHeader = base64_decode($this->base64UrlToBase64($jwtHeader), true);
 
         if ($decodedHeader === false) {
             throw new InvalidArgumentException('Invalid Base64-encoded JWT header.');
@@ -288,24 +288,10 @@ class GovUk extends OAuth2 // NOSONAR
             throw new InvalidArgumentException('Invalid Base64 encoding for modulus or exponent.');
         }
 
-        // Convert Hex to Binary
-        $modulusBin = pack('H*', bin2hex($modulusHex));
-        $exponentBin = pack('H*', bin2hex($exponentHex));
-
-        if ($modulusBin === '' || $exponentBin === '') {
-            throw new InvalidArgumentException('Failed to convert modulus or exponent to binary.');
-        }
-
-        // Construct the RSA key array
-        $rsaKey = [
-            'modulus' => $modulusBin,
-            'publicExponent' => $exponentBin,
-        ];
-
         // Load the key using phpseclib's PublicKeyLoader
         $rsa = PublicKeyLoader::load([
-            'n' => $rsaKey['modulus'],
-            'e' => $rsaKey['publicExponent'],
+            'n' => $modulusHex,
+            'e' => $exponentHex,
         ], $_ENV['GOVUK_PHPSECLIB3_PUBLIC_KEY_LOADER_RAW']);
 
         // Return the PEM-formatted public key
@@ -314,7 +300,7 @@ class GovUk extends OAuth2 // NOSONAR
 
     protected function supportedScopes(): array
     {
-        return ['open_id', 'email', 'phone', 'offline_access'];
+        return ['openid', 'email', 'phone', 'offline_access'];
     }
 
     protected function supportedBackChannelLogout(): bool
