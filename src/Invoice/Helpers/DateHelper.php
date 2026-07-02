@@ -67,7 +67,7 @@ class DateHelper extends AbstractDateHelper
     {
         $year = (int) substr($y_m_d, 0, 4);
         $month = (int) substr($y_m_d, 6, 2);
-        $day = (int) substr($y_m_d, 9, 2);
+        $day = (int) substr($y_m_d, 8, 2);
         return (new \DateTimeImmutable())->setDate($year, $month, $day);
     }
 
