@@ -359,12 +359,12 @@ echo new TagHtml()
             ->content(str_repeat(' ', 1)
                 . $t->translate('menu.contact.us')),
             $urlGenerator->generate('site/contact'),
-            $isGuest && !$noFrontPageContactDetails,
-            !$isGuest && $noFrontPageContactDetails,
+            $isGuest && !$noFrontPageContactUs,
+            !$isGuest && $noFrontPageContactUs,
             false,
             [],
             [],
-            $isGuest && !$noFrontPageContactDetails,
+            $isGuest && !$noFrontPageContactUs,
         ),
         NavLink::to(
              new Label()
