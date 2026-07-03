@@ -35,7 +35,7 @@ trait Callback
                         . '.or.state.parameter'));
         }
 
-        $this->blockInvalidState('developergovsandboxhmrc', $state);
+        $this->blockInvalidState('developersandboxhmrc', $state);
         $developerSandboxHmrc = (AuthChoice::widget())->getClient('developersandboxhmrc');
 
         $login = '';
@@ -394,7 +394,7 @@ trait Callback
         }
 
         $govUk = (AuthChoice::widget())->getClient('govuk');
-        $this->blockInvalidState('govUk', $state);
+        $this->blockInvalidState('govuk', $state);
 
         /**
          * @psalm-suppress DocblockTypeContradiction $code
@@ -447,7 +447,7 @@ trait Callback
                         'oauth2.missing.authentication.code.or.state.parameter'));
         }
 
-        $this->blockInvalidState('linkedIn', $state);
+        $this->blockInvalidState('linkedin', $state);
         $linkedIn = (AuthChoice::widget())->getClient('linkedin');
 
         /**
