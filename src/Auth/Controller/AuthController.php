@@ -146,25 +146,25 @@ final class AuthController
                     . " query parameter.");
         }
 
-        $d = new CallbackDeps($request, $this->translator, $tR, $uiR, $uR);
+        $d = new CallbackDeps($this->translator, $tR, $uiR, $uR);
 
         return match ($authclient) {
             'developersandboxhmrc' => $this->callbackDeveloperGovSandboxHmrc(
-                    $d, $_language, $code, $state),
-            'facebook' => $this->callbackFacebook($d, $_language, $code, $state,
+                    $request, $d, $_language, $code, $state),
+            'facebook' => $this->callbackFacebook($request, $d, $_language, $code, $state,
                     $error, $errorCode, $errorReason),
-            'github' => $this->callbackGithub($d, $_language, $code, $state),
-            'google' => $this->callbackGoogle($d, $_language, $code, $state),
-            'govuk' => $this->callbackGovUk($d, $_language, $code, $state),
-            'linkedin' => $this->callbackLinkedIn($d, $_language, $code, $state),
-            'microsoftonline' => $this->callbackMicrosoftOnline($d, $_language,
+            'github' => $this->callbackGithub($request, $d, $_language, $code, $state),
+            'google' => $this->callbackGoogle($request, $d, $_language, $code, $state),
+            'govuk' => $this->callbackGovUk($request, $d, $_language, $code, $state),
+            'linkedin' => $this->callbackLinkedIn($request, $d, $_language, $code, $state),
+            'microsoftonline' => $this->callbackMicrosoftOnline($request, $d, $_language,
                     $code, $state, (string) $sessionState),
             'openbanking' => $this->callbackOpenBanking($request,
                     $this->translator, $code, $state),
-            'x' => $this->callbackX($d, $_language, $code, $state),
-            'vkontakte' => $this->callbackVKontakte($d, $_language, $code,
+            'x' => $this->callbackX($request, $d, $_language, $code, $state),
+            'vkontakte' => $this->callbackVKontakte($request, $d, $_language, $code,
                     $state, (string) $deviceId),
-            'yandex' => $this->callbackYandex($d, $_language, $code, $state),
+            'yandex' => $this->callbackYandex($request, $d, $_language, $code, $state),
             default => throw new \InvalidArgumentException(
                     "Unsupported 'authclient' value: {$authclient}"),
         };

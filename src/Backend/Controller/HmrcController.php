@@ -191,7 +191,8 @@ final class HmrcController extends BaseController
         $tokenString = (string) $this->session->get('hmrc_access_token');
 
         if ($vrn === '' || strlen($tokenString) === 0) {
-            $this->flashMessage('warning', $this->translator->translate('mtd.vat.obligations.missing.vrn.or.token'));
+            $this->flashMessage('warning',
+                $this->translator->translate('mtd.vat.obligations.missing.vrn.or.token'));
             return $this->webService->getRedirectResponse('backend/hmrc/index');
         }
 

@@ -20,6 +20,7 @@ use Yiisoft\Yii\AuthClient\Widget\AuthChoice;
 trait Callback
 {
     public function callbackDeveloperGovSandboxHmrc(
+        ServerRequestInterface $request,
         CallbackDeps $d,
         #[RouteArgument('_language')]
         string $_language,
@@ -46,7 +47,7 @@ trait Callback
          * @psalm-suppress DocblockTypeContradiction $code
          */
         if (strlen($code) == 0) {
-            $authorizationUrl = $developerSandboxHmrc->buildAuthUrl($d->request, []);
+            $authorizationUrl = $developerSandboxHmrc->buildAuthUrl($request, []);
             $response = $this->webService->getRedirectResponse($authorizationUrl);
         } elseif ($code == 401) {
             $response = $this->redirectToOauth2CallbackResultUnAuthorised();
@@ -70,7 +71,7 @@ trait Callback
              * Use the code received, to get an access_token
              */
             $oAuthToken = $developerSandboxHmrc->fetchAccessTokenWithCodeVerifier(
-                $d->request, $code, [
+                $request, $code, [
                     'redirect_uri' => $developerSandboxHmrc->getOauth2ReturnUrl(),
                     'code_verifier' => $codeVerifier,
                     'grant_type' => 'authorization_code',
@@ -140,6 +141,7 @@ trait Callback
      * @return ResponseInterface
      */
     public function callbackFacebook(
+        ServerRequestInterface $request,
         CallbackDeps $d,
         #[RouteArgument('_language')]
         string $_language,
@@ -178,7 +180,7 @@ trait Callback
 // If we don't have an authorization code then get one
 // and use the protected function oauth2->generateAuthState to generate state param
 // which has a session id built into it
-            $authorizationUrl = $facebook->buildAuthUrl($d->request, []);
+            $authorizationUrl = $facebook->buildAuthUrl($request, []);
             $response = $this->webService->getRedirectResponse($authorizationUrl);
         } elseif ($code == 401) {
             $response = $this->redirectToOauth2CallbackResultUnAuthorised();
@@ -192,7 +194,7 @@ trait Callback
                         . 'possible.csrf.attack'));
         } else {
             /** @psalm-var \Yiisoft\Yii\AuthClient\Client\Facebook $facebook */
-            $oAuthTokenType = $facebook->fetchAccessToken($d->request, $code, []);
+            $oAuthTokenType = $facebook->fetchAccessToken($request, $code, []);
             $userArray = $facebook->getCurrentUserJsonArray($oAuthTokenType);
             /**
              * @var int $userArray['id']
@@ -242,6 +244,7 @@ trait Callback
      * @return ResponseInterface
      */
     public function callbackGithub(
+        ServerRequestInterface $request,
         CallbackDeps $d,
         #[RouteArgument('_language')]
         string $_language,
@@ -262,7 +265,7 @@ trait Callback
         if (strlen($code) == 0 || $code == 401 || strlen($state) == 0) {
             return match(true) {
                 strlen($code) == 0 => $this->webService->getRedirectResponse(
-                    $github->buildAuthUrl($d->request, [])),
+                    $github->buildAuthUrl($request, [])),
                 $code == 401 => $this->redirectToOauth2CallbackResultUnAuthorised(),
                 default => $this->redirectToOauth2AuthError(
                     $d->translator->translate('oauth2.missing.state.parameter'
@@ -277,7 +280,7 @@ trait Callback
         // For Github we know that the parameter key for the token is
         //  'access_token' and not the default 'oauth_token'
         /** @psalm-var \Yiisoft\Yii\AuthClient\Client\GitHub $github */
-        $oAuthTokenType = $github->fetchAccessToken($d->request, $code, []);
+        $oAuthTokenType = $github->fetchAccessToken($request, $code, []);
         /**
          * Every time you receive an access token, you should use the token
          *  to revalidate the user's identity.
@@ -319,6 +322,7 @@ trait Callback
      * @see https://console.cloud.google.com/apis/credentials?project=YOUR_PROJECT
      */
     public function callbackGoogle(
+        ServerRequestInterface $request,
         CallbackDeps $d,
         #[RouteArgument('_language')]
         string $_language,
@@ -343,7 +347,7 @@ trait Callback
         if (strlen($code) == 0 || $code == 401 || strlen($state) == 0) {
             return match(true) {
                 strlen($code) == 0 => $this->webService->getRedirectResponse(
-                    $google->buildAuthUrl($d->request, [])),
+                    $google->buildAuthUrl($request, [])),
                 $code == 401 => $this->redirectToOauth2CallbackResultUnAuthorised(),
                 default => $this->redirectToOauth2AuthError(
                     $d->translator->translate(
@@ -352,7 +356,7 @@ trait Callback
         }
 
         /** @psalm-var \Yiisoft\Yii\AuthClient\Client\Google $google */
-        $oAuthTokenType = $google->fetchAccessToken($d->request, $code, [
+        $oAuthTokenType = $google->fetchAccessToken($request, $code, [
             'grant_type' => 'authorization_code',
         ]);
         $userArray = $google->getCurrentUserJsonArray($oAuthTokenType);
@@ -374,6 +378,7 @@ trait Callback
     }
 
     public function callbackGovUk(
+        ServerRequestInterface $request,
         CallbackDeps $d,
         #[RouteArgument('_language')]
         string $_language,
@@ -398,7 +403,7 @@ trait Callback
         if (strlen($code) == 0 || $code == 401 || strlen($state) == 0) {
             return match(true) {
                 strlen($code) == 0 => $this->webService->getRedirectResponse(
-                    $govUk->buildAuthUrl($d->request, [])),
+                    $govUk->buildAuthUrl($request, [])),
                 $code == 401 => $this->redirectToOauth2CallbackResultUnAuthorised(),
                 default => $this->redirectToOauth2AuthError(
                     $d->translator->translate(
@@ -407,7 +412,7 @@ trait Callback
         }
 
         /** @psalm-var \App\Auth\Client\GovUk $govUk */
-        $oAuthTokenType = $govUk->fetchAccessToken($d->request, $code, []);
+        $oAuthTokenType = $govUk->fetchAccessToken($request, $code, []);
         $userArray = $govUk->getCurrentUserJsonArray($oAuthTokenType);
         /** @var int $userArray['id'] */
         $govUkId = $userArray['id'] ?? 0;
@@ -427,6 +432,7 @@ trait Callback
     }
 
     public function callbackLinkedIn(
+        ServerRequestInterface $request,
         CallbackDeps $d,
         #[RouteArgument('_language')]
         string $_language,
@@ -451,7 +457,7 @@ trait Callback
         if (strlen($code) == 0 || $code == 401 || strlen($state) == 0) {
             return match(true) {
                 strlen($code) == 0 => $this->webService->getRedirectResponse(
-                    $linkedIn->buildAuthUrl($d->request, [])),
+                    $linkedIn->buildAuthUrl($request, [])),
                 $code == 401 => $this->redirectToOauth2CallbackResultUnAuthorised(),
                 default => $this->redirectToOauth2AuthError(
                     $d->translator->translate(
@@ -464,7 +470,7 @@ trait Callback
             'redirect_uri' => $linkedIn->getOauth2ReturnUrl(),
         ];
         /** @psalm-var \Yiisoft\Yii\AuthClient\Client\LinkedIn $linkedIn */
-        $oAuthTokenType = $linkedIn->fetchAccessToken($d->request, $code, $params);
+        $oAuthTokenType = $linkedIn->fetchAccessToken($request, $code, $params);
         $userArray = $linkedIn->getCurrentUserJsonArray(
                 $oAuthTokenType,
                 $this->configWebDiAuthGuzzle,
@@ -488,6 +494,7 @@ trait Callback
     }
 
     public function callbackMicrosoftOnline(
+        ServerRequestInterface $request,
         CallbackDeps $d,
         #[RouteArgument('_language')]
         string $_language,
@@ -515,7 +522,7 @@ trait Callback
         if (strlen($code) == 0 || $code == '401' || strlen($state) == 0 || strlen($sessionState) == 0) {
             return match(true) {
                 strlen($code) == 0 => $this->webService->getRedirectResponse(
-                    $microsoftOnline->buildAuthUrl($d->request,
+                    $microsoftOnline->buildAuthUrl($request,
                         ['redirect_uri' => 'https://yii3i.online/callbackMicrosoftOnline'])),
                 $code == '401' => $this->redirectToOauth2CallbackResultUnAuthorised(),
                 default => $this->redirectToOauth2AuthError(
@@ -525,7 +532,7 @@ trait Callback
         }
 
         /** @psalm-var \Yiisoft\Yii\AuthClient\Client\MicrosoftOnline $microsoftOnline */
-        $oAuthTokenType = $microsoftOnline->fetchAccessToken($d->request, $code, [
+        $oAuthTokenType = $microsoftOnline->fetchAccessToken($request, $code, [
             'grant_type' => 'authorization_code',
             'redirect_uri' => 'https://yii3i.online/callbackMicrosoftOnline',
         ]);
@@ -617,6 +624,7 @@ trait Callback
     }
 
     public function callbackX(
+        ServerRequestInterface $request,
         CallbackDeps $d,
         #[RouteArgument('_language')]
         string $_language,
@@ -649,7 +657,7 @@ trait Callback
             // Store code_verifier in session or other storage
             $this->session->set('code_verifier', $codeVerifier);
             $authorizationUrl = $x->buildAuthUrl(
-                $d->request,
+                $request,
                 [
                     'code_challenge' => $codeChallenge,
                     'code_challenge_method' => 'S256',
@@ -674,7 +682,7 @@ trait Callback
             ];
             /** @psalm-var \Yiisoft\Yii\AuthClient\Client\X $x */
             $oAuthTokenType = $x->fetchAccessTokenWithCodeVerifier(
-                $d->request, $code, $params);
+                $request, $code, $params);
             $userArray = $x->getCurrentUserJsonArray(
                 $oAuthTokenType, $this->configWebDiAuthGuzzle, $this->requestFactory);
             /**
@@ -707,6 +715,7 @@ trait Callback
     }
 
     public function callbackVKontakte(
+        ServerRequestInterface $request,
         CallbackDeps $d,
         #[RouteArgument('_language')]
         string $_language,
@@ -735,7 +744,7 @@ trait Callback
                     $codeVerifier, true)), '='), '+/', '-_');
             $this->session->set('code_verifier', $codeVerifier);
             $authorizationUrl = $vkontakte->buildAuthUrl(
-                $d->request,
+                $request,
                 [
                     'code_challenge' => $codeChallenge,
                     'code_challenge_method' => 'S256',
@@ -773,7 +782,7 @@ trait Callback
          *                           'scope' => 'vkid.personal_info email'
          */
         $oAuthTokenType = $vkontakte->fetchAccessTokenWithCodeVerifier(
-            $d->request, $code, $params);
+            $request, $code, $params);
 
         /**
          * e.g.  'user' => [
@@ -837,6 +846,7 @@ trait Callback
     }
 
     public function callbackYandex(
+        ServerRequestInterface $request,
         CallbackDeps $d,
         #[RouteArgument('_language')]
         string $_language,
@@ -859,7 +869,7 @@ trait Callback
          * @psalm-suppress DocblockTypeContradiction $state
          */
         if (strlen($code) == 0 || $code == 401 || strlen($state) == 0) {
-            return $this->yandexCodeGuard($yandex, $d->request, $code, $d->translator);
+            return $this->yandexCodeGuard($yandex, $request, $code, $d->translator);
         }
 
         $codeVerifier = (string) $this->session->get('code_verifier');
@@ -869,7 +879,7 @@ trait Callback
             'code_verifier' => $codeVerifier,
         ];
         /** @psalm-var \Yiisoft\Yii\AuthClient\Client\Yandex $yandex */
-        $oAuthTokenType = $yandex->fetchAccessTokenWithCodeVerifier($d->request, $code, $params);
+        $oAuthTokenType = $yandex->fetchAccessTokenWithCodeVerifier($request, $code, $params);
         $userArray = $yandex->getCurrentUserJsonArray(
                 $oAuthTokenType, $this->configWebDiAuthGuzzle, $this->requestFactory);
         /** @var int $userArray['id'] */
