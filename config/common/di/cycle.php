@@ -2,10 +2,13 @@
 
 declare(strict_types=1);
 
+use App\Infrastructure\Persistence\UserRbacLink\UserRbacLink;
+use App\Invoice\UserInv\UserRbacLinkRepository;
 use Cycle\Database\DatabaseManager;
 use Cycle\ORM\Collection\DoctrineCollectionFactory;
 use Cycle\ORM\Factory;
 use Cycle\ORM\FactoryInterface;
+use Cycle\ORM\ORMInterface;
 
 /** @var array $params */
 
@@ -19,5 +22,12 @@ return [
             $factory,
             new DoctrineCollectionFactory(),
         );
+    },
+
+    // Explicit binding so Yii3 DI can resolve UserRbacLinkRepository directly,
+    // bypassing RepositoryContainer delegate lookup which does not fire for this class.
+    UserRbacLinkRepository::class => static function (ORMInterface $orm): UserRbacLinkRepository {
+        /** @var UserRbacLinkRepository */
+        return $orm->getRepository(UserRbacLink::class);
     },
 ];
