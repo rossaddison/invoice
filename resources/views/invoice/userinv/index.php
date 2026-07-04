@@ -33,6 +33,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @var Yiisoft\Data\Cycle\Reader\EntityReader $userinvs
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var Yiisoft\Rbac\Manager $manager
+ * @var array<int, true> $linkedUserIdMap
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -450,6 +451,51 @@ $columns = [
             }
         },
         encodeContent: false,
+    ),
+    new DataColumn(
+        'user_id',
+        header: $translator->translate('user.inv.rbac.link'),
+        content: static function (
+            UserInv $model
+        ) use (
+            $linkedUserIdMap,
+            $translator,
+            $urlGenerator,
+        ): Yiisoft\Html\Tag\CustomTag|A {
+            return isset($linkedUserIdMap[$model->reqUserId()])
+                ? Html::tag(
+                    'span',
+                    '🔗',
+                    [
+                        'class' => 'badge text-bg-success',
+                        'data-bs-toggle' => 'tooltip',
+                        'title' => $translator->translate('user.inv.rbac.link.stable'),
+                    ]
+                )
+                : Html::a(
+                    Html::tag(
+                        'button',
+                        Html::tag(
+                            'span',
+                            '⚠️',
+                            ['class' => 'badge text-bg-danger']
+                        ),
+                        [
+                            'type' => 'submit',
+                            'class' => 'dropdown-item',
+                            'onclick' => "return confirm('"
+                                . $translator->translate('user.inv.rbac.link.sync.confirm')
+                                . "');",
+                        ],
+                    ),
+                    $urlGenerator->generate(
+                        'userinv/sync-rbac-link',
+                        ['user_id' => $model->reqUserId()]
+                    ),
+                );
+        },
+        encodeContent: false,
+        withSorting: false,
     ),
     new DataColumn(
         'user',

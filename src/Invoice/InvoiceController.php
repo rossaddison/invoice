@@ -15,7 +15,11 @@ use App\Invoice\TaxRate\TaxRateRepository;
 use App\Invoice\Trait\InvoiceInstallTrait;
 use App\Invoice\Trait\InvoiceStoreCoveTrait;
 use App\Invoice\Unit\UnitRepository;
+use App\Invoice\UserInv\UserInvRepository;
+use App\Invoice\UserInv\UserRbacLinkRepository;
 use Psr\Http\Message\ResponseInterface as Response;
+use Yiisoft\Aliases\Aliases;
+use Yiisoft\Rbac\AssignmentsStorageInterface;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Session\SessionInterface;
@@ -138,6 +142,9 @@ final class InvoiceController extends BaseController
         CurrentRoute $currentRoute,
         SessionInterface $session,
         InvoiceIndexDeps $d,
+        UserRbacLinkRepository $urlR,
+        AssignmentsStorageInterface $assignmentsStorage,
+        UserInvRepository $uiR,
     ): \Psr\Http\Message\ResponseInterface {
         if ($this->userService->hasPermission(
                 Permissions::NO_ENTRY_TO_BASE_CONTROLLER)) {
@@ -162,6 +169,7 @@ final class InvoiceController extends BaseController
                 //        '//invoice/info/en/invoice'));
             }
         }
+        $urlR->syncIfEmpty($assignmentsStorage, $uiR);
         $d->gR->repoCountAll() < 4 ?
                 $this->installDefaultInvoiceAndQuoteGroup($d->gR) : '';
         $d->pmR->count() === 0 ?
@@ -273,5 +281,22 @@ final class InvoiceController extends BaseController
             'alerts' => $this->alert(),
         ];
         return $this->webViewRenderer->render('index', $data);
+    }
+
+    public function debugLogs(Aliases $aliases): Response
+    {
+        if (($_ENV['YII_DEBUG'] ?? '') !== 'true' || !$this->userService->hasPermission(Permissions::EDIT_INV)) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $logFile = $aliases->get('@runtime/logs/app.log');
+        $lines = [];
+        if (is_file($logFile)) {
+            $raw = file($logFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            $lines = array_reverse(array_slice($raw === false ? [] : $raw, -100));
+        }
+        return $this->webViewRenderer->render('debug/logs', [
+            'lines' => $lines,
+            'logFile' => $logFile,
+        ]);
     }
 }

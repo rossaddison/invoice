@@ -582,6 +582,10 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([ICLR::class, 'faq'])
                 ->name('invoice/faq'),
+            Route::get('/debug/logs')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([ICLR::class, 'debugLogs'])
+                ->name('invoice/debug/logs'),
             Route::get('/requirements')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([ICLR::class, 'requirements'])
@@ -2373,6 +2377,10 @@ return [
                 ->name('userinv/observer')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([UserInvController::class, 'assignObserverRole']),
+            Route::methods([$mG, $mP], '/userinv/sync-rbac-link/{user_id}')
+                ->name('userinv/sync-rbac-link')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([UserInvController::class, 'syncRbacLink']),
             Route::methods([$mG, $mP], '/userinv/admin/{user_id}')
                 ->name('userinv/admin')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))

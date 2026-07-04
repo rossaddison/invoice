@@ -15,6 +15,7 @@ final class UserInvSignupDeps
         public readonly UserInvRepository $uiR,
         public readonly ucR $ucR,
         public readonly tR $tR,
+        public readonly UserRbacLinkRepository $urlR,
     ) {
     }
 }

@@ -38,8 +38,13 @@ final class TelegramController extends BaseController
     // Not injected via DI — requires a runtime token from settings;
     // set lazily by action methods via TelegramHelper::getBotApi().
     private ?TelegramBotApi $telegramBotApi = null;
-    
+
     protected string $controllerName = 'invoice/telegram';
+
+    private const ROUTE_INV_VIEW      = 'inv/view';
+    private const ROUTE_SETTING_TAB   = 'setting/tabIndex';
+    private const ROUTE_PAYMENT_INDEX = 'payment/index';
+    private const FAIL_RESULT_PREFIX  = 'Fail Result: ';
 
     public function __construct(
         SessionInterface $session,
@@ -93,14 +98,14 @@ final class TelegramController extends BaseController
         $token         = $this->sR->getSetting('telegram_token');
         $providerToken = $this->sR->getSetting('telegram_provider_token');
         $currency      = $this->sR->getSetting('peppol_document_currency') ?: 'GBP';
-        $redirectRoute = 'inv/view';
+        $redirectRoute = self::ROUTE_INV_VIEW;
         $redirectArgs  = ['id' => $inv_id];
         try {
             $configError = $this->telegramConfigError($token);
             if ($configError !== null) {
                 $this->flashMessage('danger',
                     $this->translator->translate($configError));
-                [$redirectRoute, $redirectArgs] = ['setting/tabIndex', []];
+                [$redirectRoute, $redirectArgs] = [self::ROUTE_SETTING_TAB, []];
             } else {
                 [$redirectRoute, $redirectArgs] =
                     $this->sendTelegramInvoiceToClient($token, $inv_id, $providerToken, $currency);
@@ -139,7 +144,7 @@ final class TelegramController extends BaseController
         }
         if ($configError !== null) {
             $this->flashMessage('danger', $configError);
-            return $this->webService->getRedirectResponse('setting/tabIndex');
+            return $this->webService->getRedirectResponse(self::ROUTE_SETTING_TAB);
         }
         $inv = $this->iR->repoInvLoadedquery((int) $inv_id);
         if ($inv === null) {
@@ -164,7 +169,7 @@ final class TelegramController extends BaseController
             $this->logger->warning($e->getMessage());
             $this->flashMessage('danger', 'Failed to encode invoice payload: ' . $e->getMessage());
         }
-        return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
+        return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $inv_id]);
     }
 
     /**
@@ -181,7 +186,7 @@ final class TelegramController extends BaseController
             if ($configError !== null) {
                 $this->flashMessage('danger',
                     $this->translator->translate($configError));
-                return $this->webService->getRedirectResponse('setting/tabIndex');
+                return $this->webService->getRedirectResponse(self::ROUTE_SETTING_TAB);
             }
             $inv = $this->iR->repoInvLoadedquery((int) $inv_id);
             if ($inv === null) {
@@ -193,7 +198,7 @@ final class TelegramController extends BaseController
             $this->logger->warning($e->getMessage());
             $this->flashMessage('secondary', $e->getMessage());
         }
-        return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
+        return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $inv_id]);
     }
 
     /**
@@ -236,7 +241,7 @@ final class TelegramController extends BaseController
                 $this->flashMessage('secondary', $e->getMessage());
             }
         }
-        return $this->webService->getRedirectResponse('setting/tabIndex');
+        return $this->webService->getRedirectResponse(self::ROUTE_SETTING_TAB);
     }
 
     /**
@@ -252,14 +257,14 @@ final class TelegramController extends BaseController
         PR $pR,
     ): Response {
         $token         = $this->sR->getSetting('telegram_token');
-        $redirectRoute = 'payment/index';
+        $redirectRoute = self::ROUTE_PAYMENT_INDEX;
         $redirectArgs  = [];
         try {
             $configError = $this->telegramConfigError($token);
             if ($configError !== null) {
                 $this->flashMessage('danger',
                     $this->translator->translate($configError));
-                $redirectRoute = 'setting/tabIndex';
+                $redirectRoute = self::ROUTE_SETTING_TAB;
             } else {
                 $redirectRoute = $this->performRefundStars($token, $payment_id, $pR);
             }
@@ -446,10 +451,10 @@ final class TelegramController extends BaseController
     private function flashFailResult(FailResult $failResult): void
     {
         if ($failResult->description !== null) {
-            $this->flashMessage('primary', 'Fail Result: ' . $failResult->description);
+            $this->flashMessage('primary', self::FAIL_RESULT_PREFIX . $failResult->description);
         }
         if ($failResult->errorCode !== null) {
-            $this->flashMessage('primary', 'Fail Result: ' . (string) $failResult->errorCode);
+            $this->flashMessage('primary', self::FAIL_RESULT_PREFIX . (string) $failResult->errorCode);
         }
     }
 
@@ -501,7 +506,7 @@ final class TelegramController extends BaseController
             $this->translator->translate(
                 'telegram.bot.api.hello.world.test.message.sent.not'));
         if ($result->description !== null) {
-            $this->flashMessage('primary', 'Fail Result: ' . $result->description);
+            $this->flashMessage('primary', self::FAIL_RESULT_PREFIX . $result->description);
         }
         if ($result->errorCode !== null) {
             $match = match ($result->errorCode) {
@@ -516,9 +521,9 @@ final class TelegramController extends BaseController
                 default => $result->description ?? '',
             };
             $this->flashMessage('primary',
-                'Fail Result: ' . (string) $result->errorCode . ' ' . $match);
+                self::FAIL_RESULT_PREFIX . (string) $result->errorCode . ' ' . $match);
         }
-        $this->webService->getRedirectResponse('setting/tabIndex');
+        $this->webService->getRedirectResponse(self::ROUTE_SETTING_TAB);
     }
 
     private function sendPdfDocumentToClient(string $token, Inv $inv): void
@@ -530,7 +535,7 @@ final class TelegramController extends BaseController
             return;
         }
         $number     = $inv->getNumber() ?? (string) $inv->reqId();
-        $archiveDir = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR
+        $archiveDir = dirname(__DIR__, 1) . DIRECTORY_SEPARATOR
             . 'Uploads' . DIRECTORY_SEPARATOR . 'Archive';
         $globResult = glob($archiveDir . DIRECTORY_SEPARATOR . '*_' . $number . '.pdf');
         /** @var list<string> $matches */
@@ -557,13 +562,13 @@ final class TelegramController extends BaseController
         $payment = $pR->repoPaymentquery((int) $payment_id);
         if ($payment === null) {
             $this->flashMessage('danger', 'Payment not found.');
-            return 'payment/index';
+            return self::ROUTE_PAYMENT_INDEX;
         }
         $note = $payment->getNote();
         if (!preg_match('/Telegram:\s*(\S+)\s*\|\s*tguid:(\d+)/', $note, $m)) {
             $this->flashMessage('warning',
                 $this->translator->translate('telegram.stars.no.charge.id'));
-            return 'payment/index';
+            return self::ROUTE_PAYMENT_INDEX;
         }
         $chargeId = $m[1];
         $userId   = (int) $m[2];
@@ -576,7 +581,7 @@ final class TelegramController extends BaseController
             $this->flashMessage('danger',
                 'Telegram refundStarPayment failed: ' . ($result->description ?? ''));
         }
-        return 'payment/index';
+        return self::ROUTE_PAYMENT_INDEX;
     }
 
     private function performSetWebhook(

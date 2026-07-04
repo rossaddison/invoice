@@ -8,6 +8,7 @@ use App\Infrastructure\Persistence\Trait\RequireId;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
+use Cycle\Annotated\Annotation\Table\Index;
 use Cycle\ORM\Entity\Behavior;
 use DateTimeImmutable;
 use App\Infrastructure\Persistence\User\User;
@@ -20,6 +21,7 @@ use App\Infrastructure\Persistence\UserInv\Trait\UserInvTrait4;
 #[Entity(repository: \App\Invoice\UserInv\UserInvRepository::class)]
 #[Behavior\CreatedAt(field: 'date_created', column: 'date_created')]
 #[Behavior\UpdatedAt(field: 'date_modified', column: 'date_modified')]
+#[Index(columns: ['user_id'], unique: true)]
 class UserInv
 {
     use RequireId;

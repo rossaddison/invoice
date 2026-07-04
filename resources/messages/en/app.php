@@ -2811,6 +2811,15 @@ prior to importing and no existing documents e.g. Invoices.',
   'user.inv.role.observer.assigned' => 'Observer Role Assigned',
   'user.inv.role.observer.assigned.already' =>
     'The Observer Role has been assigned already.',
+  'user.inv.rbac.link' => 'RBAC Link',
+  'user.inv.rbac.link.stable' => 'RBAC link stable — role assigned and bridge row present',
+  'user.inv.rbac.link.sync.confirm' => 'Assign observer role (if missing) and sync the RBAC bridge row for this user?',
+  'user.inv.rbac.link.synced' => 'RBAC link synced — observer role assigned if it was missing',
+  'user.inv.delete.blocked.roles' =>
+    'Cannot delete: user still holds RBAC role(s):',
+  'user.inv.delete.blocked.callback' =>
+    'A user with active RBAC roles will receive a 403 Forbidden on their next'
+    . ' OAuth callback return to /invoice. Use Revoke All Roles first, then delete.',
   'user.inv.role.revoke.all' => 'Revoke All Roles',
   'user.inv.role.warning.revoke.all' =>
     'Are you sure you want to revoke all roles',

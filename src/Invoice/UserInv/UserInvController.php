@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\UserInv;
 
 use App\Auth\Permissions;
+use App\Invoice\AppConstants;
 use App\Invoice\BaseController;
 use App\Infrastructure\Persistence\Client\Client;
 use App\Infrastructure\Persistence\UserClient\UserClient;
@@ -13,6 +14,7 @@ use App\Invoice\Helpers\CountryHelper;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\UserClient\UserClientRepository as ucR;
 use App\Invoice\UserInv\UserInvRepository as uiR;
+use App\Invoice\UserInv\UserRbacLinkRepository;
 use App\User\UserService;
 use App\User\UserRepository as uR;
 use App\Widget\Button;
@@ -38,6 +40,8 @@ final class UserInvController extends BaseController
     use UserInvRoleTrait;
 
     protected string $controllerName = 'invoice/userinv';
+
+    private const REDIRECT_USERINV_INDEX = 'userinv/index';
 
     private Manager $manager;
     private UrlGenerator $urlGenerator;
@@ -106,7 +110,7 @@ final class UserInvController extends BaseController
                 && null !== $form->user_id) {
                 /** @var string $body['type'] */
                 $this->applyRolePolicyOnAdd((string) $form->user_id, $body['type'], $userinv, $body);
-                return $this->webService->getRedirectResponse('userinv/index');
+                return $this->webService->getRedirectResponse(self::REDIRECT_USERINV_INDEX);
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
@@ -169,6 +173,7 @@ final class UserInvController extends BaseController
             'sortOrder' => $querySort ?? '',
             'manager' => $this->manager,
             'optionsDataFilterUserInvLoginDropDown' => $this->optionsDataFilterUserInvLogin($d->uiR),
+            'linkedUserIdMap' => $d->urlR->findLinkedUserIdMap(),
         ];
         return $this->webViewRenderer->render('index', $parameters);
     }
@@ -250,46 +255,59 @@ final class UserInvController extends BaseController
         return $this->webService->getRedirectResponse(strlen($origin) > 0 ? $origin . '/guest' : 'client/guest');
     }
 
-    /**
-     * @param string $user_id
-     * @return Response
-     */
-    public function assignObserverRole(#[RouteArgument('user_id')] string $user_id): Response
-    {
-        if (strlen($user_id) > 0) {
+    public function assignObserverRole(
+        #[RouteArgument('user_id')] string $user_id,
+        UserRbacLinkRepository $urlR,
+    ): Response {
+        if ($user_id !== '') {
             $this->manager->revokeAll($user_id);
-            $this->manager->assign('observer', $user_id);
+            $this->manager->assign(AppConstants::ROLE_OBSERVER, $user_id);
+            $urlR->upsert((int) $user_id);
             $this->flashMessage('info', $this->translator->translate('user.inv.role.observer.assigned'));
         }
-        return $this->webService->getRedirectResponse('userinv/index');
+        return $this->webService->getRedirectResponse(self::REDIRECT_USERINV_INDEX);
     }
 
-    /**
-     * @param string $user_id
-     * @return Response
-     */
-    public function assignAccountantRole(#[RouteArgument('user_id')] string $user_id): Response
-    {
-        if (strlen($user_id) > 0) {
+    public function syncRbacLink(
+        #[RouteArgument('user_id')] string $user_id,
+        UserRbacLinkRepository $urlR,
+    ): Response {
+        if ($user_id !== '') {
+            $roles = $this->manager->getRolesByUserId($user_id);
+            if (empty($roles)) {
+                $this->manager->assign(AppConstants::ROLE_OBSERVER, $user_id);
+                $this->flashMessage('info', $this->translator->translate('user.inv.role.observer.assigned'));
+            }
+            $urlR->upsert((int) $user_id);
+            $this->flashMessage('info', $this->translator->translate('user.inv.rbac.link.synced'));
+        }
+        return $this->webService->getRedirectResponse(self::REDIRECT_USERINV_INDEX);
+    }
+
+    public function assignAccountantRole(
+        #[RouteArgument('user_id')] string $user_id,
+        UserRbacLinkRepository $urlR,
+    ): Response {
+        if ($user_id !== '') {
             $this->manager->revokeAll($user_id);
-            $this->manager->assign('accountant', $user_id);
+            $this->manager->assign(AppConstants::ROLE_ACCOUNTANT, $user_id);
+            $urlR->upsert((int) $user_id);
             $this->flashMessage('info', $this->translator->translate('user.inv.role.accountant.assigned'));
             $this->flashMessage('info', $this->translator->translate('user.inv.role.accountant.default'));
         }
-        return $this->webService->getRedirectResponse('userinv/index');
+        return $this->webService->getRedirectResponse(self::REDIRECT_USERINV_INDEX);
     }
 
-    /**
-     * @param string $user_id
-     * @return Response
-     */
-    public function revokeAllRoles(#[RouteArgument('user_id')] string $user_id): Response
-    {
-        if (strlen($user_id) > 0) {
+    public function revokeAllRoles(
+        #[RouteArgument('user_id')] string $user_id,
+        UserRbacLinkRepository $urlR,
+    ): Response {
+        if ($user_id !== '') {
             $this->manager->revokeAll($user_id);
+            $urlR->deleteByUserId((int) $user_id);
             $this->flashMessage('info', $this->translator->translate('user.inv.role.revoke.all'));
         }
-        return $this->webService->getRedirectResponse('userinv/index');
+        return $this->webService->getRedirectResponse(self::REDIRECT_USERINV_INDEX);
     }
 
     /**
@@ -312,7 +330,7 @@ final class UserInvController extends BaseController
             '@language' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Language']);
         $userinv = $this->userinv($id, $userinvRepository);
         if (!$userinv) {
-            return $this->webService->getRedirectResponse('userinv/index');
+            return $this->webService->getRedirectResponse(self::REDIRECT_USERINV_INDEX);
         }
         $form = UserInvForm::show($userinv);
         $parameters = [
@@ -332,7 +350,7 @@ final class UserInvController extends BaseController
                 && null !== $form->user_id) {
                 /** @var string $body['type'] */
                 $this->applyRolePolicyOnEdit((string) $form->user_id, $body['type'], $userinv, $body);
-                return $this->webService->getRedirectResponse('userinv/index');
+                return $this->webService->getRedirectResponse(self::REDIRECT_USERINV_INDEX);
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
@@ -361,9 +379,9 @@ final class UserInvController extends BaseController
                 ];
                 return $this->webViewRenderer->render('field', $parameters);
             }
-            return $this->webService->getRedirectResponse('userinv/index');
+            return $this->webService->getRedirectResponse(self::REDIRECT_USERINV_INDEX);
         }
-        return $this->webService->getRedirectResponse('userinv/index');
+        return $this->webService->getRedirectResponse(self::REDIRECT_USERINV_INDEX);
     }
 
     /**
@@ -380,11 +398,20 @@ final class UserInvController extends BaseController
     ): Response {
         $userinv = $this->userinv($id, $userinvRepository);
         if ($userinv) {
+            $roles = $this->manager->getRolesByUserId((string) $userinv->reqUserId());
+            if ($roles !== []) {
+                $this->flashMessage('warning',
+                    $translator->translate('user.inv.delete.blocked.roles')
+                    . ' ' . implode(', ', array_keys($roles)));
+                $this->flashMessage('info',
+                    $translator->translate('user.inv.delete.blocked.callback'));
+                return $this->webService->getRedirectResponse(self::REDIRECT_USERINV_INDEX);
+            }
             $this->userinvService->deleteUserInv($userinv);
             $this->flashMessage('info', $translator->translate('deleted'));
-            return $this->webService->getRedirectResponse('userinv/index');
+            return $this->webService->getRedirectResponse(self::REDIRECT_USERINV_INDEX);
         }
-        return $this->webService->getRedirectResponse('userinv/index');
+        return $this->webService->getRedirectResponse(self::REDIRECT_USERINV_INDEX);
     }
 
     /**
@@ -448,7 +475,7 @@ final class UserInvController extends BaseController
             ];
             return $this->webViewRenderer->render('_view', $parameters);
         }
-        return $this->webService->getRedirectResponse('userinv/index');
+        return $this->webService->getRedirectResponse(self::REDIRECT_USERINV_INDEX);
     }
 
     /**
@@ -459,7 +486,7 @@ final class UserInvController extends BaseController
         $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
         if (!$canEdit) {
             $this->flashMessage('warning', $this->translator->translate('permission'));
-            return $this->webService->getRedirectResponse('userinv/index');
+            return $this->webService->getRedirectResponse(self::REDIRECT_USERINV_INDEX);
         }
         return $canEdit;
     }
@@ -550,20 +577,22 @@ final class UserInvController extends BaseController
         $userClient->setUserId($userInv->reqUserId());
         $userClient->setClientId($client->reqId());
         $d->ucR->save($userClient);
-        $this->assignSignupRole($userId);
+        $this->assignSignupRole($userId, $d->urlR);
     }
 
-    private function assignSignupRole(int $userId): void
+    private function assignSignupRole(int $userId, UserRbacLinkRepository $urlR): void
     {
         if ($userId <= 0) {
             return;
         }
         $this->manager->revokeAll($userId);
         if ($userId > 1) {
-            $this->manager->assign('observer', $userId);
+            $this->manager->assign(AppConstants::ROLE_OBSERVER, $userId);
+            $urlR->upsert($userId);
             $this->flashMessage('info', $this->translator->translate('user.inv.role.observer.assigned'));
         } else {
-            $this->manager->assign('admin', $userId);
+            $this->manager->assign(AppConstants::ROLE_ADMIN, $userId);
+            $urlR->upsert($userId);
             $this->flashMessage('info', $this->translator->translate('user.inv.role.admin.assigned'));
         }
     }

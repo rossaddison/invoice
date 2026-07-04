@@ -11,6 +11,7 @@ use App\Infrastructure\Persistence\CompanyPrivate\CompanyPrivate;
 // Repositories
 use App\Invoice\Company\CompanyRepository;
 use App\Invoice\CompanyPrivate\CompanyPrivateRepository;
+use App\Invoice\AppConstants;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\UserInv\UserInvRepository;
 // Yiisoft
@@ -63,8 +64,8 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
         /** @var string $userStatus */
         $userStatus = $userState['status'];
         $translateSize = match ($userStatus) {
-            'accountant', 'admin' => $bs['bootstrap5LayoutInvoiceNavbarFontSize'],
-            'observer' => $bs['bootstrap5LayoutGuestNavbarFontSize'],
+            AppConstants::ROLE_ACCOUNTANT, AppConstants::ROLE_ADMIN => $bs['bootstrap5LayoutInvoiceNavbarFontSize'],
+            AppConstants::ROLE_OBSERVER => $bs['bootstrap5LayoutGuestNavbarFontSize'],
             default => $bs['bootstrap5LayoutMainNavbarFontSize'],
         };
 
@@ -386,7 +387,7 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
     private function resolveUserStatus(int $userId): string
     {
         $userPermissions = $this->manager->getPermissionsByUserId($userId);
-        foreach (['observer', 'admin', 'accountant'] as $role) {
+        foreach ([AppConstants::ROLE_OBSERVER, AppConstants::ROLE_ADMIN, AppConstants::ROLE_ACCOUNTANT] as $role) {
             if ($userPermissions === $this->manager->getPermissionsByRoleName($role)) {
                 return $role;
             }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\User\Console;
 
 use App\Auth\Form\SignupForm;
+use App\Invoice\AppConstants;
 use App\Infrastructure\Persistence\User\User;
 use LogicException;
 use Symfony\Component\Console\Command\Command;
@@ -76,7 +77,7 @@ final class CreateCommand extends Command
 
         if ($isAdmin) {
             $userId = $user->reqId();
-            $this->manager->assign('admin', $userId);
+            $this->manager->assign(AppConstants::ROLE_ADMIN, $userId);
         }
         $io->success('User created');
 

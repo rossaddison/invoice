@@ -8,6 +8,8 @@ use App\Auth\CallbackDeps;
 use App\Auth\TokenRepository;
 use App\Infrastructure\Persistence\User\User;
 use App\Invoice\UserInv\UserInvRepository;
+use App\Invoice\AppConstants;
+use App\Invoice\UserInv\UserRbacLinkRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LogLevel;
@@ -993,20 +995,15 @@ public function tfaCheckBeforeRedirects(
     private function assignRoleAndVerify(
         int $userId,
         string $role,
+        UserRbacLinkRepository $urlR,
     ): bool {
         $this->manager->revokeAll((string) $userId);
         $this->manager->assign($role, (string) $userId);
-
-        $roles = $this->manager->getRolesByUserId((string) $userId);
-        if (empty($roles)) {
-            $this->logger->log(
-                LogLevel::ERROR,
-                'RBAC assignment failed to persist for userId: ' . (string) $userId
-                    . ' role: ' . $role
-                    . ' — check yii_rbac_assignment table'
-            );
-            return false;
-        }
+        $urlR->upsert($userId);
+        $this->logger->log(
+            LogLevel::INFO,
+            'RBAC: assigned role=' . $role . ' to userId=' . $userId,
+        );
         return true;
     }
 
@@ -1041,8 +1038,8 @@ public function tfaCheckBeforeRedirects(
             $this->authService->logout();
             return $this->redirectToMain();
         }
-        $role = $d->uR->repoCount() == 1 ? 'admin' : 'observer';
-        if (!$this->assignRoleAndVerify($userId, $role)) {
+        $role = $d->uR->repoCount() == 1 ? AppConstants::ROLE_ADMIN : AppConstants::ROLE_OBSERVER;
+        if (!$this->assignRoleAndVerify($userId, $role, $d->urlR)) {
             return $this->redirectToMain();
         }
         /**

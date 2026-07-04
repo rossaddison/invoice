@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\UserInv\Trait;
 
 use App\Infrastructure\Persistence\UserInv\UserInv;
+use App\Invoice\AppConstants;
 
 trait UserInvRoleTrait
 {
@@ -13,8 +14,8 @@ trait UserInvRoleTrait
         // non-admin user assigned guest type → observer role
         if ($userId != '1' && $type == '1') {
             $roles = $this->manager->getRolesByUserId($userId);
-            if (!array_key_exists('observer', $roles)) {
-                $this->manager->assign('observer', $userId);
+            if (!array_key_exists(AppConstants::ROLE_OBSERVER, $roles)) {
+                $this->manager->assign(AppConstants::ROLE_OBSERVER, $userId);
                 $this->flashMessage('info', $this->translator->translate('user.inv.role.all.new'));
             } else {
                 $this->flashMessage('info', $this->translator->translate('user.inv.role.observer.assigned.already'));
@@ -27,8 +28,8 @@ trait UserInvRoleTrait
         // admin user assigned administrator type → admin role
         if ($userId == '1' && $type == '0') {
             $roles = $this->manager->getRolesByUserId($userId);
-            if (!array_key_exists('admin', $roles)) {
-                $this->manager->assign('admin', $userId);
+            if (!array_key_exists(AppConstants::ROLE_ADMIN, $roles)) {
+                $this->manager->assign(AppConstants::ROLE_ADMIN, $userId);
                 $this->flashMessage('info', $this->translator->translate('user.inv.role.administrator.assigned'));
             } else {
                 $this->flashMessage('info', $this->translator->translate('user.inv.role.administrator.already.assigned'));
@@ -44,8 +45,8 @@ trait UserInvRoleTrait
     {
         if ($userId != '1' && $type == '1') {
             $roles = $this->manager->getRolesByUserId($userId);
-            if (!array_key_exists('observer', $roles)) {
-                $this->manager->assign('observer', $userId);
+            if (!array_key_exists(AppConstants::ROLE_OBSERVER, $roles)) {
+                $this->manager->assign(AppConstants::ROLE_OBSERVER, $userId);
                 $this->flashMessage('info', $this->translator->translate('user.inv.role.all.new'));
             } else {
                 $this->flashMessage('warning', $this->translator->translate('user.inv.role.observer.assigned.already'));
@@ -57,8 +58,8 @@ trait UserInvRoleTrait
         }
         if ($userId == '1' && $type == '0') {
             $roles = $this->manager->getRolesByUserId($userId);
-            if (!array_key_exists('admin', $roles)) {
-                $this->manager->assign('admin', $userId);
+            if (!array_key_exists(AppConstants::ROLE_ADMIN, $roles)) {
+                $this->manager->assign(AppConstants::ROLE_ADMIN, $userId);
                 $this->flashMessage('info', $this->translator->translate('user.inv.role.administrator.assigned'));
             } else {
                 $this->flashMessage('warning', $this->translator->translate('user.inv.role.administrator.already.assigned'));

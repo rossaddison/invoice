@@ -13,6 +13,7 @@ final class UserInvIndexDeps
         public readonly cR $cR,
         public readonly UserInvRepository $uiR,
         public readonly ucR $ucR,
+        public readonly UserRbacLinkRepository $urlR,
     ) {
     }
 }

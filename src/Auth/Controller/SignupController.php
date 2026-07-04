@@ -14,6 +14,8 @@ use App\Auth\Trait\ClassList;
 use App\Auth\Trait\Oauth2;
 use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\Setting\SettingRepository as sR;
+use App\Invoice\AppConstants;
+use App\Invoice\UserInv\UserRbacLinkRepository;
 use App\Invoice\Setting\Trait\OpenBankingProviders;
 use App\Invoice\UserInv\UserInvRepository as uiR;
 use App\Service\WebControllerService;
@@ -62,6 +64,7 @@ final class SignupController
         private readonly UrlGenerator $urlGenerator,
         private readonly CurrentRoute $currentRoute,
         private readonly LoggerInterface $logger,
+        private readonly UserRbacLinkRepository $urlR,
     ) {
         $this->flash = new Flash($this->session);
         $this->webViewRenderer = $webViewRenderer->withControllerName('signup');
@@ -117,7 +120,7 @@ final class SignupController
             $user = $signupForm->signup();
             $userId = $user->reqId();
             if ($userId > 0) {
-                $role = $uR->repoCount() == 1 ? 'admin' : 'observer';
+                $role = $uR->repoCount() == 1 ? AppConstants::ROLE_ADMIN : AppConstants::ROLE_OBSERVER;
                 if (!$this->assignRoleAndVerify($userId, $role)) {
                     $redirect = $this->webService->getRedirectResponse('site/signupfailed');
                 } else {
@@ -252,6 +255,7 @@ final class SignupController
             );
             return false;
         }
+        $this->urlR->upsert($userId);
         return true;
     }
 

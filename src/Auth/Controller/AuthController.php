@@ -14,7 +14,9 @@ use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\Setting\SettingRepository;
 use App\Auth\Trait\TwoFactorAuth;
 use App\Invoice\Setting\Trait\OpenBankingProviders;
+use App\Invoice\AppConstants;
 use App\Invoice\UserInv\UserInvRepository;
+use App\Invoice\UserInv\UserRbacLinkRepository;
 use App\Service\WebControllerService;
 use App\Infrastructure\Persistence\User\User;
 use App\User\UserRepository;
@@ -129,6 +131,7 @@ final class AuthController
         TokenRepository $tR,
         UserInvRepository $uiR,
         UserRepository $uR,
+        UserRbacLinkRepository $urlR,
         string $_language,
     ): ResponseInterface {
         $qp           = $request->getQueryParams();
@@ -146,7 +149,7 @@ final class AuthController
                     . " query parameter.");
         }
 
-        $d = new CallbackDeps($this->translator, $tR, $uiR, $uR);
+        $d = new CallbackDeps($this->translator, $tR, $uiR, $uR, $urlR);
 
         return match ($authclient) {
             'developersandboxhmrc' => $this->callbackDeveloperGovSandboxHmrc(
@@ -447,7 +450,7 @@ final class AuthController
         $userRoles = $this->manager->getRolesByUserId($userId);
         $isAdminUser = false;
         foreach ($userRoles as $role) {
-            if ($role->getName() === 'admin') {
+            if ($role->getName() === AppConstants::ROLE_ADMIN) {
                 $isAdminUser = true;
                 break;
             }
