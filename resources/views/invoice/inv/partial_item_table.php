@@ -306,8 +306,8 @@ foreach ($invItems as $item) {
       echo H::openTag('td', ['class' => 'td-vert-middle btn-group']);
        if ($showButtons === true && $userCanEdit === true
            && $draft === true
-// Do not show the buttons if the invoice is linked to a sales order
-           && null === $inv->getSoId()) {
+// Allow editing when no SO is linked (null) or so_id is 0 (standalone invoice)
+           && ($inv->getSoId() === null || $inv->getSoId() === 0)) {
            if ($piR->repoCount((int) $item->getProductId()) > 0) {
                echo H::openTag('span', [
                    'data-bs-toggle' => 'tooltip',
@@ -819,7 +819,7 @@ foreach ($invItems as $item) {
              if ($showButtons === true
                 && $userCanEdit === true
                 && null === $inv->getQuoteId()
-                && null === $inv->getSoId()
+                && ($inv->getSoId() === null || $inv->getSoId() === 0)
                 && $draft === true) {
                  echo H::openTag('a', [
                      'href' => '#add-inv-tax',
@@ -853,7 +853,7 @@ foreach ($invItems as $item) {
                      if ($showButtons === true
                              && $userCanEdit === true
                              && null === $inv->getQuoteId()
-                             && null === $inv->getSoId()
+                             && ($inv->getSoId() === null || $inv->getSoId() === 0)
                              && $draft === true) {
                          echo H::openTag('span');
                           echo  new A()
