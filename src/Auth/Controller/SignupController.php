@@ -65,6 +65,7 @@ final class SignupController
         private readonly CurrentRoute $currentRoute,
         private readonly LoggerInterface $logger,
         private readonly UserRbacLinkRepository $urlR,
+        private readonly uiR $uiR,
     ) {
         $this->flash = new Flash($this->session);
         $this->webViewRenderer = $webViewRenderer->withControllerName('signup');
@@ -255,7 +256,10 @@ final class SignupController
             );
             return false;
         }
-        $this->urlR->upsert($userId);
+        $userInv = $this->uiR->repoUserInvUserIdquery($userId);
+        if ($userInv !== null) {
+            $this->urlR->upsert($userInv->reqId(), $userId);
+        }
         return true;
     }
 

@@ -258,11 +258,15 @@ final class UserInvController extends BaseController
     public function assignObserverRole(
         #[RouteArgument('user_id')] string $user_id,
         UserRbacLinkRepository $urlR,
+        uiR $uiR,
     ): Response {
         if ($user_id !== '') {
             $this->manager->revokeAll($user_id);
             $this->manager->assign(AppConstants::ROLE_OBSERVER, $user_id);
-            $urlR->upsert((int) $user_id);
+            $userInv = $uiR->repoUserInvUserIdquery((int) $user_id);
+            if ($userInv !== null) {
+                $urlR->upsert($userInv->reqId(), (int) $user_id);
+            }
             $this->flashMessage('info', $this->translator->translate('user.inv.role.observer.assigned'));
         }
         return $this->webService->getRedirectResponse(self::REDIRECT_USERINV_INDEX);
@@ -271,6 +275,7 @@ final class UserInvController extends BaseController
     public function syncRbacLink(
         #[RouteArgument('user_id')] string $user_id,
         UserRbacLinkRepository $urlR,
+        uiR $uiR,
     ): Response {
         if ($user_id !== '') {
             $roles = $this->manager->getRolesByUserId($user_id);
@@ -278,7 +283,10 @@ final class UserInvController extends BaseController
                 $this->manager->assign(AppConstants::ROLE_OBSERVER, $user_id);
                 $this->flashMessage('info', $this->translator->translate('user.inv.role.observer.assigned'));
             }
-            $urlR->upsert((int) $user_id);
+            $userInv = $uiR->repoUserInvUserIdquery((int) $user_id);
+            if ($userInv !== null) {
+                $urlR->upsert($userInv->reqId(), (int) $user_id);
+            }
             $this->flashMessage('info', $this->translator->translate('user.inv.rbac.link.synced'));
         }
         return $this->webService->getRedirectResponse(self::REDIRECT_USERINV_INDEX);
@@ -287,11 +295,15 @@ final class UserInvController extends BaseController
     public function assignAccountantRole(
         #[RouteArgument('user_id')] string $user_id,
         UserRbacLinkRepository $urlR,
+        uiR $uiR,
     ): Response {
         if ($user_id !== '') {
             $this->manager->revokeAll($user_id);
             $this->manager->assign(AppConstants::ROLE_ACCOUNTANT, $user_id);
-            $urlR->upsert((int) $user_id);
+            $userInv = $uiR->repoUserInvUserIdquery((int) $user_id);
+            if ($userInv !== null) {
+                $urlR->upsert($userInv->reqId(), (int) $user_id);
+            }
             $this->flashMessage('info', $this->translator->translate('user.inv.role.accountant.assigned'));
             $this->flashMessage('info', $this->translator->translate('user.inv.role.accountant.default'));
         }
@@ -577,10 +589,10 @@ final class UserInvController extends BaseController
         $userClient->setUserId($userInv->reqUserId());
         $userClient->setClientId($client->reqId());
         $d->ucR->save($userClient);
-        $this->assignSignupRole($userId, $d->urlR);
+        $this->assignSignupRole($userId, $userInv->reqId(), $d->urlR);
     }
 
-    private function assignSignupRole(int $userId, UserRbacLinkRepository $urlR): void
+    private function assignSignupRole(int $userId, int $userInvId, UserRbacLinkRepository $urlR): void
     {
         if ($userId <= 0) {
             return;
@@ -588,11 +600,11 @@ final class UserInvController extends BaseController
         $this->manager->revokeAll($userId);
         if ($userId > 1) {
             $this->manager->assign(AppConstants::ROLE_OBSERVER, $userId);
-            $urlR->upsert($userId);
+            $urlR->upsert($userInvId, $userId);
             $this->flashMessage('info', $this->translator->translate('user.inv.role.observer.assigned'));
         } else {
             $this->manager->assign(AppConstants::ROLE_ADMIN, $userId);
-            $urlR->upsert($userId);
+            $urlR->upsert($userInvId, $userId);
             $this->flashMessage('info', $this->translator->translate('user.inv.role.admin.assigned'));
         }
     }

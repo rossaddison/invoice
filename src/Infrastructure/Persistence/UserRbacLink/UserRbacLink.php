@@ -10,29 +10,20 @@ use App\Invoice\UserInv\UserRbacLinkRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use Cycle\Annotated\Annotation\Table\Index;
 
-/**
- * Bridge table linking userinv.user_id (INT) to yii_rbac_assignment.user_id (VARCHAR).
- * The BelongsTo relation causes Cycle ORM to create a DB-level FK:
- * user_rbac_link.user_id → userinv.user_id ON DELETE RESTRICT
- * so deletion of a UserInv with an active RBAC link is blocked at the DB layer.
- */
 #[Entity(repository: UserRbacLinkRepository::class)]
-#[Index(columns: ['user_id'], unique: true)]
-#[Index(columns: ['rbac_user_id'], unique: true)]
 class UserRbacLink
 {
     use RequireId;
 
-    #[BelongsTo(target: UserInv::class, nullable: false, fkAction: 'RESTRICT', innerKey: 'user_id', outerKey: 'user_id')]
+    #[BelongsTo(target: UserInv::class, nullable: false)]
     private ?UserInv $user_inv = null;
 
     public function __construct(
         #[Column(type: 'primary')]
         private ?int $id = null,
         #[Column(type: 'integer', nullable: false)]
-        private ?int $user_id = null,
+        private ?int $user_inv_id = null,
         #[Column(type: 'string(126)', nullable: false)]
         private ?string $rbac_user_id = null,
     ) {
@@ -62,10 +53,10 @@ class UserRbacLink
     {
         return $this->id;
     }
-
+    
     public function getUserId(): ?int
     {
-        return $this->user_id;
+        return $this->user_inv?->reqUserId();
     }
 
     public function getRbacUserId(): ?string
@@ -73,9 +64,9 @@ class UserRbacLink
         return $this->rbac_user_id;
     }
 
-    public function setUserId(?int $user_id): void
+    public function setUserInvId(?int $user_inv_id): void
     {
-        $this->user_id = $user_id;
+        $this->user_inv_id = $user_inv_id;
     }
 
     public function setRbacUserId(?string $rbac_user_id): void

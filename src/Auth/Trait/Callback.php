@@ -996,10 +996,14 @@ public function tfaCheckBeforeRedirects(
         int $userId,
         string $role,
         UserRbacLinkRepository $urlR,
+        UserInvRepository $uiR,
     ): bool {
         $this->manager->revokeAll((string) $userId);
         $this->manager->assign($role, (string) $userId);
-        $urlR->upsert($userId);
+        $userInv = $uiR->repoUserInvUserIdquery($userId);
+        if ($userInv !== null) {
+            $urlR->upsert($userInv->reqId(), $userId);
+        }
         $this->logger->log(
             LogLevel::INFO,
             'RBAC: assigned role=' . $role . ' to userId=' . $userId,
@@ -1039,7 +1043,7 @@ public function tfaCheckBeforeRedirects(
             return $this->redirectToMain();
         }
         $role = $d->uR->repoCount() == 1 ? AppConstants::ROLE_ADMIN : AppConstants::ROLE_OBSERVER;
-        if (!$this->assignRoleAndVerify($userId, $role, $d->urlR)) {
+        if (!$this->assignRoleAndVerify($userId, $role, $d->urlR, $d->uiR)) {
             return $this->redirectToMain();
         }
         /**

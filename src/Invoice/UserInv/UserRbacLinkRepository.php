@@ -47,7 +47,10 @@ final class UserRbacLinkRepository extends Select\Repository
 
     public function findByUserId(int $userId): ?UserRbacLink
     {
-        return $this->select()->where(['user_id' => $userId])->fetchOne();
+        return $this->select()
+                    ->load('user_inv')
+                    ->where(['user_inv.user_id' => $userId])
+                    ->fetchOne();
     }
 
     /**
@@ -55,10 +58,10 @@ final class UserRbacLinkRepository extends Select\Repository
      *
      * @throws Throwable
      */
-    public function upsert(int $userId): void
+    public function upsert(int $user_inv_id, int $userId): void
     {
         $this->deleteByUserId($userId);
-        $this->save(new UserRbacLink(user_id: $userId, rbac_user_id: (string) $userId));
+        $this->save(new UserRbacLink(user_inv_id: $user_inv_id, rbac_user_id: (string) $userId));
     }
 
     public function count(): int
@@ -74,7 +77,7 @@ final class UserRbacLinkRepository extends Select\Repository
     public function findLinkedUserIdMap(): array
     {
         $map = [];
-        foreach ($this->select() as $link) {
+        foreach ($this->select()->load('user_inv') as $link) {
             /** @var UserRbacLink $link */
             $uid = $link->getUserId();
             if ($uid !== null) {
@@ -98,8 +101,9 @@ final class UserRbacLinkRepository extends Select\Repository
         }
         foreach (array_keys($storage->getAll()) as $rbacUserId) {
             $userId = (int) $rbacUserId;
-            if ($userId > 0 && $uiR->repoUserInvUserIdquery($userId) !== null) {
-                $this->upsert($userId);
+            $userInv = $uiR->repoUserInvUserIdquery($userId);
+            if ($userId > 0 && ($userInv !== null)) {
+                $this->upsert($userInv->reqId(), $userId);
             }
         }
     }
