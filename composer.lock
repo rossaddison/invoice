@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0c8a1ebdfa19244d1e855a0f94a6b1a2",
+    "content-hash": "86bb194dbf03f1867802ef4ce7b46941",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -25849,21 +25849,21 @@
         },
         {
             "name": "testo/assert",
-            "version": "0.1.10",
+            "version": "0.1.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/assert.git",
-                "reference": "d6fda9855614ffdee280d886c1418c43ed0258c4"
+                "reference": "aa49c6cef6469eab825fa33d68223ca3a6c03c9d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/assert/zipball/d6fda9855614ffdee280d886c1418c43ed0258c4",
-                "reference": "d6fda9855614ffdee280d886c1418c43ed0258c4",
+                "url": "https://api.github.com/repos/php-testo/assert/zipball/aa49c6cef6469eab825fa33d68223ca3a6c03c9d",
+                "reference": "aa49c6cef6469eab825fa33d68223ca3a6c03c9d",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.2",
-                "testo/testo": "0.10.34 - 1"
+                "testo/testo": "0.10.36 - 1"
             },
             "type": "library",
             "extra": {
@@ -25896,7 +25896,7 @@
                 "testo"
             ],
             "support": {
-                "source": "https://github.com/php-testo/assert/tree/0.1.10"
+                "source": "https://github.com/php-testo/assert/tree/0.1.11"
             },
             "funding": [
                 {
@@ -25904,7 +25904,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-07-01T13:40:38+00:00"
+            "time": "2026-07-03T10:45:37+00:00"
         },
         {
             "name": "testo/bench",
@@ -26602,16 +26602,16 @@
         },
         {
             "name": "testo/testo",
-            "version": "0.10.35",
+            "version": "0.10.38",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/testo.git",
-                "reference": "673448518f5298bc1d5a4fe030ce540ec19c4562"
+                "reference": "2117f45691b7bfcf29a05850ed1ce8ba2895d534"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/testo/zipball/673448518f5298bc1d5a4fe030ce540ec19c4562",
-                "reference": "673448518f5298bc1d5a4fe030ce540ec19c4562",
+                "url": "https://api.github.com/repos/php-testo/testo/zipball/2117f45691b7bfcf29a05850ed1ce8ba2895d534",
+                "reference": "2117f45691b7bfcf29a05850ed1ce8ba2895d534",
                 "shasum": ""
             },
             "require": {
@@ -26624,7 +26624,7 @@
                 "psr/log": "^2.0 || ^3.0",
                 "symfony/console": "^6.4 || ^7 || ^8.0",
                 "symfony/finder": "^6.4 || ^7 || ^8.0",
-                "testo/assert": "^0.1.10",
+                "testo/assert": "^0.1.11",
                 "testo/bench": "^0.1.6",
                 "testo/bridge-symfony-console": "^0.1.8",
                 "testo/codecov": "^0.1.11",
@@ -26649,12 +26649,14 @@
                 "rector/rector": "^2.5.2",
                 "roxblnfk/unpoly": "1.8.2",
                 "testo/bridge-infection": "^0.1.8",
-                "testo/bridge-rector": "^0.1.2",
+                "testo/bridge-mockery": "^0.1.1",
+                "testo/bridge-rector": "^0.2.0",
                 "testo/facade": "^0.1.1"
             },
             "suggest": {
                 "llm/skills": "Ship Testo's bundled AI-agent skills into your project's skills directory automatically.",
-                "testo/bridge-infection": "Provides integration with Infection PHP mutation testing framework."
+                "testo/bridge-infection": "Provides integration with Infection PHP mutation testing framework.",
+                "testo/bridge-mockery": "Provides integration with the Mockery mocking framework."
             },
             "type": "library",
             "extra": {
@@ -26702,7 +26704,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-07-01T19:51:35+00:00"
+            "time": "2026-07-03T21:48:04+00:00"
         },
         {
             "name": "thecodingmachine/safe",
@@ -26932,5 +26934,5 @@
         "ext-zend-opcache": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
