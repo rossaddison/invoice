@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Auth\Trait;
 
 use App\Auth\CallbackDeps;
+use App\Auth\Client\DeveloperSandboxHmrc;
 use App\Auth\TokenRepository;
 use App\Infrastructure\Persistence\User\User;
 use App\Invoice\UserInv\UserInvRepository;
@@ -65,42 +66,60 @@ trait Callback
             $response = $this->redirectToOauth2AuthError(
                 $d->translator->translate('oauth2.test.user.creation.not.allowed.prod'));
         } else {
-            $codeVerifier = (string) $this->session->get('code_verifier');
-            /**
-             * @see https://developer.service.hmrc.gov.uk/
-                api-documentation/docs/authorisation
-             * For user-restricted access, the 'Authorization Code' Grant Type is used
-             * Use the code received, to get an access_token
-             */
-            $oAuthToken = $developerSandboxHmrc->fetchAccessTokenWithCodeVerifier(
-                $request, $code, [
-                    'redirect_uri' => $developerSandboxHmrc->getOauth2ReturnUrl(),
-                    'code_verifier' => $codeVerifier,
-                    'grant_type' => 'authorization_code',
-                ]);
-            // e.g. string '476425f97e53ca1124161e491bee384e'
-            $this->session->set('hmrc_access_token', $oAuthToken->getParam('access_token'));
-            // e.g. string 'bearer'
-            $this->session->set('hmrc_token_type', $oAuthToken->getParam('token_type'));
-            // default 'expires_in' int 14400
-            $this->session->set('hmrc_token_expires',
-                    time() + (int) $oAuthToken->getParam('expires_in'));
-            // e.g. read:self-assessment write:self-assessment'
-            $this->session->set('hmrc_scope', $oAuthToken->getParam('scope'));
-            // e.g. string 'cbe7c4f01a6bc55034237718d3e4ded2'
-            $this->session->set('hmrc_refresh_token', $oAuthToken->getParam('refresh_token'));
-            // Admin already authenticated via Yii3-i: the HMRC tokens are now in the
-            // session for API access. Do not switch the logged-in user or create a
-            // sandbox test-user account — just return to the HMRC backend page.
-            if ($this->authService->getIdentity()->getId() !== null) {
-                $response = $this->webService->getRedirectResponse('backend/hmrc');
-            }
+            /** @psalm-var DeveloperSandboxHmrc $developerSandboxHmrc */
+            ['login' => $login, 'email' => $email, 'password' => $password, 'response' => $response]
+                = $this->processHmrcAuthCode($request, $code, $developerSandboxHmrc);
+        }
+        return $response ?? $this->oauthRegisterAndProceed(
+            'developersandboxhmrc', $login, $email, $password,
+            $_language, self::DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN, $d);
+    }
+
+    /**
+     * @return array{login: string, email: string, password: string, response: ?ResponseInterface}
+     */
+    private function processHmrcAuthCode(
+        ServerRequestInterface $request,
+        string $code,
+        DeveloperSandboxHmrc $developerSandboxHmrc,
+    ): array {
+        $codeVerifier = (string) $this->session->get('code_verifier');
+        /**
+         * @see https://developer.service.hmrc.gov.uk/
+            api-documentation/docs/authorisation
+         * For user-restricted access, the 'Authorization Code' Grant Type is used
+         * Use the code received, to get an access_token
+         */
+        $oAuthToken = $developerSandboxHmrc->fetchAccessTokenWithCodeVerifier(
+            $request, $code, [
+                'redirect_uri' => $developerSandboxHmrc->getOauth2ReturnUrl(),
+                'code_verifier' => $codeVerifier,
+                'grant_type' => 'authorization_code',
+            ]);
+        // e.g. string '476425f97e53ca1124161e491bee384e'
+        $this->session->set('hmrc_access_token', $oAuthToken->getParam('access_token'));
+        // e.g. string 'bearer'
+        $this->session->set('hmrc_token_type', $oAuthToken->getParam('token_type'));
+        // default 'expires_in' int 14400
+        $this->session->set('hmrc_token_expires',
+                time() + (int) $oAuthToken->getParam('expires_in'));
+        // e.g. read:self-assessment write:self-assessment'
+        $this->session->set('hmrc_scope', $oAuthToken->getParam('scope'));
+        // e.g. string 'cbe7c4f01a6bc55034237718d3e4ded2'
+        $this->session->set('hmrc_refresh_token', $oAuthToken->getParam('refresh_token'));
+        $login = '';
+        $email = '';
+        $password = '';
+        $response = null;
+        if ($this->authService->getIdentity()->getId() !== null) {
+            // Admin already authenticated: HMRC tokens stored; skip test-user creation.
+            $response = $this->webService->getRedirectResponse('backend/hmrc');
+        } else {
             /**
              * @see Yiisoft\Yii\AuthClient\Client\DeveloperSandboxHmrc
              *  function getTestUserArray;
              */
             $requestBody = ['serviceNames' => ['national-insurance']];
-            /** @psalm-var \App\Auth\Client\DeveloperSandboxHmrc $developerSandboxHmrc */
             $userArray = $developerSandboxHmrc->createTestUserIndividual($oAuthToken, $requestBody);
             /**
              * @var int $userArray['userId']
@@ -124,12 +143,7 @@ trait Callback
                 $password = Random::string(32);
             }
         }
-        if ($response !== null) {
-            return $response;
-        }
-        return $this->oauthRegisterAndProceed(
-            'developersandboxhmrc', $login, $email, $password,
-            $_language, self::DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN, $d);
+        return ['login' => $login, 'email' => $email, 'password' => $password, 'response' => $response];
     }
 
     /**
