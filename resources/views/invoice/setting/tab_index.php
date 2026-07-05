@@ -8,7 +8,7 @@ use Yiisoft\Html\Html as H;
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\Button $button
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var string $alert
  * @var string $actionName
  * @var string $bootstrap5
@@ -38,6 +38,7 @@ use Yiisoft\Html\Html as H;
  * @var int $fontSize
  * @var string $font
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string, array{label:string,icon:string,color:string,aria:string,role:bool,content:string,svg?:string}> $tabs
  */
 
 // array key    - active-state slug and #settings-{key} id suffix
@@ -48,7 +49,6 @@ use Yiisoft\Html\Html as H;
 // aria         - pane aria-labelledby value; empty string omits the attribute
 // role         - whether to add role="tabpanel" on the pane div
 // content      - injected partial string for the tab pane body
-/** @var array<string, array{label:string,icon:string,color:string,aria:string,role:bool,content:string,svg?:string}> $tabs */
 $tabs = [
  'front-page' => [
      'label' => $translator->translate('front.page'),
@@ -226,7 +226,7 @@ $tabs = [
      'aria'  => 'settings-turnstile',
      'role'  => true,
      'content' => $turnstile
- ],
+ ]
 ];
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
@@ -280,8 +280,9 @@ echo H::openTag('ul', ['id' => 'settings-tabs',
     'aria-selected'  => $isActive ? 'true' : 'false',
     'style'          => 'font: inherit; --tab-color: ' . $tab['color'],
    ]); //3
-    if (!empty($tab['svg'])) { //4
-        echo $tab['svg'];
+    $svg = $tab['svg'] ?? '';
+    if ($svg !== '') { //4
+        echo $svg;
     } else {
         echo H::openTag('i', ['class' => $tab['icon']]); //4
         echo H::closeTag('i'); //4
