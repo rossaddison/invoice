@@ -44,7 +44,6 @@ trait Callback
         $login = '';
         $email = '';
         $password = '';
-        $response = null;
 
         /**
          * @psalm-suppress DocblockTypeContradiction $code

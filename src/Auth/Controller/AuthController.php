@@ -120,8 +120,9 @@ final class AuthController
         $rTrim = rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '=');
         $codeChallenge = strtr($rTrim, '+/', '-_');
         $selectedIdentityProviders = $this->idpList($codeChallenge);
-        $selectedClient = (array) $selectedIdentityProviders[$clientName];
-        $clientParams = (array) $selectedClient['params'];
+        $clientParams = isset($selectedIdentityProviders[$clientName])
+            ? (array) ((array) $selectedIdentityProviders[$clientName])['params']
+            : ['code_challenge' => $codeChallenge, 'code_challenge_method' => 'S256'];
         $clientAuthUrl = $client->buildAuthUrl($request, $clientParams);
         return $this->factory
                     ->createResponse(null, 302)
