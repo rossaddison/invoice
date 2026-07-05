@@ -93,7 +93,7 @@ trait Callback
             // session for API access. Do not switch the logged-in user or create a
             // sandbox test-user account — just return to the HMRC backend page.
             if ($this->authService->getIdentity()->getId() !== null) {
-                return $this->webService->getRedirectResponse('backend/hmrc');
+                $response = $this->webService->getRedirectResponse('backend/hmrc');
             }
             /**
              * @see Yiisoft\Yii\AuthClient\Client\DeveloperSandboxHmrc
