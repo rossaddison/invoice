@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Backend\Controller;
 
+use App\Auth\Client\HmrcApiCatalogue;
 use App\Invoice\BaseController;
 use App\Invoice\PurchaseEntry\PurchaseEntryRepository;
 use App\Invoice\Setting\SettingRepository as SR;
@@ -51,13 +52,23 @@ final class HmrcController extends BaseController
 
     public function index(): Response
     {
-        $parameters = [
-            'vrn' => $this->sR->getSetting('vat_registration_number'),
+        $grantedScope    = (string) $this->session->get('hmrc_scope', '');
+        $subscriptions   = $this->fetchApplicationSubscriptions();
+        $availableApis   = $grantedScope !== ''
+            ? HmrcApiCatalogue::fromGrantedScopeString($grantedScope)
+            : ($subscriptions !== []
+                ? HmrcApiCatalogue::fromSubscriptions($subscriptions)
+                : []);
+
+        return $this->webViewRenderer->render('index', [
+            'vrn'                 => $this->sR->getSetting('vat_registration_number'),
             'fphConnectionMethod' => $this->sR->getSetting('fph_connection_method'),
             'govVendorProductName' => $this->sR->getGovVendorProductName(),
-            'govVendorVersion' => $this->sR->getGovVendorVersion(),
-        ];
-        return $this->webViewRenderer->render('index', $parameters);
+            'govVendorVersion'    => $this->sR->getGovVendorVersion(),
+            'grantedScope'        => $grantedScope,
+            'availableApis'       => $availableApis,
+            'subscriptionsLoaded' => $subscriptions !== [],
+        ]);
     }
 
     /**
@@ -256,6 +267,48 @@ final class HmrcController extends BaseController
         ]);
     }
 
+    /**
+     * List self-employment businesses for the NINO stored in session.
+     * https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-employment-business-api/3.0
+     */
+    public function selfEmploymentBusinesses(): Response
+    {
+        $nino        = (string) $this->session->get('hmrc_nino', '');
+        $tokenString = (string) $this->session->get('hmrc_access_token');
+        $otpReference = (string) $this->session->get('otpRef');
+
+        if ($nino === '' || strlen($tokenString) === 0) {
+            $this->flashMessage('warning',
+                $this->translator->translate('mtd.vat.obligations.missing.vrn.or.token'));
+            return $this->webService->getRedirectResponse('backend/hmrc/index');
+        }
+
+        $request = $this->createRequest(
+            'GET',
+            'https://test-api.service.hmrc.gov.uk/individuals/business/self-employment/'
+                . urlencode($nino) . '/self-employments',
+        );
+
+        $request = RequestUtil::addHeaders($request, array_merge(
+            [
+                'Accept'        => 'application/vnd.hmrc.3.0+json',
+                'Authorization' => 'Bearer ' . $tokenString,
+            ],
+            $this->getWebAppViaServerHeaders($otpReference),
+        ));
+
+        $apiResponse = $this->sendRequest($request);
+        /** @var array<string, mixed> $parsed */
+        $parsed = (array) json_decode($apiResponse->getBody()->getContents(), true);
+
+        return $this->webViewRenderer->render('selfEmploymentBusinesses', [
+            'nino'          => $nino,
+            'statusCode'    => $apiResponse->getStatusCode(),
+            'businesses'    => $parsed['selfEmployments'] ?? [],
+            'raw'           => $parsed,
+        ]);
+    }
+
     public function createTestUserIndividual(array $requestBody = []): array
     {
         /**
@@ -286,6 +339,35 @@ final class HmrcController extends BaseController
             return (array) json_decode($response->getBody()->getContents(), true);
         }
 
+        return [];
+    }
+
+    /**
+     * Calls the HMRC Developer Hub subscriptions endpoint using this app's
+     * client_id. Returns the raw subscriptions array, or [] if the endpoint
+     * is unreachable or requires developer-portal authentication.
+     *
+     * @return list<array<string, mixed>>
+     */
+    private function fetchApplicationSubscriptions(): array
+    {
+        $clientId = $_ENV['DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_ID'] ?? '';
+        if ($clientId === '') {
+            return [];
+        }
+        $url     = 'https://developer.service.hmrc.gov.uk/developer/api/applications/'
+            . urlencode($clientId) . '/subscriptions';
+        $request = $this->requestFactory->createRequest('GET', $url)
+            ->withHeader('Accept', 'application/json');
+        try {
+            $response = $this->httpClient->sendRequest($request);
+            if ($response->getStatusCode() === 200) {
+                /** @var list<array<string, mixed>> $data */
+                $data = (array) json_decode($response->getBody()->getContents(), true);
+                return $data;
+            }
+        } catch (\Throwable) {
+        }
         return [];
     }
 

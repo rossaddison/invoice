@@ -54,4 +54,9 @@ return [
     Route::methods([Method::GET, Method::POST], '/backend/hmrc/vatReturnSubmit')
         ->action([HmrcController::class, 'vatReturnSubmit'])
         ->name('backend/hmrc/vatReturnSubmit'),
+
+    // https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-employment-business-api/3.0
+    Route::get('/backend/hmrc/selfEmploymentBusinesses')
+        ->action([HmrcController::class, 'selfEmploymentBusinesses'])
+        ->name('backend/hmrc/selfEmploymentBusinesses'),
 ];

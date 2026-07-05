@@ -8,9 +8,7 @@ use Yiisoft\Security\Random;
 use Yiisoft\Yii\AuthClient\OAuth2;
 use Yiisoft\Yii\AuthClient\OAuthToken;
 use Yiisoft\Yii\AuthClient\RequestUtil;
-use Psr\Http\Message\ResponseInterface;
-use DateTimeZone;
-use DateTime;
+use App\Auth\Client\HmrcApiCatalogue;
 
 /**
  * @see https://developer.service.hmrc.gov.uk/developer/applications
@@ -314,16 +312,23 @@ final class DeveloperSandboxHmrc extends OAuth2
     }
 
     /**
-     * Get the default scope for the service.
+     * Request every scope in the catalogue. HMRC silently drops any scope the
+     * registered application is not subscribed to, so the token response shows
+     * exactly what was granted for this client_id.
      *
      * @return string
-     * @psalm-suppress ImplementedReturnTypeMismatch
-     * @psalm-return 'read:self-assessment write:self-assessment'
+     * @psalm-suppress LessSpecificImplementedReturnType
      */
     #[\Override]
     protected function getDefaultScope(): string
     {
-        return 'read:self-assessment write:self-assessment';
+        return HmrcApiCatalogue::allScopes();
+    }
+
+    #[\Override]
+    public function getClientId(): string
+    {
+        return $this->clientId;
     }
 
     public function getAuthorizedIpAddressEndpoints(): array
