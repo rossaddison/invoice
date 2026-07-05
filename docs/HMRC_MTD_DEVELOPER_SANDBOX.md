@@ -80,7 +80,7 @@ After storing the five HMRC tokens in the session (`hmrc_access_token`, `hmrc_to
 
 ```php
 if ($this->authService->getIdentity()->getId() !== null) {
-    return $this->webService->getRedirectResponse('backend/hmrc');
+    $response = $this->webService->getRedirectResponse('backend/hmrc/index');
 }
 ```
 
