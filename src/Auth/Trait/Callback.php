@@ -89,6 +89,12 @@ trait Callback
             $this->session->set('hmrc_scope', $oAuthToken->getParam('scope'));
             // e.g. string 'cbe7c4f01a6bc55034237718d3e4ded2'
             $this->session->set('hmrc_refresh_token', $oAuthToken->getParam('refresh_token'));
+            // Admin already authenticated via Yii3-i: the HMRC tokens are now in the
+            // session for API access. Do not switch the logged-in user or create a
+            // sandbox test-user account — just return to the HMRC backend page.
+            if ($this->authService->getIdentity()->getId() !== null) {
+                return $this->webService->getRedirectResponse('backend/hmrc');
+            }
             /**
              * @see Yiisoft\Yii\AuthClient\Client\DeveloperSandboxHmrc
              *  function getTestUserArray;
