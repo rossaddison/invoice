@@ -131,18 +131,21 @@ final class As4TestSendCommand extends Command
             ],
         );
 
-        if (!$io->confirm('Send now?', true)) {
-            $io->info('Aborted.');
-            return ExitCode::OK;
-        }
-
         $request = new As4DispatchRequest(
             recipientPartyId: $receiverId,
             documentTypeId:   $documentType,
             processId:        $processId,
             payloadXml:       $payloadXml,
         );
+        return $this->confirmAndSend($request, $io);
+    }
 
+    private function confirmAndSend(As4DispatchRequest $request, SymfonyStyle $io): int
+    {
+        if (!$io->confirm('Send now?', true)) {
+            $io->info('Aborted.');
+            return ExitCode::OK;
+        }
         try {
             $result = $this->dispatcher->dispatch($request);
         } catch (\Throwable $e) {
@@ -150,7 +153,6 @@ final class As4TestSendCommand extends Command
             $io->error("Dispatch exception: {$e->getMessage()}");
             return ExitCode::UNSPECIFIED_ERROR;
         }
-
         return $this->reportResult($result, $io);
     }
 
@@ -180,33 +182,33 @@ final class As4TestSendCommand extends Command
 
     private function reportResult(As4DispatchResult $result, SymfonyStyle $io): int
     {
+        $signal = $result->signal;
+        if ($signal instanceof As4ReceiptSignal) {
+            $signalStr = 'Receipt — ' . $signal->messageId;
+        } elseif ($signal instanceof As4ErrorSignal) {
+            $signalStr = 'Error — ' . $signal->errorCode;
+        } else {
+            $signalStr = 'none (async 202)';
+        }
         $io->section('Result');
         $io->table(
             ['Field', 'Value'],
             [
-                ['Message ID',   $result->messageId],
-                ['HTTP Status',  (string) $result->httpStatus],
-                ['Success',      $result->success ? 'yes' : 'no'],
-                ['Signal',       $result->signal === null ? 'none (async 202)'
-                    : ($result->signal instanceof As4ReceiptSignal
-                        ? 'Receipt — ' . $result->signal->messageId
-                        : 'Error — ' . $result->signal->errorCode
-                    )
-                ],
+                ['Message ID',  $result->messageId],
+                ['HTTP Status', (string) $result->httpStatus],
+                ['Success',     $result->success ? 'yes' : 'no'],
+                ['Signal',      $signalStr],
             ],
         );
-
         if (!$result->success || $result->hasError()) {
             $io->error('Send failed — check the signal detail above.');
             return ExitCode::UNSPECIFIED_ERROR;
         }
-
-        if ($result->signal instanceof As4ReceiptSignal) {
+        if ($signal instanceof As4ReceiptSignal) {
             $io->success('Synchronous receipt received — delivery confirmed!');
         } else {
             $io->success('HTTP 202 accepted — async delivery. Check /as4/messages on the receiver.');
         }
-
         return ExitCode::OK;
     }
 }

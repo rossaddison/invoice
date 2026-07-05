@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Group;
 
 use App\Infrastructure\Persistence\Group\Group;
+use App\Invoice\Group\GroupException;
 
 final readonly class GroupService
 {
@@ -38,7 +39,7 @@ final readonly class GroupService
                 || ($model->getName() === 'Invoice Group')
                 || ($model->getName() === 'Sales Order Group')
                 || ($model->getName() === 'Credit Note Group')) {
-            throw new \RuntimeException('System group "' . ($model->getName() ?? '') . '" cannot be deleted.');
+            throw new GroupException('System group "' . ($model->getName() ?? '') . '" cannot be deleted.');
         }
         $this->repository->delete($model);
     }

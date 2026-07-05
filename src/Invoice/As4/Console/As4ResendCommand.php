@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\As4\Console;
 
+use App\Infrastructure\Persistence\As4Message\As4Message;
 use App\Invoice\As4\As4MessageRepositoryInterface;
 use App\Invoice\As4\As4MessageState;
 use App\Invoice\As4\As4ReceiptParserInterface;
@@ -88,21 +89,31 @@ final class As4ResendCommand extends Command
             ],
         );
 
+        return $this->confirmAndSend($message, $messageId, $io);
+    }
+
+    private function confirmAndSend(As4Message $message, string $messageId, SymfonyStyle $io): int
+    {
         if (!$io->confirm('Send this message now?', false)) {
             $io->info('Aborted.');
             return ExitCode::OK;
         }
-
-        $soapXml  = $message->getPayload()->getSoapMessage();
-        $envelope = $this->parseXml($soapXml);
+        $envelope = $this->parseXml($message->getPayload()->getSoapMessage());
         if ($envelope === null) {
             $io->error('Stored SOAP envelope is not well-formed XML — cannot resend.');
             return ExitCode::UNSPECIFIED_ERROR;
         }
+        return $this->trySend($message, $messageId, $envelope, $io);
+    }
 
+    private function trySend(
+        As4Message $message,
+        string $messageId,
+        DOMDocument $envelope,
+        SymfonyStyle $io,
+    ): int {
         $message->recordAttempt();
         $this->repository->save($message);
-
         try {
             $response = $this->sender->send(
                 endpoint: $message->getRouting()->getReceiverEndpoint(),
@@ -117,30 +128,25 @@ final class As4ResendCommand extends Command
             $io->error("Network failure: {$e->getMessage()}");
             return ExitCode::UNSPECIFIED_ERROR;
         }
-
         if (!$response->isSuccess()) {
             $message->markFailed('HTTP_' . $response->statusCode, 'Non-retriable HTTP error on forced resend');
             $this->repository->save($message);
             $io->error("Endpoint returned HTTP {$response->statusCode}. Message marked FAILED.");
             return ExitCode::UNSPECIFIED_ERROR;
         }
-
         $signal = $this->receiptParser->parse($response->body, $response->contentType);
         if ($signal instanceof As4ReceiptSignal) {
             $message->markReceiptReceived($signal->messageId);
             $this->repository->save($message);
             $io->success("Receipt confirmed — message delivered. Receipt ID: {$signal->messageId}");
-            return ExitCode::OK;
+        } else {
+            $message->markSent();
+            $this->repository->save($message);
+            $io->success(
+                'Transport accepted (async). State → ' . As4MessageState::sent->value
+                . '. Receipt will arrive via the inbound channel.'
+            );
         }
-
-        // Async 202 — endpoint accepted, receipt will arrive separately
-        $message->markSent();
-        $this->repository->save($message);
-        $io->success(
-            'Transport accepted (async). State → ' . As4MessageState::sent->value
-            . '. Receipt will arrive via the inbound channel.'
-        );
-
         return ExitCode::OK;
     }
 

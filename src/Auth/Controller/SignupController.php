@@ -157,7 +157,7 @@ final class SignupController
             'formModel' => $signupForm,
             'errors' => $errors,
             'selectedOpenBankingProvider' => $openBankChoice,
-            'noOpenBankingContinueButton' => $nocb == '1' ? true : false,
+            'noOpenBankingContinueButton' => $nocb === '1',
             'openBankingAuthUrl' => $openBankingAuthUrl,
             'sessionOtp' => $this->session->get('otp'),
             'telegramToken' => $this->telegramToken,

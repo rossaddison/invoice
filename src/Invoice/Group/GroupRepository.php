@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Group;
 
 use App\Infrastructure\Persistence\Group\Group;
+use App\Invoice\Group\GroupException;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -88,7 +89,7 @@ final class GroupRepository extends Select\Repository
     {
         $group = $this->repoGroupquery($id);
         if ($group === null) {
-            throw new \RuntimeException(
+            throw new GroupException(
                 "Cannot generate invoice number: no Group found with id={$id}. "
                 . 'Check that Settings → Invoice Group is configured and the group exists.'
             );

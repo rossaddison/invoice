@@ -151,85 +151,88 @@ trait Credit
         InvCreateCreditCoreDeps $core,
         InvCreateCreditUserDeps $userDeps,
     ): Response {
-        $body = $request->getQueryParams();
+        $body      = $request->getQueryParams();
         $basis_inv = $core->iR->repoInvLoadedquery((int) $body['inv_id']);
-        if (null !== $basis_inv) {
-            $basis_inv_id = (int) $body['inv_id'];
-            $creditNoteGroup = $core->gR->repoGroupByName('Credit Note Group');
-            if ($creditNoteGroup === null) {
-                return $this->factory->createResponse(Json::encode([
-                    'success' => 0,
-                    'message' => $this->translator->translate('credit.note.creation.unsuccessful'),
-                ]));
-            }
-            $groupId = $creditNoteGroup->reqId();
-            // Set the basis_inv to read-only;
-            $basis_inv->setIsReadOnly(true);
-            // Credit Note's details
-            $ajax_body = [
-                'client_id' => $body['client_id'],
-                'group_id' => $groupId,
-                'user_id' => $body['user_id'],
-                'status_id' => 12, // credit.invoice.for.invoice
-                'is_read_only' => true,
-                'number' => $core->gR->generateNumber($groupId, true),
-                'discount_amount' => $basis_inv->getDiscountAmount(),
-                'url_key' => '',
-                'password' => $body['password'],
-                'payment_method' => 0,
-                'terms' => '',
-                'delivery_location_id' => $basis_inv->getDeliveryLocationId(),
-            ];
-            // Save the basis invoice as soon as we have the new credit note's id
-            $new_inv = new Inv();
-            $form = new InvForm();
-            if ($formHydrator->populateAndValidate($form, $ajax_body)) {
-                /**
-                 * @var string $ajax_body['client_id']
-                 */
-                $client_id = (int) $ajax_body['client_id'];
-                $user = $this->activeUser($client_id, $userDeps->uR, $userDeps->ucR, $userDeps->uiR);
-                if (null !== $user) {
-                    $saved_inv_id = 0;
-                    $this->inv_service->withTransaction(
-                        function () use (
-                            $user, $new_inv, $ajax_body, $core, $basis_inv_id,
-                            $basis_inv, &$saved_inv_id
-                        ): void {
-                            $saved_inv = $this->inv_service->saveInv(
-                                $user, $new_inv, $ajax_body, $this->sR, $core->gR);
-                            $saved_inv_id = $saved_inv->reqId();
-                            if ($saved_inv_id > 0) {
-                                $savedInvId = (string) $saved_inv_id;
-                                $this->inv_item_service->initializeCreditInvItems(
-                                    $basis_inv_id, $savedInvId, $core->iiR, $core->iiaR);
-                                $this->inv_amount_service->initializeCreditInvAmount(
-                                    new InvAmount(), $basis_inv_id, $savedInvId);
-                                $this->inv_tax_rate_service->initializeCreditInvTaxRate(
-                                    $basis_inv_id, $savedInvId);
-                                // Record the new Credit Note's id in the basis invoice
-                                $basis_inv->setCreditinvoiceParentId($saved_inv_id);
-                                $core->iR->save($basis_inv);
-                            }
-                        }
-                    );
-                    if ($saved_inv_id > 0) {
-                        $parameters = [
-                            'success' => 1,
-                            'flash_message' => $this->translator->translate(
-                                'credit.note.creation.successful'),
-                        ];
-                        //return response to inv.js to reload page at location
-                        return $this->factory->createResponse(
-                            Json::encode($parameters));
-                    }
-                } //null!==$user
-            } // ajax
-        } //null!==$basis_inv
-        return $this->factory->createResponse(Json::encode([
+        $result    = null;
+        if ($basis_inv !== null) {
+            $result = $this->processCreditConfirm(
+                $basis_inv, (int) $body['inv_id'], $body, $formHydrator, $core, $userDeps);
+        }
+        return $result ?? $this->factory->createResponse(Json::encode([
             'success' => 0,
-            'message' =>
-            $this->translator->translate('credit.note.creation.unsuccessful'),
+            'message' => $this->translator->translate('credit.note.creation.unsuccessful'),
         ]));
+    }
+
+    private function processCreditConfirm(
+        Inv $basis_inv,
+        int $basis_inv_id,
+        array $body,
+        FormHydrator $formHydrator,
+        InvCreateCreditCoreDeps $core,
+        InvCreateCreditUserDeps $userDeps,
+    ): ?Response {
+        $creditNoteGroup = $core->gR->repoGroupByName('Credit Note Group');
+        if ($creditNoteGroup === null) {
+            return $this->factory->createResponse(Json::encode([
+                'success' => 0,
+                'message' => $this->translator->translate('credit.note.creation.unsuccessful'),
+            ]));
+        }
+        $groupId = $creditNoteGroup->reqId();
+        $basis_inv->setIsReadOnly(true);
+        $ajax_body = [
+            'client_id'           => $body['client_id'],
+            'group_id'            => $groupId,
+            'user_id'             => $body['user_id'],
+            'status_id'           => 12,
+            'is_read_only'        => true,
+            'number'              => $core->gR->generateNumber($groupId, true),
+            'discount_amount'     => $basis_inv->getDiscountAmount(),
+            'url_key'             => '',
+            'password'            => $body['password'],
+            'payment_method'      => 0,
+            'terms'               => '',
+            'delivery_location_id'=> $basis_inv->getDeliveryLocationId(),
+        ];
+        $new_inv = new Inv();
+        $form    = new InvForm();
+        if ($formHydrator->populateAndValidate($form, $ajax_body)) {
+            /** @var string $ajax_body['client_id'] */
+            $client_id = (int) $ajax_body['client_id'];
+            $user = $this->activeUser($client_id, $userDeps->uR, $userDeps->ucR, $userDeps->uiR);
+            if (null !== $user) {
+                $saved_inv_id = 0;
+                $this->inv_service->withTransaction(
+                    function () use (
+                        $user, $new_inv, $ajax_body, $core, $basis_inv_id,
+                        $basis_inv, &$saved_inv_id
+                    ): void {
+                        $saved_inv    = $this->inv_service->saveInv(
+                            $user, $new_inv, $ajax_body, $this->sR, $core->gR);
+                        $saved_inv_id = $saved_inv->reqId();
+                        if ($saved_inv_id > 0) {
+                            $savedInvId = (string) $saved_inv_id;
+                            $this->inv_item_service->initializeCreditInvItems(
+                                $basis_inv_id, $savedInvId, $core->iiR, $core->iiaR);
+                            $this->inv_amount_service->initializeCreditInvAmount(
+                                new InvAmount(), $basis_inv_id, $savedInvId);
+                            $this->inv_tax_rate_service->initializeCreditInvTaxRate(
+                                $basis_inv_id, $savedInvId);
+                            $basis_inv->setCreditinvoiceParentId($saved_inv_id);
+                            $core->iR->save($basis_inv);
+                        }
+                    }
+                );
+                if ($saved_inv_id > 0) {
+                    return $this->factory->createResponse(Json::encode([
+                        'success'       => 1,
+                        'flash_message' => $this->translator->translate(
+                            'credit.note.creation.successful'),
+                    ]));
+                }
+            }
+        }
+        return null;
     }
 }

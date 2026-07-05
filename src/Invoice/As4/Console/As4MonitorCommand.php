@@ -152,27 +152,33 @@ final class As4MonitorCommand extends Command
             $io->error("{$label} certificate not readable: {$path}");
             return 1;
         }
-
         $pem  = (string) file_get_contents($path);
         $cert = openssl_x509_read($pem);
         if ($cert === false) {
             $io->error("{$label} certificate cannot be parsed: {$path}");
             return 1;
         }
+        return $this->checkCertExpiry($cert, $path, $label, $warnDays, $io);
+    }
 
+    private function checkCertExpiry(
+        \OpenSSLCertificate $cert,
+        string $path,
+        string $label,
+        int $warnDays,
+        SymfonyStyle $io,
+    ): int {
         /** @var array{validTo_time_t: int, subject: array<string,string>} $info */
-        $info     = openssl_x509_parse($cert);
+        $info      = openssl_x509_parse($cert);
         $expiresAt = (new DateTime())->setTimestamp($info['validTo_time_t']);
         $now       = new DateTime();
         $diff      = (int) $now->diff($expiresAt)->days;
-        $expired   = $expiresAt < $now;
         $cn        = $info['subject']['CN'] ?? $path;
 
-        if ($expired) {
+        if ($expiresAt < $now) {
             $io->error("{$label} certificate EXPIRED on {$expiresAt->format('Y-m-d')} (CN={$cn})");
             return 1;
         }
-
         if ($diff <= $warnDays) {
             $io->warning(
                 "{$label} certificate expires in {$diff} day(s) on "
@@ -180,7 +186,6 @@ final class As4MonitorCommand extends Command
             );
             return 1;
         }
-
         $io->writeln(
             "<info>✓ {$label} certificate valid until "
             . $expiresAt->format('Y-m-d') . " ({$diff} days, CN={$cn})</info>"

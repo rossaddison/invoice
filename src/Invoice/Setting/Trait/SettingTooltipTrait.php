@@ -22,6 +22,11 @@ trait SettingTooltipTrait
 
     private function tooltipArrayA(): array
     {
+        return array_merge($this->tooltipArrayA1(), $this->tooltipArrayA2());
+    }
+
+    private function tooltipArrayA1(): array
+    {
         return [
             'active_only' => [
                 'why' => 'Old fully paid up clients, that have cancelled i.e.'
@@ -101,6 +106,12 @@ trait SettingTooltipTrait
                 . ' corner of the current browser tab.',
                 'where' => 'layout/invoice',
             ],
+        ];
+    }
+
+    private function tooltipArrayA2(): array
+    {
+        return [
             'date_tax_point' => [
                 'why' => 'Necessary for calculating VAT submissions to Receivers'
                 . ' of Revenue',
@@ -475,6 +486,11 @@ trait SettingTooltipTrait
 
     private function tooltipArrayD(): array
     {
+        return array_merge($this->tooltipArrayD1(), $this->tooltipArrayD2());
+    }
+
+    private function tooltipArrayD1(): array
+    {
         return [
             'monospace_amounts' => [
                 'why' => 'Evenly spaced characters for better presentation.',
@@ -562,6 +578,12 @@ trait SettingTooltipTrait
                 . ' with InvController/email_stage_1 variable $stream'
                 . ' ... pdfHelper..generate_inv_pdf ... mpdfHelper..pdfCreate',
             ],
+        ];
+    }
+
+    private function tooltipArrayD2(): array
+    {
+        return [
             'peppol_document_currency' => [
                 'why' => 'UBL Invoice can be in either the Supplier\'s currency'
                 . ' or the Buyer\'s currency',
