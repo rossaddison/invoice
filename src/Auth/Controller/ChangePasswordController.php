@@ -7,6 +7,8 @@ namespace App\Auth\Controller;
 use App\Auth\AuthService;
 use App\Auth\IdentityRepository;
 use App\Auth\Form\ChangePasswordForm;
+use App\Auth\Trait\TurnstileVerification;
+use App\Invoice\Setting\SettingRepository;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -19,11 +21,15 @@ use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class ChangePasswordController
 {
+    use TurnstileVerification;
+
     public function __construct(
         private readonly Flash $flash,
         private readonly Translator $translator,
         private readonly CurrentUser $currentUser,
         private readonly WebControllerService $webService,
+        private readonly AuthSecurityHelper $secHelper,
+        private readonly SettingRepository $sR,
         private WebViewRenderer $webViewRenderer,
     ) {
         // withControllerName returns a new instance so reassignment is needed
@@ -53,6 +59,18 @@ final class ChangePasswordController
  */
         $login = $identity->getUser()?->getLogin();
         $successRedirect = null;
+
+        if ($request->getMethod() === Method::POST) {
+            $ip = $this->secHelper->getClientIpAddress($request);
+            if (!$this->secHelper->checkRateLimit(sha1('change_ctrl' . $ip))) {
+                return $this->redirectToMain();
+            }
+            $body = (array) $request->getParsedBody();
+            if (!$this->verifyTurnstile((string) ($body['cf-turnstile-response'] ?? ''), $ip)) {
+                return $this->redirectToMain();
+            }
+        }
+
         if ($request->getMethod() === Method::POST
             && $formHydrator->populate($changePasswordForm, $request->getParsedBody())
             && $changePasswordForm->change()
@@ -74,10 +92,14 @@ final class ChangePasswordController
         $errors = $changePasswordForm->isValidated()
             ? $changePasswordForm->getValidationResult()->getErrorMessagesIndexedByProperty()
             : [];
+
+        $turnstileSiteKey = $this->sR->getSetting('turnstile_site_key');
+
         return $successRedirect ?? $this->webViewRenderer->render('change', [
             'formModel' => $changePasswordForm,
             'login' => $login,
             'errors' => $errors,
+            'turnstileSiteKey' => $turnstileSiteKey,
         ]);
     } // change
 

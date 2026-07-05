@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
+use Yiisoft\View\WebView;
 
 /**
  * Related logic: see App\Auth\Controller\ChangePasswordController function change
@@ -12,15 +13,23 @@ use Yiisoft\Html\Tag\Form;
  * @var App\Auth\Form\ChangePasswordForm $formModel
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var Yiisoft\View\WebView $this
+ * @var WebView $this
  *
  * Related logic: see resources\rbac\items.php admin permissions
  * @var bool $changePasswordForAnyUser
  *
  * @var string $csrf
  * @var array<string, list<string>> $errors
+ * @var string $turnstileSiteKey
  */
 $this->setTitle($translator->translate('password.change'));
+if ($turnstileSiteKey !== '') {
+    $this->registerJsFile(
+        'https://challenges.cloudflare.com/turnstile/v0/api.js',
+        WebView::POSITION_END,
+        ['async' => true, 'defer' => true],
+    );
+}
 ?>
 
 <div class="container py-5 h-100">
@@ -63,6 +72,9 @@ $this->setTitle($translator->translate('password.change'));
     ->addInputAttributes(['autocomplete' => 'verify-password'])
     ->label($translator->translate('layout.password-verify.new'))
 ?>                
+                    <?php if ($turnstileSiteKey !== '') {
+    echo Html::tag('div', '', ['class' => 'cf-turnstile', 'data-sitekey' => $turnstileSiteKey]);
+} ?>
                     <?= Field::submitButton()
     ->buttonId('change-button')
     ->name('change-button')
