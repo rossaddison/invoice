@@ -148,12 +148,13 @@ trait Callback
         #[RouteArgument('_language')]
         string $_language,
     ): ResponseInterface {
+        /** @var array<string, string> $query */
         $query       = $request->getQueryParams();
-        $code        = isset($query['code'])         ? (string) $query['code']         : null;
-        $state       = isset($query['state'])        ? (string) $query['state']        : null;
-        $error       = isset($query['error'])        ? (string) $query['error']        : null;
-        $errorCode   = isset($query['error_code'])   ? (string) $query['error_code']   : null;
-        $errorReason = isset($query['error_reason']) ? (string) $query['error_reason'] : null;
+        $code        = $query['code']         ?? null;
+        $state       = $query['state']        ?? null;
+        $error       = $query['error']        ?? null;
+        $errorCode   = $query['error_code']   ?? null;
+        $errorReason = $query['error_reason'] ?? null;
         if ($code === null || $state === null) {
 // e.g. User presses cancel button: callbackFacebook?error=access_denied&error_code=200&error_description=Permissions+error&error_reason=user_denied&state=
             return (($errorCode == 200) && ($error == 'access_denied') && ($errorReason == 'user_denied'))
