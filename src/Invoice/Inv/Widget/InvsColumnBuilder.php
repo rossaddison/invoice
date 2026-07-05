@@ -119,6 +119,7 @@ final class InvsColumnBuilder
                 encodeContent: false,
                 withSorting: false,
             ),
+            ...$this->buildPaidBalanceColumns($sR, $dp, $totalPaid, $totalBalance),
             $this->buildClientActiveColumn(),
             $this->buildCreditNoteColumn($iR),
             ...$this->buildSentLogColumns($islR),
@@ -182,7 +183,7 @@ final class InvsColumnBuilder
                 visible: $vis),
 
             ...$this->buildDateColumns(),
-            ...$this->buildAmountColumns($sR, $dp, $totalAmount, $totalPaid, $totalBalance),
+            ...$this->buildAmountColumns($sR, $dp, $totalAmount),
 
             new DataColumn(
                 header: '🚚',
@@ -290,7 +291,7 @@ final class InvsColumnBuilder
     }
 
     /**
-     * Total, paid, and balance amount columns with footer totals.
+     * Total amount column with footer total.
      *
      * @return DataColumn[]
      */
@@ -298,8 +299,6 @@ final class InvsColumnBuilder
         SR $sR,
         int $dp,
         float $totalAmount,
-        float $totalPaid,
-        float $totalBalance,
     ): array {
         $t = $this->translator;
         return [
@@ -331,6 +330,22 @@ final class InvsColumnBuilder
                         . ' ' . number_format($totalAmount, $dp))
                     ->encode(false)->render(),
             ),
+        ];
+    }
+
+    /**
+     * Paid and balance columns — placed adjacent to Quick Pay in the grid.
+     *
+     * @return DataColumn[]
+     */
+    private function buildPaidBalanceColumns(
+        SR $sR,
+        int $dp,
+        float $totalPaid,
+        float $totalBalance,
+    ): array {
+        $t = $this->translator;
+        return [
             new DataColumn(
                 property: 'filterInvAmountPaid',
                 header: $t->translate('paid') . '➡️' . $sR->getSetting('currency_symbol'),
