@@ -306,10 +306,33 @@ return [
         ->action([AuthController::class, 'regenerateCodes'])
         ->name('auth/regenerateCodes'),
     Route::methods([$mG, $mP], '/forgotpassword')
-        ->middleware(fn (
+        // Global path counter — 5 POSTs per 60 s; triggers email so kept tight
+        ->middleware(fn(
             ResponseFactoryInterface $responseFactory,
             StorageInterface $storage,
-        ) => new LRM(new Counter($storage, 3, 3), $responseFactory))
+        ) => new LRM(
+            new Counter($storage, 5, 60),
+            $responseFactory,
+            new LimitAlways(),
+            new TooManyRequestsMiddleware($responseFactory),
+        ))
+        // Per real-IP via CF-Connecting-IP; CAS fail → 429
+        ->middleware(fn(
+            ResponseFactoryInterface $responseFactory,
+            StorageInterface $storage,
+        ) => new LRM(
+            new Counter($storage, 2, 60),
+            $responseFactory,
+            new LimitCallback(static function (ServerRequestInterface $r): string {
+                $srv  = $r->getServerParams();
+                $cfIp = isset($srv['HTTP_CF_CONNECTING_IP']) ? (string) $srv['HTTP_CF_CONNECTING_IP'] : '';
+                $xfw  = isset($srv['HTTP_X_FORWARDED_FOR'])  ? (string) $srv['HTTP_X_FORWARDED_FOR']  : '';
+                $rem  = isset($srv['REMOTE_ADDR'])            ? (string) $srv['REMOTE_ADDR']            : '';
+                $ip   = $cfIp !== '' ? $cfIp : ($xfw !== '' ? $xfw : ($rem !== '' ? $rem : 'unknown'));
+                return sha1('forgot_route' . $ip);
+            }),
+            new TooManyRequestsMiddleware($responseFactory),
+        ))
         ->action([ForgotPasswordController::class, 'forgot'])
         ->name('auth/forgotpassword'),
     Route::methods([$mG, $mP],

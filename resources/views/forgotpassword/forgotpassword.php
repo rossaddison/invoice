@@ -16,8 +16,16 @@ use Yiisoft\View\WebView;
  * @var UrlGeneratorInterface           $urlGenerator
  * @var string                          $csrf
  * @var RequestPasswordResetTokenForm   $formModel
+ * @var string                          $turnstileSiteKey
  */
 $this->setTitle($translator->translate('password.reset.request.token'));
+if ($turnstileSiteKey !== '') {
+    $this->registerJsFile(
+        'https://challenges.cloudflare.com/turnstile/v0/api.js',
+        WebView::POSITION_END,
+        ['async' => true, 'defer' => true],
+    );
+}
 ?>
 
 <div class="container py-5 h-100">
@@ -38,6 +46,9 @@ $this->setTitle($translator->translate('password.reset.request.token'));
     ->label($translator->translate('email'))
     ->autofocus()
 ?>
+                    <?php if ($turnstileSiteKey !== '') {
+    echo Html::tag('div', '', ['class' => 'cf-turnstile', 'data-sitekey' => $turnstileSiteKey]);
+} ?>
                     <?= Field::submitButton()
     ->buttonId('password-reset-token-button')
     ->name('password-reset-token-button')

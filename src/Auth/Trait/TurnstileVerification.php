@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Auth\Trait;
 
 /**
- * @property-read \App\Invoice\Setting\SettingRepositoryInterface $sR
+ * @property-read \App\Invoice\Setting\SettingRepository $sR
  */
 trait TurnstileVerification
 {

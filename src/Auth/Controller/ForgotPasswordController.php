@@ -6,6 +6,7 @@ namespace App\Auth\Controller;
 
 use App\Infrastructure\Persistence\Token\Token;
 use App\Auth\TokenRepository as tR;
+use App\Auth\Trait\TurnstileVerification;
 use App\Infrastructure\Persistence\User\User;
 use App\User\UserRepository as uR;
 use App\Auth\AuthService;
@@ -15,6 +16,7 @@ use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
+use Yiisoft\Http\Method;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Body;
 use Yiisoft\FormModel\FormHydrator;
@@ -27,6 +29,8 @@ use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class ForgotPasswordController
 {
+    use TurnstileVerification;
+
     public const string REQUEST_PASSWORD_RESET_TOKEN = 'request-password-reset';
 
     public function __construct(
@@ -38,6 +42,7 @@ final class ForgotPasswordController
         private readonly UrlGenerator $urlGenerator,
         private readonly CurrentRoute $currentRoute,
         private readonly LoggerInterface $logger,
+        private readonly AuthSecurityHelper $secHelper,
     ) {
         // withControllerName returns a new instance so reassignment is needed
         $this->webViewRenderer = $webViewRenderer->withControllerName(
@@ -88,6 +93,17 @@ final class ForgotPasswordController
         if ($guard !== null) {
             return $this->webService->getRedirectResponse($guard);
         }
+        if ($request->getMethod() === Method::POST) {
+            $ip = $this->secHelper->getClientIpAddress($request);
+            if (!$this->secHelper->checkRateLimit(sha1('forgot_ctrl' . $ip))) {
+                return $this->webService->getRedirectResponse('auth/forgotpassword');
+            }
+            $body = (array) $request->getParsedBody();
+            if (!$this->verifyTurnstile((string) ($body['cf-turnstile-response'] ?? ''), $ip)) {
+                return $this->webService->getRedirectResponse('auth/forgotpassword');
+            }
+        }
+
         $response = null;
         if ($formHydrator->populateFromPostAndValidate($requestPasswordResetTokenForm, $request)) {
             $user = $uR->findByEmail($requestPasswordResetTokenForm->getEmail());
@@ -97,7 +113,10 @@ final class ForgotPasswordController
         if ($response !== null) {
             return $response;
         }
-        return $this->webViewRenderer->render('forgotpassword', ['formModel' =>    $requestPasswordResetTokenForm]);
+        return $this->webViewRenderer->render('forgotpassword', [
+            'formModel'        => $requestPasswordResetTokenForm,
+            'turnstileSiteKey' => $this->sR->getSetting('turnstile_site_key'),
+        ]);
     }
 
     private function handleForgotUser(?User $user, CurrentRoute $currentRoute, tR $tR): ?ResponseInterface
