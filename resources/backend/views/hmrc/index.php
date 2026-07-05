@@ -12,6 +12,7 @@ use Yiisoft\Html\Html as H;
  * @var string $govVendorVersion
  * @var string $grantedScope
  * @var array<string, array{name: string, scopes: list<string>, needs: string, serviceName: string, version: string}> $availableApis
+ * @var array<string, array{name: string, scopes: list<string>, needs: string, serviceName: string, version: string}> $fullCatalogue
  * @var bool $subscriptionsLoaded
  */
 
@@ -173,6 +174,49 @@ if ($availableApis === []) {
     echo H::closeTag('div');
 }
 
+echo H::closeTag('div');
+echo H::closeTag('div');
+
+// ── Full catalogue (always visible) ──────────────────────────────────────────
+echo H::openTag('div', ['class' => 'card mb-3']);
+echo H::openTag('div', ['class' => 'card-header d-flex justify-content-between align-items-center']);
+echo H::tag('strong', 'Full API Catalogue');
+echo H::tag('span',
+    count($fullCatalogue) . ' APIs',
+    ['class' => 'badge bg-secondary']);
+echo H::closeTag('div');
+echo H::openTag('div', ['class' => 'card-body p-0']);
+echo H::openTag('div', ['class' => 'table-responsive']);
+echo H::openTag('table', ['class' => 'table table-sm table-bordered mb-0 small']);
+echo H::openTag('thead', ['class' => 'table-light']);
+echo H::openTag('tr');
+foreach (['API', 'Context Path', 'Version', 'Scopes', 'Needs', 'Route'] as $col) {
+    echo H::tag('th', $col);
+}
+echo H::closeTag('tr');
+echo H::closeTag('thead');
+echo H::openTag('tbody');
+foreach ($fullCatalogue as $context => $entry) {
+    $route       = HmrcApiCatalogue::routeFor($context);
+    $inGranted   = $availableApis !== [] && isset($availableApis[$context]);
+    $rowClass    = $inGranted ? 'table-success' : '';
+    echo H::openTag('tr', ['class' => $rowClass]);
+    echo H::tag('td', H::encode($entry['name']));
+    echo H::tag('td', H::tag('code', H::encode($context), ['class' => 'small']));
+    echo H::tag('td', H::encode($entry['version']));
+    echo H::tag('td', H::tag('code', H::encode(implode(' ', $entry['scopes'])), ['class' => 'small']));
+    echo H::tag('td', H::encode(strtoupper($entry['needs'])));
+    echo H::tag('td', $route !== null
+        ? H::tag('span', '✅', ['data-bs-toggle' => 'tooltip', 'title' => $route])
+        : H::tag('span', '—', ['class' => 'text-muted']));
+    echo H::closeTag('tr');
+}
+echo H::closeTag('tbody');
+echo H::closeTag('table');
+echo H::closeTag('div');
+echo H::tag('p',
+    'Rows highlighted green are within your current granted token scope.',
+    ['class' => 'text-muted small px-3 py-2 mb-0']);
 echo H::closeTag('div');
 echo H::closeTag('div');
 

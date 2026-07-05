@@ -69,6 +69,7 @@ final class HmrcController extends BaseController
             'govVendorVersion'    => $this->sR->getGovVendorVersion(),
             'grantedScope'        => $grantedScope,
             'availableApis'       => $availableApis,
+            'fullCatalogue'       => HmrcApiCatalogue::all(),
             'subscriptionsLoaded' => $subscriptions !== [],
         ]);
     }
