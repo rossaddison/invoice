@@ -22,8 +22,16 @@ use Yiisoft\{FormModel\Field as F, Html\Html as H, Html\Tag\Form,
  * @var string                                  $openBankingAuthUrl
  * @var string                                  $selectedOpenBankingProvider
  * @var array<string, list<string>>             $errors
+ * @var string                                  $turnstileSiteKey
  */
 $this->setTitle($translator->translate('menu.signup'));
+if ($turnstileSiteKey !== '') {
+    $this->registerJsFile(
+        'https://challenges.cloudflare.com/turnstile/v0/api.js',
+        \Yiisoft\View\WebView::POSITION_END,
+        ['async' => true, 'defer' => true],
+    );
+}
 echo H::openTag('div', ['class' => (string) $class[1]]);
  echo H::openTag('div', ['class' => (string) $class[2]]);
   echo H::openTag('div', ['class' => (string) $class[3]]);
@@ -84,6 +92,9 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
     echo F::errorSummary($formModel)
     ->errors($errors)
     ->header($translator->translate('error.summary'));
+    if ($turnstileSiteKey !== '') {
+        echo H::tag('div', '', ['class' => 'cf-turnstile', 'data-sitekey' => $turnstileSiteKey]);
+    }
     echo F::submitButton()
     ->buttonId('register-button')
     ->buttonClass((string) $class[15])

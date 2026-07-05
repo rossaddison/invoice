@@ -34,6 +34,7 @@ use Yiisoft\Html\Html as H;
  * @var string $active
  * @var string $telegram
  * @var string $tfa
+ * @var string $turnstile
  * @var int $fontSize
  * @var string $font
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
@@ -41,11 +42,13 @@ use Yiisoft\Html\Html as H;
 
 // array key    - active-state slug and #settings-{key} id suffix
 // label        - button text
-// icon         - Bootstrap icon class
+// icon         - Bootstrap icon class (empty string when svg is set)
+// svg          - optional inline SVG string; overrides icon when present
 // color        - CSS color for the tab accent border
 // aria         - pane aria-labelledby value; empty string omits the attribute
 // role         - whether to add role="tabpanel" on the pane div
 // content      - injected partial string for the tab pane body
+/** @var array<string, array{label:string,icon:string,color:string,aria:string,role:bool,content:string,svg?:string}> $tabs */
 $tabs = [
  'front-page' => [
      'label' => $translator->translate('front.page'),
@@ -215,6 +218,15 @@ $tabs = [
      'role'  => true,
      'content' => $tfa
  ],
+ 'turnstile' => [
+     'label' => 'Cloudflare Turnstile',
+     'icon'  => '',
+     'svg'   => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 12" aria-hidden="true"><path d="M16.5 8h-13C2.1 8 1 6.9 1 5.5 1 4.2 2 3.2 3.2 3.1 3.6 1.3 5.2 0 7 0c1 0 1.9.4 2.6 1C10.2.4 11.1 0 12.1 0c2.2 0 4 1.8 4 4 0 .1 0 .2-.1.3C17.2 4.6 18 5.5 18 6.5c0 .8-.7 1.5-1.5 1.5z"/></svg>',
+     'color' => '#F6821F',
+     'aria'  => 'settings-turnstile',
+     'role'  => true,
+     'content' => $turnstile
+ ],
 ];
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
@@ -237,6 +249,8 @@ echo H::tag('style', '
  }
  #settings-tabs .nav-link i { font-size: 1.25em; color: var(--tab-color); }
  #settings-tabs .nav-link.active i { color: #fff; }
+ #settings-tabs .nav-link svg { fill: var(--tab-color); width: 1.25em; height: 1.25em; }
+ #settings-tabs .nav-link.active svg { fill: #fff; }
  #settings-tabs .nav-link:hover { background: rgba(0,0,0,0.05); }
  #settings-tabs .nav-link.active {
   background: var(--tab-color, #0d6efd);
@@ -266,8 +280,12 @@ echo H::openTag('ul', ['id' => 'settings-tabs',
     'aria-selected'  => $isActive ? 'true' : 'false',
     'style'          => 'font: inherit; --tab-color: ' . $tab['color'],
    ]); //3
-    echo H::openTag('i', ['class' => $tab['icon']]); //4
-    echo H::closeTag('i'); //4
+    if (!empty($tab['svg'])) { //4
+        echo $tab['svg'];
+    } else {
+        echo H::openTag('i', ['class' => $tab['icon']]); //4
+        echo H::closeTag('i'); //4
+    } //4
     echo H::openTag('span', []); //4
      echo $tab['label'];
     echo H::closeTag('span'); //4

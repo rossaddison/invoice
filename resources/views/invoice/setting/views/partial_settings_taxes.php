@@ -125,6 +125,7 @@ echo H::openTag('div', $row) . "\n"; //1
         echo $translator->translate(
          'default.invoice.tax.rate.placement'
         ) . "\n";
+        echo $s->infoIcon('default_include_item_tax') . "\n";
        echo H::closeTag('label') . "\n";
        $body[$include] =
        $s->getSetting('default_include_item_tax');

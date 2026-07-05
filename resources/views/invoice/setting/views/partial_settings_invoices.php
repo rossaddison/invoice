@@ -48,6 +48,7 @@ echo H::openTag('div', $row); //1
         echo $translator->translate(
          'default.invoice.group'
         );
+        echo $s->infoIcon('default_invoice_group');
        echo H::closeTag('label');
        $sdig = 'settings[default_invoice_group]';
        $body[$sdig] =
@@ -107,6 +108,7 @@ echo H::openTag('div', $row); //1
         echo $translator->translate(
          'default.payment.method'
         );
+        echo $s->infoIcon('invoice_default_payment_method');
        echo H::closeTag('label');
        $body[$sdpm]
        = $s->getSetting(
@@ -144,6 +146,7 @@ echo H::openTag('div', $row); //1
         echo $translator->translate(
          'invoices.due.after'
         );
+        echo $s->infoIcon('invoices_due_after');
        echo H::closeTag('label');
        $sda = 'settings[invoices_due_after]';
        $body[$sda] =
@@ -166,6 +169,7 @@ echo H::openTag('div', $row); //1
         echo $translator->translate(
          'generate.invoice.number.for.draft'
         );
+        echo $s->infoIcon('generate_invoice_number_for_draft');
        echo H::closeTag('label');
 
        $body[$snd] = $s->getSetting(
@@ -212,6 +216,7 @@ echo H::openTag('div', $row); //1
         echo $translator->translate(
          'mark.invoices.sent.pdf'
         );
+        echo $s->infoIcon('mark_invoices_sent_pdf');
        echo H::closeTag('label');
        $body[$smsp] = $s->getSetting('mark_invoices_sent_pdf');
 
@@ -265,6 +270,7 @@ echo H::openTag('div', $row); //1
         echo $translator->translate(
          'pdf.include.zugferd'
         );
+        echo $s->infoIcon('include_zugferd');
        echo H::closeTag('label');
 
        $body[$siz] =
@@ -304,6 +310,7 @@ echo H::openTag('div', $row); //1
         'for' => $spw
        ]);
         echo $translator->translate('pdf.watermark');
+        echo $s->infoIcon('pdf_watermark');
        echo H::closeTag('label');
 
        $body[$spw] =
@@ -336,6 +343,7 @@ echo H::openTag('div', $row); //1
         'for' => $spsi
        ]);
         echo $translator->translate('stream');
+        echo $s->infoIcon('pdf_stream_inv');
        echo H::closeTag('label');
 
        $body[$spsi] =
@@ -369,6 +377,7 @@ echo H::openTag('div', $row); //1
        ]);
         echo  new I()->class('bi bi-folder');
         echo $translator->translate('archive');
+        echo $s->infoIcon('pdf_archive_inv');
        echo H::closeTag('label');
 
        $body[$spai] =
@@ -448,6 +457,7 @@ echo H::openTag('div', $row); //1
         echo $translator->translate(
          'default.pdf.template'
         );
+        echo $s->infoIcon('pdf_invoice_template');
        echo H::closeTag('label');
 
        $body[$spit] =
@@ -490,6 +500,7 @@ echo H::openTag('div', $row); //1
         echo $translator->translate(
          'pdf.template.paid'
         );
+        echo $s->infoIcon('pdf_invoice_template_paid');
        echo H::closeTag('label');
 
        $body[$spitp] =
@@ -532,6 +543,7 @@ echo H::openTag('div', $row); //1
         echo $translator->translate(
          'pdf.template.overdue'
         );
+        echo $s->infoIcon('pdf_invoice_template_overdue');
        echo H::closeTag('label');
 
        $body[$spito] = $s->getSetting(
@@ -848,6 +860,7 @@ echo H::openTag('div', $row); //1
         echo $translator->translate(
          'set.to.read.only'
         );
+        echo $s->infoIcon('read_only_toggle');
        echo H::closeTag('label');
 
        $body[$srot] =
@@ -893,6 +906,7 @@ echo H::openTag('div', $row); //1
         echo $translator->translate(
          'mark.invoices.sent.copy'
         );
+        echo $s->infoIcon('mark_invoices_sent_copy');
        echo H::closeTag('label');
 
        $body[$smisc] =

@@ -118,18 +118,26 @@ final class SignupController
 
         $redirect = null;
         if ($formHydrator->populateFromPostAndValidate($signupForm, $request)) {
-            $user = $signupForm->signup();
-            $userId = $user->reqId();
-            if ($userId > 0) {
-                $role = $uR->repoCount() == 1 ? AppConstants::ROLE_ADMIN : AppConstants::ROLE_OBSERVER;
-                if (!$this->assignRoleAndVerify($userId, $role)) {
-                    $redirect = $this->webService->getRedirectResponse('site/signupfailed');
-                } else {
-                    $redirect = $this->processSendSignupEmail(
-                        $user, $currentRoute, $deps, $signupForm);
+            $body = (array) $request->getParsedBody();
+            $turnstileToken = (string) ($body['cf-turnstile-response'] ?? '');
+            $serverParams = $request->getServerParams();
+            $remoteIp = (string) ($serverParams['REMOTE_ADDR'] ?? '');
+            if (!$this->verifyTurnstile($turnstileToken, $remoteIp)) {
+                $redirect = $this->webService->getRedirectResponse('site/signupfailed');
+            } else {
+                $user = $signupForm->signup();
+                $userId = $user->reqId();
+                if ($userId > 0) {
+                    $role = $uR->repoCount() == 1 ? AppConstants::ROLE_ADMIN : AppConstants::ROLE_OBSERVER;
+                    if (!$this->assignRoleAndVerify($userId, $role)) {
+                        $redirect = $this->webService->getRedirectResponse('site/signupfailed');
+                    } else {
+                        $redirect = $this->processSendSignupEmail(
+                            $user, $currentRoute, $deps, $signupForm);
+                    }
                 }
+                $redirect = $redirect ?? $this->webService->getRedirectResponse('site/signupsuccess');
             }
-            $redirect = $redirect ?? $this->webService->getRedirectResponse('site/signupsuccess');
         }
 
         $codeVerifier = Random::string(128);
@@ -151,7 +159,47 @@ final class SignupController
             'telegramToken' => $this->telegramToken,
             'request' => $request,
             'idpList' => $this->idpList($codeChallenge),
+            'turnstileSiteKey' => $this->sR->getSetting('turnstile_site_key'),
         ]);
+    }
+
+    /**
+     * Verify a Cloudflare Turnstile token server-side.
+     * Returns true unconditionally when no secret is configured (dev/localhost).
+     */
+    private function verifyTurnstile(string $token, string $remoteIp): bool
+    {
+        $secret = $this->sR->getSetting('turnstile_secret_key');
+        if ($secret === '' || $secret === '0') {
+            return true;
+        }
+        if ($token === '') {
+            return false;
+        }
+        $payload = http_build_query([
+            'secret'   => $secret,
+            'response' => $token,
+            'remoteip' => $remoteIp,
+        ]);
+        $context = stream_context_create([
+            'http' => [
+                'method'  => 'POST',
+                'header'  => 'Content-Type: application/x-www-form-urlencoded',
+                'content' => $payload,
+                'timeout' => 5,
+            ],
+        ]);
+        $result = @file_get_contents(
+            'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+            false,
+            $context,
+        );
+        if ($result === false) {
+            return false;
+        }
+        /** @var array{success?: bool} $json */
+        $json = (array) json_decode($result, true);
+        return ($json['success'] ?? false) === true;
     }
 
     private function buildOpenBankingAuthUrl(string $openBankChoice): string

@@ -22,6 +22,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        $sepa = 'settings[email_pdf_attachment]';
        echo H::openTag('label', ['for' => $sepa]);
         echo $translator->translate('email.pdf.attachment');
+        echo $s->infoIcon('email_pdf_attachment');
        echo H::closeTag('label');
        $body[$sepa] = $s->getSetting('email_pdf_attachment');
        echo H::openTag('select', [
@@ -51,6 +52,7 @@ echo H::openTag('div', ['class' => 'row']); //1
      $sesm = 'settings[email_send_method]';
      echo H::openTag('label', ['for' => 'email_send_method']);
       echo $translator->translate('email.send.method');
+      echo $s->infoIcon('email_send_method');
      echo H::closeTag('label');
      echo H::openTag('select', [
       'name' => $sesm,

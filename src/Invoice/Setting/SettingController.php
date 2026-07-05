@@ -244,6 +244,7 @@ final class SettingController extends BaseController
             ]),
             // two-factor-authentication
             'tfa' => $this->webViewRenderer->renderPartialAsString($p . 'two_factor_authentication'),
+            'turnstile' => $this->webViewRenderer->renderPartialAsString($p . 'turnstile'),
             'bootstrap5' => $this->bootstrap5Partial(),
         ];
         if ($request->getMethod() === Method::POST) {

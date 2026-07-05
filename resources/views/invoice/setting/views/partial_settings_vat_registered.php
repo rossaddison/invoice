@@ -49,6 +49,7 @@ echo H::openTag('div', $row); //1
          ]);
          echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'enable_vat_registration']);
           echo $translator->translate('enable.vat');
+          echo $s->infoIcon('enable_vat_registration');
          echo H::closeTag('label');
        echo H::closeTag('div'); //8
        echo H::openTag('div', $checkbox); //8

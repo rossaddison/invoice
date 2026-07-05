@@ -165,6 +165,7 @@ echo H::openTag('div', $row); //1
         'for' => $kInstallTest
        ]);
         echo $translator->translate('test.data.install');
+        echo $s->infoIcon('install_test_data');
        echo H::closeTag('label');
        $body[$kInstallTest] =
        $s->getSetting('install_test_data');
@@ -213,6 +214,7 @@ echo H::openTag('div', $row); //1
         'for' => $kDefaultLanguage
        ]);
         echo $translator->translate('language');
+        echo $s->infoIcon('default_language');
        echo H::closeTag('label');
        $body[$kDefaultLanguage] =
        $s->getSetting('default_language');
@@ -244,6 +246,7 @@ echo H::openTag('div', $row); //1
         'for' => $kTimeZone
        ]);
         echo $translator->translate('time.zone');
+        echo $s->infoIcon('time_zone');
        echo H::closeTag('label');
        $body[$kTimeZone] = $s->getSetting('time_zone');
        echo H::openTag('select', [
@@ -274,6 +277,7 @@ echo H::openTag('div', $row); //1
         'for' => $kDefaultCountry
        ]);
         echo $translator->translate('default.country');
+        echo $s->infoIcon('default_country');
        echo H::closeTag('label');
        $body[$kDefaultCountry] =
        $s->getSetting('default_country');
@@ -309,6 +313,7 @@ echo H::openTag('div', $row); //1
         'for' => 'default_list_limit'
        ]);
         echo $translator->translate('default.list.limit');
+        echo $s->infoIcon('default_list_limit');
        echo H::closeTag('label');
        $body[$kDefaultListLimit] =
        $s->getSetting('default_list_limit');
@@ -419,6 +424,7 @@ echo H::openTag('div', $row); //1
         'for' => $kCurrencySymbol
        ]);
         echo $translator->translate('currency.symbol');
+        echo $s->infoIcon('currency_symbol');
        echo H::closeTag('label');
        $body[$kCurrencySymbol] =
        $s->getSetting('currency_symbol');
@@ -439,6 +445,7 @@ echo H::openTag('div', $row); //1
         echo $translator->translate(
          'currency.symbol.placement'
         );
+        echo $s->infoIcon('currency_symbol_placement');
        echo H::closeTag('label');
        $body[$kCurrencySymbolPlacement] =
        $s->getSetting('currency_symbol_placement');
@@ -479,6 +486,7 @@ echo H::openTag('div', $row); //1
         'for' => $kCurrencyCode
        ]);
         echo $translator->translate('currency.code');
+        echo $s->infoIcon('currency_code');
        echo H::closeTag('label');
        $body[$kCurrencyCode] =
        $s->getSetting('currency_code');
@@ -513,6 +521,7 @@ echo H::openTag('div', $row); //1
         echo $translator->translate(
          'tax.rate.decimal.places'
         );
+        echo $s->infoIcon('tax_rate_decimal_places');
        echo H::closeTag('label');
        $body[$kTaxDecimal] =
        $s->getSetting('tax_rate_decimal_places');
@@ -547,6 +556,7 @@ echo H::openTag('div', $row); //1
         'for' => $kNumberFormat
        ]);
         echo $translator->translate('number.format');
+        echo $s->infoIcon('number_format');
        echo H::closeTag('label');
        $body[$kNumberFormat] =
        $s->getSetting('number_format');
@@ -592,6 +602,7 @@ echo H::openTag('div', $row); //1
         'for' => $kQuotePeriod
        ]);
         echo $translator->translate('quote.overview.period');
+        echo $s->infoIcon('quote_overview_period');
        echo H::closeTag('label');
        $body[$kQuotePeriod] =
        $s->getSetting('quote_overview_period');
@@ -649,6 +660,7 @@ echo H::openTag('div', $row); //1
         'for' => $kInvoicePeriod
        ]);
         echo $translator->translate('overview.period');
+        echo $s->infoIcon('invoice_overview_period');
        echo H::closeTag('label');
        $body[$kInvoicePeriod] =
        $s->getSetting('invoice_overview_period');
@@ -708,6 +720,7 @@ echo H::openTag('div', $row); //1
         'for' => 'disable_quickactions'
        ]);
         echo $translator->translate('disable.quickactions');
+        echo $s->infoIcon('disable_quickactions');
        echo H::closeTag('label');
        $body[$kDisableQuickactions] =
        $s->getSetting('disable_quickactions');
@@ -744,6 +757,7 @@ echo H::openTag('div', $row); //1
         'for' => $kDisableSidebar
        ]);
         echo $translator->translate('disable.sidebar');
+        echo $s->infoIcon('disable_sidebar');
        echo H::closeTag('label');
        $body[$kDisableSidebar] =
        $s->getSetting('disable_sidebar');
@@ -770,6 +784,7 @@ echo H::openTag('div', $row); //1
         'for' => $kCustomTitle
        ]);
         echo $translator->translate('custom.title');
+        echo $s->infoIcon('custom_title');
        echo H::closeTag('label');
        $body[$kCustomTitle] =
        $s->getSetting('custom_title');
@@ -792,6 +807,7 @@ echo H::openTag('div', $row); //1
         echo $translator->translate(
          'monospaced.font.for.amounts'
         );
+        echo $s->infoIcon('monospace_amounts');
        echo H::closeTag('label');
        $body[$kMonospaceAmounts] =
        $s->getSetting('monospace_amounts');
@@ -829,6 +845,7 @@ echo H::openTag('div', $row); //1
         echo $translator->translate(
          'open.reports.in.new.tab'
         );
+        echo $s->infoIcon('open_reports_in_new_tab');
        echo H::closeTag('label');
        $body[$kOpenReports] =
        $s->getSetting('open_reports_in_new_tab');
@@ -864,6 +881,7 @@ echo H::openTag('div', $row); //1
         'for' => $kBccMails
        ]);
         echo $translator->translate('bcc.mails.to.admin');
+        echo $s->infoIcon('bcc_mails_to_admin');
        echo H::closeTag('label');
        $body[$kBccMails] =
        $s->getSetting('bcc_mails_to_admin');
@@ -890,6 +908,7 @@ echo H::openTag('div', $row); //1
         'for' => $kCronKey
        ]);
         echo $translator->translate('cron.key');
+        echo $s->infoIcon('cron_key');
        echo H::closeTag('label');
        echo H::openTag('div'); //8
         echo H::openTag('input', [

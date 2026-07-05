@@ -41,11 +41,9 @@ echo H::openTag('div', $row); //1
        echo H::openTag('label', [
         'for' => $kJsonFilename
        ]);
-        echo H::openTag('i', ['class' => 'bi bi-info-circle']);
-        echo H::closeTag('i');
-        echo ' ';
         echo 'Google Translate Json Filename ';
         echo '(eg. my_json_filename.json)';
+        echo $s->infoIcon('google_translate_json_filename');
        echo H::closeTag('label');
        $body[$kJsonFilename] =
        $s->getSetting('google_translate_json_filename');
@@ -61,10 +59,8 @@ echo H::openTag('div', $row); //1
        echo H::openTag('label', [
         'for' => $kLocale
        ]);
-        echo H::openTag('i', ['class' => 'bi bi-info-circle']);
-        echo H::closeTag('i');
-        echo ' ';
         echo 'Google Translate Locale';
+        echo $s->infoIcon('google_translate_locale');
        echo H::closeTag('label');
        $body[$kLocale] =
        $s->getSetting('google_translate_locale');

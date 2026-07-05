@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\Setting\Trait;
 
+use Yiisoft\Html\Html as H;
+
 trait SettingTooltipTrait
 {
 
@@ -150,6 +152,39 @@ trait SettingTooltipTrait
                 . ' To override this setting: The client will receive their'
                 . ' documents in their language provided their language is set'
                 . ' in the client form.',
+            ],
+            'turnstile_site_key' => [
+                'why' => 'The public site key embeds the Cloudflare Turnstile'
+                . ' challenge widget on the signup form. The widget runs a'
+                . ' browser-side challenge and issues a cf-turnstile-response'
+                . ' token that is submitted with the form. Prevents bot'
+                . ' mass-registration by requiring proof-of-human before the'
+                . ' server processes any new account. Leave blank to disable'
+                . ' the widget entirely (localhost / development bypass).',
+                'where' => 'resources/views/signup/signup.php — widget div and'
+                . ' Turnstile JS registration.'
+                . ' src/Auth/Controller/SignupController.php signup() — site'
+                . ' key fetched from sR and passed to the view.'
+                . ' Configured in resources/views/invoice/setting/views/'
+                . 'partial_settings_turnstile.php via Settings > Cloudflare'
+                . ' Turnstile tab.',
+            ],
+            'turnstile_secret_key' => [
+                'why' => 'The private secret key is used server-side to verify'
+                . ' the cf-turnstile-response token submitted with the signup'
+                . ' form. A POST is made to'
+                . ' challenges.cloudflare.com/turnstile/v0/siteverify with the'
+                . ' token and visitor IP before any user account is created.'
+                . ' A failed or missing token redirects to site/signupfailed.'
+                . ' If blank or set to 0, verification is skipped entirely'
+                . ' (dev bypass — never set 0 in production).',
+                'where' => 'src/Auth/Controller/SignupController.php'
+                . ' verifyTurnstile() private method — performs the HTTP POST'
+                . ' to Cloudflare and returns bool.'
+                . ' signup() calls verifyTurnstile before signupForm->signup().'
+                . ' Configured in resources/views/invoice/setting/views/'
+                . 'partial_settings_turnstile.php via Settings > Cloudflare'
+                . ' Turnstile tab.',
             ],
         ];
     }
@@ -363,7 +398,7 @@ trait SettingTooltipTrait
             'include_delivery_period' => [
                 'why' => 'A group of business terms providing information on the'
                 . ' invoice period. Also called delivery period. If the group'
-                . ' is used, the invoiceing period start date and/or end date'
+                . ' is used, the invoicing period start date and/or end date'
                 . ' must be used. ',
                 'where' => 'src/Invoice/Delivery/DeliveryController',
             ],
@@ -693,6 +728,33 @@ trait SettingTooltipTrait
     public function tooltipTitle(string $setting): string
     {
         return $this->tooltipWhy($setting) . ' | ' . $this->tooltipWhere($setting);
+    }
+
+    /**
+     * Returns a complete Bootstrap tooltip info-icon HTML fragment for use
+     * directly after a label's text content in any partial view:
+     *
+     *   echo H::openTag('label', ['for' => 'settings[some_key]']);
+     *    echo 'Label text';
+     *    echo $s->infoIcon('some_key');
+     *   echo H::closeTag('label');
+     *
+     * Returns an empty string when the setting has no entry in tooltipArray(),
+     * so it is safe to call on any key without a guard.
+     */
+    public function infoIcon(string $setting): string
+    {
+        $title = $this->tooltipTitle($setting);
+        if ($title === ' | ') {
+            return '';
+        }
+        return H::openTag('i', [
+            'class'             => 'bi bi-info-circle ms-1',
+            'data-bs-toggle'    => 'tooltip',
+            'data-bs-placement' => 'bottom',
+            'title'             => $title,
+        ])
+        . H::closeTag('i');
     }
 
     /**

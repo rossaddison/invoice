@@ -39,6 +39,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         '#_create_a_sender',
         ['class' => 'text-decoration-none']
         );
+        echo $s->infoIcon('storecove_country');
        echo H::closeTag('label');
        $body['settings[storecove_country]'] =
        $s->getSetting('storecove_country');
@@ -99,6 +100,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         echo $translator->translate(
          'storecove.sender.identifier'
         );
+        echo $s->infoIcon('storecove_sender_identifier');
        echo H::closeTag('label');
        $body['settings[storecove_sender_identifier]'] =
        $s->getSetting('storecove_sender_identifier');
@@ -166,6 +168,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         echo $translator->translate(
          'storecove.sender.identifier.basis'
         );
+        echo $s->infoIcon('storecove_sender_identifier_basis');
        echo H::closeTag('label');
        $body['settings[storecove_sender_identifier' .
         '_basis]'] = $s->getSetting(

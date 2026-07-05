@@ -121,6 +121,7 @@ echo H::openTag('div', $row); //1
         echo $translator->translate(
          'generate.quote.number.for.draft'
         );
+        echo $s->infoIcon('generate_quote_number_for_draft');
        echo H::closeTag('label');
        $body[$gqn] = $s->getSetting('generate_quote_number_for_draft');
        echo H::openTag('select', array_merge(['name' => $gqn, 'id' => $gqn],

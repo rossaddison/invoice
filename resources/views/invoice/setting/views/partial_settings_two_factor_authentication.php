@@ -42,6 +42,7 @@ echo H::openTag('div', ['class' => 'row']); //1
           echo $translator->translate(
            'two.factor.authentication.enable'
           );
+          echo $s->infoIcon('enable_tfa');
          echo H::closeTag('label');
        echo H::closeTag('div'); //8
       echo H::closeTag('div'); //7

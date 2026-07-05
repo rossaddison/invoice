@@ -90,6 +90,7 @@ echo H::openTag('div', $row); //1
        echo $translator->translate(
         'peppol.debug.with.emojis'
        );
+       echo $s->infoIcon('peppol_debug_with_emojis');
       echo H::closeTag('label');
       $body[$kPeppolDebugEmojis] =
       $s->getSetting(
@@ -256,10 +257,10 @@ echo H::openTag('div', $row); //1
       echo H::openTag('label', [
        'for' => $kPeppolDocCurrency
       ]);
-       echo '🛈';
        echo $translator->translate(
         'peppol.document.currency'
        );
+       echo $s->infoIcon('peppol_document_currency');
       echo H::closeTag('label');
       $body[$kPeppolDocCurrency] = $s->getSetting('peppol_document_currency')
         ?: $config_tax_currency;
@@ -359,6 +360,7 @@ echo H::openTag('div', $row); //1
            $translator->translate('peppol.include.delivery.period'), $iP,
            ['class' => 'text-decoration-none']
           );
+          echo $s->infoIcon('include_delivery_period');
          echo H::closeTag('label');
        echo H::closeTag('div'); //8
       echo H::closeTag('div'); //7
@@ -371,6 +373,7 @@ echo H::openTag('div', $row); //1
         $translator->translate('peppol.stand.in.code'), $iP,
         ['class' => 'text-decoration-none']
        );
+       echo $s->infoIcon('stand_in_code');
       echo H::closeTag('label');
       echo H::openTag('div', $inputGroup); //7
        $body[$kStandInCode] =
@@ -417,6 +420,7 @@ echo H::openTag('div', $row); //1
        echo $translator->translate(
         'peppol.xml.stream'
        );
+       echo $s->infoIcon('peppol_xml_stream');
       echo H::closeTag('label');
       $body[$kPeppolXmlStream] =
       $s->getSetting(

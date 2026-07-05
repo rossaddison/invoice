@@ -27,6 +27,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        $sml = 'settings[mpdf_ltr]';
        echo H::openTag('label', ['for' => $sml]);
         echo $translator->translate('mpdf.ltr');
+        echo $s->infoIcon('mpdf_ltr');
        echo H::closeTag('label');
        $body[$sml] = $s->getSetting('mpdf_ltr');
        echo H::openTag('select', [
