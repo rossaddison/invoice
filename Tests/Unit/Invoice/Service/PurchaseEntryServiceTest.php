@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Invoice\Service;
 
 use App\Infrastructure\Persistence\PurchaseEntry\PurchaseEntry;
-use App\Invoice\PurchaseEntry\PurchaseEntryRepository;
+use App\Invoice\PurchaseEntry\PurchaseEntryRepositoryInterface;
 use App\Invoice\PurchaseEntry\PurchaseEntryService;
 use DateTimeImmutable;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -13,10 +13,10 @@ use PHPUnit\Framework\TestCase;
 
 final class PurchaseEntryServiceTest extends TestCase
 {
-    /** @return array{MockObject&PurchaseEntryRepository, PurchaseEntryService} */
+    /** @return array{MockObject&PurchaseEntryRepositoryInterface, PurchaseEntryService} */
     private function makeService(): array
     {
-        $mock = $this->createMock(PurchaseEntryRepository::class);
+        $mock = $this->createMock(PurchaseEntryRepositoryInterface::class);
         return [$mock, new PurchaseEntryService($mock)];
     }
 

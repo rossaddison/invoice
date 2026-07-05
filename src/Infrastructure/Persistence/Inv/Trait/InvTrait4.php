@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\Inv\Trait;
 
+use App\Invoice\Setting\SettingRepositoryInterface;
 use DateTimeImmutable;
 
 trait InvTrait4
 {
 
-    public function setDateDue(\App\Invoice\Setting\SettingRepository $sR): void
+    public function setDateDue(SettingRepositoryInterface $sR): void
     {
         if (empty($sR->getSetting('invoices_due_after'))) {
             $days = 30;

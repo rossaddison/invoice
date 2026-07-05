@@ -20,7 +20,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  * @template TEntity of Inv
  * @extends Select\Repository<TEntity>
  */
-final class InvRepository extends Select\Repository
+final class InvRepository extends Select\Repository implements InvRepositoryInterface
 {
     use InvClientTrait;
     use InvFilterTrait;
@@ -140,6 +140,7 @@ final class InvRepository extends Select\Repository
             'id' => 'desc', 'status' => 'asc']);
     }
 
+    #[\Override]
     public function save(array|Inv|null $inv): void
     {
         $this->entityWriter->write([$inv]);

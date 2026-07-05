@@ -34,7 +34,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  * @template TEntity of Setting
  * @extends Select\Repository<TEntity>
  */
-final class SettingRepository extends Select\Repository
+final class SettingRepository extends Select\Repository implements SettingRepositoryInterface
 {
     use SettingConfigTrait;
     use SettingFileFolderTrait;
@@ -251,6 +251,7 @@ final class SettingRepository extends Select\Repository
      * @param string $key
      * @return string
      */
+    #[\Override]
     public function getSetting(string $key): string
     {
         $this->loadSettings();

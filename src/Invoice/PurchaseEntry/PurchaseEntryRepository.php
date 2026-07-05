@@ -16,7 +16,7 @@ use App\Invoice\PurchaseEntry\PurchaseEntryVatAggregator;
  * @template TEntity of PurchaseEntry
  * @extends Select\Repository<TEntity>
  */
-final class PurchaseEntryRepository extends Select\Repository
+final class PurchaseEntryRepository extends Select\Repository implements PurchaseEntryRepositoryInterface
 {
     /**
      * @param Select<TEntity> $select
@@ -53,6 +53,7 @@ final class PurchaseEntryRepository extends Select\Repository
      * @param array|PurchaseEntry|null $entry
      * @throws Throwable
      */
+    #[\Override]
     public function save(array|PurchaseEntry|null $entry): void
     {
         $this->entityWriter->write([$entry]);
@@ -62,6 +63,7 @@ final class PurchaseEntryRepository extends Select\Repository
      * @param array|PurchaseEntry|null $entry
      * @throws Throwable
      */
+    #[\Override]
     public function delete(array|PurchaseEntry|null $entry): void
     {
         $this->entityWriter->delete([$entry]);

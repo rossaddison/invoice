@@ -13,7 +13,7 @@ use Cycle\ORM\Select;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Data\Cycle\Writer\EntityWriter;
+use Yiisoft\Data\Writer\DataWriterInterface;
 
 /**
  * Unit tests for CycleOrmAs4MessageRepository.
@@ -38,12 +38,12 @@ class CycleOrmAs4MessageRepositoryTest extends TestCase
                        ->disableOriginalConstructor()
                        ->getMock();
 
-        $entityWriter = $this->createMock(EntityWriter::class);
+        $entityWriter = $this->createMock(DataWriterInterface::class);
 
         return new CycleOrmAs4MessageRepository($select, $entityWriter, $database);
     }
 
-    private function makeEntityWriterRepository(EntityWriter&MockObject $entityWriter): CycleOrmAs4MessageRepository
+    private function makeEntityWriterRepository(DataWriterInterface&MockObject $entityWriter): CycleOrmAs4MessageRepository
     {
         /** @var Select<As4Message>&MockObject $select */
         $select = $this->getMockBuilder(Select::class)
@@ -185,7 +185,7 @@ class CycleOrmAs4MessageRepositoryTest extends TestCase
     public function testSaveDelegatesToEntityWriter(): void
     {
         $message      = $this->newMessage();
-        $entityWriter = $this->createMock(EntityWriter::class);
+        $entityWriter = $this->createMock(DataWriterInterface::class);
         $entityWriter->expects($this->once())
                      ->method('write')
                      ->with([$message]);

@@ -11,7 +11,7 @@ use Cycle\Database\DatabaseInterface;
 use Cycle\ORM\Select;
 use DateTime;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
-use Yiisoft\Data\Cycle\Writer\EntityWriter;
+use Yiisoft\Data\Writer\DataWriterInterface;
 use Yiisoft\Data\Reader\Sort;
 
 /**
@@ -34,7 +34,7 @@ final class CycleOrmAs4MessageRepository extends Select\Repository implements As
      */
     public function __construct(
         Select $select,
-        private readonly EntityWriter $entityWriter,
+        private readonly DataWriterInterface $entityWriter,
         private readonly DatabaseInterface $database,
     ) {
         parent::__construct($select);

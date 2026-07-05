@@ -15,7 +15,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  * @template TEntity of InvItem
  * @extends Select\Repository<TEntity>
  */
-final class InvItemRepository extends Select\Repository
+final class InvItemRepository extends Select\Repository implements InvItemRepositoryInterface
 {
     /**
      * @param Select<TEntity> $select
@@ -56,6 +56,7 @@ final class InvItemRepository extends Select\Repository
     /**
      * @param array|InvItem|null $invitem
      */
+    #[\Override]
     public function save(array|InvItem|null $invitem): void
     {
         $this->entityWriter->write([$invitem]);

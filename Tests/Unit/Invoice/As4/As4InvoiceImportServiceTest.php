@@ -7,11 +7,11 @@ namespace Tests\Unit\Invoice\As4;
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\As4\As4InvoiceImportService;
 use App\Invoice\As4\UblXmlParser;
-use App\Invoice\ClientPeppol\ClientPeppolRepository;
+use App\Invoice\ClientPeppol\ClientPeppolRepositoryInterface;
 use App\Infrastructure\Persistence\ClientPeppol\ClientPeppol;
-use App\Invoice\Inv\InvRepository;
-use App\Invoice\InvItem\InvItemRepository;
-use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Inv\InvRepositoryInterface;
+use App\Invoice\InvItem\InvItemRepositoryInterface;
+use App\Invoice\Setting\SettingRepositoryInterface;
 use App\Invoice\Ubl\Schema;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -22,10 +22,10 @@ final class As4InvoiceImportServiceTestFixture
 {
     public function __construct(
         public readonly As4InvoiceImportService $service,
-        public readonly ClientPeppolRepository&MockObject $clientPeppolRepository,
-        public readonly InvRepository&MockObject $invRepository,
-        public readonly InvItemRepository&MockObject $invItemRepository,
-        public readonly SettingRepository&MockObject $settingRepository,
+        public readonly ClientPeppolRepositoryInterface&MockObject $clientPeppolRepository,
+        public readonly InvRepositoryInterface&MockObject $invRepository,
+        public readonly InvItemRepositoryInterface&MockObject $invItemRepository,
+        public readonly SettingRepositoryInterface&MockObject $settingRepository,
         public readonly LoggerInterface&MockObject $logger,
     ) {}
 }
@@ -85,10 +85,10 @@ XML;
 
     private function createFixture(): As4InvoiceImportServiceTestFixture
     {
-        $clientPeppolRepository = $this->createMock(ClientPeppolRepository::class);
-        $invRepository          = $this->createMock(InvRepository::class);
-        $invItemRepository      = $this->createMock(InvItemRepository::class);
-        $settingRepository      = $this->createMock(SettingRepository::class);
+        $clientPeppolRepository = $this->createMock(ClientPeppolRepositoryInterface::class);
+        $invRepository          = $this->createMock(InvRepositoryInterface::class);
+        $invItemRepository      = $this->createMock(InvItemRepositoryInterface::class);
+        $settingRepository      = $this->createMock(SettingRepositoryInterface::class);
         $logger                 = $this->createMock(LoggerInterface::class);
 
         $settingRepository->method('getSetting')->willReturn('');

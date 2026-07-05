@@ -15,7 +15,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  * @template TEntity of ClientPeppol
  * @extends Select\Repository<TEntity>
  */
-final class ClientPeppolRepository extends Select\Repository
+final class ClientPeppolRepository extends Select\Repository implements ClientPeppolRepositoryInterface
 {
     /**
      * @param Select<TEntity> $select
@@ -131,6 +131,7 @@ final class ClientPeppolRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
+    #[\Override]
     public function findByEndpointId(string $endpointId, string $schemeId): ?ClientPeppol
     {
         $query = $this->select()

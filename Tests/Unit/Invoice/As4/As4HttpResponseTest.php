@@ -65,7 +65,7 @@ class As4HttpResponseTest extends TestCase
 
     // ── isRetriable ───────────────────────────────────────────────────────────
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('retriableCodeProvider')]
+    /** @dataProvider retriableCodeProvider */
     public function testIsRetriableTrueForRetriableCodes(int $code): void
     {
         $this->assertTrue((new As4HttpResponse($code, ''))->isRetriable());
@@ -84,7 +84,7 @@ class As4HttpResponseTest extends TestCase
         ];
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('nonRetriableCodeProvider')]
+    /** @dataProvider nonRetriableCodeProvider */
     public function testIsRetriableFalseForNonRetriableCodes(int $code): void
     {
         $this->assertFalse((new As4HttpResponse($code, ''))->isRetriable());

@@ -6,10 +6,10 @@ namespace App\Invoice\As4;
 
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\InvItem\InvItem;
-use App\Invoice\ClientPeppol\ClientPeppolRepository;
-use App\Invoice\Inv\InvRepository;
-use App\Invoice\InvItem\InvItemRepository;
-use App\Invoice\Setting\SettingRepository;
+use App\Invoice\ClientPeppol\ClientPeppolRepositoryInterface;
+use App\Invoice\Inv\InvRepositoryInterface;
+use App\Invoice\InvItem\InvItemRepositoryInterface;
+use App\Invoice\Setting\SettingRepositoryInterface;
 use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 use Yiisoft\Security\Random;
@@ -18,10 +18,10 @@ final class As4InvoiceImportService implements As4PayloadHandlerInterface
 {
     public function __construct(
         private readonly UblXmlParser           $parser,
-        private readonly ClientPeppolRepository $clientPeppolRepository,
-        private readonly InvRepository          $invRepository,
-        private readonly InvItemRepository      $invItemRepository,
-        private readonly SettingRepository      $settingRepository,
+        private readonly ClientPeppolRepositoryInterface $clientPeppolRepository,
+        private readonly InvRepositoryInterface          $invRepository,
+        private readonly InvItemRepositoryInterface      $invItemRepository,
+        private readonly SettingRepositoryInterface $settingRepository,
         private readonly LoggerInterface        $logger,
     ) {}
 

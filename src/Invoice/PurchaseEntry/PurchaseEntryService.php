@@ -9,7 +9,7 @@ use App\Invoice\AppConstants;
 
 final readonly class PurchaseEntryService
 {
-    public function __construct(private PurchaseEntryRepository $repository)
+    public function __construct(private PurchaseEntryRepositoryInterface $repository)
     {
     }
 

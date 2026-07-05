@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use App\Infrastructure\Persistence\As4Message\CycleOrmAs4MessageRepository;
+use Yiisoft\Data\Cycle\Writer\EntityWriter;
+use Yiisoft\Data\Writer\DataWriterInterface;
 use App\Invoice\As4\As4DuplicateDetector;
 use App\Invoice\As4\As4DuplicateDetectorInterface;
 use App\Invoice\As4\As4EnvelopeBuilderInterface;
@@ -65,6 +67,7 @@ $retryPolicy = ($_ENV['AS4_RETRY_POLICY'] ?? 'fixed') === 'exponential'
 
 return [
     // ── Inbound interfaces (always active) ────────────────────────────────────
+    DataWriterInterface::class            => EntityWriter::class,
     As4MessageRepositoryInterface::class  => CycleOrmAs4MessageRepository::class,
     As4DuplicateDetectorInterface::class  => As4DuplicateDetector::class,
     As4ReceiptGeneratorInterface::class   => As4ReceiptGenerator::class,
