@@ -206,7 +206,33 @@ return [
         ->name('site/termsofservice'),
     // Auth
     Route::methods([$mG, $mP], '/login')
-        ->middleware(LRM::class)
+        // Outer: 30 total POSTs per 60 s on /login, regardless of IP
+        ->middleware(fn(
+            ResponseFactoryInterface $responseFactory,
+            StorageInterface $storage,
+        ) => new LRM(
+            new Counter($storage, 30, 60),
+            $responseFactory,
+            new LimitAlways(),
+            new TooManyRequestsMiddleware($responseFactory),
+        ))
+        // Inner: 5 per 60 s per real IP via CF-Connecting-IP
+        ->middleware(fn(
+            ResponseFactoryInterface $responseFactory,
+            StorageInterface $storage,
+        ) => new LRM(
+            new Counter($storage, 5, 60),
+            $responseFactory,
+            new LimitCallback(static function (ServerRequestInterface $r): string {
+                $srv  = $r->getServerParams();
+                $cfIp = isset($srv['HTTP_CF_CONNECTING_IP']) ? (string) $srv['HTTP_CF_CONNECTING_IP'] : '';
+                $xfw  = isset($srv['HTTP_X_FORWARDED_FOR'])  ? (string) $srv['HTTP_X_FORWARDED_FOR']  : '';
+                $rem  = isset($srv['REMOTE_ADDR'])            ? (string) $srv['REMOTE_ADDR']            : '';
+                $ip   = $cfIp !== '' ? $cfIp : ($xfw !== '' ? $xfw : ($rem !== '' ? $rem : 'unknown'));
+                return sha1('login_route' . $ip);
+            }),
+            new TooManyRequestsMiddleware($responseFactory),
+        ))
         ->action([AuthController::class, 'login'])
         ->name('auth/login'),
     Route::get('/authclient')

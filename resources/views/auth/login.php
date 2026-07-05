@@ -6,9 +6,11 @@ use App\Widget\Button;
 use App\Widget\IdentityProviderButton;
 use Yiisoft\{FormModel\Field as F};
 use Yiisoft\Html\{Html as H, Tag\A, Tag\Img, Tag\Form, Tag\Span};
+use Yiisoft\View\WebView;
 use Yiisoft\Yii\AuthClient\Widget\AuthChoice;
 
 /**
+ * @var WebView                                     $this
  * @var App\Auth\Form\LoginForm                     $formModel
  * @var App\Invoice\Setting\SettingRepository       $s
  * @var Yiisoft\Router\CurrentRoute                 $currentRoute
@@ -26,6 +28,15 @@ use Yiisoft\Yii\AuthClient\Widget\AuthChoice;
  */
 
 $styleTagFadeOut;
+
+$turnstileSiteKey = $s->getSetting('turnstile_site_key');
+if ($turnstileSiteKey !== '') {
+    $this->registerJsFile(
+        'https://challenges.cloudflare.com/turnstile/v0/api.js',
+        WebView::POSITION_END,
+        ['async' => true, 'defer' => true],
+    );
+}
 
 echo H::openTag('div', ['class' => (string) $class[1]]);
  echo H::openTag('div', ['class' => (string) $class[2]]);
@@ -129,6 +140,9 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
     echo F::errorSummary($formModel)
     ->errors($errors)
     ->header($translator->translate('error.summary'));
+    if ($turnstileSiteKey !== '') {
+        echo H::tag('div', '', ['class' => 'cf-turnstile', 'data-sitekey' => $turnstileSiteKey]);
+    }
     echo F::submitButton()
     ->buttonId('login-button')
     ->buttonClass((string) $class[15])

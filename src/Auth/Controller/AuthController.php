@@ -9,7 +9,7 @@ use chillerlan\QRCode\QROptions;
 use App\Auth\{AuthService, CallbackDeps, Form\LoginForm,
     Form\TwoFactorAuthenticationSetupForm,
     Form\TwoFactorAuthenticationVerifyLoginForm, Trait\Callback, Trait\ClassList,
-    Trait\Oauth2, Client\OpenBanking, Permissions, TokenRepository};
+    Trait\Oauth2, Trait\TurnstileVerification, Client\OpenBanking, Permissions, TokenRepository};
 use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\Setting\SettingRepository;
 use App\Auth\Trait\TwoFactorAuth;
@@ -46,7 +46,9 @@ final class AuthController
     use ClassList;
 
     use TwoFactorAuth;
-    
+
+    use TurnstileVerification;
+
     //initialize .env file at root with oauth2.0 settings
     use Oauth2;
 
@@ -190,6 +192,17 @@ final class AuthController
         $loginForm = new LoginForm($this->authService, $translator);
         $openBankChoice = $this->sR->getSetting('open_banking_provider');
         $openBankingAuthUrl = $this->buildOpenBankingAuthUrl($openBankChoice);
+
+        if ($request->getMethod() === Method::POST) {
+            $ip = $this->secHelper->getClientIpAddress($request);
+            if (!$this->secHelper->checkRateLimit(sha1('login_ctrl' . $ip))) {
+                return $this->webService->getRedirectResponse('auth/login');
+            }
+            $body = (array) $request->getParsedBody();
+            if (!$this->verifyTurnstile((string) ($body['cf-turnstile-response'] ?? ''), $ip)) {
+                return $this->webService->getRedirectResponse('auth/login');
+            }
+        }
 
         $response = null;
         if ($formHydrator->populateFromPostAndValidate($loginForm, $request)) {
