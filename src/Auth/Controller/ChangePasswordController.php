@@ -44,12 +44,9 @@ final class ChangePasswordController
         FormHydrator $formHydrator,
         ChangePasswordForm $changePasswordForm,
     ): ResponseInterface {
-        if ($authService->isGuest()) {
-            return $this->redirectToMain();
-        }
-        $identityId = $this->currentUser->getIdentity()->getId();
-        $identity = null !== $identityId ? $identityRepository->findIdentity($identityId) : null;
-        if (null === $identity) {
+        $identityId = $authService->isGuest() ? null : $this->currentUser->getIdentity()->getId();
+        $identity   = $identityId !== null ? $identityRepository->findIdentity($identityId) : null;
+        if ($identity === null) {
             return $this->redirectToMain();
         }
 /**
@@ -61,12 +58,12 @@ final class ChangePasswordController
         $successRedirect = null;
 
         if ($request->getMethod() === Method::POST) {
-            $ip = $this->secHelper->getClientIpAddress($request);
-            if (!$this->secHelper->checkRateLimit(hash('sha256', 'change_ctrl' . $ip))) {
-                return $this->redirectToMain();
-            }
-            $body = (array) $request->getParsedBody();
-            if (!$this->verifyTurnstile((string) ($body['cf-turnstile-response'] ?? ''), $ip)) {
+            $ip    = $this->secHelper->getClientIpAddress($request);
+            $body  = (array) $request->getParsedBody();
+            $token = (string) ($body['cf-turnstile-response'] ?? '');
+            if (!$this->secHelper->checkRateLimit(hash('sha256', 'change_ctrl' . $ip))
+                || !$this->verifyTurnstile($token, $ip)
+            ) {
                 return $this->redirectToMain();
             }
         }
