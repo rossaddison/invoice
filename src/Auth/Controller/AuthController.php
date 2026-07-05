@@ -194,12 +194,12 @@ final class AuthController
         $openBankingAuthUrl = $this->buildOpenBankingAuthUrl($openBankChoice);
 
         if ($request->getMethod() === Method::POST) {
-            $ip = $this->secHelper->getClientIpAddress($request);
-            if (!$this->secHelper->checkRateLimit(hash('sha256', 'login_ctrl' . $ip))) {
-                return $this->webService->getRedirectResponse('auth/login');
-            }
-            $body = (array) $request->getParsedBody();
-            if (!$this->verifyTurnstile((string) ($body['cf-turnstile-response'] ?? ''), $ip)) {
+            $ip    = $this->secHelper->getClientIpAddress($request);
+            $body  = (array) $request->getParsedBody();
+            $token = (string) ($body['cf-turnstile-response'] ?? '');
+            if (!$this->secHelper->checkRateLimit(hash('sha256', 'login_ctrl' . $ip))
+                || !$this->verifyTurnstile($token, $ip)
+            ) {
                 return $this->webService->getRedirectResponse('auth/login');
             }
         }
@@ -211,9 +211,6 @@ final class AuthController
                 $this->logout($uR, $uiR);
             }
         }
-        if ($response !== null) {
-            return $response;
-        }
 
         $codeVerifier = Random::string(128);
         $this->session->set('code_verifier', $codeVerifier);
@@ -222,7 +219,7 @@ final class AuthController
         $errors = $loginForm->isValidated()
             ? $loginForm->getValidationResult()->getErrorMessagesIndexedByProperty()
             : [];
-        return $this->webViewRenderer->render(
+        return $response ?? $this->webViewRenderer->render(
             'login',
             [
                 'class' => $this->classList(),
