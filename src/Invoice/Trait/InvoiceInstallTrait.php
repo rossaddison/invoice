@@ -136,7 +136,6 @@ trait InvoiceInstallTrait
             'no_front_site_slider_page' => 1,
             'no_front_team_page' => 1,
             'no_front_testimonial_page' => 1,
-            'no_developer_sandbox_hmrc_continue_button' => 1,
             'no_facebook_continue_button' => 1,
             'no_github_continue_button' => 1,
             'no_google_continue_button' => 1,

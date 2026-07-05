@@ -86,9 +86,6 @@ trait Oauth2
     // IdentityProviderList
     private function idpList(string $codeChallenge): array
     {
-        $noDeveloperSandboxHmrcContinueButton =
-            $this->sR->getSetting('no_developer_sandbox_hmrc_continue_button')
-                == '1' ? true : false;
         $noGithubContinueButton =
             $this->sR->getSetting('no_github_continue_button')
                 == '1' ? true : false;
@@ -120,15 +117,6 @@ trait Oauth2
             $this->sR->getSetting('no_yandex_continue_button')
                 == '1' ? true : false;
         return [
-            'developersandboxhmrc' => [
-                'noflag' => $noDeveloperSandboxHmrcContinueButton,
-                'params' => [
-                    'code_challenge' => $codeChallenge,
-                    'code_challenge_method' => 'S256',
-                ],
-                'buttonName' =>
-                  $this->translator->translate('continue.with.developersandboxhmrc'),
-            ],
             'facebook' => [
                 'noflag' => $noFacebookContinueButton,
                 'params' => [],

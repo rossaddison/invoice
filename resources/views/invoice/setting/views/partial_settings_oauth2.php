@@ -14,7 +14,6 @@ use Yiisoft\Html\Tag\Option;
 * Related logic: see resources\views\auth\login
 * Related logic: see resource\views\signup\signup
 * Related logic: see App\Invoice\InvoiceController
-*   no_developer_sandbox_hmrc_continue_button
 * Related logic: see App\Invoice\Setting\SettingController
 *   function tabIndex oauth2
 * @var App\Invoice\Setting\SettingRepository $s
@@ -24,7 +23,6 @@ use Yiisoft\Html\Tag\Option;
 * @var array $body
 */
 
-$kNoHmrc = 'settings[no_developer_sandbox_hmrc_continue_button]';
 $kNoGithub = 'settings[no_github_continue_button]';
 $kNoGoogle = 'settings[no_google_continue_button]';
 $kNoFacebook = 'settings[no_facebook_continue_button]';
@@ -50,32 +48,6 @@ echo H::openTag('div', ['class' => 'row']); //1
    echo H::closeTag('div'); //4
    echo H::openTag('div', ['class' => 'card-body']); //4
     echo H::openTag('div', ['class' => 'mb-3']); //5
-
-     echo H::openTag('div', ['class' => 'form-check']); //6
-      $body[$kNoHmrc] = $s->getSetting('no_developer_sandbox_hmrc_continue_button');
-      echo H::tag('input', '', [
-       'type' => 'hidden',
-       'name' => $kNoHmrc,
-       'value' => '0'
-      ]);
-      echo H::tag('input', '', [
-       'type' => 'checkbox',
-       'class' => 'form-check-input',
-       'id' => 'no_developer_sandbox_hmrc_continue_button',
-       'name' => $kNoHmrc,
-       'value' => '1',
-       'checked' => $body[$kNoHmrc] == 1
-      ]);
-      echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'no_developer_sandbox_hmrc_continue_button']);
-       echo H::tag('img', '', [
-        'src' => '/img/govuk-opengraph-image.png',
-        'width' => '12',
-        'height' => '12'
-       ]);
-       echo chr(32) . $translator->translate('gov.developer.sandbox') . chr(32)
-       . $translator->translate('gov.developer.sandbox.uk');
-      echo H::closeTag('label');
-     echo H::closeTag('div'); //6
 
      echo H::openTag('div', ['class' => 'form-check']); //6
       $body[$kNoGithub] = $s->getSetting('no_github_continue_button');

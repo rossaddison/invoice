@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Invoice\UserInv;
 
-use App\Auth\Controller\AuthController;
 use App\Auth\Permissions;
 use App\Invoice\AppConstants;
 use App\Invoice\BaseController;
@@ -395,10 +394,7 @@ final class UserInvController extends BaseController
         if ((int) $timestamp + 3600 >= time()) {
             $this->processValidToken($tokenWithoutTimestamp, $tokenType, $d, $language, $_language);
         }
-        $redirectRoute = $tokenType === AuthController::DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN
-            ? 'backend/hmrc'
-            : 'site/index';
-        return $this->webService->getRedirectResponse($redirectRoute);
+        return $this->webService->getRedirectResponse('site/index');
     }
 
     /**
