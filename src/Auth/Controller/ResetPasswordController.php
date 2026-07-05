@@ -7,11 +7,14 @@ namespace App\Auth\Controller;
 use App\Auth\Form\ResetPasswordForm;
 use App\Auth\IdentityRepository as idR;
 use App\Auth\TokenRepository as tR;
+use App\Auth\Trait\TurnstileVerification;
+use App\Invoice\Setting\SettingRepository;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Yiisoft\FormModel\FormHydrator;
+use Yiisoft\Http\Method;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Security\TokenMask;
@@ -20,6 +23,8 @@ use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class ResetPasswordController
 {
+    use TurnstileVerification;
+
     public const string REQUEST_PASSWORD_RESET_TOKEN = 'request-password-reset';
 
     public function __construct(
@@ -28,6 +33,8 @@ final class ResetPasswordController
         private readonly UrlGenerator $urlGenerator,
         private readonly TranslatorInterface $translator,
         private readonly LoggerInterface $logger,
+        private readonly AuthSecurityHelper $secHelper,
+        private readonly SettingRepository $sR,
     ) {
         // withControllerName returns a new instance so reassignment is needed
         $this->webViewRenderer = $webViewRenderer->withControllerName(
@@ -75,10 +82,24 @@ final class ResetPasswordController
         ) {
             return $this->failedReset();
         }
+
+        $turnstileSiteKey = $this->sR->getSetting('turnstile_site_key');
+
+        if ($request->getMethod() === Method::POST) {
+            $ip = $this->secHelper->getClientIpAddress($request);
+            if (!$this->secHelper->checkRateLimit(sha1('reset_ctrl' . $ip))) {
+                return $this->failedReset();
+            }
+            $body = (array) $request->getParsedBody();
+            if (!$this->verifyTurnstile((string) ($body['cf-turnstile-response'] ?? ''), $ip)) {
+                return $this->failedReset();
+            }
+        }
+
         if (!$formHydrator->populateFromPostAndValidate($resetPasswordForm, $request)) {
             return $this->webViewRenderer->render(
                 'resetpassword',
-                ['formModel' => $resetPasswordForm, 'token' => $maskedToken],
+                ['formModel' => $resetPasswordForm, 'token' => $maskedToken, 'turnstileSiteKey' => $turnstileSiteKey],
             );
         }
         // 1.) setPassword in User

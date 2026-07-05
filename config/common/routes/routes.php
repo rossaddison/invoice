@@ -337,6 +337,33 @@ return [
         ->name('auth/forgotpassword'),
     Route::methods([$mG, $mP],
             '/resetpassword/resetpassword/{token}')
+        // Global path counter — 10 POSTs per 60 s; token gate makes this low-traffic
+        ->middleware(fn(
+            ResponseFactoryInterface $responseFactory,
+            StorageInterface $storage,
+        ) => new LRM(
+            new Counter($storage, 10, 60),
+            $responseFactory,
+            new LimitAlways(),
+            new TooManyRequestsMiddleware($responseFactory),
+        ))
+        // Per real-IP via CF-Connecting-IP; CAS fail → 429
+        ->middleware(fn(
+            ResponseFactoryInterface $responseFactory,
+            StorageInterface $storage,
+        ) => new LRM(
+            new Counter($storage, 3, 60),
+            $responseFactory,
+            new LimitCallback(static function (ServerRequestInterface $r): string {
+                $srv  = $r->getServerParams();
+                $cfIp = isset($srv['HTTP_CF_CONNECTING_IP']) ? (string) $srv['HTTP_CF_CONNECTING_IP'] : '';
+                $xfw  = isset($srv['HTTP_X_FORWARDED_FOR'])  ? (string) $srv['HTTP_X_FORWARDED_FOR']  : '';
+                $rem  = isset($srv['REMOTE_ADDR'])            ? (string) $srv['REMOTE_ADDR']            : '';
+                $ip   = $cfIp !== '' ? $cfIp : ($xfw !== '' ? $xfw : ($rem !== '' ? $rem : 'unknown'));
+                return sha1('reset_route' . $ip);
+            }),
+            new TooManyRequestsMiddleware($responseFactory),
+        ))
         ->action([ResetPasswordController::class, 'resetpassword'])
         ->name('auth/resetpassword'),
     // email-verification token is masked before sending by email
