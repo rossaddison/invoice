@@ -1310,6 +1310,9 @@ if ((null !== $currentPath) && !$isGuest) {
             DropdownItem::link($t->translate('aging'),
                 $urlGenerator->generate('report/invoiceAgingIndex'),
                 itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('mtd.hmrc'),
+                $urlGenerator->generate('backend/hmrc/index'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate(
                     'report.test.fraud.prevention.headers.api'),
                 $urlGenerator->generate('backend/hmrc/fphValidate'),
