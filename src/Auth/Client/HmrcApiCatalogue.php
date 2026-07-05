@@ -128,7 +128,7 @@ final class HmrcApiCatalogue
      * Developer Hub endpoint. Falls back gracefully if the context field uses
      * either 'context' or 'apiContext' key naming.
      *
-     * @param list<array<string, mixed>> $subscriptions
+     * @param array<array-key, mixed> $subscriptions
      * @return array<string, array{name: string, scopes: list<string>, needs: string, serviceName: string, version: string}>
      */
     public static function fromSubscriptions(array $subscriptions): array
@@ -136,6 +136,10 @@ final class HmrcApiCatalogue
         $all    = self::all();
         $result = [];
         foreach ($subscriptions as $sub) {
+            if (!is_array($sub)) {
+                continue;
+            }
+            /** @var array<string, mixed> $sub */
             $context = (string) ($sub['context'] ?? ($sub['apiContext'] ?? ''));
             if ($context !== '' && isset($all[$context])) {
                 $result[$context] = $all[$context];

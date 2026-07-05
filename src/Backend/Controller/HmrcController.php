@@ -52,13 +52,15 @@ final class HmrcController extends BaseController
 
     public function index(): Response
     {
-        $grantedScope    = (string) $this->session->get('hmrc_scope', '');
-        $subscriptions   = $this->fetchApplicationSubscriptions();
-        $availableApis   = $grantedScope !== ''
-            ? HmrcApiCatalogue::fromGrantedScopeString($grantedScope)
-            : ($subscriptions !== []
-                ? HmrcApiCatalogue::fromSubscriptions($subscriptions)
-                : []);
+        $grantedScope  = (string) $this->session->get('hmrc_scope', '');
+        $subscriptions = $this->fetchApplicationSubscriptions();
+        if ($grantedScope !== '') {
+            $availableApis = HmrcApiCatalogue::fromGrantedScopeString($grantedScope);
+        } elseif ($subscriptions !== []) {
+            $availableApis = HmrcApiCatalogue::fromSubscriptions($subscriptions);
+        } else {
+            $availableApis = [];
+        }
 
         return $this->webViewRenderer->render('index', [
             'vrn'                 => $this->sR->getSetting('vat_registration_number'),
@@ -347,7 +349,7 @@ final class HmrcController extends BaseController
      * client_id. Returns the raw subscriptions array, or [] if the endpoint
      * is unreachable or requires developer-portal authentication.
      *
-     * @return list<array<string, mixed>>
+     * @return array<array-key, mixed>
      */
     private function fetchApplicationSubscriptions(): array
     {
@@ -362,11 +364,10 @@ final class HmrcController extends BaseController
         try {
             $response = $this->httpClient->sendRequest($request);
             if ($response->getStatusCode() === 200) {
-                /** @var list<array<string, mixed>> $data */
-                $data = (array) json_decode($response->getBody()->getContents(), true);
-                return $data;
+                return (array) json_decode($response->getBody()->getContents(), true);
             }
         } catch (\Throwable) {
+            // network or auth failure — fall through to empty array
         }
         return [];
     }

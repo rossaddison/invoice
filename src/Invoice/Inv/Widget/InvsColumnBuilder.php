@@ -457,7 +457,25 @@ final class InvsColumnBuilder
             $cols[] = $this->buildSoLinkColumn($p->soR);
         }
         if ($p->dlR !== null) {
-            $cols[] = $this->buildDeliveryLocationColumn($p->dlR);
+            $dlR    = $p->dlR;
+            $t      = $this->translator;
+            $vis    = $this->visible;
+            $cols[] = new DataColumn(
+                'delivery_location_id',
+                header: $t->translate('delivery.location.global.location.number'),
+                content: static function (Inv $model) use ($dlR): string {
+                    $dlId = $model->getDeliveryLocationId();
+                    $dl   = ($dlId !== null && $dlR->repoCount($dlId) > 0)
+                        ? $dlR->repoDeliveryLocationquery($dlId)
+                        : null;
+                    return null !== $dl
+                        ? Html::encode($dl->getGlobalLocationNumber())
+                        : '';
+                },
+                encodeContent: false,
+                visible: $vis,
+                withSorting: false,
+            );
         }
         return $cols;
     }
@@ -515,27 +533,6 @@ final class InvsColumnBuilder
                 }
                 return '';
             },
-            visible: $this->visible,
-            withSorting: false,
-        );
-    }
-
-    private function buildDeliveryLocationColumn(DLR $dlR): DataColumn
-    {
-        $t = $this->translator;
-        return new DataColumn(
-            'delivery_location_id',
-            header: $t->translate('delivery.location.global.location.number'),
-            content: static function (Inv $model) use ($dlR): string {
-                $dlId = $model->getDeliveryLocationId();
-                $dl   = ($dlId !== null && $dlR->repoCount($dlId) > 0)
-                    ? $dlR->repoDeliveryLocationquery($dlId)
-                    : null;
-                return null !== $dl
-                    ? Html::encode($dl->getGlobalLocationNumber())
-                    : '';
-            },
-            encodeContent: false,
             visible: $this->visible,
             withSorting: false,
         );
