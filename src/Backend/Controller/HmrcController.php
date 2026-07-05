@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Backend\Controller;
 
+use App\Auth\Client\DeveloperSandboxHmrc;
 use App\Auth\Client\HmrcApiCatalogue;
 use App\Invoice\BaseController;
 use App\Invoice\PurchaseEntry\PurchaseEntryRepository;
@@ -19,6 +20,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as ServerRequest;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
+use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
@@ -31,11 +33,13 @@ final class HmrcController extends BaseController
 
     public function __construct(
         Flash $flash,
+        private DeveloperSandboxHmrc $developerSandboxHmrc,
         private HttpClient $httpClient,
         private RequestFactoryInterface $requestFactory,
         SessionInterface $session,
         SR $sR,
         TranslatorInterface $translator,
+        private UrlGeneratorInterface $urlGenerator,
         UserService $userService,
         WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
@@ -61,16 +65,20 @@ final class HmrcController extends BaseController
         } else {
             $availableApis = [];
         }
+        $hmrcAuthUrl = $this->developerSandboxHmrc->getClientId() !== ''
+            ? $this->urlGenerator->generate('auth/authclient', ['authclient' => 'developersandboxhmrc'])
+            : '';
 
         return $this->webViewRenderer->render('index', [
-            'vrn'                 => $this->sR->getSetting('vat_registration_number'),
-            'fphConnectionMethod' => $this->sR->getSetting('fph_connection_method'),
+            'vrn'                  => $this->sR->getSetting('vat_registration_number'),
+            'fphConnectionMethod'  => $this->sR->getSetting('fph_connection_method'),
             'govVendorProductName' => $this->sR->getGovVendorProductName(),
-            'govVendorVersion'    => $this->sR->getGovVendorVersion(),
-            'grantedScope'        => $grantedScope,
-            'availableApis'       => $availableApis,
-            'fullCatalogue'       => HmrcApiCatalogue::all(),
-            'subscriptionsLoaded' => $subscriptions !== [],
+            'govVendorVersion'     => $this->sR->getGovVendorVersion(),
+            'grantedScope'         => $grantedScope,
+            'availableApis'        => $availableApis,
+            'fullCatalogue'        => HmrcApiCatalogue::all(),
+            'subscriptionsLoaded'  => $subscriptions !== [],
+            'hmrcAuthUrl'          => $hmrcAuthUrl,
         ]);
     }
 

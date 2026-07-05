@@ -14,6 +14,7 @@ use Yiisoft\Html\Html as H;
  * @var array<string, array{name: string, scopes: list<string>, needs: string, serviceName: string, version: string}> $availableApis
  * @var array<string, array{name: string, scopes: list<string>, needs: string, serviceName: string, version: string}> $fullCatalogue
  * @var bool $subscriptionsLoaded
+ * @var string $hmrcAuthUrl
  */
 
 $vrnSet = $vrn !== '';
@@ -88,8 +89,14 @@ if ($subscriptionsLoaded) {
     echo H::tag('span', '✅ Subscriptions loaded from HMRC', ['class' => 'badge bg-success']);
 } elseif ($loggedIn) {
     echo H::tag('span', 'Derived from granted scopes', ['class' => 'badge bg-info text-dark']);
+} elseif ($hmrcAuthUrl !== '') {
+    echo H::tag('a', 'Log in with HMRC', [
+        'href'  => $hmrcAuthUrl,
+        'class' => 'btn btn-sm btn-dark',
+        'id'    => 'btn-sandboxhmrc',
+    ]);
 } else {
-    echo H::tag('span', 'Log in with HMRC to see your subscriptions', ['class' => 'badge bg-secondary']);
+    echo H::tag('span', 'Configure HMRC OAuth in Settings to log in', ['class' => 'badge bg-secondary']);
 }
 echo H::closeTag('div');
 
