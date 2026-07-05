@@ -116,28 +116,29 @@ final class SignupController
         $openBankChoice = $this->sR->getSetting('open_banking_provider');
         $openBankingAuthUrl = $this->buildOpenBankingAuthUrl($openBankChoice);
 
+        if ($request->getMethod() === 'POST') {
+            $body = (array) $request->getParsedBody();
+            $srv = $request->getServerParams();
+            $remoteIp = (string) ($srv['HTTP_CF_CONNECTING_IP'] ?? $srv['REMOTE_ADDR'] ?? '');
+            if (!$this->verifyTurnstile((string) ($body['cf-turnstile-response'] ?? ''), $remoteIp)) {
+                return $this->webService->getRedirectResponse('site/signupfailed');
+            }
+        }
+
         $redirect = null;
         if ($formHydrator->populateFromPostAndValidate($signupForm, $request)) {
-            $body = (array) $request->getParsedBody();
-            $turnstileToken = (string) ($body['cf-turnstile-response'] ?? '');
-            $serverParams = $request->getServerParams();
-            $remoteIp = (string) ($serverParams['REMOTE_ADDR'] ?? '');
-            if (!$this->verifyTurnstile($turnstileToken, $remoteIp)) {
-                $redirect = $this->webService->getRedirectResponse('site/signupfailed');
-            } else {
-                $user = $signupForm->signup();
-                $userId = $user->reqId();
-                if ($userId > 0) {
-                    $role = $uR->repoCount() == 1 ? AppConstants::ROLE_ADMIN : AppConstants::ROLE_OBSERVER;
-                    if (!$this->assignRoleAndVerify($userId, $role)) {
-                        $redirect = $this->webService->getRedirectResponse('site/signupfailed');
-                    } else {
-                        $redirect = $this->processSendSignupEmail(
-                            $user, $currentRoute, $deps, $signupForm);
-                    }
+            $user = $signupForm->signup();
+            $userId = $user->reqId();
+            if ($userId > 0) {
+                $role = $uR->repoCount() == 1 ? AppConstants::ROLE_ADMIN : AppConstants::ROLE_OBSERVER;
+                if (!$this->assignRoleAndVerify($userId, $role)) {
+                    $redirect = $this->webService->getRedirectResponse('site/signupfailed');
+                } else {
+                    $redirect = $this->processSendSignupEmail(
+                        $user, $currentRoute, $deps, $signupForm);
                 }
-                $redirect = $redirect ?? $this->webService->getRedirectResponse('site/signupsuccess');
             }
+            $redirect = $redirect ?? $this->webService->getRedirectResponse('site/signupsuccess');
         }
 
         $codeVerifier = Random::string(128);

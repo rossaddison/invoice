@@ -82,15 +82,17 @@ use App\Invoice\{
     CommonErrors\CommonErrorsController,
     // Quote
     UserInv\UserInvController};
-use App\Middleware\{AccessChecker as AC, ApiDataWrapper};
+use App\Middleware\{AccessChecker as AC, ApiDataWrapper, TooManyRequestsMiddleware};
 use App\User\Controller\{ApiUserController, UserController};
 use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\{Auth\Middleware\Authentication,
     DataResponse\ResponseFactory\DataResponseFactoryInterface as DRFI,
     DataResponse\Middleware\JsonDataResponseMiddleware,
     DataResponse\Middleware\XmlDataResponseMiddleware,
     Http\Method, Router\Group, Router\Route, Yii\AuthClient\AuthAction,
     Yii\RateLimiter\Counter, Yii\RateLimiter\LimitRequestsMiddleware as LRM,
+    Yii\RateLimiter\Policy\LimitAlways, Yii\RateLimiter\Policy\LimitCallback,
     Yii\RateLimiter\Storage\StorageInterface};
 
 $pEI = Permissions::EDIT_INV;
@@ -291,10 +293,33 @@ return [
     // email-verification token is masked before sending by email
     // and must be unmasked after inbox click. Refer to userinv/signup
     Route::methods([$mG, $mP], '/signup')
-        ->middleware(fn (
+        // Fix #2: global path counter — blocks botnet waves regardless of IP
+        ->middleware(fn(
             ResponseFactoryInterface $responseFactory,
             StorageInterface $storage,
-        ) => new LRM(new Counter($storage, 10, 10), $responseFactory))
+        ) => new LRM(
+            new Counter($storage, 50, 10),
+            $responseFactory,
+            new LimitAlways(),
+            new TooManyRequestsMiddleware($responseFactory),
+        ))
+        // Fix #1 & #3: per real-IP via CF-Connecting-IP; CAS fail → 429
+        ->middleware(fn(
+            ResponseFactoryInterface $responseFactory,
+            StorageInterface $storage,
+        ) => new LRM(
+            new Counter($storage, 5, 60),
+            $responseFactory,
+            new LimitCallback(static function (ServerRequestInterface $r): string {
+                $srv  = $r->getServerParams();
+                $cfIp = isset($srv['HTTP_CF_CONNECTING_IP']) ? (string) $srv['HTTP_CF_CONNECTING_IP'] : '';
+                $xfw  = isset($srv['HTTP_X_FORWARDED_FOR']) ? (string) $srv['HTTP_X_FORWARDED_FOR'] : '';
+                $rem  = isset($srv['REMOTE_ADDR']) ? (string) $srv['REMOTE_ADDR'] : '';
+                $ip   = $cfIp !== '' ? $cfIp : ($xfw !== '' ? $xfw : ($rem !== '' ? $rem : 'unknown'));
+                return sha1('signup' . $ip);
+            }),
+            new TooManyRequestsMiddleware($responseFactory),
+        ))
         ->action([SignupController::class, 'signup'])
         ->name('auth/signup'),
     Route::methods([$mG, $mP], '/change')
