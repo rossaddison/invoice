@@ -112,7 +112,7 @@ trait Callback
         $response = null;
         if ($this->authService->getIdentity()->getId() !== null) {
             // Admin already authenticated: HMRC tokens stored; skip test-user creation.
-            $response = $this->webService->getRedirectResponse('backend/hmrc');
+            $response = $this->webService->getRedirectResponse('backend/hmrc/index');
         } else {
             /**
              * @see Yiisoft\Yii\AuthClient\Client\DeveloperSandboxHmrc
