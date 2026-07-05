@@ -93,12 +93,12 @@ final class ForgotPasswordController
             return $this->webService->getRedirectResponse($guard);
         }
         if ($request->getMethod() === Method::POST) {
-            $ip = $this->secHelper->getClientIpAddress($request);
-            if (!$this->secHelper->checkRateLimit(hash('sha256', 'forgot_ctrl' . $ip))) {
-                return $this->webService->getRedirectResponse('auth/forgotpassword');
-            }
-            $body = (array) $request->getParsedBody();
-            if (!$this->verifyTurnstile((string) ($body['cf-turnstile-response'] ?? ''), $ip)) {
+            $ip    = $this->secHelper->getClientIpAddress($request);
+            $body  = (array) $request->getParsedBody();
+            $token = (string) ($body['cf-turnstile-response'] ?? '');
+            if (!$this->secHelper->checkRateLimit(hash('sha256', 'forgot_ctrl' . $ip))
+                || !$this->verifyTurnstile($token, $ip)
+            ) {
                 return $this->webService->getRedirectResponse('auth/forgotpassword');
             }
         }
@@ -109,10 +109,7 @@ final class ForgotPasswordController
             $response = $this->handleForgotUser($user, $currentRoute, $tR);
             $response ??= $this->webService->getRedirectResponse('site/forgotalert');
         }
-        if ($response !== null) {
-            return $response;
-        }
-        return $this->webViewRenderer->render('forgotpassword', [
+        return $response ?? $this->webViewRenderer->render('forgotpassword', [
             'formModel'        => $requestPasswordResetTokenForm,
             'turnstileSiteKey' => $this->sR->getSetting('turnstile_site_key'),
         ]);
