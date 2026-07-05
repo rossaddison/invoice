@@ -15,7 +15,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
-use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Security\TokenMask;
 use Yiisoft\Translator\TranslatorInterface;
@@ -30,7 +29,6 @@ final class ResetPasswordController
     public function __construct(
         private readonly WebControllerService $webService,
         private WebViewRenderer $webViewRenderer,
-        private readonly UrlGenerator $urlGenerator,
         private readonly TranslatorInterface $translator,
         private readonly LoggerInterface $logger,
         private readonly AuthSecurityHelper $secHelper,
@@ -87,7 +85,7 @@ final class ResetPasswordController
 
         if ($request->getMethod() === Method::POST) {
             $ip = $this->secHelper->getClientIpAddress($request);
-            if (!$this->secHelper->checkRateLimit(sha1('reset_ctrl' . $ip))) {
+            if (!$this->secHelper->checkRateLimit(hash('sha256', 'reset_ctrl' . $ip))) {
                 return $this->failedReset();
             }
             $body = (array) $request->getParsedBody();

@@ -40,7 +40,6 @@ final class ForgotPasswordController
         private readonly sR $sR,
         private readonly Translator $translator,
         private readonly UrlGenerator $urlGenerator,
-        private readonly CurrentRoute $currentRoute,
         private readonly LoggerInterface $logger,
         private readonly AuthSecurityHelper $secHelper,
     ) {
@@ -95,7 +94,7 @@ final class ForgotPasswordController
         }
         if ($request->getMethod() === Method::POST) {
             $ip = $this->secHelper->getClientIpAddress($request);
-            if (!$this->secHelper->checkRateLimit(sha1('forgot_ctrl' . $ip))) {
+            if (!$this->secHelper->checkRateLimit(hash('sha256', 'forgot_ctrl' . $ip))) {
                 return $this->webService->getRedirectResponse('auth/forgotpassword');
             }
             $body = (array) $request->getParsedBody();

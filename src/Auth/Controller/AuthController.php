@@ -195,7 +195,7 @@ final class AuthController
 
         if ($request->getMethod() === Method::POST) {
             $ip = $this->secHelper->getClientIpAddress($request);
-            if (!$this->secHelper->checkRateLimit(sha1('login_ctrl' . $ip))) {
+            if (!$this->secHelper->checkRateLimit(hash('sha256', 'login_ctrl' . $ip))) {
                 return $this->webService->getRedirectResponse('auth/login');
             }
             $body = (array) $request->getParsedBody();

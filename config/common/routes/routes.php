@@ -228,8 +228,16 @@ return [
                 $cfIp = isset($srv['HTTP_CF_CONNECTING_IP']) ? (string) $srv['HTTP_CF_CONNECTING_IP'] : '';
                 $xfw  = isset($srv['HTTP_X_FORWARDED_FOR'])  ? (string) $srv['HTTP_X_FORWARDED_FOR']  : '';
                 $rem  = isset($srv['REMOTE_ADDR'])            ? (string) $srv['REMOTE_ADDR']            : '';
-                $ip   = $cfIp !== '' ? $cfIp : ($xfw !== '' ? $xfw : ($rem !== '' ? $rem : 'unknown'));
-                return sha1('login_route' . $ip);
+                if ($cfIp !== '') {
+                    $ip = $cfIp;
+                } elseif ($xfw !== '') {
+                    $ip = $xfw;
+                } elseif ($rem !== '') {
+                    $ip = $rem;
+                } else {
+                    $ip = 'unknown';
+                }
+                return hash('sha256', 'login_route' . $ip);
             }),
             new TooManyRequestsMiddleware($responseFactory),
         ))
@@ -328,8 +336,16 @@ return [
                 $cfIp = isset($srv['HTTP_CF_CONNECTING_IP']) ? (string) $srv['HTTP_CF_CONNECTING_IP'] : '';
                 $xfw  = isset($srv['HTTP_X_FORWARDED_FOR'])  ? (string) $srv['HTTP_X_FORWARDED_FOR']  : '';
                 $rem  = isset($srv['REMOTE_ADDR'])            ? (string) $srv['REMOTE_ADDR']            : '';
-                $ip   = $cfIp !== '' ? $cfIp : ($xfw !== '' ? $xfw : ($rem !== '' ? $rem : 'unknown'));
-                return sha1('forgot_route' . $ip);
+                if ($cfIp !== '') {
+                    $ip = $cfIp;
+                } elseif ($xfw !== '') {
+                    $ip = $xfw;
+                } elseif ($rem !== '') {
+                    $ip = $rem;
+                } else {
+                    $ip = 'unknown';
+                }
+                return hash('sha256', 'forgot_route' . $ip);
             }),
             new TooManyRequestsMiddleware($responseFactory),
         ))
@@ -359,8 +375,16 @@ return [
                 $cfIp = isset($srv['HTTP_CF_CONNECTING_IP']) ? (string) $srv['HTTP_CF_CONNECTING_IP'] : '';
                 $xfw  = isset($srv['HTTP_X_FORWARDED_FOR'])  ? (string) $srv['HTTP_X_FORWARDED_FOR']  : '';
                 $rem  = isset($srv['REMOTE_ADDR'])            ? (string) $srv['REMOTE_ADDR']            : '';
-                $ip   = $cfIp !== '' ? $cfIp : ($xfw !== '' ? $xfw : ($rem !== '' ? $rem : 'unknown'));
-                return sha1('reset_route' . $ip);
+                if ($cfIp !== '') {
+                    $ip = $cfIp;
+                } elseif ($xfw !== '') {
+                    $ip = $xfw;
+                } elseif ($rem !== '') {
+                    $ip = $rem;
+                } else {
+                    $ip = 'unknown';
+                }
+                return hash('sha256', 'reset_route' . $ip);
             }),
             new TooManyRequestsMiddleware($responseFactory),
         ))
@@ -389,10 +413,18 @@ return [
             new LimitCallback(static function (ServerRequestInterface $r): string {
                 $srv  = $r->getServerParams();
                 $cfIp = isset($srv['HTTP_CF_CONNECTING_IP']) ? (string) $srv['HTTP_CF_CONNECTING_IP'] : '';
-                $xfw  = isset($srv['HTTP_X_FORWARDED_FOR']) ? (string) $srv['HTTP_X_FORWARDED_FOR'] : '';
-                $rem  = isset($srv['REMOTE_ADDR']) ? (string) $srv['REMOTE_ADDR'] : '';
-                $ip   = $cfIp !== '' ? $cfIp : ($xfw !== '' ? $xfw : ($rem !== '' ? $rem : 'unknown'));
-                return sha1('signup' . $ip);
+                $xfw  = isset($srv['HTTP_X_FORWARDED_FOR'])  ? (string) $srv['HTTP_X_FORWARDED_FOR']  : '';
+                $rem  = isset($srv['REMOTE_ADDR'])            ? (string) $srv['REMOTE_ADDR']            : '';
+                if ($cfIp !== '') {
+                    $ip = $cfIp;
+                } elseif ($xfw !== '') {
+                    $ip = $xfw;
+                } elseif ($rem !== '') {
+                    $ip = $rem;
+                } else {
+                    $ip = 'unknown';
+                }
+                return hash('sha256', 'signup' . $ip);
             }),
             new TooManyRequestsMiddleware($responseFactory),
         ))
@@ -421,8 +453,16 @@ return [
                 $cfIp = isset($srv['HTTP_CF_CONNECTING_IP']) ? (string) $srv['HTTP_CF_CONNECTING_IP'] : '';
                 $xfw  = isset($srv['HTTP_X_FORWARDED_FOR'])  ? (string) $srv['HTTP_X_FORWARDED_FOR']  : '';
                 $rem  = isset($srv['REMOTE_ADDR'])            ? (string) $srv['REMOTE_ADDR']            : '';
-                $ip   = $cfIp !== '' ? $cfIp : ($xfw !== '' ? $xfw : ($rem !== '' ? $rem : 'unknown'));
-                return sha1('change_route' . $ip);
+                if ($cfIp !== '') {
+                    $ip = $cfIp;
+                } elseif ($xfw !== '') {
+                    $ip = $xfw;
+                } elseif ($rem !== '') {
+                    $ip = $rem;
+                } else {
+                    $ip = 'unknown';
+                }
+                return hash('sha256', 'change_route' . $ip);
             }),
             new TooManyRequestsMiddleware($responseFactory),
         ))
