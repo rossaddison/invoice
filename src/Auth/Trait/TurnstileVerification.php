@@ -9,6 +9,8 @@ namespace App\Auth\Trait;
  */
 trait TurnstileVerification
 {
+    private const string TURNSTILE_VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+
     /**
      * Verify a Cloudflare Turnstile token server-side.
      * Returns true unconditionally when no secret is configured (dev/localhost).
@@ -35,16 +37,9 @@ trait TurnstileVerification
                 'timeout' => 5,
             ],
         ]);
-        $result = @file_get_contents(
-            'https://challenges.cloudflare.com/turnstile/v0/siteverify',
-            false,
-            $context,
-        );
-        if ($result === false) {
-            return false;
-        }
+        $result = @file_get_contents(self::TURNSTILE_VERIFY_URL, false, $context);
         /** @var array{success?: bool} $json */
-        $json = (array) json_decode($result, true);
+        $json = $result !== false ? (array) json_decode($result, true) : [];
         return ($json['success'] ?? false) === true;
     }
 }
