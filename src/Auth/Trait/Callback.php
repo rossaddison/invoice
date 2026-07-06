@@ -152,6 +152,7 @@ trait Callback
      * 2. clicking on the proceedToMenuButton will further create a userinv
      *       extension of the user table
      * @see src/Invoice/UserInv/UserInvController function facebook
+     * @param ServerRequestInterface $request
      * @param CallbackDeps $d
      * @param string $_language
      * @param string|null $code
@@ -166,14 +167,12 @@ trait Callback
         CallbackDeps $d,
         #[RouteArgument('_language')]
         string $_language,
+        string|null $code,
+        string|null $state,
+        string|null $error,
+        string|null $errorCode,
+        string|null $errorReason,
     ): ResponseInterface {
-        /** @var array<string, string> $query */
-        $query       = $request->getQueryParams();
-        $code        = $query['code']         ?? null;
-        $state       = $query['state']        ?? null;
-        $error       = $query['error']        ?? null;
-        $errorCode   = $query['error_code']   ?? null;
-        $errorReason = $query['error_reason'] ?? null;
         if ($code === null || $state === null) {
 // e.g. User presses cancel button: callbackFacebook?error=access_denied&error_code=200&error_description=Permissions+error&error_reason=user_denied&state=
             return (($errorCode == 200) && ($error == 'access_denied') && ($errorReason == 'user_denied'))
@@ -190,9 +189,6 @@ trait Callback
         $userArray = [];
         $response = null;
 
-        /**
-         * @psalm-suppress DocblockTypeContradiction $code
-         */
         if (strlen($code) == 0) {
 // If we don't have an authorization code then get one
 // and use the protected function oauth2->generateAuthState to generate state param
@@ -202,10 +198,7 @@ trait Callback
         } elseif ($code == 401) {
             $response = $this->redirectToOauth2CallbackResultUnAuthorised();
         } elseif (strlen($state) == 0) {
-            /**
-             * @psalm-suppress DocblockTypeContradiction $state
-             * State is invalid, possible cross-site request forgery.
-             */
+            // State is invalid, possible cross-site request forgery.
             $response = $this->redirectToOauth2AuthError(
                 $d->translator->translate('oauth2.missing.state.parameter.'
                         . 'possible.csrf.attack'));
