@@ -141,9 +141,6 @@ final class AuthController
         $authclient   = $this->getStringQueryParam($qp, 'authclient');
         $code         = $this->getStringQueryParam($qp, 'code');
         $state        = $this->getStringQueryParam($qp, 'state');
-        $error        = $this->getStringQueryParam($qp, 'error');
-        $errorCode    = $this->getStringQueryParam($qp, 'error_code');
-        $errorReason  = $this->getStringQueryParam($qp, 'error_reason');
         $sessionState = $this->getStringQueryParam($qp, 'session_state');
         $deviceId     = $this->getStringQueryParam($qp, 'device_id');
 
@@ -157,8 +154,7 @@ final class AuthController
         return match ($authclient) {
             'developersandboxhmrc' => $this->callbackDeveloperGovSandboxHmrc(
                     $request, $d, $_language, $code, $state),
-            'facebook' => $this->callbackFacebook($request, $d, $_language, $code, $state,
-                    $error, $errorCode, $errorReason),
+            'facebook' => $this->callbackFacebook($request, $d, $_language),
             'github' => $this->callbackGithub($request, $d, $_language, $code, $state),
             'google' => $this->callbackGoogle($request, $d, $_language, $code, $state),
             'govuk' => $this->callbackGovUk($request, $d, $_language, $code, $state),

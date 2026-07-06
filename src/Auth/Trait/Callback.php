@@ -155,11 +155,6 @@ trait Callback
      * @param ServerRequestInterface $request
      * @param CallbackDeps $d
      * @param string $_language
-     * @param string|null $code
-     * @param string|null $state
-     * @param string|null $error
-     * @param string|null $errorCode
-     * @param string|null $errorReason
      * @return ResponseInterface
      */
     public function callbackFacebook(
@@ -167,12 +162,14 @@ trait Callback
         CallbackDeps $d,
         #[RouteArgument('_language')]
         string $_language,
-        string|null $code,
-        string|null $state,
-        string|null $error,
-        string|null $errorCode,
-        string|null $errorReason,
     ): ResponseInterface {
+        /** @var array<string, string> $query */
+        $query       = $request->getQueryParams();
+        $code        = $query['code']         ?? null;
+        $state       = $query['state']        ?? null;
+        $error       = $query['error']        ?? null;
+        $errorCode   = $query['error_code']   ?? null;
+        $errorReason = $query['error_reason'] ?? null;
         if ($code === null || $state === null) {
 // e.g. User presses cancel button: callbackFacebook?error=access_denied&error_code=200&error_description=Permissions+error&error_reason=user_denied&state=
             return (($errorCode == 200) && ($error == 'access_denied') && ($errorReason == 'user_denied'))
