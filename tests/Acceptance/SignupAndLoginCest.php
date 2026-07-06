@@ -8,6 +8,28 @@ use Tests\Support\AcceptanceTester;
 
 final class SignupAndLoginCest
 {
+    private string $rateLimiterCacheDir = __DIR__ . '/../../runtime/rate-limiter';
+
+    public function _before(AcceptanceTester $I): void
+    {
+        // Each test hits /login or /signup multiple times. The per-IP FileCache
+        // rate-limiter (5 req/60 s) carries state across test methods and even
+        // across consecutive test runs, causing spurious 429 responses.
+        // Wipe the cache before every test so each starts with a clean counter.
+        if (is_dir($this->rateLimiterCacheDir)) {
+            $files = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator(
+                    $this->rateLimiterCacheDir,
+                    \FilesystemIterator::SKIP_DOTS,
+                ),
+                \RecursiveIteratorIterator::CHILD_FIRST,
+            );
+            foreach ($files as $file) {
+                $file->isDir() ? rmdir($file->getRealPath()) : unlink($file->getRealPath());
+            }
+        }
+    }
+
     public function __construct(
         private readonly string $emptyLogin = '',
         private readonly string $emptyPassword = '',
