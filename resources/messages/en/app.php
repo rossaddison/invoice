@@ -422,8 +422,6 @@ return [
     . ' notifications — message @userinfobot on Telegram to find yours)',
   'contact.information' => 'Contact Information',
   'continue' => 'Continue',
-  'continue.with.developersandboxhmrc' => 'Continue'
-    . ' with Developer Gov Sandbox UK',
   'continue.with.facebook' => 'Continue with Facebook',
   'continue.with.github' => 'Continue with Github',
   'continue.with.google' => 'Continue with Google',
