@@ -19,6 +19,8 @@ use App\Invoice\As4\As4ReceiptGeneratorInterface;
 use App\Invoice\As4\As4ReceiptParser;
 use App\Invoice\As4\As4ReceiptParserInterface;
 use App\Invoice\As4\As4RetryPolicyInterface;
+use App\Invoice\As4\As4HttpClient;
+use App\Invoice\As4\As4HttpTransportInterface;
 use App\Invoice\As4\As4Sender;
 use App\Invoice\As4\As4SenderInterface;
 use App\Invoice\As4\As4SmpResolverInterface;
@@ -75,6 +77,7 @@ return [
     As4PayloadHandlerInterface::class     => As4InvoiceImportService::class,
 
     // ── Outbound interfaces ───────────────────────────────────────────────────
+    As4HttpTransportInterface::class    => As4HttpClient::class,
     As4SenderInterface::class          => As4Sender::class,
     As4EnvelopeBuilderInterface::class => SoapEnvelopeBuilder::class,
     As4ReceiptParserInterface::class   => As4ReceiptParser::class,
