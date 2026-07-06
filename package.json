@@ -33,7 +33,7 @@
     "@types/node": "^26.1.0",
     "@typescript-eslint/eslint-plugin": "^8.62.1",
     "@typescript-eslint/parser": "^8.62.1",
-    "@typescript/native-preview": "^7.0.0-dev.20260702.3",
+    "@typescript/native-preview": "^7.0.0-dev.20260705.1",
     "@vitest/coverage-v8": "^4.1.9",
     "esbuild": "^0.28.1",
     "eslint": "^10.6.0",
@@ -45,7 +45,7 @@
     "picomatch": "^4.0.5",
     "prettier": "^4.0.0-alpha.13",
     "rollup": ">=4.62.2",
-    "typedoc": "^0.28.19",
+    "typedoc": "^0.28.20",
     "typescript": "^6.0.3",
     "vitepress": "^2.0.0-alpha.17",
     "vitest": "^4.1.9"
