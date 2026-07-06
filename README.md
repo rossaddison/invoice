@@ -323,6 +323,86 @@ Automated generation and transmission of compliant UBL 2.4 documents via the
 
 [Tooltip Styles Configuration.](docs/TOOLTIP_STYLES_CONFIGURATION.md) (Jan 2026)
 
+## Stage 1: Suitability Assessment for VAT Test Suite
+
+This section records the pre-conditions and steps required before a VAT quarterly
+submission can be tested end-to-end against the HMRC Making Tax Digital (MTD) API
+using the Developer Sandbox environment.
+
+### Critical: Fix Production URL Bug First
+
+`HmrcController::vatObligations()` and `HmrcController::vatReturnSubmit()` currently
+call `https://api.service.hmrc.gov.uk` (production). A sandbox OAuth2 token is
+rejected at production endpoints. Before any VAT testing can succeed, those URLs must
+be switched to `https://test-api.service.hmrc.gov.uk` when operating in sandbox mode.
+`DeveloperSandboxHmrc::setEnvironment()` already exists for this purpose but is not
+yet wired through to the controller HTTP calls.
+
+### Step 1 — Register on the HMRC Developer Hub
+
+1. Go to [https://developer.service.hmrc.gov.uk](https://developer.service.hmrc.gov.uk)
+   and sign in (or create an account).
+2. Create a new **Sandbox** application.
+3. Set the **redirect URI** to match `DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_RETURN_URL`
+   in `.env` (e.g. `https://yii3i.online/callbackDeveloperGovSandboxHmrc`).
+4. Copy the new **client ID** and **client secret** into `.env`:
+   ```
+   DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_ID=...
+   DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_SECRET=...
+   DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_RETURN_URL=...
+   ```
+
+### Step 2 — Subscribe to All Relevant APIs
+
+Subscribe to every API below in the sandbox application. HMRC silently drops unsubscribed
+scopes from the token response, so subscribing to all now costs nothing and means the
+`HmrcApiCatalogue` can show the full grant without a second OAuth round-trip.
+
+| API Name | Scope(s) | Identifier | Why Relevant |
+|---|---|---|---|
+| **VAT (MTD)** | `read:vat`, `write:vat` | VRN | Core — obligations retrieval and VAT100 return submission (Boxes 1–9) |
+| **Self Assessment (Individual)** | `read:self-assessment`, `write:self-assessment` | NINO | Income and expenses for sole traders issuing invoices |
+| **Self-Employed Business** | `read:self-employment`, `write:self-employment` | NINO | Used in `HmrcController::selfEmploymentBusinesses()` |
+| **Business Details** | `read:self-assessment` | NINO | Business name and address on returns |
+| **Individual Calculations** | `read:self-assessment`, `write:self-assessment` | NINO | Tax calculation results |
+| **Income Received** | `read:self-assessment`, `write:self-assessment` | NINO | Invoice income classification |
+| **National Insurance Record** | `read:national-insurance-record` | NINO | NI contributions for self-employed |
+| **Customs Declarations** | `write:customs-declaration` | EORI | Import/export (future use) |
+| **Create Test User** | _(sandbox utility)_ | — | Required to generate sandbox VRN/NINO individuals via `createTestUserIndividual()` |
+| **Fraud Prevention Headers — Validate** | _(sandbox utility)_ | — | Used in `HmrcController::fphValidate()` |
+| **Fraud Prevention Headers — Feedback** | _(sandbox utility)_ | — | Used in `HmrcController::fphFeedback()` |
+
+### Step 3 — What Happens After Subscribing
+
+Once the sandbox application is subscribed and the OAuth2 flow is completed via
+`/auth/authclient?authclient=developersandboxhmrc`, the session stores `hmrc_scope`
+containing all granted scopes. `HmrcController::index()` then displays the full
+`HmrcApiCatalogue` with available APIs highlighted.
+
+The VAT test sequence after that point is:
+
+1. `createTestUserIndividual` — creates a sandbox individual with a **VRN** and **NINO**;
+   the sandbox auto-generates open quarterly obligations for that VRN.
+2. Store the VRN in **Settings → VAT Registration Number**.
+3. `vatObligations()` — retrieves open quarterly obligations for the VRN.
+4. `vatReturnPrepare()` — auto-fills Box 1 (output VAT) and Box 6 (sales ex-VAT) from
+   `InvAmountRepository::repoVatTotalsForPeriod()`, and Box 4 (input VAT) and Box 7
+   (purchases ex-VAT) from `PurchaseEntryRepository::repoVatTotalsForPeriod()`.
+   Boxes 3 and 5 are computed client-side (JS). Boxes 2, 8, and 9 require manual entry.
+5. `vatReturnSubmit()` — POSTs the nine-box `returnData` payload to the sandbox endpoint
+   and receives a `processingDate` confirmation in the response.
+
+### Stage 2 Preview — PHPUnit Test Data Suite
+
+Once the sandbox URL bug is fixed and credentials are configured, Stage 2 will add:
+
+- **`InvAmountRepository::repoVatTotalsForPeriod()` PHPUnit tests** — seed known invoices
+  (status 2/3/4) within a fixed quarter and assert Box 1 and Box 6 totals.
+- **Purchase entry fixtures** — seed `PurchaseEntry` rows with known VAT amounts and
+  assert Box 4 and Box 7 totals.
+- **Edge-case coverage** — zero-rated lines, invoices outside the quarter, draft invoices
+  (status 1, excluded), and mixed VAT rates.
+
 **Feature Specifics**
 
 * Cycle ORM Interface using Invoiceplane type database schema. 
