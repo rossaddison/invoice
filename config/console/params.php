@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Command\CacheClearCommand;
 use App\Command\InstallCommand;
 use App\Command\Invoice\AutoIncrementSetToOneAfterTruncate6Command;
 use App\Command\Invoice\GeneratorTruncateCommand;
@@ -31,6 +32,7 @@ return [
         'version' => Application::VERSION,
         'autoExit' => false,
         'commands' => [
+            'cache/clear' => CacheClearCommand::class,
             'serve' => Serve::class,
             'install' => InstallCommand::class,
             'as4/retry'           => As4RetryCommand::class,

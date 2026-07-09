@@ -32,6 +32,13 @@ echo new Table()
     ]),
      new Tr()
     ->dataStrings([
+        'Clear the runtime cache (DI, config, routes)',
+        'Manually deleting files in {root}/runtime/cache/',
+        'yii cache/clear',
+        '{root}\src\Command\CacheClearCommand.php',
+    ]),
+     new Tr()
+    ->dataStrings([
         'Clear the current database schema',
         'Manually deleting the schema in {root}/runtime/schema.php',
         'yii cycle/schema/clear',
