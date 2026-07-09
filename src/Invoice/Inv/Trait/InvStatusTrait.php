@@ -16,7 +16,7 @@ trait InvStatusTrait
     public function open(): EntityReader
     {
         $query = $this->select()
-                      ->where(['status_id' => ['in' => new Parameter([2,3])]])
+                      ->where(['status_id' => ['in' => new Parameter([2,3,4])]])
                       ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
@@ -24,7 +24,7 @@ trait InvStatusTrait
     public function openCount(): int
     {
         return $this->select()
-                      ->where(['status_id' => ['in' => new Parameter([2,3])]])
+                      ->where(['status_id' => ['in' => new Parameter([2,3,4])]])
                       ->where('deleted_at', null)
                       ->count();
     }
