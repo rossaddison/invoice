@@ -54,6 +54,7 @@
         "httpsoft/http-message": "^1.1.6",
         "league/iso3166": "^4.4.0",
         "maglnet/composer-require-checker": "^4.24.0",
+        "mcp/sdk": "^0.6.0",
         "mollie/mollie-api-php": ">=3.13.1",
         "mpdf/mpdf": "^8.3.1",
         "nyholm/psr7": "^1.8.2",
