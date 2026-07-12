@@ -82,7 +82,7 @@ trait PeppolHelperTaxTrait
                     ],
                     'taxCategory' => [
                         'taxScheme' => [
-                            'value' => self::TAX_CATEGORY_VAT,
+                            'value' => $this->activeTaxSchemeId(),
                         ],
                     ],
                 ];

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\Libraries;
 
+use App\Invoice\Helpers\Peppol\PeppolHelper;
+use App\Invoice\Helpers\Peppol\PeppolProfile;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Ubl\{AdditionalDocumentReference, Delivery, Generator, Invoice, Party};
 use Sabre\Xml\Writer;
@@ -23,7 +25,10 @@ final readonly class PeppolUblXml
         PeppolPaymentData $payment,
         PeppolFinancialData $financial,
     ): Invoice {
-        return new Invoice(
+        $profile = PeppolProfile::fromSetting(
+            $this->sR->getSetting(PeppolHelper::SETTING_PEPPOL_PROFILE),
+        );
+        $invoice = new Invoice(
             $this->sR,
             $header->profileID,
             (string) $header->id,
@@ -50,6 +55,7 @@ final readonly class PeppolUblXml
             $header->references->isCopyIndicator,
             $header->references->supplierAssignedAccountID,
         );
+        return $invoice->setCustomizationID($profile->customizationId());
     }
 
     /**

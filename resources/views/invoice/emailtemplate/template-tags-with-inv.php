@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 /**
+ * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var array $custom_fields
  * @var array $custom_fields['client_custom']
@@ -62,7 +63,7 @@ declare(strict_types=1);
                 </optgroup>
                 <optgroup label="<?= $translator->translate('tax.information'); ?>">
                     <option value="{{{client_vat_id}}}">
-                        <?= $translator->translate('vat.id'); ?>
+                        <?= $translator->translate('vat.id', ['term' => $s->activeTaxSchemeTerm()]); ?>
                     </option>
                     <option value="{{{client_tax_code}}}">
                         <?= $translator->translate('tax.code'); ?>

@@ -66,7 +66,7 @@ echo  new Form()
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'vat_or_tax')
-    ->label($translator->translate('vat.abbreviation'))
+    ->label($translator->translate('vat.abbreviation', ['term' => $s->activeTaxSchemeTerm()]))
     ->addInputAttributes([
         'readonly' => 'readonly',
         'disabled' => 'disabled',

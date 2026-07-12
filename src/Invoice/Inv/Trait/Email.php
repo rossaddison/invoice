@@ -126,6 +126,7 @@ trait Email
                     'custom_fields_inv_custom' =>
                         $custom_fields['inv_custom'],
                 ]),
+                    's' => $this->sR,
             ]),
             'form' => new MailerInvForm(),
         ];

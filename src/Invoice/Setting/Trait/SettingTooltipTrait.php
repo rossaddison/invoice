@@ -298,13 +298,16 @@ trait SettingTooltipTrait
                 . ' fphGeneratorMultiFactor',
             ],
             'enable_vat_registration' => [
-                'why' => 'VAT uses line item tax and applying Invoice Taxes'
+                'why' => $this->activeTaxSchemeTerm() . ' uses line item tax and'
+                . ' applying Invoice Taxes'
                 . ' (whether before line item or after line tax) are disabled.'
                 . ' Hence the tax_total field in the InvAmount Entity will'
-                . ' always equal zero if VAT is used. '
-                . 'A new nullable field ... belongs_to_vat_invoice...has been'
+                . ' always equal zero if ' . $this->activeTaxSchemeTerm()
+                . ' is used. '
+                . 'A new nullable field ... belongs_to_vat_invoice ...has been'
                 . ' introduced in the InvItem entity to allow for companies'
-                . ' making this transition. ',
+                . ' making this transition to '
+                . strtolower($this->activeTaxSchemeTerm()) . '. ',
                 'where' => 'This setting is used in resources/views/invoice/'
                 . 'inv/view.php',
             ],
@@ -589,6 +592,14 @@ trait SettingTooltipTrait
                 . ' or the Buyer\'s currency',
                 'where' => 'inv/view peppol_doc_currency_toggle and '
                 . 'inv/peppol_doc_currency_toggle',
+            ],
+            'peppol_profile' => [
+                'why' => 'Which Peppol document profile generated invoices'
+                . ' comply with — Core BIS Billing 3.0 (VAT) or a'
+                . ' country-specific PINT specialization (e.g. PINT A-NZ,'
+                . ' GST). Changes the CustomizationID/ProfileID/tax scheme'
+                . ' written into every generated e-invoice.',
+                'where' => 'App\Invoice\Helpers\Peppol\PeppolProfile',
             ],
             'peppol_debug_with_emojis' => [
                 'why' => 'To temporarily highlight the toggling '

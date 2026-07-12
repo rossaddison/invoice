@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Helpers\Peppol\Validator;
 
 use App\Invoice\Helpers\Peppol\Calculator\AbstractCalculator;
+use App\Invoice\Helpers\Peppol\PeppolProfile;
 use DOMElement;
 use DOMXPath;
 use Yiisoft\Translator\TranslatorInterface;
@@ -65,7 +66,6 @@ class DocumentLevelValidator extends AbstractCalculator
     private function validateCustomizationID(): void
     {
         $customizationID = $this->getNodeValue(self::XPATH_CUSTOMIZATION_ID);
-        $requiredStart   = 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0';
 
         if ($customizationID === null) {
             $this->addError(
@@ -75,7 +75,14 @@ class DocumentLevelValidator extends AbstractCalculator
             return;
         }
 
-        if (!str_starts_with($customizationID, $requiredStart)) {
+        // Accepts any known PeppolProfile's CustomizationID, not just core
+        // BIS 3.0 — a document generated under e.g. PINT A-NZ is equally valid.
+        $matchesKnownProfile = array_any(
+            PeppolProfile::knownCustomizationIds(),
+            static fn(string $known): bool => str_starts_with($customizationID, $known),
+        );
+
+        if (!$matchesKnownProfile) {
             $this->addError(
                 'PEPPOL-EN16931-R004: ' . $this->t->translate('PEPPOL.EN16931.R004.INVALID'),
                 $this->getNode(self::XPATH_CUSTOMIZATION_ID)

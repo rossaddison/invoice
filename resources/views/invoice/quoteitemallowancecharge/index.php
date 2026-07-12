@@ -85,7 +85,7 @@ $columns = [
         },
     ),
     new DataColumn(
-        header: $translator->translate('vat'),
+        header: $translator->translate('vat', ['term' => $s->activeTaxSchemeTerm()]),
         content: static function (QuoteItemAllowanceCharge $model)
             use ($numberHelper): string {
             // show the charge in brackets

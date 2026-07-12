@@ -16,8 +16,8 @@ $s->getSetting('display_vat_enabled_message') === '1'
     ? LabelSwitch::checkbox(
         'quote-view-label-switch',
         $s->getSetting('enable_vat_registration'),
-        $translator->translate('quote.label.switch.on'),
-        $translator->translate('quote.label.switch.off'),
+        $translator->translate('quote.label.switch.on', ['term' => $s->activeTaxSchemeTerm()]),
+        $translator->translate('quote.label.switch.off', ['term' => $s->activeTaxSchemeTerm()]),
         'quote-view-label-switch-id',
         '16',
         ) : '';

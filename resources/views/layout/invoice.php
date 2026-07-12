@@ -262,7 +262,7 @@ if ((null !== $currentPath) && !$isGuest) {
             ])
             ->items(
                 // Vat exists? Show red or green background
-                DropdownItem::text($t->translate('vat'), $itemFontArray +
+                DropdownItem::text($t->translate('vat', ['term' => $s->activeTaxSchemeTerm()]), $itemFontArray +
                     ['style' => $vat ? 'color: black; background-color: #ffcccb' :
                         'color: black; background-color: #90EE90']),
                 // Debug Mode

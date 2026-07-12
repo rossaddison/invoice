@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Setting\Trait;
 
 use App\Infrastructure\Persistence\Setting\Setting;
+use App\Invoice\Helpers\Peppol\PeppolProfile;
 use App\Invoice\Libraries\Cryptor;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
@@ -12,6 +13,15 @@ use Yiisoft\Translator\TranslatorInterface;
 
 trait SettingMiscTrait
 {
+    /**
+     * The tax scheme term ('VAT', 'GST', etc.) for the currently active
+     * {@see PeppolProfile} — used wherever a view displays a VAT-labelled
+     * field/heading so it reads correctly under a GST (or other) profile too.
+     */
+    public function activeTaxSchemeTerm(): string
+    {
+        return PeppolProfile::fromSetting($this->getSetting('peppol_profile'))->taxSchemeId();
+    }
 
     /**
      * @return array

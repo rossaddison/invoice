@@ -92,6 +92,10 @@ trait InvoiceInstallTrait
             // Invoice deletion by Law is not allowed. Invoices have to be
             // cancelled with a credit invoice/note.
             'enable_invoice_deletion' => true,
+            // Documentation only — actually enforced unconditionally in
+            // SettingRepository::loadSettings(), since enable_vat_registration's
+            // meaning now depends on PeppolProfile, a Peppol-owned concept.
+            'enable_peppol' => 1,
             'enable_peppol_client_defaults' => 1,
             'enable_telegram' => 0,
             'enable_vat_registration' => 0,

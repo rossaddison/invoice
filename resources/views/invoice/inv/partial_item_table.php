@@ -267,7 +267,7 @@ foreach ($invItems as $item) {
          echo H::openTag('b');
           echo $vat === '0' ?
               $translator->translate('tax.rate') :
-              $translator->translate('vat.rate');
+              $translator->translate('vat.rate', ['term' => $s->activeTaxSchemeTerm()]);
          echo H::closeTag('b');
         echo H::closeTag('span');
         echo H::openTag('select', [
@@ -647,7 +647,7 @@ foreach ($invItems as $item) {
        echo H::openTag('span');
         echo H::openTag('b');
          echo $vat === '0' ? $translator->translate('tax') :
-             $translator->translate('vat.abbreviation');
+             $translator->translate('vat.abbreviation', ['term' => $s->activeTaxSchemeTerm()]);
         echo H::closeTag('b');
        echo H::closeTag('span');
        echo H::openTag('br');
@@ -754,7 +754,7 @@ foreach ($invItems as $item) {
        echo H::openTag('td');
         echo H::openTag('span');
          echo H::openTag('b');
-          echo $vat == '1' ? $translator->translate('vat.break.down') :
+          echo $vat == '1' ? $translator->translate('vat.break.down', ['term' => $s->activeTaxSchemeTerm()]) :
               $translator->translate('item.tax');
          echo H::closeTag('b');
         echo H::closeTag('span');
@@ -792,7 +792,7 @@ foreach ($invItems as $item) {
         echo H::openTag('b');
          echo  new A()->content(
              $vat == '1' ? $translator->translate(
-                 'allowance.or.charge.shipping.handling.packaging.vat') :
+                 'allowance.or.charge.shipping.handling.packaging.vat', ['term' => $s->activeTaxSchemeTerm()]) :
                  $translator->translate(
                      'allowance.or.charge.shipping.handling.packaging.tax')
          )->href(

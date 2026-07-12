@@ -79,7 +79,7 @@ $columns = [
         },
     ),
     new DataColumn(
-        header: $translator->translate('vat'),
+        header: $translator->translate('vat', ['term' => $s->activeTaxSchemeTerm()]),
         content: static function (InvItemAllowanceCharge $model) use ($numberHelper): string {
             // show the charge in brackets
             if ($model->getAllowanceCharge()?->getIdentifier() == 0) {

@@ -136,7 +136,7 @@ echo H::openTag('html', ['lang' => $translator->translate('cldr')]); //0
        H::encode($userInv->getName()));
       echo H::openTag('p'); //6
        if (strlen($userInv->getVatId() ?: '') > 0) {
-        echo $translator->translate('vat.id.short') . ': ' . ($userInv->getVatId() ?: '');
+        echo $translator->translate('vat.id.short', ['term' => $s->activeTaxSchemeTerm()]) . ': ' . ($userInv->getVatId() ?: '');
         echo H::tag('br', '');
        }
        if (strlen($userInv->getTaxCode() ?? '') > 0) {
@@ -176,7 +176,7 @@ echo H::openTag('html', ['lang' => $translator->translate('cldr')]); //0
        H::encode($clientHelper->formatClient($client)));
       echo H::openTag('p'); //6
        if (strlen($client->getClientVatId()) > 0) {
-        echo $translator->translate('vat.id.short') . ': ' . H::encode($client->getClientVatId());
+        echo $translator->translate('vat.id.short', ['term' => $s->activeTaxSchemeTerm()]) . ': ' . H::encode($client->getClientVatId());
         echo H::tag('br', '');
        }
        if (strlen($client->getClientTaxCode() ?? '') > 0) {
@@ -330,7 +330,7 @@ echo H::openTag('html', ['lang' => $translator->translate('cldr')]); //0
         echo H::openTag('tr'); //8
          echo H::tag('td', '', $noBB4);
          echo H::openTag('td', $textRight); //9
-          echo $vat === '1' ? $translator->translate('vat.break.down') : $translator->translate('item.tax');
+          echo $vat === '1' ? $translator->translate('vat.break.down', ['term' => $s->activeTaxSchemeTerm()]) : $translator->translate('item.tax');
          echo H::closeTag('td'); //9
          echo H::tag('td',
           H::tag('b', $numberHelper->formatCurrency($salesorder_amount->getItemTaxTotal())),
@@ -352,7 +352,7 @@ echo H::openTag('html', ['lang' => $translator->translate('cldr')]); //0
           echo H::tag('td', '', $noBB4);
           echo H::openTag('td', $textRight); //9
            echo $vat == '1'
-            ? $translator->translate('allowance.or.charge.shipping.handling.packaging.vat')
+            ? $translator->translate('allowance.or.charge.shipping.handling.packaging.vat', ['term' => $s->activeTaxSchemeTerm()])
             : $translator->translate('allowance.or.charge.shipping.handling.packaging.tax');
           echo H::closeTag('td'); //9
           echo H::tag('td',

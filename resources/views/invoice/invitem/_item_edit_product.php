@@ -178,7 +178,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                     ->label($vat === false ?
                                             $translator->translate(
                                             'tax.rate') :
-                                            $translator->translate('vat.rate'))
+                                            $translator->translate('vat.rate', ['term' => $s->activeTaxSchemeTerm()]))
                                     ->addInputAttributes(
                                         ['class' => 'form-select',])
                                     ->optionsData($optionsDataTaxRate)

@@ -638,6 +638,7 @@ class ReportController extends BaseController
                              ?: [],
                     'n' => new NumberHelper($this->sR),
                     'clienthelper' => new ClientHelper($this->sR),
+                    's' => $this->sR,
                 ];
                 $mpdfhelper = new MpdfHelper($this->translator);
                 // Forth parameter $password is empty because these reports are intended for management only

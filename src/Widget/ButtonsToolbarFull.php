@@ -271,22 +271,6 @@ final readonly class ButtonsToolbarFull
             );
         }
 
-        // Peppol disabled indicator — links directly to the enable setting
-        if ($this->settingRepository->getSetting('enable_peppol') !== '1') {
-            $buttons[] = $this->createButton(
-                'peppol-disabled',
-                $this->urlGenerator->generate(
-                    'setting/tabIndex',
-                    [],
-                    ['active' => 'peppol'],
-                    'settings[enable_peppol]',
-                ),
-                'bi-reception-0',
-                'btn-outline-secondary',
-                'Peppol ❌',
-            );
-        }
-
         // Payment gateways - REMOVED
         // Pay-now buttons should only appear in the options dropdown menu,
         // not in the toolbar

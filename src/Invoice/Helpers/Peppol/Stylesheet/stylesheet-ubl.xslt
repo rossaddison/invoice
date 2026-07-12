@@ -24,7 +24,7 @@
 			</div>
 		</div>
 	</xsl:template>
-	<xsl:template match="cn:CreditNote[starts-with(normalize-space(cbc:CustomizationID/text()), 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0')]" mode="document" priority="1000">
+	<xsl:template match="cn:CreditNote[starts-with(normalize-space(cbc:CustomizationID/text()), 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0') or starts-with(normalize-space(cbc:CustomizationID/text()), 'urn:peppol:pint:billing-1@aunz-1') or starts-with(normalize-space(cbc:CustomizationID/text()), 'urn:peppol:pint:billing-1@sg-1')]" mode="document" priority="1000">
 		<html lang="{$language}">
 			<head>
 				<xsl:call-template name="doc-head"/>
@@ -100,7 +100,7 @@
 			</body>
 		</html>
 	</xsl:template>
-	<xsl:template match="in:Invoice[starts-with(normalize-space(cbc:CustomizationID/text()), 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0')]" mode="document" priority="1000">
+	<xsl:template match="in:Invoice[starts-with(normalize-space(cbc:CustomizationID/text()), 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0') or starts-with(normalize-space(cbc:CustomizationID/text()), 'urn:peppol:pint:billing-1@aunz-1') or starts-with(normalize-space(cbc:CustomizationID/text()), 'urn:peppol:pint:billing-1@sg-1')]" mode="document" priority="1000">
 		<html lang="{$language}">
 			<head>
 				<xsl:call-template name="doc-head"/>

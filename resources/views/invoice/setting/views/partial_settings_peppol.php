@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Invoice\Helpers\Peppol\PeppolProfile;
 use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\Option;
 use Yiisoft\Html\Tag\I;
@@ -15,11 +16,11 @@ use Yiisoft\Html\Tag\I;
 * @var string $config_tax_currency
 */
 
-$kEnablePeppol = 'settings[enable_peppol]';
 $kPeppolDebugEmojis = 'settings[peppol_debug_with_emojis]';
 $kPeppolDebugValidator = 'settings[peppol_debug_with_internal_validator]';
 $kPeppolXmlStream = 'settings[peppol_xml_stream]';
 $kPeppolDocCurrency = 'settings[peppol_document_currency]';
+$kPeppolProfile = 'settings[peppol_profile]';
 $kCurrencyCodeFrom = 'settings[currency_code_from]';
 $kCurrencyCodeTo = 'settings[currency_code_to]';
 $kCurrencyFromTo = 'settings[currency_from_to]';
@@ -48,40 +49,60 @@ echo H::openTag('div', $row); //1
    echo H::openTag('div', $panelHead); //4
     echo $translator->translate('peppol.electronic.invoicing');
    echo H::closeTag('div'); //4
-   /* Enable Peppol */
+   /* Peppol is permanently enabled — see SettingRepository::loadSettings(),
+    * which forces enable_peppol to '1' regardless of what's stored, because
+    * enable_vat_registration's meaning (and the VAT/GST term it drives) is
+    * now dependent on PeppolProfile, a Peppol-owned concept. No form input
+    * for this key any more — nothing to submit, nothing to toggle off. */
    echo H::openTag('div', $panelBody); //4
     echo H::openTag('div', $row); //5
      echo H::openTag('div', $colMd6); //6
       echo H::openTag('div', $formGroup); //7
        echo H::openTag('div', $checkbox); //8
-        $body[$kEnablePeppol] =
-        $s->getSetting('enable_peppol');
-        echo H::openTag('input', [
-          'type' => 'hidden',
-          'name' => $kEnablePeppol,
-          'value' => '0'
-         ]);
-         echo H::openTag('input', [
-          'type' => 'checkbox',
-          'class' => 'form-check-input',
-          'id' => 'enable_peppol',
-          'name' => $kEnablePeppol,
-          'value' => '1',
-          'checked' => ($body[
-          $kEnablePeppol
-         ] == '1') ? 'checked' : null
-         ]);
-         echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'enable_peppol']);
-          echo H::a(
-           $translator->translate('peppol.enable'),
-           'https://www.datypic.com/sc/ubl21/ss.html',
-           [
-           'class' => 'text-decoration-none'
-          ]
-          );
-         echo H::closeTag('label');
+        echo new I()->class('bi bi-check-circle-fill text-success me-1');
+        echo H::a(
+         $translator->translate('peppol.enable'),
+         'https://www.datypic.com/sc/ubl24/ss.html',
+         [
+         'class' => 'text-decoration-none'
+        ]
+        );
        echo H::closeTag('div'); //8
       echo H::closeTag('div'); //7
+     echo H::closeTag('div'); //6
+     /* Peppol Document Profile — see App\Invoice\Helpers\Peppol\PeppolProfile.
+      * Kept first in this panel since it now drives the VAT/GST term used
+      * throughout the rest of the app (SettingRepository::activeTaxSchemeTerm()). */
+     echo H::openTag('div', $formGroup); //6
+      echo H::openTag('label', [
+       'for' => $kPeppolProfile
+      ]);
+       echo $translator->translate(
+        'peppol.profile'
+       );
+       echo $s->infoIcon('peppol_profile');
+      echo H::closeTag('label');
+      $body[$kPeppolProfile] = PeppolProfile::fromSetting(
+       $s->getSetting('peppol_profile')
+      )->value;
+      echo H::openTag('select', [
+       'name' => $kPeppolProfile,
+       'id' => $kPeppolProfile,
+       'class' => $inputSmFormControl
+      ]);
+       /**
+       * @var PeppolProfile $peppolProfile
+       */
+       foreach (PeppolProfile::cases() as $peppolProfile) {
+       echo  new Option()
+        ->value($peppolProfile->value)
+        ->selected(
+         $body[$kPeppolProfile]
+         == $peppolProfile->value
+        )
+        ->content($peppolProfile->label());
+       }
+      echo H::closeTag('select');
      echo H::closeTag('div'); //6
      echo H::openTag('div', $formGroup); //6
       echo H::openTag('label', [

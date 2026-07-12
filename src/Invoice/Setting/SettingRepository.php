@@ -245,6 +245,12 @@ final class SettingRepository extends Select\Repository implements SettingReposi
             $this->settingsArray[$setting->getSettingKey()] =
                     $setting->getSettingValue();
         }
+        // Peppol is permanently enabled — enable_vat_registration's meaning
+        // (and the VAT/GST term it drives, see activeTaxSchemeTerm()) is now
+        // dependent on PeppolProfile, which is a Peppol-owned concept. Forced
+        // here, not just defaulted, so existing installs with a stored '0'
+        // are also covered without a DB migration.
+        $this->settingsArray['enable_peppol'] = '1';
     }
 
     /**

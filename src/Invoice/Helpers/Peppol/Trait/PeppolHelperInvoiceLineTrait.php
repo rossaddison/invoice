@@ -264,7 +264,7 @@ trait PeppolHelperInvoiceLineTrait
                                             'value' => [
                                                 [
                                                     'name' => "{$b}ID",
-                                                    'value' => self::TAX_CATEGORY_VAT
+                                                    'value' => $this->activeTaxSchemeId()
                                                 ],
                                             ],
                                         ],

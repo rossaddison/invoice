@@ -339,7 +339,7 @@ echo H::openTag('div', ['id' => 'content', 'class' => 'tabs-below p-0']); //0
        echo H::openTag('table', ['class' => $cssTableNoMargin]); //7
         if ($client->getClientVatId()) {
          echo H::openTag('tr'); //8
-          echo H::tag('th', $translator->translate('vat.id'));
+          echo H::tag('th', $translator->translate('vat.id', ['term' => $s->activeTaxSchemeTerm()]));
           echo H::tag('td', H::encode($client->getClientVatId()));
          echo H::closeTag('tr'); //8
         }

@@ -92,7 +92,7 @@ $columns = [
     ),
     new DataColumn(
         property: 'vat_or_tax',
-        header: $vat ? $translator->translate('vat') : $translator->translate('tax'),
+        header: $vat ? $translator->translate('vat', ['term' => $s->activeTaxSchemeTerm()]) : $translator->translate('tax'),
         content: static fn (InvAllowanceCharge $model) => $model->getVatOrTax()
             ?? 0.00,
         withSorting: true,

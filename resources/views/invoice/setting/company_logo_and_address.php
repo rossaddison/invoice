@@ -105,7 +105,7 @@ echo  new Img()
             <td style="width:33%;text-align:left">
                 <?php
                     if ($s->getSetting('enable_vat_registration') === '1' && $isInvoice) {
-                        echo '<div><b>' . Html::encode($translator->translate('vat.invoice')) . '</b></div>';
+                        echo '<div><b>' . Html::encode($translator->translate('vat.invoice', ['term' => $s->activeTaxSchemeTerm()])) . '</b></div>';
                         echo '<div><br><b>' . $translator->translate('number') . '</b> : ' . Html::encode($document_number) . '</div>';
                         // echo '<div><br><b>'. $translator->translate('client.number').'</b> : '.Html::encode($client_number) .'</div>';
                     if (strlen($client_purchase_order_number) > 0) {    
@@ -114,19 +114,19 @@ echo  new Img()
                         echo '<div><br><b>' . $translator->translate('tax.point') . '</b> : ' . Html::encode($date_tax_point) . '</div>';
                     }
 if ($s->getSetting('enable_vat_registration') === '1' && $isQuote) {
-    echo '<div><b>' . Html::encode($translator->translate('quote.vat.quote')) . '</b></div>';
+    echo '<div><b>' . Html::encode($translator->translate('quote.vat.quote', ['term' => $s->activeTaxSchemeTerm()])) . '</b></div>';
     echo '<div><br><b>' . $translator->translate('quote.number') . '</b> : ' . Html::encode($document_number) . '</div>';
     echo '<div><b>' . $translator->translate('client.number') . '</b> : ' . Html::encode($client_number) . '</div>';
 }
 if ($s->getSetting('enable_vat_registration') === '1' && $isSalesOrder) {
-    echo '<div><b>' . Html::encode($translator->translate('salesorder.vat.salesorder')) . '</b></div>';
+    echo '<div><b>' . Html::encode($translator->translate('salesorder.vat.salesorder', ['term' => $s->activeTaxSchemeTerm()])) . '</b></div>';
     echo '<div><br><b>' . $translator->translate('salesorder.number') . '</b> : ' . Html::encode($document_number) . '</div>';
     echo '<div><b>' . $translator->translate('client.number') . '</b> : ' . Html::encode($client_number) . '</div>';
 }
 echo '<div><br></div>';
 echo '<div><b>' . Html::encode($company['name']) . '</b></div>';
 echo '<div><br></div>';
-echo '<div>' . $translator->translate('vat.reg.no') . ': ' . Html::encode($company['vat_id']) . '</div>';
+echo '<div>' . $translator->translate('vat.reg.no', ['term' => $s->activeTaxSchemeTerm()]) . ': ' . Html::encode($company['vat_id']) . '</div>';
 echo '<div>' . $translator->translate('tax.code.short') . ': ' . Html::encode($company['tax_code']) . '</div>';
 echo '<div><br></div>';
 echo '<div>' . Html::encode($company['address_1'] ? $translator->translate('street.address') . ': ' . $company['address_1'] : '') . '</div>';

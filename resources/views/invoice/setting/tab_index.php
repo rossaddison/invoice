@@ -139,7 +139,7 @@ $tabs = [
      'content' => $google_translate
  ],
  'vat-registered' => [
-     'label' => $translator->translate('vat'),
+     'label' => $translator->translate('vat', ['term' => $s->activeTaxSchemeTerm()]),
      'icon'  => 'bi bi-building',
      'color' => '#fd7e14',
      'aria'  => 'settings-vat-registered',

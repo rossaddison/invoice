@@ -2,11 +2,14 @@
 
 declare(strict_types=1);
 
+use Yiisoft\Bootstrap5\BreadcrumbLink;
+use Yiisoft\Bootstrap5\Breadcrumbs;
 use Yiisoft\Html\Html as H;
 
 /**
 * @var App\Invoice\Setting\SettingRepository $s
 * @var Yiisoft\Translator\TranslatorInterface $translator
+* @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
 * @var array $body
 */
 
@@ -23,7 +26,27 @@ echo H::openTag('div', $row); //1
  echo H::openTag('div', $colMd8); //2
   echo H::openTag('div', $panel); //3
    echo H::openTag('div', $panelHead); //4
-    echo $translator->translate('vat');
+    echo Breadcrumbs::widget()
+     ->links(
+      BreadcrumbLink::to(
+       label: $translator->translate('vat', ['term' => $s->activeTaxSchemeTerm()]),
+       url: $urlGenerator->generate(
+        'setting/tabIndex',
+        [],
+        ['active' => 'peppol'],
+        'settings[peppol_profile]',
+       ),
+       active: false,
+       attributes: [
+        'data-bs-toggle' => 'tooltip',
+        'title' => $translator->translate('click.to.toggle'),
+       ],
+       encodeLabel: false,
+      ),
+     )
+     ->attribute('style', ['--bs-breadcrumb-font-size' => '1.25rem'])
+     ->listId(false)
+     ->render();
    echo H::closeTag('div'); //4
    echo H::openTag('div', $panelBody); //4
     echo H::openTag('div', $row); //5
@@ -48,7 +71,7 @@ echo H::openTag('div', $row); //1
           ? 'checked' : null
          ]);
          echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'enable_vat_registration']);
-          echo $translator->translate('enable.vat');
+          echo $translator->translate('enable.vat', ['term' => $s->activeTaxSchemeTerm()]);
           echo $s->infoIcon('enable_vat_registration');
          echo H::closeTag('label');
        echo H::closeTag('div'); //8
@@ -72,22 +95,26 @@ echo H::openTag('div', $row); //1
           ? 'checked' : null
          ]);
          echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'dvem_checkbox']);
-          echo $translator->translate('enable.vat.message');
+          echo $translator->translate('enable.vat.message', ['term' => $s->activeTaxSchemeTerm()]);
          echo H::closeTag('label');
         echo H::openTag('br');
         echo H::openTag('br');
         $vW = 'enable.vat.warning.line.';
+        $vatWarningTerm = ['term' => $s->activeTaxSchemeTerm()];
         echo H::openTag('p');
-         echo $translator->translate($vW . '1');
+         echo $translator->translate($vW . '1', $vatWarningTerm);
         echo H::closeTag('p');
         echo H::openTag('p');
-         echo $translator->translate($vW . '2');
+         echo $translator->translate($vW . '2', $vatWarningTerm);
         echo H::closeTag('p');
         echo H::openTag('p');
-         echo $translator->translate($vW . '3');
+         echo $translator->translate($vW . '3', $vatWarningTerm);
         echo H::closeTag('p');
         echo H::openTag('p');
-         echo $translator->translate($vW . '4');
+         echo $translator->translate($vW . '4', $vatWarningTerm);
+        echo H::closeTag('p');
+        echo H::openTag('p');
+         echo $translator->translate($vW . '5', $vatWarningTerm);
         echo H::closeTag('p');
        echo H::closeTag('div'); //8
       echo H::closeTag('div'); //7

@@ -83,7 +83,7 @@ class PeppolHelper
     use PeppolHelperTaxTrait;
     use PeppolHelperUnc7143Trait;
     public const string SETTING_PEPPOL_DOCUMENT_CURRENCY = 'peppol_document_currency';
-    public const string TAX_CATEGORY_VAT = 'VAT';
+    public const string SETTING_PEPPOL_PROFILE = 'peppol_profile';
     public const string DATE_FORMAT_YMD = 'Y-m-d';
 
     // UBL element name constants (used 5+ times as array keys/values)
@@ -167,7 +167,19 @@ class PeppolHelper
         $this->from_currency = $this->s->getSetting('currency_code_from');
         $this->to_currency   = $this->s->getSetting('currency_code_to');
     }
-    
+
+    /**
+     * The `cac:TaxScheme/cbc:ID` value ('VAT', 'GST', etc.) for the
+     * {@see PeppolProfile} currently selected via the `peppol_profile`
+     * setting — used wherever a document/line-level tax category is written.
+     */
+    public function activeTaxSchemeId(): string
+    {
+        return PeppolProfile::fromSetting(
+            $this->s->getSetting(self::SETTING_PEPPOL_PROFILE),
+        )->taxSchemeId();
+    }
+
     /** @psalm-suppress UnusedReturnValue */
     private function ensureTempPeppolFolderAndUploadsFolderExist(): Aliases
     {
@@ -308,7 +320,9 @@ class PeppolHelper
             $this->buildInvoiceLinesArray(
                 $invoice, $invoice_period, $inv->iiaR, $inv->cpR, $charge->soiR,
                     $charge->aciiR, $net->unpR);
-        $profileID = 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0';
+        $profileID = PeppolProfile::fromSetting(
+            $this->s->getSetting(self::SETTING_PEPPOL_PROFILE),
+        )->profileId();
         $supplierAssignedAccountID = $this->SupplierAssignedAccountId(
                                                             $invoice, $inv->cpR);
         $note = $invoice->getNote() ?? '';

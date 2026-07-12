@@ -223,7 +223,7 @@ foreach ($soItems as $item) {
                     </td>
                     <td>
                         <div>
-                            <span class="text-muted"><?= $vat === '0' ? $translator->translate('tax.rate') : $translator->translate('vat.rate') ?></span>
+                            <span class="text-muted"><?= $vat === '0' ? $translator->translate('tax.rate') : $translator->translate('vat.rate', ['term' => $s->activeTaxSchemeTerm()]) ?></span>
                             <select disabled name="item_tax_rate_id" class="form-control form-control-lg" data-bs-toggle = "tooltip" title="salesorder_item->tax_rate_id">
                                 <?php
                     /**
@@ -278,7 +278,7 @@ foreach ($soItems as $item) {
                         </span>
                     </td>
                     <td class="td-amount td-vert-middle">
-                        <span><?= $vat === '0' ? $translator->translate('tax') : $translator->translate('vat.abbreviation') ?></span><br/>
+                        <span><?= $vat === '0' ? $translator->translate('tax') : $translator->translate('vat.abbreviation', ['term' => $s->activeTaxSchemeTerm()]) ?></span><br/>
                         <span name="item_tax_total" class="text-end" data-bs-toggle = "tooltip" title="salesorder_item_amount->tax_total">
                             <?= $numberHelper->formatCurrency($soiaR->repoSalesOrderItemAmountquery($item->reqId())?->getTaxTotal() ?? 0.00); ?>
                         </span>
@@ -311,7 +311,7 @@ foreach ($soItems as $item) {
                 </tr>
                 <tr>
                     <td>
-                    <span><?= $vat === '1' ? $translator->translate('vat.break.down') : $translator->translate('item.tax'); ?>
+                    <span><?= $vat === '1' ? $translator->translate('vat.break.down', ['term' => $s->activeTaxSchemeTerm()]) : $translator->translate('item.tax'); ?>
                     </span>
                     </td>
                     <td class="text-end" data-bs-toggle = "tooltip" id="amount_item_tax_total" title="quote_amount->item_tax_total"><?php echo $numberHelper->formatCurrency($so_amount->getItemTaxTotal() ?? 0.00); ?></td>

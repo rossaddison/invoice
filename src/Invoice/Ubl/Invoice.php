@@ -71,6 +71,16 @@ class Invoice implements XmlSerializable
     }
 
     /**
+     * Overrides the default core-BIS-3.0 CustomizationID — used to switch the
+     * generated document to a different {@see \App\Invoice\Helpers\Peppol\PeppolProfile}.
+     */
+    public function setCustomizationID(string $customizationID): self
+    {
+        $this->customizationID = $customizationID;
+        return $this;
+    }
+
+    /**
      * @return Invoice
      */
     public function setDocumentCurrencyCode(): self

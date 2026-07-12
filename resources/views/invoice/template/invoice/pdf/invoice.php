@@ -67,7 +67,7 @@ $translator->setLocale($cldr);
       H::encode($inv->getClient()?->getClientName())));
     if (strlen($clientVatId = $inv->getClient()?->getClientVatId() ?? '') > 0) {
      echo H::tag('div',
-      $translator->translate('vat.reg.no') . ': ' .
+      $translator->translate('vat.reg.no', ['term' => $s->activeTaxSchemeTerm()]) . ': ' .
        H::encode($clientVatId));
     }
     if (strlen($clientTaxCode = $inv->getClient()?->getClientTaxCode() ?? '') > 0) {
@@ -170,7 +170,7 @@ $translator->setLocale($cldr);
        echo H::tag('th', '%', $thItemPrice);
       else :
        echo H::tag('th',
-        H::encode($translator->translate('vat.abbreviation')),
+        H::encode($translator->translate('vat.abbreviation', ['term' => $s->activeTaxSchemeTerm()])),
         $thItemPrice);
        echo H::tag('th', '%', $thItemPrice);
       endif;
@@ -289,7 +289,7 @@ $translator->setLocale($cldr);
     if ($inv_amount->getItemTaxTotal() > 0) :
      echo H::openTag('tr'); //5
       echo H::tag('td',
-       H::encode($vat === '1' ? $translator->translate('vat.break.down') :
+       H::encode($vat === '1' ? $translator->translate('vat.break.down', ['term' => $s->activeTaxSchemeTerm()]) :
         $translator->translate('item.tax')),
        array_merge($tdEnd, ['colspan' => $colspanVal]));
       echo H::tag('td', '', $tdEnd);
@@ -316,7 +316,7 @@ $translator->setLocale($cldr);
       echo H::openTag('tr'); //5
        echo H::tag('td',
         H::encode($vat == '1'
-         ? $translator->translate('allowance.or.charge.shipping.handling.packaging.vat')
+         ? $translator->translate('allowance.or.charge.shipping.handling.packaging.vat', ['term' => $s->activeTaxSchemeTerm()])
          : $translator->translate('allowance.or.charge.shipping.handling.packaging.tax')),
         array_merge($tdEnd, ['colspan' => $colspanVal]));
        echo H::tag('td', '', $tdEnd);
@@ -370,7 +370,7 @@ $translator->setLocale($cldr);
     echo H::openTag('tr'); //5
      echo H::tag('td',
       H::encode($vat == '1'
-       ? $translator->translate('allowance.or.charge.shipping.handling.packaging.vat')
+       ? $translator->translate('allowance.or.charge.shipping.handling.packaging.vat', ['term' => $s->activeTaxSchemeTerm()])
        : $translator->translate('allowance.or.charge.shipping.handling.packaging.tax')),
       ['colspan' => '6', 'class' => 'text-end']);
      $total = $inv_amount->getPackHandleShipTotal();

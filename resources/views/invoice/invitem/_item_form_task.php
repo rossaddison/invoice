@@ -168,7 +168,7 @@ foreach ($taxRates as $taxRate) {
 ?>
                                 <?= Field::select($form, 'tax_rate_id')
     ->label($vat === false ? $translator->translate('tax.rate') :
-        $translator->translate('vat.rate'))
+        $translator->translate('vat.rate', ['term' => $s->activeTaxSchemeTerm()]))
     ->addInputAttributes(['class' => 'form-select',])
     ->optionsData($optionsDataTaxRate)
     ->value(Html::encode($form->tax_rate_id))
@@ -226,7 +226,7 @@ foreach ($taxRates as $taxRate) {
                             <?= Html::openTag('span', ['name' => 'charge_total']); ?><?= $translator->translate('item.charge') ?><?= Html::closeTag('span'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount td-vert-middle']); ?>
-                            <?= Html::openTag('span'); ?><?= $vat === false ? $translator->translate('tax') : $translator->translate('vat.abbreviation')  ?><?= Html::closeTag('span'); ?>
+                            <?= Html::openTag('span'); ?><?= $vat === false ? $translator->translate('tax') : $translator->translate('vat.abbreviation', ['term' => $s->activeTaxSchemeTerm()])  ?><?= Html::closeTag('span'); ?>
                                 <?= Html::tag('br'); ?>
                             <?= Html::openTag('span', ['name' => 'tax_total', 'class' => 'text-end']); ?><?= Html::closeTag('span'); ?>
                         <?= Html::closeTag('td'); ?>

@@ -61,7 +61,7 @@ $translator->setLocale($cldr);
       H::encode($salesorder->getClient()?->getClientName())));
     if (strlen($clientVatId = $salesorder->getClient()?->getClientVatId() ?? '') > 0) {
      echo H::tag('div',
-      $translator->translate('vat.reg.no') . ': ' . H::encode($clientVatId));
+      $translator->translate('vat.reg.no', ['term' => $s->activeTaxSchemeTerm()]) . ': ' . H::encode($clientVatId));
     }
     if (strlen($clientTaxCode = $salesorder->getClient()?->getClientTaxCode() ?? '') > 0) {
      echo H::tag('div',
@@ -145,7 +145,7 @@ $translator->setLocale($cldr);
         $thItemPrice);
       else :
        echo H::tag('th',
-        H::encode($translator->translate('vat.abbreviation')),
+        H::encode($translator->translate('vat.abbreviation', ['term' => $s->activeTaxSchemeTerm()])),
         $thItemPrice);
       endif;
       echo H::tag('th',
@@ -246,7 +246,7 @@ $translator->setLocale($cldr);
     if ($so_amount->getItemTaxTotal() > 0) :
      echo H::openTag('tr'); //5
       echo H::tag('td',
-       H::encode($vat === '1' ? $translator->translate('vat.break.down') : $translator->translate('item.tax')),
+       H::encode($vat === '1' ? $translator->translate('vat.break.down', ['term' => $s->activeTaxSchemeTerm()]) : $translator->translate('item.tax')),
        array_merge($tdEnd, ['colspan' => $colSpanVal]));
       echo H::tag('td',
        H::tag('b',
@@ -270,7 +270,7 @@ $translator->setLocale($cldr);
       echo H::openTag('tr'); //5
        echo H::tag('td',
         H::encode($vat == '1'
-         ? $translator->translate('allowance.or.charge.shipping.handling.packaging.vat')
+         ? $translator->translate('allowance.or.charge.shipping.handling.packaging.vat', ['term' => $s->activeTaxSchemeTerm()])
          : $translator->translate('allowance.or.charge.shipping.handling.packaging.tax')),
         array_merge($tdEnd, ['colspan' => $colSpanVal]));
        echo H::tag('td',

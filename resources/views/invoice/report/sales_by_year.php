@@ -6,6 +6,7 @@ use Yiisoft\Html\Html;
 
 /**
  * @var App\Invoice\Helpers\NumberHelper $n
+ * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Assets\AssetManager $assetManager
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\View\WebView $this
@@ -37,7 +38,7 @@ $this->beginPage();
 
 <table>
     <tr>
-        <th style="width:15%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('vat.id')); ?></th>
+        <th style="width:15%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('vat.id', ['term' => $s->activeTaxSchemeTerm()])); ?></th>
         <th style="width:50%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('name')); ?></th>
         <th style="width:15%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('sales')); ?></th>
         <th style="width:20%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('item.tax')); ?></th>

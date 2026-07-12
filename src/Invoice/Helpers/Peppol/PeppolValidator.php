@@ -53,7 +53,6 @@ class PeppolValidator
     private const string XPATH_PROFILE_ID     = '//cbc:ProfileID';
     private const string XPATH_SUPPLIER_PARTY = '//cac:AccountingSupplierParty/cac:Party/';
     private const string XPATH_CUSTOMER_PARTY = '//cac:AccountingCustomerParty/cac:Party/';
-    private const string XPATH_TAX_SCHEME_VAT = "cac:PartyTaxScheme[cac:TaxScheme/cbc:ID='VAT']/";
 
     /** @var array<string, string> */
     private array $namespaces = [
@@ -189,16 +188,37 @@ class PeppolValidator
         $this->documentCurrencyCode = $this->getNodeValue('//cbc:DocumentCurrencyCode');
     }
 
+    /**
+     * `cac:PartyTaxScheme[...]/` predicate matching any known
+     * {@see PeppolProfile} tax scheme ID ('VAT', 'GST', etc.) — the
+     * validator inspects a document it did not necessarily generate itself,
+     * so it must recognise every published scheme, not just the one
+     * currently selected in settings.
+     */
+    private function partyTaxSchemePredicate(): string
+    {
+        $ids = array_unique(array_map(
+            static fn(PeppolProfile $p): string => $p->taxSchemeId(),
+            PeppolProfile::cases(),
+        ));
+        $conditions = array_map(
+            static fn(string $id): string => "cac:TaxScheme/cbc:ID='{$id}'",
+            $ids,
+        );
+        return 'cac:PartyTaxScheme[' . implode(' or ', $conditions) . ']/';
+    }
+
     private function extractSupplierCountry(): string
     {
-        $vatPath    = self::XPATH_SUPPLIER_PARTY . self::XPATH_TAX_SCHEME_VAT . 'cbc:CompanyID';
+        $taxSchemePredicate = $this->partyTaxSchemePredicate();
+        $vatPath    = self::XPATH_SUPPLIER_PARTY . $taxSchemePredicate . 'cbc:CompanyID';
         $vatCountry = $this->getNodeValue($vatPath);
 
         if ($vatCountry !== null && strlen($vatCountry) >= 2) {
             return strtoupper(substr($vatCountry, 0, 2));
         }
 
-        $taxRepPath    = '//cac:TaxRepresentativeParty/' . self::XPATH_TAX_SCHEME_VAT . 'cbc:CompanyID';
+        $taxRepPath    = '//cac:TaxRepresentativeParty/' . $taxSchemePredicate . 'cbc:CompanyID';
         $taxRepCountry = $this->getNodeValue($taxRepPath);
 
         if ($taxRepCountry !== null && strlen($taxRepCountry) >= 2) {
@@ -213,7 +233,7 @@ class PeppolValidator
 
     private function extractCustomerCountry(): string
     {
-        $vatPath        = self::XPATH_CUSTOMER_PARTY . self::XPATH_TAX_SCHEME_VAT . 'cbc:CompanyID';
+        $vatPath        = self::XPATH_CUSTOMER_PARTY . $this->partyTaxSchemePredicate() . 'cbc:CompanyID';
         $custVatCountry = $this->getNodeValue($vatPath);
 
         if ($custVatCountry !== null && strlen($custVatCountry) >= 2) {

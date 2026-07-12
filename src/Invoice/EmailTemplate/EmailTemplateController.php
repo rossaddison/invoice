@@ -92,6 +92,7 @@ final class EmailTemplateController extends BaseController
                 'custom_fields' => [
                     'client_custom' => $customfieldRepository->repoTablequery('client_custom'),
                 ],
+                's' => $this->sR,
             ]),
             //Email templates can be built for either a quote or an invoice.
             'invoiceTemplates' => $this->sR->getInvoiceTemplates('pdf'),
@@ -143,6 +144,7 @@ final class EmailTemplateController extends BaseController
                 'custom_fields' => [
                     'client_custom' => $customfieldRepository->repoTablequery('client_custom'),
                 ],
+                's' => $this->sR,
             ]),
             'quoteTemplates' => $this->sR->getQuoteTemplates('pdf'),
             // see src\Invoice\Asset\rebuild-1.13\js\mailer_ajax_email_addresses
@@ -207,6 +209,7 @@ final class EmailTemplateController extends BaseController
                     'custom_fields' => [
                         'client_custom' => $customfieldRepository->repoTablequery('client_custom'),
                     ],
+                    's' => $this->sR,
                 ]),
                 'invoiceTemplates' => $this->sR->getInvoiceTemplates('pdf'),
                 'selected_pdf_template' => $emailTemplate->getEmailTemplatePdfTemplate(),
@@ -265,6 +268,7 @@ final class EmailTemplateController extends BaseController
                     'custom_fields' => [
                         'client_custom' => $customfieldRepository->repoTablequery('client_custom'),
                     ],
+                    's' => $this->sR,
                 ]),
                 'quoteTemplates' => $this->sR->getQuoteTemplates('pdf'),
                 'selected_pdf_template' => $emailTemplate->getEmailTemplatePdfTemplate(),

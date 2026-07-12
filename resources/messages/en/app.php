@@ -59,7 +59,7 @@ return [
   'allowance.or.charge.allowance' =>
     'Allowance',
   'allowance.or.charge.allowance.vat' =>
-    'VAT on allowance',
+    '{term} on allowance',
   'allowance.or.charge.allowance.tax' =>
     'Tax on allowance',
   'allowance.or.charge.amount' =>
@@ -95,7 +95,7 @@ return [
   'allowance.or.charge.shipping.handling.packaging' =>
     'Shipping/Handling/Packaging',
   'allowance.or.charge.shipping.handling.packaging.vat' =>
-    'VAT on Shipping/Handling/Packaging',
+    '{term} on Shipping/Handling/Packaging',
   'allowance.or.charge.shipping.handling.packaging.tax' =>
     'Tax on Shipping/Handling/Packaging',
   'already.paid' => 'This invoice was already paid.',
@@ -234,6 +234,7 @@ return [
   'city' => 'City',
   'claim' => 'Started a Legal Claim',
   'cldr' => 'en',
+  'click.to.toggle' => 'Click to toggle',
   'client' => 'Client',
   'client.access' => 'Client Access',
   'client.add' => 'Client Add',
@@ -753,22 +754,26 @@ return [
   'enable.online.payments' => 'Enable Online Payments',
   'enable.permissive.search.clients' => 'Enable permissive search',
   'enable.projects' => 'Enable the Projects module',
-  'enable.vat' => 'Enable VAT',
-  'enable.vat.message' => 'Display VAT reminder message'
+  // {term} interchanged with gst, vat, or tax
+  'enable.vat' => 'Enable {term}',
+  'enable.vat.message' => 'Display {term} reminder message'
     . ' above options button on views',
-  'enable.vat.warning.line.1' => '1. With VAT enabled,'
+  'enable.vat.warning.line.1' => '1. With {term} enabled,'
     . ' only individual line items on the invoice'
-    . ' are taxed with vat. ie. Quote/Invoice'
+    . ' are taxed with {term}. ie. Quote/Invoice'
     . ' Taxes will not appear on the invoice'
     . ' and will be reduced to 0.',
-  'enable.vat.warning.line.2' => '2. With VAT enabled,'
+  'enable.vat.warning.line.2' => '2. With {term} enabled,'
     . ' no non-line-item taxes,'
     . ' as mentioned above, make up the tax total. ',
-  'enable.vat.warning.line.3' => '3. Create VAT'
+  'enable.vat.warning.line.3' => '3. Create {term}'
     . ' quotes/invoices on a separate database.',
-  'enable.vat.warning.line.4' => '4. All new VAT'
+  'enable.vat.warning.line.4' => '4. All new {term}'
     . ' invoice line items are flagged'
     . ' with the belongs_to_vat_invoice flag.',
+  'enable.vat.warning.line.5' => '5. Shipping, '
+    . ' handling, or packaging charges can be '
+    . ' shown as an overall allowance or charge',
   'enabled' => 'Enabled',
   'end' => 'End',
   'end.date' => 'End Date',
@@ -1152,8 +1157,8 @@ prior to importing and no existing documents e.g. Invoices.',
   'items' => 'Items',
   'judgement' => 'Judgment Obtained',
   'label' => 'Label',
-  'label.switch.off' => 'VAT Invoice',
-  'label.switch.on' => 'NON VAT Invoice',
+  'label.switch.off' => '{term} Invoice',
+  'label.switch.on' => 'NON {term} Invoice',
   'language' => 'Language',
   'last' => 'Last',
   'last.month' => 'Last Month',
@@ -1722,6 +1727,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'peppol.doc.currency.toggle' => 'Peppol Toggle Doc Currency',
   'peppol.document.reference.null' => 'inv-number-null-inv-id',
   'peppol.document.currency' => 'Peppol Document Currency - toggle on View',
+  'peppol.profile' => 'Peppol Document Profile',
   'peppol.ecosio.validator' =>
     'Ecosio Validator for OpenPeppol'
     . ' UBL Invoice (3.15.0) (aka BIS Billing 3.0.14)',
@@ -2091,8 +2097,8 @@ prior to importing and no existing documents e.g. Invoices.',
   'quote.item.amount' => 'Quote Item Amount',
   'quote.item.amount.add' => 'Quote Item Amount Add',
   'quote.item.cannot.delete' => 'Cannot delete quote item',
-  'quote.label.switch.off' => 'VAT Quote',
-  'quote.label.switch.on' => 'NON VAT Quote',
+  'quote.label.switch.off' => '{term} Quote',
+  'quote.label.switch.on' => 'NON {term} Quote',
   'quote.not.copied.to.invoice' =>
     'Invoice NOT created from Quote!'
     . ' Duplicate Invoice. '
@@ -2134,7 +2140,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'quote.to.invoice' => 'Quote to Invoice',
   'quote.to.so' => 'Quote to Sales Order',
   'quote.to.so.password' => 'Sales Order Password',
-  'quote.vat.quote' => 'VAT Quote',
+  'quote.vat.quote' => '{term} Quote',
   'quote.with.purchase.order.line.number' =>
     'Purchase Order Line Number'
     . ' (Peppol Requirement) '
@@ -2270,7 +2276,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'salesorder.rejected' => 'Sales Order Rejected',
   'salesorder.sent.to.customer' => 'Terms Agreement Required',
   'salesorder.to.invoice' => 'Sales Order to Invoice',
-  'salesorder.vat.salesorder' => 'VAT Sales Order',
+  'salesorder.vat.salesorder' => '{term} Sales Order',
   'salesorders' => 'Sales Orders',
   'save' => 'Save',
   'save.item.as.lookup' => 'Save item as lookup',
@@ -2847,15 +2853,15 @@ prior to importing and no existing documents e.g. Invoices.',
   'values' => 'Values',
   'values.with.taxes' => 'Values with taxes',
   'variant' => 'Variant',
-  'vat' => 'VAT',
-  'vat.abbreviation' => 'VAT',
-  'vat.break.down' => 'VAT Summary',
-  'vat.id' => 'VAT ID',
-  'vat.id.short' => 'VAT',
-  'vat.invoice' => 'VAT INVOICE',
-  'vat.rate' => 'VAT Rate',
-  'vat.reg.no' => 'VAT Reg No',
-  'vat.registered' => 'VAT Registered',
+  'vat' => '{term}',
+  'vat.abbreviation' => '{term}',
+  'vat.break.down' => '{term} Summary',
+  'vat.id' => '{term} ID',
+  'vat.id.short' => '{term}',
+  'vat.invoice' => '{term} INVOICE',
+  'vat.rate' => '{term} Rate',
+  'vat.reg.no' => '{term} Reg No',
+  'vat.registered' => '{term} Registered',
   'vendor.nikic.fast-route' => 'Building Faster Routes',
   'verify.password' => 'Verify Password',
   'version.history' => 'Version History',
@@ -2980,7 +2986,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'currency.name.GBP' => 'British Pounds',
 
   // === TAX MESSAGES ===
-  'tax.vat.rate' => 'VAT Rate: {rate}%',
+  'tax.vat.rate' => '{term} Rate: {rate}%',
   'tax.total.amount' => 'Total Tax: {amount}',
   'tax.exempt.notice' => 'This transaction is tax-exempt',
 
