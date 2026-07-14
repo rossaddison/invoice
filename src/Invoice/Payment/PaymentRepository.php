@@ -18,7 +18,7 @@ use Throwable;
  * @template TEntity of Payment
  * @extends Select\Repository<TEntity>
  */
-final class PaymentRepository extends Select\Repository
+final class PaymentRepository extends Select\Repository implements PaymentRepositoryInterface
 {
     /**
     * @param Select<TEntity> $select
@@ -199,5 +199,30 @@ final class PaymentRepository extends Select\Repository
         return $this->select()
                     ->where(['inv_id' => $inv_id])
                     ->count();
+    }
+
+    /**
+     * The latest payment_date recorded against an invoice, used by the
+     * home-care auto-invoice facility as the client's "last paid
+     * date" anchor. Returns null if the invoice has no payment on file.
+     *
+     * @param int $inv_id
+     * @return string|null Y-m-d date string
+     */
+    #[\Override]
+    public function repoLatestPaymentDateForInvquery(int $inv_id): ?string
+    {
+        $payment = $this->select()
+                      ->where(['inv_id' => $inv_id])
+                      ->orderBy('payment_date', 'DESC')
+                      ->fetchOne();
+        if (!$payment instanceof Payment) {
+            return null;
+        }
+        $paymentDate = $payment->getPaymentDate();
+        if ($paymentDate instanceof \DateTimeImmutable) {
+            return $paymentDate->format('Y-m-d');
+        }
+        return $paymentDate !== '' ? $paymentDate : null;
     }
 }

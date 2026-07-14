@@ -113,6 +113,32 @@ final class ClientController extends BaseController
     }
 
     /**
+     * Lets staff print a client's home-care QR code on their behalf
+     * (many customers are elderly and lack printer access). Shares the same
+     * token/service as the guest "print my QR code" action so both sides
+     * always print the same code.
+     *
+     * Related logic: see Route::get('/client/printQrCode/{id}')
+     */
+    public function printQrCode(
+        CurrentRoute $currentRoute,
+        cR $cR,
+        ClientService $clientService,
+        UrlGenerator $urlGenerator,
+    ): Response {
+        $client = $this->client($currentRoute, $cR);
+        if (!($client instanceof Client)) {
+            return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
+        }
+        $token = $clientService->getOrCreateQrToken($client);
+        $scanUrl = $urlGenerator->generateAbsolute('public/homecare-scan', ['token' => $token]);
+        return $this->webViewRenderer->renderPartial('//invoice/_shared/qr_print', [
+            'client' => $client,
+            'qrDataUri' => $clientService->renderQrDataUri($scanUrl),
+        ]);
+    }
+
+    /**
      * @param CurrentRoute $currentRoute
      * @param Request $request
      * @param FormHydrator $formHydrator

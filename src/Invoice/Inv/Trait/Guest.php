@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace App\Invoice\Inv\Trait;
 
 use App\Auth\Permissions;
+use App\Infrastructure\Persistence\Client\Client;
 use App\Infrastructure\Persistence\User\User;
 use App\Infrastructure\Persistence\UserInv\UserInv;
 
 use App\Invoice\{
+    Client\ClientRepository as ClientR,
+    Client\ClientService,
     Inv\InvGuestDeps,
     Inv\InvGuestFilter,
     Inv\InvRepository as IR,
@@ -16,7 +19,8 @@ use App\Invoice\{
 use Yiisoft\{
     Data\Reader\DataReaderInterface as DRI,
     Data\Reader\SortableDataInterface as SDI,
-    Router\HydratorAttribute\RouteArgument
+    Router\HydratorAttribute\RouteArgument,
+    Router\UrlGeneratorInterface,
 };
 use Psr\{Http\Message\ResponseInterface as Response,
 };
@@ -52,6 +56,48 @@ trait Guest
             return $this->webService->getNotFoundResponse();
         }
         return $this->renderGuestView($d, $filter, $page, $status, $user_id, $userInv, $user_clients);
+    }
+
+    /**
+     * Lets a signed-in guest print their own home-care QR code.
+     * Related logic: see Route::get('/client_invoices/qr')
+     */
+    public function guestQrCode(
+        ClientR $clientR,
+        ClientService $clientService,
+        UrlGeneratorInterface $urlGenerator,
+        InvGuestDeps $d,
+    ): Response {
+        $user = $this->userService->getUser();
+        $user_id = ($user instanceof User) ? $user->reqId() : 0;
+        if ($user_id <= 0) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $userInv = $d->uiR->repoUserInvUserIdcount($user_id) > 0
+            ? $d->uiR->repoUserInvUserIdquery($user_id) : null;
+        $user_clients = (null !== $userInv && $userInv->getActive())
+            ? $d->ucR->getAssignedToUser($user_id) : [];
+        if (null === $userInv || !$userInv->getActive() || empty($user_clients)) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $client = $clientR->repoClientqueryOrig((int) $user_clients[0]);
+        if (null === $client) {
+            return $this->webService->getNotFoundResponse();
+        }
+        return $this->renderClientQrPrint($client, $clientService, $urlGenerator);
+    }
+
+    private function renderClientQrPrint(
+        Client $client,
+        ClientService $clientService,
+        UrlGeneratorInterface $urlGenerator,
+    ): Response {
+        $token = $clientService->getOrCreateQrToken($client);
+        $scanUrl = $urlGenerator->generateAbsolute('public/homecare-scan', ['token' => $token]);
+        return $this->webViewRenderer->renderPartial('//invoice/_shared/qr_print', [
+            'client' => $client,
+            'qrDataUri' => $clientService->renderQrDataUri($scanUrl),
+        ]);
     }
 
     private function flashGuestAccessWarnings(?UserInv $userInv, array $user_clients): void

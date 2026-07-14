@@ -415,6 +415,14 @@ $bacsButton = $bacsPaymentService->isCompanyPrivateActive()
       . '</button>'
     : '';
 
+$qrButton = new A()
+    ->addClass('btn btn-outline-secondary ms-2')
+    ->addAttributes(['target' => '_blank'])
+    ->content(new I()->addClass('bi bi-qr-code') . ' ' . $translator->translate('print.qr.code'))
+    ->encode(false)
+    ->href($urlGenerator->generate('inv/guest/qr'))
+    ->render();
+
 $toolbarString =  new Form()->post(
                 $urlGenerator->generate('inv/guest'))->csrf($csrf)->open()
         .  new Div()->addClass('float-start m-3')->content(
@@ -427,6 +435,7 @@ $toolbarString =  new Form()->post(
                 $urlGenerator, 'client_id', 'warning',
                 $translator->translate('client'), true)
             .   $bacsButton
+            .   $qrButton
                 )->encode(false)->render()
         .  new Form()->close();
 

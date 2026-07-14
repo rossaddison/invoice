@@ -7,11 +7,39 @@ namespace App\Invoice\Client;
 use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Setting\SettingRepository;
+use chillerlan\QRCode\QRCode;
+use Yiisoft\Security\Random;
 
 final readonly class ClientService
 {
     public function __construct(private ClientRepository $repository)
     {
+    }
+
+    /**
+     * Returns this client's home-care QR token, generating and
+     * persisting one on first use. Shared by both the guest "print my QR
+     * code" action and the staff "print QR code for this client" action so
+     * every printout for a given client encodes the same scan URL.
+     */
+    public function getOrCreateQrToken(Client $client): string
+    {
+        $token = $client->getClientQrToken();
+        if ($token !== null && $token !== '') {
+            return $token;
+        }
+        $token = Random::string(32);
+        $client->setClientQrToken($token);
+        $this->repository->save($client);
+        return $token;
+    }
+
+    /**
+     * Renders a QR code image as a data URI, ready for an <img src="...">.
+     */
+    public function renderQrDataUri(string $content): string
+    {
+        return (string) new QRCode()->render($content);
     }
 
     /**

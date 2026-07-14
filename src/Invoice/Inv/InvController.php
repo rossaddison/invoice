@@ -37,7 +37,7 @@ use App\Widget\{ButtonsToolbarFull, FormFields};
 use App\Invoice\Helpers\{DateHelper, NumberHelper};
 use App\Invoice\Inv\Trait\{Add, Archive, Attachment, BatchEmail, Credit, Delete, Edit, Email,
     Flush, Guest, HtmlTrait, Index, MultipleCopy, OptionsData, PdfTrait, Peppol,
-    Storecove, Trash, Typescript, UrlKey, View};
+    Storecove, Trash, Typescript, UrlKey, View, HomeCareScan};
 use Yiisoft\{
     DataResponse\ResponseFactory\DataResponseFactoryInterface,
     DataResponse\ResponseFactory\HtmlResponseFactory,
@@ -53,7 +53,7 @@ final class InvController extends BaseController
 {
     use Add, Archive, Attachment, BatchEmail, Credit, Delete, Edit, Email, Flush, Guest,
         HtmlTrait, Index, MultipleCopy, OptionsData, PdfTrait, Peppol,
-        Storecove, Trash, Typescript, UrlKey, View;
+        Storecove, Trash, Typescript, UrlKey, View, HomeCareScan;
 
     protected string $controllerName = 'invoice/inv';
 

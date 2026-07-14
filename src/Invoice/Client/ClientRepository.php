@@ -174,6 +174,23 @@ final class ClientRepository extends Select\Repository
         return  $query->fetchOne() ?: null;
     }
 
+    /**
+     * Lookup for the public home-care scan endpoint: resolves a client
+     * from their printed QR token. Only active clients are eligible.
+     *
+     * @return Client|null
+     *
+     * @psalm-return TEntity|null
+     */
+    public function repoClientByQrTokenquery(string $token): ?Client
+    {
+        $query = $this
+            ->select()
+            ->where(['client_qr_token' => $token])
+            ->where(['client_active' => true]);
+        return $query->fetchOne() ?: null;
+    }
+
     public function optionsData(UserClientRepository $ucR): array
     {
         $optionsData = [];

@@ -143,6 +143,12 @@ echo H::openTag('div', ['id' => 'headerbar']); //0
     ->addAttributes(['class' => $cssBtnSuccess])
     ->render();
    echo (new A())
+    ->content(H::tag('i', '', ['class' => 'bi bi-qr-code']) . ' ' . $translator->translate('print.qr.code'))
+    ->href($urlGenerator->generate('client/printQrCode', ['id' => $clientId]))
+    ->encode(false)
+    ->addAttributes(['class' => 'btn btn-outline-secondary', 'target' => '_blank'])
+    ->render();
+   echo (new A())
     ->content(H::tag('i', '', ['class' => 'bi bi-trash']) . ' ' . $translator->translate('delete'))
     ->href($urlGenerator->generate('client/delete', ['id' => $clientId]))
     ->encode(false)

@@ -39,6 +39,8 @@ use App\Infrastructure\Persistence\Client\Trait\ClientTrait5;
 #[Index(columns: ['client_group'])]
 // Nullable FK
 #[Index(columns: ['postaladdress_id'])]
+// Lookup target for the public home-care QR scan endpoint
+#[Index(columns: ['client_qr_token'])]
 class Client
 {
     use RequireId;
@@ -134,6 +136,8 @@ class Client
         private ?int $postaladdress_id = null,
         #[Column(type: 'string(20)', nullable: true)]
         private ?string $client_telegram_chat_id = null,
+        #[Column(type: 'string(32)', nullable: true)]
+        private ?string $client_qr_token = null,
     ) {
         $this->client_full_name = ltrim(rtrim($this->client_name
                 . ' '

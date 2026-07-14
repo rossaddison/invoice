@@ -610,6 +610,74 @@ trait MultipleCopy
         return $copy_id;
     }
 
+    /**
+     * Generates a new invoice for a client from a template invoice's items,
+     * always as "sent" (status_id = 2) regardless of the
+     * mark_invoices_sent_copy setting, so it is immediately visible to the
+     * customer. Used by the public home-care QR scan endpoint
+     * (see InvController::homecareScan).
+     *
+     * @return int New invoice id, or 0 if generation could not proceed
+     *             (e.g. no active portal user linked to this client).
+     */
+    public function generateHomeCareCleaningInvoice(
+        int $clientId,
+        Inv $templateInvoice,
+        InvCopyDeps $d,
+        FormHydrator $formHydrator,
+    ): int {
+        $invId = $templateInvoice->reqId();
+        $groupId = $templateInvoice->reqGroupId();
+        $productIds = $this->collectInvProductIds($invId, $d);
+
+        $invoice_body = [
+            'quote_id'                => null,
+            'client_id'               => $clientId,
+            'group_id'                => $groupId,
+            'status_id'               => 2,
+            'number'                  => $d->gR->generateNumber($groupId),
+            'creditinvoice_parent_id' => null,
+            'discount_amount'         => (float) $templateInvoice->getDiscountAmount(),
+            'url_key'                 => Random::string(32),
+            'password'                => '',
+            'payment_method'          => $templateInvoice->getPaymentMethod(),
+            'terms'                   => $templateInvoice->getTerms(),
+            'document_description'    => $templateInvoice->getDocumentDescription(),
+            'note'                    => $templateInvoice->getNote(),
+            'stand_in_code'           => $this->sR->getSetting('stand_in_code'),
+        ];
+        $copy = new Inv();
+        $form = new InvForm();
+        if (!$formHydrator->populateAndValidate($form, $invoice_body)) {
+            return 0;
+        }
+        $user = $this->activeUser($clientId, $d->uR, $d->ucR, $d->uiR);
+        if (null === $user) {
+            return 0;
+        }
+        $copy_id = 0;
+        $this->inv_service->withTransaction(
+            function () use (
+                $user, $copy, $invoice_body, $invId, $d, $formHydrator, &$copy_id
+            ): void {
+                $this->inv_service->saveInv($user, $copy, $invoice_body, $this->sR, $d->gR);
+                $copy_id = $copy->reqId();
+                if ($copy_id > 0) {
+                    $this->invToInvInvItems($invId, $copy_id, $d, $formHydrator);
+                    $this->invToInvInvTaxRates($invId, $copy_id, $d, $formHydrator);
+                    $this->invToInvInvCustom($invId, $copy_id, $d, $formHydrator);
+                    $this->invToInvInvAllowanceCharges($invId, $copy_id, $d, $formHydrator);
+                    $this->invToInvInvAmount($invId, $copy_id, $d);
+                    $d->iR->save($copy);
+                }
+            }
+        );
+        if ($copy_id > 0 && !empty($productIds)) {
+            $d->pcS->syncFromInvItems($clientId, $productIds);
+        }
+        return $copy_id;
+    }
+
     private function invToInvInvCustom(
         int $inv_id,
         int $copy_id,

@@ -3028,5 +3028,14 @@ prior to importing and no existing documents e.g. Invoices.',
   'monitoring.metrics.requests' => 'Total Requests',
   'monitoring.metrics.errors' => 'Error Rate',
   'monitoring.metrics.response_time' => 'Average Response Time',
+
+  // === HOME-CARE QR AUTO-INVOICE ===
+  'print' => 'Print',
+  'print.qr.code' => 'Print QR Code',
+  'qr.code.instructions' => 'Stick this to your window. Scan it whenever you receive a completed  home care service through your door to request your next invoice which you can then pay immediately according to your chosen payment method. This helps use with our bank reconciliations. Thank-you.',
+  'homecare.scan.title' => 'Home Care',
+  'homecare.scan.thanks' => 'Thanks — your invoice has been generated and is ready to view in your account.',
+  'homecare.scan.not.eligible' => 'No new invoice is needed right now. If you think this is a mistake, please contact us.',
+  'homecare.scan.contact.us' => 'We could not process this scan. Please contact us directly.',
 ];
 

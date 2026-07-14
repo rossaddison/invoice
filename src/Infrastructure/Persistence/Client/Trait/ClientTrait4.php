@@ -98,4 +98,14 @@ trait ClientTrait4
     {
         $this->client_telegram_chat_id = $client_telegram_chat_id === '' ? null : $client_telegram_chat_id;
     }
+
+    public function getClientQrToken(): ?string
+    {
+        return $this->client_qr_token;
+    }
+
+    public function setClientQrToken(?string $client_qr_token): void
+    {
+        $this->client_qr_token = $client_qr_token === '' ? null : $client_qr_token;
+    }
 }
