@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d3e50fb709f6aa63c9544eaf81c8c601",
+    "content-hash": "a82981e19f131732d2eebd7f45c3ea05",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -1035,20 +1035,20 @@
         },
         {
             "name": "brick/money",
-            "version": "0.13.0",
+            "version": "0.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brick/money.git",
-                "reference": "5d657bae74a71f23d1c1889d999cf7a20b6b8ecb"
+                "reference": "55ee503b846f17aa616eb3ffd1ed34785e37e1a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brick/money/zipball/5d657bae74a71f23d1c1889d999cf7a20b6b8ecb",
-                "reference": "5d657bae74a71f23d1c1889d999cf7a20b6b8ecb",
+                "url": "https://api.github.com/repos/brick/money/zipball/55ee503b846f17aa616eb3ffd1ed34785e37e1a8",
+                "reference": "55ee503b846f17aa616eb3ffd1ed34785e37e1a8",
                 "shasum": ""
             },
             "require": {
-                "brick/math": "~0.15.0 || ~0.16.0 || ~0.17.0",
+                "brick/math": "~0.15.0 || ~0.16.0 || ~0.17.0 || ~0.18.0",
                 "php": "^8.2",
                 "psr/simple-cache": "^2.0 || ^3.0"
             },
@@ -1080,7 +1080,7 @@
             ],
             "support": {
                 "issues": "https://github.com/brick/money/issues",
-                "source": "https://github.com/brick/money/tree/0.13.0"
+                "source": "https://github.com/brick/money/tree/0.14.0"
             },
             "funding": [
                 {
@@ -1088,7 +1088,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-03-28T22:33:40+00:00"
+            "time": "2026-07-14T10:40:54+00:00"
         },
         {
             "name": "cebe/markdown",
@@ -27143,5 +27143,5 @@
         "ext-zend-opcache": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
