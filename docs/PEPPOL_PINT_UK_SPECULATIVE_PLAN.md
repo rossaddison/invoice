@@ -123,9 +123,9 @@ exist" until then.
 
 ---
 
-## Connection to `peppol-vat-gst-tax-toggle` — design these together, not separately
+## Connection to `vat-api-php` — design these together, not separately
 
-This repo already has a `peppol-vat-gst-tax-toggle` plan (separate branch, this session) modeling HMRC's VAT
+This repo already has a `vat-api-php` plan (separate branch, this session) modeling HMRC's VAT
 return: Box 1 (VAT due on sales), Box 4 (input VAT reclaimed), Box 6/7 (net sales/purchase values
 ex-VAT), etc. A PINT-UK invoice's tax-category breakdown and a `VatReturn`'s box values are two
 views of the same underlying UK VAT domain data — they should share a tax-category vocabulary
@@ -161,7 +161,7 @@ Heavily caveated — this is building against a spec that doesn't exist yet, so 
 | UK `TaxCategorySpec` table (5 categories + reverse-charge + PVA flags) | 2 h |
 | Multi-prefix `DocumentLevelValidator` (also benefits AU/NZ plan) | 2 h |
 | NI `deliveryRegion` seam (structure only, no real business rules yet) | 1.5 h |
-| Shared tax-category vocabulary with `peppol-vat-gst-tax-toggle`'s `VatReturn` boxes | 2 h |
+| Shared tax-category vocabulary with `vat-api-php`'s `VatReturn` boxes | 2 h |
 | Rework once the real Nov 2026 spec publishes | **Unknown — likely most of the above gets revised** |
 
 **Total (pre-spec groundwork only): ~10.5 hours**, with the explicit understanding that the
