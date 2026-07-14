@@ -129,6 +129,13 @@ final class ItemsCommand extends Command
             $this->addUsers($count);
             $this->addClients($count);
 
+            /* Persist users and clients now so reqId() below (User::reqId(),
+             * Client::reqId()) returns a real database ID instead of throwing
+             * LogicException('... not persisted'). */
+            $writer = new EntityWriter($this->entityManager);
+            $writer->write($this->users);
+            $writer->write($this->clients);
+
             /* Assign between one and five clients to each user randomly */
             $this->addUserClients();
 
