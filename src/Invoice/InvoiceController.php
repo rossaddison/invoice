@@ -22,6 +22,7 @@ use Yiisoft\Aliases\Aliases;
 use Yiisoft\Rbac\AssignmentsStorageInterface;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
+use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Session\SessionInterface;
 
 final class InvoiceController extends BaseController
@@ -31,10 +32,17 @@ final class InvoiceController extends BaseController
 
     protected string $controllerName = 'invoice';
 
-    public function faq(SettingRepository $sR, #[RouteArgument('topic')] string $topic): Response
-    {
+    public function faq(
+        SettingRepository $sR,
+        UrlGeneratorInterface $urlGenerator,
+        #[RouteArgument('topic')] string $topic,
+    ): Response {
         $fontSize = (int) ($sR->getSetting('bootstrap5_form_font_size') ?: 16);
         $view = match ($topic) {
+            'homecare_auto_invoice' =>
+                $this->webViewRenderer->renderPartialAsString(
+                        '//invoice/info/homecare_auto_invoice',
+                            ['fontSize' => $fontSize, 'urlGenerator' => $urlGenerator]),
             'ai_callback_session' =>
                 $this->webViewRenderer->renderPartialAsString(
                         '//invoice/info/ai/ai_callback_session',

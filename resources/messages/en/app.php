@@ -815,6 +815,7 @@ return [
   'faq.business.rules' => 'What are the Peppol Business Rules?',
   'faq.gov.developer.sandbox.hmrc' => 'How do I connect'
     . ' this repository to the HMRC Developer Sandbox?',
+  'faq.homecare.auto.invoice' => 'What is Homecare Cleaning Auto Invoice?',
   'faq.lamp.alpine' => 'How can I setup this'
     . ' repository onto Linux Alpine,'
     . ' Apache2, mySql/mariadb and php?',

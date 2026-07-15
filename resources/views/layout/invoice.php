@@ -324,6 +324,10 @@ if ((null !== $currentPath) && !$isGuest) {
                     $urlGenerator->generate($ifaq,
                         [$tpc => 'ai_callback_session', $sel => '']),
                         itemAttributes: $itemFontArray),
+                DropdownItem::link($t->translate('faq.homecare.auto.invoice'),
+                    $urlGenerator->generate($ifaq,
+                        [$tpc => 'homecare_auto_invoice', $sel => '']),
+                        itemAttributes: $itemFontArray),
             ),
             // E-Invoicing
             Dropdown::widget()

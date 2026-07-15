@@ -131,6 +131,22 @@ echo Breadcrumbs::widget()
          encodeLabel: false,
      ),
      BreadcrumbLink::to(
+         label: $translator->translate('homecare.auto.invoice.enabled'),
+         url: $urlGenerator->generate(
+             $settingTabIndex,
+             [],
+             ['active' => 'invoices'],
+             'settings[homecare_auto_invoice_enabled]',
+         ),
+         active: false,
+         attributes: [
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('homecare_auto_invoice_enabled')
+                == '1' ? '✅' : '❌',
+         ],
+         encodeLabel: false,
+     ),
+     BreadcrumbLink::to(
          label: $translator->translate('recurring'),
          url: $urlGenerator->generate('invrecurring/index'),
      ),
