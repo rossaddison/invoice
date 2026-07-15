@@ -487,219 +487,16 @@ echo GridView::widget()
 </div>
 
 <?php
-$invScript = <<<JS
-// Initialize Angular Amount Magnifier when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    // Import and initialize the text-end magnifier service
-    class InvoiceAmountMagnifier {
-        constructor() {
-            this.magnificationFactor = 1.4;
-            this.animationDuration = 250;
-            this.initialize();
-        }
-
-        initialize() {
-            this.attachMagnifiersToAmounts();
-            this.setupMutationObserver();
-        }
-
-        attachMagnifiersToAmounts() {
-            const amountSelectors = [
-                '.badge.text-bg-success',
-                '.badge.text-bg-warning',
-                '.badge.text-bg-danger'
-            ];
-
-            amountSelectors.forEach(selector => {
-                const elements = document.querySelectorAll(selector);
-                elements.forEach((element) => {
-                    if (this.isAmountElement(element)
-                        && !element.hasAttribute('data-magnifier-initialized')) {
-                        this.addMagnificationBehavior(element);
-                        element.setAttribute('data-magnifier-initialized', 'true');
-                    }
-                });
-            });
-        }
-
-        isAmountElement(element) {
-            const text = element.textContent?.trim() || '';
-            const amountPattern = /^[\d,]+\.?\d*$/;
-            return amountPattern.test(text) && text.length > 0;
-        }
-
-        addMagnificationBehavior(element) {
-            let borderColor = '#007bff';
-            let bgColor = 'rgba(255, 255, 255, 0.95)';
-            
-            if (element.classList.contains('text-bg-success')) {
-                borderColor = '#28a745';
-                bgColor = '#d4edda';
-            } else if (element.classList.contains('text-bg-warning')) {
-                borderColor = '#ffc107';
-                bgColor = '#fff3cd';
-            } else if (element.classList.contains('text-bg-danger')) {
-                borderColor = '#dc3545';
-                bgColor = '#f8d7da';
-            }
-
-            const computedStyle = window.getComputedStyle(element);
-            const originalStyles = {
-                fontSize: computedStyle.fontSize,
-                fontWeight: computedStyle.fontWeight,
-                backgroundColor: computedStyle.backgroundColor,
-                border: computedStyle.border,
-                borderRadius: computedStyle.borderRadius,
-                padding: computedStyle.padding,
-                zIndex: computedStyle.zIndex,
-                position: computedStyle.position,
-                transform: computedStyle.transform,
-                boxShadow: computedStyle.boxShadow
-            };
-
-            element.style.transition = `all \${this.animationDuration}ms ease-in-out`;
-            element.style.cursor = 'pointer';
-            element.classList.add('amount-magnifiable');
-
-            let isHovered = false;
-
-            element.addEventListener('mouseenter', () => {
-                if (!isHovered) {
-                    isHovered = true;
-                    this.applyMagnification(element, originalStyles, borderColor,
-                        bgColor);
-                }
-            });
-
-            element.addEventListener('mouseleave', () => {
-                if (isHovered) {
-                    isHovered = false;
-                    this.removeMagnification(element, originalStyles);
-                }
-            });
-
-            element.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (isHovered) {
-                    this.removeMagnification(element, originalStyles);
-                    isHovered = false;
-                } else {
-                    this.applyMagnification(element, originalStyles, borderColor,
-                        bgColor);
-                    isHovered = true;
-                }
-            });
-        }
-
-        applyMagnification(element, originalStyles, borderColor, bgColor) {
-            const currentFontSize = parseFloat(originalStyles.fontSize);
-            const newFontSize = currentFontSize * this.magnificationFactor;
-            
-            element.style.fontSize = `\${newFontSize}px`;
-            element.style.fontWeight = 'bold';
-            element.style.backgroundColor = bgColor;
-            element.style.border = `2px solid \${borderColor}`;
-            element.style.borderRadius = '6px';
-            element.style.padding = '8px 12px';
-            element.style.zIndex = '1000';
-            element.style.position = 'relative';
-            element.style.transform = 'scale(1.1)';
-            element.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
-        }
-
-        removeMagnification(element, originalStyles) {
-            Object.keys(originalStyles).forEach(property => {
-                element.style[property] = originalStyles[property];
-            });
-        }
-
-        setupMutationObserver() {
-            // Target the specific invoice table by its known ID
-            const tableContainer = document.getElementById('table-invoice-guest')
-                || document.querySelector('.table-responsive');
-
-            // If neither exists, skip observer entirely — don't fall back to body
-            if (!tableContainer) {
-                console.warn('InvoiceAmountMagnifier: table container not found, ' +
-                            'MutationObserver not attached.');
-                return;
-            }
-
-            this.observer = new MutationObserver((mutations) => {
-                // Debounce — avoid firing multiple times in quick succession
-                if (this.debounceTimer) {
-                    clearTimeout(this.debounceTimer);
-                }
-                this.debounceTimer = setTimeout(() => {
-                    const hasNewNodes = mutations.some(
-                        m => m.type === 'childList' && m.addedNodes.length > 0
-                    );
-                    if (hasNewNodes) {
-                        this.attachMagnifiersToAmounts();
-                    }
-                }, 100);
-            });
-
-            // subtree: false — only watch direct children of the table
-            // avoids watching every nested element change
-            this.observer.observe(tableContainer, {
-                childList: true,
-                subtree: false
-            });
-        }
-    }
-
-    // Initialize the text-end magnifier
-    new InvoiceAmountMagnifier();
-    
-    // Group collapsible functionality
-    window.toggleGroupRows = function(groupHeader) {
-        const toggleIcon = groupHeader.querySelector('.group-toggle-icon');
-        let nextRow = groupHeader.nextElementSibling;
-        let isCollapsing = toggleIcon.classList.contains('bi-chevron-down');
-        
-        // Toggle icon
-        if (isCollapsing) {
-            toggleIcon.classList.remove('bi-chevron-down');
-            toggleIcon.classList.add('bi-chevron-right');
-        } else {
-            toggleIcon.classList.remove('bi-chevron-right');
-            toggleIcon.classList.add('bi-chevron-down');
-        }
-        
-        // Toggle all rows until next group header or end of table
-        while (nextRow && !nextRow.classList.contains('group-header')) {
-            if (isCollapsing) {
-                nextRow.style.display = 'none';
-            } else {
-                nextRow.style.display = '';
-            }
-            nextRow = nextRow.nextElementSibling;
-        }
-    };
-    
-    // Add expand/collapse all functionality
-    window.toggleAllGroups = function(expand = null) {
-        const groupHeaders = document.querySelectorAll('.group-header');
-        groupHeaders.forEach(header => {
-            const toggleIcon = header.querySelector('.group-toggle-icon');
-            const isCurrentlyCollapsed =
-                            toggleIcon.classList.contains('bi-chevron-right');
-            
-            if (expand === null) {
-                // Toggle current state
-                window.toggleGroupRows(header);
-            } else if (expand && isCurrentlyCollapsed) {
-                // Expand if currently collapsed
-                window.toggleGroupRows(header);
-            } else if (!expand && !isCurrentlyCollapsed) {
-                // Collapse if currently expanded
-                window.toggleGroupRows(header);
-            }
-        });
-    };
-});
-JS;
+/**
+ * InvoiceAmountMagnifier + group-toggle logic moved to the shared
+ * src/typescript/list-utils.ts + inv-index.ts (bundled into
+ * invoice-typescript-iife.js) — the same code the authenticated
+ * inv/index.php page already uses, reached here via
+ * InvoiceApp.initInvIndex('table-invoice-guest', ...) self-invoking from
+ * index.ts when #table-invoice-guest is present. This also eliminates what
+ * was a near-duplicate implementation. script-src no longer needs
+ * 'unsafe-inline' for this.
+ */
 
 $invStyle = <<<CSS
 .amount-magnifiable {
@@ -842,7 +639,6 @@ tbody tr:not(.group-header):hover {
 }
 CSS;
 
-echo Html::script($invScript)->type('module');
 echo Html::style($invStyle);
 
 $filterPromptLabels = json_encode([
@@ -852,146 +648,15 @@ $filterPromptLabels = json_encode([
     'filter-status'            => '— ' . $translator->translate('status') . ' —',
     'filter-client'     => '— ' . $translator->translate('client') . ' —',
 ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR);
+// Consumed by InvoiceApp.initInvIndex('table-invoice-guest', 'inv-guest-filter-config')
+// self-invoking from index.ts — a JSON data-island rather than an
+// executable inline <script>, matching inv/index.php's #inv-filter-config
+// pattern, so script-src no longer needs 'unsafe-inline' for this.
+echo Html::tag('script', $filterPromptLabels, ['type' => 'application/json', 'id' => 'inv-guest-filter-config']);
 
-$filterPromptScript = <<<JS
-document.addEventListener('DOMContentLoaded', function () {
-    const labels = {$filterPromptLabels};
-    Object.keys(labels).forEach(function (id) {
-        const sel = document.getElementById(id);
-        if (sel && sel.options.length > 0) {
-            sel.options[0].text = labels[id];
-        }
-    });
-});
-JS;
-echo Html::script($filterPromptScript)->type('module');
-
-$mobilePreviewScript = <<<JS
-// Mobile Preview Toggle
-// Opens the current page in a 390 px popup window — a real browser viewport at phone
-// width so Bootstrap breakpoints trigger correctly. No iframe embedding required.
-// Click ‹ to collapse the button to a left-margin tab; click the tab to restore.
-class MobilePreviewToggle {
-    constructor() {
-        this.isActive = false;
-        this.previewWin = null;
-        this.sideTab = null;
-        this.injectStyles();
-        this.createButton();
-        this.createSideTab();
-        // Detect if the preview window was closed externally
-        setInterval(() => {
-            if (this.isActive && this.previewWin && this.previewWin.closed) {
-                this.isActive = false;
-                this.toggleBtn.querySelector('span').textContent = '📱 Mobile Preview';
-                this.toggleBtn.classList.remove('mp-on');
-            }
-        }, 800);
-    }
-
-    injectStyles() {
-        if (document.getElementById('mp-styles')) return;
-        const s = document.createElement('style');
-        s.id = 'mp-styles';
-        s.textContent =
-            '.mp-btn{position:fixed;bottom:72px;right:20px;z-index:10001;' +
-            'display:flex;align-items:center;gap:6px;' +
-            'padding:9px 14px 9px 18px;background:#212529;color:#fff;' +
-            'border:2px solid #495057;border-radius:22px;cursor:pointer;' +
-            'font-size:13px;font-weight:600;' +
-            'box-shadow:0 4px 14px rgba(0,0,0,.35);' +
-            'transition:background .2s,transform .15s;}' +
-            '.mp-btn:hover{background:#495057;transform:translateY(-2px);}' +
-            '.mp-btn.mp-on{background:#0d6efd;border-color:#0d6efd;}' +
-            '.mp-dismiss{display:inline-flex;align-items:center;justify-content:center;' +
-            'width:20px;height:20px;margin-left:2px;' +
-            'background:rgba(255,255,255,.15);border:none;border-radius:50%;' +
-            'color:#fff;font-size:14px;line-height:1;cursor:pointer;' +
-            'flex-shrink:0;padding:0;transition:background .15s;}' +
-            '.mp-dismiss:hover{background:rgba(255,255,255,.35);}' +
-            '.mp-side-tab{position:fixed;top:50%;left:0;z-index:10001;' +
-            'transform:translateY(-50%);' +
-            'width:28px;height:28px;padding:0;' +
-            'background:#212529;color:#fff;' +
-            'border:2px solid #495057;border-left:none;' +
-            'border-radius:0 8px 8px 0;cursor:pointer;' +
-            'font-size:15px;line-height:28px;text-align:center;' +
-            'box-shadow:3px 0 10px rgba(0,0,0,.3);' +
-            'transition:background .2s;display:none;}' +
-            '.mp-side-tab:hover{background:#495057;}' +
-            '.mp-side-tab.mp-visible{display:block;}';
-        document.head.appendChild(s);
-    }
-
-    createButton() {
-        this.toggleBtn = document.createElement('button');
-        this.toggleBtn.className = 'mp-btn';
-        this.toggleBtn.title = 'Preview at Android 390 px width';
-
-        const label = document.createElement('span');
-        label.textContent = '📱 Mobile Preview';
-        this.toggleBtn.appendChild(label);
-
-        const dismiss = document.createElement('button');
-        dismiss.className = 'mp-dismiss';
-        dismiss.title = 'Collapse to left margin';
-        dismiss.textContent = '‹';
-        dismiss.addEventListener('click', (e) => { e.stopPropagation(); this.collapse(); });
-        this.toggleBtn.appendChild(dismiss);
-
-        this.toggleBtn.addEventListener('click', () => this.toggle());
-        document.body.appendChild(this.toggleBtn);
-    }
-
-    createSideTab() {
-        this.sideTab = document.createElement('button');
-        this.sideTab.className = 'mp-side-tab';
-        this.sideTab.title = 'Restore Mobile Preview button';
-        this.sideTab.textContent = '📱';
-        this.sideTab.addEventListener('click', () => this.restore());
-        document.body.appendChild(this.sideTab);
-    }
-
-    collapse() {
-        if (this.isActive) this.deactivate();
-        this.toggleBtn.style.display = 'none';
-        this.sideTab.classList.add('mp-visible');
-    }
-
-    restore() {
-        this.sideTab.classList.remove('mp-visible');
-        this.toggleBtn.style.display = '';
-    }
-
-    activate() {
-        this.isActive = true;
-        const features = 'width=390,height=844,resizable=yes,scrollbars=yes,location=no,menubar=no,toolbar=no,status=no';
-        this.previewWin = window.open(window.location.href, 'mp-preview', features);
-        this.toggleBtn.querySelector('span').textContent = '🖥️ Close Preview';
-        this.toggleBtn.classList.add('mp-on');
-    }
-
-    deactivate() {
-        this.isActive = false;
-        if (this.previewWin && !this.previewWin.closed) {
-            this.previewWin.close();
-        }
-        this.previewWin = null;
-        this.toggleBtn.querySelector('span').textContent = '📱 Mobile Preview';
-        this.toggleBtn.classList.remove('mp-on');
-    }
-
-    toggle() {
-        this.isActive ? this.deactivate() : this.activate();
-    }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    new MobilePreviewToggle();
-});
-JS;
-
-echo Html::script($mobilePreviewScript)->type('module');
+// MobilePreviewToggle already instantiated by
+// InvoiceApp.initInvIndex('table-invoice-guest', ...) above — was a
+// near-duplicate of the same class in src/typescript/inv-index.ts.
 
 if ($bacsPaymentService->isCompanyPrivateActive()) {
    echo $modalBacsQuickPay;

@@ -59,11 +59,14 @@ return [
                 ->name('invrecurring/create-from-productclient')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvRecurringController::class, 'createFromProductClient']),
-
-            // No auth middleware: called by a scheduled cron job.
-            // Secured by cron_key query parameter matched against the stored setting.
-            Route::get('/invrecurring/cron')
-                ->action([InvRecurringController::class, 'cron'])
-                ->name('invrecurring/cron'),
         ), // invoice
+
+    // Not under RoutePermission::invoiceGroup(): called by an external
+    // scheduled cron job with no app session. Secured by its own cron_key
+    // query parameter matched against the stored setting, not RBAC — the
+    // group's Authentication middleware would otherwise reject every call
+    // before that check ever runs.
+    Route::get('/invrecurring/cron')
+        ->action([InvRecurringController::class, 'cron'])
+        ->name('invrecurring/cron'),
 ];

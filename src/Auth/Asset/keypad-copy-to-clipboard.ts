@@ -101,3 +101,13 @@ document.addEventListener('click', (event: Event): void => {
     if (digitBtn) { handleDigitInput(digitBtn); return; }
     if (closestSafe(target, '.btn-clear-otp')) { handleClearOtp(); }
 }, true);
+
+// Fades out the "TFA enabled" login-page badge after 2 seconds. Extracted
+// from src/Auth/Controller/AuthController.php's inline fadeOutJS
+// (Html::script()) so script-src no longer needs 'unsafe-inline'.
+document.addEventListener('DOMContentLoaded', () => {
+    const badge = document.getElementById('tfa-badge');
+    if (badge) {
+        setTimeout(() => badge.classList.add('hidden'), 2000);
+    }
+});

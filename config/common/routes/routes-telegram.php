@@ -36,12 +36,6 @@ return [
                 ->action([TelegramController::class, 'getUpdates'])
                 ->name('telegram/getUpdates'),
 
-            // No auth middleware: Telegram's servers must be able to POST here.
-            // Secured by X-Telegram-Bot-Api-Secret-Token header verification only.
-            Route::methods([Method::GET, Method::POST], '/telegram/webhook')
-                ->action([TelegramController::class, 'webhook'])
-                ->name('telegram/webhook'),
-
             Route::get('/telegram/send-invoice/{inv_id:\d+}')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([TelegramController::class, 'sendInvoice'])
@@ -67,4 +61,13 @@ return [
                 ->action([TelegramController::class, 'refundStars'])
                 ->name('telegram/refundStars'),
         ), // invoice
+
+    // Not under RoutePermission::invoiceGroup(): Telegram's servers must be
+    // able to POST here with no app session. Secured by
+    // X-Telegram-Bot-Api-Secret-Token header verification in the controller,
+    // not RBAC — the group's Authentication middleware would otherwise
+    // reject every call before that check ever runs.
+    Route::methods([Method::GET, Method::POST], '/telegram/webhook')
+        ->action([TelegramController::class, 'webhook'])
+        ->name('telegram/webhook'),
 ];

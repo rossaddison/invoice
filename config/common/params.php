@@ -373,7 +373,12 @@ return [
         ],
     ],
     'yiisoft/cookies' => [
-        'secretKey' => '53136271c432a1af377c3806c3112ddf',
+        // Must be set per deployment via COOKIE_SECRET_KEY — this key signs
+        // and encrypts cookies, including the "remember me" cookie-login
+        // flow. Falling back to '' rather than a shared literal so a missing
+        // env var fails safe (weak, but not identical-across-forks) instead
+        // of reintroducing a hardcoded secret.
+        'secretKey' => $_ENV['COOKIE_SECRET_KEY'] ?? '',
     ],
     'yiisoft/yii-view-renderer' => [
         'viewPath' => '@views',

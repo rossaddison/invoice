@@ -60,7 +60,7 @@ declare(strict_types=1);
                                class="form-control form-control-lg"
                                type="date"
                                autocomplete="off"
-                               onclick="this.showPicker()">
+                               data-action="show-picker">
                     </div>
                     <div class="mb-3">
                         <label
@@ -83,7 +83,7 @@ declare(strict_types=1);
                                class="form-control form-control-lg"
                                type="date"
                                autocomplete="off"
-                               onclick="this.showPicker()">
+                               data-action="show-picker">
                     </div>
                 </form>
             </div>

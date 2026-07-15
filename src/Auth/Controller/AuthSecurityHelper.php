@@ -9,12 +9,24 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Yiisoft\Security\Random;
 use Yiisoft\Session\SessionInterface;
+use Yiisoft\Yii\RateLimiter\Counter;
 use Yiisoft\Yii\RateLimiter\CounterInterface;
+use Yiisoft\Yii\RateLimiter\Storage\StorageInterface;
 
 final readonly class AuthSecurityHelper
 {
+    /**
+     * Account-keyed login throttle: independent of the (looser, IP-keyed)
+     * $rateLimiter above, so that a distributed credential-stuffing attempt
+     * spread across many IPs against one account is still blocked. Reuses
+     * the same cache-backed storage, just with its own stricter Counter.
+     */
+    private const int ACCOUNT_LIMIT = 5;
+    private const int ACCOUNT_PERIOD_SECONDS = 900;
+
     public function __construct(
         private CounterInterface $rateLimiter,
+        private StorageInterface $rateLimiterStorage,
         private LoggerInterface $logger,
         private SessionInterface $session,
     ) {}
@@ -27,6 +39,27 @@ final readonly class AuthSecurityHelper
         } catch (\Exception $e) {
             $this->logger->log(
                     LogLevel::ERROR, 'Rate limiter error: ' . $e->getMessage());
+            return true;
+        }
+    }
+
+    /**
+     * Throttles login attempts against a specific account (keyed by login
+     * name, not IP) — defense-in-depth against credential stuffing spread
+     * across many source IPs against a single account.
+     */
+    public function checkAccountRateLimit(string $login): bool
+    {
+        if ($login === '') {
+            return true;
+        }
+        try {
+            $counter = new Counter($this->rateLimiterStorage, self::ACCOUNT_LIMIT, self::ACCOUNT_PERIOD_SECONDS);
+            $result = $counter->hit(hash('sha256', 'login_account_' . mb_strtolower($login)));
+            return !$result->isLimitReached();
+        } catch (\Exception $e) {
+            $this->logger->log(
+                    LogLevel::ERROR, 'Account rate limiter error: ' . $e->getMessage());
             return true;
         }
     }

@@ -11,11 +11,16 @@ use App\Invoice\ProductImage\ProductImageRepository as piR;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\UploadedFileInterface;
+use RuntimeException;
 use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\Validator\Rule\File;
+use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 /**
@@ -26,8 +31,11 @@ final class ProductAttachmentController extends BaseController
 {
     protected string $controllerName = 'invoice/product';
 
+    private const int MAX_IMAGE_UPLOAD_BYTES = 5 * 1024 * 1024;
+
     public function __construct(
         private DataResponseFactoryInterface $responseFactory,
+        private ValidatorInterface $validator,
         WebControllerService $webService,
         UserService $userService,
         TranslatorInterface $translator,
@@ -46,6 +54,7 @@ final class ProductAttachmentController extends BaseController
         #[RouteArgument('id')] string $id,
         ProductRepository $pR,
         piR $piR,
+        Request $request,
     ): Response {
         $aliases    = $this->sR->getProductimagesFilesFolderAliases();
         $targetPath = $aliases->get('@public_product_images');
@@ -57,23 +66,23 @@ final class ProductAttachmentController extends BaseController
             return $this->webService->getRedirectResponse('product/index');
         }
 
+        /** @var UploadedFileInterface|null $file */
+        $file = $request->getUploadedFiles()['ImageAttachForm']['attachFile'] ?? null;
         if (!is_writable($targetPath)) {
             $content = $this->imageAttachmentNotWritable($product_id);
-        } elseif (empty($_FILES)) {
+        } elseif (
+            !$file instanceof UploadedFileInterface
+            || $file->getError() === UPLOAD_ERR_NO_FILE
+            || !$this->validateImageFile($file, $piR)
+        ) {
             $content = $this->imageAttachmentNoFileUploaded($product_id);
         } else {
-            /** @var string $_FILES['ImageAttachForm']['tmp_name']['attachFile'] */
-            $temporary_file = $_FILES['ImageAttachForm']['tmp_name']['attachFile'];
-            /** @var string $_FILES['ImageAttachForm']['name']['attachFile'] */
-            $original_file_name = preg_replace(
-                '/\s+/', '_',
-                $_FILES['ImageAttachForm']['name']['attachFile']
-            );
-            if ($original_file_name === null) {
+            $original_file_name = preg_replace('/\s+/', '_', (string) $file->getClientFilename());
+            if ($original_file_name === null || $original_file_name === '') {
                 return $this->webService->getRedirectResponse('product/index');
             }
             $moved = $this->imageAttachmentMoveTo(
-                $temporary_file, $targetPath . '/' . $original_file_name,
+                $file, $targetPath . '/' . $original_file_name,
                 $product_id, $original_file_name, $piR
             );
             $content = $moved
@@ -81,6 +90,23 @@ final class ProductAttachmentController extends BaseController
                 : $this->imageAttachmentNoFileUploaded($product_id);
         }
         return $this->responseFactory->createResponse($content);
+    }
+
+    /**
+     * Whitelists extension and MIME type (sniffed from the real upload contents) and size.
+     */
+    private function validateImageFile(UploadedFileInterface $file, piR $piR): bool
+    {
+        /** @var array<string, string> $contentTypes */
+        $contentTypes = $piR->getContentTypes();
+        $result = $this->validator->validate($file, [
+            new File(
+                extensions: array_keys($contentTypes),
+                mimeTypes: array_values($contentTypes),
+                maxSize: self::MAX_IMAGE_UPLOAD_BYTES,
+            ),
+        ]);
+        return $result->isValid();
     }
 
     public function downloadImageFile(
@@ -123,34 +149,36 @@ final class ProductAttachmentController extends BaseController
     }
 
     private function imageAttachmentMoveTo(
-        string $tmp,
+        UploadedFileInterface $file,
         string $target,
         int $product_id,
         string $fileName,
         piR $piR,
     ): bool {
-        if (!file_exists($target)) {
-            if (is_uploaded_file($tmp) && move_uploaded_file($tmp, $target)) {
-                $track_file = new ProductImage();
-                $track_file->setProductId($product_id);
-                $track_file->setFileNameOriginal($fileName);
-                $track_file->setFileNameNew($fileName);
-                $track_file->setUploadedDate(new \DateTimeImmutable());
-                $piR->save($track_file);
-                $this->flashMessage(
-                    'info',
-                    $this->translator->translate('productimage.uploaded.to') . $target
-                );
-                return true;
-            }
+        if (file_exists($target)) {
+            $this->flashMessage('warning', $this->translator->translate('error_duplicate_file'));
+            return false;
+        }
+        try {
+            $file->moveTo($target);
+        } catch (RuntimeException) {
             $this->flashMessage(
                 'warning',
-                $this->translator->translate('productimage.possible.file.upload.attack') . $tmp
+                $this->translator->translate('productimage.possible.file.upload.attack') . $fileName
             );
             return false;
         }
-        $this->flashMessage('warning', $this->translator->translate('error_duplicate_file'));
-        return false;
+        $track_file = new ProductImage();
+        $track_file->setProductId($product_id);
+        $track_file->setFileNameOriginal($fileName);
+        $track_file->setFileNameNew($fileName);
+        $track_file->setUploadedDate(new \DateTimeImmutable());
+        $piR->save($track_file);
+        $this->flashMessage(
+            'info',
+            $this->translator->translate('productimage.uploaded.to') . $target
+        );
+        return true;
     }
 
     private function imageAttachmentNotWritable(int $product_id): string

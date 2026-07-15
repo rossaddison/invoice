@@ -14,6 +14,7 @@ use Yiisoft\Session\SessionMiddleware;
 use Yiisoft\User\Login\Cookie\CookieLoginMiddleware;
 use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\PageOutOfRangeMiddleware;
+use App\Middleware\SecurityHeadersMiddleware;
 use Yiisoft\Yii\Middleware\Locale;
 
 // yii3-i
@@ -65,6 +66,7 @@ return [
         RequestCatcherMiddleware::class,
         ErrorCatcher::class,
         ContentSecurityPolicyMiddleware::class,
+        SecurityHeadersMiddleware::class,
         PrometheusMiddleware::class,
         SessionMiddleware::class,
         CsrfTokenMiddleware::class,
@@ -81,7 +83,7 @@ return [
     'csp' => [
         'policy' => implode('; ', [
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval'"
+            "script-src 'self'"
                 . " https://apis.google.com"
                 . " https://cdn.jsdelivr.net"
                 . " https://js.stripe.com"
@@ -124,6 +126,40 @@ return [
             "manifest-src 'self'",
             "worker-src 'self'",
         ]),
+    ],
+    // Mirrors the headers in public/.htaccess (both are sent; keep in sync)
+    // and adds HSTS + Permissions-Policy, which existed nowhere before —
+    // neither PHP nor Apache. Guaranteed here regardless of the web server
+    // in front of the app (Apache-only headers vanish on another server, a
+    // header-stripping proxy, or PHP's built-in dev server).
+    'security-headers' => [
+        'headers' => [
+            'X-Content-Type-Options' => 'nosniff',
+            'X-Frame-Options' => 'DENY',
+            'X-XSS-Protection' => '1; mode=block',
+            'Referrer-Policy' => 'strict-origin-when-cross-origin',
+            // Browsers ignore this header entirely over plain HTTP, so
+            // sending it now is safe ahead of the HTTPS redirect being
+            // enabled (see docs/SECURITY_HARDENING_AUDIT_JULY_2026.md #2).
+            'Strict-Transport-Security' => 'max-age=31536000; includeSubDomains',
+            // Deny browser features this app's own code never calls
+            // (QR codes are scanned by the visitor's separate camera app,
+            // not getUserMedia in-page). Anything not listed keeps the
+            // browser default.
+            'Permissions-Policy' => 'camera=(), microphone=(), geolocation=(),'
+                . ' payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()',
+        ],
+    ],
+    // Overrides yiisoft/session's package default (cookie_secure => 0), but
+    // only once SESSION_COOKIE_SECURE is explicitly set — see autoload.php:
+    // yiisoft/session throws on every request if this is on and the
+    // request scheme isn't https, so this must stay opt-in per deployment.
+    'yiisoft/session' => [
+        'session' => [
+            'options' => [
+                'cookie_secure' => (int) $_ENV['SESSION_COOKIE_SECURE'],
+            ],
+        ],
     ],
     'yiisoft/widget' => [
         'defaultTheme' => 'bootstrap5',

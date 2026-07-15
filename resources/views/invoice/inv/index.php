@@ -215,4 +215,5 @@ $filterPromptLabels = json_encode([
     'filter-client-group' => '— ' . $translator->translate('client.group') . ' —',
 ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR);
 echo Html::tag('script', $filterPromptLabels, ['type' => 'application/json', 'id' => 'inv-filter-config']);
-echo Html::script('InvoiceApp.initInvIndex()')->type('module');
+// InvoiceApp.initInvIndex() now self-invokes from index.ts when #table-invoice
+// is present, so script-src no longer needs 'unsafe-inline' for this call.

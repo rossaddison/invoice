@@ -14,7 +14,6 @@ use Yiisoft\Aliases\Aliases;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Definitions\Reference;
 use Yiisoft\Factory\Factory;
-use Yiisoft\Session\Session;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
@@ -82,7 +81,7 @@ $constructArray = [
     'requestFactory' => Reference::to(RequestFactoryInterface::class),
     'stateStorage'   => Reference::to(StateStorageInterface::class),
     'factory'        => Reference::to(Factory::class),
-    'session'        => Reference::to(Session::class),
+    'session'        => Reference::to(SessionInterface::class),
 ];
 
 $construct = '__construct()';
@@ -93,14 +92,10 @@ $setIssuerUrl = 'setIssuerUrl()';
 $setTenant = 'setTenant()';
 
 return [
-    Session::class => [
-        $construct => [
-            'options' => [
-                'cookie_secure' => 0,
-            ],
-        ],
-    ],
-    SessionInterface::class => Session::class,
+    // SessionInterface itself is bound in yiisoft/session's own di-web config,
+    // driven by params['yiisoft/session']['session']['options'] — reuse that
+    // single shared session rather than shadowing it with a second instance
+    // that has its own (previously hardcoded, insecure) cookie options.
     SessionStateStorage::class => [
         $construct => [
             'session' => Reference::to(SessionInterface::class),

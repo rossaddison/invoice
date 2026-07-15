@@ -68,7 +68,7 @@ declare(strict_types=1);
 <body>
 <h1><?php echo $heading; ?></h1>
     <?php echo $message; ?><br>
-<button onclick="window.close()"><i class="bi bi-x-lg"><?= $translator->translate('close'); ?></i></button>
+<button data-action="window-close"><i class="bi bi-x-lg"><?= $translator->translate('close'); ?></i></button>
 </body>
 </html>
 

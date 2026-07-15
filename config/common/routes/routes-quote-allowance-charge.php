@@ -19,6 +19,7 @@ return [
 
             // Add
             Route::methods([Method::GET, Method::POST], '/quoteallowancecharge/add/{quote_id}')
+                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([QuoteAllowanceChargeController::class, 'add'])
                 ->name('quoteallowancecharge/add'),
 

@@ -159,4 +159,7 @@ echo QuotesListWidget::widget()
 echo $modal_add_quote;
 ?>
 
-<?php echo Html::script('InvoiceApp.initQuoteIndex()')->type('module'); ?>
+<?php
+// InvoiceApp.initQuoteIndex() now self-invokes from index.ts when
+// #table-quote is present, so script-src no longer needs 'unsafe-inline'.
+?>

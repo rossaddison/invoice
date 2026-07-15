@@ -37,7 +37,7 @@ $clientName = H::encode(trim($client->getClientName() . ' ' . ($client->getClien
 <?php } ?>
   <img src="<?= H::encode($qrDataUri) ?>" alt="<?= H::encode($translator->translate('qr.code')) ?>">
   <p class="qr-hint"><?= H::encode($translator->translate('qr.code.instructions')) ?></p>
-  <button type="button" class="qr-print-btn" onclick="window.print()">
+  <button type="button" class="qr-print-btn" data-action="window-print">
     <?= H::encode($translator->translate('print')) ?>
   </button>
 </div>

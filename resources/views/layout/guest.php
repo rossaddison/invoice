@@ -288,7 +288,6 @@ if ((null !== $currentPath) && !$isGuest) {
                 static fn(int $size): string =>
                     '<a hx-get="' . Html::encode(str_replace('__SIZE__', (string) $size, $guestPageSizeUrlTemplate)) . '"'
                     . ' hx-swap="none"'
-                    . ' hx-on::after-request="iPageSizeRefresh(this);"'
                     . ' href="' . Html::encode(str_replace('__SIZE__', (string) $size, $guestPageSizeUrlTemplate)) . '"'
                     . ' class="btn btn-outline-secondary' . ($size === $guestCurrentPageSize ? ' active' : '') . '">'
                     . $size . '</a>',
@@ -381,22 +380,6 @@ if (!$isGuest) {
     . new Form()->close();
 }
 echo NavBar::end();
-echo Html::script(<<<'JS'
-function iPageSizeRefresh(btn) {
-    document.querySelectorAll('#page-size-btn-group .btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    fetch(window.location.href)
-        .then(r => r.text())
-        .then(html => {
-            const doc = new DOMParser().parseFromString(html, 'text/html');
-            const fresh = doc.getElementById('main-area');
-            if (fresh) {
-                document.getElementById('main-area').replaceWith(fresh);
-                htmx.process(fresh);
-            }
-        });
-}
-JS);
 echo Html::closeTag('header');
 echo Html::openTag('div', ['id' => 'main-area']);
   echo Html::openTag('main', ['class' => 'container-fluid py-4']);

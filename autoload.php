@@ -53,6 +53,18 @@ $_ENV['BUILD_DATABASE'] = isset($_ENV['BUILD_DATABASE']) && strlen($_ENV['BUILD_
 $_SERVER['BUILD_DATABASE'] = $_ENV['BUILD_DATABASE'];
 
 /**
+ * Session cookies get the Secure flag only once a deployment opts in, after
+ * confirming TLS is actually live end-to-end — yiisoft/session throws a hard
+ * SessionException on every request if cookie_secure is on but the request
+ * scheme isn't https, so defaulting this to true would break any deployment
+ * that isn't behind confirmed HTTPS yet (see docs/SECURITY_HARDENING_AUDIT_JULY_2026.md #2).
+ */
+$_ENV['SESSION_COOKIE_SECURE'] = isset($_ENV['SESSION_COOKIE_SECURE']) && strlen($_ENV['SESSION_COOKIE_SECURE']) > 0
+    ? filter_var($_ENV['SESSION_COOKIE_SECURE'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)
+    : false;
+$_SERVER['SESSION_COOKIE_SECURE'] = $_ENV['SESSION_COOKIE_SECURE'];
+
+/**
  * Building the database takes longer than usual and the .env $_ENV['BUILD_DATABASE'] should be set to false afterwards
  * https://stackoverflow.com/questions/3829403/how-to-increase-the-execution-timeout-in-php
  */

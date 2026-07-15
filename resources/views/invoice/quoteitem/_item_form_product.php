@@ -57,7 +57,7 @@ echo (new Form())
         'hx-swap'              => 'innerHTML',
         'hx-indicator'         => '#quote-item-saving',
         'hx-disabled-elt'      => '#btn-quote-item-save',
-        'hx-on::after-request' => 'if(event.detail.successful) this.reset()',
+        'data-hx-reset-on-success' => 'true',
     ])
     ->open();
 ?>

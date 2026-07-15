@@ -30,14 +30,15 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Yiisoft\{Assets\AssetManager,
     DataResponse\ResponseFactory\DataResponseFactoryInterface, Factory\Factory,
-    FormModel\FormHydrator, Html\Html, Html\Tag\A, Html\Tag\Style, Http\Method,
+    FormModel\FormHydrator, Html\Tag\A, Html\Tag\Style, Http\Method,
     Json\Json, Rbac\Manager as Manager, Router\FastRoute\UrlGenerator,
     Security\Random, Security\TokenMask, Session\Flash\Flash,
     Session\SessionInterface, Translator\TranslatorInterface,
     User\Login\Cookie\CookieLogin, User\Login\Cookie\CookieLoginIdentityInterface,
     View\WebView, Yii\View\Renderer\WebViewRenderer,
     Yii\AuthClient\StateStorage\StateStorageInterface,
-    Yii\AuthClient\Widget\AuthChoice, Yii\RateLimiter\CounterInterface};
+    Yii\AuthClient\Widget\AuthChoice, Yii\RateLimiter\CounterInterface,
+    Yii\RateLimiter\Storage\StorageInterface};
 
 final class AuthController
 {
@@ -86,6 +87,7 @@ final class AuthController
         private readonly TranslatorInterface $translator,
         // trait variables
         private readonly CounterInterface $rateLimiter,
+        private readonly StorageInterface $rateLimiterStorage,
         private readonly ClientInterface $configWebDiAuthGuzzle,
         private readonly RequestFactoryInterface $requestFactory,
         private readonly WebView $webView,
@@ -99,7 +101,8 @@ final class AuthController
         $this->initializeOauth2IdentityProviderDualUrls();
         $this->telegramToken = $this->sR->getSetting('telegram_token');
         $this->tfaHelper = new AuthTfaHelper($this->sR, $this->recoveryCodeService);
-        $this->secHelper = new AuthSecurityHelper($this->rateLimiter, $this->logger, $this->session);
+        $this->secHelper = new AuthSecurityHelper(
+            $this->rateLimiter, $this->rateLimiterStorage, $this->logger, $this->session);
     }
 
     /**
@@ -194,7 +197,11 @@ final class AuthController
             $ip    = $this->secHelper->getClientIpAddress($request);
             $body  = (array) $request->getParsedBody();
             $token = (string) ($body['cf-turnstile-response'] ?? '');
+            /** @var array{login?: string} $loginBody */
+            $loginBody = (array) ($body['Login'] ?? []);
+            $submittedLogin = $loginBody['login'] ?? '';
             if (!$this->secHelper->checkRateLimit(hash('sha256', 'login_ctrl' . $ip))
+                || !$this->secHelper->checkAccountRateLimit($submittedLogin)
                 || !$this->verifyTurnstile($token, $ip)
             ) {
                 return $this->webService->getRedirectResponse('auth/login');
@@ -233,20 +240,6 @@ final class AuthController
                 'request' => $request,
                 'idpList' => $this->idpList(
                     $codeChallenge),
-                // Fade-out JS: this will fade out the badge after 2 seconds;
-                // adjust as needed
-                'fadeOutJS' => Html::script(<<<JS
-            document.addEventListener('DOMContentLoaded', function() {
-            var badge = document.getElementById('tfa-badge');
-                if (badge) {
-                    setTimeout(function() {
-                        badge.classList.add('hidden');
-                    }, 2000);
-                }
-            });
-            JS)
-                                ->type('text/javascript')
-                                ->charset('utf-8'),
             ],
         );
     }
@@ -516,7 +509,10 @@ final class AuthController
         if (null === $userId || null === $userInv || null === $user) {
             return null;
         }
-        if ($this->sR->getSetting('enable_tfa') == '1') {
+        // 2FA is mandatory for admins regardless of the global enable_tfa
+        // setting — an admin without TOTP set up is routed into setup by
+        // handleTfaPath() below, same as any other 2FA-required user.
+        if ($this->sR->getSetting('enable_tfa') == '1' || $this->isAdminUser($userId)) {
             return $this->handleTfaPath($userId, $user);
         }
         return $this->handleNonTfaPath($userId, $userInv, $cookieLogin, $loginForm, $tR);

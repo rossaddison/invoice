@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Yiisoft\Html\Html;
+
 /**
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var array $custom_fields_inv_custom
@@ -58,7 +60,7 @@ declare(strict_types=1);
                         */
                        foreach ($custom_fields_inv_custom as $custom) { ?>
                         <option value="{{{<?= 'cf_' . $custom->reqId(); ?>}}}">
-                            <?= ($custom->getLabel() ?? '#') . ' (ID ' . $custom->reqId() . ')'; ?>
+                            <?= Html::encode($custom->getLabel() ?? '#') . ' (ID ' . $custom->reqId() . ')'; ?>
                         </option>
                     <?php } ?>
                 </optgroup>

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Yiisoft\Html\Html;
+
 /**
  * Related logic: see ...src\Invoice\Product\ProductController function view $parameters['partial_product_gallery']
  * @var App\Infrastructure\Persistence\Product\Product $product
@@ -22,7 +24,7 @@ if ($invEdit && $invView) {
   <div class="card-header">
       <i tooltip="data-bs-toggle" title="<?= $s->isDebugMode(9);?>">
         <?= $translator->translate('productimage.gallery'); ?>
-        <?= $product->getProductName(); ?></i>
+        <?= Html::encode($product->getProductName()); ?></i>
   </div>
   <div class="card-body">
     <div class="container">

@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-use Yiisoft\Html\Html;
-
 /**
  * JavaScript Analysis FAQ Topic
  * Route: /invoice/faq/javascript_analysis
@@ -736,47 +734,14 @@ $this->setTitle('JavaScript Analysis - FAQ');
     </div>
 </div>
 
-<!-- Add smooth scrolling for navigation -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Handle navigation clicks
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                targetElement.scrollIntoView({ behavior: 'smooth' });
-
-                // Update active nav item
-                document.querySelectorAll('.nav-link').forEach(nav => nav.classList.remove('active'));
-                this.classList.add('active');
-            }
-        });
-    });
-
-    // Update active nav on scroll
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-link');
-
-    window.addEventListener('scroll', function() {
-        let currentSection = '';
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop - 100;
-            if (window.pageYOffset >= sectionTop) {
-                currentSection = '#' + section.getAttribute('id');
-            }
-        });
-
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === currentSection) {
-                link.classList.add('active');
-            }
-        });
-    });
-});
-</script>
+<?php
+/**
+ * Smooth-scroll nav highlighting moved to src/typescript/faq-pages.ts
+ * (initJavascriptAnalysisFaq, bundled into invoice-typescript-iife.js) so
+ * script-src no longer needs 'unsafe-inline'. It self-initializes
+ * unconditionally from index.ts, guarded by this page's section[id] markup.
+ */
+?>
 
 <style>
 .card-header h5 {

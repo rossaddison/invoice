@@ -11,11 +11,6 @@ use Yiisoft\Router\Route;
 return [
     RoutePermission::invoiceGroup(
 
-            Route::methods([Method::GET, Method::POST],
-                    '/userinv/signup/{language}/{token}/{tokenType}')
-                ->name('userinv/signup')
-                ->action([UserInvController::class, 'signup']),
-
             // UserInv
             Route::get('/userinv[/page/{page:\d+}[/active/{active}]]')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
@@ -85,4 +80,14 @@ return [
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([UserInvController::class, 'assignAdminRole']),
         ), // invoice
+
+    // Not under RoutePermission::invoiceGroup(): a brand-new invitee clicking
+    // this emailed link has no app session yet. Secured by the masked,
+    // time-limited token in the URL itself, not RBAC — the group's
+    // Authentication middleware would otherwise reject every call before
+    // the token is ever checked.
+    Route::methods([Method::GET, Method::POST],
+            '/userinv/signup/{language}/{token}/{tokenType}')
+        ->name('userinv/signup')
+        ->action([UserInvController::class, 'signup']),
 ];

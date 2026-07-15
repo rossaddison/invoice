@@ -16,10 +16,11 @@ class StripeVersionTenAsset extends Asset
         'stripe/css/checkout.css',
     ];
 
-    public array $cssOptions = [
-        'media' => 'print',
-        'onload' => "this.media='all'",
-    ];
+    // Previously loaded async via cssOptions media="print" +
+    // onload="this.media='all'" — that onload is an inline event handler,
+    // silently blocked once CSP script-src dropped 'unsafe-inline', so the
+    // stylesheet's media never switched back to 'all'. Loading it as a
+    // normal blocking stylesheet instead.
 
     /** @psalm-suppress NonInvariantDocblockPropertyType */
     public array $js = [

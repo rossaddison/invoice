@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Yiisoft\Html\Html;
+
 /**
  * Related logic: see id="modal-change-client" triggered by <a href="#modal-change-client"> inv\view
  * @var App\Infrastructure\Persistence\Inv\Inv $inv
@@ -43,7 +45,7 @@ declare(strict_types=1);
  */
                                     foreach ($clients as $client) { ?>
                                     <option value="<?= $client->reqId(); ?>">
-                                        <?= $client->getClientName() ?: '#'; ?>
+                                        <?= Html::encode($client->getClientName() ?: '#'); ?>
                                     </option>
                                 <?php } ?>
                         </select>

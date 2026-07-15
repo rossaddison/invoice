@@ -14,6 +14,8 @@ use App\User\UserService;
 use App\Widget\CompanyPrivateFormFields;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\UploadedFileInterface;
+use RuntimeException;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
@@ -22,15 +24,24 @@ use Yiisoft\Security\Random;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\Validator\Rule\File;
+use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class CompanyPrivateController extends BaseController
 {
     protected string $controllerName = 'invoice/companyprivate';
 
+    /** @var list<string> */
+    private const array ALLOWED_LOGO_EXTENSIONS = ['gif', 'jpg', 'jpeg', 'png', 'bmp', 'tiff'];
+    /** @var list<string> */
+    private const array ALLOWED_LOGO_MIME_TYPES = ['image/gif', 'image/jpeg', 'image/png', 'image/bmp', 'image/tiff'];
+    private const int MAX_LOGO_UPLOAD_BYTES = 5 * 1024 * 1024;
+
     public function __construct(
         private CompanyPrivateService $companyPrivateService,
         private CompanyPrivateFormFields $formFields,
+        private ValidatorInterface $validator,
         SessionInterface $session,
         sR $sR,
         TranslatorInterface $translator,
@@ -91,22 +102,26 @@ final class CompanyPrivateController extends BaseController
             return $this->webService->getRedirectResponse('companyprivate/index');
         }
         if ($request->getMethod() === Method::POST) {
-            $logoFileName = $_FILES['logo_filename']['name'];
-            if (!isset($_FILES['logo_filename']['tmp_name']) || empty($_FILES['logo_filename']['tmp_name'])) {
+            /** @var UploadedFileInterface|null $file */
+            $file = $request->getUploadedFiles()['logo_filename'] ?? null;
+            if (!$file instanceof UploadedFileInterface || $file->getError() === UPLOAD_ERR_NO_FILE) {
                 throw new CompanyPrivateException('No file uploaded or temporary file missing.');
             }
 
-            if ($_FILES['logo_filename']['error'] !== UPLOAD_ERR_OK) {
-                throw new CompanyPrivateException('File upload error: ' . $_FILES['logo_filename']['error']);
+            if ($file->getError() !== UPLOAD_ERR_OK) {
+                throw new CompanyPrivateException('File upload error: ' . $file->getError());
             }
 
-            $tmp = $_FILES['logo_filename']['tmp_name'];
-            $originalFileName = basename($logoFileName); // Extract original file name
+            if (!$this->validateLogoFile($file)) {
+                throw new CompanyPrivateException('Uploaded logo failed validation.');
+            }
+
+            $originalFileName = basename((string) $file->getClientFilename()); // Extract original file name
             $spaceToUnderscore = preg_replace('/\s+/', '_', $originalFileName); // Replace spaces with underscores
 
             if ($spaceToUnderscore !== null && is_array($body)) {
                 $body['logo_filename'] = $this->processLogoFileUpload(
-                    $tmp, $targetPath, $targetPublicPath, $spaceToUnderscore);
+                    $file, $targetPath, $targetPublicPath, $spaceToUnderscore);
                 if ($formHydrator->populateAndValidate($form, $body)) {
                     $this->companyPrivateService->saveCompanyPrivate($company_private, $body);
                     $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
@@ -120,7 +135,7 @@ final class CompanyPrivateController extends BaseController
     }
 
     private function processLogoFileUpload(
-        string $tmp,
+        UploadedFileInterface $file,
         string $targetPath,
         string $targetPublicPath,
         string $spaceToUnderscore,
@@ -130,8 +145,10 @@ final class CompanyPrivateController extends BaseController
         $modified_original_file_name = Random::string(4) . '_' . $fileInfo['filename'] . $extension;
         $target_file_name = $targetPath . '/' . $modified_original_file_name;
         $target_public_logo = $targetPublicPath . '/' . $modified_original_file_name;
-        if (!move_uploaded_file($tmp, $target_file_name)) {
-            throw new CompanyPrivateException('Failed to move uploaded file.');
+        try {
+            $file->moveTo($target_file_name);
+        } catch (RuntimeException $e) {
+            throw new CompanyPrivateException('Failed to move uploaded file.', 0, $e);
         }
         if (!copy($target_file_name, $target_public_logo)) {
             throw new CompanyPrivateException('Failed to copy file to public folder.');
@@ -140,20 +157,39 @@ final class CompanyPrivateController extends BaseController
     }
 
     /**
-     * @param string $tmp
-     * @param string $target_file_name
-     * @param string $target_public_logo
-     * @return bool
+     * Whitelists extension, MIME type (sniffed from the real upload contents), and size.
+     */
+    private function validateLogoFile(UploadedFileInterface $file): bool
+    {
+        $result = $this->validator->validate($file, [
+            new File(
+                extensions: self::ALLOWED_LOGO_EXTENSIONS,
+                mimeTypes: self::ALLOWED_LOGO_MIME_TYPES,
+                maxSize: self::MAX_LOGO_UPLOAD_BYTES,
+            ),
+        ]);
+        return $result->isValid();
+    }
+
+    /**
+     * Moves a freshly uploaded logo into place, refusing to overwrite an existing target.
+     *
+     * @return bool True if there was an error and no move took place.
      */
     public function fileUploadingErrors(
-    string $tmp,
-    string $target_file_name,
-    string $target_public_logo): bool {
-        return !is_uploaded_file($tmp)
-            || file_exists($target_file_name)
-            || file_exists($target_public_logo)
-            || !move_uploaded_file($tmp, $target_file_name)
-            || !copy($target_file_name, $target_public_logo);
+        UploadedFileInterface $file,
+        string $target_file_name,
+        string $target_public_logo,
+    ): bool {
+        if (file_exists($target_file_name) || file_exists($target_public_logo)) {
+            return true;
+        }
+        try {
+            $file->moveTo($target_file_name);
+        } catch (RuntimeException) {
+            return true;
+        }
+        return !copy($target_file_name, $target_public_logo);
     }
 
     /**
@@ -195,16 +231,16 @@ final class CompanyPrivateController extends BaseController
         }
         $redirect = null;
         if ($request->getMethod() === Method::POST) {
+            /** @var array $body */
             $body = $request->getParsedBody() ?? [];
             // the filename before it was changed
             $existing_logo_filename = (string) ($body['existing_logo_filename'] ?? ($company_private->getLogoFilename() ?? ''));
-            // the file that has just been selected
-            /**
-             * @var array $_FILES['logo_filename']
-             * @var array $body
-             */
-            $body['logo_filename'] = !empty((string) $_FILES['logo_filename']['name'])
-            ? (string) $_FILES['logo_filename']['name']
+            // the file that has just been selected, if any
+            /** @var UploadedFileInterface|null $file */
+            $file = $request->getUploadedFiles()['logo_filename'] ?? null;
+            $hasNewFile = $file instanceof UploadedFileInterface && $file->getError() !== UPLOAD_ERR_NO_FILE;
+            $body['logo_filename'] = $hasNewFile
+            ? (string) $file->getClientFilename()
             : $existing_logo_filename;
             if ($formHydrator->populateAndValidate($form, $body)) {
                 // Replace filename's spaces with underscore and add random string preventing overwrites
@@ -220,16 +256,13 @@ final class CompanyPrivateController extends BaseController
                     $companyprivateRepository->repoCompanyPrivatequery(
                         $company_private->reqId());
                 if ($after_save) {
-                    // A new file upload must replace the previous one or keep existing file
-                    /**
-                     * @var string $_FILES['logo_filename']['tmp_name']
-                     */
-                    $tmp_name = $_FILES['logo_filename']['tmp_name'];
+                    // A new file upload must pass whitelist validation, then replace the
+                    // previous one, or keep the existing file if there's no valid new upload.
                     $after_save->setLogoFilename(
-                        // 1. tmp is an uploaded file and not a security risk
-                        // 2. the target file name does not exist
-                        // 3. tmp has been moved into the target destination
-                        !$this->fileUploadingErrors($tmp_name, $target_file_name, $target_public_logo)
+                        $hasNewFile
+                        && $file instanceof UploadedFileInterface
+                        && $this->validateLogoFile($file)
+                        && !$this->fileUploadingErrors($file, $target_file_name, $target_public_logo)
 
                         // New file upload
                         ? $modified_original_file_name

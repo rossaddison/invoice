@@ -11,7 +11,10 @@ export class AmountMagnifier {
     }
 
     private attachMagnifiers(): void {
-        ['.badge.bg-success', '.badge.bg-warning', '.badge.bg-danger'].forEach(selector => {
+        [
+            '.badge.bg-success', '.badge.bg-warning', '.badge.bg-danger',
+            '.badge.text-bg-success', '.badge.text-bg-warning', '.badge.text-bg-danger',
+        ].forEach(selector => {
             document.querySelectorAll<HTMLElement>(selector).forEach(el => {
                 if (this.isAmount(el) && !el.dataset['magnifierInitialized']) {
                     this.addBehavior(el);
@@ -36,9 +39,13 @@ export class AmountMagnifier {
     private addBehavior(el: HTMLElement): void {
         let borderColor = '#007bff';
         let bgColor = 'rgba(255, 255, 255, 0.95)';
-        if (el.classList.contains('bg-success'))      { borderColor = '#28a745'; bgColor = '#d4edda'; }
-        else if (el.classList.contains('bg-warning')) { borderColor = '#ffc107'; bgColor = '#fff3cd'; }
-        else if (el.classList.contains('bg-danger'))  { borderColor = '#dc3545'; bgColor = '#f8d7da'; }
+        if (el.classList.contains('bg-success') || el.classList.contains('text-bg-success')) {
+            borderColor = '#28a745'; bgColor = '#d4edda';
+        } else if (el.classList.contains('bg-warning') || el.classList.contains('text-bg-warning')) {
+            borderColor = '#ffc107'; bgColor = '#fff3cd';
+        } else if (el.classList.contains('bg-danger') || el.classList.contains('text-bg-danger')) {
+            borderColor = '#dc3545'; bgColor = '#f8d7da';
+        }
 
         const cs = globalThis.getComputedStyle(el);
         const orig: OriginalStyles = {

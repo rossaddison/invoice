@@ -354,63 +354,23 @@ if (is_string($positions)) {
     $positionsArray = (array) $positions;
 }
 
-$positionsJson = json_encode($positionsArray, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+/**
+ * Position-selector logic moved to src/typescript/customfield-position.ts
+ * (bundled into invoice-typescript-iife.js) so script-src no longer needs
+ * 'unsafe-inline'. The server-side data is exposed via a JSON data-island
+ * instead of being interpolated into an executable inline <script> —
+ * CSP's script-src does not gate application/json content.
+ */
+$customFieldPositionConfigJson = json_encode(
+    ['positions' => $positionsArray, 'valueSelected' => $valueSelected ?? null],
+    JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+    | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT,
+);
+$customFieldPositionConfigJson = $customFieldPositionConfigJson !== false ? $customFieldPositionConfigJson : '{}';
 
-$valueSelectedJson = isset($valueSelected) ? json_encode($valueSelected) : 'null';
-
-$js = <<<JS
-                document.addEventListener('DOMContentLoaded', function () {
-                    "use strict";
-
-                    const jsonPositions = {$positionsJson};
-
-                    const tableEl = document.getElementById('table');
-                    const locationEl = document.getElementById('location');
-
-                    function updatePositions(index, selKey) {
-                        if (!locationEl) return;
-
-                        locationEl.innerHTML = '';
-
-                        const keys = Object.keys(jsonPositions);
-                        if (keys.length === 0) return;
-
-                        if (typeof index !== 'number' || index < 0 || index >= keys.length) {
-                            index = 0;
-                        }
-
-                        const key = keys[index];
-                        const map = jsonPositions[key] || {};
-
-                        for (const pos in map) {
-                            if (!Object.prototype.hasOwnProperty.call(map, pos)) continue;
-                            const opt = document.createElement('option');
-                            opt.value = pos;
-                            opt.textContent = map[pos];
-                            if (selKey !== undefined && selKey !== null && String(selKey) === String(pos)) {
-                                opt.selected = true;
-                            }
-                            locationEl.appendChild(opt);
-                        }
-                    }
-
-                    let optionIndex = 0;
-                    if (tableEl && typeof tableEl.selectedIndex === 'number') {
-                        optionIndex = tableEl.selectedIndex;
-                    }
-
-                    if (tableEl) {
-                        tableEl.addEventListener('change', function () {
-                            optionIndex = tableEl.selectedIndex;
-                            updatePositions(optionIndex);
-                        }, false);
-                    }
-
-                    updatePositions(optionIndex, {$valueSelectedJson});
-                });
-            JS;
-
-echo Html::script($js)->type('module');
+echo Html::script($customFieldPositionConfigJson)
+    ->type('application/json')
+    ->id('customfield-position-config');
 ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

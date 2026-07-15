@@ -107,7 +107,7 @@ $vat = $s->getSetting('enable_vat_registration');
                 <td class="td-icon text-end td-vert-middle">
                     <form method="POST" class="form-inline">
                             <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-                            <button type="submit" class="btn_delete_item btn-xl btn-primary" onclick="return confirm('<?= $translator->translate('delete.record.warning'); ?>');">
+                            <button type="submit" class="btn_delete_item btn-xl btn-primary" data-confirm="<?= Html::encode($translator->translate('delete.record.warning')); ?>">
                                 <i class="bi bi-trash"></i>
                             </button>
                     </form>

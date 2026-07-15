@@ -22,7 +22,6 @@ use Yiisoft\Yii\AuthClient\Widget\AuthChoice;
  * @var string|null                                 $openBankChoice
  * @var bool                                        $noOpenBankingContinueButton
  * @var string                                      $csrf
- * @var string                                      $fadeOutJS
  * @var string                                      $styleTagFadeOut
  * @var array<string, list<string>>                 $errors
  */
@@ -162,4 +161,6 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
   echo H::closeTag('div'); // 3
  echo H::closeTag('div'); // 2
 echo H::closeTag('div'); // 1
-echo $fadeOutJS;
+// tfa-badge fade-out moved to src/Auth/Asset/keypad-copy-to-clipboard.ts
+// (bundled into keypad-copy-to-clipboard-iife.js, already loaded on this
+// page) so script-src no longer needs 'unsafe-inline'.

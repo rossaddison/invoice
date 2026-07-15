@@ -82,7 +82,14 @@ gateway integrations:
   'https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css.map'
   violates the following Content Security Policy directive"
 
-## Current CSP Configuration
+## CSP Configuration as of March 2026 (superseded — see July 2026 section below)
+
+> This `.htaccess`-only snapshot is historical. `script-src` no longer
+> carries `'unsafe-inline'`/`'unsafe-eval'` as of the July 2026 fix further
+> down this document — see
+> [Full removal of script-src `unsafe-inline`/`unsafe-eval` (July 2026)](#full-removal-of-script-src-unsafe-inlineunsafe-eval-july-2026).
+> The current, accurate policy lives in `config/web/params.php`'s `'csp'`
+> key (mirrored in `public/.htaccess`), not in this code block.
 
 ```apache
 Header always set Content-Security-Policy "\
@@ -172,17 +179,26 @@ worker-src 'self'"
 This architecture ensures PCI compliance without your server handling
 sensitive card data.
 
-### Current Unsafe Directives
+### Unsafe Directives (status as of July 2026)
 
-- **`'unsafe-inline'`**: Present in both `script-src` and `style-src`
-- **`'unsafe-eval'`**: Present in `script-src`
+- **`'unsafe-inline'` in `script-src`**: ✅ Removed July 2026 — see the
+  section further down this document.
+- **`'unsafe-eval'` in `script-src`**: ✅ Removed July 2026 — turned out not
+  to be needed by any payment gateway; the actual dependency was htmx's
+  internal `hx-on:` implementation, migrated away instead.
+- **`'unsafe-inline'` in `style-src`**: still present, deliberately —
+  Bootstrap 5 injects inline styles at runtime. Not part of the July 2026
+  fix's scope.
 
 ### Recommendations for Future Hardening
 
-1. Consider implementing CSP nonces for inline scripts instead of
-   `'unsafe-inline'`
-2. Evaluate if `'unsafe-eval'` is necessary for all payment gateways -
-   gradually remove if possible
+1. ~~Consider implementing CSP nonces for inline scripts instead of
+   `'unsafe-inline'`~~ — done differently: full externalization to a bundled
+   TS module or a `type="application/json"` data island, no nonce
+   infrastructure needed. See the July 2026 section below.
+2. ~~Evaluate if `'unsafe-eval'` is necessary for all payment gateways -
+   gradually remove if possible~~ — done; it wasn't needed by any payment
+   gateway.
 3. Regularly review Stripe, Braintree, and Amazon Pay documentation for any
    new required domains
 4. Monitor browser console for CSP violations during testing
@@ -332,3 +348,161 @@ When a payment integration is activated, append its domains in
 | Error-page coverage | Depends on Apache config | Always (before router) |
 | Payment domain extension | Edit `.htaccess` | Edit `params.php` |
 | Psalm / static analysis | Not applicable | Level 1 clean |
+
+> **Note (July 2026):** the table above describes intent as of the June
+> migration, but `'unsafe-inline' 'unsafe-eval'` had crept back into
+> `script-src` in both `config/web/params.php` and `public/.htaccess` by the
+> time of the July 2026 security audit — inline `<script>`/`onclick=`/htmx
+> usage had grown back in across views without anyone re-extracting it. The
+> section below is what actually removed them, for real this time, with the
+> full list of what moved where.
+
+---
+
+## Full removal of script-src `unsafe-inline`/`unsafe-eval` (July 2026)
+
+### Background
+
+The July 2026 security audit (`docs/SECURITY_HARDENING_AUDIT_JULY_2026.md`,
+finding #6) found `script-src 'self' 'unsafe-inline' 'unsafe-eval'` still in
+both `config/web/params.php` and `public/.htaccess`. A first grep for literal
+`<script` text undercounted badly — it missed every script built via PHP's
+`Html::script()` helper, which never contains that literal string in the
+view source. The real inventory: **12 files with inline script content, 11
+with inline `onclick=` attributes, and 6 uses of htmx's
+`hx-on::after-request`** — including both core layouts
+(`layout/guest.php`, `layout/invoice.php`) wrapping every page in the app.
+
+`'unsafe-eval'` turned out not to be decorative: htmx implements `hx-on:`
+attributes internally via `new Function(...)`, so removing `unsafe-eval`
+required migrating every `hx-on::after-request` usage first, or htmx's
+attribute processing would have silently broken.
+
+### The two migration patterns
+
+Every inline script fell into one of two shapes, handled differently:
+
+**1. Static logic → a TS module, self-initializing, no data to pass in.**
+Moved verbatim (or lightly refactored) into a new or existing file under
+`src/typescript/`, exporting an `init*()` function that guards itself by
+checking for its own target DOM elements — safe to call unconditionally on
+every page, since it's a no-op where those elements don't exist. Wired into
+the `InvoiceApp` constructor in `src/typescript/index.ts` (or, for the two
+auth pages that don't load the main bundle, into
+`src/Auth/Asset/keypad-copy-to-clipboard.ts`).
+
+**2. Inline `onclick=`/`hx-on::after-request` → delegated listener.**
+Replaced the attribute with a `data-action="…"` / `data-confirm="…"` /
+`data-hx-reset-on-success="true"` marker, and added the actual behavior once
+as a single delegated `click` (or htmx `afterRequest`) listener in
+`src/typescript/data-actions.ts` / `src/typescript/htmx-hooks.ts`, rather
+than repeating inline handler code at every call site.
+
+**3. Server-side dynamic data that used to be interpolated directly into an
+executable inline `<script>`** (e.g. `$positionsJson` spliced into a
+heredoc) → a `<script type="application/json">` **data island** instead —
+inert as far as CSP `script-src` is concerned (browsers never execute
+`application/json` script tags), built with
+`Html::script($json)->type('application/json')` or
+`Html::tag('script', $json, ['type' => 'application/json', 'id' => '...'])`,
+and read back with `JSON.parse(document.getElementById('...').textContent)`
+in the corresponding TS module.
+
+### Where each inline script moved to
+
+| Where it lived | What it did | Moved to |
+|---|---|---|
+| `resources/views/invoice/layout/alert.php` (inline `<script>`) | Flash-message countdown/pause timer, site-wide | `src/typescript/flash-message-timer.ts` |
+| `resources/views/invoice/family/_form.php` (inline `<script>`) | Require product-prefix when a comma-list is set | `src/typescript/family-form-validation.ts` |
+| `resources/views/invoice/info/javascript_analysis.php` (inline `<script>`) | Smooth-scroll nav highlighting (static FAQ page) | `src/typescript/faq-pages.ts` (`initJavascriptAnalysisFaq`) |
+| `resources/views/invoice/info/codeception_selectors_checklist.php` (`Html::script()`) | Section show/hide nav (static FAQ page) | `src/typescript/faq-pages.ts` (`initCodeceptionChecklistFaq`) |
+| `resources/views/invoice/customfield/_form.php` (`Html::script()`, dynamic data) | Position-selector options per table | `src/typescript/customfield-position.ts`, data via `#customfield-position-config` JSON island |
+| `resources/views/auth/login.php` / `src/Auth/Controller/AuthController.php` (`fadeOutJS`, `Html::script()`) | Fade out the "TFA enabled" badge after 2s | `src/Auth/Asset/keypad-copy-to-clipboard.ts` (the smaller bundle the login page actually loads — found via real browser testing, see below) |
+| `resources/views/layout/guest.php` + `layout/invoice.php` (`iPageSizeRefresh` function, duplicated in both) | Re-fetch `#main-area` after a page-size change | `src/typescript/htmx-hooks.ts` (`pageSizeRefresh`, via delegated `htmx:afterRequest`) |
+| `resources/views/layout/invoice.php` (`NProgress.start()`/`.done()`, two `Html::script()` one-liners) | Page-load progress bar | `src/typescript/index.ts` (`InvoiceApp` constructor, called directly) |
+| `resources/views/invoice/inv/guest.php` — `$invScript` (`InvoiceAmountMagnifier` + group-toggle, ~200 lines) | Hover-zoom on amount badges, collapsible invoice groups | **Deleted**, not moved — was a near-duplicate of `src/typescript/list-utils.ts` + `inv-index.ts` already used by the authenticated `inv/index.php`; `initInvIndex()` was parameterized (`tableId`, `configElId`) so the guest page now reuses the same code |
+| `resources/views/invoice/inv/guest.php` — `$filterPromptScript` | Filter-dropdown prompt-option labels | `#inv-guest-filter-config` JSON island, consumed by the same `initInvIndex()` call above (mirrors `inv/index.php`'s pre-existing `#inv-filter-config` pattern) |
+| `resources/views/invoice/inv/guest.php` — `$mobilePreviewScript` (`MobilePreviewToggle` class, ~100 lines) | Floating mobile-preview popup toggle | **Deleted**, not moved — same reasoning; `src/typescript/inv-index.ts`'s existing `MobilePreviewToggle` is instantiated once by the shared `initInvIndex()` call. The separately-dead `src/typescript/mobile-preview.ts` (an abandoned iframe-based redesign, never wired into the bundle) was deleted outright. |
+| `resources/views/invoice/inv/index.php` / `quote/index.php` (`Html::script('InvoiceApp.initInvIndex()')` one-liners) | Kick off the above init on page load | Removed entirely — `index.ts` now detects `#table-invoice` / `#table-invoice-guest` / `#table-quote` and self-invokes |
+| 10 files across `report/`, `salesorder/`, `setting/`, `_shared/`, `inv/` (`onclick="this.showPicker()"` / `window.close()` / `window.print()` / `return confirm(...)`) | Native date-picker, window close/print, delete confirmation | `data-action="show-picker"` / `"window-close"` / `"window-print"` / `data-confirm="…"` attributes, handled by one delegated listener in `src/typescript/data-actions.ts` |
+| `family/_form.php`'s "Show Number Picker" button (`onclick="toggleCommalistPicker()"`) | Toggle the family comma-list number picker | `data-action="toggle-commalist-picker"`, same delegated listener calling the pre-existing `family-commalist-picker.ts` global |
+| 4 item-form files (`invitem`/`quoteitem` `_item_form_product.php`/`_item_form_task.php`) — `hx-on::after-request="if(event.detail.successful) this.reset()"` | Clear the form after a successful htmx add | `data-hx-reset-on-success="true"` marker, handled by the delegated `htmx:afterRequest` listener in `htmx-hooks.ts` |
+| `layout/guest.php` + `layout/invoice.php`'s page-size `<a hx-on::after-request="iPageSizeRefresh(this);">` (14 links each) | Trigger the page-size refresh above | Attribute removed entirely — the delegated listener in `htmx-hooks.ts` matches on the existing `#page-size-btn-group` container, no new marker needed |
+
+Also touched: `src/typescript/list-utils.ts`'s `AmountMagnifier` selector list
+was widened to match both `.badge.bg-success` and `.badge.text-bg-success`
+(and the warning/danger variants) — the guest invoice table used the newer
+Bootstrap 5.3 `text-bg-*` utility class the shared code didn't previously
+check for, which would have silently made the magnifier a no-op there.
+
+### htmx eval-path removed
+
+`htmx.config.allowEval` is now set to `false` explicitly in
+`src/typescript/htmx-hooks.ts` — defense in depth, now that nothing in the
+app relies on htmx's `new Function(...)`-based `hx-on:` processing.
+
+### Verification
+
+This is a change where mistakes fail silently in the browser (a CSP
+violation and a dead button), not as a server error — Psalm, PHPUnit, and
+vitest all stayed green throughout even while a real bug was live. Caught
+by installing Playwright, creating a throwaway account, and driving the app
+in headless Chromium watching the DevTools console for CSP violations: the
+login-page fix above (`fadeOutJS`) was found this way, since the login page
+doesn't load the main bundle and the static file-based inventory had no way
+to know that.
+
+### One known exception — not fixable from this repo
+
+The login page still shows 2 CSP violations, both from the `AuthChoice`
+widget in `rossaddison/yii-auth-client` — a forked package installed via a
+`vcs` repository in `composer.json`, not this project's own code. Patching
+`vendor/rossaddison/yii-auth-client/src/Widget/AuthChoice.php` directly
+wouldn't persist (lost on the next `composer update`, untracked in this
+repo's git history). See `docs/SECURITY_HARDENING_AUDIT_JULY_2026.md`
+finding #6 for the exact violation hashes and stopgap options.
+
+### Follow-up regression — async CSS `onload=` handlers (found post-deploy)
+
+The original inventory only looked for `<script>` blocks, `onclick=`, and
+`hx-on:` — it missed a fourth category: an inline event handler on a
+`<link>` tag, emitted by Yii's `AssetBundle` mechanism rather than hand-written
+HTML.
+
+Several `AssetBundle` classes loaded their CSS using the classic
+non-render-blocking pattern:
+
+```php
+public array $cssOptions = [
+    'media' => 'print',
+    'onload' => "this.media='all'",
+];
+```
+
+This renders as `<link rel="stylesheet" media="print" onload="this.media='all'">`
+— the browser downloads the stylesheet without blocking render, and the
+inline `onload=` handler flips `media` back to `all` once it's loaded. With
+`script-src 'unsafe-inline'` removed, that `onload=` is silently blocked by
+CSP, so `media` is stuck at `print` forever and the stylesheet never applies
+to screen. Symptom: Bootstrap Icons (`bi-*`) disappearing site-wide (reported
+as "lost the bootstrap5 cog" / "other icons have also disappeared"), plus
+NProgress's CSS and the Stripe checkout CSS silently not applying.
+
+Fixed by removing `cssOptions` from each affected bundle and loading the
+stylesheet as a normal blocking `<link>` instead:
+
+- `src/Invoice/Asset/NodeModulesBootstrapIconsAsset.php` (local/npm Bootstrap Icons)
+- `src/Asset/AppCdnAsset.php` (CDN Bootstrap Icons)
+- `src/Invoice/Asset/NProgressAsset.php`
+- `src/Invoice/Asset/pciAsset/StripeVersionTenAsset.php`
+
+Sibling payment-gateway bundles (`AmazonPayTwoSevenAsset`,
+`BraintreeDropInOneThirtyThreeSevenAsset`) were checked and don't use this
+pattern. A repo-wide `onload` grep across `src/` turned up no other
+instances.
+
+**Lesson for future CSP audits:** when hardening `script-src`, also grep
+`AssetBundle` classes (`src/**/Asset/**/*.php`) for `cssOptions`/`jsOptions`
+containing `onload`/`onerror`/`on*` — these are just as much an inline event
+handler as one written directly in a view, but they don't show up in a
+`<script>`/`onclick`/`hx-on` search of the view layer.

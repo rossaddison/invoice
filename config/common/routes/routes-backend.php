@@ -2,8 +2,11 @@
 
 declare(strict_types=1);
 
+use App\Auth\Permissions;
 use App\Backend\Controller\HmrcController;
+use App\Middleware\RoutePermission;
 use Psr\Http\Message\ResponseFactoryInterface;
+use Yiisoft\Auth\Middleware\Authentication;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\Group;
 use Yiisoft\Router\Route;
@@ -21,42 +24,51 @@ return [
         ->host('backend.{_host}')
         ->namePrefix('backend/'),
 
-    Route::get('/backend/hmrc')
-        ->action([HmrcController::class, 'index'])
-        ->name('backend/hmrc/index'),
+    // Admin-only: VAT filing and other HMRC MTD actions. Not under
+    // RoutePermission::invoiceGroup() since these intentionally stay at
+    // /backend/hmrc/* rather than gaining an /invoice prefix — same
+    // Authentication + permission gate, applied directly to this group.
+    Group::create('/backend/hmrc')
+        ->middleware(Authentication::class)
+        ->middleware(RoutePermission::check(Permissions::MANAGE_HMRC))
+        ->routes(
+            Route::get('')
+                ->action([HmrcController::class, 'index'])
+                ->name('backend/hmrc/index'),
 
-    // Api specific feedback e.g. self-assessment, individuals, vat
-    Route::get('backend/hmrc/fphFeedback/{api}')
-        ->action([HmrcController::class, 'fphFeedback'])
-        ->name('backend/hmrc/fphFeedback'),
+            // Api specific feedback e.g. self-assessment, individuals, vat
+            Route::get('/fphFeedback/{api}')
+                ->action([HmrcController::class, 'fphFeedback'])
+                ->name('backend/hmrc/fphFeedback'),
 
-    Route::methods([Method::GET, Method::POST], '/backend/hmrc/fphValidate')
-        ->middleware(fn (
-            ResponseFactoryInterface $responseFactory,
-            StorageInterface $storage,
-        ) => new LimitRequestsMiddleware(new Counter($storage, 10, 10), $responseFactory))
-        ->action([HmrcController::class, 'fphValidate'])
-        ->name('backend/hmrc/fphValidate'),
+            Route::methods([Method::GET, Method::POST], '/fphValidate')
+                ->middleware(fn (
+                    ResponseFactoryInterface $responseFactory,
+                    StorageInterface $storage,
+                ) => new LimitRequestsMiddleware(new Counter($storage, 10, 10), $responseFactory))
+                ->action([HmrcController::class, 'fphValidate'])
+                ->name('backend/hmrc/fphValidate'),
 
-    Route::get('/backend/hmrc/createTestUserIndividual')
-        ->action([HmrcController::class, 'createTestUserIndividual'])
-        ->name('backend/hmrc/createTestUserIndividual'),
+            Route::get('/createTestUserIndividual')
+                ->action([HmrcController::class, 'createTestUserIndividual'])
+                ->name('backend/hmrc/createTestUserIndividual'),
 
-    // https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/vat-api/1.0
-    Route::get('/backend/hmrc/vatReturnPrepare')
-        ->action([HmrcController::class, 'vatReturnPrepare'])
-        ->name('backend/hmrc/vatReturnPrepare'),
+            // https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/vat-api/1.0
+            Route::get('/vatReturnPrepare')
+                ->action([HmrcController::class, 'vatReturnPrepare'])
+                ->name('backend/hmrc/vatReturnPrepare'),
 
-    Route::get('/backend/hmrc/vatObligations')
-        ->action([HmrcController::class, 'vatObligations'])
-        ->name('backend/hmrc/vatObligations'),
+            Route::get('/vatObligations')
+                ->action([HmrcController::class, 'vatObligations'])
+                ->name('backend/hmrc/vatObligations'),
 
-    Route::methods([Method::GET, Method::POST], '/backend/hmrc/vatReturnSubmit')
-        ->action([HmrcController::class, 'vatReturnSubmit'])
-        ->name('backend/hmrc/vatReturnSubmit'),
+            Route::methods([Method::GET, Method::POST], '/vatReturnSubmit')
+                ->action([HmrcController::class, 'vatReturnSubmit'])
+                ->name('backend/hmrc/vatReturnSubmit'),
 
-    // https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-employment-business-api/3.0
-    Route::get('/backend/hmrc/selfEmploymentBusinesses')
-        ->action([HmrcController::class, 'selfEmploymentBusinesses'])
-        ->name('backend/hmrc/selfEmploymentBusinesses'),
+            // https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-employment-business-api/3.0
+            Route::get('/selfEmploymentBusinesses')
+                ->action([HmrcController::class, 'selfEmploymentBusinesses'])
+                ->name('backend/hmrc/selfEmploymentBusinesses'),
+        ),
 ];

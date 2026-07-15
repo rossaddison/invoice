@@ -94,9 +94,8 @@ $client_helper = new ClientHelper($s);
                                                value="<?= $csrf ?>">
                                         <button type="submit"
                                                 class="btn btn-secondary btn-sm"
-                                                onclick="return confirm('<?=
-                                                $translator->translate(
-                                                'delete.user.client.warning'); ?>');">
+                                                data-confirm="<?= Html::encode($translator->translate(
+                                                'delete.user.client.warning')); ?>">
                                             <i class="bi-trash">
                                             </i><?= $translator->translate('remove'); ?>
                                         </button>

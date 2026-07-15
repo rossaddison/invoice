@@ -20,6 +20,23 @@ import { initTelegramProviderPopup } from './telegram-providers.js';
 import { initStreetOrder } from './family-street-order.js';
 import { initStepPopovers } from './google-translate-popover.js';
 import { AllowanceChargeToggleHandler } from './allowance-charge-toggle.js';
+import { initFlashMessageTimer } from './flash-message-timer.js';
+import { initFamilyFormValidation } from './family-form-validation.js';
+import { initDataActions } from './data-actions.js';
+import { initHtmxHooks } from './htmx-hooks.js';
+import { initCustomFieldPosition } from './customfield-position.js';
+import { initJavascriptAnalysisFaq, initCodeceptionChecklistFaq } from './faq-pages.js';
+import { initInvIndex } from './inv-index.js';
+import { initQuoteIndex } from './quote-index.js';
+
+declare global {
+    interface Window {
+        NProgress?: {
+            start(): void;
+            done(): void;
+        };
+    }
+}
 
 /**
  * Initialize Invoice Application
@@ -53,6 +70,27 @@ class InvoiceApp {
         this.initializeFullpageLoader();
 
         new AllowanceChargeToggleHandler(); // NOSONAR typescript:S1848 — constructor binds DOM event listeners; instantiation is the side effect
+
+        // CSP-motivated migrations off inline <script>/onclick — each no-ops
+        // on pages without its target elements, so safe to call everywhere.
+        initFlashMessageTimer();
+        initFamilyFormValidation();
+        initDataActions();
+        initHtmxHooks();
+        initCustomFieldPosition();
+        initJavascriptAnalysisFaq();
+        initCodeceptionChecklistFaq();
+        globalThis.NProgress?.start();
+        globalThis.NProgress?.done();
+        if (document.getElementById('table-invoice')) {
+            initInvIndex();
+        }
+        if (document.getElementById('table-invoice-guest')) {
+            initInvIndex('table-invoice-guest', 'inv-guest-filter-config');
+        }
+        if (document.getElementById('table-quote')) {
+            initQuoteIndex();
+        }
 
         console.log(
             `Invoice TypeScript App initialized with ${this.#handlers.length} core handlers`
@@ -130,6 +168,4 @@ if (document.readyState === 'loading') {
 }
 
 // Export for potential external usage
-export { InvoiceApp };
-export { initInvIndex } from './inv-index.js';
-export { initQuoteIndex } from './quote-index.js';
+export { InvoiceApp, initInvIndex, initQuoteIndex };

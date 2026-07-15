@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\Button;
 
 /**
@@ -41,7 +42,7 @@ use Yiisoft\Html\Tag\Button;
                                             <?php if (isset($filter_family) && $family->reqId() == $filter_family) {
                                                 echo ' selected="selected"';
                                             } ?>>
-                                            <?= $family->getFamilyName() ?? ''; ?>
+                                            <?= H::encode($family->getFamilyName() ?? ''); ?>
                                         </option>
                                     <?php } ?>
                                 </select>

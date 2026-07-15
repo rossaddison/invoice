@@ -21,4 +21,7 @@ final class Permissions
     public const string EDIT_PAYMENT = 'edit.payment';
 
     public const string EDIT_CLIENT_PEPPOL = 'edit.client.peppol';
+
+    /** Admin-only: HMRC MTD VAT filing/backend endpoints (config/common/routes/routes-backend.php). */
+    public const string MANAGE_HMRC = 'manage.hmrc';
 }

@@ -139,7 +139,7 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
                   <!-- Angular Number Picker Container -->
                   <div class="mt-2">
                     <button type="button" class="btn btn-outline-primary btn-sm"
-                            onclick="toggleCommalistPicker()" id="toggle-picker-btn">
+                            data-action="toggle-commalist-picker" id="toggle-picker-btn">
                       <i class="bi bi-grid-3x3-gap"></i> Show Number Picker
                     </button>
                   </div>
@@ -185,38 +185,14 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
                 <?= Html::closeTag('div'); ?>
               <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
-<script>
-(function () {
-    document.getElementById('FamilyForm').addEventListener('submit', function (e) {
-        var commalist = document.getElementById('family_commalist').value.trim();
-        var prefix    = document.getElementById('family_productprefix').value.trim();
-        if (commalist !== '' && prefix === '') {
-            e.preventDefault();
-            document.getElementById('family_productprefix').focus();
-            document.getElementById('family_productprefix').classList.add('is-invalid');
-            var existing = document.getElementById('prefix-required-feedback');
-            if (!existing) {
-                var msg = document.createElement('div');
-                msg.id = 'prefix-required-feedback';
-                msg.className = 'invalid-feedback d-block';
-                msg.textContent = 'Product prefix is required when a comma list is provided.';
-                document.getElementById('family_productprefix').insertAdjacentElement('afterend', msg);
-            }
-        } else {
-            document.getElementById('family_productprefix').classList.remove('is-invalid');
-            var existing = document.getElementById('prefix-required-feedback');
-            if (existing) { existing.remove(); }
-        }
-    });
-    document.getElementById('family_productprefix').addEventListener('input', function () {
-        if (this.value.trim() !== '') {
-            this.classList.remove('is-invalid');
-            var existing = document.getElementById('prefix-required-feedback');
-            if (existing) { existing.remove(); }
-        }
-    });
-}());
-</script>
+<?php
+/**
+ * Prefix-required-on-submit validation moved to
+ * src/typescript/family-form-validation.ts (bundled into
+ * invoice-typescript-iife.js) so script-src no longer needs 'unsafe-inline'.
+ * It self-initializes unconditionally from index.ts.
+ */
+?>
           <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
       <?= Html::closeTag('div'); ?>

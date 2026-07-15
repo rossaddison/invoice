@@ -127,14 +127,14 @@ class MobilePreviewToggle {
     }
 }
 
-export function initInvIndex(): void {
+export function initInvIndex(tableId = 'table-invoice', configElId = 'inv-filter-config'): void {
     const setup = (): void => {
-        const configEl = document.getElementById('inv-filter-config');
+        const configEl = document.getElementById(configElId);
         const labels = configEl
             ? (JSON.parse(configEl.textContent ?? '{}') as Record<string, string>)
             : {};
 
-        magnifier = new AmountMagnifier('table-invoice');
+        magnifier = new AmountMagnifier(tableId);
         initGroupBySelect();
 
         Object.entries(labels).forEach(([id, label]) => {

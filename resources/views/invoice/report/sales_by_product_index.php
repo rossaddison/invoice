@@ -70,7 +70,7 @@ $dateRange = ' (' . $dateFmt . ')';
                                             = $startTaxYear; ?>"
                                    role="presentation"
                                    autocomplete="off"
-                                   onclick="this.showPicker()">
+                                   data-action="show-picker">
                         </div>
 
                         <div class="mb-3">
@@ -86,7 +86,7 @@ $dateRange = ' (' . $dateFmt . ')';
                                            ->format('Y-m-d'); ?>"
                                    role="presentation"
                                    autocomplete="off"
-                                   onclick="this.showPicker()">
+                                   data-action="show-picker">
                         </div>
                         <input type="submit" class="btn btn-success" name="btn_submit"
                                value="<?= $translator->translate('run.report'); ?>">

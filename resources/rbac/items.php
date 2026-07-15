@@ -14,6 +14,7 @@ return [
             'edit.user.inv',
             'edit.client.peppol',
             'entry.to.base.controller',
+            'manage.hmrc',
         ],
     ],
     [
@@ -82,5 +83,11 @@ return [
         'type' => 'permission',
         'updated_at' => 1749663993,
         'created_at' => 1749663993,
+    ],
+    [
+        'name' => 'manage.hmrc',
+        'type' => 'permission',
+        'updated_at' => 1784151222,
+        'created_at' => 1784151222,
     ],
 ];

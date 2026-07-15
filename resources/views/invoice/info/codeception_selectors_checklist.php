@@ -2432,38 +2432,7 @@ echo '} ';
 
 echo '</style>';
 
-// JavaScript for navigation
-echo Html::script("
-document.addEventListener('DOMContentLoaded', function() {
-    // Handle navigation clicks
-    const navLinks = document.querySelectorAll('.nav-pills .nav-link');
-    const sections = document.querySelectorAll('.section');
-    
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Update active nav link
-            navLinks.forEach(nl => nl.classList.remove('active'));
-            this.classList.add('active');
-            
-            // Show/hide sections
-            const targetId = this.getAttribute('href').substring(1);
-            sections.forEach(section => {
-                if (section.id === targetId) {
-                    section.style.display = 'block';
-                } else {
-                    section.style.display = 'none';
-                }
-            });
-        });
-    });
-    
-    // Initially hide all sections except the first
-    sections.forEach((section, index) => {
-        if (index !== 0) {
-            section.style.display = 'none';
-        }
-    });
-});
-")->render();
+// Section show/hide nav logic moved to src/typescript/faq-pages.ts
+// (initCodeceptionChecklistFaq, bundled into invoice-typescript-iife.js) so
+// script-src no longer needs 'unsafe-inline'. It self-initializes
+// unconditionally from index.ts, guarded by this page's .section markup.

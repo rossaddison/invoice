@@ -161,7 +161,6 @@ echo Html::openTag('body');
   Html::tag('div', $t->translate('please.enable.js'),
    ['class' => 'alert alert-danger no-margin']),
  );
-echo Html::script('NProgress.start();')->type('module');
 $this->beginBody();
 
 $offcanvasPlacement = match ($bootstrap5OffcanvasPlacement) {
@@ -995,7 +994,6 @@ if ((null !== $currentPath) && !$isGuest) {
                     static fn(int $size): string =>
                         '<a hx-get="' . Html::encode(str_replace('__SIZE__', (string) $size, $pageSizeUrlTemplate)) . '"'
                         . ' hx-swap="none"'
-                        . ' hx-on::after-request="iPageSizeRefresh(this);"'
                         . ' href="' . Html::encode(str_replace('__SIZE__', (string) $size, $pageSizeUrlTemplate)) . '"'
                         . ' class="btn btn-outline-secondary' . ($size === $currentPageSize ? ' active' : '') . '">'
                         . $size . '</a>',
@@ -1332,22 +1330,6 @@ if ((null !== $currentPath) && !$isGuest) {
     ->styles(NavStyle::NAVBAR);
 } //null!== currentPath && !isGuest
 echo NavBar::end();
-echo Html::script(<<<'JS'
-function iPageSizeRefresh(btn) {
-    document.querySelectorAll('#page-size-btn-group .btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    fetch(window.location.href)
-        .then(r => r.text())
-        .then(html => {
-            const doc = new DOMParser().parseFromString(html, 'text/html');
-            const fresh = doc.getElementById('main-area');
-            if (fresh) {
-                document.getElementById('main-area').replaceWith(fresh);
-                htmx.process(fresh);
-            }
-        });
-}
-JS);
 echo $bootstrap5OffcanvasEnable ? Offcanvas::end() : '';
 echo Html::openTag('div', ['id' => 'main-area']);
  // Display the sidebar if enabled
@@ -1375,7 +1357,6 @@ echo Html::closeTag('div');
 echo Html::openTag('footer', ['class' => 'container py-4']);
  echo PerformanceMetrics::widget();
 echo Html::closeTag('footer');
-echo Html::script('NProgress.done();')->type('module');
 $this->endBody();
 echo Html::closeTag('body');
 echo Html::closeTag('html');

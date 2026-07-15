@@ -21,8 +21,10 @@ class NodeModulesBootstrapIconsAsset extends AssetBundle
         'bootstrap-icons.min.css',
     ];
 
-    public array $cssOptions = [
-        'media' => 'print',
-        'onload' => "this.media='all'",
-    ];
+    // Previously loaded async via cssOptions media="print" +
+    // onload="this.media='all'" (a non-render-blocking CSS pattern), but
+    // that onload is an inline event handler — CSP script-src dropping
+    // 'unsafe-inline' silently blocked it, so the stylesheet's media never
+    // switched back to 'all' and every bi-* icon on the site stopped
+    // rendering. Loading it as a normal blocking stylesheet instead.
 }
