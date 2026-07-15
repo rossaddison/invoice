@@ -24,6 +24,7 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<array-key, array<array-key, string>|string> $units
  * @psalm-var array<array-key, array<array-key, string>|string> $tax_rates
  * @psalm-var array<array-key, array<array-key, string>|string> $unit_peppols
+ * @psalm-var array<array-key, array<array-key, string>|string> $product_types
  */
 ?>
 
@@ -81,6 +82,18 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::tag('br'); ?>
             <?= Field::text($form, 'product_description')
         ->disabled(true); ?>
+            <?= Html::tag('br'); ?>
+            <?= Field::select($form, 'product_type')
+        ->label($translator->translate('product.type'))
+        ->addInputAttributes([
+            'class' => 'form-control  alert alert-warning',
+        ])
+        ->value($form->product_type)
+        ->prompt($translator->translate('none'))
+        ->optionsData($product_types)
+        ->disabled(true)
+        ->hint($translator->translate('hint.this.field.is.required'));
+?>
             <?= Html::tag('br'); ?>
             <?= Field::select($form, 'family_id')
         ->label($translator->translate('family'))

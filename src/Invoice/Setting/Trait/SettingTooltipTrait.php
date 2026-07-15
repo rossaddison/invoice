@@ -406,6 +406,17 @@ trait SettingTooltipTrait
                 . ' dropdown box is built with SettingRepository locales'
                 . ' function',
             ],
+            'homecare_auto_invoice_enabled' => [
+                'why' => 'Master switch for the public, unauthenticated'
+                . ' home-care QR-scan endpoint. When on, scanning a client\'s'
+                . ' QR code auto-generates their next invoice, but only when'
+                . ' their last paid invoice contained at least one'
+                . ' Service-type product and no invoice has been raised since'
+                . ' that payment. Leave off for businesses that do not use'
+                . ' the recurring home-care QR-scan flow.',
+                'where' => 'src/Invoice/Inv/HomeCareCleaningEligibilityService.php'
+                . ' and src/Invoice/Inv/Trait/HomeCareScan.php.',
+            ],
             'include_delivery_period' => [
                 'why' => 'A group of business terms providing information on the'
                 . ' invoice period. Also called delivery period. If the group'

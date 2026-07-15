@@ -14,6 +14,7 @@ use App\Invoice\Family\FamilyRepository as fR;
 use App\Invoice\Helpers\CountryHelper;
 use App\Invoice\Helpers\CustomValuesHelper as CVH;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
+use App\Invoice\Ubl\UnitCode;
 use App\Invoice\ProductCustom\ProductCustomRepository as pcR;
 use App\Invoice\ProductCustom\ProductCustomService;
 use App\Invoice\ProductCustom\ProductCustomForm;
@@ -66,6 +67,8 @@ final class ProductController extends BaseController
         $countries   = new CountryHelper();
         $peppolarrays = new PeppolArrays();
         $form        = new ProductForm();
+        $defaultUnitPeppol = $d->unitPeppolRepository->repoUnitPeppolByCodeQuery(UnitCode::UNIT);
+        $form->unit_peppol_id = $defaultUnitPeppol?->reqId();
         $productCustomForm = new ProductCustomForm();
         $customData  = $this->fetchCustomFieldsAndValues(
             $d->customFieldRepository, $d->customValueRepository, 'product_custom'
@@ -85,6 +88,7 @@ final class ProductController extends BaseController
             'units'          => ProductSelectData::units($d->unitRepository->findAllPreloaded()),
             'taxRates'       => ProductSelectData::taxRates($d->taxRateRepository->findAllPreloaded()),
             'unitPeppols'    => ProductSelectData::unitPeppols($d->unitPeppolRepository->findAllPreloaded()),
+            'productTypes'   => ProductSelectData::productTypes(),
             'customFields'   => $customData['customFields'],
             'customValues'   => $customData['customValues'],
             'cvH'            => new CVH($this->sR, $d->customValueRepository),
@@ -204,6 +208,7 @@ final class ProductController extends BaseController
             'units'          => ProductSelectData::units($d->unitRepository->findAllPreloaded()),
             'taxRates'       => ProductSelectData::taxRates($d->taxRateRepository->findAllPreloaded()),
             'unitPeppols'    => ProductSelectData::unitPeppols($d->unitPeppolRepository->findAllPreloaded()),
+            'productTypes'   => ProductSelectData::productTypes(),
             'customFields'   => $customData['customFields'],
             'customValues'   => $customData['customValues'],
             'cvH'            => new CVH($this->sR, $d->customValueRepository),
@@ -417,6 +422,7 @@ final class ProductController extends BaseController
                         'units'       => ProductSelectData::units($d->unitRepository->findAllPreloaded()),
                         'tax_rates'   => ProductSelectData::taxRates($d->taxRateRepository->findAllPreloaded()),
                         'unit_peppols' => ProductSelectData::unitPeppols($d->unitPeppolRepository->findAllPreloaded()),
+                        'product_types' => ProductSelectData::productTypes(),
                         'custom_fields' => $cfRepo->repoTablequery('product_custom'),
                         'custom_values' => $d->customValueRepository->fixCfValueToCf(
                             $cfRepo->repoTablequery('product_custom')

@@ -99,6 +99,7 @@ final class InvItemRepository extends Select\Repository implements InvItemReposi
      * @param int $inv_id
      * @return EntityReader
      */
+    #[\Override]
     public function repoInvItemIdquery(int $inv_id): EntityReader
     {
         $query = $this->select()

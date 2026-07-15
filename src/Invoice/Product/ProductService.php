@@ -63,6 +63,8 @@ final readonly class ProductService
             $model->setProductName((string) $apf['product_name']) : '';
         isset($apf['product_description']) ?
             $model->setProductDescription((string) $apf['product_description']) : '';
+        isset($apf['product_type']) ?
+            $model->setProductType((string) $apf['product_type']) : '';
         isset($apf['product_price']) ?
             $model->setProductPrice((float) $apf['product_price']) : '';
         isset($apf['product_price_base_quantity']) ?

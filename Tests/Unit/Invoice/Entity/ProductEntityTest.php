@@ -46,6 +46,7 @@ class ProductEntityTest extends TestCase
         $this->assertSame(0.00, $p->getPurchasePrice());
         $this->assertSame(1.00, $p->getProductPriceBaseQuantity());
         $this->assertSame('', $p->getProviderName());
+        $this->assertSame('product', $p->getProductType());
         $this->assertNull($p->getFamily());
         $this->assertNull($p->getTaxRate());
         $this->assertNull($p->getUnit());
@@ -170,5 +171,13 @@ class ProductEntityTest extends TestCase
         $this->assertNull($p->getUnitPeppolId());
         $p->setUnitPeppolId(5);
         $this->assertSame(5, $p->getUnitPeppolId());
+    }
+
+    public function testSetAndGetProductType(): void
+    {
+        $p = new Product();
+        $this->assertSame('product', $p->getProductType());
+        $p->setProductType('service');
+        $this->assertSame('service', $p->getProductType());
     }
 }

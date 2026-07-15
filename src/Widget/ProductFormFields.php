@@ -40,6 +40,28 @@ final readonly class ProductFormFields
     }
 
     /**
+     * Product type (Product/Service) selection dropdown field for products
+     * @param array<array-key, array<array-key, string>|string> $productTypesData
+     */
+    public function productTypeSelect(ProductForm $form, array $productTypesData,
+            bool $required = true): string
+    {
+        $hintKey = $required ? 'hint.this.field.is.required' :
+                'hint.this.field.is.not.required';
+        $cssClass = $required ? 'form-control form-control-lg alert alert-warning' :
+                'form-control form-control-lg alert alert-success';
+
+        return Field::select($form, 'product_type')
+            ->label($this->translator->translate('product.type'))
+            ->addInputAttributes(['class' => $cssClass])
+            ->value($form->product_type)
+            ->prompt($this->translator->translate('none'))
+            ->optionsData($productTypesData)
+            ->hint($this->translator->translate($hintKey))
+            ->render();
+    }
+
+    /**
      * Unit selection dropdown field for products
      * @param array<array-key, array<array-key, string>|string> $unitsData
      */

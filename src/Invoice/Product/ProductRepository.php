@@ -18,7 +18,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  * @template TEntity of Product
  * @extends Select\Repository<TEntity>
  */
-final class ProductRepository extends Select\Repository
+final class ProductRepository extends Select\Repository implements ProductRepositoryInterface
 {
     /**
     * @param Select<TEntity> $select
@@ -152,6 +152,7 @@ final class ProductRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
+    #[\Override]
     public function repoProductquery(int $product_id): ?Product
     {
         $query = $this

@@ -933,6 +933,41 @@ echo H::openTag('div', $row); //1
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
 
+      echo H::openTag('div', $formGroup); //7
+       $shaie = 'settings[homecare_auto_invoice_enabled]';
+       echo H::openTag('label', [
+        'for' => $shaie
+       ]);
+        echo $translator->translate(
+         'homecare.auto.invoice.enabled'
+        );
+        echo $s->infoIcon('homecare_auto_invoice_enabled');
+       echo H::closeTag('label');
+
+       $body[$shaie] =
+       $s->getSetting('homecare_auto_invoice_enabled');
+
+       echo H::openTag('select', [
+        'name' => $shaie,
+        'id' => $shaie,
+        'class' => 'form-select',
+       ]);
+        echo  new Option()
+         ->value('0')
+         ->content(
+          $translator->translate('no')
+         );
+        echo  new Option()
+         ->value('1')
+         ->selected(
+          $body[$shaie] == '1'
+        )
+         ->content(
+          $translator->translate('yes')
+         );
+       echo H::closeTag('select');
+      echo H::closeTag('div'); //7
+
      echo H::closeTag('div'); //6
     echo H::closeTag('div'); //5
 

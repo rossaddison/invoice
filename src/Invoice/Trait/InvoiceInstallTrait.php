@@ -107,6 +107,9 @@ trait InvoiceInstallTrait
             'generate_invoice_number_for_draft' => 1,
             'generate_quote_number_for_draft' => 1,
             'generate_so_number_for_draft' => 1,
+            // Master switch for the public QR-scan home-care auto-invoice
+            // endpoint; off by default until a business opts in.
+            'homecare_auto_invoice_enabled' => 0,
             'install_test_data' => 0,
             'inv_cdn_not_node_module' => 1,
             //1=>None, 2=>Cash, 3=>Cheque, 4=>Card/Direct Debit-Succeeded

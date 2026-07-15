@@ -24,7 +24,7 @@ etc.), not just window cleaning.
 
 | Class | Purpose |
 |---|---|
-| `App\Invoice\Inv\HomeCareCleaningEligibilityService` | Pure business rule: eligible only when the client has an invoice on file, their last invoice is paid with a payment date on record, and no invoice (paid or not) exists dated after that payment |
+| `App\Invoice\Inv\HomeCareCleaningEligibilityService` | Pure business rule: eligible only when the `homecare_auto_invoice_enabled` setting is on, the client has an invoice on file, their last invoice is paid with a payment date on record, no invoice (paid or not) exists dated after that payment, **and** that invoice contains at least one Service-type product |
 | `App\Invoice\Inv\Trait\HomeCareScan` (`homeCareScan()`) | Public, **unauthenticated** scan endpoint — a deliberate, scoped exception to this app's usual guest-access rule where a token alone never grants access without a session |
 | `App\Invoice\Inv\Trait\MultipleCopy` (`generateHomeCareCleaningInvoice()`) | Reuses the existing invoice-copy machinery (`invToInvInvItems`, `invToInvInvAmount`, etc.) instead of a new converter; always forces `status_id = 2` (sent), regardless of the `mark_invoices_sent_copy` setting |
 | `App\Invoice\Client\ClientService` (`getOrCreateQrToken()`, `renderQrDataUri()`) | Single shared source of the per-client QR token and its rendered image, used by both the guest and staff print actions |
@@ -58,8 +58,58 @@ code, not just the account owner, can reach it).
 
 ### Tests
 
-`Tests/Testo/Invoice/Inv/HomeCareCleaningEligibilityServiceTest.php` — 5
-Mockery-backed scenarios covering every branch of the eligibility rule.
+`Tests/Testo/Invoice/Inv/HomeCareCleaningEligibilityServiceTest.php` — 7
+Mockery-backed scenarios covering every branch of the eligibility rule
+(originally 5; two added in the follow-up below).
+
+---
+
+### Follow-up (15 Jul 2026): Product/Service gating + Settings toggle
+
+The eligibility rule originally only looked at payment history — it never
+checked *what* was being invoiced. A separate piece of work added an explicit
+`product_type` (`Product` | `Service`) classification to the `Product`
+entity (replacing a fragile convention where `unit_id` doubled as an
+implicit product/service signal). This follow-up wires that into the
+eligibility rule and adds a Settings-level master switch.
+
+**Eligibility rule change**: `findInvoiceToCopyIfEligible()` gained a final
+check, cheapest-first after the existing payment/date logic — at least one
+`InvItem` on the template invoice must reference a `Product` whose
+`product_type` is `Service` (not that *every* item be a Service; mixed
+invoices still qualify).
+
+| Addition | Purpose |
+|---|---|
+| `App\Invoice\Enum\ProductType` | String-backed enum (`Product`/`Service`), same convention as `StoreCoveTaxType` — stored as a plain string column, not a native enum type |
+| `Product::product_type` (string, default `'product'`) | The classification itself; existing rows silently default to `'product'`, no migration script |
+| `App\Invoice\InvItem\InvItemRepositoryInterface`: `repoInvItemIdquery(): iterable` | Added to the existing interface so the eligibility service can iterate a template invoice's items without a DB round-trip through a `final` class |
+| `App\Invoice\Product\ProductRepositoryInterface` (new) | `repoProductquery(): ?Product` — same reasoning: `ProductRepository` is `final`, unmockable directly |
+| Setting `homecare_auto_invoice_enabled` (`'0'`/`'1'`, default `'0'`) | Master switch for the whole feature, Settings → Invoices tab, with a tooltip; the eligibility rule checks this first and short-circuits everything else when off |
+
+**DI binding gap closed**: none of `HomeCareCleaningEligibilityService`'s
+five interface dependencies (including the two original ones,
+`InvRepositoryInterface`/`PaymentRepositoryInterface`) had an explicit
+container binding anywhere in `config/` — the service would have thrown a
+`NotFoundException` at the container the moment the router tried to
+construct it for `/scan/{token}`. Added
+`config/common/di/homecare.php` binding all five
+`Interface::class => Concrete::class`, same pattern as
+`As4MessageRepositoryInterface` in `config/common/di/as4.php`. Auto-merged
+via the existing `'di' => 'common/di/*.php'` glob in `configuration.php`, no
+further registration needed.
+
+**QR button visibility**: both entry points into the feature —
+`inv/guest.php`'s `$qrButton` and `client/view.php`'s `print.qr.code`
+anchor (both ultimately print a QR code encoding the `public/homecare-scan`
+URL) — rendered unconditionally regardless of the setting. Now both check
+`$s->getSetting('homecare_auto_invoice_enabled') === '1'` before rendering.
+
+**Verification**: `vendor/bin/testo` — 7/7 passing · `vendor/bin/psalm
+--no-cache` — zero errors on every touched file · `vendor/bin/phpunit` on
+`ProductEntityTest`/`ProductFormTest`/`ProductRepositoryTest` — no
+regressions from the new `implements` clauses. Not yet click-tested through
+a live `/scan/{token}` request in a browser.
 
 ---
 

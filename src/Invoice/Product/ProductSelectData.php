@@ -8,6 +8,7 @@ use App\Infrastructure\Persistence\Family\Family;
 use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use App\Infrastructure\Persistence\Unit\Unit;
 use App\Infrastructure\Persistence\UnitPeppol\UnitPeppol;
+use App\Invoice\Enum\ProductType;
 use App\Invoice\Family\FamilyRepository as fR;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 
@@ -61,6 +62,16 @@ final class ProductSelectData
         /** @var TaxRate $taxRate */
         foreach ($taxRates as $taxRate) {
             $array[$taxRate->reqId()] = $taxRate->getTaxRateName();
+        }
+        return $array;
+    }
+
+    /** @return array<string, string> */
+    public static function productTypes(): array
+    {
+        $array = [];
+        foreach (array_column(ProductType::cases(), 'value') as $value) {
+            $array[$value] = ucfirst($value);
         }
         return $array;
     }

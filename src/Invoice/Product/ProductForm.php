@@ -38,6 +38,8 @@ final class ProductForm extends FormModel
 
     public ?string $product_description = null;
 
+    public string $product_type = 'product';
+
     #[Length(min: 0, max: 100, skipOnEmpty: true)]
     public ?string $product_additional_item_property_name = null;
 
@@ -83,6 +85,7 @@ final class ProductForm extends FormModel
             $product->getProductCountryOfOriginCode();
         $form->product_name = $product->getProductName();
         $form->product_description = $product->getProductDescription();
+        $form->product_type = $product->getProductType();
         $form->product_price = $product->getProductPrice();
         $form->product_price_base_quantity =
             $product->getProductPriceBaseQuantity();

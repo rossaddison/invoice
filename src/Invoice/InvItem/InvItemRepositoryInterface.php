@@ -9,4 +9,6 @@ use App\Infrastructure\Persistence\InvItem\InvItem;
 interface InvItemRepositoryInterface
 {
     public function save(array|InvItem|null $invitem): void;
+
+    public function repoInvItemIdquery(int $inv_id): iterable;
 }

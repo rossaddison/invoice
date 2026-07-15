@@ -6,6 +6,7 @@ namespace App\Infrastructure\Persistence\Product;
 
 use App\Infrastructure\Persistence\{Client\Client, Family\Family,
     ProductClient\ProductClient, TaxRate\TaxRate, Unit\Unit, Trait\RequireId};
+use App\Invoice\Enum\ProductType;
 use App\Invoice\Product\ProductRepository as PR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -70,6 +71,8 @@ class Product
         private ?string $product_name = '',
         #[Column(type: 'longText', nullable: false)]
         private ?string $product_description = '',
+        #[Column(type: 'string(20)', nullable: false, default: 'product')]
+        private string $product_type = ProductType::Product->value,
         #[Column(type: 'decimal(20,2)', nullable: true)]
         private ?float $product_price = 0.00,
         #[Column(type: 'decimal(20,2)', nullable: true)]

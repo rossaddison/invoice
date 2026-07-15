@@ -21,6 +21,7 @@ class ProductFormTest extends TestCase
         $this->assertNull($form->family_id);
         $this->assertNull($form->tax_rate_id);
         $this->assertNull($form->unit_id);
+        $this->assertSame('product', $form->product_type);
     }
 
     public function testGetFormNameReturnsProductForm(): void
@@ -42,6 +43,7 @@ class ProductFormTest extends TestCase
         $product->method('reqTaxRateId')->willReturn(1);
         $product->method('reqUnitId')->willReturn(2);
         $product->method('getUnitPeppolId')->willReturn(null);
+        $product->method('getProductType')->willReturn('product');
         $product->method('reqId')->willReturn(3);
         $product->method('getProductSiiSchemeid')->willReturn(null);
         $product->method('getProductSiiId')->willReturn(null);
@@ -64,6 +66,7 @@ class ProductFormTest extends TestCase
         $this->assertSame(1, $form->tax_rate_id);
         $this->assertSame(2, $form->unit_id);
         $this->assertSame('GB', $form->product_country_of_origin_code);
+        $this->assertSame('product', $form->product_type);
     }
 
     public function testShowWithPeppolFields(): void
@@ -80,6 +83,7 @@ class ProductFormTest extends TestCase
         $product->method('reqTaxRateId')->willReturn(2);
         $product->method('reqUnitId')->willReturn(1);
         $product->method('getUnitPeppolId')->willReturn(5);
+        $product->method('getProductType')->willReturn('service');
         $product->method('reqId')->willReturn(10);
         $product->method('getProductSiiSchemeid')->willReturn('0088');
         $product->method('getProductSiiId')->willReturn('4006381333931');
@@ -98,6 +102,7 @@ class ProductFormTest extends TestCase
         $this->assertSame('Colour', $form->product_additional_item_property_name);
         $this->assertSame('Blue', $form->product_additional_item_property_value);
         $this->assertSame(5, $form->unit_peppol_id);
+        $this->assertSame('service', $form->product_type);
     }
 
     public function testShowReturnsNewInstance(): void
@@ -114,6 +119,7 @@ class ProductFormTest extends TestCase
         $product->method('reqTaxRateId')->willReturn(1);
         $product->method('reqUnitId')->willReturn(1);
         $product->method('getUnitPeppolId')->willReturn(null);
+        $product->method('getProductType')->willReturn('product');
         $product->method('reqId')->willReturn(1);
         $product->method('getProductSiiSchemeid')->willReturn(null);
         $product->method('getProductSiiId')->willReturn(null);

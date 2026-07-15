@@ -119,6 +119,13 @@ final class UnitPeppolRepository extends Select\Repository
         return $query->fetchOne() ?: null;
     }
 
+    public function repoUnitPeppolByCodeQuery(string $code): ?UnitPeppol
+    {
+        $query = $this->select()
+                      ->where(['code' => $code]);
+        return $query->fetchOne() ?: null;
+    }
+
     /**
      * @param int $id
      * @return int

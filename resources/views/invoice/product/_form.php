@@ -28,6 +28,7 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<array-key, array<array-key, string>|string> $families
  * @psalm-var array<array-key, array<array-key, string>|string> $units
  * @psalm-var array<array-key, array<array-key, string>|string> $unitPeppols
+ * @psalm-var array<array-key, array<array-key, string>|string> $productTypes
  */
 ?>
 
@@ -101,6 +102,9 @@ use Yiisoft\Html\Tag\Form;
     ]); ?>
         <?= $formFields->productTextField(
             $form, 'product_name', 'product.name', true); ?>
+        <?= Html::tag('br'); ?>
+        <?= $formFields->productTypeSelect(
+            $form, $productTypes, true); ?>
         <?= Html::tag('br'); ?>
         <?= $formFields->familySelect(
             $form, $families, true); ?>

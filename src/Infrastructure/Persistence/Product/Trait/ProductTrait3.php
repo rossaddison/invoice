@@ -93,6 +93,16 @@ trait ProductTrait3
         return $this->unit_peppol_id;
     }
 
+    public function setProductType(string $product_type): void
+    {
+        $this->product_type = $product_type;
+    }
+
+    public function getProductType(): string
+    {
+        return $this->product_type;
+    }
+
     // Step 1: Create an empty ArrayCollection
     public function setProductClients(): void
     {
