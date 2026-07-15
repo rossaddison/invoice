@@ -68,23 +68,28 @@ trait Guest
         UrlGeneratorInterface $urlGenerator,
         InvGuestDeps $d,
     ): Response {
+        $client = $this->resolveGuestQrClient($clientR, $d);
+        if (null === $client) {
+            return $this->webService->getNotFoundResponse();
+        }
+        return $this->renderClientQrPrint($client, $clientService, $urlGenerator);
+    }
+
+    private function resolveGuestQrClient(ClientR $clientR, InvGuestDeps $d): ?Client
+    {
         $user = $this->userService->getUser();
         $user_id = ($user instanceof User) ? $user->reqId() : 0;
         if ($user_id <= 0) {
-            return $this->webService->getNotFoundResponse();
+            return null;
         }
         $userInv = $d->uiR->repoUserInvUserIdcount($user_id) > 0
             ? $d->uiR->repoUserInvUserIdquery($user_id) : null;
         $user_clients = (null !== $userInv && $userInv->getActive())
             ? $d->ucR->getAssignedToUser($user_id) : [];
         if (null === $userInv || !$userInv->getActive() || empty($user_clients)) {
-            return $this->webService->getNotFoundResponse();
+            return null;
         }
-        $client = $clientR->repoClientqueryOrig((int) $user_clients[0]);
-        if (null === $client) {
-            return $this->webService->getNotFoundResponse();
-        }
-        return $this->renderClientQrPrint($client, $clientService, $urlGenerator);
+        return $clientR->repoClientqueryOrig((int) $user_clients[0]);
     }
 
     private function renderClientQrPrint(

@@ -8,8 +8,10 @@ use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\Inv\Trait\InvClientTrait;
 use App\Invoice\Inv\Trait\InvFilterTrait;
 use App\Invoice\Inv\Trait\InvGuestTrait;
+use App\Invoice\Inv\Trait\InvHomeCareTrait;
 use App\Invoice\Inv\Trait\InvProductTaskTrait;
 use App\Invoice\Inv\Trait\InvStatusTrait;
+use App\Invoice\Inv\Trait\InvTrashTrait;
 use Cycle\ORM\Select;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Translator\TranslatorInterface as Translator;
@@ -25,8 +27,10 @@ final class InvRepository extends Select\Repository implements InvRepositoryInte
     use InvClientTrait;
     use InvFilterTrait;
     use InvGuestTrait;
+    use InvHomeCareTrait;
     use InvProductTaskTrait;
     use InvStatusTrait;
+    use InvTrashTrait;
 
     /**
      * @param Select<TEntity> $select
@@ -151,24 +155,6 @@ final class InvRepository extends Select\Repository implements InvRepositoryInte
         $this->entityWriter->delete([$inv]);
     }
 
-    public function findTrashed(): EntityReader
-    {
-        $query = $this->select()
-            ->scope(null)
-            ->where('deleted_at', '!=', null);
-        return $this->prepareDataReader($query);
-    }
-
-    public function findTrashedById(int $id): ?Inv
-    {
-        /** @var Inv|null */
-        return $this->select()
-            ->scope(null)
-            ->where(['id' => $id])
-            ->where('deleted_at', '!=', null)
-            ->fetchOne();
-    }
-
     /**
      * @param Select $query
      * @return EntityReader
@@ -249,60 +235,5 @@ final class InvRepository extends Select\Repository implements InvRepositoryInte
                       ->where(['id' => $id])
                       ->where('deleted_at', null);
         return  $query->fetchOne() ?: null;
-    }
-
-    /**
-     * Total invoice count for a client, used by the home-care
-     * auto-invoice facility to distinguish "no invoice ever" (nothing to
-     * template from) from "invoices exist but none paid".
-     *
-     * @param int $client_id
-     * @return int
-     */
-    #[\Override]
-    public function repoClientInvoiceCountquery(int $client_id): int
-    {
-        return $this->select()
-                      ->where(['client_id' => $client_id])
-                      ->where('deleted_at', null)
-                      ->count();
-    }
-
-    /**
-     * The client's most recently paid invoice (status_id = 4), used as the
-     * eligibility anchor and item template for the home-care
-     * auto-invoice facility.
-     *
-     * @param int $client_id
-     * @return Inv|null
-     */
-    #[\Override]
-    public function repoClientLatestPaidInvoicequery(int $client_id): ?Inv
-    {
-        return $this->select()
-                      ->where(['client_id' => $client_id])
-                      ->where(['status_id' => 4])
-                      ->where('deleted_at', null)
-                      ->orderBy('date_created', 'DESC')
-                      ->fetchOne() ?: null;
-    }
-
-    /**
-     * Counts invoices for a client dated after a given date, regardless of
-     * status. Used by the home-care auto-invoice facility to detect
-     * an "interim invoice" (paid or not) that should block a new one.
-     *
-     * @param int $client_id
-     * @param string $afterDate Y-m-d date string
-     * @return int
-     */
-    #[\Override]
-    public function repoClientInvoiceCountAfterDatequery(int $client_id, string $afterDate): int
-    {
-        return $this->select()
-                      ->where(['client_id' => $client_id])
-                      ->where('date_created', '>', $afterDate)
-                      ->where('deleted_at', null)
-                      ->count();
     }
 }

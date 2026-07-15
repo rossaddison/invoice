@@ -36,35 +36,47 @@ final readonly class HomeCareCleaningEligibilityService
      */
     public function findInvoiceToCopyIfEligible(int $clientId): ?Inv
     {
-        if ($this->settingRepository->getSetting('homecare_auto_invoice_enabled') !== '1') {
-            return null;
-        }
-
-        if ($this->invRepository->repoClientInvoiceCountquery($clientId) === 0) {
+        if (!$this->isFeatureEnabledForClient($clientId)) {
             return null;
         }
 
         $lastPaid = $this->invRepository->repoClientLatestPaidInvoicequery($clientId);
-        if ($lastPaid === null) {
-            return null;
-        }
-
-        $lastPaidId = $lastPaid->reqId();
-
-        $lastPaidDate = $this->paymentRepository->repoLatestPaymentDateForInvquery($lastPaidId);
-        if ($lastPaidDate === null) {
-            return null;
-        }
-
-        if ($this->invRepository->repoClientInvoiceCountAfterDatequery($clientId, $lastPaidDate) > 0) {
-            return null;
-        }
-
-        if (!$this->hasServiceItem($lastPaidId)) {
+        if ($lastPaid === null || !$this->isEligibleInvoice($lastPaid, $clientId)) {
             return null;
         }
 
         return $lastPaid;
+    }
+
+    /**
+     * True when the feature is switched on in Settings and the client has
+     * at least one invoice on file.
+     */
+    private function isFeatureEnabledForClient(int $clientId): bool
+    {
+        return $this->settingRepository->getSetting('homecare_auto_invoice_enabled') === '1'
+            && $this->invRepository->repoClientInvoiceCountquery($clientId) > 0;
+    }
+
+    /**
+     * True when the client's most recently paid invoice has a payment date
+     * on record, no invoice at all exists dated after that payment, and
+     * that invoice contains at least one Service-type product.
+     */
+    private function isEligibleInvoice(Inv $lastPaid, int $clientId): bool
+    {
+        $lastPaidId = $lastPaid->reqId();
+
+        $lastPaidDate = $this->paymentRepository->repoLatestPaymentDateForInvquery($lastPaidId);
+        if ($lastPaidDate === null) {
+            return false;
+        }
+
+        if ($this->invRepository->repoClientInvoiceCountAfterDatequery($clientId, $lastPaidDate) > 0) {
+            return false;
+        }
+
+        return $this->hasServiceItem($lastPaidId);
     }
 
     /**

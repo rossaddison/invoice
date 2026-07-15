@@ -339,6 +339,11 @@ trait SettingTooltipTrait
 
     private function tooltipArrayC(): array
     {
+        return array_merge($this->tooltipArrayC1(), $this->tooltipArrayC2());
+    }
+
+    private function tooltipArrayC1(): array
+    {
         return [
             'generate_quote_number_for_draft' => [
                 'why' => 'Automatically generate a Quote Number by means of the'
@@ -440,6 +445,12 @@ trait SettingTooltipTrait
                 . ' invoice can be transferred to an ERP system. ',
                 'where' => 'src/Invoice/Libraries and src/Invoice/Helpers/ZugFerdHelper',
             ],
+        ];
+    }
+
+    private function tooltipArrayC2(): array
+    {
+        return [
             'install_test_data' => [
                 'why' => 'This is used by Generator..Reset Data and Generator'
                 . '..Remove Data during the testing of data',
