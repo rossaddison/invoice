@@ -8391,12 +8391,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/yii-auth-client.git",
-                "reference": "91c9c5ea71af0c51d8e8b5091cbe2a2081729f25"
+                "reference": "9b9367f41cddc37f632a408c64f1969479a16ccd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/91c9c5ea71af0c51d8e8b5091cbe2a2081729f25",
-                "reference": "91c9c5ea71af0c51d8e8b5091cbe2a2081729f25",
+                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/9b9367f41cddc37f632a408c64f1969479a16ccd",
+                "reference": "9b9367f41cddc37f632a408c64f1969479a16ccd",
                 "shasum": ""
             },
             "require": {
@@ -8493,7 +8493,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2026-07-09T09:00:25+00:00"
+            "time": "2026-07-16T11:26:13+00:00"
         },
         {
             "name": "rossaddison/yii-cycle-1",
