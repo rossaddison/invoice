@@ -15,7 +15,6 @@ use Yiisoft\Assets\AssetManager;
 use Yiisoft\Definitions\Reference;
 use Yiisoft\Factory\Factory;
 use Yiisoft\Session\SessionInterface;
-use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\AuthClient\StateStorage\StateStorageInterface;
 use Yiisoft\Yii\AuthClient\StateStorage\SessionStateStorage;
@@ -203,9 +202,7 @@ return [
         $construct => [
             // $this->clients = Collection's clients
             'clientCollection' => Reference::to(Collection::class),
-            'webView' => Reference::to(WebView::class),
             'assetManager' => Reference::to(AssetManager::class),
-            'translator' => Reference::to(TranslatorInterface::class),
         ],
     ],
     AuthAction::class => [
