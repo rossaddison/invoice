@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4c3c08e036771b89b9cd099d34285b46",
+    "content-hash": "d486708fdeb03baa446579f9bbb7672e",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -18671,16 +18671,16 @@
         },
         {
             "name": "yiisoft/yii-dataview",
-            "version": "1.1.0",
+            "version": "dev-fix/csp-dropdownfilter-onchange",
             "source": {
                 "type": "git",
-                "url": "https://github.com/yiisoft/yii-dataview.git",
-                "reference": "832f14490a021d240b7c7d0ed476063548176cf0"
+                "url": "https://github.com/rossaddison/yii-dataview.git",
+                "reference": "1ee672c644309d09c74564c6197288960c3a5e7f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/832f14490a021d240b7c7d0ed476063548176cf0",
-                "reference": "832f14490a021d240b7c7d0ed476063548176cf0",
+                "url": "https://api.github.com/repos/rossaddison/yii-dataview/zipball/1ee672c644309d09c74564c6197288960c3a5e7f",
+                "reference": "1ee672c644309d09c74564c6197288960c3a5e7f",
                 "shasum": ""
             },
             "require": {
@@ -18714,13 +18714,13 @@
             },
             "type": "library",
             "extra": {
-                "config-plugin": {
-                    "di": "di.php",
-                    "params": "params.php",
-                    "widgets-themes": "widgets-themes.php"
-                },
                 "config-plugin-options": {
                     "source-directory": "config"
+                },
+                "config-plugin": {
+                    "params": "params.php",
+                    "di": "di.php",
+                    "widgets-themes": "widgets-themes.php"
                 }
             },
             "autoload": {
@@ -18728,7 +18728,22 @@
                     "Yiisoft\\Yii\\DataView\\": "src"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Yiisoft\\Yii\\DataView\\Tests\\": "tests"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "phpunit --testdox --no-interaction"
+                ],
+                "test-watch": [
+                    "phpunit-watcher watch"
+                ],
+                "cs-fix": [
+                    "php-cs-fixer fix"
+                ]
+            },
             "license": [
                 "BSD-3-Clause"
             ],
@@ -18743,24 +18758,24 @@
                 "yii"
             ],
             "support": {
-                "chat": "https://t.me/yii3en",
-                "forum": "https://www.yiiframework.com/forum/",
-                "irc": "ircs://irc.libera.chat:6697/yii",
                 "issues": "https://github.com/yiisoft/yii-dataview/issues?state=open",
                 "source": "https://github.com/yiisoft/yii-dataview",
-                "wiki": "https://www.yiiframework.com/wiki/"
+                "forum": "https://www.yiiframework.com/forum/",
+                "wiki": "https://www.yiiframework.com/wiki/",
+                "irc": "ircs://irc.libera.chat:6697/yii",
+                "chat": "https://t.me/yii3en"
             },
             "funding": [
                 {
-                    "url": "https://github.com/sponsors/yiisoft",
-                    "type": "github"
+                    "type": "opencollective",
+                    "url": "https://opencollective.com/yiisoft"
                 },
                 {
-                    "url": "https://opencollective.com/yiisoft",
-                    "type": "opencollective"
+                    "type": "github",
+                    "url": "https://github.com/sponsors/yiisoft"
                 }
             ],
-            "time": "2026-03-21T14:40:58+00:00"
+            "time": "2026-07-16T16:30:06+00:00"
         },
         {
             "name": "yiisoft/yii-event",
@@ -27120,7 +27135,8 @@
         "rossaddison/yii-auth-client": 20,
         "rossaddison/yii-cycle-1": 20,
         "yiisoft/data-cycle": 20,
-        "yiisoft/rate-limiter": 20
+        "yiisoft/rate-limiter": 20,
+        "yiisoft/yii-dataview": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

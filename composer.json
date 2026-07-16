@@ -140,7 +140,7 @@
         "yiisoft/view": "^12.2.4",
         "yiisoft/widget": "^2.2.2",
         "yiisoft/yii-console": "^2.4.2",
-        "yiisoft/yii-dataview": ">=1.1",
+        "yiisoft/yii-dataview": "dev-fix/csp-dropdownfilter-onchange",
         "yiisoft/yii-event": "^2.2",
         "yiisoft/yii-http": "^1.1.1",
         "yiisoft/yii-middleware": "^1.1.2",
@@ -252,6 +252,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/rossaddison/yii-gii"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/rossaddison/yii-dataview"
         }
     ]
 }
