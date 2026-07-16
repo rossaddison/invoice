@@ -204,16 +204,12 @@ final class CompanyPrivateController extends BaseController
         string $modifiedOriginalFileName,
         string $existingLogoFilename,
     ): string {
-        if (!$hasNewFile || !$file instanceof UploadedFileInterface) {
-            return $existingLogoFilename;
-        }
-        if (!$this->validateLogoFile($file)) {
-            return $existingLogoFilename;
-        }
-        if ($this->fileUploadingErrors($file, $targetFileName, $targetPublicLogo)) {
-            return $existingLogoFilename;
-        }
-        return $modifiedOriginalFileName;
+        $isValidNewUpload = $hasNewFile
+            && $file instanceof UploadedFileInterface
+            && $this->validateLogoFile($file)
+            && !$this->fileUploadingErrors($file, $targetFileName, $targetPublicLogo);
+
+        return $isValidNewUpload ? $modifiedOriginalFileName : $existingLogoFilename;
     }
 
     /**
