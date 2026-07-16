@@ -90,7 +90,8 @@ return [
                 . " https://*.stripe.com"
                 . " https://*.payments-amazon.com"
                 . " https://assets.braintreegateway.com"
-                . " https://js.braintreegateway.com",
+                . " https://js.braintreegateway.com"
+                . " https://challenges.cloudflare.com",
             "style-src 'self' 'unsafe-inline'"
                 . " https://fonts.googleapis.com"
                 . " https://cdn.jsdelivr.net"
@@ -109,16 +110,19 @@ return [
                 . " https://api.stripe.com"
                 . " https://*.stripe.com"
                 . " https://*.braintreegateway.com"
-                . " https://*.payments-amazon.com",
+                . " https://*.payments-amazon.com"
+                . " https://challenges.cloudflare.com",
             "frame-src 'self'"
                 . " https://js.stripe.com"
                 . " https://*.stripe.com"
                 . " https://hooks.stripe.com"
                 . " https://assets.braintreegateway.com"
-                . " https://*.payments-amazon.com",
+                . " https://*.payments-amazon.com"
+                . " https://challenges.cloudflare.com",
             "child-src 'self'"
                 . " https://js.stripe.com"
-                . " https://*.stripe.com",
+                . " https://*.stripe.com"
+                . " https://challenges.cloudflare.com",
             "form-action 'self'",
             "frame-ancestors 'none'",
             "base-uri 'self'",
