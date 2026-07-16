@@ -160,7 +160,7 @@ and — while investigating a regression this same work surfaced (see finding
 #2's `SESSION_COOKIE_SECURE` opt-in) — confirmed a plain HTTP response no
 longer 500s and still carries every header correctly.
 
-### 6. CSP allows `'unsafe-inline' 'unsafe-eval'` for scripts — ✅ Fixed 2026-07-15 (one known exception remains)
+### 6. CSP allows `'unsafe-inline' 'unsafe-eval'` for scripts — ✅ Fixed 2026-07-15, remaining exception fixed 2026-07-16
 
 `config/web/params.php` (mirrored in `public/.htaccess`) had `'unsafe-inline'
 'unsafe-eval'` in `script-src`. The initial text-only inventory undercounted
@@ -213,21 +213,59 @@ main bundle. Moved that logic into `src/Auth/Asset/keypad-copy-to-clipboard.ts`
 disappeared on re-test. Full Psalm, PHPUnit (×2 suites), and vitest all
 clean throughout.
 
-**Known remaining exception — not fixable from this repo**: the login page
-still shows 2 CSP violations, both from the `AuthChoice` widget in
-`rossaddison/yii-auth-client` (a separate forked package, installed via a
-VCS repository in `composer.json`, not this project's own code) — one
-inline script registering `#yii-auth-client` handlers, one
-`onclick="window.open(...)"` on the Facebook login link. Patching
-`vendor/rossaddison/yii-auth-client/src/Widget/AuthChoice.php` directly
-wouldn't persist (lost on the next `composer update`, not tracked in this
-repo's git history). Real fix needs to happen in that package's own repo;
-a stopgap from here would be CSP hash-allowlisting the two exact violation
-hashes reported by the browser (fragile — breaks again if that widget's
-static content ever changes) or `'unsafe-hashes'` for the onclick.
-Separately (unrelated to CSP): the login page's HTML response is truncated
-mid-script-tag by the AuthChoice widget's own JS registration — a pre-existing
-bug in that same vendor code, worth a look independent of this audit.
+**Known remaining exception — fixed 2026-07-16, in the vendor package's own
+repo**: the login page showed 2 CSP violations, both from the `AuthChoice`
+widget in `rossaddison/yii-auth-client` (a separate forked package,
+installed via a VCS repository in `composer.json`, checked out standalone
+at `C:\wamp64\www\yii-auth-client`, branch `invoice`) — one inline script
+registering `#yii-auth-client` handlers (`WebView::registerJs()` in
+`init()`), one `onclick="window.open(...)"` on the Facebook login link
+(`authRoutedButtons()`). As predicted, patching
+`vendor/rossaddison/yii-auth-client/...` directly wouldn't have persisted —
+fixed instead in that package's own repo (commit `9b9367f`, pushed to
+`origin/invoice`), then pulled in here via
+`composer update rossaddison/yii-auth-client` (`composer.lock` now pins
+`9b9367f`).
+
+**What changed** (in `rossaddison/yii-auth-client`): `init()` now sets a
+`data-authchoice` attribute (JSON client options, or empty) on the widget's
+container div instead of registering inline JS; `authchoice.js`'s existing
+`[data-authchoice]` auto-init (on `DOMContentLoaded`) picks it up. Removing
+`AuthChoice`'s `registerJs()` call also removed the `WebView` constructor
+dependency, so `config/web/di/yii-auth-client.php`'s `AuthChoice::class`
+definition was trimmed to match (also dropped a stray `translator` arg that
+didn't correspond to any constructor parameter). `authRoutedButtons()`
+drops the inline `onclick` entirely — `clientLink()` already emits
+`data-popup-width`/`data-popup-height` in popup mode, and the delegated
+click listener in `authchoice.js` opens the popup from those, same as the
+CSP-safe path every other provider link already used.
+
+Along the way, found and fixed a **real, separate bug** in
+`authchoice.js`: it called an `extend(...)` helper that was never defined
+anywhere in the file. The delegated click-to-popup path had been silently
+broken all along — masked only because the (now-removed) inline `onclick`
+bypassed it entirely and opened the popup directly. Once the onclick was
+gone, this would have broken the login popup outright, so a minimal
+`extend()` (shallow object merge) was added.
+
+Separately (unrelated to CSP, not yet investigated): the login page's HTML
+response nests three copies of `<div id="yii-auth-client">...</div>`
+(unclosed, then re-opened) instead of one — `AuthChoice::widget()` echoes
+its container `<div>` directly from `init()` rather than returning it, and
+`resources/views/auth/login.php` never calls `AuthChoice::end()`/`render()`
+to close it; combined with the view layer's multi-pass rendering (collecting
+registered assets before final output), the constructor's direct echo fires
+on every pass. Harmless in practice — the browser's tag-soup parser still
+produces a single `#yii-auth-client` element via `getElementById()`, and the
+real OAuth link ends up a descendant of it either way — but the underlying
+"echo instead of return" pattern in that vendor widget is worth a look
+independent of this audit.
+
+**Verified for real, not just Psalm**: ran `./yii serve` locally, drove the
+login page with headless Playwright — zero CSP `script-src` console
+violations (down from 2) against the real, composer-installed vendor
+package, and the "Continue with Facebook" button still opens its popup via
+the delegated listener. Psalm clean in both repos.
 
 ### 7. 2FA is opt-in; no per-account login lockout — ✅ Fixed 2026-07-15
 
@@ -416,9 +454,10 @@ files; it won't stay that way as more routes get added.
    rotation still needed
 5. ~~HSTS / Permissions-Policy / header enforcement layer (Medium)~~ — fixed
    2026-07-15
-6. ~~CSP `unsafe-inline`/`unsafe-eval` (Medium)~~ — fixed 2026-07-15; one
-   exception remains in a third-party forked vendor package (AuthChoice
-   widget), not fixable from this repo
+6. ~~CSP `unsafe-inline`/`unsafe-eval` (Medium)~~ — fixed 2026-07-15; the
+   one exception (AuthChoice widget in the forked `rossaddison/yii-auth-client`
+   vendor package) fixed 2026-07-16 in that package's own repo, pulled in
+   via `composer update`
 7. ~~Mandatory 2FA for privileged roles + account-level lockout (Medium)~~ —
    fixed 2026-07-15 (lightweight account-rate-limit variant, not full lockout)
 8. ~~`modal_change_client.php` encoding fix + view sweep (Low)~~ — fixed
