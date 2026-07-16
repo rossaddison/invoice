@@ -458,7 +458,7 @@ final class ProductsListWidget extends Widget
                         $ug->generate('product/delete', ['id' => $m->reqId()]),
                     attributes: [
                         'title'   => $t->translate('delete'),
-                        'onclick' => "return confirm('" . $t->translate('delete.record.warning') . "');",
+                        'data-confirm' => $t->translate('delete.record.warning'),
                         'class'   => 'btn btn-outline-danger btn-sm',
                         'hx-boost' => 'false',
                     ],

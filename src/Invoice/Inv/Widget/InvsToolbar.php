@@ -134,7 +134,7 @@ final class InvsToolbar
                 ['class' => 'form-label', 'for' => 'bulk-quick-pay-date'])
             . Html::tag('input', '', ['type' => 'date', 'id' => 'bulk-quick-pay-date',
                 'class' => 'form-control', 'value' => $today, 'required' => true,
-                'onclick' => 'this.showPicker()'])
+                'data-action' => 'show-picker'])
             . Html::closeTag('div')
             . Html::openTag('div', ['class' => 'mb-3'])
             . Html::tag('label', Html::encode($t->translate('bank.ref')),
@@ -350,13 +350,13 @@ final class InvsToolbar
                     new HtmlButton()
                         ->type('button')
                         ->addClass('btn btn-outline-secondary btn-sm')
-                        ->addAttributes(['onclick' => 'toggleAllGroups(false)',
+                        ->addAttributes(['data-action' => 'toggle-all-groups', 'data-expand' => 'false',
                             'title' => 'Collapse All Groups'])
                         ->content(new I()->addClass('bi bi-chevron-up'))
                     . new HtmlButton()
                         ->type('button')
                         ->addClass('btn btn-outline-secondary btn-sm')
-                        ->addAttributes(['onclick' => 'toggleAllGroups(true)',
+                        ->addAttributes(['data-action' => 'toggle-all-groups', 'data-expand' => 'true',
                             'title' => 'Expand All Groups'])
                         ->content(new I()->addClass('bi bi-chevron-down'))
                 )

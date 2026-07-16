@@ -171,13 +171,13 @@ final class QuotesToolbar
                     (new HtmlButton())
                         ->type('button')
                         ->addClass('btn btn-outline-secondary btn-sm')
-                        ->addAttributes(['onclick' => 'toggleAllGroups(false)',
+                        ->addAttributes(['data-action' => 'toggle-all-groups', 'data-expand' => 'false',
                             'title' => 'Collapse All Groups'])
                         ->content(new I()->addClass('bi bi-chevron-up'))
                     . (new HtmlButton())
                         ->type('button')
                         ->addClass('btn btn-outline-secondary btn-sm')
-                        ->addAttributes(['onclick' => 'toggleAllGroups(true)',
+                        ->addAttributes(['data-action' => 'toggle-all-groups', 'data-expand' => 'true',
                             'title' => 'Expand All Groups'])
                         ->content(new I()->addClass('bi bi-chevron-down'))
                 )

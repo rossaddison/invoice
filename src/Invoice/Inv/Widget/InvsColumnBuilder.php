@@ -813,10 +813,7 @@ final class InvsColumnBuilder
                             return ['data-bs-toggle' => 'tooltip',
                                 'title' => $t->translate('delete'),
                                 'class' => 'btn btn-outline-danger btn-sm',
-                                'onclick' => 'return confirm('
-                                    . (string) json_encode(
-                                        $t->translate('delete.record.warning'))
-                                    . ');'];
+                                'data-confirm' => $t->translate('delete.record.warning')];
                         }
                         return ['data-bs-toggle' => 'tooltip',
                             'title' => $t->translate('delete'),

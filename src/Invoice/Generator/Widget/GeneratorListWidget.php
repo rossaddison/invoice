@@ -325,7 +325,7 @@ final class GeneratorListWidget extends Widget
                     attributes: [
                         'class'   => 'btn btn-outline-danger btn-sm',
                         'title'   => $t->translate('delete'),
-                        'onclick' => "return confirm('" . $t->translate('delete.record.warning') . "');",
+                        'data-confirm' => $t->translate('delete.record.warning'),
                         'hx-boost' => 'false',
                     ],
                 ),

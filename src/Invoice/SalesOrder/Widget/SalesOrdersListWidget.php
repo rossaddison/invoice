@@ -322,8 +322,9 @@ final class SalesOrdersListWidget extends Widget
             ->type('button')
             ->addClass('btn btn-outline-secondary btn-sm')
             ->addAttributes([
-                'onclick' => $expand ? 'toggleAllGroups(true)' : 'toggleAllGroups(false)',
-                'title'   => $expand ? 'Expand All Groups' : 'Collapse All Groups',
+                'data-action' => 'toggle-all-groups',
+                'data-expand' => $expand ? 'true' : 'false',
+                'title'       => $expand ? 'Expand All Groups' : 'Collapse All Groups',
             ])
             ->content(new I()->addClass($expand ? 'bi bi-chevron-down' : 'bi bi-chevron-up'))
             ->render();

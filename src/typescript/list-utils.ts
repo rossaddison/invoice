@@ -135,4 +135,19 @@ export function initGroupCollapsible(): void {
             if (expand === null || (expand && collapsed) || (!expand && !collapsed)) toggle(header);
         });
     };
+
+    // Group headers used to carry an inline onclick="toggleGroupRows(this)"
+    // attribute; CSP script-src 'self' blocks it. Delegate instead. Guarded
+    // so repeated initGroupCollapsible() calls (e.g. across test cases in
+    // the same jsdom document) don't stack duplicate document listeners.
+    if (!(globalThis as unknown as Record<string, unknown>)['__groupHeaderClickBound']) {
+        (globalThis as unknown as Record<string, unknown>)['__groupHeaderClickBound'] = true;
+        document.addEventListener('click', (e: MouseEvent) => {
+            const header = (e.target as HTMLElement | null)?.closest<HTMLElement>('.group-header');
+            if (header) {
+                const toggle = (globalThis as unknown as Record<string, unknown>)['toggleGroupRows'] as (h: HTMLElement) => void;
+                toggle(header);
+            }
+        });
+    }
 }

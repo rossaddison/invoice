@@ -139,7 +139,6 @@ final class InvsGroupingHelper
                 return \Yiisoft\Html\Html::tr()
                     ->addClass(
                         'group-header bg-secondary text-white fw-bold group-collapsible')
-                    ->addAttributes(['onclick' => 'toggleGroupRows(this)'])
                     ->cells(
                         \Yiisoft\Html\Html::td()
                             ->addAttributes(['colspan' => (string) $columnCount])

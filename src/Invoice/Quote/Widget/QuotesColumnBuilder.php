@@ -151,10 +151,7 @@ final class QuotesColumnBuilder
                     attributes: static function (Quote $model) use ($translator): array {
                         if ($model->getSoId() == 0 && $model->getInvId() == 0) {
                             return [
-                                'onclick'        => 'return confirm('
-                                    . (string) json_encode(
-                                    $translator->translate('delete.record.warning'))
-                                    . ');',
+                                'data-confirm'   => $translator->translate('delete.record.warning'),
                                 'data-bs-toggle' => 'tooltip',
                                 'title'          => $translator->translate('delete.quote.single'),
                                 'class'          => 'btn btn-outline-danger btn-sm',

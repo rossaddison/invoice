@@ -62,6 +62,17 @@ Fixing that declaration was necessary to even reach the TypeScript 7
 conflict above. That conflict itself is **not** fixed — see options
 considered below.
 
+**Update (see [CSP_INLINE_HANDLER_SWEEP_GAPS.md](CSP_INLINE_HANDLER_SWEEP_GAPS.md)):**
+the same TS7 incompatibility isn't Angular-only. `npm run type-check`
+(`tsc --noEmit`) fails on this repo's own `tsconfig.json`
+(`moduleResolution=node10`/`baseUrl` were removed in TS7), and `eslint`
+crashes inside `@typescript-eslint/typescript-estree` trying to build a
+type-aware Program against TS7's restructured internals. Neither blocks
+day-to-day work since `esbuild` (production bundler) and `vitest` don't
+route through `tsc`'s type-checking machinery, but it means `npm run check`
+(`type-check && lint && format:check`) is currently broken end-to-end, not
+just the Angular build step.
+
 ## Options considered (not yet acted on)
 
 1. **Scope TypeScript 6.0.x to Angular only**, via an npm `overrides` entry

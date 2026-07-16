@@ -299,4 +299,22 @@ describe('initGroupCollapsible', () => {
         toggleAll(null);
         expect(row1.style.display).toBe('none');
     });
+
+    it('clicking a .group-header row toggles its rows via the delegated listener', () => {
+        const { header, row1 } = makeGroupTable('bi-chevron-down');
+        header.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        expect(row1.style.display).toBe('none');
+    });
+
+    it('clicking a descendant of .group-header still toggles via closest()', () => {
+        const { header, row1 } = makeGroupTable('bi-chevron-down');
+        const icon = header.querySelector('.group-toggle-icon')!;
+        icon.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        expect(row1.style.display).toBe('none');
+    });
+
+    it('clicking outside any .group-header does not throw', () => {
+        makeGroupTable('bi-chevron-down');
+        expect(() => document.body.dispatchEvent(new MouseEvent('click', { bubbles: true }))).not.toThrow();
+    });
 });

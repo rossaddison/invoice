@@ -51,7 +51,7 @@ final readonly class Button
                 //$translator->translate('back'),
                 '',
                 'type' => 'reset',
-                'onclick' => 'window.history.back()',
+                'data-action' => 'history-back',
                 'class' => 'btn btn-danger bi bi-arrow-left',
                 'value' => '1',
             ],
@@ -68,7 +68,7 @@ final readonly class Button
             [
                 '',
                 'type' => 'button',
-                'onclick' => 'window.history.back()',
+                'data-action' => 'history-back',
                 'class' => 'btn btn-danger bi bi-arrow-left',
                 'data-bs-toggle' => 'tooltip',
                 'title' => 'Back',

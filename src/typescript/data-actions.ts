@@ -1,8 +1,9 @@
 /**
  * Delegated click handling for small, page-agnostic behaviors that used to be
  * inline onclick="..." attributes (this.showPicker(), window.close(),
- * window.print(), toggleCommalistPicker(), confirm-before-submit). Delegating
- * from document means script-src no longer needs 'unsafe-inline' for these.
+ * window.print(), toggleCommalistPicker(), confirm-before-submit,
+ * window.history.back(), toggleAllGroups()). Delegating from document means
+ * script-src no longer needs 'unsafe-inline' for these.
  */
 export function initDataActions(): void {
     document.addEventListener('click', (e: MouseEvent) => {
@@ -24,6 +25,16 @@ export function initDataActions(): void {
                 case 'toggle-commalist-picker':
                     globalThis.toggleCommalistPicker?.();
                     break;
+                case 'history-back':
+                    globalThis.history.back();
+                    break;
+                case 'toggle-all-groups': {
+                    const toggleAll = (globalThis as unknown as Record<string, unknown>)['toggleAllGroups'] as
+                        | ((expand: boolean) => void)
+                        | undefined;
+                    toggleAll?.(actionEl.dataset['expand'] === 'true');
+                    break;
+                }
                 default:
                     break;
             }
@@ -32,6 +43,18 @@ export function initDataActions(): void {
         const confirmEl = target.closest<HTMLElement>('[data-confirm]');
         if (confirmEl && !globalThis.confirm(confirmEl.dataset['confirm'] ?? '')) {
             e.preventDefault();
+        }
+    });
+
+    // Dropdown filters (Yiisoft\Yii\DataView DropdownFilter, class "native-reset")
+    // used to auto-submit via an inline onChange="this.form.submit()" attribute
+    // that the vendor widget renders directly — CSP script-src 'self' blocks it
+    // since it's outside this app's own inline-script sweep. Submit on their
+    // behalf via a delegated change listener instead.
+    document.addEventListener('change', (e: Event) => {
+        const target = e.target as HTMLElement | null;
+        if (target instanceof HTMLSelectElement && target.classList.contains('native-reset')) {
+            target.form?.submit();
         }
     });
 }
