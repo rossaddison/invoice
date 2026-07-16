@@ -3,7 +3,7 @@
 CLI_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 $(eval $(CLI_ARGS):;@:)
 
-PRIMARY_GOAL := $(firstword $(MAKECMDGOALS))
+PRIMARY_GOAL := $(if $(MAKECMDGOALS),$(firstword $(MAKECMDGOALS)),menu)
 
 #
 # Menu / Help Targets
