@@ -31,6 +31,7 @@ menu: ## Show the Invoice SYSTEM MENU (Make targets)
 	@echo "make cda               - Composer dump-autoload"
 	@echo "make ca                - Composer audit"
 	@echo "make cu                - Composer update"
+	@echo "make naf               - npm: Audit Fix"
 	@echo "make nu                - Update Node modules"
 	@echo "make nco               - npm: Check Outdated"
 	@echo "make nsu               - npm: Safe Update (patch only)"
@@ -59,10 +60,16 @@ menu: ## Show the Invoice SYSTEM MENU (Make targets)
 	@echo "make ccf               - Codeception Functional Suite"
 	@echo "make cca               - Codeception Acceptance Suite (needs browser driver)"
 	@echo "make cc                - Codeception All Suites"
+	@echo "make te                - Testo: All Suites (Tests/Testo/ + src/)"
+	@echo "make teu               - Testo: Unit Suite (Tests/Testo/)"
+	@echo "make tes               - Testo: Sources Suite (inline tests)"
 	@echo "make rdr               - Rector Dry Run"
 	@echo "make rmc               - Rector Make Changes"
 	@echo "make csd               - PHP-CS-Fixer Dry Run"
 	@echo "make csf               - PHP-CS-Fixer Fix"
+	@echo "make si                - [SETUP 1] Install Snyk CLI"
+	@echo "make sa                - [SETUP 2] Snyk Authenticate (browser login)"
+	@echo "make sw                - [SETUP 3] Verify Snyk auth (whoami)"
 	@echo "make sq                - Snyk Security Check (Quick - High Severity Only)"
 	@echo "make sf                - Snyk Security Check (Full - Code + Dependencies)"
 	@echo "make sd                - Snyk Security Check (Dependencies Only)"
@@ -74,6 +81,7 @@ menu: ## Show the Invoice SYSTEM MENU (Make targets)
 	@echo "make ss                - Snyk Security Summary (Total Issues Count Only)"
 	@echo "make sj                - Snyk Security JSON Output (Machine Readable)"
 	@echo "make sh                - Snyk Security High Severity Only"
+	@echo "make sr                - Snyk Full Scan + Save to snyk-report.txt"
 	@echo "make ghi               - Install GitHub CLI"
 	@echo "make gha               - GitHub CLI Auth Status"
 	@echo "make ghc               - GitHub CLI Copilot Version Check"
@@ -81,6 +89,7 @@ menu: ## Show the Invoice SYSTEM MENU (Make targets)
 	@echo "make ucr USERNAME= user PASSWORD= pass      - user/create"
 	@echo "make uar ROLE=admin USERID=1                - user/assignRole"
 	@echo "make rl                - router/list"
+	@echo "make rlc CONTROLLER=Inv                     - router/list --controller=<name>"
 	@echo "make tt TEXT=abc LANG=fr                    - translator/translate"
 	@echo "make ii                - invoice/items"
 	@echo "make ist               - invoice/setting/truncate"
@@ -97,10 +106,25 @@ menu: ## Show the Invoice SYSTEM MENU (Make targets)
 	@echo "make sonar-sev SEV=MAJOR SONAR_TOKEN=xxx - SonarCloud: Filter by severity (BLOCKER/CRITICAL/MAJOR/MINOR/INFO)"
 	@echo "make sonar-hot SONAR_TOKEN=xxx           - SonarCloud: Security hotspots"
 	@echo "make sonar-both TYPE=BUG SEV=MAJOR SONAR_TOKEN=xxx - SonarCloud: Type + severity"
+	@echo "make sonar-rule RULE=php:S1192 SONAR_TOKEN=xxx     - SonarCloud: Filter by rule key"
+	@echo "make sonar-file FILE=src/Foo.php SONAR_TOKEN=xxx   - SonarCloud: Filter by file path"
+	@echo "make sonar-rely SONAR_TOKEN=xxx                    - SonarCloud: Reliability issues (BUG)"
+	@echo "make sonar-rely-grp SONAR_TOKEN=xxx                - SonarCloud: Reliability grouped by rule"
+	@echo "make sonar-all-grp SONAR_TOKEN=xxx                 - SonarCloud: All issues grouped by rule"
+	@echo "make sonar-lang LANG=php SONAR_TOKEN=xxx           - SonarCloud: Filter by language"
 	@echo "(Tip: 'export SONAR_TOKEN=xxx' in your shell once to avoid repeating it)"
 	@echo "make peppol-check                         - Check Peppol code-list XML currency against OpenPEPPOL GitHub"
 	@echo "(Tip: 'export GITHUB_TOKEN=xxx' to raise API rate limit from 60 to 5000/hr)"
+	@echo "make ba                - Benchmarks: Run All Suites (saves to history.json)"
+	@echo "make bdi               - Benchmarks: DI Container Suite"
+	@echo "make binj              - Benchmarks: Injector Suite"
+	@echo "make brt               - Benchmarks: Router Suite"
+	@echo "make bst               - Benchmarks: String Helpers Suite"
+	@echo "make bdr               - Benchmarks: Dry Run (no save)"
+	@echo "make bdb               - Benchmarks: Serve Dashboard (localhost:8080)"
 	@echo "make info              - System Info/Diagnostics"
+	@echo "make dli               - System: Download Menu Icons"
+	@echo "make csk               - System: Generate COOKIE_SECRET_KEY (.env)"
 	@echo ""
 	@echo "make help              - Show summary of commands"
 	@echo ""
@@ -300,6 +324,11 @@ na: ## Node: Audit, Clean, List
 	npm list --depth=0
 endif
 
+ifeq ($(PRIMARY_GOAL),naf)
+naf: ## npm: Audit Fix
+	npm audit fix
+endif
+
 #
 # TypeScript Build System
 #
@@ -330,8 +359,8 @@ tsl: ## TypeScript Lint
 endif
 
 ifeq ($(PRIMARY_GOAL),tsf)
-tsf: ## TypeScript Format
-	npm run format
+tsf: ## TypeScript Format Check + Fix
+	npm run format:check && npm run format
 endif
 
 ifeq ($(PRIMARY_GOAL),nb)
@@ -445,6 +474,24 @@ cc: ## Codeception All Suites
 	php vendor/bin/codecept run
 endif
 
+#
+# Testo
+#
+
+ifeq ($(PRIMARY_GOAL),te)
+te: ## Testo: All Suites (Tests/Testo/ + src/)
+	php vendor/bin/testo
+endif
+
+ifeq ($(PRIMARY_GOAL),teu)
+teu: ## Testo: Unit Suite (Tests/Testo/)
+	php vendor/bin/testo --suite=Unit
+endif
+
+ifeq ($(PRIMARY_GOAL),tes)
+tes: ## Testo: Sources Suite (inline tests)
+	php vendor/bin/testo --suite=Sources
+endif
 
 #
 # Rector & PHP-CS-Fixer
@@ -474,6 +521,21 @@ endif
 # Security Analysis
 #
 
+ifeq ($(PRIMARY_GOAL),si)
+si: ## [SETUP 1] Install Snyk CLI
+	npm install -g snyk
+endif
+
+ifeq ($(PRIMARY_GOAL),sa)
+sa: ## [SETUP 2] Snyk Authenticate (opens browser login)
+	snyk auth
+endif
+
+ifeq ($(PRIMARY_GOAL),sw)
+sw: ## [SETUP 3] Verify Snyk auth (whoami)
+	snyk whoami
+endif
+
 ifeq ($(PRIMARY_GOAL),sq)
 sq: ## Snyk Security Check (Quick - High Severity Only)
 	npm run security:quick
@@ -499,7 +561,11 @@ endif
 
 ifeq ($(PRIMARY_GOAL),ss)
 ss: ## Snyk Security Summary (Total Issues Count Only)
+ifeq ($(OS),Windows_NT)
 	snyk code test | findstr /C:"Total issues"
+else
+	snyk code test | grep "Total issues"
+endif
 endif
 
 ifeq ($(PRIMARY_GOAL),sj)
@@ -510,6 +576,11 @@ endif
 ifeq ($(PRIMARY_GOAL),sh)
 sh: ## Snyk Security High Severity Only
 	snyk code test --severity-threshold=high
+endif
+
+ifeq ($(PRIMARY_GOAL),sr)
+sr: ## Snyk Full Scan + Save to snyk-report.txt
+	snyk code test | tee snyk-report.txt
 endif
 
 #
@@ -527,6 +598,8 @@ ghi: ## Install GitHub CLI
 			winget install --id GitHub.cli; \
 		elif command -v brew >/dev/null 2>&1; then \
 			brew install gh; \
+		elif command -v apk >/dev/null 2>&1; then \
+			apk add --no-cache github-cli; \
 		elif command -v apt-get >/dev/null 2>&1; then \
 			echo "Installing GitHub CLI via official script..."; \
 			curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
@@ -603,6 +676,11 @@ endif
 ifeq ($(PRIMARY_GOAL),rl)
 rl: ## router/list
 	php yii router/list
+endif
+
+ifeq ($(PRIMARY_GOAL),rlc)
+rlc: ## router/list --controller=NAME (adds the Controller column if blank)
+	php yii router/list --controller="$(CONTROLLER)"
 endif
 
 ifeq ($(PRIMARY_GOAL),tt)
@@ -728,6 +806,63 @@ endif
 	SONAR_TOKEN=$(SONAR_TOKEN) php sonar-issues.php --type=$(TYPE) --severity=$(SEV)
 endif
 
+ifeq ($(PRIMARY_GOAL),sonar-rule)
+sonar-rule: ## SonarCloud: Filter by rule key (usage: make sonar-rule RULE=php:S1192 SONAR_TOKEN=xxx)
+ifndef SONAR_TOKEN
+	$(error Please provide SONAR_TOKEN)
+endif
+ifndef RULE
+	$(error Please provide RULE, e.g. 'make sonar-rule RULE=php:S1192 SONAR_TOKEN=your-token')
+endif
+	SONAR_TOKEN=$(SONAR_TOKEN) php sonar-issues.php --rule=$(RULE)
+endif
+
+ifeq ($(PRIMARY_GOAL),sonar-file)
+sonar-file: ## SonarCloud: Filter by file path (usage: make sonar-file FILE=src/Invoice/Inv/InvController.php SONAR_TOKEN=xxx)
+ifndef SONAR_TOKEN
+	$(error Please provide SONAR_TOKEN)
+endif
+ifndef FILE
+	$(error Please provide FILE, e.g. 'make sonar-file FILE=src/Invoice/Inv/InvController.php SONAR_TOKEN=your-token')
+endif
+	SONAR_TOKEN=$(SONAR_TOKEN) php sonar-issues.php --file=$(FILE)
+endif
+
+ifeq ($(PRIMARY_GOAL),sonar-rely)
+sonar-rely: ## SonarCloud: Reliability issues (BUG)
+ifndef SONAR_TOKEN
+	$(error Please provide SONAR_TOKEN)
+endif
+	SONAR_TOKEN=$(SONAR_TOKEN) php sonar-issues.php --type=BUG
+endif
+
+ifeq ($(PRIMARY_GOAL),sonar-rely-grp)
+sonar-rely-grp: ## SonarCloud: Reliability issues grouped by rule
+ifndef SONAR_TOKEN
+	$(error Please provide SONAR_TOKEN)
+endif
+	SONAR_TOKEN=$(SONAR_TOKEN) php sonar-issues.php --type=BUG --grouped
+endif
+
+ifeq ($(PRIMARY_GOAL),sonar-all-grp)
+sonar-all-grp: ## SonarCloud: All issues grouped by rule
+ifndef SONAR_TOKEN
+	$(error Please provide SONAR_TOKEN)
+endif
+	SONAR_TOKEN=$(SONAR_TOKEN) php sonar-issues.php --grouped
+endif
+
+ifeq ($(PRIMARY_GOAL),sonar-lang)
+sonar-lang: ## SonarCloud: Filter by language (usage: make sonar-lang LANG=php SONAR_TOKEN=xxx)
+ifndef SONAR_TOKEN
+	$(error Please provide SONAR_TOKEN)
+endif
+ifndef LANG
+	$(error Please provide LANG=typescript, LANG=php, LANG=javascript, LANG=css, or LANG=xml)
+endif
+	SONAR_TOKEN=$(SONAR_TOKEN) php sonar-issues.php --language=$(LANG)
+endif
+
 #
 # Diagnostics
 #
@@ -744,6 +879,16 @@ info: ## System Info / Diagnostics
 	composer check-platform-reqs
 	@echo "------------ Node List ------------"
 	npm list --depth=0
+endif
+
+ifeq ($(PRIMARY_GOAL),dli)
+dli: ## System: Download Menu Icons
+	php bin/download-cli-icons.php
+endif
+
+ifeq ($(PRIMARY_GOAL),csk)
+csk: ## System: Generate COOKIE_SECRET_KEY (.env)
+	php -r "echo bin2hex(random_bytes(32));"
 endif
 
 #
@@ -782,6 +927,49 @@ pcsr: ## Run PHP CodeSniffer with detailed report
 	php -d memory_limit=1024M vendor/bin/phpcs --standard=phpcs.xml.dist --report=full --report-width=120
 endif
 
+#
+# Performance Benchmarks
+#
+
+ifeq ($(PRIMARY_GOAL),ba)
+ba: ## Benchmarks: Run All Suites (saves to history.json)
+	php benchmarks/run.php
+endif
+
+ifeq ($(PRIMARY_GOAL),bdi)
+bdi: ## Benchmarks: DI Container Suite
+	php benchmarks/run.php --suite=di
+endif
+
+ifeq ($(PRIMARY_GOAL),binj)
+binj: ## Benchmarks: Injector Suite
+	php benchmarks/run.php --suite=injector
+endif
+
+ifeq ($(PRIMARY_GOAL),brt)
+brt: ## Benchmarks: Router Suite
+	php benchmarks/run.php --suite=router
+endif
+
+ifeq ($(PRIMARY_GOAL),bst)
+bst: ## Benchmarks: String Helpers Suite
+	php benchmarks/run.php --suite=strings
+endif
+
+ifeq ($(PRIMARY_GOAL),bdr)
+bdr: ## Benchmarks: Dry Run (no save)
+	php benchmarks/run.php --dry-run
+endif
+
+ifeq ($(PRIMARY_GOAL),bdb)
+bdb: ## Benchmarks: Serve Dashboard (localhost:8080)
+	php -S localhost:8080 -t benchmarks
+endif
+
+#
+# Peppol
+#
+
 ifeq ($(PRIMARY_GOAL),peppol-check)
 peppol-check: ## Check Peppol code-list XML currency against OpenPEPPOL GitHub
 ifdef GITHUB_TOKEN
@@ -791,4 +979,4 @@ else
 endif
 endif
 
-.PHONY: menu help install ext-check ext-json ext-silent p pf pd pc pi cas co cwn ccl cv cda ca cu nu nco nsu nmu nma nes2024 nvm na crc sda ct cta ctp ccf cca cc rdr rmc csd csf sq sf sd sc ss sj sh ghi gha ghc serve ucr uar rl tt ii ist igt iit1 iqt2 ist3 int4 iut5 iait6 info tsb tsd tsw tst tsl tsf nb ai as ab ag al pcs pcsf pcsd pcsr sonar sonar-pr sonar-type sonar-sev sonar-hot sonar-both peppol-check
+.PHONY: menu help install ext-check ext-json ext-silent p pf pd pc pi cas co cwn ccl cv cda ca cu nu naf nco nsu nmu nma nes2024 nvm na crc sda ct cta ctp ccf cca cc te teu tes rdr rmc csd csf si sa sw sq sf sd sc ss sj sh sr ghi gha ghc serve ucr uar rl rlc tt ii ist igt iit1 iqt2 ist3 int4 iut5 iait6 info dli csk tsb tsd tsw tst tsl tsf nb ai as ab ag al pcs pcsf pcsd pcsr sonar sonar-pr sonar-type sonar-sev sonar-hot sonar-both sonar-rule sonar-file sonar-rely sonar-rely-grp sonar-all-grp sonar-lang peppol-check ba bdi binj brt bst bdr bdb
