@@ -18,6 +18,7 @@ use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
 use App\Invoice\Helpers\StoreCove\StoreCoveArrays;
 use App\Invoice\Setting\SettingRepository as sR;
+use App\Invoice\System\PhpVersionCheckService;
 use App\Invoice\Setting\Trait\OpenBankingProviders;
 use App\Invoice\Setting\Trait\SettingOptionsDataTrait;
 use App\Invoice\Setting\Trait\SettingsTabBootstrap5;
@@ -133,6 +134,7 @@ final class SettingController extends BaseController
         GR $gR,
         PM $pm,
         TR $tR,
+        PhpVersionCheckService $phpVersionCheckService,
         #[Query('active')]
         ?string $active = null,
     ): Response {
@@ -245,6 +247,9 @@ final class SettingController extends BaseController
             // two-factor-authentication
             'tfa' => $this->webViewRenderer->renderPartialAsString($p . 'two_factor_authentication'),
             'turnstile' => $this->webViewRenderer->renderPartialAsString($p . 'turnstile'),
+            'system_updates' => $this->webViewRenderer->renderPartialAsString($p . 'system_updates', [
+                'phpVersionCheckResult' => $phpVersionCheckService->getCached(),
+            ]),
             'bootstrap5' => $this->bootstrap5Partial(),
         ];
         if ($request->getMethod() === Method::POST) {
@@ -290,6 +295,31 @@ final class SettingController extends BaseController
                 . 'x' . (string) ($query_params['windowInnerHeight'] ?? ''),
             'userUuid' => $userUuid,
         ]);
+    }
+
+    /**
+     * Triggers a fresh php.net lookup for the running PHP major.minor branch and
+     * caches the result, then redirects back to the System Updates settings tab.
+     *
+     * @param PhpVersionCheckService $phpVersionCheckService
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function checkPhpVersionNow(
+        PhpVersionCheckService $phpVersionCheckService,
+    ): \Psr\Http\Message\ResponseInterface {
+        $result = $phpVersionCheckService->check();
+
+        if ($result->error !== null) {
+            $this->flashMessage('danger',
+                $this->translator->translate('system.updates.check.failed') . ': ' . $result->error);
+        } elseif ($result->isOutdated) {
+            $this->flashMessage($result->isSecurityRelease ? 'danger' : 'warning',
+                $this->translator->translate('system.updates.outdated') . ': ' . (string) $result->latestVersion);
+        } else {
+            $this->flashMessage('info', $this->translator->translate('system.updates.up.to.date'));
+        }
+
+        return $this->webService->getRedirectResponse('setting/tabIndex', [], ['active' => 'system-updates']);
     }
 
     /**

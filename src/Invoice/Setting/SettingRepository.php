@@ -94,6 +94,7 @@ final class SettingRepository extends Select\Repository implements SettingReposi
      * @param Setting|null $setting
      * @throws Throwable
      */
+    #[\Override]
     public function save(?Setting $setting): void
     {
         if (null !== $setting) {
@@ -210,6 +211,7 @@ final class SettingRepository extends Select\Repository implements SettingReposi
      * @param string $setting_key
      * @return Setting|null
      */
+    #[\Override]
     public function withKey(string $setting_key): ?Setting
     {
         $query = $this

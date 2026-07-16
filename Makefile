@@ -92,6 +92,7 @@ menu: ## Show the Invoice SYSTEM MENU (Make targets)
 	@echo "make rlc CONTROLLER=Inv                     - router/list --controller=<name>"
 	@echo "make tt TEXT=abc LANG=fr                    - translator/translate"
 	@echo "make ii                - invoice/items"
+	@echo "make cpv               - system/check-php-version"
 	@echo "make ist               - invoice/setting/truncate"
 	@echo "make igt               - invoice/generator/truncate"
 	@echo "make iit1              - invoice/inv/truncate1"
@@ -699,6 +700,11 @@ ii: ## invoice/items
 	php yii invoice/items
 endif
 
+ifeq ($(PRIMARY_GOAL),cpv)
+cpv: ## system/check-php-version
+	php yii system/check-php-version
+endif
+
 ifeq ($(PRIMARY_GOAL),ist)
 ist: ## invoice/setting/truncate
 	php yii invoice/setting/truncate
@@ -979,4 +985,4 @@ else
 endif
 endif
 
-.PHONY: menu help install ext-check ext-json ext-silent p pf pd pc pi cas co cwn ccl cv cda ca cu nu naf nco nsu nmu nma nes2024 nvm na crc sda ct cta ctp ccf cca cc te teu tes rdr rmc csd csf si sa sw sq sf sd sc ss sj sh sr ghi gha ghc serve ucr uar rl rlc tt ii ist igt iit1 iqt2 ist3 int4 iut5 iait6 info dli csk tsb tsd tsw tst tsl tsf nb ai as ab ag al pcs pcsf pcsd pcsr sonar sonar-pr sonar-type sonar-sev sonar-hot sonar-both sonar-rule sonar-file sonar-rely sonar-rely-grp sonar-all-grp sonar-lang peppol-check ba bdi binj brt bst bdr bdb
+.PHONY: menu help install ext-check ext-json ext-silent p pf pd pc pi cas co cwn ccl cv cda ca cu nu naf nco nsu nmu nma nes2024 nvm na crc sda ct cta ctp ccf cca cc te teu tes rdr rmc csd csf si sa sw sq sf sd sc ss sj sh sr ghi gha ghc serve ucr uar rl rlc tt ii cpv ist igt iit1 iqt2 ist3 int4 iut5 iait6 info dli csk tsb tsd tsw tst tsl tsf nb ai as ab ag al pcs pcsf pcsd pcsr sonar sonar-pr sonar-type sonar-sev sonar-hot sonar-both sonar-rule sonar-file sonar-rely sonar-rely-grp sonar-all-grp sonar-lang peppol-check ba bdi binj brt bst bdr bdb

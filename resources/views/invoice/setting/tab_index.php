@@ -35,6 +35,7 @@ use Yiisoft\Html\Html as H;
  * @var string $telegram
  * @var string $tfa
  * @var string $turnstile
+ * @var string $system_updates
  * @var int $fontSize
  * @var string $font
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
@@ -226,6 +227,14 @@ $tabs = [
      'aria'  => 'settings-turnstile',
      'role'  => true,
      'content' => $turnstile
+ ],
+ 'system-updates' => [
+     'label' => $translator->translate('system.updates'),
+     'icon'  => 'bi bi-shield-check',
+     'color' => '#198754',
+     'aria'  => 'settings-system-updates',
+     'role'  => true,
+     'content' => $system_updates
  ]
 ];
 

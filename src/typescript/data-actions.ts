@@ -2,8 +2,10 @@
  * Delegated click handling for small, page-agnostic behaviors that used to be
  * inline onclick="..." attributes (this.showPicker(), window.close(),
  * window.print(), toggleCommalistPicker(), confirm-before-submit,
- * window.history.back(), toggleAllGroups()). Delegating from document means
- * script-src no longer needs 'unsafe-inline' for these.
+ * window.history.back(), toggleAllGroups()), plus two generic reusable
+ * primitives: toggle-panel (show/hide an element by selector) and
+ * copy-to-clipboard (copy another element's text content). Delegating from
+ * document means script-src no longer needs 'unsafe-inline' for these.
  */
 export function initDataActions(): void {
     document.addEventListener('click', (e: MouseEvent) => {
@@ -33,6 +35,26 @@ export function initDataActions(): void {
                         | ((expand: boolean) => void)
                         | undefined;
                     toggleAll?.(actionEl.dataset['expand'] === 'true');
+                    break;
+                }
+                case 'toggle-panel': {
+                    const selector = actionEl.dataset['target'];
+                    const panel = selector ? document.querySelector<HTMLElement>(selector) : null;
+                    panel?.classList.toggle('d-none');
+                    break;
+                }
+                case 'copy-to-clipboard': {
+                    const selector = actionEl.dataset['copyTarget'];
+                    const source = selector ? document.querySelector<HTMLElement>(selector) : null;
+                    if (source && navigator.clipboard?.writeText) {
+                        void navigator.clipboard.writeText(source.textContent ?? '').then(() => {
+                            const original = actionEl.textContent;
+                            actionEl.textContent = 'Copied!';
+                            setTimeout(() => {
+                                actionEl.textContent = original;
+                            }, 1500);
+                        });
+                    }
                     break;
                 }
                 default:

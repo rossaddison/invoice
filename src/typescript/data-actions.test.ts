@@ -74,6 +74,50 @@ describe('initDataActions', () => {
         ).not.toThrow();
     });
 
+    it('toggles the d-none class on the data-target for data-action="toggle-panel"', () => {
+        document.body.innerHTML =
+            '<button data-action="toggle-panel" data-target="#panel">Toggle</button>' +
+            '<div id="panel" class="d-none">Content</div>';
+        const panel = document.getElementById('panel')!;
+        document.querySelector('button')!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        expect(panel.classList.contains('d-none')).toBe(false);
+        document.querySelector('button')!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        expect(panel.classList.contains('d-none')).toBe(true);
+    });
+
+    it('does not throw for toggle-panel when data-target matches nothing', () => {
+        document.body.innerHTML = '<button data-action="toggle-panel" data-target="#missing">Toggle</button>';
+        expect(() =>
+            document.querySelector('button')!.dispatchEvent(new MouseEvent('click', { bubbles: true })),
+        ).not.toThrow();
+    });
+
+    it('copies the data-copy-target element text via data-action="copy-to-clipboard"', async () => {
+        document.body.innerHTML =
+            '<pre id="cmd">apk update</pre>' +
+            '<button data-action="copy-to-clipboard" data-copy-target="#cmd">Copy</button>';
+        const writeText = vi.fn().mockResolvedValue(undefined);
+        Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+
+        const button = document.querySelector('button')!;
+        button.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        await Promise.resolve();
+        await Promise.resolve();
+
+        expect(writeText).toHaveBeenCalledWith('apk update');
+        expect(button.textContent).toBe('Copied!');
+    });
+
+    it('does not throw for copy-to-clipboard when navigator.clipboard is unavailable', () => {
+        document.body.innerHTML =
+            '<pre id="cmd">apk update</pre>' +
+            '<button data-action="copy-to-clipboard" data-copy-target="#cmd">Copy</button>';
+        Object.defineProperty(navigator, 'clipboard', { value: undefined, configurable: true });
+        expect(() =>
+            document.querySelector('button')!.dispatchEvent(new MouseEvent('click', { bubbles: true })),
+        ).not.toThrow();
+    });
+
     it('prevents default when data-confirm dialog is cancelled', () => {
         document.body.innerHTML = '<a href="/delete" data-confirm="Are you sure?">Delete</a>';
         vi.spyOn(globalThis, 'confirm').mockReturnValue(false);

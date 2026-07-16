@@ -46,6 +46,11 @@ return [
                 ->action([SettingController::class, 'fphgenerate'])
                 ->name('setting/fphgenerate'),
 
+            Route::get('/setting/checkPhpVersion')
+                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
+                ->action([SettingController::class, 'checkPhpVersionNow'])
+                ->name('setting/checkPhpVersion'),
+
             Route::methods([Method::GET, Method::POST], '/setting/index')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([SettingController::class, 'index'])

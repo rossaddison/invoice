@@ -21,6 +21,7 @@ use App\Invoice\As4\Console\As4RetryCommand;
 use App\Invoice\As4\Console\As4StatusCommand;
 use App\Invoice\As4\Console\As4TestSendCommand;
 use App\Invoice\Peppol\Console\RetryFailedCommand;
+use App\Invoice\System\Console\CheckPhpVersionCommand;
 use App\User\Console\CreateCommand;
 use App\User\Console\AssignRoleCommand;
 use Yiisoft\Yii\Console\Application;
@@ -41,6 +42,7 @@ return [
             'as4/monitor'         => As4MonitorCommand::class,
             'as4/test-send'       => As4TestSendCommand::class,
             'peppol/retry-failed' => RetryFailedCommand::class,
+            'system/check-php-version' => CheckPhpVersionCommand::class,
             'user/create' => CreateCommand::class,
             'user/assignRole' => AssignRoleCommand::class,
             'router/list' => ListCommand::class,
