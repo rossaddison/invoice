@@ -370,6 +370,7 @@ $CMDS = [
     'sys_assets'        => ['cmd' => 'powershell -Command "Get-ChildItem -Path public/assets -Exclude .gitignore | Remove-Item -Recurse -Force; Write-Host \'Assets cache cleared.\'"'],
     'sys_extensions'    => ['cmd' => 'php scripts\extension-checker.php'],
     'sys_dl_icons'      => ['cmd' => 'php bin/download-cli-icons.php'],
+    'sys_cookie_secret' => ['cmd' => 'php -r "echo bin2hex(random_bytes(32));"'],
 ];
 
 // ── Menus (each item: [label, cmdKey]) ────────────────────────────────────────
@@ -558,6 +559,7 @@ $MENUS = [
             ['Clear Public Assets Cache',              'sys_assets'],
             ['PHP Extension Checker',                  'sys_extensions'],
             ['Download Menu Icons',                    'sys_dl_icons'],
+            ['Generate COOKIE_SECRET_KEY (.env)',      'sys_cookie_secret'],
         ],
     ],
 ];
