@@ -32,8 +32,8 @@ export class FlashMessageTimer {
     private readonly paused = new Map<Element, boolean>();
 
     private calculateDuration(text: string): number {
-        const cleanText = text.replace(/<[^>]*>/g, '');
-        const wordCount = cleanText.trim().split(/\s+/).filter(word => word.length > 0).length;
+        // text comes from Element.textContent, which never contains markup.
+        const wordCount = text.trim().split(/\s+/).filter(word => word.length > 0).length;
         const readingTime = this.baseDuration + (wordCount / this.wordsPerSecond) * 1000;
         return Math.max(this.minDuration, Math.min(this.maxDuration, readingTime));
     }
@@ -154,10 +154,21 @@ export class FlashMessageTimer {
     private hideAlert(alert: Element, container: HTMLElement): void {
         alert.classList.add('hiding');
         setTimeout(() => {
-            container.parentNode?.removeChild(container);
+            container.remove();
             this.cleanupTimer(alert);
         }, 500);
     }
+}
+
+function handleAddedNode(node: Node, flashTimer: FlashMessageTimer): void {
+    if (node.nodeType === 1 && (node as Element).classList?.contains('alert')) {
+        setTimeout(() => flashTimer.init(), 100);
+    }
+}
+
+function handleMutation(mutation: MutationRecord, flashTimer: FlashMessageTimer): void {
+    if (mutation.type !== 'childList') return;
+    mutation.addedNodes.forEach(node => handleAddedNode(node, flashTimer));
 }
 
 export function initFlashMessageTimer(): void {
@@ -167,14 +178,7 @@ export function initFlashMessageTimer(): void {
     setTimeout(() => flashTimer.init(), 100);
 
     const observer = new MutationObserver(mutations => {
-        mutations.forEach(mutation => {
-            if (mutation.type !== 'childList') return;
-            mutation.addedNodes.forEach(node => {
-                if (node.nodeType === 1 && (node as Element).classList?.contains('alert')) {
-                    setTimeout(() => flashTimer.init(), 100);
-                }
-            });
-        });
+        mutations.forEach(mutation => handleMutation(mutation, flashTimer));
     });
     observer.observe(document.body, { childList: true, subtree: true });
 }

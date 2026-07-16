@@ -23,7 +23,7 @@ export function initFamilyFormValidation(): void {
                 msg.id = 'prefix-required-feedback';
                 msg.className = 'invalid-feedback d-block';
                 msg.textContent = 'Product prefix is required when a comma list is provided.';
-                prefixEl.insertAdjacentElement('afterend', msg);
+                prefixEl.after(msg);
             }
         } else {
             prefixEl.classList.remove('is-invalid');

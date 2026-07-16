@@ -193,6 +193,30 @@ final class CompanyPrivateController extends BaseController
     }
 
     /**
+     * A new file upload must pass whitelist validation, then replace the
+     * previous one, or keep the existing file if there's no valid new upload.
+     */
+    private function resolveLogoFilename(
+        bool $hasNewFile,
+        ?UploadedFileInterface $file,
+        string $targetFileName,
+        string $targetPublicLogo,
+        string $modifiedOriginalFileName,
+        string $existingLogoFilename,
+    ): string {
+        if (!$hasNewFile || !$file instanceof UploadedFileInterface) {
+            return $existingLogoFilename;
+        }
+        if (!$this->validateLogoFile($file)) {
+            return $existingLogoFilename;
+        }
+        if ($this->fileUploadingErrors($file, $targetFileName, $targetPublicLogo)) {
+            return $existingLogoFilename;
+        }
+        return $modifiedOriginalFileName;
+    }
+
+    /**
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
@@ -259,16 +283,14 @@ final class CompanyPrivateController extends BaseController
                     // A new file upload must pass whitelist validation, then replace the
                     // previous one, or keep the existing file if there's no valid new upload.
                     $after_save->setLogoFilename(
-                        $hasNewFile
-                        && $file instanceof UploadedFileInterface
-                        && $this->validateLogoFile($file)
-                        && !$this->fileUploadingErrors($file, $target_file_name, $target_public_logo)
-
-                        // New file upload
-                        ? $modified_original_file_name
-
-                        // or Existing database file name
-                        : $existing_logo_filename,
+                        $this->resolveLogoFilename(
+                            $hasNewFile,
+                            $file,
+                            $target_file_name,
+                            $target_public_logo,
+                            $modified_original_file_name,
+                            $existing_logo_filename,
+                        ),
                     );
                     $companyprivateRepository->save($after_save);
 
