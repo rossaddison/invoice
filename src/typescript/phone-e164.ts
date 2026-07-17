@@ -16,7 +16,7 @@ export function initE164PhoneFields(): void {
         'blur',
         (e: FocusEvent) => {
             const target = e.target;
-            if (target instanceof HTMLInputElement && target.hasAttribute('data-e164')) {
+            if (target instanceof HTMLInputElement && target.dataset['e164'] !== undefined) {
                 applyE164(target);
             }
         },
