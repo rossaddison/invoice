@@ -7,6 +7,7 @@ namespace Tests\Unit\Invoice\Form;
 use App\Infrastructure\Persistence\Company\Company;
 use App\Invoice\Company\CompanyForm;
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Validator\Validator;
 
 class CompanyFormTest extends TestCase
 {
@@ -96,5 +97,43 @@ class CompanyFormTest extends TestCase
             CompanyForm::show($entity),
             CompanyForm::show($entity)
         );
+    }
+
+    private function validFormForValidation(): CompanyForm
+    {
+        $form = new CompanyForm();
+        $form->email = 'info@acme.com';
+        $form->web = 'https://acme.com';
+        return $form;
+    }
+
+    public function testPhoneAcceptsE164Format(): void
+    {
+        $form = $this->validFormForValidation();
+        $form->phone = '+447726232648';
+
+        $result = new Validator()->validate($form);
+
+        $this->assertTrue($result->isValid());
+    }
+
+    public function testPhoneRejectsNationalFormat(): void
+    {
+        $form = $this->validFormForValidation();
+        $form->phone = '07726232648';
+
+        $result = new Validator()->validate($form);
+
+        $this->assertFalse($result->isValid());
+    }
+
+    public function testPhoneAllowsEmptyValue(): void
+    {
+        $form = $this->validFormForValidation();
+        $form->phone = '';
+
+        $result = new Validator()->validate($form);
+
+        $this->assertTrue($result->isValid());
     }
 }

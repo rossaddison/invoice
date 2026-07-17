@@ -9,6 +9,7 @@ use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Email;
 use Yiisoft\Validator\Rule\Integer;
 use Yiisoft\Validator\Rule\Length;
+use Yiisoft\Validator\Rule\Regex;
 use Yiisoft\Validator\Rule\Url;
 
 final class CompanyForm extends FormModel
@@ -38,6 +39,7 @@ final class CompanyForm extends FormModel
     public ?string $country = '';
 
     #[Length(min: 0, max: 30, skipOnEmpty: true)]
+    #[Regex('/^\+[1-9]\d{1,14}$/', skipOnEmpty: true)]
     public ?string $phone = '';
 
     #[Length(min: 0, max: 30, skipOnEmpty: true)]

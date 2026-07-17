@@ -8,9 +8,19 @@ use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\Client\ClientForm;
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Validator\Validator;
 
 class ClientFormTest extends TestCase
 {
+    private function validFormForValidation(): ClientForm
+    {
+        $form = new ClientForm();
+        $form->client_name = 'Test Client';
+        $form->client_email = 'test@example.com';
+        $form->client_age = 30;
+        return $form;
+    }
+
     public function testDefaultsAreEmpty(): void
     {
         $form = new ClientForm();
@@ -127,5 +137,45 @@ class ClientFormTest extends TestCase
         $this->assertSame('', $form->client_city);
         $this->assertSame('', $form->client_zip);
         $this->assertSame('', $form->client_phone);
+    }
+
+    public function testClientMobileAcceptsE164Format(): void
+    {
+        $form = $this->validFormForValidation();
+        $form->client_mobile = '+447726232648';
+
+        $result = new Validator()->validate($form);
+
+        $this->assertTrue($result->isValid());
+    }
+
+    public function testClientMobileRejectsNationalFormat(): void
+    {
+        $form = $this->validFormForValidation();
+        $form->client_mobile = '07726232648';
+
+        $result = new Validator()->validate($form);
+
+        $this->assertFalse($result->isValid());
+    }
+
+    public function testClientMobileRejectsLeadingZeroAfterPlus(): void
+    {
+        $form = $this->validFormForValidation();
+        $form->client_mobile = '+0447726232648';
+
+        $result = new Validator()->validate($form);
+
+        $this->assertFalse($result->isValid());
+    }
+
+    public function testClientMobileAllowsEmptyValue(): void
+    {
+        $form = $this->validFormForValidation();
+        $form->client_mobile = '';
+
+        $result = new Validator()->validate($form);
+
+        $this->assertTrue($result->isValid());
     }
 }

@@ -7,6 +7,7 @@ namespace App\Invoice\Company;
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Infrastructure\Persistence\Company\Company;
+use App\Invoice\Helpers\CountryHelper;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
 use App\User\UserService;
@@ -69,6 +70,7 @@ final class CompanyController extends BaseController
     ): Response {
         $body = $request->getParsedBody() ?? [];
         $form = new CompanyForm();
+        $countries = new CountryHelper();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'company/add',
@@ -77,6 +79,7 @@ final class CompanyController extends BaseController
             'form' => $form,
             'formFields' => $this->formFields,
             'companyPublic' => $this->translator->translate('company.public'),
+            'countries' => $countries->getCountryList('en'),
         ];
 
         if ($request->getMethod() === Method::POST) {
@@ -106,6 +109,7 @@ final class CompanyController extends BaseController
         $company = $this->company($currentRoute, $companyRepository);
         if ($company) {
             $form = CompanyForm::show($company);
+            $countries = new CountryHelper();
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'company/edit',
@@ -114,6 +118,7 @@ final class CompanyController extends BaseController
                 'form' => $form,
                 'formFields' => $this->formFields,
                 'companyPublic' => $this->translator->translate('company.public'),
+                'countries' => $countries->getCountryList('en'),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];

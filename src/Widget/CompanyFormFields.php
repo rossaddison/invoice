@@ -80,9 +80,10 @@ final readonly class CompanyFormFields
 
     /**
      * Company telephone field
+     * @param array<string, string> $extraAttributes
      */
     public function companyTelephoneField(CompanyForm $form, string $fieldName,
-            string $labelKey): string
+            string $labelKey, array $extraAttributes = []): string
     {
         $value = match ($fieldName) {
             'phone' => $form->phone,
@@ -96,6 +97,7 @@ final readonly class CompanyFormFields
                 'placeholder' => $this->translator->translate($labelKey),
                 'class' => 'form-control form-control-lg',
                 'value' => $value ?? '',
+                ...$extraAttributes,
             ])
             ->required(false)
             ->render();

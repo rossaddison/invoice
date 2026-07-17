@@ -16,6 +16,7 @@ use Yiisoft\Html\Tag\Form;
  * @var string $csrf
  * @var string $actionName
  * @var string $title
+ * @var array $countries
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  * @psalm-var array<string,list<string>> $errors
  */
@@ -77,7 +78,14 @@ use Yiisoft\Html\Tag\Form;
                     <?= $formFields->companyTextField($form, 'country', 'country', false); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= $formFields->companyTelephoneField($form, 'phone', 'phone'); ?>
+                    <?php
+                        $phoneDefaultRegionKey = array_search($form->country ?? '', $countries, true);
+                        $phoneDefaultRegion = $phoneDefaultRegionKey === false ? '' : (string) $phoneDefaultRegionKey;
+                    ?>
+                    <?= $formFields->companyTelephoneField($form, 'phone', 'phone', [
+                        'data-e164' => '1',
+                        'data-e164-default-region' => $phoneDefaultRegion,
+                    ]); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= $formFields->companyTelephoneField($form, 'fax', 'fax'); ?>

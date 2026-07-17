@@ -28,6 +28,7 @@ import { initCustomFieldPosition } from './customfield-position.js';
 import { initJavascriptAnalysisFaq, initCodeceptionChecklistFaq } from './faq-pages.js';
 import { initInvIndex } from './inv-index.js';
 import { initQuoteIndex } from './quote-index.js';
+import { initE164PhoneFields } from './phone-e164.js';
 
 declare global {
     interface Window {
@@ -80,6 +81,7 @@ class InvoiceApp {
         initCustomFieldPosition();
         initJavascriptAnalysisFaq();
         initCodeceptionChecklistFaq();
+        initE164PhoneFields();
         globalThis.NProgress?.start();
         globalThis.NProgress?.done();
         if (document.getElementById('table-invoice')) {

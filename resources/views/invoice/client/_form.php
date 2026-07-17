@@ -135,7 +135,14 @@ use Yiisoft\Html\Tag\Form;
   <?= $formFields->clientTextField($form, 'client_name', 'client.name', true); ?>
   <?= $formFields->clientTextField($form, 'client_surname', 'client.surname', false); ?>
   <?= $formFields->clientEmailField($form); ?>
-  <?= $formFields->clientTelephoneField($form, 'client_mobile', 'mobile'); ?>
+  <?php
+    $mobileDefaultRegionKey = array_search($form->client_country ?? $selectedCountry, $countries, true);
+    $mobileDefaultRegion = $mobileDefaultRegionKey === false ? '' : (string) $mobileDefaultRegionKey;
+  ?>
+  <?= $formFields->clientTelephoneField($form, 'client_mobile', 'mobile', [
+    'data-e164' => '1',
+    'data-e164-default-region' => $mobileDefaultRegion,
+  ]); ?>
   <?= $formFields->clientTextField($form, 'client_group', 'client.group', false); ?>
   <?= Field::select($form, 'client_frequency')
     ->label($translator->translate('client.frequency'))

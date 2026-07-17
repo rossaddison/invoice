@@ -9,6 +9,7 @@ use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Email;
 use Yiisoft\Validator\Rule\Integer;
 use Yiisoft\Validator\Rule\Length;
+use Yiisoft\Validator\Rule\Regex;
 use Yiisoft\Validator\Rule\Required;
 use DateTimeImmutable;
 
@@ -44,6 +45,7 @@ final class ClientForm extends FormModel
     #[Length(min: 0, max: 20, skipOnEmpty: true)]
     public ?string $client_fax = '';
     #[Length(min: 0, max: 20, skipOnEmpty: true)]
+    #[Regex('/^\+[1-9]\d{1,14}$/', skipOnEmpty: true)]
     public ?string $client_mobile = '';
     #[Required]
     #[Email()]

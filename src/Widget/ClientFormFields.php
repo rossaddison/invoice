@@ -82,9 +82,10 @@ final readonly class ClientFormFields
 
     /**
      * Client telephone field
+     * @param array<string, string> $extraAttributes
      */
     public function clientTelephoneField(ClientForm $form, string $fieldName,
-            string $labelKey): string
+            string $labelKey, array $extraAttributes = []): string
     {
         $value = match ($fieldName) {
             'client_mobile' => $form->client_mobile,
@@ -100,6 +101,7 @@ final readonly class ClientFormFields
                 'value' => $value ?? '',
                 'class' => 'form-control form-control-lg',
                 'id' => $fieldName,
+                ...$extraAttributes,
             ])
             ->required(false)
             ->render();

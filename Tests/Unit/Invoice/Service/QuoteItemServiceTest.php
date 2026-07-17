@@ -28,38 +28,37 @@ use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Translator\TranslatorInterface;
 
-/**
- * @psalm-suppress PropertyNotSetInConstructor Properties are initialized in
- * setUp(); psalm/plugin-phpunit is not installed in this project, so Psalm
- * cannot see that.
- */
 final class QuoteItemServiceTest extends TestCase
 {
-    private MockObject&QuoteItemRepository $repository;
-    private MockObject&QuoteItemAllowanceChargeRepository $acqiR;
-    private MockObject&QuoteRepository $qR;
-    private MockObject&TaxRateRepository $tRR;
-    private MockObject&ProductRepository $pR;
-    private MockObject&TaskRepository $taskR;
-    private QuoteItemService $service;
-
-    #[\Override]
-    protected function setUp(): void
+    /**
+     * @return array{
+     *     repository: MockObject&QuoteItemRepository,
+     *     acqiR: MockObject&QuoteItemAllowanceChargeRepository,
+     *     qR: MockObject&QuoteRepository,
+     *     tRR: MockObject&TaxRateRepository,
+     *     pR: MockObject&ProductRepository,
+     *     taskR: MockObject&TaskRepository,
+     *     service: QuoteItemService,
+     * }
+     */
+    private function makeService(): array
     {
-        $this->repository = $this->createMock(QuoteItemRepository::class);
-        $this->acqiR = $this->createMock(QuoteItemAllowanceChargeRepository::class);
-        $this->qR = $this->createMock(QuoteRepository::class);
-        $this->tRR = $this->createMock(TaxRateRepository::class);
-        $this->pR = $this->createMock(ProductRepository::class);
-        $this->taskR = $this->createMock(TaskRepository::class);
-        $this->service = new QuoteItemService(
-            $this->repository,
-            $this->acqiR,
-            $this->qR,
-            $this->tRR,
-            $this->pR,
-            $this->taskR,
-        );
+        $repository = $this->createMock(QuoteItemRepository::class);
+        $acqiR = $this->createMock(QuoteItemAllowanceChargeRepository::class);
+        $qR = $this->createMock(QuoteRepository::class);
+        $tRR = $this->createMock(TaxRateRepository::class);
+        $pR = $this->createMock(ProductRepository::class);
+        $taskR = $this->createMock(TaskRepository::class);
+
+        return [
+            'repository' => $repository,
+            'acqiR' => $acqiR,
+            'qR' => $qR,
+            'tRR' => $tRR,
+            'pR' => $pR,
+            'taskR' => $taskR,
+            'service' => new QuoteItemService($repository, $acqiR, $qR, $tRR, $pR, $taskR),
+        ];
     }
 
     private function allowanceChargeReader(array $items): MockObject
@@ -85,22 +84,24 @@ final class QuoteItemServiceTest extends TestCase
 
     public function testTaxratePercentageReturnsPercentWhenTaxRateFound(): void
     {
+        ['service' => $service] = $this->makeService();
         $taxRate = $this->createMock(TaxRate::class);
         $taxRate->method('getTaxRatePercent')->willReturn(20.0);
         $trr = $this->createMock(TaxRateRepository::class);
         $trr->expects($this->once())->method('repoTaxRatequery')->with(5)->willReturn($taxRate);
 
-        $result = $this->service->taxratePercentage(5, $trr);
+        $result = $service->taxratePercentage(5, $trr);
 
         $this->assertSame(20.0, $result);
     }
 
     public function testTaxratePercentageReturnsNullWhenTaxRateNotFound(): void
     {
+        ['service' => $service] = $this->makeService();
         $trr = $this->createMock(TaxRateRepository::class);
         $trr->method('repoTaxRatequery')->willReturn(null);
 
-        $result = $this->service->taxratePercentage(999, $trr);
+        $result = $service->taxratePercentage(999, $trr);
 
         $this->assertNull($result);
     }
@@ -109,17 +110,19 @@ final class QuoteItemServiceTest extends TestCase
 
     public function testDeleteQuoteItemCallsRepositoryDelete(): void
     {
+        ['repository' => $repository, 'service' => $service] = $this->makeService();
         $model = new QuoteItem(id: 5);
-        $this->repository->expects($this->once())->method('delete')->with($model);
+        $repository->expects($this->once())->method('delete')->with($model);
 
-        $this->service->deleteQuoteItem($model);
+        $service->deleteQuoteItem($model);
     }
 
     // --- saveQuoteItemAmount ---
 
     public function testSaveQuoteItemAmountCreatesNewAmountWhenNoneExists(): void
     {
-        $this->acqiR->method('repoQuoteItemquery')->willReturn($this->allowanceChargeReader([]));
+        ['acqiR' => $acqiR, 'service' => $service] = $this->makeService();
+        $acqiR->method('repoQuoteItemquery')->willReturn($this->allowanceChargeReader([]));
         $qiar = $this->createMock(QuoteItemAmountRepository::class);
         $qiar->method('repoCount')->willReturn(0);
         $qias = $this->createMock(QuoteItemAmountService::class);
@@ -138,12 +141,13 @@ final class QuoteItemServiceTest extends TestCase
                 })
             );
 
-        $this->service->saveQuoteItemAmount(42, 2.0, 100.0, 10.0, 20.0, $qiar, $qias);
+        $service->saveQuoteItemAmount(42, 2.0, 100.0, 10.0, 20.0, $qiar, $qias);
     }
 
     public function testSaveQuoteItemAmountUpdatesExistingAmountWhenOneExists(): void
     {
-        $this->acqiR->method('repoQuoteItemquery')->willReturn($this->allowanceChargeReader([]));
+        ['acqiR' => $acqiR, 'service' => $service] = $this->makeService();
+        $acqiR->method('repoQuoteItemquery')->willReturn($this->allowanceChargeReader([]));
         $existing = new QuoteItemAmount();
         $qiar = $this->createMock(QuoteItemAmountRepository::class);
         $qiar->method('repoCount')->willReturn(1);
@@ -153,24 +157,26 @@ final class QuoteItemServiceTest extends TestCase
             ->method('saveQuoteItemAmountNoForm')
             ->with($this->identicalTo($existing), $this->anything());
 
-        $this->service->saveQuoteItemAmount(42, 1.0, 10.0, 0.0, null, $qiar, $qias);
+        $service->saveQuoteItemAmount(42, 1.0, 10.0, 0.0, null, $qiar, $qias);
     }
 
     public function testSaveQuoteItemAmountDoesNothingWhenExistingAmountNotFound(): void
     {
-        $this->acqiR->method('repoQuoteItemquery')->willReturn($this->allowanceChargeReader([]));
+        ['acqiR' => $acqiR, 'service' => $service] = $this->makeService();
+        $acqiR->method('repoQuoteItemquery')->willReturn($this->allowanceChargeReader([]));
         $qiar = $this->createMock(QuoteItemAmountRepository::class);
         $qiar->method('repoCount')->willReturn(1);
         $qiar->method('repoQuoteItemAmountquery')->willReturn(null);
         $qias = $this->createMock(QuoteItemAmountService::class);
         $qias->expects($this->never())->method('saveQuoteItemAmountNoForm');
 
-        $this->service->saveQuoteItemAmount(42, 1.0, 10.0, 0.0, null, $qiar, $qias);
+        $service->saveQuoteItemAmount(42, 1.0, 10.0, 0.0, null, $qiar, $qias);
     }
 
     public function testSaveQuoteItemAmountAddsChargeAmountAndVat(): void
     {
-        $this->acqiR->method('repoQuoteItemquery')->willReturn(
+        ['acqiR' => $acqiR, 'service' => $service] = $this->makeService();
+        $acqiR->method('repoQuoteItemquery')->willReturn(
             $this->allowanceChargeReader([$this->allowanceCharge(true, 15.0, 3.0)])
         );
         $qiar = $this->createMock(QuoteItemAmountRepository::class);
@@ -191,12 +197,13 @@ final class QuoteItemServiceTest extends TestCase
 
         // No tax_rate_percentage, so current_tax_total is 0 and only the
         // allowance/charge VAT contributes to the tax total.
-        $this->service->saveQuoteItemAmount(1, 1.0, 100.0, 0.0, null, $qiar, $qias);
+        $service->saveQuoteItemAmount(1, 1.0, 100.0, 0.0, null, $qiar, $qias);
     }
 
     public function testSaveQuoteItemAmountSubtractsAllowanceAmountAndVat(): void
     {
-        $this->acqiR->method('repoQuoteItemquery')->willReturn(
+        ['acqiR' => $acqiR, 'service' => $service] = $this->makeService();
+        $acqiR->method('repoQuoteItemquery')->willReturn(
             $this->allowanceChargeReader([$this->allowanceCharge(false, 10.0, 2.0)])
         );
         $qiar = $this->createMock(QuoteItemAmountRepository::class);
@@ -215,7 +222,7 @@ final class QuoteItemServiceTest extends TestCase
                 })
             );
 
-        $this->service->saveQuoteItemAmount(1, 1.0, 100.0, 0.0, null, $qiar, $qias);
+        $service->saveQuoteItemAmount(1, 1.0, 100.0, 0.0, null, $qiar, $qias);
     }
 
     // --- addQuoteItemProduct ---
@@ -234,6 +241,7 @@ final class QuoteItemServiceTest extends TestCase
 
     public function testAddQuoteItemProductSavesWhenProductIdPresent(): void
     {
+        ['repository' => $repository, 'service' => $service] = $this->makeService();
         $model = new QuoteItem();
         $product = $this->createMock(Product::class);
         $product->method('getProductName')->willReturn('Widget');
@@ -243,9 +251,9 @@ final class QuoteItemServiceTest extends TestCase
         $pr->expects($this->once())->method('repoCount')->with(7)->willReturn(1);
         $deps = $this->makeDeps($pr);
 
-        $this->repository->expects($this->once())->method('save')->with($model);
+        $repository->expects($this->once())->method('save')->with($model);
 
-        $this->service->addQuoteItemProduct($model, [
+        $service->addQuoteItemProduct($model, [
             'product_id' => '7',
             'product_unit_id' => 0,
         ], '3', $deps);
@@ -258,33 +266,35 @@ final class QuoteItemServiceTest extends TestCase
 
     public function testAddQuoteItemProductDoesNotSaveWhenProductIdIsZero(): void
     {
+        ['repository' => $repository, 'service' => $service] = $this->makeService();
         $model = new QuoteItem();
         $pr = $this->createMock(ProductRepository::class);
         $pr->method('repoProductquery')->willReturn(null);
         $deps = $this->makeDeps($pr);
 
-        $this->repository->expects($this->never())->method('save');
+        $repository->expects($this->never())->method('save');
 
-        $this->service->addQuoteItemProduct($model, [
+        $service->addQuoteItemProduct($model, [
             'product_unit_id' => 0,
         ], '3', $deps);
     }
 
     public function testAddQuoteItemProductPersistsQuoteTaxRateAndTaskFromArray(): void
     {
+        ['qR' => $qR, 'tRR' => $tRR, 'taskR' => $taskR, 'service' => $service] = $this->makeService();
         $model = new QuoteItem();
         $quote = $this->createMock(Quote::class);
         $taxRate = $this->createMock(TaxRate::class);
         $task = $this->createMock(Task::class);
-        $this->qR->expects($this->once())->method('repoQuoteUnLoadedquery')->with(3)->willReturn($quote);
-        $this->tRR->expects($this->once())->method('repoTaxRatequery')->with(9)->willReturn($taxRate);
-        $this->taskR->expects($this->once())->method('repoTaskquery')->with(4)->willReturn($task);
+        $qR->expects($this->once())->method('repoQuoteUnLoadedquery')->with(3)->willReturn($quote);
+        $tRR->expects($this->once())->method('repoTaxRatequery')->with(9)->willReturn($taxRate);
+        $taskR->expects($this->once())->method('repoTaskquery')->with(4)->willReturn($task);
 
         $pr = $this->createMock(ProductRepository::class);
         $pr->method('repoProductquery')->willReturn(null);
         $deps = $this->makeDeps($pr);
 
-        $this->service->addQuoteItemProduct($model, [
+        $service->addQuoteItemProduct($model, [
             'quote_id' => '3',
             'tax_rate_id' => '9',
             'task_id' => '4',
@@ -300,6 +310,7 @@ final class QuoteItemServiceTest extends TestCase
 
     public function testSaveQuoteItemProductReturnsTaxRateIdAndSavesWhenProductIdPresent(): void
     {
+        ['repository' => $repository, 'service' => $service] = $this->makeService();
         $model = new QuoteItem();
         $product = $this->createMock(Product::class);
         $product->method('getProductName')->willReturn('Widget');
@@ -310,9 +321,9 @@ final class QuoteItemServiceTest extends TestCase
         $uR = $this->createMock(UnitRepository::class);
         $translator = $this->createMock(TranslatorInterface::class);
 
-        $this->repository->expects($this->once())->method('save')->with($model);
+        $repository->expects($this->once())->method('save')->with($model);
 
-        $taxRateId = $this->service->saveQuoteItemProduct($model, [
+        $taxRateId = $service->saveQuoteItemProduct($model, [
             'product_id' => '7',
             'tax_rate_id' => '11',
             'product_unit_id' => 0,
@@ -323,14 +334,15 @@ final class QuoteItemServiceTest extends TestCase
 
     public function testSaveQuoteItemProductDoesNotSaveWhenProductIdAbsent(): void
     {
+        ['repository' => $repository, 'service' => $service] = $this->makeService();
         $model = new QuoteItem();
         $pr = $this->createMock(ProductRepository::class);
         $uR = $this->createMock(UnitRepository::class);
         $translator = $this->createMock(TranslatorInterface::class);
 
-        $this->repository->expects($this->never())->method('save');
+        $repository->expects($this->never())->method('save');
 
-        $taxRateId = $this->service->saveQuoteItemProduct($model, [
+        $taxRateId = $service->saveQuoteItemProduct($model, [
             'product_unit_id' => 0,
         ], '3', $pr, $uR, $translator);
 
