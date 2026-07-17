@@ -58,9 +58,10 @@ final class CheckPhpVersionCommand extends Command
         $message = "A newer PHP release is available: {$result->latestVersion}";
         if ($result->isSecurityRelease) {
             $io->error("{$message} (security release)");
-            return ExitCode::UNSPECIFIED_ERROR;
+        } else {
+            $io->warning($message);
         }
-        $io->warning($message);
-        return ExitCode::OK;
+
+        return $result->isSecurityRelease ? ExitCode::UNSPECIFIED_ERROR : ExitCode::OK;
     }
 }

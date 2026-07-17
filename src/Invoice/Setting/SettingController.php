@@ -8,9 +8,6 @@ use App\Auth\Permissions;
 use App\Invoice\BaseController;
 // App
 use App\Infrastructure\Persistence\Setting\Setting;
-use App\Invoice\EmailTemplate\EmailTemplateRepository as ER;
-use App\Invoice\Group\GroupRepository as GR;
-use App\Invoice\PaymentMethod\PaymentMethodRepository as PM;
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Helpers\CountryHelper;
 use App\Invoice\Helpers\CurrencyHelper;
@@ -22,7 +19,6 @@ use App\Invoice\System\PhpVersionCheckService;
 use App\Invoice\Setting\Trait\OpenBankingProviders;
 use App\Invoice\Setting\Trait\SettingOptionsDataTrait;
 use App\Invoice\Setting\Trait\SettingsTabBootstrap5;
-use App\Invoice\TaxRate\TaxRateRepository as TR;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Ramsey\Uuid\Uuid;
@@ -121,19 +117,13 @@ final class SettingController extends BaseController
     /**
      * @param Request $request
      * @param WebViewRenderer $head
-     * @param ER $eR
-     * @param GR $gR
-     * @param PM $pm
-     * @param TR $tR
+     * @param SettingTabIndexDeps $deps
      * @return Response
      */
     public function tabIndex(
         Request $request,
         WebViewRenderer $head,
-        ER $eR,
-        GR $gR,
-        PM $pm,
-        TR $tR,
+        SettingTabIndexDeps $deps,
         PhpVersionCheckService $phpVersionCheckService,
         #[Query('active')]
         ?string $active = null,
@@ -182,26 +172,26 @@ final class SettingController extends BaseController
                 'icon' => $aliases->get('@icon'),
             ]),
             'invoices' => $this->webViewRenderer->renderPartialAsString($p . 'invoices', [
-                'invoice_groups' => $gR->findAllPreloaded(),
-                'payment_methods' => $pm->findAllPreloaded(),
+                'invoice_groups' => $deps->gR->findAllPreloaded(),
+                'payment_methods' => $deps->pm->findAllPreloaded(),
                 'public_invoice_templates' => $this->sR->getInvoiceTemplates('public'),
                 'pdf_invoice_templates' => $this->sR->getInvoiceTemplates('pdf'),
-                'email_templates_invoice' => $eR->repoEmailTemplateType('invoice'),
+                'email_templates_invoice' => $deps->eR->repoEmailTemplateType('invoice'),
             ]),
             'quotes' => $this->webViewRenderer->renderPartialAsString($p . 'quotes', [
-                'invoice_groups' => $gR->findAllPreloaded(),
+                'invoice_groups' => $deps->gR->findAllPreloaded(),
                 'public_quote_templates' => $this->sR->getQuoteTemplates('public'),
                 'pdf_quote_templates' => $this->sR->getQuoteTemplates('pdf'),
-                'email_templates_quote' => $eR->repoEmailTemplateType('quote'),
+                'email_templates_quote' => $deps->eR->repoEmailTemplateType('quote'),
             ]),
             'salesorders' => $this->webViewRenderer->renderPartialAsString($p . 'client_purchase_orders', [
-                'gR' => $gR,
+                'gR' => $deps->gR,
             ]),
             'oauth2' => $this->webViewRenderer->renderPartialAsString($p . 'oauth2', [
                 'openBankingProviders' => $this->getOpenBankingProvidersWithAuthUrl(),
             ]),
             'taxes' => $this->webViewRenderer->renderPartialAsString($p . 'taxes', [
-                'tax_rates' => $tR->findAllPreloaded(),
+                'tax_rates' => $deps->tR->findAllPreloaded(),
             ]),
             'email' => $this->webViewRenderer->renderPartialAsString($p . 'email'),
             'google_translate' => $this->webViewRenderer->renderPartialAsString($p . 'google_translate', [
@@ -212,7 +202,7 @@ final class SettingController extends BaseController
                 'gateway_currency_codes' => CurrencyHelper::all(),
                 'gateway_regions' => $this->sR->amazonRegions(),
                 'openBankingProviders' => $this->getOpenBankingProviderNames(),
-                'payment_methods' => $pm->findAllPreloaded(),
+                'payment_methods' => $deps->pm->findAllPreloaded(),
             ]),
             'mpdf' => $this->webViewRenderer->renderPartialAsString($p . 'mpdf'),
             'mtd' => $this->webViewRenderer->renderPartialAsString($p . 'making_tax_digital'),
@@ -242,7 +232,7 @@ final class SettingController extends BaseController
             'qrcode' => $this->webViewRenderer->renderPartialAsString($p . 'qr_code', [
             ]),
             'telegram' => $this->webViewRenderer->renderPartialAsString($p . 'telegram', [
-                'payment_methods' => $pm->findAllPreloaded(),
+                'payment_methods' => $deps->pm->findAllPreloaded(),
             ]),
             // two-factor-authentication
             'tfa' => $this->webViewRenderer->renderPartialAsString($p . 'two_factor_authentication'),
