@@ -66,15 +66,11 @@ class CountryHelper
     public function getCountryIdentificationCodeWithCountryList(
                                     string $cldr, string $country_name): string
     {
-        /** @var array $countries */
+        /** @var array<string, string> $countries */
         $countries = $this->getCountryList($cldr);
-        /**
-         * @var array $key
-         * @var string $value
-         */
         foreach ($countries as $key => $value) {
-            if ($country_name === $key[$value]) {
-                return $value;
+            if ($country_name === $value) {
+                return $key;
             }
         }
         return '';

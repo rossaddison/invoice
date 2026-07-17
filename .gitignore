@@ -57,6 +57,7 @@ snyk-report.txt
 # Generated coverage reports (auto-produced by test runner, never commit)
 /coverage
 coverage.xml
+coverage-testo.xml
 test-results.xml
 
 # Oxalis / Peppol certificates and production config — NEVER commit these
