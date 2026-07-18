@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Middleware\CsrfExemptMiddleware;
 use Yiisoft\Config\Config;
-use Yiisoft\Csrf\CsrfTokenMiddleware;
 use Yiisoft\DataResponse\Middleware\DataResponseMiddleware;
 use Yiisoft\DataResponse\Formatter\JsonFormatter;
 use Yiisoft\Definitions\Reference;
@@ -37,7 +37,7 @@ return [
     RouteCollectionInterface::class => static function (RouteCollectorInterface $collector) use ($config) {
         $routes = $config->get('routes');
         $collector
-            ->middleware(CsrfTokenMiddleware::class)
+            ->middleware(CsrfExemptMiddleware::class)
             ->middleware(DataResponseMiddleware::class)
             ->addRoute(
                 Group::create('/{_language}')

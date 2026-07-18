@@ -48,12 +48,6 @@ return [
                 ->name('paymentinformation/stripeComplete'),
 
             Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/stripeIncomplete/{url_key}')
-                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
-                ->action([PICLR::class, 'stripeIncomplete'])
-                ->name('paymentinformation/stripeIncomplete'),
-
-            Route::methods([Method::GET, Method::POST],
                     '/paymentinformation/wonderfulComplete/{url_key}/{ref}')
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([PICLR::class, 'wonderfulComplete'])
@@ -76,4 +70,15 @@ return [
                 ->action([PICLR::class, 'inform'])
                 ->name('paymentinformation/inform'),
         ), // invoice
+
+    // Not under RoutePermission::invoiceGroup(): Stripe's servers must be able
+    // to POST here with no app session. Secured by Stripe-Signature
+    // verification in the controller, not RBAC — see
+    // StripePaymentService::verifyWebhookSignature() and
+    // App\Middleware\CsrfExemptMiddleware (this path is also exempt from the
+    // global CSRF check, which would otherwise reject every such call before
+    // it reaches the controller).
+    Route::methods([Method::POST], '/paymentinformation/stripeWebhook')
+        ->action([PICLR::class, 'stripeWebhook'])
+        ->name('paymentinformation/stripeWebhook'),
 ];

@@ -34,40 +34,39 @@ final class PaymentInformationQueryHelper
         return !empty($sR->getSetting('gateway_mollie_testOrLiveApiKey')) ? true : false;
     }
 
+    /**
+     * True when Stripe's client-side redirect says the payment worked (or is
+     * still working) but our own webhook hasn't confirmed it server-side yet
+     * — a race between the browser redirect and the async webhook, not a
+     * failure. Only redirect statuses that genuinely mean "not paid"
+     * (requires_payment_method, canceled, etc.) fall outside this.
+     */
+    public static function isStripeStillProcessing(bool $isPaid, string $redirectStatus): bool
+    {
+        return !$isPaid && in_array($redirectStatus, ['processing', 'succeeded'], true);
+    }
+
     public static function stripeCompleteHeading(
         Translator $translator,
-        array $result,
+        bool $isPaid,
         string $invoiceNumber,
         string $redirectStatus,
     ): string {
-        $message = (string) ($result['message'] ?? '');
-        if ($redirectStatus === 'succeeded') {
+        if ($isPaid) {
             return sprintf(
                 $translator->translate('online.payment.payment.successful'),
                 $invoiceNumber,
             );
         }
+        if (self::isStripeStillProcessing($isPaid, $redirectStatus)) {
+            return sprintf(
+                $translator->translate('online.payment.payment.processing'),
+                $invoiceNumber,
+            );
+        }
         return sprintf(
             $translator->translate('online.payment.payment.failed'),
-            trim($invoiceNumber . ' ' . $message),
+            $invoiceNumber,
         );
-    }
-
-    public static function getStripePciClientSecret(array $yii_invoice): ?string
-    {
-        $payment_intent = \Stripe\PaymentIntent::create([
-            'amount'   => (int) round(((float) $yii_invoice['balance'] ?: 0.00) * 100),
-            'currency' => (string) $yii_invoice['currency'],
-            'automatic_payment_methods' => ['enabled' => true],
-            'receipt_email' => (string) $yii_invoice['customer_email'],
-            'metadata' => [
-                'invoice_id'             => (string) $yii_invoice['id'],
-                'invoice_customer_id'    => (string) $yii_invoice['customer_id'],
-                'invoice_number'         => (string) $yii_invoice['number'] ?: '',
-                'invoice_payment_method' => '',
-                'invoice_url_key'        => (string) $yii_invoice['url_key'],
-            ],
-        ]);
-        return $payment_intent->client_secret;
     }
 }

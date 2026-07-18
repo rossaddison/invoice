@@ -37,6 +37,7 @@ RewriteEngine on
         https://*.stripe.com \
         https://assets.braintreegateway.com \
         https://s3.amazonaws.com \
+        https://*.payments-amazon.com \
         https://www.mollie.com; \
     connect-src 'self' \
         https://api.storecove.com \

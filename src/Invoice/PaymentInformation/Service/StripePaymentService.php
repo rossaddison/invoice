@@ -5,15 +5,20 @@ declare(strict_types=1);
 namespace App\Invoice\PaymentInformation\Service;
 
 use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Libraries\Crypt;
+use App\Invoice\PaymentInformation\PaymentGatewayInterface;
+use App\Invoice\PaymentInformation\PaymentVerificationResult;
+use Psr\Log\LoggerInterface;
+use Stripe\Event;
+use Stripe\Exception\SignatureVerificationException;
+use Stripe\Exception\UnexpectedValueException;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
-use App\Infrastructure\Persistence\Inv\Inv;
 
-class StripePaymentService
+class StripePaymentService implements PaymentGatewayInterface
 {
     public function __construct(
         private readonly SettingRepository $settings,
+        private readonly LoggerInterface $logger,
     ) {
         $this->setApiKey();
     }
@@ -26,6 +31,22 @@ class StripePaymentService
         if (!empty($skTest)) {
             Stripe::setApiKey($skTest);
         }
+    }
+
+    #[\Override]
+    public function getDriverKey(): string
+    {
+        return 'stripe';
+    }
+
+    #[\Override]
+    public function isConfigured(): bool
+    {
+        $secretKey = (string) $this->settings->decode(
+            $this->settings->getSetting('gateway_stripe_secretKey') ?: '');
+        $publishableKey = $this->getPublishableKey();
+
+        return $secretKey !== '' && $publishableKey !== '';
     }
 
     public function getPublishableKey(): string
@@ -61,37 +82,44 @@ class StripePaymentService
     }
 
     /**
-     * Checks the payment status from Stripe's redirect parameters.
+     * Authoritatively confirms a PaymentIntent's status by asking Stripe
+     * directly, rather than trusting a client-supplied redirect parameter.
      */
-    public function handleCompletion(Inv $invoice, string $redirectStatus): array
+    #[\Override]
+    public function verifyPayment(string $providerReference): PaymentVerificationResult
     {
-        $total = $invoice->getInvAmount()->getTotal();
-        $paid = $invoice->getInvAmount()->getPaid();
-        $balance = $invoice->getInvAmount()->getBalance();
-        $result = [
-            'status_id' => null,
-            'payment_method' => null,
-            'success' => false,
-            'message' => '',
-        ];
+        $paymentIntent = PaymentIntent::retrieve($providerReference);
 
-        if ($redirectStatus === 'succeeded' && null!==$paid && null!==$balance && null!==$total) {
-            $result['status_id'] = 4; // paid
-            $result['payment_method'] = 4;
-            $result['success'] = true;
-            $result['message'] = 'Payment successful. Total/Paid/Balance: ' . $total . '/' . $paid . '/' . $balance;
-        } elseif ($redirectStatus === 'requires_payment_method') {
-            $result['status_id'] = 3; // viewed
-            $result['payment_method'] = 5;
-            $result['success'] = false;
-            $result['message'] = 'Requires a payment method. ';
-        } else {
-            $result['status_id'] = 3;
-            $result['payment_method'] = 5;
-            $result['success'] = false;
-            $result['message'] = 'Payment failed. ';
+        return new PaymentVerificationResult(
+            paid: $paymentIntent->status === 'succeeded',
+            providerReference: $providerReference,
+            message: $paymentIntent->status,
+        );
+    }
+
+    /**
+     * Verifies the `Stripe-Signature` header against the raw request body
+     * using the configured webhook secret. Returns null (and logs) on any
+     * failure instead of throwing, so callers can respond with a plain 400.
+     */
+    public function verifyWebhookSignature(string $payload, string $sigHeader): ?Event
+    {
+        $webhookSecret = (string) $this->settings->decode(
+            $this->settings->getSetting('gateway_stripe_webhookSecret') ?: '');
+
+        if ($webhookSecret === '') {
+            $this->logger->warning('Stripe webhook received but no webhook secret is configured.');
+            return null;
         }
 
-        return $result;
+        try {
+            return \Stripe\Webhook::constructEvent($payload, $sigHeader, $webhookSecret);
+        } catch (UnexpectedValueException $e) {
+            $this->logger->warning('Stripe webhook: invalid payload.', ['error' => $e->getMessage()]);
+        } catch (SignatureVerificationException $e) {
+            $this->logger->warning('Stripe webhook: signature verification failed.', ['error' => $e->getMessage()]);
+        }
+
+        return null;
     }
 }

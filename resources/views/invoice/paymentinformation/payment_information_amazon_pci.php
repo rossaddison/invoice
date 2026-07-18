@@ -115,24 +115,15 @@ if ($disable_form === false) {
         echo H::openTag('div', ['class' => 'card-body p-5 text-center']);
          echo $alert;
          echo H::tag('br');
-         // Amazon pay button
+         // Amazon pay button — the actual "pay now" action; Amazon's SDK
+         // renders its own branded button here via amazon.Pay.renderButton()
+         // (see payment-amazon.ts). There is no separate submit button:
+         // clicking anywhere else doesn't initiate a checkout session, so
+         // one isn't offered.
          // https://developer.amazon.com/docs/amazon-pay-checkout/
          // add-the-amazon-pay-button.html#4-render-the-button
          echo H::tag('div', '', ['id' => 'AmazonPayButton']);
          echo H::tag('br');
-         echo H::openTag('button', [
-             'type' => 'submit',
-             'id' => 'submit',
-             'class' => 'btn btn-lg btn-success bi bi-credit-card'
-         ]);
-          echo H::openTag('div', ['class' => 'spinner hidden', 'id' => 'spinner']);
-          echo H::closeTag('div');
-          echo H::openTag('span', ['id' => 'button-text']);
-           echo ' '
-            . $translator->translate('pay.now')
-            . ': ' . $numberHelper->formatCurrency($balance);
-          echo H::closeTag('span');
-         echo H::closeTag('button');
          echo H::encode($clientHelper->formatClient($client_on_invoice));
          echo $partial_client_address;
          echo H::tag('br');

@@ -7,7 +7,9 @@ use App\Invoice\Asset\InvoiceNodeModulesAsset as InvNm;
 use App\Invoice\Asset\MonospaceAsset;
 use App\Invoice\Asset\NProgressAsset;
 // PCI Compliant Payment Gateway Assets
-use App\Invoice\Asset\pciAsset\StripeVersionTenAsset;
+// Stripe's own asset (StripeVersionTenAsset) is registered from within
+// payment_information_stripe_pci.php instead of here, so it only loads on
+// the Stripe payment page rather than on every page in the app.
 use App\Invoice\Asset\pciAsset\BraintreeDropInOneThirtyThreeSevenAsset;
 
 use App\Asset\AppCdnAsset;
@@ -117,7 +119,6 @@ $assetManager->register($invCdnNotNodeModule ? InvCdn::class : InvNm::class);
 $assetManager->register(NProgressAsset::class);
 $s->getSetting('monospace_amounts') == 1 ?
     $assetManager->register(MonospaceAsset::class) : '';
-$assetManager->register(StripeVersionTenAsset::class);
 $assetManager->register(BraintreeDropInOneThirtyThreeSevenAsset::class);
 $vat = ($s->getSetting('enable_vat_registration') == '0');
 $this->addCssFiles($assetManager->getCssFiles());

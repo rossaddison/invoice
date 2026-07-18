@@ -1474,6 +1474,8 @@ prior to importing and no existing documents e.g. Invoices.',
   'online.payment.password' => 'Password',
   'online.payment.payment.cancelled' => 'Payment cancelled.',
   'online.payment.payment.failed' => 'Payment failed. Please try again.',
+  'online.payment.payment.processing' =>
+    'Payment for Invoice %s is still processing. Please check back shortly to confirm.',
   'online.payment.payment.redirect' =>
     'Please wait while we redirect you to the payment page...',
   'online.payment.payment.successful' => 'Payment for Invoice %s successful!',
@@ -1517,6 +1519,7 @@ prior to importing and no existing documents e.g. Invoices.',
     . 'PCI Compliant (No credit card details'
     . ' stored on this database) (unchecked)',
   'online.payment.webhookId' => 'Webhook Id',
+  'online.payment.webhookSecret' => 'Webhook Secret',
   'online.payment.websiteKey' => 'Website Key',
   'online.payments' => 'Online Payments',
   'open.banking.pay.with' => 'Pay with Open Banking: ',

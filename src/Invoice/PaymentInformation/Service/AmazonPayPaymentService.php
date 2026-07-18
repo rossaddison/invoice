@@ -8,11 +8,13 @@ use Amazon\Pay\API\Client;
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\Inv\InvRepository;
 use App\Invoice\InvAmount\InvAmountRepository;
+use App\Invoice\PaymentInformation\PaymentGatewayInterface;
+use App\Invoice\PaymentInformation\PaymentVerificationResult;
 use App\Invoice\Setting\SettingRepository as sR;
 use Yiisoft\Json\Json;
 use Yiisoft\Security\Random;
 
-class AmazonPayPaymentService
+class AmazonPayPaymentService implements PaymentGatewayInterface
 {
     public function __construct(
         private readonly sR $sR,
@@ -33,6 +35,48 @@ class AmazonPayPaymentService
             'amount' => $amount,
             'currency' => $currency,
         ];
+    }
+
+    #[\Override]
+    public function getDriverKey(): string
+    {
+        return 'amazon_pay';
+    }
+
+    #[\Override]
+    public function isConfigured(): bool
+    {
+        $publicKeyId = (string) $this->sR->decode($this->sR->getSetting('gateway_amazon_pay_publicKeyId') ?: '');
+        $merchantId  = (string) $this->sR->decode($this->sR->getSetting('gateway_amazon_pay_merchantId') ?: '');
+
+        return $publicKeyId !== '' && $merchantId !== '' && null === $this->checkPrivatePemFile();
+    }
+
+    /**
+     * Authoritatively confirms a checkout session's payment state by asking
+     * Amazon Pay directly.
+     */
+    #[\Override]
+    public function verifyPayment(string $providerReference): PaymentVerificationResult
+    {
+        $sandboxOrLive = $this->sR->getSetting('gateway_amazon_pay_sandbox') === '1' ? 'SANDBOX-' : 'LIVE-';
+        $client = new Client([
+            'public_key_id' => $sandboxOrLive
+                . (string) $this->sR->decode($this->sR->getSetting('gateway_amazon_pay_publicKeyId')),
+            'private_key' => $this->getAmazonPrivateKeyFile(),
+            'region' => $this->getAmazonRegion(),
+            'algorithm' => 'AMZN-PAY-RSASSA-PSS-V2',
+        ]);
+        $apiResponse = (array) $client->getCheckoutSession(['checkoutSessionId' => $providerReference]);
+        $responseData = (array) ($apiResponse['response'] ?? []);
+        $statusDetails = (array) ($responseData['statusDetails'] ?? []);
+        $paymentState = (string) ($statusDetails['state'] ?? '');
+
+        return new PaymentVerificationResult(
+            paid: $paymentState === 'Completed',
+            providerReference: $providerReference,
+            message: $paymentState,
+        );
     }
 
     public function handleCallback(array $payload): array

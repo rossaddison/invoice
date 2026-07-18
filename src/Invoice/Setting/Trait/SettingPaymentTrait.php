@@ -121,6 +121,12 @@ trait SettingPaymentTrait
                     'type' => 'password',
                     'label' => 'Secret Key',
                 ],
+                // signing secret for the /paymentinformation/stripeWebhook
+                // endpoint, from the Stripe Dashboard webhook configuration
+                'webhookSecret' => [
+                    'type' => 'password',
+                    'label' => 'Webhook Secret',
+                ],
             ],
         ];
     }

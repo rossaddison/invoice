@@ -74,4 +74,11 @@ final class PaymentInformationLogoRenderer
             '//invoice/paymentinformation/logo/mollieLogo',
         );
     }
+
+    public function stripeLogo(): string
+    {
+        return $this->webViewRenderer->renderPartialAsString(
+            '//invoice/paymentinformation/logo/stripeLogo',
+        );
+    }
 }

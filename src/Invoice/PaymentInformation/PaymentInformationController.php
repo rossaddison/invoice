@@ -855,7 +855,7 @@ final class PaymentInformationController
         $sandbox_url_array = $this->sR->sandboxUrlArray();
         /** @var Inv $invoice */
         $invoice       = $this->iR->repoUrlKeyGuestLoaded($url_key);
-        $invoiceNumber = null !== $invoice->getNumber() ?: 'unknown';
+        $invoiceNumber = $invoice->getNumber() ?? 'unknown';
         $mollie        = new MollieClient();
         $lastPayment   = new MolliePayment($mollie);
         if (!PaymentInformationQueryHelper::mollieSetTestOrLiveApiKey($this->sR, $mollie)) {
@@ -885,7 +885,7 @@ final class PaymentInformationController
             $invoice->setStatusId(4);
             $payment_method = 4;
             $invoice->setPaymentMethod(4);
-            $heading = sprintf($this->translator->translate('online.payment.payment.successful'), (string) $invoiceNumber);
+            $heading = sprintf($this->translator->translate('online.payment.payment.successful'), $invoiceNumber);
             $this->iR->save($invoice);
             /** @var int $invoice->reqId() */
             $invoice_amount_record = $this->iaR->repoInvquery($invoice->reqId());
@@ -897,11 +897,11 @@ final class PaymentInformationController
                 $this->iaR->save($invoice_amount_record);
                 $this->recordOnlinePaymentsAndMerchant(
                     new PaymentRecordContext(
-                        reference: (string) $invoiceNumber . '-' . $lastPayment->status,
+                        reference: $invoiceNumber . '-' . $lastPayment->status,
                         invoice_id: (string) $invoice_amount_record->reqInvId(),
                         balance: $balance > 0.00 ? $balance : 0.00,
                         invoice_payment_method: $payment_method,
-                        invoice_number: (string) $invoiceNumber,
+                        invoice_number: $invoiceNumber,
                         driver: 'Mollie',
                         d: 'mollie',
                         invoice_url_key: $metadataInvoiceUrlKey,
@@ -931,7 +931,7 @@ final class PaymentInformationController
             $invoice->setPaymentMethod(5);
             $heading = sprintf(
                 $this->translator->translate('online.payment.payment.failed'),
-                (string) $invoiceNumber . ' '
+                $invoiceNumber . ' '
                     . $this->translator->translate('payment.gateway.mollie.api.payment.id')
                     . $paymentId,
             );
@@ -958,6 +958,10 @@ final class PaymentInformationController
         PaymentInformationGatewayContext $ctx,
         array $yii_invoice_array,
     ): Response {
+        if (!$this->stripePaymentService->isConfigured()) {
+            $this->flashMessage('warning', 'Stripe payment gateway is not properly configured.');
+            return $this->webService->getNotFoundResponse();
+        }
         // Get Stripe keys and client secret from service
         $publishableKey = $this->stripePaymentService->getPublishableKey();
         $clientSecret   = $this->stripePaymentService->createPaymentIntent(
@@ -986,6 +990,7 @@ final class PaymentInformationController
             'payment_method' => $ctx->payment_method_for_this_invoice ?: 'None',
             'total'          => $ctx->total,
             'companyLogo'    => $this->logoRenderer->companyLogo(),
+            'stripeLogo'     => $this->logoRenderer->stripeLogo(),
             'title'          => Stripe::getApiVersion()
                                     . ' - PCI Compliant - is enabled. ',
         ];
@@ -994,6 +999,12 @@ final class PaymentInformationController
                 $stripe_pci_view_data);
     }
 
+    /**
+     * Read-only: the invoice is marked paid exclusively by stripeWebhook(),
+     * which is authoritative because it's driven by a Stripe-signed event
+     * rather than this client-supplied redirect. This action only re-reads
+     * current state to decide which message to show — it never writes.
+     */
     public function stripeComplete(
                         Request $request, CurrentRoute $currentRoute): Response
     {
@@ -1006,65 +1017,108 @@ final class PaymentInformationController
         if (null === $invoice) {
             return $this->webService->getNotFoundResponse();
         }
-        $invoiceNumber               = (null !== $invoice->getNumber()) ?:
-                                                                    'unknown';
-        $query_params                = $request->getQueryParams();
-        $redirectStatus =
-                            (string) ($query_params['redirect_status'] ?? '');
-        $result                      =
-                $this->stripePaymentService->handleCompletion(
-                                    $invoice, $redirectStatus);
-        $invoice->setStatusId((int) $result['status_id']);
-        $invoice->setPaymentMethod(4);
-        $this->iR->save($invoice);
-        /** @var int $invoice->reqId() */
-        $invoice_amount_record = $this->iaR->repoInvquery($invoice->reqId());
+        $invoiceNumber   = $invoice->getNumber() ?? 'unknown';
+        $query_params    = $request->getQueryParams();
+        $redirectStatus  = (string) ($query_params['redirect_status'] ?? '');
         /** @var InvAmount $invoice_amount_record */
-        $balance = $invoice_amount_record->getBalance();
-        $view_data = null;
-        if (null !== $balance) {
-// The invoice amount has been paid => balance on the invoice is zero and the
-// paid amount is full
-            $invoice_amount_record->setBalance(0);
-            $invoice_amount_record->setPaid(
-                                $invoice_amount_record->getTotal() ?? 0.00);
-            $this->iaR->save($invoice_amount_record);
-            $this->recordOnlinePaymentsAndMerchant(
-                new PaymentRecordContext(
-                    reference: (string) $invoiceNumber . '-' . $redirectStatus,
-                    invoice_id: (string) $invoice_amount_record->reqInvId(),
-                    balance: $balance ?: 0.00,
-                    invoice_payment_method: (int) $result['payment_method'],
-                    invoice_number: (string) $invoiceNumber,
-                    driver: 'Stripe',
-                    d: 'stripe',
-                    invoice_url_key: $invoiceUrlKey,
-                    response: true,
-                    sandbox_url_array: $sandboxUrlArray,
-                ),
-            );
+        $invoice_amount_record = $this->iaR->repoInvquery($invoice->reqId());
+        $isPaid = 0.00 === $invoice_amount_record->getBalance();
 
-            $view_data = [
-                'render' => $this->webViewRenderer->renderPartialAsString(
-                    '//invoice/paymentinformation/payment_message',
-                    [
-                        'heading'     => PaymentInformationQueryHelper::stripeCompleteHeading(
-                            $this->translator, $result, (string) $invoiceNumber, $redirectStatus),
-                        'message'     =>
-                            $this->translator->translate('payment')
-                                . ':'
-                                . $this->translator->translate('complete'),
-                        'url'         => 'inv/urlKey',
-                        'url_key'     => $invoiceUrlKey,
-                        'gateway' => 'Stripe',
-                        'sandbox_url' => $sandboxUrlArray['stripe'],
-                    ],
-                ),
-            ];
+        $view_data = [
+            'render' => $this->webViewRenderer->renderPartialAsString(
+                '//invoice/paymentinformation/payment_message',
+                [
+                    'heading'     => PaymentInformationQueryHelper::stripeCompleteHeading(
+                        $this->translator, $isPaid, $invoiceNumber, $redirectStatus),
+                    'message'     =>
+                        $this->translator->translate('payment')
+                            . ':'
+                            . $this->translator->translate('complete'),
+                    'url'         => 'inv/urlKey',
+                    'url_key'     => $invoiceUrlKey,
+                    'gateway' => 'Stripe',
+                    'sandbox_url' => $sandboxUrlArray['stripe'],
+                ],
+            ),
+        ];
+        return $this->webViewRenderer->render('payment_completion_page', $view_data);
+    }
+
+    /**
+     * Receives Stripe's signed payment_intent.* events. This is the sole
+     * writer for Stripe payment status — verifies the signature, then marks
+     * the invoice paid/failed. Route is CSRF-exempt and unauthenticated by
+     * design; see routes-payment-information.php and CsrfExemptMiddleware.
+     */
+    public function stripeWebhook(Request $request): Response
+    {
+        $payload   = $request->getBody()->getContents();
+        $sigHeader = $request->getHeaderLine('Stripe-Signature');
+        $event     = $this->stripePaymentService->verifyWebhookSignature($payload, $sigHeader);
+        if (null === $event) {
+            return $this->factory->createResponse(Json::encode(['error' => 'invalid signature']))
+                ->withStatus(400);
         }
-        return null !== $view_data
-            ? $this->webViewRenderer->render('payment_completion_page', $view_data)
-            : $this->webService->getNotFoundResponse();
+
+        if (!in_array($event->type, ['payment_intent.succeeded', 'payment_intent.payment_failed'], true)) {
+            return $this->factory->createResponse(Json::encode(['received' => true]));
+        }
+
+        /** @var \Stripe\PaymentIntent $paymentIntent */
+        $paymentIntent  = $event->data->object;
+        $invoiceUrlKey  = (string) ($paymentIntent->metadata['invoice_url_key'] ?? '');
+        $invoice        = $invoiceUrlKey !== '' ? $this->iR->repoUrlKeyGuestLoaded($invoiceUrlKey) : null;
+        if (null === $invoice) {
+            $this->logger->warning('Stripe webhook: invoice not found for url_key.', ['url_key' => $invoiceUrlKey]);
+            return $this->factory->createResponse(Json::encode(['received' => true]));
+        }
+
+        /** @var InvAmount $invoice_amount_record */
+        $invoice_amount_record = $this->iaR->repoInvquery($invoice->reqId());
+        if (0.00 === $invoice_amount_record->getBalance()) {
+            // Already processed — Stripe may redeliver the same event.
+            return $this->factory->createResponse(Json::encode(['received' => true]));
+        }
+
+        $invoiceNumber   = $invoice->getNumber() ?? 'unknown';
+        $sandboxUrlArray = $this->sR->sandboxUrlArray();
+        $succeeded       = $event->type === 'payment_intent.succeeded';
+        $balance         = $invoice_amount_record->getBalance() ?? 0.00;
+
+        // Write the payment/merchant audit record BEFORE finalising the
+        // invoice's own status/balance. If this throws, the invoice is left
+        // exactly as it was (balance untouched) so the idempotency guard
+        // above won't skip a future retry — the alternative order risks an
+        // invoice showing "paid" with no payment record if this insert fails
+        // after the invoice fields already committed.
+        $this->recordOnlinePaymentsAndMerchant(
+            new PaymentRecordContext(
+                reference: $invoiceNumber . '-' . $event->type,
+                invoice_id: (string) $invoice_amount_record->reqInvId(),
+                balance: $balance,
+                invoice_payment_method: $succeeded ? 4 : 5,
+                invoice_number: $invoiceNumber,
+                driver: 'Stripe',
+                d: 'stripe',
+                invoice_url_key: $invoiceUrlKey,
+                response: $succeeded,
+                sandbox_url_array: $sandboxUrlArray,
+            ),
+        );
+
+        if ($succeeded) {
+            $invoice->setStatusId(4);
+            $invoice->setPaymentMethod(4);
+            $this->iR->save($invoice);
+            $invoice_amount_record->setBalance(0);
+            $invoice_amount_record->setPaid($invoice_amount_record->getTotal() ?? 0.00);
+            $this->iaR->save($invoice_amount_record);
+        } else {
+            $invoice->setStatusId(6);
+            $this->iR->save($invoice);
+        }
+
+        return $this->factory->createResponse(Json::encode(['received' => true]));
     }
 
     /** @psalm-suppress UnusedReturnValue */

@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
+use App\Invoice\Asset\pciAsset\StripeVersionTenAsset;
 use Yiisoft\Html\Html as H;
 
 /**
  * Related logic: see PaymentInformationController function stripeInForm
  * @var App\Infrastructure\Persistence\Client\Client $client_on_invoice
  * @var App\Infrastructure\Persistence\Inv\Inv $invoice
+ * @var Yiisoft\Assets\AssetManager $assetManager
  *
  * Related logic: see config\common\params 'yiisoft/view'
  *  => ['parameters' => ['clientHelper' => Reference::to(ClientHelper::class)]]
@@ -39,8 +41,11 @@ use Yiisoft\Html\Html as H;
  * @var string $partial_client_address
  * @var string $payment_method
  * @var string $pci_client_publishable_key
+ * @var string $stripeLogo
  * @var string $title
  */
+
+$assetManager->register(StripeVersionTenAsset::class);
 
 if ($disable_form === false) {
     echo H::openTag('div', ['class' => 'container py-5 h-100']);
@@ -90,6 +95,9 @@ if ($disable_form === false) {
         echo H::closeTag('div');
         echo H::tag('br');
         echo H::tag('Div', H::tag('H4', $title));
+        echo H::openTag('div', ['class' => 'text-center']);
+         echo $stripeLogo;
+        echo H::closeTag('div');
         echo H::tag('br');
         echo H::openTag('div', ['class' => 'card-body p-5 text-center']);
          echo H::openTag('form', ['method' => 'post',

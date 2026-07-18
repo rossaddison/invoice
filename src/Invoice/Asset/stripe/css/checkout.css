@@ -1,5 +1,5 @@
 /* Variables */
-* {
+#payment-form * {
   box-sizing: border-box;
 }
 
@@ -21,8 +21,10 @@
   margin-bottom: 24px;
 }
 
-/* Buttons and links */
-button {
+/* Buttons and links — scoped to the Stripe form, and excluding #submit,
+   which already gets the app's own Bootstrap .btn-success styling in
+   payment_information_stripe_pci.php; this rule previously fought with it. */
+#payment-form button:not(#submit) {
   background: #5469d4;
   font-family: Arial, sans-serif;
   color: #ffffff;
@@ -37,10 +39,10 @@ button {
   box-shadow: 0px 4px 5.5px 0px rgba(0, 0, 0, 0.07);
   width: 100%;
 }
-button:hover {
+#payment-form button:not(#submit):hover {
   filter: contrast(115%);
 }
-button:disabled {
+#payment-form button:not(#submit):disabled {
   opacity: 0.5;
   cursor: default;
 }
@@ -116,7 +118,7 @@ button:disabled {
 }
 
 @media only screen and (max-width: 600px) {
-  form {
+  #payment-form {
     width: 80vw;
     min-width: initial;
   }

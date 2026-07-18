@@ -27,6 +27,7 @@ use Yiisoft\Html\Html as H;
  * @var bool $is_overdue
  * @var float $balance
  * @var float $total
+ * @var Yiisoft\Yii\View\Renderer\Csrf $csrf
  * @var string $alert
  * @var string $client_token
  * @var string $companyLogo
@@ -93,6 +94,12 @@ if ($disable_form === false) {
           echo H::openTag('input', ['type' => 'submit']);
           echo H::closeTag('input');
           echo H::openTag('input', ['type' => 'hidden', 'id' => 'nonce', 'name' => 'payment_method_nonce']);
+          echo H::closeTag('input');
+          echo H::openTag('input', [
+              'type'  => 'hidden',
+              'name'  => $csrf->getParameterName(),
+              'value' => $csrf->getToken(),
+          ]);
           echo H::closeTag('input');
          echo H::closeTag('form');
          echo $companyLogo;

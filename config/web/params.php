@@ -6,18 +6,22 @@ use Yiisoft\Bootstrap5\Assets\BootstrapAsset;
 use Yiisoft\Bootstrap5\Assets\BootstrapCdnAsset;
 use App\Invoice\Prometheus\PrometheusMiddleware;
 use Yiisoft\Cookies\CookieMiddleware;
-use Yiisoft\Csrf\CsrfTokenMiddleware;
 use Yiisoft\ErrorHandler\Middleware\ErrorCatcher;
 use Yiisoft\RequestProvider\RequestCatcherMiddleware;
 use Yiisoft\Router\Middleware\Router;
 use Yiisoft\Session\SessionMiddleware;
 use Yiisoft\User\Login\Cookie\CookieLoginMiddleware;
 use App\Middleware\ContentSecurityPolicyMiddleware;
+use App\Middleware\CsrfExemptMiddleware;
 use App\Middleware\PageOutOfRangeMiddleware;
 use App\Middleware\SecurityHeadersMiddleware;
 use Yiisoft\Yii\Middleware\Locale;
 
 // yii3-i
+// Amazon Pay serves its SDK, button graphics, and checkout iframe from this
+// wildcard domain — referenced across four separate CSP directives below.
+$amazonPayCsp = ' https://*.payments-amazon.com';
+
 return [
     'locale' => [
         'locales' => [
@@ -69,7 +73,7 @@ return [
         SecurityHeadersMiddleware::class,
         PrometheusMiddleware::class,
         SessionMiddleware::class,
-        CsrfTokenMiddleware::class,
+        CsrfExemptMiddleware::class,
         CookieMiddleware::class,
         CookieLoginMiddleware::class,
         Locale::class,
@@ -88,7 +92,7 @@ return [
                 . " https://cdn.jsdelivr.net"
                 . " https://js.stripe.com"
                 . " https://*.stripe.com"
-                . " https://*.payments-amazon.com"
+                . $amazonPayCsp
                 . " https://assets.braintreegateway.com"
                 . " https://js.braintreegateway.com"
                 . " https://challenges.cloudflare.com",
@@ -104,20 +108,21 @@ return [
                 . " https://*.stripe.com"
                 . " https://assets.braintreegateway.com"
                 . " https://s3.amazonaws.com"
+                . $amazonPayCsp
                 . " https://www.mollie.com",
             "connect-src 'self'"
                 . " https://api.storecove.com"
                 . " https://api.stripe.com"
                 . " https://*.stripe.com"
                 . " https://*.braintreegateway.com"
-                . " https://*.payments-amazon.com"
+                . $amazonPayCsp
                 . " https://challenges.cloudflare.com",
             "frame-src 'self'"
                 . " https://js.stripe.com"
                 . " https://*.stripe.com"
                 . " https://hooks.stripe.com"
                 . " https://assets.braintreegateway.com"
-                . " https://*.payments-amazon.com"
+                . $amazonPayCsp
                 . " https://challenges.cloudflare.com",
             "child-src 'self'"
                 . " https://js.stripe.com"

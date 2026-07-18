@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Invoice\PaymentInformation\Service;
 
 use App\Infrastructure\Persistence\Inv\Inv;
+use App\Invoice\PaymentInformation\PaymentGatewayInterface;
+use App\Invoice\PaymentInformation\PaymentVerificationResult;
 use App\Invoice\Setting\SettingRepository;
 use Braintree\Gateway;
 use Braintree\CustomerGateway;
@@ -16,7 +18,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Service for handling Braintree payment operations
  */
-class BraintreePaymentService
+class BraintreePaymentService implements PaymentGatewayInterface
 {
     public function __construct(
         private readonly SettingRepository $settings,
@@ -223,14 +225,45 @@ class BraintreePaymentService
         return (string) $this->settings->decode($privateKey ?: '');
     }
 
+    #[\Override]
+    public function getDriverKey(): string
+    {
+        return 'braintree';
+    }
+
     /**
      * Checks if Braintree is properly configured
      */
+    #[\Override]
     public function isConfigured(): bool
     {
         return !empty($this->getMerchantId())
                && !empty($this->getPublicKey())
                && !empty($this->getPrivateKey());
+    }
+
+    /**
+     * Authoritatively confirms a transaction's settlement status by asking
+     * Braintree directly.
+     */
+    #[\Override]
+    public function verifyPayment(string $providerReference): PaymentVerificationResult
+    {
+        $gateway = $this->createGateway();
+        $transaction = $gateway->transaction()->find($providerReference);
+        /** @psalm-var object{status?: string} $transaction */
+        $status = $transaction->status ?? '';
+        $settled = in_array($status, [
+            Transaction::SETTLED,
+            Transaction::SETTLING,
+            Transaction::SUBMITTED_FOR_SETTLEMENT,
+        ], true);
+
+        return new PaymentVerificationResult(
+            paid: $settled,
+            providerReference: $providerReference,
+            message: $status,
+        );
     }
 
     /**
