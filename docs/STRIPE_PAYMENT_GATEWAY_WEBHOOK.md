@@ -25,7 +25,19 @@ page; and Stripe had no brand/logo treatment unlike Braintree and Mollie.
 - `PaymentInformationController::stripeWebhook()` handles
   `payment_intent.succeeded` / `payment_intent.payment_failed`, is idempotent
   (checks `InvAmount::getBalance() === 0.0` before reprocessing), and is the
-  **sole writer** of Stripe payment status.
+  **sole writer** of Stripe payment status. The controller action itself is a
+  one-line delegator to `Service\StripeWebhookHandler::handle()` — the actual
+  signature verification, event resolution, and invoice/payment writes live
+  there instead, decomposed into small guard-clause methods
+  (`resolveContext()`, `applyEvent()`). This split was needed to keep
+  `PaymentInformationController` under SonarQube's per-class method limit
+  (php:S1448, 20 methods) and to let the guard-clause chain stay under the
+  per-method return-count limit (php:S1142, 3 returns) without cramming
+  everything into one long method. Both were caught by SonarCloud CI *after*
+  the initial merge, not by local Psalm — Psalm has no equivalent
+  complexity/structure metrics, so this class of finding only surfaces once
+  CI's SonarCloud scan runs; worth checking for after any commit that adds
+  methods to an already-large class, not just relying on `psalm --no-cache`.
 - `stripeComplete()` (the browser-redirect landing page) is now **read-only**
   — it re-reads current invoice state and uses `redirect_status` only to pick
   wording, never to write anything.
@@ -35,6 +47,21 @@ page; and Stripe had no brand/logo treatment unlike Braintree and Mollie.
   untouched), so the idempotency guard won't later skip a genuine retry. The
   reverse order was tried first, found live, and reverted — see the live
   testing doc below.
+
+### Shared payment-recording, also extracted
+
+The payment/merchant audit-record write (previously
+`PaymentInformationController::recordOnlinePaymentsAndMerchant()`, private,
+~100 lines) is used by Braintree's and Mollie's completion flows too, not
+just Stripe's. It's now `Service\OnlinePaymentRecorderService::record()`, a
+standalone class with `PaymentService`/`MerchantService`/`Flash` injected
+directly rather than borrowed from the controller's own constructor — this
+alone dropped the controller from 21 methods to 20, clearing php:S1448
+without needing to touch anything gateway-specific. Braintree's
+`renderBraintreePostResponse()` and Mollie's `mollieComplete()` were updated
+to call `$this->paymentRecorder->record(...)` in place of the old private
+method call; both were re-verified live after the change (see the live
+testing doc).
 
 ### CSRF exemption for the webhook
 

@@ -12,8 +12,6 @@ use App\Invoice\Company\CompanyRepository as compR;
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\InvAmount\InvAmount;
 use App\Infrastructure\Persistence\InvItem\InvItem;
-use App\Infrastructure\Persistence\Merchant\Merchant;
-use App\Infrastructure\Persistence\Payment\Payment;
 // Libraries
 use App\Invoice\Helpers\DateHelper;
 // Psr
@@ -22,14 +20,14 @@ use App\Invoice\InvAmount\InvAmountRepository as iaR;
 // Repositories
 use App\Invoice\InvItem\InvItemRepository as iiR;
 use App\Invoice\Libraries\Crypt;
-use App\Invoice\Merchant\MerchantService;
-use App\Invoice\Payment\PaymentService;
 use App\Invoice\PaymentInformation\PaymentInformationLogoRenderer;
 use App\Invoice\PaymentInformation\PaymentInformationQueryHelper;
 use App\Invoice\PaymentInformation\Service\AmazonPayPaymentService;
 use App\Invoice\PaymentInformation\Service\BraintreePaymentService;
+use App\Invoice\PaymentInformation\Service\OnlinePaymentRecorderService;
 use App\Invoice\PaymentInformation\Service\OpenBankingPaymentService;
 use App\Invoice\PaymentInformation\Service\StripePaymentService;
+use App\Invoice\PaymentInformation\Service\StripeWebhookHandler;
 use App\Invoice\PaymentMethod\PaymentMethodRepository as pmR;
 // Services
 use App\Invoice\Setting\SettingRepository as sR;
@@ -68,13 +66,13 @@ final class PaymentInformationController
     public function __construct(
         private DataResponseFactoryInterface $factory,
         private Flash $flash,
-        private MerchantService $merchantService,
         private AmazonPayPaymentService $amazonPayPaymentService,
         private BraintreePaymentService $braintreePaymentService,
         private StripePaymentService $stripePaymentService,
+        private StripeWebhookHandler $stripeWebhookHandler,
+        private OnlinePaymentRecorderService $paymentRecorder,
         private OpenBankingPaymentService $openBankingPaymentService,
         private OpenBanking $openBankingOauthClient,
-        private PaymentService $paymentService,
         private Session $session,
         private iaR $iaR,
         private iR $iR,
@@ -90,13 +88,13 @@ final class PaymentInformationController
     ) {
         $this->factory                   = $factory;
         $this->flash                     = $flash;
-        $this->merchantService           = $merchantService;
         $this->amazonPayPaymentService   = $amazonPayPaymentService;
         $this->braintreePaymentService   = $braintreePaymentService;
         $this->stripePaymentService      = $stripePaymentService;
+        $this->stripeWebhookHandler      = $stripeWebhookHandler;
+        $this->paymentRecorder           = $paymentRecorder;
         $this->openBankingPaymentService = $openBankingPaymentService;
         $this->openBankingOauthClient    = $openBankingOauthClient;
-        $this->paymentService            = $paymentService;
         $this->session                   = $session;
         $this->iaR                       = $iaR;
         $this->iR                        = $iR;
@@ -633,7 +631,7 @@ final class PaymentInformationController
                 $invoice_amount_record->setBalance(0.00);
                 $invoice_amount_record->setPaid($invoice_amount_record->getTotal() ?? 0.00);
                 $this->iaR->save($invoice_amount_record);
-                $this->recordOnlinePaymentsAndMerchant(
+                $this->paymentRecorder->record(
                     new PaymentRecordContext(
                         reference: $ctx->invoice->getNumber() ??
                             $this->translator->translate('number.no'),
@@ -895,7 +893,7 @@ final class PaymentInformationController
                 $invoice_amount_record->setBalance(0);
                 $invoice_amount_record->setPaid($invoice_amount_record->getTotal() ?? 0.00);
                 $this->iaR->save($invoice_amount_record);
-                $this->recordOnlinePaymentsAndMerchant(
+                $this->paymentRecorder->record(
                     new PaymentRecordContext(
                         reference: $invoiceNumber . '-' . $lastPayment->status,
                         invoice_id: (string) $invoice_amount_record->reqInvId(),
@@ -1045,181 +1043,17 @@ final class PaymentInformationController
     }
 
     /**
-     * Receives Stripe's signed payment_intent.* events. This is the sole
-     * writer for Stripe payment status — verifies the signature, then marks
-     * the invoice paid/failed. Route is CSRF-exempt and unauthenticated by
-     * design; see routes-payment-information.php and CsrfExemptMiddleware.
+     * Receives Stripe's signed payment_intent.* events. Delegates to
+     * StripeWebhookHandler — extracted out of this controller to keep it
+     * under SonarQube's per-class method count (php:S1448) and to let the
+     * webhook's guard-clause chain stay under the per-method return count
+     * (php:S1142) without collapsing everything into one long method. Route
+     * is CSRF-exempt and unauthenticated by design; see
+     * routes-payment-information.php and CsrfExemptMiddleware.
      */
     public function stripeWebhook(Request $request): Response
     {
-        $payload   = $request->getBody()->getContents();
-        $sigHeader = $request->getHeaderLine('Stripe-Signature');
-        $event     = $this->stripePaymentService->verifyWebhookSignature($payload, $sigHeader);
-        if (null === $event) {
-            return $this->factory->createResponse(Json::encode(['error' => 'invalid signature']))
-                ->withStatus(400);
-        }
-
-        if (!in_array($event->type, ['payment_intent.succeeded', 'payment_intent.payment_failed'], true)) {
-            return $this->factory->createResponse(Json::encode(['received' => true]));
-        }
-
-        /** @var \Stripe\PaymentIntent $paymentIntent */
-        $paymentIntent  = $event->data->object;
-        $invoiceUrlKey  = (string) ($paymentIntent->metadata['invoice_url_key'] ?? '');
-        $invoice        = $invoiceUrlKey !== '' ? $this->iR->repoUrlKeyGuestLoaded($invoiceUrlKey) : null;
-        if (null === $invoice) {
-            $this->logger->warning('Stripe webhook: invoice not found for url_key.', ['url_key' => $invoiceUrlKey]);
-            return $this->factory->createResponse(Json::encode(['received' => true]));
-        }
-
-        /** @var InvAmount $invoice_amount_record */
-        $invoice_amount_record = $this->iaR->repoInvquery($invoice->reqId());
-        if (0.00 === $invoice_amount_record->getBalance()) {
-            // Already processed — Stripe may redeliver the same event.
-            return $this->factory->createResponse(Json::encode(['received' => true]));
-        }
-
-        $invoiceNumber   = $invoice->getNumber() ?? 'unknown';
-        $sandboxUrlArray = $this->sR->sandboxUrlArray();
-        $succeeded       = $event->type === 'payment_intent.succeeded';
-        $balance         = $invoice_amount_record->getBalance() ?? 0.00;
-
-        // Write the payment/merchant audit record BEFORE finalising the
-        // invoice's own status/balance. If this throws, the invoice is left
-        // exactly as it was (balance untouched) so the idempotency guard
-        // above won't skip a future retry — the alternative order risks an
-        // invoice showing "paid" with no payment record if this insert fails
-        // after the invoice fields already committed.
-        $this->recordOnlinePaymentsAndMerchant(
-            new PaymentRecordContext(
-                reference: $invoiceNumber . '-' . $event->type,
-                invoice_id: (string) $invoice_amount_record->reqInvId(),
-                balance: $balance,
-                invoice_payment_method: $succeeded ? 4 : 5,
-                invoice_number: $invoiceNumber,
-                driver: 'Stripe',
-                d: 'stripe',
-                invoice_url_key: $invoiceUrlKey,
-                response: $succeeded,
-                sandbox_url_array: $sandboxUrlArray,
-            ),
-        );
-
-        if ($succeeded) {
-            $invoice->setStatusId(4);
-            $invoice->setPaymentMethod(4);
-            $this->iR->save($invoice);
-            $invoice_amount_record->setBalance(0);
-            $invoice_amount_record->setPaid($invoice_amount_record->getTotal() ?? 0.00);
-            $this->iaR->save($invoice_amount_record);
-        } else {
-            $invoice->setStatusId(6);
-            $this->iR->save($invoice);
-        }
-
-        return $this->factory->createResponse(Json::encode(['received' => true]));
-    }
-
-    /** @psalm-suppress UnusedReturnValue */
-    private function recordOnlinePaymentsAndMerchant(
-        PaymentRecordContext $ctx,
-    ): \Psr\Http\Message\ResponseInterface {
-        if ($ctx->response) {
-            $payment_note = $this->translator->translate('transaction.reference')
-                    . ': ' . $ctx->reference . "\n";
-            $payment_note .= $this->translator->translate('payment.provider')
-                    . ': ' . ucwords(str_replace('_', ' ', $ctx->d));
-
-            // Set invoice to paid
-            $payment_array = [
-                'inv_id'            => $ctx->invoice_id,
-                'payment_date'      =>
-                    \DateTime::createFromImmutable(new \DateTimeImmutable('now')),
-                'amount'            => $ctx->balance,
-                'payment_method_id' => $ctx->invoice_payment_method,
-                'note'              => $payment_note,
-            ];
-
-            $payment = new Payment();
-            $this->paymentService->addPaymentViaPaymentHandler(
-                                                    $payment, $payment_array);
-
-            $payment_success_msg = sprintf($this->translator->translate(
-                        'online.payment.payment.successful'), $ctx->invoice_number);
-
-            // Save gateway response
-            $successful_merchant_response_array = [
-                'inv_id'                       => $ctx->invoice_id,
-                'merchant_response_successful' => true,
-                'merchant_response_date'       =>
-                    \DateTime::createFromImmutable(new \DateTimeImmutable('now')),
-                'merchant_response_driver'     => $ctx->driver,
-                'merchant_response'            => $payment_success_msg,
-                'merchant_response_reference'  => $ctx->reference,
-            ];
-
-            $merchant_response = new Merchant();
-            $this->merchantService
-                ->saveMerchantViaPaymentHandler(
-                        $merchant_response, $successful_merchant_response_array);
-
-            // Redirect user and display the success message
-            $this->flashMessage('success', $payment_success_msg);
-
-            return $this->factory->createResponse(
-                $this->webViewRenderer->renderPartialAsString(
-                    '//invoice/setting/payment_message',
-                    [
-                        'heading'     => '',
-                        'message'     => $payment_success_msg,
-                        'url'         => 'inv/urlKey',
-                        'url_key'     => $ctx->invoice_url_key,
-                        'gateway'     => $ctx->driver,
-                        'sandbox_url' => $ctx->sandbox_url_array[$ctx->d],
-                    ],
-                ),
-            );
-        }
-        // Payment failed
-        // Save the response in the database
-        $payment_failure_msg = sprintf(
-            $this->translator->translate(
-                'online.payment.payment.failed'), $ctx->invoice_number);
-
-        $unsuccessful_merchant_response_array = [
-            'inv_id'                       => $ctx->invoice_id,
-            'merchant_response_successful' => false,
-            'merchant_response_date'       =>
-                \DateTime::createFromImmutable(new \DateTimeImmutable('now')),
-            'merchant_response_driver'     => $ctx->driver,
-            'merchant_response'            => $payment_failure_msg,
-            'merchant_response_reference'  => $ctx->reference,
-        ];
-
-        $merchant_response = new Merchant();
-        $this->merchantService
-            ->saveMerchantViaPaymentHandler(
-                $merchant_response,
-                $unsuccessful_merchant_response_array,
-            );
-
-        // Redirect user and display the success message
-        $this->flashMessage('warning', $payment_failure_msg);
-
-        return $this->factory->createResponse(
-            $this->webViewRenderer->renderPartialAsString(
-                '//invoice/setting/payment_message',
-                [
-                    'heading'     => '',
-                    'message'     => $payment_failure_msg,
-                    'url'         => 'inv/urlKey',
-                    'url_key'     => $ctx->invoice_url_key,
-                    'gateway'     => $ctx->driver,
-                    'sandbox_url' => $ctx->sandbox_url_array[$ctx->d],
-                ],
-            ),
-        );
+        return $this->stripeWebhookHandler->handle($request);
     }
 
     private function updateInvoicePaymentMethod(string $urlKey): void {
