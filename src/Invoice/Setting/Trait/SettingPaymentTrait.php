@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Setting\Trait;
 
+use App\Invoice\AppConstants;
 use Yiisoft\Translator\TranslatorInterface;
 
 trait SettingPaymentTrait
@@ -14,6 +15,28 @@ trait SettingPaymentTrait
         return [
             // Below are listed online dashboard tested PCI COMPLIANT
             //  i.e. credit card details not stored on server, Payment Gateways
+            'Adyen' => [
+                'apiKey' => [
+                    'type' => 'password',
+                    'label' => AppConstants::LABEL_API_KEY,
+                ],
+                'clientKey' => [
+                    'type' => 'password',
+                    'label' => 'Client Key',
+                ],
+                'merchantAccount' => [
+                    'type' => 'text',
+                    'label' => 'Merchant Account',
+                ],
+                'webhookHmacKey' => [
+                    'type' => 'password',
+                    'label' => 'Webhook Hmac Key',
+                ],
+                'sandbox' => [
+                    'type' => 'checkbox',
+                    'label' => 'Sandbox',
+                ],
+            ],
             'Amazon_Pay' => [
                 'publicKeyId' => [
                     'type' => 'password',
@@ -48,7 +71,7 @@ trait SettingPaymentTrait
             'Braintree' => [
                 'privateKey' => [
                     'type' => 'password',
-                    'label' => 'Api Key',
+                    'label' => AppConstants::LABEL_API_KEY,
                 ],
                 'publicKey' => [
                     'type' => 'password',
@@ -101,13 +124,13 @@ trait SettingPaymentTrait
             'StoreCove' => [
                 'apiKey' => [
                     'type' => 'password',
-                    'label' => 'Api Key',
+                    'label' => AppConstants::LABEL_API_KEY,
                 ],
             ],
             'Stripe' => [
                 'apiKey' => [
                     'type' => 'password',
-                    'label' => 'Api Key',
+                    'label' => AppConstants::LABEL_API_KEY,
                 ],
                 // Related logic: see src/Invoice/Language/English/gateway_lang
                 // Not server-side ie. client-side
@@ -160,6 +183,7 @@ trait SettingPaymentTrait
             . 'external-payments/sandbox/home',
             'braintree' => 'https://sandbox.braintreegateway.com/login',
             'mollie' => 'https://my.mollie.com/dashboard/',
+            'adyen' => 'https://ca-test.adyen.com',
         ];
     }
 

@@ -12,4 +12,6 @@ final class AppConstants
     public const string ROLE_ADMIN       = 'admin';
     public const string ROLE_OBSERVER    = 'observer';
     public const string ROLE_ACCOUNTANT  = 'accountant';
+
+    public const string LABEL_API_KEY    = 'Api Key';
 }

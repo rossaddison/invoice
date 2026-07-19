@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Auth\Permissions;
+use App\Invoice\PaymentInformation\AdyenPaymentController as APICLR;
 use App\Invoice\PaymentInformation\PaymentInformationController as PICLR;
 use App\Middleware\RoutePermission;
 use Yiisoft\Http\Method;
@@ -10,6 +11,18 @@ use Yiisoft\Router\Route;
 
 return [
     RoutePermission::invoiceGroup(
+
+            Route::methods([Method::GET, Method::POST],
+                    '/paymentinformation/adyenInForm/{url_key}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([APICLR::class, 'adyenInForm'])
+                ->name('paymentinformation/adyenInForm'),
+
+            Route::methods([Method::GET, Method::POST],
+                    '/paymentinformation/adyenComplete/{url_key}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([APICLR::class, 'adyenComplete'])
+                ->name('paymentinformation/adyenComplete'),
 
             Route::methods([Method::GET, Method::POST],
                     '/paymentinformation/amazonComplete/{url_key}')
@@ -81,4 +94,13 @@ return [
     Route::methods([Method::POST], '/paymentinformation/stripeWebhook')
         ->action([PICLR::class, 'stripeWebhook'])
         ->name('paymentinformation/stripeWebhook'),
+
+    // Not under RoutePermission::invoiceGroup(): Adyen's servers must be able
+    // to POST here with no app session. Secured by HMAC signature
+    // verification in the controller, not RBAC — see
+    // AdyenPaymentService::verifyWebhookNotification() and
+    // App\Middleware\CsrfExemptMiddleware.
+    Route::methods([Method::POST], '/paymentinformation/adyenWebhook')
+        ->action([APICLR::class, 'adyenWebhook'])
+        ->name('paymentinformation/adyenWebhook'),
 ];

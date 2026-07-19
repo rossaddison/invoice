@@ -15,7 +15,7 @@ final class SettingForm extends FormModel
     #[Length(min: 0, max: 100)]
     private ?string $setting_key = null;
     #[Required]
-    #[Length(min: 0, max: 191)]
+    #[Length(min: 0, max: 65535)]
     private ?string $setting_value = null;
 
     public static function show(Setting $setting): self

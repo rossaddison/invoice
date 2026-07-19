@@ -18,9 +18,20 @@ use App\Middleware\SecurityHeadersMiddleware;
 use Yiisoft\Yii\Middleware\Locale;
 
 // yii3-i
-// Amazon Pay serves its SDK, button graphics, and checkout iframe from this
-// wildcard domain — referenced across four separate CSP directives below.
-$amazonPayCsp = ' https://*.payments-amazon.com';
+// Amazon Pay serves its SDK, button graphics, and checkout iframe from
+// *.payments-amazon.com, but the promotional-messaging/checkout-session API
+// (fetched client-side by the SDK, e.g. promotionalMicrotextMessage) lives
+// on region-specific payments-{eu,na,fe}.amazon.com subdomains instead. CSP
+// host-source wildcards can only replace a whole label (*.amazon.com), not
+// a partial one (payments-*.amazon.com is invalid and silently ignored by
+// browsers), so *.amazon.com is used here despite being broader than
+// strictly needed — referenced across four separate CSP directives below.
+$amazonPayCsp = ' https://*.payments-amazon.com https://*.amazon.com';
+// Adyen's Web SDK, Drop-in styling, and 3DS/redirect payment method iframes
+// come from checkoutshopper-{test,live[-region]}.adyen.com; the live
+// endpoint is region-specific (some regions use a *.cdn.adyen.com variant),
+// so both wildcard forms are included rather than one fixed subdomain.
+$adyenCsp = ' https://*.adyen.com https://*.cdn.adyen.com';
 
 return [
     'locale' => [
@@ -93,13 +104,15 @@ return [
                 . " https://js.stripe.com"
                 . " https://*.stripe.com"
                 . $amazonPayCsp
+                . $adyenCsp
                 . " https://assets.braintreegateway.com"
                 . " https://js.braintreegateway.com"
                 . " https://challenges.cloudflare.com",
             "style-src 'self' 'unsafe-inline'"
                 . " https://fonts.googleapis.com"
                 . " https://cdn.jsdelivr.net"
-                . " https://assets.braintreegateway.com",
+                . " https://assets.braintreegateway.com"
+                . $adyenCsp,
             "font-src 'self'"
                 . " https://fonts.gstatic.com"
                 . " https://cdn.jsdelivr.net",
@@ -109,13 +122,20 @@ return [
                 . " https://assets.braintreegateway.com"
                 . " https://s3.amazonaws.com"
                 . $amazonPayCsp
+                . " https://*.media-amazon.com"
+                . $adyenCsp
                 . " https://www.mollie.com",
             "connect-src 'self'"
                 . " https://api.storecove.com"
                 . " https://api.stripe.com"
                 . " https://*.stripe.com"
                 . " https://*.braintreegateway.com"
+                // Drop-in v3's client-side tokenization GraphQL API lives on
+                // a separate domain from the gateway itself — e.g.
+                // payments.braintree-api.com / payments.sandbox.braintree-api.com
+                . " https://*.braintree-api.com"
                 . $amazonPayCsp
+                . $adyenCsp
                 . " https://challenges.cloudflare.com",
             "frame-src 'self'"
                 . " https://js.stripe.com"
@@ -123,6 +143,7 @@ return [
                 . " https://hooks.stripe.com"
                 . " https://assets.braintreegateway.com"
                 . $amazonPayCsp
+                . $adyenCsp
                 . " https://challenges.cloudflare.com",
             "child-src 'self'"
                 . " https://js.stripe.com"

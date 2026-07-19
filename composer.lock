@@ -4,8 +4,58 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d486708fdeb03baa446579f9bbb7672e",
+    "content-hash": "f8a8ce302ed70f8128ea39339376e07b",
     "packages": [
+        {
+            "name": "adyen/php-api-library",
+            "version": "v30.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Adyen/adyen-php-api-library.git",
+                "reference": "6df5e4fb65e7fe5f352c2abb3cecc434016a4f1c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Adyen/adyen-php-api-library/zipball/6df5e4fb65e7fe5f352c2abb3cecc434016a4f1c",
+                "reference": "6df5e4fb65e7fe5f352c2abb3cecc434016a4f1c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-ctype": "*",
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "ext-openssl": "*",
+                "php": ">=7.3"
+            },
+            "require-dev": {
+                "dms/phpunit-arraysubset-asserts": "0.5.0",
+                "friendsofphp/php-cs-fixer": "*",
+                "php-coveralls/php-coveralls": "2.7.0",
+                "phpunit/phpunit": "9.6.33",
+                "squizlabs/php_codesniffer": "3.10.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Adyen\\": "src/Adyen/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A PHP client library for accessing Adyen APIs",
+            "homepage": "https://github.com/Adyen/adyen-php-api-library",
+            "keywords": [
+                "adyen"
+            ],
+            "support": {
+                "issues": "https://github.com/Adyen/adyen-php-api-library/issues",
+                "source": "https://github.com/Adyen/adyen-php-api-library/tree/v30.0.1"
+            },
+            "time": "2026-06-29T11:42:11+00:00"
+        },
         {
             "name": "alexkart/curl-builder",
             "version": "1.1.0",

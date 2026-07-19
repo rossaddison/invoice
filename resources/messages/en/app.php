@@ -1453,6 +1453,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'online.payment.card.invalid' => 'This credit card is'
     . ' invalid. Please check the provided information.',
   'online.payment.clientId' => 'Client Id',
+  'online.payment.clientKey' => 'Client Key',
   'online.payment.clientSecret' => 'Client Secret',
   'online.payment.creditcard.hint' => 'If you want to pay'
     . ' via credit card please enter'
@@ -1466,6 +1467,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'online.payment.for.invoice' => 'Online Payment for Invoice',
   'online.payment.installationId' => 'Installation Id',
   'online.payment.merchantAccessCode' => 'Merchant Access Code',
+  'online.payment.merchantAccount' => 'Merchant Account',
   'online.payment.merchantId' => 'Merchant Id',
   'online.payment.merchantKey' => 'Merchant Key',
   'online.payment.method' => 'Online Payment Method',
@@ -1518,6 +1520,7 @@ prior to importing and no existing documents e.g. Invoices.',
     'Omnipay Version (checked) / '
     . 'PCI Compliant (No credit card details'
     . ' stored on this database) (unchecked)',
+  'online.payment.webhookHmacKey' => 'Webhook Hmac Key',
   'online.payment.webhookId' => 'Webhook Id',
   'online.payment.webhookSecret' => 'Webhook Secret',
   'online.payment.websiteKey' => 'Website Key',

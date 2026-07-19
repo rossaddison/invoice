@@ -232,16 +232,6 @@ echo H::openTag('div', [
  echo H::closeTag('div'); //1
 echo H::closeTag('div'); //0
 
-// Initialise ClipboardJS once the modal HTML is in the DOM.
-// Guard prevents double-init if the partial is ever included more than once.
-echo H::script(
-    "if(!window.bacsClipInit){" .
-    "window.bacsClipInit=true;" .
-    "var bacsClip=new ClipboardJS('.bacs-copy-btn');" .
-    "bacsClip.on('success',function(e){" .
-    " var b=e.trigger,o=b.innerHTML;" .
-    " b.innerHTML='<i class=\"bi bi-clipboard-check fs-6 text-success\"></i>';" .
-    " setTimeout(function(){b.innerHTML=o;},1500);" .
-    " e.clearSelection();" .
-    "});}"
-);
+// ClipboardJS init for '.bacs-copy-btn' happens in the TS bundle
+// (initBacsQuickPay in src/typescript/bacs-quickpay.ts) — CSP script-src
+// has no 'unsafe-inline', so no inline <script> here.

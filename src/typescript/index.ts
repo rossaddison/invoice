@@ -16,6 +16,8 @@ import './family-commalist-picker.js';
 import { initStripePayment } from './payment-stripe.js';
 import { initAmazonPayment } from './payment-amazon.js';
 import { initBraintreePayment } from './payment-braintree.js';
+import { initAdyenPayment } from './payment-adyen.js';
+import { initBacsQuickPay } from './bacs-quickpay.js';
 import { initTelegramProviderPopup } from './telegram-providers.js';
 import { initStreetOrder } from './family-street-order.js';
 import { initStepPopovers } from './google-translate-popover.js';
@@ -155,6 +157,8 @@ if (document.readyState === 'loading') {
         initStripePayment();
         initAmazonPayment();
         initBraintreePayment();
+        initAdyenPayment();
+        initBacsQuickPay();
         initTelegramProviderPopup();
         initStreetOrder();
         initStepPopovers();
@@ -164,6 +168,8 @@ if (document.readyState === 'loading') {
     initStripePayment();
     initAmazonPayment();
     initBraintreePayment();
+    initAdyenPayment();
+    initBacsQuickPay();
     initTelegramProviderPopup();
     initStreetOrder();
     initStepPopovers();

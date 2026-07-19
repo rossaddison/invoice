@@ -81,4 +81,11 @@ final class PaymentInformationLogoRenderer
             '//invoice/paymentinformation/logo/stripeLogo',
         );
     }
+
+    public function adyenLogo(): string
+    {
+        return $this->webViewRenderer->renderPartialAsString(
+            '//invoice/paymentinformation/logo/adyenLogo',
+        );
+    }
 }
