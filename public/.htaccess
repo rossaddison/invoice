@@ -11,7 +11,7 @@ RewriteEngine on
     # Browsers ignore this over plain HTTP, so it's safe to send ahead of
     # the HTTPS redirect below being enabled.
     Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
-    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(self \"https://js.stripe.com\"), usb=(), magnetometer=(), gyroscope=(), accelerometer=()"
 
     # Content Security Policy for PWA
     Header always set Content-Security-Policy "\

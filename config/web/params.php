@@ -175,9 +175,17 @@ return [
             // Deny browser features this app's own code never calls
             // (QR codes are scanned by the visitor's separate camera app,
             // not getUserMedia in-page). Anything not listed keeps the
-            // browser default.
+            // browser default. payment= is the exception: Stripe's pay.js
+            // calls the Payment Request API (Apple Pay/Google Pay/Link)
+            // from this document's own origin, so a blanket payment=()
+            // silently breaks it — allowlisting 'self' plus Stripe's own
+            // origin (its Payment Request iframe/pay.js) matches Stripe's
+            // documented Permissions-Policy recommendation. Unlike CSP,
+            // Permissions-Policy allowlists don't support *.example.com
+            // wildcards, only exact quoted origins or 'self'/*.
             'Permissions-Policy' => 'camera=(), microphone=(), geolocation=(),'
-                . ' payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()',
+                . ' payment=(self "https://js.stripe.com"),'
+                . ' usb=(), magnetometer=(), gyroscope=(), accelerometer=()',
         ],
     ],
     // Overrides yiisoft/session's package default (cookie_secure => 0), but
