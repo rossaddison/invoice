@@ -119,21 +119,29 @@ final class AdyenPaymentService implements PaymentGatewayInterface
             return null;
         }
 
-        /** @var array{notificationItems?: array<int, array{NotificationRequestItem?: array}>} $decoded */
-        $decoded = (array) Json::decode($rawBody);
-        $item = $decoded['notificationItems'][0]['NotificationRequestItem'] ?? null;
+        $item = $this->extractNotificationItem($rawBody);
         if (!is_array($item)) {
             return null;
         }
 
+        return $this->isValidNotificationHmac($hmacKey, $item) ? $item : null;
+    }
+
+    private function extractNotificationItem(string $rawBody): mixed
+    {
+        /** @var array{notificationItems?: array<int, array{NotificationRequestItem?: array}>} $decoded */
+        $decoded = (array) Json::decode($rawBody);
+        return $decoded['notificationItems'][0]['NotificationRequestItem'] ?? null;
+    }
+
+    private function isValidNotificationHmac(string $hmacKey, array $item): bool
+    {
         try {
-            $valid = new HmacSignature()->isValidNotificationHMAC($hmacKey, $item);
+            return new HmacSignature()->isValidNotificationHMAC($hmacKey, $item);
         } catch (AdyenException $e) {
             $this->logger->warning('Adyen webhook: HMAC validation failed.', ['error' => $e->getMessage()]);
-            return null;
+            return false;
         }
-
-        return $valid ? $item : null;
     }
 
     private function buildClient(): Client

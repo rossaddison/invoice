@@ -495,7 +495,10 @@ final class PaymentInformationController
                     // browser redirect can't carry $ctx across requests
                     // anyway, so there's no reuse benefit to handling it
                     // inline here first.
-                    'Adyen'      => $this->debugAdyenRedirect($ctx),
+                    'Adyen'      => $this->webService->getRedirectResponse(
+                        'paymentinformation/adyenInForm',
+                        ['url_key' => $ctx->url_key, '_language' => 'en'],
+                    ),
                     default      => null,
                 };
                 if ($gatewayResponse !== null) {
@@ -508,33 +511,6 @@ final class PaymentInformationController
         }
 
         return $this->webService->getNotFoundResponse();
-    }
-
-    /**
-     * TEMPORARY diagnostic — logs exactly what generating the Adyen redirect
-     * URL does (success or exception) so we can see the real failure instead
-     * of guessing. Remove once the Adyen redirect is confirmed working.
-     */
-    private function debugAdyenRedirect(PaymentInformationGatewayContext $ctx): Response
-    {
-        try {
-            $url = $this->urlGenerator->generate(
-                'paymentinformation/adyenInForm',
-                ['url_key' => $ctx->url_key, '_language' => 'en'],
-            );
-            $this->logger->error('DEBUG adyenInForm redirect URL generated', ['url' => $url]);
-            return $this->webService->getRedirectResponse(
-                'paymentinformation/adyenInForm',
-                ['url_key' => $ctx->url_key, '_language' => 'en'],
-            );
-        } catch (\Throwable $e) {
-            $this->logger->error('DEBUG adyenInForm redirect FAILED', [
-                'exception' => $e::class,
-                'message'   => $e->getMessage(),
-                'trace'     => $e->getTraceAsString(),
-            ]);
-            throw $e;
-        }
     }
 
     public function amazonInForm(PaymentInformationGatewayContext $ctx): Response

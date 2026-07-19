@@ -63,7 +63,7 @@ export function initAdyenPayment(): void {
         onError: (error) => {
             const messageContainer = document.querySelector<HTMLElement>('#dropin-container');
             if (messageContainer) {
-                messageContainer.setAttribute('data-adyen-error', error.message ?? 'Unknown error');
+                messageContainer.dataset.adyenError = error.message ?? 'Unknown error';
             }
         },
     }).then((checkout) => {
