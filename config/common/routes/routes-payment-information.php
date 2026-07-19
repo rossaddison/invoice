@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Auth\Permissions;
 use App\Invoice\PaymentInformation\AdyenPaymentController as APICLR;
 use App\Invoice\PaymentInformation\PaymentInformationController as PICLR;
+use App\Invoice\PaymentInformation\PaymentRefundController as PRCLR;
 use App\Middleware\RoutePermission;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\Route;
@@ -82,6 +83,12 @@ return [
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([PICLR::class, 'inform'])
                 ->name('paymentinformation/inform'),
+
+            Route::methods([Method::GET, Method::POST],
+                    '/paymentinformation/refund/{payment_id}/{gateway}')
+                ->middleware(RoutePermission::check(Permissions::EDIT_PAYMENT))
+                ->action([PRCLR::class, 'refund'])
+                ->name('paymentinformation/refund'),
         ), // invoice
 
     // Not under RoutePermission::invoiceGroup(): Stripe's servers must be able

@@ -126,6 +126,7 @@ final class AdyenWebhookHandler
                 invoice_url_key: $context->invoiceUrlKey,
                 response: $context->succeeded,
                 sandbox_url_array: $this->sR->sandboxUrlArray(),
+                provider_reference: $context->pspReference,
             ),
         );
 

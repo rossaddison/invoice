@@ -36,7 +36,9 @@ class Merchant
         #[Column(type: 'string(151)', nullable: false)]
         private string $response = '',
         #[Column(type: 'string(151)', nullable: false)]
-        private string $reference = '')
+        private string $reference = '',
+        #[Column(type: 'string(151)', nullable: true)]
+        private ?string $provider_reference = null)
     {
     }
 
@@ -119,5 +121,15 @@ class Merchant
     public function setReference(string $reference): void
     {
         $this->reference = $reference;
+    }
+
+    public function getProviderReference(): ?string
+    {
+        return $this->provider_reference;
+    }
+
+    public function setProviderReference(?string $provider_reference): void
+    {
+        $this->provider_reference = $provider_reference;
     }
 }

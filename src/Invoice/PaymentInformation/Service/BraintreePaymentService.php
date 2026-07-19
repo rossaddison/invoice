@@ -6,6 +6,7 @@ namespace App\Invoice\PaymentInformation\Service;
 
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\PaymentInformation\PaymentGatewayInterface;
+use App\Invoice\PaymentInformation\PaymentRefundResult;
 use App\Invoice\PaymentInformation\PaymentVerificationResult;
 use App\Invoice\Setting\SettingRepository;
 use Braintree\Gateway;
@@ -240,6 +241,42 @@ class BraintreePaymentService implements PaymentGatewayInterface
         return !empty($this->getMerchantId())
                && !empty($this->getPublicKey())
                && !empty($this->getPrivateKey());
+    }
+
+    #[\Override]
+    public function refund(string $providerReference, float $amount): PaymentRefundResult
+    {
+        try {
+            $gateway = $this->createGateway();
+            $result = $gateway->transaction()->refund(
+                $providerReference,
+                number_format($amount, 2, '.', ''),
+            );
+
+            if ($result instanceof Successful && isset($result->transaction)) {
+                /** @psalm-var object{id?: string|int, status?: string} $result->transaction */
+                $transaction = $result->transaction;
+                return new PaymentRefundResult(
+                    refunded: true,
+                    providerReference: isset($transaction->id) ? (string) $transaction->id : $providerReference,
+                    message: isset($transaction->status) ? $transaction->status : '',
+                );
+            }
+
+            /** @var string|null $result->message */
+            $message = $result->message ?? 'Braintree refund failed';
+            $this->logger->warning('Braintree refund failed', [
+                'transaction_id' => $providerReference,
+                'message' => $message,
+            ]);
+            return new PaymentRefundResult(refunded: false, providerReference: $providerReference, message: $message);
+        } catch (\Throwable $e) {
+            $this->logger->error('Exception occurred during Braintree refund', [
+                'transaction_id' => $providerReference,
+                'error' => $e->getMessage(),
+            ]);
+            return new PaymentRefundResult(refunded: false, providerReference: $providerReference, message: $e->getMessage());
+        }
     }
 
     /**

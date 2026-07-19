@@ -13,6 +13,9 @@ use Stripe\Exception\SignatureVerificationException;
 use Stripe\Exception\UnexpectedValueException;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
+use Stripe\Refund;
+use Stripe\Exception\ApiErrorException;
+use App\Invoice\PaymentInformation\PaymentRefundResult;
 
 class StripePaymentService implements PaymentGatewayInterface
 {
@@ -95,6 +98,33 @@ class StripePaymentService implements PaymentGatewayInterface
             providerReference: $providerReference,
             message: $paymentIntent->status,
         );
+    }
+
+    #[\Override]
+    public function refund(string $providerReference, float $amount): PaymentRefundResult
+    {
+        try {
+            $refund = Refund::create([
+                'payment_intent' => $providerReference,
+                'amount' => (int) round($amount * 100),
+            ]);
+
+            return new PaymentRefundResult(
+                refunded: $refund->status === 'succeeded' || $refund->status === 'pending',
+                providerReference: $refund->id,
+                message: (string) $refund->status,
+            );
+        } catch (ApiErrorException $e) {
+            $this->logger->error('Stripe refund failed.', [
+                'payment_intent' => $providerReference,
+                'error' => $e->getMessage(),
+            ]);
+            return new PaymentRefundResult(
+                refunded: false,
+                providerReference: $providerReference,
+                message: $e->getMessage(),
+            );
+        }
     }
 
     /**

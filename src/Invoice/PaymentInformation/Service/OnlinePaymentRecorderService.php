@@ -76,6 +76,7 @@ final class OnlinePaymentRecorderService
             'merchant_response_driver'     => $ctx->driver,
             'merchant_response'            => $payment_success_msg,
             'merchant_response_reference'  => $ctx->reference,
+            'merchant_response_provider_reference' => $ctx->provider_reference,
         ];
 
         $merchant_response = new Merchant();

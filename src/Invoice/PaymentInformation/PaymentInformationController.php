@@ -655,6 +655,8 @@ final class PaymentInformationController
                         invoice_url_key: $ctx->url_key,
                         response: true,
                         sandbox_url_array: $sandbox_url_array,
+                        provider_reference: is_string($transactionResult['transaction_id'])
+                            ? $transactionResult['transaction_id'] : null,
                     ),
                 );
             }
@@ -915,6 +917,7 @@ final class PaymentInformationController
                         invoice_url_key: $metadataInvoiceUrlKey,
                         response: true,
                         sandbox_url_array: $sandbox_url_array,
+                        provider_reference: $paymentId,
                     ),
                 );
             }

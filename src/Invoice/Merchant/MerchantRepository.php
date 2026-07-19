@@ -120,6 +120,21 @@ final class MerchantRepository extends Select\Repository
         return   $this->prepareDataReader($query);
     }
 
+    /**
+     * The most recent successful online-payment audit record for this
+     * invoice and gateway driver, used to look up the provider transaction
+     * reference a refund must be issued against.
+     */
+    public function repoMerchantLatestSuccessfulByInvIdAndDriver(int $invId, string $driver): ?Merchant
+    {
+        $query = $this->select()
+                      ->where(['inv_id' => $invId])
+                      ->andWhere(['driver' => $driver])
+                      ->andWhere(['successful' => true])
+                      ->orderBy('id', 'DESC');
+        return $query->fetchOne() ?: null;
+    }
+
     public function repoMerchantInvNumberWithPaymentProvider(string $invNumber, string $invPaymentProvider): EntityReader
     {
         $query = $this->select()

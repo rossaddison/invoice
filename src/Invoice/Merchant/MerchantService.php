@@ -86,6 +86,9 @@ final readonly class MerchantService
          */
         $model->setReference(
             $array['merchant_response_reference']);
+        /** @var string|null $array['merchant_response_provider_reference'] */
+        $model->setProviderReference(
+            $array['merchant_response_provider_reference'] ?? null);
         $this->repository->save($model);
     }
 

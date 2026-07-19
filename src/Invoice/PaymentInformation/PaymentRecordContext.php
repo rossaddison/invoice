@@ -17,6 +17,7 @@ final class PaymentRecordContext
         public readonly string $invoice_url_key,
         public readonly bool $response,
         public readonly array $sandbox_url_array,
+        public readonly ?string $provider_reference = null,
     ) {
     }
 }

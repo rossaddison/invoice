@@ -99,6 +99,8 @@ final class StripeWebhookHandler
         $invoiceNumber        = $invoice->getNumber() ?? 'unknown';
         $succeeded            = $event->type === 'payment_intent.succeeded';
         $balance              = $invoiceAmountRecord->getBalance() ?? 0.00;
+        /** @var \Stripe\PaymentIntent $paymentIntent */
+        $paymentIntent        = $event->data->object;
 
         // Write the payment/merchant audit record BEFORE finalising the
         // invoice's own status/balance. If this throws, the invoice is left
@@ -118,6 +120,7 @@ final class StripeWebhookHandler
                 invoice_url_key: $context->invoiceUrlKey,
                 response: $succeeded,
                 sandbox_url_array: $this->sR->sandboxUrlArray(),
+                provider_reference: $paymentIntent->id,
             ),
         );
 

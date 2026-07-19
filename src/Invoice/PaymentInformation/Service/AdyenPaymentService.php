@@ -10,9 +10,12 @@ use Adyen\Environment;
 use Adyen\Model\Checkout\Amount;
 use Adyen\Model\Checkout\CreateCheckoutSessionRequest;
 use Adyen\Model\Checkout\CreateCheckoutSessionResponse;
+use Adyen\Model\Checkout\PaymentRefundRequest;
+use Adyen\Service\Checkout\ModificationsApi;
 use Adyen\Service\Checkout\PaymentsApi;
 use Adyen\Util\HmacSignature;
 use App\Invoice\PaymentInformation\PaymentGatewayInterface;
+use App\Invoice\PaymentInformation\PaymentRefundResult;
 use App\Invoice\PaymentInformation\PaymentVerificationResult;
 use App\Invoice\Setting\SettingRepository;
 use Psr\Log\LoggerInterface;
@@ -102,6 +105,40 @@ final class AdyenPaymentService implements PaymentGatewayInterface
             providerReference: $providerReference,
             message: (string) $result->getStatus(),
         );
+    }
+
+    #[\Override]
+    public function refund(string $providerReference, float $amount): PaymentRefundResult
+    {
+        $refundAmount = new Amount();
+        $refundAmount->setCurrency(strtoupper($this->settings->getSetting('currency_code') ?: 'GBP'));
+        $refundAmount->setValue((int) round($amount * 100));
+
+        $request = new PaymentRefundRequest();
+        $request->setAmount($refundAmount);
+        $request->setMerchantAccount($this->merchantAccount());
+        $request->setReference($providerReference);
+
+        try {
+            $modificationsApi = new ModificationsApi($this->buildClient());
+            $response = $modificationsApi->refundCapturedPayment($providerReference, $request);
+
+            return new PaymentRefundResult(
+                refunded: in_array($response->getStatus(), ['received', 'success'], true),
+                providerReference: $response->getPspReference(),
+                message: $response->getStatus(),
+            );
+        } catch (AdyenException $e) {
+            $this->logger->error('Adyen refund failed.', [
+                'pspReference' => $providerReference,
+                'error' => $e->getMessage(),
+            ]);
+            return new PaymentRefundResult(
+                refunded: false,
+                providerReference: $providerReference,
+                message: $e->getMessage(),
+            );
+        }
     }
 
     /**

@@ -9,6 +9,7 @@ use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\Inv\InvRepository;
 use App\Invoice\InvAmount\InvAmountRepository;
 use App\Invoice\PaymentInformation\PaymentGatewayInterface;
+use App\Invoice\PaymentInformation\PaymentRefundResult;
 use App\Invoice\PaymentInformation\PaymentVerificationResult;
 use App\Invoice\Setting\SettingRepository as sR;
 use Yiisoft\Json\Json;
@@ -76,6 +77,50 @@ class AmazonPayPaymentService implements PaymentGatewayInterface
             paid: $paymentState === 'Completed',
             providerReference: $providerReference,
             message: $paymentState,
+        );
+    }
+
+    /**
+     * $providerReference must be an Amazon Pay chargeId (not a
+     * checkoutSessionId). Refunds are asynchronous on Amazon's side —
+     * refunded: true here means the refund was accepted (RefundInitiated),
+     * not necessarily settled yet.
+     */
+    #[\Override]
+    public function refund(string $providerReference, float $amount): PaymentRefundResult
+    {
+        // Unlike checkoutSessionId/getButtonData's raw `sandbox: bool` config,
+        // the *stored* publicKeyId already carries Amazon's own "SANDBOX-"/
+        // "LIVE-" prefix (that's how Amazon issues these ids) — do not
+        // prepend one here, or the request is rejected as InvalidHeaderValue.
+        $client = new Client([
+            'public_key_id' => (string) $this->sR->decode($this->sR->getSetting('gateway_amazon_pay_publicKeyId')),
+            'private_key' => $this->getAmazonPrivateKeyFile(),
+            'region' => $this->getAmazonRegion(),
+            'algorithm' => 'AMZN-PAY-RSASSA-PSS-V2',
+        ]);
+        $currencyCode = $this->sR->getSetting('currency_code') ?: 'GBP';
+        $payload = [
+            'chargeId' => $providerReference,
+            'refundReferenceId' => 'REFUND-' . Random::string(16),
+            'refundTotal' => [
+                'currencyCode' => $currencyCode,
+                'amount' => number_format($amount, 2, '.', ''),
+            ],
+        ];
+        $apiResponse = (array) $client->createRefund($payload, [
+            'x-amz-pay-idempotency-key' => Random::string(16),
+        ]);
+        $responseData = (array) ($apiResponse['response'] ?? []);
+        $statusDetails = (array) ($responseData['statusDetails'] ?? []);
+        $state = (string) ($statusDetails['state'] ?? '');
+        $refundId = (string) ($responseData['refundId'] ?? '');
+        $errorMessage = (string) ($responseData['message'] ?? '');
+
+        return new PaymentRefundResult(
+            refunded: $refundId !== '' && $state !== 'Declined',
+            providerReference: $refundId !== '' ? $refundId : $providerReference,
+            message: $state !== '' ? $state : $errorMessage,
         );
     }
 

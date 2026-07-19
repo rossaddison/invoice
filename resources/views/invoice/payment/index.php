@@ -46,11 +46,44 @@ $toolbarReset =  new A()
     ->id('btn-reset')
     ->render();
 
+// Build enabled payment gateways list once for use in the refund column
+$enabledGateways = $s->paymentGatewaysEnabledDriverList();
+
 $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
         content: static fn (Payment $model): int => $model->reqId(),
+    ),
+    new DataColumn(
+        header: $translator->translate('refund'),
+        visible: $canEdit && !empty($enabledGateways),
+        content: static function (Payment $model) use ($urlGenerator, $enabledGateways, $translator): string {
+            $dropdownId = 'refund-drop-' . Html::encode((string) $model->reqId());
+            $items = '';
+            foreach ($enabledGateways as $gateway) {
+                $displayName = str_replace('_', ' ', (string) $gateway);
+                $url = $urlGenerator->generate('paymentinformation/refund', [
+                    'payment_id' => $model->reqId(),
+                    'gateway' => $gateway,
+                ]);
+                $confirmText = sprintf(
+                    $translator->translate('refund.confirm'), $displayName);
+                $items .= '<li><a class="dropdown-item" href="'
+                    . Html::encode($url) . '" onclick="return confirm(\''
+                    . Html::encode($confirmText)
+                    . '\');">' . Html::encode($displayName) . '</a></li>';
+            }
+            return '<div class="dropdown d-inline-block">'
+                . '<button class="btn btn-sm btn-outline-danger dropdown-toggle"'
+                . ' type="button" id="' . $dropdownId . '"'
+                . ' data-bs-toggle="dropdown" aria-expanded="false">'
+                . '↩️ ' . Html::encode($translator->translate('refund'))
+                . '</button>'
+                . '<ul class="dropdown-menu" aria-labelledby="'
+                . $dropdownId . '">' . $items . '</ul></div>';
+        },
+        encodeContent: false,
     ),
     new DataColumn(
         property: 'paymentDateFilter',

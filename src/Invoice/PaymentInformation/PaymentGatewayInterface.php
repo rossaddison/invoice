@@ -28,4 +28,13 @@ interface PaymentGatewayInterface
      * trusting client-supplied input alone.
      */
     public function verifyPayment(string $providerReference): PaymentVerificationResult;
+
+    /**
+     * Issues a full refund of $amount against a previously completed
+     * payment, identified by the same provider reference verifyPayment()
+     * takes (PaymentIntent id, pspReference, transaction id, etc.). Never
+     * throws on a provider-side failure — that's reported via
+     * PaymentRefundResult::$refunded/$message so the caller can flash it.
+     */
+    public function refund(string $providerReference, float $amount): PaymentRefundResult;
 }

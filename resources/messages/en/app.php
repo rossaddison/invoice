@@ -2199,6 +2199,16 @@ prior to importing and no existing documents e.g. Invoices.',
     'Only invoices with a status of sent can be made recurring',
   'recurring.tooltip.next' =>
     'The next date is set by means of the index.',
+  'refund' => 'Refund',
+  'refund.confirm' =>
+    'Are you sure you wish to refund this payment via %s?',
+  'refund.failed' =>
+    'Refund via %s failed. Check the payment gateway logs for details.',
+  'refund.no.provider.reference' =>
+    'No %s payment reference was recorded against this payment, so it'
+    . ' cannot be refunded automatically.',
+  'refund.recorded' => 'Refunded via %s. Provider reference: %s',
+  'refund.successful' => 'Refund via %s was successful.',
   'region' => 'Region',
   'reject' => 'Reject',
   'reject.this.quote' => 'Reject This Quote',
