@@ -22,10 +22,24 @@ use Yiisoft\View\WebView;
  * before going live; deliberately not SRI-pinned here since a stale/wrong
  * integrity hash would silently break script loading entirely, which is
  * worse than no integrity check while this is still sandbox-only.
+ *
+ * v6 (bumped from v5.40.0): v5 hit a hard client-side error — "The
+ * following properties should not be passed to the client: askDonation" —
+ * because Adyen's /sessions response now always includes the Giving/
+ * Donation-related `askDonation` field, and v5's Drop-in rejects any
+ * session field it doesn't recognise. v6.36.0+ added real support for that
+ * field. This also required corresponding changes in payment-adyen.ts (the
+ * CDN global renamed AdyenCheckout -> AdyenWeb, Drop-in creation moved from
+ * checkout.create('dropin') to `new AdyenWeb.Dropin(checkout, ...)`, and
+ * countryCode became a mandatory AdyenCheckout() config field) — see that
+ * file and AdyenPaymentController::adyenInForm() for the countryCode
+ * plumbing. Confirmed against the real UMD bundle (not just docs): v6's
+ * window.AdyenWeb object is `{Core, AdyenCheckout, createComponent, Dropin,
+ * ...componentClasses}` — there is no longer a bare window.AdyenCheckout.
  */
 class AdyenAsset extends Asset
 {
-    private const string SDK_VERSION = '5.40.0';
+    private const string SDK_VERSION = '6.41.0';
 
     /** @psalm-suppress NonInvariantDocblockPropertyType */
     public array $css = [

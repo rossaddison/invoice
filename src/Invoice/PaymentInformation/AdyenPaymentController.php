@@ -11,6 +11,7 @@ use App\Infrastructure\Persistence\InvAmount\InvAmount;
 use App\Infrastructure\Persistence\InvItem\InvItem;
 use App\Infrastructure\Persistence\PaymentMethod\PaymentMethod;
 use App\Invoice\Client\ClientRepository as cR;
+use App\Invoice\Helpers\CountryHelper;
 use App\Invoice\Inv\InvRepository as iR;
 use App\Invoice\InvAmount\InvAmountRepository as iaR;
 use App\Invoice\InvItem\InvItemRepository as iiR;
@@ -123,8 +124,28 @@ final class AdyenPaymentController
             'adyenSessionId'      => $sessionCtx['session']->getId(),
             'adyenSessionData'    => $sessionCtx['session']->getSessionData(),
             'adyenEnvironment'    => $this->adyenPaymentService->isSandbox() ? 'test' : 'live',
+            'adyenCountryCode'    => $this->resolveCountryCode($client?->getClientCountry()),
             'title'               => 'Adyen - PCI Compliant - is enabled. ',
         ]);
+    }
+
+    /**
+     * Adyen Web v6 made countryCode a mandatory AdyenCheckout() config
+     * field. The client's country is stored as a free-text country name
+     * (see ClientForm/Client::getClientCountry()), not an ISO code, so it's
+     * resolved via the same league/iso3166 lookup CountryHelper already
+     * uses elsewhere (PeppolHelper's delivery-location code). Falls back to
+     * 'GB' — matching this codebase's other GBP-default fallbacks (e.g.
+     * AdyenPaymentService::refund()'s currency default) — when the stored
+     * name doesn't resolve, rather than sending Adyen an empty/invalid value.
+     */
+    private function resolveCountryCode(?string $clientCountryName): string
+    {
+        if ($clientCountryName === null || $clientCountryName === '') {
+            return 'GB';
+        }
+        $code = new CountryHelper()->getCountryIdentificationCodeWithLeague($clientCountryName);
+        return $code !== '' ? $code : 'GB';
     }
 
     /**

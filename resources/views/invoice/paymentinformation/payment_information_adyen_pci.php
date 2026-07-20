@@ -34,6 +34,7 @@ use Yiisoft\Html\Html as H;
  * @var float $balance
  * @var float $total
  * @var string $adyenClientKey
+ * @var string $adyenCountryCode
  * @var string $adyenEnvironment
  * @var string $adyenLogo
  * @var string $adyenSessionData
@@ -183,5 +184,6 @@ echo H::tag('div', '', [
     'data-session-id'       => $adyenSessionId,
     'data-session-data'     => $adyenSessionData,
     'data-environment'      => $adyenEnvironment,
+    'data-country-code'     => $adyenCountryCode,
     'class'                 => 'd-none',
 ]);

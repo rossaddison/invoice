@@ -48,7 +48,7 @@ use Yiisoft\Html\Tag\A;
         body {
             display: table-cell;
             margin: 2em auto;
-            vertical-align: middle;
+            vertical-align: top;
         }
 
         h1 {

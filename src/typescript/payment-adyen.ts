@@ -15,7 +15,11 @@
  */
 
 // ---------------------------------------------------------------------------
-// Ambient declarations for the Adyen Web SDK (v5, AdyenCheckout is async)
+// Ambient declarations for the Adyen Web SDK (v6). Confirmed against the
+// real CDN UMD bundle: the global is window.AdyenWeb (v5 was
+// window.AdyenCheckout directly), and Drop-in creation is now
+// `new AdyenWeb.Dropin(checkout, config)` rather than
+// `checkout.create('dropin')`.
 // ---------------------------------------------------------------------------
 declare global {
     interface AdyenCheckoutSession {
@@ -28,18 +32,28 @@ declare global {
     interface AdyenDropinComponent {
         mount(selector: string): AdyenDropinComponent;
     }
-    interface AdyenCheckoutInstance {
-        create(type: 'dropin'): AdyenDropinComponent;
-    }
     interface AdyenCheckoutConfig {
         environment: string;
         clientKey: string;
+        countryCode: string;
         session: AdyenCheckoutSession;
         onPaymentCompleted?: (result: AdyenCheckoutResult, component: unknown) => void;
+        onPaymentFailed?: (result: AdyenCheckoutResult, component: unknown) => void;
         onError?: (error: { name?: string; message?: string }, component: unknown) => void;
     }
-    // The global AdyenCheckout() factory injected by the CDN bundle
-    const AdyenCheckout: (config: AdyenCheckoutConfig) => Promise<AdyenCheckoutInstance>;
+    interface AdyenCheckoutInstance {
+        // Present for interface conformance; component creation goes
+        // through the Dropin constructor in v6, not this method.
+    }
+    interface AdyenWebNamespace {
+        AdyenCheckout(config: AdyenCheckoutConfig): Promise<AdyenCheckoutInstance>;
+        Dropin: new (
+            checkout: AdyenCheckoutInstance,
+            config?: Record<string, unknown>,
+        ) => AdyenDropinComponent;
+    }
+    // eslint-disable-next-line no-var
+    var AdyenWeb: AdyenWebNamespace;
 }
 
 // ---------------------------------------------------------------------------
@@ -53,12 +67,14 @@ export function initAdyenPayment(): void {
     const sessionId   = configEl.dataset.sessionId   ?? '';
     const sessionData = configEl.dataset.sessionData ?? '';
     const environment = configEl.dataset.environment ?? 'test';
+    const countryCode = configEl.dataset.countryCode ?? '';
 
-    if (!clientKey || !sessionId || !sessionData) return;
+    if (!clientKey || !sessionId || !sessionData || !countryCode) return;
 
-    void AdyenCheckout({
+    void globalThis.AdyenWeb.AdyenCheckout({
         environment,
         clientKey,
+        countryCode,
         session: { id: sessionId, sessionData },
         onError: (error) => {
             const messageContainer = document.querySelector<HTMLElement>('#dropin-container');
@@ -67,6 +83,6 @@ export function initAdyenPayment(): void {
             }
         },
     }).then((checkout) => {
-        checkout.create('dropin').mount('#dropin-container');
+        new globalThis.AdyenWeb.Dropin(checkout).mount('#dropin-container');
     });
 }
