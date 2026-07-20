@@ -70,13 +70,14 @@ final readonly class ClientFormFields
         return Field::email($form, 'client_email')
             ->label($this->translator->translate('email'))
             ->addInputAttributes([
-                'placeholder'  => $this->translator->translate('email'),
+                'placeholder'  => $this->translator->translate('email.placeholder'),
                 'value'        => $form->client_email ?? '',
                 'class'        => 'form-control form-control-lg',
                 'id'           => 'client_email',
                 'autocomplete' => 'email',
             ])
-            ->required(false)
+            ->required(true)
+            ->hint($this->translator->translate('hint.this.field.is.required'))
             ->render();
     }
 
@@ -94,17 +95,24 @@ final readonly class ClientFormFields
             default => null,
         };
 
-        return Field::telephone($form, $fieldName)
+        $placeholderKey = $fieldName === 'client_mobile' ? 'mobile.placeholder' : $labelKey;
+
+        $field = Field::telephone($form, $fieldName)
             ->label($this->translator->translate($labelKey))
             ->addInputAttributes([
-                'placeholder' => $this->translator->translate($labelKey),
+                'placeholder' => $this->translator->translate($placeholderKey),
                 'value' => $value ?? '',
                 'class' => 'form-control form-control-lg',
                 'id' => $fieldName,
                 ...$extraAttributes,
             ])
-            ->required(false)
-            ->render();
+            ->required(false);
+
+        if ($fieldName === 'client_mobile') {
+            $field = $field->hint($this->translator->translate('mobile.hint'));
+        }
+
+        return $field->render();
     }
 
     /**

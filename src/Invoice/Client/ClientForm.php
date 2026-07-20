@@ -64,8 +64,7 @@ final class ClientForm extends FormModel
     public ?string $client_surname = '';
     public ?string $client_birthdate = null;
 
-    #[Required]
-    #[Integer(min: 16, max: 100)]
+    #[Integer(min: 16, max: 100, skipOnEmpty: true)]
     public ?int $client_age = null;
 
     public ?int $client_gender = null;
