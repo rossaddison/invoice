@@ -32,7 +32,6 @@ use App\Invoice\PaymentMethod\PaymentMethodRepository as pmR;
 // Services
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\PaymentInformation\Trait\TinkPaymentTrait;
-use App\Invoice\Setting\Trait\OpenBankingProviders;
 use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use App\User\UserService;
@@ -52,13 +51,13 @@ use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Translator\TranslatorInterface as Translator;
-use App\Auth\Client\OpenBanking;
+use RossAddison\OpenBankingClient\OpenBanking;
+use RossAddison\OpenBankingClient\OpenBankingProviderRegistryInterface;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class PaymentInformationController
 {
     use FlashMessage;
-    use OpenBankingProviders;
     use TinkPaymentTrait;
 
     private string $telegramToken;
@@ -73,6 +72,7 @@ final class PaymentInformationController
         private OnlinePaymentRecorderService $paymentRecorder,
         private OpenBankingPaymentService $openBankingPaymentService,
         private OpenBanking $openBankingOauthClient,
+        private OpenBankingProviderRegistryInterface $openBankingProviderRegistry,
         private Session $session,
         private iaR $iaR,
         private iR $iR,
@@ -95,6 +95,7 @@ final class PaymentInformationController
         $this->paymentRecorder           = $paymentRecorder;
         $this->openBankingPaymentService = $openBankingPaymentService;
         $this->openBankingOauthClient    = $openBankingOauthClient;
+        $this->openBankingProviderRegistry = $openBankingProviderRegistry;
         $this->session                   = $session;
         $this->iaR                       = $iaR;
         $this->iR                        = $iR;
@@ -152,7 +153,7 @@ final class PaymentInformationController
     ): Response {
         $provider = PaymentInformationQueryHelper::extractProviderLower($ctx->client_chosen_gateway);
         $providerConfig = (null !== $provider) ?
-                           $this->getOpenBankingProviderConfig($provider) : null;
+                           $this->openBankingProviderRegistry->getProviderConfig($provider) : null;
         // Determine if provider is 'wonderful' by examining if the apiToken
         //  is filled
         $isWonderful = ($ctx->client_chosen_gateway == 'Open_Banking_With_Wonderful')
@@ -310,7 +311,7 @@ final class PaymentInformationController
         $codeVerifier   = (string) $this->session->get('code_verifier');
         $provider       = $this->sR->getSetting('open_banking_provider');
         $providerConfig = $provider ?
-                $this->getOpenBankingProviderConfig($provider) : null;
+                $this->openBankingProviderRegistry->getProviderConfig($provider) : null;
 
         if (null !== $providerConfig
                 && (strlen($code) > 0)

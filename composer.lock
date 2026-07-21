@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8fc91ce12145e2baa386212ca3ed32e5",
+    "content-hash": "1fda022ba4327dc857bc830c68592175",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -8373,6 +8373,70 @@
                 "source": "https://github.com/robrichards/xmlseclibs/tree/3.1.5"
             },
             "time": "2026-03-13T10:31:56+00:00"
+        },
+        {
+            "name": "rossaddison/openbanking-client",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:rossaddison/openbanking-client.git",
+                "reference": "f167fb5036a5994adbb4cd2b4e37f95730e52b52"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rossaddison/openbanking-client/zipball/f167fb5036a5994adbb4cd2b4e37f95730e52b52",
+                "reference": "f167fb5036a5994adbb4cd2b4e37f95730e52b52",
+                "shasum": ""
+            },
+            "require": {
+                "ext-openssl": "*",
+                "php": "8.3 - 8.5",
+                "psr/http-client": ">=1.0.3",
+                "psr/http-factory": "^1.1",
+                "psr/http-message": "^2.0",
+                "rossaddison/yii-auth-client": "dev-invoice"
+            },
+            "require-dev": {
+                "httpsoft/http-message": "^1.1.6",
+                "phpunit/phpunit": ">=13.1.4",
+                "sebastian/comparator": ">=8.2.1",
+                "sebastian/diff": "^8.3",
+                "vimeo/psalm": ">=6.16.1",
+                "yiisoft/router-fastroute": "^4.0.3"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "RossAddison\\OpenBankingClient\\": "src"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "RossAddison\\OpenBankingClient\\Tests\\": "tests"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "phpunit --testdox --no-interaction"
+                ]
+            },
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Provider-agnostic Open Banking OAuth2/PKCE client and third-party-provider registry for Yii3, built on yiisoft/yii-auth-client",
+            "homepage": "https://github.com/rossaddison/openbanking-client",
+            "keywords": [
+                "oauth",
+                "open-banking",
+                "psd2",
+                "yii"
+            ],
+            "support": {
+                "source": "https://github.com/rossaddison/openbanking-client",
+                "issues": "https://github.com/rossaddison/openbanking-client/issues"
+            },
+            "time": "2026-07-21T16:54:59+00:00"
         },
         {
             "name": "rossaddison/requirements",
@@ -27180,6 +27244,7 @@
     "stability-flags": {
         "cebe/markdown": 20,
         "roave/security-advisories": 20,
+        "rossaddison/openbanking-client": 20,
         "rossaddison/requirements": 20,
         "rossaddison/translator-extractor": 20,
         "rossaddison/yii-auth-client": 20,

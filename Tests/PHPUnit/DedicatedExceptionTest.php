@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use App\Auth\Client\GovUkException;
-use App\Auth\Client\OpenBankingClientException;
 use App\Command\InstallCommandException;
 use App\Command\Invoice\ItemsCommandException;
 use App\Invoice\CompanyPrivate\CompanyPrivateException;
@@ -46,17 +45,6 @@ class DedicatedExceptionTest extends TestCase
     {
         $previous = new \RuntimeException('previous');
         $e = new GovUkException('test message', 42, $previous);
-
-        $this->assertInstanceOf(\RuntimeException::class, $e);
-        $this->assertSame('test message', $e->getMessage());
-        $this->assertSame(42, $e->getCode());
-        $this->assertSame($previous, $e->getPrevious());
-    }
-
-    public function testOpenBankingClientExceptionIsRuntimeException(): void
-    {
-        $previous = new \RuntimeException('previous');
-        $e = new OpenBankingClientException('test message', 42, $previous);
 
         $this->assertInstanceOf(\RuntimeException::class, $e);
         $this->assertSame('test message', $e->getMessage());

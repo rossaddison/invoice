@@ -5,7 +5,9 @@ declare(strict_types=1);
 // Clients specific to the UK and EU
 use App\Auth\Client\DeveloperSandboxHmrc;
 use App\Auth\Client\GovUk;
-use App\Auth\Client\OpenBanking;
+use RossAddison\OpenBankingClient\OpenBanking;
+use RossAddison\OpenBankingClient\OpenBankingProviderRegistry;
+use RossAddison\OpenBankingClient\OpenBankingProviderRegistryInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -144,6 +146,7 @@ return [
         $setReturnUrl => [$microsoftonlineClient['returnUrl']],
         $setTenant => [$microsoftonlineClient['tenant']],
     ],
+    OpenBankingProviderRegistryInterface::class => OpenBankingProviderRegistry::class,
     OpenBanking::class => [
         $construct => $constructArray,
         $setClientId => [$openbankingClient['clientId']],

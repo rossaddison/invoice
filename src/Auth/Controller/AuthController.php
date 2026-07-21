@@ -9,11 +9,12 @@ use chillerlan\QRCode\QROptions;
 use App\Auth\{AuthService, CallbackDeps, Form\LoginForm,
     Form\TwoFactorAuthenticationSetupForm,
     Form\TwoFactorAuthenticationVerifyLoginForm, Trait\Callback, Trait\ClassList,
-    Trait\Oauth2, Trait\TurnstileVerification, Client\OpenBanking, Permissions, TokenRepository};
+    Trait\Oauth2, Trait\TurnstileVerification, Permissions, TokenRepository};
 use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\Setting\SettingRepository;
 use App\Auth\Trait\TwoFactorAuth;
-use App\Invoice\Setting\Trait\OpenBankingProviders;
+use RossAddison\OpenBankingClient\OpenBanking;
+use RossAddison\OpenBankingClient\OpenBankingProviderRegistryInterface;
 use App\Invoice\AppConstants;
 use App\Invoice\UserInv\UserInvRepository;
 use App\Invoice\UserInv\UserRbacLinkRepository;
@@ -53,8 +54,6 @@ final class AuthController
     //initialize .env file at root with oauth2.0 settings
     use Oauth2;
 
-    use OpenBankingProviders;
-
     public const string
             DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN = 'developersandboxhmrc-access';
     public const string FACEBOOK_ACCESS_TOKEN = 'facebook-access';
@@ -82,6 +81,7 @@ final class AuthController
         private readonly Manager $manager,
         private readonly SessionInterface $session,
         private readonly SettingRepository $sR,
+        private readonly OpenBankingProviderRegistryInterface $openBankingProviderRegistry,
         private readonly UrlGenerator $urlGenerator,
         private readonly LoggerInterface $logger,
         private readonly TranslatorInterface $translator,
@@ -470,7 +470,7 @@ final class AuthController
         if (strlen($openBankChoice) === 0) {
             return '';
         }
-        $providerConfig = $this->getOpenBankingProviderConfig($openBankChoice);
+        $providerConfig = $this->openBankingProviderRegistry->getProviderConfig($openBankChoice);
         if ($providerConfig === null) {
             return '';
         }

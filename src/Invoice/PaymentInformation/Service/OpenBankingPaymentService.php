@@ -8,20 +8,19 @@ use App\Infrastructure\Persistence\Company\Company;
 use App\Infrastructure\Persistence\CompanyPrivate\CompanyPrivate;
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\Setting\SettingRepository as sR;
-use App\Invoice\Setting\Trait\OpenBankingProviders;
 use GuzzleHttp\Client as GuzzleClient;
 use Psr\Http\Message\ServerRequestInterface;
+use RossAddison\OpenBankingClient\OpenBanking;
+use RossAddison\OpenBankingClient\OpenBankingProviderRegistryInterface;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Security\Random;
 use Yiisoft\Session\SessionInterface;
-use App\Auth\Client\OpenBanking;
 
 final class OpenBankingPaymentService
 {
-    use OpenBankingProviders;
-
     public function __construct(
         private readonly OpenBanking $openBanking,
+        private readonly OpenBankingProviderRegistryInterface $openBankingProviderRegistry,
         private readonly SessionInterface $session,
         private readonly sR $sR,
         private readonly UrlGenerator $urlGenerator,
@@ -98,7 +97,7 @@ final class OpenBankingPaymentService
 
     public function initiateTinkPayment(float $amount, Inv $invoice, Company $company, string $currency, string $recipientName, int $clientId, int $clientSecret): array
     {
-        $providerConfig = $this->getOpenBankingProviderConfig('tink');
+        $providerConfig = $this->openBankingProviderRegistry->getProviderConfig('tink');
         if (null === $providerConfig) {
             return ['success' => false, 'data' => []];
         }
@@ -167,7 +166,7 @@ final class OpenBankingPaymentService
      * @param Inv $invoice
      * @param array $items_array
      * @return array
-     * Related logic: see src/Invoice/Setting/Trait/OpenBankingProviders.php
+     * Related logic: see rossaddison/openbanking-client's OpenBankingProviderRegistry
      */
     public function paymentStatusAndDetails(string $urlKey, float $amount, Inv $invoice, array $items_array): array
     {
@@ -182,7 +181,7 @@ final class OpenBankingPaymentService
         }
         $customer_email_address = $invoice->getClient()?->getClientEmail();
         $apiKey               = $this->sR->getSetting('gateway_open_banking_with_wonderful_apiToken');
-        $providerConfig       = $this->getOpenBankingProviderConfig('wonderful');
+        $providerConfig       = $this->openBankingProviderRegistry->getProviderConfig('wonderful');
         $result = ['success' => false, 'data' => []];
         if (null !== $providerConfig) {
             try {

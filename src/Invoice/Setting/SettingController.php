@@ -16,7 +16,7 @@ use App\Invoice\Helpers\Peppol\PeppolArrays;
 use App\Invoice\Helpers\StoreCove\StoreCoveArrays;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\System\PhpVersionCheckService;
-use App\Invoice\Setting\Trait\OpenBankingProviders;
+use RossAddison\OpenBankingClient\OpenBankingProviderRegistryInterface;
 use App\Invoice\Setting\Trait\SettingOptionsDataTrait;
 use App\Invoice\Setting\Trait\SettingsTabBootstrap5;
 use App\Service\WebControllerService;
@@ -49,7 +49,6 @@ use DateTimeZone;
 
 final class SettingController extends BaseController
 {
-    use OpenBankingProviders;
     use SettingOptionsDataTrait;
     use SettingsTabBootstrap5;
 
@@ -58,6 +57,7 @@ final class SettingController extends BaseController
     public function __construct(
         private SettingService $settingService,
         private DataResponseFactoryInterface $factory,
+        private OpenBankingProviderRegistryInterface $openBankingProviderRegistry,
         SessionInterface $session,
         sR $sR,
         TranslatorInterface $translator,
@@ -188,7 +188,7 @@ final class SettingController extends BaseController
                 'gR' => $deps->gR,
             ]),
             'oauth2' => $this->webViewRenderer->renderPartialAsString($p . 'oauth2', [
-                'openBankingProviders' => $this->getOpenBankingProvidersWithAuthUrl(),
+                'openBankingProviders' => $this->openBankingProviderRegistry->getProvidersWithAuthUrl(),
             ]),
             'taxes' => $this->webViewRenderer->renderPartialAsString($p . 'taxes', [
                 'tax_rates' => $deps->tR->findAllPreloaded(),
@@ -201,7 +201,7 @@ final class SettingController extends BaseController
                 'gateway_drivers' => $this->sR->activePaymentGateways(),
                 'gateway_currency_codes' => CurrencyHelper::all(),
                 'gateway_regions' => $this->sR->amazonRegions(),
-                'openBankingProviders' => $this->getOpenBankingProviderNames(),
+                'openBankingProviders' => $this->openBankingProviderRegistry->getProviderNames(),
                 'payment_methods' => $deps->pm->findAllPreloaded(),
             ]),
             'mpdf' => $this->webViewRenderer->renderPartialAsString($p . 'mpdf'),

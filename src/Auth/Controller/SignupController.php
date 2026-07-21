@@ -17,7 +17,6 @@ use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\AppConstants;
 use App\Invoice\UserInv\UserRbacLinkRepository;
-use App\Invoice\Setting\Trait\OpenBankingProviders;
 use App\Invoice\UserInv\UserInvRepository as uiR;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
@@ -37,7 +36,8 @@ use Yiisoft\Security\TokenMask;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface as Translator;
-use App\Auth\Client\OpenBanking;
+use RossAddison\OpenBankingClient\OpenBanking;
+use RossAddison\OpenBankingClient\OpenBankingProviderRegistryInterface;
 use Yiisoft\Yii\AuthClient\Widget\AuthChoice;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
@@ -46,8 +46,6 @@ final class SignupController
     use ClassList;
 
     use Oauth2;
-
-    use OpenBankingProviders;
 
     use TurnstileVerification;
 
@@ -63,6 +61,7 @@ final class SignupController
         private WebViewRenderer $webViewRenderer,
         private readonly MailerInterface $mailer,
         private readonly sR $sR,
+        private readonly OpenBankingProviderRegistryInterface $openBankingProviderRegistry,
         private readonly Translator $translator,
         private readonly UrlGenerator $urlGenerator,
         private readonly CurrentRoute $currentRoute,
@@ -170,7 +169,7 @@ final class SignupController
     private function buildOpenBankingAuthUrl(string $openBankChoice): string
     {
         if (strlen($openBankChoice) > 0) {
-            $providerConfig = $this->getOpenBankingProviderConfig($openBankChoice);
+            $providerConfig = $this->openBankingProviderRegistry->getProviderConfig($openBankChoice);
             if ($providerConfig !== null) {
                 /** @var OpenBanking $openBanking */
                 $openBanking = (AuthChoice::widget())->getClient('openbanking');
