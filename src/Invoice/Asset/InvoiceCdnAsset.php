@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Asset;
 
-use App\Invoice\Asset\Bootstrap5LightBoxCdnAsset;
+use App\Invoice\Asset\Bootstrap5LightboxCdnAsset;
 use App\Asset\ClipBoardCdnAsset;
 use Yiisoft\Assets\AssetBundle;
 
@@ -68,7 +68,7 @@ class InvoiceCdnAsset extends AssetBundle
     public bool $cdn = false;
 
     public array $depends = [
-        Bootstrap5LightBoxCdnAsset::class,
+        Bootstrap5LightboxCdnAsset::class,
         ClipBoardCdnAsset::class,
     ];
 }

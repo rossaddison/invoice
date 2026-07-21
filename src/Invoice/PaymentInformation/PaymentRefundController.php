@@ -51,6 +51,23 @@ final class PaymentRefundController
 
     public function refund(CurrentRoute $currentRoute): Response
     {
+        $context = $this->resolveContext($currentRoute);
+        if ($context instanceof Response) {
+            return $context;
+        }
+
+        $result = $this->dispatchRefund($context->driver, $context->reference, $context->payment->getAmount() ?? 0.00);
+        if (null === $result) {
+            return $this->webService->getNotFoundResponse();
+        }
+
+        $this->handleRefundResult($context, $result);
+
+        return $this->webService->getRedirectResponse('payment/index');
+    }
+
+    private function resolveContext(CurrentRoute $currentRoute): Response|RefundContext
+    {
         $paymentId = (int) $currentRoute->getArgument('payment_id', '0');
         $driver    = (string) $currentRoute->getArgument('gateway', '');
         $payment   = $paymentId > 0 ? $this->paymentRepository->repoPaymentquery($paymentId) : null;
@@ -70,27 +87,26 @@ final class PaymentRefundController
             return $this->webService->getRedirectResponse('payment/index');
         }
 
-        $result = $this->dispatchRefund($driver, $reference, $payment->getAmount() ?? 0.00);
-        if (null === $result) {
-            return $this->webService->getNotFoundResponse();
-        }
+        return new RefundContext($payment, $driver, $reference);
+    }
 
+    private function handleRefundResult(RefundContext $context, PaymentRefundResult $result): void
+    {
         if ($result->refunded) {
-            $this->recordRefundNote($payment, $driver, $result);
+            $this->recordRefundNote($context->payment, $context->driver, $result);
             $this->flashMessage('success',
-                sprintf($this->translator->translate('refund.successful'), $driver));
-        } else {
-            $this->logger->error('Online payment refund failed.', [
-                'driver'     => $driver,
-                'payment_id' => $paymentId,
-                'reference'  => $reference,
-                'message'    => $result->message,
-            ]);
-            $this->flashMessage('danger',
-                sprintf($this->translator->translate('refund.failed'), $driver));
+                sprintf($this->translator->translate('refund.successful'), $context->driver));
+            return;
         }
 
-        return $this->webService->getRedirectResponse('payment/index');
+        $this->logger->error('Online payment refund failed.', [
+            'driver'     => $context->driver,
+            'payment_id' => $context->payment->reqId(),
+            'reference'  => $context->reference,
+            'message'    => $result->message,
+        ]);
+        $this->flashMessage('danger',
+            sprintf($this->translator->translate('refund.failed'), $context->driver));
     }
 
     private function dispatchRefund(string $driver, string $reference, float $amount): ?PaymentRefundResult

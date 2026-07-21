@@ -13,7 +13,7 @@ use Yiisoft\Assets\AssetBundle;
  * first — the AssetManager always inserts a bundle's $depends before the
  * bundle itself, regardless of registration call order elsewhere.
  */
-class Bootstrap5LightBoxCdnAsset extends AssetBundle
+class Bootstrap5LightboxCdnAsset extends AssetBundle
 {
     public bool $cdn = true;
 
