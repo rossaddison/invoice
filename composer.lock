@@ -8379,7 +8379,7 @@
             "version": "dev-main",
             "source": {
                 "type": "git",
-                "url": "git@github.com:rossaddison/openbanking-client.git",
+                "url": "https://github.com/rossaddison/openbanking-client.git",
                 "reference": "f167fb5036a5994adbb4cd2b4e37f95730e52b52"
             },
             "dist": {
@@ -15092,7 +15092,7 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git@github.com:rossaddison/data-cycle.git",
+                "url": "https://github.com/rossaddison/data-cycle.git",
                 "reference": "f117ea4486429d0c66237feaf05336902ce72b03"
             },
             "dist": {
@@ -18787,7 +18787,7 @@
             "version": "dev-fix/csp-dropdownfilter-onchange",
             "source": {
                 "type": "git",
-                "url": "git@github.com:rossaddison/yii-dataview.git",
+                "url": "https://github.com/rossaddison/yii-dataview.git",
                 "reference": "f546ef28faa637ff45ac4b4daf071bce5d040da3"
             },
             "dist": {
@@ -24433,7 +24433,7 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git@github.com:rossaddison/translator-extractor.git",
+                "url": "https://github.com/rossaddison/translator-extractor.git",
                 "reference": "b2b3ff2ee3f691ab41b297a902a656e96d539ecf"
             },
             "dist": {
