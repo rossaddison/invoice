@@ -33,6 +33,10 @@ Automated generation and transmission of compliant UBL 2.4 documents via the
 
 **Recent Implementations**
 
+[Web-Based Setup Wizard — `/install`](docs/INSTALL_WIZARD.md) — Turns the manual install dance uncovered by the fresh-install test below into a numbered-step wizard (Requirements → Database → Build Tables → Create Admin) a brand-new installer walks through in the browser instead of hand-editing `.env`. `App\Install\Controller\InstallController` deliberately carries no Cycle-ORM/DI dependency in its constructor — every DB check goes through a new raw-PDO `DatabaseProbe` — so it can render before the database is configured, reachable, or built; state is recomputed fresh on every request (`determineState()`), so the wizard resumes correctly from wherever an installer left off and self-locks (redirects straight to `/login`) the moment an admin account exists, guarding all four routes, not just the page. Hands off to the existing, already-tested `/signup` → mandatory-2FA `/login` flow unchanged rather than rebuilding it. Building a page that must render before any table exists surfaced three previously-latent, app-wide bugs, all fixed here: `CommonViewInjection`/`LayoutViewInjection` (registered globally for every page) unconditionally queried the `company` table with no fallback — meaning a missing database already 500'd the *entire* app, not just this new route — fixed by falling through to each method's existing empty-company defaults; `SettingRepository::loadSettings()` had the same gap one level deeper (every `getSetting()` call app-wide depends on it), fixed with a `$loadSettingsAttempted` guard so a failed connection is only attempted once per request; and `requirements.php` was fatal-broken outright (`require_once` pointed at a `vendor/yiisoft/requirements` path that doesn't exist — the package installs as `rossaddison/requirements`) with a second dormant bug in its mandatory memory-limit check (`checkPhpIniOn('memory_limit')` only recognizes boolean-style ini values, so it always evaluated `false` against a size string like `1024M`, regardless of the actual limit) — both fixed in a new `RequirementsConfig` class shared between `/install` and the CLI script so the two check lists can't drift apart. Psalm errorLevel 1 clean; new `EnvFileWriterTest` unit-tests the `.env` line-rewriter in isolation (July 2026)
+
+[Fresh Install Test — Signup, RBAC Roles, Mandatory Admin 2FA](docs/INSTALL_TEST_JULY_2026.md) — Drove the full install path (`composer update` → `BUILD_DATABASE=true` → `npm i` → signup → login) end-to-end on a genuinely fresh `git clone` into a new folder against a brand-new MySQL schema, entirely over HTTP (cookie jar + CSRF scraped per page, no browser). Confirmed `composer update` and the `BUILD_DATABASE=true` table build (84 tables) both work cleanly, but found `npm i` is not optional as the "Installing npm_modules" section's placement implies — without a populated `node_modules`, `AssetManager` throws `Yiisoft\Assets\Exception\InvalidConfigException` (`sourcePath ... node_modules/bootstrap/dist/css`) on the very first page load, login/signup screens included, since asset publishing has no prebuilt fallback. Signup confirmed first user → `admin` RBAC role, second → `observer`, both persisted at the DB level (`user`, `yii_rbac_assignment`, `user_inv`) even though the app shows a "signup failed" page when SMTP isn't configured — the mail-send exception fires only after the user row and role are already saved, matching this section's existing "you will still be able to login" note. Newly documented: **2FA is mandatory for the admin account regardless of the global `enable_tfa` setting** — first admin login is always forced through `/showSetup` (TOTP secret/QR, Aegis-branded) before reaching `/invoice`; verified without a phone by generating real codes from the scanned secret via the app's own `spomky-labs/otphp` library. Also flags a Windows-specific gotcha for other installers: AVG's `IDP.generic` heuristic silently deleted a freshly-cloned `public/index.php` before any code ran, needing a per-folder AV exception (July 2026)
+
 [Stripe Pay by Bank — Open Banking for UK & Finland](docs/STRIPE_PAY_BY_BANK_UK_FINLAND.md) — documents how to enable Stripe's **Pay by Bank** Open Banking payment method (UK and Finland are both generally-available customer locations per [Stripe's docs](https://docs.stripe.com/payments/pay-by-bank), France/Germany/Ireland still private preview) so customers pay directly from their bank account/app instead of a card; this app already supports it with **zero code changes** since `StripePaymentService::createPaymentIntent()` creates every PaymentIntent with `automatic_payment_methods.enabled = true` rather than a hardcoded method list, so which methods appear is driven entirely by **Settings → Payment methods** in the Stripe Dashboard — turning on Pay by Bank and turning off Cards there is enough to go "Pay by Bank only"; covers the customer's bank-app redirect/approval flow, that it reuses the existing `payment_intent.succeeded` webhook handling unchanged, and its limitations (no recurring payments, no manual capture, no disputes, refunds supported up to 730 days) (July 2026)
 
 [Payment Gateway Refund — Live Testing & Adyen v6 Upgrade](docs/PAYMENT_GATEWAY_REFUND_LIVE_TESTING_JULY_2026.md) — the refund dropdown on `payment/index` (`PaymentRefundController`) had only ever been proven via a script calling each gateway's `refund()` directly; this pass drove it through the real UI end-to-end for all four PCI-compliant gateways and verified every result against the provider's own API/dashboard, not just this app's database — Stripe, Braintree (sandbox needs a manual `Gateway::testing()->settle()` force-settle before refund is possible — real `Braintree\Test\Transaction::settle()` is a trap, it hits an unconfigured global gateway), and Mollie (first genuine success-path refund test; previously only proven against a fake, rejected reference) all passed cleanly. Adyen surfaced a real production bug: the pinned Web SDK v5.40.0 crashed outright ("The following properties should not be passed to the client: askDonation") because Adyen's `/sessions` response now always includes a Giving/Donation field v5's Drop-in rejects — fixed by upgrading to v6.41.0, which required real code changes (confirmed against the actual CDN bundle, not just docs): the global renamed `window.AdyenCheckout` → `window.AdyenWeb`, Drop-in creation moved to a `new AdyenWeb.Dropin(checkout)` constructor, and `countryCode` became mandatory (resolved via the existing `CountryHelper`/league-iso3166 lookup). Since `adyenComplete()` is deliberately read-only and Adyen has no Stripe-CLI equivalent for local webhook forwarding, payment/refund confirmation was verified by replaying a genuinely HMAC-signed `AUTHORISATION` notification — built from a real sandbox transaction's actual pspReference and signed with the app's own configured HMAC key — against the local webhook route directly, exercising the real signature-verification and handler code end-to-end (July 2026)
@@ -455,9 +459,31 @@ Once the sandbox URL bug is fixed and credentials are configured, Stage 2 will a
 *````composer update````*
 
 After a composer update, you'll need to manually:
+1. Run ````npm i```` (see "Installing npm_modules" below) — **do this before the next
+   step**. Confirmed by a fresh-clone install test (see Recent Implementations above):
+   without a populated `node_modules`, the very first page load throws
+   `Yiisoft\Assets\Exception\InvalidConfigException` because asset publishing reads
+   Bootstrap/TypeScript straight out of `node_modules` with no prebuilt fallback.
+2. Copy ````.env.example```` to ````.env```` if you haven't already.
+3. Browse to ````/install```` — a step-by-step wizard now handles the rest of this
+   section for you (requirements check, database connection, table build), then
+   hands off to the signup page for your first (admin) account. It self-locks once
+   an account exists — revisiting `/install` on an already-installed site redirects
+   straight to `/login`, so it's safe to leave the route in place permanently.
+
+If you'd rather do it by hand (e.g. a headless/scripted deployment), the manual
+steps the wizard automates are:
 1. Set `BUILD_DATABASE=true` in your `.env` file
 2. Start the application to trigger table creation
 3. Reset `BUILD_DATABASE=` for better performance
+
+— or run the equivalent CLI installer, ````php yii install````.
+
+If, right after `git clone`-ing or extracting a fresh download on Windows,
+`public/index.php` goes missing (`git status` shows it deleted, re-checking it out
+fails with `Permission denied`), your antivirus's heuristic scanner may be silently
+deleting it — AVG's `IDP.generic` heuristic did exactly this in testing. Add an
+exception for the project folder and re-checkout the file.
 
 **Installing npm_modules**
 * Step 1: Download node.js at https://nodejs.org/en/download
@@ -505,6 +531,12 @@ The c:\wamp64\yii3-i\config\common\params.php file line approx. 193 will automat
 
 Signup your first user using **+ Person icon**. This user will automatically be assigned the admin role. If you do not have an internet connection you will receive an email failed message
 but you will still be able to login. 
+
+**2FA is mandatory for the admin account regardless of the global "Enable 2FA" setting.**
+On first admin login you will always be routed to a TOTP setup page (QR code + manual
+secret) before reaching the dashboard — scan it with [Aegis](https://getaegis.app) or
+any other TOTP authenticator app (Google Authenticator, etc.) and enter the 6-digit
+code to finish signing in.
 
 You or your customer, signup the second user as your Client/Customer. They will automatically be assigned the observer role. 
 If you do not have an internet connection you will get a failed message but if your admin makes the 'Invoice User Account' status active the user

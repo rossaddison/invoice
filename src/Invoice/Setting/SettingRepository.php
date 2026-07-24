@@ -48,6 +48,8 @@ final class SettingRepository extends Select\Repository implements SettingReposi
 
     public array $settingsArray = [];
 
+    private bool $loadSettingsAttempted = false;
+
     private const string DECRYPT_KEY = 'base64:3iqxXZEG5aR0NPvmE4qubcE/'
             . 'sn6nuzXKLrZVRMP3/Ak=';
 
@@ -237,15 +239,23 @@ final class SettingRepository extends Select\Repository implements SettingReposi
      */
     public function loadSettings(): void
     {
-        if ($this->settingsArray !== []) {
+        if ($this->settingsArray !== [] || $this->loadSettingsAttempted) {
             return;
         }
-        $all_settings = $this->findAllPreloaded();
-        /** @var Setting $setting */
-        foreach ($all_settings as $setting) {
-            /** @var string $this->settingsArray[$setting->getSettingKey()] */
-            $this->settingsArray[$setting->getSettingKey()] =
-                    $setting->getSettingValue();
+        $this->loadSettingsAttempted = true;
+        try {
+            $all_settings = $this->findAllPreloaded();
+            /** @var Setting $setting */
+            foreach ($all_settings as $setting) {
+                /** @var string $this->settingsArray[$setting->getSettingKey()] */
+                $this->settingsArray[$setting->getSettingKey()] =
+                        $setting->getSettingValue();
+            }
+        } catch (\Throwable) {
+            // Database/table not ready yet (e.g. the /install wizard, rendered
+            // before any table exists) — getSetting() falls back to '' for
+            // every key; $loadSettingsAttempted stops this from retrying (and
+            // re-failing) on every subsequent getSetting() call in the request.
         }
     }
 

@@ -206,40 +206,47 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
             'companyLogoMargin' => 10,
         ];
 
-        $companies = $this->companyRepository->findAllPreloaded();
-        $companyPrivates = $this->companyPrivateRepository->findAllPreloaded();
+        // Guards against the database not being reachable/built yet (e.g. the
+        // /install wizard's own pages) — see the identical guard in
+        // App\ViewInjection\CommonViewInjection::resolveCompanyData().
+        try {
+            $companies = $this->companyRepository->findAllPreloaded();
+            $companyPrivates = $this->companyPrivateRepository->findAllPreloaded();
 
-        /**
-         * @var Company $company
-         */
-        foreach ($companies as $company) {
-            if ($company->getCurrent() == '1') {
-                $data['brandLabel'] = $company->getName() ?? '';
-                $data['companyWeb'] = $company->getWeb() ?? '';
-                $data['companySlack'] = $company->getSlack() ?? '';
-                $data['companyFaceBook'] = $company->getFaceBook() ?? '';
-                $data['companyTwitter'] = $company->getTwitter() ?? '';
-                $data['companyLinkedIn'] = $company->getLinkedIn() ?? '';
-                $data['companyWhatsApp'] = $company->getWhatsApp() ?? '';
-                $data['companyEmail'] = $company->getEmail() ?? '';
-                /**
-                 * @var CompanyPrivate $private
-                 */
-                foreach ($companyPrivates as $private) {
-                    if ($private->reqCompanyId() === $company->reqId()
-                        && (
-                            $private->getStartDate()?->format('Y-m-d')
-                           < (new \DateTimeImmutable('now'))->format('Y-m-d')
-                           && $private->getEndDate()?->format('Y-m-d')
-                           > (new \DateTimeImmutable('now'))->format('Y-m-d')
-                        )) {
-                        $data['companyLogoFileName'] = $private->getLogoFilename() ?? '';
-                        $data['companyLogoWidth'] = $private->getLogoWidth() ?? 80;
-                        $data['companyLogoHeight'] = $private->getLogoHeight() ?? 40;
-                        $data['companyLogoMargin'] = $private->getLogoMargin() ?? 10;
+            /**
+             * @var Company $company
+             */
+            foreach ($companies as $company) {
+                if ($company->getCurrent() == '1') {
+                    $data['brandLabel'] = $company->getName() ?? '';
+                    $data['companyWeb'] = $company->getWeb() ?? '';
+                    $data['companySlack'] = $company->getSlack() ?? '';
+                    $data['companyFaceBook'] = $company->getFaceBook() ?? '';
+                    $data['companyTwitter'] = $company->getTwitter() ?? '';
+                    $data['companyLinkedIn'] = $company->getLinkedIn() ?? '';
+                    $data['companyWhatsApp'] = $company->getWhatsApp() ?? '';
+                    $data['companyEmail'] = $company->getEmail() ?? '';
+                    /**
+                     * @var CompanyPrivate $private
+                     */
+                    foreach ($companyPrivates as $private) {
+                        if ($private->reqCompanyId() === $company->reqId()
+                            && (
+                                $private->getStartDate()?->format('Y-m-d')
+                               < (new \DateTimeImmutable('now'))->format('Y-m-d')
+                               && $private->getEndDate()?->format('Y-m-d')
+                               > (new \DateTimeImmutable('now'))->format('Y-m-d')
+                            )) {
+                            $data['companyLogoFileName'] = $private->getLogoFilename() ?? '';
+                            $data['companyLogoWidth'] = $private->getLogoWidth() ?? 80;
+                            $data['companyLogoHeight'] = $private->getLogoHeight() ?? 40;
+                            $data['companyLogoMargin'] = $private->getLogoMargin() ?? 10;
+                        }
                     }
                 }
             }
+        } catch (\Throwable) {
+            // Database/table not ready yet — fall through with the defaults above.
         }
 
         return $data;
@@ -347,7 +354,12 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
          */
         $debugMode = $_ENV['YII_DEBUG'] == 'true';
         $buildDatabase = $_ENV['BUILD_DATABASE'] == 'true';
-        $this->settingRepository->debugMode($debugMode);
+        try {
+            // Syncs the debug_mode setting row to match .env — database/table
+            // not ready yet (e.g. the /install wizard) simply skips the sync.
+            $this->settingRepository->debugMode($debugMode);
+        } catch (\Throwable) {
+        }
 
         $status = '';
         if (null !== $user) {

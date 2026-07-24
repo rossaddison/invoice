@@ -31,6 +31,7 @@ import { initJavascriptAnalysisFaq, initCodeceptionChecklistFaq } from './faq-pa
 import { initInvIndex } from './inv-index.js';
 import { initQuoteIndex } from './quote-index.js';
 import { initE164PhoneFields } from './phone-e164.js';
+import { initInstallWizard } from './install-wizard.js';
 
 declare global {
     interface Window {
@@ -84,6 +85,7 @@ class InvoiceApp {
         initJavascriptAnalysisFaq();
         initCodeceptionChecklistFaq();
         initE164PhoneFields();
+        initInstallWizard();
         globalThis.NProgress?.start();
         globalThis.NProgress?.done();
         if (document.getElementById('table-invoice')) {

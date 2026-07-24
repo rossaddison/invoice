@@ -13656,3 +13656,29 @@ body *:focus {
 .form-control, .card {
   box-shadow: none;
 }
+
+/* Install wizard step-circle indicator */
+.install-step-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  font-weight: bold;
+  border: 2px solid #ced4da;
+  color: #6c757d;
+  background: #fff;
+}
+
+.install-step-circle.is-active {
+  border-color: #0d6efd;
+  color: #fff;
+  background: #0d6efd;
+}
+
+.install-step-circle.is-complete {
+  border-color: #198754;
+  color: #fff;
+  background: #198754;
+}

@@ -43,8 +43,6 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
      */
     private function resolveCompanyData(): array
     {
-        $companies = $this->companyRepository->findAllPreloaded();
-        $companyPrivates = $this->companyPrivateRepository->findAllPreloaded();
         $companyName = '';
         $companyWeb = '';
         $companyAddress1 = '';
@@ -59,46 +57,63 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
         $companyStartDate = '';
         $arbitrationBody = '';
         $arbitrationJurisdiction = '';
-        /**
-         * @var Company $company
-         */
-        foreach ($companies as $company) {
-            if ($company->getCurrent() == '1') {
-                $companyName = $company->getName();
-                $companyWeb = $company->getWeb();
-                $companySeoDescription = $company->getSeoDescription();
-                $companyAddress1 = $company->getAddress1();
-                $companyAddress2 = $company->getAddress2();
-                $companyCity = $company->getCity();
-                $companyState = $company->getState();
-                $companyZip = $company->getZip();
-                $companyCountry = $company->getCountry();
-                $companyPhone = $company->getPhone();
-                $companyEmail = $company->getEmail();
-                $arbitrationBody = $company->getArbitrationBody();
-                $arbitrationJurisdiction = $company->getArbitrationJurisdiction();
-                /**
-                 * @var CompanyPrivate $private
-                 */
-                foreach ($companyPrivates as $private) {
-                    // site's logo: take the first logo where the current date falls within
-                    // the logo's start and end dates
-                    if ($private->reqCompanyId() === $company->reqId()
-                        && ($private->getStartDate()?->format('Y-m-d') <
-                            (new \DateTimeImmutable('now'))->format('Y-m-d'))
-                        && ($private->getEndDate()?->format('Y-m-d') >
-                            (new \DateTimeImmutable('now'))->format('Y-m-d'))) {
-                        $companyLogoFileName = $private->getLogoFilename() ?? '';
-                        $companyLogoWidth = $private->getLogoWidth();
-                        $companyLogoHeight = $private->getLogoHeight();
-                        $companyStartDate = $private->getStartDate()?->format('Y-m-d');
+
+        // Guards against the database not being reachable/built yet (e.g. the
+        // /install wizard's own pages, rendered before any table exists) —
+        // every other page in the app already assumes this query succeeds,
+        // so a failure here falls back to the same defaults used when simply
+        // no current-company row exists, rather than a fatal error.
+        try {
+            $companies = $this->companyRepository->findAllPreloaded();
+            $companyPrivates = $this->companyPrivateRepository->findAllPreloaded();
+            /**
+             * @var Company $company
+             */
+            foreach ($companies as $company) {
+                if ($company->getCurrent() == '1') {
+                    $companyName = $company->getName();
+                    $companyWeb = $company->getWeb();
+                    $companySeoDescription = $company->getSeoDescription();
+                    $companyAddress1 = $company->getAddress1();
+                    $companyAddress2 = $company->getAddress2();
+                    $companyCity = $company->getCity();
+                    $companyState = $company->getState();
+                    $companyZip = $company->getZip();
+                    $companyCountry = $company->getCountry();
+                    $companyPhone = $company->getPhone();
+                    $companyEmail = $company->getEmail();
+                    $arbitrationBody = $company->getArbitrationBody();
+                    $arbitrationJurisdiction = $company->getArbitrationJurisdiction();
+                    /**
+                     * @var CompanyPrivate $private
+                     */
+                    foreach ($companyPrivates as $private) {
+                        // site's logo: take the first logo where the current date falls within
+                        // the logo's start and end dates
+                        if ($private->reqCompanyId() === $company->reqId()
+                            && ($private->getStartDate()?->format('Y-m-d') <
+                                (new \DateTimeImmutable('now'))->format('Y-m-d'))
+                            && ($private->getEndDate()?->format('Y-m-d') >
+                                (new \DateTimeImmutable('now'))->format('Y-m-d'))) {
+                            $companyLogoFileName = $private->getLogoFilename() ?? '';
+                            $companyLogoWidth = $private->getLogoWidth();
+                            $companyLogoHeight = $private->getLogoHeight();
+                            $companyStartDate = $private->getStartDate()?->format('Y-m-d');
+                        }
                     }
                 }
             }
+        } catch (\Throwable) {
+            // Database/table not ready yet — fall through with the defaults above.
         }
-        $logoPath = $companyLogoFileName !== ''
-            ? '/logo/' . $companyLogoFileName
-            : '/site/' . $this->settingRepository->publicLogo() . '.png';
+        $logoPath = $companyLogoFileName !== '' ? '/logo/' . $companyLogoFileName : null;
+        if ($logoPath === null) {
+            try {
+                $logoPath = '/site/' . $this->settingRepository->publicLogo() . '.png';
+            } catch (\Throwable) {
+                $logoPath = '/site/logo.png';
+            }
+        }
 
         return [
             'arbitrationBody' => $arbitrationBody,
