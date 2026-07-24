@@ -27,7 +27,7 @@ Merchant-side, 35+ countries (including the UK and Finland) can *accept*
 Pay by Bank payments — the country restriction above is about where the
 *paying customer's* bank account has to be.
 
-## Why "Pay by Bank only" instead of cards
+## Why "Pay by Bank" instead of cards
 
 Pay by Bank settles account-to-account, so it carries none of the
 card-network interchange fees, has no chargebacks (the customer already
