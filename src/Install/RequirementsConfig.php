@@ -31,7 +31,13 @@ final class RequirementsConfig
             [
                 'name' => 'Maximum Execution Time of 400 seconds',
                 'mandatory' => true,
-                'condition' => $requirementsChecker->checkMaxExecutionTime('400'),
+                // Note: RequirementsChecker::checkMaxExecutionTime() reads the ini key via
+                // ini_get('max_exection_time') (typo, missing 'u') so it always returns false
+                // from ini_get(), which then always compares as "OK" — the wrong check for
+                // this requirement, so it's deliberately not used here (same class of bug as
+                // the memory_limit check below).
+                'condition' => (int) ini_get('max_execution_time') === 0
+                    || (int) ini_get('max_execution_time') >= 400,
                 'by' => '<a href="https://www.php.net/manual/en/info.configuration.php#ini.max-execution-time">php.ini setting</a>',
                 'memo' => 'A php.ini max_execution_time minimum of 400 seconds is required for installation and complex operations.',
             ],

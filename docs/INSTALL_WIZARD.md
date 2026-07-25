@@ -70,11 +70,38 @@ previously-latent issues — none specific to the wizard, all now fixed:
   `checkPhpIniOn('memory_limit')`, which only recognizes boolean-style ini values
   (`'on'`/`1`) and therefore always evaluated `false` against a size string like
   `1024M` — the mandatory memory check could never pass regardless of the real
-  limit. Both fixed in `RequirementsConfig` (shared with `/install`); a third,
-  vendor-side bug (`checkMaxExecutionTime()`'s `ini_get('max_exection_time')` typo,
-  and the web view's `$summary['errors'] !== []` comparison against an int,
-  always true) was left alone since it lives in the vendor package itself — the
-  wizard sidesteps it entirely by consuming `getResult()` directly.
+  limit. Both fixed in `RequirementsConfig` (shared with `/install`); the web
+  view's `$summary['errors'] !== []` comparison against an int (always true) was
+  left alone since it lives in the vendor package itself and `RequirementsConfig`
+  consumes `getResult()` directly, sidestepping it.
+- **`RequirementsChecker::checkMaxExecutionTime()`** (vendor, `rossaddison/requirements`)
+  reads `ini_get('max_exection_time')` — a typo (missing `u`) — which always
+  returns `false` from `ini_get()` for a key that doesn't exist, so the comparison
+  always evaluated to "OK" regardless of the real `max_execution_time`. Unlike the
+  memory-limit check, `RequirementsConfig` was calling this vendor method directly
+  rather than working around it. Fixed the same way as memory-limit: a direct
+  `ini_get('max_execution_time')` comparison in `RequirementsConfig` itself.
+  This mattered in practice, not just cosmetically: `config/common/params.php`'s
+  `PhpFileSchemaProvider` runs in `MODE_READ_AND_WRITE` whenever `BUILD_DATABASE`
+  isn't explicitly `true` (i.e. the state `/pre-install.php` deliberately leaves
+  `.env` in), and that mode still migrates/writes missing tables as a side effect
+  of DI container construction on **any** request — not just the wizard's
+  "Build Tables" step. `autoload.php`'s `ini_set('max_execution_time', ...)` bump
+  was gated on `$_SERVER['BUILD_DATABASE']`, so this auto-migrate path had no
+  timeout protection at all. Reproduced on a stock WAMP `php.ini`
+  (`max_execution_time = 120`, the out-of-the-box default): the very first plain
+  `GET /` after `/pre-install.php` created the database silently started building
+  all ~86 tables, hit the real 120s ceiling mid-build, and fataled with
+  `Maximum execution time of 120 seconds exceeded` in
+  `vendor/cycle/database/src/Driver/Driver.php`. Worse, it didn't self-heal — every
+  subsequent request restarted the FK-constraint pass from scratch and hit the
+  same wall again, permanently, leaving a fresh install completely bricked with no
+  indication why. Fixed by removing the `BUILD_DATABASE` gate entirely — `autoload.php`
+  now calls `ini_set('max_execution_time', '400')` unconditionally, matching
+  `RequirementsConfig`'s own unconditional 400s mandatory requirement. Verified
+  end-to-end against the exact failing conditions (fresh empty DB, no schema
+  cache, `BUILD_DATABASE=false`, real 120s `php.ini`): the same request that
+  previously fataled at 120s now completes in ~290s.
 
 ## Deliberately out of scope
 

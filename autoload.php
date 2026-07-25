@@ -65,9 +65,14 @@ $_ENV['SESSION_COOKIE_SECURE'] = isset($_ENV['SESSION_COOKIE_SECURE']) && strlen
 $_SERVER['SESSION_COOKIE_SECURE'] = $_ENV['SESSION_COOKIE_SECURE'];
 
 /**
- * Building the database takes longer than usual and the .env $_ENV['BUILD_DATABASE'] should be set to false afterwards
+ * Cycle ORM's schema provider runs in MODE_READ_AND_WRITE (see config/common/params.php)
+ * whenever BUILD_DATABASE is not explicitly true, and that mode still writes/migrates
+ * missing tables as a side effect of container construction on *any* request — not just
+ * while BUILD_DATABASE=true is set. A fresh database (e.g. right after public/pre-install.php
+ * creates it) can therefore trigger a full schema build on a plain page load. Gating this
+ * bump on BUILD_DATABASE left that path unprotected and able to exceed a stock php.ini's
+ * default max_execution_time (commonly 120s on WAMP) — see docs/INSTALL_WIZARD.md. Applied
+ * unconditionally to match RequirementsConfig's own unconditional 400s mandatory requirement.
  * https://stackoverflow.com/questions/3829403/how-to-increase-the-execution-timeout-in-php
  */
-if ($_SERVER['BUILD_DATABASE']) {
-    ini_set('max_execution_time', '360');
-}
+ini_set('max_execution_time', '400');
