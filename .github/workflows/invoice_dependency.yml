@@ -71,3 +71,106 @@ jobs:
 
       - name: Check dependency
         run: vendor/bin/composer-require-checker
+
+  mutation-alpine:
+    name: PHP ${{ matrix.php }}-alpine${{ matrix.alpine }}
+
+    runs-on: ubuntu-latest
+    container:
+      image: alpine:${{ matrix.alpine }}
+
+    strategy:
+      matrix:
+        # PHP 8.5 has no package on any stable Alpine release yet — only on
+        # the rolling `edge` branch — so each PHP version is paired with the
+        # oldest Alpine release that actually carries it, rather than a free
+        # os x php cross-product.
+        include:
+          - php: '84'
+            alpine: '3.22'
+          - php: '85'
+            alpine: 'edge'
+
+    steps:
+      # actions/checkout and actions/cache are Node-based Actions; the Node
+      # runtime GitHub injects into the container is glibc-linked, which
+      # will not execute on musl libc without this compatibility layer.
+      - name: Install glibc compatibility layer
+        run: apk add --no-cache gcompat
+
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+
+      # shivammathur/setup-php has no Alpine support (Ubuntu/Windows/macOS
+      # only, see its README's platform table), so PHP and Composer are set
+      # up directly via apk/the official installer instead. uopz is dropped
+      # here — no Alpine package exists for it, and it is unused anywhere in
+      # this codebase (grep confirms), so nothing here depends on it.
+      # ext-zend-opcache is bundled directly into the php85 apk package (no
+      # separate php85-opcache package exists yet), but is a separate
+      # package on php84, hence it is listed explicitly only where it exists
+      # as its own package.
+      - name: Install PHP and extensions
+        run: |
+          apk add --no-cache \
+            php${{ matrix.php }} \
+            php${{ matrix.php }}-phar \
+            php${{ matrix.php }}-bcmath \
+            php${{ matrix.php }}-ctype \
+            php${{ matrix.php }}-curl \
+            php${{ matrix.php }}-dom \
+            php${{ matrix.php }}-fileinfo \
+            php${{ matrix.php }}-gd \
+            php${{ matrix.php }}-intl \
+            php${{ matrix.php }}-mbstring \
+            php${{ matrix.php }}-openssl \
+            php${{ matrix.php }}-pdo \
+            php${{ matrix.php }}-pdo_sqlite \
+            php${{ matrix.php }}-pecl-apcu \
+            php${{ matrix.php }}-simplexml \
+            php${{ matrix.php }}-sodium \
+            php${{ matrix.php }}-tokenizer \
+            php${{ matrix.php }}-xml \
+            php${{ matrix.php }}-xmlreader \
+            php${{ matrix.php }}-xmlwriter
+          # Alpine's own `composer` apk package depends on php83 (which had
+          # a CVE) and rewrites /usr/bin/php to point at it — installing
+          # Composer via the official installer script instead avoids
+          # silently running everything under the wrong PHP version.
+          ln -sf /usr/bin/php${{ matrix.php }} /usr/bin/php
+          php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+          php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+          rm composer-setup.php
+
+      # ext-zend-opcache is a separate package on php84, but bundled
+      # directly into the php85 apk package (no php85-opcache package
+      # exists yet) — install it only where it exists as its own package.
+      - name: Install ext-opcache (PHP 8.4 only)
+        if: matrix.php == '84'
+        run: apk add --no-cache php84-opcache
+
+      # This project's composer.json references several rossaddison/* forks
+      # as VCS (not Packagist) repositories; composer resolving them hits
+      # GitHub's API and needs auth to avoid the unauthenticated rate limit,
+      # same as the "Set up Composer GitHub auth" step in invoice_build.yml.
+      - name: Set up Composer GitHub auth
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: composer config --global --auth github-oauth.github.com "$GITHUB_TOKEN"
+
+      - name: Determine composer cache directory
+        run: echo "COMPOSER_CACHE_DIR=$(composer config cache-dir)" >> $GITHUB_ENV
+
+      - name: Cache dependencies installed with composer
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: ${{ env.COMPOSER_CACHE_DIR }}
+          key: php${{ matrix.php }}-alpine${{ matrix.alpine }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: |
+            php${{ matrix.php }}-alpine${{ matrix.alpine }}-composer-
+
+      - name: Install maglnet/composer-require-checker
+        run: composer require maglnet/composer-require-checker:^4.19
+
+      - name: Check dependency
+        run: vendor/bin/composer-require-checker

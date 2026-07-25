@@ -73,3 +73,91 @@ jobs:
 
       - name: Static analysis
         run: vendor/bin/psalm --shepherd --stats --output-format=checkstyle | cs2pr --graceful-warnings --colorize
+
+  psalm-alpine:
+    name: PHP ${{ matrix.php }}-alpine${{ matrix.alpine }}
+
+    runs-on: ubuntu-latest
+    container:
+      image: alpine:${{ matrix.alpine }}
+
+    strategy:
+      matrix:
+        # See invoice_dependency.yml's mutation-alpine job for why PHP and
+        # Alpine versions are paired explicitly rather than a free matrix.
+        include:
+          - php: '84'
+            alpine: '3.22'
+          - php: '85'
+            alpine: 'edge'
+
+    steps:
+      - name: Install glibc compatibility layer
+        run: apk add --no-cache gcompat
+
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+
+      # See invoice_dependency.yml's mutation-alpine job for why PHP/Composer
+      # are set up directly via apk rather than shivammathur/setup-php.
+      - name: Install PHP and extensions
+        run: |
+          apk add --no-cache \
+            php${{ matrix.php }} \
+            php${{ matrix.php }}-phar \
+            php${{ matrix.php }}-bcmath \
+            php${{ matrix.php }}-ctype \
+            php${{ matrix.php }}-curl \
+            php${{ matrix.php }}-dom \
+            php${{ matrix.php }}-fileinfo \
+            php${{ matrix.php }}-gd \
+            php${{ matrix.php }}-intl \
+            php${{ matrix.php }}-mbstring \
+            php${{ matrix.php }}-openssl \
+            php${{ matrix.php }}-pdo \
+            php${{ matrix.php }}-pdo_sqlite \
+            php${{ matrix.php }}-pecl-apcu \
+            php${{ matrix.php }}-simplexml \
+            php${{ matrix.php }}-sodium \
+            php${{ matrix.php }}-tokenizer \
+            php${{ matrix.php }}-xml \
+            php${{ matrix.php }}-xmlreader \
+            php${{ matrix.php }}-xmlwriter
+          ln -sf /usr/bin/php${{ matrix.php }} /usr/bin/php
+          php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+          php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+          rm composer-setup.php
+
+      # ext-zend-opcache is a separate package on php84, but bundled
+      # directly into the php85 apk package (no php85-opcache package
+      # exists yet) — install it only where it exists as its own package.
+      - name: Install ext-opcache (PHP 8.4 only)
+        if: matrix.php == '84'
+        run: apk add --no-cache php84-opcache
+
+      - name: Set up Composer GitHub auth
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: composer config --global --auth github-oauth.github.com "$GITHUB_TOKEN"
+
+      - name: Determine composer cache directory
+        run: echo "COMPOSER_CACHE_DIR=$(composer config cache-dir)" >> $GITHUB_ENV
+
+      - name: Cache dependencies installed with composer
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: ${{ env.COMPOSER_CACHE_DIR }}
+          key: php${{ matrix.php }}-alpine${{ matrix.alpine }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: |
+            php${{ matrix.php }}-alpine${{ matrix.alpine }}-composer-
+
+      - name: Install dependencies with composer
+        run: composer update --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
+
+      # cs2pr (checkstyle-to-PR-annotation) is installed via setup-php's
+      # `tools:` input on the Ubuntu job; no Alpine equivalent is wired up
+      # here, so this leg runs Psalm directly without the annotation step —
+      # the goal is proving Psalm itself is clean on Alpine/PHP84+85, not
+      # replicating the PR-annotation UX.
+      - name: Static analysis
+        run: vendor/bin/psalm --shepherd --stats
