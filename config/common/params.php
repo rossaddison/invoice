@@ -11,6 +11,7 @@ use Yiisoft\Assets\AssetManager;
 use Yiisoft\Definitions\Reference;
 use Yiisoft\Form\Field\SubmitButton;
 use Yiisoft\Form\Field\Checkbox;
+use Yiisoft\Form\Field\RadioList;
 use Yiisoft\Form\Field\CheckboxLabelPlacement;
 use Yiisoft\Form\Field\ErrorSummary;
 use Yiisoft\FormModel\ValidationRulesEnricher;
@@ -271,6 +272,17 @@ return [
                         'inputClass()' => ['form-check-input'],
                         'inputLabelClass()' => ['form-check-label'],
                         'labelPlacement()' => [CheckboxLabelPlacement::SIDE],
+                    ],
+                    // The default floating-label template/container makes no
+                    // sense for a group of radio buttons (there's no single
+                    // input to float the label over) — same class of problem
+                    // the Checkbox override above fixes; without this the
+                    // group label renders after all the radio options and
+                    // overlaps them.
+                    RadioList::class => [
+                        $containerClass => ['mb-3'],
+                        'template()' => ["{label}\n{input}\n{hint}\n{error}"],
+                        'labelClass()' => ['form-label'],
                     ],
                     DataColumn::class => [
                         $containerClass => ['mb-3'],

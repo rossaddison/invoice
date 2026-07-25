@@ -99,6 +99,18 @@ final class PaymentMethodRepository extends Select\Repository
     }
 
     /**
+     * @return PaymentMethod|null
+     *
+     * @psalm-return TEntity|null
+     */
+    public function repoPaymentMethodByNameQuery(string $name): ?PaymentMethod
+    {
+        $query = $this->select()
+                      ->where(['name' => $name]);
+        return $query->fetchOne() ?: null;
+    }
+
+    /**
      * @param int $id
      * @return int
      */

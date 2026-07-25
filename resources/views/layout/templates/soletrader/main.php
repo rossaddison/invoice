@@ -65,6 +65,7 @@ use Yiisoft\Yii\AuthClient\Asset\AuthChoiceAsset;
  * @var bool $noFrontPageTermsOfService
  * @var bool $stopLoggingIn
  * @var bool $stopSigningUp
+ * @var bool $stopHomecareSigningUp
  * @var string $bootstrap5LayoutMainNavbarFont
  * @var string $bootstrap5LayoutMainNavbarFontSize
  * @var string $companySeoDescription
@@ -395,6 +396,23 @@ echo new TagHtml()
             [],
             [],
             $isGuest && !$stopSigningUp,
+        ),
+        NavLink::to(
+             new Label()
+            ->attributes([
+                'class' => 'bi bi-house-heart-fill text-danger',
+                'data-bs-toggle' => 'tooltip',
+                'title' => str_repeat(' ', 1)
+                    . $t->translate('homecare.signup.title'),
+            ])
+            ->content(str_repeat(' ', 1) . $t->translate('homecare.signup.title')),
+            $urlGenerator->generate('homecare/signup'),
+            $isGuest && !$stopHomecareSigningUp,
+            !$isGuest && $stopHomecareSigningUp,
+            false,
+            [],
+            [],
+            $isGuest && !$stopHomecareSigningUp,
         ),
         NavLink::to(
             /**

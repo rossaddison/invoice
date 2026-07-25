@@ -422,6 +422,15 @@ trait SettingTooltipTrait
                 'where' => 'src/Invoice/Inv/HomeCareCleaningEligibilityService.php'
                 . ' and src/Invoice/Inv/Trait/HomeCareScan.php.',
             ],
+            'stop_homecare_signing_up' => [
+                'why' => 'Blocks the public HomeCare signup form'
+                . ' (/homecare-signup) at the controller, redirecting away'
+                . ' instead of accepting new signups. Turn on for a business'
+                . ' that has stopped taking new home-care customers through'
+                . ' self-signup, without having to disable the whole'
+                . ' home-care QR auto-invoice feature for existing clients.',
+                'where' => 'src/Auth/Controller/HomeCareSignupController.php',
+            ],
             'include_delivery_period' => [
                 'why' => 'A group of business terms providing information on the'
                 . ' invoice period. Also called delivery period. If the group'

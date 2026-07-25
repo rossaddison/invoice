@@ -190,6 +190,7 @@ trait InvoiceInstallTrait
             'reports_in_new_tab' => true,
             'signup_automatically_assign_client' => 0,
             'signup_default_age_minimum_eighteen' => 1,
+            'stop_homecare_signing_up' => false,
             'stop_logging_in' => false,
             'stop_signing_up' => false,
             'tax_rate_decimal_places' => 2,

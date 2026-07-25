@@ -38,6 +38,21 @@ final class UnitRepository extends Select\Repository
     }
 
     /**
+     * The lowest-id Unit record, used as a pragmatic fallback by flows
+     * (e.g. HomeCare signup) that must auto-create a Product with no admin
+     * present to pick a unit.
+     *
+     * @return Unit|null
+     *
+     * @psalm-return TEntity|null
+     */
+    public function repoFirstByIdQuery(): ?Unit
+    {
+        $query = $this->select()->orderBy(['id' => 'asc']);
+        return $query->fetchOne() ?: null;
+    }
+
+    /**
      * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Unit|null $unit
      * @throws Throwable

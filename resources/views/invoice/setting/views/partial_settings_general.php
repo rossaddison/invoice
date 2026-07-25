@@ -40,6 +40,7 @@ $kDefaultListLimit = 'settings[default_list_limit]';
 $kDisableFlash = 'settings[disable_flash_messages]';
 $kSignupAssignClient = 'settings[signup_automatically_assign_client]';
 $kSignupAgeMin = 'settings[signup_default_age_minimum_eighteen]';
+$kStopHomecareSigningUp = 'settings[stop_homecare_signing_up]';
 $kCurrencySymbol = 'settings[currency_symbol]';
 $kCurrencySymbolPlacement = 'settings[currency_symbol_placement]';
 $kCurrencyCode = 'settings[currency_code]';
@@ -107,6 +108,31 @@ echo H::openTag('div', $row); //1
         echo  new Option()
          ->value('1')
          ->selected($body[$kStopSigningUp] == '1')
+         ->content($translator->translate('yes'));
+       echo H::closeTag('select');
+      echo H::closeTag('div'); //7
+     echo H::closeTag('div'); //6
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
+       echo H::openTag('label', [
+        'for' => $kStopHomecareSigningUp
+       ]);
+        echo $translator->translate('stop.homecare.signing.up');
+        echo $s->infoIcon('stop_homecare_signing_up');
+       echo H::closeTag('label');
+       $body[$kStopHomecareSigningUp] =
+       $s->getSetting('stop_homecare_signing_up');
+       echo H::openTag('select', [
+        'name' => $kStopHomecareSigningUp,
+        'id' => $kStopHomecareSigningUp,
+        'class' => 'form-select',
+       ]);
+        echo  new Option()
+         ->value('0')
+         ->content($translator->translate('no'));
+        echo  new Option()
+         ->value('1')
+         ->selected($body[$kStopHomecareSigningUp] == '1')
          ->content($translator->translate('yes'));
        echo H::closeTag('select');
       echo H::closeTag('div'); //7

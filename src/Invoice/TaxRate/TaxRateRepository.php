@@ -38,6 +38,21 @@ final class TaxRateRepository extends Select\Repository
     }
 
     /**
+     * The lowest-id TaxRate record, used as a pragmatic fallback by flows
+     * (e.g. HomeCare signup) that must auto-create a Product with no admin
+     * present to pick a tax rate.
+     *
+     * @return TaxRate|null
+     *
+     * @psalm-return TEntity|null
+     */
+    public function repoFirstByIdQuery(): ?TaxRate
+    {
+        $query = $this->select()->orderBy(['id' => 'asc']);
+        return $query->fetchOne() ?: null;
+    }
+
+    /**
      * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|TaxRate|null $taxRate
      * @throws Throwable

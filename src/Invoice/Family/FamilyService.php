@@ -35,6 +35,28 @@ final readonly class FamilyService
     }
 
     /**
+     * Resolves a customer-entered street name to an existing pre-entered
+     * Family/run — exact match on both family_name and category_secondary_id
+     * — or creates a new one when no run has been set up for that
+     * street/category combination yet. Used by the HomeCare signup flow.
+     * Commalist/prefix are left empty on a newly created Family — staff
+     * flesh it out later from the existing Family UI.
+     */
+    public function findOrCreateByStreetName(string $streetName, int $categorySecondaryId): Family
+    {
+        $existing = $this->repository->repoFamilyByNameAndSecondaryCategoryQuery($streetName, $categorySecondaryId);
+        if ($existing !== null) {
+            return $existing;
+        }
+        $family = new Family();
+        $this->saveFamily($family, [
+            'family_name' => $streetName,
+            'category_secondary_id' => (string) $categorySecondaryId,
+        ]);
+        return $family;
+    }
+
+    /**
      * Bulk-writes street_sort_order for the given family IDs in the supplied order.
      * Position 1 = first in the cleaning run, 2 = second, etc.
      *

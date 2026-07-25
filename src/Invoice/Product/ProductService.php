@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Product;
 
 use App\Infrastructure\Persistence\Product\Product;
+use App\Invoice\Enum\ProductType;
 use App\Invoice\Family\FamilyRepository as FR;
 use App\Invoice\TaxRate\TaxRateRepository as TRR;
 use App\Invoice\Unit\UnitRepository as UR;
@@ -127,5 +128,41 @@ final readonly class ProductService
     public function deleteProduct(Product $model): void
     {
         $this->repository->delete($model);
+    }
+
+    /**
+     * Resolves the Service-type Product representing a single house number
+     * under a street's Family (used by the HomeCare signup flow — one
+     * Product per address, `product_type = Service`). Reuses the same
+     * existence check as the staff-facing commalist bulk generator
+     * (`FamilyController::createProductsFromCommalist()`). When no matching
+     * Product exists yet, one is created at `$price` — an existing Product's
+     * price/tax/unit are never overwritten by a later signup at the same
+     * address.
+     */
+    public function findOrCreateHouseNumberProduct(
+        int $familyId,
+        string $buildingNumber,
+        float $price,
+        int $taxRateId,
+        int $unitId,
+    ): Product {
+        /** @var Product $candidate */
+        foreach ($this->repository->repoProductWithFamilyIdQuery($buildingNumber, $familyId) as $candidate) {
+            return $candidate;
+        }
+        $product = new Product();
+        $this->saveProduct($product, [
+            'ProductForm' => [
+                'product_name'        => $buildingNumber,
+                'product_description' => $buildingNumber,
+                'product_type'        => ProductType::Service->value,
+                'product_price'       => $price,
+                'family_id'           => (string) $familyId,
+                'tax_rate_id'         => (string) $taxRateId,
+                'unit_id'             => (string) $unitId,
+            ],
+        ]);
+        return $product;
     }
 }

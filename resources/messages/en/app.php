@@ -1621,6 +1621,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'payment.method.history' =>
     'Cannot delete. Payment Method history exists.',
   'payment.methods' => 'Payment Methods',
+  'payment.option' => 'How would you like to pay?',
   'payment.no.invoice.sent' =>
     'No invoices have been sent'
     . ' by us or viewed by the customer.',
@@ -2438,6 +2439,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'state' => 'State',
   'status' => 'Status',
   'stop' => 'Stop',
+  'stop.homecare.signing.up' => 'No home care signup needed',
   'stop.logging.in' => 'Stop logging in',
   'stop.signing.up' => 'Stop signing up',
   'storecove' => 'Storecove',
@@ -3073,5 +3075,18 @@ prior to importing and no existing documents e.g. Invoices.',
   'homecare.scan.thanks' => 'Thanks — your invoice has been generated and is ready to view in your account.',
   'homecare.scan.not.eligible' => 'No new invoice is needed right now. If you think this is a mistake, please contact us.',
   'homecare.scan.contact.us' => 'We could not process this scan. Please contact us directly.',
+  'homecare.signup.title' => 'Home Care Signup',
+  'homecare.signup.payment.will.pay.today' => 'I will pay today',
+  'homecare.signup.payment.have.paid.cash' => 'I have already paid cash',
+  'homecare.signup.category.new.area' => 'My area is not listed — this is a new area',
+  'homecare.signup.street.name' => 'Street name',
+  'homecare.signup.confirmed.paid' =>
+    'Thanks — your account is set up and your first invoice is marked paid. Your QR code is ready below: stick it somewhere visible and scan it after every future visit to request your next invoice automatically.',
+  'homecare.signup.confirmed.unpaid' =>
+    'Thanks — your account is set up and your first invoice has been sent. Your QR code is ready below to print now, but automatic scan-to-invoice will only start working once that invoice is marked paid.',
+  'homecare.signup.confirmed.expired' =>
+    'This confirmation link has expired or already been used. Please sign up again.',
+  'homecare.signup.confirmed.setup.incomplete' =>
+    'We could not finish setting up your account. Please contact us directly.',
 ];
 

@@ -125,6 +125,7 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
             'debugMode' => $userState['debugMode'],
             'stopSigningUp' => $bs['stopSigningUp'],
             'stopLoggingIn' => $bs['stopLoggingIn'],
+            'stopHomecareSigningUp' => $bs['stopHomecareSigningUp'],
             'noFrontPageAbout' => $bs['noFrontPageAbout'],
             'noFrontPageAccreditations' => $bs['noFrontPageAccreditations'],
             'noFrontPageGallery' => $bs['noFrontPageGallery'],
@@ -262,6 +263,7 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
      *     bootstrap5FormInputHeight: int,
      *     stopSigningUp: bool,
      *     stopLoggingIn: bool,
+     *     stopHomecareSigningUp: bool,
      *     noFrontPageAbout: bool,
      *     noFrontPageGallery: bool,
      *     noFrontPageAccreditations: bool,
@@ -308,6 +310,8 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
                 $s->getSetting('stop_signing_up') == '1',
             'stopLoggingIn' =>
                 $s->getSetting('stop_logging_in') == '1',
+            'stopHomecareSigningUp' =>
+                $s->getSetting('stop_homecare_signing_up') == '1',
             'noFrontPageAbout' =>
                 $s->getSetting('no_front_about_page') == '1',
             'noFrontPageGallery' =>

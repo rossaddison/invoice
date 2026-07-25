@@ -136,6 +136,27 @@ final class FamilyRepository extends Select\Repository
     }
 
     /**
+     * Exact match against family_name AND category_secondary_id, used by the
+     * HomeCare signup flow to resolve a customer-entered street name against
+     * the runs/streets staff have already pre-entered. Both columns are
+     * required so that two different runs which happen to share the same
+     * street name, but belong to different secondary categories, are never
+     * confused with one another.
+     *
+     * @return Family|null
+     *
+     * @psalm-return TEntity|null
+     */
+    public function repoFamilyByNameAndSecondaryCategoryQuery(string $name, int $categorySecondaryId): ?Family
+    {
+        $query = $this
+            ->select()
+            ->where('family_name', $name)
+            ->andWhere('category_secondary_id', $categorySecondaryId);
+        return $query->fetchOne() ?: null;
+    }
+
+    /**
      * Returns all families ordered by street_sort_order ASC, then family_name ASC.
      * Used exclusively by the cleaning-run street order drag-and-drop view.
      */

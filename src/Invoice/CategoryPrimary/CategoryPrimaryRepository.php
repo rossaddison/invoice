@@ -81,6 +81,21 @@ final class CategoryPrimaryRepository extends Select\Repository
     }
 
     /**
+     * The lowest-id CategoryPrimary record, used as a pragmatic fallback by
+     * flows (e.g. HomeCare signup) that must auto-create a CategorySecondary
+     * for a "new area" with no admin present to pick a primary category.
+     *
+     * @return CategoryPrimary|null
+     *
+     * @psalm-return TEntity|null
+     */
+    public function repoFirstByIdQuery(): ?CategoryPrimary
+    {
+        $query = $this->select()->orderBy(['id' => 'asc']);
+        return $query->fetchOne() ?: null;
+    }
+
+    /**
      * @return array
      */
     public function optionsDataCategoryPrimaries(): array
