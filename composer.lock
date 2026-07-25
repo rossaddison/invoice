@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "62ec3faf5219afd33a0d6a5e66b5f1c4",
+    "content-hash": "3b6718c1da912b62fcafbc9a61ff8dba",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -3216,29 +3216,30 @@
         },
         {
             "name": "google/auth",
-            "version": "v1.52.0",
+            "version": "v1.53.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-auth-library-php.git",
-                "reference": "7a7e5ab2ff2d9449a252eab587d4dae978c22a77"
+                "reference": "d677d0b0c4bd52ab222a85df8e74e0d491c0cc5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-auth-library-php/zipball/7a7e5ab2ff2d9449a252eab587d4dae978c22a77",
-                "reference": "7a7e5ab2ff2d9449a252eab587d4dae978c22a77",
+                "url": "https://api.github.com/repos/googleapis/google-auth-library-php/zipball/d677d0b0c4bd52ab222a85df8e74e0d491c0cc5a",
+                "reference": "d677d0b0c4bd52ab222a85df8e74e0d491c0cc5a",
                 "shasum": ""
             },
             "require": {
                 "firebase/php-jwt": "^6.0||^7.0",
-                "guzzlehttp/guzzle": "^7.4.5",
-                "guzzlehttp/psr7": "^2.4.5",
+                "guzzlehttp/guzzle": "^7.8.2||^8.0",
+                "guzzlehttp/psr7": "^2.6.3||^3.0",
                 "php": "^8.1",
                 "psr/cache": "^2.0||^3.0",
+                "psr/http-client": "^1.0",
                 "psr/http-message": "^1.1||^2.0",
                 "psr/log": "^2.0||^3.0"
             },
             "require-dev": {
-                "guzzlehttp/promises": "^2.0",
+                "guzzlehttp/promises": "^2.0.3||^3.0",
                 "kelvinmo/simplejwt": "^1.1.0",
                 "phpseclib/phpseclib": "^3.0.35",
                 "phpspec/prophecy-phpunit": "^2.1",
@@ -3272,9 +3273,9 @@
             "support": {
                 "docs": "https://cloud.google.com/php/docs/reference/auth/latest",
                 "issues": "https://github.com/googleapis/google-auth-library-php/issues",
-                "source": "https://github.com/googleapis/google-auth-library-php/tree/v1.52.0"
+                "source": "https://github.com/googleapis/google-auth-library-php/tree/v1.53.0"
             },
-            "time": "2026-06-23T16:43:15+00:00"
+            "time": "2026-07-22T22:36:10+00:00"
         },
         {
             "name": "google/cloud-core",
@@ -3460,16 +3461,16 @@
         },
         {
             "name": "google/gax",
-            "version": "v1.45.0",
+            "version": "v1.46.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/gax-php.git",
-                "reference": "9310034e6fcf94ff1e71d54204720d6607751bff"
+                "reference": "32824ff2b65fd4fe6d916f667cdc31445579e9f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/9310034e6fcf94ff1e71d54204720d6607751bff",
-                "reference": "9310034e6fcf94ff1e71d54204720d6607751bff",
+                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/32824ff2b65fd4fe6d916f667cdc31445579e9f2",
+                "reference": "32824ff2b65fd4fe6d916f667cdc31445579e9f2",
                 "shasum": ""
             },
             "require": {
@@ -3518,9 +3519,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/gax-php/issues",
-                "source": "https://github.com/googleapis/gax-php/tree/v1.45.0"
+                "source": "https://github.com/googleapis/gax-php/tree/v1.46.0"
             },
-            "time": "2026-07-17T19:39:21+00:00"
+            "time": "2026-07-22T05:23:19+00:00"
         },
         {
             "name": "google/grpc-gcp",
@@ -17263,16 +17264,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/rate-limiter.git",
-                "reference": "80ed5f54030c066de2d08ed64bb83c7a49821973"
+                "reference": "fddd313eb2f96aee60e9720bb8816a70b8cac753"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/rate-limiter/zipball/80ed5f54030c066de2d08ed64bb83c7a49821973",
-                "reference": "80ed5f54030c066de2d08ed64bb83c7a49821973",
+                "url": "https://api.github.com/repos/yiisoft/rate-limiter/zipball/fddd313eb2f96aee60e9720bb8816a70b8cac753",
+                "reference": "fddd313eb2f96aee60e9720bb8816a70b8cac753",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.0",
+                "php": "8.0 - 8.5",
                 "psr/http-factory": "^1.0",
                 "psr/http-message": "^1.1|^2.0",
                 "psr/http-message-implementation": "1.0",
@@ -17282,21 +17283,30 @@
                 "yiisoft/http": "^1.2"
             },
             "require-dev": {
+                "bamarni/composer-bin-plugin": "^1.9.1",
                 "ext-apcu": "*",
-                "maglnet/composer-require-checker": "^4.4",
+                "friendsofphp/php-cs-fixer": "^3.95",
                 "nyholm/psr7": "^1.0",
                 "phpunit/phpunit": "^9.5",
                 "rector/rector": "^2.0.2",
                 "roave/infection-static-analysis-plugin": "^1.16",
                 "spatie/phpunit-watcher": "^1.23",
                 "vimeo/psalm": "^4.30 || ^5.13 || ^6.16.1",
-                "yiisoft/cache": "^3.0"
+                "yiisoft/cache": "^3.0",
+                "yiisoft/code-style": "^1.0"
             },
             "suggest": {
                 "ext-apcu": "To use APCu storage"
             },
             "default-branch": true,
             "type": "library",
+            "extra": {
+                "bamarni-bin": {
+                    "bin-links": true,
+                    "forward-command": true,
+                    "target-directory": "tools"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Yiisoft\\Yii\\RateLimiter\\": "src"
@@ -17334,7 +17344,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2026-07-14T18:46:29+00:00"
+            "time": "2026-07-24T07:37:36+00:00"
         },
         {
             "name": "yiisoft/rbac",
@@ -20214,21 +20224,21 @@
         },
         {
             "name": "codeception/lib-web",
-            "version": "2.1.0",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/lib-web.git",
-                "reference": "a030a3a22fc8e856b5957086794ed5403c7992d9"
+                "reference": "b630c3a296685d20e8ea5c4a17b11f47ec381d91"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/lib-web/zipball/a030a3a22fc8e856b5957086794ed5403c7992d9",
-                "reference": "a030a3a22fc8e856b5957086794ed5403c7992d9",
+                "url": "https://api.github.com/repos/Codeception/lib-web/zipball/b630c3a296685d20e8ea5c4a17b11f47ec381d91",
+                "reference": "b630c3a296685d20e8ea5c4a17b11f47ec381d91",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
-                "guzzlehttp/psr7": "^2.0",
+                "guzzlehttp/psr7": "^2.0 | ^3.0",
                 "php": "^8.2",
                 "phpunit/phpunit": "^11.5 | ^12 | ^13",
                 "symfony/css-selector": ">=4.4.24 <9.0"
@@ -20261,9 +20271,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Codeception/lib-web/issues",
-                "source": "https://github.com/Codeception/lib-web/tree/2.1.0"
+                "source": "https://github.com/Codeception/lib-web/tree/2.1.1"
             },
-            "time": "2026-02-06T15:22:13+00:00"
+            "time": "2026-07-22T06:33:17+00:00"
         },
         {
             "name": "codeception/module-asserts",
@@ -21431,16 +21441,16 @@
         },
         {
             "name": "jolicode/jolinotif",
-            "version": "v3.3.0",
+            "version": "v3.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jolicode/JoliNotif.git",
-                "reference": "7083df4c4dc614f20bf16dc3ad53f705460bd1dd"
+                "reference": "fd188c41fdf2d0659a6e48bac705e0615e6eefdb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jolicode/JoliNotif/zipball/7083df4c4dc614f20bf16dc3ad53f705460bd1dd",
-                "reference": "7083df4c4dc614f20bf16dc3ad53f705460bd1dd",
+                "url": "https://api.github.com/repos/jolicode/JoliNotif/zipball/fd188c41fdf2d0659a6e48bac705e0615e6eefdb",
+                "reference": "fd188c41fdf2d0659a6e48bac705e0615e6eefdb",
                 "shasum": ""
             },
             "require": {
@@ -21492,7 +21502,7 @@
             ],
             "support": {
                 "issues": "https://github.com/jolicode/JoliNotif/issues",
-                "source": "https://github.com/jolicode/JoliNotif/tree/v3.3.0"
+                "source": "https://github.com/jolicode/JoliNotif/tree/v3.3.1"
             },
             "funding": [
                 {
@@ -21500,7 +21510,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-12-04T10:50:17+00:00"
+            "time": "2026-07-22T08:53:38+00:00"
         },
         {
             "name": "jolicode/php-os-helper",
@@ -23314,12 +23324,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "e018fe05ea951d66d1d5f066b4b4aac0366c7a4a"
+                "reference": "e7d396822cefa7207fd352f61f68660811e108a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/e018fe05ea951d66d1d5f066b4b4aac0366c7a4a",
-                "reference": "e018fe05ea951d66d1d5f066b4b4aac0366c7a4a",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/e7d396822cefa7207fd352f61f68660811e108a4",
+                "reference": "e7d396822cefa7207fd352f61f68660811e108a4",
                 "shasum": ""
             },
             "conflict": {
@@ -23516,7 +23526,7 @@
                 "doctrine/mongodb-odm-bundle": "<3.0.1",
                 "doctrine/orm": ">=1,<1.2.4|>=2,<2.4.8|>=2.5,<2.5.1|>=2.8.3,<2.8.4",
                 "dolibarr/dolibarr": "<=23.0.2",
-                "dompdf/dompdf": "<2.0.4",
+                "dompdf/dompdf": "<3.1.6",
                 "doublethreedigital/guest-entries": "<3.1.2",
                 "dreamfactory/df-core": "<1.0.4",
                 "drupal-pattern-lab/unified-twig-extensions": "<=0.1",
@@ -23674,7 +23684,7 @@
                 "guzzlehttp/guzzle": "<7.15.1",
                 "guzzlehttp/guzzle-services": "<1.5.4",
                 "guzzlehttp/oauth-subscriber": "<0.8.1",
-                "guzzlehttp/psr7": "<2.12.1",
+                "guzzlehttp/psr7": "<2.12.3",
                 "haffner/jh_captcha": "<=2.1.3|>=3,<=3.0.2",
                 "handcraftedinthealps/goodby-csv": "<1.4.3",
                 "harvesthq/chosen": "<1.8.7",
@@ -23949,7 +23959,7 @@
                 "personnummer/personnummer": "<3.0.2",
                 "ph7software/ph7builder": "<=17.9.1",
                 "phanan/koel": "<=9.7",
-                "pheditor/pheditor": "<2.0.6",
+                "pheditor/pheditor": "<2.0.8",
                 "phenx/php-svg-lib": "<0.5.2",
                 "php-censor/php-censor": "<2.0.13|>=2.1,<2.1.5",
                 "php-mod/curl": "<2.3.2",
@@ -23965,7 +23975,7 @@
                 "phpoffice/common": "<0.2.9",
                 "phpoffice/math": "<=0.2",
                 "phpoffice/phpexcel": "<=1.8.2",
-                "phpoffice/phpspreadsheet": "<=1.30.4|>=2,<=2.1.15|>=2.2,<=2.4.4|>=3,<=3.10.4|>=4,<=5.6",
+                "phpoffice/phpspreadsheet": "<=1.30.5|>=2,<=2.1.17|>=2.2,<=2.4.6|>=3,<=3.10.6|>=4,<=5.8",
                 "phppgadmin/phppgadmin": "<=7.13",
                 "phpseclib/phpseclib": "<=2.0.54|>=3,<=3.0.53",
                 "phpservermon/phpservermon": "<3.6",
@@ -23992,7 +24002,7 @@
                 "pocketmine/pocketmine-mp": "<5.42.1",
                 "pocketmine/raklib": ">=0.14,<0.14.6|>=0.15,<0.15.1",
                 "pontedilana/php-weasyprint": "<=2.5.1",
-                "poweradmin/poweradmin": "<4.2.4|>=4.3,<4.3.3",
+                "poweradmin/poweradmin": "<4.2.5|>=4.3,<4.3.4",
                 "pressbooks/pressbooks": "<5.18",
                 "prestashop/autoupgrade": ">=4,<4.10.1",
                 "prestashop/blockreassurance": "<=5.1.3",
@@ -24428,7 +24438,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-07-21T02:36:18+00:00"
+            "time": "2026-07-24T23:00:42+00:00"
         },
         {
             "name": "rossaddison/translator-extractor",
@@ -27276,5 +27286,5 @@
         "ext-zend-opcache": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }
