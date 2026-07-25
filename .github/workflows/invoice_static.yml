@@ -81,6 +81,12 @@ jobs:
     container:
       image: alpine:${{ matrix.alpine }}
 
+    # PHP 8.5 hits an open, upstream Psalm bug unrelated to Alpine —
+    # https://github.com/vimeo/psalm/issues/11831 ("Psalm crash due to NAN
+    # on PHP 8.5") — so a failure on that leg alone doesn't fail the whole
+    # workflow. Remove this once that issue is fixed upstream.
+    continue-on-error: ${{ matrix.php == '85' }}
+
     strategy:
       fail-fast: false
       matrix:
