@@ -80,6 +80,7 @@ jobs:
       image: alpine:${{ matrix.alpine }}
 
     strategy:
+      fail-fast: false
       matrix:
         # PHP 8.5 has no package on any stable Alpine release yet — only on
         # the rolling `edge` branch — so each PHP version is paired with the
@@ -121,6 +122,7 @@ jobs:
             php${{ matrix.php }}-dom \
             php${{ matrix.php }}-fileinfo \
             php${{ matrix.php }}-gd \
+            php${{ matrix.php }}-iconv \
             php${{ matrix.php }}-intl \
             php${{ matrix.php }}-mbstring \
             php${{ matrix.php }}-openssl \

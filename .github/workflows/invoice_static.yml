@@ -82,6 +82,7 @@ jobs:
       image: alpine:${{ matrix.alpine }}
 
     strategy:
+      fail-fast: false
       matrix:
         # See invoice_dependency.yml's mutation-alpine job for why PHP and
         # Alpine versions are paired explicitly rather than a free matrix.
@@ -111,6 +112,7 @@ jobs:
             php${{ matrix.php }}-dom \
             php${{ matrix.php }}-fileinfo \
             php${{ matrix.php }}-gd \
+            php${{ matrix.php }}-iconv \
             php${{ matrix.php }}-intl \
             php${{ matrix.php }}-mbstring \
             php${{ matrix.php }}-openssl \
