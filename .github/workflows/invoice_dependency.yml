@@ -151,6 +151,13 @@ jobs:
         if: matrix.php == '84'
         run: apk add --no-cache php84-opcache
 
+      # Alpine's stock php.ini defaults to memory_limit=128M, which
+      # composer-require-checker's AST parsing of the full codebase
+      # exceeds. shivammathur/setup-php sets this to unlimited by default
+      # on the Ubuntu leg, which is why this only shows up here.
+      - name: Raise PHP memory_limit
+        run: echo "memory_limit=-1" > /etc/php${{ matrix.php }}/conf.d/99-memory-limit.ini
+
       # This project's composer.json references several rossaddison/* forks
       # as VCS (not Packagist) repositories; composer resolving them hits
       # GitHub's API and needs auth to avoid the unauthenticated rate limit,
