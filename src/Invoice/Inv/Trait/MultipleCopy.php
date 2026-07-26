@@ -483,11 +483,18 @@ trait MultipleCopy
         $original = $d->iaR->repoInvquery($invId);
         if (null !== $original) {
             $array = [];
-            $array['inv_id'] = $original->reqInvId();
+            // inv_id must be the COPY's own id, not the original's
+            // (reqInvId() belongs to $original) — using the original's id
+            // here overwrote the copy's InvAmount.inv_id foreign key,
+            // detaching it from the new invoice. inv/index then found no
+            // matching InvAmount row and showed an incorrect amount until
+            // the invoice was opened, which recalculates and re-saves
+            // InvAmount with the correct inv_id via NumberHelper::calculateInv().
+            $array['inv_id'] = $copiedId;
             $array['item_subtotal'] = $original->getItemSubtotal();
             $array['item_taxtotal'] = $original->getItemTaxTotal();
             $array['packhandleship_tax'] = $original->getPackhandleshipTax();
-            $array['packhandleship_total'] = $original->getPackhandleshipTax();
+            $array['packhandleship_total'] = $original->getPackhandleshipTotal();
             $array['tax_total'] = $original->getTaxTotal();
             $array['total'] = $original->getTotal();
             $array['paid'] = 0;
