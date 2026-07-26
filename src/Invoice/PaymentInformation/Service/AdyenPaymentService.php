@@ -57,7 +57,7 @@ final class AdyenPaymentService implements PaymentGatewayInterface
      * as `merchantReference` in the AUTHORISATION webhook — the same role
      * Stripe's PaymentIntent metadata plays.
      */
-    public function createSession(array $invoiceData, string $returnUrl): ?CreateCheckoutSessionResponse
+    public function createSession(array $invoiceData, string $returnUrl, string $countryCode): ?CreateCheckoutSessionResponse
     {
         $amount = new Amount();
         $amount->setCurrency(strtoupper((string) $invoiceData['currency']));
@@ -67,6 +67,7 @@ final class AdyenPaymentService implements PaymentGatewayInterface
         $request->setMerchantAccount($this->merchantAccount());
         $request->setReference((string) $invoiceData['url_key']);
         $request->setReturnUrl($returnUrl);
+        $request->setCountryCode($countryCode);
 
         try {
             $paymentsApi = new PaymentsApi($this->buildClient());

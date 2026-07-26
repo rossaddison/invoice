@@ -124,7 +124,7 @@ final class AdyenPaymentController
             'adyenSessionId'      => $sessionCtx['session']->getId(),
             'adyenSessionData'    => $sessionCtx['session']->getSessionData(),
             'adyenEnvironment'    => $this->adyenPaymentService->isSandbox() ? 'test' : 'live',
-            'adyenCountryCode'    => $this->resolveCountryCode($client?->getClientCountry()),
+            'adyenCountryCode'    => $sessionCtx['country_code'],
             'title'               => 'Adyen - PCI Compliant - is enabled. ',
         ]);
     }
@@ -202,7 +202,8 @@ final class AdyenPaymentController
      * @param array{url_key: string, invoice: Inv, balance: float,
      *     total: float, disable_form: bool, items_array: list<string>} $ctx
      * @return Response|array{session: CreateCheckoutSessionResponse,
-     *     payment_method_for_this_invoice: ?PaymentMethod, is_overdue: bool}
+     *     payment_method_for_this_invoice: ?PaymentMethod, is_overdue: bool,
+     *     country_code: string}
      */
     private function createAdyenSession(array $ctx, pmR $pmR): Response|array
     {
@@ -211,6 +212,7 @@ final class AdyenPaymentController
             return $this->webService->getNotFoundResponse();
         }
 
+        $countryCode = $this->resolveCountryCode($ctx['invoice']->getClient()?->getClientCountry());
         $yii_invoice_array = [
             'balance'  => $ctx['balance'],
             'currency' => !empty($this->sR->getSetting('currency_code'))
@@ -228,7 +230,15 @@ final class AdyenPaymentController
             'paymentinformation/adyenComplete',
             ['url_key' => $ctx['url_key'], '_language' => 'en'],
         );
-        $session = $this->adyenPaymentService->createSession($yii_invoice_array, $returnUrl);
+        // countryCode must be set on the session itself, not only passed to
+        // the front-end AdyenCheckout() config — otherwise Adyen returns
+        // payment methods unfiltered by country (e.g. US-only "Pay by Bank"
+        // alongside a GB session), and selecting one of those mismatched
+        // methods fails at submission with a 422 "Field 'countryCode' is
+        // not valid" from /sessions/{id}/payments, since the front-end
+        // config value only drives Drop-in's localisation, not which
+        // methods the session actually offers.
+        $session = $this->adyenPaymentService->createSession($yii_invoice_array, $returnUrl, $countryCode);
         if (null === $session) {
             $this->flashMessage('warning', 'Unable to start an Adyen payment session.');
             return $this->webService->getNotFoundResponse();
@@ -240,6 +250,7 @@ final class AdyenPaymentController
             'payment_method_for_this_invoice'  => $pmR->repoPaymentMethodquery((int) $invoice->getPaymentMethod()),
             'is_overdue'                        => $ctx['balance'] > 0.00
                 && strtotime($invoice->getDateDue()->format('Y-m-d')) < time(),
+            'country_code'                      => $countryCode,
         ];
     }
 
