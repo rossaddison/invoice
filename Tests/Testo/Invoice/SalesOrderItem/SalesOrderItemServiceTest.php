@@ -562,7 +562,7 @@ final class SalesOrderItemServiceTest
         Assert::same('ABC123', $model->getPeppolPoItemid());
         // The repository's save() is declared void, so its return value is
         // always null and this ternary always evaluates to false. See
-        // POSSIBLE ISSUE note in the final report.
+        // PR #998 "Possible issues found".
         Assert::false($result);
     }
 

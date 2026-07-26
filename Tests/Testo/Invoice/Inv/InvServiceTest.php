@@ -395,7 +395,7 @@ final class InvServiceTest
         $service->saveInv($user, $model, [], $s, $gR);
 
         // The translated string is computed but never assigned back onto the
-        // model (see POSSIBLE ISSUE in the final report) - terms stays at
+        // model (see PR #998 "Possible issues found") - terms stays at
         // its untouched constructor default.
         Assert::same('', $model->getTerms());
     }
@@ -656,8 +656,10 @@ final class InvServiceTest
         $e = $repo->shouldReceive('save');
         $e->once()->with($model);
 
+        $before = date('Y-m-d');
         $service = $this->makeService($repo);
         $service->saveInvFromRecurring($user, $model, $details, $s);
+        $after = date('Y-m-d');
 
         Assert::same(1, $model->reqStatusId());
         Assert::same('REC-001', $model->getNumber());
@@ -665,8 +667,8 @@ final class InvServiceTest
         Assert::same(32, strlen($model->getUrlKey()));
         Assert::same(0, $model->getPaymentMethod());
         Assert::same(0.00, $model->getDiscountAmount());
-        Assert::same(date('Y-m-d'), $model->getDateCreated()->format('Y-m-d'));
-        Assert::same(date('Y-m-d'), $model->getDateSupplied()->format('Y-m-d'));
-        Assert::same(date('Y-m-d'), $model->getDateTaxPoint()->format('Y-m-d'));
+        Assert::true(in_array($model->getDateCreated()->format('Y-m-d'), [$before, $after], true));
+        Assert::true(in_array($model->getDateSupplied()->format('Y-m-d'), [$before, $after], true));
+        Assert::true(in_array($model->getDateTaxPoint()->format('Y-m-d'), [$before, $after], true));
     }
 }

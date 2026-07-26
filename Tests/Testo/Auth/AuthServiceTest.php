@@ -30,15 +30,19 @@ final class AuthServiceTest
         ?UserRepository $userR = null,
         ?IdentityRepository $identityR = null,
     ): AuthService {
+        /** @var UserRepository&m\MockInterface $userR */
         $userR = $userR ?? m::mock(UserRepository::class);
+        /** @var IdentityRepository&m\MockInterface $identityR */
         $identityR = $identityR ?? m::mock(IdentityRepository::class);
         return new AuthService($currentUser, $userR, $identityR);
     }
 
     public function loginSucceedsWithValidCredentialsAndLogsInIdentity(): void
     {
+        /** @var Identity&m\MockInterface $identity */
         $identity = m::mock(Identity::class);
 
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
         /** @var \Mockery\Expectation $e */
         $e = $user->shouldReceive('validatePassword');
@@ -47,11 +51,13 @@ final class AuthServiceTest
         $e2 = $user->shouldReceive('getIdentity');
         $e2->once()->andReturn($identity);
 
+        /** @var UserRepository&m\MockInterface $userR */
         $userR = m::mock(UserRepository::class);
         /** @var \Mockery\Expectation $e3 */
         $e3 = $userR->shouldReceive('findByLoginWithAuthIdentity');
         $e3->once()->with('jane')->andReturn($user);
 
+        /** @var CurrentUser&m\MockInterface $currentUser */
         $currentUser = m::mock(CurrentUser::class);
         /** @var \Mockery\Expectation $e4 */
         $e4 = $currentUser->shouldReceive('login');
@@ -64,11 +70,13 @@ final class AuthServiceTest
 
     public function loginFailsWhenUserNotFound(): void
     {
+        /** @var UserRepository&m\MockInterface $userR */
         $userR = m::mock(UserRepository::class);
         /** @var \Mockery\Expectation $e */
         $e = $userR->shouldReceive('findByLoginWithAuthIdentity');
         $e->once()->with('unknown')->andReturn(null);
 
+        /** @var CurrentUser&m\MockInterface $currentUser */
         $currentUser = m::mock(CurrentUser::class);
         $currentUser->shouldNotReceive('login');
 
@@ -79,17 +87,20 @@ final class AuthServiceTest
 
     public function loginFailsWhenPasswordInvalid(): void
     {
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
         /** @var \Mockery\Expectation $e */
         $e = $user->shouldReceive('validatePassword');
         $e->once()->with('wrong password')->andReturn(false);
         $user->shouldNotReceive('getIdentity');
 
+        /** @var UserRepository&m\MockInterface $userR */
         $userR = m::mock(UserRepository::class);
         /** @var \Mockery\Expectation $e2 */
         $e2 = $userR->shouldReceive('findByLoginWithAuthIdentity');
         $e2->once()->with('jane')->andReturn($user);
 
+        /** @var CurrentUser&m\MockInterface $currentUser */
         $currentUser = m::mock(CurrentUser::class);
         $currentUser->shouldNotReceive('login');
 
@@ -100,19 +111,23 @@ final class AuthServiceTest
 
     public function oauthLoginSucceedsWhenUserFound(): void
     {
+        /** @var Identity&m\MockInterface $identity */
         $identity = m::mock(Identity::class);
 
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
         /** @var \Mockery\Expectation $e */
         $e = $user->shouldReceive('getIdentity');
         $e->once()->andReturn($identity);
         $user->shouldNotReceive('validatePassword');
 
+        /** @var UserRepository&m\MockInterface $userR */
         $userR = m::mock(UserRepository::class);
         /** @var \Mockery\Expectation $e2 */
         $e2 = $userR->shouldReceive('findByLoginWithAuthIdentity');
         $e2->once()->with('jane')->andReturn($user);
 
+        /** @var CurrentUser&m\MockInterface $currentUser */
         $currentUser = m::mock(CurrentUser::class);
         /** @var \Mockery\Expectation $e3 */
         $e3 = $currentUser->shouldReceive('login');
@@ -125,11 +140,13 @@ final class AuthServiceTest
 
     public function oauthLoginFailsWhenUserNotFound(): void
     {
+        /** @var UserRepository&m\MockInterface $userR */
         $userR = m::mock(UserRepository::class);
         /** @var \Mockery\Expectation $e */
         $e = $userR->shouldReceive('findByLoginWithAuthIdentity');
         $e->once()->with('unknown')->andReturn(null);
 
+        /** @var CurrentUser&m\MockInterface $currentUser */
         $currentUser = m::mock(CurrentUser::class);
         $currentUser->shouldNotReceive('login');
 
@@ -140,11 +157,13 @@ final class AuthServiceTest
 
     public function logoutRegeneratesCookieKeyAndSavesIdentityWhenIdentityIsOurs(): void
     {
+        /** @var Identity&m\MockInterface $identity */
         $identity = m::mock(Identity::class);
         /** @var \Mockery\Expectation $e */
         $e = $identity->shouldReceive('regenerateCookieLoginKey');
         $e->once()->andReturn('new-key');
 
+        /** @var CurrentUser&m\MockInterface $currentUser */
         $currentUser = m::mock(CurrentUser::class);
         /** @var \Mockery\Expectation $e2 */
         $e2 = $currentUser->shouldReceive('getIdentity');
@@ -153,6 +172,7 @@ final class AuthServiceTest
         $e3 = $currentUser->shouldReceive('logout');
         $e3->once()->andReturn(true);
 
+        /** @var IdentityRepository&m\MockInterface $identityR */
         $identityR = m::mock(IdentityRepository::class);
         /** @var \Mockery\Expectation $e4 */
         $e4 = $identityR->shouldReceive('save');
@@ -165,8 +185,10 @@ final class AuthServiceTest
 
     public function logoutDoesNotSaveWhenIdentityIsNotOurIdentityClass(): void
     {
+        /** @var IdentityInterface&m\MockInterface $identity */
         $identity = m::mock(IdentityInterface::class);
 
+        /** @var CurrentUser&m\MockInterface $currentUser */
         $currentUser = m::mock(CurrentUser::class);
         /** @var \Mockery\Expectation $e */
         $e = $currentUser->shouldReceive('getIdentity');
@@ -175,6 +197,7 @@ final class AuthServiceTest
         $e2 = $currentUser->shouldReceive('logout');
         $e2->once()->andReturn(false);
 
+        /** @var IdentityRepository&m\MockInterface $identityR */
         $identityR = m::mock(IdentityRepository::class);
         $identityR->shouldNotReceive('save');
 
@@ -185,8 +208,10 @@ final class AuthServiceTest
 
     public function getIdentityReturnsCurrentUserIdentity(): void
     {
+        /** @var IdentityInterface&m\MockInterface $identity */
         $identity = m::mock(IdentityInterface::class);
 
+        /** @var CurrentUser&m\MockInterface $currentUser */
         $currentUser = m::mock(CurrentUser::class);
         /** @var \Mockery\Expectation $e */
         $e = $currentUser->shouldReceive('getIdentity');
@@ -199,6 +224,7 @@ final class AuthServiceTest
 
     public function isGuestReturnsTrueWhenCurrentUserIsGuest(): void
     {
+        /** @var CurrentUser&m\MockInterface $currentUser */
         $currentUser = m::mock(CurrentUser::class);
         /** @var \Mockery\Expectation $e */
         $e = $currentUser->shouldReceive('isGuest');
@@ -211,6 +237,7 @@ final class AuthServiceTest
 
     public function isGuestReturnsFalseWhenCurrentUserIsAuthenticated(): void
     {
+        /** @var CurrentUser&m\MockInterface $currentUser */
         $currentUser = m::mock(CurrentUser::class);
         /** @var \Mockery\Expectation $e */
         $e = $currentUser->shouldReceive('isGuest');
