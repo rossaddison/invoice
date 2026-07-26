@@ -9,6 +9,7 @@ use Yiisoft\Html\Tag\I;
 /**
  * @var App\Infrastructure\Persistence\Quote\Quote $quote
  * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var bool $invEdit
  * @var string $add_quote_product
  * @var string $add_quote_task
@@ -46,13 +47,15 @@ use Yiisoft\Html\Tag\I;
     <?= Html::openTag('li', ['id' => 'back', 'class' => 'tab-pane']); ?>
         <?=  new A()
         ->addAttributes([
-            'type' => 'reset',
-            'onclick' => 'window.history.back()',
-            'value' => '1',
-            'data-bs-toggle' => 'tab',
+            // Deliberately no data-bs-toggle="tab" — this link navigates
+            // away entirely rather than switching an in-page tab pane.
+            // Bootstrap's Tab plugin intercepts clicks on any element with
+            // that attribute and calls preventDefault(), which silently
+            // swallowed this link's href regardless of what it was set to.
             'class' => 'text-decoration-none',
         ])
         ->addClass('btn btn-danger bi bi-arrow-left')
+        ->href($urlGenerator->generate('quote/index'))
         ->id('back')
         ->render(); ?>
     <?= Html::closeTag('li'); ?>

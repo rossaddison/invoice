@@ -189,7 +189,7 @@ trait MultipleCopy
         }
         $this->inv_service->withTransaction(
             function () use (
-                $user, $copy, $invoice_body, $opts, $invId,
+                $user, $copy, $invoice_body, $opts, $invId, $original,
                 $d, $formHydrator, $productIds, $targetClientId
             ): void {
                 $copied = $this->inv_service->copyInv(
@@ -203,8 +203,9 @@ trait MultipleCopy
                 $this->invToInvInvItems($invId, $copied_id, $d, $formHydrator);
                 $this->invToInvInvTaxRates($invId, $copied_id, $d, $formHydrator);
                 $this->invToInvInvCustom($invId, $copied_id, $d, $formHydrator);
+                $this->invToInvInvAllowanceCharges($invId, $copied_id, $d, $formHydrator);
                 if ($opts->sameAmount) {
-                    $this->invToInvInvAmount($invId, $copied_id, $d);
+                    $this->invToInvInvAmount($original, $copied, $d);
                 }
                 $d->iR->save($copy);
                 if (!empty($productIds)) {
@@ -478,32 +479,28 @@ trait MultipleCopy
         }
     }
 
-    private function invToInvInvAmount(int $invId, int $copiedId, InvCopyDeps $d): void
+    /**
+     * Mirrors SalesOrderToInvoiceConverter::soToInvoiceSoAmount() — operates
+     * on each Inv's own already-attached InvAmount relation object and saves
+     * through the parent Inv, rather than re-fetching a detached InvAmount
+     * via a separate repository call (the previous approach here, which
+     * required manually reattaching the Cycle BelongsTo relation and got
+     * that wrong in two different ways).
+     */
+    private function invToInvInvAmount(Inv $original, Inv $copied, InvCopyDeps $d): void
     {
-        $original = $d->iaR->repoInvquery($invId);
-        if (null !== $original) {
-            $array = [];
-            // inv_id must be the COPY's own id, not the original's
-            // (reqInvId() belongs to $original) — using the original's id
-            // here overwrote the copy's InvAmount.inv_id foreign key,
-            // detaching it from the new invoice. inv/index then found no
-            // matching InvAmount row and showed an incorrect amount until
-            // the invoice was opened, which recalculates and re-saves
-            // InvAmount with the correct inv_id via NumberHelper::calculateInv().
-            $array['inv_id'] = $copiedId;
-            $array['item_subtotal'] = $original->getItemSubtotal();
-            $array['item_taxtotal'] = $original->getItemTaxTotal();
-            $array['packhandleship_tax'] = $original->getPackhandleshipTax();
-            $array['packhandleship_total'] = $original->getPackhandleshipTotal();
-            $array['tax_total'] = $original->getTaxTotal();
-            $array['total'] = $original->getTotal();
-            $array['paid'] = 0;
-            $array['balance'] = $original->getBalance();
-            $copied = $d->iaR->repoInvquery($copiedId);
-            null !== $copied ?
-                $this->inv_amount_service->saveInvAmountViaCalculations(
-                        $copied, $array) : '';
-        }
+        $originalAmount = $original->getInvAmount();
+        $copiedAmount = $copied->getInvAmount();
+        $copiedAmount->setInvId($copied->reqId());
+        $copiedAmount->setItemSubtotal($originalAmount->getItemSubtotal());
+        $copiedAmount->setItemTaxTotal($originalAmount->getItemTaxTotal());
+        $copiedAmount->setPackhandleshipTotal($originalAmount->getPackhandleshipTotal() ?: 0.00);
+        $copiedAmount->setPackhandleshipTax($originalAmount->getPackhandleshipTax() ?: 0.00);
+        $copiedAmount->setTaxTotal($originalAmount->getTaxTotal() ?? 0.00);
+        $copiedAmount->setTotal($originalAmount->getTotal() ?? 0.00);
+        $copiedAmount->setPaid(0.00);
+        $copiedAmount->setBalance($originalAmount->getBalance() ?? 0.00);
+        $d->iR->save($copied);
     }
 
     /**
@@ -597,7 +594,7 @@ trait MultipleCopy
         $copy_id = 0;
         $this->inv_service->withTransaction(
             function () use (
-                $user, $copy, $ajax_body, $invId, $d, $formHydrator, &$copy_id
+                $user, $copy, $ajax_body, $invId, $original, $d, $formHydrator, &$copy_id
             ): void {
                 $this->inv_service->saveInv($user, $copy, $ajax_body, $this->sR, $d->gR);
                 $copy_id = $copy->reqId();
@@ -606,7 +603,7 @@ trait MultipleCopy
                     $this->invToInvInvTaxRates($invId, $copy_id, $d, $formHydrator);
                     $this->invToInvInvCustom($invId, $copy_id, $d, $formHydrator);
                     $this->invToInvInvAllowanceCharges($invId, $copy_id, $d, $formHydrator);
-                    $this->invToInvInvAmount($invId, $copy_id, $d);
+                    $this->invToInvInvAmount($original, $copy, $d);
                     $d->iR->save($copy);
                 }
             }
@@ -665,7 +662,7 @@ trait MultipleCopy
         $copy_id = 0;
         $this->inv_service->withTransaction(
             function () use (
-                $user, $copy, $invoice_body, $invId, $d, $formHydrator, &$copy_id
+                $user, $copy, $invoice_body, $invId, $templateInvoice, $d, $formHydrator, &$copy_id
             ): void {
                 $this->inv_service->saveInv($user, $copy, $invoice_body, $this->sR, $d->gR);
                 $copy_id = $copy->reqId();
@@ -674,7 +671,7 @@ trait MultipleCopy
                     $this->invToInvInvTaxRates($invId, $copy_id, $d, $formHydrator);
                     $this->invToInvInvCustom($invId, $copy_id, $d, $formHydrator);
                     $this->invToInvInvAllowanceCharges($invId, $copy_id, $d, $formHydrator);
-                    $this->invToInvInvAmount($invId, $copy_id, $d);
+                    $this->invToInvInvAmount($templateInvoice, $copy, $d);
                     $d->iR->save($copy);
                 }
             }
@@ -858,7 +855,11 @@ trait MultipleCopy
                 'inv_id' => $copy_id,
                 'tax_rate_id' => $inv_tax_rate->reqTaxRateId(),
                 'include_item_tax' => $inv_tax_rate->getIncludeItemTax(),
-                'amount' => $inv_tax_rate->getInvTaxRateAmount(),
+                // Key must match InvTaxRateForm's #[Required] property name
+                // (inv_tax_rate_amount) — 'amount' silently failed
+                // validation, so no InvTaxRate row was ever created for the
+                // copy, leaving its invoice-level tax missing entirely.
+                'inv_tax_rate_amount' => $inv_tax_rate->getInvTaxRateAmount(),
             ];
             $invTaxRate = new InvTaxRate();
             $form = new InvTaxRateForm();

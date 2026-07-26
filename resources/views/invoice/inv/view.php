@@ -744,13 +744,17 @@ if ($readOnly === false && $invEdit && $inv->reqStatusId() === 1) {
         echo H::openTag('li', ['id' => 'back', 'class' => 'tab-pane']);
         echo  new A()
             ->addAttributes([
-                'type' => 'reset',
-                'onclick' => 'window.history.back()',
-                'value' => '1',
-                'data-bs-toggle' => 'tab',
+                // Deliberately no data-bs-toggle="tab" — unlike its
+                // siblings in this nav, this link navigates away from the
+                // page entirely rather than switching an in-page tab pane.
+                // Bootstrap's Tab plugin intercepts clicks on any element
+                // with that attribute and calls preventDefault(), which
+                // silently swallowed this link's href no matter what it
+                // was set to.
                 'class' => 'text-decoration-none',
             ])
             ->addClass('btn btn-danger bi bi-arrow-left')
+            ->href($urlGenerator->generate('inv/index'))
             ->id('back')
             ->render();
         echo H::closeTag('li');

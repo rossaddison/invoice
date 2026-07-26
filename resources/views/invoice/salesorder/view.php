@@ -143,6 +143,13 @@ echo H::openTag('div', ['class' => 'card']); //0
     echo H::closeTag('ul'); //4
    echo H::closeTag('div'); //3
   echo H::closeTag('div'); //2
+  echo H::openTag('div', ['class' => 'headerbar-item float-start']); //2
+   echo H::openTag('a', [
+    'href' => $urlGenerator->generate('salesorder/index'),
+    'class' => 'btn btn-danger bi bi-arrow-left',
+   ]); //3
+   echo H::closeTag('a'); //3
+  echo H::closeTag('div'); //2
  echo H::closeTag('div'); //1
 
  echo H::openTag('div', ['id' => 'content']); //1

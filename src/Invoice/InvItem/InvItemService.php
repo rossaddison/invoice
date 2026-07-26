@@ -508,20 +508,33 @@ final readonly class InvItemService
         // Fetch all allowance/charges for this item
         $all_charges = 0.00;
         $all_allowances = 0.00;
+        $all_charges_vat = 0.00;
+        $all_allowances_vat = 0.00;
         $aciis = $this->aciiR->repoInvItemquery($inv_item_id);
         /** @var \App\Infrastructure\Persistence\InvItemAllowanceCharge\InvItemAllowanceCharge $acii */
         foreach ($aciis as $acii) {
             if ($acii->getAllowanceCharge()?->getIdentifier() == '1') {
                 $all_charges += (float) $acii->getAmount();
+                $all_charges_vat += (float) $acii->getVatOrTax();
             } else {
                 $all_allowances += (float) $acii->getAmount();
+                $all_allowances_vat += (float) $acii->getVatOrTax();
             }
         }
         $ipInvAc = $sub_total + $all_charges - $all_allowances;
         if ($tax_rate_percentage >= 0.00) {
+            // Matches InvItemAllowanceChargeController::performAddSave()/
+            // performEditSave(): the item's own tax_rate_percentage applies
+            // only to the item's own (charge/allowance-exclusive) subtotal —
+            // each allowance/charge instead contributes its own vat_or_tax
+            // (computed from *its* tax rate at the time it was added)
+            // directly. Applying tax_rate_percentage to the charge-inclusive
+            // subtotal instead silently produced the wrong tax whenever an
+            // allowance/charge's own tax rate differed from the item's.
             $tax_total =
                 // Cash Settlement discounts must be removed before tax worked
-                ($ipInvAc - $discount_total) * ($tax_rate_percentage / 100.00);
+                ($sub_total - $discount_total) * ($tax_rate_percentage / 100.00)
+                + ($all_charges_vat - $all_allowances_vat);
         } else {
             $tax_total = 0.00;
         }
