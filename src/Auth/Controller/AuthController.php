@@ -416,6 +416,29 @@ final class AuthController
                 ['_language' => 'en']);
     }
 
+    protected function redirectToEmailNotVerified(): ResponseInterface
+    {
+        return $this->webService->getRedirectResponse('site/emailnotverified',
+                ['_language' => 'en']);
+    }
+
+    /**
+     * True if the identity still has a live (unclicked) email-verification
+     * token, covering both the generic signup and the HomeCare signup flows.
+     * Checked before disableToken() below runs, since that call invalidates
+     * the generic-signup token as a side effect of this same login attempt.
+     */
+    private function hasUnusedEmailVerificationToken(TokenRepository $tR, string $userId): bool
+    {
+        foreach (['email-verification', 'homecare-email-verification'] as $tokenType) {
+            $token = $tR->findTokenByIdentityIdAndType((int) $userId, $tokenType);
+            if (null !== $token && !str_starts_with((string) $token->getToken(), 'already_used_token_')) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Related logic: see https://github.com/rossaddison/invoice/discussions/215
      * @param string $provider
@@ -560,7 +583,10 @@ final class AuthController
  * Also the token that was originally assigned on signup, must now be 'disabled'
  *  because the admin is responsible for making the user active.
  */
+        $awaitingEmailVerification = $this->hasUnusedEmailVerificationToken($tR, $userId);
         $this->disableToken($tR, $userId, $this->getTokenType('email-verification'));
-        return $this->redirectToAdminMustMakeActive();
+        return $awaitingEmailVerification
+            ? $this->redirectToEmailNotVerified()
+            : $this->redirectToAdminMustMakeActive();
     }
 }

@@ -186,6 +186,9 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
             'adminmustmakeactive' => [
                 'adminMustMakeActive' => $t->translate('loginalert.user.inactive'),
             ],
+            'emailnotverified' => [
+                'emailNotVerified' => $t->translate('loginalert.user.emailnotverified'),
+            ],
             'forgotemailfailed' => [
                 'passwordResetFailed' => $t->translate('password.reset.failed'),
                 'invoiceEmailException' => $t->translate('email.exception'),

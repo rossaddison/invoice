@@ -80,6 +80,11 @@ final class SiteController
         return $this->webViewRenderer->render('adminmustmakeactive');
     }
 
+    public function emailnotverified(): Response
+    {
+        return $this->webViewRenderer->render('emailnotverified');
+    }
+
     public function contact(): Response
     {
         return $this->webViewRenderer->render('contact');

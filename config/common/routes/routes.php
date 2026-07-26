@@ -77,6 +77,9 @@ return [
     Route::methods([$mG, $mP], '/adminmustmakeactive')
         ->action([SiteController::class, 'adminmustmakeactive'])
         ->name('site/adminmustmakeactive'),
+    Route::methods([$mG, $mP], '/emailnotverified')
+        ->action([SiteController::class, 'emailnotverified'])
+        ->name('site/emailnotverified'),
     Route::methods([$mG, $mP], '/team')
         ->action([SiteController::class, 'team'])
         ->name('site/team'),

@@ -1215,6 +1215,8 @@ prior to importing and no existing documents e.g. Invoices.',
   'loginalert.credentials.incorrect' => 'Email'
     . ' or Password incorrect.',
   'loginalert.no.password' => 'Please enter a password.',
+  'loginalert.user.emailnotverified' => 'Access Denied: Click on'
+    . ' the verification link sent to your email address.',
   'loginalert.user.inactive' => 'This user is'
     . ' marked as inactive. Please contact'
     . ' the system administrator.',
