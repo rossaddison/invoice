@@ -40,9 +40,41 @@ A second, unrelated copy-paste bug was in the same block:
 - `$array['inv_id']` now uses `$copiedId` (the new invoice's own id).
 - `packhandleship_total` now reads `getPackhandleshipTotal()`.
 
+## Follow-up bug found during live verification
+
+Fixing the `inv_id` value above surfaced a second, deeper, pre-existing bug:
+live-testing the checkbox copy immediately threw a hard fatal error instead
+of the earlier silent-wrong-value symptom:
+
+```
+Cycle\ORM\Exception\Relation\NullException: Relation `invAmount`.`inv`
+(Cycle\ORM\Relation\BelongsTo)->inv can not be null.
+```
+
+`InvAmount.inv` is declared `#[BelongsTo(target: Inv::class, nullable:
+false)]` — a required relation *object*, separate from the plain `inv_id`
+scalar column. `InvAmountService::saveInvAmountViaCalculations()` (the only
+caller is `invToInvInvAmount()` above) only ever called
+`$model->setInvId(...)`, never `$model->setInv($invEntity)`. Cycle's
+UnitOfWork requires the relation object to be set at persist time for a
+non-nullable `BelongsTo`, independent of the scalar column value — so this
+was always broken, for any `inv_id` value. It likely didn't surface as a
+hard crash under the original (wrong `inv_id`) code because that value
+pointed at an invoice already resolvable elsewhere in Cycle's identity map
+for that request; pointing it at the freshly-created copy's own id exposed
+the missing relation.
+
+**Fix**: `saveInvAmountViaCalculations()` now calls the existing private
+`persist()` helper first (already used correctly by `saveInvAmount()`),
+which loads the `Inv` entity by id and calls `$model->setInv($invEntity)`
+before the scalar setters run.
+
 ## Verification
 
-- `vendor/bin/psalm --no-cache` clean on the changed file.
-- No existing test coverage for this trait; recommend confirming live —
-  copy an invoice via the `inv/index` checkbox and confirm the new invoice's
-  amount displays correctly immediately, without opening it first.
+- `vendor/bin/psalm --no-cache` clean on both changed files.
+- `Tests/Unit/QuoteToSalesOrderToInvoiceWorkflowTest.php` (12 tests, the only
+  existing coverage touching `InvAmountService`) passes unchanged.
+- Confirmed live: reproduced the exact `NullException` via checkbox-copy on
+  `inv/index` before this second fix; recommend re-confirming after deploy
+  that copying no longer throws and the amount displays correctly
+  immediately, without opening the new invoice first.

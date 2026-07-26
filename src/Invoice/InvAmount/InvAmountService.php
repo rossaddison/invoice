@@ -151,6 +151,12 @@ final readonly class InvAmountService
      */
     public function saveInvAmountViaCalculations(InvAmount $model, array $array): void
     {
+        // Must resolve and attach the actual Inv entity via persist(), not
+        // just the inv_id scalar column — InvAmount.inv is a required
+        // (nullable: false) BelongsTo relation, and Cycle ORM throws
+        // NullException at save time if that relation object was never set,
+        // regardless of what the plain inv_id column holds.
+        $this->persist($model, $array);
         $model->setInvId((int) $array['inv_id']);
         $model->setItemSubtotal((float) $array['item_subtotal']);
         $model->setItemTaxTotal((float) $array['item_taxtotal']);
