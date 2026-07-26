@@ -57,3 +57,16 @@ offers a US-only method that can never actually complete.
   Key Allowed Origins list already correctly included both `http://localhost`
   and `https://yii3i.online`, ruling out CORS before the real cause
   (unfiltered payment methods) was found via the `422` response body.
+- Full end-to-end confirmation: a guest completed a real Tink Pay by Bank test
+  payment on `https://yii3i.online` — session creation → Drop-in → Tink login
+  → AUTHORISATION webhook → invoice marked paid — with no errors.
+
+## Known UI quirk (not a bug)
+
+After the fix, Pay by Bank's "Bank selection" dropdown initially showed **"No
+options found"** when clicked directly on the visible input. This is a
+click-target quirk on that specific Drop-in field, not a data or
+`countryCode` problem — clicking slightly *above* the visible box opens it
+correctly and lists all available Tink providers (Tink Demo Bank among
+them). No code change was needed or made for this; noted here purely so it
+isn't mistaken for a regression of the fix above.
