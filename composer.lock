@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3b6718c1da912b62fcafbc9a61ff8dba",
+    "content-hash": "b850c54591c56a918fdbf0cf51845e69",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -20382,23 +20382,24 @@
         },
         {
             "name": "codeception/module-phpbrowser",
-            "version": "4.0.0",
+            "version": "4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/module-phpbrowser.git",
-                "reference": "495a2cf19c4d0f1004bc24e10ed9d3cf33ccdc51"
+                "reference": "56903df98e29dedb51dd9f8d2dc00b05063c2135"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/module-phpbrowser/zipball/495a2cf19c4d0f1004bc24e10ed9d3cf33ccdc51",
-                "reference": "495a2cf19c4d0f1004bc24e10ed9d3cf33ccdc51",
+                "url": "https://api.github.com/repos/Codeception/module-phpbrowser/zipball/56903df98e29dedb51dd9f8d2dc00b05063c2135",
+                "reference": "56903df98e29dedb51dd9f8d2dc00b05063c2135",
                 "shasum": ""
             },
             "require": {
                 "codeception/codeception": "*@dev",
                 "codeception/lib-innerbrowser": "*@dev",
                 "ext-json": "*",
-                "guzzlehttp/guzzle": "^7.4",
+                "guzzlehttp/guzzle": "^7.8.2 | ^8.0",
+                "guzzlehttp/psr7": "^2.6.3 | ^3.0",
                 "php": "^8.2",
                 "symfony/browser-kit": "^5.4 | ^6.0 | ^7.0 | ^8.0"
             },
@@ -20410,7 +20411,7 @@
                 "aws/aws-sdk-php": "^3.199",
                 "codeception/module-rest": "^2.0 | *@dev",
                 "ext-curl": "*",
-                "phpstan/phpstan": "^1.10",
+                "phpstan/phpstan": "^2.2.6",
                 "squizlabs/php_codesniffer": "^3.10"
             },
             "suggest": {
@@ -20443,9 +20444,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Codeception/module-phpbrowser/issues",
-                "source": "https://github.com/Codeception/module-phpbrowser/tree/4.0.0"
+                "source": "https://github.com/Codeception/module-phpbrowser/tree/4.1.0"
             },
-            "time": "2026-01-23T13:24:41+00:00"
+            "time": "2026-07-27T06:11:37+00:00"
         },
         {
             "name": "codeception/stub",
@@ -27286,5 +27287,5 @@
         "ext-zend-opcache": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
