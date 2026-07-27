@@ -2849,6 +2849,13 @@ prior to importing and no existing documents e.g. Invoices.',
   'user.inv.role.observer.assigned' => 'Observer Role Assigned',
   'user.inv.role.observer.assigned.already' =>
     'The Observer Role has been assigned already.',
+  'user.inv.role.worker' => 'Worker',
+  'user.inv.role.worker.assign' => 'Assign',
+  'user.inv.role.worker.assigned' => 'Worker Role Assigned',
+  'user.inv.role.worker.none.available' =>
+    'No unlinked Worker records — add one under Worker first.',
+  'user.inv.role.worker.unavailable' =>
+    'Could not assign — the selected Worker is already linked to another user.',
   'user.inv.rbac.link' => 'RBAC Link',
   'user.inv.rbac.link.stable' => 'RBAC link stable — role assigned and bridge row present',
   'user.inv.rbac.link.sync.confirm' => 'Assign observer role (if missing) and sync the RBAC bridge row for this user?',
@@ -2921,6 +2928,14 @@ prior to importing and no existing documents e.g. Invoices.',
   'web' => 'Web',
   'web.address' => 'Web Address',
   'welcome' => 'Welcome',
+  'worker' => 'Worker',
+  'worker.assign' => 'Assign',
+  'worker.assigned' => 'Worker Assigned',
+  'worker.firstname' => 'First Name',
+  'worker.lastname' => 'Last Name',
+  'worker.linked.login' => 'Linked Login',
+  'worker.unassigned' => 'Unassigned',
+  'workers' => 'Workers',
   'wrong.passwordreset.token' =>
     'No user'
     . ' found for the provided reset token.'

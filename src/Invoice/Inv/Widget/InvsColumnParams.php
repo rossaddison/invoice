@@ -11,6 +11,7 @@ use App\Invoice\InvSentLog\InvSentLogRepository;
 use App\Invoice\Quote\QuoteRepository;
 use App\Invoice\SalesOrder\SalesOrderRepository;
 use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Worker\WorkerRepository;
 
 final readonly class InvsColumnParams
 {
@@ -19,6 +20,7 @@ final readonly class InvsColumnParams
         public InvRecurringRepository $irR,
         public InvSentLogRepository $islR,
         public SettingRepository $sR,
+        public WorkerRepository $wR,
         public int $dp,
         public float $totalAmount,
         public float $totalPaid,

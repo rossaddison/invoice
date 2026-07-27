@@ -34,6 +34,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var Yiisoft\Rbac\Manager $manager
  * @var array<int, true> $linkedUserIdMap
+ * @var App\Invoice\Worker\WorkerRepository $wR
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -401,6 +402,58 @@ $columns = [
                 }
                 return '';
             }
+        },
+        encodeContent: false,
+    ),
+    new DataColumn(
+        'user_id',
+        header: $translator->translate('user.inv.role.worker'),
+        content: static function (
+            UserInv $model
+        ) use (
+            $translator,
+            $urlGenerator,
+            $wR,
+            $csrf,
+        ): Yiisoft\Html\Tag\CustomTag|string {
+            $linkedWorker = $wR->findByUserId($model->reqUserId());
+            if ($linkedWorker !== null) {
+                return Html::tag(
+                    'span',
+                    '🔗 ' . Html::encode($linkedWorker->getFirstname()),
+                    ['class' => 'badge text-bg-success'],
+                );
+            }
+            $unlinkedWorkers = $wR->findAllActiveUnlinked();
+            if ($unlinkedWorkers === []) {
+                return Html::tag(
+                    'span',
+                    $translator->translate('user.inv.role.worker.none.available'),
+                    ['class' => 'badge text-bg-secondary'],
+                );
+            }
+            $options = Html::openTag('select', ['name' => 'worker_id', 'class' => 'form-select form-select-sm']);
+            foreach ($unlinkedWorkers as $worker) {
+                $options .= new \Yiisoft\Html\Tag\Option()
+                    ->value((string) $worker->reqId())
+                    ->content($worker->getFirstname())
+                    ->render();
+            }
+            $options .= Html::closeTag('select');
+            return new Form()
+                ->post($urlGenerator->generate('userinv/worker', ['user_id' => $model->reqUserId()]))
+                ->csrf($csrf)
+                ->addAttributes(['class' => 'd-flex gap-1'])
+                ->content(
+                    $options
+                    . Html::tag(
+                        'button',
+                        $translator->translate('user.inv.role.worker.assign'),
+                        ['type' => 'submit', 'class' => 'btn btn-outline-primary btn-sm'],
+                    ),
+                )
+                ->encode(false)
+                ->render();
         },
         encodeContent: false,
     ),

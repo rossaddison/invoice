@@ -8,11 +8,51 @@ use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\AppConstants;
 use App\Invoice\UserInv\UserInvRepository as uiR;
 use App\Invoice\UserInv\UserRbacLinkRepository;
+use App\Invoice\Worker\WorkerRepository as wR;
+use App\User\UserRepository as uR;
 use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 
 trait UserInvRoleTrait
 {
+    /**
+     * Links an existing, unlinked Worker record to this user's login and
+     * assigns the worker RBAC role — the counterpart to
+     * assignObserverRole()/assignAccountantRole() above, but the worker
+     * role additionally needs to know *which* Worker this user is (see
+     * InvRepository::repoWorkerVisible() / Trait\Guest.php), so the picked
+     * worker_id is required in the POST body rather than being implicit.
+     */
+    public function assignWorkerRole(
+        Request $request,
+        #[RouteArgument('user_id')] string $user_id,
+        UserRbacLinkRepository $urlR,
+        uiR $uiR,
+        wR $wR,
+        uR $uR,
+    ): Response {
+        $body = $request->getParsedBody() ?? [];
+        /** @var string $worker_id */
+        $worker_id = is_array($body) ? ($body['worker_id'] ?? '') : '';
+        // repoUserInvUserIdquery() confirms the user actually exists before
+        // findById() is called — that method assumes a persisted id and
+        // isn't itself null-safe.
+        $userInv = $user_id !== '' ? $uiR->repoUserInvUserIdquery((int) $user_id) : null;
+        $worker = $worker_id !== '' ? $wR->repoWorkerquery((int) $worker_id) : null;
+        if ($userInv !== null && $worker !== null && $worker->getUser() === null) {
+            $user = $uR->findById((int) $user_id);
+            $this->manager->revokeAll($user_id);
+            $this->manager->assign(AppConstants::ROLE_WORKER, $user_id);
+            $urlR->upsert($userInv->reqId(), (int) $user_id);
+            $worker->setUser($user);
+            $wR->save($worker);
+            $this->flashMessage('info', $this->translator->translate('user.inv.role.worker.assigned'));
+        } else {
+            $this->flashMessage('warning', $this->translator->translate('user.inv.role.worker.unavailable'));
+        }
+        return $this->webService->getRedirectResponse(self::REDIRECT_USERINV_INDEX);
+    }
     public function assignObserverRole(
         #[RouteArgument('user_id')] string $user_id,
         UserRbacLinkRepository $urlR,

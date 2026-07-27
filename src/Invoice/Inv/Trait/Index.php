@@ -13,6 +13,7 @@ use App\Invoice\{
     Inv\Widget\InvsFilterOptions,
     Inv\Widget\InvsListWidget,
     InvRecurring\InvRecurringRepository as IRR,
+    Worker\WorkerRepository as WR,
 };
 use App\Widget\Bootstrap5ModalInv;
 use Yiisoft\{
@@ -108,6 +109,7 @@ public function index(
                 'qR'                 => $nav->qR,
                 'dlR'                => $nav->dlR,
                 'soR'                => $nav->soR,
+                'wR'                 => $nav->wR,
                 'sortString'         => $sortString,
                 'status'             => $effectiveStatus,
                 'visible'            => $visible !== '0',
@@ -151,6 +153,7 @@ public function index(
                         ->withRelationRepositories($nav->qR, $nav->soR, $nav->dlR)
                         ->withSR($this->sR)
                         ->withEmailRepositories($nav->etR, $nav->fdR)
+                        ->withWorkerRepository($nav->wR)
                         ->withCsrf((string) ($request->getParsedBody()['_csrf'] ?? ''))
                         ->withDecimalPlaces(
                             (int) $this->sR->getSetting('tax_rate_decimal_places'))
@@ -178,6 +181,31 @@ public function index(
         $this->flashMessage('info',
             $this->translator->translate('user.client.active.no'));
         return $this->webService->getRedirectResponse('client/index');
+    }
+
+    /**
+     * Allocates (or clears) the HomeCare worker on an invoice, from the
+     * dropdown InvsColumnBuilder renders in the inv/index grid. Read-only
+     * for a worker's own inv/guest visibility — see
+     * InvRepository::repoWorkerVisible() / Trait\Guest.php.
+     */
+    public function setWorker(
+        Request $request,
+        #[RouteArgument('inv_id')] string $inv_id,
+        IR $iR,
+        WR $wR,
+    ): Response {
+        $body = $request->getParsedBody() ?? [];
+        /** @var string $worker_id */
+        $worker_id = is_array($body) ? ($body['worker_id'] ?? '') : '';
+        $inv = $inv_id !== '' ? $iR->repoInvUnLoadedquery((int) $inv_id) : null;
+        if ($inv !== null) {
+            $worker = $worker_id !== '' ? $wR->repoWorkerquery((int) $worker_id) : null;
+            $inv->setWorker($worker);
+            $iR->save($inv);
+            $this->flashMessage('info', $this->translator->translate('worker.assigned'));
+        }
+        return $this->webService->getRedirectResponse('inv/index');
     }
 
     private function indexApplyFilters(

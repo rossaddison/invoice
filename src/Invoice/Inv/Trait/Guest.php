@@ -12,6 +12,7 @@ use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\{
     Client\ClientRepository as ClientR,
     Client\ClientService,
+    Inv\InvGuestAccess,
     Inv\InvGuestDeps,
     Inv\InvGuestFilter,
     Inv\InvRepository as IR,
@@ -47,15 +48,36 @@ trait Guest
         if ($user_id <= 0) {
             return $this->webService->getNotFoundResponse();
         }
+        $access = $this->resolveGuestAccess($d, $user_id);
+        if (null === $access) {
+            return $this->webService->getNotFoundResponse();
+        }
+        return $this->renderGuestView($d, $filter, $page, $status, $user_id, $access);
+    }
+
+    /**
+     * Resolves what this logged-in user is allowed to see on inv/guest: a
+     * HomeCare field worker (linked via Worker.user_id) bypasses the
+     * UserClient gate entirely and is scoped by worker_id instead — see
+     * InvRepository::repoWorkerVisible(). Everyone else keeps the existing
+     * client-assignment gate.
+     */
+    private function resolveGuestAccess(InvGuestDeps $d, int $user_id): ?InvGuestAccess
+    {
         $userInv = $d->uiR->repoUserInvUserIdcount($user_id) > 0
             ? $d->uiR->repoUserInvUserIdquery($user_id) : null;
+        $worker = (null !== $userInv && $userInv->getActive())
+            ? $d->wR->findByUserId($user_id) : null;
+        if (null !== $userInv && null !== $worker) {
+            return new InvGuestAccess($userInv, [], $worker);
+        }
         $user_clients = (null !== $userInv && $userInv->getActive())
             ? $d->ucR->getAssignedToUser($user_id) : [];
         $this->flashGuestAccessWarnings($userInv, $user_clients);
         if (null === $userInv || !$userInv->getActive() || empty($user_clients)) {
-            return $this->webService->getNotFoundResponse();
+            return null;
         }
-        return $this->renderGuestView($d, $filter, $page, $status, $user_id, $userInv, $user_clients);
+        return new InvGuestAccess($userInv, $user_clients);
     }
 
     /**
@@ -123,17 +145,24 @@ trait Guest
         string $page,
         string $status,
         int $user_id,
-        UserInv $userInv,
-        array $user_clients,
+        InvGuestAccess $access,
     ): Response {
+        $userInv = $access->userInv;
+        $user_clients = $access->clients;
+        $worker = $access->worker;
         $effectiveStatus = (isset($filter->filterStatus) && !empty($filter->filterStatus))
             ? (int) $filter->filterStatus : (int) $status;
-        $invs = $this->invsStatusGuest($d->iR, $effectiveStatus, $user_clients);
+        $invs = null !== $worker
+            ? $d->iR->repoWorkerVisible($effectiveStatus, $worker->reqId())
+            : $this->invsStatusGuest($d->iR, $effectiveStatus, $user_clients);
         $preFilterInvs = $invs;
         $invs = $this->applyGuestFilters($filter, $d->iR, $invs);
         $inv_statuses = $d->iR->getStatuses($this->translator);
         $label = $d->iR->getSpecificStatusArrayLabel($status);
-        $bacsUnpaidInvs = $d->iR->repoUnpaidByClientIds($user_clients);
+        // Payment isn't relevant to a worker's job — see the worker branch
+        // above and Permissions::VIEW_PAYMENT (excluded from the worker
+        // RBAC role), which drives $viewPayment below.
+        $bacsUnpaidInvs = null !== $worker ? [] : $d->iR->repoUnpaidByClientIds($user_clients);
         $dp = (int) $this->sR->getSetting('tax_rate_decimal_places');
         $parameters = [
             'alert' => $this->alert(),
@@ -162,6 +191,9 @@ trait Guest
             'label' => $label,
             // the guest will not have access to the pageSizeLimiter
             'viewInv' => $this->userService->hasPermission(Permissions::VIEW_INV),
+            // false for the worker role (see resources/rbac/items.php) —
+            // "not see payment, it is not relevant to him"
+            'viewPayment' => $this->userService->hasPermission(Permissions::VIEW_PAYMENT),
             // update userinv with the user's listlimit preference
             'userInv' => $userInv,
             'userInvListLimit' => $userInv->getListLimit(),

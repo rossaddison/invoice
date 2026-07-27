@@ -6,7 +6,8 @@ namespace App\Infrastructure\Persistence\Inv;
 
 use App\Infrastructure\Persistence\{
     Client\Client, Group\Group, InvAmount\InvAmount, InvItem\InvItem,
-    InvSentLog\InvSentLog, InvRecurring\InvRecurring, Trait\RequireId
+    InvSentLog\InvSentLog, InvRecurring\InvRecurring, Trait\RequireId,
+    Worker\Worker
 };
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -43,6 +44,7 @@ use App\Infrastructure\Persistence\Inv\Trait\InvTrait5;
 #[Index(columns: ['contract_id'])]
 #[Index(columns: ['so_id'])]
 #[Index(columns: ['quote_id'])]
+#[Index(columns: ['worker_id'])]
 
 class Inv
 {
@@ -64,6 +66,13 @@ class Inv
     // Client
     #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Client $client = null;
+
+    // Worker — the HomeCare field worker this invoice has been allocated
+    // to, set from inv/index (staff) or via userinv/index's worker-login
+    // link. Unlike the FKs above, this one is genuinely nullable: most
+    // invoices have no worker allocated at all.
+    #[BelongsTo(target: Worker::class, nullable: true, fkAction: 'NO ACTION')]
+    private ?Worker $worker = null;
 
     #[HasOne(target: InvAmount::class, outerKey: 'inv_id')]
     private readonly InvAmount $invAmount;
@@ -159,6 +168,8 @@ class Inv
         private ?int $postal_address_id = null,
         #[Column(type: 'integer(11)', nullable: true, default: 0)]
         private ?int $contract_id = null,
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $worker_id = null,
         //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/cbc-DescriptionCode/
         #[Column(type: 'string(3)', nullable: false)]
         private string $stand_in_code = '',

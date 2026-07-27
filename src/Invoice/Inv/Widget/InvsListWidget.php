@@ -14,6 +14,7 @@ use App\Invoice\InvSentLog\InvSentLogRepository as ISLR;
 use App\Invoice\Quote\QuoteRepository as QR;
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
 use App\Invoice\Setting\SettingRepository as SR;
+use App\Invoice\Worker\WorkerRepository as WR;
 use App\Widget\GridComponents;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
@@ -52,6 +53,7 @@ final class InvsListWidget extends Widget
     private ?SR $sR = null;
     private ?ETR $etR = null;
     private ?FDR $fdR = null;
+    private ?WR $wR = null;
     private string|\Stringable $csrf = '';
     private int $decimalPlaces = 2;
     private bool $visible = false;
@@ -116,6 +118,13 @@ final class InvsListWidget extends Widget
         $new = clone $this;
         $new->etR = $etR;
         $new->fdR = $fdR;
+        return $new;
+    }
+
+    public function withWorkerRepository(WR $wR): static
+    {
+        $new = clone $this;
+        $new->wR = $wR;
         return $new;
     }
 
@@ -185,7 +194,7 @@ final class InvsListWidget extends Widget
     {
         if ($this->paginator === null || $this->iR === null
             || $this->irR === null || $this->islR === null || $this->sR === null
-            || $this->etR === null || $this->fdR === null) {
+            || $this->etR === null || $this->fdR === null || $this->wR === null) {
             return '';
         }
 
@@ -240,12 +249,14 @@ final class InvsListWidget extends Widget
             $this->filterOptions ?? new InvsFilterOptions(),
             $this->visible,
             $this->visibleInvSentLogColumn,
+            $this->csrf,
         );
         $columns = $columnBuilder->buildColumns(new InvsColumnParams(
             iR:           $this->iR,
             irR:          $this->irR,
             islR:         $this->islR,
             sR:           $this->sR,
+            wR:           $this->wR,
             dp:           $this->decimalPlaces,
             totalAmount:  $totalAmount,
             totalPaid:    $totalPaid,

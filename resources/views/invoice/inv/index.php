@@ -18,6 +18,7 @@ use Yiisoft\Html\Html;
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Invoice\EmailTemplate\EmailTemplateRepository $etR
  * @var App\Invoice\FromDropDown\FromDropDownRepository $fdR
+ * @var App\Invoice\Worker\WorkerRepository $wR
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -173,6 +174,7 @@ echo InvsListWidget::widget()
     ->withRelationRepositories($qR, $soR, $dlR)
     ->withSR($s)
     ->withEmailRepositories($etR, $fdR)
+    ->withWorkerRepository($wR)
     ->withCsrf($csrf)
     ->withDecimalPlaces($decimalPlaces)
     ->withVisible($visible)

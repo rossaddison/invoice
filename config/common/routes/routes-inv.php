@@ -146,6 +146,11 @@ Route::methods([Method::GET, Method::POST], '/inv/pdfDashboardIncludeCf/{id}')
                 ->action([InvController::class, 'markSentAsDraft'])
                 ->name('inv/markSentAsDraft'),
 
+            Route::methods([Method::GET, Method::POST], '/inv/setworker/{inv_id}')
+                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
+                ->action([InvController::class, 'setWorker'])
+                ->name('inv/setworker'),
+
             Route::methods([Method::GET], '/inv/batchEmailPreview')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'batchEmailPreview'])

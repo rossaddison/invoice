@@ -16,9 +16,11 @@ use App\Invoice\Setting\SettingRepository as SR;
 use App\Widget\GridComponents;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
+use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Html\Tag\Label;
+use Yiisoft\Html\Tag\Option;
 use Yiisoft\Html\Tag\Span;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
@@ -56,6 +58,7 @@ final class InvsColumnBuilder
         private readonly InvsFilterOptions $filterOptions,
         private readonly bool $visible,
         private readonly bool $visibleInvSentLogColumn,
+        private readonly string|\Stringable $csrf = '',
     ) {}
 
     /**
@@ -75,10 +78,51 @@ final class InvsColumnBuilder
         $ug  = $this->urlGenerator;
         $vis = $this->visible;
 
+        $homeCareEnabled = $sR->getSetting('homecare_auto_invoice_enabled') === '1';
+        $activeWorkers   = $p->wR->findAllActive();
+        $csrf            = $this->csrf;
+
         $columns = [
             $this->buildCheckboxColumn(),
             $this->buildWorkflowTypeColumn(),
             $this->buildEditColumn($sR),
+            new DataColumn(
+                'worker_id',
+                header: $t->translate('worker'),
+                content: static function (Inv $model) use ($ug, $t, $activeWorkers, $csrf): string {
+                    $current = $model->getWorker();
+                    $options = (new Option())
+                        ->value('')
+                        ->content($t->translate('worker.unassigned'))
+                        ->render();
+                    foreach ($activeWorkers as $worker) {
+                        $option = (new Option())->value((string) $worker->reqId())
+                            ->content($worker->getFirstname());
+                        if (null !== $current && $current->reqId() === $worker->reqId()) {
+                            $option = $option->selected(true);
+                        }
+                        $options .= $option->render();
+                    }
+                    return (new Form())
+                        ->post($ug->generate('inv/setworker', ['inv_id' => $model->reqId()]))
+                        ->csrf($csrf)
+                        ->addAttributes(['class' => 'd-flex gap-1'])
+                        ->content(
+                            Html::openTag('select', [
+                                'name' => 'worker_id', 'class' => 'form-select form-select-sm',
+                            ]) . $options . Html::closeTag('select')
+                            . Html::tag('button', '💾', [
+                                'type' => 'submit', 'class' => 'btn btn-outline-primary btn-sm',
+                                'title' => $t->translate('worker.assign'),
+                            ])
+                        )
+                        ->encode(false)
+                        ->render();
+                },
+                encodeContent: false,
+                visible: $homeCareEnabled,
+                withSorting: false,
+            ),
             $this->buildPdfEmailColumn(),
             $this->buildInvNumberColumn(),
             $this->buildFamilyNameColumn(),

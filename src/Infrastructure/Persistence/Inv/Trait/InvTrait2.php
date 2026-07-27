@@ -91,4 +91,15 @@ trait InvTrait2
     {
         $this->delivery_location_id = $delivery_location_id;
     }
+
+    // null: no HomeCare worker allocated to this invoice yet
+    public function getWorkerId(): ?int
+    {
+        return $this->worker_id;
+    }
+
+    public function setWorkerId(?int $worker_id): void
+    {
+        $this->worker_id = $worker_id;
+    }
 }

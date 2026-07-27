@@ -46,6 +46,7 @@ const NATIVE_RESET_INV_AMOUNT_FILTER = 'native-reset inv-amount-filter';
  * @var Yiisoft\Yii\DataView\YiiRouter\UrlCreator $urlCreator
  * @var Yiisoft\Data\Cycle\Reader\EntityReader $invs
  * @var bool $viewInv
+ * @var bool $viewPayment
  * @var int $decimalPlaces
  * @var int $defaultPageSizeOffsetPaginator
  * @var int $userInvListLimit
@@ -153,6 +154,7 @@ $columns = [
                     'placeholder' => $translator->translate('paid'),
                 ]),
         withSorting: false,
+        visible: $viewPayment,
     ),
     new ActionColumn(
         header: '',
@@ -371,6 +373,7 @@ $columns = [
                     'placeholder' => $translator->translate('total'),
                 ]),
         withSorting: false,
+        visible: $viewPayment,
     ),
     new DataColumn(
         property: 'filterInvAmountBalance',
@@ -394,6 +397,7 @@ $columns = [
                     'placeholder' => $translator->translate('balance'),
                 ]),
         withSorting: false,
+        visible: $viewPayment,
     ),
 ];
 
@@ -408,7 +412,7 @@ $sortedAndPagedPaginator = (new OffsetPaginator($invs))
                     ->withToken(PageToken::next((string) $page));
 
 
-$bacsButton = $bacsPaymentService->isCompanyPrivateActive()
+$bacsButton = $viewPayment && $bacsPaymentService->isCompanyPrivateActive()
     ? '<button type="button" class="btn btn-outline-success ms-2"'
       . ' data-bs-toggle="modal" data-bs-target="#bacsQuickPayModal">'
       . '🏦 ' . Html::encode($translator->translate('bacs.pay.by.bank.transfer'))
@@ -658,6 +662,6 @@ echo Html::tag('script', $filterPromptLabels, ['type' => 'application/json', 'id
 // InvoiceApp.initInvIndex('table-invoice-guest', ...) above — was a
 // near-duplicate of the same class in src/typescript/inv-index.ts.
 
-if ($bacsPaymentService->isCompanyPrivateActive()) {
+if ($viewPayment && $bacsPaymentService->isCompanyPrivateActive()) {
    echo $modalBacsQuickPay;
 }

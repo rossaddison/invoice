@@ -11,6 +11,7 @@ use App\Invoice\PaymentMethod\PaymentMethodRepository as PMR;
 use App\Invoice\Quote\QuoteRepository as QR;
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
 use App\Invoice\UserClient\UserClientRepository as UCR;
+use App\Invoice\Worker\WorkerRepository as WR;
 
 final class InvIndexNavDeps
 {
@@ -22,6 +23,7 @@ final class InvIndexNavDeps
         public readonly UCR $ucR,
         public readonly ETR $etR,
         public readonly FDR $fdR,
+        public readonly WR $wR,
     ) {
     }
 }
