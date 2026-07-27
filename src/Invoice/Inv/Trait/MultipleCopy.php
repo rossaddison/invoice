@@ -18,6 +18,7 @@ use App\Invoice\{
     Inv\CsvDateNormaliser,
     Inv\InvCopyDeps,
     Inv\InvForm,
+    Inv\InvIndexFilter,
     Helpers\InvRecalculator,
     Payment\PaymentService,
 };
@@ -85,6 +86,48 @@ trait MultipleCopy
 
         return $this->factory->createResponse(
             Json::encode(['success' => $anySuccess ? 1 : 0])
+        );
+    }
+
+    /**
+     * Copies every invoice currently matching the inv/index grid's active
+     * filters (not just checkbox-selected ones — see multiplecopy() above
+     * for that) to a single given date, each staying with its own original
+     * client. Reuses the same indexApplyFilters() the grid itself uses, so
+     * "all invoices" always means exactly what's on screen.
+     */
+    public function copyAllToDate(
+        Request $request,
+        InvIndexFilter $filter,
+        InvCopyDeps $d,
+        FormHydrator $formHydrator,
+    ): Response {
+        $data = $request->getQueryParams();
+        $newDate = CsvDateNormaliser::normalise(trim((string) ($data['new_date'] ?? '')));
+        if ($newDate === '') {
+            return $this->factory->createResponse(Json::encode(['success' => 0]));
+        }
+        $effectiveStatus = isset($filter->filterStatus) && !empty($filter->filterStatus)
+            ? (int) $filter->filterStatus : (int) ($data['status'] ?? 0);
+        $invs = $this->indexApplyFilters($filter, $d->iR, $effectiveStatus);
+        $opts = new CopyInvOptions(createdDate: $newDate);
+        $copyCount = 0;
+        /** @var Inv $inv */
+        foreach ($invs as $inv) {
+            $invId = $inv->reqId();
+            $original = $d->iR->repoInvUnloadedquery($invId);
+            if (!$original) {
+                continue;
+            }
+            $productIds = $this->collectInvProductIds($invId, $d);
+            if ($this->copyInvToClient(
+                $invId, $original, $original->reqClientId(), $d, $formHydrator, $productIds, $opts
+            )) {
+                $copyCount++;
+            }
+        }
+        return $this->factory->createResponse(
+            Json::encode(['success' => $copyCount > 0 ? 1 : 0, 'count' => $copyCount])
         );
     }
 

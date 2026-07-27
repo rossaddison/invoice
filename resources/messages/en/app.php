@@ -453,6 +453,11 @@ return [
   'converted.to.so' => 'Converted to Sales Order',
   'copied' => 'Copied!',
   'copy' => 'Copy',
+  'copy.all.to.date' => 'Copy All to Date',
+  'copy.all.to.date.new.date' => 'New Date',
+  'copy.all.to.date.warning' =>
+    'This will copy every invoice currently shown by your filters above'
+    . ' to the date below, each staying with its own client.',
   'copy.invoice' => 'Copy Invoice',
   'copy.quote' => 'Copy Quote',
   'count' => 'Invoice Count',

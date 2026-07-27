@@ -52,6 +52,16 @@ final class InvsToolbar
             ->id('btn-modal-copy-inv-multipe')
             ->render();
 
+        $copyAllToDate = new A()
+            ->addAttributes(['type' => 'button', 'data-bs-toggle' => 'modal',
+                'data-bs-target' => '#modal-copy-all-to-date',
+                'title' => Html::encode($p->translator->translate('copy.all.to.date')),
+                'style' => 'text-decoration:none'])
+            ->addClass('btn btn-success')
+            ->content('📅 ' . $p->translator->translate('copy.all.to.date'))
+            ->id('btn-copy-all-to-date')
+            ->render();
+
         $markAsSent = new A()
             ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip',
                 'title' => Html::encode($p->translator->translate('sent'))])
@@ -74,6 +84,7 @@ final class InvsToolbar
             ->render();
 
         $bulkQuickPayModal  = self::buildBulkQuickPayModal($t, $today);
+        $copyAllToDateModal = self::buildCopyAllToDateModal($t, $today);
         $batchEmailBtn      = self::buildBatchEmailButton($t);
         $batchEmailModal    = self::buildBatchEmailModal($p, $t);
         $markSentAsDraft    = self::buildMarkSentAsDraft($p);
@@ -101,6 +112,7 @@ final class InvsToolbar
                 . $allVisible
                 . $toolbarReset
                 . $copyMultiple
+                . $copyAllToDate
                 . $markAsSent
                 . $markSentAsDraft
                 . $bulkQuickPay
@@ -113,6 +125,7 @@ final class InvsToolbar
             )->encode(false)->render()
             . new Form()->close()
             . $bulkQuickPayModal
+            . $copyAllToDateModal
             . $batchEmailModal;
     }
 
@@ -150,6 +163,49 @@ final class InvsToolbar
             . Html::tag('button', '💰 ' . Html::encode($t->translate('quick.pay')),
                 ['type' => 'button', 'class' => 'btn btn-success',
                     'id' => 'bulk-quick-pay-confirm'])
+            . Html::closeTag('div')
+            . Html::closeTag('div')
+            . Html::closeTag('div')
+            . Html::closeTag('div');
+    }
+
+    /**
+     * Unlike buildBulkQuickPayModal() above, this has no checkbox selection
+     * step at all — it acts on every invoice currently matching the grid's
+     * active filters (see MultipleCopy::copyAllToDate()), so the date field
+     * is the only input; the JS-side confirm() dialog is the sole guard
+     * before a potentially large bulk-copy runs.
+     */
+    private static function buildCopyAllToDateModal(TranslatorInterface $t, string $today): string
+    {
+        return Html::openTag('div', ['class' => 'modal fade', 'id' => 'modal-copy-all-to-date',
+                'tabindex' => '-1', 'aria-hidden' => 'true'])
+            . Html::openTag('div', ['class' => 'modal-dialog'])
+            . Html::openTag('div', ['class' => 'modal-content'])
+            . Html::openTag('div', ['class' => 'modal-header'])
+            . Html::tag('h5', '📅 ' . Html::encode($t->translate('copy.all.to.date')),
+                ['class' => 'modal-title'])
+            . Html::tag('button', '', ['type' => 'button', 'class' => 'btn-close',
+                'data-bs-dismiss' => 'modal', 'aria-label' => 'Close'])
+            . Html::closeTag('div')
+            . Html::openTag('div', ['class' => 'modal-body'])
+            . Html::tag('p', Html::encode($t->translate('copy.all.to.date.warning')),
+                ['class' => 'text-danger'])
+            . Html::openTag('div', ['class' => 'mb-3'])
+            . Html::tag('label', Html::encode($t->translate('copy.all.to.date.new.date')),
+                ['class' => 'form-label', 'for' => 'copy-all-to-date-date'])
+            . Html::tag('input', '', ['type' => 'date', 'id' => 'copy-all-to-date-date',
+                'class' => 'form-control', 'value' => $today, 'required' => true,
+                'data-action' => 'show-picker'])
+            . Html::closeTag('div')
+            . Html::closeTag('div')
+            . Html::openTag('div', ['class' => 'modal-footer'])
+            . Html::tag('button', Html::encode($t->translate('cancel')),
+                ['type' => 'button', 'class' => 'btn btn-secondary',
+                    'data-bs-dismiss' => 'modal'])
+            . Html::tag('button', '📅 ' . Html::encode($t->translate('copy.all.to.date')),
+                ['type' => 'button', 'class' => 'btn btn-success',
+                    'id' => 'copy-all-to-date-confirm'])
             . Html::closeTag('div')
             . Html::closeTag('div')
             . Html::closeTag('div')

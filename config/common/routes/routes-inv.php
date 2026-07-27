@@ -241,6 +241,11 @@ Route::methods([Method::GET, Method::POST], '/inv/pdfDashboardIncludeCf/{id}')
                 ->action([InvController::class, 'multiplecopyspreadsheet'])
                 ->name('inv/multiplecopyspreadsheet'),
 
+            Route::methods([Method::GET, Method::POST], '/inv/copyalltodate')
+                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
+                ->action([InvController::class, 'copyAllToDate'])
+                ->name('inv/copyalltodate'),
+
             Route::methods([Method::GET], '/inv/copycsvtemplate')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'csvTemplateInvCopy'])
