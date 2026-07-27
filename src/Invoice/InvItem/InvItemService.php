@@ -143,9 +143,12 @@ final readonly class InvItemService
      * @param int $originalId
      * @param int $newId
      * @param ACIIR $aciiR
+     * @param float $multiplier Applied to amount and vat_or_tax; -1.0
+     *        reverses the allowance/charge for a credit note, matching the
+     *        negated quantity/subtotal used elsewhere in that flow.
      */
     public function addInvItemAllowanceCharges(string $copyInvId,
-        int $originalId, int $newId, ACIIR $aciiR): void
+        int $originalId, int $newId, ACIIR $aciiR, float $multiplier = 1.0): void
     {
         $originalACs = $aciiR->repoInvItemquery($originalId);
         /**
@@ -157,8 +160,8 @@ final readonly class InvItemService
                 (int) $originalAC->getAllowanceCharge()?->reqId());
             $iiac->setInvId((int) $copyInvId);
             $iiac->setInvItemId($newId);
-            $iiac->setAmount((float) $originalAC->getAmount());
-            $iiac->setVatOrTax((float) $originalAC->getVatOrTax());
+            $iiac->setAmount((float) $originalAC->getAmount() * $multiplier);
+            $iiac->setVatOrTax((float) $originalAC->getVatOrTax() * $multiplier);
             $aciiR->save($iiac);
         }
     }
@@ -613,6 +616,10 @@ final readonly class InvItemService
             $new_item->setProductUnitId((int) $item->getProductUnitId());
             $new_item->setDate($item->getDateAdded());
             $iiR->save($new_item);
+
+            // Reverse this item's allowance/charges onto the credit note item
+            $this->addInvItemAllowanceCharges(
+                $new_inv_id, $item->reqId(), $new_item->reqId(), $this->aciiR, -1.0);
 
             // Create an item amount for this item; reversing the items amounts
             // to negative

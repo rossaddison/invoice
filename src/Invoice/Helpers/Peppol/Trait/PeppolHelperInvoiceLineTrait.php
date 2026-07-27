@@ -51,6 +51,12 @@ trait PeppolHelperInvoiceLineTrait
         $invoiceLines = [];
         $b = Schema::CBC;
         $a = Schema::CAC;
+        // A credit note uses <cac:CreditNoteLine>/<cbc:CreditedQuantity>
+        // instead of <cac:InvoiceLine>/<cbc:InvoicedQuantity> (same UBL
+        // shape otherwise). See PeppolHelper::isCreditNote().
+        $isCreditNote = $this->isCreditNote($invoice);
+        $lineTag = $isCreditNote ? 'CreditNoteLine' : 'InvoiceLine';
+        $quantityTag = $isCreditNote ? 'CreditedQuantity' : 'InvoicedQuantity';
         /** @var InvItem $item */
         foreach ($invoice->getItems() as $item) {
             [$peppol_po_itemid, $peppol_po_lineid] = $this->validateInvItem($item, $soiR);
@@ -80,12 +86,12 @@ trait PeppolHelperInvoiceLineTrait
             $orderLineRef = $optionals['orderLineRef'];
             $buyersItemId = $optionals['buyersItemId'];
             $invoiceLines[$item_id] = [
-                'name' => "{$a}InvoiceLine",
+                'name' => "{$a}{$lineTag}",
                 'value' => [
                     ['name' => "{$b}ID", 'value' => (string) $item_id],
                     ...$lineNote,
                     [
-                        'name' => "{$b}InvoicedQuantity",
+                        'name' => "{$b}{$quantityTag}",
                         'value' => (string) $item->getQuantity(),
                         'attributes' => ['unitCode' => $unit_peppol->getCode()],
                     ],

@@ -21,6 +21,7 @@ use App\Infrastructure\Persistence\Upload\Upload;
 use App\Invoice\Helpers\{CountryHelper, DateHelper, NumberHelper};
 use App\Invoice\Libraries\PeppolUblXml;
 use App\Invoice\{Setting\SettingRepository as SRepo,
+    Group\GroupRepository as GR,
     InvAllowanceCharge\InvAllowanceChargeRepository as ACIR,
     InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR,
     InvAmount\InvAmountRepository as IAR, InvItem\InvItemRepository as IIR,
@@ -149,10 +150,13 @@ class PeppolHelper
             'tree as depicted in Addendum 2 to ISO 8348. ';
     public const string ICD_WILL_ALSO = 'The ICD code will also ';
    
+    private const string CREDIT_NOTE_GROUP_NAME = 'Credit Note Group';
+
     private readonly DateHelper $datehelper;
     private string $documentCurrency;
     private string $from_currency;
     private string $to_currency;
+    private ?int $creditNoteGroupId = null;
 
     public function __construct(
         public SRepo $s,
@@ -160,12 +164,27 @@ class PeppolHelper
         private readonly InvAmount $inv_amount,
         private readonly DL $delivery_location,
         private readonly Translator $t,
+        private readonly GR $gR,
     ) {
         $this->datehelper = new DateHelper($this->s);
         $this->documentCurrency =
             $this->s->getSetting(self::SETTING_PEPPOL_DOCUMENT_CURRENCY);
         $this->from_currency = $this->s->getSetting('currency_code_from');
         $this->to_currency   = $this->s->getSetting('currency_code_to');
+    }
+
+    /**
+     * A credit note is just an Inv row filed under the 'Credit Note Group'
+     * (see Trait\Credit::processCreditConfirm) — there is no dedicated
+     * entity/flag, so document type is resolved from the group name.
+     */
+    private function isCreditNote(Inv $invoice): bool
+    {
+        if ($this->creditNoteGroupId === null) {
+            $creditNoteGroup = $this->gR->repoGroupByName(self::CREDIT_NOTE_GROUP_NAME);
+            $this->creditNoteGroupId = $creditNoteGroup?->reqId() ?? 0;
+        }
+        return $this->creditNoteGroupId > 0 && $invoice->reqGroupId() === $this->creditNoteGroupId;
     }
     
     /** @psalm-suppress UnusedReturnValue */
@@ -377,6 +396,7 @@ class PeppolHelper
             ),
             $peppolPayment,
             $peppolFinancial,
+            $this->isCreditNote($invoice),
         );
         fwrite($f, $peppol_ubl_xml->output($xml));
         fclose($f);
