@@ -9,7 +9,7 @@ use chillerlan\QRCode\QROptions;
 use App\Auth\{AuthService, CallbackDeps, Form\LoginForm,
     Form\TwoFactorAuthenticationSetupForm,
     Form\TwoFactorAuthenticationVerifyLoginForm, Trait\Callback, Trait\ClassList,
-    Trait\Oauth2, Trait\TurnstileVerification, Permissions, TokenRepository};
+    Trait\Oauth2, Trait\Redirects, Trait\TurnstileVerification, Permissions, TokenRepository};
 use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\Setting\SettingRepository;
 use App\Auth\Trait\TwoFactorAuth;
@@ -53,6 +53,8 @@ final class AuthController
 
     //initialize .env file at root with oauth2.0 settings
     use Oauth2;
+
+    use Redirects;
 
     public const string
             DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN = 'developersandboxhmrc-access';
@@ -397,29 +399,6 @@ final class AuthController
     {
         $this->session->set('regenerate_codes', true);
         return $this->webService->getRedirectResponse('auth/verifyLogin');
-    }
-
-    private function redirectToMain(): ResponseInterface
-    {
-        return $this->webService->getRedirectResponse('site/index',
-                ['_language' => 'en']);
-    }
-
-    private function redirectToInvoiceIndex(): ResponseInterface
-    {
-        return $this->webService->getRedirectResponse('invoice/index');
-    }
-
-    protected function redirectToAdminMustMakeActive(): ResponseInterface
-    {
-        return $this->webService->getRedirectResponse('site/adminmustmakeactive',
-                ['_language' => 'en']);
-    }
-
-    protected function redirectToEmailNotVerified(): ResponseInterface
-    {
-        return $this->webService->getRedirectResponse('site/emailnotverified',
-                ['_language' => 'en']);
     }
 
     /**

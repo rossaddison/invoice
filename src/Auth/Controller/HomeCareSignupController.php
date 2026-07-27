@@ -10,11 +10,15 @@ use App\Auth\Trait\ClassList;
 use App\Auth\Trait\TurnstileVerification;
 use App\Infrastructure\Persistence\CategorySecondary\CategorySecondary;
 use App\Infrastructure\Persistence\Client\Client;
+use App\Infrastructure\Persistence\Family\Family;
 use App\Infrastructure\Persistence\HomeCarePendingSignup\HomeCarePendingSignup;
+use App\Infrastructure\Persistence\Identity\Identity;
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\InvItem\InvItem;
 use App\Infrastructure\Persistence\Payment\Payment;
+use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use App\Infrastructure\Persistence\Token\Token;
+use App\Infrastructure\Persistence\Unit\Unit;
 use App\Infrastructure\Persistence\User\User;
 use App\Infrastructure\Persistence\UserClient\UserClient;
 use App\Infrastructure\Persistence\UserInv\UserInv;
@@ -79,11 +83,7 @@ final class HomeCareSignupController
         HomeCareSignupForm $signupForm,
         HomeCareSignupDeps $d,
     ): Response {
-        if (!$this->authService->isGuest()) {
-            return $this->webService->getRedirectResponse('site/index');
-        }
-
-        if ($this->sR->getSetting('stop_homecare_signing_up') === '1') {
+        if (!$this->authService->isGuest() || $this->sR->getSetting('stop_homecare_signing_up') === '1') {
             return $this->webService->getRedirectResponse('site/index');
         }
 
@@ -238,20 +238,95 @@ final class HomeCareSignupController
         FormHydrator $formHydrator,
         HomeCareSignupConfirmDeps $d,
     ): Response {
+        $resolved = $this->resolveAndActivateSignup($tokenMasked, $tokenType, $d);
+        if ($resolved instanceof Response) {
+            return $resolved;
+        }
+        ['identity' => $identity, 'userId' => $userId, 'pending' => $pending, 'userInv' => $userInv] = $resolved;
+
+        $email = $identity->getUser()?->getEmail() ?? '';
+        $client = $this->createClient($email, $language, $pending, $d);
+        $clientId = $client->reqId();
+        $this->linkUserClient($userId, $clientId, $d);
+        $this->assignSignupRole($userId, $userInv->reqId(), $d);
+
+        $provisioned = $this->provisionInvoice($clientId, $pending, $formHydrator, $d);
+        if ($provisioned instanceof Response) {
+            return $provisioned;
+        }
+        $invId = $provisioned;
+
+        $paidNow = false;
+        if ($pending->getPaymentOption() === HomeCareSignupForm::PAYMENT_HAVE_PAID_CASH) {
+            $paidNow = $this->recordCashPayment($invId, $d);
+        }
+
+        // Always provision the QR code, regardless of payment state — it's
+        // ready to print immediately, even though scanning it won't
+        // generate anything until HomeCareCleaningEligibilityService sees a
+        // paid invoice with a Service-type item on file.
+        $token = $d->clientService->getOrCreateQrToken($client);
+        $scanUrl = $this->urlGenerator->generateAbsolute('public/homecare-scan', ['token' => $token]);
+        $qrDataUri = $d->clientService->renderQrDataUri($scanUrl);
+
+        return $this->renderConfirmed($paidNow ? 'paid' : 'unpaid', $qrDataUri);
+    }
+
+    /**
+     * Unmasks/parses the token and resolves the identity it belongs to.
+     * Split out of resolveAndActivateSignup() purely to keep each method's
+     * return count within SonarQube's limit (S1142) — the two failure
+     * branches here both redirect to site/index and happen before any
+     * pending-signup/token side effects, so merging them costs nothing.
+     *
+     * @return Response|array{identity: Identity, userId: int, tokenWithoutTimestamp: string, timestamp: string}
+     */
+    private function resolveIdentityFromToken(
+        string $tokenMasked,
+        string $tokenType,
+        HomeCareSignupConfirmDeps $d,
+    ): Response|array {
         $unMaskedToken = TokenMask::remove($tokenMasked);
         $positionFromUnderscore = strrpos($unMaskedToken, '_');
-        if ($positionFromUnderscore === false) {
-            return $this->webService->getRedirectResponse('site/index');
-        }
-        $timestamp = substr($unMaskedToken, $positionFromUnderscore + 1);
-        $tokenWithoutTimestamp = substr($unMaskedToken, 0, -(strlen($timestamp) + 1));
-
-        $identity = $d->tR->findIdentityByToken($tokenWithoutTimestamp, $tokenType);
+        $timestamp = $positionFromUnderscore !== false
+            ? substr($unMaskedToken, $positionFromUnderscore + 1)
+            : null;
+        $tokenWithoutTimestamp = $timestamp !== null
+            ? substr($unMaskedToken, 0, -(strlen($timestamp) + 1))
+            : null;
+        $identity = $tokenWithoutTimestamp !== null
+            ? $d->tR->findIdentityByToken($tokenWithoutTimestamp, $tokenType)
+            : null;
         $userId = $identity?->getUser()?->reqId();
-        if (null === $identity || null === $userId) {
+
+        if ($timestamp === null || $tokenWithoutTimestamp === null || $identity === null || $userId === null) {
             return $this->webService->getRedirectResponse('site/index');
         }
 
+        return [
+            'identity' => $identity,
+            'userId' => $userId,
+            'tokenWithoutTimestamp' => $tokenWithoutTimestamp,
+            'timestamp' => $timestamp,
+        ];
+    }
+
+    /**
+     * Reads/deletes the pending signup, invalidates the confirmation token,
+     * checks expiry, and activates the UserInv — in that exact order, since
+     * the pending-delete and token-invalidate side effects must happen
+     * before the expiry check regardless of outcome (mirrors the original
+     * unsplit method's ordering).
+     *
+     * @return Response|array{pending: HomeCarePendingSignup, userInv: UserInv}
+     */
+    private function activateSignupAccount(
+        int $userId,
+        string $tokenWithoutTimestamp,
+        string $tokenType,
+        string $timestamp,
+        HomeCareSignupConfirmDeps $d,
+    ): Response|array {
         // Read once and delete immediately, mirroring how the token itself
         // is invalidated after use — no stale pending rows can linger.
         $pending = $d->pendingR->repoByUserIdquery($userId);
@@ -276,12 +351,50 @@ final class HomeCareSignupController
         $userInv->setActive(true);
         $d->uiR->save($userInv);
 
-        $email = $identity->getUser()?->getEmail() ?? '';
-        $client = $this->createClient($email, $language, $pending, $d);
-        $clientId = $client->reqId();
-        $this->linkUserClient($userId, $clientId, $d);
-        $this->assignSignupRole($userId, $userInv->reqId(), $d);
+        return ['pending' => $pending, 'userInv' => $userInv];
+    }
 
+    /**
+     * @return Response|array{identity: Identity, userId: int, pending: HomeCarePendingSignup, userInv: UserInv}
+     */
+    private function resolveAndActivateSignup(
+        string $tokenMasked,
+        string $tokenType,
+        HomeCareSignupConfirmDeps $d,
+    ): Response|array {
+        $tokenResult = $this->resolveIdentityFromToken($tokenMasked, $tokenType, $d);
+        if ($tokenResult instanceof Response) {
+            return $tokenResult;
+        }
+        $accountResult = $this->activateSignupAccount(
+            $tokenResult['userId'],
+            $tokenResult['tokenWithoutTimestamp'],
+            $tokenType,
+            $tokenResult['timestamp'],
+            $d,
+        );
+        if ($accountResult instanceof Response) {
+            return $accountResult;
+        }
+        return [
+            'identity' => $tokenResult['identity'],
+            'userId' => $tokenResult['userId'],
+            'pending' => $accountResult['pending'],
+            'userInv' => $accountResult['userInv'],
+        ];
+    }
+
+    /**
+     * Resolves (and possibly creates) the CategorySecondary, then the
+     * Family, then the TaxRate/Unit — in that exact order, since
+     * resolveSecondaryCategoryId() may create a new CategorySecondary row
+     * as a side effect that must happen regardless of whether TaxRate/Unit
+     * later turn out to be missing (mirrors the original unsplit ordering).
+     *
+     * @return Response|array{family: Family, taxRate: TaxRate, unit: Unit}
+     */
+    private function resolveFamilyForSignup(HomeCarePendingSignup $pending, HomeCareSignupConfirmDeps $d): Response|array
+    {
         $categorySecondaryId = $this->resolveSecondaryCategoryId($pending, $d);
         if ($categorySecondaryId === null) {
             return $this->renderConfirmed('setup_incomplete');
@@ -292,6 +405,21 @@ final class HomeCareSignupController
         if ($taxRate === null || $unit === null) {
             return $this->renderConfirmed('setup_incomplete');
         }
+        return ['family' => $family, 'taxRate' => $taxRate, 'unit' => $unit];
+    }
+
+    private function provisionInvoice(
+        int $clientId,
+        HomeCarePendingSignup $pending,
+        FormHydrator $formHydrator,
+        HomeCareSignupConfirmDeps $d,
+    ): Response|int {
+        $familyResult = $this->resolveFamilyForSignup($pending, $d);
+        if ($familyResult instanceof Response) {
+            return $familyResult;
+        }
+        ['family' => $family, 'taxRate' => $taxRate, 'unit' => $unit] = $familyResult;
+
         $product = $d->productService->findOrCreateHouseNumberProduct(
             $family->reqId(),
             $pending->getBuildingNumber(),
@@ -307,20 +435,7 @@ final class HomeCareSignupController
         $d->productClientService->syncFromInvItems($clientId, [$product->reqId()]);
         $d->invRecalculator->recalculate($invId);
 
-        $paidNow = false;
-        if ($pending->getPaymentOption() === HomeCareSignupForm::PAYMENT_HAVE_PAID_CASH) {
-            $paidNow = $this->recordCashPayment($invId, $d);
-        }
-
-        // Always provision the QR code, regardless of payment state — it's
-        // ready to print immediately, even though scanning it won't
-        // generate anything until HomeCareCleaningEligibilityService sees a
-        // paid invoice with a Service-type item on file.
-        $token = $d->clientService->getOrCreateQrToken($client);
-        $scanUrl = $this->urlGenerator->generateAbsolute('public/homecare-scan', ['token' => $token]);
-        $qrDataUri = $d->clientService->renderQrDataUri($scanUrl);
-
-        return $this->renderConfirmed($paidNow ? 'paid' : 'unpaid', $qrDataUri);
+        return $invId;
     }
 
     /**
