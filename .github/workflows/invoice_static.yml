@@ -83,8 +83,10 @@ jobs:
 
     # PHP 8.5 hits an open, upstream Psalm bug unrelated to Alpine —
     # https://github.com/vimeo/psalm/issues/11831 ("Psalm crash due to NAN
-    # on PHP 8.5") — so a failure on that leg alone doesn't fail the whole
-    # workflow. Remove this once that issue is fixed upstream.
+    # on PHP 8.5"). The php85/alpine:edge leg below is disabled entirely
+    # for the time being rather than just tolerated via continue-on-error,
+    # since it's currently failing outright. Re-enable both the leg and
+    # the continue-on-error once that issue is fixed upstream.
     continue-on-error: ${{ matrix.php == '85' }}
 
     strategy:
@@ -95,8 +97,8 @@ jobs:
         include:
           - php: '84'
             alpine: '3.22'
-          - php: '85'
-            alpine: 'edge'
+          # - php: '85'
+          #   alpine: 'edge'
 
     steps:
       - name: Install glibc compatibility layer
