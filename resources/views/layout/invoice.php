@@ -1183,6 +1183,9 @@ if ((null !== $currentPath) && !$isGuest) {
             DropdownItem::link($t->translate('recurring'),
                 $urlGenerator->generate('invrecurring/index'),
                 itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('workers'),
+                $urlGenerator->generate('worker/index'),
+                itemAttributes: $itemFontArray),
         ),
         // Payment
         Dropdown::widget()
