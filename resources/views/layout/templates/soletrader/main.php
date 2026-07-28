@@ -514,6 +514,13 @@ echo new TagHtml()
   echo Html::closeTag('footer'); //2
   echo Html::tag('style', '
    .navbar { box-shadow: 0 2px 10px rgba(0,0,0,0.4); }
+   /* The language dropdown items (below the navbar-toggler) hardcode
+      color: black inline, but nothing on this page explicitly sets the
+      dropdown-menu popup background — only bootstrap.min.css is loaded
+      here (no data-bs-theme, no custom CSS variables), so it is relying
+      entirely on the stock Bootstrap default rather than something this
+      layout controls directly. Pinning it explicitly removes any doubt. */
+   .navbar .dropdown-menu { background-color: #fff; }
    .navbar .nav-link { color: rgba(255,255,255,0.8) !important; transition: color 0.15s; }
    .navbar .nav-link:hover { color: #fff !important; }
    .navbar .nav-link.active { color: #fff !important; }
