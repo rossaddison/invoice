@@ -217,6 +217,12 @@ return [
   'cannot.delete' => 'Cannot delete. Delete associated records first',
   'case.date' => 'Case Date',
   'case.number' => 'Case Number',
+  'capture.gps.on.send' => 'Capture GPS Location When Releasing to Sent',
+  'capture.gps.on.send.description' =>
+    'Reserved for a future worker/manager status workflow (started/'
+    . ' completed statuses between draft and sent, with a "worker" role'
+    . ' scoped to only their allocated jobs) — not built yet, so turning'
+    . ' this on currently has no effect.',
   'cash.discount' => 'Cash Discount',
   'category.primary' => 'Category Primary',
   'category.secondary' => 'Category Secondary',
@@ -1215,6 +1221,18 @@ prior to importing and no existing documents e.g. Invoices.',
   'loading.error' => 'It seems that the'
     . ' application stuck because of an error.',
   'loading.error.help' => 'Get Help',
+  'location' => 'Location',
+  'location.accuracy' => 'Accuracy',
+  'location.latitude' => 'Latitude',
+  'location.longitude' => 'Longitude',
+  'location.test.button' => 'Test My Location',
+  'location.tester' => 'Test Your Device Location',
+  'location.tester.description' =>
+    'Uses your browser\'s location permission to show this device\'s'
+    . ' current GPS coordinates. Nothing is saved — this is only to'
+    . ' confirm geolocation works on this device before relying on it'
+    . ' elsewhere. Requires HTTPS and a location-permission prompt you'
+    . ' accept.',
   'login' => 'Login',
   'login.logo' => 'Login Logo',
   'loginalert.credentials.incorrect' => 'Email'

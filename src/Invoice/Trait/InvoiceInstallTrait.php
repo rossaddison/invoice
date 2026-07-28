@@ -97,6 +97,10 @@ trait InvoiceInstallTrait
             'enable_vat_registration' => 0,
             'enable_tfa' => 0,
             // Qr code is always shown
+            // Placeholder for a not-yet-built worker/manager status
+            // workflow — see Settings tab "Location" and
+            // SettingTooltipTrait::tooltipArrayC1(). No effect yet.
+            'capture_gps_on_send' => 0,
             'enable_tfa_with_disabling' => 0,
             // Archived pdfs are automatically sent to customers from
             // view/invoice...Options...Send

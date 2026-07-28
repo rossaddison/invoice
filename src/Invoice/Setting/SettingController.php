@@ -234,6 +234,7 @@ final class SettingController extends BaseController
             'telegram' => $this->webViewRenderer->renderPartialAsString($p . 'telegram', [
                 'payment_methods' => $deps->pm->findAllPreloaded(),
             ]),
+            'location' => $this->webViewRenderer->renderPartialAsString($p . 'location'),
             // two-factor-authentication
             'tfa' => $this->webViewRenderer->renderPartialAsString($p . 'two_factor_authentication'),
             'turnstile' => $this->webViewRenderer->renderPartialAsString($p . 'turnstile'),

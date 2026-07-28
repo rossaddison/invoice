@@ -422,6 +422,17 @@ trait SettingTooltipTrait
                 'where' => 'src/Invoice/Inv/HomeCareCleaningEligibilityService.php'
                 . ' and src/Invoice/Inv/Trait/HomeCareScan.php.',
             ],
+            'capture_gps_on_send' => [
+                'why' => 'Placeholder for a not-yet-built feature: capturing the'
+                . ' releasing manager\'s GPS location (and the allocated'
+                . ' worker\'s name) at the moment an invoice is manually'
+                . ' transitioned to sent, as proof-of-completion for a'
+                . ' field-service job. No started/completed statuses or'
+                . ' capture logic exist yet — turning this on currently has'
+                . ' no effect.',
+                'where' => 'Not yet wired to anything — reserved for a future'
+                . ' worker/manager status workflow.',
+            ],
             'stop_homecare_signing_up' => [
                 'why' => 'Blocks the public HomeCare signup form'
                 . ' (/homecare-signup) at the controller, redirecting away'
