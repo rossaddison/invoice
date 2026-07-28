@@ -183,7 +183,7 @@ return [
             // documented Permissions-Policy recommendation. Unlike CSP,
             // Permissions-Policy allowlists don't support *.example.com
             // wildcards, only exact quoted origins or 'self'/*.
-            'Permissions-Policy' => 'camera=(), microphone=(), geolocation=(),'
+            'Permissions-Policy' => 'camera=(), microphone=(), geolocation=(self),'
                 . ' payment=(self "https://js.stripe.com"),'
                 . ' usb=(), magnetometer=(), gyroscope=(), accelerometer=()',
         ],
