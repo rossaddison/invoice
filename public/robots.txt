@@ -1,2 +1,21 @@
 User-agent: *
-Disallow:
+
+# Auth-flow action pages have no SEO value and are locale-prefixed (e.g.
+# /es/login, /zu-ZA/login) via the same {locale}/ path mechanism as the
+# rest of the site, so each is listed with and without a locale segment.
+# Added 2026-07-28 after AhrefsBot was observed crawling every locale
+# variant of /login — wasted crawl budget, not a security concern (these
+# routes are already rate-limited and Turnstile-protected server-side;
+# this is purely about not inviting crawlers to index them).
+Disallow: /login
+Disallow: /*/login
+Disallow: /signup
+Disallow: /*/signup
+Disallow: /forgotpassword
+Disallow: /*/forgotpassword
+Disallow: /change
+Disallow: /*/change
+Disallow: /resetpassword/
+Disallow: /*/resetpassword/
+Disallow: /homecare-signup
+Disallow: /*/homecare-signup
