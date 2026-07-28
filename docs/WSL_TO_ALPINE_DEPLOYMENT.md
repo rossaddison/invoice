@@ -434,11 +434,22 @@ Create a file `/var/www/invoice/deploy.sh`:
 
 ```bash
 #!/bin/sh
+composer install
 chown -R apache:apache /var/www/invoice/resources/rbac/
 chown -R apache:apache /var/www/invoice/runtime/
 chown -R apache:apache /var/www/invoice/public/assets/
-echo "Ownership fixed — deploy complete."
+echo "Dependencies installed, ownership fixed — deploy complete."
 ```
+
+`composer install` reads `composer.lock` (already pulled) and installs
+exactly what's pinned there — safe and fast to run on every deploy even
+when no dependency changed (it just reports "Nothing to install, update or
+remove" and exits). Skipping it after a deploy that *did* add a package —
+like the `yiisoft/cache-apcu` addition in July 2026 — leaves `vendor/`
+out of sync with `composer.lock`, and the app fatals on the first missing
+autoloaded class. No `--no-dev` flag here deliberately: this doc's own
+Psalm section above runs `php vendor/bin/psalm` directly on this server,
+which needs the dev dependencies present.
 
 Make it executable:
 ```bash
