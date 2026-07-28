@@ -1,5 +1,29 @@
 # What `YII_ENV` Actually Controls, and the Real Cause Behind "Clear the Cache" — July 2026
 
+## TL;DR — in plain English
+
+- On your **local WAMP box** (`YII_ENV=dev`), route caching is switched
+  **off**. Every page request rebuilds the route table fresh from whatever's
+  currently in the route config files. There is no cache sitting there
+  going stale — so `php yii cache/clear` has nothing meaningful to do for
+  routing. Running it locally is harmless, just pointless for this purpose.
+- On **production** (`yii3i.online`, `YII_ENV=prod`), route caching is
+  switched **on**. The first request after a fresh cache builds the route
+  table once and saves it to a file, then every request after that reuses
+  that same file forever — there's no expiry, no "has this changed?"
+  check, nothing. So it's production, and only production, that ever needs
+  `php yii cache/clear` — and only after a route was added, changed, or
+  removed.
+- This has **nothing to do with** other kinds of changes not showing up —
+  a new menu link, a new form field, any HTML on a page. Those are plain
+  PHP that reruns on every request everywhere, dev and prod alike. If one
+  of those "isn't showing up," the cause is almost always that the change
+  was never actually committed and pushed — check that first, long before
+  suspecting any cache.
+
+The rest of this doc is the detailed, line-by-line version of the above,
+for anyone who wants to see exactly where in the code this happens.
+
 ## Background
 
 `.env`'s `YII_ENV` (`dev` / `prod` / `test`) is documented as affecting "other
