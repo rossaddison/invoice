@@ -139,8 +139,18 @@ return [
         ->name('site/termsofservice'),
     // Auth
     Route::methods([$mG, $mP], '/login')
-        // Outer: 30 total POSTs per 60 s on /login, regardless of IP
-        ->middleware(RateLimiter::global(30))
+        // Outer: 300 total POSTs per 60 s on /login, regardless of IP.
+        // Raised from 30 on 2026-07-28: a distributed bot run (dozens of
+        // IPs, hundreds-to-thousands of hits each per
+        // /var/log/apache2/*.log) kept this bucket permanently saturated,
+        // locking out legitimate logins entirely — the global cap was
+        // providing negative value at that traffic volume, since the
+        // per-IP layer below already isolates any single attacking IP.
+        // This raise is a stopgap, not a fix: the real fix for this
+        // volume is blocking it at Cloudflare (WAF / rate-limit rule /
+        // Bot Fight Mode), which the app-layer limiter was never meant to
+        // substitute for.
+        ->middleware(RateLimiter::global(300))
         // Inner: 5 per 60 s per real IP via CF-Connecting-IP
         ->middleware(RateLimiter::perIp(5, 'login_route'))
         ->action([AuthController::class, 'login'])
