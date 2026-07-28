@@ -195,28 +195,7 @@ export class InvoiceHandler {
             return;
         }
 
-        // Copy multiple invoices (spreadsheet import)
-        const copySpreadsheet = closestSafe<HTMLElement>(target, '#modal_copy_inv_spreadsheet_confirm');
-        if (copySpreadsheet) {
-            void this.handleCopyInvoicesSpreadsheet();
-            return;
-        }
-
-        // Copy multiple invoices
-        const copyMultiple = closestSafe<HTMLElement>(target, '.modal_copy_inv_multiple_confirm');
-        if (copyMultiple) {
-            this.handleCopyMultipleInvoices(copyMultiple);
-            return;
-        }
-
-        // Copy single invoice
-        const invToInv =
-            closestSafe<HTMLElement>(target, '#inv_to_inv_confirm') ||
-            closestSafe<HTMLElement>(target, '.inv_to_inv_confirm');
-        if (invToInv) {
-            this.handleCopySingleInvoice(invToInv);
-            return;
-        }
+        if (this.handleCopyClick(target)) { return; }
 
         // Add invoice tax
         const invTaxSubmit = closestSafe<HTMLElement>(target, '#inv_tax_submit');
@@ -254,6 +233,33 @@ export class InvoiceHandler {
         if (deleteItem) {
             this.handleDeleteSingleItem(deleteItem);
         }
+    }
+
+    private handleCopyClick(target: HTMLElement): boolean {
+        // Copy multiple invoices (spreadsheet import)
+        const copySpreadsheet = closestSafe<HTMLElement>(target, '#modal_copy_inv_spreadsheet_confirm');
+        if (copySpreadsheet) {
+            void this.handleCopyInvoicesSpreadsheet();
+            return true;
+        }
+
+        // Copy multiple invoices
+        const copyMultiple = closestSafe<HTMLElement>(target, '.modal_copy_inv_multiple_confirm');
+        if (copyMultiple) {
+            this.handleCopyMultipleInvoices(copyMultiple);
+            return true;
+        }
+
+        // Copy single invoice
+        const invToInv =
+            closestSafe<HTMLElement>(target, '#inv_to_inv_confirm') ||
+            closestSafe<HTMLElement>(target, '.inv_to_inv_confirm');
+        if (invToInv) {
+            this.handleCopySingleInvoice(invToInv);
+            return true;
+        }
+
+        return false;
     }
 
     private handleExportClick(target: HTMLElement): boolean {

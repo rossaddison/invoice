@@ -12,15 +12,14 @@ use App\Invoice\InvRecurring\InvRecurringRepository as IRR;
 use App\Invoice\InvSentLog\InvSentLogRepository as ISLR;
 use App\Invoice\Quote\QuoteRepository as QR;
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
+use App\Invoice\Inv\Widget\Trait\InvsWorkerColumnTrait;
 use App\Invoice\Setting\SettingRepository as SR;
 use App\Widget\GridComponents;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
-use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Html\Tag\Label;
-use Yiisoft\Html\Tag\Option;
 use Yiisoft\Html\Tag\Span;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
@@ -43,6 +42,8 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
  */
 final class InvsColumnBuilder
 {
+    use InvsWorkerColumnTrait;
+
     private const string ROUTE_EDIT          = 'inv/edit';
     private const string FILTER_CLASS        = 'native-reset inv-filter';
     private const string AMOUNT_FILTER_CLASS = 'native-reset inv-amount-filter';
@@ -79,90 +80,18 @@ final class InvsColumnBuilder
         $vis = $this->visible;
 
         $homeCareEnabled = $sR->getSetting('homecare_auto_invoice_enabled') === '1';
-        $activeWorkers   = $p->wR->findAllActive();
-        $csrf            = $this->csrf;
 
         $columns = [
             $this->buildCheckboxColumn(),
             $this->buildWorkflowTypeColumn(),
             $this->buildEditColumn($sR),
-            new DataColumn(
-                'worker_id',
-                header: $t->translate('worker'),
-                content: static function (Inv $model) use ($ug, $t, $activeWorkers, $csrf): string {
-                    $current = $model->getWorker();
-                    $options = (new Option())
-                        ->value('')
-                        ->content($t->translate('worker.unassigned'))
-                        ->render();
-                    foreach ($activeWorkers as $worker) {
-                        $option = (new Option())->value((string) $worker->reqId())
-                            ->content($worker->getFirstname());
-                        if (null !== $current && $current->reqId() === $worker->reqId()) {
-                            $option = $option->selected(true);
-                        }
-                        $options .= $option->render();
-                    }
-                    return (new Form())
-                        ->post($ug->generate('inv/setworker', ['inv_id' => $model->reqId()]))
-                        ->csrf($csrf)
-                        ->addAttributes(['class' => 'd-flex gap-1'])
-                        ->content(
-                            Html::openTag('select', [
-                                'name' => 'worker_id', 'class' => 'form-select form-select-sm',
-                            ]) . $options . Html::closeTag('select')
-                            . Html::tag('button', '💾', [
-                                'type' => 'submit', 'class' => 'btn btn-outline-primary btn-sm',
-                                'title' => $t->translate('worker.assign'),
-                            ])
-                        )
-                        ->encode(false)
-                        ->render();
-                },
-                encodeContent: false,
-                visible: $homeCareEnabled,
-                withSorting: false,
-            ),
+            $this->buildWorkerColumn($p, $homeCareEnabled),
             $this->buildPdfEmailColumn(),
             $this->buildInvNumberColumn(),
             $this->buildFamilyNameColumn(),
             $this->buildYearMonthColumn(),
             $this->buildStatusColumn($iR, $irR, $sR),
-            new DataColumn(
-                header: (new Label())->content('💰')
-                    ->addAttributes(['data-bs-toggle' => 'tooltip',
-                        'title' => $t->translate('quick.pay')])
-                    ->render(),
-                encodeHeader: false,
-                content: static function (Inv $model) use ($ug, $t): string {
-                    $invId    = $model->reqId();
-                    $statusId = $model->reqStatusId();
-                    $paid     = $model->getInvAmount()->getPaid() ?? 0.0;
-                    $total    = $model->getInvAmount()->getTotal() ?? 0.0;
-                    if ($statusId === 4 || ($total > 0.0 && $paid >= $total)) {
-                        return '<span class="badge bg-success" data-bs-toggle="tooltip" title="'
-                            . Html::encode($t->translate('paid')) . '">✅</span>';
-                    }
-                    if ((int) $model->getCreditinvoiceParentId() > 0
-                        || !in_array($statusId, [2, 3, 5, 6], true)
-                        || $total <= 0.0
-                    ) {
-                        return '';
-                    }
-                    $qpId = 'qp-' . $invId;
-                    return '<div id="' . $qpId . '">'
-                        . '<button class="btn btn-outline-success btn-sm"'
-                        . ' hx-get="' . Html::encode(
-                            $ug->generate('inv/quickpayform', [], ['inv_id' => $invId])
-                        ) . '"'
-                        . ' hx-target="#' . $qpId . '" hx-swap="innerHTML"'
-                        . ' data-bs-toggle="tooltip" title="'
-                        . Html::encode($t->translate('quick.pay')) . '">💰</button>'
-                        . '</div>';
-                },
-                encodeContent: false,
-                withSorting: false,
-            ),
+            $this->buildQuickPayColumn(),
             ...$this->buildPaidBalanceColumns($sR, $dp, $totalPaid, $totalBalance),
             $this->buildClientActiveColumn(),
             $this->buildCreditNoteColumn($iR),
