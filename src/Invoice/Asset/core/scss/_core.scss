@@ -1042,9 +1042,18 @@ body.error {
   .navbar-nav {
     margin: 7px 0;
 
-    .dropdown .dropdown-menu {
-      background: $navbar-inverse-border;
-    }
+    // No dropdown-menu background here. $navbar-inverse-border
+    // (darken(#333c4a, 10%) ≈ #1e242c) is a border-color variable —
+    // correctly used that way for .navbar-toggle above — but was
+    // mistakenly reused as a *background* for dropdown menus here. Every
+    // dropdown item's text color is hardcoded black (see
+    // resources/views/layout/invoice.php's $itemFontArray), so this made
+    // every mobile dropdown menu unreadable: black text on a near-black
+    // background. This is the original source that both
+    // src/Invoice/Asset/invoice/css/layout.css and the compiled
+    // src/Invoice/Asset/invoice/css/style.css carried duplicate copies
+    // of — fixed there too, but fixing it here is what stops it from
+    // reappearing the next time style.css gets rebuilt from this file.
   }
 
   #content {
