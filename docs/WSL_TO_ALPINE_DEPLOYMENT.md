@@ -473,6 +473,21 @@ CLI's own APCu pool, not the web server's) — restarting Apache is what
 actually clears it. Still run `php yii cache/clear` too for the general
 DI/config cache housekeeping; just don't rely on it for a route change.
 
+**If a deployed CSS/JS/image change doesn't seem to take effect**, clear
+the published assets cache:
+```bash
+rm -rf /var/www/invoice/public/assets/*
+```
+`Yiisoft\Assets\AssetManager` publishes each asset bundle into a
+content-hashed subdirectory under `public/assets/` (e.g.
+`public/assets/194851c0/`) rather than serving straight from
+`src/Invoice/Asset/`. There's no console command or admin UI button for
+this despite a stale comment in `resources/views/layout/invoice.php`
+implying one exists — it's a manual filesystem clear. Apache/PHP
+republishes everything fresh on the very next request, no restart needed.
+`deploy.sh` already `chown`s this directory for the `apache` user, so this
+is safe to run before or after it.
+
 ---
 
 ## Important Reminders
