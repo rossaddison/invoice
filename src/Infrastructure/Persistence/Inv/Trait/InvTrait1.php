@@ -114,6 +114,14 @@ trait InvTrait1
         return '';
     }
 
+    public function getFirstItemCategorySecondaryId(): ?int
+    {
+        foreach ($this->items as $item) {
+            return $item->getProduct()?->getFamily()?->getCategorySecondaryId();
+        }
+        return null;
+    }
+
     public function reqId(): int
     {
         return $this->requireId($this->id, 'Inv');

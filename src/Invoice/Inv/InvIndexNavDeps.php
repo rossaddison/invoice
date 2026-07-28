@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv;
 
+use App\Invoice\CategorySecondary\CategorySecondaryRepository as CSR;
 use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
 use App\Invoice\EmailTemplate\EmailTemplateRepository as ETR;
 use App\Invoice\FromDropDown\FromDropDownRepository as FDR;
@@ -24,6 +25,7 @@ final class InvIndexNavDeps
         public readonly ETR $etR,
         public readonly FDR $fdR,
         public readonly WR $wR,
+        public readonly CSR $csR,
     ) {
     }
 }

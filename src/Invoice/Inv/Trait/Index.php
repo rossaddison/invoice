@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Invoice\Inv\Trait;
 
 use App\Invoice\{
+    CategorySecondary\CategorySecondaryRepository as CSR,
+    Inv\HomeCareRunContext,
     Inv\InvIndexFilter,
     Inv\InvIndexListDeps,
     Inv\InvIndexNavDeps,
@@ -17,10 +19,8 @@ use App\Invoice\{
 };
 use App\Widget\Bootstrap5ModalInv;
 use Yiisoft\{
-    Data\Cycle\Reader\EntityReader,
     Data\Paginator\OffsetPaginator,
     Data\Paginator\PageToken,
-    Data\Reader\DataReaderInterface as DRI,
     Data\Reader\Sort,
     Html\Html,
     Router\HydratorAttribute\RouteArgument,
@@ -69,7 +69,8 @@ public function index(
                 'id', 'status_id', 'number', 'date_created', 'date_due', 'client_id',
             ])->withOrderString($sortString);
 
-            $invs = $this->indexApplyFilters($filter, $list->invRepo, $effectiveStatus);
+            $run  = $this->indexHomeCareRunContext($request, $filter);
+            $invs = $list->invRepo->filterCombined($filter, $run, $effectiveStatus);
 
             $currentPage = max(1, (int) $page);
             $pageSize    = max(1, (int) ($this->sR->getSetting('default_list_limit') ?: 1));
@@ -85,6 +86,7 @@ public function index(
 
             $this->draftFlash($_language);
             $this->markSentFlash($_language);
+            $this->homeCareRunFlash($nav->csR);
 
             $gridSummary = $this->indexGridSummary($paginator, $pageSize, $label);
 
@@ -110,6 +112,7 @@ public function index(
                 'dlR'                => $nav->dlR,
                 'soR'                => $nav->soR,
                 'wR'                 => $nav->wR,
+                'csR'                => $nav->csR,
                 'sortString'         => $sortString,
                 'status'             => $effectiveStatus,
                 'visible'            => $visible !== '0',
@@ -129,6 +132,8 @@ public function index(
                     $this->optionsDataYearMonthFilter(),
                 'optionsStatusDropDownFilter' =>
                     $this->optionsDataStatusFilter($list->invRepo),
+                'optionsCategorySecondaryRunDropDownFilter' =>
+                    $nav->csR->optionsDataCategorySecondaries(),
                 'modal_add_inv' =>
                     $bootstrap5ModalInv->renderPartialLayoutWithFormAsString(
                         'inv', []),
@@ -154,6 +159,7 @@ public function index(
                         ->withSR($this->sR)
                         ->withEmailRepositories($nav->etR, $nav->fdR)
                         ->withWorkerRepository($nav->wR)
+                        ->withCategorySecondaryRepository($nav->csR)
                         ->withCsrf((string) ($request->getParsedBody()['_csrf'] ?? ''))
                         ->withDecimalPlaces(
                             (int) $this->sR->getSetting('tax_rate_decimal_places'))
@@ -163,15 +169,16 @@ public function index(
                         ->withGroupBy($filter->groupBy ?? 'none')
                         ->withClientCount($list->clientRepo->count())
                         ->withGridDisplayOptions($gridSummary, $sortString)
-                        ->withFilterOptions(new InvsFilterOptions(
-                            invNumber:       $this->optionsDataInvNumberFilter($list->invRepo),
-                            creditInvNumber: $this->optionsDataCreditInvNumberFilter($list->invRepo),
-                            familyName:      $this->optionsDataFamilyNameFilter($list->invRepo),
-                            clients:         $this->optionsDataClientsFilter($list->invRepo),
-                            clientGroup:     $this->optionsDataClientGroupFilter($list->clientRepo),
-                            yearMonth:       $this->optionsDataYearMonthFilter(),
-                            status:          $this->optionsDataStatusFilter($list->invRepo),
-                        ))
+                        ->withFilterOptions(new InvsFilterOptions([
+                            'invNumber'       => $this->optionsDataInvNumberFilter($list->invRepo),
+                            'creditInvNumber' => $this->optionsDataCreditInvNumberFilter($list->invRepo),
+                            'familyName'      => $this->optionsDataFamilyNameFilter($list->invRepo),
+                            'clients'         => $this->optionsDataClientsFilter($list->invRepo),
+                            'clientGroup'     => $this->optionsDataClientGroupFilter($list->clientRepo),
+                            'yearMonth'       => $this->optionsDataYearMonthFilter(),
+                            'status'          => $this->optionsDataStatusFilter($list->invRepo),
+                            'categorySecondaryRun' => $nav->csR->optionsDataCategorySecondaries(),
+                        ]))
                         ->render()
                 );
             }
@@ -208,66 +215,26 @@ public function index(
         return $this->webService->getRedirectResponse('inv/index');
     }
 
-    private function indexApplyFilters(
-        InvIndexFilter $filter,
-        IR $invRepo,
-        int $effectiveStatus,
-    ): DRI {
-        $invs = $this->invsStatus($invRepo, $effectiveStatus);
-        $invs = $this->applyBasicFilters($filter, $invs, $invRepo);
-        $invs = $this->applyAmountFilters($filter, $invs, $invRepo);
-        $invs = $this->applyClientFilters($filter, $invs, $invRepo);
-        return $invs;
-    }
-
-    private function applyBasicFilters(InvIndexFilter $filter, DRI $invs, IR $invRepo): DRI
+    /**
+     * Resolves the effective HomeCare "current run" category_secondary for
+     * this request: whatever the grid's filterCategorySecondaryRun dropdown
+     * was submitted as, or — only when that query param wasn't present at
+     * all (a plain, unfiltered visit) — the id configured in Settings.
+     * array_key_exists() on the raw query params (not the hydrated $filter
+     * object) is what distinguishes "never touched" from "explicitly
+     * cleared via the dropdown's blank option", since both produce an empty
+     * $filter->filterCategorySecondaryRun.
+     */
+    private function indexHomeCareRunContext(Request $request, InvIndexFilter $filter): HomeCareRunContext
     {
-        if (isset($filter->filterInvNumber) && !empty($filter->filterInvNumber)) {
-            $invs = $invRepo->filterInvNumber($filter->filterInvNumber);
-        }
-        if (isset($filter->filterCreditInvNumber) && !empty($filter->filterCreditInvNumber)) {
-            $invs = $invRepo->filterCreditInvNumber($filter->filterCreditInvNumber);
-        }
-        if (isset($filter->filterFamilyName) && !empty($filter->filterFamilyName)) {
-            $invs = $invRepo->filterFamilyName($filter->filterFamilyName);
-        }
-        if ((isset($filter->filterInvNumber) && !empty($filter->filterInvNumber))
-            && (isset($filter->filterInvAmountTotal) && !empty($filter->filterInvAmountTotal))) {
-            $invs = $invRepo->filterInvNumberAndInvAmountTotal(
-                $filter->filterInvNumber, (float) $filter->filterInvAmountTotal);
-        }
-        return $invs;
-    }
-
-    private function applyAmountFilters(InvIndexFilter $filter, DRI $invs, IR $invRepo): DRI
-    {
-        if (isset($filter->filterInvAmountTotal) && !empty($filter->filterInvAmountTotal)) {
-            $invs = $invRepo->filterInvAmountTotal((float) $filter->filterInvAmountTotal);
-        }
-        if (isset($filter->filterInvAmountPaid) && !empty($filter->filterInvAmountPaid)) {
-            $invs = $invRepo->filterInvAmountPaid((float) $filter->filterInvAmountPaid);
-        }
-        if (isset($filter->filterInvAmountBalance) && !empty($filter->filterInvAmountBalance)) {
-            $invs = $invRepo->filterInvAmountBalance((float) $filter->filterInvAmountBalance);
-        }
-        return $invs;
-    }
-
-    private function applyClientFilters(InvIndexFilter $filter, DRI $invs, IR $invRepo): DRI
-    {
-        if (isset($filter->filterClient) && !empty($filter->filterClient)) {
-            $invs = $invRepo->filterClient($filter->filterClient);
-        }
-        if (isset($filter->filterClientGroup) && !empty($filter->filterClientGroup)) {
-            $invs = $invRepo->filterClientGroup($filter->filterClientGroup);
-        }
-        if (isset($filter->filterClientAddress1) && !empty($filter->filterClientAddress1)) {
-            $invs = $invRepo->filterClientAddress1($filter->filterClientAddress1);
-        }
-        if (isset($filter->filterDateCreatedYearMonth) && !empty($filter->filterDateCreatedYearMonth)) {
-            $invs = $invRepo->filterDateCreatedLike('Y-m', $filter->filterDateCreatedYearMonth);
-        }
-        return $invs;
+        $touched = array_key_exists('filterCategorySecondaryRun', $request->getQueryParams());
+        $configuredId = (int) $this->sR->getSetting('homecare_current_run_category_secondary_id');
+        $effectiveId = $touched ? (int) $filter->filterCategorySecondaryRun : $configuredId;
+        return new HomeCareRunContext(
+            categorySecondaryId: $effectiveId,
+            applyDateFilter: $effectiveId > 0 && $effectiveId === $configuredId,
+            lastRunDate: (string) $this->sR->getSetting('homecare_current_run_last_run_date'),
+        );
     }
 
     private function indexGridSummary(
@@ -332,14 +299,6 @@ public function index(
         );
     }
 
-    /**
-     * @psalm-return EntityReader<array-key, array<array-key, mixed>|object>
-     */
-    private function invsStatus(IR $iR, int $status): DRI
-    {
-        return $iR->findAllWithStatus($status);
-    }
-
     private function draftFlash(string $_language): void
     {
         $draft   = $this->sR->getSetting('generate_invoice_number_for_draft');
@@ -363,5 +322,38 @@ public function index(
                     ['class' => 'btn btn-primary'])
                 : '');
         $this->flashMessage($level, $message);
+    }
+
+    /**
+     * Surfaces the configured HomeCare "current run" (Settings → invoices
+     * tab) as an info flash with a link back to it, so it stays
+     * discoverable even after a manager has cleared or changed the grid's
+     * Current Run dropdown filter.
+     */
+    private function homeCareRunFlash(CSR $csR): void
+    {
+        $categorySecondaryId = (int) $this->sR->getSetting(
+            'homecare_current_run_category_secondary_id');
+        if ($categorySecondaryId <= 0) {
+            return;
+        }
+        $categorySecondary = $csR->repoCategorySecondaryQuery($categorySecondaryId);
+        if ($categorySecondary === null) {
+            return;
+        }
+        $lastRunDate = (string) $this->sR->getSetting('homecare_current_run_last_run_date');
+        $linkText = ($categorySecondary->getName() ?? '')
+            . ($lastRunDate !== '' ? ' — ' . $this->translator->translate('since')
+                . ' ' . $lastRunDate : '');
+        $link = Html::a(
+            $linkText,
+            $this->url_generator->generate('inv/index', [], [
+                'filterCategorySecondaryRun' => (string) $categorySecondaryId,
+            ]),
+            ['class' => 'btn btn-primary'],
+        );
+        $this->flashMessage('info',
+            $this->translator->translate('homecare.current.run') . ' '
+                . str_repeat('&nbsp;', 2) . (string) $link);
     }
 }

@@ -114,6 +114,15 @@ trait InvoiceInstallTrait
             // Master switch for the public QR-scan home-care auto-invoice
             // endpoint; off by default until a business opts in.
             'homecare_auto_invoice_enabled' => 0,
+            // The category_secondary (street/area) currently being worked,
+            // used to default inv/index's Current Run filter. 0 = not
+            // configured. See Settings tab "invoices" and
+            // SettingTooltipTrait::tooltipArrayC1().
+            'homecare_current_run_category_secondary_id' => 0,
+            // Manually-entered start date of the current run — invoices
+            // dated on/after this are included when the Current Run filter
+            // matches the configured category_secondary above.
+            'homecare_current_run_last_run_date' => '',
             'install_test_data' => 0,
             'inv_cdn_not_node_module' => 1,
             //1=>None, 2=>Cash, 3=>Cheque, 4=>Card/Direct Debit-Succeeded

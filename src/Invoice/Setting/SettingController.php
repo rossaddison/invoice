@@ -177,6 +177,7 @@ final class SettingController extends BaseController
                 'public_invoice_templates' => $this->sR->getInvoiceTemplates('public'),
                 'pdf_invoice_templates' => $this->sR->getInvoiceTemplates('pdf'),
                 'email_templates_invoice' => $deps->eR->repoEmailTemplateType('invoice'),
+                'category_secondaries' => $deps->csR->optionsDataCategorySecondaries(),
             ]),
             'quotes' => $this->webViewRenderer->renderPartialAsString($p . 'quotes', [
                 'invoice_groups' => $deps->gR->findAllPreloaded(),

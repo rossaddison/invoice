@@ -3108,6 +3108,10 @@ prior to importing and no existing documents e.g. Invoices.',
 
   // === HOME-CARE QR AUTO-INVOICE ===
   'homecare.auto.invoice.enabled' => 'Enable Home Care QR Auto-Invoice',
+  'homecare.current.run' => 'Current Run',
+  'homecare.current.run.category.secondary' => 'Current Run — Area',
+  'homecare.current.run.last.run.date' => 'Current Run — Last Run Date',
+  'since' => 'since',
   'print' => 'Print',
   'print.qr.code' => 'Print QR Code',
   'qr.code.instructions' => 'Stick this to your window. Scan it whenever you receive a completed  home care service through your door to request your next invoice which you can then pay immediately according to your chosen payment method. This helps use with our bank reconciliations. Thank-you.',

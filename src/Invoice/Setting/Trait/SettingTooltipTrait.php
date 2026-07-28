@@ -433,6 +433,27 @@ trait SettingTooltipTrait
                 'where' => 'Not yet wired to anything — reserved for a future'
                 . ' worker/manager status workflow.',
             ],
+            'homecare_current_run_category_secondary_id' => [
+                'why' => 'The category_secondary (street/area) currently being'
+                . ' worked. Defaults the inv/index "Current Run" dropdown'
+                . ' filter to this value on a plain visit — invoices belonging'
+                . ' to a different category_secondary are hidden until the'
+                . ' filter is changed or cleared. Set to "Not set" to disable'
+                . ' the default filtering without affecting the dropdown'
+                . ' itself.',
+                'where' => 'src/Invoice/Inv/Trait/InvCombinedFilterTrait.php and'
+                . ' src/Invoice/Inv/Trait/Index.php'
+                . ' (indexHomeCareRunContext/homeCareRunFlash).',
+            ],
+            'homecare_current_run_last_run_date' => [
+                'why' => 'Manually entered start date of the current run. Only'
+                . ' applies when the inv/index Current Run filter matches this'
+                . ' setting\'s configured category_secondary — invoices dated'
+                . ' before this are excluded; browsing a different'
+                . ' category_secondary via the same dropdown ignores this date.',
+                'where' => 'src/Invoice/Inv/Trait/InvCombinedFilterTrait.php'
+                . ' (applyRunDateCondition).',
+            ],
             'stop_homecare_signing_up' => [
                 'why' => 'Blocks the public HomeCare signup form'
                 . ' (/homecare-signup) at the controller, redirecting away'

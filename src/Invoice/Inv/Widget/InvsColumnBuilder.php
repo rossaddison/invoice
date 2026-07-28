@@ -12,6 +12,7 @@ use App\Invoice\InvRecurring\InvRecurringRepository as IRR;
 use App\Invoice\InvSentLog\InvSentLogRepository as ISLR;
 use App\Invoice\Quote\QuoteRepository as QR;
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
+use App\Invoice\Inv\Widget\Trait\InvsCategorySecondaryRunColumnTrait;
 use App\Invoice\Inv\Widget\Trait\InvsWorkerColumnTrait;
 use App\Invoice\Setting\SettingRepository as SR;
 use App\Widget\GridComponents;
@@ -42,6 +43,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
  */
 final class InvsColumnBuilder
 {
+    use InvsCategorySecondaryRunColumnTrait;
     use InvsWorkerColumnTrait;
 
     private const string ROUTE_EDIT          = 'inv/edit';
@@ -89,6 +91,7 @@ final class InvsColumnBuilder
             $this->buildPdfEmailColumn(),
             $this->buildInvNumberColumn(),
             $this->buildFamilyNameColumn(),
+            $this->buildCategorySecondaryRunColumn($p->csR, $homeCareEnabled),
             $this->buildYearMonthColumn(),
             $this->buildStatusColumn($iR, $irR, $sR),
             $this->buildQuickPayColumn(),

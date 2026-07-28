@@ -9,6 +9,7 @@ use Yiisoft\Bootstrap5\BreadcrumbLink;
 use Yiisoft\Html\Html;
 
 /**
+ * @var App\Invoice\CategorySecondary\CategorySecondaryRepository $csR
  * @var App\Invoice\DeliveryLocation\DeliveryLocationRepository $dlR
  * @var App\Invoice\Inv\InvRepository $iR
  * @var App\Invoice\InvRecurring\InvRecurringRepository $irR
@@ -44,6 +45,7 @@ use Yiisoft\Html\Html;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsClientGroupDropDownFilter
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsYearMonthDropDownFilter
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsStatusDropDownFilter
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsCategorySecondaryRunDropDownFilter
  */
 
 $settingTabIndex = 'setting/tabIndex';
@@ -175,6 +177,7 @@ echo InvsListWidget::widget()
     ->withSR($s)
     ->withEmailRepositories($etR, $fdR)
     ->withWorkerRepository($wR)
+    ->withCategorySecondaryRepository($csR)
     ->withCsrf($csrf)
     ->withDecimalPlaces($decimalPlaces)
     ->withVisible($visible)
@@ -182,15 +185,16 @@ echo InvsListWidget::widget()
     ->withGroupBy($groupBy ?? 'none')
     ->withClientCount($clientCount)
     ->withGridDisplayOptions($gridSummary, $sortString)
-    ->withFilterOptions(new InvsFilterOptions(
-        invNumber:       $optionsInvNumberDropDownFilter,
-        creditInvNumber: $optionsCreditInvNumberDropDownFilter,
-        familyName:      $optionsFamilyNameDropDownFilter,
-        clients:         $optionsClientsDropDownFilter,
-        clientGroup:     $optionsClientGroupDropDownFilter,
-        yearMonth:       $optionsYearMonthDropDownFilter,
-        status:          $optionsStatusDropDownFilter,
-    ))
+    ->withFilterOptions(new InvsFilterOptions([
+        'invNumber'       => $optionsInvNumberDropDownFilter,
+        'creditInvNumber' => $optionsCreditInvNumberDropDownFilter,
+        'familyName'      => $optionsFamilyNameDropDownFilter,
+        'clients'         => $optionsClientsDropDownFilter,
+        'clientGroup'     => $optionsClientGroupDropDownFilter,
+        'yearMonth'       => $optionsYearMonthDropDownFilter,
+        'status'          => $optionsStatusDropDownFilter,
+        'categorySecondaryRun' => $optionsCategorySecondaryRunDropDownFilter,
+    ]))
     ->render();
 
 echo $modal_add_inv;

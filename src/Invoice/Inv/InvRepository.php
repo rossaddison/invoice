@@ -6,6 +6,7 @@ namespace App\Invoice\Inv;
 
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\Inv\Trait\InvClientTrait;
+use App\Invoice\Inv\Trait\InvCombinedFilterTrait;
 use App\Invoice\Inv\Trait\InvFilterTrait;
 use App\Invoice\Inv\Trait\InvGuestTrait;
 use App\Invoice\Inv\Trait\InvHomeCareTrait;
@@ -25,6 +26,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class InvRepository extends Select\Repository implements InvRepositoryInterface
 {
     use InvClientTrait;
+    use InvCombinedFilterTrait;
     use InvFilterTrait;
     use InvGuestTrait;
     use InvHomeCareTrait;

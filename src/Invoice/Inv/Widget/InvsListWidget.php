@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Inv\Widget;
 
 use App\Infrastructure\Persistence\Inv\Inv;
+use App\Invoice\CategorySecondary\CategorySecondaryRepository as CSR;
 use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
 use App\Invoice\EmailTemplate\EmailTemplateRepository as ETR;
 use App\Invoice\FromDropDown\FromDropDownRepository as FDR;
@@ -54,6 +55,7 @@ final class InvsListWidget extends Widget
     private ?ETR $etR = null;
     private ?FDR $fdR = null;
     private ?WR $wR = null;
+    private ?CSR $csR = null;
     private string|\Stringable $csrf = '';
     private int $decimalPlaces = 2;
     private bool $visible = false;
@@ -128,6 +130,13 @@ final class InvsListWidget extends Widget
         return $new;
     }
 
+    public function withCategorySecondaryRepository(CSR $csR): static
+    {
+        $new = clone $this;
+        $new->csR = $csR;
+        return $new;
+    }
+
     public function withCsrf(string|\Stringable $csrf): static
     {
         $new = clone $this;
@@ -194,7 +203,8 @@ final class InvsListWidget extends Widget
     {
         if ($this->paginator === null || $this->iR === null
             || $this->irR === null || $this->islR === null || $this->sR === null
-            || $this->etR === null || $this->fdR === null || $this->wR === null) {
+            || $this->etR === null || $this->fdR === null || $this->wR === null
+            || $this->csR === null) {
             return '';
         }
 
@@ -257,6 +267,7 @@ final class InvsListWidget extends Widget
             islR:         $this->islR,
             sR:           $this->sR,
             wR:           $this->wR,
+            csR:          $this->csR,
             dp:           $this->decimalPlaces,
             totalAmount:  $totalAmount,
             totalPaid:    $totalPaid,
