@@ -95,6 +95,7 @@
         "yiisoft/auth": "^3.2.1",
         "yiisoft/bootstrap5": "^1.2",
         "yiisoft/cache": "^3.2",
+        "yiisoft/cache-apcu": "^1.1",
         "yiisoft/cache-file": "^3.2",
         "yiisoft/config": "^1.6.2",
         "yiisoft/cookies": "^1.2.4",

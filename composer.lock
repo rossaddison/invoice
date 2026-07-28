@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "be6fe2a16f045dc98db86659a5e0d3b3",
+    "content-hash": "2f8b6c43f52176fc73637176575b6474",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -14693,6 +14693,73 @@
                 }
             ],
             "time": "2025-12-11T05:44:17+00:00"
+        },
+        {
+            "name": "yiisoft/cache-apcu",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiisoft/cache-apcu.git",
+                "reference": "d8777eae598d299ea0c4df295a5c43322c1fc8d2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yiisoft/cache-apcu/zipball/d8777eae598d299ea0c4df295a5c43322c1fc8d2",
+                "reference": "d8777eae598d299ea0c4df295a5c43322c1fc8d2",
+                "shasum": ""
+            },
+            "require": {
+                "ext-apcu": "*",
+                "php": "^8.0",
+                "psr/simple-cache": "^2.0|^3.0"
+            },
+            "provide": {
+                "psr/simple-cache-implementation": "1.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.5",
+                "roave/infection-static-analysis-plugin": "^1.16",
+                "spatie/phpunit-watcher": "^1.23",
+                "vimeo/psalm": "^4.18"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Yiisoft\\Cache\\Apcu\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Yii Caching Library - APCu Handler",
+            "homepage": "https://www.yiiframework.com/",
+            "keywords": [
+                "apcu",
+                "cache",
+                "framework",
+                "psr-16",
+                "yii"
+            ],
+            "support": {
+                "chat": "https://t.me/yii3en",
+                "forum": "https://www.yiiframework.com/forum/",
+                "irc": "ircs://irc.libera.chat:6697/yii",
+                "issues": "https://github.com/yiisoft/cache-apcu/issues?state=open",
+                "source": "https://github.com/yiisoft/cache-apcu",
+                "wiki": "https://www.yiiframework.com/wiki/"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/yiisoft",
+                    "type": "github"
+                },
+                {
+                    "url": "https://opencollective.com/yiisoft",
+                    "type": "open_collective"
+                }
+            ],
+            "time": "2024-04-24T12:22:19+00:00"
         },
         {
             "name": "yiisoft/cache-file",

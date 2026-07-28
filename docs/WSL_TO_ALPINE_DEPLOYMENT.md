@@ -450,6 +450,18 @@ Run after every `git pull`:
 git pull origin main && ./deploy.sh
 ```
 
+**If this deploy added, changed, or removed a route**, also restart Apache:
+```bash
+rc-service apache2 restart
+```
+`git pull` can never clear the route-dispatch cache on its own — see
+`docs/YII_ENV_ROUTE_CACHE_AND_DEPLOY_JULY_2026.md` for the full mechanism.
+Since the July 2026 switch to APCu-backed caching, `php yii cache/clear`
+alone is **not** sufficient for this specific case (it only reaches the
+CLI's own APCu pool, not the web server's) — restarting Apache is what
+actually clears it. Still run `php yii cache/clear` too for the general
+DI/config cache housekeeping; just don't rely on it for a route change.
+
 ---
 
 ## Important Reminders

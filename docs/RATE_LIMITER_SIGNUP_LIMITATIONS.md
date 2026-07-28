@@ -114,9 +114,18 @@ new LRM(
 )
 ```
 
-**Fix (option B)** — switch `StorageInterface` from `FileCache` to `APCuCache`
-(already wired in `config/common/di/cache.php`). APCu uses atomic operations,
-eliminating CAS contention entirely.
+**Fix (option B) — DONE (July 2026)**: `config/common/di/cache.php` now binds
+`CacheInterface` to `ApcuCache` whenever the `apcu` extension is loaded
+(falls back to `FileCache` otherwise — see
+`docs/YII_ENV_ROUTE_CACHE_AND_DEPLOY_JULY_2026.md` §6 for the full
+writeup). `SimpleCacheStorage` picks this up automatically since it's
+constructed from `Reference::to(CacheInterface::class)`, so `/signup`'s
+rate-limit counter now uses APCu's atomic operations, eliminating the CAS
+contention this section describes. **Option A (explicit 429
+fail-middleware) has not been implemented** — worth doing regardless,
+since APCu removes the *likely* trigger for `isFailStoreUpdatedData`
+but not the theoretical one, and failing open on a rate limiter is the
+wrong default either way.
 
 ---
 
@@ -198,7 +207,7 @@ counter key.
 |---|-------|----------|-----------------|
 | 1 | `REMOTE_ADDR` wrong behind Cloudflare | **Critical** | `LimitCallback` reading `CF-Connecting-IP` |
 | 2 | Per-IP limit useless against botnets | **High** | Add a global `LimitAlways` path counter |
-| 3 | CAS failure silently allows requests | **High** | Pass fail-middleware or switch to APCu storage |
+| 3 | CAS failure silently allows requests | **High** | ~~Switch to APCu storage~~ **done July 2026**; fail-middleware (option A) still open |
 | 4 | Turnstile fires after form validation | **Medium** | Move Turnstile check before hydration |
 | 5 | Rate headers teach bots the reset time | **Low** | Strip from 429 responses |
 | 6 | GET/POST counted in separate buckets | **Low** | Method-agnostic fingerprint on signup |

@@ -9,11 +9,17 @@
   routing. Running it locally is harmless, just pointless for this purpose.
 - On **production** (`yii3i.online`, `YII_ENV=prod`), route caching is
   switched **on**. The first request after a fresh cache builds the route
-  table once and saves it to a file, then every request after that reuses
-  that same file forever — there's no expiry, no "has this changed?"
-  check, nothing. So it's production, and only production, that ever needs
-  `php yii cache/clear` — and only after a route was added, changed, or
-  removed.
+  table once and saves it, then every request after that reuses that same
+  saved copy forever — there's no expiry, no "has this changed?" check,
+  nothing. So it's production, and only production, that ever needs
+  clearing — and only after a route was added, changed, or removed.
+- As of July 2026 that saved copy lives in **APCu** (shared memory)
+  instead of a file on disk, wherever the APCu extension is available —
+  faster, but with a real catch: `php yii cache/clear` runs on the CLI,
+  which has its **own separate** APCu memory pool from the actual web
+  server processes — it cannot reach the cache the website is really
+  serving from. **The real fix is restarting Apache/PHP-FPM** after a
+  route-changing deploy (§6).
 - This has **nothing to do with** other kinds of changes not showing up —
   a new menu link, a new form field, any HTML on a page. Those are plain
   PHP that reruns on every request everywhere, dev and prod alike. If one
@@ -124,26 +130,29 @@ clear. Two things matter here:
 contains a bare `*`), specifically so runtime state like this cache
 survives across deploys. That's the right default for most of what lives
 under `runtime/` (sessions, logs, uploaded assets) — but it means a
-`git pull` on the Alpine production server **cannot** touch
-`runtime/cache/routes-cache`, no matter how many routes changed in the
-pulled commits. The stale compiled table just keeps being served. This is
-solved with either:
+`git pull` on the Alpine production server **cannot** touch wherever the
+cache actually lives, no matter how many routes changed in the pulled
+commits. The stale compiled table just keeps being served. What actually
+clears it depends on which backend is active (§6):
 
-```bash
-# Wipes everything under runtime/cache/ — DI, config, and route caches alike
-php yii cache/clear
-```
+- **If `CacheInterface` is bound to `FileCache`** (the `apcu` extension
+  isn't loaded): `php yii cache/clear` is enough on its own — it
+  recursively deletes every file under `@runtime/cache`, including
+  `routes-cache`.
+- **If it's bound to `ApcuCache`** (the normal case whenever `apcu` is
+  loaded, which it is on this project's documented Alpine setup):
+  `php yii cache/clear` is **not** enough by itself. It still runs and
+  reports success, but the compiled route table lives in the *web
+  server's* APCu memory, and this command runs on the CLI — which PHP
+  gives a completely separate APCu memory pool from Apache/PHP-FPM's, by
+  design, always. The command's `apcu_clear_cache()` call only clears its
+  own CLI-local pool, not the one the website is actually serving from.
+  **Restart the web server** (`rc-service apache2 restart` on Alpine) —
+  that's what actually tears down and rebuilds the live APCu segment.
 
-or manually:
-
-```bash
-rm -f /var/www/invoice/runtime/cache/routes-cache*
-```
-
-`CacheClearCommand` (`src/Command/CacheClearCommand.php`) does the former —
-it doesn't distinguish which cache is which, it just recursively deletes
-every file under `@runtime/cache`, which is a safe, complete fix (the
-caches simply get rebuilt fresh from config on the next request).
+Either way: never manually hunt for `runtime/cache/routes-cache*` — that
+file won't exist at all once APCu is active, so "deleting" it silently
+accomplishes nothing.
 
 ## 5. What this does **not** explain — the other half of "not appearing"
 
@@ -157,7 +166,7 @@ controller action mapping). It has **nothing to do with**:
   cache anywhere in the stack. If a menu item, a form field, or any other
   rendered HTML "isn't showing up," route caching is never the cause.
 - Settings values (`SettingRepository`) — those come from the database, not
-  this file cache.
+  this cache, whichever backend holds it.
 - The DI container's own compiled definitions, RBAC files, or anything
   else — `php yii cache/clear` happens to sweep all of `runtime/cache/` in
   one go, which is why its own description says "DI, config, and routes,"
@@ -171,10 +180,71 @@ committed — `git status` showed it as an uncommitted local change, so it
 was never pushed and never could have reached the server regardless of any
 cache. Route caching was investigated and ruled out as the cause, but is
 documented here in full because it's a real, distinct failure mode that
-*will* eventually bite a genuine route change if `cache/clear` is skipped
-after a deploy.
+*will* eventually bite a genuine route change if the cache isn't actually
+cleared after a deploy (§4/§6 — which, since the APCu switch, means a web
+server restart, not `php yii cache/clear`).
 
-## 6. A third, independent consumption path: raw `$_ENV['YII_ENV']` checks
+## 6. The cache backend itself changed: `FileCache` → `ApcuCache`
+
+Everything in §3 was written against `FileCache`, which is what backed the
+route-dispatch cache (and, separately, `yiisoft/rate-limiter`'s per-IP
+counters — see `docs/RATE_LIMITER_SIGNUP_LIMITATIONS.md` #3, where
+concurrent bot traffic caused real lock contention on that file store).
+`config/common/di/cache.php` now binds the app's one `Psr\SimpleCache\CacheInterface`
+conditionally:
+
+```php
+CacheInterface::class => extension_loaded('apcu') ? ApcuCache::class : FileCache::class,
+```
+
+Nothing about §3's behavior changes conceptually — it's still "compute
+once, cache forever, no TTL, no invalidation" — only *where* "forever"
+lives:
+
+- **Storage moves from disk to shared memory.** No more
+  `runtime/cache/routes-cache` file; the compiled dispatch table (and rate
+  limiter counters) now live in the APCu extension's own memory segment,
+  which every PHP-FPM/mod_php worker process on that machine shares.
+- **It survives a `git pull` for the exact same reason as before** —
+  `git pull` only touches tracked files, and this cache was never a
+  tracked file to begin with, whichever backend holds it.
+- **The real way to clear it: restart the web server.** APCu's shared
+  memory segment is torn down when the PHP processes that own it stop —
+  unlike the file cache, which persists until something explicitly
+  deletes it. So `rc-service apache2 restart` (or a PHP-FPM pool restart)
+  now doubles as a complete cache clear. **This is the recommended step
+  after any deploy that changes a route**, once APCu is active.
+- **`php yii cache/clear` does *not* reach this cache — and that's not a
+  bug, it's how APCu works.** APCu gives the CLI process running that
+  command its own memory pool, completely separate from Apache/PHP-FPM's
+  web workers, always — there is no configuration that shares them. The
+  command's `apcu_clear_cache()` call (added alongside this change, in
+  `src/Command/CacheClearCommand.php`) clears that CLI-local pool, which
+  is harmless but doesn't touch what the website is actually serving.
+  The command prints a warning to this effect so it's not silently
+  misleading. Its file-deletion half (`@runtime/cache`) still works fine
+  regardless — filesystem operations aren't SAPI-scoped — it's only the
+  APCu half that can't reach across the CLI/web boundary.
+- **Guarded, not assumed.** `extension_loaded('apcu')` is checked before
+  binding, every time the container is built — calling `apcu_fetch()` etc.
+  without the extension loaded is a hard fatal error in PHP, not a
+  graceful miss, so this app falls back to `FileCache` cleanly anywhere
+  the extension isn't present (a fresh dev machine, a future hosting
+  target) rather than assuming it's always there. It's present on this
+  project's documented Alpine setup (`php84-pecl-apcu` in
+  `docs/PHP84_ALPINE_SETUP.md`'s install list) and the extension is loaded
+  locally on WAMP too.
+- **CLI note, and why it matters here now.** APCu is disabled for CLI
+  processes by default (`apc.enable_cli=0`) — confirmed locally on this
+  WAMP box — unless explicitly turned on in `php.ini`. This app's two
+  original consumers (route matching, HTTP rate limiting) never ran in a
+  console context, so this used to be a non-issue in practice. It stopped
+  being purely academic the moment `CacheClearCommand` itself started
+  calling `apcu_clear_cache()` from the CLI — which is exactly the bullet
+  above: that call either hits a disabled/empty CLI pool, or at best a
+  pool that was never shared with the web workers in the first place.
+
+## 7. A third, independent consumption path: raw `$_ENV['YII_ENV']` checks
 
 Separate from both the environment-file merge (§1-2) and `$params['env']`/
 `SettingRepository::getEnv()` (§3, in the earlier grep discussion), a few
@@ -203,12 +273,17 @@ through `config/environments/`, it doesn't show up in that table in §2 —
 worth knowing it's a distinct third mechanism if you ever go looking for
 "where does `YII_ENV` matter" and only check the environment-params files.
 
-## 7. Quick reference: is it the route cache, or something else?
+## 8. Quick reference: is it the route cache, or something else?
 
 - **Added/changed/removed a route, deployed to prod, and hitting that URL
-  404s or hits the wrong action?** → Route cache. Run `php yii cache/clear`
-  on the server (or the manual `rm -f routes-cache*`), per
-  `docs/WSL_TO_ALPINE_DEPLOYMENT.md`'s deploy script.
+  404s or hits the wrong action?** → Route cache. **Restart the web server**
+  (`rc-service apache2 restart` on Alpine) — that's what actually clears
+  it now that APCu is the backend (§6). `php yii cache/clear` still runs
+  fine and clears its file-based half, but its APCu half can't reach the
+  web workers' pool from the CLI, so don't rely on it alone. Don't bother
+  hunting for `runtime/cache/routes-cache*` by hand either — that file may
+  not exist at all even though the cache is very much still active in
+  shared memory.
 - **A view, layout, menu item, form field, or any other rendered HTML isn't
   showing up after a deploy?** → Not the route cache — verify the change
   was actually committed (`git status` / `git log -p -- <file>` on the
