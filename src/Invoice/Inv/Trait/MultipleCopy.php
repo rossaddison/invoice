@@ -109,7 +109,8 @@ trait MultipleCopy
         }
         $effectiveStatus = isset($filter->filterStatus) && !empty($filter->filterStatus)
             ? (int) $filter->filterStatus : (int) ($data['status'] ?? 0);
-        $invs = $this->indexApplyFilters($filter, $d->iR, $effectiveStatus);
+        $run  = $this->indexHomeCareRunContext($request, $filter);
+        $invs = $d->iR->filterCombined($filter, $run, $effectiveStatus);
         $opts = new CopyInvOptions(createdDate: $newDate);
         $copyCount = 0;
         /** @var Inv $inv */

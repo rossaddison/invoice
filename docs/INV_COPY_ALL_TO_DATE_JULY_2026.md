@@ -19,19 +19,36 @@ questions were resolved with the user up front:
 ## 1. Reused the existing copy machinery, not a new pipeline
 
 `MultipleCopy::copyAllToDate()` (`src/Invoice/Inv/Trait/MultipleCopy.php`)
-is deliberately thin: it calls the exact same `indexApplyFilters()` the
-`inv/index` action itself uses to build the on-screen grid (so "all
-invoices" always means precisely what's on screen, by construction — not a
-second, potentially-drifting definition of "filtered"), then for every
-matching invoice calls the same `copyInvToClient()` helper `multiplecopy()`
-already uses, with the target client forced to each invoice's own
-`reqClientId()` and a single `CopyInvOptions(createdDate: ...)` applied
-across the whole batch.
+is deliberately thin: it calls `InvRepository::filterCombined($filter, $run,
+$effectiveStatus)` — the exact same method the `inv/index` action itself
+calls (`Index::index()`) to build the on-screen grid (so "all invoices"
+always means precisely what's on screen, by construction — not a second,
+potentially-drifting definition of "filtered") — then for every matching
+invoice calls the same `copyInvToClient()` helper `multiplecopy()` already
+uses, with the target client forced to each invoice's own `reqClientId()`
+and a single `CopyInvOptions(createdDate: ...)` applied across the whole
+batch. The `HomeCareRunContext` that `filterCombined()` requires is built
+the same way `index()` builds it, via `Index::indexHomeCareRunContext()`.
 
-`indexApplyFilters()` is declared `private` on the `Index` trait, but since
-PHP traits are flattened into their composing class at compile time (not
-scoped independently like separate classes), any other trait mixed into
-the same `InvController` — `MultipleCopy` included — can call it via
+**Correction (July 2026):** this section originally described the shared
+method as `indexApplyFilters()`. That method never existed anywhere in
+`InvController` or its traits — it was a copy-paste-shaped name that
+silently compiled because PHP traits don't enforce a method actually
+exists until it's called, and this endpoint went untested by hand. It only
+surfaced when `vendor/bin/psalm --no-cache` was run project-wide and
+flagged `UndefinedMethod` on the call plus a `MixedAssignment` on `$invs`
+as a knock-on effect. `filterCombined()`, above, is what `index()` has
+always actually called; `copyAllToDate()` now calls the same thing. A
+second, unrelated Psalm finding from the same run — `CategorySecondaryRepository::optionsDataCategorySecondaries()`
+only declaring `@return array` instead of `@return array<array-key,
+string>` — caused a `MixedArgumentTypeCoercion` on `InvsFilterOptions`'s
+constructor in `Index.php`; fixed by tightening the annotation to match
+the method's actual return shape.
+
+`indexHomeCareRunContext()` is declared `private` on the `Index` trait, but
+since PHP traits are flattened into their composing class at compile time
+(not scoped independently like separate classes), any other trait mixed
+into the same `InvController` — `MultipleCopy` included — can call it via
 `$this->` exactly as if it had been declared directly on the controller.
 
 ## 2. No selection step — the confirm dialog is the only safety gate
@@ -68,7 +85,9 @@ button group right next to the existing "☑️ Copy Invoice" button.
 
 ## Verification
 
-- Full-project `vendor/bin/psalm --no-cache` clean.
+- Full-project `vendor/bin/psalm --no-cache` clean (see the July 2026
+  correction above — this was re-verified after the `indexApplyFilters()`
+  bug fix, and is accurate now).
 - Full Testo suite (242 tests) still passing — no regressions from the
   `MultipleCopy.php` addition.
 - `esbuild` production bundle (`invoice-typescript-iife.js`/`.min.js`)
