@@ -918,6 +918,9 @@ final class InvItemServiceTest
         /** @var \Mockery\Expectation $e3 */
         $e3 = $chargeItem->shouldReceive('getAmount');
         $e3->once()->andReturn('5');
+        /** @var \Mockery\Expectation $e3b */
+        $e3b = $chargeItem->shouldReceive('getVatOrTax');
+        $e3b->once()->andReturn('1.5');
 
         $allowanceType = m::mock(AllowanceCharge::class);
         /** @var \Mockery\Expectation $e4 */
@@ -931,6 +934,9 @@ final class InvItemServiceTest
         /** @var \Mockery\Expectation $e6 */
         $e6 = $allowanceItem->shouldReceive('getAmount');
         $e6->once()->andReturn('2');
+        /** @var \Mockery\Expectation $e6b */
+        $e6b = $allowanceItem->shouldReceive('getVatOrTax');
+        $e6b->once()->andReturn('0.5');
 
         $aciiR = m::mock(InvItemAllowanceChargeRepository::class);
         /** @var \Mockery\Expectation $e7 */
@@ -948,7 +954,10 @@ final class InvItemServiceTest
         $subTotal = 2.0 * 10.0;
         $discountTotal = 2.0 * 1.0;
         $ipInvAc = $subTotal + 5.0 - 2.0;
-        $taxTotal = ($ipInvAc - $discountTotal) * (20.0 / 100.00);
+        // Matches InvItemService::saveInvItemAmount: the item's own tax rate
+        // applies to its charge/allowance-exclusive subtotal, and each
+        // allowance/charge separately contributes its own getVatOrTax().
+        $taxTotal = ($subTotal - $discountTotal) * (20.0 / 100.00) + (1.5 - 0.5);
 
         $iias = m::mock(InvItemAmountService::class);
         /** @var \Mockery\Expectation $e10 */
