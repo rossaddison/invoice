@@ -8,6 +8,7 @@ use App\Auth\Permissions;
 use App\Infrastructure\Persistence\Client\Client;
 use App\Infrastructure\Persistence\User\User;
 use App\Infrastructure\Persistence\UserInv\UserInv;
+use App\Invoice\Enum\DoNotSendReason;
 
 use App\Invoice\{
     Client\ClientRepository as ClientR,
@@ -23,7 +24,9 @@ use Yiisoft\{
     Router\HydratorAttribute\RouteArgument,
     Router\UrlGeneratorInterface,
 };
-use Psr\{Http\Message\ResponseInterface as Response,
+use Psr\{
+    Http\Message\ResponseInterface as Response,
+    Http\Message\ServerRequestInterface as Request,
 };
 
 trait Guest
@@ -196,6 +199,7 @@ trait Guest
             'viewPayment' => $this->userService->hasPermission(Permissions::VIEW_PAYMENT),
             // update userinv with the user's listlimit preference
             'userInv' => $userInv,
+            'worker' => $worker,
             'userInvListLimit' => $userInv->getListLimit(),
             'defaultPageSizeOffsetPaginator' => $userInv->getListLimit() ?? 10,
             // numbered tiles between the arrows
@@ -251,5 +255,30 @@ trait Guest
         array $user_clients): SDI
     {
         return $iR->repoGuestClientsPostDraft((int) $status, $user_clients);
+    }
+
+    /**
+     * HomeCare field worker flags/clears do-not-send from their own
+     * inv/guest row. Gated by VIEW_INV (routes-inv.php), not EDIT_INV, so
+     * the worker RBAC role can actually reach it.
+     */
+    public function setDoNotSend(
+        Request $request,
+        #[RouteArgument('inv_id')] string $inv_id,
+        IR $iR,
+    ): Response {
+        $body = $request->getParsedBody() ?? [];
+        /** @var string $reason */
+        $reason = is_array($body) ? ($body['reason'] ?? '') : '';
+        $validReason = DoNotSendReason::tryFrom($reason) !== null ? $reason : '';
+        $inv = $inv_id !== '' ? $iR->repoInvUnLoadedquery((int) $inv_id) : null;
+        if ($inv !== null) {
+            $inv->setDoNotSend($validReason !== '');
+            $inv->setDoNotSendReason($validReason);
+            $iR->save($inv);
+            $this->flashMessage('info', $this->translator->translate(
+                $validReason !== '' ? 'do.not.send.flashSet' : 'do.not.send.flashCleared'));
+        }
+        return $this->webService->getRedirectResponse('inv/guest');
     }
 }

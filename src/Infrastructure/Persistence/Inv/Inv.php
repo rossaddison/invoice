@@ -140,6 +140,14 @@ class Inv
         private ?int $status_id = 1,
         #[Column(type: 'boolean', nullable: false)]
         private bool $is_read_only = false,
+        // Set by a HomeCare field worker from inv/guest when a job hits a
+        // problem on-site — blocks every status-to-"sent" transition
+        // server-side (see blocksSending() below) until cleared,
+        // independent of is_read_only above.
+        #[Column(type: 'boolean', nullable: false)]
+        private bool $do_not_send = false,
+        #[Column(type: 'string(32)', nullable: false, default: '')]
+        private string $do_not_send_reason = '',
         #[Column(type: 'string(90)', nullable: true)]
         private ?string $password = '',
         #[Column(type: 'string(100)', nullable: true)]

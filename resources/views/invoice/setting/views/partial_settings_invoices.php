@@ -18,7 +18,6 @@ use Yiisoft\Html\Tag\I;
 * @var array $roles
 * @var array $places
 * @var array $cantons
-* @var array $category_secondaries
 */
 
 $row = ['class' => 'row'];
@@ -932,97 +931,6 @@ echo H::openTag('div', $row); //1
           $translator->translate('yes')
          );
        echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-
-      echo H::openTag('div', $formGroup); //7
-       $shaie = 'settings[homecare_auto_invoice_enabled]';
-       echo H::openTag('label', [
-        'for' => $shaie
-       ]);
-        echo $translator->translate(
-         'homecare.auto.invoice.enabled'
-        );
-        echo $s->infoIcon('homecare_auto_invoice_enabled');
-       echo H::closeTag('label');
-
-       $body[$shaie] =
-       $s->getSetting('homecare_auto_invoice_enabled');
-
-       echo H::openTag('select', [
-        'name' => $shaie,
-        'id' => $shaie,
-        'class' => 'form-select',
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->content(
-          $translator->translate('no')
-         );
-        echo  new Option()
-         ->value('1')
-         ->selected(
-          $body[$shaie] == '1'
-        )
-         ->content(
-          $translator->translate('yes')
-         );
-       echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-
-      echo H::openTag('div', $formGroup); //7
-       $shcrcsi = 'settings[homecare_current_run_category_secondary_id]';
-       echo H::openTag('label', [
-        'for' => $shcrcsi
-       ]);
-        echo $translator->translate(
-         'homecare.current.run.category.secondary'
-        );
-        echo $s->infoIcon('homecare_current_run_category_secondary_id');
-       echo H::closeTag('label');
-
-       $body[$shcrcsi] =
-       $s->getSetting('homecare_current_run_category_secondary_id');
-
-       echo H::openTag('select', [
-        'name' => $shcrcsi,
-        'id' => $shcrcsi,
-        'class' => 'form-select',
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->content(
-          $translator->translate('not.set')
-         );
-        foreach ($category_secondaries as $categorySecondaryId => $categorySecondaryName) {
-         echo  new Option()
-          ->value((string) $categorySecondaryId)
-          ->selected(
-           $body[$shcrcsi] == (string) $categorySecondaryId
-         )
-          ->content(
-           $categorySecondaryName
-          );
-        }
-       echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-
-      echo H::openTag('div', $formGroup); //7
-       $shcrlrd = 'settings[homecare_current_run_last_run_date]';
-       echo H::openTag('label', [
-        'for' => $shcrlrd
-       ]);
-        echo $translator->translate(
-         'homecare.current.run.last.run.date'
-        );
-        echo $s->infoIcon('homecare_current_run_last_run_date');
-       echo H::closeTag('label');
-
-       echo H::input('date', $shcrlrd, $s->getSetting(
-        'homecare_current_run_last_run_date'
-       ), [
-        'id' => $shcrlrd,
-        'class' => 'form-control',
-       ]);
       echo H::closeTag('div'); //7
 
      echo H::closeTag('div'); //6

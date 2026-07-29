@@ -71,7 +71,7 @@ trait InvsWorkerColumnTrait
         );
     }
 
-    private function buildQuickPayColumn(): DataColumn
+    private function buildQuickPayColumn(bool $visible = true): DataColumn
     {
         $t  = $this->translator;
         $ug = $this->urlGenerator;
@@ -109,6 +109,7 @@ trait InvsWorkerColumnTrait
             },
             encodeContent: false,
             withSorting: false,
+            visible: $visible,
         );
     }
 }

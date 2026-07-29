@@ -13,6 +13,8 @@ use App\Invoice\InvSentLog\InvSentLogRepository as ISLR;
 use App\Invoice\Quote\QuoteRepository as QR;
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
 use App\Invoice\Inv\Widget\Trait\InvsCategorySecondaryRunColumnTrait;
+use App\Invoice\Inv\Widget\Trait\InvsColumnVisibilityTrait;
+use App\Invoice\Inv\Widget\Trait\InvsDoNotSendColumnTrait;
 use App\Invoice\Inv\Widget\Trait\InvsWorkerColumnTrait;
 use App\Invoice\Setting\SettingRepository as SR;
 use App\Widget\GridComponents;
@@ -44,6 +46,8 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 final class InvsColumnBuilder
 {
     use InvsCategorySecondaryRunColumnTrait;
+    use InvsColumnVisibilityTrait;
+    use InvsDoNotSendColumnTrait;
     use InvsWorkerColumnTrait;
 
     private const string ROUTE_EDIT          = 'inv/edit';
@@ -82,22 +86,28 @@ final class InvsColumnBuilder
         $vis = $this->visible;
 
         $homeCareEnabled = $sR->getSetting('homecare_auto_invoice_enabled') === '1';
+        /** @var list<string> $hiddenColumns */
+        $hiddenColumns = array_values(array_filter(explode(',',
+            $sR->getSetting('homecare_hidden_inv_columns'))));
+        $isHidden = fn(string $key): bool =>
+            $this->isColumnHidden($key, $homeCareEnabled, $hiddenColumns);
 
         $columns = [
             $this->buildCheckboxColumn(),
-            $this->buildWorkflowTypeColumn(),
+            $this->buildWorkflowTypeColumn(!$isHidden('workflow_type')),
             $this->buildEditColumn($sR),
             $this->buildWorkerColumn($p, $homeCareEnabled),
-            $this->buildPdfEmailColumn(),
+            $this->buildDoNotSendColumn($homeCareEnabled),
+            $this->buildPdfEmailColumn(!$isHidden('pdf_email')),
             $this->buildInvNumberColumn(),
-            $this->buildFamilyNameColumn(),
+            $this->buildFamilyNameColumn(!$isHidden('family_name')),
             $this->buildCategorySecondaryRunColumn($p->csR, $homeCareEnabled),
-            $this->buildYearMonthColumn(),
+            $this->buildYearMonthColumn(!$isHidden('year_month')),
             $this->buildStatusColumn($iR, $irR, $sR),
-            $this->buildQuickPayColumn(),
+            $this->buildQuickPayColumn(!$isHidden('quick_pay')),
             ...$this->buildPaidBalanceColumns($sR, $dp, $totalPaid, $totalBalance),
-            $this->buildClientActiveColumn(),
-            $this->buildCreditNoteColumn($iR),
+            $this->buildClientActiveColumn(!$isHidden('client_active')),
+            $this->buildCreditNoteColumn($iR, !$isHidden('credit_note')),
             ...$this->buildSentLogColumns($islR),
             new DataColumn(
                 property: 'filterClient',
@@ -112,13 +122,15 @@ final class InvsColumnBuilder
                         'title' => $t->translate('client')])
                     ->optionsData($this->filterOptions->clients),
                 withSorting: false,
+                visible: !$isHidden('client'),
             ),
 
             new DataColumn('client_number',
                 header: $t->translate('client.number'),
                 content: static fn(Inv $m): string =>
                     Html::encode($m->getClient()?->getClientNumber()),
-                encodeContent: false),
+                encodeContent: false,
+                visible: !$isHidden('client_number')),
 
             new DataColumn(
                 property: 'filterClientAddress1',
@@ -130,13 +142,15 @@ final class InvsColumnBuilder
                     'id' => 'filter-address-1', 'class' => self::FILTER_CLASS,
                     'aria-label' => 'Filter by street address',
                     'title' => $t->translate('street.address'),
-                    'placeholder' => $t->translate('street.address')])),
+                    'placeholder' => $t->translate('street.address')]),
+                visible: !$isHidden('client_address_1')),
 
             new DataColumn('client_address_2',
                 header: $t->translate('street.address.2'),
                 content: static fn(Inv $m): string =>
                     Html::encode($m->getClient()?->getClientAddress2()),
-                encodeContent: false),
+                encodeContent: false,
+                visible: !$isHidden('client_address_2')),
 
             new DataColumn(
                 property: 'filterClientGroup',
@@ -150,13 +164,14 @@ final class InvsColumnBuilder
                         'title' => $t->translate('client.group')])
                     ->optionsData($this->filterOptions->clientGroup),
                 withSorting: false,
+                visible: !$isHidden('client_group'),
             ),
 
             new DataColumn('time_created',
                 header: $t->translate('datetime.immutable.time.created'),
                 content: static fn(Inv $m): string =>
                     $m->getTimeCreated()->format('H:i:s'),
-                visible: $vis),
+                visible: $vis && !$isHidden('time_created')),
 
             ...$this->buildDateColumns(),
             ...$this->buildAmountColumns($sR, $dp, $totalAmount),
@@ -170,11 +185,11 @@ final class InvsColumnBuilder
                             ['origin' => 'inv', 'origin_id' => $model->reqId(),
                                 'action' => 'index'])),
                 encodeContent: false,
-                visible: $vis,
+                visible: $vis && !$isHidden('delivery_add'),
                 withSorting: false,
             ),
 
-            $this->buildDeleteColumn($sR),
+            $this->buildDeleteColumn($sR, !$isHidden('delete')),
         ];
 
         array_push($columns, ...$this->buildOptionalLinkColumns($p));
@@ -516,7 +531,7 @@ final class InvsColumnBuilder
 
     // ── Individual column builders ────────────────────────────────────────────
 
-    private function buildWorkflowTypeColumn(): DataColumn
+    private function buildWorkflowTypeColumn(bool $visible = true): DataColumn
     {
         $t = $this->translator;
         return new DataColumn(
@@ -551,10 +566,11 @@ final class InvsColumnBuilder
             },
             encodeContent: false,
             withSorting: false,
+            visible: $visible,
         );
     }
 
-    private function buildFamilyNameColumn(): DataColumn
+    private function buildFamilyNameColumn(bool $visible = true): DataColumn
     {
         $t = $this->translator;
         return new DataColumn(
@@ -569,10 +585,11 @@ final class InvsColumnBuilder
                     'title' => $t->translate('family.name')])
                 ->optionsData($this->filterOptions->familyName),
             withSorting: false,
+            visible: $visible,
         );
     }
 
-    private function buildYearMonthColumn(): DataColumn
+    private function buildYearMonthColumn(bool $visible = true): DataColumn
     {
         $t      = $this->translator;
         $header = $t->translate(
@@ -589,11 +606,11 @@ final class InvsColumnBuilder
                     'title' => $header])
                 ->optionsData($this->filterOptions->yearMonth),
             withSorting: false,
-            visible: $this->visible,
+            visible: $this->visible && $visible,
         );
     }
 
-    private function buildClientActiveColumn(): DataColumn
+    private function buildClientActiveColumn(bool $visible = true): DataColumn
     {
         $ug = $this->urlGenerator;
         $t  = $this->translator;
@@ -611,6 +628,7 @@ final class InvsColumnBuilder
                         'id' => $model->getClient()?->reqId(), 'origin' => 'inv',
                     ]))
                     ->content($model->getClient()?->getClientActive() ? '✅' : '❌'),
+            visible: $visible,
         );
     }
 
@@ -712,7 +730,7 @@ final class InvsColumnBuilder
         );
     }
 
-    private function buildPdfEmailColumn(): ActionColumn
+    private function buildPdfEmailColumn(bool $visible = true): ActionColumn
     {
         $ug = $this->urlGenerator;
         $t  = $this->translator;
@@ -759,10 +777,11 @@ final class InvsColumnBuilder
                 ),
             ],
             after: Html::closeTag('div') . Html::closeTag('div') . Html::closeTag('div'),
+            visible: $visible,
         );
     }
 
-    private function buildDeleteColumn(SR $sR): ActionColumn
+    private function buildDeleteColumn(SR $sR, bool $visible = true): ActionColumn
     {
         $ug = $this->urlGenerator;
         $t  = $this->translator;
@@ -799,7 +818,7 @@ final class InvsColumnBuilder
                     },
                 ),
             ],
-            visible: $this->visible,
+            visible: $this->visible && $visible,
         );
     }
 
@@ -889,7 +908,7 @@ final class InvsColumnBuilder
         );
     }
 
-    private function buildCreditNoteColumn(IR $iR): DataColumn
+    private function buildCreditNoteColumn(IR $iR, bool $visible = true): DataColumn
     {
         $ug = $this->urlGenerator;
         $t  = $this->translator;
@@ -921,7 +940,7 @@ final class InvsColumnBuilder
                     'title' => $t->translate('credit.invoice.for.invoice')])
                 ->optionsData($this->filterOptions->creditInvNumber),
             withSorting: false,
-            visible: $this->visible,
+            visible: $this->visible && $visible,
         );
     }
 }

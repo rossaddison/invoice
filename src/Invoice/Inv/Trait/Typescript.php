@@ -29,6 +29,7 @@ trait Typescript
          * @var array $data['keylist']
          */
         $keyList = $data['keylist'] ?? [];
+        $skippedDoNotSend = 0;
         if (!empty($keyList)) {
             /**
              * @var string $value
@@ -38,6 +39,10 @@ trait Typescript
                  * @var \App\Infrastructure\Persistence\Inv\Inv $inv
                  */
                 $inv = $iR->repoInvUnLoadedquery((int) $value);
+                if ($inv->blocksSending()) {
+                    $skippedDoNotSend++;
+                    continue;
+                }
                 if (null !== $inv->getInvAmount()->getTotal()
                         && $inv->getInvAmount()->getTotal() > 0) {
                     $inv->setStatusId(2);
@@ -64,6 +69,10 @@ trait Typescript
             }
             $this->flashMessage('info',
                 $this->translator->translate('record.successfully.updated'));
+            if ($skippedDoNotSend > 0) {
+                $this->flashMessage('warning', $skippedDoNotSend
+                    . ' ' . $this->translator->translate('do.not.send.blocksBulkSent'));
+            }
         }
         return $this->factory->createResponse(Json::encode($parameters));
     }

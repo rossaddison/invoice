@@ -62,7 +62,7 @@ trait SettingInvoiceMarkTrait
         if ($invoice) {
             //draft->sent->view->paid
             //set the invoice to sent ie. 2
-            if ($invoice->reqStatusId() === 1) {
+            if ($invoice->reqStatusId() === 1 && !$invoice->blocksSending()) {
                 $invoice->setStatusId(2);
             }
             //set the invoice to read only ie. not updateable,

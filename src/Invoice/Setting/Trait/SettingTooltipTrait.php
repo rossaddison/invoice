@@ -454,6 +454,17 @@ trait SettingTooltipTrait
                 'where' => 'src/Invoice/Inv/Trait/InvCombinedFilterTrait.php'
                 . ' (applyRunDateCondition).',
             ],
+            'homecare_hidden_inv_columns' => [
+                'why' => 'Which inv/index columns to hide, for managers using the'
+                . ' grid on a phone during HomeCare rounds — most of the ~27'
+                . ' columns are desktop-office-oriented and unusable at mobile'
+                . ' width. Only takes effect while homecare_auto_invoice_enabled'
+                . ' is on; the general/desktop grid for non-HomeCare businesses'
+                . ' always shows every column regardless of this setting.',
+                'where' => 'src/Invoice/Inv/Widget/InvsColumnBuilder.php'
+                . ' (buildColumns) and'
+                . ' src/Invoice/Inv/Widget/Trait/InvsColumnVisibilityTrait.php.',
+            ],
             'stop_homecare_signing_up' => [
                 'why' => 'Blocks the public HomeCare signup form'
                 . ' (/homecare-signup) at the controller, redirecting away'

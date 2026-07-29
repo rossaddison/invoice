@@ -130,7 +130,16 @@ final readonly class InvService
         isset($array['group_id']) ? $model->setGroupId((int) $array['group_id']) : '';
         isset($array['so_id']) ? $model->setSoId((int) $array['so_id']) : '';
         isset($array['quote_id']) ? $model->setQuoteId((int) $array['quote_id']) : '';
-        isset($array['status_id']) ? $model->setStatusId((int) $array['status_id']) : '';
+        if (isset($array['status_id'])) {
+            $targetStatusId = (int) $array['status_id'];
+            // A HomeCare worker's do_not_send flag (see Trait\Guest::setDoNotSend())
+            // blocks every transition to "sent" on an existing invoice, including
+            // this generic form-driven one used by inv/edit's status dropdown.
+            $blocked = $model->hasIdentity() && $targetStatusId === 2 && $model->blocksSending();
+            if (!$blocked) {
+                $model->setStatusId($targetStatusId);
+            }
+        }
         isset($array['contract_id']) ? $model->setContractId((int) $array['contract_id']) : '';
     }
 

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Infrastructure\Persistence\Inv\Inv;
+use App\Invoice\Enum\DoNotSendReason;
 use App\Widget\Button;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
@@ -11,6 +12,7 @@ use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H4;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Label;
+use Yiisoft\Html\Tag\Option;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
@@ -36,6 +38,7 @@ const NATIVE_RESET_INV_AMOUNT_FILTER = 'native-reset inv-amount-filter';
  * @var App\Invoice\PaymentInformation\Service\BacsPaymentService $bacsPaymentService
  * @var App\Invoice\SalesOrder\SalesOrderRepository $soR
  * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Infrastructure\Persistence\Worker\Worker|null $worker
  * @var App\Widget\Button $button
  * @var App\Widget\GridComponents $gridComponents
  * @var Yiisoft\Data\Paginator\OffsetPaginator $sortedAndPagedPaginator
@@ -268,6 +271,47 @@ $columns = [
         encodeContent: false,
         withSorting: false,
         visible: true,
+    ),
+    // HomeCare field worker's do-not-send flag — only ever shown/settable
+    // on the worker-scoped guest view, never for an ordinary client guest.
+    new DataColumn(
+        header: $translator->translate('do.not.send'),
+        content: static function (Inv $model) use ($urlGenerator, $csrf, $translator): string {
+            $current = $model->getDoNotSendReason();
+            $options = new Option()->value('')
+                ->content($translator->translate('do.not.send.not.set'))
+                ->render();
+            foreach (DoNotSendReason::cases() as $reason) {
+                $option = new Option()->value($reason->value)
+                    ->content($translator->translate('do.not.send.reason.' .
+                    $reason->value));
+                if ($reason->value === $current) {
+                    $option = $option->selected(true);
+                }
+                $options .= $option->render();
+            }
+            return new Form()
+                ->post($urlGenerator->generate('inv/setdonotsend',
+                        ['inv_id' => $model->reqId()]))
+                ->csrf($csrf)
+                ->addAttributes(['class' => 'd-flex gap-1'])
+                ->content(
+                    Html::openTag('select', [
+                        'name' => 'reason',
+                        'class' => 'form-select form-select-sm',
+                    ]) . $options . Html::closeTag('select')
+                    . Html::tag('button', '💾', [
+                        'type' => 'submit',
+                        'class' => 'btn btn-outline-danger btn-sm',
+                        'title' => $translator->translate('do.not.send'),
+                    ])
+                )
+                ->encode(false)
+                ->render();
+        },
+        encodeContent: false,
+        visible: $worker !== null,
+        withSorting: false,
     ),
     // Credit note for the invoice
     new DataColumn(

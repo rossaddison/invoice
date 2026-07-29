@@ -233,7 +233,7 @@ public function index(
         return new HomeCareRunContext(
             categorySecondaryId: $effectiveId,
             applyDateFilter: $effectiveId > 0 && $effectiveId === $configuredId,
-            lastRunDate: (string) $this->sR->getSetting('homecare_current_run_last_run_date'),
+            lastRunDate: $this->sR->getSetting('homecare_current_run_last_run_date'),
         );
     }
 
@@ -341,7 +341,7 @@ public function index(
         if ($categorySecondary === null) {
             return;
         }
-        $lastRunDate = (string) $this->sR->getSetting('homecare_current_run_last_run_date');
+        $lastRunDate = $this->sR->getSetting('homecare_current_run_last_run_date');
         $linkText = ($categorySecondary->getName() ?? '')
             . ($lastRunDate !== '' ? ' — ' . $this->translator->translate('since')
                 . ' ' . $lastRunDate : '');

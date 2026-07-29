@@ -177,7 +177,6 @@ final class SettingController extends BaseController
                 'public_invoice_templates' => $this->sR->getInvoiceTemplates('public'),
                 'pdf_invoice_templates' => $this->sR->getInvoiceTemplates('pdf'),
                 'email_templates_invoice' => $deps->eR->repoEmailTemplateType('invoice'),
-                'category_secondaries' => $deps->csR->optionsDataCategorySecondaries(),
             ]),
             'quotes' => $this->webViewRenderer->renderPartialAsString($p . 'quotes', [
                 'invoice_groups' => $deps->gR->findAllPreloaded(),
@@ -236,6 +235,11 @@ final class SettingController extends BaseController
                 'payment_methods' => $deps->pm->findAllPreloaded(),
             ]),
             'location' => $this->webViewRenderer->renderPartialAsString($p . 'location'),
+            'homecare' => $this->webViewRenderer->renderPartialAsString($p . 'homecare', [
+                'hidden_inv_columns' => array_filter(
+                    explode(',', $this->sR->getSetting('homecare_hidden_inv_columns'))),
+                'category_secondaries' => $deps->csR->optionsDataCategorySecondaries(),
+            ]),
             // two-factor-authentication
             'tfa' => $this->webViewRenderer->renderPartialAsString($p . 'two_factor_authentication'),
             'turnstile' => $this->webViewRenderer->renderPartialAsString($p . 'turnstile'),
@@ -247,8 +251,17 @@ final class SettingController extends BaseController
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
             if (is_array($body)) {
-                /** @var array<string, string> $settings */
+                /** @var array<string, string|list<string>> $settings */
                 $settings = (array) $body['settings'];
+                // homecare_hidden_inv_columns is checkboxes[], not a single
+                // field — saveSubmittedSettings()/saveOneSetting() expect
+                // every value to already be a plain string, so join here.
+                if (isset($settings['homecare_hidden_inv_columns'])
+                        && is_array($settings['homecare_hidden_inv_columns'])) {
+                    $settings['homecare_hidden_inv_columns'] =
+                        implode(',', $settings['homecare_hidden_inv_columns']);
+                }
+                /** @var array<string, string> $settings */
                 $errorResponse = $this->saveSubmittedSettings($settings, $numberhelper);
                 if ($errorResponse !== null) {
                     return $errorResponse;

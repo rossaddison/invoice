@@ -34,6 +34,7 @@ use Yiisoft\Html\Html as H;
  * @var string $active
  * @var string $telegram
  * @var string $location
+ * @var string $homecare
  * @var string $tfa
  * @var string $turnstile
  * @var string $system_updates
@@ -203,6 +204,14 @@ $tabs = [
      'aria'  => 'settings-location',
      'role'  => true,
      'content' => $location
+ ],
+ 'homecare' => [
+     'label' => $translator->translate('homecare'),
+     'icon'  => 'bi bi-house-heart',
+     'color' => '#fd7e14',
+     'aria'  => 'settings-homecare',
+     'role'  => true,
+     'content' => $homecare
  ],
  'bootstrap5' => [
      'label' => $translator->translate('bootstrap5'),
