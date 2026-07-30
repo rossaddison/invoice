@@ -150,7 +150,7 @@
         "yiisoft/yii-runner-console": "^2.2.1",
         "yiisoft/yii-runner-http": "^3.2.1",
         "yiisoft/yii-view-renderer": "^7.4.1",
-        "zircote/swagger-php": ">=6.5.0"
+        "zircote/swagger-php": ">=6.5.1"
     },
     "require-dev": {
         "codeception/c3": "^2.9",

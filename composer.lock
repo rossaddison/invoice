@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a75a672ec2ef0695d3f6af767f449c49",
+    "content-hash": "a188038e7fc9f9c67afd7ab4d41704f2",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -8445,12 +8445,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/requirements.git",
-                "reference": "ee0242546b7d64122967dc7a1fe4445def07b45a"
+                "reference": "365f07f6d4386c713e24d2dad483e04252bcc708"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/requirements/zipball/ee0242546b7d64122967dc7a1fe4445def07b45a",
-                "reference": "ee0242546b7d64122967dc7a1fe4445def07b45a",
+                "url": "https://api.github.com/repos/rossaddison/requirements/zipball/365f07f6d4386c713e24d2dad483e04252bcc708",
+                "reference": "365f07f6d4386c713e24d2dad483e04252bcc708",
                 "shasum": ""
             },
             "require": {
@@ -8458,8 +8458,8 @@
             },
             "require-dev": {
                 "maglnet/composer-require-checker": "^3.8 || ^4.24",
-                "phpunit/phpunit": "^9.6.34 || ^12.5.24",
-                "roave/infection-static-analysis-plugin": "^1.43",
+                "phpunit/phpunit": "^9.6.34 || ^12.5.33",
+                "roave/infection-static-analysis-plugin": "^1.44",
                 "spatie/phpunit-watcher": "^1.24.4",
                 "vimeo/psalm": "^4.30 || ^5.26.1 || ^6.16.1"
             },
@@ -8498,7 +8498,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2026-05-06T23:40:35+00:00"
+            "time": "2026-07-30T08:19:05+00:00"
         },
         {
             "name": "rossaddison/yii-auth-client",
@@ -8506,12 +8506,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/yii-auth-client.git",
-                "reference": "6c2bfeff31c9bdf8e2b6eaf1e0aab2ad3bb08024"
+                "reference": "ea829fa5808ba487ee8504ca2bfccb6fc696a14d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/6c2bfeff31c9bdf8e2b6eaf1e0aab2ad3bb08024",
-                "reference": "6c2bfeff31c9bdf8e2b6eaf1e0aab2ad3bb08024",
+                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/ea829fa5808ba487ee8504ca2bfccb6fc696a14d",
+                "reference": "ea829fa5808ba487ee8504ca2bfccb6fc696a14d",
                 "shasum": ""
             },
             "require": {
@@ -8550,7 +8550,7 @@
                 "maglnet/composer-require-checker": ">=4.24",
                 "nyholm/psr7": ">=1.8.2",
                 "phpunit/phpunit": ">=12.5.24",
-                "rector/rector": ">=2.5.4",
+                "rector/rector": ">=2.5.8",
                 "roave/infection-static-analysis-plugin": ">=1.44",
                 "spatie/phpunit-watcher": ">=1.24.4",
                 "styleci/cli": ">=1.6",
@@ -8608,7 +8608,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2026-07-16T12:52:40+00:00"
+            "time": "2026-07-30T08:09:09+00:00"
         },
         {
             "name": "rossaddison/yii-cycle-1",
@@ -8723,12 +8723,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/yii-gii.git",
-                "reference": "73e01411908c6f2887544040d03373f3667d6dad"
+                "reference": "1359a205762a95fb43d0dc389189a23a7c59e84b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/yii-gii/zipball/73e01411908c6f2887544040d03373f3667d6dad",
-                "reference": "73e01411908c6f2887544040d03373f3667d6dad",
+                "url": "https://api.github.com/repos/rossaddison/yii-gii/zipball/1359a205762a95fb43d0dc389189a23a7c59e84b",
+                "reference": "1359a205762a95fb43d0dc389189a23a7c59e84b",
                 "shasum": ""
             },
             "require": {
@@ -8736,8 +8736,8 @@
                 "php": "8.4 - 8.5",
                 "phpspec/php-diff": ">=1.1.3",
                 "psr/http-message": ">=2",
-                "symfony/console": ">=8.0.9",
-                "yiisoft/active-record": ">=1.0.2",
+                "symfony/console": ">=8.1.2",
+                "yiisoft/active-record": ">=1.1.0",
                 "yiisoft/aliases": ">=3.1.1",
                 "yiisoft/arrays": ">=3.2.1",
                 "yiisoft/csrf": ">=2.2.3",
@@ -8751,7 +8751,7 @@
                 "yiisoft/json": ">=1.1",
                 "yiisoft/router": ">=4.0.2",
                 "yiisoft/strings": ">=2.7",
-                "yiisoft/validator": ">=2.5.1",
+                "yiisoft/validator": ">=2.6.0",
                 "yiisoft/yii-console": ">=2.4.2",
                 "yiisoft/yii-middleware": ">=1.1.2"
             },
@@ -8760,8 +8760,8 @@
                 "maglnet/composer-require-checker": ">=4.24",
                 "nyholm/psr7": ">=1.8.2",
                 "phpunit/phpunit": ">=13.1.8",
-                "rector/rector": ">=2.4.2",
-                "roave/infection-static-analysis-plugin": "*",
+                "rector/rector": ">=2.5.8",
+                "roave/infection-static-analysis-plugin": ">=1.44",
                 "spatie/phpunit-watcher": ">=1.24.4",
                 "vimeo/psalm": ">=6.16.1",
                 "yiisoft/cache": ">=3.2",
@@ -8821,7 +8821,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2026-05-06T19:51:06+00:00"
+            "time": "2026-07-30T08:38:08+00:00"
         },
         {
             "name": "sabre/uri",
@@ -10399,16 +10399,16 @@
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v21.0.0",
+            "version": "v21.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "0498d20d0c33490c38df956dd7cef49b3a2ad6f0"
+                "reference": "19d7cdd5873340d68a46511f6fd15d1745578385"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/0498d20d0c33490c38df956dd7cef49b3a2ad6f0",
-                "reference": "0498d20d0c33490c38df956dd7cef49b3a2ad6f0",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/19d7cdd5873340d68a46511f6fd15d1745578385",
+                "reference": "19d7cdd5873340d68a46511f6fd15d1745578385",
                 "shasum": ""
             },
             "require": {
@@ -10455,9 +10455,9 @@
             ],
             "support": {
                 "issues": "https://github.com/stripe/stripe-php/issues",
-                "source": "https://github.com/stripe/stripe-php/tree/v21.0.0"
+                "source": "https://github.com/stripe/stripe-php/tree/v21.1.0"
             },
-            "time": "2026-07-16T00:34:23+00:00"
+            "time": "2026-07-29T23:30:47+00:00"
         },
         {
             "name": "symfony/cache",
@@ -13480,16 +13480,16 @@
         },
         {
             "name": "symfony/var-exporter",
-            "version": "v8.1.1",
+            "version": "v8.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-exporter.git",
-                "reference": "75b74315b4e4be40e5534cf9c5cc30dd0907ed71"
+                "reference": "766dac532a04d8980b4d83183fd3d1ea284bac11"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-exporter/zipball/75b74315b4e4be40e5534cf9c5cc30dd0907ed71",
-                "reference": "75b74315b4e4be40e5534cf9c5cc30dd0907ed71",
+                "url": "https://api.github.com/repos/symfony/var-exporter/zipball/766dac532a04d8980b4d83183fd3d1ea284bac11",
+                "reference": "766dac532a04d8980b4d83183fd3d1ea284bac11",
                 "shasum": ""
             },
             "require": {
@@ -13539,7 +13539,7 @@
                 "serialize"
             ],
             "support": {
-                "source": "https://github.com/symfony/var-exporter/tree/v8.1.1"
+                "source": "https://github.com/symfony/var-exporter/tree/v8.1.3"
             },
             "funding": [
                 {
@@ -13559,7 +13559,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-06-27T09:05:56+00:00"
+            "time": "2026-07-29T16:43:23+00:00"
         },
         {
             "name": "symfony/yaml",
@@ -19544,16 +19544,16 @@
         },
         {
             "name": "zircote/swagger-php",
-            "version": "6.5.0",
+            "version": "6.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zircote/swagger-php.git",
-                "reference": "4d1794f7fbb362e0f4bfeb5315b025ef4c4949b6"
+                "reference": "791f8b2e88b78bd71c57d4de923e6d1cadfdae03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/4d1794f7fbb362e0f4bfeb5315b025ef4c4949b6",
-                "reference": "4d1794f7fbb362e0f4bfeb5315b025ef4c4949b6",
+                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/791f8b2e88b78bd71c57d4de923e6d1cadfdae03",
+                "reference": "791f8b2e88b78bd71c57d4de923e6d1cadfdae03",
                 "shasum": ""
             },
             "require": {
@@ -19621,7 +19621,7 @@
             ],
             "support": {
                 "issues": "https://github.com/zircote/swagger-php/issues",
-                "source": "https://github.com/zircote/swagger-php/tree/6.5.0"
+                "source": "https://github.com/zircote/swagger-php/tree/6.5.1"
             },
             "funding": [
                 {
@@ -19629,7 +19629,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-07-27T04:27:14+00:00"
+            "time": "2026-07-30T04:11:06+00:00"
         }
     ],
     "packages-dev": [
