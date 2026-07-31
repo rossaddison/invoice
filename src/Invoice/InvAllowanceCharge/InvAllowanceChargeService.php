@@ -47,4 +47,28 @@ final readonly class InvAllowanceChargeService
     {
         $this->repository->delete($model);
     }
+
+    /**
+     * Reverses the basis invoice's document-level allowance/charges onto a
+     * credit note, matching the negated items/amounts/tax rates applied
+     * elsewhere in that flow. Amount is negated directly rather than via the
+     * form (InvAllowanceChargeForm enforces amount > 0); vat_or_tax follows
+     * automatically since saveInvAllowanceCharge derives it from amount.
+     * @param int $basis_inv_id
+     * @param int $new_inv_id
+     */
+    public function initializeCreditInvAllowanceCharges(int $basis_inv_id, int $new_inv_id): void
+    {
+        $inv_allowance_charges = $this->repository->repoACIquery($basis_inv_id);
+        /**
+         * @var InvAllowanceCharge $inv_allowance_charge
+         */
+        foreach ($inv_allowance_charges as $inv_allowance_charge) {
+            $this->saveInvAllowanceCharge(new InvAllowanceCharge(), [
+                'inv_id' => $new_inv_id,
+                'allowance_charge_id' => $inv_allowance_charge->reqAllowanceChargeId(),
+                'amount' => (float) $inv_allowance_charge->getAmount() * -1.00,
+            ]);
+        }
+    }
 }

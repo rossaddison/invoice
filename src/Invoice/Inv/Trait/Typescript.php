@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv\Trait;
 
+use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\InvTaxRate\InvTaxRate;
 use App\Invoice\{
     InvTaxRate\InvTaxRateForm, Group\GroupRepository as GR,
@@ -29,52 +30,61 @@ trait Typescript
          * @var array $data['keylist']
          */
         $keyList = $data['keylist'] ?? [];
+        if (empty($keyList)) {
+            return $this->factory->createResponse(Json::encode($parameters));
+        }
         $skippedDoNotSend = 0;
-        if (!empty($keyList)) {
+        /**
+         * @var string $value
+         */
+        foreach ($keyList as $value) {
             /**
-             * @var string $value
+             * @var Inv $inv
              */
-            foreach ($keyList as $value) {
-                /**
-                 * @var \App\Infrastructure\Persistence\Inv\Inv $inv
-                 */
-                $inv = $iR->repoInvUnLoadedquery((int) $value);
-                if ($inv->blocksSending()) {
-                    $skippedDoNotSend++;
-                    continue;
-                }
-                if (null !== $inv->getInvAmount()->getTotal()
-                        && $inv->getInvAmount()->getTotal() > 0) {
-                    $inv->setStatusId(2);
-                    if (strlen($inv->getNumber() ?? '') == 0) {
-                        $inv->setNumber((string) $gR->generateNumber(
-                            $inv->reqGroupId(), true));
-                    }
-/**
- * If the invoice has been sent either by 1. checkbox and the 'sent' button in
- * the index or by 2. 'email' then it must be made readonly so that it cannot be
- * edited depending on what the 'read_only_toggle' status is and whether read
- * only effects i.e. disable_read_only, are being used. 'disable_read_only' is
- * false by default in InvoiceController on setting up.
- *
- * Related logic: see 'read_only_toggle' Settings ....
- * Invoices ... Other Settings ... Disable the read only button on ... {status}
- */
-                    if ($this->shouldMarkReadOnly('0')) {
-                        $inv->setIsReadOnly(true);
-                    }
-                    $iR->save($inv);
-                    $parameters['success'] = 1;
-                }
+            $inv = $iR->repoInvUnLoadedquery((int) $value);
+            if ($inv->blocksSending()) {
+                $skippedDoNotSend++;
+                continue;
             }
-            $this->flashMessage('info',
-                $this->translator->translate('record.successfully.updated'));
-            if ($skippedDoNotSend > 0) {
-                $this->flashMessage('warning', $skippedDoNotSend
-                    . ' ' . $this->translator->translate('do.not.send.blocksBulkSent'));
+            if ($this->markSingleInvAsSent($inv, $iR, $gR)) {
+                $parameters['success'] = 1;
             }
         }
+        $this->flashMessage('info',
+            $this->translator->translate('record.successfully.updated'));
+        if ($skippedDoNotSend > 0) {
+            $this->flashMessage('warning', $skippedDoNotSend
+                . ' ' . $this->translator->translate('do.not.send.blocksBulkSent'));
+        }
         return $this->factory->createResponse(Json::encode($parameters));
+    }
+
+    /**
+     * If the invoice has been sent either by 1. checkbox and the 'sent' button in
+     * the index or by 2. 'email' then it must be made readonly so that it cannot be
+     * edited depending on what the 'read_only_toggle' status is and whether read
+     * only effects i.e. disable_read_only, are being used. 'disable_read_only' is
+     * false by default in InvoiceController on setting up.
+     *
+     * Related logic: see 'read_only_toggle' Settings ....
+     * Invoices ... Other Settings ... Disable the read only button on ... {status}
+     *
+     * @return bool whether the invoice was updated
+     */
+    private function markSingleInvAsSent(Inv $inv, IR $iR, GR $gR): bool
+    {
+        if (null === $inv->getInvAmount()->getTotal() || $inv->getInvAmount()->getTotal() <= 0) {
+            return false;
+        }
+        $inv->setStatusId(2);
+        if (strlen($inv->getNumber() ?? '') == 0) {
+            $inv->setNumber((string) $gR->generateNumber($inv->reqGroupId(), true));
+        }
+        if ($this->shouldMarkReadOnly('0')) {
+            $inv->setIsReadOnly(true);
+        }
+        $iR->save($inv);
+        return true;
     }
 
     public function markSentAsDraft(Request $request, IR $iR):
