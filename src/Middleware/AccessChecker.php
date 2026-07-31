@@ -14,7 +14,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Yiisoft\Http\Status;
-use Yiisoft\User\CurrentUser;
 
 final class AccessChecker implements MiddlewareInterface
 {
@@ -24,7 +23,6 @@ final class AccessChecker implements MiddlewareInterface
         private ResponseFactoryInterface $responseFactory,
         private UserService $userService,
         private LoggerInterface $logger,
-        private CurrentUser $currentUser,
     ) {
     }
 
@@ -36,9 +34,12 @@ final class AccessChecker implements MiddlewareInterface
         }
 
         if (!$this->userService->hasPermission($this->permission)) {
+            // The user's own id (UserService::getUser()), not
+            // CurrentUser::getId() — that returns the identity table's own
+            // row id, which is a different, misleading number to log here.
             $this->logger->log(
                 LogLevel::WARNING,
-                'Access denied: userId=' . ($this->currentUser->getId() ?? 'guest')
+                'Access denied: userId=' . ($this->userService->getUser()?->reqId() ?? 'guest')
                     . ' permission=' . $this->permission,
             );
             return $this->responseFactory->createResponse(Status::FORBIDDEN);
