@@ -22,9 +22,9 @@ final readonly class PeppolUblXml
         Delivery $delivery,
         PeppolPaymentData $payment,
         PeppolFinancialData $financial,
-        bool $isCreditNote = false,
     ): Invoice {
-        $documentClass = $isCreditNote ? CreditNote::class : Invoice::class;
+        $documentClass = ($header->references->isCreditNote ?? false)
+            ? CreditNote::class : Invoice::class;
         return new $documentClass(
             $this->sR,
             $header->profileID,

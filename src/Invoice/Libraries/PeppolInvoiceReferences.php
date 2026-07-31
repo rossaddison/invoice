@@ -14,6 +14,7 @@ readonly class PeppolInvoiceReferences
         public ?ContractDocumentReference $contractDocumentReference,
         public ?bool $isCopyIndicator,
         public ?string $supplierAssignedAccountID,
+        public ?bool $isCreditNote = false,
     ) {
     }
 }
