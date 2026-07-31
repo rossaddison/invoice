@@ -32,9 +32,13 @@ final readonly class PlaywrightPdfRenderService
     }
 
     /**
+     * @return string Combined stdout/stderr — the console command prints
+     * this (it can contain a one-time 2FA setup secret to save); the web
+     * button ignores it.
+     *
      * @throws PlaywrightRenderFailedException
      */
-    public function render(int $invoiceId, string $outputPath, TranslatorInterface $translator): void
+    public function render(int $invoiceId, string $outputPath, TranslatorInterface $translator): string
     {
         $root = $this->aliases->get('@root');
         $args = [
@@ -58,5 +62,6 @@ final readonly class PlaywrightPdfRenderService
         if (!$process->isSuccessful()) {
             throw new PlaywrightRenderFailedException($translator, $process->getErrorOutput());
         }
+        return $process->getOutput() . $process->getErrorOutput();
     }
 }

@@ -77,12 +77,15 @@ final class RenderInvoicePdfCommand extends Command
             : $this->aliases->get('@root') . '/playwright/output/invoice-' . $invoiceId . '.pdf';
 
         try {
-            $this->renderService->render((int) $invoiceId, $outputPath, $this->translator);
+            $renderOutput = $this->renderService->render((int) $invoiceId, $outputPath, $this->translator);
         } catch (PlaywrightRenderFailedException $e) {
             $io->error($e->getDetail());
             return ExitCode::UNSPECIFIED_ERROR;
         }
 
+        if (trim($renderOutput) !== '') {
+            $output->writeln($renderOutput);
+        }
         $io->success('PDF rendered successfully: ' . $outputPath);
         return ExitCode::OK;
     }

@@ -89,7 +89,18 @@ async function main(): Promise<void> {
 
         await login(page, baseUrl, email, password);
 
-        await page.goto(`${baseUrl}/inv/view/${invoiceId}`, { waitUntil: 'networkidle' });
+        // Route is /{_language}/invoice/inv/view/{id} — the /invoice/ segment
+        // is easy to miss and was missing here for a while, which silently
+        // "succeeded" by rendering the app's own 404 page instead of the
+        // invoice. The status check below exists specifically to catch that
+        // failure mode loudly instead of producing a wrong-content PDF.
+        const response = await page.goto(`${baseUrl}/invoice/inv/view/${invoiceId}`, { waitUntil: 'networkidle' });
+        if (!response || !response.ok()) {
+            throw new Error(
+                `Failed to load invoice ${invoiceId}: HTTP ${response?.status() ?? 'no response'} at ${page.url()} ` +
+                `— check that PLAYWRIGHT_TEST_EMAIL is admin, or owns/is linked to this invoice as an observer.`,
+            );
+        }
 
         await page.pdf({ path: outputPath, format: 'A4', printBackground: true });
         console.log(`PDF written to ${outputPath}`);
