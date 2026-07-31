@@ -7,6 +7,7 @@ namespace App\Auth\Trait;
 use App\Auth\CallbackDeps;
 use App\Auth\Client\DeveloperSandboxHmrc;
 use App\Auth\TokenRepository;
+use App\Infrastructure\Persistence\Identity\Identity;
 use App\Infrastructure\Persistence\User\User;
 use App\Invoice\UserInv\UserInvRepository;
 use App\Invoice\AppConstants;
@@ -920,21 +921,26 @@ public function tfaCheckBeforeRedirects(
     UserInvRepository $uiR,
 ): ResponseInterface {
     $identity = $this->authService->getIdentity();
-    $userId = $identity->getId();
+    // getId() returns the identity table's own row id, not the user's —
+    // those two frequently diverge (2,570 of 4,579 identity rows in this
+    // dev DB have id != user_id), which silently broke every lookup below
+    // for any account where they don't coincidentally match.
+    $userId = $identity instanceof Identity ? $identity->getUserId() : null;
 
     $this->logger->log(LogLevel::DEBUG,
         'tfaCheck — provider: ' . $providerName
         . ' userId: ' . var_export($userId, true));
 
     if (null !== $userId) {
-        $userInv = $uiR->repoUserInvUserIdquery((int) $userId);
+        $userIdString = (string) $userId;
+        $userInv = $uiR->repoUserInvUserIdquery($userId);
 
         $this->logger->log(LogLevel::DEBUG,
             'tfaCheck — userInv found: ' . var_export($userInv !== null, true));
 
         if (null !== $userInv) {
             $status = $userInv->getActive();
-            $isAdminUser = $this->isAdminUser($userId);
+            $isAdminUser = $this->isAdminUser($userIdString);
 
             $this->logger->log(LogLevel::DEBUG,
                 'tfaCheck — status: ' . var_export($status, true)
@@ -950,7 +956,7 @@ public function tfaCheckBeforeRedirects(
                     . ' tfa_verified after set: '
                     . var_export($this->session->get('tfa_verified'), true));
 
-                $isAdminUser ? $this->disableToken($tR, $userId,
+                $isAdminUser ? $this->disableToken($tR, $userIdString,
                         $providerName) : '';
                 return $this->redirectToInvoiceIndex();
             }
@@ -958,7 +964,7 @@ public function tfaCheckBeforeRedirects(
             $this->logger->log(LogLevel::DEBUG,
                 'tfaCheck — status false and not admin'
                 . ' redirecting to adminMustMakeActive');
-            $this->disableToken($tR, $userId,
+            $this->disableToken($tR, $userIdString,
                     $this->getTokenType($providerName));
             return $this->redirectToAdminMustMakeActive();
         }
