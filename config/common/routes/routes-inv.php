@@ -65,6 +65,14 @@ Route::methods([Method::GET, Method::POST], '/inv/pdfDashboardIncludeCf/{id}')
                 ->action([InvController::class, 'pdf'])
                 ->name('inv/pdf'),
 
+            // Further restricted to admin/observer inside pdfPlaywright()
+            // itself (excludes accountant) since this shells out to
+            // Node/Chromium per request rather than using mPDF.
+            Route::methods([Method::GET, Method::POST], '/inv/pdfPlaywright/{id}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_INV))
+                ->action([InvController::class, 'pdfPlaywright'])
+                ->name('inv/pdfPlaywright'),
+
             // {invoice} is a complete string
             Route::methods([Method::GET, Method::POST], '/inv/download/{invoice}')
                 ->middleware(RoutePermission::check(Permissions::VIEW_INV))

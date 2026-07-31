@@ -10,6 +10,7 @@ use App\Command\Invoice\InvTruncate1Command;
 use App\Command\Invoice\ItemsCommand;
 use App\Command\Invoice\NonUserRelatedTruncate4Command;
 use App\Command\Invoice\QuoteTruncate2Command;
+use App\Command\Invoice\RenderInvoicePdfCommand;
 use App\Command\Invoice\SettingTruncateCommand;
 use App\Command\Invoice\SalesOrderTruncate3Command;
 use App\Command\Invoice\UserRelatedTruncate5Command;
@@ -53,6 +54,7 @@ return [
              * using two specific invoice taxes generated in the summary table
              */
             'invoice/items' => ItemsCommand::class,
+            'invoice/render-pdf' => RenderInvoicePdfCommand::class,
             'invoice/setting/truncate' => SettingTruncateCommand::class,
             'invoice/generator/truncate' => GeneratorTruncateCommand::class,
             'invoice/inv/truncate1' => InvTruncate1Command::class,

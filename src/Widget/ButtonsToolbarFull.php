@@ -43,6 +43,7 @@ final readonly class ButtonsToolbarFull
         bool $read_only = false,
         string $vat = '0',
         bool $paymentCfExist = false,
+        bool $canPlaywrightPdf = false,
     ): string {
         $invId = $inv->reqId();
         $primaryButtons = [];
@@ -158,7 +159,7 @@ final readonly class ButtonsToolbarFull
 
         // Get advanced buttons
         $advancedButtons = $this->getAdvancedButtons(
-            $inv, $invEdit, $vat);
+            $inv, $invEdit, $vat, $canPlaywrightPdf);
 
         return $this->renderFullToolbar($primaryButtons, $advancedButtons, $inv);
     }
@@ -167,9 +168,23 @@ final readonly class ButtonsToolbarFull
         Inv $inv,
         bool $invEdit,
         string $vat,
+        bool $canPlaywrightPdf,
     ): array {
         $invId = $inv->reqId();
         $buttons = [];
+
+        // Chromium-rendered PDF (Playwright) — pixel-accurate Bootstrap5
+        // layout, restricted to admin/observer since it shells out to
+        // Node/Chromium per request; see PdfTrait::pdfPlaywright()
+        if ($canPlaywrightPdf) {
+            $buttons[] = $this->createButton(
+                'pdf-playwright',
+                $this->urlGenerator->generate('inv/pdfPlaywright', ['id' => $invId]),
+                'bi-file-earmark-pdf',
+                'btn-outline-success',
+                $this->translator->translate('pdf.playwright'),
+            );
+        }
 
         // Tax and Allowance/Charge buttons
         if ($invEdit

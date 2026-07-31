@@ -1709,10 +1709,16 @@ prior to importing and no existing documents e.g. Invoices.',
     . ' of your PDF invoices.',
   'pdf.modal' => 'Modal Pdf',
   'install.pdf.viewer.extension' => 'Install PDF Viewer Extension',
+  'pdf.playwright' => 'Chromium PDF (Playwright)',
   'pdf.quote.footer' => 'Quote footer',
   'pdf.quote.footer.hint' => 'You can enter '
     . 'any HTML here which will be displayed'
     . ' on the bottom of your PDF quotes.',
+  'pdf.render.playwright.failed' => 'Failed to Render PDF via Playwright',
+  'pdf.render.playwright.failed.solution' => 'Please try again. If this '
+    . 'persists, check that `npm run build:playwright` has been run and '
+    . 'the configured render account (PLAYWRIGHT_TEST_EMAIL in .env) can '
+    . 'log in.',
   'pdf.settings' => 'PDF Settings',
   'pdf.template' => 'PDF Template',
   'pdf.template.overdue' => 'Overdue PDF Template',

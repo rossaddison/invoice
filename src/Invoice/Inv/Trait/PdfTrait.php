@@ -6,7 +6,9 @@ namespace App\Invoice\Inv\Trait;
 
 use App\Infrastructure\Persistence\{Inv\Inv};
 use App\Invoice\Inv\Exception\PdfNotFoundException;
+use App\Invoice\Inv\Exception\PlaywrightRenderFailedException;
 use App\Invoice\Inv\InvPdfService;
+use App\Invoice\Inv\Service\PlaywrightPdfRenderService;
 use App\Invoice\Upload\UploadRepository as UPR;
 use App\Widget\Bootstrap5ModalPdf;
 
@@ -128,6 +130,48 @@ trait PdfTrait
                 if ($temp_aliase) {
                     $this->sendFileDownload($temp_aliase, $upR);
                 }
+            }
+        }
+        exit;
+    }
+
+    /**
+     * Renders the invoice via headless Chromium (Playwright) rather than
+     * mPDF, for pixel-accurate Bootstrap5 layout — restricted to admin and
+     * observer, deliberately narrower than the other pdf* actions' rbac
+     * (no accountant), since this shells out to Node/Chromium per request.
+     */
+    public function pdfPlaywright(
+        #[RouteArgument('id')] int $id,
+        InvPdfService $invPdfService,
+        PlaywrightPdfRenderService $renderService,
+        UPR $upR,
+    ): mixed {
+        $inv = $invPdfService->findInv($id);
+        if (null === $inv
+            || !($this->rbacAdmin()
+                || $this->rbacObserver($inv, $invPdfService->ucR(), $invPdfService->uiR()))
+        ) {
+            throw new PdfNotFoundException($this->translator);
+        }
+        if (!$renderService->isBuilt()) {
+            throw new PlaywrightRenderFailedException(
+                $this->translator,
+                'Compiled script not found: ' . $renderService->scriptPath()
+                    . ' — run `npm run build:playwright` first.',
+            );
+        }
+        $outputPath = sys_get_temp_dir() . '/invoice-' . $id . '-'
+            . bin2hex(random_bytes(8)) . '.pdf';
+        try {
+            $renderService->render($id, $outputPath, $this->translator);
+            $this->sendFileDownload($outputPath, $upR);
+        } catch (PlaywrightRenderFailedException $e) {
+            $this->logger->error('Playwright PDF render failed: ' . $e->getDetail());
+            throw $e;
+        } finally {
+            if (is_file($outputPath)) {
+                unlink($outputPath);
             }
         }
         exit;
