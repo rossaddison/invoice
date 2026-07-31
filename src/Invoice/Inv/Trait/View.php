@@ -167,6 +167,8 @@ trait View
                         $read_only,
                         $this->sR->getSetting('enable_vat_registration'),
                         $service->meta->cfR->repoTableCountquery('payment_custom') > 0,
+                        $this->rbacAdmin()
+                            || $this->rbacObserver($inv, $service->relation->ucR, $service->relation->uiR),
                     ),
                 ];
                 if ($this->rbacObserver($inv, $service->relation->ucR, $service->relation->uiR)

@@ -32,6 +32,7 @@
     "@angular/platform-browser": "22.1.0",
     "@babel/core": "8.0.1",
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.62.1",
     "@types/node": "^26.1.2",
     "@typescript-eslint/eslint-plugin": "^8.65.0",
     "@typescript-eslint/parser": "^8.65.0",
@@ -43,6 +44,7 @@
     "jsdom": "^30.0.1",
     "minimatch": ">=10.2.6",
     "npm-check-updates": "^23.0.0",
+    "otplib": "^13.4.1",
     "picomatch": "^4.0.5",
     "prettier": "^4.0.0-alpha.13",
     "rollup": ">=4.62.3",
@@ -67,6 +69,7 @@
     "build:typescript:auth": "esbuild src/Auth/Asset/keypad-copy-to-clipboard.ts --bundle --platform=browser --outfile=src/Auth/Asset/rebuild/js/keypad-copy-to-clipboard-iife.js --target=es2024 --format=iife --minify --supported:const-and-let=true",
     "build:typescript:prod": "esbuild src/typescript/index.ts --bundle --outfile=src/Invoice/Asset/rebuild/js/invoice-typescript-iife.js --target=es2024 --format=iife --global-name=InvoiceApp --minify --supported:const-and-let=true && esbuild src/typescript/index.ts --bundle --outfile=src/Invoice/Asset/rebuild/js/invoice-typescript-iife.min.js --target=es2024 --format=iife --global-name=InvoiceApp --minify --supported:const-and-let=true",
     "build:typescript:watch": "npm run build:typescript:dev -- --watch",
+    "build:playwright": "esbuild playwright/render-invoice.ts --bundle --platform=node --format=esm --outfile=playwright/render-invoice.js --external:playwright --target=node22",
     "prepare": "git config core.hooksPath .githooks",
     "build:angular": "ng build --configuration production",
     "build:angular:dev": "ng build",
@@ -138,10 +141,18 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/rossaddison/invoice.git"
+    "url": "git+https://github.com/rossaddison/invoice.git"
   },
   "bugs": {
     "url": "https://github.com/rossaddison/invoice/issues"
   },
-  "homepage": "https://github.com/rossaddison/invoice#readme"
+  "homepage": "https://github.com/rossaddison/invoice#readme",
+  "main": "eslint.config.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "author": "",
+  "allowScripts": {
+    "esbuild@0.28.1": true
+  }
 }
