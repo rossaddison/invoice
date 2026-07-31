@@ -1105,10 +1105,18 @@ final class InvItemServiceTest
         $e12->once()->andReturn($dateAdded);
         /** @var \Mockery\Expectation $e13 */
         $e13 = $basisItem->shouldReceive('reqId');
-        $e13->once()->andReturn(500);
+        // Called twice: once by addInvItemAllowanceCharges() (as the
+        // original item id to reverse charges from) and once by
+        // repoInvItemAmountquery() (to find the basis item's amount row).
+        $e13->twice()->andReturn(500);
 
         /** @var InvItem|null $capturedItem */
         $capturedItem = null;
+
+        $aciiR = m::mock(InvItemAllowanceChargeRepository::class);
+        /** @var \Mockery\Expectation $e13b */
+        $e13b = $aciiR->shouldReceive('repoInvItemquery');
+        $e13b->once()->with(500)->andReturn($this->readerYielding([]));
 
         $iiR = m::mock(InvItemRepository::class);
         /** @var \Mockery\Expectation $e14 */
@@ -1154,7 +1162,7 @@ final class InvItemServiceTest
             }
         ));
 
-        $service = $this->makeService();
+        $service = $this->makeService(aciiR: $aciiR);
         $service->initializeCreditInvItems(70, '80', $iiR, $iiaR);
 
         Assert::notNull($capturedItem);
