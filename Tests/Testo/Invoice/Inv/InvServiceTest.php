@@ -258,6 +258,60 @@ final class InvServiceTest
         Assert::same(4, $model->getPaymentMethod());
     }
 
+    public function saveInvRecomputesDateDueWhenNoDirectDebitDateScheduled(): void
+    {
+        $model = new Inv();
+        $user = m::mock(User::class);
+        /** @var \Mockery\Expectation $e */
+        $e = $user->shouldReceive('reqId');
+        $e->andReturn(1);
+
+        $s = $this->makeSettingRepo();
+        $gR = m::mock(GroupRepository::class);
+        $gR->shouldNotReceive('generateNumber');
+
+        $repo = m::mock(InvRepository::class);
+        /** @var \Mockery\Expectation $e2 */
+        $e2 = $repo->shouldReceive('save');
+        $e2->once()->with($model);
+
+        $service = $this->makeService($repo, null, null, $gR);
+        $service->saveInv($user, $model, ['terms' => 'Net 30'], $s, $gR);
+
+        // invoices_due_after is 14 in makeSettingRepo(); date_due should no
+        // longer be the constructor's 2024-01-01 placeholder.
+        Assert::same(
+            $model->getDateCreated()->add(new \DateInterval('P14D'))->format('Y-m-d'),
+            $model->getDateDue()->format('Y-m-d'),
+        );
+    }
+
+    public function saveInvLeavesDateDueUnchangedWhenDirectDebitDateAlreadyScheduled(): void
+    {
+        $model = new Inv();
+        $model->setDirectDebitDate(new DateTimeImmutable('2026-08-07'));
+        $originalDateDue = $model->getDateDue();
+
+        $user = m::mock(User::class);
+        /** @var \Mockery\Expectation $e */
+        $e = $user->shouldReceive('reqId');
+        $e->andReturn(1);
+
+        $s = $this->makeSettingRepo();
+        $gR = m::mock(GroupRepository::class);
+        $gR->shouldNotReceive('generateNumber');
+
+        $repo = m::mock(InvRepository::class);
+        /** @var \Mockery\Expectation $e2 */
+        $e2 = $repo->shouldReceive('save');
+        $e2->once()->with($model);
+
+        $service = $this->makeService($repo, null, null, $gR);
+        $service->saveInv($user, $model, ['terms' => 'Net 30'], $s, $gR);
+
+        Assert::same($originalDateDue->format('Y-m-d'), $model->getDateDue()->format('Y-m-d'));
+    }
+
     public function saveInvOnNewInvoiceMarksSentAndReadOnlyWhenSettingEnabled(): void
     {
         $model = new Inv(status_id: 9, is_read_only: false);

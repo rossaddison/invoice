@@ -27,6 +27,16 @@ trait InvTrait4
         return $this->date_due;
     }
 
+    public function getDirectDebitDate(): ?DateTimeImmutable
+    {
+        return $this->direct_debit_date;
+    }
+
+    public function setDirectDebitDate(?DateTimeImmutable $direct_debit_date): void
+    {
+        $this->direct_debit_date = $direct_debit_date;
+    }
+
     public function getDateSupplied(): DateTimeImmutable
     {
         return $this->date_supplied;

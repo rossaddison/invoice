@@ -103,7 +103,12 @@ final readonly class InvService
             }
         }
 
-        $model->setDateDue($s);
+        // Once a GoCardless payment has been scheduled, date_due must stop
+        // moving so it can't drift away from the direct_debit_date the
+        // customer was actually told about.
+        if (null === $model->getDirectDebitDate()) {
+            $model->setDateDue($s);
+        }
 
         $model->setUrlKey(Random::string(32));
         $model->setStandInCode($s->getSetting('stand_in_code'));

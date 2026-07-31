@@ -125,6 +125,14 @@ class Inv
     #[Column(type: 'datetime', nullable: false)]
     private DateTimeImmutable $date_due;
 
+    // Set once a GoCardless Direct Debit payment has been scheduled for
+    // this invoice — the actual collection date, which may be later than
+    // date_due if GoCardless's minimum charge-date lead time requires it.
+    // While this is non-null, InvService::saveInv() stops recomputing
+    // date_due on every save, so the two dates can't drift apart.
+    #[Column(type: 'datetime', nullable: true)]
+    private ?DateTimeImmutable $direct_debit_date = null;
+
     public function __construct(
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $client_id = null,
