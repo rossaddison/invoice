@@ -32,6 +32,7 @@
     "@angular/platform-browser": "22.1.0",
     "@babel/core": "8.0.1",
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.62.1",
     "@types/node": "^26.1.2",
     "@typescript-eslint/eslint-plugin": "^8.65.0",
     "@typescript-eslint/parser": "^8.65.0",
@@ -138,10 +139,15 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/rossaddison/invoice.git"
+    "url": "git+https://github.com/rossaddison/invoice.git"
   },
   "bugs": {
     "url": "https://github.com/rossaddison/invoice/issues"
   },
-  "homepage": "https://github.com/rossaddison/invoice#readme"
+  "homepage": "https://github.com/rossaddison/invoice#readme",
+  "main": "eslint.config.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "author": ""
 }
