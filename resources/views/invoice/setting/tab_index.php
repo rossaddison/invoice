@@ -33,6 +33,7 @@ use Yiisoft\Html\Html as H;
  * @var string $qrcode
  * @var string $active
  * @var string $telegram
+ * @var string $whatsapp
  * @var string $location
  * @var string $homecare
  * @var string $tfa
@@ -196,6 +197,14 @@ $tabs = [
      'aria'  => 'settings-telegram',
      'role'  => true,
      'content' => $telegram
+ ],
+ 'whatsapp' => [
+     'label' => $translator->translate('whatsapp'),
+     'icon'  => 'bi bi-whatsapp',
+     'color' => '#25D366',
+     'aria'  => 'settings-whatsapp',
+     'role'  => true,
+     'content' => $whatsapp
  ],
  'location' => [
      'label' => $translator->translate('location'),

@@ -234,6 +234,7 @@ final class SettingController extends BaseController
             'telegram' => $this->webViewRenderer->renderPartialAsString($p . 'telegram', [
                 'payment_methods' => $deps->pm->findAllPreloaded(),
             ]),
+            'whatsapp' => $this->webViewRenderer->renderPartialAsString($p . 'whatsapp'),
             'location' => $this->webViewRenderer->renderPartialAsString($p . 'location'),
             'homecare' => $this->webViewRenderer->renderPartialAsString($p . 'homecare', [
                 'hidden_inv_columns' => array_filter(

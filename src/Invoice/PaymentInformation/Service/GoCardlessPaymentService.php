@@ -43,7 +43,7 @@ final class GoCardlessPaymentService implements PaymentGatewayInterface
     #[\Override]
     public function isConfigured(): bool
     {
-        return $this->accessToken() !== '' && $this->environment() !== '';
+        return $this->accessToken() !== '';
     }
 
     private function accessToken(): string
@@ -52,24 +52,18 @@ final class GoCardlessPaymentService implements PaymentGatewayInterface
             $this->settings->getSetting('gateway_gocardless_accessToken') ?: '');
     }
 
-    /**
-     * Returns Environment::SANDBOX or Environment::LIVE, or '' when the
-     * setting holds neither (unconfigured, or an invalid value).
-     */
     private function environment(): string
     {
-        $env = $this->settings->getSetting('gateway_gocardless_environment');
-        return match ($env) {
-            Environment::LIVE, Environment::SANDBOX => $env,
-            default => '',
-        };
+        return $this->settings->getSetting('gateway_gocardless_sandbox') === '1'
+            ? Environment::SANDBOX
+            : Environment::LIVE;
     }
 
     private function client(): Client
     {
         return new Client([
             'access_token' => $this->accessToken(),
-            'environment' => $this->environment() ?: Environment::SANDBOX,
+            'environment' => $this->environment(),
         ]);
     }
 

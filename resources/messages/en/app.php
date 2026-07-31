@@ -2951,6 +2951,22 @@ prior to importing and no existing documents e.g. Invoices.',
   'web' => 'Web',
   'web.address' => 'Web Address',
   'welcome' => 'Welcome',
+  'whatsapp' => 'WhatsApp',
+  'whatsapp.business.cloud.api.access.token' =>
+    'Permanent Access Token (from a System User in Business Settings)',
+  'whatsapp.business.cloud.api.business.account.id' =>
+    'WhatsApp Business Account ID',
+  'whatsapp.business.cloud.api.enable' => 'Enable WhatsApp',
+  'whatsapp.business.cloud.api.general.purpose' =>
+    '<b>WhatsApp Business Cloud API sends invoice-ready notifications'
+    . ' to clients via a pre-approved message template,'
+    . ' identified by the Phone Number ID and access token below.</b>',
+  'whatsapp.business.cloud.api.phone.number.id' =>
+    'Phone Number ID (from WhatsApp -> API Setup — not the visible phone number)',
+  'whatsapp.business.cloud.api.template.language' =>
+    'Message Template Language Code (e.g. en_GB)',
+  'whatsapp.business.cloud.api.template.name' =>
+    'Approved Message Template Name',
   'worker' => 'Worker',
   'worker.assign' => 'Assign',
   'worker.assigned' => 'Worker Assigned',

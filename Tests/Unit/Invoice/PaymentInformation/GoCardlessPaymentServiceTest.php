@@ -6,7 +6,6 @@ namespace Tests\Unit\Invoice\PaymentInformation;
 
 use App\Invoice\PaymentInformation\Service\GoCardlessPaymentService;
 use App\Invoice\Setting\SettingRepository;
-use GoCardlessPro\Environment;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
@@ -57,42 +56,24 @@ final class GoCardlessPaymentServiceTest extends TestCase
     public function testIsConfiguredFalseWhenAccessTokenMissing(): void
     {
         $service = $this->makeService([
-            'gateway_gocardless_environment' => Environment::SANDBOX,
+            'gateway_gocardless_sandbox' => '1',
         ]);
         self::assertFalse($service->isConfigured());
     }
 
-    public function testIsConfiguredFalseWhenEnvironmentMissing(): void
+    public function testIsConfiguredTrueWhenAccessTokenSet(): void
     {
         $service = $this->makeService([
             'gateway_gocardless_accessToken' => 'sandbox_access_token',
-        ]);
-        self::assertFalse($service->isConfigured());
-    }
-
-    public function testIsConfiguredFalseWhenEnvironmentInvalid(): void
-    {
-        $service = $this->makeService([
-            'gateway_gocardless_accessToken' => 'sandbox_access_token',
-            'gateway_gocardless_environment' => 'staging',
-        ]);
-        self::assertFalse($service->isConfigured());
-    }
-
-    public function testIsConfiguredTrueWhenAllSet(): void
-    {
-        $service = $this->makeService([
-            'gateway_gocardless_accessToken' => 'sandbox_access_token',
-            'gateway_gocardless_environment' => Environment::SANDBOX,
         ]);
         self::assertTrue($service->isConfigured());
     }
 
-    public function testIsConfiguredTrueForLiveEnvironment(): void
+    public function testIsConfiguredTrueRegardlessOfSandboxFlag(): void
     {
         $service = $this->makeService([
             'gateway_gocardless_accessToken' => 'live_access_token',
-            'gateway_gocardless_environment' => Environment::LIVE,
+            'gateway_gocardless_sandbox' => '0',
         ]);
         self::assertTrue($service->isConfigured());
     }

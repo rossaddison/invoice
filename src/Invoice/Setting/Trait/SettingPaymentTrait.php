@@ -86,6 +86,22 @@ trait SettingPaymentTrait
                     'label' => 'Sandbox',
                 ],
             ],
+            'GoCardless' => [
+                'accessToken' => [
+                    'type' => 'password',
+                    'label' => 'Access Token',
+                ],
+                // signing secret for the GoCardless webhook endpoint, from
+                // the GoCardless Dashboard webhook configuration
+                'webhookSecret' => [
+                    'type' => 'password',
+                    'label' => 'Webhook Secret',
+                ],
+                'sandbox' => [
+                    'type' => 'checkbox',
+                    'label' => 'Sandbox',
+                ],
+            ],
             'Mollie' => [
                 'testOrLiveApiKey' => [
                     'type' => 'password',
@@ -184,6 +200,7 @@ trait SettingPaymentTrait
             'braintree' => 'https://sandbox.braintreegateway.com/login',
             'mollie' => 'https://my.mollie.com/dashboard/',
             'adyen' => 'https://ca-test.adyen.com',
+            'gocardless' => 'https://manage-sandbox.gocardless.com',
         ];
     }
 
