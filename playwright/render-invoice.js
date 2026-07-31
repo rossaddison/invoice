@@ -1315,6 +1315,7 @@ async function main() {
         `Failed to load invoice ${invoiceId}: HTTP ${response?.status() ?? "no response"} at ${page.url()} \u2014 check that PLAYWRIGHT_TEST_EMAIL is admin, or owns/is linked to this invoice as an observer.`
       );
     }
+    await page.emulateMedia({ media: "screen" });
     await page.pdf({ path: outputPath, format: "A4", printBackground: true });
     console.log(`PDF written to ${outputPath}`);
   } finally {

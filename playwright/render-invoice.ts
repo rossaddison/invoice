@@ -102,6 +102,11 @@ async function main(): Promise<void> {
             );
         }
 
+        // page.pdf() defaults to emulating "print" media, not "screen" —
+        // matters for any print-specific CSS this app has, so force screen
+        // media to match what a user actually sees in-browser.
+        await page.emulateMedia({ media: 'screen' });
+
         await page.pdf({ path: outputPath, format: 'A4', printBackground: true });
         console.log(`PDF written to ${outputPath}`);
     } finally {
