@@ -422,6 +422,49 @@ trait SettingTooltipTrait
                 'where' => 'src/Invoice/Inv/HomeCareCleaningEligibilityService.php'
                 . ' and src/Invoice/Inv/Trait/HomeCareScan.php.',
             ],
+            'capture_gps_on_send' => [
+                'why' => 'Placeholder for a not-yet-built feature: capturing the'
+                . ' releasing manager\'s GPS location (and the allocated'
+                . ' worker\'s name) at the moment an invoice is manually'
+                . ' transitioned to sent, as proof-of-completion for a'
+                . ' field-service job. No started/completed statuses or'
+                . ' capture logic exist yet — turning this on currently has'
+                . ' no effect.',
+                'where' => 'Not yet wired to anything — reserved for a future'
+                . ' worker/manager status workflow.',
+            ],
+            'homecare_current_run_category_secondary_id' => [
+                'why' => 'The category_secondary (street/area) currently being'
+                . ' worked. Defaults the inv/index "Current Run" dropdown'
+                . ' filter to this value on a plain visit — invoices belonging'
+                . ' to a different category_secondary are hidden until the'
+                . ' filter is changed or cleared. Set to "Not set" to disable'
+                . ' the default filtering without affecting the dropdown'
+                . ' itself.',
+                'where' => 'src/Invoice/Inv/Trait/InvCombinedFilterTrait.php and'
+                . ' src/Invoice/Inv/Trait/Index.php'
+                . ' (indexHomeCareRunContext/homeCareRunFlash).',
+            ],
+            'homecare_current_run_last_run_date' => [
+                'why' => 'Manually entered start date of the current run. Only'
+                . ' applies when the inv/index Current Run filter matches this'
+                . ' setting\'s configured category_secondary — invoices dated'
+                . ' before this are excluded; browsing a different'
+                . ' category_secondary via the same dropdown ignores this date.',
+                'where' => 'src/Invoice/Inv/Trait/InvCombinedFilterTrait.php'
+                . ' (applyRunDateCondition).',
+            ],
+            'homecare_hidden_inv_columns' => [
+                'why' => 'Which inv/index columns to hide, for managers using the'
+                . ' grid on a phone during HomeCare rounds — most of the ~27'
+                . ' columns are desktop-office-oriented and unusable at mobile'
+                . ' width. Only takes effect while homecare_auto_invoice_enabled'
+                . ' is on; the general/desktop grid for non-HomeCare businesses'
+                . ' always shows every column regardless of this setting.',
+                'where' => 'src/Invoice/Inv/Widget/InvsColumnBuilder.php'
+                . ' (buildColumns) and'
+                . ' src/Invoice/Inv/Widget/Trait/InvsColumnVisibilityTrait.php.',
+            ],
             'stop_homecare_signing_up' => [
                 'why' => 'Blocks the public HomeCare signup form'
                 . ' (/homecare-signup) at the controller, redirecting away'

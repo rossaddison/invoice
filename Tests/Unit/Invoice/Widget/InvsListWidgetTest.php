@@ -384,7 +384,7 @@ final class InvsListWidgetTest extends TestCase
     public function testWithFilterOptionsReturnsNewInstanceAndOriginalUnchanged(): void
     {
         $original   = $this->makeWidget();
-        $filterOpts = new InvsFilterOptions(invNumber: ['INV-001' => 'INV-001']);
+        $filterOpts = new InvsFilterOptions(['invNumber' => ['INV-001' => 'INV-001']]);
         $new        = $original->withFilterOptions($filterOpts);
 
         $this->assertNotSame($original, $new);
@@ -451,13 +451,13 @@ final class InvsListWidgetTest extends TestCase
 
     public function testInvsFilterOptionsStoresStatusArray(): void
     {
-        $opts = new InvsFilterOptions(status: [1 => 'Draft', 2 => 'Sent']);
+        $opts = new InvsFilterOptions(['status' => [1 => 'Draft', 2 => 'Sent']]);
         $this->assertSame([1 => 'Draft', 2 => 'Sent'], $opts->status);
     }
 
     public function testInvsFilterOptionsStoresInvNumberArray(): void
     {
-        $opts = new InvsFilterOptions(invNumber: ['INV-001' => 'INV-001']);
+        $opts = new InvsFilterOptions(['invNumber' => ['INV-001' => 'INV-001']]);
         $this->assertSame(['INV-001' => 'INV-001'], $opts->invNumber);
     }
 

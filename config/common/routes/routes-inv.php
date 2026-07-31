@@ -146,6 +146,18 @@ Route::methods([Method::GET, Method::POST], '/inv/pdfDashboardIncludeCf/{id}')
                 ->action([InvController::class, 'markSentAsDraft'])
                 ->name('inv/markSentAsDraft'),
 
+            Route::methods([Method::GET, Method::POST], '/inv/setworker/{inv_id}')
+                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
+                ->action([InvController::class, 'setWorker'])
+                ->name('inv/setworker'),
+
+            // VIEW_INV, not EDIT_INV — the worker role that sets this from
+            // inv/guest only has VIEW_INV (see resources/rbac/items.php).
+            Route::methods([Method::GET, Method::POST], '/inv/setdonotsend/{inv_id}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_INV))
+                ->action([InvController::class, 'setDoNotSend'])
+                ->name('inv/setdonotsend'),
+
             Route::methods([Method::GET], '/inv/batchEmailPreview')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'batchEmailPreview'])
@@ -235,6 +247,11 @@ Route::methods([Method::GET, Method::POST], '/inv/pdfDashboardIncludeCf/{id}')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'multiplecopyspreadsheet'])
                 ->name('inv/multiplecopyspreadsheet'),
+
+            Route::methods([Method::GET, Method::POST], '/inv/copyalltodate')
+                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
+                ->action([InvController::class, 'copyAllToDate'])
+                ->name('inv/copyalltodate'),
 
             Route::methods([Method::GET], '/inv/copycsvtemplate')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))

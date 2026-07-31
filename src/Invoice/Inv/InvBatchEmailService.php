@@ -62,7 +62,11 @@ final readonly class InvBatchEmailService
         $anySuccess = false;
         foreach ($invIds as $invId) {
             $inv = $this->d->iR->repoInvLoadedquery($invId);
-            if ($inv === null) {
+            // A do_not_send-flagged invoice is skipped entirely here — no
+            // email sent at all, not just no status change — since by the
+            // time setStatusId(2) would run below, the email would already
+            // be out and unrecoverable.
+            if ($inv === null || $inv->blocksSending()) {
                 continue;
             }
 

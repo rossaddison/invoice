@@ -13609,9 +13609,11 @@ body.error div.error-container h1, body.error div.error-container .h1 {
   .navbar-nav {
     margin: 7px 0;
   }
-  .navbar-nav .dropdown .dropdown-menu {
-    background: rgb(30.192, 35.52, 43.808);
-  }
+  /* No dropdown-menu background here — see
+     src/Invoice/Asset/core/scss/_core.scss for the full explanation.
+     This was compiled from a $navbar-inverse-border (border-color)
+     variable mistakenly reused as a dropdown-menu background, making
+     every dropdown item's hardcoded-black text unreadable on mobile. */
   #content {
     padding: 10px;
   }

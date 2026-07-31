@@ -217,6 +217,12 @@ return [
   'cannot.delete' => 'Cannot delete. Delete associated records first',
   'case.date' => 'Case Date',
   'case.number' => 'Case Number',
+  'capture.gps.on.send' => 'Capture GPS Location When Releasing to Sent',
+  'capture.gps.on.send.description' =>
+    'Reserved for a future worker/manager status workflow (started/'
+    . ' completed statuses between draft and sent, with a "worker" role'
+    . ' scoped to only their allocated jobs) — not built yet, so turning'
+    . ' this on currently has no effect.',
   'cash.discount' => 'Cash Discount',
   'category.primary' => 'Category Primary',
   'category.secondary' => 'Category Secondary',
@@ -453,6 +459,11 @@ return [
   'converted.to.so' => 'Converted to Sales Order',
   'copied' => 'Copied!',
   'copy' => 'Copy',
+  'copy.all.to.date' => 'Copy All to Date',
+  'copy.all.to.date.new.date' => 'New Date',
+  'copy.all.to.date.warning' =>
+    'This will copy every invoice currently shown by your filters above'
+    . ' to the date below, each staying with its own client.',
   'copy.invoice' => 'Copy Invoice',
   'copy.quote' => 'Copy Quote',
   'count' => 'Invoice Count',
@@ -1210,6 +1221,18 @@ prior to importing and no existing documents e.g. Invoices.',
   'loading.error' => 'It seems that the'
     . ' application stuck because of an error.',
   'loading.error.help' => 'Get Help',
+  'location' => 'Location',
+  'location.accuracy' => 'Accuracy',
+  'location.latitude' => 'Latitude',
+  'location.longitude' => 'Longitude',
+  'location.test.button' => 'Test My Location',
+  'location.tester' => 'Test Your Device Location',
+  'location.tester.description' =>
+    'Uses your browser\'s location permission to show this device\'s'
+    . ' current GPS coordinates. Nothing is saved — this is only to'
+    . ' confirm geolocation works on this device before relying on it'
+    . ' elsewhere. Requires HTTPS and a location-permission prompt you'
+    . ' accept.',
   'login' => 'Login',
   'login.logo' => 'Login Logo',
   'loginalert.credentials.incorrect' => 'Email'
@@ -2849,6 +2872,13 @@ prior to importing and no existing documents e.g. Invoices.',
   'user.inv.role.observer.assigned' => 'Observer Role Assigned',
   'user.inv.role.observer.assigned.already' =>
     'The Observer Role has been assigned already.',
+  'user.inv.role.worker' => 'Worker',
+  'user.inv.role.worker.assign' => 'Assign',
+  'user.inv.role.worker.assigned' => 'Worker Role Assigned',
+  'user.inv.role.worker.none.available' =>
+    'No unlinked Worker records — add one under Worker first.',
+  'user.inv.role.worker.unavailable' =>
+    'Could not assign — the selected Worker is already linked to another user.',
   'user.inv.rbac.link' => 'RBAC Link',
   'user.inv.rbac.link.stable' => 'RBAC link stable — role assigned and bridge row present',
   'user.inv.rbac.link.sync.confirm' => 'Assign observer role (if missing) and sync the RBAC bridge row for this user?',
@@ -2921,6 +2951,14 @@ prior to importing and no existing documents e.g. Invoices.',
   'web' => 'Web',
   'web.address' => 'Web Address',
   'welcome' => 'Welcome',
+  'worker' => 'Worker',
+  'worker.assign' => 'Assign',
+  'worker.assigned' => 'Worker Assigned',
+  'worker.firstname' => 'First Name',
+  'worker.lastname' => 'Last Name',
+  'worker.linked.login' => 'Linked Login',
+  'worker.unassigned' => 'Unassigned',
+  'workers' => 'Workers',
   'wrong.passwordreset.token' =>
     'No user'
     . ' found for the provided reset token.'
@@ -3070,6 +3108,33 @@ prior to importing and no existing documents e.g. Invoices.',
 
   // === HOME-CARE QR AUTO-INVOICE ===
   'homecare.auto.invoice.enabled' => 'Enable Home Care QR Auto-Invoice',
+  'homecare.current.run' => 'Current Run',
+  'homecare.current.run.category.secondary' => 'Current Run — Area',
+  'homecare.current.run.last.run.date' => 'Current Run — Last Run Date',
+  'since' => 'since',
+  'homecare' => 'HomeCare',
+  'homecare.mobile.rotate.tip.title' => 'Android tip:',
+  'homecare.mobile.rotate.tip.body' => 'If inv/index feels cramped in portrait, try landscape. Swipe down from the top-right corner for Quick Settings, then swipe down again to expand it — the rotate-lock icon is in the expanded panel.',
+  'homecare.hidden.columns' => 'inv/index Columns — HomeCare Mode',
+  'homecare.hidden.columns.description' => 'Hide these columns on inv/index while Home Care QR Auto-Invoice is enabled, so managers see a shorter, more usable grid on a phone. Worker, Amount, and Do Not Send always stay visible. The general grid is unaffected while Home Care QR Auto-Invoice is off.',
+  'homecare.column.workflow.type' => 'Workflow Type',
+  'homecare.column.pdf.email' => 'PDF / Email Actions',
+  'homecare.column.year.month' => 'Year-Month',
+  'homecare.column.quick.pay' => 'Quick Pay',
+  'homecare.column.client.active' => 'Client Active',
+  'homecare.column.delivery.add' => 'Add Delivery',
+  'do.not.send' => 'Do Not Send',
+  'do.not.send.not.set' => 'Not set',
+  'do.not.send.reason.property_inaccessible' => 'Property inaccessible',
+  'do.not.send.reason.job_incomplete' => 'Job not completed',
+  'do.not.send.reason.customer_dispute' => 'Customer dispute',
+  'do.not.send.reason.damage_occurred' => 'Damage occurred',
+  'do.not.send.reason.safety_concern' => 'Safety concern',
+  'do.not.send.reason.other' => 'Other',
+  'do.not.send.flashSet' => 'Do Not Send flag set — this invoice cannot be marked sent until it is cleared.',
+  'do.not.send.flashCleared' => 'Do Not Send flag cleared.',
+  'do.not.send.blocksEmail' => 'This invoice is flagged Do Not Send and cannot be emailed to the customer.',
+  'do.not.send.blocksBulkSent' => 'invoice(s) not marked sent — Do Not Send flag set.',
   'print' => 'Print',
   'print.qr.code' => 'Print QR Code',
   'qr.code.instructions' => 'Stick this to your window. Scan it whenever you receive a completed  home care service through your door to request your next invoice which you can then pay immediately according to your chosen payment method. This helps use with our bank reconciliations. Thank-you.',

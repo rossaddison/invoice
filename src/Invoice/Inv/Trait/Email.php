@@ -180,6 +180,13 @@ trait Email
             return $this->webService->getRedirectResponse('inv/index');
         }
         $d = $invEmailService->d;
+        // A do_not_send-flagged invoice must never reach the customer at
+        // all, not just skip the status update below — that's the whole
+        // point of the flag (see Trait\Guest::setDoNotSend()).
+        if ($d->core->iR->repoInvUnloadedquery($inv_id)?->blocksSending() === true) {
+            $this->flashMessage('warning', $this->translator->translate('do.not.send.blocksEmail'));
+            return $this->webService->getRedirectResponse('inv/index');
+        }
         if (!$invEmailService->mailerConfigured()) {
             $this->flashMessage('warning',
                 $this->translator->translate('email.not.configured'));
@@ -237,7 +244,9 @@ trait Email
         if (!$invoice) {
             return;
         }
-        $invoice->setStatusId(2);
+        if (!$invoice->blocksSending()) {
+            $invoice->setStatusId(2);
+        }
         if (($this->sR->getSetting('read_only_toggle') == '2')
             && ($this->sR->getSetting('disable_read_only') == '0')) {
             $invoice->setIsReadOnly(true);

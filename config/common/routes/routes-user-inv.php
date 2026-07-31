@@ -79,6 +79,11 @@ return [
                 ->name('userinv/admin')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([UserInvController::class, 'assignAdminRole']),
+
+            Route::methods([Method::GET, Method::POST], '/userinv/worker/{user_id}')
+                ->name('userinv/worker')
+                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
+                ->action([UserInvController::class, 'assignWorkerRole']),
         ), // invoice
 
     // Not under RoutePermission::invoiceGroup(): a brand-new invitee clicking

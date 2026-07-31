@@ -163,15 +163,14 @@ jobs:
       matrix:
         # See invoice_dependency.yml's mutation-alpine job for why PHP and
         # Alpine versions are paired explicitly rather than a free matrix.
-        # Node.js version therefore differs slightly between the two legs
-        # (22 on 3.22, 24 on edge) since it tracks whichever Alpine release
-        # is paired with that PHP version — not a functional problem for a
-        # build/install smoke check, just worth knowing about.
+        # The php85/alpine:edge leg is temporarily disabled — see
+        # invoice_static.yml's psalm-alpine job for the open upstream Psalm
+        # bug (vimeo/psalm#11831) blocking it. Re-enable once that's fixed.
         include:
           - php: '84'
             alpine: '3.22'
-          - php: '85'
-            alpine: 'edge'
+          # - php: '85'
+          #   alpine: 'edge'
 
     steps:
       - name: Install glibc compatibility layer

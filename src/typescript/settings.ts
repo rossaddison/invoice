@@ -81,6 +81,15 @@ export class SettingsHandler {
             }
         }
 
+        // Geolocation tester (Settings > Location)
+        const geoBtn = document.getElementById('btn-geolocation-test') as HTMLButtonElement;
+        if (geoBtn) {
+            geoBtn.addEventListener('click', e => {
+                e.preventDefault();
+                this.handleGeolocationTestClick();
+            });
+        }
+
         // Online payment select
         const onlineSelect = document.getElementById('online-payment-select') as HTMLSelectElement;
         if (onlineSelect) {
@@ -172,6 +181,64 @@ export class SettingsHandler {
         } catch (error) {
             console.error('FPH generate failed', error);
         }
+    }
+
+    /**
+     * Live geolocation tester on the Settings > Location tab. Nothing is
+     * saved — this only proves the browser will hand this device's current
+     * coordinates to the page before anyone relies on it for something
+     * that matters (e.g. a future worker/manager capture-on-send feature).
+     */
+    private handleGeolocationTestClick(): void {
+        const resultEl = document.getElementById('geolocation-result');
+        if (!resultEl) return;
+
+        if (!('geolocation' in navigator)) {
+            resultEl.innerHTML =
+                '<div class="alert alert-warning mb-0">Geolocation is not supported by this browser.</div>';
+            return;
+        }
+
+        const isSecureContext =
+            location.protocol === 'https:' ||
+            location.hostname === 'localhost' ||
+            location.hostname === '127.0.0.1';
+        if (!isSecureContext) {
+            resultEl.innerHTML =
+                '<div class="alert alert-warning mb-0">Geolocation requires HTTPS ' +
+                '(this page is loaded over plain HTTP).</div>';
+            return;
+        }
+
+        resultEl.innerHTML = '<div class="text-muted">Requesting location…</div>';
+
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                const { latitude, longitude, accuracy } = position.coords;
+                resultEl.innerHTML =
+                    '<div class="alert alert-success mb-0">' +
+                    `<strong>Latitude:</strong> ${latitude.toFixed(6)}<br>` +
+                    `<strong>Longitude:</strong> ${longitude.toFixed(6)}<br>` +
+                    `<strong>Accuracy:</strong> ~${Math.round(accuracy)}m` +
+                    '</div>';
+            },
+            error => {
+                let message = 'Unable to retrieve location.';
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        message = 'Location permission was denied.';
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        message = 'Location information is unavailable.';
+                        break;
+                    case error.TIMEOUT:
+                        message = 'The location request timed out.';
+                        break;
+                }
+                resultEl.innerHTML = `<div class="alert alert-danger mb-0">${message}</div>`;
+            },
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        );
     }
 
     /**

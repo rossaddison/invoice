@@ -97,6 +97,10 @@ trait InvoiceInstallTrait
             'enable_vat_registration' => 0,
             'enable_tfa' => 0,
             // Qr code is always shown
+            // Placeholder for a not-yet-built worker/manager status
+            // workflow — see Settings tab "Location" and
+            // SettingTooltipTrait::tooltipArrayC1(). No effect yet.
+            'capture_gps_on_send' => 0,
             'enable_tfa_with_disabling' => 0,
             // Archived pdfs are automatically sent to customers from
             // view/invoice...Options...Send
@@ -110,6 +114,21 @@ trait InvoiceInstallTrait
             // Master switch for the public QR-scan home-care auto-invoice
             // endpoint; off by default until a business opts in.
             'homecare_auto_invoice_enabled' => 0,
+            // The category_secondary (street/area) currently being worked,
+            // used to default inv/index's Current Run filter. 0 = not
+            // configured. See Settings tab "invoices" and
+            // SettingTooltipTrait::tooltipArrayC1().
+            'homecare_current_run_category_secondary_id' => 0,
+            // Manually-entered start date of the current run — invoices
+            // dated on/after this are included when the Current Run filter
+            // matches the configured category_secondary above.
+            'homecare_current_run_last_run_date' => '',
+            // Comma-separated list of inv/index column keys to hide, only
+            // while homecare_auto_invoice_enabled is on — the general
+            // desktop grid for non-HomeCare businesses is never affected.
+            // '' = nothing hidden. See Settings tab "homecare" and
+            // InvsColumnBuilder::buildColumns()/InvsColumnVisibilityTrait.
+            'homecare_hidden_inv_columns' => '',
             'install_test_data' => 0,
             'inv_cdn_not_node_module' => 1,
             //1=>None, 2=>Cash, 3=>Cheque, 4=>Card/Direct Debit-Succeeded

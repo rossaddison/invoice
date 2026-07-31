@@ -269,9 +269,16 @@ div.table-content .table-responsive {
     margin: 7px 0;
   }
 
-  .navbar-nav .dropdown .dropdown-menu {
-    background: #1e242c;
-  }
+  /* No dropdown-menu background override here — the navbar's dropdown
+     items (resources/views/layout/invoice.php $itemFontArray) hardcode
+     `color: black` via inline style on ~170 DropdownItem calls, which
+     inline styles always win over a class-based background change here.
+     A dark #1e242c background (from a September 2025 "CSS reorganization"
+     commit with no stated rationale) made every item unreadable on mobile
+     — black text on a near-black background. Falling through to the
+     default --bs-dropdown-bg: var(--bs-body-bg) (#fff) matches what
+     desktop already shows, which the hardcoded black text is legible
+     against. */
 
   #content {
     padding: var(--spacing-md);

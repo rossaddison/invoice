@@ -58,6 +58,35 @@ trait InvTrait3
         $this->is_read_only = $is_read_only;
     }
 
+    public function getDoNotSend(): bool
+    {
+        return $this->do_not_send;
+    }
+
+    public function setDoNotSend(bool $do_not_send): void
+    {
+        $this->do_not_send = $do_not_send;
+    }
+
+    public function getDoNotSendReason(): string
+    {
+        return $this->do_not_send_reason;
+    }
+
+    public function setDoNotSendReason(string $do_not_send_reason): void
+    {
+        $this->do_not_send_reason = $do_not_send_reason;
+    }
+
+    /**
+     * True when a HomeCare field worker has flagged this invoice from
+     * inv/guest — every status-to-"sent" transition must check this first.
+     */
+    public function blocksSending(): bool
+    {
+        return $this->do_not_send;
+    }
+
     public function getPassword(): ?string
     {
         return $this->password;

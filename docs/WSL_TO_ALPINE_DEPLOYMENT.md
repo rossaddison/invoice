@@ -326,13 +326,132 @@ php vendor/bin/psalm src/Invoice/BaseController.php
 
 **Check if the rate limiter is causing 403s by checking Apache log for patterns:**
 ```bash
-tail -100 /var/log/apache2/error_log | grep "429\|rate\|limit"
+# This server's actual log files (confirmed July 2026 — access.log and
+# yii3i_access.log are both live; access2.log and yii3i.eu.org-*.log are
+# stale leftovers from a domain that no longer resolves):
+tail -100 /var/log/apache2/access.log /var/log/apache2/yii3i_access.log | grep "429\|rate\|limit"
 ```
 
 **Check your route rate limiter configuration:**
 ```bash
 grep -r "LRM\|RateLimiter\|Counter" /var/www/invoice/config/web/di/rate-limit.php
 ```
+
+**Find out which log file is actually being written to right now** (this
+box has several `.log` files under `/var/log/apache2/`, not all of them
+current — go by modification time, not by which name sounds right):
+```bash
+ls -la --time-style=full-iso /var/log/apache2/*.log
+```
+
+**See which IPs are actually hitting a route the most** (useful before
+deciding a flood is really happening — a full-history `grep` across a
+40–50MB log file can look alarming purely because it spans weeks, not
+because there's an active burst right now; prefer `tail -n <N>` first to
+look at *recent* traffic only):
+```bash
+tail -n 300 /var/log/apache2/*.log 2>/dev/null | grep '/login' | tail -50
+grep -h '/login' /var/log/apache2/*.log 2>/dev/null | awk '{print $1}' | sort | uniq -c | sort -rn | head -15
+```
+
+---
+
+## fail2ban: Auto-Banning Floods on Auth Routes
+
+This app's own rate-limiter middleware and Cloudflare Turnstile both help,
+but neither stops a flood of requests from reaching the origin server in
+the first place — Turnstile only runs once a request is already inside
+`AuthController::login()`, well after the rate limiter has already counted
+it. This server has **no Cloudflare in front of it** (confirmed July 2026
+— `yii3i.online` uses Vultr's own nameservers and resolves straight to the
+origin IP), so there's no edge layer available either; blocking has to
+happen on the box itself. `fail2ban` fills that gap: it watches the Apache
+access log and bans an IP at the `iptables` level once it crosses a
+threshold.
+
+**Install** (`iptables`/`ip6tables` aren't installed by default on this
+Alpine image):
+```bash
+apk add fail2ban iptables ip6tables
+```
+
+**Filter** — `/etc/fail2ban/filter.d/yii3i-login.conf`:
+```bash
+cat > /etc/fail2ban/filter.d/yii3i-login.conf << 'EOF'
+[Definition]
+failregex = ^<HOST> \S+ \S+ \[.*\] "(GET|POST) /login(\?\S*)? HTTP/\d\.\d" \d{3}
+ignoreregex =
+EOF
+```
+
+**Jail** — `/etc/fail2ban/jail.d/yii3i-login.conf` (adjust `logpath` to
+whatever `ls -la --time-style=full-iso /var/log/apache2/*.log` shows as
+actually current — this box currently writes to both of the two listed):
+```bash
+cat > /etc/fail2ban/jail.d/yii3i-login.conf << 'EOF'
+[yii3i-login]
+enabled  = true
+filter   = yii3i-login
+logpath  = /var/log/apache2/access.log
+           /var/log/apache2/yii3i_access.log
+port     = http,https
+protocol = tcp
+maxretry = 10
+findtime = 60
+bantime  = 3600
+action   = iptables-multiport[name=yii3i-login, port="http,https", protocol=tcp]
+EOF
+```
+Bans an IP for 1 hour once it hits `/login` 10+ times within 60 seconds —
+well above any real user's retry pattern.
+
+**Enable and start** (must be a `restart`, not just `start`, if fail2ban
+was already running before the jail file existed — it won't pick up new
+jail files otherwise):
+```bash
+rc-update add fail2ban
+rc-service fail2ban restart
+```
+
+**Verify**:
+```bash
+fail2ban-client status yii3i-login
+iptables -L -n | grep -i fail2ban
+```
+`Currently failed`/`Total failed` will read 0 until a real burst happens —
+fail2ban only watches new log lines from the moment it starts, it doesn't
+scan history retroactively. To test the filter regex actually matches this
+server's real log format without waiting for a live flood:
+```bash
+fail2ban-regex /var/log/apache2/access.log /etc/fail2ban/filter.d/yii3i-login.conf
+```
+
+**Watch it catch something over time**:
+```bash
+tail -f /var/log/fail2ban.log
+```
+
+### mod_evasive is not available on Alpine
+
+Investigated as a companion to fail2ban (reacts inside Apache itself,
+faster than fail2ban's log-tail approach) — it isn't packaged for Alpine
+at all:
+```bash
+apk search -v evasive        # nothing
+apk search -v apache2-mod    # no evasive-related package, even with
+                              # main + community + edge/testing all enabled
+```
+The only way to get it would be compiling from source via `apxs`
+(`apache2-dev`, a C toolchain, and the module's source downloaded
+directly). Decided against it: an unaudited, hand-compiled C module
+running inside the Apache process is a real step up in risk (a
+memory-safety bug in it is a whole-server problem), it won't receive
+security updates through `apk upgrade` since it isn't a tracked package,
+and it'd need manual recompiling after every future Apache/PHP version
+bump. fail2ban alone, on top of the existing app-layer rate limiter and
+Turnstile, was judged sufficient — three independent layers (app
+rate-limit → Turnstile → fail2ban) without adding unaudited compiled code
+to the web server process.
 
 ---
 
@@ -434,11 +553,22 @@ Create a file `/var/www/invoice/deploy.sh`:
 
 ```bash
 #!/bin/sh
+composer install
 chown -R apache:apache /var/www/invoice/resources/rbac/
 chown -R apache:apache /var/www/invoice/runtime/
 chown -R apache:apache /var/www/invoice/public/assets/
-echo "Ownership fixed — deploy complete."
+echo "Dependencies installed, ownership fixed — deploy complete."
 ```
+
+`composer install` reads `composer.lock` (already pulled) and installs
+exactly what's pinned there — safe and fast to run on every deploy even
+when no dependency changed (it just reports "Nothing to install, update or
+remove" and exits). Skipping it after a deploy that *did* add a package —
+like the `yiisoft/cache-apcu` addition in July 2026 — leaves `vendor/`
+out of sync with `composer.lock`, and the app fatals on the first missing
+autoloaded class. No `--no-dev` flag here deliberately: this doc's own
+Psalm section above runs `php vendor/bin/psalm` directly on this server,
+which needs the dev dependencies present.
 
 Make it executable:
 ```bash
@@ -449,6 +579,33 @@ Run after every `git pull`:
 ```bash
 git pull origin main && ./deploy.sh
 ```
+
+**If this deploy added, changed, or removed a route**, also restart Apache:
+```bash
+rc-service apache2 restart
+```
+`git pull` can never clear the route-dispatch cache on its own — see
+`docs/YII_ENV_ROUTE_CACHE_AND_DEPLOY_JULY_2026.md` for the full mechanism.
+Since the July 2026 switch to APCu-backed caching, `php yii cache/clear`
+alone is **not** sufficient for this specific case (it only reaches the
+CLI's own APCu pool, not the web server's) — restarting Apache is what
+actually clears it. Still run `php yii cache/clear` too for the general
+DI/config cache housekeeping; just don't rely on it for a route change.
+
+**If a deployed CSS/JS/image change doesn't seem to take effect**, clear
+the published assets cache:
+```bash
+rm -rf /var/www/invoice/public/assets/*
+```
+`Yiisoft\Assets\AssetManager` publishes each asset bundle into a
+content-hashed subdirectory under `public/assets/` (e.g.
+`public/assets/194851c0/`) rather than serving straight from
+`src/Invoice/Asset/`. There's no console command or admin UI button for
+this despite a stale comment in `resources/views/layout/invoice.php`
+implying one exists — it's a manual filesystem clear. Apache/PHP
+republishes everything fresh on the very next request, no restart needed.
+`deploy.sh` already `chown`s this directory for the `apache` user, so this
+is safe to run before or after it.
 
 ---
 

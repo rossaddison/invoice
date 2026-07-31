@@ -86,11 +86,14 @@ jobs:
         # the rolling `edge` branch — so each PHP version is paired with the
         # oldest Alpine release that actually carries it, rather than a free
         # os x php cross-product.
+        # The php85/alpine:edge leg is temporarily disabled — see
+        # invoice_static.yml's psalm-alpine job for the open upstream Psalm
+        # bug (vimeo/psalm#11831) blocking it. Re-enable once that's fixed.
         include:
           - php: '84'
             alpine: '3.22'
-          - php: '85'
-            alpine: 'edge'
+          # - php: '85'
+          #   alpine: 'edge'
 
     steps:
       # actions/checkout and actions/cache are Node-based Actions; the Node

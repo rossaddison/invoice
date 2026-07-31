@@ -122,7 +122,7 @@ final class CategorySecondaryRepository extends Select\Repository
     }
 
     /**
-     * @return array
+     * @return array<array-key, string>
      */
     public function optionsDataCategorySecondaries(): array
     {

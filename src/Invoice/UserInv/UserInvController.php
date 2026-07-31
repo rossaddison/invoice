@@ -174,6 +174,7 @@ final class UserInvController extends BaseController
             'manager' => $this->manager,
             'optionsDataFilterUserInvLoginDropDown' => $this->optionsDataFilterUserInvLogin($d->uiR),
             'linkedUserIdMap' => $d->urlR->findLinkedUserIdMap(),
+            'wR' => $d->wR,
         ];
         return $this->webViewRenderer->render('index', $parameters);
     }

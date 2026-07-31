@@ -1,0 +1,188 @@
+<?php
+
+declare(strict_types=1);
+
+use Yiisoft\Html\Html as H;
+use Yiisoft\Html\Tag\H6;
+use Yiisoft\Html\Tag\Option;
+
+/**
+* @var App\Invoice\Setting\SettingRepository $s
+* @var Yiisoft\Translator\TranslatorInterface $translator
+* @var array $hidden_inv_columns
+* @var array $category_secondaries
+* @var array $body
+*/
+
+// key => translation key. Worker, Amount/Total, and the do_not_send badge
+// are deliberately absent — always visible in HomeCare mode, never
+// hideable. See InvsColumnBuilder::buildColumns() for where each key is
+// actually applied.
+$toggleableColumns = [
+    'workflow_type'    => 'homecare.column.workflow.type',
+    'pdf_email'        => 'homecare.column.pdf.email',
+    'family_name'      => 'family.name',
+    'year_month'       => 'homecare.column.year.month',
+    'quick_pay'        => 'homecare.column.quick.pay',
+    'client_active'    => 'homecare.column.client.active',
+    'credit_note'      => 'credit.invoice.for.invoice',
+    'client'           => 'client',
+    'client_number'    => 'client.number',
+    'client_address_1' => 'street.address',
+    'client_address_2' => 'street.address.2',
+    'client_group'     => 'client.group',
+    'time_created'     => 'datetime.immutable.time.created',
+    'delivery_add'     => 'homecare.column.delivery.add',
+    'delete'           => 'delete',
+];
+
+echo H::openTag('div', ['class' => 'row']); //1
+ echo H::openTag('div', ['class' => 'col-12 col-md-8 offset-md-2']); //2
+
+  echo H::openTag('div', ['class' => 'alert alert-info mb-3']); //android-rotate-tip
+   echo H::tag('strong', H::encode($translator->translate('homecare.mobile.rotate.tip.title')));
+   echo ' ' . H::encode($translator->translate('homecare.mobile.rotate.tip.body'));
+  echo H::closeTag('div'); //android-rotate-tip
+
+  echo H::openTag('div', ['class' => 'card mb-3']); //current-run-card
+   echo H::openTag('div', ['class' => 'card-header']); //4
+    echo new H6()->content($translator->translate('homecare.current.run'));
+   echo H::closeTag('div'); //4
+   echo H::openTag('div', ['class' => 'card-body']); //4
+
+    echo H::openTag('div', ['class' => 'mb-3']); //5
+     $shaie = 'settings[homecare_auto_invoice_enabled]';
+     echo H::openTag('label', [
+      'for' => $shaie
+     ]);
+      echo $translator->translate(
+       'homecare.auto.invoice.enabled'
+      );
+      echo $s->infoIcon('homecare_auto_invoice_enabled');
+     echo H::closeTag('label');
+
+     $body[$shaie] =
+     $s->getSetting('homecare_auto_invoice_enabled');
+
+     echo H::openTag('select', [
+      'name' => $shaie,
+      'id' => $shaie,
+      'class' => 'form-select',
+     ]);
+      echo  new Option()
+       ->value('0')
+       ->content(
+        $translator->translate('no')
+       );
+      echo  new Option()
+       ->value('1')
+       ->selected(
+        $body[$shaie] == '1'
+      )
+       ->content(
+        $translator->translate('yes')
+       );
+     echo H::closeTag('select');
+    echo H::closeTag('div'); //5
+
+    echo H::openTag('div', ['class' => 'mb-3']); //5
+     $shcrcsi = 'settings[homecare_current_run_category_secondary_id]';
+     echo H::openTag('label', [
+      'for' => $shcrcsi
+     ]);
+      echo $translator->translate(
+       'homecare.current.run.category.secondary'
+      );
+      echo $s->infoIcon('homecare_current_run_category_secondary_id');
+     echo H::closeTag('label');
+
+     $body[$shcrcsi] =
+     $s->getSetting('homecare_current_run_category_secondary_id');
+
+     echo H::openTag('select', [
+      'name' => $shcrcsi,
+      'id' => $shcrcsi,
+      'class' => 'form-select',
+     ]);
+      echo  new Option()
+       ->value('0')
+       ->content(
+        $translator->translate('not.set')
+       );
+      /**
+       * @var string $categorySecondaryName
+       */
+      foreach ($category_secondaries as $categorySecondaryId => $categorySecondaryName) {
+       echo  new Option()
+        ->value((string) $categorySecondaryId)
+        ->selected(
+         $body[$shcrcsi] == (string) $categorySecondaryId
+       )
+        ->content(
+         $categorySecondaryName
+        );
+      }
+     echo H::closeTag('select');
+    echo H::closeTag('div'); //5
+
+    echo H::openTag('div', ['class' => 'mb-3']); //5
+     $shcrlrd = 'settings[homecare_current_run_last_run_date]';
+     echo H::openTag('label', [
+      'for' => $shcrlrd
+     ]);
+      echo $translator->translate(
+       'homecare.current.run.last.run.date'
+      );
+      echo $s->infoIcon('homecare_current_run_last_run_date');
+     echo H::closeTag('label');
+
+     echo H::input('date', $shcrlrd, $s->getSetting(
+      'homecare_current_run_last_run_date'
+     ), [
+      'id' => $shcrlrd,
+      'class' => 'form-control',
+     ]);
+    echo H::closeTag('div'); //5
+
+   echo H::closeTag('div'); //4
+  echo H::closeTag('div'); //current-run-card
+
+  echo H::openTag('div', ['class' => 'card']); //3
+   echo H::openTag('div', ['class' => 'card-header']); //4
+    echo new H6()->content($translator->translate('homecare.hidden.columns'));
+   echo H::closeTag('div'); //4
+   echo H::openTag('div', ['class' => 'card-body']); //4
+    echo H::tag('p', H::encode($translator->translate('homecare.hidden.columns.description')),
+        ['class' => 'text-muted']);
+    echo $s->infoIcon('homecare_hidden_inv_columns');
+
+    // Fallback so unchecking every box still submits the key — without
+    // this, saving with nothing checked would leave the setting untouched
+    // instead of clearing it.
+    echo H::openTag('input', [
+     'type' => 'hidden',
+     'name' => 'settings[homecare_hidden_inv_columns][]',
+     'value' => '',
+    ]);
+
+    foreach ($toggleableColumns as $columnKey => $labelKey) {
+     echo H::openTag('div', ['class' => 'form-check']);
+      $inputId = 'homecare-hide-' . $columnKey;
+      echo H::openTag('input', [
+       'type' => 'checkbox',
+       'class' => 'form-check-input',
+       'id' => $inputId,
+       'name' => 'settings[homecare_hidden_inv_columns][]',
+       'value' => $columnKey,
+       'checked' => in_array($columnKey, $hidden_inv_columns, true) ? 'checked' : null,
+      ]);
+      echo H::openTag('label', ['class' => 'form-check-label', 'for' => $inputId]);
+       echo $translator->translate($labelKey);
+      echo H::closeTag('label');
+     echo H::closeTag('div');
+    }
+   echo H::closeTag('div'); //4
+  echo H::closeTag('div'); //3
+
+ echo H::closeTag('div'); //2
+echo H::closeTag('div'); //1

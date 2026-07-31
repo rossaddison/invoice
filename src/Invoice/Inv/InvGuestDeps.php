@@ -9,6 +9,7 @@ use App\Invoice\InvRecurring\InvRecurringRepository as IRR;
 use App\Invoice\PaymentInformation\Service\BacsPaymentService;
 use App\Invoice\UserClient\UserClientRepository as UCR;
 use App\Invoice\UserInv\UserInvRepository as UIR;
+use App\Invoice\Worker\WorkerRepository as WR;
 
 final class InvGuestDeps
 {
@@ -19,6 +20,7 @@ final class InvGuestDeps
         public readonly UCR $ucR,
         public readonly UIR $uiR,
         public readonly BacsPaymentService $bacsPaymentService,
+        public readonly WR $wR,
     ) {
     }
 }

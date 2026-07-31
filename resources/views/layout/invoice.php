@@ -130,8 +130,8 @@ $t = $translator;
 $itemFontArray = [
     'style' => 'font-size: ' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;'
     . ' color: black;'];
-// Platform, Performance, and Clear Assets Cache, and links Menu will disappear
-// if set to false;
+// Platform, Performance, and links Menu will disappear
+// if $debugMode set to false;
 /**
  * Related logic: see src\ViewInjection\LayoutViewInjection.php $debugMode
  */
@@ -1182,6 +1182,9 @@ if ((null !== $currentPath) && !$isGuest) {
                 itemAttributes: $itemFontArray),    
             DropdownItem::link($t->translate('recurring'),
                 $urlGenerator->generate('invrecurring/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('workers'),
+                $urlGenerator->generate('worker/index'),
                 itemAttributes: $itemFontArray),
         ),
         // Payment

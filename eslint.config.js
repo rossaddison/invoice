@@ -1,7 +1,6 @@
 import js from '@eslint/js';
 import typescriptEslint from '@typescript-eslint/eslint-plugin';
 import typescriptParser from '@typescript-eslint/parser';
-import deprecation from 'eslint-plugin-deprecation';
 import globals from 'globals';
 
 export default [
@@ -9,8 +8,7 @@ export default [
     {
         files: ['**/*.ts', '**/*.tsx'],
         plugins: {
-            '@typescript-eslint': typescriptEslint,
-            'deprecation': deprecation
+            '@typescript-eslint': typescriptEslint
         },
         languageOptions: {
             parser: typescriptParser,
@@ -26,7 +24,7 @@ export default [
             }
         },
         rules: {
-            'deprecation/deprecation': 'warn',
+            '@typescript-eslint/no-deprecated': 'warn',
             '@typescript-eslint/no-unused-vars': 'warn',
             '@typescript-eslint/no-explicit-any': 'warn',
             'no-var': 'error',

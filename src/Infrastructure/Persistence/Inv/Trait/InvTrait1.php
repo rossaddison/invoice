@@ -10,6 +10,7 @@ use App\Infrastructure\Persistence\InvItem\InvItem;
 use App\Infrastructure\Persistence\InvRecurring\InvRecurring;
 use App\Infrastructure\Persistence\InvSentLog\InvSentLog;
 use App\Infrastructure\Persistence\User\User;
+use App\Infrastructure\Persistence\Worker\Worker;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -46,6 +47,16 @@ trait InvTrait1
     public function getClient(): ?Client
     {
         return $this->client;
+    }
+
+    public function setWorker(?Worker $worker): void
+    {
+        $this->worker = $worker;
+    }
+
+    public function getWorker(): ?Worker
+    {
+        return $this->worker;
     }
 
     public function setInvRecurring(): void
@@ -101,6 +112,14 @@ trait InvTrait1
             return $familyName . '➡️' . $productName;
         }
         return '';
+    }
+
+    public function getFirstItemCategorySecondaryId(): ?int
+    {
+        foreach ($this->items as $item) {
+            return $item->getProduct()?->getFamily()?->getCategorySecondaryId();
+        }
+        return null;
     }
 
     public function reqId(): int

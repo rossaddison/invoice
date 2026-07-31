@@ -6,7 +6,8 @@ namespace App\Infrastructure\Persistence\Inv;
 
 use App\Infrastructure\Persistence\{
     Client\Client, Group\Group, InvAmount\InvAmount, InvItem\InvItem,
-    InvSentLog\InvSentLog, InvRecurring\InvRecurring, Trait\RequireId
+    InvSentLog\InvSentLog, InvRecurring\InvRecurring, Trait\RequireId,
+    Worker\Worker
 };
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -43,6 +44,7 @@ use App\Infrastructure\Persistence\Inv\Trait\InvTrait5;
 #[Index(columns: ['contract_id'])]
 #[Index(columns: ['so_id'])]
 #[Index(columns: ['quote_id'])]
+#[Index(columns: ['worker_id'])]
 
 class Inv
 {
@@ -64,6 +66,13 @@ class Inv
     // Client
     #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Client $client = null;
+
+    // Worker — the HomeCare field worker this invoice has been allocated
+    // to, set from inv/index (staff) or via userinv/index's worker-login
+    // link. Unlike the FKs above, this one is genuinely nullable: most
+    // invoices have no worker allocated at all.
+    #[BelongsTo(target: Worker::class, nullable: true, fkAction: 'NO ACTION')]
+    private ?Worker $worker = null;
 
     #[HasOne(target: InvAmount::class, outerKey: 'inv_id')]
     private readonly InvAmount $invAmount;
@@ -131,6 +140,14 @@ class Inv
         private ?int $status_id = 1,
         #[Column(type: 'boolean', nullable: false)]
         private bool $is_read_only = false,
+        // Set by a HomeCare field worker from inv/guest when a job hits a
+        // problem on-site — blocks every status-to-"sent" transition
+        // server-side (see blocksSending() below) until cleared,
+        // independent of is_read_only above.
+        #[Column(type: 'boolean', nullable: false)]
+        private bool $do_not_send = false,
+        #[Column(type: 'string(32)', nullable: false, default: '')]
+        private string $do_not_send_reason = '',
         #[Column(type: 'string(90)', nullable: true)]
         private ?string $password = '',
         #[Column(type: 'string(100)', nullable: true)]
@@ -159,6 +176,8 @@ class Inv
         private ?int $postal_address_id = null,
         #[Column(type: 'integer(11)', nullable: true, default: 0)]
         private ?int $contract_id = null,
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $worker_id = null,
         //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/cbc-DescriptionCode/
         #[Column(type: 'string(3)', nullable: false)]
         private string $stand_in_code = '',

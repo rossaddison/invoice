@@ -181,6 +181,13 @@ export class InvoiceHandler {
             return;
         }
 
+        // Copy all (filtered) invoices to a date (modal confirm)
+        const copyAllToDate = closestSafe(target, '#copy-all-to-date-confirm');
+        if (copyAllToDate) {
+            void this.handleCopyAllToDate();
+            return;
+        }
+
         // Batch email (modal confirm)
         const batchEmailConfirm = closestSafe(target, '#batch-email-confirm');
         if (batchEmailConfirm) {
@@ -188,28 +195,7 @@ export class InvoiceHandler {
             return;
         }
 
-        // Copy multiple invoices (spreadsheet import)
-        const copySpreadsheet = closestSafe<HTMLElement>(target, '#modal_copy_inv_spreadsheet_confirm');
-        if (copySpreadsheet) {
-            void this.handleCopyInvoicesSpreadsheet();
-            return;
-        }
-
-        // Copy multiple invoices
-        const copyMultiple = closestSafe<HTMLElement>(target, '.modal_copy_inv_multiple_confirm');
-        if (copyMultiple) {
-            this.handleCopyMultipleInvoices(copyMultiple);
-            return;
-        }
-
-        // Copy single invoice
-        const invToInv =
-            closestSafe<HTMLElement>(target, '#inv_to_inv_confirm') ||
-            closestSafe<HTMLElement>(target, '.inv_to_inv_confirm');
-        if (invToInv) {
-            this.handleCopySingleInvoice(invToInv);
-            return;
-        }
+        if (this.handleCopyClick(target)) { return; }
 
         // Add invoice tax
         const invTaxSubmit = closestSafe<HTMLElement>(target, '#inv_tax_submit');
@@ -247,6 +233,33 @@ export class InvoiceHandler {
         if (deleteItem) {
             this.handleDeleteSingleItem(deleteItem);
         }
+    }
+
+    private handleCopyClick(target: HTMLElement): boolean {
+        // Copy multiple invoices (spreadsheet import)
+        const copySpreadsheet = closestSafe<HTMLElement>(target, '#modal_copy_inv_spreadsheet_confirm');
+        if (copySpreadsheet) {
+            void this.handleCopyInvoicesSpreadsheet();
+            return true;
+        }
+
+        // Copy multiple invoices
+        const copyMultiple = closestSafe<HTMLElement>(target, '.modal_copy_inv_multiple_confirm');
+        if (copyMultiple) {
+            this.handleCopyMultipleInvoices(copyMultiple);
+            return true;
+        }
+
+        // Copy single invoice
+        const invToInv =
+            closestSafe<HTMLElement>(target, '#inv_to_inv_confirm') ||
+            closestSafe<HTMLElement>(target, '.inv_to_inv_confirm');
+        if (invToInv) {
+            this.handleCopySingleInvoice(invToInv);
+            return true;
+        }
+
+        return false;
     }
 
     private handleExportClick(target: HTMLElement): boolean {
@@ -362,6 +375,49 @@ export class InvoiceHandler {
             globalThis.location.reload();
         } catch (error) {
             console.error('bulk_quick_pay error', error);
+            if (btn && originalHtml) { setButtonLoadingOff(btn, originalHtml); }
+            alert('An error occurred. See console for details.');
+        }
+    }
+
+    /**
+     * Copies every invoice currently matching the grid's active filters
+     * (not a checkbox selection — see handleCopyMultipleInvoices above) to
+     * a single date, each staying with its own original client. Forwards
+     * the page's current query string as-is so the server re-applies the
+     * exact same filters the grid is showing.
+     */
+    private async handleCopyAllToDate(): Promise<void> {
+        const dateInput = document.getElementById('copy-all-to-date-date') as HTMLInputElement | null;
+        const newDate = dateInput?.value ?? '';
+        if (newDate === '') {
+            alert('Please enter a date.');
+            return;
+        }
+        if (!confirm(`This will copy every invoice currently shown by your filters to ${newDate}. This cannot be undone in bulk. Continue?`)) {
+            return;
+        }
+        const btn = document.getElementById('copy-all-to-date-confirm');
+        const originalHtml = btn?.innerHTML;
+        if (btn) { setButtonLoadingOn(btn); }
+        try {
+            const statusMatch = /\/status\/(\d+)/.exec(location.pathname);
+            const existingParams = Object.fromEntries(new URLSearchParams(location.search).entries());
+            const url = `${location.origin}/invoice/inv/copyalltodate`;
+            const response = await getJson<ApiResponse>(url, {
+                ...existingParams,
+                new_date: newDate,
+                status: statusMatch?.[1] ?? '0',
+            });
+            const data = parsedata(response);
+            if (data.success === 1) {
+                if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
+            } else if (btn) {
+                btn.innerHTML = '<h2 class="text-center"><i class="bi bi-x-lg"></i></h2>';
+            }
+            globalThis.location.reload();
+        } catch (error) {
+            console.error('copy_all_to_date error', error);
             if (btn && originalHtml) { setButtonLoadingOff(btn, originalHtml); }
             alert('An error occurred. See console for details.');
         }

@@ -23,5 +23,6 @@ final class InvIndexFilter implements RequestInputInterface
     public ?string $filterClientAddress1 = null;
     public ?string $filterDateCreatedYearMonth = null;
     public ?string $filterStatus = null;
+    public ?string $filterCategorySecondaryRun = null;
     public ?string $groupBy = 'none';
 }

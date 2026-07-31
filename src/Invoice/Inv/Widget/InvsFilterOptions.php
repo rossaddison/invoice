@@ -9,6 +9,9 @@ namespace App\Invoice\Inv\Widget;
  *
  * Replaces the seven individual withOptions*DropDownFilter() setters on the
  * widget, so that the total method count stays at or below 20 (S1448).
+ *
+ * Takes a single keyed array rather than one parameter per filter to stay
+ * within S107 (≤ 7 constructor parameters) as more filters are added.
  */
 final class InvsFilterOptions
 {
@@ -33,30 +36,30 @@ final class InvsFilterOptions
     /** @psalm-var array<array-key, array<array-key, string>|string> */
     public readonly array $status;
 
+    /** @psalm-var array<array-key, array<array-key, string>|string> */
+    public readonly array $categorySecondaryRun;
+
     /**
-     * @psalm-param array<array-key, array<array-key, string>|string> $invNumber
-     * @psalm-param array<array-key, array<array-key, string>|string> $creditInvNumber
-     * @psalm-param array<array-key, array<array-key, string>|string> $familyName
-     * @psalm-param array<array-key, array<array-key, string>|string> $clients
-     * @psalm-param array<array-key, array<array-key, string>|string> $clientGroup
-     * @psalm-param array<array-key, array<array-key, string>|string> $yearMonth
-     * @psalm-param array<array-key, array<array-key, string>|string> $status
+     * @psalm-param array{
+     *     invNumber?: array<array-key, array<array-key, string>|string>,
+     *     creditInvNumber?: array<array-key, array<array-key, string>|string>,
+     *     familyName?: array<array-key, array<array-key, string>|string>,
+     *     clients?: array<array-key, array<array-key, string>|string>,
+     *     clientGroup?: array<array-key, array<array-key, string>|string>,
+     *     yearMonth?: array<array-key, array<array-key, string>|string>,
+     *     status?: array<array-key, array<array-key, string>|string>,
+     *     categorySecondaryRun?: array<array-key, array<array-key, string>|string>,
+     * } $options
      */
-    public function __construct(
-        array $invNumber = [],
-        array $creditInvNumber = [],
-        array $familyName = [],
-        array $clients = [],
-        array $clientGroup = [],
-        array $yearMonth = [],
-        array $status = [],
-    ) {
-        $this->invNumber        = $invNumber;
-        $this->creditInvNumber  = $creditInvNumber;
-        $this->familyName       = $familyName;
-        $this->clients          = $clients;
-        $this->clientGroup      = $clientGroup;
-        $this->yearMonth        = $yearMonth;
-        $this->status           = $status;
+    public function __construct(array $options = [])
+    {
+        $this->invNumber             = $options['invNumber'] ?? [];
+        $this->creditInvNumber       = $options['creditInvNumber'] ?? [];
+        $this->familyName            = $options['familyName'] ?? [];
+        $this->clients               = $options['clients'] ?? [];
+        $this->clientGroup           = $options['clientGroup'] ?? [];
+        $this->yearMonth             = $options['yearMonth'] ?? [];
+        $this->status                = $options['status'] ?? [];
+        $this->categorySecondaryRun  = $options['categorySecondaryRun'] ?? [];
     }
 }

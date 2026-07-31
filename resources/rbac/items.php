@@ -43,6 +43,23 @@ return [
         ],
     ],
     [
+        // Field worker (HomeCare) — read-only, scoped to invoices allocated
+        // to them (see InvRepository::repoWorkerVisible()). No edit.inv, so
+        // like observer they cannot reach staff-side inv/index, only
+        // inv/guest. Deliberately narrower than observer: no view.payment
+        // (payment info isn't relevant to the worker) and no
+        // edit.user.inv/edit.client.peppol (edit-type permissions, not
+        // relevant to a read-only field role).
+        'name' => 'worker',
+        'type' => 'role',
+        'updated_at' => 1784151222,
+        'created_at' => 1784151222,
+        'children' => [
+            'view.inv',
+            'entry.to.base.controller',
+        ],
+    ],
+    [
         'name' => 'view.inv',
         'type' => 'permission',
         'updated_at' => 1748873425,

@@ -96,4 +96,30 @@ trait InvGuestTrait
                       ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
+
+    /**
+     * Invoices currently allocated to a HomeCare worker — the worker-scoped
+     * counterpart to repoGuestClientsPostDraft(), keyed on worker_id instead
+     * of client_id.
+     *
+     * @param int $status_id
+     * @param int $worker_id
+     * @return EntityReader
+     */
+    public function repoWorkerVisible(int $status_id, int $worker_id): EntityReader
+    {
+        if ($status_id > 0) {
+            $query = $this->select()
+                    ->where(['status_id' => $status_id])
+                    ->where(['worker_id' => $worker_id])
+                    ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
+                    ->where('deleted_at', null);
+            return $this->prepareDataReader($query);
+        }
+        $query = $this->select()
+                     ->where(['worker_id' => $worker_id])
+                     ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
+                     ->where('deleted_at', null);
+        return $this->prepareDataReader($query);
+    }
 }
