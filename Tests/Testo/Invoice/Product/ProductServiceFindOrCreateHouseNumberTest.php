@@ -101,4 +101,22 @@ final class ProductServiceFindOrCreateHouseNumberTest
         Assert::same(ProductType::Service->value, $product->getProductType());
         Assert::same(35.00, $product->getProductPrice());
     }
+
+    public function deleteProductCallsRepositoryDelete(): void
+    {
+        $product = m::mock(Product::class);
+
+        /** @var ProductRepository&m\MockInterface $productR */
+        $productR = m::mock(ProductRepository::class);
+        /** @var \Mockery\Expectation $e */
+        $e = $productR->expects('delete');
+        $e->once()->with($product);
+
+        $fR = m::mock(FamilyRepository::class);
+        $trR = m::mock(TaxRateRepository::class);
+        $unR = m::mock(UnitRepository::class);
+
+        $service = new ProductService($productR, $fR, $trR, $unR);
+        $service->deleteProduct($product);
+    }
 }
