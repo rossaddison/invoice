@@ -2,11 +2,13 @@ import { chromium, type Page } from 'playwright';
 import { generateSync } from 'otplib';
 
 /**
- * Renders a single invoice's inv/view page to PDF using a real Chromium
- * engine via Playwright, instead of mPDF's HTML-to-PDF conversion — mPDF
- * does not reliably support Bootstrap5 (flexbox/grid, modern CSS), so this
- * exists to test/compare actual rendered layout, starting with the HomeCare
- * workflow's invoice views.
+ * Renders the actual invoice document (the same one mPDF converts, via
+ * inv/pdfPlaywrightDocument) to PDF using a real Chromium engine instead of
+ * mPDF's HTML-to-PDF conversion — mPDF does not reliably support Bootstrap5
+ * (flexbox/grid, modern CSS), so this exists to produce the same
+ * professional-looking document with better rendering fidelity. This is
+ * NOT the admin inv/view screen — that has its own toolbar/breadcrumb/
+ * edit-form UI and produces an unusable result if rendered to PDF directly.
  *
  * Every inv/* route requires an authenticated session AND (once a user has
  * 2FA enabled) a valid TOTP code, so this drives the real /login form and
@@ -89,12 +91,13 @@ async function main(): Promise<void> {
 
         await login(page, baseUrl, email, password);
 
-        // Route is /{_language}/invoice/inv/view/{id} — the /invoice/ segment
-        // is easy to miss and was missing here for a while, which silently
-        // "succeeded" by rendering the app's own 404 page instead of the
-        // invoice. The status check below exists specifically to catch that
-        // failure mode loudly instead of producing a wrong-content PDF.
-        const response = await page.goto(`${baseUrl}/invoice/inv/view/${invoiceId}`, { waitUntil: 'networkidle' });
+        // Route is /{_language}/invoice/inv/pdfPlaywrightDocument/{id} — the
+        // /invoice/ segment is easy to miss and was missing here for a
+        // while, which silently "succeeded" by rendering the app's own 404
+        // page instead of the invoice. The status check below exists
+        // specifically to catch that failure mode loudly instead of
+        // producing a wrong-content PDF.
+        const response = await page.goto(`${baseUrl}/invoice/inv/pdfPlaywrightDocument/${invoiceId}`, { waitUntil: 'networkidle' });
         if (!response || !response.ok()) {
             throw new Error(
                 `Failed to load invoice ${invoiceId}: HTTP ${response?.status() ?? 'no response'} at ${page.url()} ` +
@@ -107,7 +110,16 @@ async function main(): Promise<void> {
         // media to match what a user actually sees in-browser.
         await page.emulateMedia({ media: 'screen' });
 
-        await page.pdf({ path: outputPath, format: 'A4', printBackground: true });
+        // Playwright defaults to zero margins on all sides — mPDF's own
+        // defaults (MpdfHelper::$marginLeft/Right/Top/Bottom) are 15mm/
+        // 15mm/16mm/16mm, matched here for visual parity with the existing
+        // "Download PDF" output.
+        await page.pdf({
+            path: outputPath,
+            format: 'A4',
+            printBackground: true,
+            margin: { left: '15mm', right: '15mm', top: '16mm', bottom: '16mm' },
+        });
         console.log(`PDF written to ${outputPath}`);
     } finally {
         await browser.close();

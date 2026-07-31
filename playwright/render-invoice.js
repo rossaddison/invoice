@@ -1309,14 +1309,19 @@ async function main() {
   try {
     const page = await browser.newPage();
     await login(page, baseUrl, email, password);
-    const response = await page.goto(`${baseUrl}/invoice/inv/view/${invoiceId}`, { waitUntil: "networkidle" });
+    const response = await page.goto(`${baseUrl}/invoice/inv/pdfPlaywrightDocument/${invoiceId}`, { waitUntil: "networkidle" });
     if (!response || !response.ok()) {
       throw new Error(
         `Failed to load invoice ${invoiceId}: HTTP ${response?.status() ?? "no response"} at ${page.url()} \u2014 check that PLAYWRIGHT_TEST_EMAIL is admin, or owns/is linked to this invoice as an observer.`
       );
     }
     await page.emulateMedia({ media: "screen" });
-    await page.pdf({ path: outputPath, format: "A4", printBackground: true });
+    await page.pdf({
+      path: outputPath,
+      format: "A4",
+      printBackground: true,
+      margin: { left: "15mm", right: "15mm", top: "16mm", bottom: "16mm" }
+    });
     console.log(`PDF written to ${outputPath}`);
   } finally {
     await browser.close();

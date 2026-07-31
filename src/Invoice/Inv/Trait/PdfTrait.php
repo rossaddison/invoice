@@ -8,6 +8,7 @@ use App\Infrastructure\Persistence\{Inv\Inv};
 use App\Invoice\Inv\Exception\PdfNotFoundException;
 use App\Invoice\Inv\Exception\PlaywrightRenderFailedException;
 use App\Invoice\Inv\InvPdfService;
+use App\Invoice\Inv\Service\PlaywrightDocumentHtmlBuilder;
 use App\Invoice\Inv\Service\PlaywrightPdfRenderService;
 use App\Invoice\Upload\UploadRepository as UPR;
 use App\Widget\Bootstrap5ModalPdf;
@@ -133,6 +134,36 @@ trait PdfTrait
             }
         }
         exit;
+    }
+
+    /**
+     * Serves the same invoice-document HTML mPDF converts (InvPdfService::
+     * generateHtml()) as a real, browsable page — with the two CSS files
+     * mPDF injects via its own WriteHtml($css, 1) API call instead embedded
+     * as an inline <style> block, since that document has no <link>/<style>
+     * tags of its own (mPDF's API doesn't need them). This is what
+     * playwright/render-invoice.ts navigates to for the "Chromium PDF
+     * (Playwright)" button — rendering the admin inv/view screen instead
+     * produces the admin toolbar/breadcrumb/edit-form UI, not a usable
+     * invoice document.
+     */
+    public function pdfPlaywrightDocument(
+        #[RouteArgument('id')] int $id,
+        InvPdfService $invPdfService,
+        PlaywrightDocumentHtmlBuilder $htmlBuilder,
+    ): Response {
+        $inv = $invPdfService->findInv($id);
+        if (null === $inv
+            || !($this->rbacAdmin()
+                || $this->rbacObserver($inv, $invPdfService->ucR(), $invPdfService->uiR()))
+        ) {
+            throw new PdfNotFoundException($this->translator);
+        }
+        $html = $invPdfService->generateHtml($id, false);
+        if ($html === '') {
+            throw new PdfNotFoundException($this->translator);
+        }
+        return $this->htmlResponseFactory->createResponse($htmlBuilder->build($html));
     }
 
     /**
