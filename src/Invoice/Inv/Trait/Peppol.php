@@ -65,7 +65,7 @@ trait Peppol
         }
         // Load the inv's HASONE relation 'invAmount'
         $peppolhelper = new PeppolHelper(
-            $this->sR, $net->delRepo, $invoice->getInvAmount(), $delloc, $this->translator);
+            $this->sR, $net->delRepo, $invoice->getInvAmount(), $delloc, $this->translator, $core->gR);
         $uploads_temp_peppol_absolute_path_dot_xml =
             $peppolhelper->generateInvoicePeppolUblXmlTempFile(
                 $invoice,
@@ -334,7 +334,7 @@ trait Peppol
         PeppolSendService $peppolSendService,
     ): void {
         $peppolhelper = new PeppolHelper(
-            $this->sR, $net->delRepo, $invoice->getInvAmount(), $delloc, $this->translator);
+            $this->sR, $net->delRepo, $invoice->getInvAmount(), $delloc, $this->translator, $core->gR);
         try {
             $xmlPath = $peppolhelper->generateInvoicePeppolUblXmlTempFile(
                 $invoice,

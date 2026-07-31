@@ -6,6 +6,7 @@ namespace App\Invoice\Inv;
 
 use App\Invoice\ClientPeppol\ClientPeppolRepository as cpR;
 use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
+use App\Invoice\Group\GroupRepository as GR;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
 use App\Invoice\PostalAddress\PostalAddressRepository as paR;
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
@@ -19,6 +20,7 @@ final class InvPeppolCoreDeps
         public readonly DLR $dlR,
         public readonly paR $paR,
         public readonly SOR $soR,
+        public readonly GR $gR,
     ) {
     }
 }

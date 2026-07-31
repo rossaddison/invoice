@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Libraries;
 
 use App\Invoice\Setting\SettingRepository as sR;
-use App\Invoice\Ubl\{AdditionalDocumentReference, Delivery, Generator, Invoice, Party};
+use App\Invoice\Ubl\{AdditionalDocumentReference, CreditNote, Delivery, Generator, Invoice, Party};
 use Sabre\Xml\Writer;
 
 final readonly class PeppolUblXml
@@ -22,8 +22,10 @@ final readonly class PeppolUblXml
         Delivery $delivery,
         PeppolPaymentData $payment,
         PeppolFinancialData $financial,
+        bool $isCreditNote = false,
     ): Invoice {
-        return new Invoice(
+        $documentClass = $isCreditNote ? CreditNote::class : Invoice::class;
+        return new $documentClass(
             $this->sR,
             $header->profileID,
             (string) $header->id,
@@ -62,7 +64,9 @@ final readonly class PeppolUblXml
         $writer = new Writer();
         $writer->openMemory();
         $writer->setIndent(true);
-        $writer->text(Generator::invoice($ubl_invoice, $ubl_invoice->getDocumentCurrencyCode()));
+        $writer->text($ubl_invoice instanceof CreditNote
+            ? Generator::creditNote($ubl_invoice, $ubl_invoice->getDocumentCurrencyCode())
+            : Generator::invoice($ubl_invoice, $ubl_invoice->getDocumentCurrencyCode()));
         $writer->endDocument();
         return $writer->outputMemory();
     }

@@ -215,6 +215,8 @@ trait Credit
                             $savedInvId = (string) $saved_inv_id;
                             $this->inv_item_service->initializeCreditInvItems(
                                 $basis_inv_id, $savedInvId, $core->iiR, $core->iiaR);
+                            $this->inv_allowance_charge_service->initializeCreditInvAllowanceCharges(
+                                $basis_inv_id, $saved_inv_id);
                             $this->inv_amount_service->initializeCreditInvAmount(
                                 new InvAmount(), $basis_inv_id, $savedInvId);
                             $this->inv_tax_rate_service->initializeCreditInvTaxRate(

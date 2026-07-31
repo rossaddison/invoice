@@ -10,35 +10,37 @@ class Generator
 {
     public static string $currencyID;
 
-    /**
-     * @psalm-suppress MissingReturnType
-     */
     public static function invoice(
         Invoice $invoice,
         string $currencyId = 'EUR'
     ): string
     {
+        return self::write($invoice, 'Invoice', Schema::INVOICE_NS, $currencyId);
+    }
+
+    public static function creditNote(
+        CreditNote $creditNote,
+        string $currencyId = 'EUR'
+    ): string
+    {
+        return self::write($creditNote, 'CreditNote', Schema::CREDIT_NOTE_NS, $currencyId);
+    }
+
+    private static function write(
+        Invoice $document,
+        string $rootElement,
+        string $rootNamespace,
+        string $currencyId
+    ): string {
         self::$currencyID = $currencyId;
 
         $xmlService = new Service();
 
         $xmlService->namespaceMap = [
-            'urn:oasis:names:specification:ubl:schema:xsd:'
-            . 'Invoice-2' => '',
-            'urn:oasis:names:specification:ubl:schema:xsd:'
-            . 'CommonBasicComponents-2' => 'cbc',
-            'urn:oasis:names:specification:ubl:schema:xsd:'
-            . 'CommonAggregateComponents-2' => 'cac',
+            $rootNamespace => '',
+            Schema::CBC_NS => 'cbc',
+            Schema::CAC_NS => 'cac',
         ];
-        return $xmlService->write('Invoice', $invoice);
-    }
-
-    /** @psalm-suppress MissingReturnType */
-    public static function creditNote(
-        CreditNote $creditNote,
-        string $currencyId = 'EUR'
-    )
-    {
-        return self::invoice($creditNote, $currencyId);
+        return $xmlService->write($rootElement, $document);
     }
 }
