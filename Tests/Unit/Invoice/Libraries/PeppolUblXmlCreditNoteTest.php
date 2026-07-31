@@ -81,7 +81,7 @@ final class PeppolUblXmlCreditNoteTest extends TestCase
      *     financial: PeppolFinancialData,
      * }
      */
-    private function minimalDocumentGraph(SettingRepository $s): array
+    private function minimalDocumentGraph(SettingRepository $s, bool $isCreditNote = false): array
     {
         $header = new PeppolInvoiceHeader(
             'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0',
@@ -100,6 +100,7 @@ final class PeppolUblXmlCreditNoteTest extends TestCase
                 null,
                 true,
                 null,
+                $isCreditNote,
             ),
         );
 
@@ -156,14 +157,13 @@ final class PeppolUblXmlCreditNoteTest extends TestCase
     public function testCreditNoteOutputsCreditNoteRootTagNamespaceAndTypeCode(): void
     {
         $s = $this->settingRepository();
-        $graph = $this->minimalDocumentGraph($s);
+        $graph = $this->minimalDocumentGraph($s, isCreditNote: true);
         $party = $this->minimalParty();
         $peppolUblXml = new PeppolUblXml($s);
 
         $ubl = $peppolUblXml->xml(
             $graph['header'], $graph['additionalDocumentReference'],
             $party, $party, $graph['delivery'], $graph['payment'], $graph['financial'],
-            isCreditNote: true,
         );
         $xml = $peppolUblXml->output($ubl);
 

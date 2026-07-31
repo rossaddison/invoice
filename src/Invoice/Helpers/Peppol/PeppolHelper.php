@@ -362,6 +362,7 @@ class PeppolHelper
                 null !== $cdr_id ? new ContractDocumentReference($cdr_id) : null,
                 $isCopyIndicator,
                 $supplierAssignedAccountID,
+                $this->isCreditNote($invoice),
             ),
         );
         $peppolPayment = new PeppolPaymentData(
@@ -396,7 +397,6 @@ class PeppolHelper
             ),
             $peppolPayment,
             $peppolFinancial,
-            $this->isCreditNote($invoice),
         );
         fwrite($f, $peppol_ubl_xml->output($xml));
         fclose($f);
