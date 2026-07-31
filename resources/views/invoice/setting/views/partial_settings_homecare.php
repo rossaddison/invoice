@@ -50,7 +50,7 @@ echo H::openTag('div', ['class' => 'row']); //1
    echo H::closeTag('div'); //4
    echo H::openTag('div', ['class' => 'card-body']); //4
 
-    echo H::openTag('div', ['class' => 'mb-3']); //7
+    echo H::openTag('div', ['class' => 'mb-3']); //5
      $shaie = 'settings[homecare_auto_invoice_enabled]';
      echo H::openTag('label', [
       'for' => $shaie
@@ -83,9 +83,9 @@ echo H::openTag('div', ['class' => 'row']); //1
         $translator->translate('yes')
        );
      echo H::closeTag('select');
-    echo H::closeTag('div'); //7
+    echo H::closeTag('div'); //5
 
-    echo H::openTag('div', ['class' => 'mb-3']); //7
+    echo H::openTag('div', ['class' => 'mb-3']); //5
      $shcrcsi = 'settings[homecare_current_run_category_secondary_id]';
      echo H::openTag('label', [
       'for' => $shcrcsi
@@ -123,9 +123,9 @@ echo H::openTag('div', ['class' => 'row']); //1
         );
       }
      echo H::closeTag('select');
-    echo H::closeTag('div'); //7
+    echo H::closeTag('div'); //5
 
-    echo H::openTag('div', ['class' => 'mb-3']); //7
+    echo H::openTag('div', ['class' => 'mb-3']); //5
      $shcrlrd = 'settings[homecare_current_run_last_run_date]';
      echo H::openTag('label', [
       'for' => $shcrlrd
@@ -142,7 +142,7 @@ echo H::openTag('div', ['class' => 'row']); //1
       'id' => $shcrlrd,
       'class' => 'form-control',
      ]);
-    echo H::closeTag('div'); //7
+    echo H::closeTag('div'); //5
 
    echo H::closeTag('div'); //4
   echo H::closeTag('div'); //current-run-card
