@@ -167,9 +167,9 @@ trait PdfTrait
     }
 
     /**
-     * Renders the invoice via headless Chromium (Playwright) rather than
-     * mPDF, for pixel-accurate Bootstrap5 layout — restricted to admin and
-     * observer, deliberately narrower than the other pdf* actions' rbac
+     * Renders the invoice document via headless Chromium (Playwright)
+     * rather than mPDF, for better rendering fidelity — restricted to admin
+     * and observer, deliberately narrower than the other pdf* actions' rbac
      * (no accountant), since this shells out to Node/Chromium per request.
      */
     public function pdfPlaywright(

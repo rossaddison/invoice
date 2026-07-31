@@ -173,8 +173,8 @@ final readonly class ButtonsToolbarFull
         $invId = $inv->reqId();
         $buttons = [];
 
-        // Chromium-rendered PDF (Playwright) — pixel-accurate Bootstrap5
-        // layout, restricted to admin/observer since it shells out to
+        // Chromium-rendered PDF (Playwright) — better rendering fidelity
+        // than mPDF, restricted to admin/observer since it shells out to
         // Node/Chromium per request; see PdfTrait::pdfPlaywright()
         if ($canPlaywrightPdf) {
             $buttons[] = $this->createButton(

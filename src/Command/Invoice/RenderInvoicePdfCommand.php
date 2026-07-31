@@ -16,11 +16,11 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\Console\ExitCode;
 
 /**
- * Shells out to playwright/render-invoice.js, which renders an invoice's
- * inv/view page to PDF via headless Chromium instead of mPDF — mPDF does
- * not reliably support Bootstrap5 (flexbox/grid, modern CSS), so this is
- * for comparing/testing actual rendered layout fidelity, starting with the
- * HomeCare workflow's invoice views.
+ * Shells out to playwright/render-invoice.js, which renders the invoice
+ * document (the same one mPDF converts, via inv/pdfPlaywrightDocument) to
+ * PDF via headless Chromium instead of mPDF — mPDF does not reliably
+ * support Bootstrap5 (flexbox/grid, modern CSS), so this exists to produce
+ * the same professional-looking document with better rendering fidelity.
  */
 final class RenderInvoicePdfCommand extends Command
 {
@@ -39,7 +39,7 @@ final class RenderInvoicePdfCommand extends Command
     {
         $this
             ->setDescription(
-                'Renders an invoice\'s inv/view page to PDF via headless Chromium '
+                'Renders the invoice document to PDF via headless Chromium '
                 . '(Playwright), for comparing against mPDF\'s output.'
             )
             ->setHelp(

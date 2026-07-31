@@ -10,9 +10,10 @@ use Yiisoft\Aliases\Aliases;
 use Yiisoft\Translator\TranslatorInterface;
 
 /**
- * Shells out to playwright/render-invoice.js, which renders an invoice's
- * inv/view page to PDF via headless Chromium instead of mPDF — mPDF does
- * not reliably support Bootstrap5 (flexbox/grid, modern CSS). Shared by
+ * Shells out to playwright/render-invoice.js, which renders the invoice
+ * document (the same one mPDF converts, via inv/pdfPlaywrightDocument) to
+ * PDF via headless Chromium instead of mPDF — mPDF does not reliably
+ * support Bootstrap5 (flexbox/grid, modern CSS). Shared by
  * RenderInvoicePdfCommand (CLI) and PdfTrait::pdfPlaywright() (web button).
  */
 final readonly class PlaywrightPdfRenderService
