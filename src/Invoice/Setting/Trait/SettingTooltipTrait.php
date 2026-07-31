@@ -339,7 +339,11 @@ trait SettingTooltipTrait
 
     private function tooltipArrayC(): array
     {
-        return array_merge($this->tooltipArrayC1(), $this->tooltipArrayC2());
+        return array_merge(
+            $this->tooltipArrayC1(),
+            $this->tooltipArrayC1b(),
+            $this->tooltipArrayC2(),
+        );
     }
 
     private function tooltipArrayC1(): array
@@ -433,6 +437,12 @@ trait SettingTooltipTrait
                 'where' => 'Not yet wired to anything — reserved for a future'
                 . ' worker/manager status workflow.',
             ],
+        ];
+    }
+
+    private function tooltipArrayC1b(): array
+    {
+        return [
             'homecare_current_run_category_secondary_id' => [
                 'why' => 'The category_secondary (street/area) currently being'
                 . ' worked. Defaults the inv/index "Current Run" dropdown'

@@ -175,23 +175,12 @@ trait Email
         int $inv_id,
         InvEmailService $invEmailService,
     ): Response {
-        if (!$inv_id) {
-            $this->flashMessage('warning', $this->translator->translate('email.not.sent'));
+        $guardMessageKey = $this->emailStage2GuardMessageKey($inv_id, $invEmailService);
+        if ($guardMessageKey !== null) {
+            $this->flashMessage('warning', $this->translator->translate($guardMessageKey));
             return $this->webService->getRedirectResponse('inv/index');
         }
         $d = $invEmailService->d;
-        // A do_not_send-flagged invoice must never reach the customer at
-        // all, not just skip the status update below — that's the whole
-        // point of the flag (see Trait\Guest::setDoNotSend()).
-        if ($d->core->iR->repoInvUnloadedquery($inv_id)?->blocksSending() === true) {
-            $this->flashMessage('warning', $this->translator->translate('do.not.send.blocksEmail'));
-            return $this->webService->getRedirectResponse('inv/index');
-        }
-        if (!$invEmailService->mailerConfigured()) {
-            $this->flashMessage('warning',
-                $this->translator->translate('email.not.configured'));
-            return $this->webService->getRedirectResponse('inv/index');
-        }
         $body = $request->getParsedBody() ?? [];
         $messageKey = 'email.not.sent.successfully';
         if (is_array($body)) {
@@ -224,6 +213,23 @@ trait Email
             $this->translator->translate($messageKey),
         );
         return $this->webService->getRedirectResponse('inv/index');
+    }
+
+    // A do_not_send-flagged invoice must never reach the customer at
+    // all, not just skip the status update below — that's the whole
+    // point of the flag (see Trait\Guest::setDoNotSend()).
+    private function emailStage2GuardMessageKey(int $inv_id, InvEmailService $invEmailService): ?string
+    {
+        if (!$inv_id) {
+            return 'email.not.sent';
+        }
+        $d = $invEmailService->d;
+        $blocksSending = $d->core->iR->repoInvUnloadedquery($inv_id)?->blocksSending() === true;
+        return match (true) {
+            $blocksSending => 'do.not.send.blocksEmail',
+            !$invEmailService->mailerConfigured() => 'email.not.configured',
+            default => null,
+        };
     }
 
     private function invMessageResponse(int $inv_id, string $messageKey): Response
