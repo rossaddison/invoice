@@ -26,13 +26,19 @@ final class IdentityRepository extends Select\Repository implements IdentityRepo
     }
 
     /**
+     * $id is the identity's own primary key, i.e. Identity::getId() — the value
+     * Yiisoft\User\CurrentUser::switchIdentity() stores in session at login and
+     * passes back here on every subsequent request to restore it. Querying by
+     * 'user_id' here (as this used to) doesn't match what getId() stores, so it
+     * broke session restoration for any account where identity.id != user_id.
+     *
      * @param string $id
      * @return Identity|null
      */
     #[\Override]
     public function findIdentity(string $id): ?Identity
     {
-        return $this->findOne(['user_id' => $id]);
+        return $this->findOne(['id' => $id]);
     }
 
     /**

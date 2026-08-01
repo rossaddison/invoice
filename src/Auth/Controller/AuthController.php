@@ -10,6 +10,7 @@ use App\Auth\{AuthService, CallbackDeps, Form\LoginForm,
     Form\TwoFactorAuthenticationSetupForm,
     Form\TwoFactorAuthenticationVerifyLoginForm, Trait\Callback, Trait\ClassList,
     Trait\Oauth2, Trait\Redirects, Trait\TurnstileVerification, Permissions, TokenRepository};
+use App\Infrastructure\Persistence\Identity\Identity;
 use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\Setting\SettingRepository;
 use App\Auth\Trait\TwoFactorAuth;
@@ -379,12 +380,14 @@ final class AuthController
         UserInvRepository $uiR,
     ): ResponseInterface {
         $identity = $this->authService->getIdentity();
-        $userId = $identity->getId();
+        // getId() returns the identity table's own row id, not the user's —
+        // see resolveLoginResponse() for why that matters here.
+        $userId = $identity instanceof Identity ? $identity->getUserId() : null;
         // if enable_tfa_with_disabling setting has changed during login of admin
         // make sure this is reflected in the user setting.
         if ($this->sR->getSetting('enable_tfa_with_disabling') == '1'
                 && $this->sR->getSetting('enable_tfa') == '1') {
-            $this->clearTfaOnLogout($userId, $uR, $uiR);
+            $this->clearTfaOnLogout(null !== $userId ? (string) $userId : null, $uR, $uiR);
             $this->session->remove('verified_2fa_user_id');
         }
         // prevent session fixation
@@ -505,19 +508,24 @@ final class AuthController
         TokenRepository $tR,
     ): ?ResponseInterface {
         $identity = $this->authService->getIdentity();
-        $userId = $identity->getId();
-        $userInv = null !== $userId ? $uiR->repoUserInvUserIdquery((int) $userId) : null;
+        // getId() returns the identity table's own row id, not the user's —
+        // those two frequently diverge (2,570 of 4,579 identity rows in this
+        // dev DB have id != user_id), which silently broke every lookup
+        // below for any account where they don't coincidentally match.
+        $userId = $identity instanceof Identity ? $identity->getUserId() : null;
+        $userInv = null !== $userId ? $uiR->repoUserInvUserIdquery($userId) : null;
         $user = null !== $userInv ? $userInv->getUser() : null;
         if (null === $userId || null === $userInv || null === $user) {
             return null;
         }
+        $userIdString = (string) $userId;
         // 2FA is mandatory for admins regardless of the global enable_tfa
         // setting — an admin without TOTP set up is routed into setup by
         // handleTfaPath() below, same as any other 2FA-required user.
-        if ($this->sR->getSetting('enable_tfa') == '1' || $this->isAdminUser($userId)) {
-            return $this->handleTfaPath($userId, $user);
+        if ($this->sR->getSetting('enable_tfa') == '1' || $this->isAdminUser($userIdString)) {
+            return $this->handleTfaPath($userIdString, $user);
         }
-        return $this->handleNonTfaPath($userId, $userInv, $cookieLogin, $loginForm, $tR);
+        return $this->handleNonTfaPath($userIdString, $userInv, $cookieLogin, $loginForm, $tR);
     }
 
     private function handleTfaPath(string $userId, User $user): ResponseInterface

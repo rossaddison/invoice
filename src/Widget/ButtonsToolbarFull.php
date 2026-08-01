@@ -43,6 +43,7 @@ final readonly class ButtonsToolbarFull
         bool $read_only = false,
         string $vat = '0',
         bool $paymentCfExist = false,
+        bool $canPlaywrightPdf = false,
     ): string {
         $invId = $inv->reqId();
         $primaryButtons = [];
@@ -158,7 +159,7 @@ final readonly class ButtonsToolbarFull
 
         // Get advanced buttons
         $advancedButtons = $this->getAdvancedButtons(
-            $inv, $invEdit, $vat);
+            $inv, $invEdit, $vat, $canPlaywrightPdf);
 
         return $this->renderFullToolbar($primaryButtons, $advancedButtons, $inv);
     }
@@ -167,9 +168,23 @@ final readonly class ButtonsToolbarFull
         Inv $inv,
         bool $invEdit,
         string $vat,
+        bool $canPlaywrightPdf,
     ): array {
         $invId = $inv->reqId();
         $buttons = [];
+
+        // Chromium-rendered PDF (Playwright) — better rendering fidelity
+        // than mPDF, restricted to admin/observer since it shells out to
+        // Node/Chromium per request; see PdfTrait::pdfPlaywright()
+        if ($canPlaywrightPdf) {
+            $buttons[] = $this->createButton(
+                'pdf-playwright',
+                $this->urlGenerator->generate('inv/pdfPlaywright', ['id' => $invId]),
+                'bi-file-earmark-pdf',
+                'btn-outline-success',
+                $this->translator->translate('pdf.playwright'),
+            );
+        }
 
         // Tax and Allowance/Charge buttons
         if ($invEdit
@@ -197,7 +212,24 @@ final readonly class ButtonsToolbarFull
             );
         }
 
-        // PEPPOL features
+        return [
+            ...$buttons,
+            ...$this->getPeppolButtons($inv, $invEdit),
+            ...$this->getPdfPreviewButtons(),
+            ...$this->getDeleteButtons($inv, $invEdit),
+        ];
+    }
+
+    /**
+     * PEPPOL action buttons when enabled for this invoice, or a single
+     * disabled-indicator button (linking straight to the enable setting)
+     * when the feature is off entirely.
+     */
+    private function getPeppolButtons(Inv $inv, bool $invEdit): array
+    {
+        $invId = $inv->reqId();
+        $buttons = [];
+
         if ($invEdit && ($inv->getSoId() > 0)
             && $this->settingRepository->getSetting('enable_peppol') === '1') {
             $buttons[] = $this->createWindowButton(
@@ -287,11 +319,21 @@ final readonly class ButtonsToolbarFull
             );
         }
 
-        // Payment gateways - REMOVED
-        // Pay-now buttons should only appear in the options dropdown menu,
-        // not in the toolbar
+        return $buttons;
+    }
 
-        // Modal PDF (if enabled)
+    /**
+     * Modal-PDF toggle (or a link to enable it), the HTML preview modal,
+     * and the Chrome PDF Viewer extension install link.
+     *
+     * Payment gateways were deliberately removed from here — pay-now
+     * buttons should only appear in the options dropdown menu, not the
+     * toolbar.
+     */
+    private function getPdfPreviewButtons(): array
+    {
+        $buttons = [];
+
         if ($this->settingRepository->getSetting('pdf_stream_inv') === '1') {
             $buttons[] = $this->createModalButton(
                 'modal-pdf',
@@ -311,18 +353,14 @@ final readonly class ButtonsToolbarFull
             );
         }
 
-        // HTML Preview
-        $htmlTitle = 'Html Preview';
-
         $buttons[] = $this->createModalButton(
             'html-preview',
             '#inv-to-html',
             'fa-code',
             'btn-outline-secondary',
-            $htmlTitle,
+            'Html Preview',
         );
 
-        // Chrome PDF Viewer Extension
         $buttons[] = $this->createWindowButton(
             'chrome-pdf-viewer',
             'https://chromewebstore.google.com/detail/pdf-viewer/oemmndcbldboiebfnladdacbdfmadadm?pli=1',
@@ -331,17 +369,24 @@ final readonly class ButtonsToolbarFull
             $this->translator->translate('install.pdf.viewer.extension'),
         );
 
-        // Delete buttons (if allowed)
-        if ($this->canDeleteInvoice($inv, $invEdit)) {
-            $buttons[] = $this->createModalButton(
+        return $buttons;
+    }
+
+    private function getDeleteButtons(Inv $inv, bool $invEdit): array
+    {
+        if (!$this->canDeleteInvoice($inv, $invEdit)) {
+            return [];
+        }
+
+        return [
+            $this->createModalButton(
                 'delete-invoice',
                 '#delete-inv',
                 'bi-trash',
                 'btn-outline-danger',
                 $this->translator->translate('delete'),
-            );
-
-            $buttons[] = $this->createModalButton(
+            ),
+            $this->createModalButton(
                 'delete-items',
                 '#delete-items',
                 'bi-trash',
@@ -349,10 +394,8 @@ final readonly class ButtonsToolbarFull
                 $this->translator->translate('delete')
                     . ' '
                     . $this->translator->translate('item'),
-            );
-        }
-
-        return $buttons;
+            ),
+        ];
     }
 
     private function canDeleteInvoice(Inv $inv, bool $invEdit): bool
