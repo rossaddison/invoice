@@ -159,6 +159,17 @@ final class GoCardlessPaymentController
             $this->session->remove(self::SESSION_TOKEN_KEY . '_url_key');
         }
 
+        // direct_debit_date is guaranteed set at this point — either just
+        // scheduled above, or already set on a prior request (the
+        // direct_debit_date-not-null branch above skips straight here).
+        $directDebitDate = $invoice->getDirectDebitDate();
+        $message = $directDebitDate instanceof DateTimeImmutable
+            ? sprintf(
+                $this->translator->translate('gocardless.direct.debit.collection.scheduled.for'),
+                $directDebitDate->format('jS F Y'),
+            )
+            : $this->translator->translate('payment') . ':' . $this->translator->translate('complete');
+
         $view_data = [
             'render' => $this->webViewRenderer->renderPartialAsString(
                 '//invoice/paymentinformation/payment_message',
@@ -167,8 +178,7 @@ final class GoCardlessPaymentController
                         $this->translator->translate('online.payment.payment.processing'),
                         $invoice->getNumber() ?? 'unknown',
                     ),
-                    'message' => $this->translator->translate('payment')
-                        . ':' . $this->translator->translate('complete'),
+                    'message' => $message,
                     'url' => 'inv/urlKey',
                     'url_key' => $urlKey,
                     'gateway' => 'GoCardless',

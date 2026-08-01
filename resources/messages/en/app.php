@@ -1012,6 +1012,8 @@ return [
   'generators' => 'Generators',
   'generators.relation' => 'Generators Relation',
   'gln' => 'GLN',
+  'gocardless.direct.debit.collection.scheduled.for' =>
+    'Your Direct Debit collection is scheduled for %s.',
   'gov.developer.sandbox' => 'Developer Sandbox',
   'gov.developer.sandbox.uk' => 'Hmrc',
   'grand.fathered' => 'Grand Fathered',
