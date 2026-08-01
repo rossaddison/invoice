@@ -124,6 +124,15 @@ final class GoCardlessPaymentController
      * immediately schedules the actual Direct Debit collection against it —
      * GoCardless payments aren't synchronous, so the invoice is only
      * actually marked paid later, by GoCardlessWebhookHandler.
+     *
+     * A redirect flow can only be completed once — GoCardless rejects a
+     * second attempt with a 422 InvalidStateException. Since the invoice's
+     * balance is usually still > 0 at this point (the webhook hasn't
+     * cleared it yet), loadInvoiceContext()'s balance check doesn't catch a
+     * refresh/back-button retry here, so direct_debit_date being already
+     * set is the guard: skip straight to re-rendering the completion page
+     * instead of calling GoCardless (and scheduling a second collection)
+     * again.
      */
     public function goCardlessComplete(CurrentRoute $currentRoute, Request $request): Response
     {
@@ -133,18 +142,22 @@ final class GoCardlessPaymentController
         }
         [$urlKey, $invoice] = $ctx;
 
-        $redirectFlowId = (string) ($request->getQueryParams()['redirect_flow_id'] ?? '');
-        /** @var string|null $sessionToken */
-        $sessionToken = $this->session->get(self::SESSION_TOKEN_KEY);
-        /** @var string|null $sessionUrlKey */
-        $sessionUrlKey = $this->session->get(self::SESSION_TOKEN_KEY . '_url_key');
-        if ($redirectFlowId === '' || null === $sessionToken || $sessionUrlKey !== $urlKey) {
-            $this->flashMessage('warning', 'GoCardless session expired — please try again.');
-            return $this->webService->getNotFoundResponse();
-        }
+        if ($invoice->getDirectDebitDate() === null) {
+            $redirectFlowId = (string) ($request->getQueryParams()['redirect_flow_id'] ?? '');
+            /** @var string|null $sessionToken */
+            $sessionToken = $this->session->get(self::SESSION_TOKEN_KEY);
+            /** @var string|null $sessionUrlKey */
+            $sessionUrlKey = $this->session->get(self::SESSION_TOKEN_KEY . '_url_key');
+            if ($redirectFlowId === '' || null === $sessionToken || $sessionUrlKey !== $urlKey) {
+                $this->flashMessage('warning', 'GoCardless session expired — please try again.');
+                return $this->webService->getNotFoundResponse();
+            }
 
-        $mandate = $this->goCardlessPaymentService->completeRedirectFlow($redirectFlowId, $sessionToken);
-        $this->scheduleCollection($invoice, $urlKey, $mandate['mandate_id']);
+            $mandate = $this->goCardlessPaymentService->completeRedirectFlow($redirectFlowId, $sessionToken);
+            $this->scheduleCollection($invoice, $urlKey, $mandate['mandate_id']);
+            $this->session->remove(self::SESSION_TOKEN_KEY);
+            $this->session->remove(self::SESSION_TOKEN_KEY . '_url_key');
+        }
 
         $view_data = [
             'render' => $this->webViewRenderer->renderPartialAsString(
