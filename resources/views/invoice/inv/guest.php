@@ -83,6 +83,16 @@ echo new Div();
 // Build enabled payment gateways list once for use in the paid column
 $enabledGateways = $s->paymentGatewaysEnabledDriverList();
 
+// homecare_hidden_inv_guest_columns — see partial_settings_homecare.php.
+// A no-op while HomeCare is off, same reasoning as
+// InvsColumnVisibilityTrait on the staff-side inv/index grid.
+$homeCareEnabled = $s->getSetting('homecare_auto_invoice_enabled') === '1';
+/** @var list<string> $hiddenGuestColumns */
+$hiddenGuestColumns = array_values(array_filter(explode(',',
+    $s->getSetting('homecare_hidden_inv_guest_columns'))));
+$isGuestColumnHidden = static fn(string $key): bool =>
+    $homeCareEnabled && in_array($key, $hiddenGuestColumns, true);
+
 $columns = [
     new DataColumn(
         property: 'filterInvNumber',
@@ -157,7 +167,7 @@ $columns = [
                     'placeholder' => $translator->translate('paid'),
                 ]),
         withSorting: false,
-        visible: $viewPayment,
+        visible: $viewPayment && !$isGuestColumnHidden('paid'),
     ),
     new ActionColumn(
         header: '',
@@ -347,7 +357,7 @@ $columns = [
                 ])
                 ->optionsData($optionsCreditInvNumberDropDownFilter),
         withSorting: false,
-        visible: true,
+        visible: !$isGuestColumnHidden('credit_note'),
     ),
     /**
      * Related logic: see https://github.com/rossaddison/yii-dataview/commit/9e908d87cddd0661b440cb989429e1652e00a9fe
@@ -368,6 +378,7 @@ $columns = [
                 ])
                 ->optionsData($optionsClientsDropDownFilter),
         withSorting: false,
+        visible: !$isGuestColumnHidden('client'),
     ),
     new DataColumn(
         'date_created',
@@ -376,6 +387,7 @@ $columns = [
             string => (!is_string($dateCreated = $model->getDateCreated()) ?
                 $dateCreated->format('Y-m-d') : ''),
         withSorting: false,
+        visible: !$isGuestColumnHidden('date_created'),
     ),
     new DataColumn(
         'date_due',
@@ -391,6 +403,7 @@ $columns = [
         },
         encodeContent: false,
         withSorting: true,
+        visible: !$isGuestColumnHidden('date_due'),
     ),
     new DataColumn(
         property: 'filterInvAmountTotal',
@@ -417,7 +430,7 @@ $columns = [
                     'placeholder' => $translator->translate('total'),
                 ]),
         withSorting: false,
-        visible: $viewPayment,
+        visible: $viewPayment && !$isGuestColumnHidden('total'),
     ),
     new DataColumn(
         property: 'filterInvAmountBalance',
@@ -441,7 +454,7 @@ $columns = [
                     'placeholder' => $translator->translate('balance'),
                 ]),
         withSorting: false,
-        visible: $viewPayment,
+        visible: $viewPayment && !$isGuestColumnHidden('balance'),
     ),
 ];
 

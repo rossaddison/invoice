@@ -10,6 +10,7 @@ use Yiisoft\Html\Tag\Option;
 * @var App\Invoice\Setting\SettingRepository $s
 * @var Yiisoft\Translator\TranslatorInterface $translator
 * @var array $hidden_inv_columns
+* @var array $hidden_inv_guest_columns
 * @var array $category_secondaries
 * @var array $body
 */
@@ -175,6 +176,54 @@ echo H::openTag('div', ['class' => 'row']); //1
        'name' => 'settings[homecare_hidden_inv_columns][]',
        'value' => $columnKey,
        'checked' => in_array($columnKey, $hidden_inv_columns, true) ? 'checked' : null,
+      ]);
+      echo H::openTag('label', ['class' => 'form-check-label', 'for' => $inputId]);
+       echo $translator->translate($labelKey);
+      echo H::closeTag('label');
+     echo H::closeTag('div');
+    }
+   echo H::closeTag('div'); //4
+  echo H::closeTag('div'); //3
+
+  echo H::openTag('div', ['class' => 'card mt-3']); //3
+   echo H::openTag('div', ['class' => 'card-header']); //4
+    echo new H6()->content($translator->translate('homecare.hidden.columns.guest'));
+   echo H::closeTag('div'); //4
+   echo H::openTag('div', ['class' => 'card-body']); //4
+    echo H::tag('p', H::encode($translator->translate('homecare.hidden.columns.guest.description')),
+        ['class' => 'text-muted']);
+    echo $s->infoIcon('homecare_hidden_inv_guest_columns');
+
+    // Same fallback reasoning as the staff-side list above.
+    echo H::openTag('input', [
+     'type' => 'hidden',
+     'name' => 'settings[homecare_hidden_inv_guest_columns][]',
+     'value' => '',
+    ]);
+
+    // Only the columns inv/guest.php actually renders — Number, the PDF
+    // download menu, id, and Status are deliberately absent, always
+    // visible there, same as Worker/Amount/do_not_send on the staff side.
+    $toggleableGuestColumns = [
+     'paid'         => 'paid',
+     'credit_note'  => 'credit.invoice.for.invoice',
+     'client'       => 'client',
+     'date_created' => 'date.created',
+     'date_due'     => 'due.date',
+     'total'        => 'total',
+     'balance'      => 'balance',
+    ];
+
+    foreach ($toggleableGuestColumns as $columnKey => $labelKey) {
+     echo H::openTag('div', ['class' => 'form-check']);
+      $inputId = 'homecare-hide-guest-' . $columnKey;
+      echo H::openTag('input', [
+       'type' => 'checkbox',
+       'class' => 'form-check-input',
+       'id' => $inputId,
+       'name' => 'settings[homecare_hidden_inv_guest_columns][]',
+       'value' => $columnKey,
+       'checked' => in_array($columnKey, $hidden_inv_guest_columns, true) ? 'checked' : null,
       ]);
       echo H::openTag('label', ['class' => 'form-check-label', 'for' => $inputId]);
        echo $translator->translate($labelKey);

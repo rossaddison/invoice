@@ -475,6 +475,14 @@ trait SettingTooltipTrait
                 . ' (buildColumns) and'
                 . ' src/Invoice/Inv/Widget/Trait/InvsColumnVisibilityTrait.php.',
             ],
+            'homecare_hidden_inv_guest_columns' => [
+                'why' => 'Same idea as homecare_hidden_inv_columns above, but for'
+                . ' the guest-facing invoice grid (inv/guest) — a smaller,'
+                . ' different column set since the guest grid never shows'
+                . ' the staff-only HomeCare columns at all. Only takes'
+                . ' effect while homecare_auto_invoice_enabled is on.',
+                'where' => 'resources/views/invoice/inv/guest.php.',
+            ],
             'stop_homecare_signing_up' => [
                 'why' => 'Blocks the public HomeCare signup form'
                 . ' (/homecare-signup) at the controller, redirecting away'

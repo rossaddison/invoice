@@ -129,6 +129,12 @@ trait InvoiceInstallTrait
             // '' = nothing hidden. See Settings tab "homecare" and
             // InvsColumnBuilder::buildColumns()/InvsColumnVisibilityTrait.
             'homecare_hidden_inv_columns' => '',
+            // Same idea as homecare_hidden_inv_columns above, but for the
+            // guest-facing grid (inv/guest.php) — a different, smaller
+            // column set since the guest grid never shows the
+            // staff-only HomeCare columns (workflow_type, family_name,
+            // etc.) at all. Also a no-op while HomeCare is off.
+            'homecare_hidden_inv_guest_columns' => '',
             'install_test_data' => 0,
             'inv_cdn_not_node_module' => 1,
             //1=>None, 2=>Cash, 3=>Cheque, 4=>Card/Direct Debit-Succeeded

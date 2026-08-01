@@ -239,6 +239,8 @@ final class SettingController extends BaseController
             'homecare' => $this->webViewRenderer->renderPartialAsString($p . 'homecare', [
                 'hidden_inv_columns' => array_filter(
                     explode(',', $this->sR->getSetting('homecare_hidden_inv_columns'))),
+                'hidden_inv_guest_columns' => array_filter(
+                    explode(',', $this->sR->getSetting('homecare_hidden_inv_guest_columns'))),
                 'category_secondaries' => $deps->csR->optionsDataCategorySecondaries(),
             ]),
             // two-factor-authentication
@@ -261,6 +263,11 @@ final class SettingController extends BaseController
                         && is_array($settings['homecare_hidden_inv_columns'])) {
                     $settings['homecare_hidden_inv_columns'] =
                         implode(',', $settings['homecare_hidden_inv_columns']);
+                }
+                if (isset($settings['homecare_hidden_inv_guest_columns'])
+                        && is_array($settings['homecare_hidden_inv_guest_columns'])) {
+                    $settings['homecare_hidden_inv_guest_columns'] =
+                        implode(',', $settings['homecare_hidden_inv_guest_columns']);
                 }
                 /** @var array<string, string> $settings */
                 $errorResponse = $this->saveSubmittedSettings($settings, $numberhelper);
