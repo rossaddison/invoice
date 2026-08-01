@@ -42,7 +42,7 @@ echo H::openTag('div', ['id' => 'modal-copy-inv-multiple', 'class' => 'modal',
        'class'        => 'form-control form-control-lg',
        'type'         => 'date',
        'autocomplete' => 'off',
-       'onclick'      => 'this.showPicker()',
+       'data-action'  => 'show-picker',
       ]);
      echo H::closeTag('div'); //5
      echo H::openTag('div', ['class' => 'mb-2']); //5

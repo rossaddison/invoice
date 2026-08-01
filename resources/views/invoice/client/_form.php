@@ -246,7 +246,7 @@ use Yiisoft\Html\Tag\Form;
         'id'           => 'client_birthdate',
         'role'         => 'presentation',
         'autocomplete' => 'off',
-        'onclick'      => 'this.showPicker()',
+        'data-action'      => 'show-picker',
     ])
     ->value(Html::encode($form->client_birthdate ?? ''))
     ->required(false); ?>

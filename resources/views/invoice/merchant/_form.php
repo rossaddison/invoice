@@ -74,7 +74,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::date($form, 'date')
     ->label($translator->translate('date'))
     ->required(true)
-    ->addInputAttributes(['onclick' => 'this.showPicker()'])
+    ->addInputAttributes(['data-action' => 'show-picker'])
     ->value(!is_string($form->getDate()) ? ($form->getDate())->format('Y-m-d') : '')
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>

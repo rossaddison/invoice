@@ -155,4 +155,40 @@ describe('initDataActions', () => {
         document.querySelector('select')!.dispatchEvent(new Event('change', { bubbles: true }));
         expect(submitSpy).not.toHaveBeenCalled();
     });
+
+    it('checks every checkbox in the data-target when select-all is checked', () => {
+        document.body.innerHTML = `
+            <input type="checkbox" id="select-all" data-action="select-all" data-target="#group">
+            <div id="group">
+                <input type="checkbox" id="a">
+                <input type="checkbox" id="b">
+            </div>`;
+        const selectAll = document.getElementById('select-all') as HTMLInputElement;
+        selectAll.checked = true;
+        selectAll.dispatchEvent(new Event('change', { bubbles: true }));
+        expect((document.getElementById('a') as HTMLInputElement).checked).toBe(true);
+        expect((document.getElementById('b') as HTMLInputElement).checked).toBe(true);
+    });
+
+    it('unchecks every checkbox in the data-target when select-all is unchecked', () => {
+        document.body.innerHTML = `
+            <input type="checkbox" id="select-all" data-action="select-all" data-target="#group">
+            <div id="group">
+                <input type="checkbox" id="a" checked>
+                <input type="checkbox" id="b" checked>
+            </div>`;
+        const selectAll = document.getElementById('select-all') as HTMLInputElement;
+        selectAll.checked = false;
+        selectAll.dispatchEvent(new Event('change', { bubbles: true }));
+        expect((document.getElementById('a') as HTMLInputElement).checked).toBe(false);
+        expect((document.getElementById('b') as HTMLInputElement).checked).toBe(false);
+    });
+
+    it('does not throw for select-all when data-target matches nothing', () => {
+        document.body.innerHTML =
+            '<input type="checkbox" id="select-all" data-action="select-all" data-target="#missing">';
+        const selectAll = document.getElementById('select-all') as HTMLInputElement;
+        selectAll.checked = true;
+        expect(() => selectAll.dispatchEvent(new Event('change', { bubbles: true }))).not.toThrow();
+    });
 });

@@ -137,7 +137,7 @@ echo H::openTag('div', ['class' => 'card-header']); //4
       echo H::openTag('div'); //9
        echo Field::date($form, 'date_created')
         ->label($translator->translate('date.issued'))
-        ->addInputAttributes(['onclick' => 'this.showPicker()'])
+        ->addInputAttributes(['data-action' => 'show-picker'])
         ->value(
          H::encode($form->getDateCreated() instanceof \DateTimeImmutable
           ? $form->getDateCreated()->format('Y-m-d')

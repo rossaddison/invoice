@@ -64,14 +64,14 @@ use Yiisoft\Html\Tag\Form;
     <?= Field::date($form, 'period_start')
        ->label($translator->translate('contract.period.start'))
        ->value($form->getPeriodStart())
-       ->addInputAttributes(['onclick' => 'this.showPicker()'])     
+       ->addInputAttributes(['data-action' => 'show-picker'])     
        ->required(true)
        ->hint($translator->translate('hint.this.field.is.required'));
    ?>
     <?= Field::date($form, 'period_end')
         ->label($translator->translate('contract.period.end'))
         ->value($form->getPeriodEnd())
-        ->addInputAttributes(['onclick' => 'this.showPicker()'])    
+        ->addInputAttributes(['data-action' => 'show-picker'])    
         ->required(true)
         ->hint($translator->translate('hint.this.field.is.required'));
     ?>

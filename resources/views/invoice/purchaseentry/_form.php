@@ -50,7 +50,7 @@ echo H::openTag('div', ['class' => 'container mt-4']);
            'required' => true,
            'role' => 'presentation',
            'autocomplete' => 'off',
-           'onclick' => 'this.showPicker()'
+           'data-action' => 'show-picker'
        ]);
        if (isset($errors['date'])) {
            echo H::tag('div', implode(' ', $errors['date']),

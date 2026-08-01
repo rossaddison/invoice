@@ -125,7 +125,7 @@ if ($openInvsCount > 0) {
                     <?= Field::date($form, 'payment_date')
     ->label($translator->translate('payment.date'))
     ->required(true)
-    ->addInputAttributes(['onclick' => 'this.showPicker()'])
+    ->addInputAttributes(['data-action' => 'show-picker'])
     ->value($form->getPaymentDate() instanceof DateTimeImmutable ? $form->getPaymentDate()->format('Y-m-d') : '')
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>

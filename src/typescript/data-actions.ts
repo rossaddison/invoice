@@ -85,5 +85,17 @@ export function initDataActions(): void {
         if (target instanceof HTMLSelectElement && target.classList.contains('native-reset')) {
             target.form?.submit();
         }
+
+        // Generic "select all" checkbox: data-target points at a container
+        // whose child checkboxes all get set to this checkbox's own state.
+        if (target instanceof HTMLInputElement
+                && target.type === 'checkbox'
+                && target.dataset['action'] === 'select-all') {
+            const selector = target.dataset['target'];
+            const container = selector ? document.querySelector<HTMLElement>(selector) : null;
+            container?.querySelectorAll<HTMLInputElement>('input[type="checkbox"]').forEach((cb) => {
+                cb.checked = target.checked;
+            });
+        }
     });
 }

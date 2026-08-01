@@ -81,7 +81,7 @@ use Yiisoft\Html\Tag\Form;
             'id' => 'date_modified',
             'role' => 'presentation',
             'autocomplete' => 'off',
-            'onclick' => 'this.showPicker()',
+            'data-action' => 'show-picker',
         ])
         ->value(!is_string($modifiedDate = $form->getDateModified()) ?
                 $modifiedDate->format('Y-m-d') : '')
@@ -94,7 +94,7 @@ use Yiisoft\Html\Tag\Form;
     echo Field::date($form, 'start_date')
     ->label($translator->translate('delivery.start.date')
             . ' (' . $dateHelper->display() . ')')
-    ->addInputAttributes(['onclick' => 'this.showPicker()'])        
+    ->addInputAttributes(['data-action' => 'show-picker'])        
     ->value(!is_string($startDate = $form->getStartDate()) ?
             $startDate->format('Y-m-d') : '')
     ->required(true) 
@@ -107,7 +107,7 @@ use Yiisoft\Html\Tag\Form;
     echo Field::date($form, 'actual_delivery_date')
     ->label($translator->translate('delivery.actual.delivery.date')
             . ' (' . $dateHelper->display() . ')')
-    ->addInputAttributes(['onclick' => 'this.showPicker()'])
+    ->addInputAttributes(['data-action' => 'show-picker'])
     ->value(!is_string($actualDeliveryDate = $form->getActualDeliveryDate())
             ? $actualDeliveryDate->format('Y-m-d') : '')
     ->required(true)
@@ -120,7 +120,7 @@ use Yiisoft\Html\Tag\Form;
     echo Field::date($form, 'end_date')
     ->label($translator->translate('delivery.end.date')
             . ' (' . $dateHelper->display() . ')')
-    ->addInputAttributes(['onclick' => 'this.showPicker()'])        
+    ->addInputAttributes(['data-action' => 'show-picker'])        
     ->value(!is_string($endDate = $form->getEndDate()) ?
             $endDate->format('Y-m-d') : '')
     ->required(true)

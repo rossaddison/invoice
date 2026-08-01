@@ -30,7 +30,8 @@ echo H::openTag('div', ['class' => 'row']); //1
       'type' => 'checkbox',
       'class' => 'form-check-input',
       'id' => 'front-page-select-all',
-      'onchange' => "document.querySelectorAll('#front-page-checkboxes input[type=checkbox]').forEach(function(cb){ cb.checked = this.checked; cb.dispatchEvent(new Event('change')); }.bind(this))",
+      'data-action' => 'select-all',
+      'data-target' => '#front-page-checkboxes',
      ]);
      echo H::openTag('label', ['class' => 'form-check-label fw-bold text-secondary', 'for' => 'front-page-select-all']);
       echo $translator->translate('select.all');

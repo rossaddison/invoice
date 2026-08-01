@@ -90,7 +90,7 @@ $formControl = 'form-control form-control-lg';
     ->label($translator->translate('task.finish.date'))
     ->addInputAttributes([
         'class'   => $formControl,
-        'onclick' => 'this.showPicker()',
+        'data-action' => 'show-picker',
     ])
     ->value(Html::encode($form->getFinishDate() instanceof \DateTimeImmutable
                          ? $form->getFinishDate()->format('Y-m-d') : (is_string(

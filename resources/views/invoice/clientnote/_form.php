@@ -81,7 +81,7 @@ echo Field::select($form, 'client_id')
                           'id'           => 'date_note',
                           'role'         => 'presentation',
                           'autocomplete' => 'off',
-                          'onclick'      => 'this.showPicker()',
+                          'data-action'      => 'show-picker',
                       ])
                       ->value(Html::encode($form->getDateNote() ?? ''))
                       ->hint($translator->translate(
