@@ -6,20 +6,28 @@ namespace App\Invoice\Inv;
 
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\InvItem\InvItem;
+use App\Invoice\Client\ClientRepositoryInterface;
 use App\Invoice\Enum\ProductType;
+use App\Invoice\HomeCareVisit\HomeCareVisitRepositoryInterface;
 use App\Invoice\InvItem\InvItemRepositoryInterface;
-use App\Invoice\Payment\PaymentRepositoryInterface;
 use App\Invoice\Product\ProductRepositoryInterface;
 use App\Invoice\Setting\SettingRepositoryInterface;
 
 final readonly class HomeCareCleaningEligibilityService
 {
+    /**
+     * Invoice status_id meaning "paid" — see the same literal used by
+     * InvRepository::repoClientLatestPaidInvoicequery().
+     */
+    private const int PAID_STATUS_ID = 4;
+
     public function __construct(
         private InvRepositoryInterface $invRepository,
-        private PaymentRepositoryInterface $paymentRepository,
         private InvItemRepositoryInterface $invItemRepository,
         private ProductRepositoryInterface $productRepository,
         private SettingRepositoryInterface $settingRepository,
+        private HomeCareVisitRepositoryInterface $homeCareVisitRepository,
+        private ClientRepositoryInterface $clientRepository,
     ) {
     }
 
@@ -28,11 +36,21 @@ final readonly class HomeCareCleaningEligibilityService
      * invoice for this client, and if so, which invoice's items/amounts
      * should be copied into the new one.
      *
-     * Eligible only when: the feature is enabled in Settings, the client has
-     * at least one invoice on file, their most recently paid invoice has a
-     * payment date on record, no invoice at all (paid or not) exists dated
-     * after that payment date, and that invoice contains at least one
-     * Service-type product.
+     * Eligible only when: the feature is enabled (globally and not paused
+     * for this specific client), the client has at least one invoice on
+     * file, the last invoice *this facility itself generated* (if any) has
+     * already been paid, and the client's most recently paid invoice
+     * overall contains at least one Service-type product to copy from.
+     *
+     * Deliberately does NOT block on "any invoice dated after the last
+     * payment" the way an earlier version of this rule did — that heuristic
+     * meant any unrelated invoice or credit note an admin raised for other
+     * reasons (a one-off product sale, a correction, a refund) silently
+     * disabled this client's automation with no indication the two things
+     * were connected. Anchoring on this facility's own visit/invoice link
+     * instead (via HomeCareVisitRepositoryInterface) decouples it from the
+     * rest of the client's invoice history entirely. See
+     * docs/HOMECARE_AUTOINVOICE_PITFALLS_AUGUST_2026.md.
      */
     public function findInvoiceToCopyIfEligible(int $clientId): ?Inv
     {
@@ -40,8 +58,12 @@ final readonly class HomeCareCleaningEligibilityService
             return null;
         }
 
+        if ($this->hasUnpaidGeneratedVisit($clientId)) {
+            return null;
+        }
+
         $lastPaid = $this->invRepository->repoClientLatestPaidInvoicequery($clientId);
-        if ($lastPaid === null || !$this->isEligibleInvoice($lastPaid, $clientId)) {
+        if ($lastPaid === null || !$this->hasServiceItem($lastPaid->reqId())) {
             return null;
         }
 
@@ -49,34 +71,35 @@ final readonly class HomeCareCleaningEligibilityService
     }
 
     /**
-     * True when the feature is switched on in Settings and the client has
-     * at least one invoice on file.
+     * True when the feature is switched on globally, not paused for this
+     * specific client, and the client has at least one invoice on file.
      */
     private function isFeatureEnabledForClient(int $clientId): bool
     {
-        return $this->settingRepository->getSetting('homecare_auto_invoice_enabled') === '1'
-            && $this->invRepository->repoClientInvoiceCountquery($clientId) > 0;
+        if ($this->settingRepository->getSetting('homecare_auto_invoice_enabled') !== '1') {
+            return false;
+        }
+        if ($this->invRepository->repoClientInvoiceCountquery($clientId) === 0) {
+            return false;
+        }
+        $client = $this->clientRepository->repoClientqueryOrig($clientId);
+        return $client === null || !$client->getHomecareAutoInvoicePaused();
     }
 
     /**
-     * True when the client's most recently paid invoice has a payment date
-     * on record, no invoice at all exists dated after that payment, and
-     * that invoice contains at least one Service-type product.
+     * True when this facility already generated an invoice for this client
+     * and that specific invoice hasn't been paid yet — i.e. the client
+     * isn't due for another one regardless of what else has happened on
+     * their account since.
      */
-    private function isEligibleInvoice(Inv $lastPaid, int $clientId): bool
+    private function hasUnpaidGeneratedVisit(int $clientId): bool
     {
-        $lastPaidId = $lastPaid->reqId();
-
-        $lastPaidDate = $this->paymentRepository->repoLatestPaymentDateForInvquery($lastPaidId);
-        if ($lastPaidDate === null) {
+        $invoiceId = $this->homeCareVisitRepository->repoLatestGeneratedVisitquery($clientId)?->getInvoiceId();
+        if ($invoiceId === null) {
             return false;
         }
-
-        if ($this->invRepository->repoClientInvoiceCountAfterDatequery($clientId, $lastPaidDate) > 0) {
-            return false;
-        }
-
-        return $this->hasServiceItem($lastPaidId);
+        $invoice = $this->invRepository->repoInvUnLoadedquery($invoiceId);
+        return $invoice !== null && $invoice->reqStatusId() !== self::PAID_STATUS_ID;
     }
 
     /**

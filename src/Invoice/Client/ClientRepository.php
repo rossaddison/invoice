@@ -17,7 +17,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  * @template TEntity of Client
  * @extends Select\Repository<TEntity>
  */
-final class ClientRepository extends Select\Repository
+final class ClientRepository extends Select\Repository implements ClientRepositoryInterface
 {
     /**
      * @param Select<TEntity> $select
@@ -122,6 +122,7 @@ final class ClientRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
+    #[\Override]
     public function repoClientqueryOrig(int $id): ?Client
     {
         $query = $this->select()

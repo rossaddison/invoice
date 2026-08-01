@@ -209,6 +209,7 @@ final class InvRepository extends Select\Repository implements InvRepositoryInte
      * @param int $id
      * @return Inv|null
      */
+    #[\Override]
     public function repoInvUnLoadedquery(int $id): ?Inv
     {
         $query = $this->select()

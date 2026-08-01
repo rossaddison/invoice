@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+use App\Invoice\Client\ClientRepository;
+use App\Invoice\Client\ClientRepositoryInterface;
+use App\Invoice\HomeCareVisit\HomeCareVisitRepository;
+use App\Invoice\HomeCareVisit\HomeCareVisitRepositoryInterface;
 use App\Invoice\Inv\InvRepository;
 use App\Invoice\Inv\InvRepositoryInterface;
 use App\Invoice\InvItem\InvItemRepository;
@@ -28,4 +32,6 @@ return [
     InvItemRepositoryInterface::class => InvItemRepository::class,
     ProductRepositoryInterface::class => ProductRepository::class,
     SettingRepositoryInterface::class => SettingRepository::class,
+    HomeCareVisitRepositoryInterface::class => HomeCareVisitRepository::class,
+    ClientRepositoryInterface::class => ClientRepository::class,
 ];

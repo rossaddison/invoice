@@ -15,4 +15,6 @@ interface InvRepositoryInterface
     public function repoClientLatestPaidInvoicequery(int $client_id): ?Inv;
 
     public function repoClientInvoiceCountAfterDatequery(int $client_id, string $afterDate): int;
+
+    public function repoInvUnLoadedquery(int $id): ?Inv;
 }

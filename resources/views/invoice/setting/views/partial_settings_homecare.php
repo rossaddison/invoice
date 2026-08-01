@@ -9,6 +9,7 @@ use Yiisoft\Html\Tag\Option;
 /**
 * @var App\Invoice\Setting\SettingRepository $s
 * @var Yiisoft\Translator\TranslatorInterface $translator
+* @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
 * @var array $hidden_inv_columns
 * @var array $hidden_inv_guest_columns
 * @var array $category_secondaries
@@ -44,6 +45,12 @@ echo H::openTag('div', ['class' => 'row']); //1
    echo H::tag('strong', H::encode($translator->translate('homecare.mobile.rotate.tip.title')));
    echo ' ' . H::encode($translator->translate('homecare.mobile.rotate.tip.body'));
   echo H::closeTag('div'); //android-rotate-tip
+
+  echo H::a(
+   '📋 ' . $translator->translate('homecare.visit.log.title'),
+   $urlGenerator->generate('homecarevisit/index'),
+   ['class' => 'btn btn-outline-secondary btn-sm mb-3']
+  );
 
   echo H::openTag('div', ['class' => 'card mb-3']); //current-run-card
    echo H::openTag('div', ['class' => 'card-header']); //4

@@ -138,6 +138,14 @@ class Client
         private ?string $client_telegram_chat_id = null,
         #[Column(type: 'string(32)', nullable: true)]
         private ?string $client_qr_token = null,
+        /**
+         * Per-client override for the homecare_auto_invoice_enabled Setting
+         * — lets staff pause QR auto-invoicing for one problem client (e.g.
+         * a billing dispute) without needing the site-wide switch, which
+         * would otherwise pause it for every HomeCare client at once.
+         */
+        #[Column(type: 'bool', typecast: 'bool', default: false)]
+        private bool $homecare_auto_invoice_paused = false,
     ) {
         $this->client_full_name = ltrim(rtrim($this->client_name
                 . ' '

@@ -108,4 +108,14 @@ trait ClientTrait4
     {
         $this->client_qr_token = $client_qr_token === '' ? null : $client_qr_token;
     }
+
+    public function getHomecareAutoInvoicePaused(): bool
+    {
+        return $this->homecare_auto_invoice_paused;
+    }
+
+    public function setHomecareAutoInvoicePaused(bool $homecare_auto_invoice_paused): void
+    {
+        $this->homecare_auto_invoice_paused = $homecare_auto_invoice_paused;
+    }
 }
