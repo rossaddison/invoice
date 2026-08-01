@@ -23,6 +23,7 @@ final class CsrfExemptMiddleware implements MiddlewareInterface
         '/paymentinformation/adyenWebhook',
         '/paymentinformation/goCardlessWebhook',
         '/whatsapp/webhook',
+        '/telegram/webhook',
     ];
 
     public function __construct(
