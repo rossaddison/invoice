@@ -500,6 +500,12 @@ final class PaymentInformationController
                         'paymentinformation/adyenInForm',
                         ['url_key' => $ctx->url_key, '_language' => 'en'],
                     ),
+                    // GoCardless has its own dedicated GoCardlessPaymentController
+                    // — same reasoning as Adyen above.
+                    'GoCardless' => $this->webService->getRedirectResponse(
+                        'paymentinformation/goCardlessInForm',
+                        ['url_key' => $ctx->url_key, '_language' => 'en'],
+                    ),
                     default      => null,
                 };
                 if ($gatewayResponse !== null) {

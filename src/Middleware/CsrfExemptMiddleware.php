@@ -21,6 +21,7 @@ final class CsrfExemptMiddleware implements MiddlewareInterface
     private const EXEMPT_PATH_SUBSTRINGS = [
         '/paymentinformation/stripeWebhook',
         '/paymentinformation/adyenWebhook',
+        '/paymentinformation/goCardlessWebhook',
     ];
 
     public function __construct(

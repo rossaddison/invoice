@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Auth\Permissions;
 use App\Invoice\PaymentInformation\AdyenPaymentController as APICLR;
+use App\Invoice\PaymentInformation\GoCardlessPaymentController as GCPICLR;
 use App\Invoice\PaymentInformation\PaymentInformationController as PICLR;
 use App\Invoice\PaymentInformation\PaymentRefundController as PRCLR;
 use App\Middleware\RoutePermission;
@@ -24,6 +25,18 @@ return [
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([APICLR::class, 'adyenComplete'])
                 ->name('paymentinformation/adyenComplete'),
+
+            Route::methods([Method::GET, Method::POST],
+                    '/paymentinformation/goCardlessInForm/{url_key}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([GCPICLR::class, 'goCardlessInForm'])
+                ->name('paymentinformation/goCardlessInForm'),
+
+            Route::methods([Method::GET, Method::POST],
+                    '/paymentinformation/goCardlessComplete/{url_key}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([GCPICLR::class, 'goCardlessComplete'])
+                ->name('paymentinformation/goCardlessComplete'),
 
             Route::methods([Method::GET, Method::POST],
                     '/paymentinformation/amazonComplete/{url_key}')
@@ -110,4 +123,13 @@ return [
     Route::methods([Method::POST], '/paymentinformation/adyenWebhook')
         ->action([APICLR::class, 'adyenWebhook'])
         ->name('paymentinformation/adyenWebhook'),
+
+    // Not under RoutePermission::invoiceGroup(): GoCardless's servers must
+    // be able to POST here with no app session. Secured by
+    // Webhook-Signature verification in the handler, not RBAC — see
+    // GoCardlessPaymentService::isValidWebhookSignature() and
+    // App\Middleware\CsrfExemptMiddleware.
+    Route::methods([Method::POST], '/paymentinformation/goCardlessWebhook')
+        ->action([GCPICLR::class, 'goCardlessWebhook'])
+        ->name('paymentinformation/goCardlessWebhook'),
 ];

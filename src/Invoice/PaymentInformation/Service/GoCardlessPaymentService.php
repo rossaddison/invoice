@@ -149,6 +149,19 @@ final class GoCardlessPaymentService implements PaymentGatewayInterface
         ];
     }
 
+    /**
+     * Webhook events only carry links.payment (the GoCardless payment id),
+     * not the metadata scheduleDirectDebitPayment() set — this resolves a
+     * webhook event back to the invoice it belongs to.
+     *
+     * @return array<string, string>
+     */
+    public function getPaymentMetadata(string $paymentId): array
+    {
+        /** @var array<string, string> */
+        return (array) $this->client()->payments()->get($paymentId)->metadata;
+    }
+
     #[\Override]
     public function verifyPayment(string $providerReference): PaymentVerificationResult
     {
