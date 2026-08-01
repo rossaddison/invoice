@@ -2963,16 +2963,47 @@ prior to importing and no existing documents e.g. Invoices.',
   'whatsapp.business.cloud.api.business.account.id' =>
     'WhatsApp Business Account ID',
   'whatsapp.business.cloud.api.enable' => 'Enable WhatsApp',
+  'whatsapp.business.cloud.api.enabled.not' => 'WhatsApp Not Enabled',
   'whatsapp.business.cloud.api.general.purpose' =>
     '<b>WhatsApp Business Cloud API sends invoice-ready notifications'
     . ' to clients via a pre-approved message template,'
     . ' identified by the Phone Number ID and access token below.</b>',
+  'whatsapp.business.cloud.api.not.configured' =>
+    'WhatsApp is not fully configured'
+    . ' (Phone Number ID, Access Token and Template Name are all required).',
   'whatsapp.business.cloud.api.phone.number.id' =>
     'Phone Number ID (from WhatsApp -> API Setup — not the visible phone number)',
   'whatsapp.business.cloud.api.template.language' =>
     'Message Template Language Code (e.g. en_GB)',
   'whatsapp.business.cloud.api.template.name' =>
     'Approved Message Template Name',
+  'whatsapp.business.cloud.api.test.message.sent' =>
+    'WhatsApp test message sent.',
+  'whatsapp.business.cloud.api.test.message.sent.not' =>
+    'WhatsApp test message NOT sent.',
+  'whatsapp.business.cloud.api.test.recipient.not.set' =>
+    'Test Recipient Number has not been set.',
+  'whatsapp.business.cloud.api.test.recipient.number' =>
+    'Test Recipient Number (must be pre-verified in Meta while the app is in development mode)',
+  'whatsapp.business.cloud.api.webhook.current.status' =>
+    '<b>Current use:</b>'
+    . ' The GET verification handshake is implemented so a webhook'
+    . ' subscription can be saved in the Meta dashboard.'
+    . ' Incoming POST events (delivery statuses, replies) are logged'
+    . ' only — they are not yet processed, the same as Telegram\'s'
+    . ' webhook today.',
+  'whatsapp.business.cloud.api.webhook.future.use' =>
+    '<b>Future:</b>'
+    . ' Processing incoming events could auto-record delivery/read'
+    . ' status or handle customer replies.',
+  'whatsapp.business.cloud.api.webhook.url.this.site' =>
+    'This site\'s WhatsApp Webhook Url'
+    . ' — enter it, and the Verify Token below, in'
+    . ' WhatsApp > Configuration > Webhooks in the Meta dashboard.',
+  'whatsapp.business.cloud.api.webhook.verify.token' =>
+    'Webhook Verify Token'
+    . ' (a value you choose; entered in the Meta dashboard'
+    . ' and echoed back during the verification handshake)',
   'worker' => 'Worker',
   'worker.assign' => 'Assign',
   'worker.assigned' => 'Worker Assigned',

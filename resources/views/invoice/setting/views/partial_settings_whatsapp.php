@@ -9,6 +9,7 @@ use Yiisoft\Html\Html as H;
 * https://developers.facebook.com/documentation/business-messaging/whatsapp/get-started
 * @var App\Invoice\Setting\SettingRepository $s
 * @var Yiisoft\Translator\TranslatorInterface $translator
+* @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
 * @var array $body
 */
 
@@ -218,6 +219,101 @@ echo H::openTag('div', $row); //1
         'value' => H::encode($body[$templateLanguage])
        ]);
 
+       echo H::openTag('p');
+        echo H::openTag('b');
+         echo '6. ';
+        echo H::closeTag('b');
+        echo 'While the app is in development mode, Meta only delivers messages to recipient numbers added and verified under ';
+        echo H::openTag('pre');
+         echo 'WhatsApp > API Setup > To';
+        echo H::closeTag('pre');
+        echo 'Add your own number there first, then record it below (in international format, e.g. +447700900123):';
+       echo H::closeTag('p');
+       $testRecipient = 'settings[whatsapp_test_recipient_number]';
+       echo H::openTag('label', ['for' => $testRecipient]);
+        echo $translator->translate('whatsapp.business.cloud.api.test.recipient.number');
+       echo H::closeTag('label');
+       $body[$testRecipient] = $s->getSetting('whatsapp_test_recipient_number');
+       echo H::openTag('input', [
+        'type' => 'text',
+        'name' => $testRecipient,
+        'id' => $testRecipient,
+        'class' => 'form-select',
+        'value' => H::encode($body[$testRecipient])
+       ]);
+
+       echo H::openTag('p');
+        echo H::openTag('b');
+         echo '7. ';
+        echo H::closeTag('b');
+        echo 'Save these settings, then send the configured template to the number above ';
+        echo H::openTag('a', [
+         'href' => $urlGenerator->generate('whatsapp/index')
+        ]);
+         echo 'by clicking here...';
+        echo H::closeTag('a');
+       echo H::closeTag('p');
+       echo H::openTag('br');
+      echo H::closeTag('div'); //7
+     echo H::closeTag('div'); //6
+    echo H::closeTag('div'); //5
+
+    echo H::openTag('div', $row); //5
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('label');
+       echo H::openTag('b');
+        echo H::openTag('h4');
+         echo 'Webhooks';
+        echo H::closeTag('h4');
+       echo H::closeTag('b');
+      echo H::closeTag('label');
+      echo H::openTag('div', $formGroup); //7
+       echo H::openTag('p');
+        echo $translator->translate('whatsapp.business.cloud.api.webhook.current.status');
+       echo H::closeTag('p');
+       echo H::openTag('p');
+        echo $translator->translate('whatsapp.business.cloud.api.webhook.future.use');
+       echo H::closeTag('p');
+       echo H::openTag('p');
+        echo H::openTag('b');
+         echo 'Further reading: ';
+        echo H::closeTag('b');
+        echo H::openTag('a', [
+         'href' => 'https://developers.facebook.com/documentation/business-messaging/whatsapp/webhooks/get-started',
+         'target' => '_blank'
+        ]);
+         echo 'WhatsApp Webhooks — Get Started';
+        echo H::closeTag('a');
+       echo H::closeTag('p');
+       $verifyToken = 'settings[whatsapp_webhook_verify_token]';
+       echo H::openTag('label', ['for' => $verifyToken]);
+        echo $translator->translate('whatsapp.business.cloud.api.webhook.verify.token');
+       echo H::closeTag('label');
+       $body[$verifyToken] = $s->getSetting('whatsapp_webhook_verify_token');
+       echo H::openTag('input', [
+        'type' => 'password',
+        'name' => $verifyToken,
+        'id' => $verifyToken,
+        'class' => 'form-select',
+        'value' => H::encode($body[$verifyToken])
+       ]);
+      echo H::closeTag('div'); //7
+     echo H::closeTag('div'); //6
+    echo H::closeTag('div'); //5
+
+    echo H::openTag('div', $row); //5
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
+       echo H::openTag('label');
+        echo H::openTag('b');
+         echo $translator->translate('whatsapp.business.cloud.api.webhook.url.this.site');
+        echo H::closeTag('b');
+       echo H::closeTag('label');
+       echo H::openTag('p');
+        echo H::openTag('pre');
+         echo $urlGenerator->generateAbsolute('whatsapp/webhook');
+        echo H::closeTag('pre');
+       echo H::closeTag('p');
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
     echo H::closeTag('div'); //5
