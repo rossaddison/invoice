@@ -184,6 +184,7 @@ final readonly class CompanyPrivateFormFields
             ->addInputAttributes([
                 'class' => 'form-control form-control-lg',
                 'placeholder' => $placeholder,
+                'data-action' => 'show-picker',
             ])
             ->value($formattedValue)
             ->render();

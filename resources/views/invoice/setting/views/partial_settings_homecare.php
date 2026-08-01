@@ -142,6 +142,7 @@ echo H::openTag('div', ['class' => 'row']); //1
      ), [
       'id' => $shcrlrd,
       'class' => 'form-control',
+      'data-action' => 'show-picker',
      ]);
     echo H::closeTag('div'); //5
 

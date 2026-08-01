@@ -108,6 +108,7 @@ foreach ($orm_schema->getColumns() as $column) {
             echo "<?= Html::openTag('div'); ?>";
             echo '<?= Field::date($form,' . "'" . $column->getName() . "')";
             echo "    ->label()";
+            echo "    ->addInputAttributes(['data-action' => 'show-picker'])";
             echo '    ->value($form->get' . ucfirst($column->getName()) . '() ? ($form->get' . ucfirst($column->getName()) . '())->format(\'Y-m-d\') : \'\')';
             echo '?>';
             echo '<?= Html::closeTag(\'div\'); ?>';

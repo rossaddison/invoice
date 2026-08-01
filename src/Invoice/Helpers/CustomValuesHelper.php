@@ -121,6 +121,7 @@ class CustomValuesHelper
                 ->addInputAttributes([
                     'name' => $customBracketCustomField,
                     'id' => $customFieldId,
+                    'data-action' => 'show-picker',
                 ])
                 ->required($custom_field->getRequired())
                 ->hint($custom_field->getRequired() == 1
