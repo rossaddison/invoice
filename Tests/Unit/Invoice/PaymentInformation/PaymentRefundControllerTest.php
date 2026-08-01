@@ -13,6 +13,7 @@ use App\Invoice\PaymentInformation\PaymentRefundResult;
 use App\Invoice\PaymentInformation\Service\AdyenPaymentService;
 use App\Invoice\PaymentInformation\Service\AmazonPayPaymentService;
 use App\Invoice\PaymentInformation\Service\BraintreePaymentService;
+use App\Invoice\PaymentInformation\Service\GoCardlessPaymentService;
 use App\Invoice\PaymentInformation\Service\MolliePaymentService;
 use App\Invoice\PaymentInformation\Service\StripePaymentService;
 use App\Invoice\Setting\SettingRepository;
@@ -95,6 +96,7 @@ final class PaymentRefundControllerTest extends TestCase
         ?LoggerInterface $logger = null,
         ?PaymentRepository $paymentRepository = null,
         array $translatorPlaceholders = [],
+        ?GoCardlessPaymentService $goCardless = null,
     ): PaymentRefundController {
         $sR = $this->createStub(SettingRepository::class);
         $sR->method('getSetting')->willReturnCallback(
@@ -120,6 +122,7 @@ final class PaymentRefundControllerTest extends TestCase
             $this->createStub(AdyenPaymentService::class),
             $this->createStub(AmazonPayPaymentService::class),
             $this->createStub(BraintreePaymentService::class),
+            $goCardless ?? $this->createStub(GoCardlessPaymentService::class),
             $this->createStub(MolliePaymentService::class),
             $stripe,
         );
@@ -211,6 +214,43 @@ final class PaymentRefundControllerTest extends TestCase
         $response = $controller->refund($this->makeRoute(1, 'unknown'));
 
         self::assertSame(404, $response->getStatusCode());
+    }
+
+    public function testRefundDispatchesToGoCardlessWhenDriverIsGocardless(): void
+    {
+        $payment = $this->createMock(Payment::class);
+        $payment->method('reqInvId')->willReturn(9);
+        $payment->method('reqId')->willReturn(1);
+        $payment->method('getAmount')->willReturn(130.0);
+        $payment->method('getNote')->willReturn('');
+        $payment->expects(self::once())->method('setNote')->with(self::stringContains('RF123'));
+
+        $merchant = $this->createStub(Merchant::class);
+        $merchant->method('getProviderReference')->willReturn('PM123');
+
+        $paymentRepository = $this->createMock(PaymentRepository::class);
+        $paymentRepository->method('repoPaymentquery')->willReturn($payment);
+        $paymentRepository->expects(self::once())->method('save')->with($payment);
+
+        $goCardless = $this->createMock(GoCardlessPaymentService::class);
+        $goCardless->expects(self::once())
+            ->method('refund')
+            ->with('PM123', 130.0)
+            ->willReturn(new PaymentRefundResult(refunded: true, providerReference: 'RF123', message: 'refunded'));
+
+        $controller = $this->makeController(
+            settings: ['gateway_gocardless_enabled' => '1'],
+            payment: $payment,
+            merchant: $merchant,
+            stripe: $this->createStub(StripePaymentService::class),
+            paymentRepository: $paymentRepository,
+            translatorPlaceholders: ['refund.recorded' => 2],
+            goCardless: $goCardless,
+        );
+
+        $response = $controller->refund($this->makeRoute(1, 'gocardless'));
+
+        self::assertSame(302, $response->getStatusCode());
     }
 
     public function testRefundSuccessRecordsNoteAndRedirects(): void

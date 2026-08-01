@@ -10,6 +10,7 @@ use App\Invoice\Payment\PaymentRepository;
 use App\Invoice\PaymentInformation\Service\AdyenPaymentService;
 use App\Invoice\PaymentInformation\Service\AmazonPayPaymentService;
 use App\Invoice\PaymentInformation\Service\BraintreePaymentService;
+use App\Invoice\PaymentInformation\Service\GoCardlessPaymentService;
 use App\Invoice\PaymentInformation\Service\MolliePaymentService;
 use App\Invoice\PaymentInformation\Service\StripePaymentService;
 use App\Invoice\Setting\SettingRepository as sR;
@@ -44,6 +45,7 @@ final class PaymentRefundController
         private readonly AdyenPaymentService $adyenPaymentService,
         private readonly AmazonPayPaymentService $amazonPayPaymentService,
         private readonly BraintreePaymentService $braintreePaymentService,
+        private readonly GoCardlessPaymentService $goCardlessPaymentService,
         private readonly MolliePaymentService $molliePaymentService,
         private readonly StripePaymentService $stripePaymentService,
     ) {
@@ -117,6 +119,7 @@ final class PaymentRefundController
             'braintree'  => $this->braintreePaymentService->refund($reference, $amount),
             'mollie'     => $this->molliePaymentService->refund($reference, $amount),
             'amazon_pay' => $this->amazonPayPaymentService->refund($reference, $amount),
+            'gocardless' => $this->goCardlessPaymentService->refund($reference, $amount),
             default      => null,
         };
     }
