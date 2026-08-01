@@ -119,6 +119,13 @@ final class GoCardlessPaymentService implements PaymentGatewayInterface
      * GoCardless UI lands) is responsible for clamping it to GoCardless's
      * minimum charge-date lead time before calling this.
      *
+     * No custom `reference` is sent — GoCardless rejects one with a 422
+     * (InvalidApiUsageException, "Custom payment references are not enabled
+     * for your scheme identifier") unless that's separately enabled for the
+     * account by GoCardless support, and metadata (not reference) is what
+     * getPaymentMetadata()/the webhook handler use to resolve a payment back
+     * to its invoice, so a custom reference isn't functionally needed here.
+     *
      * @param array<string, string> $metadata
      * @return array{id: string, status: string, charge_date: string}
      */
@@ -127,7 +134,6 @@ final class GoCardlessPaymentService implements PaymentGatewayInterface
         float $amount,
         string $currency,
         DateTimeImmutable $chargeDate,
-        string $reference,
         array $metadata = [],
     ): array {
         $payment = $this->client()->payments()->create([
@@ -136,7 +142,6 @@ final class GoCardlessPaymentService implements PaymentGatewayInterface
                 'amount' => (int) round($amount * 100),
                 'currency' => strtoupper($currency),
                 'charge_date' => $chargeDate->format('Y-m-d'),
-                'reference' => $reference,
                 'links' => ['mandate' => $mandateId],
                 'metadata' => $metadata,
             ],

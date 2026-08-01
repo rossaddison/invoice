@@ -141,6 +141,54 @@ echo H::openTag('div', $row); //1
 
    echo H::openTag('div', $panelBodySmall); //4
 
+    // GoCardless offers two separate integration models in its dashboard —
+    // this only ever uses the simpler one, so make that explicit up front
+    // rather than leaving it to be discovered by trial and error.
+    if ($d == 'gocardless') {
+    echo H::openTag('p', ['class' => 'text-muted small']);
+     echo H::openTag('b');
+      echo 'No Partner Integration: ';
+     echo H::closeTag('b');
+     echo 'this uses GoCardless\'s ';
+     echo H::openTag('b');
+      echo 'Direct integration';
+     echo H::closeTag('b');
+     echo ' — a single Access Token for your own account (in your GoCardless dashboard: ';
+     echo H::openTag('pre');
+      echo 'Developers > Create > Access Token';
+     echo H::closeTag('pre');
+     echo '). Do ';
+     echo H::openTag('b');
+      echo 'not';
+     echo H::closeTag('b');
+     echo ' create a Partner app — that OAuth-based integration is only for platforms connecting many separate merchants\' own GoCardless accounts, which this application does not do.';
+    echo H::closeTag('p');
+    echo H::openTag('p', ['class' => 'text-muted small']);
+     echo H::openTag('b');
+      echo 'When creating the token: ';
+     echo H::closeTag('b');
+     echo 'set Scope to ';
+     echo H::openTag('b');
+      echo 'Read-write access';
+     echo H::closeTag('b');
+     echo ' — Read only access will not let this application create redirect flows, mandates, or schedule payments. GoCardless only shows the token value once, immediately after creation, so copy it into the field below straight away.';
+    echo H::closeTag('p');
+    echo H::openTag('p', ['class' => 'text-muted small']);
+     echo H::openTag('b');
+      echo 'When creating the webhook endpoint: ';
+     echo H::closeTag('b');
+     echo 'set URL to this site\'s ';
+     echo H::openTag('pre');
+      echo '/paymentinformation/goCardlessWebhook';
+     echo H::closeTag('pre');
+     echo 'route (already exempt from CSRF checks), and leave ';
+     echo H::openTag('b');
+      echo '"Generate a secret for me"';
+     echo H::closeTag('b');
+     echo ' selected. As with the access token, GoCardless only shows the generated secret once, immediately after clicking Create — copy it into the Webhook Secret field below straight away.';
+    echo H::closeTag('p');
+    }
+
     /**
     * @var string $key
     * @var array $setting

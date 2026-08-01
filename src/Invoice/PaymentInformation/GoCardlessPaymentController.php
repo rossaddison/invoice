@@ -185,7 +185,6 @@ final class GoCardlessPaymentController
             $invoiceAmountRecord->getBalance() ?? 0.00,
             $currency,
             $chargeDate,
-            $invoice->getNumber() ?? $urlKey,
             ['invoice_url_key' => $urlKey],
         );
 
