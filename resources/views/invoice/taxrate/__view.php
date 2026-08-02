@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use Yiisoft\FormModel\Field;
+use App\Widget\ReadOnlyField;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Invoice\TaxRate\TaxRateForm $form
@@ -19,20 +18,24 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataPeppolTaxRateCode
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataStoreCoveTaxType
  */
+
+// A pure display page — see docs/READONLY_VIEW_FIELDS_AUGUST_2026.md.
+$selectLabel = static function (array $optionsData, int|string|null $value): string {
+    if ($value === null || $value === '') {
+        return '';
+    }
+    $key = (string) $value;
+    /** @var string|array|null $label */
+    $label = $optionsData[$key] ?? null;
+    return is_string($label) ? $label : $key;
+};
 ?>
 
-<?=  new Form()
-    ->post($urlGenerator->generate($actionName, $actionArguments))
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)
-    ->id('TaxRateForm')
-    ->open() ?>
-
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
-<?= Html::openTag('div', ['class' => 'card-header']); ?>
+<?= Html::openTag('div', ['class' => 'card-body']); ?>
 
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
     <?= Html::encode($title) ?>
@@ -41,56 +44,30 @@ use Yiisoft\Html\Tag\Form;
     <?= $button::back(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::text($form, 'tax_rate_name')
-                        ->label($translator->translate('tax.rate.name'))
-                        ->value(Html::encode($form->getTaxRateName() ?? ''))
-                        ->disabled(true);
-?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::text($form, 'tax_rate_percent')
-    ->label($translator->translate('tax.rate.percent'))
-    ->value(Html::encode($form->getTaxRatePercent() ?? ''))
-    ->disabled(true);
-?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::checkbox($form, 'tax_rate_default')
-    ->inputLabelAttributes(['class' => 'form-check-label'])
-    ->inputClass('form-check-input')
-    ->ariaDescribedBy($translator->translate('tax.rate.default'))
-    ->disabled(true);
-?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::text($form, 'tax_rate_code')
-    ->label($translator->translate('tax.rate.code'))
-    ->value(Html::encode($form->getTaxRateCode() ?? ''))
-    ->disabled(true);
-?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::select($form, 'peppol_tax_rate_code')
-    ->label($translator->translate('peppol.tax.rate.code'))
-    ->optionsData($optionsDataPeppolTaxRateCode)
-    ->value(Html::encode($form->getPeppolTaxRateCode() ?? ''))->disabled(true);
-?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::select($form, 'storecove_tax_type')
-    ->label($translator->translate('storecove.tax.rate.code'))
-    ->optionsData($optionsDataStoreCoveTaxType)
-    ->value(Html::encode($form->getStorecoveTaxType() ?? ''))
-    ->disabled(true);
-?>
-                <?= Html::closeTag('div'); ?>
-            <?= Html::closeTag('div'); ?>
+            <?php
+                ReadOnlyField::render($translator->translate('tax.rate.name'), $form->getTaxRateName());
+                ReadOnlyField::render(
+                    $translator->translate('tax.rate.percent'),
+                    $form->getTaxRatePercent() !== null ? (string) $form->getTaxRatePercent() : '',
+                );
+                ReadOnlyField::render(
+                    $translator->translate('tax.rate.default'),
+                    $translator->translate($form->getTaxRateDefault() === true ? 'yes' : 'no'),
+                );
+                ReadOnlyField::render($translator->translate('tax.rate.code'), $form->getTaxRateCode());
+                ReadOnlyField::render(
+                    $translator->translate('peppol.tax.rate.code'),
+                    $selectLabel($optionsDataPeppolTaxRateCode, $form->getPeppolTaxRateCode()),
+                );
+                ReadOnlyField::render(
+                    $translator->translate('storecove.tax.rate.code'),
+                    $selectLabel($optionsDataStoreCoveTaxType, $form->getStorecoveTaxType()),
+                );
+            ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?=  new Form()->close() ?>
+<?= Html::closeTag('div'); ?>

@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use Yiisoft\FormModel\Field;
+use App\Widget\ReadOnlyField;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Invoice\Setting\SettingForm $form
@@ -19,47 +18,25 @@ use Yiisoft\Html\Tag\Form;
  * @var string $title
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
+
+// A pure display page — see docs/READONLY_VIEW_FIELDS_AUGUST_2026.md.
 ?>
 
-<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-6']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
-<?= Html::openTag('div', ['class' => 'card-header']); ?>
+<?= Html::openTag('div', ['class' => 'card-body']); ?>
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
-<?= $translator->translate('setting.form'); ?>
+    <?= Html::encode($title); ?>
 <?= Html::closeTag('h1'); ?>
-<?=
-     new Form()
-    ->post($urlGenerator->generate($actionName, $actionArguments))
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)
-    ->id('SettingForm')
-    ->open()
-?>
-<?= $button::backSave(); ?>
-<?= Html::openTag('div', ['class' => 'card']); ?>
-<?= Field::text($form, 'setting_key')
-    ->label($translator->translate('setting.key'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('setting.key'),
-        'value' => Html::encode($form->getSettingKey() ?? ''),
-        'id' => 'setting_key',
-    ])
-    ->disabled(true);
-?>
-<?= Field::text($form, 'setting_value')
-    ->label($translator->translate('setting.value'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('setting.value'),
-        'value' => Html::encode($form->getSettingValue() ?? ''),
-        'id' => 'setting_value',
-    ])
-    ->disabled(true);
-?>
+<?= $button::back(); ?>
+<?= Html::openTag('div'); ?>
+    <?php
+        ReadOnlyField::render($translator->translate('setting.key'), $form->getSettingKey());
+        ReadOnlyField::render($translator->translate('setting.value'), $form->getSettingValue());
+    ?>
 <?= Html::closeTag('div'); ?>
-<?=  new Form()->close(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

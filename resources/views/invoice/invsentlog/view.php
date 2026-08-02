@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Widget\ReadOnlyField;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Form;
-use Yiisoft\FormModel\Field;
 
 /**
  * @var App\Invoice\InvSentLog\InvSentLogForm $form
@@ -17,52 +16,28 @@ use Yiisoft\FormModel\Field;
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
 
+// A pure display page — see docs/READONLY_VIEW_FIELDS_AUGUST_2026.md.
 ?>
-<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
-<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?><?= Html::openTag('div', ['class' => 'card-header']); ?>
-<?=  new Form()
-    ->post($urlGenerator->generate($actionName, $actionArguments))
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)
-    ->id('InvSentLogForm')
-    ->open()
-?>
-
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
+<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div', ['class' => 'card-body']); ?>
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
+    <?= Html::encode($title); ?>
+<?= Html::closeTag('h1'); ?>
 <?= $button::back(); ?>
-
-<?= Html::openTag('div', ['class' => 'container']); ?>
-<?= Html::openTag('div', ['class' => 'row']); ?>
-<?= Html::openTag('div', ['class' => 'col card mb-3']); ?>
-<?= Html::openTag('div', ['class' => 'card-header']); ?>
-    <?= Html::openTag('h5'); ?>
-        <?= Html::encode($title); ?>
-    <?= Html::closeTag('h5'); ?>
-    <?= Html::openTag('div'); ?>
-        <?= Field::text($form, 'inv_id')
-           ->label($translator->translate('number'))
-           ->addInputAttributes([
-               'class' => 'form-control form-control-lg',
-           ])
-           ->value(Html::encode($form->getInv()?->getNumber() ?? '#'))
-           ->placeholder($translator->translate('number'))
-           ->readonly(true)
-        ?>
-    <?= Html::closeTag('div'); ?>
-    <?= Html::openTag('div'); ?>
-        <?= Field::text($form, 'date_sent')
-   ->label($translator->translate('email.date'))
-   ->addInputAttributes([
-       'class' => 'form-control form-control-lg',
-   ])
-   ->value(Html::encode(!is_string($form->getDateSent()) ? $form->getDateSent()?->format('l, d-M-y H:i:s T') : ''))
-   ->placeholder($translator->translate('date.sent'))
-   ->readonly(true)
-?>
-    <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('form'); ?>
+<?= Html::openTag('div'); ?>
+    <?php
+        ReadOnlyField::render($translator->translate('number'), $form->getInv()?->getNumber() ?? '#');
+        ReadOnlyField::render(
+            $translator->translate('email.date'),
+            $form->getDateSent() instanceof \DateTimeImmutable
+                ? $form->getDateSent()->format('l, d-M-y H:i:s T')
+                : '',
+        );
+    ?>
+<?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
