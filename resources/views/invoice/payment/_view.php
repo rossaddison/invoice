@@ -1,9 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
-use Yiisoft\FormModel\Field;
+use App\Widget\ReadOnlyField;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Invoice\Payment\PaymentForm $form
@@ -20,36 +20,19 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<string,list<string>> $errors
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataPaymentMethod
  */
-?>
 
-<?=  new Form()
-    ->post($urlGenerator->generate($actionName, $actionArguments))
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)
-    ->id('PaymentForm')
-    ->open() ?>
+// A pure display page — see docs/READONLY_VIEW_FIELDS_AUGUST_2026.md.
+$selectLabel = static function (array $optionsData, int|string|null $value): string {
+    if ($value === null || $value === '') {
+        return '';
+    }
+    $key = (string) $value;
+    /** @var string|array|null $label */
+    $label = $optionsData[$key] ?? null;
+    return is_string($label) ? $label : $key;
+};
 
-<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
-<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
-<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
-<?= Html::openTag('div', ['class' => 'card-header']); ?>
-
-<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
-    <?= Html::encode($translator->translate('payment.form')) ?>
-<?= Html::closeTag('h1'); ?>
-<?= Html::openTag('div', ['id' => 'headerbar']); ?>
-    <?= $button::back(); ?>
-    <?= Html::openTag('div', ['id' => 'content']); ?>
-        <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                <?= Field::errorSummary($form)
-                    ->errors($errors)
-                    ->header($translator->translate('error.summary'))
-                    ->onlyCommonErrors()
-?>
-                <?php
-    $optionsDataPaymentMethod = [];
+$optionsDataPaymentMethod = [];
 /**
  * @var App\Infrastructure\Persistence\PaymentMethod\PaymentMethod $paymentMethod
  */
@@ -61,60 +44,42 @@ foreach ($paymentMethods as $paymentMethod) {
         $optionsDataPaymentMethod[$paymentMethodId] = $paymentMethodName;
     }
 }
-echo Field::select($form, 'payment_method_id')
-->label($translator->translate('payment.method'))
-->optionsData($optionsDataPaymentMethod)
-->addInputAttributes([
-    'readonly' => 'readonly',
-    'disabled' => 'disabled',
-])
 ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?=
-        Field::text($form, 'inv')
-        ->label($translator->translate('invoice'))
-        ->addInputAttributes([
-            'readonly' => 'readonly',
-            'disabled' => 'disabled',
-        ])
-        ->value(Html::encode($form->getInv()?->getNumber() ?? $translator->translate('number.no')))
-?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::date($form, 'payment_date')
-    ->label($translator->translate('date'))
-    ->addInputAttributes([
-        'readonly' => 'readonly',
-        'disabled' => 'disabled',
-    ])
-    ->value(Html::encode($form->getPaymentDate() instanceof DateTimeImmutable ? $form->getPaymentDate()->format('Y-m-d') : ''))
-?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::textarea($form, 'note')
-    ->label($translator->translate('note'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('note'),
-        'value' => Html::encode($form->getNote() ?? ''),
-        'class' => 'form-control form-control-lg',
-        'id' => 'note',
-        'readonly' => 'readonly',
-        'disabled' => 'disabled',
-    ])
-?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::text($form, 'amount')
-    ->label($translator->translate('amount'))
-    ->placeholder($translator->translate('amount'))
-    ->value(Html::encode($form->getAmount() ?? ''))
-    ->addInputAttributes([
-        'readonly' => 'readonly',
-        'disabled' => 'disabled',
-    ])
-?>
-                <?= Html::closeTag('div'); ?>
-            <?= Html::closeTag('div'); ?>
+
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
+<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div', ['class' => 'card-body']); ?>
+
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
+    <?= Html::encode($translator->translate('payment.form')) ?>
+<?= Html::closeTag('h1'); ?>
+<?= Html::openTag('div', ['id' => 'headerbar']); ?>
+    <?= $button::back(); ?>
+    <?= Html::openTag('div', ['id' => 'content']); ?>
+        <?= Html::openTag('div', ['class' => 'row']); ?>
+            <?php
+                ReadOnlyField::render(
+                    $translator->translate('payment.method'),
+                    $selectLabel($optionsDataPaymentMethod, $form->getPaymentMethodId()),
+                );
+                ReadOnlyField::render(
+                    $translator->translate('invoice'),
+                    $form->getInv()?->getNumber() ?? $translator->translate('number.no'),
+                );
+                ReadOnlyField::render(
+                    $translator->translate('date'),
+                    $form->getPaymentDate() instanceof DateTimeImmutable
+                        ? $form->getPaymentDate()->format('Y-m-d')
+                        : '',
+                );
+                ReadOnlyField::render($translator->translate('note'), $form->getNote());
+                ReadOnlyField::render(
+                    $translator->translate('amount'),
+                    $form->getAmount() !== null ? (string) $form->getAmount() : '',
+                );
+            ?>
             <?= Html::openTag('div'); ?>
                 <?= $viewCustomFields; ?>
             <?= Html::closeTag('div'); ?>
@@ -124,4 +89,4 @@ echo Field::select($form, 'payment_method_id')
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?=  new Form()->close() ?>
+<?= Html::closeTag('div'); ?>

@@ -1,10 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
-
-use Yiisoft\FormModel\Field;
+use App\Widget\ReadOnlyField;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Invoice\Task\TaskForm $form
@@ -21,93 +20,18 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<array-key, array<array-key, string>|string> $taxRates
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataStatus
  */
-?>
-<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
-<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
-<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
-<?= Html::openTag('div', ['class' => 'card-header']); ?>
-<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
-<?= $translator->translate('tasks.form'); ?>
-<?= Html::closeTag('h1'); ?>
-<?=  new Form()
-    ->post($urlGenerator->generate($actionName, $actionArguments))
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)
-    ->id('TaskForm')
-    ->open()
-?>
-<?= Html::openTag('div'); ?>
-    <?= Field::text($form, 'name')
-        ->label($translator->translate('name'))
-        ->required(true)
-        ->addInputAttributes([
-            'readonly' => 'readonly',
-            'disabled' => 'disabled',
-        ])
-        ->value(Html::encode($form->getName()))
-        ->placeholder($translator->translate('name'));
-?>
-    <?= Html::tag('br'); ?>
-    <?= Field::text($form, 'description')
-    ->label($translator->translate('description'))
-    ->required(true)
-    ->addInputAttributes([
-        'readonly' => 'readonly',
-        'disabled' => 'disabled',
-    ])
-    ->value(Html::encode($form->getDescription()))
-    ->placeholder($translator->translate('description'))
-?>
-    <?= Html::tag('br'); ?>
-    <?= Field::select($form, 'project_id')
-    ->label($translator->translate('project'))
-    ->addInputAttributes([
-        'readonly' => 'readonly',
-        'disabled' => 'disabled',
-    ])
-    ->optionsData($projects)
-    ->value($form->getProjectId())
-    ->prompt($translator->translate('none'))
-?>
-    <?= Html::tag('br'); ?>
-    <?= Field::select($form, 'tax_rate_id')
-    ->label($translator->translate('tax.rate'))
-    ->addInputAttributes([
-        'readonly' => 'readonly',
-        'disabled' => 'disabled',
-    ])
-    ->optionsData($taxRates)
-    ->value($form->getTaxRateId())
-    ->prompt($translator->translate('none'))
-?>
-    <?= Html::tag('br'); ?>
-    <?= Field::text($form, 'price')
-    ->label($translator->translate('price'))
-    ->addInputAttributes([
-        'readonly' => 'readonly',
-        'disabled' => 'disabled',
-    ])
-    ->value($s->formatAmount(($form->getPrice() ?? 0.00)))
-    ->placeholder($translator->translate('price'))
-    ->hint($translator->translate('hint.this.field.is.required')); ?>
-    <?= Html::tag('br'); ?>
-    <?=
-    Field::date($form, 'finish_date')
-    ->label($translator->translate('task.finish.date'))
-    ->addInputAttributes([
-        'readonly' => 'readonly',
-        'disabled' => 'disabled',
-    ])
-    ->value(Html::encode($form->getFinishDate() instanceof \DateTimeImmutable
-                         ? $form->getFinishDate()->format('Y-m-d') : (is_string(
-                             $form->getFinishDate(),
-                         )
-                         ? $form->getFinishDate() : '')))
-?>
-    <?= Html::tag('br'); ?>
-    <?php
-    $optionsDataStatus = [];
+
+// A pure display page — see docs/READONLY_VIEW_FIELDS_AUGUST_2026.md.
+$selectLabel = static function (array $optionsData, int|string|null $value): string {
+    if ($value === null || $value === '') {
+        return '';
+    }
+    $key = (string) $value;
+    /** @var string|array|null $label */
+    $label = $optionsData[$key] ?? null;
+    return is_string($label) ? $label : $key;
+};
+
 $statuses = [
     1 => [
         'label' => $translator->translate('not.started'),
@@ -126,6 +50,7 @@ $statuses = [
         'class' => 'primary',
     ],
 ];
+$optionsDataStatus = [];
 /**
  * @var int $key
  * @var array $status
@@ -138,18 +63,43 @@ foreach ($statuses as $key => $status) {
     $optionsDataStatus[$key] = $status['label'];
 }
 ?>
-    <?= Field::select($form, 'status')
-    ->label($translator->translate('status'))
-    ->addInputAttributes([
-        'readonly' => 'readonly',
-        'disabled' => 'disabled',
-    ])
-    ->optionsData($optionsDataStatus)
-    ->value($form->getStatus())
-?>
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
+<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div', ['class' => 'card-body']); ?>
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
+<?= $translator->translate('tasks.form'); ?>
+<?= Html::closeTag('h1'); ?>
+<?= Html::openTag('div'); ?>
+    <?php
+        ReadOnlyField::render($translator->translate('name'), $form->getName());
+        ReadOnlyField::render($translator->translate('description'), $form->getDescription());
+        ReadOnlyField::render(
+            $translator->translate('project'),
+            $selectLabel($projects, $form->getProjectId()),
+        );
+        ReadOnlyField::render(
+            $translator->translate('tax.rate'),
+            $selectLabel($taxRates, $form->getTaxRateId()),
+        );
+        ReadOnlyField::render(
+            $translator->translate('price'),
+            $s->formatAmount($form->getPrice() ?? 0.00),
+        );
+        ReadOnlyField::render(
+            $translator->translate('task.finish.date'),
+            $form->getFinishDate() instanceof \DateTimeImmutable
+                ? $form->getFinishDate()->format('Y-m-d')
+                : (is_string($form->getFinishDate()) ? $form->getFinishDate() : ''),
+        );
+        ReadOnlyField::render(
+            $translator->translate('status'),
+            $selectLabel($optionsDataStatus, $form->getStatus()),
+        );
+    ?>
 <?= Html::closeTag('div'); ?>
 <?= $button::back(); ?>
-<?=  new Form()->close(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
