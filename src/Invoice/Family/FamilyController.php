@@ -8,6 +8,7 @@ use App\Invoice\BaseController;
 use App\Infrastructure\Persistence\Family\Family;
 use App\Infrastructure\Persistence\FamilyCustom\FamilyCustom;
 use App\Infrastructure\Persistence\Product\Product;
+use App\Invoice\Enum\ProductType;
 use App\Invoice\Family\Widget\FamilyListWidget;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\CategoryPrimary\CategoryPrimaryRepository as cpR;
@@ -610,6 +611,14 @@ final class FamilyController extends BaseController
                 'ProductForm' => [
                     'product_name'        => $productName,
                     'product_description' => $productName,
+                    // Matches ProductService::findOrCreateHouseNumberProduct()
+                    // (the HomeCare signup flow's equivalent, one product per
+                    // house number) — without this, every commalist-generated
+                    // product silently defaulted to product_type=Product,
+                    // permanently ineligible for HomeCare auto-invoicing
+                    // until manually edited one by one. See
+                    // docs/HOMECARE_AUTOINVOICE_PITFALLS_AUGUST_2026.md.
+                    'product_type'        => ProductType::Service->value,
                     'product_sku'         => $item,
                     'product_price'       => 0.00,
                     'family_id'           => (string) $familyId,
