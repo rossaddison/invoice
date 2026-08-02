@@ -8,6 +8,7 @@ use App\Invoice\BaseController;
 use App\Infrastructure\Persistence\Delivery\Delivery;
 use App\Invoice\Inv\InvRepository;
 use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
+use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
 use App\Service\WebControllerService;
@@ -242,22 +243,39 @@ final class DeliveryController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param DeliveryRepository $deliveryRepository
+     * @param DLR $delRepo
+     * @param InvRepository $iR
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function view(CurrentRoute $currentRoute, DeliveryRepository $deliveryRepository): \Psr\Http\Message\ResponseInterface
-    {
+    public function view(
+        CurrentRoute $currentRoute,
+        DeliveryRepository $deliveryRepository,
+        DLR $delRepo,
+        InvRepository $iR,
+    ): \Psr\Http\Message\ResponseInterface {
         $delivery = $this->delivery($currentRoute, $deliveryRepository);
         if ($delivery) {
-            $form = new DeliveryForm();
-            $parameters = [
-                'title' => $this->translator->translate('view'),
-                'actionName' => 'delivery/view',
-                'actionArguments' => ['id' => $delivery->reqId()],
-                'errors' => [],
-                'form' => $form,
-                'delivery' => $delivery,
-            ];
-            return $this->webViewRenderer->render('_view', $parameters);
+            $inv_id = $delivery->getInvId();
+            if ($inv_id > 0) {
+                $inv = $iR->repoInvLoadedquery($inv_id);
+                if (null !== $inv) {
+                    $form = DeliveryForm::show($delivery);
+                    $parameters = [
+                        'title' => $this->translator->translate('view'),
+                        'actionName' => 'delivery/view',
+                        'actionArguments' => ['id' => $delivery->reqId()],
+                        'errors' => [],
+                        'form' => $form,
+                        'delivery' => $delivery,
+                        'inv' => $inv,
+                        'dateHelper' => new DateHelper($this->sR),
+                        's' => $this->sR,
+                        'del_count' => $delRepo->repoClientCount($inv->reqClientId()),
+                        'dels' => $delRepo->repoClientquery($inv->reqClientId()),
+                    ];
+                    return $this->webViewRenderer->render('_view', $parameters);
+                }
+            }
         }
         return $this->webService->getRedirectResponse('delivery/index');
     }

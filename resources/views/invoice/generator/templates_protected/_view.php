@@ -14,13 +14,12 @@ echo "<?php\n";
 
 declare(strict_types=1);
 
-use Yiisoft\FormModel\Field;
+use App\Widget\ReadOnlyField;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\A;
-use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Invoice\<?= $generator->getCamelcaseCapitalName(); ?>\<?= $generator->getCamelcaseCapitalName(); ?>Form $form
+ * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\Button $button
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -34,48 +33,40 @@ use Yiisoft\Html\Tag\Form;
 
 <?php
     echo "?>\n";
-echo '<?= Html::openTag(\'h1\'); ?><?= Html::encode($title) ?><?= Html::closeTag(\'h1\'); ?>' . "\n";
+echo "\n";
+echo "// A pure display page — see docs/READONLY_VIEW_FIELDS_AUGUST_2026.md.\n";
+echo '$selectLabel = static function (array $optionsData, int|string|null $value): string {' . "\n";
+echo "    if (\$value === null || \$value === '') {\n";
+echo "        return '';\n";
+echo "    }\n";
+echo '    $key = (string) $value;' . "\n";
+echo '    /** @var string|array|null $label */' . "\n";
+echo '    $label = $optionsData[$key] ?? null;' . "\n";
+echo '    return is_string($label) ? $label : $key;' . "\n";
+echo "};\n";
+echo "?>\n";
+echo "\n";
 echo "<?= Html::openTag('div',['class'=>'container-fluid py-3']); ?>" . "\n";
 echo "<?= Html::openTag('div',['class'=>'row justify-content-center']); ?>" . "\n";
 echo "<?= Html::openTag('div',['class'=>'col-12 col-lg-10 col-xl-10']); ?>" . "\n";
 echo "<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>";
-echo "<?= Html::openTag('div',['class'=>'card-header']); ?>" . "\n";
+echo "<?= Html::openTag('div',['class'=>'card-body']); ?>" . "\n";
 
 echo "<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>" . "\n";
-echo '     <?= $translator->translate(' . "'i.add'); ?>" . "\n";
+echo '    <?= Html::encode($title); ?>' . "\n";
 echo "<?= Html::closeTag('h1'); ?>" . "\n";
-
-echo "<?=  new Form()" . "\n";
-echo '    ->post($urlGenerator->generate($actionName, $actionArguments))' . "\n";
-echo "    ->enctypeMultipartFormData()" . "\n";
-echo '    ->csrf($csrf)' . "\n";
-echo "    ->id('" . $generator->getCamelcaseCapitalName() . "Form')" . "\n";
-echo "    ->open()" . "\n";
-echo "?>" . "\n";
-echo "\n";
-echo "<?= Html::openTag('div', ['class' => 'container']); ?>" . "\n";
-echo "<?= Html::openTag('div', ['class' => 'row']); ?>" . "\n";
-echo "<?= Html::openTag('div', ['class' => 'col card mb-3']); ?>" . "\n";
-echo "<?= Html::openTag('div',['class' => 'card-header']); ?>" . "\n";
-echo "    <?= Html::openTag('h5'); ?>" . "\n";
-echo '        <?= Html::encode($title); ?>' . "\n";
-echo "    <?= Html::closeTag('h5'); ?>" . "\n";
+echo '<?= $button::back(); ?>' . "\n";
+echo "<?= Html::openTag('div'); ?>" . "\n";
 
 /**
  * @var App\Infrastructure\Persistence\GentorRelation\GentorRelation $relation
  */
 foreach ($relations as $relation) {
-    echo "    <?= Html::openTag('div'); ?>" . "\n";
-    echo '        <?= Field::select($' . 'form, ' . "'" . ($relation->getLowercaseName() ?? '#') . "_id')" . "\n";
-    echo "            ->addInputAttributes([" . "\n";
-    echo "                 'class' => 'form-control form-control-lg'," . "\n";
-    echo "            ])" . "\n";
-    echo '            ->value($form->get' . ucfirst($relation->getLowercaseName() ?? '#') . "_id())" . "\n";
-    echo '            ->prompt($translator->translate(\'i.none\'))' . "\n";
-    echo '            ->optionsData($' . ($relation->getLowercaseName() ?? '#') . 's)' . "\n";
-    echo '        ?>' . "\n";
-    echo '    <?= Html::closeTag(\'div\'); ?>' . "\n";
-
+    $relationName = $relation->getLowercaseName() ?? '#';
+    echo '    <?php ReadOnlyField::render(' . "\n";
+    echo '        $translator->translate(\'' . $relationName . '\'),' . "\n";
+    echo '        $selectLabel($' . $relationName . 's, $form->get' . ucfirst($relationName) . '_id()),' . "\n";
+    echo '    ); ?>' . "\n";
 }
 
 // exclude relations or fields ending in '_id'
@@ -93,13 +84,10 @@ foreach ($orm_schema->getColumns() as $column) {
          * Related logic: see private bool $client_active = false;
          */
         if (($column->getType() === 'bool') && ($column->getAbstractType() === 'bool')) {
-            echo "    <?= Html::openTag('div'); ?>" . "\n";
-            echo '        <?= Field::checkbox($form,' . "'" . $column->getName() . "')" . "\n";
-            echo "            ->inputLabelAttributes(['class' => 'form-check-label'])" . "\n";
-            echo "            ->inputClass('form-check-input')" . "\n";
-            echo '            ->ariaDescribedBy($translator->translate(' . "'" . $column->getName() . '))' . "\n";
-            echo '        ?>' . "\n";
-            echo '      <?= Html::closeTag(\'div\'); ?>' . "\n";
+            echo '    <?php ReadOnlyField::render(' . "\n";
+            echo '        $translator->translate(\'' . $column->getName() . '\'),' . "\n";
+            echo '        $translator->translate($form->get' . ucfirst($column->getName()) . '() === true ? \'yes\' : \'no\'),' . "\n";
+            echo '    ); ?>' . "\n";
         }
         /**
          * Related logic: see src/Invoice/Entity/ClientNote
@@ -107,13 +95,10 @@ foreach ($orm_schema->getColumns() as $column) {
          * Related logic: see private mixed $date_note;
          */
         if (($column->getType() === 'mixed') && (($column->getAbstractType() === 'date'))) {
-            echo "    <?= Html::openTag('div'); ?>" . "\n";
-            echo '        <?= Field::date($form,' . "'" . $column->getName() . "')" . "\n";
-            echo "            ->label()" . "\n";
-            echo '            ->value($form->get' . ucfirst($column->getName()) . '() ? ($form->get' . ucfirst($column->getName()) . '())->format(\'Y-m-d\') : \'\')' . "\n";
-            echo '            ->readonly(true)';
-            echo '         ?>' . "\n";
-            echo '     <?= Html::closeTag(\'div\'); ?>' . "\n";
+            echo '    <?php ReadOnlyField::render(' . "\n";
+            echo '        $translator->translate(\'' . $column->getName() . '\'),' . "\n";
+            echo '        $form->get' . ucfirst($column->getName()) . '() instanceof \DateTimeImmutable ? ($form->get' . ucfirst($column->getName()) . '())->format(\'Y-m-d\') : \'\',' . "\n";
+            echo '    ); ?>' . "\n";
         }
         /**
          * Related logic: see src/Invoice/Entity/Product
@@ -121,17 +106,10 @@ foreach ($orm_schema->getColumns() as $column) {
          * Related logic: see private ?float $purchase_price = null;
          */
         if (($column->getType() === 'float') && ($column->getAbstractType() === 'decimal')) {
-            echo "    <?= Html::openTag('div'); ?>" . "\n";
-            echo '        <?= Field::text($form,' . "'" . $column->getName() . "')" . "\n";
-            echo '            ->label($translator->translate(' . "'" . $column->getName() . "'" . '))' . "\n";
-            echo '            ->addInputAttributes([' . "\n";
-            echo "                'class' => 'form-control form-control-lg'," . "\n";
-            echo '            ])' . "\n";
-            echo '            ->value($s->formatAmount((float)($form->get' . ucfirst($column->getName()) . '() ?? 0.00)))' . "\n";
-            echo '            ->placeholder($' . 'translator->translate(' . "'" . $column->getName() . "'" . '))' . "\n";
-            echo '            ->readonly(true)';
-            echo '         ?>' . "\n";
-            echo '     <?= Html::closeTag(\'div\'); ?>' . "\n";
+            echo '    <?php ReadOnlyField::render(' . "\n";
+            echo '        $translator->translate(\'' . $column->getName() . '\'),' . "\n";
+            echo '        $s->formatAmount((float) ($form->get' . ucfirst($column->getName()) . '() ?? 0.00)),' . "\n";
+            echo '    ); ?>' . "\n";
         }
         /**
          * Related logic: see src/Invoice/Entity/ClientNote
@@ -139,36 +117,22 @@ foreach ($orm_schema->getColumns() as $column) {
          * Related logic: see private string $note =  '';
          */
         if (($column->getType() === 'string') && ($column->getAbstractType() <> 'date')) {
-            echo "    <?= Html::openTag('div'); ?>" . "\n";
-            echo '        <?= Field::text($form,' . "'" . $column->getName() . "')" . "\n";
-            echo '            ->label($translator->translate(' . $column->getName() . '))' . "\n";
-            echo '            ->addInputAttributes([' . "\n";
-            echo "                'class' => 'form-control form-control-lg'," . "\n";
-            echo '            ])' . "\n";
-            echo '            ->value(Html::encode(' . '$' . 'form->get' . ucfirst($column->getName()) . '()))' . "\n";
-            echo '            ->readonly(true)';
-            echo '            ->placeholder($' . 'translator->translate(' . "'" . $column->getName() . "'" . '))' . "\n";
-            echo '         ?>' . "\n";
-            echo '    <?= Html::closeTag(\'div\'); ?>' . "\n";
+            echo '    <?php ReadOnlyField::render(' . "\n";
+            echo '        $translator->translate(\'' . $column->getName() . '\'),' . "\n";
+            echo '        $form->get' . ucfirst($column->getName()) . '(),' . "\n";
+            echo '    ); ?>' . "\n";
         }
 
         if (($column->getType() === 'int') && ($column->getAbstractType() <> 'date') && ($column->getAbstractType() <> 'primary')) {
-            echo "    <?= Html::openTag('div'); ?>" . "\n";
-            echo '        <?= Field::text($form,' . "'" . $column->getName() . "')" . "\n";
-            echo '            ->label($translator->translate(' . $column->getName() . '))' . "\n";
-            echo '            ->addInputAttributes([' . "\n";
-            echo "                'class' => 'form-control form-control-lg'," . "\n";
-            echo '            ])' . "\n";
-            echo '            ->value(Html::encode(' . '$' . 'form->get' . ucfirst($column->getName()) . '()))' . "\n";
-            echo '            ->readonly(true)';
-            echo '            ->placeholder($' . 'translator->translate(' . "'" . $column->getName() . "'" . '))' . "\n";
-            echo '        ?>' . "\n";
-            echo '    <?= Html::closeTag(\'div\'); ?>' . "\n";
+            echo '    <?php ReadOnlyField::render(' . "\n";
+            echo '        $translator->translate(\'' . $column->getName() . '\'),' . "\n";
+            echo '        $form->get' . ucfirst($column->getName()) . '() !== null ? (string) $form->get' . ucfirst($column->getName()) . '() : \'\',' . "\n";
+            echo '    ); ?>' . "\n";
         }
     } // if substr
 } // foreach columns
 
-echo "<?= Html::closeTag('form'); ?>" . "\n";
+echo "<?= Html::closeTag('div'); ?>" . "\n";
 
 echo '<?= Html::closeTag(\'div\'); ?>' . "\n";
 echo '<?= Html::closeTag(\'div\'); ?>' . "\n";
