@@ -98,7 +98,7 @@ final class ProductForm extends FormModel
         $form->tax_rate_id = $product->reqTaxRateId();
         $form->unit_id = $product->reqUnitId();
         $form->unit_peppol_id = $product->getUnitPeppolId();
-        $form->family_id = $product->reqId();
+        $form->family_id = $product->reqFamilyId();
         return $form;
     }
 

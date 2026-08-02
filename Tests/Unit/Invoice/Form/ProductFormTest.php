@@ -31,7 +31,6 @@ class ProductFormTest extends TestCase
 
     public function testShowPopulatesFromMockedProduct(): void
     {
-        /** @var Product&\PHPUnit\Framework\MockObject\Stub $product */
         $product = $this->createStub(Product::class);
         $product->method('getProductSku')->willReturn('SKU-001');
         $product->method('getProductName')->willReturn('Widget Pro');
@@ -42,6 +41,7 @@ class ProductFormTest extends TestCase
         $product->method('getProviderName')->willReturn('Acme Wholesale');
         $product->method('reqTaxRateId')->willReturn(1);
         $product->method('reqUnitId')->willReturn(2);
+        $product->method('reqFamilyId')->willReturn(4);
         $product->method('getUnitPeppolId')->willReturn(null);
         $product->method('getProductType')->willReturn('product');
         $product->method('reqId')->willReturn(3);
@@ -65,13 +65,13 @@ class ProductFormTest extends TestCase
         $this->assertSame('Acme Wholesale', $form->provider_name);
         $this->assertSame(1, $form->tax_rate_id);
         $this->assertSame(2, $form->unit_id);
+        $this->assertSame(4, $form->family_id);
         $this->assertSame('GB', $form->product_country_of_origin_code);
         $this->assertSame('product', $form->product_type);
     }
 
     public function testShowWithPeppolFields(): void
     {
-        /** @var Product&\PHPUnit\Framework\MockObject\Stub $product */
         $product = $this->createStub(Product::class);
         $product->method('getProductSku')->willReturn('SKU-002');
         $product->method('getProductName')->willReturn('Peppol Item');
@@ -82,6 +82,7 @@ class ProductFormTest extends TestCase
         $product->method('getProviderName')->willReturn(null);
         $product->method('reqTaxRateId')->willReturn(2);
         $product->method('reqUnitId')->willReturn(1);
+        $product->method('reqFamilyId')->willReturn(7);
         $product->method('getUnitPeppolId')->willReturn(5);
         $product->method('getProductType')->willReturn('service');
         $product->method('reqId')->willReturn(10);
@@ -102,12 +103,12 @@ class ProductFormTest extends TestCase
         $this->assertSame('Colour', $form->product_additional_item_property_name);
         $this->assertSame('Blue', $form->product_additional_item_property_value);
         $this->assertSame(5, $form->unit_peppol_id);
+        $this->assertSame(7, $form->family_id);
         $this->assertSame('service', $form->product_type);
     }
 
     public function testShowReturnsNewInstance(): void
     {
-        /** @var Product&\PHPUnit\Framework\MockObject\Stub $product */
         $product = $this->createStub(Product::class);
         $product->method('getProductSku')->willReturn('X');
         $product->method('getProductName')->willReturn('X');
@@ -118,6 +119,7 @@ class ProductFormTest extends TestCase
         $product->method('getProviderName')->willReturn(null);
         $product->method('reqTaxRateId')->willReturn(1);
         $product->method('reqUnitId')->willReturn(1);
+        $product->method('reqFamilyId')->willReturn(1);
         $product->method('getUnitPeppolId')->willReturn(null);
         $product->method('getProductType')->willReturn('product');
         $product->method('reqId')->willReturn(1);

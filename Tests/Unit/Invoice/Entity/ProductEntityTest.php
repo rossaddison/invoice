@@ -165,6 +165,20 @@ class ProductEntityTest extends TestCase
         $this->assertSame(3, $p->reqUnitId());
     }
 
+    public function testReqFamilyIdThrowsWhenNull(): void
+    {
+        $p = new Product();
+        $this->expectException(\LogicException::class);
+        $p->reqFamilyId();
+    }
+
+    public function testSetAndReqFamilyId(): void
+    {
+        $p = new Product();
+        $p->setFamilyId(4);
+        $this->assertSame(4, $p->reqFamilyId());
+    }
+
     public function testSetAndGetUnitPeppolId(): void
     {
         $p = new Product();

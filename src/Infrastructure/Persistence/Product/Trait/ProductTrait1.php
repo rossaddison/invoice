@@ -68,6 +68,11 @@ trait ProductTrait1
         $this->family_id = $family_id;
     }
 
+    public function reqFamilyId(): int
+    {
+        return $this->requireId($this->family_id, 'Family');
+    }
+
     public function getProductSku(): ?string
     {
         return $this->product_sku;
