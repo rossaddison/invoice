@@ -354,10 +354,24 @@ final readonly class InvItemService
         InvItem $model, array $array, int $product_id,
         Product $product, PR $pr
     ): void {
-        $name = (isset($array['product_id']) && $pr->repoCount($product_id) > 0)
-            ? $product->getProductName()
-            : '';
-        $model->setName($name ?? '');
+        // 'name'/'description' mirror the same precedence: a caller-supplied
+        // value (e.g. invToInvInvItems() copying the template invoice's own
+        // item verbatim) always wins, falling back to the current Product
+        // only when the caller didn't supply one at all (the plain "add
+        // product to invoice" flow, whose form has no name/description
+        // fields of its own). Previously 'name' ignored the caller-supplied
+        // value entirely and always used the live Product's name, unlike
+        // 'description' — meaning a later product rename could silently
+        // diverge name from description on every future copied invoice item
+        // (visible in Peppol/UBL export, which carries them as distinct
+        // elements), even though the on-screen invoice view only ever
+        // displays description.
+        if (isset($array['name'])) {
+            $model->setName((string) $array['name']);
+        } else {
+            $productExists = isset($array['product_id']) && $pr->repoCount($product_id) > 0;
+            $model->setName($productExists ? ($product->getProductName() ?? '') : '');
+        }
         $productDescription = $product->getProductDescription();
         if (null !== $productDescription) {
             $model->setDescription(isset($array['description'])

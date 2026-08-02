@@ -518,6 +518,56 @@ final class InvItemServiceTest
         Assert::same(300, $model->reqInvId());
     }
 
+    /**
+     * A caller-supplied 'name' (e.g. invToInvInvItems() copying a template
+     * invoice's own item verbatim, as HomeCare auto-invoicing does) must win
+     * over the current Product's own name — previously only 'description'
+     * had this precedence; 'name' always used the live Product regardless,
+     * which could silently diverge name from description on a copied
+     * invoice item if the product was ever renamed after the fact.
+     */
+    public function saveInvItemProductPrefersSuppliedNameOverLiveProductName(): void
+    {
+        $model = new InvItem();
+
+        $product = m::mock(Product::class);
+        /** @var \Mockery\Expectation $e */
+        $e = $product->shouldReceive('getProductName');
+        $e->never();
+        /** @var \Mockery\Expectation $e2 */
+        $e2 = $product->shouldReceive('getProductDescription');
+        $e2->once()->andReturn('Live Desc');
+
+        $pr = m::mock(ProductRepository::class);
+        /** @var \Mockery\Expectation $e3 */
+        $e3 = $pr->shouldReceive('repoProductquery');
+        $e3->once()->with(12)->andReturn($product);
+        $pr->shouldNotReceive('repoCount');
+
+        $unR = m::mock(UnitRepository::class);
+        /** @var \Mockery\Expectation $e4 */
+        $e4 = $unR->shouldReceive('repoUnitquery');
+        $e4->once()->andReturn(null);
+
+        $repository = m::mock(InvItemRepository::class);
+        /** @var \Mockery\Expectation $e5 */
+        $e5 = $repository->shouldReceive('save');
+        $e5->once();
+
+        $service = $this->makeService(repository: $repository);
+
+        $array = [
+            'product_id' => '12',
+            'name' => '14 Elm Street',
+            'description' => 'Explicit copied description',
+        ];
+
+        $service->saveInvItemProduct($model, $array, '300', $pr, $unR);
+
+        Assert::same('14 Elm Street', $model->getName());
+        Assert::same('Explicit copied description', $model->getDescription());
+    }
+
     public function saveInvItemProductWithoutProductSkipsSave(): void
     {
         $model = new InvItem();
