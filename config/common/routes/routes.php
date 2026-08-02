@@ -49,7 +49,7 @@ return [
         ->middleware(RateLimiter::global(60))
         // Inner: 10 per 60 s per real IP via CF-Connecting-IP
         ->middleware(RateLimiter::perIp(10, 'homecare_scan_route'))
-        ->action([InvController::class, 'homecareScan'])
+        ->action([InvController::class, 'homeCareScan'])
         ->name('public/homecare-scan'),
     // Admin dashboard that can use the existing authentication middleware
     // if needed.
