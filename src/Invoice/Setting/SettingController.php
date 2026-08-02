@@ -17,6 +17,7 @@ use App\Invoice\Helpers\StoreCove\StoreCoveArrays;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\System\PhpVersionCheckService;
 use RossAddison\OpenBankingClient\OpenBankingProviderRegistryInterface;
+use App\Invoice\Setting\Trait\SettingCheckboxArrayTrait;
 use App\Invoice\Setting\Trait\SettingOptionsDataTrait;
 use App\Invoice\Setting\Trait\SettingsTabBootstrap5;
 use App\Service\WebControllerService;
@@ -49,6 +50,7 @@ use DateTimeZone;
 
 final class SettingController extends BaseController
 {
+    use SettingCheckboxArrayTrait;
     use SettingOptionsDataTrait;
     use SettingsTabBootstrap5;
 
@@ -272,20 +274,6 @@ final class SettingController extends BaseController
             }
         }
         return $this->webViewRenderer->render('//invoice/setting/tab_index', $parameters);
-    }
-
-    /**
-     * Joins a checkboxes[] submission (a settings[] key) into a single
-     * comma-separated string in place — saveSubmittedSettings()/
-     * saveOneSetting() expect every value to already be a plain string.
-     *
-     * @param array<string, string|list<string>> $settings
-     */
-    private function joinCheckboxArraySetting(array &$settings, string $key): void
-    {
-        if (isset($settings[$key]) && is_array($settings[$key])) {
-            $settings[$key] = implode(',', $settings[$key]);
-        }
     }
 
     /**
