@@ -24,10 +24,13 @@ trait HomeCareScan
      * A pending HomeCareVisit row is claimed for (client, today) *before*
      * the eligibility decision — its unique index is what actually makes
      * concurrent/repeat same-day scans safe, not application-level locking.
-     * Losing that claim (a concurrent request won it, or this is a repeat
-     * scan) replays whatever outcome the winning request recorded rather
-     * than re-deciding, so a scan can never generate a second invoice for
-     * the same client on the same day. See
+     * Losing that claim only blocks a retry permanently once the existing
+     * row's outcome is 'generated' (a real invoice exists — must never
+     * double-generate). A stale 'not_eligible'/'contact_us' row means
+     * nothing was created yet, so it's safe to delete and re-claim: staff
+     * fixing a data issue (e.g. a product's type) mid-day can have the
+     * customer rescan and actually succeed, rather than being stuck
+     * replaying the first attempt's outcome until midnight. See
      * docs/HOMECARE_AUTOINVOICE_PITFALLS_AUGUST_2026.md.
      *
      * Related logic: see Route::get('/scan/{token}')
@@ -51,7 +54,13 @@ trait HomeCareScan
         $visit = $visitRepository->tryCreatePendingVisit($clientId, $today);
         if (null === $visit) {
             $existing = $visitRepository->repoFindByClientAndDatequery($clientId, $today);
-            return $this->renderHomeCareScanResult($existing?->getOutcome() ?? 'not_eligible');
+            if ($existing !== null && $existing->getOutcome() !== 'generated') {
+                $visitRepository->delete($existing);
+                $visit = $visitRepository->tryCreatePendingVisit($clientId, $today);
+            }
+            if (null === $visit) {
+                return $this->renderHomeCareScanResult($existing?->getOutcome() ?? 'not_eligible');
+            }
         }
 
         $templateInvoice = $eligibilityService->findInvoiceToCopyIfEligible($clientId);

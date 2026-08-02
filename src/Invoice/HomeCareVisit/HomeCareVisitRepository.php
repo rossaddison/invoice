@@ -35,6 +35,16 @@ final class HomeCareVisitRepository extends Select\Repository implements HomeCar
         $this->entityWriter->write([$visit]);
     }
 
+    /**
+     * @param array|HomeCareVisit|null $visit
+     * @throws Throwable
+     */
+    #[\Override]
+    public function delete(array|HomeCareVisit|null $visit): void
+    {
+        $this->entityWriter->delete([$visit]);
+    }
+
     #[\Override]
     public function repoFindByClientAndDatequery(int $clientId, DateTimeImmutable $visitedAt): ?HomeCareVisit
     {

@@ -11,6 +11,8 @@ interface HomeCareVisitRepositoryInterface
 {
     public function save(array|HomeCareVisit|null $visit): void;
 
+    public function delete(array|HomeCareVisit|null $visit): void;
+
     /**
      * Finds the (client_id, visited_at) row if one already exists —
      * whichever request created it "wins"; every other concurrent/repeat
@@ -25,6 +27,12 @@ interface HomeCareVisitRepositoryInterface
      * request won the race, or this is a repeat same-day scan), returns
      * null, and the caller should re-fetch via repoFindByClientAndDatequery()
      * to render the previously-recorded outcome instead of re-deciding.
+     *
+     * Note this only protects the moment of *creating* a row — once an
+     * existing same-day row is found to be non-terminal (its outcome isn't
+     * 'generated', so no invoice exists yet), the caller is expected to
+     * delete() it and call this again for a genuine retry. See
+     * HomeCareScan::homeCareScan().
      */
     public function tryCreatePendingVisit(int $clientId, DateTimeImmutable $visitedAt): ?HomeCareVisit;
 
