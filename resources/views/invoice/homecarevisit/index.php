@@ -55,12 +55,12 @@ echo H::openTag('div', ['class' => 'row']);
            echo H::openTag('tr');
             echo H::tag('td', H::encode($row['client_name']));
             echo H::tag('td', H::encode($visit->getVisitedAt()?->format('Y-m-d') ?? ''));
-            echo H::tag('td', $outcomeBadge($visit->getOutcome()), ['encode' => false]);
+            echo H::tag('td', $outcomeBadge($visit->getOutcome()))->encode(false);
             $invoiceId = $visit->getInvoiceId();
             echo H::tag('td', $invoiceId !== null
                 ? H::a('#' . $invoiceId,
                     $urlGenerator->generate('inv/view', ['id' => $invoiceId]))->render()
-                : '', ['encode' => false]);
+                : '')->encode(false);
             echo H::tag('td', H::encode($visit->getReason() ?? ''));
             echo H::tag('td', H::encode($visit->getCreatedAt()->format('Y-m-d H:i:s')));
            echo H::closeTag('tr');
