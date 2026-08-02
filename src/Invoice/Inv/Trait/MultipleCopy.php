@@ -720,7 +720,7 @@ trait MultipleCopy
                     // HomeCareSignupController's invoice generation.
                     $copy->setStatusId(2);
                     if (strlen($copy->getNumber() ?? '') === 0) {
-                        $copy->setNumber((string) $d->gR->generateNumber($groupId, true));
+                        $copy->setNumber((string) $d->gR->generateNumber($templateInvoice->reqGroupId(), true));
                     }
                     $this->invToInvInvItems($invId, $copy_id, $d, $formHydrator);
                     $this->invToInvInvTaxRates($invId, $copy_id, $d, $formHydrator);
