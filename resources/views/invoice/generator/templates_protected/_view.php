@@ -58,6 +58,12 @@ echo "<?= Html::closeTag('h1'); ?>" . "\n";
 echo '<?= $button::back(); ?>' . "\n";
 echo "<?= Html::openTag('div'); ?>" . "\n";
 
+// Converts a snake_case column/relation name to the PascalCase suffix used
+// by the generated Form's getters, e.g. 'date_note' -> 'DateNote' (plain
+// ucfirst() only capitalizes the first letter, leaving the underscores in
+// place and producing a call to a getter that doesn't exist).
+$toPascalCase = static fn (string $name): string => str_replace('_', '', ucwords($name, '_'));
+
 /**
  * @var App\Infrastructure\Persistence\GentorRelation\GentorRelation $relation
  */
@@ -65,7 +71,7 @@ foreach ($relations as $relation) {
     $relationName = $relation->getLowercaseName() ?? '#';
     echo '    <?php ReadOnlyField::render(' . "\n";
     echo '        $translator->translate(\'' . $relationName . '\'),' . "\n";
-    echo '        $selectLabel($' . $relationName . 's, $form->get' . ucfirst($relationName) . '_id()),' . "\n";
+    echo '        $selectLabel($' . $relationName . 's, $form->get' . $toPascalCase($relationName) . 'Id()),' . "\n";
     echo '    ); ?>' . "\n";
 }
 
@@ -86,7 +92,7 @@ foreach ($orm_schema->getColumns() as $column) {
         if (($column->getType() === 'bool') && ($column->getAbstractType() === 'bool')) {
             echo '    <?php ReadOnlyField::render(' . "\n";
             echo '        $translator->translate(\'' . $column->getName() . '\'),' . "\n";
-            echo '        $translator->translate($form->get' . ucfirst($column->getName()) . '() === true ? \'yes\' : \'no\'),' . "\n";
+            echo '        $translator->translate($form->get' . $toPascalCase($column->getName()) . '() === true ? \'yes\' : \'no\'),' . "\n";
             echo '    ); ?>' . "\n";
         }
         /**
@@ -97,7 +103,7 @@ foreach ($orm_schema->getColumns() as $column) {
         if (($column->getType() === 'mixed') && (($column->getAbstractType() === 'date'))) {
             echo '    <?php ReadOnlyField::render(' . "\n";
             echo '        $translator->translate(\'' . $column->getName() . '\'),' . "\n";
-            echo '        $form->get' . ucfirst($column->getName()) . '() instanceof \DateTimeImmutable ? ($form->get' . ucfirst($column->getName()) . '())->format(\'Y-m-d\') : \'\',' . "\n";
+            echo '        $form->get' . $toPascalCase($column->getName()) . '() instanceof \DateTimeImmutable ? ($form->get' . $toPascalCase($column->getName()) . '())->format(\'Y-m-d\') : \'\',' . "\n";
             echo '    ); ?>' . "\n";
         }
         /**
@@ -108,7 +114,7 @@ foreach ($orm_schema->getColumns() as $column) {
         if (($column->getType() === 'float') && ($column->getAbstractType() === 'decimal')) {
             echo '    <?php ReadOnlyField::render(' . "\n";
             echo '        $translator->translate(\'' . $column->getName() . '\'),' . "\n";
-            echo '        $s->formatAmount((float) ($form->get' . ucfirst($column->getName()) . '() ?? 0.00)),' . "\n";
+            echo '        $s->formatAmount((float) ($form->get' . $toPascalCase($column->getName()) . '() ?? 0.00)),' . "\n";
             echo '    ); ?>' . "\n";
         }
         /**
@@ -119,14 +125,14 @@ foreach ($orm_schema->getColumns() as $column) {
         if (($column->getType() === 'string') && ($column->getAbstractType() <> 'date')) {
             echo '    <?php ReadOnlyField::render(' . "\n";
             echo '        $translator->translate(\'' . $column->getName() . '\'),' . "\n";
-            echo '        $form->get' . ucfirst($column->getName()) . '(),' . "\n";
+            echo '        $form->get' . $toPascalCase($column->getName()) . '(),' . "\n";
             echo '    ); ?>' . "\n";
         }
 
         if (($column->getType() === 'int') && ($column->getAbstractType() <> 'date') && ($column->getAbstractType() <> 'primary')) {
             echo '    <?php ReadOnlyField::render(' . "\n";
             echo '        $translator->translate(\'' . $column->getName() . '\'),' . "\n";
-            echo '        $form->get' . ucfirst($column->getName()) . '() !== null ? (string) $form->get' . ucfirst($column->getName()) . '() : \'\',' . "\n";
+            echo '        $form->get' . $toPascalCase($column->getName()) . '() !== null ? (string) $form->get' . $toPascalCase($column->getName()) . '() : \'\',' . "\n";
             echo '    ); ?>' . "\n";
         }
     } // if substr
