@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use Yiisoft\FormModel\Field;
+use App\Widget\ReadOnlyField;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Invoice\CustomField\CustomFieldForm $form
@@ -19,69 +18,44 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
 
+// A pure display page — see docs/READONLY_VIEW_FIELDS_AUGUST_2026.md.
 ?>
 
-<?=
-     new Form()
-    ->post($urlGenerator->generate($actionName, $actionArguments))
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)
-    ->id('CustomFieldForm')
-    ->open()
-?>
-
-<?= Html::openTag('h1'); ?>
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
+<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div', ['class' => 'card-body']); ?>
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
-<?= Html::openTag('div'); ?>
-    <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-        <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                <?= Field::text($form, 'table')
-    ->addInputAttributes(['style' => 'background:lightblue'])
-    ->label($translator->translate('table'))
-    ->value(Html::encode(strlen($table = $form->table ?? '') > 0 ? ucfirst($s->lang((string) $custom_tables[$table])) : ''))
-    ->readonly(true);
-?>
-            <?= Html::closeTag('div'); ?>
-
-            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                <?= Field::text($form, 'label')
-    ->addInputAttributes(['style' => 'background:lightblue'])
-    ->label($translator->translate('label'))
-    ->value(Html::encode($form->label ?? ''))
-    ->readonly(true);
-?>
-            <?= Html::closeTag('div'); ?>
-
-            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                <?= Field::text($form, 'type')
-    ->addInputAttributes(['style' => 'background:lightblue'])
-    ->label($translator->translate('type'))
-    ->value(Html::encode($translator->translate('' . str_replace("-", "_", strtolower($form->type ?? '')) . '')))
-    ->readonly(true);
-?>
-            <?= Html::closeTag('div'); ?>
-
-            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                <?= Field::text($form, 'location')
-    ->addInputAttributes(['style' => 'background:lightblue'])
-    ->label($translator->translate('custom.field.location'))
-    ->value(Html::encode($form->location ?? ''))
-    ->readonly(true);
-?>
-            <?= Html::closeTag('div'); ?>
-
-            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                <?= Field::text($form, 'order')
-    ->addInputAttributes(['style' => 'background:lightblue'])
-    ->label($translator->translate('order'))
-    ->value(Html::encode($form->order ?? ''))
-    ->readonly(true);
-?>
-            <?= Html::closeTag('div'); ?>
-        <?= Html::closeTag('div'); ?>
-    <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>
 <?= $button::back(); ?>
-<?=  new Form()->close(); ?>
+<?= Html::openTag('div'); ?>
+    <?php
+        $table = $form->table ?? '';
+        ReadOnlyField::render(
+            $translator->translate('table'),
+            strlen($table) > 0 && isset($custom_tables[$table])
+                ? ucfirst($s->lang((string) $custom_tables[$table]))
+                : '',
+        );
+        ReadOnlyField::render($translator->translate('label'), $form->label);
+        ReadOnlyField::render(
+            $translator->translate('type'),
+            $translator->translate(str_replace('-', '_', strtolower($form->type ?? ''))),
+        );
+        ReadOnlyField::render(
+            $translator->translate('custom.field.location'),
+            $form->location !== null ? (string) $form->location : '',
+        );
+        ReadOnlyField::render(
+            $translator->translate('order'),
+            $form->order !== null ? (string) $form->order : '',
+        );
+    ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>

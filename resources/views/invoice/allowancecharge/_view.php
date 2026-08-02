@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use Yiisoft\FormModel\Field;
+use App\Widget\ReadOnlyField;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Invoice\AllowanceCharge\AllowanceChargeForm $form
@@ -17,73 +16,46 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
 
+// A pure display page — see docs/READONLY_VIEW_FIELDS_AUGUST_2026.md.
 $ac = 'allowance.or.charge.';
-
-echo Html::openTag('h1');
- echo Html::encode($title);
-echo Html::closeTag('h1');
-
-echo  new Form()
-    ->post($urlGenerator->generate($actionName, $actionArguments))
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)
-    ->id('AllowanceChargeForm')
-    ->open();
-echo Html::openTag('div');
- echo Html::openTag('div', ['class' => 'mb-3']); //1
-  echo Html::openTag('div', ['class' => 'row']); //2
-   echo Html::openTag('div', ['class' => 'mb-3']); //3
-    echo Field::text($form, 'identifier')
-        ->addInputAttributes(['style' => 'background:lightblue'])
-        ->label($translator->translate('allowance.or.charge'))
-        ->value(Html::encode($form->getIdentifier() == true
-        ? $translator->translate($ac . 'charge')
-        : $translator->translate($ac . 'allowance')))
-        ->readonly(true);
-   echo Html::closeTag('div'); //3
-   echo Html::openTag('div', ['class' => 'form-check form-switch']); //3
-    echo Field::checkbox($form, 'level')
-        ->inputLabel($translator->translate($ac . 'level'))
-        ->inputLabelAttributes(['class' => 'form-check-label fs-4'])
-        ->inputClass('form-check-input');
-   echo Html::closeTag('div'); //3
-   echo Html::openTag('div', ['class' => 'mb-3']); //3
-    echo Field::text($form, 'reason_code')
-        ->addInputAttributes(['style' => 'background:lightblue'])
-        ->label($translator->translate($ac . 'reason.code'))
-        ->value(Html::encode($form->getReasonCode() ?? ''))
-        ->readonly(true);
-   echo Html::closeTag('div'); //3
-   echo Html::openTag('div', ['class' => 'mb-3']); //3
-    echo Field::text($form, 'reason')
-        ->addInputAttributes(['style' => 'background:lightblue'])
-        ->label($translator->translate($ac . 'reason'))
-        ->value(Html::encode($form->getReason() ?? ''))
-        ->readonly(true);
-   echo Html::closeTag('div'); //3
-   echo Html::openTag('div', ['class' => 'mb-3']); //3
-    echo Field::text($form, 'multiplier_factor_numeric')
-        ->addInputAttributes(['style' => 'background:lightblue'])
-        ->label($translator->translate($ac . 'multiplier.factor.numeric'))
-        ->value(Html::encode($form->getMultiplierFactorNumeric() ?? ''))
-        ->readonly(true);
-   echo Html::closeTag('div'); //3
-   echo Html::openTag('div', ['class' => 'mb-3']); //3
-    echo Field::text($form, 'amount')
-        ->addInputAttributes(['style' => 'background:lightblue'])
-        ->label($translator->translate($ac . 'amount'))
-        ->value(Html::encode($form->getAmount() ?? ''))
-        ->readonly(true);
-   echo Html::closeTag('div'); //3
-   echo Html::openTag('div', ['class' => 'mb-3']); //3
-    echo Field::text($form, 'base_amount')
-        ->addInputAttributes(['style' => 'background:lightblue'])
-        ->label($translator->translate($ac . 'base.amount'))
-        ->value(Html::encode($form->getBaseAmount() ?? ''))
-        ->readonly(true);
-   echo Html::closeTag('div'); //3
-  echo Html::closeTag('div'); //2
- echo Html::closeTag('div'); //1
-echo Html::closeTag('div');
-echo $button::back();
-echo  new Form()->close();
+?>
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
+<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div', ['class' => 'card-body']); ?>
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
+    <?= Html::encode($title); ?>
+<?= Html::closeTag('h1'); ?>
+<?= $button::back(); ?>
+<?= Html::openTag('div'); ?>
+    <?php
+        ReadOnlyField::render(
+            $translator->translate('allowance.or.charge'),
+            $translator->translate($form->getIdentifier() === true ? $ac . 'charge' : $ac . 'allowance'),
+        );
+        ReadOnlyField::render(
+            $translator->translate($ac . 'level'),
+            $translator->translate($form->getLevel() === 1 ? 'yes' : 'no'),
+        );
+        ReadOnlyField::render($translator->translate($ac . 'reason.code'), $form->getReasonCode());
+        ReadOnlyField::render($translator->translate($ac . 'reason'), $form->getReason());
+        ReadOnlyField::render(
+            $translator->translate($ac . 'multiplier.factor.numeric'),
+            $form->getMultiplierFactorNumeric() !== null ? (string) $form->getMultiplierFactorNumeric() : '',
+        );
+        ReadOnlyField::render(
+            $translator->translate($ac . 'amount'),
+            $form->getAmount() !== null ? (string) $form->getAmount() : '',
+        );
+        ReadOnlyField::render(
+            $translator->translate($ac . 'base.amount'),
+            $form->getBaseAmount() !== null ? (string) $form->getBaseAmount() : '',
+        );
+    ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>

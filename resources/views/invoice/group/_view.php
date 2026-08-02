@@ -1,10 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
-
-use Yiisoft\FormModel\Field;
+use App\Widget\ReadOnlyField;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Invoice\Group\GroupForm $form
@@ -16,79 +15,36 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<string,list<string>> $errors
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
+
+// A pure display page — see docs/READONLY_VIEW_FIELDS_AUGUST_2026.md.
 ?>
 
 <?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
 <?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
 <?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
-<?= Html::openTag('div', ['class' => 'card-header']); ?>
+<?= Html::openTag('div', ['class' => 'card-body']); ?>
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
     <?= $translator->translate('group.form'); ?>
 <?= Html::closeTag('h1'); ?>
-<?=  new Form()
-    ->post($urlGenerator->generate($actionName, $actionArguments))
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)
-    ->id('GroupForm')
-    ->open()
-?>
-<?= Html::openTag('div', ['class' => 'tabs-below']); ?>
-
-    <?= Html::openTag('div', ['class' => 'tab-content']); ?>
-
-        <?= Html::openTag('div'); ?>
-            <?= Field::text($form, 'name')
-                ->label($translator->translate('name'))
-                ->addInputAttributes([
-                    'class' => 'form-control form-control-lg',
-                    'readonly' => 'readonly',
-                    'disabled' => 'disabled',
-                ])
-                ->value(Html::encode($form->getName()))
-                ->placeholder($translator->translate('name'))
-                ->hint($translator->translate('hint.this.field.is.required')); ?>
-            <?= Html::tag('br'); ?>
-            <?= Field::text($form, 'identifier_format')
-                ->label($translator->translate('identifier.format'))
-                ->addInputAttributes([
-                    'class' => 'form-control taggable',
-                    'id' => 'identifier_format',
-                    'name' => 'identifier_format',
-                    'readonly' => 'readonly',
-                    'disabled' => 'disabled',
-                ])
-                ->value(Html::encode($form->getIdentifierFormat()))
-                ->placeholder('INV-{{{id}}}')
-                ->hint($translator->translate('hint.this.field.is.required')); ?>
-            <?= Field::text($form, 'left_pad')
-                ->label($translator->translate('left.pad'))
-                ->addInputAttributes([
-                    'class' => 'form-control form-control-lg',
-                    'readonly' => 'readonly',
-                    'disabled' => 'disabled',
-                ])
-                ->value(Html::encode($form->getLeftPad()) ?: '0')
-                ->placeholder('0')
-                ->hint($translator->translate('hint.this.field.is.required')); ?>
-            <?= Html::tag('br'); ?>
-            <?= Field::text($form, 'next_id')
-                ->label($translator->translate('next.id'))
-                ->addInputAttributes([
-                    'class' => 'form-control form-control-lg',
-                    'readonly' => 'readonly',
-                    'disabled' => 'disabled',
-                ])
-                ->value(Html::encode($form->getNextId()) ?: '1')
-                ->placeholder('1')
-                ->hint($translator->translate('hint.this.field.is.required')); ?>
-            <?= Html::tag('br'); ?>
-            <?= Html::closeTag('div'); ?>
-            <?= $button::back(); ?>
-        <?= Html::closeTag('div'); ?>
-    <?= Html::closeTag('div'); ?>
+<?= Html::openTag('div'); ?>
+    <?php
+        ReadOnlyField::render($translator->translate('name'), $form->getName());
+        ReadOnlyField::render(
+            $translator->translate('identifier.format'),
+            $form->getIdentifierFormat(),
+        );
+        ReadOnlyField::render(
+            $translator->translate('left.pad'),
+            $form->getLeftPad() !== null ? (string) $form->getLeftPad() : '0',
+        );
+        ReadOnlyField::render(
+            $translator->translate('next.id'),
+            $form->getNextId() !== null ? (string) $form->getNextId() : '1',
+        );
+    ?>
+    <?= $button::back(); ?>
 <?= Html::closeTag('div'); ?>
-<?=  new Form()->close(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

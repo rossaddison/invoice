@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use Yiisoft\FormModel\Field;
+use App\Widget\ReadOnlyField;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
@@ -21,18 +20,23 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataAllowanceCharges
  */
 
-echo  new Form()
-    ->post($urlGenerator->generate($actionName, $actionArguments))
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)
-    ->id('InvAllowanceChargeForm')
-    ->open() ?>
+// A pure display page — see docs/READONLY_VIEW_FIELDS_AUGUST_2026.md.
+$selectLabel = static function (array $optionsData, int|string|null $value): string {
+    if ($value === null || $value === '') {
+        return '';
+    }
+    $key = (string) $value;
+    /** @var string|array|null $label */
+    $label = $optionsData[$key] ?? null;
+    return is_string($label) ? $label : $key;
+};
+?>
 
 <?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
 <?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
 <?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
-<?= Html::openTag('div', ['class' => 'card-header']); ?>
+<?= Html::openTag('div', ['class' => 'card-body']); ?>
 
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
     <?= Html::encode($title) ?>
@@ -41,44 +45,24 @@ echo  new Form()
     <?= $button::back(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                <?= Field::select($form, 'allowance_charge_id')
-                    ->label($translator->translate('allowance.or.charge'))
-                    ->addInputAttributes([
-                        'readonly' => 'readonly',
-                        'disabled' => 'disabled',
-                    ])
-                    ->optionsData($optionsDataAllowanceCharges);
-?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::text($form, 'amount')
-    ->label($translator->translate('allowance.or.charge.amount'))
-    ->addInputAttributes([
-        'readonly' => 'readonly',
-        'disabled' => 'disabled',
-    ])
-    ->value(Html::encode($form->getAmount()));
-?>
-                <?= Html::closeTag('div'); ?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::text($form, 'vat_or_tax')
-    ->label($translator->translate('vat.abbreviation'))
-    ->addInputAttributes([
-        'readonly' => 'readonly',
-        'disabled' => 'disabled',
-    ])
-    ->value(Html::encode($form->getVatOrTax()));
-?>
-                <?= Html::closeTag('div'); ?>
-            <?= Html::closeTag('div'); ?>
+            <?php
+                ReadOnlyField::render(
+                    $translator->translate('allowance.or.charge'),
+                    $selectLabel($optionsDataAllowanceCharges, $form->getAllowanceChargeId()),
+                );
+                ReadOnlyField::render(
+                    $translator->translate('allowance.or.charge.amount'),
+                    $form->getAmount() !== null ? (string) $form->getAmount() : '',
+                );
+                ReadOnlyField::render(
+                    $translator->translate('vat.abbreviation'),
+                    $form->getVatOrTax() !== null ? (string) $form->getVatOrTax() : '',
+                );
+            ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?=  new Form()->close() ?>
+<?= Html::closeTag('div'); ?>

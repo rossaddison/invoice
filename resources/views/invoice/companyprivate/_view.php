@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use Yiisoft\FormModel\Field;
+use App\Widget\ReadOnlyField;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Invoice\CompanyPrivate\CompanyPrivateForm $form
@@ -21,132 +20,72 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<string,list<string>> $errors
  */
 
+// A pure display page — see docs/READONLY_VIEW_FIELDS_AUGUST_2026.md.
 ?>
-<?= Html::openTag('h1');?>
-    <?= Html::encode($title); ?>
-<?=Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
 <?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
 <?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
-<?= Html::openTag('div', ['class' => 'card-header']); ?>
+<?= Html::openTag('div', ['class' => 'card-body']); ?>
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
-<?= $translator->translate('setting.company.private'); ?>
+    <?= Html::encode($title); ?>
 <?= Html::closeTag('h1'); ?>
-
-<?=  new Form()
-    ->post($urlGenerator->generate($actionName, $actionArguments))
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)
-    ->id('CompanyPrivateForm')
-    ->open() ?>
-
-    <?= Html::openTag('div', ['id' => 'headerbar']); ?>
-        <?= Html::openTag('h1', ['class' => 'headerbar-title']); ?>
-            <?= $translator->translate('view'); ?>
-        <?= Html::closeTag('h1'); ?>
-        <?= Html::openTag('div', ['id' => 'content']); ?>
-            <?= Html::openTag('div', ['class' => 'row']); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::text($form, 'company_public_name')
-                        ->readonly(true); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::text($form, 'tax_code')
-                        ->readonly(true); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::text($form, 'iban')
-                        ->readonly(true); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::text($form, 'bacs_sort_code')
-                        ->addInputAttributes(['class' => 'form-control form-control-lg font-monospace'])
-                        ->label($translator->translate('bacs.sort.code'))
-                        ->readonly(true)
-                        ->value(Html::encode($form->getBacsSortCode() ?? '')); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::text($form, 'bacs_account_number')
-                        ->addInputAttributes(['class' => 'form-control form-control-lg font-monospace'])
-                        ->label($translator->translate('bacs.account.number'))
-                        ->readonly(true)
-                        ->value(Html::encode($form->getBacsAccountNumber() ?? '')); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::text($form, 'gln')
-                        ->addInputAttributes(['class' => 'form-control form-control-lg',])
-                        ->label($translator->translate('gln'))
-                        ->readonly(true)
-                        ->value(Html::encode($form->getGln() ??  '')); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::text($form, 'rcc')
-                        ->readonly(true); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'container-fluid px-1']); ?>
-                    <?= Html::openTag('div', ['class' => 'p-3 border bg-light']); ?>
-                        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                            <?= Field::text($form, 'logo_filename')
-                                ->readonly(true)
-                                ->value($form->getLogoFilename()); ?>
-                        <?= Html::closeTag('div'); ?>
-                        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                            <?= Field::image()
-                               ->src('/logo/' . ($form->getLogoFilename() ?? '#'))
-                               ->height($form->getLogoHeight())
-                               ->width($form->getLogoWidth()); ?>
-                        <?= Html::closeTag('div'); ?>
+<?= Html::openTag('div', ['id' => 'headerbar']); ?>
+    <?= $button::back(); ?>
+    <?= Html::openTag('div', ['id' => 'content']); ?>
+        <?= Html::openTag('div', ['class' => 'row']); ?>
+            <?php
+                ReadOnlyField::render('Company Name', $form->getCompanyPublicName());
+                ReadOnlyField::render($translator->translate('tax.code'), $form->getTaxCode());
+                ReadOnlyField::render($translator->translate('user.iban'), $form->getIban());
+                ReadOnlyField::render($translator->translate('bacs.sort.code'), $form->getBacsSortCode());
+                ReadOnlyField::render(
+                    $translator->translate('bacs.account.number'),
+                    $form->getBacsAccountNumber(),
+                );
+                ReadOnlyField::render($translator->translate('gln'), $form->getGln());
+                ReadOnlyField::render('RCC', $form->getRcc());
+            ?>
+            <?= Html::openTag('div', ['class' => 'container-fluid px-1']); ?>
+                <?= Html::openTag('div', ['class' => 'p-3 border bg-light']); ?>
+                    <?php
+                        ReadOnlyField::render('Logo Filename', $form->getLogoFilename());
+                    ?>
+                    <?= Html::openTag('div', ['class' => 'mb-3']); ?>
+                        <?= Html::img('/logo/' . ($form->getLogoFilename() ?? '#'))
+                            ->height((int) ($form->getLogoHeight() ?? 0))
+                            ->width((int) ($form->getLogoWidth() ?? 0)); ?>
                     <?= Html::closeTag('div'); ?>
-                <?= Html::Tag('br'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::text($form, 'logo_width')
-                        ->readonly(true); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::text($form, 'logo_height')
-                        ->readonly(true); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::text($form, 'logo_margin')
-                        ->readonly(true); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::date($form, 'start_date')
-                        ->addInputAttributes(
-                            [
-                                'class' => 'form-control form-control-lg',
-                                'placeholder' => ' (' . $dateHelper->display() . ')',
-                                'readonly' => 'readonly',
-                                'disabled' => 'disabled',
-                            ],
-                        )
-                        ->value(Html::encode(!is_string($startdate = $form->getStartDate()) && null !== $startdate
-                                            ? $startdate->format('Y-m-d')
-                                            : (new \DateTimeImmutable('now'))->format('Y-m-d')));
-?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::date($form, 'end_date')
-    ->addInputAttributes(
-        [
-            'class' => 'form-control form-control-lg',
-            'placeholder' => ' (' . $dateHelper->display() . ')',
-            'readonly' => 'readonly',
-            'disabled' => 'disabled',
-        ],
-    )
-    ->value(Html::encode(!is_string($enddate = $form->getEndDate()) && null !== $enddate
-                        ? $enddate->format('Y-m-d')
-                        : (new \DateTimeImmutable('now'))->format('Y-m-d')));
-?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
+            <?php
+                ReadOnlyField::render(
+                    $translator->translate('company.private.logo.width'),
+                    $form->getLogoWidth(),
+                );
+                ReadOnlyField::render(
+                    $translator->translate('company.private.logo.height'),
+                    $form->getLogoHeight(),
+                );
+                ReadOnlyField::render(
+                    $translator->translate('company.private.logo.margin'),
+                    $form->getLogoMargin(),
+                );
+                ReadOnlyField::render(
+                    $translator->translate('start.date') . ' (' . $dateHelper->display() . ')',
+                    $form->getStartDate() instanceof \DateTimeImmutable
+                        ? $form->getStartDate()->format('Y-m-d')
+                        : (new \DateTimeImmutable('now'))->format('Y-m-d'),
+                );
+                ReadOnlyField::render(
+                    $translator->translate('end.date') . ' (' . $dateHelper->display() . ')',
+                    $form->getEndDate() instanceof \DateTimeImmutable
+                        ? $form->getEndDate()->format('Y-m-d')
+                        : (new \DateTimeImmutable('now'))->format('Y-m-d'),
+                );
+            ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
-<?= $button::back(); ?>
-<?=  new Form()->close() ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

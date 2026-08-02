@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use Yiisoft\FormModel\Field;
+use App\Widget\ReadOnlyField;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Invoice\CategorySecondary\CategorySecondaryForm $form
@@ -19,54 +18,35 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<array-key, array<array-key, string>|string> $category_primarys
  */
 
+// A pure display page — see docs/READONLY_VIEW_FIELDS_AUGUST_2026.md.
+$selectLabel = static function (array $optionsData, int|string|null $value): string {
+    if ($value === null || $value === '') {
+        return '';
+    }
+    $key = (string) $value;
+    /** @var string|array|null $label */
+    $label = $optionsData[$key] ?? null;
+    return is_string($label) ? $label : $key;
+};
 ?>
-<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
 <?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
 <?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
-<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?><?= Html::openTag('div', ['class' => 'card-header']); ?>
+<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div', ['class' => 'card-body']); ?>
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
-     <?= $translator->translate('add'); ?>
-     <?= $button->back(); ?>
+    <?= Html::encode($title); ?>
 <?= Html::closeTag('h1'); ?>
-<?=  new Form()
-    ->post($urlGenerator->generate($actionName, $actionArguments))
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)
-    ->id('CategorySecondaryForm')
-    ->open()
-?>
-
-<?= Html::openTag('div', ['class' => 'container']); ?>
-<?= Html::openTag('div', ['class' => 'row']); ?>
-<?= Html::openTag('div', ['class' => 'col card mb-3']); ?>
-<?= Html::openTag('div', ['class' => 'card-header']); ?>
-    <?= Html::openTag('h5'); ?>
-        <?= Html::encode($title); ?>
-    <?= Html::closeTag('h5'); ?>
-    <?= Html::openTag('div'); ?>
-        <?= Field::select($form, 'category_primary_id')
-            ->addInputAttributes([
-                'class' => 'form-control form-control-lg',
-                'disabled' => 'disabled',
-            ])
-            ->value($form->getCategoryPrimaryId())
-            ->prompt($translator->translate('none'))
-            ->optionsData($category_primarys)
-?>
-    <?= Html::closeTag('div'); ?>
-    <?= Html::openTag('div'); ?>
-        <?= Field::text($form, 'name')
-    ->label($translator->translate('name'))
-    ->addInputAttributes([
-        'class' => 'form-control form-control-lg',
-    ])
-    ->value(Html::encode($form->getName()))
-    ->readonly(true)
-    ->placeholder($translator->translate('name'))
-?>
-    <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('form'); ?>
+<?= $button::back(); ?>
+<?= Html::openTag('div'); ?>
+    <?php
+        ReadOnlyField::render(
+            $translator->translate('category.primary'),
+            $selectLabel($category_primarys, $form->getCategoryPrimaryId()),
+        );
+        ReadOnlyField::render($translator->translate('name'), $form->getName());
+    ?>
+<?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use Yiisoft\FormModel\Field;
+use App\Widget\ReadOnlyField;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeForm $form
@@ -21,33 +20,9 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<string,list<string>> $errors
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataAllowanceCharge
  */
-?>
 
-<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
-<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
-<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
-<?= Html::openTag('div', ['class' => 'card-header']); ?>
-<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
-<?=  new Form()
-    ->post($urlGenerator->generate($actionName, $actionArguments))
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)
-    ->id('InvItemAllowanceChargeForm')
-    ->open();
-?>
-
-<?= Html::openTag('div', ['class' => 'headerbar']); ?>
-        <?= Html::openTag('h1');?>
-            <?= Html::encode($title); ?>
-        <?=Html::closeTag('h1'); ?>
-<?= Html::closeTag('div'); ?>
-
-<?= Html::openTag('div', ['id' => 'content']); ?>
-    <?= Html::openTag('div', ['class' => 'row']); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-            <?php
-                $optionsDataAllowanceCharge = [];
+// A pure display page — see docs/READONLY_VIEW_FIELDS_AUGUST_2026.md.
+$optionsDataAllowanceCharge = [];
 /**
  * @var App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge $allowance_charge
  */
@@ -61,32 +36,41 @@ foreach ($allowance_charges as $allowance_charge) {
     . ' ' . ($allowance_charge->getTaxRate()?->getTaxRateName() ?? '')
     . ' ' . ($translator->translate('allowance.or.charge.allowance'));
 }
+$selectLabel = static function (array $optionsData, int|string|null $value): string {
+    if ($value === null || $value === '') {
+        return '';
+    }
+    $key = (string) $value;
+    /** @var string|array|null $label */
+    $label = $optionsData[$key] ?? null;
+    return is_string($label) ? $label : $key;
+};
 ?>
-            <?= Field::select($form, 'allowance_charge_id')
-    ->label($translator->translate('allowance.or.charge.item.invoice'))
-    ->addInputAttributes([
-        'class' => 'form-control form-control-lg',
-        'readonly' => 'readonly',
-        'disabled' => 'disabled',
-    ])
-    ->optionsData($optionsDataAllowanceCharge)
-    ->value($form->getAllowanceChargeId())
-    ->prompt($translator->translate('none'));
-?>
-            <?= Field::text($form, 'amount')
-    ->label($translator->translate('text-end.inv.item') . '(' . $s->getSetting('currency_symbol') . ')')
-    ->addInputAttributes([
-        'class' => 'form-control form-control-lg',
-        'readonly' => 'readonly',
-        'disabled' => 'disabled',
-    ])
-    ->value($s->formatAmount($form->getAmount() ?? 0.00));
-?>
+
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
+<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div', ['class' => 'card-body']); ?>
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
+    <?= Html::encode($title); ?>
+<?= Html::closeTag('h1'); ?>
+<?= Html::openTag('div', ['id' => 'headerbar']); ?>
+    <?= $button::back(); ?>
+    <?= Html::openTag('div', ['id' => 'content']); ?>
+        <?= Html::openTag('div', ['class' => 'row']); ?>
+            <?php
+                ReadOnlyField::render(
+                    $translator->translate('allowance.or.charge.item.invoice'),
+                    $selectLabel($optionsDataAllowanceCharge, $form->getAllowanceChargeId()),
+                );
+                ReadOnlyField::render(
+                    $translator->translate('text-end.inv.item') . '(' . $s->getSetting('currency_symbol') . ')',
+                    $s->formatAmount($form->getAmount() ?? 0.00),
+                );
+            ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>
-<?= $button::back(); ?>
-<?=  new Form()->close(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

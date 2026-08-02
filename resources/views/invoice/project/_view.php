@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use Yiisoft\FormModel\Field;
+use App\Widget\ReadOnlyField;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Invoice\Project\ProjectForm $form
@@ -18,20 +17,24 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
 
+// A pure display page — see docs/READONLY_VIEW_FIELDS_AUGUST_2026.md.
+$clientName = '';
+/**
+ * @var App\Infrastructure\Persistence\Client\Client $client
+ */
+foreach ($clients as $client) {
+    if ($client->reqId() === $form->getClientId()) {
+        $clientName = $client->getClientName() . ' ' . ($client->getClientSurname() ?? '');
+        break;
+    }
+}
 ?>
-
-<?=  new Form()
-    ->post($urlGenerator->generate($actionName, $actionArguments))
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)
-    ->id('ProjectForm')
-    ->open() ?>
 
 <?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
 <?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
 <?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
-<?= Html::openTag('div', ['class' => 'card-header']); ?>
+<?= Html::openTag('div', ['class' => 'card-body']); ?>
 
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
     <?= Html::encode($title) ?>
@@ -40,50 +43,14 @@ use Yiisoft\Html\Tag\Form;
     <?= $button::back(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                <?php
-                    $optionsDataClient = [];
-/**
- * @var App\Infrastructure\Persistence\Client\Client $client
- */
-foreach ($clients as $client) {
-    $clientName = $client->getClientName();
-    $clientSurname = $client->getClientSurname() ?? '';
-    $clientId = $client->reqId();
-    // Only add to the dropdown if the following conditions are satisfied
-    if ((strlen($clientName) > 0) && (strlen(($clientSurname)) > 0)) {
-        $optionsDataClient[$clientId] = $clientName . ' ' . $clientSurname;
-    }
-}
-echo Field::select($form, 'client_id')
-->label($translator->translate('client'))
-->addInputAttributes([
-    'id' => 'client_id',
-    'class' => 'form-control form-control-lg',
-    'readonly' => 'readonly',
-    'disabled' => 'disabled',
-])
-->optionsData($optionsDataClient)
-?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                <?= Field::text($form, 'name')
-    ->label($translator->translate('project.name'))
-    ->addInputAttributes([
-        'id' => 'name',
-        'class' => 'form-control form-control-lg',
-        'placeholder' => $translator->translate('project.name'),
-        'readonly' => 'readonly',
-        'disabled' => 'disabled',
-    ])
-?>
-                <?= Html::closeTag('div'); ?>
-            <?= Html::closeTag('div'); ?>
+            <?php
+                ReadOnlyField::render($translator->translate('client'), $clientName);
+                ReadOnlyField::render($translator->translate('project.name'), $form->getName());
+            ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?=  new Form()->close() ?>
+<?= Html::closeTag('div'); ?>

@@ -70,6 +70,11 @@ final class CompanyPrivateForm extends FormModel
         return $this->company_id;
     }
 
+    public function getCompanyPublicName(): ?string
+    {
+        return $this->company_public_name;
+    }
+
     public function getVatId(): ?string
     {
         return $this->vat_id;

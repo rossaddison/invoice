@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use Yiisoft\FormModel\Field;
+use App\Widget\ReadOnlyField;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Invoice\ProductProperty\ProductPropertyForm $form
@@ -17,20 +16,15 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  * @psalm-var array<string,list<string>> $errors
  */
-?>
 
-<?=  new Form()
-    ->post($urlGenerator->generate($actionName, $actionArguments))
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)
-    ->id('ProductPropertyForm')
-    ->open() ?>
+// A pure display page — see docs/READONLY_VIEW_FIELDS_AUGUST_2026.md.
+?>
 
 <?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
 <?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
 <?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
-<?= Html::openTag('div', ['class' => 'card-header']); ?>
+<?= Html::openTag('div', ['class' => 'card-body']); ?>
 
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
     <?= Html::encode($title) ?>
@@ -39,32 +33,20 @@ use Yiisoft\Html\Tag\Form;
     <?= $button::back(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::hidden($form, 'product_id')
-                        ->hideLabel(true); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::text($form, 'name')
-                        ->readonly(true); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::text($form, 'value')
-                        ->readonly(true); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::text($form, 'product_id')
-                        ->label($translator->translate('product.name'))
-                        ->readonly(true)
-                        ->value($form->getProduct()?->getProductName() ?? ''); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::a(
-                    $form->getProduct()?->getProductName() ?? '',
-                    $urlGenerator->generate('product/view',
-                        ['id' => $form->getProduct()?->reqId()]),
+            <?php
+                ReadOnlyField::render($translator->translate('name'), $form->getName());
+                ReadOnlyField::render($translator->translate('value'), $form->getValue());
+            ?>
+            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
+                <?= Html::label($translator->translate('product.name'))
+                    ->attributes(['class' => 'text-muted mb-0']); ?>
+                <?= Html::div(
+                    Html::a(
+                        $form->getProduct()?->getProductName() ?? '',
+                        $urlGenerator->generate('product/view', ['id' => $form->getProduct()?->reqId()]),
+                    ),
+                    ['class' => 'form-control-plaintext'],
                 ); ?>
-                <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
@@ -72,4 +54,4 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?=  new Form()->close() ?>
+<?= Html::closeTag('div'); ?>

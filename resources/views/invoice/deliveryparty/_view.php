@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use Yiisoft\FormModel\Field;
+use App\Widget\ReadOnlyField;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Widget\Button $button
@@ -17,30 +16,22 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
 
+// A pure display page — see docs/READONLY_VIEW_FIELDS_AUGUST_2026.md.
 ?>
-<?=  new Form()
-    ->post($urlGenerator->generate($actionName, $actionArguments))
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)
-    ->id('DeliveryPartyForm')
-    ->open() ?>
-
-<?= Html::openTag('h1'); ?>
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
+<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div', ['class' => 'card-body']); ?>
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
+<?= $button::back(); ?>
 <?= Html::openTag('div'); ?>
-    <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-        <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                <?= Field::text($form, 'party_name')
-                    ->addInputAttributes(['style' => 'background:lightblue'])
-                    ->label($translator->translate('delivery.party.name'))
-                    ->value(Html::encode($form->getPartyName() ?? ''))
-                    ->readonly(true);
-?>
-            <?= Html::closeTag('div'); ?>
-        <?= Html::closeTag('div'); ?>
-    <?= Html::closeTag('div'); ?>
+    <?php ReadOnlyField::render($translator->translate('delivery.party.name'), $form->getPartyName()); ?>
 <?= Html::closeTag('div'); ?>
-<?= $button::backSave(); ?>
-<?=  new Form()->close() ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>

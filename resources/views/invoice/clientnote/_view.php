@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use Yiisoft\FormModel\Field;
+use App\Widget\ReadOnlyField;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Invoice\ClientNote\ClientNoteForm $form
@@ -20,21 +19,34 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataClient
  */
 
+// A pure display page — see docs/READONLY_VIEW_FIELDS_AUGUST_2026.md.
+$optionsDataClient = [];
+/**
+ * @var App\Infrastructure\Persistence\Client\Client $client
+ */
+foreach ($clients as $client) {
+    $clientId = $client->reqId();
+    $optionsDataClient[$clientId] = $client->getClientName()
+            . ' '
+            . ($client->getClientSurname() ?? '#');
+}
+$selectLabel = static function (array $optionsData, int|string|null $value): string {
+    if ($value === null || $value === '') {
+        return '';
+    }
+    $key = (string) $value;
+    /** @var string|array|null $label */
+    $label = $optionsData[$key] ?? null;
+    return is_string($label) ? $label : $key;
+};
 ?>
-
-<?=  new Form()
-    ->post($urlGenerator->generate($actionName, $actionArguments))
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)
-    ->id('ClientNoteForm')
-    ->open() ?>
 
 <?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
 <?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
 <?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
 <?= Html::openTag('div', ['class' =>
     'card border border-dark shadow-2-strong rounded-3']); ?>
-<?= Html::openTag('div', ['class' => 'card-header']); ?>
+<?= Html::openTag('div', ['class' => 'card-body']); ?>
 
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
     <?= Html::encode($title) ?>
@@ -45,53 +57,13 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <?= Html::openTag('div'); ?>
                 <?php
-                    $optionsDataClient = [];
-/**
- * @var App\Infrastructure\Persistence\Client\Client $client
- */
-                foreach ($clients as $client) {
-                    $clientId = $client->reqId();
-                    $optionsDataClient[$clientId] = $client->getClientName()
-                            . ' '
-                            . ($client->getClientSurname() ?? '#');
-                }
-                echo Field::select($form, 'client_id')
-                ->label($translator->translate('client'))
-                ->addInputAttributes([
-                    'id' => 'client_id',
-                    'class' => 'form-control form-control-lg',
-                    'readonly' => 'readonly',
-                    'disabled' => 'disabled',
-                ])
-                ->optionsData($optionsDataClient);
+                    ReadOnlyField::render(
+                        $translator->translate('client'),
+                        $selectLabel($optionsDataClient, $form->getClientId()),
+                    );
+                    ReadOnlyField::render($translator->translate('date'), $form->getDateNote());
+                    ReadOnlyField::render($translator->translate('note'), $form->getNote());
                 ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::date($form, 'date_note')
-                      ->label($translator->translate('date'))
-                      ->addInputAttributes([
-                          'placeholder'  => $translator->translate('date'),
-                          'class'        => 'form-control form-control-lg',
-                          'id'           => 'date_note',
-                          'data-action'      => 'show-picker',
-                      ])
-                      ->value(Html::encode($form->getDateNote() ?? ''))
-                      ->hint($translator->translate(
-                            'hint.this.field.is.required')); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                <?= Field::textarea($form, 'note')
-                    ->label($translator->translate('note'))
-                    ->addInputAttributes([
-                        'placeholder' => $translator->translate('note'),
-                        'value' => Html::encode($form->getNote() ?? ''),
-                        'class' => 'form-control form-control-lg',
-                        'id' => 'note',
-                        'readonly' => 'readonly',
-                        'disabled' => 'disabled',
-                    ])
-                ?>
-                <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
@@ -99,4 +71,5 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?=  new Form()->close() ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
