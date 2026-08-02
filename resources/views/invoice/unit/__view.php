@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use Yiisoft\FormModel\Field;
+use App\Widget\ReadOnlyField;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Invoice\Unit\UnitForm $form
@@ -17,20 +16,15 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  * @var string $title
  */
+
+// A pure display page — see docs/READONLY_VIEW_FIELDS_AUGUST_2026.md.
 ?>
 
-<?=  new Form()
-    ->post($urlGenerator->generate($actionName, $actionArguments))
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)
-    ->id('UnitForm')
-    ->open() ?>
-
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center align-items-start']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-6']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
-<?= Html::openTag('div', ['class' => 'card-header']); ?>
+<?= Html::openTag('div', ['class' => 'card-body']); ?>
 
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
     <?= Html::encode($title) ?>
@@ -39,26 +33,23 @@ use Yiisoft\Html\Tag\Form;
     <?= $button::back(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::text($form, 'unit_name')
-    ->label($translator->translate('unit.name'))
-    ->value(Html::encode($form->getUnitName() ?? ''))
-    ->disabled(true);
-?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::text($form, 'unit_name_plrl')
-    ->label($translator->translate('unit.name.plrl'))
-    ->value(Html::encode($form->getUnitNamePlrl() ?? ''))
-    ->disabled(true);
-?>
-                <?= Html::closeTag('div'); ?>
-            <?= Html::closeTag('div'); ?>
+            <?php
+                ReadOnlyField::render(
+                    $translator->translate('unit.name'),
+                    $form->getUnitName(),
+                    ['class' => 'col-md-6 mb-3'],
+                );
+                ReadOnlyField::render(
+                    $translator->translate('unit.name.plrl'),
+                    $form->getUnitNamePlrl(),
+                    ['class' => 'col-md-6 mb-3'],
+                );
+            ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?=  new Form()->close() ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>

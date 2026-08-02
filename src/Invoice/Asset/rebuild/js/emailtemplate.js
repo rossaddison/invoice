@@ -304,16 +304,21 @@
             }, { passive: true });
         }
 
-        // Correct the height of the content area (approximate original outerHeight behaviour)
-        var contentEl = document.getElementById('content');
-        var htmlEl = document.documentElement;
-        var documentHeight = htmlEl ? (htmlEl.offsetHeight || htmlEl.clientHeight) : (document.body ? document.body.clientHeight : 0);
-        var navbarHeight = (document.querySelector('.navbar') || {}).offsetHeight || 0;
-        var headerbarHeight = (document.getElementById('headerbar') || {}).offsetHeight || 0;
-        var submenuHeight = (document.getElementById('submenu') || {}).offsetHeight || 0;
-        var contentHeight = documentHeight - navbarHeight - headerbarHeight - submenuHeight;
-        if (contentEl && (contentEl.offsetHeight || contentEl.clientHeight) < contentHeight) {
-            contentEl.style.minHeight = contentHeight + 'px';
+        // Correct the height of the content area (approximate original outerHeight behaviour).
+        // Scoped to the email template settings form only — #content/#headerbar ids are
+        // reused by every page's view template, so without this guard the stretch ran
+        // globally and inflated unrelated short pages (e.g. unit/view) to near-viewport height.
+        if (document.getElementById('form-settings')) {
+            var contentEl = document.getElementById('content');
+            var htmlEl = document.documentElement;
+            var documentHeight = htmlEl ? (htmlEl.offsetHeight || htmlEl.clientHeight) : (document.body ? document.body.clientHeight : 0);
+            var navbarHeight = (document.querySelector('.navbar') || {}).offsetHeight || 0;
+            var headerbarHeight = (document.getElementById('headerbar') || {}).offsetHeight || 0;
+            var submenuHeight = (document.getElementById('submenu') || {}).offsetHeight || 0;
+            var contentHeight = documentHeight - navbarHeight - headerbarHeight - submenuHeight;
+            if (contentEl && (contentEl.offsetHeight || contentEl.clientHeight) < contentHeight) {
+                contentEl.style.minHeight = contentHeight + 'px';
+            }
         }
 
         // Keep track of last taggable clicked
