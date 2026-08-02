@@ -711,6 +711,17 @@ trait MultipleCopy
                 $this->inv_service->saveInv($user, $copy, $invoice_body, $this->sR, $d->gR);
                 $copy_id = $copy->reqId();
                 if ($copy_id > 0) {
+                    // Fresh invoices only get status/number correctly from
+                    // saveInv() when 'mark_invoices_sent_copy' happens to be
+                    // on — InvService::initNewInvFields() unconditionally
+                    // re-derives both from that setting for any new invoice,
+                    // clobbering the status_id/number this call already
+                    // asked for. Same gotcha, same fix, as
+                    // HomeCareSignupController's invoice generation.
+                    $copy->setStatusId(2);
+                    if (strlen($copy->getNumber() ?? '') === 0) {
+                        $copy->setNumber((string) $d->gR->generateNumber($groupId, true));
+                    }
                     $this->invToInvInvItems($invId, $copy_id, $d, $formHydrator);
                     $this->invToInvInvTaxRates($invId, $copy_id, $d, $formHydrator);
                     $this->invToInvInvCustom($invId, $copy_id, $d, $formHydrator);
