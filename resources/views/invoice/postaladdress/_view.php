@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use Yiisoft\FormModel\Field;
+use App\Widget\ReadOnlyField;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Infrastructure\Persistence\PostalAddress\PostalAddress $postalAddress
@@ -19,14 +18,9 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<string,list<string>> $errors
  */
 
-?>
+// A pure display page — see docs/READONLY_VIEW_FIELDS_AUGUST_2026.md.
 
-<?=  new Form()
-    ->post($urlGenerator->generate($actionName, $actionArguments))
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)
-    ->id('PostalAddressForm')
-    ->open() ?>
+?>
 
 <?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
 <?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
@@ -42,56 +36,39 @@ use Yiisoft\Html\Tag\Form;
     <?= $pAdd = 'client.postaladdress.'; ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Field::hidden($form, 'client_id')
-                    ->hideLabel(); ?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Field::text($form, 'street_name')
-                    ->label($translator->translate($pAdd . 'street.name'))
-                    ->disabled(true);
-?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Field::text($form, $pAdd. 'additional_street_name')
-                    ->label($translator->translate($pAdd . 'additional.street.name'))
-               ->disabled(true);
+            <?php
+                ReadOnlyField::render(
+                    $translator->translate($pAdd . 'street.name'),
+                    $form->getStreetName(),
+                );
+                ReadOnlyField::render(
+                    $translator->translate($pAdd . 'additional.street.name'),
+                    $form->getAdditionalStreetName(),
+                );
+                ReadOnlyField::render(
+                    $translator->translate($pAdd . 'building.number'),
+                    $form->getBuildingNumber(),
+                );
+                ReadOnlyField::render(
+                    $translator->translate($pAdd . 'city.name'),
+                    $form->getCityName(),
+                );
+                ReadOnlyField::render(
+                    $translator->translate($pAdd . 'postalzone'),
+                    $form->getPostalzone(),
+                );
+                ReadOnlyField::render(
+                    $translator->translate($pAdd . 'countrysubentity'),
+                    $form->getCountrysubentity(),
+                );
+                ReadOnlyField::render(
+                    $translator->translate($pAdd . 'country'),
+                    $form->getCountry(),
+                );
             ?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Field::text($form, 'building_number')
-                    ->label($translator->translate($pAdd . 'building.number'))
-                    ->disabled(true);
-                ?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Field::text($form, 'city_name')
-                    ->label($translator->translate($pAdd . 'city.name'))
-                    ->disabled(true);
-                ?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Field::text($form, 'postalzone')
-                    ->label($translator->translate($pAdd . 'postalzone'))
-                    ->disabled(true);
-                ?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Field::text($form, 'countrysubentity')
-                    ->label($translator->translate($pAdd . 'countrysubentity'))
-                    ->disabled(true);
-                ?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Field::text($form, 'country')
-                    ->label($translator->translate($pAdd . 'country'))
-                    ->disabled(true);
-                ?>
-            <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?=  new Form()->close() ?>

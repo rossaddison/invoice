@@ -3,11 +3,9 @@
 declare(strict_types=1);
 
 use App\Invoice\FamilyCustom\FamilyCustomForm;
-use App\Infrastructure\Persistence\FamilyCustom\FamilyCustom;
-use Yiisoft\FormModel\Field;
+use App\Widget\ReadOnlyField;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Th;
-use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Invoice\Family\FamilyForm $form
@@ -27,14 +25,18 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<array-key, array<array-key, string>|string> $categoryPrimaries
  * @psalm-var array<array-key, array<array-key, string>|string> $categorySecondaries
  */
-?>
 
-<?=  new Form()
-    ->post($urlGenerator->generate($actionName, $actionArguments))
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)
-    ->id('FamilyForm')
-    ->open() ?>
+// A pure display page — see docs/READONLY_VIEW_FIELDS_AUGUST_2026.md.
+$selectLabel = static function (array $optionsData, int|string|null $value): string {
+    if ($value === null || $value === '') {
+        return '';
+    }
+    $key = (string) $value;
+    /** @var string|array|null $label */
+    $label = $optionsData[$key] ?? null;
+    return is_string($label) ? $label : $key;
+};
+?>
 
 <?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
   <?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
@@ -48,75 +50,28 @@ use Yiisoft\Html\Tag\Form;
             <?= $button::back(); ?>
             <?= Html::openTag('div', ['id' => 'content']); ?>
               <?= Html::openTag('div', ['class' => 'row']); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                  <?= Field::errorSummary($form)
-                    ->errors($errors)
-                    ->header($translator->translate('error.summary'))
-                    ->onlyProperties(...['family_name'])
-                    ->onlyCommonErrors()
-?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                  <?= Field::text($form, 'family_name')
-                        ->label($translator->translate('family.name'))
-                        ->addInputAttributes([
-                            'placeholder' => $translator->translate('family.name'),
-                            'value' => Html::encode($form->getFamilyName() ?? ''),
-                            'class' => 'form-control form-control-lg',
-                            'id' => 'family_name',
-                        ])
-                        ->disabled()
-                        ->readonly(true);
-                  ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::select($form, 'category_primary_id')
-                        ->label($translator->translate('category.primary'))
-                        ->addInputAttributes([
-                            'class' => 'form-control  alert alert-warning',
-                        ])
-                        ->value($form->getCategoryPrimaryId())
-                        ->prompt($translator->translate('none'))
-                        ->optionsData($categoryPrimaries)
-                        ->disabled(true);
-                    ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                  <?= Field::select($form, 'category_secondary_id')
-                        ->label($translator->translate('category.secondary'))
-                        ->addInputAttributes([
-                            'class' => 'form-control  alert alert-warning',
-                        ])
-                        ->value($form->getCategorySecondaryId())
-                        ->prompt($translator->translate('none'))
-                        ->optionsData($categorySecondaries)
-                        ->disabled(true)
-                    ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                  <?= Field::text($form, 'family_commalist')
-                        ->label($translator->translate('family.comma.list'))
-                        ->addInputAttributes([
-                            'placeholder' => $translator->translate('family.comma.list'),
-                            'value' => Html::encode($form->getFamilyCommalist() ?? ''),
-                            'class' => 'form-control form-control-lg',
-                            'id' => 'family_commalist',
-                        ])
-                        ->disabled(true);
-                  ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                  <?= Field::text($form, 'family_productprefix')
-                        ->label($translator->translate('family.product.prefix'))
-                        ->addInputAttributes([
-                            'placeholder' => $translator->translate('family.product.prefix'),
-                            'value' => Html::encode($form->getFamilyProductprefix() ?? ''),
-                            'class' => 'form-control form-control-lg',
-                            'id' => 'family_productprefix',
-                        ])
-                        ->disabled(true);
-                  ?>
-                <?= Html::closeTag('div'); ?>
+                <?php
+                    ReadOnlyField::render(
+                        $translator->translate('family.name'),
+                        $form->getFamilyName(),
+                    );
+                    ReadOnlyField::render(
+                        $translator->translate('category.primary'),
+                        $selectLabel($categoryPrimaries, $form->getCategoryPrimaryId()),
+                    );
+                    ReadOnlyField::render(
+                        $translator->translate('category.secondary'),
+                        $selectLabel($categorySecondaries, $form->getCategorySecondaryId()),
+                    );
+                    ReadOnlyField::render(
+                        $translator->translate('family.comma.list'),
+                        $form->getFamilyCommalist(),
+                    );
+                    ReadOnlyField::render(
+                        $translator->translate('family.product.prefix'),
+                        $form->getFamilyProductprefix(),
+                    );
+                ?>
                 <?php
                 $i = 1;
                 /**
@@ -145,5 +100,3 @@ $cvH->printFieldForView($custom_field, $familyCustomForm, $familyCustomValues);?
     <?= Html::closeTag('div'); ?>
   <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-
-<?=  new Form()->close() ?>

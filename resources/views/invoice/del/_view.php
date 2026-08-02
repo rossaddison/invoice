@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-use Yiisoft\FormModel\Field;
+use App\Widget\ReadOnlyField;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\A;
-use Yiisoft\Html\Tag\Form;
 
 /**
  * Related logic: see App\Invoice\DeliveryLocation\DeliveryLocationController function view
@@ -23,13 +21,28 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<string,list<string>> $errors
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataEAS
  */
+
+// A pure display page — see docs/READONLY_VIEW_FIELDS_AUGUST_2026.md.
+$selectLabel = static function (array $optionsData, int|string|null $value): string {
+    if ($value === null || $value === '') {
+        return '';
+    }
+    $key = (string) $value;
+    /** @var string|array|null $label */
+    $label = $optionsData[$key] ?? null;
+    return is_string($label) ? $label : $key;
+};
+
+$optionsDataEAS = [];
+/**
+ * Related logic: see src/Invoice/Helpers/Peppol/PeppolArrays.php function electronicAddressScheme
+ * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-Delivery/cac-DeliveryLocation/cbc-ID/
+ * @var array $value
+ */
+foreach ($electronic_address_scheme as $value) {
+    $optionsDataEAS[(string) $value['Id']] = (string) $value['Id'] . str_repeat("-", 10) . (string) $value['Name'];
+}
 ?>
-<?=  new Form()
-    ->post($urlGenerator->generate($actionName, $actionArguments))
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)
-    ->id('DeliveryLocationForm')
-    ->open() ?>
 
 <?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
 <?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
@@ -44,147 +57,52 @@ use Yiisoft\Html\Tag\Form;
     <?= $button::back(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Field::text($form, 'date_created')
-                    ->label($translator->translate('common.date.created'))
-                    ->value(Html::encode($form->getDateCreated()
-                                              ->setTimeZone(new DateTimeZone(
-                                                    $s->getSetting('time_zone') ?:
-                                                    'Europe/London'))
-                                              ->format('Y-m-d H:i:s')))
-                    ->addInputAttributes([
-                        'placeholder' => $translator->translate('common.date.created'),
-                        'readonly' => 'readonly',
-                    ]);
-                ?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Field::text($form, 'date_modified')
-                    ->label($translator->translate('common.date.modified'))
-                    ->value(Html::encode($form->getDateModified()
-                                              ->setTimeZone(new DateTimeZone(
-                                                    $s->getSetting('time_zone') ?:
-                                                    'Europe/London')) 
-                                              ->format('Y-m-d H:i:s')))
-                    ->addInputAttributes([
-                        'placeholder' => $translator->translate('common.date.modified'),
-                        'readonly' => 'readonly',
-                    ])
-                ?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Field::text($form, 'name')
-    ->label($translator->translate('name'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('name'),
-        'disabled' => 'disabled',
-    ])
-    ->value(Html::encode($form->getName() ?? ''))
-?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Field::text($form, 'building_number')
-    ->label($translator->translate('delivery.location.building.number'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('delivery.location.building.number'),
-        'disabled' => 'disabled',
-    ])
-    ->value(Html::encode($form->getBuildingNumber() ?? ''))
-?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Field::text($form, 'address_1')
-    ->label($translator->translate('street.address'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('street.address'),
-        'disabled' => 'disabled',
-    ])
-    ->value(Html::encode($form->getAddress1() ?? ''));
-?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Field::text($form, 'address_2')
-    ->label($translator->translate('street.address.2'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('street.address.2'),
-        'disabled' => 'disabled',
-        'value' => Html::encode($form->getAddress2() ?? ''),
-    ]);
-?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Field::text($form, 'city')
-    ->label($translator->translate('city'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('city'),
-        'disabled' => 'disabled',
-        'value' => Html::encode($form->getCity() ?? ''),
-    ]);
-?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Field::text($form, 'state')
-    ->label($translator->translate('state'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('state'),
-        'disabled' => 'disabled',
-        'value' => Html::encode($form->getState() ?? ''),
-    ]);
-?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Field::text($form, 'zip')
-    ->label($translator->translate('zip'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('zip'),
-        'disabled' => 'disabled',
-        'value' => Html::encode($form->getZip() ?? ''),
-    ]);
-?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Field::text($form, 'country')
-    ->label($translator->translate('country'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('country'),
-        'disabled' => 'disabled',
-    ])
-    ->value(Html::encode($form->getCountry() ?? ''));
-?>
-            <?= Html::closeTag('div'); ?>
+            <?php
+                ReadOnlyField::render(
+                    $translator->translate('common.date.created'),
+                    $form->getDateCreated()
+                        ->setTimeZone(new DateTimeZone($s->getSetting('time_zone') ?: 'Europe/London'))
+                        ->format('Y-m-d H:i:s'),
+                );
+                ReadOnlyField::render(
+                    $translator->translate('common.date.modified'),
+                    $form->getDateModified()
+                        ->setTimeZone(new DateTimeZone($s->getSetting('time_zone') ?: 'Europe/London'))
+                        ->format('Y-m-d H:i:s'),
+                );
+                ReadOnlyField::render($translator->translate('name'), $form->getName());
+                ReadOnlyField::render(
+                    $translator->translate('delivery.location.building.number'),
+                    $form->getBuildingNumber(),
+                );
+                ReadOnlyField::render($translator->translate('street.address'), $form->getAddress1());
+                ReadOnlyField::render($translator->translate('street.address.2'), $form->getAddress2());
+                ReadOnlyField::render($translator->translate('city'), $form->getCity());
+                ReadOnlyField::render($translator->translate('state'), $form->getState());
+                ReadOnlyField::render($translator->translate('zip'), $form->getZip());
+                ReadOnlyField::render($translator->translate('country'), $form->getCountry());
+            ?>
             <?= Html::openTag('div'); ?>
                 <?= Html::a(
                     $translator->translate('delivery.location.global.location.number'),
                     'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-Delivery/cac-DeliveryLocation/cbc-ID/',
                     ['class' => 'text-decoration-none'],
                 ); ?>
-                <?= Field::text($form, 'global_location_number')
-                                                                                                                                                                    ->label($translator->translate('delivery.location.global.location.number'))
-                                                                                                                                                                    ->addInputAttributes([
-                                                                                                                                                                        'placeholder' => $translator->translate('delivery.location.global.location.number'),
-                                                                                                                                                                        'disabled' => 'disabled',
-                                                                                                                                                                        'value' => Html::encode($form->getGlobalLocationNumber() ?? ''),
-                                                                                                                                                                    ]);
-?>
+                <?php
+                    ReadOnlyField::render(
+                        $translator->translate('delivery.location.global.location.number'),
+                        $form->getGlobalLocationNumber(),
+                    );
+                ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
-                <?php
-    $optionsDataEAS = [];
-/**
- * Related logic: see src/Invoice/Helpers/Peppol/PeppolArrays.php function electronicAddressScheme
- * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-Delivery/cac-DeliveryLocation/cbc-ID/
- * @var array $value
- */
-foreach ($electronic_address_scheme as $value) {
-    $optionsDataEAS[(string) $value['Id']] = (string) $value['Id'] . str_repeat("-", 10) . (string) $value['Name'];
-}
-?>
                 <?= Html::a('EAS', 'https://docs.peppol.eu/poacc/upgrade-3/codelist/eas'); ?>
-                <?php Field::select($form, 'electronic_address_scheme')
-    ->label($translator->translate('delivery.location.electronic.address.scheme'))
-    ->optionsData($optionsDataEAS)
-    ->disabled(true);
-?>
+                <?php
+                    ReadOnlyField::render(
+                        $translator->translate('delivery.location.electronic.address.scheme'),
+                        $selectLabel($optionsDataEAS, $form->getElectronicAddressScheme()),
+                    );
+                ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
@@ -192,4 +110,3 @@ foreach ($electronic_address_scheme as $value) {
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?=  new Form()->close() ?>

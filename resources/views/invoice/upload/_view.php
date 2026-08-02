@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use Yiisoft\FormModel\Field;
+use App\Widget\ReadOnlyField;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Invoice\Upload\UploadForm $form
@@ -18,14 +17,17 @@ use Yiisoft\Html\Tag\Form;
  * @var string $title
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataClients
  */
-?>
 
-<?=  new Form()
-    ->post($urlGenerator->generate($actionName, $actionArguments))
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)
-    ->id('UploadForm')
-    ->open();
+// A pure display page — see docs/READONLY_VIEW_FIELDS_AUGUST_2026.md.
+$selectLabel = static function (array $optionsData, int|string|null $value): string {
+    if ($value === null || $value === '') {
+        return '';
+    }
+    $key = (string) $value;
+    /** @var string|array|null $label */
+    $label = $optionsData[$key] ?? null;
+    return is_string($label) ? $label : $key;
+};
 ?>
 
 <?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
@@ -41,52 +43,37 @@ use Yiisoft\Html\Tag\Form;
     <?= $button::back(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                <?= Field::select($form, 'client_id')
-                    ->label($translator->translate('clients'))
-                    ->optionsData($optionsDataClients)
-                    ->disabled(true);
-?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                <?= Field::text($form, 'url_key')
-    ->label($translator->translate('upload.url.key'))
-    ->value(Html::encode($form->getUrlKey()))
-    ->disabled(true);
-?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                <?= Field::text($form, 'file_name_original')
-    ->label($translator->translate('upload.filename.original'))
-    ->value(Html::encode($form->getFileNameOriginal()))
-    ->disabled(true);
-?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                <?= Field::text($form, 'file_name_new')
-    ->label($translator->translate('upload.filename.new'))
-    ->value(Html::encode($form->getFileNameNew()))
-    ->disabled(true);
-?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                <?= Field::text($form, 'description')
-    ->label($translator->translate('upload.description'))
-    ->value(Html::encode($form->getDescription()))
-    ->disabled(true);
-?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                <?= Field::date($form, 'uploaded_date')
-    ->label($translator->translate('date'))
-    ->required(true)
-    ->value($form->getUploadedDate() instanceof \DateTimeImmutable ? ($form->getUploadedDate())->format('Y-m-d') : '')
-    ->disabled(true);
-?>
-            <?= Html::closeTag('div'); ?>
+            <?php
+                ReadOnlyField::render(
+                    $translator->translate('clients'),
+                    $selectLabel($optionsDataClients, $form->getClientId()),
+                );
+                ReadOnlyField::render(
+                    $translator->translate('upload.url.key'),
+                    $form->getUrlKey(),
+                );
+                ReadOnlyField::render(
+                    $translator->translate('upload.filename.original'),
+                    $form->getFileNameOriginal(),
+                );
+                ReadOnlyField::render(
+                    $translator->translate('upload.filename.new'),
+                    $form->getFileNameNew(),
+                );
+                ReadOnlyField::render(
+                    $translator->translate('upload.description'),
+                    $form->getDescription(),
+                );
+                ReadOnlyField::render(
+                    $translator->translate('date'),
+                    $form->getUploadedDate() instanceof \DateTimeImmutable
+                        ? ($form->getUploadedDate())->format('Y-m-d')
+                        : $form->getUploadedDate(),
+                );
+            ?>
+        <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?=  new Form()->close() ?>

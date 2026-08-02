@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-use Yiisoft\FormModel\Field;
+use App\Widget\ReadOnlyField;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
-use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Infrastructure\Persistence\Product\Product $product
@@ -26,6 +25,22 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<array-key, array<array-key, string>|string> $unit_peppols
  * @psalm-var array<array-key, array<array-key, string>|string> $product_types
  */
+
+// A pure display page — was previously built from disabled Field:: widgets
+// that rendered identically to the real editable form on product/edit,
+// which confirmed live confused a user into trying to change Product Type
+// here. ReadOnlyField (form-control-plaintext) makes it visually obvious
+// nothing on this page is editable. See
+// docs/READONLY_VIEW_FIELDS_AUGUST_2026.md.
+$selectLabel = static function (array $optionsData, int|string|null $value): string {
+    if ($value === null || $value === '') {
+        return '';
+    }
+    $key = (string) $value;
+    /** @var string|array|null $label */
+    $label = $optionsData[$key] ?? null;
+    return is_string($label) ? $label : $key;
+};
 ?>
 
 <?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
@@ -36,12 +51,6 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
 <?= $translator->translate('products.form'); ?>
 <?= Html::closeTag('h1'); ?>
-<?=  new Form()
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)
-    ->id('ProductForm')
-    ->open()
-?>
 
 <?= Html::openTag('ul', ['id' => 'product-tabs', 'class' => 'nav nav-tabs nav-tabs-noborder']); ?>
     <?= Html::openTag('li', ['class' => 'active']); ?>
@@ -77,211 +86,66 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::openTag('div', ['class' => 'tab-content']); ?>
 
         <?= Html::openTag('div', ['id' => 'product-required', 'class' => 'tab-pane active']); ?>
-            <?= Field::text($form, 'product_name')
-        ->disabled(true); ?>
-            <?= Html::tag('br'); ?>
-            <?= Field::text($form, 'product_description')
-        ->disabled(true); ?>
-            <?= Html::tag('br'); ?>
-            <?= Field::select($form, 'product_type')
-        ->label($translator->translate('product.type'))
-        ->addInputAttributes([
-            'class' => 'form-control  alert alert-warning',
-        ])
-        ->value($form->product_type)
-        ->prompt($translator->translate('none'))
-        ->optionsData($product_types)
-        ->disabled(true)
-        ->hint($translator->translate('hint.this.field.is.required'));
-?>
-            <?= Html::tag('br'); ?>
-            <?= Field::select($form, 'family_id')
-        ->label($translator->translate('family'))
-        ->addInputAttributes([
-            'class' => 'form-control  alert alert-warning',
-        ])
-        ->value($form->family_id)
-        ->prompt($translator->translate('none'))
-        ->optionsData($families)
-        ->disabled(true)
-        ->hint($translator->translate('hint.this.field.is.required'));
-?>
-            <?= Html::tag('br'); ?>
-            <?= Field::select($form, 'unit_id')
-    ->label($translator->translate('unit'))
-    ->addInputAttributes([
-        'class' => 'form-control  alert alert-warning',
-    ])
-    ->value($form->unit_id)
-    ->prompt($translator->translate('none'))
-    ->optionsData($units)
-    ->disabled(true)
-    ->hint($translator->translate('hint.this.field.is.required'));
-?>
-            <?= Html::tag('br'); ?>
-            <?= Field::select($form, 'tax_rate_id')
-    ->label($translator->translate('tax.rate'))
-    ->addInputAttributes([
-        'class' => 'form-control  alert alert-warning',
-    ])
-    ->optionsData($tax_rates)
-    ->value($form->tax_rate_id)
-    ->prompt($translator->translate('none'))
-    ->disabled(true)
-    ->hint($translator->translate('hint.this.field.is.required'));
-?>
-            <?= Html::tag('br'); ?>
-            <?= Field::text($form, 'product_sku')
-    ->label($translator->translate('product.sku'))
-    ->required(true)
-    ->addInputAttributes([
-        'class' => 'form-control  alert alert-warning',
-    ])
-    ->value(Html::encode($form->product_sku))
-    ->placeholder($translator->translate('product.sku'))
-    ->disabled(true)
-    ->hint($translator->translate('hint.this.field.is.required')); ?>
-            <?= Html::tag('br'); ?>
-            <?= Field::text($form, 'purchase_price')
-    ->label($translator->translate('purchase.price'))
-    ->addInputAttributes([
-        'class' => 'form-control  alert alert-warning',
-    ])
-    ->value($s->formatAmount(($form->purchase_price ?? 0.00) >= 0.00
-                              ? ($form->purchase_price ?? 0.00) : 0.00))
-    ->placeholder($translator->translate('purchase.price'))
-    ->disabled(true)
-    ->hint($translator->translate('hint.this.field.is.required')); ?>
-            <?= Html::tag('br'); ?>
-            <?= Field::text($form, 'product_price')
-    ->label($translator->translate('product.price'))
-    ->required(true)
-    ->addInputAttributes([
-        'class' => 'form-control  alert alert-warning',
-    ])
-    ->disabled(true)
-    ->value($s->formatAmount(($form->product_price ?? 0.00) >= 0.00
-                               ? ($form->product_price ?? 0.00) : 0.00))
-    ->placeholder($translator->translate('product.price'))
-
-        ->hint($translator->translate('hint.this.field.is.required')); ?>
-            <?= Html::tag('br'); ?>
-            <?= Field::number($form, 'product_price_base_quantity')
-    ->label($translator->translate('product.price.base.quantity'))
-    ->required(true)
-    ->addInputAttributes([
-        'class' => 'form-control  alert alert-warning',
-    ])
-    ->disabled(true)
-    ->value($s->formatAmount($form->product_price_base_quantity >= 0.00
-                               ? $form->product_price_base_quantity : 0.00))
-    ->placeholder($translator->translate('product.price.base.quantity'))
-    ->hint($translator->translate('hint.this.field.is.required')); ?>
-            <?= Html::tag('br'); ?>
+            <?php ReadOnlyField::render($translator->translate('product.name'), $form->product_name); ?>
+            <?php ReadOnlyField::render($translator->translate('product.description'), $form->product_description); ?>
+            <?php ReadOnlyField::render(
+                $translator->translate('product.type'),
+                $selectLabel($product_types, $form->product_type),
+            ); ?>
+            <?php ReadOnlyField::render(
+                $translator->translate('family'),
+                $selectLabel($families, $form->family_id),
+            ); ?>
+            <?php ReadOnlyField::render(
+                $translator->translate('unit'),
+                $selectLabel($units, $form->unit_id),
+            ); ?>
+            <?php ReadOnlyField::render(
+                $translator->translate('tax.rate'),
+                $selectLabel($tax_rates, $form->tax_rate_id),
+            ); ?>
+            <?php ReadOnlyField::render($translator->translate('product.sku'), $form->product_sku); ?>
+            <?php ReadOnlyField::render(
+                $translator->translate('purchase.price'),
+                $s->formatAmount(($form->purchase_price ?? 0.00) >= 0.00 ? ($form->purchase_price ?? 0.00) : 0.00),
+            ); ?>
+            <?php ReadOnlyField::render(
+                $translator->translate('product.price'),
+                $s->formatAmount(($form->product_price ?? 0.00) >= 0.00 ? ($form->product_price ?? 0.00) : 0.00),
+            ); ?>
+            <?php ReadOnlyField::render(
+                $translator->translate('product.price.base.quantity'),
+                $s->formatAmount($form->product_price_base_quantity >= 0.00 ? $form->product_price_base_quantity : 0.00),
+            ); ?>
         <?= Html::closeTag('div'); ?>
 
         <?= Html::openTag('div', ['id' => 'product-not-required', 'class' => 'tab-pane']); ?>
 
-            <?= Field::select($form, 'unit_peppol_id')
-    ->label($translator->translate('product.peppol.unit'))
-    ->addInputAttributes([
-        'class' => 'form-control  alert alert-success',
-    ])
-    ->prompt($translator->translate('none'))
-    ->optionsData($unit_peppols)
-    ->value(Html::encode($form->unit_peppol_id))
-    ->disabled(true)
-    ->hint($translator->translate('hint.this.field.is.not.required')); ?>
-            <?= Html::tag('br'); ?>
-            <?= Field::text($form, 'product_sii_id')
-    ->label($translator->translate('product.sii.id'))
-    ->addInputAttributes([
-        'class' => 'form-control  alert alert-success',
-    ])
-    ->value(Html::encode($form->product_sii_id))
-    ->placeholder($translator->translate('product.sii.id'))
-    ->disabled(true)
-    ->hint($translator->translate('hint.this.field.is.not.required')); ?>
-            <?= Html::tag('br'); ?>
-            <?= Field::text($form, 'product_sii_schemeid')
-    ->label($translator->translate('product.sii.schemeid'))
-    ->addInputAttributes([
-        'class' => 'form-control  alert alert-success',
-    ])
-    ->value(Html::encode($form->product_sii_schemeid))
-    ->placeholder($translator->translate('product.sii.schemeid'))
-    ->disabled(true)
-    ->hint($translator->translate('hint.this.field.is.not.required')); ?>
-            <?= Html::tag('br'); ?>
-            <?= Field::text($form, 'product_icc_listid')
-    ->label($translator->translate('product.icc.listid'))
-    ->addInputAttributes([
-        'class' => 'form-control  alert alert-success',
-    ])
-    ->value(Html::encode($form->product_icc_listid))
-    ->placeholder($translator->translate('product.icc.listid'))
-    ->disabled(true)
-    ->hint($translator->translate('hint.this.field.is.not.required')); ?>
-            <?= Html::tag('br'); ?>
-            <?= Field::text($form, 'product_icc_listversionid')
-    ->label($translator->translate('product.icc.listversionid'))
-    ->addInputAttributes([
-        'class' => 'form-control  alert alert-success',
-    ])
-    ->value(Html::encode($form->product_icc_listversionid))
-    ->placeholder($translator->translate('product.icc.listversionid'))
-    ->disabled(true)
-    ->hint($translator->translate('hint.this.field.is.not.required')); ?>
-            <?= Html::tag('br'); ?>
-            <?= Field::text($form, 'product_icc_id')
-    ->label($translator->translate('product.icc.id'))
-    ->addInputAttributes([
-        'class' => 'form-control  alert alert-success',
-    ])
-    ->value(Html::encode($form->product_icc_id))
-    ->placeholder($translator->translate('product.icc.id'))
-    ->disabled(true)
-    ->hint($translator->translate('hint.this.field.is.not.required')); ?>
-            <?= Html::tag('br'); ?>
-            <?= Field::text($form, 'product_country_of_origin_code')
-    ->label($translator->translate('product.country.of.origin.code') . $s->where('default_country'))
-    ->addInputAttributes([
-        'class' => 'form-control  alert alert-success',
-    ])
-    ->value(Html::encode($form->product_country_of_origin_code))
-    ->placeholder($translator->translate('product.country.of.origin.code') . $s->where('default_country'))
-    ->disabled(true)
-    ->hint($translator->translate('hint.this.field.is.not.required')); ?>
-            <?= Html::tag('br'); ?>
-            <?= Field::text($form, 'product_additional_item_property_name')
-    ->label($translator->translate('product.additional.item.property.name'))
-    ->addInputAttributes([
-        'class' => 'form-control  alert alert-success',
-    ])
-    ->value(Html::encode($form->product_additional_item_property_name))
-    ->placeholder($translator->translate('product.additional.item.property.name'))
-    ->disabled(true)
-    ->hint($translator->translate('hint.this.field.is.not.required')); ?>
-            <?= Html::tag('br'); ?>
-            <?= Field::text($form, 'product_additional_item_property_value')
-    ->label($translator->translate('product.additional.item.property.value'))
-    ->addInputAttributes([
-        'class' => 'form-control  alert alert-success',
-    ])
-    ->value(Html::encode($form->product_additional_item_property_value))
-    ->placeholder($translator->translate('product.additional.item.property.value'))
-    ->disabled(true)
-    ->hint($translator->translate('hint.this.field.is.not.required')); ?>
-            <?= Html::tag('br'); ?>
-            <?= Field::text($form, 'provider_name')
-    ->label($translator->translate('provider.name'))
-    ->addInputAttributes([
-        'class' => 'form-control  alert alert-success',
-    ])
-    ->value(Html::encode($form->provider_name))
-    ->placeholder($translator->translate('provider.name'))
-    ->disabled(true)
-    ->hint($translator->translate('hint.this.field.is.not.required')); ?>
+            <?php ReadOnlyField::render(
+                $translator->translate('product.peppol.unit'),
+                $selectLabel($unit_peppols, $form->unit_peppol_id),
+            ); ?>
+            <?php ReadOnlyField::render($translator->translate('product.sii.id'), $form->product_sii_id); ?>
+            <?php ReadOnlyField::render($translator->translate('product.sii.schemeid'), $form->product_sii_schemeid); ?>
+            <?php ReadOnlyField::render($translator->translate('product.icc.listid'), $form->product_icc_listid); ?>
+            <?php ReadOnlyField::render(
+                $translator->translate('product.icc.listversionid'),
+                $form->product_icc_listversionid,
+            ); ?>
+            <?php ReadOnlyField::render($translator->translate('product.icc.id'), $form->product_icc_id); ?>
+            <?php ReadOnlyField::render(
+                $translator->translate('product.country.of.origin.code') . $s->where('default_country'),
+                $form->product_country_of_origin_code,
+            ); ?>
+            <?php ReadOnlyField::render(
+                $translator->translate('product.additional.item.property.name'),
+                $form->product_additional_item_property_name,
+            ); ?>
+            <?php ReadOnlyField::render(
+                $translator->translate('product.additional.item.property.value'),
+                $form->product_additional_item_property_value,
+            ); ?>
+            <?php ReadOnlyField::render($translator->translate('provider.name'), $form->provider_name); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
@@ -302,7 +166,6 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('div'); ?>
 
 <?= $button::back(); ?>
-<?=  new Form()->close(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

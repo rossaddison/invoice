@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use Yiisoft\FormModel\Field;
+use App\Widget\ReadOnlyField;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Invoice\InvRecurring\InvRecurringForm $form
@@ -19,14 +18,24 @@ use Yiisoft\Html\Tag\Form;
  * @var string $title
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
-?>
 
-<?=  new Form()
-    ->post($urlGenerator->generate($actionName, $actionArguments))
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)
-    ->id('InvRecurringForm')
-    ->open() ?>
+// A pure display page — see docs/READONLY_VIEW_FIELDS_AUGUST_2026.md.
+$optionsDataFrequency = [];
+/**
+ * @var string $key
+ * @var string $value
+ */
+foreach ($numberHelper->recurFrequencies() as $key => $value) {
+    $optionsDataFrequency[$key] = $translator->translate($value);
+}
+$frequencyLabel = $form->getFrequency() !== null && $form->getFrequency() !== ''
+    ? ($optionsDataFrequency[$form->getFrequency()] ?? $form->getFrequency())
+    : '';
+
+$formatMaybeDate = static function (string|DateTimeImmutable|null $value): string {
+    return $value instanceof DateTimeImmutable ? $value->format('Y-m-d') : (string) $value;
+};
+?>
 
 <?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
 <?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
@@ -45,61 +54,22 @@ use Yiisoft\Html\Tag\Form;
                     <?= $translator->translate('recurring.original.invoice.date') . '(' . $dateHelper->display() . ')'; ?>
                     <?= $invDateCreated->format('Y-m-d'); ?>
                 <?= Html::closeTag('p'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::hidden($form, 'inv_id')
-                        ->hideLabel();
-?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?php
-    $optionsDataFrequency = [];
-/**
- * @var string $key
- * @var string $value
- */
-foreach ($numberHelper->recurFrequencies() as $key => $value) {
-    $optionsDataFrequency[$key] = $translator->translate($value);
-}
-?>
-                    <?=
-    /**
-     * Purpose: Changing this frequency will calculate the start date from the current (above) immutable invoice date
-     * Related logic: see C:\wamp64\www\invoice\src\Invoice\Asset\rebuild-1.13\js\inv.js get_recur_start_date
-     * Related logic: see C:\wamp64\www\invoice\src\Invoice\Asset\rebuild-1.13\js\inv.js $('#frequency').change(function () {
-     */
-    Field::select($form, 'frequency')
-    ->label($translator->translate('recurring.frequency'))
-    ->value($form->getFrequency() ?? '')
-    ->disabled(true)
-    ->optionsData($optionsDataFrequency);
-?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?php echo Field::hidden($form, 'start')
-        ->hideLabel(true)
-        ->label($translator->translate('start') . " (" . $dateHelper->display() . ") ")
-        ->value(!is_string($start = $form->getStart()) ? $start?->format('Y-m-d') : '');
-?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::date($form, 'next')
-    ->label($translator->translate('next') . " (" . $dateHelper->display() . ") ")
-    ->value(!is_string($next = $form->getNext()) ? $next?->format('Y-m-d') : '')
-    ->addInputAttributes([
-        'data-bs-toggle' => 'tooltip',
-        'title' => $translator->translate('recurring.tooltip.next'),
-    ])
-    ->readonly(true);
-?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::date($form, 'end')
-        ->label($translator->translate('end') . " (" . $dateHelper->display() . ") ")
-        ->value(!is_string($end = $form->getEnd()) ? $end?->format('Y-m-d') : '')
-        ->readonly(true)
-?>
-                <?= Html::closeTag('div'); ?>
-                <?= $button::backSave(); ?>
+                <?php
+                    ReadOnlyField::render($translator->translate('recurring.frequency'), $frequencyLabel);
+                    ReadOnlyField::render(
+                        $translator->translate('start') . ' (' . $dateHelper->display() . ') ',
+                        $formatMaybeDate($form->getStart()),
+                    );
+                    ReadOnlyField::render(
+                        $translator->translate('next') . ' (' . $dateHelper->display() . ') ',
+                        $formatMaybeDate($form->getNext()),
+                    );
+                    ReadOnlyField::render(
+                        $translator->translate('end') . ' (' . $dateHelper->display() . ') ',
+                        $formatMaybeDate($form->getEnd()),
+                    );
+                ?>
+                <?= $button::back(); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
@@ -107,4 +77,3 @@ foreach ($numberHelper->recurFrequencies() as $key => $value) {
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?=  new Form()->close(); ?>

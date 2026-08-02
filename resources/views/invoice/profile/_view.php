@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use Yiisoft\FormModel\Field;
+use App\Widget\ReadOnlyField;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Invoice\Profile\ProfileForm $form
@@ -17,14 +16,9 @@ use Yiisoft\Html\Tag\Form;
  * @var string $title
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
-?>
 
-<?=  new Form()
-    ->post($urlGenerator->generate($actionName, $actionArguments))
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)
-    ->id('ProfileForm')
-    ->open() ?>
+// A pure display page — see docs/READONLY_VIEW_FIELDS_AUGUST_2026.md.
+?>
 
 <?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
 <?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
@@ -40,51 +34,40 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::checkbox($form, 'current')
-                        ->label($translator->translate('profile.property.label.current'))
-                        ->inputLabelAttributes(['class' => 'form-check-label'])
-                        ->disabled(true)
-                        ->inputClass('form-check-input')
-                        ->ariaDescribedBy($translator->translate('active'))
-                ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                     <?php
-                        $optionsDataCompany = [];
-                        /**
-                         * @var App\Infrastructure\Persistence\Company\Company $company
-                         */
-                        foreach ($companies as $company) {
-                            $companyId = (string) $company->reqId();
-                            $companyName = $company->getName();
-                            if (strlen($companyId) > 0 && null !== $companyName) {
-                                $optionsDataCompany[$companyId] = $companyName;
-                            }
+                <?php
+                    $companyName = '';
+                    /**
+                     * @var App\Infrastructure\Persistence\Company\Company $company
+                     */
+                    foreach ($companies as $company) {
+                        if ($company->reqId() === $form->getCompanyId()) {
+                            $companyName = $company->getName() ?? '';
+                            break;
                         }
-                    ?>
-                    <?= Field::select($form, 'company_id')
-                        ->label($translator->translate('profile.property.label.company'))    
-                        ->optionsData($optionsDataCompany)
-                        ->disabled(true);
-                    ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::telephone($form, 'mobile')
-                        ->label($translator->translate('profile.property.label.mobile'))                               ->disabled(true);
-                    ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::email($form, 'email')
-                        ->label($translator->translate('profile.property.label.email'))                                ->disabled(true);
-                    ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::text($form, 'description')
-                        ->label($translator->translate('profile.property.label.description'))                    
-                        ->disabled(true);
-                    ?>
-                <?= Html::closeTag('div'); ?>
+                    }
+                ?>
+                <?php
+                    ReadOnlyField::render(
+                        $translator->translate('profile.property.label.current'),
+                        $translator->translate($form->getCurrent() === 1 ? 'yes' : 'no'),
+                    );
+                    ReadOnlyField::render(
+                        $translator->translate('profile.property.label.company'),
+                        $companyName,
+                    );
+                    ReadOnlyField::render(
+                        $translator->translate('profile.property.label.mobile'),
+                        $form->getMobile(),
+                    );
+                    ReadOnlyField::render(
+                        $translator->translate('profile.property.label.email'),
+                        $form->getEmail(),
+                    );
+                    ReadOnlyField::render(
+                        $translator->translate('profile.property.label.description'),
+                        $form->getDescription(),
+                    );
+                ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
@@ -92,5 +75,3 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?=  new Form()->close() ?>
-

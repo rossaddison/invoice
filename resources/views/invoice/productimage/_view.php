@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-
-use Yiisoft\FormModel\Field;
+use App\Widget\ReadOnlyField;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Invoice\ProductImage\ProductImageForm $form
@@ -17,14 +15,9 @@ use Yiisoft\Html\Tag\Form;
  * @var string $title
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
-?>
 
-<?=  new Form()
-    ->post($urlGenerator->generate($actionName, $actionArguments))
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)
-    ->id('ProductImageForm')
-    ->open() ?>
+// A pure display page — see docs/READONLY_VIEW_FIELDS_AUGUST_2026.md.
+?>
 
 <?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
 <?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
@@ -39,37 +32,27 @@ use Yiisoft\Html\Tag\Form;
     <?= $button::back(); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-               <?= Html::closeTag('div'); ?>
-                    <?= Html::openTag('div'); ?>
-                        <?= Field::hidden($form, 'product_id')
-                            ->hideLabel(true);
-?>
-                    <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::date($form, 'uploaded_date')
-->addInputAttributes([
-    'readonly' => 'readonly',
-    'disabled' => 'disabled',
-])
-->label($translator->translate('date'))
-->required(true)
-->value($form->getUploadedDate() instanceof DateTimeImmutable ? ($form->getUploadedDate())->format('Y-m-d') : '')
-?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::text($form, 'file_name_original')
-    ->disabled(true); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::text($form, 'file_name_new')
-    ->disabled(true); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::text($form, 'description')
-    ->disabled(true); ?>
-                <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div'); ?>
+                <?php
+                    ReadOnlyField::render(
+                        $translator->translate('date'),
+                        $form->getUploadedDate() instanceof \DateTimeImmutable
+                            ? ($form->getUploadedDate())->format('Y-m-d')
+                            : $form->getUploadedDate(),
+                    );
+                    ReadOnlyField::render(
+                        $translator->translate('upload.filename.original'),
+                        $form->getFileNameOriginal(),
+                    );
+                    ReadOnlyField::render(
+                        $translator->translate('upload.filename.new'),
+                        $form->getFileNameNew(),
+                    );
+                    ReadOnlyField::render(
+                        $translator->translate('upload.description'),
+                        $form->getDescription(),
+                    );
+                ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
@@ -77,4 +60,3 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?=  new Form()->close() ?>
