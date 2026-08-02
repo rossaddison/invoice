@@ -54,20 +54,12 @@ final readonly class HomeCareCleaningEligibilityService
      */
     public function findInvoiceToCopyIfEligible(int $clientId): ?Inv
     {
-        if (!$this->isFeatureEnabledForClient($clientId)) {
-            return null;
-        }
-
-        if ($this->hasUnpaidGeneratedVisit($clientId)) {
+        if (!$this->isFeatureEnabledForClient($clientId) || $this->hasUnpaidGeneratedVisit($clientId)) {
             return null;
         }
 
         $lastPaid = $this->invRepository->repoClientLatestPaidInvoicequery($clientId);
-        if ($lastPaid === null || !$this->hasServiceItem($lastPaid->reqId())) {
-            return null;
-        }
-
-        return $lastPaid;
+        return ($lastPaid !== null && $this->hasServiceItem($lastPaid->reqId())) ? $lastPaid : null;
     }
 
     /**

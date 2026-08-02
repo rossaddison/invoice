@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv\Trait;
 
+use App\Infrastructure\Persistence\HomeCareVisit\HomeCareVisit;
+use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\Client\ClientRepository as ClientR;
 use App\Invoice\HomeCareVisit\HomeCareVisitRepositoryInterface;
 use App\Invoice\Inv\InvCopyDeps;
@@ -48,9 +50,29 @@ trait HomeCareScan
         if (null === $client) {
             return $this->webService->getNotFoundResponse();
         }
-        $clientId = $client->reqId();
-        $today = new DateTimeImmutable('today');
 
+        $claim = $this->claimTodaysHomeCareVisit($client->reqId(), $visitRepository);
+        if ($claim instanceof Response) {
+            return $claim;
+        }
+        [$clientId, $visit] = $claim;
+
+        return $this->decideAndRecordHomeCareScanOutcome(
+            $clientId, $visit, $eligibilityService, $visitRepository, $d, $formHydrator,
+        );
+    }
+
+    /**
+     * Attempts to claim (or reclaim, after deleting a stale non-terminal
+     * row) today's HomeCareVisit slot for this client.
+     *
+     * @return Response|array{0: int, 1: HomeCareVisit}
+     */
+    private function claimTodaysHomeCareVisit(
+        int $clientId,
+        HomeCareVisitRepositoryInterface $visitRepository,
+    ): Response|array {
+        $today = new DateTimeImmutable('today');
         $visit = $visitRepository->tryCreatePendingVisit($clientId, $today);
         if (null === $visit) {
             $existing = $visitRepository->repoFindByClientAndDatequery($clientId, $today);
@@ -62,7 +84,17 @@ trait HomeCareScan
                 return $this->renderHomeCareScanResult($existing?->getOutcome() ?? 'not_eligible');
             }
         }
+        return [$clientId, $visit];
+    }
 
+    private function decideAndRecordHomeCareScanOutcome(
+        int $clientId,
+        HomeCareVisit $visit,
+        HomeCareCleaningEligibilityService $eligibilityService,
+        HomeCareVisitRepositoryInterface $visitRepository,
+        InvCopyDeps $d,
+        FormHydrator $formHydrator,
+    ): Response {
         $templateInvoice = $eligibilityService->findInvoiceToCopyIfEligible($clientId);
         if (null === $templateInvoice) {
             $visit->setOutcome('not_eligible');
@@ -72,7 +104,18 @@ trait HomeCareScan
 
         $newInvoiceId = $this->generateHomeCareCleaningInvoice(
             $clientId, $templateInvoice, $d, $formHydrator);
+        $this->applyHomeCareScanOutcome($visit, $newInvoiceId, $clientId, $templateInvoice);
+        $visitRepository->save($visit);
 
+        return $this->renderHomeCareScanResult($newInvoiceId > 0 ? 'generated' : 'contact_us');
+    }
+
+    private function applyHomeCareScanOutcome(
+        HomeCareVisit $visit,
+        int $newInvoiceId,
+        int $clientId,
+        Inv $templateInvoice,
+    ): void {
         if ($newInvoiceId > 0) {
             $visit->setOutcome('generated');
             $visit->setInvoiceId($newInvoiceId);
@@ -87,9 +130,6 @@ trait HomeCareScan
                 'template_invoice_id' => $templateInvoice->reqId(),
             ]);
         }
-        $visitRepository->save($visit);
-
-        return $this->renderHomeCareScanResult($newInvoiceId > 0 ? 'generated' : 'contact_us');
     }
 
     private function renderHomeCareScanResult(string $outcome): Response

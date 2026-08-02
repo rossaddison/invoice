@@ -256,19 +256,12 @@ final class SettingController extends BaseController
             if (is_array($body)) {
                 /** @var array<string, string|list<string>> $settings */
                 $settings = (array) $body['settings'];
-                // homecare_hidden_inv_columns is checkboxes[], not a single
-                // field — saveSubmittedSettings()/saveOneSetting() expect
-                // every value to already be a plain string, so join here.
-                if (isset($settings['homecare_hidden_inv_columns'])
-                        && is_array($settings['homecare_hidden_inv_columns'])) {
-                    $settings['homecare_hidden_inv_columns'] =
-                        implode(',', $settings['homecare_hidden_inv_columns']);
-                }
-                if (isset($settings['homecare_hidden_inv_guest_columns'])
-                        && is_array($settings['homecare_hidden_inv_guest_columns'])) {
-                    $settings['homecare_hidden_inv_guest_columns'] =
-                        implode(',', $settings['homecare_hidden_inv_guest_columns']);
-                }
+                // homecare_hidden_inv_(guest_)columns are checkboxes[], not a
+                // single field — saveSubmittedSettings()/saveOneSetting()
+                // expect every value to already be a plain string, so join
+                // here.
+                $this->joinCheckboxArraySetting($settings, 'homecare_hidden_inv_columns');
+                $this->joinCheckboxArraySetting($settings, 'homecare_hidden_inv_guest_columns');
                 /** @var array<string, string> $settings */
                 $errorResponse = $this->saveSubmittedSettings($settings, $numberhelper);
                 if ($errorResponse !== null) {
@@ -279,6 +272,20 @@ final class SettingController extends BaseController
             }
         }
         return $this->webViewRenderer->render('//invoice/setting/tab_index', $parameters);
+    }
+
+    /**
+     * Joins a checkboxes[] submission (a settings[] key) into a single
+     * comma-separated string in place — saveSubmittedSettings()/
+     * saveOneSetting() expect every value to already be a plain string.
+     *
+     * @param array<string, string|list<string>> $settings
+     */
+    private function joinCheckboxArraySetting(array &$settings, string $key): void
+    {
+        if (isset($settings[$key]) && is_array($settings[$key])) {
+            $settings[$key] = implode(',', $settings[$key]);
+        }
     }
 
     /**
