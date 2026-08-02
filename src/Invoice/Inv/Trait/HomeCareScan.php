@@ -11,6 +11,7 @@ use App\Invoice\Inv\HomeCareCleaningEligibilityService;
 use DateTimeImmutable;
 use Psr\Http\Message\ResponseInterface as Response;
 use Yiisoft\FormModel\FormHydrator;
+use Yiisoft\Router\HydratorAttribute\RouteArgument;
 
 trait HomeCareScan
 {
@@ -32,6 +33,7 @@ trait HomeCareScan
      * Related logic: see Route::get('/scan/{token}')
      */
     public function homeCareScan(
+        #[RouteArgument('token')]
         string $token,
         ClientR $clientR,
         HomeCareCleaningEligibilityService $eligibilityService,
