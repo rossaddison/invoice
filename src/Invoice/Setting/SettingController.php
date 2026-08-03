@@ -17,6 +17,7 @@ use App\Invoice\Helpers\StoreCove\StoreCoveArrays;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\System\PhpVersionCheckService;
 use RossAddison\OpenBankingClient\OpenBankingProviderRegistryInterface;
+use App\Invoice\Setting\Trait\SettingBackupTrait;
 use App\Invoice\Setting\Trait\SettingCheckboxArrayTrait;
 use App\Invoice\Setting\Trait\SettingOptionsDataTrait;
 use App\Invoice\Setting\Trait\SettingsTabBootstrap5;
@@ -50,6 +51,7 @@ use DateTimeZone;
 
 final class SettingController extends BaseController
 {
+    use SettingBackupTrait;
     use SettingCheckboxArrayTrait;
     use SettingOptionsDataTrait;
     use SettingsTabBootstrap5;
@@ -329,39 +331,6 @@ final class SettingController extends BaseController
         }
 
         return $this->webService->getRedirectResponse('setting/tabIndex', [], ['active' => 'system-updates']);
-    }
-
-    /**
-     * Streams a gzip-compressed SQL dump of the whole database as a file
-     * download. Generated via DatabaseBackupService (pure Cycle DBAL, no
-     * mysqldump/exec()) so it works the same on shared hosting as on a VPS.
-     */
-    public function downloadBackup(DatabaseBackupService $backupService): mixed
-    {
-        $fileName = 'invoice_backup_' . date('Ymd_His') . '.sql.gz';
-        $filePath = sys_get_temp_dir() . '/' . $fileName;
-        try {
-            $backupService->writeGzippedDump($filePath);
-            $fileSize = filesize($filePath);
-            if ($fileSize === false) {
-                throw new \RuntimeException('backup file was not created');
-            }
-            header('Expires: -1');
-            header('Cache-Control: public, must-revalidate, post-check=0, pre-check=0');
-            header("Content-Disposition: attachment; filename=\"{$fileName}\"");
-            header('Content-Type: application/gzip');
-            header('Content-Length: ' . (string) $fileSize);
-            readfile($filePath);
-        } catch (\Throwable $e) {
-            $this->flashMessage('danger',
-                $this->translator->translate('backup.download.failed') . ': ' . $e->getMessage());
-            return $this->webService->getRedirectResponse('setting/tabIndex', [], ['active' => 'backup']);
-        } finally {
-            if (is_file($filePath)) {
-                unlink($filePath);
-            }
-        }
-        exit;
     }
 
     /**

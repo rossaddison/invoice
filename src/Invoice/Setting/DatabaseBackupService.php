@@ -30,7 +30,7 @@ final class DatabaseBackupService
     {
         $gz = gzopen($filePath, 'wb9');
         if ($gz === false) {
-            throw new \RuntimeException('Unable to open backup file for writing: ' . $filePath);
+            throw new DatabaseBackupException('Unable to open backup file for writing: ' . $filePath);
         }
         try {
             $driver = $this->database->getDriver();
