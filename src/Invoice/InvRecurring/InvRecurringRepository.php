@@ -8,6 +8,7 @@ use App\Invoice\Helpers\DateHelper;
 use App\Infrastructure\Persistence\InvRecurring\InvRecurring;
 use App\Invoice\Setting\SettingRepository;
 use Cycle\ORM\Select;
+use Cycle\ORM\Select\QueryBuilder;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
@@ -124,31 +125,36 @@ final class InvRecurringRepository extends Select\Repository
         ];
     }
 
-    // Recur invoices become active when the current date passes the recur_next_date ie. recur_next_date is less than current date
-    // They remain active as long as the current date does not pass the recur_end_date or the recur_end_date has been stopped
-    // ie. a zero mysql string date is inserted.
+    // Recur invoices are due when today has reached or passed "next", and
+    // haven't been stopped ("end" left unset) or already run past "end".
     // If they are active the button will indicate active on it. Use the base invoice hyperlink to go to the respective invoice
 
     /**
-     * Get invrecurrings  that are active
+     * Get invrecurrings that are due to generate an invoice today.
      *
      * @psalm-return EntityReader
      */
     public function active(): EntityReader
     {
-        $query = $this->select()
-                      ->where('next_date', '<', date('Y-m-d'))
-                      ->orWhere('end_date', '>', date('Y-m-d'))
-                      ->orWhere('end_date', '=', '0000-00-00');
+        $query = $this->dueQuery();
         return $this->prepareDataReader($query);
     }
 
     public function CountActive(): int
     {
+        return $this->dueQuery()->count();
+    }
+
+    /**
+     * @return Select<InvRecurring>
+     */
+    private function dueQuery(): Select
+    {
+        $today = date('Y-m-d');
         return $this->select()
-                      ->where('next_date', '<', date('Y-m-d'))
-                      ->orWhere('end_date', '>', date('Y-m-d'))
-                      ->orWhere('end_date', '=', '0000-00-00')
-                      ->count();
+            ->where('next', '<=', $today)
+            ->where(static function (QueryBuilder $q) use ($today): void {
+                $q->where('end', null)->orWhere('end', '>=', $today);
+            });
     }
 }

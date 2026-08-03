@@ -8,7 +8,6 @@ use App\Auth\Permissions;
 use App\Invoice\BaseController;
 // Entities
 use App\Infrastructure\Persistence\Inv\Inv;
-use App\Infrastructure\Persistence\InvItem\InvItem;
 use App\Infrastructure\Persistence\InvRecurring\InvRecurring;
 use App\Infrastructure\Persistence\UserInv\UserInv;
 // Repositories
@@ -21,10 +20,7 @@ use App\Invoice\ProductClient\ProductClientRepository as PCR;
 use App\Invoice\Setting\SettingRepository as SR;
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Helpers\NumberHelper;
-use App\Invoice\Helpers\Telegram\TelegramHelper;
 use App\User\UserService;
-use App\Invoice\InvItem\IiAddProductDeps;
-use App\Invoice\InvItem\InvItemService;
 use App\Invoice\InvAmount\InvAmountService;
 use App\Invoice\InvTaxRate\InvTaxRateService;
 use App\Invoice\InvCustom\InvCustomService;
@@ -35,7 +31,6 @@ use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
-use Yiisoft\Log\Logger;
 use Yiisoft\Mailer\MailerInterface;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\Flash;
@@ -49,11 +44,9 @@ final class InvRecurringController extends BaseController
     protected string $controllerName = 'invoice/invrecurring';
 
     public function __construct(
-        private Logger $_logger,
         private DataResponseFactoryInterface $factory,
         private InvCustomService $invCustomService,
         private InvAmountService $invAmountService,
-        private InvItemService $invItemService,
         private InvRecurringService $invrecurringService,
         private InvTaxRateService $invTaxRateService,
         private IS $iS,
@@ -67,11 +60,9 @@ final class InvRecurringController extends BaseController
         Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
-        $this->_logger = new Logger();
         $this->factory = $factory;
         $this->invCustomService = $invCustomService;
         $this->invAmountService = $invAmountService;
-        $this->invItemService = $invItemService;
         $this->invrecurringService = $invrecurringService;
         $this->invTaxRateService = $invTaxRateService;
         $this->iS = $iS;
@@ -161,6 +152,7 @@ final class InvRecurringController extends BaseController
      * @param GR $gR
      * @param PCR $pcR
      * @param InvItemDeps $itemDeps
+     * @param InvRecurringCronService $cronService
      * @return Response
      */
     public function createFromProductClient(
@@ -170,6 +162,7 @@ final class InvRecurringController extends BaseController
         GR $gR,
         PCR $pcR,
         InvItemDeps $itemDeps,
+        InvRecurringCronService $cronService,
     ): Response {
         $clientId = (int) $currentRoute->getArgument('client_id');
         $client = $cR->repoClientquery($clientId);
@@ -194,7 +187,7 @@ final class InvRecurringController extends BaseController
                     'date_supplied'  => (new \DateTimeImmutable())->format('Y-m-d'),
                 ], $this->sR, $gR);
 
-                $this->addProductItemsToInv($productClients, (string) $savedInv->reqId(), $itemDeps);
+                $cronService->addProductItemsToInv($productClients, (string) $savedInv->reqId(), $itemDeps);
 
                 $this->invrecurringService->saveInvRecurring(new InvRecurring(), [
                     'inv_id'    => $savedInv->reqId(),
@@ -218,24 +211,20 @@ final class InvRecurringController extends BaseController
     /**
      * Cron endpoint — create new recurring invoices and send Telegram reminders.
      * No session authentication required; secured by cron_key query parameter only.
+     * Prefer the `invrecurring/process` console command for new setups; this
+     * endpoint remains for existing curl+cron_key triggers.
      *
      * @param Request $request
-     * @param IRR $irR
-     * @param IR $iR
-     * @param GR $gR
-     * @param PCR $pcR
      * @param InvItemDeps $itemDeps
      * @param InvCronUserDeps $cronDeps
+     * @param InvRecurringCronService $cronService
      * @return Response
      */
     public function cron(
         Request $request,
-        IRR $irR,
-        IR $iR,
-        GR $gR,
-        PCR $pcR,
         InvItemDeps $itemDeps,
         InvCronUserDeps $cronDeps,
+        InvRecurringCronService $cronService,
     ): Response {
         $params = $request->getQueryParams();
         $cronKey = (string) ($params['cron_key'] ?? '');
@@ -243,81 +232,18 @@ final class InvRecurringController extends BaseController
             return $this->factory->createResponse(Json::encode(['success' => false, 'error' => 'Forbidden']));
         }
 
-        $user = $this->userService->getUser() ?? $this->resolveAdminUser($cronDeps);
+        $user = $this->userService->getUser() ?? $cronService->resolveAdminUser($cronDeps);
         if (null === $user) {
             return $this->factory->createResponse(Json::encode(['success' => false, 'error' => 'No admin user found']));
         }
 
-        $created = 0;
-        $reminded = 0;
-        $token = $this->sR->getSetting('telegram_token');
-        $telegramActive = $this->sR->getSetting('enable_telegram') === '1' && strlen($token) > 1;
-
-        /** @var InvRecurring $invRecurring */
-        foreach ($irR->active() as $invRecurring) {
-            $prevInvId = $invRecurring->reqInvId();
-            $baseInv = $iR->repoInvUnloadedquery($prevInvId);
-            if (null === $baseInv) {
-                continue;
-            }
-            $clientId = $baseInv->reqClientId();
-
-            $userInv = $this->resolveRecurringUser($clientId, $cronDeps);
-            if (null === $userInv) {
-                continue;
-            }
-
-            $created += $this->createIfConsentedWithProducts(
-                $userInv, $clientId, $user, $gR, $itemDeps, $pcR);
-
-            $this->advanceRecurringDate($invRecurring, $irR);
-
-            if ($telegramActive) {
-                $reminded += $this->sendTelegramReminderIfNeeded($prevInvId, $userInv, $cronDeps, $token);
-            }
-        }
+        $result = $cronService->process($user, $itemDeps, $cronDeps);
 
         return $this->factory->createResponse(Json::encode([
             'success'  => true,
-            'created'  => $created,
-            'reminded' => $reminded,
+            'created'  => $result['created'],
+            'reminded' => $result['reminded'],
         ]));
-    }
-
-    private function resolveRecurringUser(int $clientId, InvCronUserDeps $cronDeps): ?UserInv
-    {
-        $userClient = $cronDeps->uclR->repoUserquery($clientId);
-        if (null === $userClient) {
-            return null;
-        }
-        return $cronDeps->uiR->repoUserInvUserIdquery($userClient->reqUserId());
-    }
-
-    private function createIfConsentedWithProducts(
-        UserInv $userInv,
-        int $clientId,
-        \App\Infrastructure\Persistence\User\User $user,
-        GR $gR,
-        InvItemDeps $itemDeps,
-        PCR $pcR,
-    ): int {
-        if (!$userInv->getConsentPeriodicInvoice()) {
-            return 0;
-        }
-        /** @var array<int,\App\Infrastructure\Persistence\ProductClient\ProductClient> $productClients */
-        $productClients = $pcR->findByClientId($clientId);
-        if (count($productClients) === 0) {
-            return 0;
-        }
-        $savedInv = $this->iS->saveInv($user, new Inv(), [
-            'client_id'     => $clientId,
-            'group_id'      => 1,
-            'status_id'     => 1,
-            'date_created'  => (new \DateTimeImmutable())->format('Y-m-d'),
-            'date_supplied' => (new \DateTimeImmutable())->format('Y-m-d'),
-        ], $this->sR, $gR);
-        $this->addProductItemsToInv($productClients, (string) $savedInv->reqId(), $itemDeps);
-        return 1;
     }
 
     //inv.js create_recurring_confirm_multiple function calls this function
@@ -520,82 +446,6 @@ final class InvRecurringController extends BaseController
     }
 
     // ── Private helpers ────────────────────────────────────────────────────────
-
-    /**
-     * @param array<int,\App\Infrastructure\Persistence\ProductClient\ProductClient> $productClients
-     */
-    private function addProductItemsToInv(array $productClients, string $invId, InvItemDeps $d): void
-    {
-        foreach ($productClients as $productClient) {
-            $productId = $productClient->getProductId();
-            if (null === $productId) {
-                continue;
-            }
-            $product = $d->pR->repoProductquery($productId);
-            if (null !== $product) {
-                $this->invItemService->addInvItemProduct(
-                    new InvItem(),
-                    [
-                        'product_id'      => $product->reqId(),
-                        'tax_rate_id'     => $product->reqTaxRateId(),
-                        'quantity'        => 1.00,
-                        'price'           => $product->getProductPrice() ?? 0.00,
-                        'discount_amount' => 0.00,
-                        'product_unit_id' => $product->reqUnitId(),
-                    ],
-                    $invId,
-                    new IiAddProductDeps($d->pR, $d->trR, $d->iias, $d->iiar, $this->sR, $d->unR),
-                );
-            }
-        }
-    }
-
-    private function resolveAdminUser(InvCronUserDeps $d): ?\App\Infrastructure\Persistence\User\User
-    {
-        /** @var UserInv $ui */
-        foreach ($d->uiR->findAllPreloaded() as $ui) {
-            if ($ui->getType() === 0) {
-                return $d->userRepository->findById($ui->reqUserId());
-            }
-        }
-        return null;
-    }
-
-    private function advanceRecurringDate(InvRecurring $invRecurring, IRR $irR): void
-    {
-        $dateHelper = new DateHelper($this->sR);
-        $nextRaw = $invRecurring->getNext();
-        $nextString = match (true) {
-            $nextRaw instanceof \DateTimeImmutable => $nextRaw->format('Y-m-d'),
-            is_string($nextRaw) && $nextRaw !== '' => $nextRaw,
-            default                                => date('Y-m-d'),
-        };
-        $invRecurring->setNext($dateHelper->incrementDateStringToDateTime($nextString, $invRecurring->getFrequency()));
-        $irR->save($invRecurring);
-    }
-
-    private function sendTelegramReminderIfNeeded(
-        int $prevInvId,
-        UserInv $userInv,
-        InvCronUserDeps $d,
-        string $token,
-    ): int {
-        $invAmount = $d->iaR->repoInvquery($prevInvId);
-        $balance = $invAmount?->getBalance() ?? 0.0;
-        if ($balance > 0.0 && $userInv->getConsentTelegramOutstanding()) {
-            $chatId = $userInv->getTelegramChatId();
-            if (null !== $chatId && $chatId !== '') {
-                $telegramHelper = new TelegramHelper($token, $this->_logger);
-                $telegramHelper->getBotApi()->sendMessage(
-                    $chatId,
-                    'Invoice #' . $prevInvId . ' has an outstanding balance of '
-                        . number_format($balance, 2) . '. Please log in to make a payment.',
-                );
-                return 1;
-            }
-        }
-        return 0;
-    }
 
     /**
      * @param CurrentRoute $currentRoute

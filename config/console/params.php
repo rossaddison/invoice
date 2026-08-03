@@ -21,7 +21,9 @@ use App\Invoice\As4\Console\As4ResendCommand;
 use App\Invoice\As4\Console\As4RetryCommand;
 use App\Invoice\As4\Console\As4StatusCommand;
 use App\Invoice\As4\Console\As4TestSendCommand;
+use App\Invoice\InvRecurring\Console\ProcessRecurringInvoicesCommand;
 use App\Invoice\Peppol\Console\RetryFailedCommand;
+use App\Invoice\Setting\Console\BackupDatabaseCommand;
 use App\Invoice\System\Console\CheckPhpVersionCommand;
 use App\User\Console\CreateCommand;
 use App\User\Console\AssignRoleCommand;
@@ -44,6 +46,8 @@ return [
             'as4/test-send'       => As4TestSendCommand::class,
             'peppol/retry-failed' => RetryFailedCommand::class,
             'system/check-php-version' => CheckPhpVersionCommand::class,
+            'invrecurring/process' => ProcessRecurringInvoicesCommand::class,
+            'setting/backup-database' => BackupDatabaseCommand::class,
             'user/create' => CreateCommand::class,
             'user/assignRole' => AssignRoleCommand::class,
             'router/list' => ListCommand::class,
