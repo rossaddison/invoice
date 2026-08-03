@@ -22,6 +22,9 @@ phpstan.phar
 phpunit-skelgen.phar
 phpunit.phar
 
+# Database backups — real data, never version-controlled
+/backups/
+
 # local config
 .env
 /docker-compose.override.yml

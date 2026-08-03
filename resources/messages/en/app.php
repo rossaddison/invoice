@@ -131,6 +131,13 @@ return [
   'automatic.email.on.recur' => 'Automatically Email'
     . ' recurring invoices',
   'back' => 'Back',
+  'backup' => 'Backup',
+  'backup.database' => 'Database Backup',
+  'backup.database.description' => 'Download a compressed copy of the entire'
+    . ' database — every table, structure and data — as a single .sql.gz'
+    . ' file. Keep it somewhere safe outside this server.',
+  'backup.database.download' => 'Download Database Backup',
+  'backup.download.failed' => 'Database backup failed',
   'balance' => 'Balance',
   'balance.does.not.equal.zero' => 'Balance does not'
     . ' equal zero. Status is Paid therefore '

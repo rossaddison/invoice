@@ -116,6 +116,18 @@ declare(strict_types=1);
         rm -rf /var/www/invoice/runtime/cache/*
         Yii3 rebuilds the cache automatically on the next request.
  </b>
+ <b>27. Backing up whilst in the server at the root:
+        mysqldump -u root -p'<password>'
+           --single-transaction yii3_i |
+           gzip > /tmp/invoice_backup_$(date +%Y%m%d_%H%M%S).sql.gz
+        
+        Backing to localhost whilst on the localmachine:
+           scp root@yii3i.online:/tmp/invoice_backup_*.sql.gz
+           /mnt/c/wamp64/www/invoice/backups/
+           
+           ....provide the <password>
+  
+</b>
 </p>
 </pre>
 </div>

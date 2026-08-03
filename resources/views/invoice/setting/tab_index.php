@@ -39,6 +39,7 @@ use Yiisoft\Html\Html as H;
  * @var string $tfa
  * @var string $turnstile
  * @var string $system_updates
+ * @var string $backup
  * @var int $fontSize
  * @var string $font
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
@@ -262,6 +263,14 @@ $tabs = [
      'aria'  => 'settings-system-updates',
      'role'  => true,
      'content' => $system_updates
+ ],
+ 'backup' => [
+     'label' => $translator->translate('backup'),
+     'icon'  => 'bi bi-download',
+     'color' => '#0d6efd',
+     'aria'  => 'settings-backup',
+     'role'  => true,
+     'content' => $backup
  ]
 ];
 

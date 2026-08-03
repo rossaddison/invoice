@@ -51,6 +51,11 @@ return [
                 ->action([SettingController::class, 'checkPhpVersionNow'])
                 ->name('setting/checkPhpVersion'),
 
+            Route::get('/setting/downloadBackup')
+                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
+                ->action([SettingController::class, 'downloadBackup'])
+                ->name('setting/downloadBackup'),
+
             Route::methods([Method::GET, Method::POST], '/setting/index')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([SettingController::class, 'index'])
