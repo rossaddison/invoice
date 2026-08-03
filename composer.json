@@ -33,6 +33,7 @@
         "ext-pdo": "*",
         "ext-sodium": "*",
         "ext-zend-opcache": "*",
+        "ext-zlib": "*",
         "adyen/php-api-library": "^30.0.1",
         "amzn/amazon-pay-api-sdk-php": "^2.7.2",
         "braintree/braintree_php": ">=6.36.0",

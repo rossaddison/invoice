@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aa3908e31e8e9385dccdb1ca56e51f5e",
+    "content-hash": "f304a7c63b3d23100ca5d5d906fc7c0a",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -27412,7 +27412,8 @@
         "ext-openssl": "*",
         "ext-pdo": "*",
         "ext-sodium": "*",
-        "ext-zend-opcache": "*"
+        "ext-zend-opcache": "*",
+        "ext-zlib": "*"
     },
     "platform-dev": {},
     "plugin-api-version": "2.9.0"
