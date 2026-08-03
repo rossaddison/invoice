@@ -81,7 +81,9 @@ final class DatabaseBackupService
         /** @var array<array-key, string|int|float|null> $row */
         foreach ($rows as $row) {
             $values = array_map(
-                static fn (string|int|float|null $value): string => $value === null ? 'NULL' : $driver->quote($value),
+                static fn (string|int|float|null $value): string => $value === null
+                    ? 'NULL'
+                    : $driver->quote((string) $value),
                 $row,
             );
             $batch[] = '(' . implode(',', $values) . ')';
