@@ -17,7 +17,7 @@ final readonly class HomeCareCleaningEligibilityService
 {
     /**
      * Invoice status_id meaning "paid" — see the same literal used by
-     * InvRepository::repoClientLatestPaidInvoicequery().
+     * InvRepository::repoClientPaidInvoicesquery().
      */
     private const int PAID_STATUS_ID = 4;
 
@@ -39,8 +39,9 @@ final readonly class HomeCareCleaningEligibilityService
      * Eligible only when: the feature is enabled (globally and not paused
      * for this specific client), the client has at least one invoice on
      * file, the last invoice *this facility itself generated* (if any) has
-     * already been paid, and the client's most recently paid invoice
-     * overall contains at least one Service-type product to copy from.
+     * already been paid, and at least one of the client's paid invoices
+     * (searched most-recent-first) contains a Service-type product to copy
+     * from.
      *
      * Deliberately does NOT block on "any invoice dated after the last
      * payment" the way an earlier version of this rule did — that heuristic
@@ -58,8 +59,26 @@ final readonly class HomeCareCleaningEligibilityService
             return null;
         }
 
-        $lastPaid = $this->invRepository->repoClientLatestPaidInvoicequery($clientId);
-        return ($lastPaid !== null && $this->hasServiceItem($lastPaid->reqId())) ? $lastPaid : null;
+        return $this->findMostRecentPaidInvoiceWithServiceItem($clientId);
+    }
+
+    /**
+     * Searches backwards through the client's paid invoices, most recent
+     * first, for the first one containing a Service-type item — rather
+     * than strictly requiring the single most-recent paid invoice to have
+     * one, which previously left the facility permanently dormant for any
+     * client whose latest paid invoice happened to be an unrelated
+     * one-off, non-Service sale. See
+     * docs/HOMECARE_AUTOINVOICE_PITFALLS_AUGUST_2026.md, pitfall #4.
+     */
+    private function findMostRecentPaidInvoiceWithServiceItem(int $clientId): ?Inv
+    {
+        foreach ($this->invRepository->repoClientPaidInvoicesquery($clientId) as $invoice) {
+            if ($this->hasServiceItem($invoice->reqId())) {
+                return $invoice;
+            }
+        }
+        return null;
     }
 
     /**

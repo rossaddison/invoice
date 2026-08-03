@@ -91,19 +91,44 @@ readable at **Settings → HomeCare → 📋 HomeCare QR Scan Log**
 (`homecarevisit/index`, `EDIT_INV` permission). The customer-facing result
 page stays deliberately generic; this log is the staff-only counterpart.
 
+### Backward search for a Service item — fixes #4 (August 2026 follow-up)
+
+`HomeCareCleaningEligibilityService::findInvoiceToCopyIfEligible()` no
+longer requires the single most-recent paid invoice to contain a
+Service-type item. It now walks the client's paid invoices, most recent
+first, via a new `InvRepositoryInterface::repoClientPaidInvoicesquery()`
+(capped at the most recent 50), returning the first one whose items
+include a Service product — via a new private
+`findMostRecentPaidInvoiceWithServiceItem()`. A client whose latest paid
+invoice happens to be an unrelated one-off, non-Service sale is no longer
+left permanently dormant as long as an earlier paid invoice has one.
+
+The replaced `InvRepository::repoClientLatestPaidInvoicequery()` ordered by
+`date_created` (editable); its replacement orders by `id` instead — the
+immutable, true-insertion-order primary key — which also narrows pitfall
+#11 a little further (see below). The old, already-dead
+`repoClientInvoiceCountAfterDatequery()` (a leftover of the pre-fix "any
+invoice after last payment" rule, zero callers) was deleted at the same
+time. `HomeCareCleaningEligibilityServiceTest` gained a dedicated
+`searchesBackwardsPastNonServiceInvoiceToFindServiceItem()` case, plus a
+`allPaidInvoicesLackServiceItemIsNotEligible()` case covering the
+still-dormant path when *no* paid invoice has a Service item at all
+(9 tests total, up from 8).
+
 ### Not fixed here (documented, not solved)
 
-- Pitfall #4 (dormant if the last paid invoice lacks a Service item) is
-  unchanged — a separate, more nuanced business-logic question (should the
-  facility search backwards for the most recent paid invoice *with* a
-  Service item, rather than strictly the most recent paid one?) left for a
-  follow-up.
 - Pitfall #6 (permanent, non-expiring QR token) is an accepted tradeoff, not
-  a bug.
-- Pitfall #11 (backdated payment dates shifting the anchor) is a much
-  smaller risk now that eligibility no longer scans invoice history at all,
-  but a manually-edited payment date on the visit-tracked invoice itself
-  could still, in principle, affect timing — not separately guarded against.
+  a bug — token rotation/expiry would need its own UX decision (how would a
+  customer get a fresh sticker?) and hasn't been requested.
+- Pitfall #11 (backdated payment dates shifting the anchor) is largely
+  moot: nothing in the current eligibility chain reads `Payment.payment_date`
+  at all — the "is it paid yet" gate is a pure `status_id` check, and the
+  item-template search above now orders by the immutable `id` rather than
+  the editable `date_created`. The only remaining, genuinely hypothetical
+  exposure is an admin editing `status_id` back and forth on the specific
+  invoice a `HomeCareVisit` row already points to — not guarded against, and
+  not judged worth an audit trail for what would be a deliberate admin
+  action on their own data.
 
 ## Required manual step before this works live
 
@@ -121,3 +146,9 @@ suite: 597 tests (594 passed, 3 pre-existing/unrelated OpenSSL RSA-key-
 generation environment failures). Full PHPUnit suite: 3,875 tests (only the
 known Cycle-ORM-mock notices). `HomeCareCleaningEligibilityServiceTest`
 rewritten to cover every branch of the new rule (8 tests) (August 2026).
+
+**Pitfall #4 follow-up fix**: full-project `vendor/bin/psalm --no-cache` —
+zero errors. Full Testo `Unit` suite: 607 tests (604 passed, the same 3
+pre-existing/unrelated failures). Full PHPUnit suite: 3,877 tests (only the
+known notices). `HomeCareCleaningEligibilityServiceTest` now 9 tests
+(August 2026).

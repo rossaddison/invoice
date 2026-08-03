@@ -26,40 +26,27 @@ trait InvHomeCareTrait
     }
 
     /**
-     * The client's most recently paid invoice (status_id = 4), used as the
-     * eligibility anchor and item template for the home-care
-     * auto-invoice facility.
+     * The client's most recently paid invoices (status_id = 4), most recent
+     * first — used by the home-care auto-invoice facility as the item
+     * template source, searching backwards until one with a Service item
+     * is found (see HomeCareCleaningEligibilityService). Ordered by `id`
+     * rather than `date_created`: the id is immutable and assigned in true
+     * insertion order, so it can't be shifted by an admin backdating an
+     * invoice's date after the fact. Capped at the most recent 50 to bound
+     * the backward search for a client whose invoices never contain one.
      *
      * @param int $client_id
-     * @return Inv|null
+     * @return array<int, Inv>
      */
     #[\Override]
-    public function repoClientLatestPaidInvoicequery(int $client_id): ?Inv
+    public function repoClientPaidInvoicesquery(int $client_id): array
     {
         return $this->select()
                       ->where(['client_id' => $client_id])
                       ->where(['status_id' => 4])
                       ->where('deleted_at', null)
-                      ->orderBy('date_created', 'DESC')
-                      ->fetchOne() ?: null;
-    }
-
-    /**
-     * Counts invoices for a client dated after a given date, regardless of
-     * status. Used by the home-care auto-invoice facility to detect
-     * an "interim invoice" (paid or not) that should block a new one.
-     *
-     * @param int $client_id
-     * @param string $afterDate Y-m-d date string
-     * @return int
-     */
-    #[\Override]
-    public function repoClientInvoiceCountAfterDatequery(int $client_id, string $afterDate): int
-    {
-        return $this->select()
-                      ->where(['client_id' => $client_id])
-                      ->where('date_created', '>', $afterDate)
-                      ->where('deleted_at', null)
-                      ->count();
+                      ->orderBy('id', 'DESC')
+                      ->limit(50)
+                      ->fetchAll();
     }
 }
