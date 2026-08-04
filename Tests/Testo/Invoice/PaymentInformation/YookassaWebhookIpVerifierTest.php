@@ -10,9 +10,10 @@ use Testo\Test;
 
 /**
  * Covers YookassaWebhookIpVerifier against the exact CIDR/IP ranges
- * ground-truthed from YooKassa's own official (archived)
- * `yoomoney/yookassa-sdk-php` SDK's `SecurityHelper` class — pure logic, no
- * network I/O.
+ * ground-truthed from YooKassa's own official `yoomoney/yookassa-sdk-php`
+ * SDK's `SecurityHelper` class — confirmed identical against both the
+ * stale GitHub mirror and YooMoney's current actively-maintained source
+ * (v3.14.0 as of June 2026) — pure logic, no network I/O.
  */
 #[Test]
 final class YookassaWebhookIpVerifierTest

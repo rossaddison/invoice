@@ -6,11 +6,16 @@ namespace App\Invoice\PaymentInformation\Service;
 
 /**
  * YooKassa's webhook notifications carry no cryptographic signature at all —
- * ground-truthed directly from the official (now-archived)
- * `yoomoney/yookassa-sdk-php` SDK's `YooKassa\Helpers\SecurityHelper` class:
- * the only authenticity mechanism YooKassa itself documents is an IP
- * allowlist. The exact CIDR ranges below are copied verbatim from that
- * class, not guessed.
+ * ground-truthed directly from the official `yoomoney/yookassa-sdk-php`
+ * SDK's `YooKassa\Helpers\SecurityHelper` class: the only authenticity
+ * mechanism YooKassa itself documents is an IP allowlist. The exact CIDR
+ * ranges below are copied verbatim from that class, not guessed — and
+ * re-confirmed identical (same methods, same literal IP/CIDR values)
+ * against YooMoney's own actively-maintained source
+ * (`git.yoomoney.ru/projects/SDK/repos/yookassa-sdk-php`, v3.14.0 as of
+ * June 2026), not just the stale GitHub mirror this was first read from.
+ * YooKassa has not added request signing in four years of active
+ * development on this SDK.
  *
  * IP-allowlisting alone is not tamper-proof (a shared-hosting reverse proxy
  * can make `REMOTE_ADDR` unreliable, and IPs can in principle be spoofed at

@@ -17,13 +17,20 @@ use Ramsey\Uuid\Uuid;
  * YooKassa (formerly Yandex.Checkout/Yandex.Kassa) — Russia's other major
  * gateway alongside Robokassa, and this app's second Asia/CIS-adjacent
  * region gateway. Built as a direct HTTP integration — no third-party SDK —
- * consistent with this project's Robokassa decision; YooKassa's own official
- * `yoomoney/yookassa-sdk-php` is additionally now archived (no longer
- * maintained), reinforcing that choice further.
+ * consistent with this project's Robokassa decision: a lean dependency
+ * surface stays preferable to a wrapper package regardless of how well the
+ * upstream SDK is maintained.
  *
- * Every endpoint/field/mechanism here is ground-truthed by reading that
- * archived official SDK's source directly (github.com/yoomoney/
- * yookassa-sdk-php, read for research purposes only, not installed):
+ * **Two sources for YooKassa's official PHP SDK exist, at very different
+ * versions** — worth knowing if re-verifying anything here later:
+ * `github.com/yoomoney/yookassa-sdk-php` is a stale, effectively-archived
+ * mirror frozen around v2.3.0 (~2022); the actual actively-maintained
+ * source is YooMoney's own Bitbucket instance,
+ * `git.yoomoney.ru/projects/SDK/repos/yookassa-sdk-php`, at v3.14.0 as of
+ * June 2026 per its CHANGELOG.md. Every endpoint/field/mechanism this class
+ * relies on was first ground-truthed against the GitHub mirror, then
+ * specifically re-checked against the current Bitbucket source for drift —
+ * confirmed identical across both:
  *
  * - Base URL `https://api.yookassa.ru/v3` (`lib/configuration.json`).
  * - Auth: HTTP Basic, `Authorization: Basic base64(shopId:secretKey)`
@@ -31,7 +38,8 @@ use Ramsey\Uuid\Uuid;
  * - `Idempotence-Key` header required on POST (`lib/Client/BaseClient.php`);
  *   a v4 UUID here, matching the SDK's own recommendation.
  * - Paths: `POST /payments`, `GET /payments/{id}`, `POST /refunds`
- *   (`lib/Client/BaseClient.php`'s `PAYMENTS_PATH`/`REFUNDS_PATH` constants).
+ *   (`lib/Client/BaseClient.php`'s `PAYMENTS_PATH`/`REFUNDS_PATH` constants,
+ *   `lib/Client.php`'s `getPaymentInfo()`/`createPayment()`/`createRefund()`).
  * - Payment/refund status enums `pending`/`waiting_for_capture`/`succeeded`/
  *   `canceled` (`lib/Model/PaymentStatus.php`, `RefundStatus.php`).
  * - Refund request body `payment_id`/`amount`/`description`
@@ -39,6 +47,13 @@ use Ramsey\Uuid\Uuid;
  * - Redirect confirmation: request `confirmation: {type: "redirect",
  *   return_url}`, response `confirmation.confirmation_url`
  *   (`lib/Model/Confirmation/ConfirmationRedirect.php`).
+ * - The HTTP error envelope `refund()` reads on failure — top-level
+ *   `{description, code, parameter, retry_after, type}` — confirmed via
+ *   `BadApiRequestException`'s real error-parsing logic on both versions,
+ *   even though v3.14.0 refactored that parsing through an intermediate
+ *   `Error` model object (`ApiException::createMessageFromError()`) rather
+ *   than reading the decoded JSON directly; the field names read are
+ *   unchanged.
  *
  * Unlike Robokassa, YooKassa's API itself has a genuine sandbox: a free
  * test shop (own shopId/secretKey) hitting this same base URL. In practice,
@@ -50,28 +65,16 @@ use Ramsey\Uuid\Uuid;
  * **Webhook authenticity is architecturally different from every other
  * gateway in this app**: YooKassa's notifications carry no HMAC/signature at
  * all — `lib/Helpers/SecurityHelper.php` documents IP-allowlisting as the
- * only mechanism. See YookassaWebhookIpVerifier and YookassaWebhookHandler
- * for how this app treats that IP check as a fast pre-filter only, always
- * re-confirming via an authenticated `GET /payments/{id}` before trusting a
- * notification enough to mark an invoice paid.
+ * only mechanism, confirmed unchanged (same method set, same exact IP/CIDR
+ * literals) on the current v3.14.0 source too — YooKassa hasn't added
+ * signing in four years of active development on this SDK. See
+ * YookassaWebhookIpVerifier and YookassaWebhookHandler for how this app
+ * treats that IP check as a fast pre-filter only, always re-confirming via
+ * an authenticated `GET /payments/{id}` before trusting a notification
+ * enough to mark an invoice paid.
  *
  * Only full refunds are requested, matching how this app always calls
  * `refund()` with the whole original payment amount.
- *
- * **Cross-validated against the SDK's own test fixtures and executable
- * logic** (not just its interface/model declarations), since no live
- * account exists to test against directly:
- * `tests/Client/fixtures/createPaymentFixtures.json` confirms
- * `amount.value` is a decimal STRING (`"10.00"`), matching this class's
- * `number_format($amount, 2, '.', '')`. `lib/Common/Exceptions/
- * BadApiRequestException.php` — real executable error-parsing logic, not a
- * guess — confirms the actual HTTP error envelope this class's `refund()`
- * reads from is top-level `{description, code, parameter, retry_after,
- * type}`, not the `{error: {code, description}}` shape a first read of
- * `tests/Client/fixtures/createRefundFixtures.json` suggests (that fixture
- * turned out to be testing the deserializer's tolerance of unknown extra
- * fields, not documenting a real response shape — `lib/Model/Refund.php`
- * has no `error` property at all).
  */
 final class YookassaPaymentService implements PaymentGatewayInterface
 {

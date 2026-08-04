@@ -21,8 +21,9 @@ use Testo\Test;
  * Covers YookassaPaymentService against a mocked Guzzle handler — no real
  * network calls. Base URL, Basic Auth header, endpoint paths, and
  * status/response shapes are all ground-truthed against YooKassa's official
- * (archived) `yoomoney/yookassa-sdk-php` SDK source — see the class's own
- * docblock.
+ * `yoomoney/yookassa-sdk-php` SDK source (cross-checked against both the
+ * stale GitHub mirror and YooMoney's current actively-maintained source)
+ * — see the class's own docblock.
  */
 #[Test]
 final class YookassaPaymentServiceTest

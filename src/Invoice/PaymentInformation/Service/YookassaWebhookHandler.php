@@ -16,8 +16,9 @@ use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 /**
  * Receives YooKassa's webhook notification — JSON POST body
  * `{type, event, object}` (see YooKassaPaymentService's docblock for the
- * event-type constants ground-truthed against the official, now-archived
- * `yoomoney/yookassa-sdk-php` SDK).
+ * event-type constants ground-truthed against the official
+ * `yoomoney/yookassa-sdk-php` SDK, cross-checked against both the stale
+ * GitHub mirror and YooMoney's current actively-maintained source).
  *
  * Unlike every other gateway webhook in this app, YooKassa's notifications
  * carry no cryptographic signature — see YookassaWebhookIpVerifier's

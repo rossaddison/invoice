@@ -210,23 +210,30 @@ original payment amount.
 
 **YooKassa** (formerly Yandex.Checkout/Yandex.Kassa) is this app's second
 Russia/CIS-region gateway, added alongside Robokassa. Built the same
-way — direct HTTP, no third-party SDK/composer package — with an extra
-reason this time: YooKassa's own official `yoomoney/yookassa-sdk-php` is
-now **archived** on GitHub (no longer maintained), which would have made it
-a poor dependency choice even before considering this project's general
-small-third-party-package caution.
+way — direct HTTP, no third-party SDK/composer package — on this project's
+general small-third-party-package caution, independent of how well the
+upstream SDK is maintained.
 
-Every endpoint/field/mechanism `YookassaPaymentService` relies on is
-ground-truthed by reading that archived SDK's source directly (not
-installed, read for research purposes only): base URL
+**Two sources for YooKassa's official PHP SDK exist, at very different
+versions**: `github.com/yoomoney/yookassa-sdk-php` is a stale, effectively
+archived mirror frozen around v2.3.0 (~2022); the actual
+actively-maintained source is YooMoney's own Bitbucket instance,
+`git.yoomoney.ru/projects/SDK/repos/yookassa-sdk-php`, at v3.14.0 as of
+June 2026 per its CHANGELOG.md. Everything `YookassaPaymentService` relies
+on was ground-truthed first against the GitHub mirror, then specifically
+re-checked against the current Bitbucket source for four years of possible
+drift — confirmed identical on both: base URL
 `https://api.yookassa.ru/v3`; HTTP Basic Auth
 (`Authorization: Basic base64(shopId:secretKey)`); the required
 `Idempotence-Key` header (a v4 UUID here, via `ramsey/uuid`, already a
 dependency); the `POST /payments`, `GET /payments/{id}`, and `POST /refunds`
 paths; the `pending`/`waiting_for_capture`/`succeeded`/`canceled` payment
-status enum; and the redirect confirmation shape (request
+status enum; the redirect confirmation shape (request
 `confirmation: {type: "redirect", return_url}`, response
-`confirmation.confirmation_url`).
+`confirmation.confirmation_url`); and the HTTP error envelope `refund()`
+reads on failure (`{description, code, parameter, retry_after, type}`) —
+unchanged even though v3.14.0 refactored that parsing through an
+intermediate `Error` model rather than reading the decoded JSON directly.
 
 **YooKassa's API itself has a genuine sandbox**: a free test shop with its
 own shopId/secretKey, hitting this exact same production base URL. In
@@ -242,9 +249,11 @@ Mollie's single `testOrLiveApiKey` field, not a code branch.
 
 **Webhook authenticity is architecturally different from every other
 gateway in this app**: YooKassa's notifications carry no HMAC/signature at
-all — ground-truthed via the same archived SDK's `SecurityHelper` class,
-which documents an IP allowlist (exact CIDR ranges copied verbatim into
-`YookassaWebhookIpVerifier`) as the only mechanism YooKassa itself provides.
+all — ground-truthed via the SDK's `SecurityHelper` class, which documents
+an IP allowlist (exact CIDR ranges copied verbatim into
+`YookassaWebhookIpVerifier`, re-confirmed identical against the current
+v3.14.0 source too) as the only mechanism YooKassa itself provides — no
+signing added in four years of active development.
 Because IP-allowlisting alone isn't tamper-proof (a reverse proxy can make
 `REMOTE_ADDR` unreliable), `YookassaWebhookHandler` treats a passing IP
 check as only a fast pre-filter and always re-confirms via an authenticated
