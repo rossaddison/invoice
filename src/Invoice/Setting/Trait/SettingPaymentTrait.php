@@ -137,6 +137,27 @@ trait SettingPaymentTrait
                     'label' => 'Client Secret',
                 ],
             ],
+            // Russia/CIS Central Asia. Per Robokassa's own OpenAPI spec
+            // (docs.robokassa.ru/openapi/robokassa.yaml), both the Invoice
+            // API and OpStateExt are explicitly production-mode-only
+            // (testSupported: false) — Robokassa's IsTest flag only applies
+            // to the legacy Merchant/Index.aspx redirect scheme, which this
+            // integration deliberately doesn't use. So there is exactly one
+            // credential set, no separate sandbox/test passwords.
+            'Robokassa' => [
+                'login' => [
+                    'type' => 'text',
+                    'label' => 'Merchant Login',
+                ],
+                'password1' => [
+                    'type' => 'password',
+                    'label' => 'Password #1',
+                ],
+                'password2' => [
+                    'type' => 'password',
+                    'label' => 'Password #2',
+                ],
+            ],
             'StoreCove' => [
                 'apiKey' => [
                     'type' => 'password',
@@ -201,6 +222,11 @@ trait SettingPaymentTrait
             'mollie' => 'https://my.mollie.com/dashboard/',
             'adyen' => 'https://ca-test.adyen.com',
             'gocardless' => 'https://manage-sandbox.gocardless.com',
+            // Robokassa has no sandbox at all for the Invoice/OpStateExt
+            // APIs this integration uses (confirmed via Robokassa's own
+            // OpenAPI spec: both are testSupported: false) — this is just
+            // the ordinary merchant cabinet.
+            'robokassa' => 'https://partner.robokassa.ru',
         ];
     }
 

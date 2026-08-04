@@ -165,10 +165,26 @@ simple enough not to need a wrapper: HTTP requests via `guzzlehttp/guzzle`
 Payment initiation uses Robokassa's modern **JWT-based invoice API** rather
 than the legacy MD5 query-string redirect scheme, per an explicit
 instruction to prioritize current technology over the older integration
-style. See `RobokassaPaymentService` for the current implementation status —
-`sandbox_status` for this row stays `untested` until a real Robokassa
-sandbox/demo account is available to verify against; this cannot be closed
-out without one.
+style.
+
+Every endpoint, field, and signature formula this integration relies on is
+ground-truthed against Robokassa's own official OpenAPI specification
+(`https://docs.robokassa.ru/openapi/robokassa.yaml`) — the `createInvoice`
+operation for payment initiation, `getOperationState` (OpStateExt) for
+payment-status verification, and the `paymentResult` webhook for the
+inbound Result URL callback (`SignatureValue` formula
+`OutSum:InvId:Пароль#2:Shp_*`, Shp_ params sorted alphabetically). That same
+spec explicitly documents both `createInvoice` and `getOperationState` as
+production-mode-only (`x-robokassa-environment: testSupported: false`) —
+Robokassa's `IsTest` flag only applies to the legacy `Merchant/Index.aspx`
+redirect scheme, which this integration deliberately doesn't use. This
+confirms what was independently found by checking Robokassa's own site
+directly: there is no sandbox environment at all for the API surface used
+here, only one production credential set (`login`/`password1`/`password2`).
+See `RobokassaPaymentService` and `RobokassaSignatureService` for the
+current implementation. `sandbox_status` for this row stays `untested`
+since verification can only happen against a real Robokassa merchant
+account's live credentials, never a free sandbox.
 
 ## Verification
 

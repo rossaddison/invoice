@@ -7,6 +7,7 @@ use App\Invoice\PaymentInformation\AdyenPaymentController as APICLR;
 use App\Invoice\PaymentInformation\GoCardlessPaymentController as GCPICLR;
 use App\Invoice\PaymentInformation\PaymentInformationController as PICLR;
 use App\Invoice\PaymentInformation\PaymentRefundController as PRCLR;
+use App\Invoice\PaymentInformation\RobokassaPaymentController as RPICLR;
 use App\Middleware\RoutePermission;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\Route;
@@ -132,4 +133,13 @@ return [
     Route::methods([Method::POST], '/paymentinformation/goCardlessWebhook')
         ->action([GCPICLR::class, 'goCardlessWebhook'])
         ->name('paymentinformation/goCardlessWebhook'),
+
+    // Not under RoutePermission::invoiceGroup(): Robokassa's servers must be
+    // able to POST here with no app session. Secured by signature
+    // verification in the controller, not RBAC — see
+    // RobokassaPaymentService::verifyResultUrlCallback() and
+    // App\Middleware\CsrfExemptMiddleware.
+    Route::methods([Method::POST], '/paymentinformation/robokassaWebhook')
+        ->action([RPICLR::class, 'robokassaWebhook'])
+        ->name('paymentinformation/robokassaWebhook'),
 ];

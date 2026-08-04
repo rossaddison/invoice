@@ -143,6 +143,23 @@
                 "europe"
             ],
             "notes": "UK Direct Debit only \u2014 manual/file-based (BacsPaymentService), no third-party SDK/composer package and no online sandbox API to automate; sandbox_env_var left null permanently."
+        },
+        {
+            "key": "robokassa",
+            "name": "Robokassa",
+            "composer_package": null,
+            "sdk_version": null,
+            "last_updated": "2026-08-04",
+            "sandbox_env_var": null,
+            "sandbox_tested_at": null,
+            "sandbox_status": "untested",
+            "sandbox_last_error": null,
+            "live_tested_at": null,
+            "regions": [
+                "asia",
+                "europe"
+            ],
+            "notes": "First Asia-priority-region gateway. Direct HTTP integration against Robokassa's own JWT invoice API \u2014 no third-party SDK/composer package, per this project's supply-chain-risk decision (docs/GATEWAY_STATUS_PAGE_AUGUST_2026.md). Regions per Robokassa's own merchant docs: Russia/Belarus plus CIS Central Asia (Kazakhstan, Kyrgyzstan, Tajikistan, Turkmenistan, Uzbekistan) and Baltic/other European countries, RUB/USD/EUR/KZT. All endpoints/formulas (CreateInvoice, OpStateExt, the Result URL callback signature) are ground-truthed against Robokassa's official OpenAPI spec (docs.robokassa.ru/openapi/robokassa.yaml) \u2014 confirmed 2026-08-04. That same spec confirms Robokassa has no sandbox at all for the Invoice API or OpStateExt (both explicitly 'testSupported: false'); the IsTest flag only applies to the legacy Merchant/Index.aspx scheme this integration doesn't use \u2014 matching what the user found by checking Robokassa's own site directly. sandbox_env_var left null permanently: there is no sandbox credential of any kind to hold. sandbox_status stays 'untested' since verification can only happen against a real merchant account's live credentials, not a free sandbox."
         }
     ]
 }

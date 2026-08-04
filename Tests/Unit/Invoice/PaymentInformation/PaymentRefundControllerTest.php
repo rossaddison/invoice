@@ -15,6 +15,7 @@ use App\Invoice\PaymentInformation\Service\AmazonPayPaymentService;
 use App\Invoice\PaymentInformation\Service\BraintreePaymentService;
 use App\Invoice\PaymentInformation\Service\GoCardlessPaymentService;
 use App\Invoice\PaymentInformation\Service\MolliePaymentService;
+use App\Invoice\PaymentInformation\Service\RobokassaPaymentService;
 use App\Invoice\PaymentInformation\Service\StripePaymentService;
 use App\Invoice\Setting\SettingRepository;
 use App\Service\WebControllerService;
@@ -125,6 +126,7 @@ final class PaymentRefundControllerTest extends TestCase
             $goCardless ?? $this->createStub(GoCardlessPaymentService::class),
             $this->createStub(MolliePaymentService::class),
             $stripe,
+            $this->createStub(RobokassaPaymentService::class),
         );
     }
 

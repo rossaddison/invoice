@@ -22,6 +22,7 @@ final class CsrfExemptMiddleware implements MiddlewareInterface
         '/paymentinformation/stripeWebhook',
         '/paymentinformation/adyenWebhook',
         '/paymentinformation/goCardlessWebhook',
+        '/paymentinformation/robokassaWebhook',
         '/whatsapp/webhook',
         '/telegram/webhook',
     ];
