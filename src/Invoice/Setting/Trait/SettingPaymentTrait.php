@@ -168,6 +168,27 @@ trait SettingPaymentTrait
                     'label' => 'Password #3 (Refund API, optional)',
                 ],
             ],
+            // Russia — second Asia/CIS-adjacent gateway. Unlike Robokassa,
+            // YooKassa (formerly Yandex.Checkout) has a genuine sandbox: a
+            // free test shop with its own shopId/secretKey, hitting the same
+            // api.yookassa.ru/v3 base URL as production — same pattern as
+            // Mollie's single testOrLiveApiKey field, 'sandbox' here is
+            // informational only (which credential set is currently pasted
+            // in), not a code branch.
+            'Yookassa' => [
+                'shopId' => [
+                    'type' => 'text',
+                    'label' => 'Shop ID',
+                ],
+                'secretKey' => [
+                    'type' => 'password',
+                    'label' => 'Secret Key',
+                ],
+                'sandbox' => [
+                    'type' => 'checkbox',
+                    'label' => 'Sandbox (test shop credentials)',
+                ],
+            ],
             'StoreCove' => [
                 'apiKey' => [
                     'type' => 'password',
@@ -237,6 +258,9 @@ trait SettingPaymentTrait
             // OpenAPI spec: both are testSupported: false) — this is just
             // the ordinary merchant cabinet.
             'robokassa' => 'https://partner.robokassa.ru',
+            // Real test-shop dashboard, same UI as production — confirmed
+            // via yookassa.ru's own developer docs.
+            'yookassa' => 'https://yookassa.ru/my/',
         ];
     }
 

@@ -206,6 +206,55 @@ status but isn't wired up yet. Only full refunds are requested (no
 `RefundSum`), matching how this app always calls `refund()` with the whole
 original payment amount.
 
+## YooKassa — second Russia/CIS-market gateway, with a real sandbox
+
+**YooKassa** (formerly Yandex.Checkout/Yandex.Kassa) is this app's second
+Russia/CIS-region gateway, added alongside Robokassa. Built the same
+way — direct HTTP, no third-party SDK/composer package — with an extra
+reason this time: YooKassa's own official `yoomoney/yookassa-sdk-php` is
+now **archived** on GitHub (no longer maintained), which would have made it
+a poor dependency choice even before considering this project's general
+small-third-party-package caution.
+
+Every endpoint/field/mechanism `YookassaPaymentService` relies on is
+ground-truthed by reading that archived SDK's source directly (not
+installed, read for research purposes only): base URL
+`https://api.yookassa.ru/v3`; HTTP Basic Auth
+(`Authorization: Basic base64(shopId:secretKey)`); the required
+`Idempotence-Key` header (a v4 UUID here, via `ramsey/uuid`, already a
+dependency); the `POST /payments`, `GET /payments/{id}`, and `POST /refunds`
+paths; the `pending`/`waiting_for_capture`/`succeeded`/`canceled` payment
+status enum; and the redirect confirmation shape (request
+`confirmation: {type: "redirect", return_url}`, response
+`confirmation.confirmation_url`).
+
+**Unlike Robokassa, YooKassa has a genuine sandbox**: a free test shop with
+its own shopId/secretKey, hitting this exact same production base URL — the
+user has confirmed this and will test the integration directly against a
+real test shop. Settings only need one shopId/secretKey pair (whichever the
+merchant currently has pasted in); `sandbox` is informational only, the
+same pattern already established for Mollie's single `testOrLiveApiKey`
+field, not a code branch.
+
+**Webhook authenticity is architecturally different from every other
+gateway in this app**: YooKassa's notifications carry no HMAC/signature at
+all — ground-truthed via the same archived SDK's `SecurityHelper` class,
+which documents an IP allowlist (exact CIDR ranges copied verbatim into
+`YookassaWebhookIpVerifier`) as the only mechanism YooKassa itself provides.
+Because IP-allowlisting alone isn't tamper-proof (a reverse proxy can make
+`REMOTE_ADDR` unreliable), `YookassaWebhookHandler` treats a passing IP
+check as only a fast pre-filter and always re-confirms via an authenticated
+`GET /payments/{id}` before ever marking an invoice paid — never trusting
+the notification body's own `status` field directly.
+
+Refunds are wired up too (`POST /refunds`, `payment_id`/`amount` body);
+`sandbox_status` stays `untested` in `/gateway-status` until the user's own
+test-shop run confirms it end-to-end. Unlike Robokassa, `sandbox_env_var`
+being left `null` for now is a scope decision, not a hard limitation: this
+app's `CheckGatewaySandboxesCommand` currently assumes one secret string per
+gateway, and YooKassa needs a shopId+secretKey pair, so wiring it into the
+weekly CI sandbox-check job needs a small credential-schema decision first.
+
 ## Verification
 
 Full-project `vendor/bin/psalm --no-cache` — no errors. Full Testo suite —

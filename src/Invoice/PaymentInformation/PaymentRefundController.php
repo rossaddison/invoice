@@ -14,6 +14,7 @@ use App\Invoice\PaymentInformation\Service\GoCardlessPaymentService;
 use App\Invoice\PaymentInformation\Service\MolliePaymentService;
 use App\Invoice\PaymentInformation\Service\RobokassaPaymentService;
 use App\Invoice\PaymentInformation\Service\StripePaymentService;
+use App\Invoice\PaymentInformation\Service\YookassaPaymentService;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
@@ -50,6 +51,7 @@ final class PaymentRefundController
         private readonly MolliePaymentService $molliePaymentService,
         private readonly StripePaymentService $stripePaymentService,
         private readonly RobokassaPaymentService $robokassaPaymentService,
+        private readonly YookassaPaymentService $yookassaPaymentService,
     ) {
     }
 
@@ -123,6 +125,7 @@ final class PaymentRefundController
             'amazon_pay' => $this->amazonPayPaymentService->refund($reference, $amount),
             'gocardless' => $this->goCardlessPaymentService->refund($reference, $amount),
             'robokassa'  => $this->robokassaPaymentService->refund($reference, $amount),
+            'yookassa'   => $this->yookassaPaymentService->refund($reference, $amount),
             default      => null,
         };
     }

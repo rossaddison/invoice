@@ -17,6 +17,7 @@ use App\Invoice\PaymentInformation\Service\GoCardlessPaymentService;
 use App\Invoice\PaymentInformation\Service\MolliePaymentService;
 use App\Invoice\PaymentInformation\Service\RobokassaPaymentService;
 use App\Invoice\PaymentInformation\Service\StripePaymentService;
+use App\Invoice\PaymentInformation\Service\YookassaPaymentService;
 use App\Invoice\Setting\SettingRepository;
 use App\Service\WebControllerService;
 use GuzzleHttp\Psr7\HttpFactory;
@@ -127,6 +128,7 @@ final class PaymentRefundControllerTest extends TestCase
             $this->createStub(MolliePaymentService::class),
             $stripe,
             $this->createStub(RobokassaPaymentService::class),
+            $this->createStub(YookassaPaymentService::class),
         );
     }
 

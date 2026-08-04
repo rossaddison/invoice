@@ -8,6 +8,7 @@ use App\Invoice\PaymentInformation\GoCardlessPaymentController as GCPICLR;
 use App\Invoice\PaymentInformation\PaymentInformationController as PICLR;
 use App\Invoice\PaymentInformation\PaymentRefundController as PRCLR;
 use App\Invoice\PaymentInformation\RobokassaPaymentController as RPICLR;
+use App\Invoice\PaymentInformation\YookassaPaymentController as YKPICLR;
 use App\Middleware\RoutePermission;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\Route;
@@ -142,4 +143,15 @@ return [
     Route::methods([Method::POST], '/paymentinformation/robokassaWebhook')
         ->action([RPICLR::class, 'robokassaWebhook'])
         ->name('paymentinformation/robokassaWebhook'),
+
+    // Not under RoutePermission::invoiceGroup(): YooKassa's servers must be
+    // able to POST here with no app session. Unlike every other gateway
+    // webhook above, YooKassa's notifications carry no cryptographic
+    // signature at all — secured here by an IP allowlist pre-filter plus a
+    // mandatory authenticated GET-back confirmation before trusting the
+    // notification, not RBAC. See YookassaWebhookIpVerifier's docblock and
+    // App\Middleware\CsrfExemptMiddleware.
+    Route::methods([Method::POST], '/paymentinformation/yookassaWebhook')
+        ->action([YKPICLR::class, 'yookassaWebhook'])
+        ->name('paymentinformation/yookassaWebhook'),
 ];

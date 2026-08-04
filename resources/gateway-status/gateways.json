@@ -160,6 +160,23 @@
                 "europe"
             ],
             "notes": "First Asia-priority-region gateway. Direct HTTP integration against Robokassa's own JWT invoice API \u2014 no third-party SDK/composer package, per this project's supply-chain-risk decision (docs/GATEWAY_STATUS_PAGE_AUGUST_2026.md). Regions per Robokassa's own merchant docs: Russia/Belarus plus CIS Central Asia (Kazakhstan, Kyrgyzstan, Tajikistan, Turkmenistan, Uzbekistan) and Baltic/other European countries, RUB/USD/EUR/KZT. All endpoints/formulas (CreateInvoice, OpStateExt, the Result URL callback signature) are ground-truthed against Robokassa's official OpenAPI spec (docs.robokassa.ru/openapi/robokassa.yaml) \u2014 confirmed 2026-08-04. That same spec confirms Robokassa has no sandbox at all for the Invoice API or OpStateExt (both explicitly 'testSupported: false'); the IsTest flag only applies to the legacy Merchant/Index.aspx scheme this integration doesn't use \u2014 matching what the user found by checking Robokassa's own site directly. sandbox_env_var left null permanently: there is no sandbox credential of any kind to hold. sandbox_status stays 'untested' since verification can only happen against a real merchant account's live credentials, not a free sandbox."
+        },
+        {
+            "key": "yookassa",
+            "name": "YooKassa",
+            "composer_package": null,
+            "sdk_version": null,
+            "last_updated": "2026-08-04",
+            "sandbox_env_var": null,
+            "sandbox_tested_at": null,
+            "sandbox_status": "untested",
+            "sandbox_last_error": null,
+            "live_tested_at": null,
+            "regions": [
+                "asia",
+                "europe"
+            ],
+            "notes": "Second Russia/CIS-market gateway (formerly Yandex.Checkout/Yandex.Kassa). Direct HTTP integration \u2014 no third-party SDK/composer package; YooKassa's own official yoomoney/yookassa-sdk-php is additionally now archived on GitHub, reinforcing that choice. Base URL, Basic Auth (shopId:secretKey), Idempotence-Key header, /payments, /payments/{id}, /refunds paths, and payment/refund status enums are ground-truthed by reading that archived SDK's source directly (github.com/yoomoney/yookassa-sdk-php) \u2014 confirmed 2026-08-04. Regions carried over from Robokassa's reasoning (Russia/CIS/Baltic) as a reasonable default, not independently re-verified against YooKassa's own country-support docs this pass. Unlike Robokassa, YooKassa has a genuine sandbox \u2014 a free test shop with its own shopId/secretKey hitting this same production base URL \u2014 confirmed by the user, who will test this integration directly against a real test shop. sandbox_env_var still left null for now: this app's CheckGatewaySandboxesCommand assumes one secret string per gateway, and YooKassa needs a shopId+secretKey pair, so CI automation needs a small schema decision first \u2014 deliberately deferred, not an oversight. YooKassa's webhook notifications carry no cryptographic signature at all (ground-truthed via the same SDK's SecurityHelper class) \u2014 authenticity relies on an IP allowlist plus a mandatory authenticated GET-back confirmation before trusting any notification, architecturally different from every other gateway in this app. sandbox_status stays 'untested' until the user's own test-shop run confirms it end-to-end."
         }
     ]
 }
