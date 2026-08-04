@@ -22,22 +22,26 @@ namespace App\Invoice\PaymentInformation\Service;
  */
 final class YookassaWebhookIpVerifier
 {
+    // These are YooKassa's own published webhook-sender IP ranges
+    // (ground-truthed from their SDK's SecurityHelper class) — an
+    // intentional third-party allowlist, not accidentally-hardcoded internal
+    // infrastructure. NOSONAR: php:S1313 on each literal below.
     /** @var list<string> CIDR ranges or bare IPv4 addresses. */
     private const array IPV4_TRUSTED = [
-        '185.71.76.0/27',
-        '185.71.77.0/27',
-        '77.75.153.0/25',
-        '77.75.154.128/25',
-        '77.75.156.11',
-        '77.75.156.35',
+        '185.71.76.0/27', // NOSONAR: php:S1313
+        '185.71.77.0/27', // NOSONAR: php:S1313
+        '77.75.153.0/25', // NOSONAR: php:S1313
+        '77.75.154.128/25', // NOSONAR: php:S1313
+        '77.75.156.11', // NOSONAR: php:S1313
+        '77.75.156.35', // NOSONAR: php:S1313
     ];
 
     /** @var list<array{0: string, 1: string}> [firstInRange, lastInRange] IPv6 pairs. */
     private const array IPV6_TRUSTED = [
-        ['2a02:5180:0000:1509:0000:0000:0000:0000', '2a02:5180:0000:1509:ffff:ffff:ffff:ffff'],
-        ['2a02:5180:0000:2655:0000:0000:0000:0000', '2a02:5180:0000:2655:ffff:ffff:ffff:ffff'],
-        ['2a02:5180:0000:1533:0000:0000:0000:0000', '2a02:5180:0000:1533:ffff:ffff:ffff:ffff'],
-        ['2a02:5180:0000:2669:0000:0000:0000:0000', '2a02:5180:0000:2669:ffff:ffff:ffff:ffff'],
+        ['2a02:5180:0000:1509:0000:0000:0000:0000', '2a02:5180:0000:1509:ffff:ffff:ffff:ffff'], // NOSONAR: php:S1313
+        ['2a02:5180:0000:2655:0000:0000:0000:0000', '2a02:5180:0000:2655:ffff:ffff:ffff:ffff'], // NOSONAR: php:S1313
+        ['2a02:5180:0000:1533:0000:0000:0000:0000', '2a02:5180:0000:1533:ffff:ffff:ffff:ffff'], // NOSONAR: php:S1313
+        ['2a02:5180:0000:2669:0000:0000:0000:0000', '2a02:5180:0000:2669:ffff:ffff:ffff:ffff'], // NOSONAR: php:S1313
     ];
 
     public function isTrusted(string $ip): bool
@@ -74,13 +78,11 @@ final class YookassaWebhookIpVerifier
 
         $ipDec = ip2long($ip);
         $rangeDec = ip2long($rangeIp);
-        if ($ipDec === false || $rangeDec === false) {
-            return false;
-        }
         $wildcardDec = (int) (2 ** (32 - (int) $netmaskBits)) - 1;
         $netmaskDec = ~$wildcardDec;
 
-        return ($ipDec & $netmaskDec) === ($rangeDec & $netmaskDec);
+        return $ipDec !== false && $rangeDec !== false
+            && ($ipDec & $netmaskDec) === ($rangeDec & $netmaskDec);
     }
 
     private function isInIpv6TrustedList(string $ip): bool

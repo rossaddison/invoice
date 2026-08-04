@@ -10,214 +10,276 @@ use Yiisoft\Translator\TranslatorInterface;
 trait SettingPaymentTrait
 {
 
+    /**
+     * Below are listed online dashboard tested PCI COMPLIANT i.e. credit
+     * card details not stored on server, Payment Gateways. Each gateway's
+     * field config is split into its own method (php:S138 — this function
+     * grew past 150 lines as gateways were added).
+     */
     public function activePaymentGateways(): array
     {
         return [
-            // Below are listed online dashboard tested PCI COMPLIANT
-            //  i.e. credit card details not stored on server, Payment Gateways
-            'Adyen' => [
-                'apiKey' => [
-                    'type' => 'password',
-                    'label' => AppConstants::LABEL_API_KEY,
-                ],
-                'clientKey' => [
-                    'type' => 'password',
-                    'label' => 'Client Key',
-                ],
-                'merchantAccount' => [
-                    'type' => 'text',
-                    'label' => 'Merchant Account',
-                ],
-                'webhookHmacKey' => [
-                    'type' => 'password',
-                    'label' => 'Webhook Hmac Key',
-                ],
-                'sandbox' => [
-                    'type' => 'checkbox',
-                    'label' => 'Sandbox',
-                ],
+            'Adyen' => $this->adyenGatewayFields(),
+            'Amazon_Pay' => $this->amazonPayGatewayFields(),
+            'Braintree' => $this->braintreeGatewayFields(),
+            'GoCardless' => $this->goCardlessGatewayFields(),
+            'Mollie' => $this->mollieGatewayFields(),
+            'Open_Banking_With_Wonderful' => $this->openBankingWonderfulGatewayFields(),
+            'Open_Banking_With_Tink' => $this->openBankingTinkGatewayFields(),
+            'Robokassa' => $this->robokassaGatewayFields(),
+            'Yookassa' => $this->yookassaGatewayFields(),
+            'StoreCove' => $this->storeCoveGatewayFields(),
+            'Stripe' => $this->stripeGatewayFields(),
+        ];
+    }
+
+    private function adyenGatewayFields(): array
+    {
+        return [
+            'apiKey' => [
+                'type' => 'password',
+                'label' => AppConstants::LABEL_API_KEY,
             ],
-            'Amazon_Pay' => [
-                'publicKeyId' => [
-                    'type' => 'password',
-                    'label' => 'Public Key ID',
-                ],
-                'merchantId' => [
-                    'type' => 'password',
-                    'label' => 'Merchant ID',
-                ],
-                'clientId' => [
-                    'type' => 'password',
-                    'label' => 'Client ID',
-                ],
-                'clientSecret' => [
-                    'type' => 'password',
-                    'label' => 'Client Secret',
-                ],
-                'returnUrl' => [
-                    'type' => 'text',
-                    'label' => 'Return Url',
-                ],
-                'storeId' => [
-                    'type' => 'password',
-                    'label' => 'Store Id',
-                ],
-                'sandbox' => [
-                    'type' => 'checkbox',
-                    'label' => 'Sandbox',
-                ],
+            'clientKey' => [
+                'type' => 'password',
+                'label' => 'Client Key',
             ],
-            // https://sandbox.braintreegateway.com/merchants
-            'Braintree' => [
-                'privateKey' => [
-                    'type' => 'password',
-                    'label' => AppConstants::LABEL_API_KEY,
-                ],
-                'publicKey' => [
-                    'type' => 'password',
-                    'label' => 'Public Key',
-                ],
-                'merchantId' => [
-                    'type' => 'password',
-                    'label' => 'Merchant Id',
-                ],
-                'sandbox' => [
-                    'type' => 'checkbox',
-                    'label' => 'Sandbox',
-                ],
+            'merchantAccount' => [
+                'type' => 'text',
+                'label' => 'Merchant Account',
             ],
-            'GoCardless' => [
-                'accessToken' => [
-                    'type' => 'password',
-                    'label' => 'Access Token',
-                ],
-                // signing secret for the GoCardless webhook endpoint, from
-                // the GoCardless Dashboard webhook configuration
-                'webhookSecret' => [
-                    'type' => 'password',
-                    'label' => 'Webhook Secret',
-                ],
-                'sandbox' => [
-                    'type' => 'checkbox',
-                    'label' => 'Sandbox',
-                ],
+            'webhookHmacKey' => [
+                'type' => 'password',
+                'label' => 'Webhook Hmac Key',
             ],
-            'Mollie' => [
-                'testOrLiveApiKey' => [
-                    'type' => 'password',
-                    'label' =>
-                    'Test or Live Api Key i.e key starts with test_ or live_',
-                ],
-                'partnerID' => [
-                    'type' => 'text',
-                    'label' => 'Partner ID',
-                ],
-                'profileID' => [
-                    'type' => 'text',
-                    'label' => 'Profile ID',
-                ],
-                'sandbox' => [
-                    'type' => 'checkbox',
-                    'label' => 'Sandbox',
-                ],
+            'sandbox' => [
+                'type' => 'checkbox',
+                'label' => 'Sandbox',
             ],
-            'Open_Banking_With_Wonderful' => [
-                'apiToken' => [
-                    'type' => 'password',
-                    'label' => 'API Token',
-                ],
+        ];
+    }
+
+    private function amazonPayGatewayFields(): array
+    {
+        return [
+            'publicKeyId' => [
+                'type' => 'password',
+                'label' => 'Public Key ID',
             ],
-            'Open_Banking_With_Tink' => [
-                'clientId' => [
-                    'type' => 'password',
-                    'label' => 'Client Id',
-                ],
-                'clientSecret' => [
-                    'type' => 'password',
-                    'label' => 'Client Secret',
-                ],
+            'merchantId' => [
+                'type' => 'password',
+                'label' => 'Merchant ID',
             ],
-            // Russia/CIS Central Asia. Per Robokassa's own OpenAPI spec
-            // (docs.robokassa.ru/openapi/robokassa.yaml), both the Invoice
-            // API and OpStateExt are explicitly production-mode-only
-            // (testSupported: false) — Robokassa's IsTest flag only applies
-            // to the legacy Merchant/Index.aspx redirect scheme, which this
-            // integration deliberately doesn't use. So there is exactly one
-            // credential set, no separate sandbox/test passwords.
-            'Robokassa' => [
-                'login' => [
-                    'type' => 'text',
-                    'label' => 'Merchant Login',
-                ],
-                'password1' => [
-                    'type' => 'password',
-                    'label' => 'Password #1',
-                ],
-                'password2' => [
-                    'type' => 'password',
-                    'label' => 'Password #2',
-                ],
-                // Only issued once Robokassa support has enabled the Refund
-                // API for this merchant account — a separate password from
-                // Password #1/#2, used only for RefundService/Refund/Create.
-                // Leave blank if refunds haven't been enabled; refund()
-                // reports a clear "not configured" message instead of
-                // failing silently.
-                'password3' => [
-                    'type' => 'password',
-                    'label' => 'Password #3 (Refund API, optional)',
-                ],
+            'clientId' => [
+                'type' => 'password',
+                'label' => 'Client ID',
             ],
-            // Russia — second Asia/CIS-adjacent gateway. Unlike Robokassa,
-            // YooKassa (formerly Yandex.Checkout) has a genuine sandbox: a
-            // free test shop with its own shopId/secretKey, hitting the same
-            // api.yookassa.ru/v3 base URL as production — same pattern as
-            // Mollie's single testOrLiveApiKey field, 'sandbox' here is
-            // informational only (which credential set is currently pasted
-            // in), not a code branch.
-            'Yookassa' => [
-                'shopId' => [
-                    'type' => 'text',
-                    'label' => 'Shop ID',
-                ],
-                'secretKey' => [
-                    'type' => 'password',
-                    'label' => 'Secret Key',
-                ],
-                'sandbox' => [
-                    'type' => 'checkbox',
-                    'label' => 'Sandbox (test shop credentials)',
-                ],
+            'clientSecret' => [
+                'type' => 'password',
+                'label' => 'Client Secret',
             ],
-            'StoreCove' => [
-                'apiKey' => [
-                    'type' => 'password',
-                    'label' => AppConstants::LABEL_API_KEY,
-                ],
+            'returnUrl' => [
+                'type' => 'text',
+                'label' => 'Return Url',
             ],
-            'Stripe' => [
-                'apiKey' => [
-                    'type' => 'password',
-                    'label' => AppConstants::LABEL_API_KEY,
-                ],
-                // Related logic: see src/Invoice/Language/English/gateway_lang
-                // Not server-side ie. client-side
-                'publishableKey' => [
-                    'type' => 'password',
-                    'label' => 'Publishable Key',
-                ],
-                // server-side Related logic:
-                // https://dashboard.stripe.com/test/dashboard
-                'secretKey' => [
-                    'type' => 'password',
-                    'label' => 'Secret Key',
-                ],
-                // signing secret for the /paymentinformation/stripeWebhook
-                // endpoint, from the Stripe Dashboard webhook configuration
-                'webhookSecret' => [
-                    'type' => 'password',
-                    'label' => 'Webhook Secret',
-                ],
+            'storeId' => [
+                'type' => 'password',
+                'label' => 'Store Id',
+            ],
+            'sandbox' => [
+                'type' => 'checkbox',
+                'label' => 'Sandbox',
+            ],
+        ];
+    }
+
+    // https://sandbox.braintreegateway.com/merchants
+    private function braintreeGatewayFields(): array
+    {
+        return [
+            'privateKey' => [
+                'type' => 'password',
+                'label' => AppConstants::LABEL_API_KEY,
+            ],
+            'publicKey' => [
+                'type' => 'password',
+                'label' => 'Public Key',
+            ],
+            'merchantId' => [
+                'type' => 'password',
+                'label' => 'Merchant Id',
+            ],
+            'sandbox' => [
+                'type' => 'checkbox',
+                'label' => 'Sandbox',
+            ],
+        ];
+    }
+
+    private function goCardlessGatewayFields(): array
+    {
+        return [
+            'accessToken' => [
+                'type' => 'password',
+                'label' => 'Access Token',
+            ],
+            // signing secret for the GoCardless webhook endpoint, from
+            // the GoCardless Dashboard webhook configuration
+            'webhookSecret' => [
+                'type' => 'password',
+                'label' => 'Webhook Secret',
+            ],
+            'sandbox' => [
+                'type' => 'checkbox',
+                'label' => 'Sandbox',
+            ],
+        ];
+    }
+
+    private function mollieGatewayFields(): array
+    {
+        return [
+            'testOrLiveApiKey' => [
+                'type' => 'password',
+                'label' =>
+                'Test or Live Api Key i.e key starts with test_ or live_',
+            ],
+            'partnerID' => [
+                'type' => 'text',
+                'label' => 'Partner ID',
+            ],
+            'profileID' => [
+                'type' => 'text',
+                'label' => 'Profile ID',
+            ],
+            'sandbox' => [
+                'type' => 'checkbox',
+                'label' => 'Sandbox',
+            ],
+        ];
+    }
+
+    private function openBankingWonderfulGatewayFields(): array
+    {
+        return [
+            'apiToken' => [
+                'type' => 'password',
+                'label' => 'API Token',
+            ],
+        ];
+    }
+
+    private function openBankingTinkGatewayFields(): array
+    {
+        return [
+            'clientId' => [
+                'type' => 'password',
+                'label' => 'Client Id',
+            ],
+            'clientSecret' => [
+                'type' => 'password',
+                'label' => 'Client Secret',
+            ],
+        ];
+    }
+
+    /**
+     * Russia/CIS Central Asia. Per Robokassa's own OpenAPI spec
+     * (docs.robokassa.ru/openapi/robokassa.yaml), both the Invoice API and
+     * OpStateExt are explicitly production-mode-only (testSupported: false)
+     * — Robokassa's IsTest flag only applies to the legacy
+     * Merchant/Index.aspx redirect scheme, which this integration
+     * deliberately doesn't use. So there is exactly one credential set, no
+     * separate sandbox/test passwords.
+     */
+    private function robokassaGatewayFields(): array
+    {
+        return [
+            'login' => [
+                'type' => 'text',
+                'label' => 'Merchant Login',
+            ],
+            'password1' => [
+                'type' => 'password',
+                'label' => 'Password #1',
+            ],
+            'password2' => [
+                'type' => 'password',
+                'label' => 'Password #2',
+            ],
+            // Only issued once Robokassa support has enabled the Refund
+            // API for this merchant account — a separate password from
+            // Password #1/#2, used only for RefundService/Refund/Create.
+            // Leave blank if refunds haven't been enabled; refund()
+            // reports a clear "not configured" message instead of
+            // failing silently.
+            'password3' => [
+                'type' => 'password',
+                'label' => 'Password #3 (Refund API, optional)',
+            ],
+        ];
+    }
+
+    /**
+     * Russia — second Asia/CIS-adjacent gateway. Unlike Robokassa, YooKassa
+     * (formerly Yandex.Checkout) has a genuine sandbox: a free test shop
+     * with its own shopId/secretKey, hitting the same api.yookassa.ru/v3
+     * base URL as production — same pattern as Mollie's single
+     * testOrLiveApiKey field, 'sandbox' here is informational only (which
+     * credential set is currently pasted in), not a code branch.
+     */
+    private function yookassaGatewayFields(): array
+    {
+        return [
+            'shopId' => [
+                'type' => 'text',
+                'label' => 'Shop ID',
+            ],
+            'secretKey' => [
+                'type' => 'password',
+                'label' => 'Secret Key',
+            ],
+            'sandbox' => [
+                'type' => 'checkbox',
+                'label' => 'Sandbox (test shop credentials)',
+            ],
+        ];
+    }
+
+    private function storeCoveGatewayFields(): array
+    {
+        return [
+            'apiKey' => [
+                'type' => 'password',
+                'label' => AppConstants::LABEL_API_KEY,
+            ],
+        ];
+    }
+
+    private function stripeGatewayFields(): array
+    {
+        return [
+            'apiKey' => [
+                'type' => 'password',
+                'label' => AppConstants::LABEL_API_KEY,
+            ],
+            // Related logic: see src/Invoice/Language/English/gateway_lang
+            // Not server-side ie. client-side
+            'publishableKey' => [
+                'type' => 'password',
+                'label' => 'Publishable Key',
+            ],
+            // server-side Related logic:
+            // https://dashboard.stripe.com/test/dashboard
+            'secretKey' => [
+                'type' => 'password',
+                'label' => 'Secret Key',
+            ],
+            // signing secret for the /paymentinformation/stripeWebhook
+            // endpoint, from the Stripe Dashboard webhook configuration
+            'webhookSecret' => [
+                'type' => 'password',
+                'label' => 'Webhook Secret',
             ],
         ];
     }

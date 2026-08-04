@@ -152,7 +152,7 @@ final class RobokassaPaymentService implements PaymentGatewayInterface
             if ($xml === null) {
                 return new PaymentVerificationResult(false, $providerReference, 'Unable to parse Robokassa response.');
             }
-            $stateCode = (string) $xml->State->Code;
+            $stateCode = $xml->State !== null ? (string) $xml->State->Code : '';
 
             // 100 = "operation successfully confirmed" per the spec's own
             // x-robokassa-state-descriptions for OperationState.Code.
@@ -182,41 +182,50 @@ final class RobokassaPaymentService implements PaymentGatewayInterface
         }
 
         try {
-            $xml = $this->fetchOperationStateXml($providerReference);
-            $opKey = $xml === null ? '' : (string) $xml->Info->OpKey;
-            if ($opKey === '') {
-                return new PaymentRefundResult(false, $providerReference, 'Unable to look up the Robokassa OpKey for this payment via OpStateExt.');
-            }
-
-            [$dataToSign, $signature] = $this->signer->signRefundJwt(['OpKey' => $opKey], $this->password3());
-            $jwt = $dataToSign . '.' . $signature;
-
-            // Unlike CreateInvoice (always HTTP 200), the spec documents real
-            // 400/401 statuses here with a useful RefundCreateResponse body
-            // (e.g. "Signature key is not exists...") — http_errors: false
-            // so Guzzle hands back that body instead of throwing it away.
-            $response = $this->httpClient->post(self::REFUND_CREATE_URL, [
-                'body' => json_encode($jwt, JSON_THROW_ON_ERROR),
-                'headers' => ['Content-Type' => 'application/json'],
-                'http_errors' => false,
-            ]);
-            /** @var array{success?: bool, message?: string|null, requestId?: string|null} $data */
-            $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
-
-            if (($data['success'] ?? false) !== true) {
-                return new PaymentRefundResult(false, $providerReference, $data['message'] ?? 'Robokassa refund request rejected.');
-            }
-
-            $requestId = $data['requestId'] ?? $providerReference;
-            return new PaymentRefundResult(
-                true,
-                $requestId,
-                'Robokassa refund request accepted (requestId: ' . $requestId . '). Robokassa processes refunds asynchronously — confirm completion via Refund/GetState or the merchant dashboard.',
-            );
+            return $this->requestRefund($providerReference);
         } catch (GuzzleException|\JsonException $e) {
             $this->logger->error('Robokassa refund failed.', ['error' => $e->getMessage()]);
             return new PaymentRefundResult(false, $providerReference, $e->getMessage());
         }
+    }
+
+    /**
+     * @throws GuzzleException
+     * @throws \JsonException
+     */
+    private function requestRefund(string $providerReference): PaymentRefundResult
+    {
+        $xml = $this->fetchOperationStateXml($providerReference);
+        $opKey = ($xml !== null && $xml->Info !== null) ? (string) $xml->Info->OpKey : '';
+        if ($opKey === '') {
+            return new PaymentRefundResult(false, $providerReference, 'Unable to look up the Robokassa OpKey for this payment via OpStateExt.');
+        }
+
+        [$dataToSign, $signature] = $this->signer->signRefundJwt(['OpKey' => $opKey], $this->password3());
+        $jwt = $dataToSign . '.' . $signature;
+
+        // Unlike CreateInvoice (always HTTP 200), the spec documents real
+        // 400/401 statuses here with a useful RefundCreateResponse body
+        // (e.g. "Signature key is not exists...") — http_errors: false
+        // so Guzzle hands back that body instead of throwing it away.
+        $response = $this->httpClient->post(self::REFUND_CREATE_URL, [
+            'body' => json_encode($jwt, JSON_THROW_ON_ERROR),
+            'headers' => ['Content-Type' => 'application/json'],
+            'http_errors' => false,
+        ]);
+        /** @var array{success?: bool, message?: string|null, requestId?: string|null} $data */
+        $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+
+        if (($data['success'] ?? false) !== true) {
+            return new PaymentRefundResult(false, $providerReference, $data['message'] ?? 'Robokassa refund request rejected.');
+        }
+
+        $requestId = $data['requestId'] ?? $providerReference;
+        return new PaymentRefundResult(
+            true,
+            $requestId,
+            'Robokassa refund request accepted (requestId: ' . $requestId . '). Robokassa processes refunds asynchronously — confirm completion via Refund/GetState or the merchant dashboard.',
+        );
     }
 
     /**

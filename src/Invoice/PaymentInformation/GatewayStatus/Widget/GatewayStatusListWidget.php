@@ -138,7 +138,7 @@ final class GatewayStatusListWidget extends Widget
     /**
      * @param GatewayStatusRow $row
      */
-    private static function nameCell(array $row): string
+    private static function nameCell(array $row): string // NOSONAR: php:S1144 — used via self::nameCell(...) first-class callable in render(), which this analyzer doesn't trace
     {
         return Html::encode($row['name']);
     }
@@ -146,7 +146,7 @@ final class GatewayStatusListWidget extends Widget
     /**
      * @param GatewayStatusRow $row
      */
-    private static function regionsCell(array $row): string
+    private static function regionsCell(array $row): string // NOSONAR: php:S1144 — used via self::regionsCell(...) first-class callable in render(), which this analyzer doesn't trace
     {
         return Html::encode($row['regions']);
     }
@@ -154,7 +154,7 @@ final class GatewayStatusListWidget extends Widget
     /**
      * @param GatewayStatusRow $row
      */
-    private static function sdkVersionCell(array $row): string
+    private static function sdkVersionCell(array $row): string // NOSONAR: php:S1144 — used via self::sdkVersionCell(...) first-class callable in render(), which this analyzer doesn't trace
     {
         return Html::encode($row['sdk_version'] ?? '—');
     }
@@ -162,7 +162,7 @@ final class GatewayStatusListWidget extends Widget
     /**
      * @param GatewayStatusRow $row
      */
-    private static function lastUpdatedCell(array $row): string
+    private static function lastUpdatedCell(array $row): string // NOSONAR: php:S1144 — used via self::lastUpdatedCell(...) first-class callable in render(), which this analyzer doesn't trace
     {
         return Html::encode($row['last_updated']);
     }
@@ -170,7 +170,7 @@ final class GatewayStatusListWidget extends Widget
     /**
      * @param GatewayStatusRow $row
      */
-    private static function sandboxStatusCell(array $row): string
+    private static function sandboxStatusCell(array $row): string // NOSONAR: php:S1144 — used via self::sandboxStatusCell(...) first-class callable in render(), which this analyzer doesn't trace
     {
         $badge = match ($row['sandbox_status']) {
             'pass' => Html::span('Sandbox tested ✓', ['class' => 'badge text-bg-success']),
@@ -186,7 +186,7 @@ final class GatewayStatusListWidget extends Widget
     /**
      * @param GatewayStatusRow $row
      */
-    private static function liveTestedAtCell(array $row): string
+    private static function liveTestedAtCell(array $row): string // NOSONAR: php:S1144 — used via self::liveTestedAtCell(...) first-class callable in render(), which this analyzer doesn't trace
     {
         return Html::encode($row['live_tested_at'] ?? 'Not yet live tested');
     }

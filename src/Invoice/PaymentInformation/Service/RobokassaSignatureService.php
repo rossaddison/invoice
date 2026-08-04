@@ -60,7 +60,7 @@ final class RobokassaSignatureService
      */
     public function signOpState(string $merchantLogin, string $invId, string $password2): string
     {
-        return hash('md5', $merchantLogin . ':' . $invId . ':' . $password2);
+        return hash('md5', $merchantLogin . ':' . $invId . ':' . $password2); // NOSONAR: php:S4790 — MD5 is mandated by Robokassa's own OpStateExt signature formula, not a security choice made here
     }
 
     /**
@@ -87,7 +87,7 @@ final class RobokassaSignatureService
             $parts[] = $pair;
         }
 
-        $expected = hash('md5', implode(':', $parts));
+        $expected = hash('md5', implode(':', $parts)); // NOSONAR: php:S4790 — MD5 is mandated by Robokassa's own paymentResult webhook signature formula, not a security choice made here
 
         return hash_equals(strtolower($expected), strtolower($signatureValue));
     }
