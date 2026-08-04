@@ -32,6 +32,7 @@
         "ext-openssl": "*",
         "ext-pdo": "*",
         "ext-pdo_sqlite": "*",
+        "ext-simplexml": "*",
         "ext-sodium": "*",
         "ext-zend-opcache": "*",
         "ext-zlib": "*",
