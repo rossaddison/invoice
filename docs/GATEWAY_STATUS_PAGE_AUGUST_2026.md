@@ -228,13 +228,16 @@ status enum; and the redirect confirmation shape (request
 `confirmation: {type: "redirect", return_url}`, response
 `confirmation.confirmation_url`).
 
-**Unlike Robokassa, YooKassa has a genuine sandbox**: a free test shop with
-its own shopId/secretKey, hitting this exact same production base URL — the
-user has confirmed this and will test the integration directly against a
-real test shop. Settings only need one shopId/secretKey pair (whichever the
-merchant currently has pasted in); `sandbox` is informational only, the
-same pattern already established for Mollie's single `testOrLiveApiKey`
-field, not a code branch.
+**YooKassa's API itself has a genuine sandbox**: a free test shop with its
+own shopId/secretKey, hitting this exact same production base URL. In
+practice, though, signing up (2026-08-04) requires registered company
+details even to create a shop — the same practical KYC barrier hit with
+Robokassa, just for a different underlying reason: Robokassa has no sandbox
+API at all, while YooKassa has one but gates account creation behind
+business registration. Settings only need one shopId/secretKey pair
+(whichever the merchant currently has pasted in); `sandbox` is informational
+only, the same pattern already established for Mollie's single
+`testOrLiveApiKey` field, not a code branch.
 
 **Webhook authenticity is architecturally different from every other
 gateway in this app**: YooKassa's notifications carry no HMAC/signature at
@@ -248,8 +251,8 @@ check as only a fast pre-filter and always re-confirms via an authenticated
 the notification body's own `status` field directly.
 
 Refunds are wired up too (`POST /refunds`, `payment_id`/`amount` body);
-`sandbox_status` stays `untested` in `/gateway-status` until the user's own
-test-shop run confirms it end-to-end. Unlike Robokassa, `sandbox_env_var`
+`sandbox_status` stays `untested` in `/gateway-status` — no test-shop
+account is currently available to verify against. Unlike Robokassa, `sandbox_env_var`
 being left `null` for now is a scope decision, not a hard limitation: this
 app's `CheckGatewaySandboxesCommand` currently assumes one secret string per
 gateway, and YooKassa needs a shopId+secretKey pair, so wiring it into the
