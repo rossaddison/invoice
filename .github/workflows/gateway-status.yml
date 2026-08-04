@@ -1,0 +1,73 @@
+name: Gateway Status
+
+on:
+  schedule:
+    # Every Monday at 03:00 UTC — an hour after benchmark.yml's 02:00 slot,
+    # so the two scheduled jobs don't compete for the same runner window.
+    - cron: '0 3 * * 1'
+  workflow_dispatch: {}
+
+concurrency:
+  group: gateway-status
+  cancel-in-progress: false
+
+jobs:
+  check-sandboxes:
+    name: Check gateway sandboxes
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.4'
+          extensions: fileinfo, pdo, pdo_sqlite, intl, gd, openssl, dom, json, mbstring, curl, uopz, sodium, ctype
+          coverage: none
+
+      # This project's composer.json references several rossaddison/* forks
+      # as VCS (not Packagist) repositories; resolving them hits GitHub's
+      # API and needs auth to avoid the unauthenticated rate limit, same as
+      # invoice_build.yml's "Set up Composer GitHub auth" step.
+      - name: Set up Composer GitHub auth
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: composer config --global --auth github-oauth.github.com "$GITHUB_TOKEN"
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
+
+      # Sandbox credentials are intentionally separate GitHub repo secrets
+      # from this app's own production gateway credentials (which live
+      # encrypted in the app's MySQL Setting table) — see
+      # docs/GATEWAY_STATUS_PAGE_AUGUST_2026.md for the full naming
+      # convention and rollout status. Any secret left unset here is
+      # skipped gracefully by the command, not treated as a failure.
+      - name: Check gateway sandboxes
+        env:
+          STRIPE_SANDBOX_SECRET_KEY: ${{ secrets.STRIPE_SANDBOX_SECRET_KEY }}
+          MOLLIE_SANDBOX_API_KEY: ${{ secrets.MOLLIE_SANDBOX_API_KEY }}
+          GOCARDLESS_SANDBOX_ACCESS_TOKEN: ${{ secrets.GOCARDLESS_SANDBOX_ACCESS_TOKEN }}
+        run: php yii gateway-status/check-sandboxes
+
+      - name: Rebuild gateway status
+        run: php yii gateway-status/rebuild
+
+      # Raw git CLI, matching benchmark.yml's own commit-back pattern — no
+      # git-auto-commit-action is used anywhere in this repo.
+      - name: Commit results
+        if: github.event_name != 'pull_request'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add resources/gateway-status/
+          if git diff --staged --quiet; then
+            echo "Nothing to commit — gateway status unchanged."
+          else
+            git commit -m "chore: weekly gateway status check $(date -u +%Y-%m-%d)"
+            git push
+          fi

@@ -1,0 +1,148 @@
+{
+    "schema_version": 1,
+    "gateways": [
+        {
+            "key": "stripe",
+            "name": "Stripe",
+            "composer_package": "stripe/stripe-php",
+            "sdk_version": "v21.1.1",
+            "last_updated": "2026-08-04",
+            "sandbox_env_var": "STRIPE_SANDBOX_SECRET_KEY",
+            "sandbox_tested_at": null,
+            "sandbox_status": null,
+            "sandbox_last_error": null,
+            "live_tested_at": null,
+            "regions": [
+                "north america",
+                "south america",
+                "europe",
+                "asia",
+                "oceania"
+            ],
+            "notes": "Regions per stripe.com/global (checked 2026-08-04): fully supported in North/South America, Europe, Asia, Oceania; Africa is \"extended network\" only (via Paystack), not direct Stripe support, so Africa is deliberately omitted here. Previously live-tested per docs/PAYMENT_GATEWAY_LIVE_TESTING_JULY_2026.md and docs/PAYMENT_GATEWAY_REFUND_LIVE_TESTING_JULY_2026.md (July 2026) \u2014 exact date not recorded there; fill in live_tested_at once confirmed."
+        },
+        {
+            "key": "braintree",
+            "name": "Braintree",
+            "composer_package": "braintree/braintree_php",
+            "sdk_version": "6.36.0",
+            "last_updated": "2026-08-04",
+            "sandbox_env_var": null,
+            "sandbox_tested_at": null,
+            "sandbox_status": null,
+            "sandbox_last_error": null,
+            "live_tested_at": null,
+            "regions": [
+                "north america",
+                "europe",
+                "asia",
+                "oceania"
+            ],
+            "notes": "Regions per Braintree's own merchant-availability docs (checked 2026-08-04): US/Canada, Europe, Singapore/Hong Kong/Malaysia, Australia/New Zealand. No South America or Africa merchant support found. Previously live-tested per docs/PAYMENT_GATEWAY_LIVE_TESTING_JULY_2026.md and docs/PAYMENT_GATEWAY_REFUND_LIVE_TESTING_JULY_2026.md (July 2026) \u2014 exact date not recorded there; fill in live_tested_at once confirmed. sandbox_env_var left null pending confirmation of a genuinely side-effect-free sandbox health-check call \u2014 a client-token fetch isn't truly read-only."
+        },
+        {
+            "key": "mollie",
+            "name": "Mollie",
+            "composer_package": "mollie/mollie-api-php",
+            "sdk_version": "v3.13.1",
+            "last_updated": "2026-08-04",
+            "sandbox_env_var": "MOLLIE_SANDBOX_API_KEY",
+            "sandbox_tested_at": null,
+            "sandbox_status": null,
+            "sandbox_last_error": null,
+            "live_tested_at": null,
+            "regions": [
+                "europe"
+            ],
+            "notes": "Mollie requires the merchant itself to be based in the EEA, Switzerland, or UK (checked 2026-08-04, mollie.com) \u2014 Europe-only by design. Previously live-tested per docs/PAYMENT_GATEWAY_LIVE_TESTING_JULY_2026.md and docs/PAYMENT_GATEWAY_REFUND_LIVE_TESTING_JULY_2026.md (July 2026) \u2014 exact date not recorded there; fill in live_tested_at once confirmed."
+        },
+        {
+            "key": "amazon_pay",
+            "name": "Amazon Pay",
+            "composer_package": "amzn/amazon-pay-api-sdk-php",
+            "sdk_version": "2.7.2",
+            "last_updated": "2026-08-04",
+            "sandbox_env_var": null,
+            "sandbox_tested_at": null,
+            "sandbox_status": null,
+            "sandbox_last_error": null,
+            "live_tested_at": null,
+            "regions": [
+                "north america",
+                "europe",
+                "asia"
+            ],
+            "notes": "Regions per Amazon Pay's merchant-establishment country list (checked 2026-08-04): US, UK/EU, Japan. No confirmed South America/Africa/Oceania merchant support found. Per docs/PAYMENT_GATEWAY_LIVE_TESTING_JULY_2026.md, live payment testing stayed blocked on external Seller Central sandbox setup (storeId/clientId) \u2014 confirmed as a config gap, not a code defect \u2014 so live_tested_at is deliberately left unset. sandbox_env_var left null pending confirmation of a genuinely side-effect-free sandbox health-check call."
+        },
+        {
+            "key": "adyen",
+            "name": "Adyen",
+            "composer_package": "adyen/php-api-library",
+            "sdk_version": "v30.0.1",
+            "last_updated": "2026-08-04",
+            "sandbox_env_var": null,
+            "sandbox_tested_at": null,
+            "sandbox_status": null,
+            "sandbox_last_error": null,
+            "live_tested_at": null,
+            "regions": [
+                "north america",
+                "south america",
+                "europe",
+                "asia",
+                "oceania"
+            ],
+            "notes": "Adyen supports online payments in nearly 100 countries across most continents (checked 2026-08-04); coverage is limited in Sub-Saharan Africa and parts of the Middle East, so Africa is deliberately omitted here rather than overclaimed. Previously live-tested per docs/ADYEN_GATEWAY_LIVE_TESTING_AND_CSP_FIXES_JULY_2026.md and docs/PAYMENT_GATEWAY_REFUND_LIVE_TESTING_JULY_2026.md (July 2026, refund verified via signed webhook replay) \u2014 exact date not recorded there; fill in live_tested_at once confirmed. sandbox_env_var left null pending confirmation of a genuinely side-effect-free sandbox health-check call (Checkout API has no obvious no-op ping)."
+        },
+        {
+            "key": "gocardless",
+            "name": "GoCardless",
+            "composer_package": "gocardless/gocardless-pro",
+            "sdk_version": "8.0.3",
+            "last_updated": "2026-08-04",
+            "sandbox_env_var": "GOCARDLESS_SANDBOX_ACCESS_TOKEN",
+            "sandbox_tested_at": null,
+            "sandbox_status": null,
+            "sandbox_last_error": null,
+            "live_tested_at": null,
+            "regions": [
+                "europe",
+                "north america",
+                "oceania"
+            ],
+            "notes": "Merchant onboarding per gocardless.com (checked 2026-08-04) covers UK/Eurozone/Sweden, US, and Canada directly; customer bank-account collection extends further to Denmark, Australia, and New Zealand. Live-testing status not yet recorded in this table."
+        },
+        {
+            "key": "open_banking",
+            "name": "Open Banking",
+            "composer_package": "rossaddison/openbanking-client",
+            "sdk_version": "dev-main",
+            "last_updated": "2026-08-04",
+            "sandbox_env_var": null,
+            "sandbox_tested_at": null,
+            "sandbox_status": null,
+            "sandbox_last_error": null,
+            "live_tested_at": null,
+            "regions": [
+                "europe"
+            ],
+            "notes": "This app currently wires only the UK bank-to-bank Open Banking flow (OpenBankingPaymentService); the underlying rossaddison/openbanking-client provider registry itself spans more continents, but nothing outside the UK is actually integrated into this app yet, so \"europe\" is the honest scope of this row. Not a classic gateway-SDK ping candidate for automated sandbox checks; sandbox_env_var left null permanently."
+        },
+        {
+            "key": "bacs",
+            "name": "BACS Direct Debit",
+            "composer_package": null,
+            "sdk_version": null,
+            "last_updated": "2026-08-04",
+            "sandbox_env_var": null,
+            "sandbox_tested_at": null,
+            "sandbox_status": null,
+            "sandbox_last_error": null,
+            "live_tested_at": null,
+            "regions": [
+                "europe"
+            ],
+            "notes": "UK Direct Debit only \u2014 manual/file-based (BacsPaymentService), no third-party SDK/composer package and no online sandbox API to automate; sandbox_env_var left null permanently."
+        }
+    ]
+}

@@ -22,6 +22,8 @@ use App\Invoice\As4\Console\As4RetryCommand;
 use App\Invoice\As4\Console\As4StatusCommand;
 use App\Invoice\As4\Console\As4TestSendCommand;
 use App\Invoice\InvRecurring\Console\ProcessRecurringInvoicesCommand;
+use App\Invoice\PaymentInformation\GatewayStatus\Console\CheckGatewaySandboxesCommand;
+use App\Invoice\PaymentInformation\GatewayStatus\Console\RebuildGatewayStatusCommand;
 use App\Invoice\Peppol\Console\RetryFailedCommand;
 use App\Invoice\Setting\Console\BackupDatabaseCommand;
 use App\Invoice\System\Console\CheckPhpVersionCommand;
@@ -48,6 +50,8 @@ return [
             'system/check-php-version' => CheckPhpVersionCommand::class,
             'invrecurring/process' => ProcessRecurringInvoicesCommand::class,
             'setting/backup-database' => BackupDatabaseCommand::class,
+            'gateway-status/rebuild' => RebuildGatewayStatusCommand::class,
+            'gateway-status/check-sandboxes' => CheckGatewaySandboxesCommand::class,
             'user/create' => CreateCommand::class,
             'user/assignRole' => AssignRoleCommand::class,
             'router/list' => ListCommand::class,

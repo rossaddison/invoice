@@ -31,6 +31,7 @@
         "ext-mbstring": "*",
         "ext-openssl": "*",
         "ext-pdo": "*",
+        "ext-pdo_sqlite": "*",
         "ext-sodium": "*",
         "ext-zend-opcache": "*",
         "ext-zlib": "*",

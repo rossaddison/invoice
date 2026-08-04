@@ -44,7 +44,7 @@ $divHeight = (string) 250;
                 <?= Html::closeTag('h3'); ?>
                 <?= Html::openTag('p'); ?>
                     Currently I am developing a php based invoicing system using
-                        the Yii3 Framework and the opensource code is available at ➡️ 
+                        the Yii3 Framework and the opensource code is available at ➡️
                 <?= Html::closeTag('p'); ?>
                 <?= Html::openTag('p'); ?>
                 <?=  new A()->content(
@@ -52,7 +52,14 @@ $divHeight = (string) 250;
                         'https://github.com/rossaddison/invoice')->render(); ?>
                 <?= Html::closeTag('p'); ?>
                 <?= Html::openTag('p'); ?>
-                    This site will be used to demo quote and invoice creation at a future date.
+                    It now covers Peppol/AS4 e-invoicing, multiple card and bank payment
+                        gateways, HomeCare recurring-invoice automation, and scheduled
+                        console commands for backups and recurring billing.
+                <?= Html::closeTag('p'); ?>
+                <?= Html::openTag('p'); ?>
+                <?=  new A()->content(
+                    'See our payment gateway coverage ➡️')->href(
+                        '/gateway-status')->render(); ?>
                 <?= Html::closeTag('p'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div'); ?>

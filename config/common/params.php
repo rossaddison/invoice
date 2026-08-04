@@ -417,6 +417,10 @@ return [
                 //'default' => ['connection' => 'sqlite'],
                 // yii-invoice
                 'default' => ['connection' => 'mysql'],
+                // Payment gateway status page (public, repo-tracked reference
+                // data) — deliberately its own SQLite file, decoupled from
+                // the main MySQL database. See docs/GATEWAY_STATUS_PAGE_AUGUST_2026.md.
+                'gateway_status' => ['connection' => 'sqlite'],
             ],
             'connections' => [
                 'mysql' => new Cycle\Database\Config\MySQLDriverConfig(
@@ -426,6 +430,12 @@ return [
                         $dbPassword,
                     ),
                     driver: Cycle\Database\Driver\MySQL\MySQLDriver::class,
+                ),
+                'sqlite' => new Cycle\Database\Config\SQLiteDriverConfig(
+                    connection: new Cycle\Database\Config\SQLite\FileConnectionConfig(
+                        dirname(__DIR__, 2) . '/resources/gateway-status/gateway-status.sqlite',
+                    ),
+                    driver: Cycle\Database\Driver\SQLite\SQLiteDriver::class,
                 ),
             ],
         ],

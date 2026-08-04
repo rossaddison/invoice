@@ -86,6 +86,9 @@ return [
     Route::methods([$mG, $mP], '/pricing')
         ->action([SiteController::class, 'pricing'])
         ->name('site/pricing'),
+    Route::methods([$mG, $mP], '/gateway-status')
+        ->action([SiteController::class, 'gatewayStatus'])
+        ->name('site/gateway-status'),
     Route::methods([$mG, $mP], '/testimonial')
         ->action([SiteController::class, 'testimonial'])
         ->name('site/testimonial'),
