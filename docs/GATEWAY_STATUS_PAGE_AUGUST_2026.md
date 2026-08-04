@@ -230,14 +230,15 @@ status enum; and the redirect confirmation shape (request
 
 **YooKassa's API itself has a genuine sandbox**: a free test shop with its
 own shopId/secretKey, hitting this exact same production base URL. In
-practice, though, signing up (2026-08-04) requires registered company
-details even to create a shop — the same practical KYC barrier hit with
-Robokassa, just for a different underlying reason: Robokassa has no sandbox
-API at all, while YooKassa has one but gates account creation behind
-business registration. Settings only need one shopId/secretKey pair
-(whichever the merchant currently has pasted in); `sandbox` is informational
-only, the same pattern already established for Mollie's single
-`testOrLiveApiKey` field, not a code branch.
+practice, though, signing up (2026-08-04) requires a TIN (Tax
+Identification Number — a registered legal entity) even to create a shop,
+so an individual cannot obtain test credentials at all — the same practical
+KYC barrier hit with Robokassa, just for a different underlying reason:
+Robokassa has no sandbox API at all, while YooKassa has one, but account
+creation itself is gated behind a TIN. Settings only need one
+shopId/secretKey pair (whichever the merchant currently has pasted in);
+`sandbox` is informational only, the same pattern already established for
+Mollie's single `testOrLiveApiKey` field, not a code branch.
 
 **Webhook authenticity is architecturally different from every other
 gateway in this app**: YooKassa's notifications carry no HMAC/signature at
