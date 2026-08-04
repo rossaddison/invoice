@@ -157,6 +157,16 @@ trait SettingPaymentTrait
                     'type' => 'password',
                     'label' => 'Password #2',
                 ],
+                // Only issued once Robokassa support has enabled the Refund
+                // API for this merchant account — a separate password from
+                // Password #1/#2, used only for RefundService/Refund/Create.
+                // Leave blank if refunds haven't been enabled; refund()
+                // reports a clear "not configured" message instead of
+                // failing silently.
+                'password3' => [
+                    'type' => 'password',
+                    'label' => 'Password #3 (Refund API, optional)',
+                ],
             ],
             'StoreCove' => [
                 'apiKey' => [

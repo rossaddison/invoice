@@ -186,6 +186,26 @@ current implementation. `sandbox_status` for this row stays `untested`
 since verification can only happen against a real Robokassa merchant
 account's live credentials, never a free sandbox.
 
+**Refunds**: the same OpenAPI spec documents a real Refund API
+(`RefundService/Refund/Create` + `Refund/GetState`), correcting an earlier
+assumption in this integration that Robokassa had none. It's wired up in
+`refund()`, with three real constraints the spec makes explicit: (1) it
+needs its own separate credential, Password #3, only issued by Robokassa
+support once the Refund API is specifically enabled for the merchant
+account — most merchants won't have this configured, so `refund()` reports
+a clear not-configured message rather than a failed HTTP call when it's
+blank; (2) the API is keyed by `OpKey` (the completed operation's own key),
+not `InvId` — resolved via an OpStateExt lookup (`Info.OpKey`) before the
+refund request itself is signed and sent; (3) unlike CreateInvoice, the
+Refund API's own spec documents real 400/401 HTTP statuses with a useful
+JSON body on failure, and Robokassa's own spec authors note a real
+successful refund wasn't exercised during their own spec verification — so
+`success: true` here is only confirmation the refund *request* was
+accepted, not that money has moved; `Refund/GetState` exists to poll final
+status but isn't wired up yet. Only full refunds are requested (no
+`RefundSum`), matching how this app always calls `refund()` with the whole
+original payment amount.
+
 ## Verification
 
 Full-project `vendor/bin/psalm --no-cache` — no errors. Full Testo suite —

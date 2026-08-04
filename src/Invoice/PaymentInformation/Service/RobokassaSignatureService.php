@@ -21,6 +21,12 @@ namespace App\Invoice\PaymentInformation\Service;
  * - `verifyResultUrlSignature()` — the `paymentResult` webhook's
  *   `x-robokassa-signature`: formula `OutSum:InvId:Пароль#2:Shp_*`, with
  *   Shp_ custom parameters in alphabetical order.
+ * - `signRefundJwt()` — the `createRefund` operation's `x-robokassa-jwt`
+ *   block: secret `Пароль#3` (a separate password from Пароль#1/#2, only
+ *   issued once Robokassa support has enabled the Refund API for the
+ *   merchant account), signingInput `BASE64URL_HEADER.BASE64URL_PAYLOAD`,
+ *   signature `HMAC(signingInput, secret)` using HS256 (the spec permits
+ *   HS256/HS384/HS512; HS256 is used here as the conventional default).
  */
 final class RobokassaSignatureService
 {
@@ -84,5 +90,24 @@ final class RobokassaSignatureService
         $expected = hash('md5', implode(':', $parts));
 
         return hash_equals(strtolower($expected), strtolower($signatureValue));
+    }
+
+    /**
+     * Signs a Refund API request payload (RefundPayload: OpKey, optionally
+     * RefundSum) — see this class's docblock.
+     *
+     * @param array<string, scalar> $payload
+     * @return array{0: string, 1: string} [encodedHeader.encodedPayload, signature]
+     */
+    public function signRefundJwt(array $payload, string $password3): array
+    {
+        $header = ['typ' => 'JWT', 'alg' => 'HS256'];
+        $encodedHeader = $this->base64Url(json_encode($header, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
+        $encodedPayload = $this->base64Url(json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
+        $dataToSign = $encodedHeader . '.' . $encodedPayload;
+
+        $rawSignature = hash_hmac('sha256', $dataToSign, $password3, true);
+
+        return [$dataToSign, $this->base64Url($rawSignature)];
     }
 }

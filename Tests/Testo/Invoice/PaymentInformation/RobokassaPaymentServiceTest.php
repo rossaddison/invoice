@@ -20,15 +20,15 @@ use Testo\Test;
 
 /**
  * Covers RobokassaPaymentService against a mocked Guzzle handler — no real
- * network calls. Response shapes and the verifyPayment()/verifyResultUrlCallback()
- * formulas all match Robokassa's official OpenAPI specification
- * (https://docs.robokassa.ru/openapi/robokassa.yaml) — see the class's own
- * docblock.
+ * network calls. Response shapes and the verifyPayment()/
+ * verifyResultUrlCallback()/refund() formulas all match Robokassa's official
+ * OpenAPI specification (https://docs.robokassa.ru/openapi/robokassa.yaml) —
+ * see the class's own docblock.
  */
 #[Test]
 final class RobokassaPaymentServiceTest
 {
-    private function makeSettingRepository(): SettingRepository&m\MockInterface
+    private function makeSettingRepository(bool $refundEnabled = false): SettingRepository&m\MockInterface
     {
         $sR = m::mock(SettingRepository::class);
         $sR->shouldReceive('getSetting')->with('gateway_robokassa_login')->andReturn('demo-login');
@@ -36,6 +36,14 @@ final class RobokassaPaymentServiceTest
         $sR->shouldReceive('decode')->with('enc-password1')->andReturn('password1');
         $sR->shouldReceive('getSetting')->with('gateway_robokassa_password2')->andReturn('enc-password2');
         $sR->shouldReceive('decode')->with('enc-password2')->andReturn('password2');
+
+        if ($refundEnabled) {
+            $sR->shouldReceive('getSetting')->with('gateway_robokassa_password3')->andReturn('enc-password3');
+            $sR->shouldReceive('decode')->with('enc-password3')->andReturn('password3');
+        } else {
+            $sR->shouldReceive('getSetting')->with('gateway_robokassa_password3')->andReturn('');
+            $sR->shouldReceive('decode')->with('')->andReturn('');
+        }
 
         return $sR;
     }
@@ -45,10 +53,10 @@ final class RobokassaPaymentServiceTest
         return new HttpClient(['handler' => HandlerStack::create($mock)]);
     }
 
-    private function makeService(MockHandler $mock): RobokassaPaymentService
+    private function makeService(MockHandler $mock, bool $refundEnabled = false): RobokassaPaymentService
     {
         return new RobokassaPaymentService(
-            $this->makeSettingRepository(),
+            $this->makeSettingRepository($refundEnabled),
             new RobokassaSignatureService(),
             m::spy(LoggerInterface::class),
             $this->makeHttpClient($mock),
@@ -238,14 +246,98 @@ final class RobokassaPaymentServiceTest
         Assert::false($service->verifyResultUrlCallback('100.00', '456', 'wrong-signature'));
     }
 
-    public function refundAlwaysReportsUnrefundedWithAMerchantDashboardMessage(): void
+    public function refundReturnsUnrefundedWhenPassword3IsNotConfigured(): void
     {
         $service = $this->makeService(new MockHandler([]));
 
-        $result = $service->refund('ref-123', 50.0);
+        $result = $service->refund('789', 50.0);
 
         Assert::false($result->refunded);
-        Assert::same('ref-123', $result->providerReference);
-        Assert::true(str_contains($result->message, 'merchant dashboard'));
+        Assert::same('789', $result->providerReference);
+        Assert::true(str_contains($result->message, 'Password #3'));
+    }
+
+    public function refundLooksUpOpKeyThenSubmitsARefundRequest(): void
+    {
+        $mock = new MockHandler([
+            new Response(200, [], '<OperationStateResponse><Result><Code>0</Code></Result><State><Code>100</Code></State><Info><OpKey>opkey-abc-123</OpKey></Info></OperationStateResponse>'),
+            new Response(200, [], json_encode(['success' => true, 'message' => null, 'requestId' => 'req-1'], JSON_THROW_ON_ERROR)),
+        ]);
+        $service = $this->makeService($mock, refundEnabled: true);
+
+        $result = $service->refund('789', 50.0);
+
+        Assert::true($result->refunded);
+        Assert::same('req-1', $result->providerReference);
+        Assert::true(str_contains($result->message, 'req-1'));
+    }
+
+    public function refundSignsTheRefundJwtWithPassword3AndTheLookedUpOpKey(): void
+    {
+        $mock = new MockHandler([
+            new Response(200, [], '<OperationStateResponse><Result><Code>0</Code></Result><Info><OpKey>opkey-abc-123</OpKey></Info></OperationStateResponse>'),
+            new Response(200, [], json_encode(['success' => true, 'message' => null, 'requestId' => 'req-1'], JSON_THROW_ON_ERROR)),
+        ]);
+        $service = $this->makeService($mock, refundEnabled: true);
+
+        $service->refund('789', 50.0);
+
+        $sentRequest = $mock->getLastRequest();
+        /** @var string $jwt */
+        $jwt = json_decode((string) $sentRequest->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        [$encodedHeader, $encodedPayload, $signature] = explode('.', $jwt);
+
+        [$expectedDataToSign, $expectedSignature] = (new RobokassaSignatureService())->signRefundJwt(
+            ['OpKey' => 'opkey-abc-123'],
+            'password3',
+        );
+
+        Assert::same($expectedDataToSign, $encodedHeader . '.' . $encodedPayload);
+        Assert::same($expectedSignature, $signature);
+    }
+
+    public function refundReturnsUnrefundedWhenTheOpKeyCannotBeLookedUp(): void
+    {
+        // Per the spec's operationNotFound example: no Info element at all.
+        $mock = new MockHandler([
+            new Response(200, [], '<OperationStateResponse><Result><Code>3</Code><Description>Not found</Description></Result></OperationStateResponse>'),
+        ]);
+        $service = $this->makeService($mock, refundEnabled: true);
+
+        $result = $service->refund('789', 50.0);
+
+        Assert::false($result->refunded);
+        Assert::true(str_contains($result->message, 'OpKey'));
+    }
+
+    public function refundReturnsUnrefundedWhenTheRefundApiRejectsTheRequest(): void
+    {
+        // Matches the spec's own 401 example verbatim.
+        $mock = new MockHandler([
+            new Response(200, [], '<OperationStateResponse><Result><Code>0</Code></Result><Info><OpKey>opkey-abc-123</OpKey></Info></OperationStateResponse>'),
+            new Response(401, [], json_encode([
+                'success' => false,
+                'message' => 'Signature key is not exists or partner have not access to API',
+                'requestId' => null,
+            ], JSON_THROW_ON_ERROR)),
+        ]);
+        $service = $this->makeService($mock, refundEnabled: true);
+
+        $result = $service->refund('789', 50.0);
+
+        Assert::false($result->refunded);
+        Assert::same('Signature key is not exists or partner have not access to API', $result->message);
+    }
+
+    public function refundReturnsUnrefundedWhenTheHttpCallFails(): void
+    {
+        $mock = new MockHandler([
+            new ConnectException('Connection refused', new GuzzleRequest('GET', 'https://auth.robokassa.ru/')),
+        ]);
+        $service = $this->makeService($mock, refundEnabled: true);
+
+        $result = $service->refund('789', 50.0);
+
+        Assert::false($result->refunded);
     }
 }
