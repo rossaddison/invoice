@@ -17388,12 +17388,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/rate-limiter.git",
-                "reference": "fddd313eb2f96aee60e9720bb8816a70b8cac753"
+                "reference": "789e52e026980484d24f3a1ed117c350d92ee26b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/rate-limiter/zipball/fddd313eb2f96aee60e9720bb8816a70b8cac753",
-                "reference": "fddd313eb2f96aee60e9720bb8816a70b8cac753",
+                "url": "https://api.github.com/repos/yiisoft/rate-limiter/zipball/789e52e026980484d24f3a1ed117c350d92ee26b",
+                "reference": "789e52e026980484d24f3a1ed117c350d92ee26b",
                 "shasum": ""
             },
             "require": {
@@ -17468,7 +17468,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2026-07-24T07:37:36+00:00"
+            "time": "2026-08-04T07:35:23+00:00"
         },
         {
             "name": "yiisoft/rbac",
@@ -20111,12 +20111,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/Codeception.git",
-                "reference": "eb7a6a2ace3a1f404853ac5808b2bcf1293ad1fd"
+                "reference": "16e44302cc4ee0ffa188be75510a5d7c8226b834"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/eb7a6a2ace3a1f404853ac5808b2bcf1293ad1fd",
-                "reference": "eb7a6a2ace3a1f404853ac5808b2bcf1293ad1fd",
+                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/16e44302cc4ee0ffa188be75510a5d7c8226b834",
+                "reference": "16e44302cc4ee0ffa188be75510a5d7c8226b834",
                 "shasum": ""
             },
             "require": {
@@ -20231,7 +20231,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2026-06-24T19:56:06+00:00"
+            "time": "2026-08-04T15:57:09+00:00"
         },
         {
             "name": "codeception/lib-asserts",
@@ -23449,12 +23449,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "3c9ad688ad8826203588ec49363f73f4deb590c1"
+                "reference": "87faae4ca4b824c493788fac487f2e212be4fd22"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/3c9ad688ad8826203588ec49363f73f4deb590c1",
-                "reference": "3c9ad688ad8826203588ec49363f73f4deb590c1",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/87faae4ca4b824c493788fac487f2e212be4fd22",
+                "reference": "87faae4ca4b824c493788fac487f2e212be4fd22",
                 "shasum": ""
             },
             "conflict": {
@@ -23806,7 +23806,7 @@
                 "gregwar/rst": "<1.0.3",
                 "grumpydictator/firefly-iii": "<=6.6.2",
                 "gugoan/economizzer": "<=0.9.0.0-beta1",
-                "guzzlehttp/guzzle": "<7.15.1",
+                "guzzlehttp/guzzle": "<7.15.2|>=8,<8.0.1",
                 "guzzlehttp/guzzle-services": "<1.5.4",
                 "guzzlehttp/oauth-subscriber": "<0.8.1",
                 "guzzlehttp/psr7": "<2.12.3",
@@ -24567,7 +24567,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-08-01T00:01:24+00:00"
+            "time": "2026-08-03T22:59:19+00:00"
         },
         {
             "name": "rossaddison/translator-extractor",
