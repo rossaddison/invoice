@@ -40,10 +40,12 @@ use Ramsey\Uuid\Uuid;
  *   return_url}`, response `confirmation.confirmation_url`
  *   (`lib/Model/Confirmation/ConfirmationRedirect.php`).
  *
- * Unlike Robokassa, YooKassa has a genuine sandbox: a free test shop (own
- * shopId/secretKey) hitting this same base URL — confirmed via YooKassa's
- * own developer docs and independently by the user, who can test this
- * integration against a real test shop.
+ * Unlike Robokassa, YooKassa's API itself has a genuine sandbox: a free
+ * test shop (own shopId/secretKey) hitting this same base URL. In practice,
+ * though, signing up requires a TIN (a registered legal entity), which
+ * blocked the user from obtaining test credentials — so this integration
+ * remains unverified against a live account, same as Robokassa, just for a
+ * different underlying reason.
  *
  * **Webhook authenticity is architecturally different from every other
  * gateway in this app**: YooKassa's notifications carry no HMAC/signature at
@@ -55,6 +57,21 @@ use Ramsey\Uuid\Uuid;
  *
  * Only full refunds are requested, matching how this app always calls
  * `refund()` with the whole original payment amount.
+ *
+ * **Cross-validated against the SDK's own test fixtures and executable
+ * logic** (not just its interface/model declarations), since no live
+ * account exists to test against directly:
+ * `tests/Client/fixtures/createPaymentFixtures.json` confirms
+ * `amount.value` is a decimal STRING (`"10.00"`), matching this class's
+ * `number_format($amount, 2, '.', '')`. `lib/Common/Exceptions/
+ * BadApiRequestException.php` — real executable error-parsing logic, not a
+ * guess — confirms the actual HTTP error envelope this class's `refund()`
+ * reads from is top-level `{description, code, parameter, retry_after,
+ * type}`, not the `{error: {code, description}}` shape a first read of
+ * `tests/Client/fixtures/createRefundFixtures.json` suggests (that fixture
+ * turned out to be testing the deserializer's tolerance of unknown extra
+ * fields, not documenting a real response shape — `lib/Model/Refund.php`
+ * has no `error` property at all).
  */
 final class YookassaPaymentService implements PaymentGatewayInterface
 {

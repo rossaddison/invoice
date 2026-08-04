@@ -185,10 +185,16 @@ final class YookassaPaymentServiceTest
 
     public function refundReturnsRefundedFalseWhenTheApiRejectsTheRequest(): void
     {
+        // Exact top-level {type, id, code, description, parameter} shape per
+        // the SDK's own BadApiRequestException — the real parsing logic for
+        // a 400 response, not a guess (see YookassaPaymentService's docblock).
         $mock = new MockHandler([
             new Response(400, [], json_encode([
+                'type' => 'error',
+                'id' => 'error-uuid-123',
                 'code' => 'invalid_request',
                 'description' => 'Payment has already been refunded',
+                'parameter' => 'payment_id',
             ], JSON_THROW_ON_ERROR)),
         ]);
         $service = $this->makeService($mock);
