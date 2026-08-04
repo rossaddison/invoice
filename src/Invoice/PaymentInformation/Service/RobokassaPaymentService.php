@@ -95,8 +95,16 @@ final class RobokassaPaymentService implements PaymentGatewayInterface
      * The endpoint always answers HTTP 200 and distinguishes success from
      * an application-level error via the `isSuccess` field (per the spec's
      * InvoiceCreateSuccess/InvoiceError schemas) — never via HTTP status.
+     *
+     * $successUrl, when given, is sent as `SuccessUrl2Data: {Url, Method:
+     * "GET"}` (the spec's `RedirectData` schema) so Robokassa's hosted page
+     * sends the customer's browser back to this app after paying. This is
+     * purely a UX nicety — the invoice is only ever actually marked paid by
+     * the Result URL webhook (RobokassaWebhookHandler), never by this
+     * redirect, since Robokassa's own docs describe payment confirmation as
+     * asynchronous.
      */
-    public function createPaymentUrl(int $invId, float $outSum, string $description): ?string
+    public function createPaymentUrl(int $invId, float $outSum, string $description, ?string $successUrl = null): ?string
     {
         $payload = [
             'MerchantLogin' => $this->login(),
@@ -106,6 +114,9 @@ final class RobokassaPaymentService implements PaymentGatewayInterface
             'OutSum' => $outSum,
             'Description' => $description,
         ];
+        if ($successUrl !== null) {
+            $payload['SuccessUrl2Data'] = ['Url' => $successUrl, 'Method' => 'GET'];
+        }
         [$dataToSign, $signature] = $this->signer->signJwt(
             ['alg' => 'MD5', 'typ' => 'JWT'],
             $payload,

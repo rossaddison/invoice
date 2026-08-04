@@ -41,6 +41,30 @@ return [
                 ->name('paymentinformation/goCardlessComplete'),
 
             Route::methods([Method::GET, Method::POST],
+                    '/paymentinformation/robokassaInForm/{url_key}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([RPICLR::class, 'robokassaInForm'])
+                ->name('paymentinformation/robokassaInForm'),
+
+            Route::methods([Method::GET, Method::POST],
+                    '/paymentinformation/robokassaComplete/{url_key}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([RPICLR::class, 'robokassaComplete'])
+                ->name('paymentinformation/robokassaComplete'),
+
+            Route::methods([Method::GET, Method::POST],
+                    '/paymentinformation/yookassaInForm/{url_key}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([YKPICLR::class, 'yookassaInForm'])
+                ->name('paymentinformation/yookassaInForm'),
+
+            Route::methods([Method::GET, Method::POST],
+                    '/paymentinformation/yookassaComplete/{url_key}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([YKPICLR::class, 'yookassaComplete'])
+                ->name('paymentinformation/yookassaComplete'),
+
+            Route::methods([Method::GET, Method::POST],
                     '/paymentinformation/amazonComplete/{url_key}')
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([PICLR::class, 'amazonComplete'])

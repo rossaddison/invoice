@@ -115,6 +115,45 @@ final class RobokassaPaymentServiceTest
         Assert::same('https://auth.robokassa.ru/merchant/Invoice/AbCdEf', $url);
     }
 
+    public function createPaymentUrlIncludesSuccessUrl2DataWhenASuccessUrlIsGiven(): void
+    {
+        $mock = new MockHandler([
+            new Response(200, [], json_encode(['isSuccess' => true, 'id' => 'x', 'invId' => 1, 'url' => 'https://example.test/pay'], JSON_THROW_ON_ERROR)),
+        ]);
+        $service = $this->makeService($mock);
+
+        $service->createPaymentUrl(1, 10.0, 'test', 'https://invoice.example/return');
+
+        $sentRequest = $mock->getLastRequest();
+        /** @var string $jwt */
+        $jwt = json_decode((string) $sentRequest->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        $payloadJson = base64_decode(strtr(explode('.', $jwt)[1], '-_', '+/'), true);
+        /** @var array{SuccessUrl2Data?: array{Url: string, Method: string}} $payload */
+        $payload = json_decode((string) $payloadJson, true, 512, JSON_THROW_ON_ERROR);
+
+        Assert::same('https://invoice.example/return', $payload['SuccessUrl2Data']['Url']);
+        Assert::same('GET', $payload['SuccessUrl2Data']['Method']);
+    }
+
+    public function createPaymentUrlOmitsSuccessUrl2DataWhenNoSuccessUrlIsGiven(): void
+    {
+        $mock = new MockHandler([
+            new Response(200, [], json_encode(['isSuccess' => true, 'id' => 'x', 'invId' => 1, 'url' => 'https://example.test/pay'], JSON_THROW_ON_ERROR)),
+        ]);
+        $service = $this->makeService($mock);
+
+        $service->createPaymentUrl(1, 10.0, 'test');
+
+        $sentRequest = $mock->getLastRequest();
+        /** @var string $jwt */
+        $jwt = json_decode((string) $sentRequest->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        $payloadJson = base64_decode(strtr(explode('.', $jwt)[1], '-_', '+/'), true);
+        /** @var array<string, mixed> $payload */
+        $payload = json_decode((string) $payloadJson, true, 512, JSON_THROW_ON_ERROR);
+
+        Assert::false(array_key_exists('SuccessUrl2Data', $payload));
+    }
+
     public function createPaymentUrlSignsTheJwtWithMerchantLoginAndPassword1(): void
     {
         $mock = new MockHandler([

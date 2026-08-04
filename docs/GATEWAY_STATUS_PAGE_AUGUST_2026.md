@@ -268,6 +268,51 @@ app's `CheckGatewaySandboxesCommand` currently assumes one secret string per
 gateway, and YooKassa needs a shopId+secretKey pair, so wiring it into the
 weekly CI sandbox-check job needs a small credential-schema decision first.
 
+## Customer-facing checkout flow (Robokassa + YooKassa)
+
+Both gateways initially shipped with only the server-to-server plumbing
+(webhook, refund, verify) — the guest-facing "in-form" step that actually
+lets a customer pay was a deliberate follow-up, matching the other
+gateways' incremental rollout. That step is now built for both.
+
+Unlike Stripe/Mollie/Braintree (which render a local card-entry form) or
+Adyen (an embedded drop-in), Robokassa and YooKassa are architecturally
+closer to **GoCardless**: both gateways host their own complete payment
+page, so the "in-form" step is just a 302 redirect straight to a URL the
+gateway hands back, with no local view to render at all —
+`RobokassaPaymentController`/`YookassaPaymentController` each got a thin
+`{gateway}InForm()`/`{gateway}Complete()` pair mirroring
+`GoCardlessPaymentController`'s existing shape exactly.
+
+- **`{gateway}InForm()`**: loads the invoice from `url_key`, confirms the
+  gateway is configured and the balance is still positive, then asks the
+  service to create the payment/invoice and redirects (302) to the URL it
+  returns. Robokassa's `createPaymentUrl()` gained an optional
+  `$successUrl` parameter, sent as the spec's `SuccessUrl2Data: {Url,
+  Method: "GET"}` (a `RedirectData` object, confirmed via the OpenAPI
+  spec) so Robokassa's hosted page sends the browser back afterward;
+  YooKassa's `createPayment()` already took a `$returnUrl` for the
+  same purpose.
+- **`{gateway}Complete()`**: deliberately **read-only**, the same pattern
+  already used by `PaymentInformationController::stripeComplete()` — it
+  re-reads the invoice's current balance to decide which message to show,
+  but never writes payment state itself. Both gateways confirm payment
+  asynchronously (Robokassa via the Result URL webhook; YooKassa via its
+  own webhook, only after an authenticated re-confirmation given it has no
+  signature) — a customer's browser landing on this page proves nothing
+  about payment success on its own, so treating it as authoritative would
+  be a real bug, not just an inconsistency.
+
+Wired into `PaymentInformationController::pciCompliantGatewayInForms()`'s
+dispatch `match` alongside the existing Adyen/GoCardless redirect cases,
+and into the two dedicated controllers' constructors (both needed the same
+`Flash` injection GoCardless's controller already has, missed on the first
+attempt and caught by Psalm's `UndefinedThisPropertyFetch`). No new
+translation strings were needed — `already.paid`,
+`online.payment.payment.processing`/`successful`, `payment`, and
+`complete` already existed and cover every message state these two flows
+need.
+
 ## Verification
 
 Full-project `vendor/bin/psalm --no-cache` — no errors. Full Testo suite —
@@ -276,4 +321,10 @@ RSA-key environment failures as every other session this month). Full
 `vendor/bin/phpunit` — 3,877/3,877 passing, confirming the second Cycle
 database didn't regress the MySQL-backed schema. `/gateway-status` and the
 refreshed homepage both confirmed rendering correctly against a live local
-request.
+request. The new `robokassaInForm`/`yookassaInForm` routes were also
+curl'd directly against the running local site with a nonexistent
+`url_key`, confirming a clean `404` (via the language-redirect
+middleware's `302` then the controller's own not-found path) rather than a
+`500` from a DI-wiring mistake — the same class of check used throughout
+this session for routes that can't be fully exercised without real gateway
+credentials.

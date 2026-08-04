@@ -506,6 +506,16 @@ final class PaymentInformationController
                         'paymentinformation/goCardlessInForm',
                         ['url_key' => $ctx->url_key, '_language' => 'en'],
                     ),
+                    // Robokassa and YooKassa each have their own dedicated
+                    // controller — same reasoning as Adyen/GoCardless above.
+                    'Robokassa'  => $this->webService->getRedirectResponse(
+                        'paymentinformation/robokassaInForm',
+                        ['url_key' => $ctx->url_key, '_language' => 'en'],
+                    ),
+                    'Yookassa'   => $this->webService->getRedirectResponse(
+                        'paymentinformation/yookassaInForm',
+                        ['url_key' => $ctx->url_key, '_language' => 'en'],
+                    ),
                     default      => null,
                 };
                 if ($gatewayResponse !== null) {
