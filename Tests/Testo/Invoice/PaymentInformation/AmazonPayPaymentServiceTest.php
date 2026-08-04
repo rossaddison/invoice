@@ -27,6 +27,51 @@ use Yiisoft\Aliases\Aliases;
 #[Test]
 final class AmazonPayPaymentServiceTest
 {
+    /**
+     * A fixed, publicly-published test-only RSA key — Amazon's own official
+     * `amzn/amazon-pay-api-sdk-php` SDK's test suite
+     * (tests/unit/unit_test_key_private.txt) uses this exact key for its
+     * own signing tests, copied verbatim rather than generating a fresh key
+     * per test run via openssl_pkey_new(). That call previously failed here
+     * with "Unable to generate a test RSA key." — a local PHP/OpenSSL
+     * environment issue (this WAMP install's php.ini has no working
+     * openssl.cnf configured), not anything about the SDK or this app's own
+     * code — so a real dynamically-generated key was never actually
+     * necessary for these tests to be meaningful; any valid RSA private key
+     * works identically for exercising `getButtonData()`'s signing path.
+     * Using this fixture instead makes the suite deterministic and
+     * independent of the local machine's OpenSSL configuration entirely.
+     */
+    private const string TEST_RSA_PRIVATE_KEY = <<<'PEM'
+        -----BEGIN RSA PRIVATE KEY-----
+        MIIEowIBAAKCAQEA6Eqj050ePXhA39d4FyvSQyIbW9frefsjw9JSPIRHX4XimpAO
+        gJ75BmG/wptqXOG79xDyWOXmHHz5alRjvoQAlI7HOdnScWxHO+9esm1koJyvug23
+        Pa5KN8j7BYRpFOuYhFS8hxUEsmMYSw7iIsckbqBB7VzxnGfP10kNcAhJ+GSbHN74
+        CsqJJkX+66m85Mrb/13QxZVbIsZLwfQ/S12lStvI1rjtyXBEmfEWNOZLQdPdM2QB
+        kCm+vp9QjsD2zpINCCazp+DibqjcCtSGN2mSiraFSBKdg1E55K11E56pF55BsZk5
+        lo8/aGAMEYzJB4XYwaMV21Fadg8sM0NRlBFluwIDAQABAoIBACqN8fFEaVPNgeT/
+        7ioghwZxax2qMqNIFMc88n/Po9umBVtXZLC/btNyeNTH7/ZQDEU4v4z1oPA7HN4T
+        06oFOK3+chTxCJJqyan7Mhfx3mtmCPNGq/kKwuHxWbsrBK0mc+xaMad1fETJzpuB
+        gH/qh4wUo78+Naz3f6Xq5iFOA28TdcVXBeECoEfHAmBdknsZRMLvF9goVXwSaKuD
+        /mWXiIj3dLbU+TS9NZXlLEnMTJVZiiqyhRWT9oLui/7ROftjtMX49zDLSTifrmeT
+        Wzji+8N9VHCyRTXDXile/L15mFoh5P41LdhgFwvSGyUq9vGnwFdMNiEYTimOhmsw
+        KM2oFZECgYEA/VcPmXAQwbYOyc2XduxKHob17TfHSH97zYAp1OKvayRr7xzYWhmQ
+        ezcRDRcGh9YddZXK59a8RZK3r+gipdoUA492/a14w52pKi22drCaqAn4SQ/zd2Jw
+        G6CZWOxPwsCT9EsC9eLTXcWC0YzWraNQmf3uRGVQeSgvkM8JlprrlpUCgYEA6rsA
+        +5TJh8KfIYORgkywrSztOWo8JeenW+Lu7ARWauz+a7How5V3xIszkuz9b7cmRhdg
+        5gk8xTtR4UWo1SR5mTFuezfOTF0RzBBW7romHKTMOXJcLSoJKe9cQ3ZzaGoDHSqq
+        pdapbaSLoKB4nCrK40SRmvmZAwojVA1NTgSvhw8CgYEArZPEHWY6JO8/bKdPmuzE
+        z+u6fmEUSqkGQ0QH5VO3yxo2VauW1QzlAHc3WJepItLidlk+n+ByON0QvBa5/pbP
+        1ayrY55CuwzABiUx+lqAbJgAJNcoAmlQ1K0RxGqNL6vQ87Wdfql+FqaoPjlYMbpP
+        FGN2qCgenhSZmocwU58rwY0CgYBF9sNOOYTwMDRaOusOGWm31GJI8L9I1QlvO+7W
+        7lwLtuQGmZq1YUG3lX4j1vubZs3Dqog5SJuSdiHrsWWnUh3kaXVyyKl23W7GkkA3
+        G8jsVLqCjPGojJT6qNupSA8SGjcfZG5Ey/zoL1lm4S3R7ndW0kNMHAVdgJITJXvb
+        O05ORQKBgEGPnMKv7dJA10Un77GMH7+6/ujWfL4JRj+Aa6l0RCnc05rECtkF5V27
+        gzjqRXZYIRczgyXa1MpNeZgE0C7MpXSbzTR4L8E9bMH2b+R4EjX8hoY32BReW0uA
+        b4k6oZiNnDl1XZgwczfC1sTF/QsOJPe8i70Vzh/ZNG7DGw2dePLA
+        -----END RSA PRIVATE KEY-----
+        PEM;
+
     private function makeTempPemDir(bool $withPrivateKey): string
     {
         $dir = sys_get_temp_dir() . '/amazon_pay_test_' . uniqid('', true);
@@ -34,17 +79,7 @@ final class AmazonPayPaymentServiceTest
             throw new \RuntimeException("Unable to create temp dir: {$dir}");
         }
         if ($withPrivateKey) {
-            $resource = openssl_pkey_new([
-                'private_key_bits' => 2048,
-                'private_key_type' => OPENSSL_KEYTYPE_RSA,
-            ]);
-            if ($resource === false) {
-                throw new \RuntimeException('Unable to generate a test RSA key.');
-            }
-            if (!openssl_pkey_export($resource, $pem)) {
-                throw new \RuntimeException('Unable to export the test RSA key.');
-            }
-            file_put_contents($dir . '/private.pem', $pem);
+            file_put_contents($dir . '/private.pem', self::TEST_RSA_PRIVATE_KEY);
         }
         return $dir;
     }
