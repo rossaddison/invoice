@@ -8,6 +8,7 @@ use App\Invoice\PaymentInformation\GoCardlessPaymentController as GCPICLR;
 use App\Invoice\PaymentInformation\MolliePaymentController as MPICLR;
 use App\Invoice\PaymentInformation\PaymentInformationController as PICLR;
 use App\Invoice\PaymentInformation\PaymentRefundController as PRCLR;
+use App\Invoice\PaymentInformation\PaypalPaymentController as PPPICLR;
 use App\Invoice\PaymentInformation\PaystackPaymentController as PSPICLR;
 use App\Invoice\PaymentInformation\RazorpayPaymentController as RZPICLR;
 use App\Invoice\PaymentInformation\RobokassaPaymentController as RPICLR;
@@ -90,6 +91,18 @@ return [
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([RZPICLR::class, 'razorpayComplete'])
                 ->name('paymentinformation/razorpayComplete'),
+
+            Route::methods([Method::GET, Method::POST],
+                    '/paymentinformation/paypalInForm/{url_key}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([PPPICLR::class, 'paypalInForm'])
+                ->name('paymentinformation/paypalInForm'),
+
+            Route::methods([Method::GET, Method::POST],
+                    '/paymentinformation/paypalComplete/{url_key}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([PPPICLR::class, 'paypalComplete'])
+                ->name('paymentinformation/paypalComplete'),
 
             Route::methods([Method::GET, Method::POST],
                     '/paymentinformation/amazonComplete/{url_key}')
@@ -233,4 +246,13 @@ return [
     Route::methods([Method::POST], '/paymentinformation/razorpayWebhook')
         ->action([RZPICLR::class, 'razorpayWebhook'])
         ->name('paymentinformation/razorpayWebhook'),
+
+    // Not under RoutePermission::invoiceGroup(): PayPal's servers must be
+    // able to POST here with no app session. Secured by PayPal's own
+    // Verify Webhook Signature API call in the handler, not RBAC — see
+    // PaypalPaymentService::verifyWebhookSignature() and
+    // App\Middleware\CsrfExemptMiddleware.
+    Route::methods([Method::POST], '/paymentinformation/paypalWebhook')
+        ->action([PPPICLR::class, 'paypalWebhook'])
+        ->name('paymentinformation/paypalWebhook'),
 ];

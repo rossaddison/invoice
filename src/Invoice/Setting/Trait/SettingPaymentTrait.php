@@ -30,6 +30,7 @@ trait SettingPaymentTrait
             'Yookassa' => $this->yookassaGatewayFields(),
             'Paystack' => $this->paystackGatewayFields(),
             'Razorpay' => $this->razorpayGatewayFields(),
+            'Paypal' => $this->paypalGatewayFields(),
             'StoreCove' => $this->storeCoveGatewayFields(),
             'Stripe' => $this->stripeGatewayFields(),
         ];
@@ -306,6 +307,47 @@ trait SettingPaymentTrait
         ];
     }
 
+    /**
+     * PayPal — this app's broadest-reach gateway (200+ markets across every
+     * populated continent), built against the Orders v2 REST API
+     * (`POST /v2/checkout/orders` + `.../capture`), ground-truthed against
+     * the official `paypal/paypal-server-sdk` (github.com/paypal/
+     * PayPal-PHP-Server-SDK, actively maintained, read for research purposes
+     * only — see PaypalPaymentService's own docblock for why no SDK is
+     * installed here).
+     *
+     * Unlike every other gateway's 'sandbox' checkbox in this app — which is
+     * purely informational, since Mollie/YooKassa/Paystack/Razorpay all use
+     * one base URL and differ only by which credential is pasted in —
+     * PayPal's sandbox genuinely IS a separate base URL
+     * (`api-m.sandbox.paypal.com` vs `api-m.paypal.com`), so here 'sandbox'
+     * is a real code branch, not just documentation.
+     */
+    private function paypalGatewayFields(): array
+    {
+        return [
+            'clientId' => [
+                'type' => 'text',
+                'label' => 'Client ID',
+            ],
+            'clientSecret' => [
+                'type' => 'password',
+                'label' => 'Client Secret',
+            ],
+            // From the webhook's own configuration page in the PayPal
+            // Developer Dashboard — required by the Verify Webhook Signature
+            // API call, distinct from clientId/clientSecret.
+            'webhookId' => [
+                'type' => 'text',
+                'label' => 'Webhook ID',
+            ],
+            'sandbox' => [
+                'type' => 'checkbox',
+                'label' => 'Sandbox (uses api-m.sandbox.paypal.com)',
+            ],
+        ];
+    }
+
     private function storeCoveGatewayFields(): array
     {
         return [
@@ -390,6 +432,10 @@ trait SettingPaymentTrait
             // distinguished by which key id/secret (rzp_test_/rzp_live_) is
             // configured.
             'razorpay' => 'https://dashboard.razorpay.com',
+            // Genuinely separate sandbox environment (its own base URL and
+            // its own test buyer/business accounts), unlike every other
+            // gateway above.
+            'paypal' => 'https://developer.paypal.com/dashboard/accounts',
         ];
     }
 

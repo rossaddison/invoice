@@ -528,6 +528,12 @@ final class PaymentInformationController
                         'paymentinformation/razorpayInForm',
                         ['url_key' => $ctx->url_key, '_language' => 'en'],
                     ),
+                    // Paypal has its own dedicated PaypalPaymentController
+                    // — same reasoning as every other dedicated gateway controller above.
+                    'Paypal'     => $this->webService->getRedirectResponse(
+                        'paymentinformation/paypalInForm',
+                        ['url_key' => $ctx->url_key, '_language' => 'en'],
+                    ),
                     default      => null,
                 };
                 if ($gatewayResponse !== null) {
