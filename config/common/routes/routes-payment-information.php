@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Auth\Permissions;
 use App\Invoice\PaymentInformation\AdyenPaymentController as APICLR;
 use App\Invoice\PaymentInformation\GoCardlessPaymentController as GCPICLR;
+use App\Invoice\PaymentInformation\MolliePaymentController as MPICLR;
 use App\Invoice\PaymentInformation\PaymentInformationController as PICLR;
 use App\Invoice\PaymentInformation\PaymentRefundController as PRCLR;
 use App\Invoice\PaymentInformation\RobokassaPaymentController as RPICLR;
@@ -178,4 +179,14 @@ return [
     Route::methods([Method::POST], '/paymentinformation/yookassaWebhook')
         ->action([YKPICLR::class, 'yookassaWebhook'])
         ->name('paymentinformation/yookassaWebhook'),
+
+    // Not under RoutePermission::invoiceGroup(): Mollie's servers must be
+    // able to POST here with no app session. Mollie's classic per-payment
+    // webhook carries no signature at all — secured here by calling back
+    // GET /payments/{id} with this app's own API key and trusting only
+    // that response, never the POST body itself, not RBAC. See
+    // MollieWebhookHandler's docblock and App\Middleware\CsrfExemptMiddleware.
+    Route::methods([Method::POST], '/paymentinformation/mollieWebhook')
+        ->action([MPICLR::class, 'mollieWebhook'])
+        ->name('paymentinformation/mollieWebhook'),
 ];

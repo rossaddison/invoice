@@ -850,6 +850,16 @@ final class PaymentInformationController
                         '_language' => (string) $this->session->get('_language'),
                     ]
                 ),
+                // Mollie's classic per-payment webhook — MollieWebhookHandler
+                // is the authoritative source that actually marks the
+                // invoice paid; mollieComplete() only reads current state.
+                // Mollie needs a publicly reachable HTTPS URL to actually
+                // call this — a local/dev environment with no public
+                // tunnel simply won't receive it, same limitation as any
+                // other webhook-based gateway in local development.
+                'webhookUrl' => $this->urlGenerator->generateAbsolute(
+                    'paymentinformation/mollieWebhook',
+                ),
                 'metadata' => [
                     'invoice_id'          => $yii_invoice['id'],
                     'invoice_customer_id' => $yii_invoice['customer_id'],
@@ -918,7 +928,13 @@ final class PaymentInformationController
             $invoice_amount_record = $this->iaR->repoInvquery($invoice->reqId());
             /** @var InvAmount $invoice_amount_record */
             $balance = $invoice_amount_record->getBalance();
-            if (null !== $balance) {
+            // Guard against double-recording: MollieWebhookHandler may have
+            // already marked this invoice paid (Mollie's own docs: "the
+            // webhook may be called after the customer has already been
+            // redirected" — it can just as easily arrive first), in which
+            // case balance is already 0 and re-running this would create a
+            // duplicate Merchant audit row via paymentRecorder->record().
+            if (null !== $balance && $balance > 0.00) {
                 $invoice_amount_record->setBalance(0);
                 $invoice_amount_record->setPaid($invoice_amount_record->getTotal() ?? 0.00);
                 $this->iaR->save($invoice_amount_record);
