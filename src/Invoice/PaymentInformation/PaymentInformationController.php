@@ -877,6 +877,9 @@ final class PaymentInformationController
                 // other webhook-based gateway in local development.
                 'webhookUrl' => $this->urlGenerator->generateAbsolute(
                     'paymentinformation/mollieWebhook',
+                    [
+                        '_language' => (string) $this->session->get('_language'),
+                    ]
                 ),
                 'metadata' => [
                     'invoice_id'          => $yii_invoice['id'],
