@@ -29,6 +29,7 @@ trait SettingPaymentTrait
             'Robokassa' => $this->robokassaGatewayFields(),
             'Yookassa' => $this->yookassaGatewayFields(),
             'Paystack' => $this->paystackGatewayFields(),
+            'Razorpay' => $this->razorpayGatewayFields(),
             'StoreCove' => $this->storeCoveGatewayFields(),
             'Stripe' => $this->stripeGatewayFields(),
         ];
@@ -271,6 +272,40 @@ trait SettingPaymentTrait
         ];
     }
 
+    /**
+     * India — Razorpay is this app's first India-region gateway, built
+     * against its Payment Links API (a hosted checkout page, unlike the
+     * embedded-JS-widget Orders API most Razorpay integrations use — chosen
+     * specifically because it matches this app's existing redirect-based
+     * pattern, no client-side JS integration needed). keyId/keySecret are
+     * genuinely different per test/live mode (rzp_test_.../rzp_live_...),
+     * same base URL — 'sandbox' here is informational only, not a code
+     * branch. webhookSecret is a separate secret configured when setting up
+     * the webhook in the Razorpay Dashboard, distinct from keySecret (same
+     * pattern as Stripe/Adyen/GoCardless's own webhookSecret field).
+     */
+    private function razorpayGatewayFields(): array
+    {
+        return [
+            'keyId' => [
+                'type' => 'text',
+                'label' => 'Key ID',
+            ],
+            'keySecret' => [
+                'type' => 'password',
+                'label' => 'Key Secret',
+            ],
+            'webhookSecret' => [
+                'type' => 'password',
+                'label' => 'Webhook Secret',
+            ],
+            'sandbox' => [
+                'type' => 'checkbox',
+                'label' => 'Sandbox (test key id/secret)',
+            ],
+        ];
+    }
+
     private function storeCoveGatewayFields(): array
     {
         return [
@@ -351,6 +386,10 @@ trait SettingPaymentTrait
             // Same dashboard for test and live secret keys, distinguished
             // only by which key (sk_test_/sk_live_) is configured.
             'paystack' => 'https://dashboard.paystack.com',
+            // Same dashboard for test and live mode, toggled via a switch —
+            // distinguished by which key id/secret (rzp_test_/rzp_live_) is
+            // configured.
+            'razorpay' => 'https://dashboard.razorpay.com',
         ];
     }
 

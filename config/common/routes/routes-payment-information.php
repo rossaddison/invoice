@@ -9,6 +9,7 @@ use App\Invoice\PaymentInformation\MolliePaymentController as MPICLR;
 use App\Invoice\PaymentInformation\PaymentInformationController as PICLR;
 use App\Invoice\PaymentInformation\PaymentRefundController as PRCLR;
 use App\Invoice\PaymentInformation\PaystackPaymentController as PSPICLR;
+use App\Invoice\PaymentInformation\RazorpayPaymentController as RZPICLR;
 use App\Invoice\PaymentInformation\RobokassaPaymentController as RPICLR;
 use App\Invoice\PaymentInformation\YookassaPaymentController as YKPICLR;
 use App\Middleware\RoutePermission;
@@ -77,6 +78,18 @@ return [
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([PSPICLR::class, 'paystackComplete'])
                 ->name('paymentinformation/paystackComplete'),
+
+            Route::methods([Method::GET, Method::POST],
+                    '/paymentinformation/razorpayInForm/{url_key}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([RZPICLR::class, 'razorpayInForm'])
+                ->name('paymentinformation/razorpayInForm'),
+
+            Route::methods([Method::GET, Method::POST],
+                    '/paymentinformation/razorpayComplete/{url_key}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([RZPICLR::class, 'razorpayComplete'])
+                ->name('paymentinformation/razorpayComplete'),
 
             Route::methods([Method::GET, Method::POST],
                     '/paymentinformation/amazonComplete/{url_key}')
@@ -211,4 +224,13 @@ return [
     Route::methods([Method::POST], '/paymentinformation/paystackWebhook')
         ->action([PSPICLR::class, 'paystackWebhook'])
         ->name('paymentinformation/paystackWebhook'),
+
+    // Not under RoutePermission::invoiceGroup(): Razorpay's servers must be
+    // able to POST here with no app session. Secured by X-Razorpay-Signature
+    // verification in the handler, not RBAC — see
+    // RazorpaySignatureService::verifyWebhookSignature() and
+    // App\Middleware\CsrfExemptMiddleware.
+    Route::methods([Method::POST], '/paymentinformation/razorpayWebhook')
+        ->action([RZPICLR::class, 'razorpayWebhook'])
+        ->name('paymentinformation/razorpayWebhook'),
 ];

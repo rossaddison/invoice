@@ -522,6 +522,12 @@ final class PaymentInformationController
                         'paymentinformation/paystackInForm',
                         ['url_key' => $ctx->url_key, '_language' => 'en'],
                     ),
+                    // Razorpay has its own dedicated RazorpayPaymentController
+                    // — same reasoning as Adyen/GoCardless/Robokassa/YooKassa/Paystack above.
+                    'Razorpay'   => $this->webService->getRedirectResponse(
+                        'paymentinformation/razorpayInForm',
+                        ['url_key' => $ctx->url_key, '_language' => 'en'],
+                    ),
                     default      => null,
                 };
                 if ($gatewayResponse !== null) {
