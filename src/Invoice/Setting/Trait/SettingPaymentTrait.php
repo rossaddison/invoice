@@ -28,6 +28,7 @@ trait SettingPaymentTrait
             'Open_Banking_With_Tink' => $this->openBankingTinkGatewayFields(),
             'Robokassa' => $this->robokassaGatewayFields(),
             'Yookassa' => $this->yookassaGatewayFields(),
+            'Paystack' => $this->paystackGatewayFields(),
             'StoreCove' => $this->storeCoveGatewayFields(),
             'Stripe' => $this->stripeGatewayFields(),
         ];
@@ -246,6 +247,30 @@ trait SettingPaymentTrait
         ];
     }
 
+    /**
+     * Africa — Paystack's core markets are Nigeria, Ghana, South Africa,
+     * Kenya, Côte d'Ivoire, Egypt, and Rwanda, filling a real gap this
+     * app's other gateways don't cover directly (Stripe's own Africa
+     * support is "extended network only", via Paystack itself — see
+     * gateways.json). Single secretKey field: like Mollie/YooKassa, test
+     * vs live mode is just which key prefix (sk_test_/sk_live_) is pasted
+     * in, same base URL — 'sandbox' here is informational only, not a
+     * code branch.
+     */
+    private function paystackGatewayFields(): array
+    {
+        return [
+            'secretKey' => [
+                'type' => 'password',
+                'label' => 'Secret Key',
+            ],
+            'sandbox' => [
+                'type' => 'checkbox',
+                'label' => 'Sandbox (test secret key)',
+            ],
+        ];
+    }
+
     private function storeCoveGatewayFields(): array
     {
         return [
@@ -323,6 +348,9 @@ trait SettingPaymentTrait
             // Real test-shop dashboard, same UI as production — confirmed
             // via yookassa.ru's own developer docs.
             'yookassa' => 'https://yookassa.ru/my/',
+            // Same dashboard for test and live secret keys, distinguished
+            // only by which key (sk_test_/sk_live_) is configured.
+            'paystack' => 'https://dashboard.paystack.com',
         ];
     }
 

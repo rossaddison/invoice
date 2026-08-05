@@ -12,6 +12,7 @@ use App\Invoice\PaymentInformation\Service\AmazonPayPaymentService;
 use App\Invoice\PaymentInformation\Service\BraintreePaymentService;
 use App\Invoice\PaymentInformation\Service\GoCardlessPaymentService;
 use App\Invoice\PaymentInformation\Service\MolliePaymentService;
+use App\Invoice\PaymentInformation\Service\PaystackPaymentService;
 use App\Invoice\PaymentInformation\Service\RobokassaPaymentService;
 use App\Invoice\PaymentInformation\Service\StripePaymentService;
 use App\Invoice\PaymentInformation\Service\YookassaPaymentService;
@@ -52,6 +53,7 @@ final class PaymentRefundController
         private readonly StripePaymentService $stripePaymentService,
         private readonly RobokassaPaymentService $robokassaPaymentService,
         private readonly YookassaPaymentService $yookassaPaymentService,
+        private readonly PaystackPaymentService $paystackPaymentService,
     ) {
     }
 
@@ -126,6 +128,7 @@ final class PaymentRefundController
             'gocardless' => $this->goCardlessPaymentService->refund($reference, $amount),
             'robokassa'  => $this->robokassaPaymentService->refund($reference, $amount),
             'yookassa'   => $this->yookassaPaymentService->refund($reference, $amount),
+            'paystack'   => $this->paystackPaymentService->refund($reference, $amount),
             default      => null,
         };
     }

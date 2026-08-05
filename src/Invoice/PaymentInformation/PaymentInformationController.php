@@ -516,6 +516,12 @@ final class PaymentInformationController
                         'paymentinformation/yookassaInForm',
                         ['url_key' => $ctx->url_key, '_language' => 'en'],
                     ),
+                    // Paystack has its own dedicated PaystackPaymentController
+                    // — same reasoning as Adyen/GoCardless/Robokassa/YooKassa above.
+                    'Paystack'   => $this->webService->getRedirectResponse(
+                        'paymentinformation/paystackInForm',
+                        ['url_key' => $ctx->url_key, '_language' => 'en'],
+                    ),
                     default      => null,
                 };
                 if ($gatewayResponse !== null) {

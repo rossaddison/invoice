@@ -25,8 +25,8 @@
             "key": "braintree",
             "name": "Braintree",
             "composer_package": "braintree/braintree_php",
-            "sdk_version": "6.36.0",
-            "last_updated": "2026-08-04",
+            "sdk_version": "6.37.0",
+            "last_updated": "2026-08-05",
             "sandbox_env_var": null,
             "sandbox_tested_at": null,
             "sandbox_status": null,
@@ -78,8 +78,8 @@
             "key": "adyen",
             "name": "Adyen",
             "composer_package": "adyen/php-api-library",
-            "sdk_version": "v30.0.1",
-            "last_updated": "2026-08-04",
+            "sdk_version": "v30.0.2",
+            "last_updated": "2026-08-05",
             "sandbox_env_var": null,
             "sandbox_tested_at": null,
             "sandbox_status": null,
@@ -177,6 +177,22 @@
                 "europe"
             ],
             "notes": "Second Russia/CIS-market gateway (formerly Yandex.Checkout/Yandex.Kassa). Direct HTTP integration \u2014 no third-party SDK/composer package, per this project's general small-third-party-package caution. Two sources for YooKassa's official PHP SDK exist at very different versions: github.com/yoomoney/yookassa-sdk-php is a stale mirror frozen around v2.3.0 (~2022); the actively-maintained source is git.yoomoney.ru/projects/SDK/repos/yookassa-sdk-php, at v3.14.0 as of June 2026 per its CHANGELOG.md. Base URL, Basic Auth (shopId:secretKey), Idempotence-Key header, /payments, /payments/{id}, /refunds paths, payment/refund status enums, and the refund error-envelope shape were ground-truthed against the GitHub mirror first, then specifically re-checked against the current Bitbucket source for four years of possible drift \u2014 confirmed identical on both (2026-08-04). Regions carried over from Robokassa's reasoning (Russia/CIS/Baltic) as a reasonable default, not independently re-verified against YooKassa's own country-support docs this pass. YooKassa's API itself has a genuine sandbox (a free test shop with its own shopId/secretKey hitting this same production base URL) \u2014 but the user found in practice, when attempting sign-up (2026-08-04), that YooKassa requires a TIN (Tax Identification Number, i.e. a registered legal entity) even to create a shop, so an individual cannot obtain test credentials at all. Same practical KYC barrier hit with Robokassa, just for a different underlying reason (Robokassa has no sandbox API at all; YooKassa has one, but account creation itself is gated behind a TIN). sandbox_env_var still left null for now: this app's CheckGatewaySandboxesCommand assumes one secret string per gateway, and YooKassa needs a shopId+secretKey pair, so CI automation needs a small schema decision first \u2014 deliberately deferred, not an oversight. YooKassa's webhook notifications carry no cryptographic signature at all (ground-truthed via the same SDK's SecurityHelper class, re-confirmed unchanged on the current v3.14.0 source too \u2014 no signing added in four years) \u2014 authenticity relies on an IP allowlist plus a mandatory authenticated GET-back confirmation before trusting any notification, architecturally different from every other gateway in this app. sandbox_status stays 'untested' \u2014 no test-shop account currently available to verify against."
+        },
+        {
+            "key": "paystack",
+            "name": "Paystack",
+            "composer_package": null,
+            "sdk_version": null,
+            "last_updated": "2026-08-05",
+            "sandbox_env_var": null,
+            "sandbox_tested_at": null,
+            "sandbox_status": "untested",
+            "sandbox_last_error": null,
+            "live_tested_at": null,
+            "regions": [
+                "africa"
+            ],
+            "notes": "First Africa-region gateway. Direct HTTP integration \u2014 no third-party SDK/composer package. Paystack's own GitHub org (PaystackHQ/paystack-php) is a stale 2017 mirror of the community yabacon/paystack-php package; that package (more recently touched, 2023, 116 stars) was read directly for research purposes only, not installed, per this project's small-third-party-package caution. Base URL, Bearer-token auth, response envelope, /transaction/initialize and /transaction/verify/{reference} paths, and the X-Paystack-Signature = hash_hmac('sha512', rawBody, secretKey) webhook formula were ground-truthed directly against that SDK's real executable source (Router, RequestBuilder, Response, Event::validFor()) \u2014 confirmed 2026-08-05. Paystack's own primary docs site (paystack.com/docs) returned HTTP 403 to every fetch attempt this session (bot-protection) and could not be independently cross-checked; the /refund endpoint specifically is not covered by the SDK read at all and is built from Paystack's well-established public API shape, not a primary-source confirmation \u2014 flagged in PaystackPaymentService's own docblock. Regions: Paystack's core supported markets are Nigeria, Ghana, South Africa, Kenya, C\u00f4te d'Ivoire, Egypt, and Rwanda (per general public knowledge of Paystack's own market coverage, not independently re-verified against a primary source this session) \u2014 filling a real gap Stripe's own Africa support doesn't cover directly (Stripe's Africa reach is \"extended network only\", via Paystack itself). sandbox_env_var left null: like Mollie/YooKassa, Paystack's test vs live mode is just which secret key prefix (sk_test_/sk_live_) is configured against the same base URL, and the user has no registered company to create even a test Paystack account with \u2014 same practical barrier already hit with YooKassa. sandbox_status stays 'untested' for the same reason."
         }
     ]
 }

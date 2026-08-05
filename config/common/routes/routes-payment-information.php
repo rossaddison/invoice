@@ -8,6 +8,7 @@ use App\Invoice\PaymentInformation\GoCardlessPaymentController as GCPICLR;
 use App\Invoice\PaymentInformation\MolliePaymentController as MPICLR;
 use App\Invoice\PaymentInformation\PaymentInformationController as PICLR;
 use App\Invoice\PaymentInformation\PaymentRefundController as PRCLR;
+use App\Invoice\PaymentInformation\PaystackPaymentController as PSPICLR;
 use App\Invoice\PaymentInformation\RobokassaPaymentController as RPICLR;
 use App\Invoice\PaymentInformation\YookassaPaymentController as YKPICLR;
 use App\Middleware\RoutePermission;
@@ -64,6 +65,18 @@ return [
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([YKPICLR::class, 'yookassaComplete'])
                 ->name('paymentinformation/yookassaComplete'),
+
+            Route::methods([Method::GET, Method::POST],
+                    '/paymentinformation/paystackInForm/{url_key}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([PSPICLR::class, 'paystackInForm'])
+                ->name('paymentinformation/paystackInForm'),
+
+            Route::methods([Method::GET, Method::POST],
+                    '/paymentinformation/paystackComplete/{url_key}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([PSPICLR::class, 'paystackComplete'])
+                ->name('paymentinformation/paystackComplete'),
 
             Route::methods([Method::GET, Method::POST],
                     '/paymentinformation/amazonComplete/{url_key}')
@@ -189,4 +202,13 @@ return [
     Route::methods([Method::POST], '/paymentinformation/mollieWebhook')
         ->action([MPICLR::class, 'mollieWebhook'])
         ->name('paymentinformation/mollieWebhook'),
+
+    // Not under RoutePermission::invoiceGroup(): Paystack's servers must be
+    // able to POST here with no app session. Secured by X-Paystack-Signature
+    // verification in the handler, not RBAC — see
+    // PaystackSignatureService::verifyWebhookSignature() and
+    // App\Middleware\CsrfExemptMiddleware.
+    Route::methods([Method::POST], '/paymentinformation/paystackWebhook')
+        ->action([PSPICLR::class, 'paystackWebhook'])
+        ->name('paymentinformation/paystackWebhook'),
 ];
