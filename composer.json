@@ -38,7 +38,7 @@
         "ext-zlib": "*",
         "adyen/php-api-library": "^30.0.1",
         "amzn/amazon-pay-api-sdk-php": "^2.7.2",
-        "braintree/braintree_php": ">=6.36.0",
+        "braintree/braintree_php": ">=6.37.0",
         "brick/math": ">=0.17.2",
         "brick/money": ">=0.14.1",
         "cebe/markdown": "^1.2.1@dev",

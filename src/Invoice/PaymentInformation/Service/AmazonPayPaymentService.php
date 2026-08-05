@@ -248,9 +248,6 @@ class AmazonPayPaymentService implements PaymentGatewayInterface
         ];
         $payloadJSON = Json::encode($payloadArray);
 
-        /**
-         * @psalm-suppress MixedReturnStatement $this->generateButtonSignature($payloadJSON)
-         */
         $signature = $this->generateButtonSignature($payloadJSON);
 
         $productType = 'PayOnly';
@@ -297,10 +294,11 @@ class AmazonPayPaymentService implements PaymentGatewayInterface
         ];
         $client = new Client($amazonpay_config);
 
-        /**
-         * @psalm-suppress MixedReturnStatement $this->generateButtonSignature($payloadJSON)
-         */
-        return $client->generateButtonSignature($payloadJSON);
+        // Amazon Pay's SDK declares no return type on generateButtonSignature()
+        // (untyped legacy code) — it always returns a string on success,
+        // throwing \Exception itself if RSA signing fails, so this cast is a
+        // real type narrowing, not a guess.
+        return (string) $client->generateButtonSignature($payloadJSON);
     }
 
     private function getAmazonPrivateKeyFile(): string
