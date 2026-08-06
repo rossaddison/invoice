@@ -13900,12 +13900,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-token/jwt-framework.git",
-                "reference": "786c2f24ef133652b1dc2d5f62d49e753050b10c"
+                "reference": "7a0e08e6fdcbe2c3a985f85c80503c60066ee7ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/web-token/jwt-framework/zipball/786c2f24ef133652b1dc2d5f62d49e753050b10c",
-                "reference": "786c2f24ef133652b1dc2d5f62d49e753050b10c",
+                "url": "https://api.github.com/repos/web-token/jwt-framework/zipball/7a0e08e6fdcbe2c3a985f85c80503c60066ee7ce",
+                "reference": "7a0e08e6fdcbe2c3a985f85c80503c60066ee7ce",
                 "shasum": ""
             },
             "require": {
@@ -13918,6 +13918,7 @@
                 "symfony/config": "^7.0|^8.0",
                 "symfony/console": "^7.0|^8.0",
                 "symfony/dependency-injection": "^7.0|^8.0",
+                "symfony/deprecation-contracts": "^2.5|^3.0",
                 "symfony/event-dispatcher": "^7.0|^8.0",
                 "symfony/http-client-contracts": "^3.4",
                 "symfony/http-kernel": "^7.0|^8.0"
@@ -14010,7 +14011,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-08-06T20:03:12+00:00"
+            "time": "2026-08-06T20:55:28+00:00"
         },
         {
             "name": "webmozart/assert",
