@@ -13900,12 +13900,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-token/jwt-framework.git",
-                "reference": "1633fa8af90dec0dfde1a8325a616194cb66865f"
+                "reference": "786c2f24ef133652b1dc2d5f62d49e753050b10c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/web-token/jwt-framework/zipball/1633fa8af90dec0dfde1a8325a616194cb66865f",
-                "reference": "1633fa8af90dec0dfde1a8325a616194cb66865f",
+                "url": "https://api.github.com/repos/web-token/jwt-framework/zipball/786c2f24ef133652b1dc2d5f62d49e753050b10c",
+                "reference": "786c2f24ef133652b1dc2d5f62d49e753050b10c",
                 "shasum": ""
             },
             "require": {
@@ -14010,7 +14010,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-08-06T18:57:09+00:00"
+            "time": "2026-08-06T20:03:12+00:00"
         },
         {
             "name": "webmozart/assert",
