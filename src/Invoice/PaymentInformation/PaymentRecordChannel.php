@@ -32,7 +32,11 @@ enum PaymentRecordChannel: string
     {
         return match ($this) {
             self::Webhook => '🪝',
-            self::Redirect => '➡️',
+            // "Right Arrow Curving Left" (U+21A9 U+FE0F) — the classic
+            // reply/return arrow, chosen over a plain rightwards arrow so
+            // it reads unambiguously as "came back via a redirect" rather
+            // than a directional/navigation cue.
+            self::Redirect => '↩️',
         };
     }
 }

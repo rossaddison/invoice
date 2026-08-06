@@ -23,9 +23,9 @@ final class PaymentRecordChannelTest
         Assert::same('🪝', PaymentRecordChannel::Webhook->emoji());
     }
 
-    public function redirectEmojiIsTheArrow(): void
+    public function redirectEmojiIsTheCurvingArrow(): void
     {
-        Assert::same('➡️', PaymentRecordChannel::Redirect->emoji());
+        Assert::same('↩️', PaymentRecordChannel::Redirect->emoji());
     }
 
     public function theTwoChannelsHaveDifferentEmoji(): void
