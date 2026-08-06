@@ -41,6 +41,7 @@
     "esbuild": "^0.28.1",
     "eslint": "^10.8.0",
     "globals": "^17.9.0",
+    "js-yaml": "5.2.3",    
     "jsdom": "^30.0.1",
     "minimatch": ">=10.2.6",
     "npm-check-updates": "^23.0.1",
