@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "927ab29eadcacfb95a0d9c358044b957",
+    "content-hash": "3619ad2af7fe29e269df0c9a5a170223",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -1026,16 +1026,16 @@
         },
         {
             "name": "brick/math",
-            "version": "0.17.2",
+            "version": "0.18.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brick/math.git",
-                "reference": "8189e751995f9e15729c1aa2f89fa8f166ffe818"
+                "reference": "82944324d1c1bdb2c2618e89978d4e2ad78d69ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brick/math/zipball/8189e751995f9e15729c1aa2f89fa8f166ffe818",
-                "reference": "8189e751995f9e15729c1aa2f89fa8f166ffe818",
+                "url": "https://api.github.com/repos/brick/math/zipball/82944324d1c1bdb2c2618e89978d4e2ad78d69ad",
+                "reference": "82944324d1c1bdb2c2618e89978d4e2ad78d69ad",
                 "shasum": ""
             },
             "require": {
@@ -1073,7 +1073,7 @@
             ],
             "support": {
                 "issues": "https://github.com/brick/math/issues",
-                "source": "https://github.com/brick/math/tree/0.17.2"
+                "source": "https://github.com/brick/math/tree/0.18.0"
             },
             "funding": [
                 {
@@ -1081,7 +1081,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-05-25T20:34:43+00:00"
+            "time": "2026-06-14T18:21:03+00:00"
         },
         {
             "name": "brick/money",
@@ -10345,20 +10345,20 @@
         },
         {
             "name": "spomky-labs/pki-framework",
-            "version": "1.5.0",
+            "version": "1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Spomky-Labs/pki-framework.git",
-                "reference": "e0d61661962560c1cedfef02b51b431e720aae78"
+                "reference": "80778a25426288acd2e3a7cde2def41a3d59cddf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Spomky-Labs/pki-framework/zipball/e0d61661962560c1cedfef02b51b431e720aae78",
-                "reference": "e0d61661962560c1cedfef02b51b431e720aae78",
+                "url": "https://api.github.com/repos/Spomky-Labs/pki-framework/zipball/80778a25426288acd2e3a7cde2def41a3d59cddf",
+                "reference": "80778a25426288acd2e3a7cde2def41a3d59cddf",
                 "shasum": ""
             },
             "require": {
-                "brick/math": "^0.10|^0.11|^0.12|^0.13|^0.14|^0.15|^0.16|^0.17|^0.18",
+                "brick/math": "^0.10|^0.11|^0.12|^0.13|^0.14|^0.15|^0.16|^0.17|^0.18|^0.19",
                 "ext-mbstring": "*",
                 "php": ">=8.1"
             },
@@ -10438,7 +10438,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Spomky-Labs/pki-framework/issues",
-                "source": "https://github.com/Spomky-Labs/pki-framework/tree/1.5.0"
+                "source": "https://github.com/Spomky-Labs/pki-framework/tree/1.6.0"
             },
             "funding": [
                 {
@@ -10450,7 +10450,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-07-16T10:28:45+00:00"
+            "time": "2026-08-06T16:21:11+00:00"
         },
         {
             "name": "stripe/stripe-php",
@@ -13896,20 +13896,20 @@
         },
         {
             "name": "web-token/jwt-framework",
-            "version": "4.1.7",
+            "version": "4.2.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-token/jwt-framework.git",
-                "reference": "a63c5521df18570ff195d21e6896ffb629042134"
+                "reference": "1633fa8af90dec0dfde1a8325a616194cb66865f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/web-token/jwt-framework/zipball/a63c5521df18570ff195d21e6896ffb629042134",
-                "reference": "a63c5521df18570ff195d21e6896ffb629042134",
+                "url": "https://api.github.com/repos/web-token/jwt-framework/zipball/1633fa8af90dec0dfde1a8325a616194cb66865f",
+                "reference": "1633fa8af90dec0dfde1a8325a616194cb66865f",
                 "shasum": ""
             },
             "require": {
-                "brick/math": "^0.12|^0.13|^0.14|^0.15|^0.16|^0.17",
+                "brick/math": "^0.12|^0.13|^0.14|^0.15|^0.16|^0.17|^0.18|^0.19",
                 "ext-openssl": "*",
                 "php": ">=8.2",
                 "psr/clock": "^1.0",
@@ -13953,6 +13953,7 @@
                 "symfony/serializer": "Use the Symfony serializer to serialize/unserialize JWS and JWE tokens.",
                 "symfony/var-dumper": "Used to show data on the debug toolbar."
             },
+            "default-branch": true,
             "type": "symfony-bundle",
             "autoload": {
                 "psr-4": {
@@ -13997,7 +13998,7 @@
             ],
             "support": {
                 "issues": "https://github.com/web-token/jwt-framework/issues",
-                "source": "https://github.com/web-token/jwt-framework/tree/4.1.7"
+                "source": "https://github.com/web-token/jwt-framework/tree/4.2.x"
             },
             "funding": [
                 {
@@ -14009,7 +14010,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-06-06T18:19:13+00:00"
+            "time": "2026-08-06T18:57:09+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -14521,20 +14522,20 @@
         },
         {
             "name": "yiisoft/auth",
-            "version": "3.2.1",
+            "version": "3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/auth.git",
-                "reference": "30f591448b96b7998c8ce66776aa178b53eee83e"
+                "reference": "6d556f7d499f2af101c00dadb2d71f585f29427c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/auth/zipball/30f591448b96b7998c8ce66776aa178b53eee83e",
-                "reference": "30f591448b96b7998c8ce66776aa178b53eee83e",
+                "url": "https://api.github.com/repos/yiisoft/auth/zipball/6d556f7d499f2af101c00dadb2d71f585f29427c",
+                "reference": "6d556f7d499f2af101c00dadb2d71f585f29427c",
                 "shasum": ""
             },
             "require": {
-                "php": "8.0 - 8.5",
+                "php": "8.1 - 8.5",
                 "psr/http-factory": "^1.0",
                 "psr/http-message": "^1.0 || ^2.0",
                 "psr/http-server-handler": "^1.0",
@@ -14543,15 +14544,16 @@
                 "yiisoft/strings": "^2.0"
             },
             "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.92.5",
                 "jetbrains/phpstorm-attributes": "^1.2",
-                "maglnet/composer-require-checker": "^4.4",
+                "maglnet/composer-require-checker": "^4.7.1",
                 "nyholm/psr7": "^1.8.2",
-                "phpunit/phpunit": "^9.6.22",
-                "rector/rector": "^2.0.9",
-                "roave/infection-static-analysis-plugin": "^1.25",
-                "spatie/phpunit-watcher": "^1.23.6",
-                "vimeo/psalm": "^4.30 || ^5.26.1 || ^6.10",
-                "yiisoft/yii-debug": "dev-master || dev-php80"
+                "phpunit/phpunit": "^10.5.60",
+                "rector/rector": "^2.3.0",
+                "roave/infection-static-analysis-plugin": "^1.35",
+                "spatie/phpunit-watcher": "^1.24.4",
+                "vimeo/psalm": "^5.26.1 || ^6.16.1",
+                "yiisoft/yii-debug": "dev-master"
             },
             "type": "library",
             "extra": {
@@ -14595,7 +14597,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-12-17T13:13:44+00:00"
+            "time": "2026-08-06T07:37:25+00:00"
         },
         {
             "name": "yiisoft/bootstrap5",
@@ -20111,12 +20113,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/Codeception.git",
-                "reference": "16e44302cc4ee0ffa188be75510a5d7c8226b834"
+                "reference": "3a8dc67fbb53fa0f7fa0e738c221ff1cd6e8bc12"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/16e44302cc4ee0ffa188be75510a5d7c8226b834",
-                "reference": "16e44302cc4ee0ffa188be75510a5d7c8226b834",
+                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/3a8dc67fbb53fa0f7fa0e738c221ff1cd6e8bc12",
+                "reference": "3a8dc67fbb53fa0f7fa0e738c221ff1cd6e8bc12",
                 "shasum": ""
             },
             "require": {
@@ -20231,7 +20233,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2026-08-04T15:57:09+00:00"
+            "time": "2026-08-06T14:11:56+00:00"
         },
         {
             "name": "codeception/lib-asserts",
@@ -23449,12 +23451,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "50bd2d8224ed2c0a6db8a050790c9c1b9e8acf26"
+                "reference": "b869df2059731ad01759305695f2cfd528e98705"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/50bd2d8224ed2c0a6db8a050790c9c1b9e8acf26",
-                "reference": "50bd2d8224ed2c0a6db8a050790c9c1b9e8acf26",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/b869df2059731ad01759305695f2cfd528e98705",
+                "reference": "b869df2059731ad01759305695f2cfd528e98705",
                 "shasum": ""
             },
             "conflict": {
@@ -24259,7 +24261,7 @@
                 "spomky-labs/otphp": "<11.4.3",
                 "spoon/library": "<1.4.1",
                 "spoonity/tcpdf": "<6.2.22",
-                "squizlabs/php_codesniffer": ">=1,<2.8.1|>=3,<3.0.1",
+                "squizlabs/php_codesniffer": "<3.13.6|>=4,<4.0.2",
                 "ssddanbrown/bookstack": "<24.05.1",
                 "starcitizentools/citizen-skin": ">=1.9.4,<3.9",
                 "starcitizentools/short-description": ">=4,<4.0.1",
@@ -24567,7 +24569,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-08-05T12:51:34+00:00"
+            "time": "2026-08-06T12:55:35+00:00"
         },
         {
             "name": "rossaddison/translator-extractor",
@@ -25778,19 +25780,20 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "4.0.1",
+            "version": "4.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "0525c73950de35ded110cffafb9892946d7771b5"
+                "reference": "bbdc3d0532623e21838b7041a4364383a8126f96"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/0525c73950de35ded110cffafb9892946d7771b5",
-                "reference": "0525c73950de35ded110cffafb9892946d7771b5",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/bbdc3d0532623e21838b7041a4364383a8126f96",
+                "reference": "bbdc3d0532623e21838b7041a4364383a8126f96",
                 "shasum": ""
             },
             "require": {
+                "ext-libxml": "*",
                 "ext-simplexml": "*",
                 "ext-tokenizer": "*",
                 "ext-xmlwriter": "*",
@@ -25798,6 +25801,10 @@
             },
             "require-dev": {
                 "phpunit/phpunit": "^8.4.0 || ^9.3.4 || ^10.5.32 || 11.3.3 - 11.5.28 || ^11.5.31"
+            },
+            "suggest": {
+                "ext-iconv": "For accurate character length calculation when the checked files contain multi-byte characters.",
+                "ext-pcntl": "For parallel processing support via the --parallel CLI option."
             },
             "bin": [
                 "bin/phpcbf",
@@ -25853,7 +25860,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-11-10T16:43:36+00:00"
+            "time": "2026-08-06T02:45:27+00:00"
         },
         {
             "name": "staabm/side-effects-detector",
@@ -26266,21 +26273,21 @@
         },
         {
             "name": "testo/assert",
-            "version": "0.1.11",
+            "version": "0.1.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/assert.git",
-                "reference": "aa49c6cef6469eab825fa33d68223ca3a6c03c9d"
+                "reference": "c53eda41f1546e6ccf2ab306831530150c4844cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/assert/zipball/aa49c6cef6469eab825fa33d68223ca3a6c03c9d",
-                "reference": "aa49c6cef6469eab825fa33d68223ca3a6c03c9d",
+                "url": "https://api.github.com/repos/php-testo/assert/zipball/c53eda41f1546e6ccf2ab306831530150c4844cf",
+                "reference": "c53eda41f1546e6ccf2ab306831530150c4844cf",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.2",
-                "testo/testo": "0.10.36 - 1"
+                "testo/testo": "0.10.39 - 1"
             },
             "type": "library",
             "extra": {
@@ -26313,7 +26320,7 @@
                 "testo"
             ],
             "support": {
-                "source": "https://github.com/php-testo/assert/tree/0.1.11"
+                "source": "https://github.com/php-testo/assert/tree/0.1.12"
             },
             "funding": [
                 {
@@ -26321,27 +26328,27 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-07-03T10:45:37+00:00"
+            "time": "2026-08-06T07:43:13+00:00"
         },
         {
             "name": "testo/bench",
-            "version": "0.1.6",
+            "version": "0.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/bench.git",
-                "reference": "a9fb60c9b33e96fa2ff7dc9f51aa98243bba9bf6"
+                "reference": "a69d0c8b60ef7cea253daedc9327c0887af7e446"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/bench/zipball/a9fb60c9b33e96fa2ff7dc9f51aa98243bba9bf6",
-                "reference": "a9fb60c9b33e96fa2ff7dc9f51aa98243bba9bf6",
+                "url": "https://api.github.com/repos/php-testo/bench/zipball/a69d0c8b60ef7cea253daedc9327c0887af7e446",
+                "reference": "a69d0c8b60ef7cea253daedc9327c0887af7e446",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.2",
-                "testo/data": "^0.1.6",
-                "testo/inline": "^0.1.6",
-                "testo/testo": "0.10.34 - 1"
+                "testo/data": "^0.1.7",
+                "testo/inline": "^0.1.7",
+                "testo/testo": "0.10.39 - 1"
             },
             "type": "library",
             "extra": {
@@ -26373,7 +26380,7 @@
                 "testo"
             ],
             "support": {
-                "source": "https://github.com/php-testo/bench/tree/0.1.6"
+                "source": "https://github.com/php-testo/bench/tree/0.1.7"
             },
             "funding": [
                 {
@@ -26381,30 +26388,30 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-07-01T13:40:16+00:00"
+            "time": "2026-08-06T07:46:35+00:00"
         },
         {
             "name": "testo/bridge-mockery",
-            "version": "0.1.1",
+            "version": "0.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/bridge-mockery.git",
-                "reference": "7184aae54010b90e1d0f3c6ef1b67f13440ef6b5"
+                "reference": "24f0c6f102ec2014a8e69af90c5e4c37af34af4a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/bridge-mockery/zipball/7184aae54010b90e1d0f3c6ef1b67f13440ef6b5",
-                "reference": "7184aae54010b90e1d0f3c6ef1b67f13440ef6b5",
+                "url": "https://api.github.com/repos/php-testo/bridge-mockery/zipball/24f0c6f102ec2014a8e69af90c5e4c37af34af4a",
+                "reference": "24f0c6f102ec2014a8e69af90c5e4c37af34af4a",
                 "shasum": ""
             },
             "require": {
                 "mockery/mockery": "^1.6",
                 "php": ">=8.2",
-                "testo/testo": "0.10.36 - 1"
+                "testo/testo": "0.10.39 - 1"
             },
             "require-dev": {
-                "testo/assert": "^0.1.11",
-                "testo/codecov": "^0.1.11",
+                "testo/assert": "^0.1.12",
+                "testo/codecov": "^0.1.12",
                 "testo/test": "^0.1.6"
             },
             "type": "library",
@@ -26436,7 +26443,7 @@
                 "testo"
             ],
             "support": {
-                "source": "https://github.com/php-testo/bridge-mockery/tree/0.1.1"
+                "source": "https://github.com/php-testo/bridge-mockery/tree/0.1.2"
             },
             "funding": [
                 {
@@ -26444,7 +26451,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-07-03T10:45:44+00:00"
+            "time": "2026-08-06T07:43:13+00:00"
         },
         {
             "name": "testo/bridge-symfony-console",
@@ -26508,24 +26515,24 @@
         },
         {
             "name": "testo/codecov",
-            "version": "0.1.11",
+            "version": "0.1.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/codecov.git",
-                "reference": "cfa3d7cf66318379bac9cb9500b014e61053bfce"
+                "reference": "6e82b139788739fab2a94e52b56b0b26194c11ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/codecov/zipball/cfa3d7cf66318379bac9cb9500b014e61053bfce",
-                "reference": "cfa3d7cf66318379bac9cb9500b014e61053bfce",
+                "url": "https://api.github.com/repos/php-testo/codecov/zipball/6e82b139788739fab2a94e52b56b0b26194c11ba",
+                "reference": "6e82b139788739fab2a94e52b56b0b26194c11ba",
                 "shasum": ""
             },
             "require": {
                 "ext-xmlwriter": "*",
                 "php": ">=8.2",
-                "testo/data": "^0.1.6",
-                "testo/inline": "^0.1.5",
-                "testo/testo": "0.10.26 - 1"
+                "testo/data": "^0.1.7",
+                "testo/inline": "^0.1.7",
+                "testo/testo": "0.10.39 - 1"
             },
             "type": "library",
             "extra": {
@@ -26554,7 +26561,7 @@
                 "testo"
             ],
             "support": {
-                "source": "https://github.com/php-testo/codecov/tree/0.1.11"
+                "source": "https://github.com/php-testo/codecov/tree/0.1.12"
             },
             "funding": [
                 {
@@ -26562,7 +26569,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-06-21T15:50:34+00:00"
+            "time": "2026-08-06T07:45:32+00:00"
         },
         {
             "name": "testo/convention",
@@ -26621,22 +26628,22 @@
         },
         {
             "name": "testo/data",
-            "version": "0.1.6",
+            "version": "0.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/data.git",
-                "reference": "18f990382cf6e0d39c05ec060de2c4386d2c05de"
+                "reference": "ca70f7b7c29bab22b6abb4e00783b80c18551b5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/data/zipball/18f990382cf6e0d39c05ec060de2c4386d2c05de",
-                "reference": "18f990382cf6e0d39c05ec060de2c4386d2c05de",
+                "url": "https://api.github.com/repos/php-testo/data/zipball/ca70f7b7c29bab22b6abb4e00783b80c18551b5a",
+                "reference": "ca70f7b7c29bab22b6abb4e00783b80c18551b5a",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.2",
-                "testo/filter": "^0.1.2",
-                "testo/testo": "0.10.19 - 1"
+                "testo/filter": "^0.1.6",
+                "testo/testo": "0.10.39 - 1"
             },
             "type": "library",
             "extra": {
@@ -26665,7 +26672,7 @@
                 "testo"
             ],
             "support": {
-                "source": "https://github.com/php-testo/data/tree/0.1.6"
+                "source": "https://github.com/php-testo/data/tree/0.1.7"
             },
             "funding": [
                 {
@@ -26673,7 +26680,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-06-07T19:36:52+00:00"
+            "time": "2026-08-06T07:43:21+00:00"
         },
         {
             "name": "testo/facade",
@@ -26735,22 +26742,80 @@
             "time": "2026-06-10T08:06:28+00:00"
         },
         {
-            "name": "testo/filter",
-            "version": "0.1.5",
+            "name": "testo/fiber",
+            "version": "0.1.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/php-testo/filter.git",
-                "reference": "6e3682e342ff5b6847d49a5d66a07c8176693141"
+                "url": "https://github.com/php-testo/fiber.git",
+                "reference": "01e789395637449d2c182a8bc54d9b2ef034a636"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/filter/zipball/6e3682e342ff5b6847d49a5d66a07c8176693141",
-                "reference": "6e3682e342ff5b6847d49a5d66a07c8176693141",
+                "url": "https://api.github.com/repos/php-testo/fiber/zipball/01e789395637449d2c182a8bc54d9b2ef034a636",
+                "reference": "01e789395637449d2c182a8bc54d9b2ef034a636",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.2",
-                "testo/testo": "0.10.33 - 1"
+                "testo/testo": "0.10.39 - 1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Testo\\Fiber\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Aleksei Gagarin (roxblnfk)",
+                    "homepage": "https://github.com/roxblnfk"
+                }
+            ],
+            "description": "Fiber/coroutine execution plugin for the Testo testing framework: run tests as cooperatively-scheduled plain fibers.",
+            "keywords": [
+                "concurrency",
+                "coroutine",
+                "fiber",
+                "scheduler",
+                "testo"
+            ],
+            "support": {
+                "source": "https://github.com/php-testo/fiber/tree/0.1.1"
+            },
+            "funding": [
+                {
+                    "url": "https://boosty.to/roxblnfk",
+                    "type": "boosty"
+                }
+            ],
+            "time": "2026-08-06T07:42:37+00:00"
+        },
+        {
+            "name": "testo/filter",
+            "version": "0.1.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-testo/filter.git",
+                "reference": "dd3bc254ccece5008ec22d3cdba313b43a1f786d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-testo/filter/zipball/dd3bc254ccece5008ec22d3cdba313b43a1f786d",
+                "reference": "dd3bc254ccece5008ec22d3cdba313b43a1f786d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2",
+                "testo/testo": "0.10.39 - 1"
             },
             "type": "library",
             "extra": {
@@ -26782,7 +26847,7 @@
                 "testo"
             ],
             "support": {
-                "source": "https://github.com/php-testo/filter/tree/0.1.5"
+                "source": "https://github.com/php-testo/filter/tree/0.1.6"
             },
             "funding": [
                 {
@@ -26790,28 +26855,28 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-06-29T20:41:56+00:00"
+            "time": "2026-08-06T07:42:41+00:00"
         },
         {
             "name": "testo/inline",
-            "version": "0.1.6",
+            "version": "0.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/inline.git",
-                "reference": "26f2604350bd8c7a17bff32cc00b16929f7e1b38"
+                "reference": "66093b2581e2dbdc8d929390d18a5f015005db0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/inline/zipball/26f2604350bd8c7a17bff32cc00b16929f7e1b38",
-                "reference": "26f2604350bd8c7a17bff32cc00b16929f7e1b38",
+                "url": "https://api.github.com/repos/php-testo/inline/zipball/66093b2581e2dbdc8d929390d18a5f015005db0c",
+                "reference": "66093b2581e2dbdc8d929390d18a5f015005db0c",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.2",
-                "testo/assert": "^0.1.10",
-                "testo/data": "^0.1.6",
-                "testo/filter": "^0.1.5",
-                "testo/testo": "0.10.34 - 1"
+                "testo/assert": "^0.1.12",
+                "testo/data": "^0.1.7",
+                "testo/filter": "^0.1.6",
+                "testo/testo": "0.10.39 - 1"
             },
             "type": "library",
             "extra": {
@@ -26840,7 +26905,7 @@
                 "testo"
             ],
             "support": {
-                "source": "https://github.com/php-testo/inline/tree/0.1.6"
+                "source": "https://github.com/php-testo/inline/tree/0.1.7"
             },
             "funding": [
                 {
@@ -26848,7 +26913,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-07-01T13:40:50+00:00"
+            "time": "2026-08-06T07:43:10+00:00"
         },
         {
             "name": "testo/lifecycle",
@@ -26907,21 +26972,21 @@
         },
         {
             "name": "testo/repeat",
-            "version": "0.1.8",
+            "version": "0.1.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/repeat.git",
-                "reference": "0e6a74716e34e7d85710189347ff14aaaac81d21"
+                "reference": "9d20e475e6fe94d0bb7a43d6ab2b12c69d77a0f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/repeat/zipball/0e6a74716e34e7d85710189347ff14aaaac81d21",
-                "reference": "0e6a74716e34e7d85710189347ff14aaaac81d21",
+                "url": "https://api.github.com/repos/php-testo/repeat/zipball/9d20e475e6fe94d0bb7a43d6ab2b12c69d77a0f5",
+                "reference": "9d20e475e6fe94d0bb7a43d6ab2b12c69d77a0f5",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.2",
-                "testo/testo": "0.10.19 - 1"
+                "testo/testo": "0.10.39 - 1"
             },
             "type": "library",
             "extra": {
@@ -26954,7 +27019,7 @@
                 "testo"
             ],
             "support": {
-                "source": "https://github.com/php-testo/repeat/tree/0.1.8"
+                "source": "https://github.com/php-testo/repeat/tree/0.1.9"
             },
             "funding": [
                 {
@@ -26962,25 +27027,25 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-06-07T19:36:04+00:00"
+            "time": "2026-08-06T07:42:29+00:00"
         },
         {
             "name": "testo/retry",
-            "version": "0.1.4",
+            "version": "0.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/retry.git",
-                "reference": "4394270c794528b7967ee39bb5151ece52b4436b"
+                "reference": "8e158e8341a5824b96f252fc711988daf15694d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/retry/zipball/4394270c794528b7967ee39bb5151ece52b4436b",
-                "reference": "4394270c794528b7967ee39bb5151ece52b4436b",
+                "url": "https://api.github.com/repos/php-testo/retry/zipball/8e158e8341a5824b96f252fc711988daf15694d2",
+                "reference": "8e158e8341a5824b96f252fc711988daf15694d2",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.2",
-                "testo/testo": "0.10.19 - 1"
+                "testo/testo": "0.10.39 - 1"
             },
             "type": "library",
             "extra": {
@@ -27012,7 +27077,7 @@
                 "testo"
             ],
             "support": {
-                "source": "https://github.com/php-testo/retry/tree/0.1.4"
+                "source": "https://github.com/php-testo/retry/tree/0.1.5"
             },
             "funding": [
                 {
@@ -27020,7 +27085,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-06-07T19:36:25+00:00"
+            "time": "2026-08-06T07:43:03+00:00"
         },
         {
             "name": "testo/test",
@@ -27082,16 +27147,16 @@
         },
         {
             "name": "testo/testo",
-            "version": "0.10.38",
+            "version": "0.10.39",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/testo.git",
-                "reference": "2117f45691b7bfcf29a05850ed1ce8ba2895d534"
+                "reference": "d731f36bf5bc76e9c79f1f5e4efd112f6112a385"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/testo/zipball/2117f45691b7bfcf29a05850ed1ce8ba2895d534",
-                "reference": "2117f45691b7bfcf29a05850ed1ce8ba2895d534",
+                "url": "https://api.github.com/repos/php-testo/testo/zipball/d731f36bf5bc76e9c79f1f5e4efd112f6112a385",
+                "reference": "d731f36bf5bc76e9c79f1f5e4efd112f6112a385",
                 "shasum": ""
             },
             "require": {
@@ -27104,22 +27169,24 @@
                 "psr/log": "^2.0 || ^3.0",
                 "symfony/console": "^6.4 || ^7 || ^8.0",
                 "symfony/finder": "^6.4 || ^7 || ^8.0",
-                "testo/assert": "^0.1.11",
-                "testo/bench": "^0.1.6",
+                "testo/assert": "^0.1.12",
+                "testo/bench": "^0.1.7",
                 "testo/bridge-symfony-console": "^0.1.8",
-                "testo/codecov": "^0.1.11",
+                "testo/codecov": "^0.1.12",
                 "testo/convention": "^0.1.4",
-                "testo/data": "^0.1.6",
-                "testo/filter": "^0.1.5",
-                "testo/inline": "^0.1.6",
+                "testo/data": "^0.1.7",
+                "testo/fiber": "^0.1.1",
+                "testo/filter": "^0.1.6",
+                "testo/inline": "^0.1.7",
                 "testo/lifecycle": "^0.1.5",
-                "testo/repeat": "^0.1.8",
-                "testo/retry": "^0.1.4",
+                "testo/repeat": "^0.1.9",
+                "testo/retry": "^0.1.5",
                 "testo/test": "^0.1.6",
                 "yiisoft/injector": "^1.2"
             },
             "replace": {
-                "internal/container": "*"
+                "internal/container": "*",
+                "internal/fiber": "*"
             },
             "require-dev": {
                 "bamarni/composer-bin-plugin": "^1.8",
@@ -27129,8 +27196,9 @@
                 "rector/rector": "^2.5.2",
                 "roxblnfk/unpoly": "1.8.2",
                 "testo/bridge-infection": "^0.1.8",
-                "testo/bridge-mockery": "^0.1.1",
-                "testo/bridge-rector": "^0.2.0",
+                "testo/bridge-mockery": "^0.1.2",
+                "testo/bridge-rector": "^0.2.1",
+                "testo/bridge-revolt": "^0.1.1",
                 "testo/facade": "^0.1.1"
             },
             "suggest": {
@@ -27152,6 +27220,7 @@
             "autoload": {
                 "psr-4": {
                     "Testo\\": "core/",
+                    "Internal\\Fiber\\": "internal/fiber/src",
                     "Internal\\Container\\": "internal/container/src"
                 }
             },
@@ -27184,7 +27253,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-07-03T21:48:04+00:00"
+            "time": "2026-08-06T07:41:52+00:00"
         },
         {
             "name": "thecodingmachine/safe",
