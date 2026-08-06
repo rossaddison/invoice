@@ -6,7 +6,6 @@ use App\Auth\Permissions;
 use App\Backend\Controller\HmrcController;
 use App\Middleware\RoutePermission;
 use Psr\Http\Message\ResponseFactoryInterface;
-use Yiisoft\Auth\Middleware\Authentication;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\Group;
 use Yiisoft\Router\Route;
@@ -27,9 +26,19 @@ return [
     // Admin-only: VAT filing and other HMRC MTD actions. Not under
     // RoutePermission::invoiceGroup() since these intentionally stay at
     // /backend/hmrc/* rather than gaining an /invoice prefix — same
-    // Authentication + permission gate, applied directly to this group.
+    // permission gate, applied directly to this group.
+    //
+    // Yiisoft\Auth\Middleware\Authentication used to sit alongside this
+    // middleware, added in the same July 2026 security-hardening pass —
+    // removed because it requires a Yiisoft\Auth\AuthenticatorInterface
+    // DI binding that has never existed anywhere in this app (confirmed:
+    // no implementation, no config binding, no other route uses it
+    // either). That made this middleware unconstructable — every request
+    // to /backend/hmrc/* has 500'd with a DI NotFoundException since the
+    // day it was added, regardless of yiisoft/auth version. This
+    // RoutePermission::check() call is the same, real, working RBAC gate
+    // every other protected route in this app already relies on alone.
     Group::create('/backend/hmrc')
-        ->middleware(Authentication::class)
         ->middleware(RoutePermission::check(Permissions::MANAGE_HMRC))
         ->routes(
             Route::get('')
