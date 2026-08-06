@@ -692,6 +692,11 @@ final class PaymentInformationController
                         sandbox_url_array: $sandbox_url_array,
                         provider_reference: is_string($transactionResult['transaction_id'])
                             ? $transactionResult['transaction_id'] : null,
+                        // Braintree has no webhook at all in this app — its
+                        // Drop-in form POST is synchronous, so this is
+                        // genuinely a redirect/form-POST recording, not a
+                        // webhook one.
+                        channel: PaymentRecordChannel::Redirect,
                     ),
                 );
             }
@@ -972,6 +977,11 @@ final class PaymentInformationController
                         response: true,
                         sandbox_url_array: $sandbox_url_array,
                         provider_reference: $paymentId,
+                        // Legacy fallback: MollieWebhookHandler normally
+                        // records this via webhook first, but this
+                        // reverse-lookup can still be the one that actually
+                        // wins the race — see the guard comment above.
+                        channel: PaymentRecordChannel::Redirect,
                     ),
                 );
             }

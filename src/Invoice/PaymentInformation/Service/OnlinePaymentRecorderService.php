@@ -48,7 +48,11 @@ final class OnlinePaymentRecorderService
 
     private function recordSuccess(PaymentRecordContext $ctx): Response
     {
-        $payment_note = $this->translator->translate('transaction.reference')
+        // Emoji prefix so an admin browsing the payment list/detail view can
+        // tell at a glance which mechanism actually confirmed this payment
+        // — see PaymentRecordChannel's own docblock.
+        $payment_note = $ctx->channel->emoji() . ' '
+                . $this->translator->translate('transaction.reference')
                 . ': ' . $ctx->reference . "\n";
         $payment_note .= $this->translator->translate('payment.provider')
                 . ': ' . ucwords(str_replace('_', ' ', $ctx->d));

@@ -18,6 +18,7 @@ final class PaymentRecordContext
         public readonly bool $response,
         public readonly array $sandbox_url_array,
         public readonly ?string $provider_reference = null,
+        public readonly PaymentRecordChannel $channel = PaymentRecordChannel::Webhook,
     ) {
     }
 }
