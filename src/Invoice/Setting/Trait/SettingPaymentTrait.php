@@ -31,6 +31,7 @@ trait SettingPaymentTrait
             'Paystack' => $this->paystackGatewayFields(),
             'Razorpay' => $this->razorpayGatewayFields(),
             'Paypal' => $this->paypalGatewayFields(),
+            'Square' => $this->squareGatewayFields(),
             'StoreCove' => $this->storeCoveGatewayFields(),
             'Stripe' => $this->stripeGatewayFields(),
         ];
@@ -348,6 +349,45 @@ trait SettingPaymentTrait
         ];
     }
 
+    /**
+     * Square — built against the Checkout API's Payment Links
+     * (`POST /v2/online-checkout/payment-links`, an Order-based hosted
+     * checkout page), ground-truthed against the official
+     * `square/square-php-sdk` (github.com/square/square-php-sdk, actively
+     * maintained — see SquarePaymentService's own docblock for why no SDK
+     * is installed here).
+     *
+     * Like PayPal, Square's sandbox setting really is a different base URL
+     * (`connect.squareupsandbox.com` vs `connect.squareup.com`), not just a
+     * different credential — confirmed via the SDK's own Environments enum.
+     *
+     * locationId is required by Square's API on every Payment Link/Order
+     * (a Square merchant account can have multiple business locations);
+     * webhookSecret is the webhook subscription's own signature key from
+     * the Square Developer Dashboard, distinct from accessToken.
+     */
+    private function squareGatewayFields(): array
+    {
+        return [
+            'accessToken' => [
+                'type' => 'password',
+                'label' => 'Access Token',
+            ],
+            'locationId' => [
+                'type' => 'text',
+                'label' => 'Location ID',
+            ],
+            'webhookSecret' => [
+                'type' => 'password',
+                'label' => 'Webhook Secret',
+            ],
+            'sandbox' => [
+                'type' => 'checkbox',
+                'label' => 'Sandbox (uses connect.squareupsandbox.com)',
+            ],
+        ];
+    }
+
     private function storeCoveGatewayFields(): array
     {
         return [
@@ -436,6 +476,9 @@ trait SettingPaymentTrait
             // its own test buyer/business accounts), unlike every other
             // gateway above.
             'paypal' => 'https://developer.paypal.com/dashboard/accounts',
+            // Genuinely separate sandbox environment (its own base URL and
+            // its own test seller accounts), same reasoning as PayPal above.
+            'square' => 'https://developer.squareup.com/apps',
         ];
     }
 

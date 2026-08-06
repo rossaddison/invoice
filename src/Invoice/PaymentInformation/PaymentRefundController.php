@@ -16,6 +16,7 @@ use App\Invoice\PaymentInformation\Service\PaypalPaymentService;
 use App\Invoice\PaymentInformation\Service\PaystackPaymentService;
 use App\Invoice\PaymentInformation\Service\RazorpayPaymentService;
 use App\Invoice\PaymentInformation\Service\RobokassaPaymentService;
+use App\Invoice\PaymentInformation\Service\SquarePaymentService;
 use App\Invoice\PaymentInformation\Service\StripePaymentService;
 use App\Invoice\PaymentInformation\Service\YookassaPaymentService;
 use App\Invoice\Setting\SettingRepository as sR;
@@ -58,6 +59,7 @@ final class PaymentRefundController
         private readonly PaystackPaymentService $paystackPaymentService,
         private readonly RazorpayPaymentService $razorpayPaymentService,
         private readonly PaypalPaymentService $paypalPaymentService,
+        private readonly SquarePaymentService $squarePaymentService,
     ) {
     }
 
@@ -135,6 +137,7 @@ final class PaymentRefundController
             'paystack'   => $this->paystackPaymentService->refund($reference, $amount),
             'razorpay'   => $this->razorpayPaymentService->refund($reference, $amount),
             'paypal'     => $this->paypalPaymentService->refund($reference, $amount),
+            'square'     => $this->squarePaymentService->refund($reference, $amount),
             default      => null,
         };
     }

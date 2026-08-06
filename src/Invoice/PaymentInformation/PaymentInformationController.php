@@ -534,6 +534,12 @@ final class PaymentInformationController
                         'paymentinformation/paypalInForm',
                         ['url_key' => $ctx->url_key, '_language' => 'en'],
                     ),
+                    // Square has its own dedicated SquarePaymentController
+                    // — same reasoning as every other dedicated gateway controller above.
+                    'Square'     => $this->webService->getRedirectResponse(
+                        'paymentinformation/squareInForm',
+                        ['url_key' => $ctx->url_key, '_language' => 'en'],
+                    ),
                     default      => null,
                 };
                 if ($gatewayResponse !== null) {

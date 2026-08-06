@@ -19,6 +19,7 @@ use App\Invoice\PaymentInformation\Service\PaypalPaymentService;
 use App\Invoice\PaymentInformation\Service\PaystackPaymentService;
 use App\Invoice\PaymentInformation\Service\RazorpayPaymentService;
 use App\Invoice\PaymentInformation\Service\RobokassaPaymentService;
+use App\Invoice\PaymentInformation\Service\SquarePaymentService;
 use App\Invoice\PaymentInformation\Service\StripePaymentService;
 use App\Invoice\PaymentInformation\Service\YookassaPaymentService;
 use App\Invoice\Setting\SettingRepository;
@@ -135,6 +136,7 @@ final class PaymentRefundControllerTest extends TestCase
             $this->createStub(PaystackPaymentService::class),
             $this->createStub(RazorpayPaymentService::class),
             $this->createStub(PaypalPaymentService::class),
+            $this->createStub(SquarePaymentService::class),
         );
     }
 

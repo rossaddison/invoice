@@ -12,6 +12,7 @@ use App\Invoice\PaymentInformation\PaypalPaymentController as PPPICLR;
 use App\Invoice\PaymentInformation\PaystackPaymentController as PSPICLR;
 use App\Invoice\PaymentInformation\RazorpayPaymentController as RZPICLR;
 use App\Invoice\PaymentInformation\RobokassaPaymentController as RPICLR;
+use App\Invoice\PaymentInformation\SquarePaymentController as SQPICLR;
 use App\Invoice\PaymentInformation\YookassaPaymentController as YKPICLR;
 use App\Middleware\RoutePermission;
 use Yiisoft\Http\Method;
@@ -103,6 +104,18 @@ return [
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([PPPICLR::class, 'paypalComplete'])
                 ->name('paymentinformation/paypalComplete'),
+
+            Route::methods([Method::GET, Method::POST],
+                    '/paymentinformation/squareInForm/{url_key}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([SQPICLR::class, 'squareInForm'])
+                ->name('paymentinformation/squareInForm'),
+
+            Route::methods([Method::GET, Method::POST],
+                    '/paymentinformation/squareComplete/{url_key}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([SQPICLR::class, 'squareComplete'])
+                ->name('paymentinformation/squareComplete'),
 
             Route::methods([Method::GET, Method::POST],
                     '/paymentinformation/amazonComplete/{url_key}')
@@ -255,4 +268,13 @@ return [
     Route::methods([Method::POST], '/paymentinformation/paypalWebhook')
         ->action([PPPICLR::class, 'paypalWebhook'])
         ->name('paymentinformation/paypalWebhook'),
+
+    // Not under RoutePermission::invoiceGroup(): Square's servers must be
+    // able to POST here with no app session. Secured by
+    // x-square-hmacsha256-signature verification in the handler, not RBAC —
+    // see SquareSignatureService::verifyWebhookSignature() and
+    // App\Middleware\CsrfExemptMiddleware.
+    Route::methods([Method::POST], '/paymentinformation/squareWebhook')
+        ->action([SQPICLR::class, 'squareWebhook'])
+        ->name('paymentinformation/squareWebhook'),
 ];
