@@ -19,6 +19,7 @@ use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\Html as TagHtml;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Label;
+use Yiisoft\Html\Tag\Link;
 use Yiisoft\Html\Tag\Meta;
 use Yiisoft\Html\Tag\Style;
 use Yiisoft\Html\Tag\Title;
@@ -120,6 +121,13 @@ echo new TagHtml()->lang($currentRoute->getArgument('_language') ?? 'en');
 echo Html::openTag('head');
 echo Meta::documentEncoding('utf-8');
 echo Meta::data('viewport', 'width=device-width, initial-scale=1');
+// HomeCare offline PWA (see docs/HOMECARE_OFFLINE_PWA_AUGUST_2026.md) —
+// harmless/generic for both plain client guests and worker guests; only
+// the actual "Download for Offline" UI on guest.php itself is
+// worker-only. CSP already permits this: manifest-src 'self' /
+// worker-src 'self' (config/web/params.php).
+echo new Link()->rel('manifest')->href('/manifest.json');
+echo Meta::data('theme-color', '#1e73b8');
  echo new Style()->content(
     ':root {'
     . ' --guest-nav-fs: ' . $bootstrap5LayoutGuestNavbarFontSize . 'px;'

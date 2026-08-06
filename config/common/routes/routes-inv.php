@@ -54,6 +54,21 @@ Route::methods([Method::GET, Method::POST], '/inv/pdfDashboardIncludeCf/{id}')
                 ->action([InvController::class, 'guestQrCode'])
                 ->name('inv/guest/qr'),
 
+            // HomeCare field-worker-only offline PWA (see
+            // docs/HOMECARE_OFFLINE_PWA_AUGUST_2026.md): a JSON snapshot
+            // of the worker's allocated invoices, and the standalone
+            // shell page the service worker precaches to render it with
+            // zero connectivity.
+            Route::get('/client_invoices/offline-data')
+                ->middleware(RoutePermission::check(Permissions::VIEW_INV))
+                ->action([InvController::class, 'guestOfflineData'])
+                ->name('inv/guest/offlineData'),
+
+            Route::get('/client_invoices/offline')
+                ->middleware(RoutePermission::check(Permissions::VIEW_INV))
+                ->action([InvController::class, 'guestOffline'])
+                ->name('inv/guest/offline'),
+
             Route::methods([Method::GET, Method::POST], '/inv/urlKey/{url_key}/{gateway}')
                 ->name('inv/urlKey')
                 ->middleware(RoutePermission::check(Permissions::VIEW_INV))

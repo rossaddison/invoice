@@ -486,6 +486,25 @@ $qrButton = $s->getSetting('homecare_auto_invoice_enabled') === '1'
         ->render()
     : '';
 
+// HomeCare offline PWA (see docs/HOMECARE_OFFLINE_PWA_AUGUST_2026.md) —
+// worker-only, same $worker !== null gating already used for the
+// do-not-send column above. An ordinary client guest never sees this.
+$homeCareOfflineButtons = $worker !== null
+    ? Html::openTag('button', [
+            'type' => 'button',
+            'id' => 'homecare-offline-download-btn',
+            'class' => 'btn btn-outline-primary ms-2',
+        ])
+        . Html::encode($translator->translate('homecare.offline.download.button'))
+        . Html::closeTag('button')
+        . new A()
+            ->addClass('btn btn-outline-secondary ms-2')
+            ->content($translator->translate('homecare.offline.view.button'))
+            ->href($urlGenerator->generate('inv/guest/offline'))
+            ->render()
+        . Html::tag('span', '', ['id' => 'homecare-offline-status', 'class' => 'ms-2'])
+    : '';
+
 $toolbarString =  new Form()->post(
                 $urlGenerator->generate('inv/guest'))->csrf($csrf)->open()
         .  new Div()->addClass('float-start m-3')->content(
@@ -499,6 +518,7 @@ $toolbarString =  new Form()->post(
                 $translator->translate('client'), true)
             .   $bacsButton
             .   $qrButton
+            .   $homeCareOfflineButtons
                 )->encode(false)->render()
         .  new Form()->close();
 
@@ -714,6 +734,16 @@ $filterPromptLabels = json_encode([
 // executable inline <script>, matching inv/index.php's #inv-filter-config
 // pattern, so script-src no longer needs 'unsafe-inline' for this.
 echo Html::tag('script', $filterPromptLabels, ['type' => 'application/json', 'id' => 'inv-guest-filter-config']);
+
+// Consumed by initHomeCareOffline() (src/typescript/homecare-offline.ts) —
+// same JSON-data-island reasoning as inv-guest-filter-config above. Only
+// worker-scoped guests ever have the download button this drives, but the
+// island itself is harmless to emit unconditionally.
+$homeCareOfflineLabels = json_encode([
+    'success' => $translator->translate('homecare.offline.download.success'),
+    'failed' => $translator->translate('homecare.offline.download.failed'),
+], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR);
+echo Html::tag('script', $homeCareOfflineLabels, ['type' => 'application/json', 'id' => 'homecare-offline-i18n']);
 
 // MobilePreviewToggle already instantiated by
 // InvoiceApp.initInvIndex('table-invoice-guest', ...) above — was a

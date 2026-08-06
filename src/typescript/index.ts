@@ -31,6 +31,7 @@ import { initJavascriptAnalysisFaq, initCodeceptionChecklistFaq } from './faq-pa
 import { initInvIndex } from './inv-index.js';
 import { initQuoteIndex } from './quote-index.js';
 import { initE164PhoneFields } from './phone-e164.js';
+import { initHomeCareOffline } from './homecare-offline.js';
 
 declare global {
     interface Window {
@@ -92,6 +93,7 @@ class InvoiceApp {
         if (document.getElementById('table-invoice-guest')) {
             initInvIndex('table-invoice-guest', 'inv-guest-filter-config');
         }
+        initHomeCareOffline(); // no-ops unless the worker-only download button is present
         if (document.getElementById('table-quote')) {
             initQuoteIndex();
         }

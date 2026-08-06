@@ -6,6 +6,8 @@ namespace App\Invoice\Inv\Trait;
 
 use App\Auth\Permissions;
 use App\Infrastructure\Persistence\Client\Client;
+use App\Infrastructure\Persistence\Inv\Inv;
+use App\Infrastructure\Persistence\InvItem\InvItem;
 use App\Infrastructure\Persistence\User\User;
 use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\Enum\DoNotSendReason;
@@ -21,6 +23,7 @@ use App\Invoice\{
 use Yiisoft\{
     Data\Reader\DataReaderInterface as DRI,
     Data\Reader\SortableDataInterface as SDI,
+    Json\Json,
     Router\HydratorAttribute\RouteArgument,
     Router\UrlGeneratorInterface,
 };
@@ -81,6 +84,135 @@ trait Guest
             return null;
         }
         return new InvGuestAccess($userInv, $user_clients);
+    }
+
+    /**
+     * HomeCare field-worker-only: a JSON snapshot of this worker's
+     * currently-allocated invoices (client + item detail), fetched and
+     * cached client-side (IndexedDB, see src/typescript/homecare-offline.ts)
+     * so inv/guest/offline can render it with zero connectivity.
+     *
+     * Deliberately excludes every amount/price field — matches the
+     * existing $viewPayment-driven restriction already applied to a
+     * worker on the live inv/guest grid (Permissions::VIEW_PAYMENT is not
+     * granted to the worker RBAC role, see resources/rbac/items.php).
+     *
+     * Not a HomeCare-specific route restriction: an ordinary client guest
+     * (no linked Worker) simply has nothing worker-scoped to download, so
+     * this 404s for them the same way it would for an unauthenticated
+     * request, rather than returning an empty payload.
+     *
+     * Related logic: see Route::get('/client_invoices/offline-data')
+     */
+    public function guestOfflineData(InvGuestDeps $d): Response
+    {
+        $user = $this->userService->getUser();
+        $user_id = ($user instanceof User) ? $user->reqId() : 0;
+        if ($user_id <= 0) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $access = $this->resolveGuestAccess($d, $user_id);
+        if (null === $access || null === $access->worker) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $invs = $d->iR->repoWorkerVisible(0, $access->worker->reqId());
+        $invoices = [];
+        /** @var Inv $inv */
+        foreach ($invs as $inv) {
+            $invoices[] = $this->serializeInvoiceForOffline($inv, $d->iR);
+        }
+        return $this->factory->createResponse(Json::encode([
+            'downloadedAt' => (new \DateTimeImmutable('now'))->format(DATE_ATOM),
+            'invoices' => $invoices,
+        ]));
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function serializeInvoiceForOffline(Inv $inv, IR $iR): array
+    {
+        $client = $inv->getClient();
+        $items = [];
+        /** @var InvItem $item */
+        foreach ($inv->getItems() as $item) {
+            $items[] = [
+                'name' => $item->getName(),
+                'description' => $item->getDescription(),
+                'quantity' => $item->getQuantity(),
+                'productUnit' => $item->getProductUnit(),
+                'note' => $item->getNote(),
+            ];
+        }
+        return [
+            'id' => $inv->reqId(),
+            'number' => $inv->getNumber(),
+            'statusId' => $inv->reqStatusId(),
+            'statusLabel' => $iR->getSpecificStatusArrayLabel((string) $inv->reqStatusId()),
+            'dateCreated' => $this->offlineDate($inv->getDateCreated()),
+            'dateDue' => $this->offlineDate($inv->getDateDue()),
+            'note' => $inv->getNote(),
+            'doNotSend' => $inv->getDoNotSend(),
+            'doNotSendReason' => $inv->getDoNotSendReason(),
+            'urlKey' => $inv->getUrlKey(),
+            'client' => null !== $client ? [
+                'fullName' => $client->getClientFullName(),
+                'address1' => $client->getClientAddress1(),
+                'address2' => $client->getClientAddress2(),
+                'buildingNumber' => $client->getClientBuildingNumber(),
+                'city' => $client->getClientCity(),
+                'state' => $client->getClientState(),
+                'zip' => $client->getClientZip(),
+                'country' => $client->getClientCountry(),
+                'phone' => $client->getClientPhone(),
+                'mobile' => $client->getClientMobile(),
+                'email' => $client->getClientEmail(),
+            ] : null,
+            'items' => $items,
+        ];
+    }
+
+    /**
+     * Cycle ORM can leave a typed DateTimeImmutable property unhydrated in
+     * edge cases — guest.php's own grid columns already guard the same way
+     * (`!is_string($dateCreated = $model->getDateCreated())`) before
+     * calling ->format() on it, so this mirrors that defensively rather
+     * than trusting the declared (non-nullable) return type.
+     */
+    private function offlineDate(mixed $date): ?string
+    {
+        return $date instanceof \DateTimeImmutable ? $date->format('Y-m-d') : null;
+    }
+
+    /**
+     * The offline-shell page (see docs/HOMECARE_OFFLINE_PWA_AUGUST_2026.md):
+     * a near-empty container — everything on it is rendered client-side
+     * from IndexedDB by src/typescript/homecare-offline.ts, never from
+     * data passed in here. This is precached by the service worker
+     * (src/typescript/sw.ts) so it still loads with zero connectivity;
+     * deliberately not the same route as inv/guest itself, whose
+     * server-rendered HTML carries a live CSRF token and session state
+     * that would go stale if a service worker ever served a cached copy
+     * of it.
+     *
+     * Related logic: see Route::get('/client_invoices/offline')
+     */
+    public function guestOffline(InvGuestDeps $d): Response
+    {
+        $user = $this->userService->getUser();
+        $user_id = ($user instanceof User) ? $user->reqId() : 0;
+        if ($user_id <= 0) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $access = $this->resolveGuestAccess($d, $user_id);
+        if (null === $access || null === $access->worker) {
+            return $this->webService->getNotFoundResponse();
+        }
+        // renderPartial(), not render() — this is a standalone document
+        // with its own <!DOCTYPE html> (see offline.php's own docblock),
+        // deliberately not wrapped in the normal layout, same reasoning
+        // as HomeCareScan.php's homecare_scan_result.php.
+        return $this->webViewRenderer->renderPartial('offline', []);
     }
 
     /**
