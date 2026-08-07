@@ -76,7 +76,10 @@ trait SettingTooltipTrait
             'cron_key' => [
                 'why' => 'A cron job is used on the server to automatically'
                 . ' email recurring invoices to clients.',
-                'where' => 'This will be setup later.',
+                'where' => 'Sent by the cron job as an HTTP Bearer token'
+                . ' (Authorization: Bearer <this value>), not a URL query'
+                . ' parameter — see the invrecurring/process console'
+                . ' command for a setup that avoids HTTP entirely.',
             ],
             'currency_code_from_to' => [
                 'why' => 'Necessary if Peppol Document Currency different to'

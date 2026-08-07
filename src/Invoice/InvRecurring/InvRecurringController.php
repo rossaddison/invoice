@@ -210,28 +210,26 @@ final class InvRecurringController extends BaseController
 
     /**
      * Cron endpoint — create new recurring invoices and send Telegram reminders.
-     * No session authentication required; secured by cron_key query parameter only.
+     * No session authentication — authorized instead by an HTTP Bearer token
+     * (`Authorization: Bearer <cron_key>`), enforced by
+     * Yiisoft\Auth\Middleware\Authentication (routes-inv-recurring.php) before
+     * this action ever runs: an unauthenticated request never reaches here at
+     * all, it gets a `401` + `WWW-Authenticate` challenge straight from the
+     * middleware. See docs/INVRECURRING_CRON_BEARER_AUTH_AUGUST_2026.md.
      * Prefer the `invrecurring/process` console command for new setups; this
-     * endpoint remains for existing curl+cron_key triggers.
+     * endpoint remains for existing curl+cron_key triggers (now sent as a
+     * Bearer token rather than a URL query parameter).
      *
-     * @param Request $request
      * @param InvItemDeps $itemDeps
      * @param InvCronUserDeps $cronDeps
      * @param InvRecurringCronService $cronService
      * @return Response
      */
     public function cron(
-        Request $request,
         InvItemDeps $itemDeps,
         InvCronUserDeps $cronDeps,
         InvRecurringCronService $cronService,
     ): Response {
-        $params = $request->getQueryParams();
-        $cronKey = (string) ($params['cron_key'] ?? '');
-        if ($cronKey === '' || $cronKey !== $this->sR->getSetting('cron_key')) {
-            return $this->factory->createResponse(Json::encode(['success' => false, 'error' => 'Forbidden']));
-        }
-
         $user = $this->userService->getUser() ?? $cronService->resolveAdminUser($cronDeps);
         if (null === $user) {
             return $this->factory->createResponse(Json::encode(['success' => false, 'error' => 'No admin user found']));
