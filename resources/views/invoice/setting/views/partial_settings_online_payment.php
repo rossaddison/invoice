@@ -226,19 +226,41 @@ echo H::openTag('div', $row); //1
     echo H::closeTag('div'); //5
 
     } else {
-    // Password fields never need decode() here: $body is this request's
-    // own freshly-submitted plaintext (what the browser just posted),
-    // never previously-encrypted data — on a fresh GET, $body is empty
-    // (the field starts blank), so decode() would only ever be reached
-    // on an actual submission, where it's always raw plaintext the user
-    // just typed. Calling decode() on it is a category error, not a
-    // meaningful round-trip — it either coincidentally happens to be
-    // valid ciphertext-shaped input (rare, wrong result) or throws
-    // CryptorException, exactly as reported. Storage-side encoding
-    // still happens correctly and separately in saveOneSetting().
-    $inputValue = (string)
+    if ($setting['type'] == 'password') {
+    // $body[...] is NOT raw submitted plaintext here — the foreach
+    // above (line 200-201) unconditionally overwrites it with the
+    // real stored (encrypted) setting value on every render, GET or
+    // POST. decode() is therefore correct and necessary. A previous
+    // "fix" here removed this call on the wrong assumption that $body
+    // held fresh plaintext; it didn't, and that change corrupted every
+    // gateway's stored secret by re-encrypting already-encrypted
+    // ciphertext on the next save. See
+    // docs/CRYPTOR_DECODE_REGRESSION_AUGUST_2026.md.
+    //
+    // The try/catch below is a separate, deliberate safety net: if a
+    // stored value is ever malformed (however that happens — a
+    // partial write, manual DB edit, or corruption from the
+    // regression above), decode() throws CryptorException and used to
+    // crash this entire settings page, for every tab, not just the
+    // affected gateway. Failing safe to an empty field is strictly
+    // better than a fatal error blocking access to every gateway's
+    // settings at once.
+    try {
+     $inputValue = (string) (strlen((string)
+      $body[$pfxGateway . $d . '_' .
+      $key . ']']) > 0
+      ? $s->decode((string)
+      $body[$pfxGateway . $d . '_' .
+      $key . ']'])
+      : '');
+    } catch (\App\Invoice\Libraries\CryptorException) {
+     $inputValue = '';
+    }
+     } else {
+     $inputValue = (string)
      $body[$pfxGateway . $d . '_' .
      $key . ']'];
+     }
 
      echo H::openTag('div', $formGroup); //6
      echo H::openTag('label', [
