@@ -1,6 +1,36 @@
 # Including Codeception's Functional Suite in Coverage — August 2026
 
-## Summary
+## Status: CI step reverted, dormant bugs fixed and kept
+
+The CI coverage-generation step described below was added, then reverted
+after the first real CI run: on `ubuntu-latest` (PCOV, not the Xdebug
+used to verify this locally) nearly every Functional test failed
+instantly (`0.00s`, consistent with the coverage-instrumented spawned
+server crashing on its first real request and every request after
+failing against a dead process) — a PCOV-specific incompatibility that
+couldn't be reproduced or diagnosed locally (this project's local WAMP
+setup only has Xdebug, not PCOV). Separately, even where it *did* work
+locally under Xdebug, per-test overhead was severe — 15-16 seconds per
+Functional test under coverage, versus a fraction of a second normally —
+making a 50-test suite run well over ten minutes just for this one step.
+
+**What's kept**: the three real, dormant `c3.php`/`public/index.php` bugs
+below are still fixed — they were genuine bugs regardless of whether this
+specific CI step ships, and leave `YII_C3` unset (the production default)
+completely unaffected. `Tests/Functional.suite.yml`'s `coverage: enabled:
+true` block is also kept, harmless unless someone explicitly passes
+`--coverage-xml`/`--coverage` on the command line — useful for future
+manual investigation. **What's reverted**: the `sonar` CI job's
+`Generate Functional suite coverage` step, and `coverage-functional.xml`
+from `sonar-project.properties`. SonarCloud's PHP coverage is back to
+Unit + Testo only, same as before this was attempted.
+
+Revisiting this would need either a PCOV-specific fix verified against a
+real PCOV environment (not guessed blind against CI), or a fundamentally
+different, lower-overhead mechanism than C3's per-request HTTP round
+trip.
+
+## Original summary
 
 SonarCloud's PHP coverage percentage only ever reflected `Tests/Unit` and
 `Tests/PHPUnit` (via `vendor/bin/phpunit --coverage-clover`) plus
