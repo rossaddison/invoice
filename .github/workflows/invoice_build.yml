@@ -60,6 +60,11 @@ jobs:
       - name: Generate Testo coverage
         run: php -d memory_limit=512M vendor/bin/testo --suite=Unit --coverage-clover=coverage-testo.xml
 
+      - name: Generate Functional suite coverage (via C3 remote collection)
+        env:
+          YII_C3: '1'
+        run: php -d memory_limit=512M vendor/bin/codecept run Functional --coverage-xml=coverage-functional.xml
+
       - name: Setup Node.js
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:

@@ -1,8 +1,13 @@
 actor: FunctionalTester
+coverage:
+  enabled: true
+  include:
+    - src/*
+    - config/*
 extensions:
   enabled:
     - Codeception\Extension\RunProcess:
-        0: php -d variables_order=EGPCS -S 127.0.0.1:8881 -t public
+        0: php -d variables_order=EGPCS -d xdebug.mode=coverage -S 127.0.0.1:8881 -t public
         sleep: 1
 modules:
   enabled:
