@@ -16,6 +16,7 @@ use App\Invoice\InvItemAmount\InvItemAmountRepository;
 use App\Invoice\Product\ProductRepository;
 use App\Invoice\Task\TaskRepository;
 use App\Invoice\TaxRate\TaxRateRepository;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
@@ -27,7 +28,17 @@ use Yiisoft\Data\Cycle\Reader\EntityReader;
  * rows onto the credit note item, negated in step with the already-negated
  * quantity/subtotal, so a UBL export of the credit note still has an
  * allowance/charge breakdown to draw from.
+ *
+ * Every test method here mixes real assertions (expects()->method(...))
+ * on some mocks with other mocks used as plain stubs (willReturn() only,
+ * e.g. unrelated repository dependencies a given test doesn't care about)
+ * — PHPUnit 13's stub-without-expectations check flags those per mock
+ * instance regardless of what other mocks in the same test do. This
+ * class-level attribute silences that check; it does not weaken any
+ * existing expects() assertion, which still runs and still fails the test
+ * if unmet.
  */
+#[AllowMockObjectsWithoutExpectations]
 final class InvItemServiceCreditTest extends TestCase
 {
     /**

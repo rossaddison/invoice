@@ -15,6 +15,7 @@ use App\Invoice\Ubl\{
     PaymentTerms, Schema
 };
 use DateTime;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 
@@ -31,8 +32,12 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
  *
  * These tests exercise the real xml()/output() pipeline end-to-end (real
  * Ubl\Invoice/CreditNote/Generator objects — only SettingRepository/Translator
- * are stubbed) and assert on the actual serialized XML string.
+ * are stubbed) and assert on the actual serialized XML string. Those two
+ * mocks are configured with willReturn() only, never expects() — hence
+ * the class-level attribute below, silencing PHPUnit 13's stub-without-
+ * expectations check for these two.
  */
+#[AllowMockObjectsWithoutExpectations]
 final class PeppolUblXmlCreditNoteTest extends TestCase
 {
     private function settingRepository(): SettingRepository

@@ -23,11 +23,23 @@ use App\Invoice\QuoteItemAmount\QuoteItemAmountService;
 use App\Invoice\Task\TaskRepository;
 use App\Invoice\TaxRate\TaxRateRepository;
 use App\Invoice\Unit\UnitRepository;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Translator\TranslatorInterface;
 
+/**
+ * Every test method here mixes real assertions (expects()->method(...))
+ * on some mocks with other mocks used as plain stubs (willReturn()/
+ * willReturnMap() only, e.g. unrelated repository dependencies a given
+ * test doesn't care about) — PHPUnit 13's stub-without-expectations check
+ * flags those per mock instance regardless of what other mocks in the
+ * same test do. This class-level attribute silences that check; it does
+ * not weaken any existing expects() assertion, which still runs and still
+ * fails the test if unmet.
+ */
+#[AllowMockObjectsWithoutExpectations]
 final class QuoteItemServiceTest extends TestCase
 {
     /**

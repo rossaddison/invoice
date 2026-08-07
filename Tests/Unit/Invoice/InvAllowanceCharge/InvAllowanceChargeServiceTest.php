@@ -10,10 +10,23 @@ use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use App\Invoice\AllowanceCharge\AllowanceChargeRepository;
 use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository;
 use App\Invoice\InvAllowanceCharge\InvAllowanceChargeService;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 
+/**
+ * Every test method here mixes real assertions (expects()->method(...))
+ * on some mocks with other mocks used as plain stubs (the EntityReader
+ * from reader() and TaxRate from allowanceChargeWithTaxRate(), both only
+ * ever configured with willReturn(), never expects()) — PHPUnit 13's
+ * stub-without-expectations check flags those per mock instance
+ * regardless of what other mocks in the same test do. This class-level
+ * attribute silences that check; it does not weaken any existing
+ * expects() assertion, which still runs and still fails the test if
+ * unmet.
+ */
+#[AllowMockObjectsWithoutExpectations]
 final class InvAllowanceChargeServiceTest extends TestCase
 {
     /**
