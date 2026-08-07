@@ -106,7 +106,8 @@ export class SalesOrderHandler {
      * Initialize Tom Select if present for salesorder selects
      */
     private initSelects(): void {
-        if ((globalThis as any).TomSelect === undefined) return;
+        const TomSelect = globalThis.TomSelect;
+        if (TomSelect === undefined) return;
 
         const selects = document.querySelectorAll(
             '.simple-select'
@@ -115,7 +116,7 @@ export class SalesOrderHandler {
             // Check if already initialized
             if (!(element as any)._tomselect) {
                 try {
-                    new globalThis.TomSelect(element, {});
+                    new TomSelect(element, {});
                     (element as any)._tomselect = true;
                 } catch (error) {
                     console.warn('Failed to initialize TomSelect:', error);

@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2024",
     "module": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "lib": ["ES2024", "DOM", "DOM.Iterable"],
     "strict": true,
     "esModuleInterop": true,
@@ -11,9 +11,8 @@
     "declaration": false,
     "outDir": "./dist",
     "rootDir": "./src/typescript",
-    "baseUrl": "./src/typescript",
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["./src/typescript/*"]
     },
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,

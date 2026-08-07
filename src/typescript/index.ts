@@ -34,12 +34,13 @@ import { initE164PhoneFields } from './phone-e164.js';
 import { initHomeCareOffline } from './homecare-offline.js';
 
 declare global {
-    interface Window {
-        NProgress?: {
-            start(): void;
-            done(): void;
-        };
-    }
+    // var (not `interface Window`) — see htmx.ts for why.
+    var NProgress:
+        | {
+              start(): void;
+              done(): void;
+          }
+        | undefined;
 }
 
 /**
@@ -106,10 +107,10 @@ class InvoiceApp {
     /**
      * Initialize Bootstrap tooltips — Bootstrap must be loaded before this runs.
      * Registration order in layout/invoice.php ensures bootstrap.bundle.js
-     * executes before the IIFE, so (globalThis as any).bootstrap is available here.
+     * executes before the IIFE, so globalThis.bootstrap is available here.
      */
     private initializeTooltips(): void {
-        const bs = (globalThis as any).bootstrap;
+        const bs = globalThis.bootstrap;
         if (!bs?.Tooltip) return;
         document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(element => {
             try {
