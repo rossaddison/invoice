@@ -233,10 +233,9 @@ let picker: FamilyCommalistPicker | null = null;
 
 // Integration functions
 declare global {
-    interface Window {
-        toggleCommalistPicker: () => void;
-        picker: FamilyCommalistPicker | null;
-    }
+    // var (not `interface Window`) — see htmx.ts for why.
+    var toggleCommalistPicker: (() => void) | undefined;
+    var picker: FamilyCommalistPicker | null | undefined;
 }
 
 export function initializeCommalistPicker() {

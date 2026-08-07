@@ -2,23 +2,21 @@
 
 // Global Bootstrap types
 declare global {
-    interface Window {
-        bootstrap?: {
-            Tooltip: new (element: Element, options?: any) => any;
-            Modal: new (
-                element: Element,
-                options?: any
-            ) => {
-                show(): void;
-                hide(): void;
-            };
-        };
-        lastTaggableClicked?: Element;
-        TomSelect?: any;
-    }
-    const bootstrap:
+    // var (not `interface Window`, not `const`) — TypeScript only extends
+    // globalThis's own type for ambient `var` declarations; `const`/`let`
+    // ambient globals type-check as bare identifiers but never as
+    // globalThis properties (this mirrors real JS: a top-level `const` at
+    // script scope doesn't become a globalThis property either, only
+    // `var` does). This app's own convention is globalThis, never window
+    // (typescript:S7764), so both mismatches needed fixing — this was
+    // previously declared twice (as `interface Window` here, and
+    // separately as `const` right below), neither of which actually
+    // covered a plain globalThis.bootstrap read; merged into one.
+    var bootstrap:
         | {
-              Tooltip: new (element: Element, options?: any) => any;
+              Tooltip: (new (element: Element, options?: any) => any) & {
+                  getOrCreateInstance(element: Element, options?: any): any;
+              };
               Modal: new (
                   element: Element,
                   options?: any
@@ -28,6 +26,12 @@ declare global {
               };
           }
         | undefined;
+    var lastTaggableClicked: Element | undefined;
+    // TomSelect's canonical declaration lives in product.ts (a more
+    // specific constructor type; this file previously duplicated it as a
+    // loose `any`, which TypeScript correctly flagged as a conflicting
+    // declaration — TS2687/TS2717 — once it started fully type-checking
+    // this file again).
 }
 
 export interface ApiResponse {

@@ -128,6 +128,7 @@ final class SquareWebhookHandler
                 response: true,
                 sandbox_url_array: $this->sR->sandboxUrlArray(),
                 provider_reference: $paymentId,
+                secondary_provider_reference: $orderId,
             ),
         );
 

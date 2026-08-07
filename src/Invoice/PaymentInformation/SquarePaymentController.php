@@ -82,22 +82,11 @@ final class SquarePaymentController
      */
     public function squareInForm(CurrentRoute $currentRoute): Response
     {
-        $invoice = $this->loadInvoice($currentRoute);
-        if ($invoice instanceof Response) {
-            return $invoice;
+        $resolved = $this->resolveConfiguredInvoiceWithBalance($currentRoute);
+        if ($resolved instanceof Response) {
+            return $resolved;
         }
-        if (!$this->squarePaymentService->isConfigured()) {
-            $this->flashMessage('warning', 'Square payment gateway is not properly configured.');
-            return $this->webService->getNotFoundResponse();
-        }
-
-        /** @var InvAmount $invoiceAmountRecord */
-        $invoiceAmountRecord = $this->iaR->repoInvquery($invoice->reqId());
-        $balance = $invoiceAmountRecord->getBalance() ?? 0.00;
-        if ($balance <= 0.00) {
-            $this->flashMessage('warning', $this->translator->translate('already.paid'));
-            return $this->webService->getNotFoundResponse();
-        }
+        ['invoice' => $invoice, 'balance' => $balance] = $resolved;
 
         $urlKey = $invoice->getUrlKey();
         $completeUrl = $this->urlGenerator->generateAbsolute(
@@ -116,6 +105,52 @@ final class SquarePaymentController
         }
 
         return $this->responseFactory->createResponse(302)->withHeader('Location', $result['paymentLinkUrl']);
+    }
+
+    /**
+     * Shared load+isConfigured+balance guard chain for squareInForm() —
+     * split across small single-purpose guards so no method in the chain
+     * exceeds php:S1142's 3-returns-per-method limit.
+     *
+     * @return Response|array{invoice: Inv, balance: float}
+     */
+    private function resolveConfiguredInvoiceWithBalance(CurrentRoute $currentRoute): Response|array
+    {
+        $invoice = $this->loadInvoice($currentRoute);
+        if ($invoice instanceof Response) {
+            return $invoice;
+        }
+
+        $configured = $this->requireSquareConfigured();
+        if ($configured instanceof Response) {
+            return $configured;
+        }
+
+        return $this->requirePositiveBalance($invoice);
+    }
+
+    private function requireSquareConfigured(): ?Response
+    {
+        if (!$this->squarePaymentService->isConfigured()) {
+            $this->flashMessage('warning', 'Square payment gateway is not properly configured.');
+            return $this->webService->getNotFoundResponse();
+        }
+        return null;
+    }
+
+    /**
+     * @return Response|array{invoice: Inv, balance: float}
+     */
+    private function requirePositiveBalance(Inv $invoice): Response|array
+    {
+        /** @var InvAmount $invoiceAmountRecord */
+        $invoiceAmountRecord = $this->iaR->repoInvquery($invoice->reqId());
+        $balance = $invoiceAmountRecord->getBalance() ?? 0.00;
+        if ($balance <= 0.00) {
+            $this->flashMessage('warning', $this->translator->translate('already.paid'));
+            return $this->webService->getNotFoundResponse();
+        }
+        return ['invoice' => $invoice, 'balance' => $balance];
     }
 
     /**

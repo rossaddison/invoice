@@ -10,6 +10,7 @@ use App\Invoice\PaymentInformation\PaymentVerificationResult;
 use App\Invoice\Setting\SettingRepository;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 
@@ -123,22 +124,30 @@ final class PaystackPaymentService implements PaymentGatewayInterface
                 ],
                 'json' => $body,
             ]);
-            /** @var array{status?: bool, message?: string, data?: array{authorization_url?: string, reference?: string}} $data */
-            $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
-            if (($data['status'] ?? false) !== true) {
-                $this->logger->error('Paystack createPayment rejected.', ['message' => $data['message'] ?? 'unknown error']);
-                return null;
-            }
-            $authorizationUrl = $data['data']['authorization_url'] ?? null;
-            if ($authorizationUrl === null) {
-                return null;
-            }
-
-            return ['reference' => $reference, 'authorizationUrl' => $authorizationUrl];
+            return $this->parseCreatePaymentResponse($response, $reference);
         } catch (GuzzleException|\JsonException $e) {
             $this->logger->error('Paystack createPayment failed.', ['error' => $e->getMessage()]);
             return null;
         }
+    }
+
+    /**
+     * @return array{reference: string, authorizationUrl: string}|null
+     */
+    private function parseCreatePaymentResponse(ResponseInterface $response, string $reference): ?array
+    {
+        /** @var array{status?: bool, message?: string, data?: array{authorization_url?: string, reference?: string}} $data */
+        $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        if (($data['status'] ?? false) !== true) {
+            $this->logger->error('Paystack createPayment rejected.', ['message' => $data['message'] ?? 'unknown error']);
+            return null;
+        }
+        $authorizationUrl = $data['data']['authorization_url'] ?? null;
+        if ($authorizationUrl === null) {
+            return null;
+        }
+
+        return ['reference' => $reference, 'authorizationUrl' => $authorizationUrl];
     }
 
     #[\Override]

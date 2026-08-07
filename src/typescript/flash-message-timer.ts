@@ -17,9 +17,8 @@ interface TimerData {
 }
 
 declare global {
-    interface Window {
-        flashMessageTimer?: FlashMessageTimer;
-    }
+    // var (not `interface Window`) — see htmx.ts for why.
+    var flashMessageTimer: FlashMessageTimer | undefined;
 }
 
 export class FlashMessageTimer {

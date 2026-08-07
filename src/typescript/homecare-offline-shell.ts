@@ -44,6 +44,49 @@ function textEl(tag: string, className: string, text: string): HTMLElement {
     return el;
 }
 
+function nonEmptyParts(parts: (string | null)[]): string[] {
+    return parts.filter((part): part is string => !!part && part.trim() !== '');
+}
+
+function renderClientBlock(client: NonNullable<OfflineInvoice['client']>): DocumentFragment {
+    const block = document.createDocumentFragment();
+    block.appendChild(textEl('div', 'client', client.fullName));
+
+    const addressParts = nonEmptyParts([client.buildingNumber, client.address1, client.address2, client.city, client.state, client.zip, client.country]);
+    if (addressParts.length > 0) {
+        block.appendChild(textEl('div', 'address', addressParts.join(', ')));
+    }
+
+    const contactParts = nonEmptyParts([client.phone, client.mobile, client.email]);
+    if (contactParts.length > 0) {
+        block.appendChild(textEl('div', 'contact', contactParts.join(' · ')));
+    }
+
+    return block;
+}
+
+function renderItemLine(item: OfflineInvoice['items'][number]): HTMLElement {
+    const li = document.createElement('li');
+    const quantityPrefix = item.quantity !== null ? `${item.quantity} × ` : '';
+    li.textContent = quantityPrefix + (item.name ?? '');
+    if (item.note) {
+        const noteSpan = document.createElement('span');
+        noteSpan.className = 'note';
+        noteSpan.textContent = ' — ' + item.note;
+        li.appendChild(noteSpan);
+    }
+    return li;
+}
+
+function renderItemList(items: OfflineInvoice['items']): HTMLElement {
+    const list = document.createElement('ul');
+    list.className = 'items';
+    for (const item of items) {
+        list.appendChild(renderItemLine(item));
+    }
+    return list;
+}
+
 function renderInvoiceCard(inv: OfflineInvoice): HTMLElement {
     const card = document.createElement('div');
     card.className = 'offline-card';
@@ -54,41 +97,14 @@ function renderInvoiceCard(inv: OfflineInvoice): HTMLElement {
     if (inv.doNotSend) {
         card.appendChild(textEl('div', 'note', '🚫 ' + inv.doNotSendReason));
     }
-
-    const client = inv.client;
-    if (client) {
-        card.appendChild(textEl('div', 'client', client.fullName));
-        const addressParts = [client.buildingNumber, client.address1, client.address2, client.city, client.state, client.zip, client.country]
-            .filter((part): part is string => !!part && part.trim() !== '');
-        if (addressParts.length > 0) {
-            card.appendChild(textEl('div', 'address', addressParts.join(', ')));
-        }
-        const contactParts = [client.phone, client.mobile, client.email].filter((part): part is string => !!part && part.trim() !== '');
-        if (contactParts.length > 0) {
-            card.appendChild(textEl('div', 'contact', contactParts.join(' · ')));
-        }
+    if (inv.client) {
+        card.appendChild(renderClientBlock(inv.client));
     }
-
     if (inv.note) {
         card.appendChild(textEl('div', 'note', inv.note));
     }
-
     if (inv.items.length > 0) {
-        const list = document.createElement('ul');
-        list.className = 'items';
-        for (const item of inv.items) {
-            const li = document.createElement('li');
-            const quantityPrefix = item.quantity !== null ? `${item.quantity} × ` : '';
-            li.textContent = quantityPrefix + (item.name ?? '');
-            if (item.note) {
-                const noteSpan = document.createElement('span');
-                noteSpan.className = 'note';
-                noteSpan.textContent = ' — ' + item.note;
-                li.appendChild(noteSpan);
-            }
-            list.appendChild(li);
-        }
-        card.appendChild(list);
+        card.appendChild(renderItemList(inv.items));
     }
 
     return card;
@@ -116,10 +132,20 @@ async function renderOfflineShell(): Promise<void> {
     }
 }
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        void renderOfflineShell();
+function domReady(): Promise<void> {
+    if (document.readyState !== 'loading') {
+        return Promise.resolve();
+    }
+    return new Promise((resolve) => {
+        document.addEventListener('DOMContentLoaded', () => resolve(), { once: true });
     });
-} else {
-    void renderOfflineShell();
 }
+
+// Top-level await instead of an async IIFE/void call (typescript:S7785) —
+// this file builds as an ES module (package.json's
+// build:typescript:homecare-shell, --format=esm) and loads via
+// <script type="module"> (resources/views/invoice/inv/offline.php),
+// specifically to allow this. Module scripts are deferred by the HTML spec
+// on their own, so no separate ->defer() is needed.
+await domReady();
+await renderOfflineShell();

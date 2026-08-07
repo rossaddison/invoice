@@ -27,7 +27,7 @@ interface FamilyGenerateRequest extends RequestParams {
 }
 
 interface FamilyGenerateResponse extends ApiResponse {
-    success: boolean;
+    success: 0 | 1;
     count?: number;
     message?: string;
     warnings?: string[];
@@ -400,7 +400,7 @@ export class FamilyHandler {
                 return;
             }
 
-            if (data.success) {
+            if (data.success === 1) {
                 this.handleGenerationSuccess(data, processBtn);
             } else {
                 processBtn.innerHTML = originalText;

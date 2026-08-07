@@ -1,10 +1,12 @@
 import { parsedata, getJson, ApiResponse, RequestParams } from './utils.js';
 
 declare global {
-    interface Window {
-        TomSelect: new (element: Element, options: Record<string, unknown>) => { destroy(): void };
-        productTableFilter: () => void;
-    }
+    // var (not `interface Window`) — see htmx.ts for why. The sole
+    // canonical TomSelect declaration — previously duplicated (and
+    // conflicting: optional `any` vs. this specific constructor shape)
+    // in types.ts, which is why TS2687/TS2717 flagged them.
+    var TomSelect: (new (element: Element, options: Record<string, unknown>) => { destroy(): void }) | undefined;
+    var productTableFilter: (() => void) | undefined;
 }
 
 type ButtonState = 'loading' | 'success' | 'error';
@@ -179,11 +181,12 @@ export class ProductHandler {
 
     private initializeComponents(): void {
         // Initialize TomSelect (replaces jQuery select2)
-        if ((globalThis as any).TomSelect !== undefined) {
+        const TomSelect = globalThis.TomSelect;
+        if (TomSelect !== undefined) {
             document.querySelectorAll('.simple-select').forEach((el: Element) => {
                 const tracked = el as Element & { _tomselect?: unknown };
                 if (!tracked._tomselect) {
-                    tracked._tomselect = new globalThis.TomSelect(el, {});
+                    tracked._tomselect = new TomSelect(el, {});
                 }
             });
         }
