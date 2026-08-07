@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Auth\Permissions;
 use App\Invoice\InvRecurring\InvRecurringController;
 use App\Middleware\RoutePermission;
+use Yiisoft\Auth\Middleware\Authentication;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\Route;
 
@@ -62,11 +63,18 @@ return [
         ), // invoice
 
     // Not under RoutePermission::invoiceGroup(): called by an external
-    // scheduled cron job with no app session. Secured by its own cron_key
-    // query parameter matched against the stored setting, not RBAC — the
-    // group's Authentication middleware would otherwise reject every call
-    // before that check ever runs.
+    // scheduled cron job with no app session, so session-based RBAC
+    // (RoutePermission::check()) doesn't apply here at all — there's no
+    // logged-in user to check a permission against. This is the one route
+    // in the app where Yiisoft\Auth\Middleware\Authentication is actually
+    // the right tool: a program, not a person, making a single standalone
+    // request. See config/web/di/cron-auth.php for the AuthenticatorInterface
+    // binding this middleware needs to be constructible at all, and
+    // docs/INVRECURRING_CRON_BEARER_AUTH_AUGUST_2026.md for the full
+    // before/after story (this route used to check a `cron_key` query
+    // parameter by hand, with no real HTTP semantics on failure).
     Route::get('/invrecurring/cron')
+        ->middleware(Authentication::class)
         ->action([InvRecurringController::class, 'cron'])
         ->name('invrecurring/cron'),
 ];

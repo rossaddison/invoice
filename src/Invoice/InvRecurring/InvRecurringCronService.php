@@ -23,8 +23,9 @@ use Yiisoft\Log\Logger;
 /**
  * Generates recurring invoices and sends Telegram balance reminders.
  * Extracted from InvRecurringController::cron() so both the legacy HTTP
- * cron_key endpoint and the `invrecurring/process` console command can
- * share the exact same logic.
+ * endpoint (Bearer-token authenticated — see
+ * docs/INVRECURRING_CRON_BEARER_AUTH_AUGUST_2026.md) and the
+ * `invrecurring/process` console command can share the exact same logic.
  */
 final class InvRecurringCronService
 {
