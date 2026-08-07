@@ -7,9 +7,11 @@ namespace App\Invoice\PaymentInformation\GatewayStatus\Console;
 use App\Invoice\PaymentInformation\GatewayStatus\GatewayStatusException;
 use App\Invoice\PaymentInformation\GatewayStatus\GatewayStatusRow;
 use App\Invoice\PaymentInformation\GatewayStatus\GatewayStatusService;
+use App\Invoice\PaymentInformation\Service\SquarePaymentService;
 use DateTimeImmutable;
 use GoCardlessPro\Client as GoCardlessClient;
 use GoCardlessPro\Environment as GoCardlessEnvironment;
+use GuzzleHttp\Client as HttpClient;
 use Mollie\Api\MollieApiClient;
 use Stripe\StripeClient;
 use Symfony\Component\Console\Command\Command;
@@ -27,10 +29,11 @@ use Yiisoft\Yii\Console\ExitCode;
  * gateways.json or the named environment variable itself is unset — this is
  * what lets sandbox coverage roll out incrementally per gateway/region.
  *
- * Only Stripe, Mollie, and GoCardless have a confirmed, genuinely
+ * Only Stripe, Mollie, GoCardless, and Square have a confirmed, genuinely
  * side-effect-free sandbox call wired up so far (a pure read each — account
- * balance, payment methods list, creditors list). Every other gateway ships
- * with `sandbox_env_var: null` in gateways.json until a safe call is
+ * balance, payment methods list, creditors list, business locations list).
+ * Every other gateway ships with `sandbox_env_var: null` in gateways.json
+ * until a safe call is
  * confirmed for it too — see docs/GATEWAY_STATUS_PAGE_AUGUST_2026.md.
  *
  * Usage:
@@ -100,6 +103,7 @@ final class CheckGatewaySandboxesCommand extends Command
                 'stripe' => $this->checkStripe($secret),
                 'mollie' => $this->checkMollie($secret),
                 'gocardless' => $this->checkGoCardless($secret),
+                'square' => $this->checkSquare($secret),
                 default => throw new GatewayStatusException("No sandbox check wired up for gateway '{$key}'."),
             };
             return null;
@@ -128,5 +132,25 @@ final class CheckGatewaySandboxesCommand extends Command
             'environment' => GoCardlessEnvironment::SANDBOX,
         ]);
         $client->creditors()->list(['params' => ['limit' => 1]]);
+    }
+
+    /**
+     * No SDK installed for Square (see SquarePaymentService's own
+     * docblock — its HTTP layer isn't Guzzle-compatible), so this is a
+     * direct HTTP call, matching how SquarePaymentService itself talks to
+     * Square. Sandbox base URL hardcoded here deliberately: this command
+     * only ever checks sandboxes (see its own class docblock), so there's
+     * no live/sandbox branch to get wrong the way SquarePaymentService's
+     * own baseUrl() has to handle.
+     */
+    private function checkSquare(string $accessToken): void
+    {
+        $client = new HttpClient();
+        $client->get('https://connect.squareupsandbox.com/v2/locations', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Square-Version' => SquarePaymentService::SQUARE_VERSION,
+            ],
+        ]);
     }
 }

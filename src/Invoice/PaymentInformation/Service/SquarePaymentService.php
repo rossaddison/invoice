@@ -68,7 +68,10 @@ use Ramsey\Uuid\Uuid;
  */
 final class SquarePaymentService implements PaymentGatewayInterface
 {
-    private const string SQUARE_VERSION = '2026-07-15';
+    // public — also read by CheckGatewaySandboxesCommand's checkSquare(),
+    // so the weekly sandbox check always uses the same API version as
+    // real payment traffic, rather than a second copy that could drift.
+    public const string SQUARE_VERSION = '2026-07-15';
 
     public function __construct(
         private readonly SettingRepository $settings,
