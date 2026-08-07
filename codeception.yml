@@ -1,5 +1,13 @@
 namespace: Tests
 support_namespace: Support
+# Global, not per-suite: must run before ANY suite's classes are
+# autoloaded, since DG\BypassFinals::enable() can only bypass 'final' on
+# classes that get autoloaded after it runs. A per-Unit-suite bootstrap
+# was too late when running `codecept run` (all suites) — Acceptance/
+# Cli/Functional running first meant classes like Yiisoft\Router\CurrentRoute
+# were already loaded, genuinely final, before Unit's own bootstrap ever
+# fired. See Tests/bootstrap.php for the actual enable() call.
+bootstrap: bootstrap.php
 paths:
     tests: tests
     output: tests/_output
