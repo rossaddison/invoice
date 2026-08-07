@@ -64,8 +64,21 @@ Payment Link creation time; `SquareWebhookHandler` makes a **second** GET
 call (`getOrderReferenceId()`, `GET /v2/orders/{id}`) to resolve that
 `reference_id` back from the `order_id` the webhook payload actually
 carries — a similar shape to Razorpay's payment-link-id-vs-payment-id
-wrinkle, but resolved via an extra API call rather than a stored dual
-reference.
+wrinkle, resolved via an extra API call at webhook-processing time (this
+part unchanged since it first shipped).
+
+**Updated August 2026**: Square now also has its own `SquareMerchant`
+entity (replacing the generic `Merchant` audit table for Square
+specifically) that persists **both** `order_id` and `payment_id` as
+independent columns, once a webhook has resolved them — needed because
+Square's refund API is keyed by `payment_id` while invoice-lookup needs
+`order_id`, and the shared `Merchant` table's single `provider_reference`
+column can't hold both. See
+[docs/SQUARE_MERCHANT_PER_PROVIDER_ENTITY_AUGUST_2026.md](SQUARE_MERCHANT_PER_PROVIDER_ENTITY_AUGUST_2026.md)
+for the full story. The order_id→invoice *resolution* mechanism above is
+unchanged (still a live `GET /v2/orders/{id}` call); what's new is that
+the result gets persisted afterward instead of only ever living in a
+single request's memory.
 
 The webhook's signature check reconstructs the "notification URL" from the
 inbound request's own URI (`$request->getUri()`), which must match exactly
@@ -94,13 +107,21 @@ publicly documented merchant-eligible countries are the US, Canada, UK,
 Ireland, France, Spain, Australia, and Japan — general public knowledge,
 not independently re-verified against a primary source this session.
 
-## ⚠️ Untested against a real account
+## Untested against a real account — status
 
-Per the user's own statement, they have no registered company and cannot
-create even a test Square Sandbox seller account — the same practical
-barrier already hit with YooKassa, Paystack, Razorpay, and PayPal.
-`sandbox_status` on the `/gateway-status` page stays `untested` permanently
-for this reason.
+Originally blocked by the same practical barrier already hit with
+YooKassa, Paystack, Razorpay, and PayPal: no registered company to create
+even a test Square Sandbox seller account with. **That's since changed**
+— the user has confirmed they can now test against a real Square account.
+
+The weekly `gateway-status` GitHub Actions workflow
+(`.github/workflows/gateway-status.yml`) now has Square wired into its
+sandbox check (`CheckGatewaySandboxesCommand::checkSquare()`, a read-only
+`GET /v2/locations` call) — `sandbox_env_var` in `gateways.json` is set to
+`SQUARE_SANDBOX_ACCESS_TOKEN`. `sandbox_status` stays `untested` only
+until that GitHub repo secret is actually configured with a real
+credential and the workflow runs — not permanently, as this doc
+previously (incorrectly) said.
 
 ## Verification
 

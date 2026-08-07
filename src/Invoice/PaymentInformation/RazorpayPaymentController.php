@@ -11,6 +11,7 @@ use App\Invoice\Inv\InvRepository as iR;
 use App\Invoice\InvAmount\InvAmountRepository as iaR;
 use App\Invoice\PaymentInformation\Service\RazorpayPaymentService;
 use App\Invoice\PaymentInformation\Service\RazorpayWebhookHandler;
+use App\Invoice\PaymentInformation\Trait\PaymentGatewayGuardTrait;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
@@ -53,6 +54,7 @@ use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 final class RazorpayPaymentController
 {
     use FlashMessage;
+    use PaymentGatewayGuardTrait;
 
     public function __construct(
         private readonly RazorpayPaymentService $razorpayPaymentService,
@@ -88,7 +90,7 @@ final class RazorpayPaymentController
      */
     public function razorpayInForm(CurrentRoute $currentRoute): Response
     {
-        $resolved = $this->resolveConfiguredInvoiceWithBalance($currentRoute);
+        $resolved = $this->resolveConfiguredInvoiceWithBalance($currentRoute, $this->razorpayPaymentService, 'Razorpay');
         if ($resolved instanceof Response) {
             return $resolved;
         }
@@ -113,51 +115,6 @@ final class RazorpayPaymentController
         return $this->responseFactory->createResponse(302)->withHeader('Location', $result['paymentLinkUrl']);
     }
 
-    /**
-     * Shared load+isConfigured+balance guard chain for razorpayInForm() —
-     * split across small single-purpose guards so no method in the chain
-     * exceeds php:S1142's 3-returns-per-method limit.
-     *
-     * @return Response|array{invoice: Inv, balance: float}
-     */
-    private function resolveConfiguredInvoiceWithBalance(CurrentRoute $currentRoute): Response|array
-    {
-        $invoice = $this->loadInvoice($currentRoute);
-        if ($invoice instanceof Response) {
-            return $invoice;
-        }
-
-        $configured = $this->requireRazorpayConfigured();
-        if ($configured instanceof Response) {
-            return $configured;
-        }
-
-        return $this->requirePositiveBalance($invoice);
-    }
-
-    private function requireRazorpayConfigured(): ?Response
-    {
-        if (!$this->razorpayPaymentService->isConfigured()) {
-            $this->flashMessage('warning', 'Razorpay payment gateway is not properly configured.');
-            return $this->webService->getNotFoundResponse();
-        }
-        return null;
-    }
-
-    /**
-     * @return Response|array{invoice: Inv, balance: float}
-     */
-    private function requirePositiveBalance(Inv $invoice): Response|array
-    {
-        /** @var InvAmount $invoiceAmountRecord */
-        $invoiceAmountRecord = $this->iaR->repoInvquery($invoice->reqId());
-        $balance = $invoiceAmountRecord->getBalance() ?? 0.00;
-        if ($balance <= 0.00) {
-            $this->flashMessage('warning', $this->translator->translate('already.paid'));
-            return $this->webService->getNotFoundResponse();
-        }
-        return ['invoice' => $invoice, 'balance' => $balance];
-    }
 
     /**
      * Customer returns here from Razorpay's hosted Payment Link page —

@@ -11,6 +11,7 @@ use App\Invoice\Inv\InvRepository as iR;
 use App\Invoice\InvAmount\InvAmountRepository as iaR;
 use App\Invoice\PaymentInformation\Service\PaystackPaymentService;
 use App\Invoice\PaymentInformation\Service\PaystackWebhookHandler;
+use App\Invoice\PaymentInformation\Trait\PaymentGatewayGuardTrait;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
@@ -47,6 +48,7 @@ use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 final class PaystackPaymentController
 {
     use FlashMessage;
+    use PaymentGatewayGuardTrait;
 
     public function __construct(
         private readonly PaystackPaymentService $paystackPaymentService,
@@ -109,68 +111,35 @@ final class PaystackPaymentController
     }
 
     /**
-     * Shared load+isConfigured+balance+email guard chain for
-     * paystackInForm() — split across small single-purpose guards so no
-     * method in the chain exceeds php:S1142's 3-returns-per-method limit.
+     * The shared load+isConfigured+balance guard chain (PaymentGatewayGuardTrait)
+     * plus one extra Paystack-specific step: it requires a client email
+     * address, which its refund/create-payment API needs but no other
+     * gateway does.
      *
      * @return Response|array{invoice: Inv, balance: float, email: string}
      */
     private function resolveConfiguredInvoiceWithBalanceAndEmail(CurrentRoute $currentRoute): Response|array
     {
-        $invoice = $this->loadInvoice($currentRoute);
-        if ($invoice instanceof Response) {
-            return $invoice;
+        $resolved = $this->resolveConfiguredInvoiceWithBalance($currentRoute, $this->paystackPaymentService, 'Paystack');
+        if ($resolved instanceof Response) {
+            return $resolved;
         }
 
-        $configured = $this->requirePaystackConfigured();
-        if ($configured instanceof Response) {
-            return $configured;
-        }
-
-        return $this->requirePositiveBalanceAndEmail($invoice);
-    }
-
-    private function requirePaystackConfigured(): ?Response
-    {
-        if (!$this->paystackPaymentService->isConfigured()) {
-            $this->flashMessage('warning', 'Paystack payment gateway is not properly configured.');
-            return $this->webService->getNotFoundResponse();
-        }
-        return null;
+        return $this->requireClientEmail($resolved['invoice'], $resolved['balance']);
     }
 
     /**
      * @return Response|array{invoice: Inv, balance: float, email: string}
      */
-    private function requirePositiveBalanceAndEmail(Inv $invoice): Response|array
+    private function requireClientEmail(Inv $invoice, float $balance): Response|array
     {
-        $balanceResult = $this->requirePositiveBalance($invoice);
-        if ($balanceResult instanceof Response) {
-            return $balanceResult;
-        }
-
         $email = $invoice->getClient()?->getClientEmail() ?? '';
         if ($email === '') {
             $this->flashMessage('warning', 'Paystack requires a client email address on file — please add one before paying online.');
             return $this->webService->getNotFoundResponse();
         }
 
-        return ['invoice' => $invoice, 'balance' => $balanceResult['balance'], 'email' => $email];
-    }
-
-    /**
-     * @return Response|array{invoice: Inv, balance: float}
-     */
-    private function requirePositiveBalance(Inv $invoice): Response|array
-    {
-        /** @var InvAmount $invoiceAmountRecord */
-        $invoiceAmountRecord = $this->iaR->repoInvquery($invoice->reqId());
-        $balance = $invoiceAmountRecord->getBalance() ?? 0.00;
-        if ($balance <= 0.00) {
-            $this->flashMessage('warning', $this->translator->translate('already.paid'));
-            return $this->webService->getNotFoundResponse();
-        }
-        return ['invoice' => $invoice, 'balance' => $balance];
+        return ['invoice' => $invoice, 'balance' => $balance, 'email' => $email];
     }
 
     /**
