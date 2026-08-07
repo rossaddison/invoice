@@ -26,6 +26,7 @@ use App\Invoice\PaymentInformation\GatewayStatus\Console\CheckGatewaySandboxesCo
 use App\Invoice\PaymentInformation\GatewayStatus\Console\RebuildGatewayStatusCommand;
 use App\Invoice\Peppol\Console\RetryFailedCommand;
 use App\Invoice\Setting\Console\BackupDatabaseCommand;
+use App\Invoice\Setting\Console\CheckGatewaySecretsCommand;
 use App\Invoice\System\Console\CheckPhpVersionCommand;
 use App\User\Console\CreateCommand;
 use App\User\Console\AssignRoleCommand;
@@ -50,6 +51,7 @@ return [
             'system/check-php-version' => CheckPhpVersionCommand::class,
             'invrecurring/process' => ProcessRecurringInvoicesCommand::class,
             'setting/backup-database' => BackupDatabaseCommand::class,
+            'setting/check-gateway-secrets' => CheckGatewaySecretsCommand::class,
             'gateway-status/rebuild' => RebuildGatewayStatusCommand::class,
             'gateway-status/check-sandboxes' => CheckGatewaySandboxesCommand::class,
             'user/create' => CreateCommand::class,
