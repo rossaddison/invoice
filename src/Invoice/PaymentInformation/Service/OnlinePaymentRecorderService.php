@@ -6,9 +6,11 @@ namespace App\Invoice\PaymentInformation\Service;
 
 use App\Infrastructure\Persistence\Merchant\Merchant;
 use App\Infrastructure\Persistence\Payment\Payment;
+use App\Infrastructure\Persistence\SquareMerchant\SquareMerchant;
 use App\Invoice\Merchant\MerchantService;
 use App\Invoice\Payment\PaymentService;
 use App\Invoice\PaymentInformation\PaymentRecordContext;
+use App\Invoice\SquareMerchant\SquareMerchantService;
 use App\Invoice\Traits\FlashMessage;
 use Psr\Http\Message\ResponseInterface as Response;
 use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
@@ -31,6 +33,7 @@ final class OnlinePaymentRecorderService
         private readonly Flash $flash,
         private readonly MerchantService $merchantService,
         private readonly PaymentService $paymentService,
+        private readonly SquareMerchantService $squareMerchantService,
         private readonly Translator $translator,
         private readonly WebViewRenderer $webViewRenderer,
     ) {
@@ -72,21 +75,7 @@ final class OnlinePaymentRecorderService
         $payment_success_msg = sprintf($this->translator->translate(
                     'online.payment.payment.successful'), $ctx->invoice_number);
 
-        $successful_merchant_response_array = [
-            'inv_id'                       => $ctx->invoice_id,
-            'merchant_response_successful' => true,
-            'merchant_response_date'       =>
-                \DateTime::createFromImmutable(new \DateTimeImmutable('now')),
-            'merchant_response_driver'     => $ctx->driver,
-            'merchant_response'            => $payment_success_msg,
-            'merchant_response_reference'  => $ctx->reference,
-            'merchant_response_provider_reference' => $ctx->provider_reference,
-        ];
-
-        $merchant_response = new Merchant();
-        $this->merchantService
-            ->saveMerchantViaPaymentHandler(
-                    $merchant_response, $successful_merchant_response_array);
+        $this->recordAuditRow($ctx, true, $payment_success_msg);
 
         $this->flashMessage('success', $payment_success_msg);
 
@@ -111,22 +100,7 @@ final class OnlinePaymentRecorderService
             $this->translator->translate(
                 'online.payment.payment.failed'), $ctx->invoice_number);
 
-        $unsuccessful_merchant_response_array = [
-            'inv_id'                       => $ctx->invoice_id,
-            'merchant_response_successful' => false,
-            'merchant_response_date'       =>
-                \DateTime::createFromImmutable(new \DateTimeImmutable('now')),
-            'merchant_response_driver'     => $ctx->driver,
-            'merchant_response'            => $payment_failure_msg,
-            'merchant_response_reference'  => $ctx->reference,
-        ];
-
-        $merchant_response = new Merchant();
-        $this->merchantService
-            ->saveMerchantViaPaymentHandler(
-                $merchant_response,
-                $unsuccessful_merchant_response_array,
-            );
+        $this->recordAuditRow($ctx, false, $payment_failure_msg);
 
         $this->flashMessage('warning', $payment_failure_msg);
 
@@ -143,5 +117,54 @@ final class OnlinePaymentRecorderService
                 ],
             ),
         );
+    }
+
+    /**
+     * Square writes its own SquareMerchant row instead of the generic
+     * Merchant one — see that entity's own docblock for why. Every other
+     * gateway keeps using the shared Merchant table, unchanged.
+     */
+    private function recordAuditRow(PaymentRecordContext $ctx, bool $successful, string $message): void
+    {
+        if ($ctx->driver === 'Square') {
+            $this->recordSquareMerchant($ctx, $successful, $message);
+            return;
+        }
+
+        $this->recordGenericMerchant($ctx, $successful, $message);
+    }
+
+    private function recordGenericMerchant(PaymentRecordContext $ctx, bool $successful, string $message): void
+    {
+        $merchant_response_array = [
+            'inv_id'                       => $ctx->invoice_id,
+            'merchant_response_successful' => $successful,
+            'merchant_response_date'       =>
+                \DateTime::createFromImmutable(new \DateTimeImmutable('now')),
+            'merchant_response_driver'     => $ctx->driver,
+            'merchant_response'            => $message,
+            'merchant_response_reference'  => $ctx->reference,
+            'merchant_response_provider_reference' => $successful ? $ctx->provider_reference : null,
+        ];
+
+        $merchant_response = new Merchant();
+        $this->merchantService->saveMerchantViaPaymentHandler($merchant_response, $merchant_response_array);
+    }
+
+    private function recordSquareMerchant(PaymentRecordContext $ctx, bool $successful, string $message): void
+    {
+        $square_merchant_array = [
+            'inv_id'                       => (int) $ctx->invoice_id,
+            'merchant_response_successful' => $successful,
+            'merchant_response_date'       =>
+                \DateTime::createFromImmutable(new \DateTimeImmutable('now')),
+            'merchant_response'            => $message,
+            'merchant_response_reference'  => $ctx->reference,
+            'merchant_response_payment_id' => $successful ? $ctx->provider_reference : null,
+            'merchant_response_order_id'   => $successful ? $ctx->secondary_provider_reference : null,
+        ];
+
+        $square_merchant = new SquareMerchant();
+        $this->squareMerchantService->saveSquareMerchantViaPaymentHandler($square_merchant, $square_merchant_array);
     }
 }

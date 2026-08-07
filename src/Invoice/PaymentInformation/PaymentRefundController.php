@@ -20,6 +20,7 @@ use App\Invoice\PaymentInformation\Service\SquarePaymentService;
 use App\Invoice\PaymentInformation\Service\StripePaymentService;
 use App\Invoice\PaymentInformation\Service\YookassaPaymentService;
 use App\Invoice\Setting\SettingRepository as sR;
+use App\Invoice\SquareMerchant\SquareMerchantRepository;
 use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -44,6 +45,7 @@ final class PaymentRefundController
         private readonly Flash $flash,
         private readonly PaymentRepository $paymentRepository,
         private readonly MerchantRepository $merchantRepository,
+        private readonly SquareMerchantRepository $squareMerchantRepository,
         private readonly sR $sR,
         private readonly Translator $translator,
         private readonly WebControllerService $webService,
@@ -91,17 +93,35 @@ final class PaymentRefundController
             return $this->webService->getNotFoundResponse();
         }
 
-        $merchant = $this->merchantRepository
-            ->repoMerchantLatestSuccessfulByInvIdAndDriver($payment->reqInvId(), $driver);
-        $reference = $merchant?->getProviderReference();
+        $reference = $this->resolveProviderReference($payment->reqInvId(), $driver);
 
-        if (null === $merchant || null === $reference || $reference === '') {
+        if (null === $reference || $reference === '') {
             $this->flashMessage('warning',
                 sprintf($this->translator->translate('refund.no.provider.reference'), $driver));
             return $this->webService->getRedirectResponse('payment/index');
         }
 
         return new RefundContext($payment, $driver, $reference);
+    }
+
+    /**
+     * Square has its own per-provider Merchant entity (SquareMerchant),
+     * refund-capable by its payment_id column, not the generic Merchant
+     * table's provider_reference — see SquareMerchant's own docblock.
+     * Every other gateway still resolves through the shared Merchant
+     * table, unchanged.
+     */
+    private function resolveProviderReference(int $invId, string $driver): ?string
+    {
+        if (strtolower($driver) === 'square') {
+            return $this->squareMerchantRepository
+                ->repoSquareMerchantLatestSuccessfulByInvId($invId)
+                ?->getPaymentId();
+        }
+
+        return $this->merchantRepository
+            ->repoMerchantLatestSuccessfulByInvIdAndDriver($invId, $driver)
+            ?->getProviderReference();
     }
 
     private function handleRefundResult(RefundContext $context, PaymentRefundResult $result): void
