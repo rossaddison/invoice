@@ -226,19 +226,19 @@ echo H::openTag('div', $row); //1
     echo H::closeTag('div'); //5
 
     } else {
-    if ($setting['type'] == 'password') {
-    $inputValue = (string) (strlen((string)
-     $body[$pfxGateway . $d . '_' .
-     $key . ']']) > 0
-     ? $s->decode((string)
-     $body[$pfxGateway . $d . '_' .
-     $key . ']'])
-     : '');
-     } else {
-     $inputValue = (string)
+    // Password fields never need decode() here: $body is this request's
+    // own freshly-submitted plaintext (what the browser just posted),
+    // never previously-encrypted data — on a fresh GET, $body is empty
+    // (the field starts blank), so decode() would only ever be reached
+    // on an actual submission, where it's always raw plaintext the user
+    // just typed. Calling decode() on it is a category error, not a
+    // meaningful round-trip — it either coincidentally happens to be
+    // valid ciphertext-shaped input (rare, wrong result) or throws
+    // CryptorException, exactly as reported. Storage-side encoding
+    // still happens correctly and separately in saveOneSetting().
+    $inputValue = (string)
      $body[$pfxGateway . $d . '_' .
      $key . ']'];
-     }
 
      echo H::openTag('div', $formGroup); //6
      echo H::openTag('label', [
