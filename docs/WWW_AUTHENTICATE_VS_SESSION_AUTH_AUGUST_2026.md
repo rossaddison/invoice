@@ -110,3 +110,208 @@ standard machine-readable retry instruction back. Until that day, the
 mechanism has nothing to do here, which is exactly why removing
 `Authentication::class` from `RoutePermission::invoiceGroup()` was the
 correct fix rather than trying to configure it.
+
+## Translations
+
+AI-assisted translations, not reviewed by a native speaker — corrections
+welcome via PR. Chosen deliberately to balance `yiisoft/auth`'s own
+maintainer base: Persian for Yii's historically large Iranian developer
+community, alongside Russian (which samdark and vjik, this doc's intended
+upstream audience, already read natively); Portuguese for Brazil, whose
+mandatory e-invoicing (NFe) regime is years ahead of the UK's own
+still-pending 2029 mandate — the exact problem domain this app exists for.
+
+<details>
+<summary>🇮🇷 فارسی (Persian)</summary>
+
+<div dir="rtl">
+
+### پیش‌زمینه
+
+این متن هنگام بررسی رفع خرابی تزریق وابستگی (DI) در Authentication و
+مطالعه‌ی کار فعال جداسازی رابط‌ها (interface segregation) در
+`yiisoft/auth` (ایشو #۱۱۳، PR #۱۱۵، PR #۱۲۵) نوشته شده است. خطایی که این
+برنامه واقعاً با آن مواجه شد از نظر فنی درست است، اما گمراه‌کننده است:
+جمله‌ی راهکار پیشنهادی خودِ آن می‌گوید بررسی کنید که کلاس `Authentication`
+«وجود دارد و به‌طور خودکار بارگذاری می‌شود» (autoloadable)، در حالی که این
+هرگز مشکل نبوده است. علت واقعی یک وابستگی عمیق‌تر است (رابط
+`AuthenticatorInterface` هیچ پیاده‌سازی متصلی ندارد)، و پیام هرگز این را
+نمی‌گوید، و هیچ نمونه‌ای برای رفع آن ارائه نمی‌دهد.
+
+### پیام پیشنهادی جایگزین
+
+این پیام، اتصال واقعاً گمشده را با نام واقعی رابط آن مشخص می‌کند، یک
+راه‌حل یک‌خطی آماده برای کپی ارائه می‌دهد، و — بخشی که پیام فعلی نمی‌تواند
+ارائه دهد چون از نیت فراخواننده اطلاعی ندارد — جایگزین به همان اندازه
+معتبر را نام می‌برد: اصلاً میان‌افزار (middleware) را اعمال نکنید، که در
+نهایت همان راه‌حلی بود که در این برنامه به کار رفت.
+
+### سردرگمی زیربنایی، به‌زبان ساده
+
+دلیل عمیق‌تر این سردرگمی، متن یک پیام خطا نیست — بلکه این است که
+«Authentication» در `yiisoft/auth` و ورود مبتنی بر نشست (session) در
+`yiisoft/user`، دو مسئله‌ی کاملاً متفاوت را حل می‌کنند که تصادفاً نامی
+مشترک دارند. به‌محض این‌که این تفاوت روشن شود، خطا (و راه‌حل آن) کاملاً
+بدیهی می‌شود.
+
+**چیستی**
+
+ورود مبتنی بر نشست مانند دستبند یک جشنواره است. شما یک‌بار می‌آیید، کسی
+در دروازه هویت شما را بررسی می‌کند و یک دستبند به شما می‌بندد (این همان
+«ورود به سیستم» است — دستبند همان کوکی است). پس از آن، هر بار که به سمت
+هر سِن می‌روید، نگهبان فقط نگاهی به مچ دست شما می‌اندازد — بدون مدرک،
+بدون سؤال. اگر دستبند نداشته باشید، نگهبان همان‌جا از شما بازجویی
+نمی‌کند؛ او شما را به غرفه‌ی ثبت‌نام برمی‌گرداند (یعنی هدایت مجدد به یک
+صفحه‌ی ورود).
+
+احراز هویت به سبک چالش HTTP (سرآیند `WWW-Authenticate`، روش‌های
+Basic/Bearer) مانند نگهبانی است که اصلاً دستبند نمی‌دهد. در هر دری، هر
+بار، باید همان‌جا مدرک نشان دهید. هیچ غرفه‌ی ثبت‌نامی برای فرستادن شما
+وجود ندارد — نگهبان فقط همان‌جا قانون دقیق را اعلام می‌کند: «من فقط
+پاسپورت یا گواهی‌نامه‌ی رانندگی قبول می‌کنم.» همان جمله — یعنی فهرست دقیق
+فرمت‌های مدرکی که او قبول می‌کند — دقیقاً همان چیزی است که سرآیند
+`WWW-Authenticate` است. سپس شما همان مدرک دقیق را در تلاش بعدی خود ارائه
+می‌دهید.
+
+**چرایی**
+
+ورود مبتنی بر نشست به این دلیل وجود دارد که یک انسان که پشت مرورگر
+نشسته و کلیک می‌کند، نمی‌خواهد در هر کلیک دوباره رمز عبور را تایپ کند.
+دستبند برای مدتی او را به یاد می‌آورد. وقتی دستبند ندارد، راه‌حل منطقی
+یک اقدام انسان‌دوستانه است: او را به میزی با یک فرم هدایت کنید.
+
+احراز هویت به سبک چالش HTTP وجود دارد چون «بازدیدکننده» یک انسان با دست
+برای پرکردن فرم نیست — بلکه یک برنامه است: یک اسکریپت، سرور شرکتی دیگر،
+یا برنامه‌ی موبایلی که مستقیماً با یک API صحبت می‌کند. یک برنامه
+نمی‌تواند خودش را به صفحه‌ی ورود ببرد و با ماوس کلیک کند. آن فقط به یک
+دستور ساده و قابل‌خواندن توسط ماشین نیاز دارد — «یک توکن Bearer پیوست
+کن» — تا بتواند دقیقاً همان درخواست را به‌درستی دوباره امتحان کند،
+بدون این‌که هیچ انسانی در هیچ‌کجای این فرایند دخیل باشد.
+
+**چه زمانی**
+
+یک سؤال بپرسید: آیا یک انسان در مرورگر بین صفحات کلیک می‌کند، یا یک
+برنامه یک درخواست مستقل و یک‌باره ارسال می‌کند؟
+
+- انسان در مرورگر، نشستِ چندصفحه‌ای ← مبتنی بر نشست. این دقیقاً همان
+  چیزی است که امروز در تمام صفحات این برنامه، به‌درستی، اتفاق می‌افتد.
+- برنامه، یک درخواست یک‌باره، بدون مرورگر ← سبک چالش HTTP. این برنامه در
+  حال حاضر دقیقاً یک نقطه‌پایانی (endpoint) با این شکل دارد: محرک
+  زمان‌بندی‌شده‌ی فاکتورهای تکرارشونده (`InvRecurringController::cron()`)
+  — یک اسکریپت (`curl` از یک زمان‌بند cron) که یک‌بار یک URL را فراخوانی
+  می‌کند، بدون انسان، بدون مرورگر. این بخش در حال حاضر برای شکل خودش کار
+  اشتباهی انجام می‌دهد: به‌جای الگوی «مدرک به‌همراه درخواست» که احراز
+  هویت به سبک چالش برای آن ساخته شده، یک رمز مخفی که در رشته‌ی پرسمان URL
+  چسبانده شده را بررسی می‌کند.
+
+محرکِ نیاز واقعی این برنامه به `WWW-Authenticate` این نیست که
+«`yiisoft/auth` نصب شده است» — بلکه روزی است که این برنامه ویژگی‌ای پیدا
+کند که در آن یک برنامه، نه یک انسان، مستقیماً با آن صحبت می‌کند و انتظار
+یک دستور استاندارد و قابل‌خواندن توسط ماشین برای تلاش مجدد دارد. تا آن
+روز، این مکانیزم اینجا کاری برای انجام‌دادن ندارد، و دقیقاً به همین دلیل
+حذف `Authentication::class` از `RoutePermission::invoiceGroup()` راه‌حل
+درست بود، نه تلاش برای پیکربندی آن.
+
+</div>
+
+</details>
+
+<details>
+<summary>🇵🇹 Português (Portuguese)</summary>
+
+### Contexto
+
+Escrito durante a investigação da correção do crash de DI do
+Authentication e a leitura do trabalho ativo de segregação de interfaces
+do `yiisoft/auth` (issue #113, PR #115, PR #125). A exceção que esta
+aplicação realmente encontrou é tecnicamente correta, mas ativamente
+enganosa: sua própria frase de correção diz para verificar se a classe
+`Authentication` "existe e pode ser carregada automaticamente"
+(autoloadable), o que nunca foi o problema. A causa real está uma
+dependência mais abaixo (a interface `AuthenticatorInterface` não tem
+implementação vinculada), e a mensagem nunca diz isso, nem oferece um
+exemplo de correção.
+
+### Mensagem de substituição proposta
+
+Isso nomeia a vinculação realmente ausente pelo seu nome real de
+interface, oferece uma correção de uma linha pronta para copiar e colar
+e — a parte que a mensagem atual não pode oferecer porque não conhece a
+intenção de quem a chamou — indica a alternativa igualmente válida:
+simplesmente não aplicar o middleware, que foi exatamente a correção
+final desta aplicação.
+
+### A confusão de fundo, explicada de forma simples
+
+O motivo mais profundo pelo qual isso confunde as pessoas não é a
+redação de uma única exceção — é que o "Authentication" do
+`yiisoft/auth` e o login baseado em sessão do `yiisoft/user` resolvem
+dois problemas genuinamente diferentes que compartilham o mesmo nome.
+Assim que a diferença fica clara, a exceção (e a correção) se tornam
+óbvias.
+
+**O quê**
+
+O login baseado em sessão é como uma pulseira de festival. Você chega
+uma vez, alguém verifica sua identidade no portão e coloca uma pulseira
+em você (isso é "fazer login" — a pulseira é um cookie). Depois disso,
+toda vez que você se aproxima de qualquer palco, o segurança apenas olha
+para o seu pulso — sem identidade, sem perguntas. Se você não estiver
+usando uma, o segurança não te interroga ali mesmo; ele te encaminha de
+volta ao balcão de check-in (um redirecionamento para uma página de
+login).
+
+A autenticação no estilo de desafio HTTP (`WWW-Authenticate`,
+Basic/Bearer) é como um segurança sem pulseiras. Em cada porta, todas as
+vezes, você mostra sua identidade ali mesmo. Não há balcão de check-in
+para onde te encaminhar — o segurança apenas declara a regra exata na
+hora: "Eu só aceito passaporte ou carteira de motorista." Essa frase — a
+lista exata de formatos de identidade que ele aceitará — é literalmente
+o que é o cabeçalho `WWW-Authenticate`. Você então entrega essa
+identidade exata na sua próxima tentativa.
+
+**Por quê**
+
+O login baseado em sessão existe porque um humano sentado em um
+navegador, clicando por aí, não quer digitar a senha novamente a cada
+clique. Uma pulseira o lembra por um tempo. Quando ele não está usando
+uma, a solução sensata é uma ação amigável para humanos: encaminhá-lo a
+um balcão com um formulário.
+
+A autenticação no estilo de desafio HTTP existe porque o "visitante" não
+é um humano com mãos para preencher um formulário — é um programa: um
+script, o servidor de outra empresa, um aplicativo de celular falando
+diretamente com uma API. Um programa não pode se encaminhar sozinho a
+uma página de login e clicar com o mouse. Ele só precisa de uma
+instrução simples e legível por máquina — "anexe um token Bearer" — para
+poder repetir exatamente a mesma requisição corretamente, sem nenhum
+humano envolvido em lugar nenhum.
+
+**Quando**
+
+Faça uma pergunta: é um humano clicando em páginas em um navegador, ou é
+um programa fazendo uma única requisição independente?
+
+- Humano em um navegador, sessão de múltiplas páginas → baseado em
+  sessão. É o que acontece em cada página desta aplicação hoje,
+  corretamente.
+- Programa, requisição única, sem navegador envolvido → estilo de
+  desafio HTTP. Esta aplicação tem exatamente um endpoint com essa forma
+  agora: o gatilho de cron de faturas recorrentes
+  (`InvRecurringController::cron()`) — um script (`curl` a partir de um
+  agendador cron) acessando uma URL uma única vez, sem humano, sem
+  navegador. Atualmente ele faz a coisa errada para a sua própria forma:
+  verifica um segredo colado na query string da URL, em vez do padrão de
+  identidade-na-requisição para o qual a autenticação no estilo de
+  desafio foi criada.
+
+O gatilho para esta aplicação realmente precisar do `WWW-Authenticate`
+não é "o `yiisoft/auth` está instalado" — é o dia em que esta aplicação
+ganhar qualquer funcionalidade em que um programa, não uma pessoa, fale
+diretamente com ela e espere de volta uma instrução padrão e legível por
+máquina para repetir a tentativa. Até esse dia, o mecanismo não tem nada
+a fazer aqui, e é exatamente por isso que remover `Authentication::class`
+de `RoutePermission::invoiceGroup()` foi a correção correta, em vez de
+tentar configurá-lo.
+
+</details>
