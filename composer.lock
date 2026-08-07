@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3619ad2af7fe29e269df0c9a5a170223",
+    "content-hash": "67cc81677ea97b3f6211c2a51556ce31",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -3401,16 +3401,16 @@
         },
         {
             "name": "google/cloud-translate",
-            "version": "v2.3.1",
+            "version": "v2.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-translate.git",
-                "reference": "4ccfb8fe24a6efa4472e619360e15eeb60f19f1b"
+                "reference": "6ba72471d7b68043c89938b484d0ee0e74520885"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-translate/zipball/4ccfb8fe24a6efa4472e619360e15eeb60f19f1b",
-                "reference": "4ccfb8fe24a6efa4472e619360e15eeb60f19f1b",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-translate/zipball/6ba72471d7b68043c89938b484d0ee0e74520885",
+                "reference": "6ba72471d7b68043c89938b484d0ee0e74520885",
                 "shasum": ""
             },
             "require": {
@@ -3424,7 +3424,7 @@
                 "phpdocumentor/reflection-docblock": "^5.3.3||^6.0",
                 "phpspec/prophecy-phpunit": "^2.0",
                 "phpunit/phpunit": "^9.0",
-                "squizlabs/php_codesniffer": "2.*"
+                "squizlabs/php_codesniffer": "3.*"
             },
             "suggest": {
                 "ext-grpc": "The gRPC extension enables use of the performant gRPC transport",
@@ -3451,9 +3451,9 @@
             ],
             "description": "Cloud Translation Client for PHP",
             "support": {
-                "source": "https://github.com/googleapis/google-cloud-php-translate/tree/v2.3.1"
+                "source": "https://github.com/googleapis/google-cloud-php-translate/tree/v2.3.2"
             },
-            "time": "2026-06-17T23:07:32+00:00"
+            "time": "2026-08-07T09:39:23+00:00"
         },
         {
             "name": "google/common-protos",
