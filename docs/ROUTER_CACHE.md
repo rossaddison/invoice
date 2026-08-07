@@ -28,11 +28,18 @@ The dispatch table is a plain PHP array, so loading it from file is a simple
 ### PSR-16 binding (`config/common/di/cache.php`)
 
 ```php
-CacheInterface::class => FileCache::class,
+CacheInterface::class => extension_loaded('apcu') ? ApcuCache::class : FileCache::class,
 ```
 
-`FileCache` writes to `@runtime/cache` (resolved to `runtime/cache/` from the
-project root) using the vendor default from `yiisoft/cache-file`.
+**As of July 2026 this is conditional, not always `FileCache`.** Wherever the
+`apcu` extension is loaded — which it is on this project's documented
+Alpine setup and locally on WAMP — the binding resolves to `ApcuCache`
+instead, and the dispatch table lives in shared memory, not
+`runtime/cache/routes-cache` on disk. See
+[YII_ENV_ROUTE_CACHE_AND_DEPLOY_JULY_2026.md](YII_ENV_ROUTE_CACHE_AND_DEPLOY_JULY_2026.md)
+for the full detail — that doc is the authoritative one on this mechanism;
+the rest of this page still describes the on-disk `FileCache` behavior,
+which only applies when `apcu` isn't loaded.
 
 ### UrlMatcher factory (`vendor/yiisoft/router-fastroute/config/di-web.php`)
 
@@ -100,20 +107,27 @@ and in `autoload.php` / `src/Auth/Trait/OAuth2` for other environment checks.
 
 ## Deployment rule
 
-Whenever routes change on a production server the stale cache file must be
+Whenever routes change on a production server the stale cache must be
 cleared before the next request, otherwise new or modified routes are invisible
-to the dispatcher.
+to the dispatcher. **Which action actually clears it depends on the backend
+(above):**
 
-```bash
-# Clear only the router cache
-rm runtime/cache/routes-cache*
+- **`FileCache`** (no `apcu` extension loaded): delete the file.
+  ```bash
+  rm runtime/cache/routes-cache*
+  # or wipe the entire runtime cache (also clears other stale data)
+  rm -rf runtime/cache/*
+  ```
+- **`ApcuCache`** (the normal case on this project's production/Alpine
+  setup): there is no file to delete — `routes-cache` lives in the web
+  server's own APCu shared-memory segment. **Restart the web server**
+  (`rc-service apache2 restart` on Alpine) to tear it down; `php yii
+  cache/clear` runs on the CLI, which APCu gives a completely separate
+  memory pool from Apache/PHP-FPM's, so it cannot reach the cache the site
+  is actually serving from.
 
-# Or wipe the entire runtime cache (also clears other stale data)
-rm -rf runtime/cache/*
-```
-
-Add this as a step in your deploy script **before** restarting PHP-FPM /
-Apache so the first real request after deploy rebuilds a fresh dispatch table.
+Add whichever applies as a step in your deploy script so the first real
+request after deploy rebuilds a fresh dispatch table.
 
 ### Symptom when cache is stale
 
@@ -122,11 +136,22 @@ even though `git pull` has run and the PHP files are on disk.  The browser
 console shows the full URL with correct path and query string, but the server
 finds no matching route.
 
-**Real example (June 2026):** after adding `inv/batchEmailPreview` and
-`inv/batchEmail`, every fetch to those endpoints returned 404 on production
-while localhost (which runs with `YII_ENV=dev` / cache disabled) worked
-perfectly.  Clearing `runtime/cache/*` on the production server fixed it
-immediately with no other changes required.
+**Real example (June 2026, `FileCache` era):** after adding
+`inv/batchEmailPreview` and `inv/batchEmail`, every fetch to those endpoints
+returned 404 on production while localhost (which runs with `YII_ENV=dev` /
+cache disabled) worked perfectly.  Clearing `runtime/cache/*` on the
+production server fixed it immediately with no other changes required.
+
+**Don't assume every 404 on a payment/gateway route is this cache, though**
+(real example, August 2026): `squareInForm` 404'd even after a full Apache
+restart. The actual cause was unrelated to routing entirely —
+`PaymentGatewayGuardTrait::requireGatewayConfigured()` deliberately returns
+a 404 (with a flash message) whenever a gateway's `isConfigured()` check
+fails, e.g. a missing `locationId` for Square. Route caching only explains a
+404 for a route that doesn't resolve *at all*; a route that resolves fine
+but the controller itself chooses to 404 is a different failure mode with
+the same symptom. Check `runtime/logs/*.log` for a flash-message clue
+before assuming cache.
 
 ---
 
@@ -135,9 +160,16 @@ immediately with no other changes required.
 To verify the cache works without deploying:
 
 1. Temporarily set `YII_ENV=prod` in `.env`
-2. Make one HTTP request — check `runtime/cache/` for a `routes-cache` file
+2. Make one HTTP request
 3. Subsequent requests skip compilation
-4. Revert to `YII_ENV=dev` and delete `runtime/cache/routes-cache*` when done
+4. Revert to `YII_ENV=dev` when done
+
+Where to look for step 2 depends on the backend (above): if `apcu` isn't
+loaded on your local machine, check `runtime/cache/` for a `routes-cache`
+file and delete it in step 4. If `apcu` **is** loaded — true on this
+project's documented WAMP setup — there's no file; the cache lives in PHP's
+local APCu memory instead, and restarting your local web server (or PHP
+process) clears it in step 4, same as production.
 
 ---
 
