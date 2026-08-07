@@ -126,7 +126,12 @@ be updated: swap the `use` import, replace positional-id constructor args with
 Every test marker other than `.` (pass) is a failure:
 - `S` skipped, `I` incomplete, `R` risky, `D` deprecation, `N` notice, `W` warning
 - Never use `markTestSkipped()` as a workaround — mock the dependency instead
-- PHPUnit notices from Cycle ORM `createMock()` are known/acceptable (pre-existing pattern)
+- A `createMock()` used purely as a stub (configured with `willReturn()`/`willReturnMap()`
+  but never asserted with `expects()`) triggers PHPUnit 13's stub-without-expectations
+  notice — resolve with `#[AllowMockObjectsWithoutExpectations]` (class-level when every
+  method in the file is affected, otherwise per-method), not by leaving the notice in
+  place. As of August 2026 the suite is notice-free (`OK (3824 tests, ...)`, zero `N`
+  markers) — do not reintroduce this without fixing it the same way.
 
 ---
 
