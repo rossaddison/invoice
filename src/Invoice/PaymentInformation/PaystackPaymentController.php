@@ -83,28 +83,11 @@ final class PaystackPaymentController
      */
     public function paystackInForm(CurrentRoute $currentRoute): Response
     {
-        $invoice = $this->loadInvoice($currentRoute);
-        if ($invoice instanceof Response) {
-            return $invoice;
+        $resolved = $this->resolveConfiguredInvoiceWithBalanceAndEmail($currentRoute);
+        if ($resolved instanceof Response) {
+            return $resolved;
         }
-        if (!$this->paystackPaymentService->isConfigured()) {
-            $this->flashMessage('warning', 'Paystack payment gateway is not properly configured.');
-            return $this->webService->getNotFoundResponse();
-        }
-
-        /** @var InvAmount $invoiceAmountRecord */
-        $invoiceAmountRecord = $this->iaR->repoInvquery($invoice->reqId());
-        $balance = $invoiceAmountRecord->getBalance() ?? 0.00;
-        if ($balance <= 0.00) {
-            $this->flashMessage('warning', $this->translator->translate('already.paid'));
-            return $this->webService->getNotFoundResponse();
-        }
-
-        $email = $invoice->getClient()?->getClientEmail() ?? '';
-        if ($email === '') {
-            $this->flashMessage('warning', 'Paystack requires a client email address on file — please add one before paying online.');
-            return $this->webService->getNotFoundResponse();
-        }
+        ['invoice' => $invoice, 'balance' => $balance, 'email' => $email] = $resolved;
 
         $urlKey = $invoice->getUrlKey();
         $callbackUrl = $this->urlGenerator->generateAbsolute(
@@ -123,6 +106,71 @@ final class PaystackPaymentController
         }
 
         return $this->responseFactory->createResponse(302)->withHeader('Location', $result['authorizationUrl']);
+    }
+
+    /**
+     * Shared load+isConfigured+balance+email guard chain for
+     * paystackInForm() — split across small single-purpose guards so no
+     * method in the chain exceeds php:S1142's 3-returns-per-method limit.
+     *
+     * @return Response|array{invoice: Inv, balance: float, email: string}
+     */
+    private function resolveConfiguredInvoiceWithBalanceAndEmail(CurrentRoute $currentRoute): Response|array
+    {
+        $invoice = $this->loadInvoice($currentRoute);
+        if ($invoice instanceof Response) {
+            return $invoice;
+        }
+
+        $configured = $this->requirePaystackConfigured();
+        if ($configured instanceof Response) {
+            return $configured;
+        }
+
+        return $this->requirePositiveBalanceAndEmail($invoice);
+    }
+
+    private function requirePaystackConfigured(): ?Response
+    {
+        if (!$this->paystackPaymentService->isConfigured()) {
+            $this->flashMessage('warning', 'Paystack payment gateway is not properly configured.');
+            return $this->webService->getNotFoundResponse();
+        }
+        return null;
+    }
+
+    /**
+     * @return Response|array{invoice: Inv, balance: float, email: string}
+     */
+    private function requirePositiveBalanceAndEmail(Inv $invoice): Response|array
+    {
+        $balanceResult = $this->requirePositiveBalance($invoice);
+        if ($balanceResult instanceof Response) {
+            return $balanceResult;
+        }
+
+        $email = $invoice->getClient()?->getClientEmail() ?? '';
+        if ($email === '') {
+            $this->flashMessage('warning', 'Paystack requires a client email address on file — please add one before paying online.');
+            return $this->webService->getNotFoundResponse();
+        }
+
+        return ['invoice' => $invoice, 'balance' => $balanceResult['balance'], 'email' => $email];
+    }
+
+    /**
+     * @return Response|array{invoice: Inv, balance: float}
+     */
+    private function requirePositiveBalance(Inv $invoice): Response|array
+    {
+        /** @var InvAmount $invoiceAmountRecord */
+        $invoiceAmountRecord = $this->iaR->repoInvquery($invoice->reqId());
+        $balance = $invoiceAmountRecord->getBalance() ?? 0.00;
+        if ($balance <= 0.00) {
+            $this->flashMessage('warning', $this->translator->translate('already.paid'));
+            return $this->webService->getNotFoundResponse();
+        }
+        return ['invoice' => $invoice, 'balance' => $balance];
     }
 
     /**

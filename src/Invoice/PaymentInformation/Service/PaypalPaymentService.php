@@ -10,6 +10,7 @@ use App\Invoice\PaymentInformation\PaymentVerificationResult;
 use App\Invoice\Setting\SettingRepository;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -138,26 +139,34 @@ final class PaypalPaymentService implements PaymentGatewayInterface
                 ],
                 'json' => $body,
             ]);
-            /** @var array{id?: string, links?: list<array{rel?: string, href?: string}>} $data */
-            $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
-            $orderId = $data['id'] ?? null;
-            $approveUrl = null;
-            foreach ($data['links'] ?? [] as $link) {
-                if (($link['rel'] ?? '') === 'approve') {
-                    $approveUrl = $link['href'] ?? null;
-                    break;
-                }
-            }
-            if (null === $orderId || null === $approveUrl) {
-                $this->logger->error('PayPal createPayment: response missing id or approve link.');
-                return null;
-            }
-
-            return ['orderId' => $orderId, 'approveUrl' => $approveUrl];
+            return $this->parseCreatePaymentResponse($response);
         } catch (GuzzleException|\JsonException $e) {
             $this->logger->error('PayPal createPayment failed.', ['error' => $e->getMessage()]);
             return null;
         }
+    }
+
+    /**
+     * @return array{orderId: string, approveUrl: string}|null
+     */
+    private function parseCreatePaymentResponse(ResponseInterface $response): ?array
+    {
+        /** @var array{id?: string, links?: list<array{rel?: string, href?: string}>} $data */
+        $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        $orderId = $data['id'] ?? null;
+        $approveUrl = null;
+        foreach ($data['links'] ?? [] as $link) {
+            if (($link['rel'] ?? '') === 'approve') {
+                $approveUrl = $link['href'] ?? null;
+                break;
+            }
+        }
+        if (null === $orderId || null === $approveUrl) {
+            $this->logger->error('PayPal createPayment: response missing id or approve link.');
+            return null;
+        }
+
+        return ['orderId' => $orderId, 'approveUrl' => $approveUrl];
     }
 
     /**
@@ -195,21 +204,29 @@ final class PaypalPaymentService implements PaymentGatewayInterface
                     'http_errors' => false,
                 ],
             );
-            /** @var array{purchase_units?: list<array{payments?: array{captures?: list<array{id?: string, status?: string}>}}>} $data */
-            $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
-            $capture = $data['purchase_units'][0]['payments']['captures'][0] ?? null;
-            $captureId = $capture['id'] ?? null;
-            $status = $capture['status'] ?? null;
-            if (null === $captureId || null === $status) {
-                $this->logger->warning('PayPal captureOrder: response missing capture id or status.', ['order_id' => $orderId]);
-                return null;
-            }
-
-            return ['captureId' => $captureId, 'status' => $status];
+            return $this->parseCaptureOrderResponse($response, $orderId);
         } catch (GuzzleException|\JsonException $e) {
             $this->logger->error('PayPal captureOrder failed.', ['error' => $e->getMessage()]);
             return null;
         }
+    }
+
+    /**
+     * @return array{captureId: string, status: string}|null
+     */
+    private function parseCaptureOrderResponse(ResponseInterface $response, string $orderId): ?array
+    {
+        /** @var array{purchase_units?: list<array{payments?: array{captures?: list<array{id?: string, status?: string}>}}>} $data */
+        $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        $capture = $data['purchase_units'][0]['payments']['captures'][0] ?? null;
+        $captureId = $capture['id'] ?? null;
+        $status = $capture['status'] ?? null;
+        if (null === $captureId || null === $status) {
+            $this->logger->warning('PayPal captureOrder: response missing capture id or status.', ['order_id' => $orderId]);
+            return null;
+        }
+
+        return ['captureId' => $captureId, 'status' => $status];
     }
 
     /**
@@ -269,24 +286,29 @@ final class PaypalPaymentService implements PaymentGatewayInterface
                     'http_errors' => false,
                 ],
             );
-            /** @var array{id?: string, status?: string, name?: string, message?: string} $data */
-            $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
-
-            if (isset($data['name'])) {
-                return new PaymentRefundResult(false, $providerReference, $data['message'] ?? 'PayPal refund request rejected.');
-            }
-
-            $refundId = $data['id'] ?? '';
-            $status = $data['status'] ?? '';
-            return new PaymentRefundResult(
-                in_array($status, ['COMPLETED', 'PENDING'], true),
-                $refundId !== '' ? $refundId : $providerReference,
-                $status,
-            );
+            return $this->parseRefundResponse($response, $providerReference);
         } catch (GuzzleException|\JsonException $e) {
             $this->logger->error('PayPal refund failed.', ['error' => $e->getMessage()]);
             return new PaymentRefundResult(false, $providerReference, $e->getMessage());
         }
+    }
+
+    private function parseRefundResponse(ResponseInterface $response, string $providerReference): PaymentRefundResult
+    {
+        /** @var array{id?: string, status?: string, name?: string, message?: string} $data */
+        $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+
+        if (isset($data['name'])) {
+            return new PaymentRefundResult(false, $providerReference, $data['message'] ?? 'PayPal refund request rejected.');
+        }
+
+        $refundId = $data['id'] ?? '';
+        $status = $data['status'] ?? '';
+        return new PaymentRefundResult(
+            in_array($status, ['COMPLETED', 'PENDING'], true),
+            $refundId !== '' ? $refundId : $providerReference,
+            $status,
+        );
     }
 
     /**
@@ -309,21 +331,16 @@ final class PaypalPaymentService implements PaymentGatewayInterface
         try {
             /** @var mixed $webhookEvent */
             $webhookEvent = json_decode($rawBody, true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException) {
-            return false;
-        }
+            $body = [
+                'transmission_id' => $headers['transmissionId'] ?? '',
+                'transmission_time' => $headers['transmissionTime'] ?? '',
+                'cert_url' => $headers['certUrl'] ?? '',
+                'auth_algo' => $headers['authAlgo'] ?? '',
+                'transmission_sig' => $headers['transmissionSig'] ?? '',
+                'webhook_id' => $webhookId,
+                'webhook_event' => $webhookEvent,
+            ];
 
-        $body = [
-            'transmission_id' => $headers['transmissionId'] ?? '',
-            'transmission_time' => $headers['transmissionTime'] ?? '',
-            'cert_url' => $headers['certUrl'] ?? '',
-            'auth_algo' => $headers['authAlgo'] ?? '',
-            'transmission_sig' => $headers['transmissionSig'] ?? '',
-            'webhook_id' => $webhookId,
-            'webhook_event' => $webhookEvent,
-        ];
-
-        try {
             $response = $this->httpClient->post($this->baseUrl() . '/v1/notifications/verify-webhook-signature', [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $token,

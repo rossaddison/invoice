@@ -88,6 +88,11 @@ final class MollieWebhookHandler
             return $this->factory->createResponse('OK');
         }
 
+        return $this->fetchAndProcessPayment($paymentId);
+    }
+
+    private function fetchAndProcessPayment(string $paymentId): Response
+    {
         try {
             $payment = $this->mollieClient->payments->get($paymentId);
         } catch (MollieException $e) {

@@ -68,6 +68,10 @@ echo new TagHtml()->lang('en'); //0
   // the same way in production, so this deliberately doesn't try to
   // compute a deployment-path prefix that isn't actually configured
   // anywhere.
-  echo Html::script()->url('/homecare-offline-shell.js')->defer(); //2
+  // type="module" (not ->defer()) — this bundle uses top-level await
+  // (typescript:S7785), which requires ES module scope; module scripts
+  // are deferred by the HTML spec on their own, so no separate defer is
+  // needed.
+  echo Html::script()->url('/homecare-offline-shell.js')->type('module'); //2
  echo Html::closeTag('body'); //1
 echo Html::closeTag('html'); //0
