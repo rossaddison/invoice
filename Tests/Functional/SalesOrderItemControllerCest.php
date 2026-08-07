@@ -4,39 +4,41 @@ declare(strict_types=1);
 
 namespace Tests\Functional;
 
+use Codeception\Util\HttpCode;
 use Tests\Support\FunctionalTester;
 
 class SalesOrderItemControllerCest
 {
     /**
      * Unauthenticated GET to the edit route.
-     * The auth middleware issues a 302 before the controller runs;
-     * PhpBrowser follows it automatically, so the edit form is never reached.
+     * AccessChecker::process() (src/Middleware/AccessChecker.php) returns a
+     * straight 403 Forbidden on the same URL when the guest permission check
+     * fails — it never redirects. PhpBrowser therefore stays on the
+     * requested URL; the edit form itself is never rendered.
      */
-    public function testEditUnauthenticatedGetRedirectsAwayFromEditPage(
+    public function testEditUnauthenticatedGetIsForbidden(
         FunctionalTester $tester
     ): void {
-        $tester->wantTo('verify unauthenticated GET is redirected away from the edit page');
+        $tester->wantTo('verify unauthenticated GET to the edit page is refused with 403');
 
         $tester->amOnPage('/invoice/salesorderitem/edit/1');
 
-        $tester->dontSeeCurrentUrlEquals('/invoice/salesorderitem/edit/1');
+        $tester->seeResponseCodeIs(HttpCode::FORBIDDEN);
         $tester->dontSeeInSource('peppol_po_itemid');
     }
 
     /**
-     * Auth fires before item lookup: a non-existent item ID must also redirect
-     * away, not return 404. This confirms the controller body is never reached
-     * for unauthenticated requests regardless of whether the item exists.
+     * Auth fires before item lookup: a non-existent item ID must also get
+     * 403, not 404. This confirms the controller body is never reached for
+     * unauthenticated requests regardless of whether the item exists.
      */
-    public function testEditUnauthenticatedNonExistentItemRedirectsNotNotFound(
+    public function testEditUnauthenticatedNonExistentItemIsForbiddenNotNotFound(
         FunctionalTester $tester
     ): void {
-        $tester->wantTo('verify auth redirect occurs before item lookup for non-existent item');
+        $tester->wantTo('verify auth check occurs before item lookup for non-existent item');
 
         $tester->amOnPage('/invoice/salesorderitem/edit/99999999');
 
-        $tester->dontSeeCurrentUrlEquals('/invoice/salesorderitem/edit/99999999');
-        $tester->dontSeeResponseCodeIs(404);
+        $tester->seeResponseCodeIs(HttpCode::FORBIDDEN);
     }
 }
