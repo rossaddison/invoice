@@ -17,7 +17,7 @@ use Testo\Test;
 #[Test]
 final class GatewayStatusRowTest
 {
-    private function makeRow(?string $expiryDate): GatewayStatusRow
+    private function makeRow(?string $sandboxExpiryDate): GatewayStatusRow
     {
         return new GatewayStatusRow(
             key: 'stripe',
@@ -30,31 +30,31 @@ final class GatewayStatusRowTest
             sandboxStatus: null,
             sandboxLastError: null,
             liveTestedAt: null,
-            expiryDate: $expiryDate,
+            sandboxExpiryDate: $sandboxExpiryDate,
             regions: [],
             notes: null,
         );
     }
 
-    public function isExpiredReturnsFalseWhenNoExpiryDateSet(): void
+    public function isExpiredReturnsFalseWhenNoSandboxExpiryDateSet(): void
     {
         $row = $this->makeRow(null);
         Assert::false($row->isExpired('2026-08-08'));
     }
 
-    public function isExpiredReturnsFalseWhenExpiryDateIsInTheFuture(): void
+    public function isExpiredReturnsFalseWhenSandboxExpiryDateIsInTheFuture(): void
     {
         $row = $this->makeRow('2026-08-09');
         Assert::false($row->isExpired('2026-08-08'));
     }
 
-    public function isExpiredReturnsTrueWhenExpiryDateIsToday(): void
+    public function isExpiredReturnsTrueWhenSandboxExpiryDateIsToday(): void
     {
         $row = $this->makeRow('2026-08-08');
         Assert::true($row->isExpired('2026-08-08'));
     }
 
-    public function isExpiredReturnsTrueWhenExpiryDateIsInThePast(): void
+    public function isExpiredReturnsTrueWhenSandboxExpiryDateIsInThePast(): void
     {
         $row = $this->makeRow('2026-01-01');
         Assert::true($row->isExpired('2026-08-08'));

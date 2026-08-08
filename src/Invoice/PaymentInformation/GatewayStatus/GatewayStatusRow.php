@@ -9,8 +9,9 @@ namespace App\Invoice\PaymentInformation\GatewayStatus;
  * (see docs/GATEWAY_STATUS_PAGE_AUGUST_2026.md): $sdkVersion/$lastUpdated
  * are rewritten only by RebuildGatewayStatusCommand (from composer.lock);
  * $sandboxTestedAt/$sandboxStatus/$sandboxLastError only by
- * CheckGatewaySandboxesCommand; everything else — including $expiryDate —
- * is human-curated and must never be touched by either command.
+ * CheckGatewaySandboxesCommand; everything else — including
+ * $sandboxExpiryDate — is human-curated and must never be touched by
+ * either command.
  */
 final readonly class GatewayStatusRow
 {
@@ -23,14 +24,18 @@ final readonly class GatewayStatusRow
      *   Most gateways need exactly one (an API key/access token); Adyen
      *   needs two (API key + merchant account — paymentMethods() requires
      *   both, see docs/GATEWAY_STATUS_PAGE_AUGUST_2026.md).
-     * @param string|null $expiryDate `Y-m-d`, human-entered — when this
-     *   gateway's *sandbox* credential/account is known to expire (e.g. a
-     *   time-limited test merchant account or API key). Never set
-     *   automatically; left null unless you actually know an expiry date.
-     *   CheckGatewaySandboxesCommand sends a Telegram alert when this date
-     *   has passed — see its own docblock and
+     * @param string|null $sandboxExpiryDate `Y-m-d`, human-entered — when
+     *   this gateway's *sandbox account* is known to expire. Deliberately
+     *   about the account, not the API key/credential itself: most
+     *   gateways' API keys don't expire on a fixed schedule at all (e.g.
+     *   Adyen's stay valid indefinitely until manually rotated, per
+     *   Adyen's own docs — confirmed 2026-08-08) — it's trial/sandbox
+     *   *accounts* that tend to have a real, known expiry date instead.
+     *   Never set automatically; left null unless you actually know a
+     *   date. CheckGatewaySandboxesCommand sends a Telegram alert once
+     *   it's passed — see its own docblock and
      *   docs/GATEWAY_STATUS_PAGE_AUGUST_2026.md. Deliberately scoped to
-     *   sandbox credentials only, not this app's own encrypted production
+     *   sandbox accounts only, not this app's own encrypted production
      *   gateway credentials (Setting table) — a separate trust boundary.
      */
     public function __construct(
@@ -44,7 +49,7 @@ final readonly class GatewayStatusRow
         public ?string $sandboxStatus,
         public ?string $sandboxLastError,
         public ?string $liveTestedAt,
-        public ?string $expiryDate,
+        public ?string $sandboxExpiryDate,
         public array $regions,
         public ?string $notes,
     ) {
@@ -62,7 +67,7 @@ final readonly class GatewayStatusRow
      *     sandbox_status?: string|null,
      *     sandbox_last_error?: string|null,
      *     live_tested_at?: string|null,
-     *     expiry_date?: string|null,
+     *     sandbox_expiry_date?: string|null,
      *     regions?: array<array-key, string>,
      *     notes?: string|null,
      * } $data
@@ -88,7 +93,7 @@ final readonly class GatewayStatusRow
             sandboxStatus: $data['sandbox_status'] ?? null,
             sandboxLastError: $data['sandbox_last_error'] ?? null,
             liveTestedAt: $data['live_tested_at'] ?? null,
-            expiryDate: $data['expiry_date'] ?? null,
+            sandboxExpiryDate: $data['sandbox_expiry_date'] ?? null,
             regions: $regions,
             notes: $data['notes'] ?? null,
         );
@@ -106,7 +111,7 @@ final readonly class GatewayStatusRow
      *     sandbox_status: string|null,
      *     sandbox_last_error: string|null,
      *     live_tested_at: string|null,
-     *     expiry_date: string|null,
+     *     sandbox_expiry_date: string|null,
      *     regions: list<string>,
      *     notes: string|null,
      * }
@@ -131,7 +136,7 @@ final readonly class GatewayStatusRow
             'sandbox_status' => $this->sandboxStatus,
             'sandbox_last_error' => $this->sandboxLastError,
             'live_tested_at' => $this->liveTestedAt,
-            'expiry_date' => $this->expiryDate,
+            'sandbox_expiry_date' => $this->sandboxExpiryDate,
             'regions' => $this->regions,
             'notes' => $this->notes,
         ];
@@ -150,7 +155,7 @@ final readonly class GatewayStatusRow
             $this->sandboxStatus,
             $this->sandboxLastError,
             $this->liveTestedAt,
-            $this->expiryDate,
+            $this->sandboxExpiryDate,
             $this->regions,
             $this->notes,
         );
@@ -169,18 +174,18 @@ final readonly class GatewayStatusRow
             $sandboxStatus,
             $sandboxLastError,
             $this->liveTestedAt,
-            $this->expiryDate,
+            $this->sandboxExpiryDate,
             $this->regions,
             $this->notes,
         );
     }
 
     /**
-     * True once today (`Y-m-d`) is on or after $expiryDate. False when no
-     * expiry date is set at all.
+     * True once today (`Y-m-d`) is on or after $sandboxExpiryDate. False
+     * when no sandbox expiry date is set at all.
      */
     public function isExpired(string $today): bool
     {
-        return $this->expiryDate !== null && $this->expiryDate <= $today;
+        return $this->sandboxExpiryDate !== null && $this->sandboxExpiryDate <= $today;
     }
 }

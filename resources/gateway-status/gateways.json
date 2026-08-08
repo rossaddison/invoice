@@ -12,7 +12,7 @@
             "sandbox_status": "pass",
             "sandbox_last_error": null,
             "live_tested_at": null,
-            "expiry_date": null,
+            "sandbox_expiry_date": null,
             "regions": [
                 "north america",
                 "south america",
@@ -33,7 +33,7 @@
             "sandbox_status": null,
             "sandbox_last_error": null,
             "live_tested_at": null,
-            "expiry_date": null,
+            "sandbox_expiry_date": null,
             "regions": [
                 "north america",
                 "europe",
@@ -53,7 +53,7 @@
             "sandbox_status": "pass",
             "sandbox_last_error": null,
             "live_tested_at": null,
-            "expiry_date": null,
+            "sandbox_expiry_date": null,
             "regions": [
                 "europe"
             ],
@@ -70,7 +70,7 @@
             "sandbox_status": null,
             "sandbox_last_error": null,
             "live_tested_at": null,
-            "expiry_date": null,
+            "sandbox_expiry_date": null,
             "regions": [
                 "north america",
                 "europe",
@@ -92,7 +92,7 @@
             "sandbox_status": "pass",
             "sandbox_last_error": null,
             "live_tested_at": null,
-            "expiry_date": null,
+            "sandbox_expiry_date": null,
             "regions": [
                 "north america",
                 "south america",
@@ -113,7 +113,7 @@
             "sandbox_status": "pass",
             "sandbox_last_error": null,
             "live_tested_at": null,
-            "expiry_date": null,
+            "sandbox_expiry_date": null,
             "regions": [
                 "europe",
                 "north america",
@@ -132,7 +132,7 @@
             "sandbox_status": null,
             "sandbox_last_error": null,
             "live_tested_at": null,
-            "expiry_date": null,
+            "sandbox_expiry_date": null,
             "regions": [
                 "europe"
             ],
@@ -149,7 +149,7 @@
             "sandbox_status": null,
             "sandbox_last_error": null,
             "live_tested_at": null,
-            "expiry_date": null,
+            "sandbox_expiry_date": null,
             "regions": [
                 "europe"
             ],
@@ -166,7 +166,7 @@
             "sandbox_status": "untested",
             "sandbox_last_error": null,
             "live_tested_at": null,
-            "expiry_date": null,
+            "sandbox_expiry_date": null,
             "regions": [
                 "asia",
                 "europe"
@@ -184,7 +184,7 @@
             "sandbox_status": "untested",
             "sandbox_last_error": null,
             "live_tested_at": null,
-            "expiry_date": null,
+            "sandbox_expiry_date": null,
             "regions": [
                 "asia",
                 "europe"
@@ -202,7 +202,7 @@
             "sandbox_status": "untested",
             "sandbox_last_error": null,
             "live_tested_at": null,
-            "expiry_date": null,
+            "sandbox_expiry_date": null,
             "regions": [
                 "africa"
             ],
@@ -219,7 +219,7 @@
             "sandbox_status": "untested",
             "sandbox_last_error": null,
             "live_tested_at": null,
-            "expiry_date": null,
+            "sandbox_expiry_date": null,
             "regions": [
                 "asia"
             ],
@@ -236,7 +236,7 @@
             "sandbox_status": "untested",
             "sandbox_last_error": null,
             "live_tested_at": null,
-            "expiry_date": null,
+            "sandbox_expiry_date": null,
             "regions": [
                 "north america",
                 "south america",
@@ -258,7 +258,7 @@
             "sandbox_status": "pass",
             "sandbox_last_error": null,
             "live_tested_at": null,
-            "expiry_date": null,
+            "sandbox_expiry_date": null,
             "regions": [
                 "north america",
                 "europe",

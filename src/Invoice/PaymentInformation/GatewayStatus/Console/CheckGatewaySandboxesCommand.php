@@ -50,15 +50,17 @@ use Yiisoft\Yii\Console\ExitCode;
  * ships with `sandbox_env_var: null` in gateways.json until a safe call is
  * confirmed for it too — see docs/GATEWAY_STATUS_PAGE_AUGUST_2026.md.
  *
- * Also checks every row's human-entered `expiry_date` (gateways.json —
- * never written by this command, see GatewayStatusRow's own docblock)
- * against today, independent of whether a sandbox check ran for that
- * gateway at all, and sends one Telegram message listing every gateway
- * that's expired (none sent when nothing has). Fires every run for as
- * long as a gateway stays expired — stateless by design, no "already
- * notified" tracking, since re-nagging weekly until someone bumps the
- * date is the point, not a bug. Deliberately scoped to *sandbox*
- * credential expiry only, via its own TELEGRAM_BOT_TOKEN/TELEGRAM_CHAT_ID
+ * Also checks every row's human-entered `sandbox_expiry_date`
+ * (gateways.json — never written by this command, see GatewayStatusRow's
+ * own docblock) against today, independent of whether a sandbox check ran
+ * for that gateway at all, and sends one Telegram message listing every
+ * gateway that's expired (none sent when nothing has). Fires every run
+ * for as long as a gateway stays expired — stateless by design, no
+ * "already notified" tracking, since re-nagging weekly until someone
+ * bumps the date is the point, not a bug. Deliberately scoped to
+ * *sandbox account* expiry only (not the API key/credential itself —
+ * most gateways' keys don't expire on a fixed schedule at all), via its
+ * own TELEGRAM_BOT_TOKEN/TELEGRAM_CHAT_ID
  * GitHub repo secrets — separate from this app's own in-app Telegram bot
  * config (Setting table's telegram_token/telegram_chat_id, see
  * TelegramController), which is a different bot for a different audience
@@ -148,10 +150,10 @@ final class CheckGatewaySandboxesCommand extends Command
         }
 
         $lines = array_map(
-            static fn (GatewayStatusRow $row): string => "• {$row->name}: expired {$row->expiryDate}",
+            static fn (GatewayStatusRow $row): string => "• {$row->name}: expired {$row->sandboxExpiryDate}",
             $expired,
         );
-        $text = "⚠️ Gateway sandbox credential(s) expired:\n" . implode("\n", $lines);
+        $text = "⚠️ Gateway sandbox account(s) expired:\n" . implode("\n", $lines);
 
         try {
             $telegramHelper = new TelegramHelper($botToken, $this->logger);

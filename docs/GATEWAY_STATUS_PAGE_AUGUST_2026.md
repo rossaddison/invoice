@@ -31,7 +31,7 @@ SiteController::gatewayStatus()  →  resources/views/site/gateway-status.php
 |---|---|
 | `sdk_version`, `last_updated` | `gateway-status/rebuild`, from `composer.lock` — `last_updated` only bumps when the resolved version actually changed |
 | `sandbox_tested_at`, `sandbox_status`, `sandbox_last_error` | `gateway-status/check-sandboxes` |
-| `name`, `regions`, `notes`, `live_tested_at`, `sandbox_env_var`, `expiry_date` | Human only — never touched by either command |
+| `name`, `regions`, `notes`, `live_tested_at`, `sandbox_env_var`, `sandbox_expiry_date` | Human only — never touched by either command |
 
 `live_tested_at` is deliberately excluded from all automation. This project's
 own precedent (`docs/PAYMENT_GATEWAY_LIVE_TESTING_JULY_2026.md`) shows live
@@ -490,34 +490,51 @@ this feature otherwise lives in:
   renewal reminder doesn't need same-day catching, and a second scheduled
   workflow is a second thing to maintain for marginal benefit.
 
-### New field: `expiry_date`
+### New field: `sandbox_expiry_date` (renamed from `expiry_date`)
+
+Originally shipped as `expiry_date`, framed around credential/API key
+expiry. Renamed the same day, before any real value was ever set on it,
+once checking Adyen's own docs turned up a real fact worth designing
+around: **API keys generally don't expire on a fixed schedule at all** —
+Adyen's stay valid indefinitely until someone manually regenerates one
+(the only "expiry" involved is a 24-hour grace period the *old* key gets
+after that). What *does* commonly have a real, known expiry is the
+**sandbox/trial account** itself — a different thing entirely. So the
+field is `sandbox_expiry_date` now, and every docblock/comment reflects
+that it's about the account, not the key.
 
 `gateways.json`'s human-curated field set (see the field-ownership table
-above) gained one more: `expiry_date` (`Y-m-d`, nullable, `null` on every
-row by default). Entirely human-entered — set it on a gateway only when
-you actually know its sandbox account/API key has a real expiry, same as
-every other human-only field here. `GatewayStatusRow::isExpired(string
-$today): bool` is the one piece of actual logic (`expiryDate !== null &&
-expiryDate <= $today`) — kept as a small, independently unit-tested pure
-method (`GatewayStatusRowTest`) rather than buried inline in the console
-command, since date-comparison logic is exactly the kind of thing that's
-cheap to get subtly wrong (off-by-one on "today", string vs. `DateTime`
-comparison, etc.).
+above) gained one more: `sandbox_expiry_date` (`Y-m-d`, nullable, `null`
+on every row by default). Entirely human-entered — set it on a gateway
+only when you actually know its sandbox *account* has a real expiry,
+same as every other human-only field here. `GatewayStatusRow::isExpired(
+string $today): bool` is the one piece of actual logic
+(`sandboxExpiryDate !== null && sandboxExpiryDate <= $today`) — kept as a
+small, independently unit-tested pure method (`GatewayStatusRowTest`)
+rather than buried inline in the console command, since date-comparison
+logic is exactly the kind of thing that's cheap to get subtly wrong
+(off-by-one on "today", string vs. `DateTime` comparison, etc.).
 
-The `gateway_status` SQLite table gained the matching `expiry_date`
-column (with its own index, following the same pattern as
-`sandbox_tested_at`/`live_tested_at`) via the usual
+The `gateway_status` SQLite table gained the matching
+`sandbox_expiry_date` column (with its own index, following the same
+pattern as `sandbox_tested_at`/`live_tested_at`) via the usual
 `BUILD_DATABASE=true` + delete `runtime/schema.php` + reload cycle — see
 "Why a second, Cycle-ORM-managed SQLite database" above for why that's a
 whole-app-risk operation to do carefully, not just a `gateway_status`
 one. Verified directly against the real local SQLite file (`PRAGMA
 table_info(gateway_status)`) rather than assumed from the entity
-attribute alone.
+attribute alone. The rename needed a second pass through that same cycle
+— Cycle's `SyncTables` generator adds a differently-named column rather
+than detecting a true rename, so the original `expiry_date` column (and
+its index) was left orphaned after the first sync; confirmed it held
+nothing but `NULL` across every row before dropping both by hand
+(`DROP INDEX` then `ALTER TABLE ... DROP COLUMN`) rather than leaving
+dead schema behind.
 
 Deliberately **not** added to the public `/gateway-status` grid this
 pass — the page already shows enough columns, and nothing in the
-original ask called for public display of credential-expiry metadata.
-Easy to add later if wanted; the data's there.
+original ask called for public display of sandbox-expiry metadata. Easy
+to add later if wanted; the data's there.
 
 ### Telegram notification — from within the app, not the CI workflow
 
@@ -541,18 +558,18 @@ had never wrapped before) but constructs it with credentials from two new,
 separate GitHub repo secrets — `TELEGRAM_BOT_TOKEN`/`TELEGRAM_CHAT_ID` —
 read via `getenv()` exactly like every sandbox credential in this same
 command already is. `CheckGatewaySandboxesCommand::notifyExpiredGateways()`
-runs after the sandbox-ping loop, independent of it (a gateway can have an
-`expiry_date` with no `sandbox_env_var` configured at all, and still get
-alerted): filters every row for `isExpired($today)`, and — only if at
-least one is — sends one Telegram message listing all of them (`"⚠️ Gateway
-sandbox credential(s) expired:\n• Stripe: expired 2026-08-01\n..."`).
+runs after the sandbox-ping loop, independent of it (a gateway can have a
+`sandbox_expiry_date` with no `sandbox_env_var` configured at all, and
+still get alerted): filters every row for `isExpired($today)`, and — only
+if at least one is — sends one Telegram message listing all of them
+(`"⚠️ Gateway sandbox account(s) expired:\n• Stripe: expired 2026-08-01\n..."`).
 
 Design choices worth being explicit about:
 
 - **Stateless, fires every run while expired.** No "already notified"
   tracking — a gateway that stays expired gets re-mentioned every week
-  until someone bumps `expiry_date`. That's the intended behavior (a
-  nag that stops nagging once actually fixed), not a missing feature.
+  until someone bumps `sandbox_expiry_date`. That's the intended behavior
+  (a nag that stops nagging once actually fixed), not a missing feature.
 - **Skips silently, not a failure, when either secret is unset** — same
   incremental-rollout philosophy as every sandbox credential above. The
   two secrets aren't in GitHub yet as of this writing; the command runs
@@ -563,24 +580,27 @@ Design choices worth being explicit about:
 
 ### Verification
 
-Full-project `vendor/bin/psalm --no-cache` clean. Full Testo suite —
+Full-project `vendor/bin/psalm --no-cache` clean, both before and after
+the `expiry_date` → `sandbox_expiry_date` rename. Full Testo suite —
 776/776 passing (772 existing + 4 new `GatewayStatusRowTest` cases
 covering `isExpired()`'s boundary — no date set, future date, exactly
 today, past date — plus one extended assertion in the existing
 `GatewayStatusServiceTest::syncToDatabaseUpdatesExistingEntityWhenOneExists`
-confirming `expiry_date` actually persists through `syncToDatabase()`).
-`Functional SiteControllerCest` — 25/25, confirming the schema change
-didn't disturb the public page. The new `expiry_date` SQLite column was
-verified live against the real local database (not just inferred from the
-entity attribute), using the same `BUILD_DATABASE=true` cycle this
-project always uses for entity changes, then immediately reverted.
+confirming `sandbox_expiry_date` actually persists through
+`syncToDatabase()`). `Functional SiteControllerCest` — 25/25, confirming
+the schema change didn't disturb the public page. The `sandbox_expiry_date`
+SQLite column, and the clean removal of the orphaned `expiry_date` one
+left behind by the rename, were both verified live against the real local
+database (`PRAGMA table_info`, not just inferred from the entity
+attribute), using the same `BUILD_DATABASE=true` cycle this project
+always uses for entity changes, then immediately reverted.
 
 Not verified live end-to-end: the actual Telegram send. `TELEGRAM_BOT_TOKEN`/
 `TELEGRAM_CHAT_ID` aren't configured yet, and no `gateways.json` row has a
-real `expiry_date` set, so `notifyExpiredGateways()`'s message-sending
-branch has never actually executed outside its unit tests. Once both are
-in place, setting one gateway's `expiry_date` to a past date and running
-`php yii gateway-status/check-sandboxes` (or triggering the workflow) is
-the real end-to-end check — same "verify live, not just by reading the
-code" standard this project holds its other Telegram/webhook integrations
-to.
+real `sandbox_expiry_date` set, so `notifyExpiredGateways()`'s
+message-sending branch has never actually executed outside its unit
+tests. Once both are in place, setting one gateway's
+`sandbox_expiry_date` to a past date and running `php yii
+gateway-status/check-sandboxes` (or triggering the workflow) is the real
+end-to-end check — same "verify live, not just by reading the code"
+standard this project holds its other Telegram/webhook integrations to.
