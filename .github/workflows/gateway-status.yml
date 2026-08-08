@@ -16,6 +16,33 @@ jobs:
     name: Check gateway sandboxes
     runs-on: ubuntu-latest
 
+    # Every `php yii ...` call builds the full app DI container, which
+    # eagerly compiles the Cycle ORM schema for ALL registered database
+    # connections (mysql "default" + the separate gateway_status SQLite
+    # one) unless a cached runtime/schema.php is already present --
+    # that cache is gitignored (see runtime/.gitignore) and regenerated
+    # per-environment, so a fresh CI checkout never has one. This holds
+    # even for gateway-status/check-sandboxes and gateway-status/rebuild,
+    # neither of which ever touches the mysql connection themselves --
+    # the schema build happens during container bootstrap, before the
+    # command even runs. A real (empty) MySQL service is the least
+    # surprising fix: it's what a first-ever local install already does
+    # (see config/common/params.php's schema-providers comment), not a
+    # workaround specific to this workflow.
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: yii3_i
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
     steps:
       - name: Checkout
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -26,7 +53,7 @@ jobs:
         uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
         with:
           php-version: '8.4'
-          extensions: fileinfo, pdo, pdo_sqlite, intl, gd, openssl, dom, json, mbstring, curl, uopz, sodium, ctype
+          extensions: fileinfo, pdo, pdo_sqlite, pdo_mysql, intl, gd, openssl, dom, json, mbstring, curl, uopz, sodium, ctype
           coverage: none
 
       # This project's composer.json references several rossaddison/* forks
@@ -48,12 +75,18 @@ jobs:
       # a fresh CI checkout never has one; Tests/bootstrap.php and
       # benchmark.yml's run.php both sidestep this by never requiring the
       # root autoload.php, which is why this is the first workflow to hit
-      # it. .env.example's blank/placeholder values are all safe defaults
-      # here — this command only ever touches the separate SQLite
-      # gateway_status connection (see config/common/params.php), never
-      # the blank MySQL credentials.
+      # it. DB_HOST_IP_ADDRESS is overridden to 127.0.0.1 explicitly --
+      # PDO's MySQL driver treats the default 'localhost' as "connect via
+      # unix socket", which doesn't exist for a service container; only an
+      # explicit IP forces a real TCP connection to the mysql service
+      # above. DB_NAME/DB_USERNAME/DB_PASSWORD are left at their
+      # .env.example defaults (blank -> 'yii3_i'/'root'/null in
+      # config/common/params.php), matching the service's own
+      # MYSQL_DATABASE/empty-password setup.
       - name: Create .env for console bootstrap
-        run: cp .env.example .env
+        run: |
+          cp .env.example .env
+          sed -i 's/^DB_HOST_IP_ADDRESS=.*/DB_HOST_IP_ADDRESS=127.0.0.1/' .env
 
       # Sandbox credentials are intentionally separate GitHub repo secrets
       # from this app's own production gateway credentials (which live
