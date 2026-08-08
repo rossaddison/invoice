@@ -12,6 +12,8 @@ use Yiisoft\Html\Tag\Option;
 * @var array $gateway_currency_codes
 * @var array $gateway_regions
 * @var array $payment_methods
+* @var array<string, string> $gateway_credential_urls
+* @var Yiisoft\Router\FastRoute\UrlGenerator $urlFastRouteGenerator
 */
 
 $row = ['class' => 'row'];
@@ -111,7 +113,27 @@ echo H::openTag('div', $row); //1
   ]);
 
    echo H::openTag('div', $panelHead); //4
-    echo ucwords(str_replace('_', ' ', $driver));
+    // Permalink to this exact gateway's section — deep-links straight
+    // past the tab-switching JS, e.g. for support docs/conversations
+    // ("Settings > Online Payment > Stripe") instead of "scroll down
+    // to find it".
+    echo H::openTag('a', [
+     'href' => $urlFastRouteGenerator->generate('setting/tabIndex') .
+      '#gateway-settings-' . $d,
+     'class' => 'text-decoration-none text-reset',
+    ]);
+     echo ucwords(str_replace('_', ' ', $driver));
+    echo H::closeTag('a');
+    if (isset($gateway_credential_urls[$d]) && $gateway_credential_urls[$d] !== '') {
+    echo H::openTag('a', [
+     'href' => $gateway_credential_urls[$d],
+     'target' => '_blank',
+     'rel' => 'noopener noreferrer',
+     'class' => 'small ms-2',
+    ]);
+     echo $translator->translate('online.payment.get.credentials');
+    echo H::closeTag('a');
+    }
     echo H::openTag('div', $pullRight); //5
      echo H::openTag('div', $noMargin); //6
       $body[$pfxGateway . $d . $sfxEnabled] =

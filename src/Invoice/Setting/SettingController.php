@@ -129,6 +129,7 @@ final class SettingController extends BaseController
         WebViewRenderer $head,
         SettingTabIndexDeps $deps,
         PhpVersionCheckService $phpVersionCheckService,
+        FastRouteGenerator $urlFastRouteGenerator,
         #[Query('active')]
         ?string $active = null,
     ): Response {
@@ -207,6 +208,8 @@ final class SettingController extends BaseController
                 'gateway_regions' => $this->sR->amazonRegions(),
                 'openBankingProviders' => $this->openBankingProviderRegistry->getProviderNames(),
                 'payment_methods' => $deps->pm->findAllPreloaded(),
+                'gateway_credential_urls' => $this->sR->gatewayCredentialUrls(),
+                'urlFastRouteGenerator' => $urlFastRouteGenerator,
             ]),
             'mpdf' => $this->webViewRenderer->renderPartialAsString($p . 'mpdf'),
             'mtd' => $this->webViewRenderer->renderPartialAsString($p . 'making_tax_digital'),

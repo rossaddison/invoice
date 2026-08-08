@@ -37,6 +37,32 @@ trait SettingPaymentTrait
         ];
     }
 
+    /**
+     * Where each gateway's own credentials actually come from — one link
+     * per gateway, to that provider's main developer/API dashboard, shown
+     * next to the gateway's title in Settings > Online Payment. Filled in
+     * one gateway at a time as each is confirmed against a real account
+     * (see docs/GATEWAY_CREDENTIAL_URLS_AUGUST_2026.md); a gateway with no
+     * entry here simply shows no link yet, rather than a guessed one — a
+     * wrong link is worse than no link. Keyed by the same lowercased
+     * driver name activePaymentGateways() uses ($d in the view).
+     */
+    public function gatewayCredentialUrls(): array
+    {
+        return [
+            // No account yet: sign up at https://www.adyen.com/signup first,
+            // then log in and land on this same page.
+            'adyen' => 'https://ca-test.adyen.com/ca/ui/developers/api-credentials/',
+            'gocardless' => 'https://manage-sandbox.gocardless.com/sign-in?redirect=%2Fdevelopers',
+            'mollie' => 'https://my.mollie.com/dashboard/login?lang=en',
+            // Lands on the Applications list — create an application (if
+            // none yet), then click "Manage" on it to reach the actual
+            // Credentials/Locations/Webhooks pages.
+            'square' => 'https://app.squareup.com/dashboard/apps/my-applications',
+            'stripe' => 'https://dashboard.stripe.com',
+        ];
+    }
+
     private function adyenGatewayFields(): array
     {
         return [
