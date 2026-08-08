@@ -16,6 +16,13 @@ final readonly class GatewayStatusRow
 {
     /**
      * @param list<string> $regions
+     * @param list<string> $sandboxEnvVars Names of the GitHub Actions repo
+     *   secrets/environment variables CheckGatewaySandboxesCommand reads for
+     *   this gateway's sandbox check, in the order its own checkGateway()
+     *   case expects them. Empty means no sandbox check is wired up yet.
+     *   Most gateways need exactly one (an API key/access token); Adyen
+     *   needs two (API key + merchant account — paymentMethods() requires
+     *   both, see docs/GATEWAY_STATUS_PAGE_AUGUST_2026.md).
      */
     public function __construct(
         public string $key,
@@ -23,7 +30,7 @@ final readonly class GatewayStatusRow
         public ?string $composerPackage,
         public ?string $sdkVersion,
         public string $lastUpdated,
-        public ?string $sandboxEnvVar,
+        public array $sandboxEnvVars,
         public ?string $sandboxTestedAt,
         public ?string $sandboxStatus,
         public ?string $sandboxLastError,
@@ -40,7 +47,7 @@ final readonly class GatewayStatusRow
      *     composer_package?: string|null,
      *     sdk_version?: string|null,
      *     last_updated?: string,
-     *     sandbox_env_var?: string|null,
+     *     sandbox_env_var?: string|list<string>|null,
      *     sandbox_tested_at?: string|null,
      *     sandbox_status?: string|null,
      *     sandbox_last_error?: string|null,
@@ -52,6 +59,12 @@ final readonly class GatewayStatusRow
     public static function fromArray(array $data): self
     {
         $regions = array_values($data['regions'] ?? []);
+        $rawEnvVar = $data['sandbox_env_var'] ?? null;
+        $sandboxEnvVars = match (true) {
+            $rawEnvVar === null => [],
+            is_array($rawEnvVar) => $rawEnvVar,
+            default => [$rawEnvVar],
+        };
 
         return new self(
             key: $data['key'] ?? '',
@@ -59,7 +72,7 @@ final readonly class GatewayStatusRow
             composerPackage: $data['composer_package'] ?? null,
             sdkVersion: $data['sdk_version'] ?? null,
             lastUpdated: $data['last_updated'] ?? '',
-            sandboxEnvVar: $data['sandbox_env_var'] ?? null,
+            sandboxEnvVars: $sandboxEnvVars,
             sandboxTestedAt: $data['sandbox_tested_at'] ?? null,
             sandboxStatus: $data['sandbox_status'] ?? null,
             sandboxLastError: $data['sandbox_last_error'] ?? null,
@@ -76,7 +89,7 @@ final readonly class GatewayStatusRow
      *     composer_package: string|null,
      *     sdk_version: string|null,
      *     last_updated: string,
-     *     sandbox_env_var: string|null,
+     *     sandbox_env_var: string|list<string>|null,
      *     sandbox_tested_at: string|null,
      *     sandbox_status: string|null,
      *     sandbox_last_error: string|null,
@@ -93,7 +106,14 @@ final readonly class GatewayStatusRow
             'composer_package' => $this->composerPackage,
             'sdk_version' => $this->sdkVersion,
             'last_updated' => $this->lastUpdated,
-            'sandbox_env_var' => $this->sandboxEnvVar,
+            // A single-var gateway keeps the plain-string JSON shape every
+            // existing entry already has (readable, no needless diff); only
+            // a genuinely multi-value gateway (Adyen) serializes as an array.
+            'sandbox_env_var' => match (count($this->sandboxEnvVars)) {
+                0 => null,
+                1 => $this->sandboxEnvVars[0],
+                default => $this->sandboxEnvVars,
+            },
             'sandbox_tested_at' => $this->sandboxTestedAt,
             'sandbox_status' => $this->sandboxStatus,
             'sandbox_last_error' => $this->sandboxLastError,
@@ -111,7 +131,7 @@ final readonly class GatewayStatusRow
             $this->composerPackage,
             $sdkVersion,
             $lastUpdated,
-            $this->sandboxEnvVar,
+            $this->sandboxEnvVars,
             $this->sandboxTestedAt,
             $this->sandboxStatus,
             $this->sandboxLastError,
@@ -129,7 +149,7 @@ final readonly class GatewayStatusRow
             $this->composerPackage,
             $this->sdkVersion,
             $this->lastUpdated,
-            $this->sandboxEnvVar,
+            $this->sandboxEnvVars,
             $sandboxTestedAt,
             $sandboxStatus,
             $sandboxLastError,

@@ -53,6 +53,8 @@ jobs:
           MOLLIE_SANDBOX_API_KEY: ${{ secrets.MOLLIE_SANDBOX_API_KEY }}
           GOCARDLESS_SANDBOX_ACCESS_TOKEN: ${{ secrets.GOCARDLESS_SANDBOX_ACCESS_TOKEN }}
           SQUARE_SANDBOX_ACCESS_TOKEN: ${{ secrets.SQUARE_SANDBOX_ACCESS_TOKEN }}
+          ADYEN_SANDBOX_API_KEY: ${{ secrets.ADYEN_SANDBOX_API_KEY }}
+          ADYEN_SANDBOX_MERCHANT_ACCOUNT: ${{ secrets.ADYEN_SANDBOX_MERCHANT_ACCOUNT }}
         run: php yii gateway-status/check-sandboxes
 
       - name: Rebuild gateway status

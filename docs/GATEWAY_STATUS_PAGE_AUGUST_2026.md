@@ -85,19 +85,34 @@ it's only needed locally when the entity's own schema changes.
 - `php yii gateway-status/rebuild` — resolves each gateway's SDK version from
   `composer.lock`, rewrites `gateways.json`, syncs every row into the
   database.
-- `php yii gateway-status/check-sandboxes` — for each gateway with a
-  `sandbox_env_var` set in `gateways.json`, reads that named environment
-  variable; if unset, skips without failing (this is what makes rollout
-  incremental per gateway/region). If set, makes one confirmed
-  side-effect-free sandbox API call and records the result.
+- `php yii gateway-status/check-sandboxes` — for each gateway with
+  `sandbox_env_var` set in `gateways.json`, reads its named environment
+  variable(s); if any one is unset, skips that gateway entirely without
+  failing (this is what makes rollout incremental per gateway/region). If
+  all are set, makes one confirmed side-effect-free sandbox API call and
+  records the result.
 
-Only **Stripe** (`balance->retrieve()`), **Mollie** (`methods->allEnabled()`),
-and **GoCardless** (`creditors()->list()`) have a confirmed, genuinely
-read-only sandbox call wired up so far — all three verified against this
-app's own vendored SDK source before wiring them in. Braintree, Adyen, and
-Amazon Pay ship with `sandbox_env_var: null` until a safe no-side-effect call
-is confirmed for each (a client-token fetch, for instance, isn't actually
-read-only). Open Banking and BACS aren't classic gateway-SDK pings and stay
+`sandbox_env_var` is normally a single string (one API key/access token),
+but can be a JSON array when a gateway's safe check genuinely needs more
+than one value — currently just **Adyen**, whose `paymentMethods()` call
+requires both an API key and a merchant account name
+(`GatewayStatusRow::$sandboxEnvVars` is always a `list<string>` internally;
+`toArray()` only serializes it as a JSON array when there's more than one,
+keeping every single-value gateway's JSON unchanged). Values are read in
+the order gateways.json lists the env var names and handed to
+`checkGateway()`'s per-gateway case in that same order.
+
+**Stripe** (`balance->retrieve()`), **Mollie** (`methods->allEnabled()`),
+**GoCardless** (`creditors()->list()`), **Square** (`GET /v2/locations`), and
+**Adyen** (`POST /paymentMethods` — a genuine read despite the verb, "Get a
+list of available payment methods" per the vendored SDK's own docblock)
+have a confirmed, genuinely read-only sandbox call wired up — all five
+verified against this app's own vendored SDK source (or, for Square, its
+non-installed-but-read-for-ground-truthing source) before wiring them in.
+Braintree and Amazon Pay still ship with `sandbox_env_var: null` until a
+safe no-side-effect call is confirmed for each (a client-token fetch, for
+instance, isn't actually read-only). Open Banking and BACS aren't classic
+gateway-SDK pings and stay
 `sandbox_env_var: null` permanently.
 
 ## GitHub Actions secrets
@@ -111,10 +126,17 @@ from this app's own production credentials (which live encrypted in the
 - `STRIPE_SANDBOX_SECRET_KEY`
 - `MOLLIE_SANDBOX_API_KEY`
 - `GOCARDLESS_SANDBOX_ACCESS_TOKEN`
+- `SQUARE_SANDBOX_ACCESS_TOKEN`
+- `ADYEN_SANDBOX_API_KEY`
+- `ADYEN_SANDBOX_MERCHANT_ACCOUNT`
 
-None of these secrets exist yet — until they're added in the repo's GitHub
-Settings, the weekly job runs cleanly and simply skips every gateway (no
-failure). Add them whenever real sandbox accounts exist for each.
+None of these secrets exist in the repo's GitHub Settings yet — until each
+is added, the weekly job runs cleanly and simply skips that gateway (no
+failure). Deliberately not something Claude sets directly: these are real
+sandbox credentials, and shouldn't flow through a conversation transcript
+or tool-call history even for a sandbox account — add them yourself via
+GitHub → Settings → Secrets and variables → Actions → New repository
+secret, whenever a real sandbox account exists for each.
 
 ## The public page
 
@@ -312,6 +334,41 @@ translation strings were needed — `already.paid`,
 `online.payment.payment.processing`/`successful`, `payment`, and
 `complete` already existed and cover every message state these two flows
 need.
+
+## Adyen sandbox check — first multi-secret gateway (August 2026)
+
+`CheckGatewaySandboxesCommand` originally assumed one secret per gateway —
+exactly the limitation this doc's own YooKassa section flagged as
+"deliberately deferred, not an oversight." Adyen forced the decision:
+its only genuinely side-effect-free sandbox call, `paymentMethods()`
+(`POST /paymentMethods`, "Get a list of available payment methods" per the
+vendored SDK's own docblock — a real read despite the POST verb), requires
+`merchantAccount` as a hard-required field on the request
+(`Adyen\Model\Checkout\PaymentMethodsRequest` throws if it's null) — an API
+key alone isn't enough, unlike every other gateway checked here.
+
+`GatewayStatusRow::$sandboxEnvVar` (a nullable string) became
+`$sandboxEnvVars` (a `list<string>`), with `fromArray()`/`toArray()`
+staying backward-compatible with plain-string JSON for every gateway that
+only needs one secret — only Adyen's entry actually serializes as a JSON
+array now. `CheckGatewaySandboxesCommand`'s loop reads every named env var
+for a row (skipping — not failing — the whole gateway if any one is
+unset) and hands the resolved list to `checkGateway()`, indexed in the
+same order gateways.json lists the env var names.
+
+This unblocks YooKassa's own multi-secret case (shopId+secretKey) too,
+now that the schema decision it was waiting on is made — not done this
+pass, since no YooKassa sandbox account exists to verify a check against
+(see this doc's own YooKassa section).
+
+Verified: full-project `vendor/bin/psalm --no-cache` — no errors. Full
+Testo suite (772/772) and full PHPUnit suite (3,824/3,824) passing, after
+updating `GatewayStatusServiceTest`'s fixtures to the renamed
+`sandboxEnvVars` constructor parameter. `php yii
+gateway-status/check-sandboxes` run locally with no secrets set — every
+gateway (including Adyen) skips cleanly with a clear per-gateway message,
+confirming the new multi-var loop doesn't fail closed when nothing is
+configured.
 
 ## Verification
 
