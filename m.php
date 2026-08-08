@@ -262,16 +262,6 @@ $CMDS = [
     'ts_lint'           => ['cmd' => 'npm run lint'],
     'ts_format'         => ['cmd' => 'npm run format:check && npm run format'],
 
-    // Angular
-    'ang_install'       => ['cmd' => 'npm install',
-                            'confirm' => 'This may modify TypeScript/ESLint config. Continue?'],
-    'ang_serve'         => ['cmd' => 'start cmd /k npm run ng:serve', 'bg' => true,
-                            'open' => 'http://localhost:4200'],
-    'ang_build'         => ['cmd' => 'npm run ng:build'],
-    'ang_gen'           => ['cmd' => 'npm run angular:generate-component {name}',
-                            'params' => ['name' => 'Component name (e.g. dashboard)']],
-    'ang_lint'          => ['cmd' => 'npm run lint:angular'],
-
     // Testing
     'test_entity'       => ['cmd' => 'php vendor/bin/phpunit Tests/Unit/Invoice/Entity/ --no-coverage --testdox --colors=always'],
     'test_unit'         => ['cmd' => 'php vendor/bin/phpunit Tests/Unit/ --no-coverage --testdox --colors=always'],
@@ -424,16 +414,6 @@ $MENUS = [
             ['Type Check',                         'ts_check'],
             ['Lint',                               'ts_lint'],
             ['Format Check + Fix',                 'ts_format'],
-        ],
-    ],
-    'angular' => [
-        'title' => 'Angular',
-        'items' => [
-            ['Install Dependencies',               'ang_install'],
-            ['Serve Development (opens new window)','ang_serve'],
-            ['Build Production',                   'ang_build'],
-            ['Generate Component',                 'ang_gen'],
-            ['Lint Check',                         'ang_lint'],
         ],
     ],
     'testing' => [
@@ -940,7 +920,6 @@ body.panel-open{padding-bottom:55vh}
     ['composer',   'Composer',     'PHP dependencies'],
     ['node',       'Node',         'npm packages'],
     ['typescript', 'TypeScript',   'TS build tools'],
-    ['angular',    'Angular',      'Angular CLI'],
     ['testing',    'Testing',      'PHPUnit + Codeception + Testo'],
     ['snyk',       'Snyk',         'Security scanning'],
     ['fixer',      'PHP-CS-Fixer', 'Code style fixer'],
@@ -958,7 +937,6 @@ body.panel-open{padding-bottom:55vh}
     'composer'   => 'composer',
     'node'       => 'nodejs',
     'typescript' => 'typescript',
-    'angular'    => 'angular',
     'testing'    => 'testing',
     'snyk'       => 'snyk',
     'fixer'      => 'phpcs-fixer',
