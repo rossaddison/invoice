@@ -251,6 +251,27 @@ echo H::openTag('div', ['class' => 'row']); //1
      echo H::closeTag('div'); //6
 
      echo H::openTag('div', ['class' => 'form-check']); //6
+      $snfgsp = 'settings[no_front_gateway_status_page]';
+      $body[$snfgsp] = $s->getSetting('no_front_gateway_status_page');
+      echo H::openTag('input', [
+       'type' => 'hidden',
+       'name' => $snfgsp,
+       'value' => '0'
+      ]);
+      echo H::openTag('input', [
+       'type' => 'checkbox',
+       'class' => 'form-check-input',
+       'id' => 'no_front_gateway_status_page',
+       'name' => $snfgsp,
+       'value' => '1',
+       'checked' => ($body[$snfgsp] == 1) ? 'checked' : null
+      ]);
+      echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'no_front_gateway_status_page']);
+       echo $translator->translate('menu.gateway.status');
+      echo H::closeTag('label');
+     echo H::closeTag('div'); //6
+
+     echo H::openTag('div', ['class' => 'form-check']); //6
       $snfssp = 'settings[no_front_site_slider_page]';
       $body[$snfssp] = $s->getSetting('no_front_site_slider_page');
       echo H::openTag('input', [

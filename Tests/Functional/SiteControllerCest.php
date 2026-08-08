@@ -51,6 +51,30 @@ class SiteControllerCest
         $tester->seeResponseCodeIs(200);
     }
 
+    /**
+     * Default state (no_front_gateway_status_page unset) — the page loads
+     * and its pagination summary renders with real numbers, not the raw
+     * 'Page {currentPage} of {totalPages}' GridView/BaseListView's own
+     * default summaryTemplate produces when no translator resolves those
+     * placeholders (see GatewayStatusListWidget's own fix for why this
+     * assertion matters, not just that the page loads at all).
+     *
+     * The no_front_gateway_status_page == '1' -> 404 path isn't covered
+     * here — no existing Functional test infrastructure toggles a Setting
+     * row directly, and adding that machinery for one toggle is out of
+     * scope for this pass; verified by code review and Psalm instead,
+     * matching the same 10-times-proven no_front_X_page pattern this one
+     * mirrors exactly (see SiteController::gatewayStatus()).
+     */
+    public function testGatewayStatusPage(FunctionalTester $tester): void
+    {
+        $tester->wantTo('see the gateway status page loads with a real pagination summary');
+        $tester->amOnPage('/gateway-status');
+        $tester->seeResponseCodeIs(200);
+        $tester->dontSeeInSource('{currentPage}');
+        $tester->dontSeeInSource('{totalPages}');
+    }
+
     public function testPrivacyPolicyPage(FunctionalTester $tester): void
     {
         $tester->wantTo('see the privacy policy page loads');

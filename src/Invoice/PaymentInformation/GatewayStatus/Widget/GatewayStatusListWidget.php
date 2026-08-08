@@ -8,6 +8,7 @@ use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
+use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\GridView;
@@ -52,6 +53,7 @@ final class GatewayStatusListWidget extends Widget
     public function __construct(
         private readonly CurrentRoute $currentRoute,
         private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -75,6 +77,23 @@ final class GatewayStatusListWidget extends Widget
         /** @var \Yiisoft\Yii\DataView\Pagination\PaginationWidgetInterface<\Yiisoft\Data\Paginator\PaginatorInterface> $pagination */
         $pagination = OffsetPagination::widget();
 
+        // GridView/BaseListView's own default summaryTemplate ('Page
+        // <b>{currentPage}</b> of <b>{totalPages}</b>') relies on a
+        // translator it builds itself (IdMessageReader + Intl/Simple
+        // MessageFormatter) when none is passed to the constructor — no
+        // other list widget in this app relies on that path (every one
+        // overrides summaryTemplate() with a pre-built string instead, see
+        // e.g. InvsListWidget/FamilyListWidget), and it doesn't actually
+        // substitute the placeholders here, rendering the raw
+        // 'Page {currentPage} of {totalPages}' text verbatim. Matching the
+        // established pattern: compute the summary ourselves with this
+        // app's own translator, which is known to work correctly.
+        $summary = sprintf(
+            $this->translator->translate('gateway.status.page.summary'),
+            $this->paginator->getCurrentPage(),
+            $this->paginator->getTotalPages(),
+        );
+
         $gridView = GridView::widget()
             ->containerAttributes(['id' => self::DOM_ID, 'class' => 'position-relative'])
             ->tableAttributes(['class' => 'table table-striped align-middle'])
@@ -82,6 +101,7 @@ final class GatewayStatusListWidget extends Widget
             ->urlParameterProvider(new UrlParameterProvider($this->currentRoute))
             ->urlCreator(new UrlCreator($this->urlGenerator))
             ->paginationWidget($pagination)
+            ->summaryTemplate($summary)
             ->sortableHeaderPrepend('<div class="float-end text-secondary text-opacity-50">⭥</div>')
             ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
             ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')

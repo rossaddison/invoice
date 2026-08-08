@@ -56,11 +56,13 @@ $divHeight = (string) 250;
                         gateways, HomeCare recurring-invoice automation, and scheduled
                         console commands for backups and recurring billing.
                 <?= Html::closeTag('p'); ?>
+                <?php if ($s->getSetting('no_front_gateway_status_page') == '0') { ?>
                 <?= Html::openTag('p'); ?>
                 <?=  new A()->content(
                     'See our payment gateway coverage ➡️')->href(
                         '/gateway-status')->render(); ?>
                 <?= Html::closeTag('p'); ?>
+                <?php } ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div'); ?>
 <?= Html::openTag('div'); ?>

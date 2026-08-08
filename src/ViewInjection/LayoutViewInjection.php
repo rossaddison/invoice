@@ -136,6 +136,7 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
             'noFrontPageTermsOfService' => $bs['noFrontPageTermsOfService'],
             'noFrontPageContactDetails' => $bs['noFrontPageContactDetails'],
             'noFrontPageContactUs' => $bs['noFrontPageContactUs'],
+            'noFrontPageGatewayStatus' => $bs['noFrontPageGatewayStatus'],
             'isGuest' => $userState['isGuest'],
             'user' => $userState['user'],
             'userLogin' => $userState['userLogin'],
@@ -274,6 +275,7 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
      *     noFrontPageTermsOfService: bool,
      *     noFrontPageContactDetails: bool,
      *     noFrontPageContactUs: bool,
+     *     noFrontPageGatewayStatus: bool,
      * }
      */
     private function resolveBootstrapSettings(): array
@@ -332,6 +334,8 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
                 $s->getSetting('no_front_contact_details_page') == '1',
             'noFrontPageContactUs' =>
                 $s->getSetting('no_front_contact_us_page') == '1',
+            'noFrontPageGatewayStatus' =>
+                $s->getSetting('no_front_gateway_status_page') == '1',
         ];
     }
 

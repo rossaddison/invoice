@@ -385,3 +385,82 @@ middleware's `302` then the controller's own not-found path) rather than a
 `500` from a DI-wiring mistake — the same class of check used throughout
 this session for routes that can't be fully exercised without real gateway
 credentials.
+
+## Pagination summary bug fix + visibility toggle (August 2026)
+
+### The bug
+
+The live page's second row of pagination rendered the literal text
+`Page {currentPage} of {totalPages}` instead of real numbers.
+`GatewayStatusListWidget` never passed a `TranslatorInterface` to
+`GridView::widget()`, so `Yiisoft\Yii\DataView\GridView\BaseListView`
+fell back to a translator it builds for itself internally
+(`createDefaultTranslator()` — `IdMessageReader` + Intl/SimpleMessageFormatter)
+which doesn't correctly substitute the ICU-style `{currentPage}`/`{totalPages}`
+placeholders in this app's setup, even with `intl` loaded. Every other
+`GridView`-based list widget in this app (`InvsListWidget`,
+`ProductsListWidget`, `FamilyListWidget`, `GeneratorListWidget`,
+`SalesOrdersListWidget`, `QuotesListWidget`) sidesteps this entirely by
+overriding `->summaryTemplate(...)` with a pre-built string —
+`GatewayStatusListWidget` (and its stated closest sibling `UsersListWidget`,
+which likely has the identical latent bug, not fixed here — out of scope)
+were the exceptions.
+
+Fixed by giving `GatewayStatusListWidget`'s constructor a `TranslatorInterface`
+and computing the summary itself:
+
+```php
+$summary = sprintf(
+    $this->translator->translate('gateway.status.page.summary'),
+    $this->paginator->getCurrentPage(),
+    $this->paginator->getTotalPages(),
+);
+// ...
+->summaryTemplate($summary)
+```
+
+with `'gateway.status.page.summary' => 'Page %d of %d'` in
+`resources/messages/en/app.php`. `SiteController::gatewayStatus()` now
+takes `TranslatorInterface $translator` and passes it through to the
+widget. Verified live (`Page 1 of 2` now renders) and with a new permanent
+`SiteControllerCest::testGatewayStatusPage()` assertion that
+`{currentPage}`/`{totalPages}` never appear in the page source.
+
+### Visibility toggle — `no_front_gateway_status_page`
+
+A new checkbox was added to Settings → Front Page
+(`partial_settings_front_page.php`), matching the existing
+`no_front_{about,gallery,pricing,...}_page` naming convention exactly.
+
+This one deviates deliberately from what the other ten `no_front_*`
+settings actually do. Those only hide a navbar link
+(`LayoutViewInjection` → `noFrontPage*` booleans → `NavLink::to(...)` in
+`resources/views/layout/templates/soletrader/main.php`) — the underlying
+route still returns `200` even with the link hidden. For gateway-status,
+the setting also 404s the route itself
+(`SiteController::gatewayStatus()` returns
+`$webService->getNotFoundResponse()` when the setting is `'1'`), because
+this page can expose real (if anonymized) information about which
+payment providers are configured, and the intent is to let it be turned
+off outright, not just unlinked.
+
+The homepage's "See our payment gateway coverage" link
+(`resources/views/site/index.php`) was already gated behind this same
+setting. This pass adds the missing second entry point: a `NavLink` in
+`main.php`'s guest navbar (icon `bi-credit-card-2-front-fill`, positioned
+next to Pricing), following the exact 8-argument `NavLink::to(...)` shape
+every sibling link uses — `$isGuest && !$noFrontPageGatewayStatus` for
+visibility, mirrored in the trailing argument. `LayoutViewInjection` gained
+the matching `noFrontPageGatewayStatus` boolean (both in
+`resolveBootstrapSettings()` and the parameters returned to the view).
+
+Verified: full-project `vendor/bin/psalm --no-cache` clean, full Testo
+(772/772) and full PHPUnit (3,824/3,824) passing, `Functional
+SiteControllerCest` (25/25) passing, and the navbar link confirmed live via
+curl against `http://invoice.myhost/` (`<a href="/gateway-status"
+class="nav-link active" ...>`). The disabled (`'1'` → `404`) path isn't
+covered by an automated test — no existing Functional test infrastructure
+toggles a `Setting` row directly, and adding that machinery for one toggle
+was judged out of scope for this pass — verified by code review and Psalm
+instead, matching the same already-proven pattern the other ten
+`no_front_X_page` settings use.

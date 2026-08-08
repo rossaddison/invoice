@@ -63,6 +63,7 @@ use Yiisoft\Yii\AuthClient\Asset\AuthChoiceAsset;
  * @var bool $noFrontPage
  * @var bool $noFrontPagePrivacyPolicy
  * @var bool $noFrontPageTermsOfService
+ * @var bool $noFrontPageGatewayStatus
  * @var bool $stopLoggingIn
  * @var bool $stopSigningUp
  * @var bool $stopHomecareSigningUp
@@ -314,6 +315,19 @@ echo new TagHtml()
             [],
             [],
             $isGuest && !$noFrontPagePricing,
+        ),
+        NavLink::to(
+             new Label()
+            ->attributes(['class' => 'bi bi-credit-card-2-front-fill text-success'])
+            ->content(str_repeat(' ', 1)
+                . $t->translate('menu.gateway.status')),
+            $urlGenerator->generate('site/gateway-status'),
+            $isGuest && !$noFrontPageGatewayStatus,
+            !$isGuest && $noFrontPageGatewayStatus,
+            false,
+            [],
+            [],
+            $isGuest && !$noFrontPageGatewayStatus,
         ),
         NavLink::to(
              new Label()

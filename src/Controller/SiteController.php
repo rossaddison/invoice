@@ -7,6 +7,8 @@ namespace App\Controller;
 use App\Infrastructure\Persistence\GatewayStatus\GatewayStatus;
 use App\Invoice\PaymentInformation\GatewayStatus\GatewayStatusRepository;
 use App\Invoice\PaymentInformation\GatewayStatus\Widget\GatewayStatusListWidget;
+use App\Invoice\Setting\SettingRepository as sR;
+use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Paginator\OffsetPaginator;
@@ -15,6 +17,7 @@ use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Router\UrlGeneratorInterface;
+use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class SiteController
@@ -107,13 +110,29 @@ final class SiteController
      * optional region filter, and pagination are all real — the same
      * GridView mechanics as the app's other list widgets (see
      * GatewayStatusListWidget) — not a bespoke static table.
+     *
+     * Gated by the `no_front_gateway_status_page` setting (Settings >
+     * Front Page), the same "no_front_X_page" naming convention every
+     * other front-page toggle uses — but unlike those, which only hide a
+     * navbar link while the page itself stays reachable
+     * (LayoutViewInjection/main.php), this one actually 404s the route
+     * when set, since the homepage link is the only way to reach this
+     * page (no navbar entry exists for it) and the setting is meant to
+     * let the page be turned off outright, not just unlinked.
      */
     public function gatewayStatus(
         Request $request,
         CurrentRoute $currentRoute,
         UrlGeneratorInterface $urlGenerator,
         GatewayStatusRepository $gatewayStatusRepository,
+        TranslatorInterface $translator,
+        sR $sR,
+        WebControllerService $webService,
     ): Response {
+        if ($sR->getSetting('no_front_gateway_status_page') == '1') {
+            return $webService->getNotFoundResponse();
+        }
+
         $gateways = $gatewayStatusRepository->findAllquery();
 
         $allRegions = [];
@@ -165,7 +184,7 @@ final class SiteController
          */
         $paginator = (new OffsetPaginator(new IterableDataReader($rows)))->withSort($sort);
 
-        $widget = (new GatewayStatusListWidget($currentRoute, $urlGenerator))->withPaginator($paginator);
+        $widget = (new GatewayStatusListWidget($currentRoute, $urlGenerator, $translator))->withPaginator($paginator);
 
         return $this->webViewRenderer->render('gateway-status', [
             'gatewayStatusGrid' => $widget,
