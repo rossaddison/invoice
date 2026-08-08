@@ -209,7 +209,17 @@ final class SettingController extends BaseController
                 'openBankingProviders' => $this->openBankingProviderRegistry->getProviderNames(),
                 'payment_methods' => $deps->pm->findAllPreloaded(),
                 'gateway_credential_urls' => $this->sR->gatewayCredentialUrls(),
-                'urlFastRouteGenerator' => $urlFastRouteGenerator,
+                // The concrete FastRoute UrlGenerator (unlike the
+                // UrlGeneratorInterface binding) has no _language default
+                // set, so it must always be passed explicitly here —
+                // mirrors the Mollie webhookUrl fix (980eb93f): every
+                // route in this app sits under Group::create('/{_language}'),
+                // so omitting it throws RuntimeException at generate()
+                // time, not silently.
+                'tab_index_url' => $urlFastRouteGenerator->generate(
+                    'setting/tabIndex',
+                    ['_language' => (string) $this->session->get('_language')],
+                ),
             ]),
             'mpdf' => $this->webViewRenderer->renderPartialAsString($p . 'mpdf'),
             'mtd' => $this->webViewRenderer->renderPartialAsString($p . 'making_tax_digital'),

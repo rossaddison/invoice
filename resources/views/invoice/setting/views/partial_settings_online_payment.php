@@ -13,7 +13,7 @@ use Yiisoft\Html\Tag\Option;
 * @var array $gateway_regions
 * @var array $payment_methods
 * @var array<string, string> $gateway_credential_urls
-* @var Yiisoft\Router\FastRoute\UrlGenerator $urlFastRouteGenerator
+* @var string $tab_index_url
 */
 
 $row = ['class' => 'row'];
@@ -118,8 +118,7 @@ echo H::openTag('div', $row); //1
     // ("Settings > Online Payment > Stripe") instead of "scroll down
     // to find it".
     echo H::openTag('a', [
-     'href' => $urlFastRouteGenerator->generate('setting/tabIndex') .
-      '#gateway-settings-' . $d,
+     'href' => $tab_index_url . '#gateway-settings-' . $d,
      'class' => 'text-decoration-none text-reset',
     ]);
      echo ucwords(str_replace('_', ' ', $driver));
