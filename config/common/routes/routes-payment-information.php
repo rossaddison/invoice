@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Auth\Permissions;
 use App\Invoice\PaymentInformation\AdyenPaymentController as APICLR;
 use App\Invoice\PaymentInformation\GoCardlessPaymentController as GCPICLR;
+use App\Invoice\PaymentInformation\MercadoPagoPaymentController as MERPICLR;
 use App\Invoice\PaymentInformation\MolliePaymentController as MPICLR;
 use App\Invoice\PaymentInformation\PaymentInformationController as PICLR;
 use App\Invoice\PaymentInformation\PaymentRefundController as PRCLR;
@@ -92,6 +93,18 @@ return [
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([RZPICLR::class, 'razorpayComplete'])
                 ->name('paymentinformation/razorpayComplete'),
+
+            Route::methods([Method::GET, Method::POST],
+                    '/paymentinformation/mercadoPagoInForm/{url_key}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([MERPICLR::class, 'mercadoPagoInForm'])
+                ->name('paymentinformation/mercadoPagoInForm'),
+
+            Route::methods([Method::GET, Method::POST],
+                    '/paymentinformation/mercadoPagoComplete/{url_key}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([MERPICLR::class, 'mercadoPagoComplete'])
+                ->name('paymentinformation/mercadoPagoComplete'),
 
             Route::methods([Method::GET, Method::POST],
                     '/paymentinformation/paypalInForm/{url_key}')
@@ -259,6 +272,15 @@ return [
     Route::methods([Method::POST], '/paymentinformation/razorpayWebhook')
         ->action([RZPICLR::class, 'razorpayWebhook'])
         ->name('paymentinformation/razorpayWebhook'),
+
+    // Not under RoutePermission::invoiceGroup(): Mercado Pago's servers
+    // must be able to POST here with no app session. Secured by
+    // x-signature/x-request-id HMAC verification in the handler, not RBAC —
+    // see MercadoPagoSignatureService::verifyWebhookSignature() and
+    // App\Middleware\CsrfExemptMiddleware.
+    Route::methods([Method::POST], '/paymentinformation/mercadoPagoWebhook')
+        ->action([MERPICLR::class, 'mercadoPagoWebhook'])
+        ->name('paymentinformation/mercadoPagoWebhook'),
 
     // Not under RoutePermission::invoiceGroup(): PayPal's servers must be
     // able to POST here with no app session. Secured by PayPal's own

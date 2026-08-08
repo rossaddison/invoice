@@ -43,12 +43,12 @@ use Yiisoft\Yii\Console\ExitCode;
  * lists the env var names, and handed to each checkGateway() case in that
  * order.
  *
- * Only Stripe, Mollie, GoCardless, Square, and Adyen have a confirmed,
- * genuinely side-effect-free sandbox call wired up so far (a pure read
- * each — account balance, payment methods list, creditors list, business
- * locations list, available payment methods list). Every other gateway
- * ships with `sandbox_env_var: null` in gateways.json until a safe call is
- * confirmed for it too — see docs/GATEWAY_STATUS_PAGE_AUGUST_2026.md.
+ * Only Stripe, Mollie, GoCardless, Square, Adyen, and Mercado Pago have a
+ * confirmed, genuinely side-effect-free sandbox call wired up so far (a
+ * pure read each — account balance, payment methods list, creditors list,
+ * business locations list, available payment methods list). Every other
+ * gateway ships with `sandbox_env_var: null` in gateways.json until a safe
+ * call is confirmed for it too — see docs/GATEWAY_STATUS_PAGE_AUGUST_2026.md.
  *
  * Also checks every row's human-entered `sandbox_expiry_date`
  * (gateways.json — never written by this command, see GatewayStatusRow's
@@ -180,6 +180,7 @@ final class CheckGatewaySandboxesCommand extends Command
                 'gocardless' => $this->checkGoCardless($secrets[0]),
                 'square' => $this->checkSquare($secrets[0]),
                 'adyen' => $this->checkAdyen($secrets[0], $secrets[1]),
+                'mercado_pago' => $this->checkMercadoPago($secrets[0]),
                 default => throw new GatewayStatusException("No sandbox check wired up for gateway '{$key}'."),
             };
             return null;
@@ -252,5 +253,21 @@ final class CheckGatewaySandboxesCommand extends Command
 
         $paymentsApi = new AdyenPaymentsApi($client);
         $paymentsApi->paymentMethods($request);
+    }
+
+    /**
+     * GET /v1/payment_methods is a pure read — "Lists the payment methods
+     * ... available for the country associated with the access token",
+     * confirmed directly against the vendored SDK source
+     * (MercadoPago\Client\PaymentMethod\PaymentMethodClient::list()'s own
+     * docblock) — no charge, no state mutation, same shape as
+     * Mollie/Adyen's own payment-methods-list checks above.
+     */
+    private function checkMercadoPago(string $accessToken): void
+    {
+        $client = new HttpClient();
+        $client->get('https://api.mercadopago.com/v1/payment_methods', [
+            'headers' => ['Authorization' => 'Bearer ' . $accessToken],
+        ]);
     }
 }

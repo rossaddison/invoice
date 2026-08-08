@@ -14,6 +14,7 @@ use App\Invoice\PaymentInformation\Service\AdyenPaymentService;
 use App\Invoice\PaymentInformation\Service\AmazonPayPaymentService;
 use App\Invoice\PaymentInformation\Service\BraintreePaymentService;
 use App\Invoice\PaymentInformation\Service\GoCardlessPaymentService;
+use App\Invoice\PaymentInformation\Service\MercadoPagoPaymentService;
 use App\Invoice\PaymentInformation\Service\MolliePaymentService;
 use App\Invoice\PaymentInformation\Service\PaypalPaymentService;
 use App\Invoice\PaymentInformation\Service\PaystackPaymentService;
@@ -137,6 +138,7 @@ final class PaymentRefundControllerTest extends TestCase
             $this->createStub(YookassaPaymentService::class),
             $this->createStub(PaystackPaymentService::class),
             $this->createStub(RazorpayPaymentService::class),
+            $this->createStub(MercadoPagoPaymentService::class),
             $this->createStub(PaypalPaymentService::class),
             $this->createStub(SquarePaymentService::class),
         );

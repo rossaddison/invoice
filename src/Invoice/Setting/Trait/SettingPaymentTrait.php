@@ -30,6 +30,7 @@ trait SettingPaymentTrait
             'Yookassa' => $this->yookassaGatewayFields(),
             'Paystack' => $this->paystackGatewayFields(),
             'Razorpay' => $this->razorpayGatewayFields(),
+            'Mercado_Pago' => $this->mercadoPagoGatewayFields(),
             'Paypal' => $this->paypalGatewayFields(),
             'Square' => $this->squareGatewayFields(),
             'StoreCove' => $this->storeCoveGatewayFields(),
@@ -335,6 +336,34 @@ trait SettingPaymentTrait
     }
 
     /**
+     * Mercado Pago — a single Access Token (Bearer auth), unlike Razorpay's
+     * key id + secret pair. The webhook secret is a separate credential,
+     * configured in the Mercado Pago dashboard under "Tus Integraciones"
+     * (not the access token) — see MercadoPagoSignatureService's docblock.
+     * Unlike every other gateway here, the webhook *destination* URL itself
+     * doesn't need a dashboard field — MercadoPagoPaymentService sends it
+     * programmatically on every checkout ("notification_url"), computed
+     * from this app's own routing.
+     */
+    private function mercadoPagoGatewayFields(): array
+    {
+        return [
+            'accessToken' => [
+                'type' => 'password',
+                'label' => 'Access Token',
+            ],
+            'webhookSecret' => [
+                'type' => 'password',
+                'label' => 'Webhook Secret Signature',
+            ],
+            'sandbox' => [
+                'type' => 'checkbox',
+                'label' => 'Sandbox (redirect to sandbox_init_point using a test access token)',
+            ],
+        ];
+    }
+
+    /**
      * PayPal — this app's broadest-reach gateway (200+ markets across every
      * populated continent), built against the Orders v2 REST API
      * (`POST /v2/checkout/orders` + `.../capture`), ground-truthed against
@@ -498,6 +527,11 @@ trait SettingPaymentTrait
             // distinguished by which key id/secret (rzp_test_/rzp_live_) is
             // configured.
             'razorpay' => 'https://dashboard.razorpay.com',
+            // Same dashboard for test and live access tokens — Mercado
+            // Pago distinguishes sandbox from production by which
+            // credential is configured, same shape as Paystack/Razorpay,
+            // not a separate environment/base URL.
+            'mercado_pago' => 'https://www.mercadopago.com/developers/panel',
             // Genuinely separate sandbox environment (its own base URL and
             // its own test buyer/business accounts), unlike every other
             // gateway above.
