@@ -41,6 +41,20 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
 
+      # autoload.php (required by the ./yii console entrypoint every `php
+      # yii ...` call below goes through) calls Dotenv::load(), not
+      # safeLoad() — it throws a fatal InvalidPathException if no .env
+      # file exists at all. .env is gitignored (it holds real secrets), so
+      # a fresh CI checkout never has one; Tests/bootstrap.php and
+      # benchmark.yml's run.php both sidestep this by never requiring the
+      # root autoload.php, which is why this is the first workflow to hit
+      # it. .env.example's blank/placeholder values are all safe defaults
+      # here — this command only ever touches the separate SQLite
+      # gateway_status connection (see config/common/params.php), never
+      # the blank MySQL credentials.
+      - name: Create .env for console bootstrap
+        run: cp .env.example .env
+
       # Sandbox credentials are intentionally separate GitHub repo secrets
       # from this app's own production gateway credentials (which live
       # encrypted in the app's MySQL Setting table) — see
