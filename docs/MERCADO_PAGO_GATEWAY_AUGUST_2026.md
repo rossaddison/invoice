@@ -13,10 +13,10 @@ Chile, Colombia, Mexico, Peru, and Uruguay — tied to Mercado Livre, the
 region's largest online marketplace. Chosen over the two other real
 contenders researched (PagSeguro/PagBank — Brazil-only; EBANX — a
 cross-border facilitator worth a second South-America gateway later)
-specifically because its sandbox/test credentials sit behind a regular
-Mercado Pago account, not a registered company — the same wall that's
-blocked Paystack/Razorpay/YooKassa/PayPal Sandbox from ever being
-live-tested in this project.
+on the reasoning that its sandbox/test credentials sit behind a regular
+Mercado Pago account rather than a registered company — **this turned out
+to be wrong in practice, corrected below** (see "Untested against a real
+account").
 
 ## Ground-truthing
 
@@ -137,16 +137,32 @@ as a deliberate non-change this pass, easy to revisit if wanted.
 
 ## ⚠️ Untested against a real account
 
-Mercado Pago's sandbox looking more accessible than Paystack/Razorpay/
-YooKassa's (test credentials behind a regular account, not a registered
-company) is based on Mercado Pago's own developer documentation, **not yet
-independently confirmed against an actual sandbox sign-up this session**.
-This integration is verified only against Testo's mocked HTTP responses
-and the SDK's ground-truthed source, never against a real Mercado Pago
-account. `sandbox_status` on the `/gateway-status` page stays untested
-until `MERCADOPAGO_SANDBOX_ACCESS_TOKEN` is actually configured as a
-GitHub repo secret and the weekly workflow runs — see
-`docs/GATEWAY_STATUS_PAGE_AUGUST_2026.md`.
+This integration's original pitch was that Mercado Pago's sandbox would be
+*more* accessible than Paystack/Razorpay/YooKassa's (a regular account,
+not a registered company) — based only on Mercado Pago's own developer
+docs, not an actual sign-up attempt. **That turned out to be wrong**: in
+practice, creating a Mercado Pago account requires a local tax ID tied to
+residency — a CUIT/CUIL (itself derived from a DNI, Argentina's national
+ID) in Argentina, a CPF in Brazil, and the equivalent in each other
+supported country. Per direct user reports researched afterward, a CUIT
+obtained without a DNI doesn't work for this either — there's no path to
+a Mercado Pago account without being an actual resident/citizen of one of
+its supported countries. This is the same *category* of wall that's
+blocked Paystack/Razorpay/YooKassa/PayPal Sandbox already (all four
+ultimately gate on some form of local registration this project's
+maintainer doesn't have), just a different specific mechanism — a
+personal tax ID tied to residency, not a company registration.
+
+This doesn't make the integration wrong or unusable — anyone running this
+app who *is* a Mercado Pago–eligible resident can configure and use it
+today, same as any other gateway here. It does mean `sandbox_status` on
+the `/gateway-status` page is expected to stay `untested` permanently for
+this maintainer specifically, matching Paystack/Razorpay/YooKassa/PayPal
+Sandbox's own entries — not a temporary state waiting on a GitHub secret
+the way Stripe/Mollie/Adyen/GoCardless/Square's rollout worked. This
+integration is verified only against Testo's mocked HTTP responses and
+the SDK's ground-truthed source, never against a real Mercado Pago
+account.
 
 ## Verification
 
