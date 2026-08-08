@@ -8,8 +8,8 @@
             "sdk_version": "v21.1.1",
             "last_updated": "2026-08-04",
             "sandbox_env_var": "STRIPE_SANDBOX_SECRET_KEY",
-            "sandbox_tested_at": null,
-            "sandbox_status": null,
+            "sandbox_tested_at": "2026-08-08",
+            "sandbox_status": "pass",
             "sandbox_last_error": null,
             "live_tested_at": null,
             "regions": [
@@ -47,8 +47,8 @@
             "sdk_version": "v3.13.1",
             "last_updated": "2026-08-04",
             "sandbox_env_var": "MOLLIE_SANDBOX_API_KEY",
-            "sandbox_tested_at": null,
-            "sandbox_status": null,
+            "sandbox_tested_at": "2026-08-08",
+            "sandbox_status": "pass",
             "sandbox_last_error": null,
             "live_tested_at": null,
             "regions": [
@@ -84,8 +84,8 @@
                 "ADYEN_SANDBOX_API_KEY",
                 "ADYEN_SANDBOX_MERCHANT_ACCOUNT"
             ],
-            "sandbox_tested_at": null,
-            "sandbox_status": "untested",
+            "sandbox_tested_at": "2026-08-08",
+            "sandbox_status": "pass",
             "sandbox_last_error": null,
             "live_tested_at": null,
             "regions": [
@@ -104,8 +104,8 @@
             "sdk_version": "8.0.3",
             "last_updated": "2026-08-04",
             "sandbox_env_var": "GOCARDLESS_SANDBOX_ACCESS_TOKEN",
-            "sandbox_tested_at": null,
-            "sandbox_status": null,
+            "sandbox_tested_at": "2026-08-08",
+            "sandbox_status": "pass",
             "sandbox_last_error": null,
             "live_tested_at": null,
             "regions": [
@@ -241,8 +241,8 @@
             "sdk_version": null,
             "last_updated": "2026-08-06",
             "sandbox_env_var": "SQUARE_SANDBOX_ACCESS_TOKEN",
-            "sandbox_tested_at": null,
-            "sandbox_status": "untested",
+            "sandbox_tested_at": "2026-08-08",
+            "sandbox_status": "pass",
             "sandbox_last_error": null,
             "live_tested_at": null,
             "regions": [
