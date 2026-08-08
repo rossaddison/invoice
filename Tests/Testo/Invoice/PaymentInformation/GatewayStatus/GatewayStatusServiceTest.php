@@ -139,6 +139,7 @@ final class GatewayStatusServiceTest
                 sandboxStatus: null,
                 sandboxLastError: null,
                 liveTestedAt: null,
+                expiryDate: null,
                 regions: ['europe'],
                 notes: null,
             );
@@ -178,6 +179,7 @@ final class GatewayStatusServiceTest
                 sandboxStatus: null,
                 sandboxLastError: null,
                 liveTestedAt: null,
+                expiryDate: null,
                 regions: [],
                 notes: null,
             );
@@ -192,6 +194,7 @@ final class GatewayStatusServiceTest
                 sandboxStatus: null,
                 sandboxLastError: null,
                 liveTestedAt: null,
+                expiryDate: null,
                 regions: [],
                 notes: null,
             );
@@ -230,6 +233,7 @@ final class GatewayStatusServiceTest
                 sandboxStatus: null,
                 sandboxLastError: null,
                 liveTestedAt: null,
+                expiryDate: null,
                 regions: ['europe'],
                 notes: null,
             );
@@ -272,6 +276,7 @@ final class GatewayStatusServiceTest
                 sandboxStatus: null,
                 sandboxLastError: null,
                 liveTestedAt: null,
+                expiryDate: null,
                 regions: ['europe', 'asia'],
                 notes: null,
             );
@@ -312,6 +317,7 @@ final class GatewayStatusServiceTest
                 sandboxStatus: 'pass',
                 sandboxLastError: null,
                 liveTestedAt: null,
+                expiryDate: '2026-12-31',
                 regions: ['europe'],
                 notes: null,
             );
@@ -321,6 +327,7 @@ final class GatewayStatusServiceTest
             Assert::same('v3.13.1', $existing->getSdkVersion());
             Assert::same('pass', $existing->getSandboxStatus());
             Assert::same('europe', $existing->getRegions());
+            Assert::same('2026-12-31', $existing->getExpiryDate());
         } finally {
             $this->removeTempRoot($root);
         }

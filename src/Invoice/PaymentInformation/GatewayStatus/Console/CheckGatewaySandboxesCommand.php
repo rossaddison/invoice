@@ -8,6 +8,7 @@ use Adyen\Client as AdyenClient;
 use Adyen\Environment as AdyenEnvironment;
 use Adyen\Model\Checkout\PaymentMethodsRequest;
 use Adyen\Service\Checkout\PaymentsApi as AdyenPaymentsApi;
+use App\Invoice\Helpers\Telegram\TelegramHelper;
 use App\Invoice\PaymentInformation\GatewayStatus\GatewayStatusException;
 use App\Invoice\PaymentInformation\GatewayStatus\GatewayStatusRow;
 use App\Invoice\PaymentInformation\GatewayStatus\GatewayStatusService;
@@ -17,6 +18,7 @@ use GoCardlessPro\Client as GoCardlessClient;
 use GoCardlessPro\Environment as GoCardlessEnvironment;
 use GuzzleHttp\Client as HttpClient;
 use Mollie\Api\MollieApiClient;
+use Psr\Log\LoggerInterface as Logger;
 use Stripe\StripeClient;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -48,6 +50,25 @@ use Yiisoft\Yii\Console\ExitCode;
  * ships with `sandbox_env_var: null` in gateways.json until a safe call is
  * confirmed for it too — see docs/GATEWAY_STATUS_PAGE_AUGUST_2026.md.
  *
+ * Also checks every row's human-entered `expiry_date` (gateways.json —
+ * never written by this command, see GatewayStatusRow's own docblock)
+ * against today, independent of whether a sandbox check ran for that
+ * gateway at all, and sends one Telegram message listing every gateway
+ * that's expired (none sent when nothing has). Fires every run for as
+ * long as a gateway stays expired — stateless by design, no "already
+ * notified" tracking, since re-nagging weekly until someone bumps the
+ * date is the point, not a bug. Deliberately scoped to *sandbox*
+ * credential expiry only, via its own TELEGRAM_BOT_TOKEN/TELEGRAM_CHAT_ID
+ * GitHub repo secrets — separate from this app's own in-app Telegram bot
+ * config (Setting table's telegram_token/telegram_chat_id, see
+ * TelegramController), which is a different bot for a different audience
+ * (clients, not maintainers) and isn't available to a CI job anyway (no
+ * production database). Skipped silently, not failed, when either secret
+ * is unset — same "roll out incrementally" philosophy as the sandbox
+ * secrets above. A Telegram send failure is logged and swallowed, never
+ * fails the command — an alerting outage shouldn't block the sandbox
+ * check/rebuild/commit this same run still needs to do.
+ *
  * Usage:
  *   php yii gateway-status/check-sandboxes
  */
@@ -57,6 +78,7 @@ final class CheckGatewaySandboxesCommand extends Command
 
     public function __construct(
         private readonly GatewayStatusService $service,
+        private readonly Logger $logger,
     ) {
         parent::__construct();
     }
@@ -103,8 +125,41 @@ final class CheckGatewaySandboxesCommand extends Command
         $this->service->syncToDatabase($updatedRows);
 
         $io->writeln("Checked {$checked} gateway(s) with a configured secret.");
+        $this->notifyExpiredGateways($updatedRows, $today, $io);
         $io->success('Sandbox checks complete.');
         return ExitCode::OK;
+    }
+
+    /**
+     * @param list<GatewayStatusRow> $rows
+     */
+    private function notifyExpiredGateways(array $rows, string $today, SymfonyStyle $io): void
+    {
+        $expired = array_values(array_filter($rows, static fn (GatewayStatusRow $row): bool => $row->isExpired($today)));
+        if ($expired === []) {
+            return;
+        }
+
+        $botToken = getenv('TELEGRAM_BOT_TOKEN');
+        $chatId = getenv('TELEGRAM_CHAT_ID');
+        if ($botToken === false || $botToken === '' || $chatId === false || $chatId === '') {
+            $io->writeln('Skipping Telegram notification: TELEGRAM_BOT_TOKEN/TELEGRAM_CHAT_ID not set.');
+            return;
+        }
+
+        $lines = array_map(
+            static fn (GatewayStatusRow $row): string => "• {$row->name}: expired {$row->expiryDate}",
+            $expired,
+        );
+        $text = "⚠️ Gateway sandbox credential(s) expired:\n" . implode("\n", $lines);
+
+        try {
+            $telegramHelper = new TelegramHelper($botToken, $this->logger);
+            $telegramHelper->sendMessage($chatId, $text);
+            $io->writeln('Telegram notification sent for ' . count($expired) . ' expired gateway(s).');
+        } catch (\Throwable $e) {
+            $io->writeln('Telegram notification failed: ' . $e->getMessage());
+        }
     }
 
     /**

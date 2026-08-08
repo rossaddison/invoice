@@ -103,6 +103,14 @@ jobs:
       # docs/GATEWAY_STATUS_PAGE_AUGUST_2026.md for the full naming
       # convention and rollout status. Any secret left unset here is
       # skipped gracefully by the command, not treated as a failure.
+      #
+      # TELEGRAM_BOT_TOKEN/TELEGRAM_CHAT_ID are a separate bot from this
+      # app's own in-app Telegram integration (Setting table's
+      # telegram_token/telegram_chat_id) — that one's for clients, this
+      # one's a maintainer alert for expired sandbox credentials, and the
+      # in-app Setting isn't reachable from CI anyway (no production DB).
+      # Left unset until configured; the command skips the notification
+      # gracefully, same as any other unset secret here.
       - name: Check gateway sandboxes
         env:
           STRIPE_SANDBOX_SECRET_KEY: ${{ secrets.STRIPE_SANDBOX_SECRET_KEY }}
@@ -111,6 +119,8 @@ jobs:
           SQUARE_SANDBOX_ACCESS_TOKEN: ${{ secrets.SQUARE_SANDBOX_ACCESS_TOKEN }}
           ADYEN_SANDBOX_API_KEY: ${{ secrets.ADYEN_SANDBOX_API_KEY }}
           ADYEN_SANDBOX_MERCHANT_ACCOUNT: ${{ secrets.ADYEN_SANDBOX_MERCHANT_ACCOUNT }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: php yii gateway-status/check-sandboxes
 
       - name: Rebuild gateway status

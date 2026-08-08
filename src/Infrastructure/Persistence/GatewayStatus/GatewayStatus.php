@@ -22,12 +22,18 @@ use Cycle\Annotated\Annotation\Table\Index;
  * `sandbox_last_error` is intentionally never rendered on the public page —
  * it exists purely for maintainer diagnostics after a failed automated
  * sandbox check.
+ *
+ * `expiry_date` is human-entered (via gateways.json, never written by
+ * either console command) — when this gateway's *sandbox* credential is
+ * known to expire. CheckGatewaySandboxesCommand sends a Telegram alert
+ * once it's passed; see that command's own docblock.
  */
 #[Entity(repository: GatewayStatusRepository::class, database: 'gateway_status')]
 #[Index(columns: ['gateway_key'], unique: true)]
 #[Index(columns: ['last_updated'], name: 'gateway_status_last_updated_idx')]
 #[Index(columns: ['sandbox_tested_at'], name: 'gateway_status_sandbox_tested_at_idx')]
 #[Index(columns: ['live_tested_at'], name: 'gateway_status_live_tested_at_idx')]
+#[Index(columns: ['expiry_date'], name: 'gateway_status_expiry_date_idx')]
 class GatewayStatus
 {
     use RequireId;
@@ -52,6 +58,8 @@ class GatewayStatus
         private ?string $sandbox_last_error = null,
         #[Column(type: 'string(10)', nullable: true)]
         private ?string $live_tested_at = null,
+        #[Column(type: 'string(10)', nullable: true)]
+        private ?string $expiry_date = null,
         #[Column(type: 'string(255)', nullable: false)]
         private string $regions = '',
         #[Column(type: 'text', nullable: true)]
@@ -152,6 +160,16 @@ class GatewayStatus
     public function setLiveTestedAt(?string $live_tested_at): void
     {
         $this->live_tested_at = $live_tested_at;
+    }
+
+    public function getExpiryDate(): ?string
+    {
+        return $this->expiry_date;
+    }
+
+    public function setExpiryDate(?string $expiry_date): void
+    {
+        $this->expiry_date = $expiry_date;
     }
 
     /**

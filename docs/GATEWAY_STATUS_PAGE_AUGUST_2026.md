@@ -31,7 +31,7 @@ SiteController::gatewayStatus()  →  resources/views/site/gateway-status.php
 |---|---|
 | `sdk_version`, `last_updated` | `gateway-status/rebuild`, from `composer.lock` — `last_updated` only bumps when the resolved version actually changed |
 | `sandbox_tested_at`, `sandbox_status`, `sandbox_last_error` | `gateway-status/check-sandboxes` |
-| `name`, `regions`, `notes`, `live_tested_at`, `sandbox_env_var` | Human only — never touched by either command |
+| `name`, `regions`, `notes`, `live_tested_at`, `sandbox_env_var`, `expiry_date` | Human only — never touched by either command |
 
 `live_tested_at` is deliberately excluded from all automation. This project's
 own precedent (`docs/PAYMENT_GATEWAY_LIVE_TESTING_JULY_2026.md`) shows live
@@ -130,13 +130,21 @@ from this app's own production credentials (which live encrypted in the
 - `ADYEN_SANDBOX_API_KEY`
 - `ADYEN_SANDBOX_MERCHANT_ACCOUNT`
 
-None of these secrets exist in the repo's GitHub Settings yet — until each
-is added, the weekly job runs cleanly and simply skips that gateway (no
-failure). Deliberately not something Claude sets directly: these are real
-sandbox credentials, and shouldn't flow through a conversation transcript
-or tool-call history even for a sandbox account — add them yourself via
-GitHub → Settings → Secrets and variables → Actions → New repository
-secret, whenever a real sandbox account exists for each.
+All six are configured as of 2026-08-08 — the weekly job pings every one of
+these five gateways' real sandbox APIs and gets `pass` (see
+`docs/GATEWAY_STATUS_CI_ENV_FIX_AUGUST_2026.md` for the CI plumbing that
+took three fixes to get there). A gateway with no secret configured yet
+simply skips (no failure) — deliberately not something Claude sets
+directly: these are real sandbox credentials, and shouldn't flow through a
+conversation transcript or tool-call history even for a sandbox account —
+add them yourself via GitHub → Settings → Secrets and variables → Actions →
+New repository secret, whenever a real sandbox account exists for each.
+
+Two more, unrelated to any specific gateway, added the same way — see
+"Sandbox credential expiry + Telegram alert" below:
+
+- `TELEGRAM_BOT_TOKEN`
+- `TELEGRAM_CHAT_ID`
 
 ## The public page
 
@@ -464,3 +472,115 @@ toggles a `Setting` row directly, and adding that machinery for one toggle
 was judged out of scope for this pass — verified by code review and Psalm
 instead, matching the same already-proven pattern the other ten
 `no_front_X_page` settings use.
+
+## Sandbox credential expiry + Telegram alert (August 2026)
+
+### Scope, deliberately narrow
+
+Two decisions made explicitly before writing any code, both because the
+alternative would have meant touching a different trust boundary than
+this feature otherwise lives in:
+
+- **Sandbox credentials only**, not this app's own encrypted production
+  gateway credentials (`Setting` table). Those are a separate system with
+  a different audience and different risk profile; mixing "your Stripe
+  *sandbox* key is about to expire" alerting into the same schema as
+  production secrets wasn't worth the coupling.
+- **Reuses the existing weekly cron**, not a new, tighter schedule. A
+  renewal reminder doesn't need same-day catching, and a second scheduled
+  workflow is a second thing to maintain for marginal benefit.
+
+### New field: `expiry_date`
+
+`gateways.json`'s human-curated field set (see the field-ownership table
+above) gained one more: `expiry_date` (`Y-m-d`, nullable, `null` on every
+row by default). Entirely human-entered — set it on a gateway only when
+you actually know its sandbox account/API key has a real expiry, same as
+every other human-only field here. `GatewayStatusRow::isExpired(string
+$today): bool` is the one piece of actual logic (`expiryDate !== null &&
+expiryDate <= $today`) — kept as a small, independently unit-tested pure
+method (`GatewayStatusRowTest`) rather than buried inline in the console
+command, since date-comparison logic is exactly the kind of thing that's
+cheap to get subtly wrong (off-by-one on "today", string vs. `DateTime`
+comparison, etc.).
+
+The `gateway_status` SQLite table gained the matching `expiry_date`
+column (with its own index, following the same pattern as
+`sandbox_tested_at`/`live_tested_at`) via the usual
+`BUILD_DATABASE=true` + delete `runtime/schema.php` + reload cycle — see
+"Why a second, Cycle-ORM-managed SQLite database" above for why that's a
+whole-app-risk operation to do carefully, not just a `gateway_status`
+one. Verified directly against the real local SQLite file (`PRAGMA
+table_info(gateway_status)`) rather than assumed from the entity
+attribute alone.
+
+Deliberately **not** added to the public `/gateway-status` grid this
+pass — the page already shows enough columns, and nothing in the
+original ask called for public display of credential-expiry metadata.
+Easy to add later if wanted; the data's there.
+
+### Telegram notification — from within the app, not the CI workflow
+
+The explicit design constraint: the notification had to be PHP code
+making the HTTP call, not a `curl` step written directly into the YAML
+workflow. This app already has a full Telegram integration
+(`App\Invoice\Helpers\Telegram\TelegramHelper`, a thin wrapper over
+`phptg/bot-api`, used for sending clients native Telegram invoices) — that
+existing bot is driven entirely by `Setting` table config
+(`telegram_token`/`telegram_chat_id`), which is unreachable from a CI job
+(no production database; `check-sandboxes` runs against a throwaway,
+freshly-schema'd MySQL service container — see
+`docs/GATEWAY_STATUS_CI_ENV_FIX_AUGUST_2026.md`). It's also arguably the
+wrong bot for this anyway — a client-facing invoicing bot and a
+maintainer-facing "your sandbox key expired" alert are different
+audiences.
+
+So this reuses `TelegramHelper` (gained one new method, `sendMessage()` —
+a thin wrapper over `TelegramBotApi::sendMessage()`, the one call this app
+had never wrapped before) but constructs it with credentials from two new,
+separate GitHub repo secrets — `TELEGRAM_BOT_TOKEN`/`TELEGRAM_CHAT_ID` —
+read via `getenv()` exactly like every sandbox credential in this same
+command already is. `CheckGatewaySandboxesCommand::notifyExpiredGateways()`
+runs after the sandbox-ping loop, independent of it (a gateway can have an
+`expiry_date` with no `sandbox_env_var` configured at all, and still get
+alerted): filters every row for `isExpired($today)`, and — only if at
+least one is — sends one Telegram message listing all of them (`"⚠️ Gateway
+sandbox credential(s) expired:\n• Stripe: expired 2026-08-01\n..."`).
+
+Design choices worth being explicit about:
+
+- **Stateless, fires every run while expired.** No "already notified"
+  tracking — a gateway that stays expired gets re-mentioned every week
+  until someone bumps `expiry_date`. That's the intended behavior (a
+  nag that stops nagging once actually fixed), not a missing feature.
+- **Skips silently, not a failure, when either secret is unset** — same
+  incremental-rollout philosophy as every sandbox credential above. The
+  two secrets aren't in GitHub yet as of this writing; the command runs
+  clean either way.
+- **A Telegram send failure is caught and logged, never fails the
+  command.** An alerting outage shouldn't block the sandbox check,
+  rebuild, and commit this same run still needs to do.
+
+### Verification
+
+Full-project `vendor/bin/psalm --no-cache` clean. Full Testo suite —
+776/776 passing (772 existing + 4 new `GatewayStatusRowTest` cases
+covering `isExpired()`'s boundary — no date set, future date, exactly
+today, past date — plus one extended assertion in the existing
+`GatewayStatusServiceTest::syncToDatabaseUpdatesExistingEntityWhenOneExists`
+confirming `expiry_date` actually persists through `syncToDatabase()`).
+`Functional SiteControllerCest` — 25/25, confirming the schema change
+didn't disturb the public page. The new `expiry_date` SQLite column was
+verified live against the real local database (not just inferred from the
+entity attribute), using the same `BUILD_DATABASE=true` cycle this
+project always uses for entity changes, then immediately reverted.
+
+Not verified live end-to-end: the actual Telegram send. `TELEGRAM_BOT_TOKEN`/
+`TELEGRAM_CHAT_ID` aren't configured yet, and no `gateways.json` row has a
+real `expiry_date` set, so `notifyExpiredGateways()`'s message-sending
+branch has never actually executed outside its unit tests. Once both are
+in place, setting one gateway's `expiry_date` to a past date and running
+`php yii gateway-status/check-sandboxes` (or triggering the workflow) is
+the real end-to-end check — same "verify live, not just by reading the
+code" standard this project holds its other Telegram/webhook integrations
+to.

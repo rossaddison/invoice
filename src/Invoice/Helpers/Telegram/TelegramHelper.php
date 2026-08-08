@@ -176,6 +176,20 @@ final class TelegramHelper
     }
 
     /**
+     * Sends a plain text message to the given chat. Thin wrapper over the
+     * underlying TelegramBotApi::sendMessage() (only the two params every
+     * caller so far actually needs — every other call site in this app
+     * that needs the full parameter set calls getBotApi()->sendMessage()
+     * directly, see TelegramController::processTestMessage()).
+     */
+    public function sendMessage(
+        string $chatId,
+        string $text,
+    ): FailResult|Message {
+        return $this->botApi->sendMessage($chatId, $text);
+    }
+
+    /**
      * Sends the company's geographic location to the chat.
      * Useful for giving clients directions to your premises.
      */

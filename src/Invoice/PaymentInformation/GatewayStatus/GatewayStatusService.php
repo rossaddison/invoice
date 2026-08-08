@@ -48,6 +48,7 @@ final class GatewayStatusService
          *         sandbox_status?: string|null,
          *         sandbox_last_error?: string|null,
          *         live_tested_at?: string|null,
+         *         expiry_date?: string|null,
          *         regions?: array<array-key, string>,
          *         notes?: string|null,
          *     }>,
@@ -121,6 +122,7 @@ final class GatewayStatusService
             $entity->setSandboxStatus($row->sandboxStatus);
             $entity->setSandboxLastError($row->sandboxLastError);
             $entity->setLiveTestedAt($row->liveTestedAt);
+            $entity->setExpiryDate($row->expiryDate);
             $entity->setRegions(implode(',', $row->regions));
             $entity->setNotes($row->notes);
             $this->repository->save($entity);
