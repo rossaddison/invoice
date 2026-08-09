@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7d7f79804a6afec793b9efe48766b073",
+    "content-hash": "00ed43cf7e58bb041d89af9ff4c104a0",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -17391,12 +17391,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/rate-limiter.git",
-                "reference": "789e52e026980484d24f3a1ed117c350d92ee26b"
+                "reference": "274b9a2c4e41f065f3d184164fe6204b2bd1b091"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/rate-limiter/zipball/789e52e026980484d24f3a1ed117c350d92ee26b",
-                "reference": "789e52e026980484d24f3a1ed117c350d92ee26b",
+                "url": "https://api.github.com/repos/yiisoft/rate-limiter/zipball/274b9a2c4e41f065f3d184164fe6204b2bd1b091",
+                "reference": "274b9a2c4e41f065f3d184164fe6204b2bd1b091",
                 "shasum": ""
             },
             "require": {
@@ -17410,13 +17410,13 @@
                 "yiisoft/http": "^1.2"
             },
             "require-dev": {
-                "bamarni/composer-bin-plugin": "^1.9.1",
                 "ext-apcu": "*",
                 "friendsofphp/php-cs-fixer": "^3.95",
                 "nyholm/psr7": "^1.0",
                 "phpunit/phpunit": "^9.5",
                 "rector/rector": "^2.0.2",
                 "roave/infection-static-analysis-plugin": "^1.16",
+                "shipmonk/composer-dependency-analyser": "^1.8",
                 "spatie/phpunit-watcher": "^1.23",
                 "vimeo/psalm": "^4.30 || ^5.13 || ^6.16.1",
                 "yiisoft/cache": "^3.0",
@@ -17427,13 +17427,6 @@
             },
             "default-branch": true,
             "type": "library",
-            "extra": {
-                "bamarni-bin": {
-                    "bin-links": true,
-                    "forward-command": true,
-                    "target-directory": "tools"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "Yiisoft\\Yii\\RateLimiter\\": "src"
@@ -17471,7 +17464,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2026-08-04T07:35:23+00:00"
+            "time": "2026-08-09T15:12:24+00:00"
         },
         {
             "name": "yiisoft/rbac",
@@ -24671,22 +24664,22 @@
         },
         {
             "name": "sanmai/di-container",
-            "version": "0.1.17",
+            "version": "0.1.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sanmai/di-container.git",
-                "reference": "a901c4a8778c9212ef4d66607525281af2f787bd"
+                "reference": "084abe756ba2c0d9a793c2d142ec6e8fb50e9869"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sanmai/di-container/zipball/a901c4a8778c9212ef4d66607525281af2f787bd",
-                "reference": "a901c4a8778c9212ef4d66607525281af2f787bd",
+                "url": "https://api.github.com/repos/sanmai/di-container/zipball/084abe756ba2c0d9a793c2d142ec6e8fb50e9869",
+                "reference": "084abe756ba2c0d9a793c2d142ec6e8fb50e9869",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.2",
                 "psr/container": "^1.1.2 || ^2.0",
-                "sanmai/pipeline": "^6.17 || ^7.0"
+                "sanmai/pipeline": "^7.10"
             },
             "require-dev": {
                 "ergebnis/composer-normalize": "^2.8",
@@ -24738,7 +24731,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sanmai/di-container/issues",
-                "source": "https://github.com/sanmai/di-container/tree/0.1.17"
+                "source": "https://github.com/sanmai/di-container/tree/0.1.22"
             },
             "funding": [
                 {
@@ -24746,7 +24739,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-06-01T08:52:14+00:00"
+            "time": "2026-08-09T15:52:22+00:00"
         },
         {
             "name": "sanmai/duoclock",
