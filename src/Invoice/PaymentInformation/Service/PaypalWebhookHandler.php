@@ -50,7 +50,17 @@ final class PaypalWebhookHandler
     public function handle(Request $request): Response
     {
         $rawBody = $request->getBody()->getContents();
-        $webhookId = (string) $this->sR->decode($this->sR->getSetting('gateway_paypal_webhookId') ?: '');
+        // gateway_paypal_webhookId is a plain 'text' Setting field (see
+        // SettingPaymentTrait::paypalGatewayFields()), never encrypted on
+        // save — unlike gateway_paypal_clientSecret ('password' type,
+        // genuinely decode()-d in PaypalPaymentService::clientSecret()).
+        // Calling decode() on it fed a plain string like "32L62775KU8374611"
+        // into Cryptor::Decrypt(), which isn't valid ciphertext and threw —
+        // a real, live-verified 500 on every single incoming PayPal
+        // webhook, confirmed via production's own error log
+        // (PaypalWebhookHandler.php(53) in every stack trace) before this
+        // fix. See docs/PAYPAL_WEBHOOK_ID_DECODE_BUG_AUGUST_2026.md.
+        $webhookId = $this->sR->getSetting('gateway_paypal_webhookId') ?: '';
         $headers = [
             'transmissionId' => $request->getHeaderLine('PAYPAL-TRANSMISSION-ID'),
             'transmissionTime' => $request->getHeaderLine('PAYPAL-TRANSMISSION-TIME'),
