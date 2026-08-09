@@ -57,11 +57,11 @@ final class PaypalPaymentServiceTest
         return new HttpClient(['handler' => HandlerStack::create($mock)]);
     }
 
-    private function makeService(MockHandler $mock): PaypalPaymentService
+    private function makeService(MockHandler $mock, ?LoggerInterface $logger = null): PaypalPaymentService
     {
         return new PaypalPaymentService(
             $this->makeSettingRepository(),
-            m::spy(LoggerInterface::class),
+            $logger ?? m::spy(LoggerInterface::class),
             $this->makeHttpClient($mock),
         );
     }
@@ -162,6 +162,38 @@ final class PaypalPaymentServiceTest
         Assert::null($service->createPayment(10.0, 'test', 'https://invoice.example/complete', 'https://invoice.example/complete'));
     }
 
+    /**
+     * Unlike captureOrder()/refund() (http_errors: false, error body read
+     * directly off the response), createPayment() lets Guzzle's default
+     * http_errors: true throw on a 4xx/5xx — this confirms the thrown
+     * exception's own attached response body still gets the same
+     * structured-detail extraction, via errorLogContext().
+     */
+    public function createPaymentLogsPaypalsIssueAndDebugIdWhenRejectedWithAnErrorStatus(): void
+    {
+        $mock = new MockHandler([
+            $this->tokenResponse(),
+            new Response(400, [], json_encode([
+                'name' => 'INVALID_REQUEST',
+                'message' => 'Request is not well-formed, syntactically incorrect, or violates schema.',
+                'debug_id' => 'xyz789debug',
+                'details' => [['issue' => 'INVALID_PARAMETER_SYNTAX']],
+            ], JSON_THROW_ON_ERROR)),
+        ]);
+        /** @var LoggerInterface&m\MockInterface $logger */
+        $logger = m::mock(LoggerInterface::class);
+        /** @var \Mockery\Expectation $eError */
+        $eError = $logger->shouldReceive('error');
+        $eError->once()->with('PayPal createPayment failed.', m::on(static function (array $context): bool {
+            return $context['issue'] === 'INVALID_PARAMETER_SYNTAX'
+                && $context['debug_id'] === 'xyz789debug'
+                && isset($context['error']);
+        }));
+        $service = $this->makeService($mock, $logger);
+
+        Assert::null($service->createPayment(10.0, 'test', 'https://invoice.example/complete', 'https://invoice.example/complete'));
+    }
+
     public function captureOrderReturnsTheCaptureIdAndStatus(): void
     {
         $mock = new MockHandler([
@@ -188,6 +220,46 @@ final class PaypalPaymentServiceTest
             new Response(422, [], json_encode(['name' => 'UNPROCESSABLE_ENTITY'], JSON_THROW_ON_ERROR)),
         ]);
         $service = $this->makeService($mock);
+
+        Assert::null($service->captureOrder('ORDER123'));
+    }
+
+    /**
+     * Ground-truthed against a real sandbox 422 hit live during manual
+     * testing (see docs/PAYPAL_CAPTURE_ERROR_LOGGING_AUGUST_2026.md) — a
+     * second checkout attempt against an invoice already paid once got
+     * rejected because this app sets Mercado Pago-style unique invoice_id
+     * per order, and PayPal enforces that. Before this fix, the only way
+     * to learn *why* a captureOrder() rejection happened was PayPal's own
+     * Developer Dashboard error log; this confirms the same detail now
+     * lands in this app's own logs instead.
+     */
+    public function captureOrderLogsPaypalsIssueAndDebugIdWhenRejected(): void
+    {
+        $mock = new MockHandler([
+            $this->tokenResponse(),
+            new Response(422, [], json_encode([
+                'name' => 'UNPROCESSABLE_ENTITY',
+                'message' => 'The requested action could not be performed, semantically incorrect, or failed business validation.',
+                'debug_id' => 'f116065da72bf',
+                'details' => [[
+                    'issue' => 'DUPLICATE_INVOICE_ID',
+                    'description' => 'Invoice ID INV120 is already used.',
+                ]],
+            ], JSON_THROW_ON_ERROR)),
+        ]);
+        /** @var LoggerInterface&m\MockInterface $logger */
+        $logger = m::mock(LoggerInterface::class);
+        /** @var \Mockery\Expectation $eError */
+        $eError = $logger->shouldReceive('error');
+        $eError->once()->with('PayPal captureOrder rejected by PayPal.', m::on(static function (array $context): bool {
+            return $context['order_id'] === 'ORDER123'
+                && $context['http_status'] === 422
+                && $context['issue'] === 'DUPLICATE_INVOICE_ID'
+                && $context['debug_id'] === 'f116065da72bf'
+                && $context['name'] === 'UNPROCESSABLE_ENTITY';
+        }));
+        $service = $this->makeService($mock, $logger);
 
         Assert::null($service->captureOrder('ORDER123'));
     }
@@ -260,6 +332,31 @@ final class PaypalPaymentServiceTest
 
         Assert::false($result->refunded);
         Assert::same('Capture has already been fully refunded', $result->message);
+    }
+
+    public function refundLogsPaypalsIssueAndDebugIdWhenRejected(): void
+    {
+        $mock = new MockHandler([
+            $this->tokenResponse(),
+            new Response(422, [], json_encode([
+                'name' => 'UNPROCESSABLE_ENTITY',
+                'message' => 'Capture has already been fully refunded',
+                'debug_id' => 'abc123debug',
+                'details' => [['issue' => 'CAPTURE_FULLY_REFUNDED']],
+            ], JSON_THROW_ON_ERROR)),
+        ]);
+        /** @var LoggerInterface&m\MockInterface $logger */
+        $logger = m::mock(LoggerInterface::class);
+        /** @var \Mockery\Expectation $eError */
+        $eError = $logger->shouldReceive('error');
+        $eError->once()->with('PayPal refund rejected by PayPal.', m::on(static function (array $context): bool {
+            return $context['provider_reference'] === 'CAP123'
+                && $context['issue'] === 'CAPTURE_FULLY_REFUNDED'
+                && $context['debug_id'] === 'abc123debug';
+        }));
+        $service = $this->makeService($mock, $logger);
+
+        Assert::false($service->refund('CAP123', 50.0)->refunded);
     }
 
     public function refundReturnsRefundedFalseWhenTheHttpCallFails(): void

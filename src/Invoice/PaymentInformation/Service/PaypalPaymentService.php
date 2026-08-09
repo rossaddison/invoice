@@ -10,6 +10,7 @@ use App\Invoice\PaymentInformation\PaymentVerificationResult;
 use App\Invoice\Setting\SettingRepository;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
@@ -141,7 +142,7 @@ final class PaypalPaymentService implements PaymentGatewayInterface
             ]);
             return $this->parseCreatePaymentResponse($response);
         } catch (GuzzleException|\JsonException $e) {
-            $this->logger->error('PayPal createPayment failed.', ['error' => $e->getMessage()]);
+            $this->logger->error('PayPal createPayment failed.', $this->errorLogContext($e));
             return null;
         }
     }
@@ -216,8 +217,25 @@ final class PaypalPaymentService implements PaymentGatewayInterface
      */
     private function parseCaptureOrderResponse(ResponseInterface $response, string $orderId): ?array
     {
+        $rawBody = (string) $response->getBody();
+
+        // http_errors is false on this call (see captureOrder()) so a
+        // rejected capture (e.g. DUPLICATE_INVOICE_ID, ORDER_NOT_APPROVED)
+        // arrives here as a normal response with a 4xx/5xx status, not an
+        // exception — the body is PayPal's error shape, not a capture
+        // shape, so it must be handled before attempting to read
+        // purchase_units below.
+        if ($response->getStatusCode() >= 400) {
+            $this->logger->error('PayPal captureOrder rejected by PayPal.', [
+                'order_id' => $orderId,
+                'http_status' => $response->getStatusCode(),
+                ...$this->extractErrorDetail($rawBody),
+            ]);
+            return null;
+        }
+
         /** @var array{purchase_units?: list<array{payments?: array{captures?: list<array{id?: string, status?: string}>}}>} $data */
-        $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        $data = json_decode($rawBody, true, 512, JSON_THROW_ON_ERROR);
         $capture = $data['purchase_units'][0]['payments']['captures'][0] ?? null;
         $captureId = $capture['id'] ?? null;
         $status = $capture['status'] ?? null;
@@ -254,7 +272,7 @@ final class PaypalPaymentService implements PaymentGatewayInterface
 
             return new PaymentVerificationResult($status === 'COMPLETED', $providerReference, $status);
         } catch (GuzzleException|\JsonException $e) {
-            $this->logger->warning('PayPal verifyPayment failed.', ['error' => $e->getMessage()]);
+            $this->logger->warning('PayPal verifyPayment failed.', $this->errorLogContext($e));
             return new PaymentVerificationResult(false, $providerReference, $e->getMessage());
         }
     }
@@ -288,18 +306,25 @@ final class PaypalPaymentService implements PaymentGatewayInterface
             );
             return $this->parseRefundResponse($response, $providerReference);
         } catch (GuzzleException|\JsonException $e) {
-            $this->logger->error('PayPal refund failed.', ['error' => $e->getMessage()]);
+            $this->logger->error('PayPal refund failed.', $this->errorLogContext($e));
             return new PaymentRefundResult(false, $providerReference, $e->getMessage());
         }
     }
 
     private function parseRefundResponse(ResponseInterface $response, string $providerReference): PaymentRefundResult
     {
+        $rawBody = (string) $response->getBody();
         /** @var array{id?: string, status?: string, name?: string, message?: string} $data */
-        $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        $data = json_decode($rawBody, true, 512, JSON_THROW_ON_ERROR);
 
         if (isset($data['name'])) {
-            return new PaymentRefundResult(false, $providerReference, $data['message'] ?? 'PayPal refund request rejected.');
+            $detail = $this->extractErrorDetail($rawBody);
+            $this->logger->error('PayPal refund rejected by PayPal.', [
+                'provider_reference' => $providerReference,
+                'http_status' => $response->getStatusCode(),
+                ...$detail,
+            ]);
+            return new PaymentRefundResult(false, $providerReference, $detail['message'] ?? 'PayPal refund request rejected.');
         }
 
         $refundId = $data['id'] ?? '';
@@ -353,7 +378,7 @@ final class PaypalPaymentService implements PaymentGatewayInterface
 
             return ($data['verification_status'] ?? '') === 'SUCCESS';
         } catch (GuzzleException|\JsonException $e) {
-            $this->logger->warning('PayPal verifyWebhookSignature failed.', ['error' => $e->getMessage()]);
+            $this->logger->warning('PayPal verifyWebhookSignature failed.', $this->errorLogContext($e));
             return false;
         }
     }
@@ -373,9 +398,54 @@ final class PaypalPaymentService implements PaymentGatewayInterface
 
             return $data['access_token'] ?? null;
         } catch (GuzzleException|\JsonException $e) {
-            $this->logger->error('PayPal accessToken request failed.', ['error' => $e->getMessage()]);
+            $this->logger->error('PayPal accessToken request failed.', $this->errorLogContext($e));
             return null;
         }
+    }
+
+    /**
+     * Extracts PayPal's structured error detail — `name`, `message` (or the
+     * first `details[].description`), `issue` (e.g. `DUPLICATE_INVOICE_ID`),
+     * and `debug_id` — from an error response body. Written after a live
+     * sandbox `captureOrder()` failure could only be diagnosed by manually
+     * digging through PayPal's own Developer Dashboard error log; this is
+     * what lets the same diagnosis happen directly from this app's own logs
+     * instead. `issue`/`debug_id` in particular are what actually pinpoint
+     * *why* (e.g. distinguishing "already captured" from "not yet approved"
+     * from "instrument declined") — `message` alone is often just PayPal's
+     * generic wrapper text ("The requested action could not be performed,
+     * semantically incorrect, or failed business validation.").
+     *
+     * @return array{name: string|null, message: string|null, issue: string|null, debug_id: string|null}
+     */
+    private function extractErrorDetail(string $rawBody): array
+    {
+        try {
+            /** @var array{name?: string, message?: string, debug_id?: string, details?: list<array{issue?: string, description?: string}>} $data */
+            $data = json_decode($rawBody, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            return ['name' => null, 'message' => null, 'issue' => null, 'debug_id' => null];
+        }
+
+        return [
+            'name' => $data['name'] ?? null,
+            'message' => $data['message'] ?? ($data['details'][0]['description'] ?? null),
+            'issue' => $data['details'][0]['issue'] ?? null,
+            'debug_id' => $data['debug_id'] ?? null,
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function errorLogContext(GuzzleException|\JsonException $e): array
+    {
+        $context = ['error' => $e->getMessage()];
+        $response = $e instanceof RequestException ? $e->getResponse() : null;
+        if (null !== $response) {
+            $context += $this->extractErrorDetail((string) $response->getBody());
+        }
+        return $context;
     }
 
     private function baseUrl(): string
