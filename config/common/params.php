@@ -424,8 +424,12 @@ return [
             ],
             'connections' => [
                 'mysql' => new Cycle\Database\Config\MySQLDriverConfig(
+                    // charset=utf8mb4 must be explicit in the DSN -- see
+                    // config/common/di/db.php's own comment on this same
+                    // fix and docs/MYSQL_CONNECTION_CHARSET_BUG_AUGUST_2026.md
+                    // for the live production incident this fixes.
                     connection: new Cycle\Database\Config\MySQL\DsnConnectionConfig(
-                        'mysql:host=' . $dbHost . ';dbname='. $dbName,
+                        'mysql:host=' . $dbHost . ';dbname='. $dbName . ';charset=utf8mb4',
                         $dbUser,
                         $dbPassword,
                     ),
