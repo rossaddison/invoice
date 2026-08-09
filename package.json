@@ -23,7 +23,7 @@
     "@typescript-eslint/parser": "^8.66.0",
     "@typescript/native-preview": "^7.0.0-dev.20260707.2",
     "@vitest/coverage-v8": "^4.1.10",
-    "esbuild": "^0.28.1",
+    "esbuild": "^0.28.2",
     "eslint": "^10.8.1",
     "globals": "^17.9.0",
     "js-yaml": "5.2.3",    
@@ -85,7 +85,7 @@
   "overrides": {
     "webpack-dev-server": "^5.2.4",
     "uuid": ">=11.1.1",
-    "esbuild": "^0.28.1",
+    "esbuild": "^0.28.2",
     "vite": ">7.3.4",
     "body-parser": ">=2.3.0",
     "fast-uri": ">=4.1.2",
