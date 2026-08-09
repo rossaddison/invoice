@@ -18,14 +18,37 @@ use Testo\Test;
 #[Test]
 final class PaymentRecordChannelTest
 {
-    public function webhookEmojiIsTheHook(): void
+    public function webhookEmojiIsHighVoltage(): void
     {
-        Assert::same('🪝', PaymentRecordChannel::Webhook->emoji());
+        Assert::same('⚡', PaymentRecordChannel::Webhook->emoji());
+    }
+
+    public function webhookEmojiIsBmpSafe(): void
+    {
+        // Regression guard for the MySQL charset incident — every codepoint
+        // must be <= U+FFFF (Basic Multilingual Plane), i.e. at most 3 bytes
+        // in UTF-8, so it can never repeat the crash documented in
+        // docs/MYSQL_CONNECTION_CHARSET_BUG_AUGUST_2026.md regardless of
+        // what the live connection's negotiated charset turns out to be.
+        $emoji = PaymentRecordChannel::Webhook->emoji();
+        $codepoints = mb_str_split($emoji, 1, 'UTF-8');
+        foreach ($codepoints as $char) {
+            Assert::true(mb_ord($char, 'UTF-8') <= 0xFFFF);
+        }
     }
 
     public function redirectEmojiIsTheCurvingArrow(): void
     {
         Assert::same('↩️', PaymentRecordChannel::Redirect->emoji());
+    }
+
+    public function redirectEmojiIsBmpSafe(): void
+    {
+        $emoji = PaymentRecordChannel::Redirect->emoji();
+        $codepoints = mb_str_split($emoji, 1, 'UTF-8');
+        foreach ($codepoints as $char) {
+            Assert::true(mb_ord($char, 'UTF-8') <= 0xFFFF);
+        }
     }
 
     public function theTwoChannelsHaveDifferentEmoji(): void
