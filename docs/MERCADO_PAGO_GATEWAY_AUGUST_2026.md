@@ -148,18 +148,23 @@ supported country. Per direct user reports researched afterward, a CUIT
 obtained without a DNI doesn't work for this either — there's no path to
 a Mercado Pago account without being an actual resident/citizen of one of
 its supported countries. This is the same *category* of wall that's
-blocked Paystack/Razorpay/YooKassa/PayPal Sandbox already (all four
-ultimately gate on some form of local registration this project's
-maintainer doesn't have), just a different specific mechanism — a
-personal tax ID tied to residency, not a company registration.
+blocked Paystack/Razorpay/YooKassa already (all three ultimately gate on
+some form of local registration this project's maintainer doesn't have),
+just a different specific mechanism — a personal tax ID tied to
+residency, not a company registration. (PayPal was originally assumed to
+be a fourth example of this same wall — that assumption turned out to be
+wrong: a personal PayPal account was in fact sufficient, no registered
+company needed. See `docs/PAYPAL_GATEWAY_AUGUST_2026.md`. Not every
+gateway with an initially-assumed sign-up barrier turns out to actually
+have one.)
 
 This doesn't make the integration wrong or unusable — anyone running this
 app who *is* a Mercado Pago–eligible resident can configure and use it
 today, same as any other gateway here. It does mean `sandbox_status` on
 the `/gateway-status` page is expected to stay `untested` permanently for
-this maintainer specifically, matching Paystack/Razorpay/YooKassa/PayPal
-Sandbox's own entries — not a temporary state waiting on a GitHub secret
-the way Stripe/Mollie/Adyen/GoCardless/Square's rollout worked. This
+this maintainer specifically, matching Paystack/Razorpay/YooKassa's own
+entries — not a temporary state waiting on a GitHub secret the way
+Stripe/Mollie/Adyen/GoCardless/Square/PayPal's rollout worked. This
 integration is verified only against Testo's mocked HTTP responses and
 the SDK's ground-truthed source, never against a real Mercado Pago
 account.
