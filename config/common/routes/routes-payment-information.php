@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Auth\Permissions;
 use App\Invoice\PaymentInformation\AdyenPaymentController as APICLR;
+use App\Invoice\PaymentInformation\CheckoutComPaymentController as CKPICLR;
 use App\Invoice\PaymentInformation\GoCardlessPaymentController as GCPICLR;
 use App\Invoice\PaymentInformation\MercadoPagoPaymentController as MERPICLR;
 use App\Invoice\PaymentInformation\MolliePaymentController as MPICLR;
@@ -129,6 +130,18 @@ return [
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([SQPICLR::class, 'squareComplete'])
                 ->name('paymentinformation/squareComplete'),
+
+            Route::methods([Method::GET, Method::POST],
+                    '/paymentinformation/checkoutComInForm/{url_key}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([CKPICLR::class, 'checkoutComInForm'])
+                ->name('paymentinformation/checkoutComInForm'),
+
+            Route::methods([Method::GET, Method::POST],
+                    '/paymentinformation/checkoutComComplete/{url_key}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([CKPICLR::class, 'checkoutComComplete'])
+                ->name('paymentinformation/checkoutComComplete'),
 
             Route::methods([Method::GET, Method::POST],
                     '/paymentinformation/amazonComplete/{url_key}')
@@ -299,4 +312,13 @@ return [
     Route::methods([Method::POST], '/paymentinformation/squareWebhook')
         ->action([SQPICLR::class, 'squareWebhook'])
         ->name('paymentinformation/squareWebhook'),
+
+    // Not under RoutePermission::invoiceGroup(): Checkout.com's servers
+    // must be able to POST here with no app session. Secured by
+    // Cko-Signature HMAC verification in the handler, not RBAC — see
+    // CheckoutComSignatureService::verifyWebhookSignature() and
+    // App\Middleware\CsrfExemptMiddleware.
+    Route::methods([Method::POST], '/paymentinformation/checkoutComWebhook')
+        ->action([CKPICLR::class, 'checkoutComWebhook'])
+        ->name('paymentinformation/checkoutComWebhook'),
 ];

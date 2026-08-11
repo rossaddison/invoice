@@ -22,6 +22,7 @@ trait SettingPaymentTrait
             'Adyen' => $this->adyenGatewayFields(),
             'Amazon_Pay' => $this->amazonPayGatewayFields(),
             'Braintree' => $this->braintreeGatewayFields(),
+            'Checkout_Com' => $this->checkoutComGatewayFields(),
             'GoCardless' => $this->goCardlessGatewayFields(),
             'Mollie' => $this->mollieGatewayFields(),
             'Open_Banking_With_Wonderful' => $this->openBankingWonderfulGatewayFields(),
@@ -141,6 +142,40 @@ trait SettingPaymentTrait
             'merchantId' => [
                 'type' => 'password',
                 'label' => 'Merchant Id',
+            ],
+            'sandbox' => [
+                'type' => 'checkbox',
+                'label' => 'Sandbox',
+            ],
+        ];
+    }
+
+    /**
+     * Checkout.com — built against the Payment Links API
+     * (`POST /payment-links`, an Order-based hosted checkout page
+     * matching Square/Razorpay/Mercado Pago's existing redirect pattern)
+     * via the official `checkout/checkout-sdk-php` package, genuinely
+     * installed as a composer dependency since its own HTTP layer is
+     * `guzzlehttp/guzzle` — see CheckoutComPaymentService's own docblock
+     * for the full ground-truthing. `publicKey` is genuinely optional
+     * (only needed for client-side tokenization this app's
+     * hosted-redirect flow never uses) but kept for parity with every
+     * other gateway's field set and possible future use.
+     */
+    private function checkoutComGatewayFields(): array
+    {
+        return [
+            'secretKey' => [
+                'type' => 'password',
+                'label' => 'Secret Key',
+            ],
+            'publicKey' => [
+                'type' => 'password',
+                'label' => 'Public Key',
+            ],
+            'webhookSecret' => [
+                'type' => 'password',
+                'label' => 'Webhook Secret',
             ],
             'sandbox' => [
                 'type' => 'checkbox',
@@ -511,6 +546,10 @@ trait SettingPaymentTrait
             'amazon_pay' => 'https://sellercentral-europe.amazon.com/'
             . 'external-payments/sandbox/home',
             'braintree' => 'https://sandbox.braintreegateway.com/login',
+            // The Hub is the same dashboard URL for both sandbox and live
+            // accounts, distinguished by which account you're logged into
+            // — confirmed via Checkout.com's own support docs.
+            'checkout_com' => 'https://hub.checkout.com/',
             'mollie' => 'https://my.mollie.com/dashboard/',
             'adyen' => 'https://ca-test.adyen.com',
             'gocardless' => 'https://manage-sandbox.gocardless.com',

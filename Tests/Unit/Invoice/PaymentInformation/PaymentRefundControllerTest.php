@@ -13,6 +13,7 @@ use App\Invoice\PaymentInformation\PaymentRefundResult;
 use App\Invoice\PaymentInformation\Service\AdyenPaymentService;
 use App\Invoice\PaymentInformation\Service\AmazonPayPaymentService;
 use App\Invoice\PaymentInformation\Service\BraintreePaymentService;
+use App\Invoice\PaymentInformation\Service\CheckoutComPaymentService;
 use App\Invoice\PaymentInformation\Service\GoCardlessPaymentService;
 use App\Invoice\PaymentInformation\Service\MercadoPagoPaymentService;
 use App\Invoice\PaymentInformation\Service\MolliePaymentService;
@@ -141,6 +142,7 @@ final class PaymentRefundControllerTest extends TestCase
             $this->createStub(MercadoPagoPaymentService::class),
             $this->createStub(PaypalPaymentService::class),
             $this->createStub(SquarePaymentService::class),
+            $this->createStub(CheckoutComPaymentService::class),
         );
     }
 

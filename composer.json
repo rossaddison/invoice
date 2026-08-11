@@ -42,6 +42,7 @@
         "brick/math": ">=0.18.0",
         "brick/money": ">=0.14.1",
         "cebe/markdown": "^1.2.1@dev",
+        "checkout/checkout-sdk-php": "^5.3",
         "chillerlan/php-qrcode": "^6.0.1",
         "cycle/annotated": "^4.6.0",
         "cycle/database": "^2.21.0",

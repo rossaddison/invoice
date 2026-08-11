@@ -540,6 +540,12 @@ final class PaymentInformationController
                         'paymentinformation/squareInForm',
                         ['url_key' => $ctx->url_key, '_language' => 'en'],
                     ),
+                    // Checkout.com has its own dedicated CheckoutComPaymentController
+                    // — same reasoning as every other dedicated gateway controller above.
+                    'Checkout_Com' => $this->webService->getRedirectResponse(
+                        'paymentinformation/checkoutComInForm',
+                        ['url_key' => $ctx->url_key, '_language' => 'en'],
+                    ),
                     default      => null,
                 };
                 if ($gatewayResponse !== null) {

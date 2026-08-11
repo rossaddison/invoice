@@ -10,6 +10,7 @@ use App\Invoice\Payment\PaymentRepository;
 use App\Invoice\PaymentInformation\Service\AdyenPaymentService;
 use App\Invoice\PaymentInformation\Service\AmazonPayPaymentService;
 use App\Invoice\PaymentInformation\Service\BraintreePaymentService;
+use App\Invoice\PaymentInformation\Service\CheckoutComPaymentService;
 use App\Invoice\PaymentInformation\Service\GoCardlessPaymentService;
 use App\Invoice\PaymentInformation\Service\MercadoPagoPaymentService;
 use App\Invoice\PaymentInformation\Service\MolliePaymentService;
@@ -64,6 +65,7 @@ final class PaymentRefundController
         private readonly MercadoPagoPaymentService $mercadoPagoPaymentService,
         private readonly PaypalPaymentService $paypalPaymentService,
         private readonly SquarePaymentService $squarePaymentService,
+        private readonly CheckoutComPaymentService $checkoutComPaymentService,
     ) {
     }
 
@@ -161,6 +163,7 @@ final class PaymentRefundController
             'mercado_pago' => $this->mercadoPagoPaymentService->refund($reference, $amount),
             'paypal'     => $this->paypalPaymentService->refund($reference, $amount),
             'square'     => $this->squarePaymentService->refund($reference, $amount),
+            'checkout_com' => $this->checkoutComPaymentService->refund($reference, $amount),
             default      => null,
         };
     }
