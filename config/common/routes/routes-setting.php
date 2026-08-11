@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Auth\Permissions;
+use App\Invoice\PaymentInformation\AdyenHmacKeyVerificationController;
 use App\Invoice\Setting\SettingController;
 use App\Middleware\RoutePermission;
 use Yiisoft\Http\Method;
@@ -75,5 +76,10 @@ return [
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([SettingController::class, 'clear'])
                 ->name('setting/clear'),
+
+            Route::get('/setting/adyenVerifyHmacKey')
+                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
+                ->action([AdyenHmacKeyVerificationController::class, 'verifyHmacKey'])
+                ->name('setting/adyenVerifyHmacKey'),
         ), // invoice
 ];

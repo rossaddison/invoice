@@ -215,4 +215,38 @@ final class AdyenPaymentService implements PaymentGatewayInterface
     {
         return (string) $this->settings->decode($this->settings->getSetting('gateway_adyen_webhookHmacKey') ?: '');
     }
+
+    /**
+     * Independently computes the currently-configured HMAC key's own KCV
+     * (Key Check Value) — HMAC-SHA256("00000000", key-packed-as-binary),
+     * last 3 bytes, uppercase hex — so it can be compared directly against
+     * the KCV Adyen's own Customer Area displays for a webhook's HMAC key.
+     *
+     * This exists because "the key is present and correctly formatted" and
+     * "the key is the *right* key" turned out to be two separate things
+     * worth verifying independently: Adyen shows a freshly-generated HMAC
+     * key's raw value exactly once, and if that value is copied but the
+     * webhook's own configuration page is never explicitly saved, Adyen
+     * keeps signing with whatever key was active before — silently leaving
+     * this app with a well-formed but wrong key. A real live incident hit
+     * exactly this; see docs/ADYEN_WEBHOOK_HMAC_KEY_NOT_SAVED_AUGUST_2026.md
+     * for the full diagnosis this method now saves a future user from
+     * having to redo by hand.
+     *
+     * Returns null when no key is configured or it isn't valid hex —
+     * matching hmacKey()'s own two failure states in
+     * verifyWebhookNotification(), where mirroring hex-validity here means
+     * this check can never claim a KCV for a key that would fail signing
+     * for an unrelated, more basic reason.
+     */
+    public function hmacKeyKcv(): ?string
+    {
+        $key = $this->hmacKey();
+        if ($key === '' || !ctype_xdigit($key)) {
+            return null;
+        }
+
+        $hash = hash_hmac('sha256', '00000000', pack('H*', $key), true);
+        return strtoupper(bin2hex(substr($hash, -3)));
+    }
 }

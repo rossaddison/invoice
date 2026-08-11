@@ -220,6 +220,14 @@ final class SettingController extends BaseController
                     'setting/tabIndex',
                     ['_language' => (string) $this->session->get('_language')],
                 ),
+                // Adyen-only "Verify" button next to the Webhook Hmac Key
+                // field — see AdyenHmacKeyVerificationController's own
+                // docblock and docs/ADYEN_WEBHOOK_HMAC_KEY_NOT_SAVED_AUGUST_2026.md
+                // for why this exists.
+                'adyen_hmac_verify_url' => $urlFastRouteGenerator->generate(
+                    'setting/adyenVerifyHmacKey',
+                    ['_language' => (string) $this->session->get('_language')],
+                ),
             ]),
             'mpdf' => $this->webViewRenderer->renderPartialAsString($p . 'mpdf'),
             'mtd' => $this->webViewRenderer->renderPartialAsString($p . 'making_tax_digital'),

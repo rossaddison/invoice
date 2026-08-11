@@ -14,6 +14,7 @@ use Yiisoft\Html\Tag\Option;
 * @var array $payment_methods
 * @var array<string, string> $gateway_credential_urls
 * @var string $tab_index_url
+* @var string $adyen_hmac_verify_url
 */
 
 $row = ['class' => 'row'];
@@ -308,6 +309,26 @@ echo H::openTag('div', $row); //1
       'name' => $pfxGateway . $d . '_' .
       $key . '_field_is_password]'
      ]);
+     }
+     // Adyen's HMAC key is shown once, at generation time, and never
+     // again — copying it isn't the same action as saving the webhook's
+     // own configuration page, an easy mistake that silently leaves
+     // Adyen signing with a different (stale) key than whatever's
+     // pasted here. This button computes the saved key's own KCV so it
+     // can be compared by eye against the KCV Adyen's Customer Area
+     // shows for that webhook, catching exactly that mistake without
+     // needing a real test payment first. See
+     // docs/ADYEN_WEBHOOK_HMAC_KEY_NOT_SAVED_AUGUST_2026.md.
+     if ($d == 'adyen' && $key == 'webhookHmacKey') {
+     echo H::openTag('a', [
+      'href' => $adyen_hmac_verify_url,
+      'class' => 'btn btn-primary mt-2',
+     ]);
+      echo '🔑 ' . $translator->translate('online.payment.adyen.hmac.kcv.verify');
+     echo H::closeTag('a');
+     echo H::openTag('div', ['class' => 'form-text']);
+      echo $translator->translate('online.payment.adyen.hmac.kcv.hint');
+     echo H::closeTag('div');
      }
     echo H::closeTag('div'); //5
 

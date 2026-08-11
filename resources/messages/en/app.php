@@ -1481,6 +1481,20 @@ prior to importing and no existing documents e.g. Invoices.',
     'Please wait while we redirect you'
     . ' to your card issuer for authentication...',
   'online.payment.accessKey' => 'Access Key',
+  'online.payment.adyen.hmac.kcv.hint' =>
+    'Adyen shows a new HMAC key\'s value only once — copying it is not'
+    . ' the same as saving the webhook\'s own configuration page.'
+    . ' Verify, then compare the KCV shown here against the KCV in'
+    . ' Adyen\'s Customer Area for this webhook before relying on it.',
+  'online.payment.adyen.hmac.kcv.not.configured' =>
+    'No Adyen webhook HMAC key is configured, or it is not valid'
+    . ' hexadecimal.',
+  'online.payment.adyen.hmac.kcv.result' =>
+    'This key\'s KCV is %s — compare it against the KCV shown in'
+    . ' Adyen\'s Customer Area for this webhook. If they don\'t match,'
+    . ' the key was likely copied but never saved on Adyen\'s side —'
+    . ' regenerate it and be sure to click Save this time.',
+  'online.payment.adyen.hmac.kcv.verify' => 'Verify HMAC key (show KCV)',
   'online.payment.accessToken' => 'Access Token',
   'online.payment.accountId' => 'Account Id',
   'online.payment.accountNumber' => 'Account Number',
