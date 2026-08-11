@@ -45,19 +45,20 @@ specific sub-page is usually one or two clicks away.
 
 | Gateway | URL | Note |
 |---|---|---|
-| Adyen | `https://ca-test.adyen.com/ca/ui/developers/api-credentials/` | No account yet: sign up at `adyen.com/signup` first, then log in and land here. |
+| Adyen | `https://ca-test.adyen.com/ca/ui/developers/api-credentials/` | Real sandbox account confirmed (`RossAddisonServicesECOM`) — live-tested end-to-end, see `docs/ADYEN_WEBHOOK_HMAC_KEY_NOT_SAVED_AUGUST_2026.md`. |
 | GoCardless | `https://manage-sandbox.gocardless.com/sign-in?redirect=%2Fdevelopers` | Sandbox login, redirects straight to Developers. |
 | Mollie | `https://my.mollie.com/dashboard/login?lang=en` | |
+| PayPal | `https://developer.paypal.com/dashboard/applications/sandbox` | Lands on the sandbox Apps & Credentials list — Client ID/Secret and the webhook subscription's own config are one or two clicks further in. Real sandbox account confirmed — live-tested end-to-end, see `docs/PAYPAL_GATEWAY_AUGUST_2026.md`. |
 | Square | `https://app.squareup.com/dashboard/apps/my-applications` | Lands on the Applications list — create an application (if none yet), then click "Manage" to reach Credentials/Locations/Webhooks. |
 | Stripe | `https://dashboard.stripe.com` | |
 
-These five are exactly the gateways confirmed live-tested against a real
-account this session (see `project_square_integration_complete` and
-related memory) — chosen as the first batch specifically because their
-URLs could be verified rather than guessed. The remaining gateways
-(Amazon Pay, Braintree, Open Banking Tink/Wonderful, Paypal, Paystack,
-Razorpay, Robokassa, StoreCove, Yookassa) are unfilled until each is
-confirmed the same way.
+These six are exactly the gateways confirmed live-tested against a real
+account (see `project_square_integration_complete` and related memory,
+plus this same session's PayPal/Adyen live-testing) — chosen as each
+batch specifically because their URLs could be verified rather than
+guessed. The remaining gateways (Amazon Pay, Braintree, Open Banking
+Tink/Wonderful, Paystack, Razorpay, Robokassa, StoreCove, Yookassa) are
+unfilled until each is confirmed the same way.
 
 ## Implementation
 

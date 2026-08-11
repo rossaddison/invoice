@@ -101,7 +101,12 @@ delivery.
 Real, live, end-to-end confirmation: a genuine Adyen sandbox payment (Pay
 by Bank via Tink Demo Bank) against a fresh invoice correctly flipped to
 paid on its first real webhook delivery after the key was properly saved.
-No code changes were made in this pass — `AdyenPaymentService.php` and
-`AdyenWebhookHandler.php` are unchanged from what's already committed;
-every temporary debug script and in-place logging addition used during
-diagnosis was reverted (`git checkout --`) before this write-up.
+The diagnosis itself required no code changes — `AdyenPaymentService.php`
+and `AdyenWebhookHandler.php` were unchanged from what was already
+committed at that point; every temporary debug script and in-place
+logging addition used during diagnosis was reverted (`git checkout --`)
+before this write-up. A follow-up pass did add one small, permanent
+piece of code: `AdyenPaymentService::hmacKeyKcv()` plus a "Verify HMAC
+key" button on the Adyen settings tab, so a future user hitting this
+same class of mistake gets a one-click check instead of a from-scratch
+diagnosis — `php -l` clean, full-project Psalm clean, Testo 810/810.

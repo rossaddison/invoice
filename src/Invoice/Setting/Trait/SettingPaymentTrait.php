@@ -51,11 +51,13 @@ trait SettingPaymentTrait
     public function gatewayCredentialUrls(): array
     {
         return [
-            // No account yet: sign up at https://www.adyen.com/signup first,
-            // then log in and land on this same page.
             'adyen' => 'https://ca-test.adyen.com/ca/ui/developers/api-credentials/',
             'gocardless' => 'https://manage-sandbox.gocardless.com/sign-in?redirect=%2Fdevelopers',
             'mollie' => 'https://my.mollie.com/dashboard/login?lang=en',
+            // Lands on the sandbox Apps & Credentials list — Client
+            // ID/Secret and the webhook subscription's own config are one
+            // or two clicks further in from here.
+            'paypal' => 'https://developer.paypal.com/dashboard/applications/sandbox',
             // Lands on the Applications list — create an application (if
             // none yet), then click "Manage" on it to reach the actual
             // Credentials/Locations/Webhooks pages.

@@ -98,16 +98,24 @@ general public knowledge, not exhaustively re-verified per-country this
 session; exact send/receive capability varies by country, especially in
 parts of Africa.
 
-## ⚠️ Untested against a real account
+## ✅ Live-tested against a real account (August 2026)
 
-Per the user's own statement, they have no registered company and cannot
-create even a test PayPal Sandbox business account — the same practical
-barrier already hit with YooKassa, Paystack, and Razorpay. `sandbox_status`
-on the `/gateway-status` page stays `untested` permanently for this reason.
-This integration is verified only against Testo's mocked HTTP responses and
-the SDK's ground-truthed source, never against a real PayPal account.
-Anyone enabling this gateway in production should treat it as unverified
-end-to-end until a real PayPal merchant account confirms it.
+The assumption this integration originally shipped under — that a
+registered company was required to create even a test PayPal Sandbox
+business account, the same practical barrier hit with YooKassa,
+Paystack, and Razorpay — turned out to be wrong. A personal PayPal
+account was sufficient to create a Sandbox Business + Personal buyer
+pair via the Developer Dashboard. A real, live, end-to-end sandbox test
+(order creation → hosted approval → capture → webhook signature
+verification → invoice correctly flipped to paid) passed on a
+first-attempt, no-resend basis. `sandbox_status` on the
+`/gateway-status` page is `pass`.
+
+That same live-testing pass found and fixed three real production bugs,
+none specific to this integration's own logic — see
+`docs/PAYPAL_WEBHOOK_ID_DECODE_BUG_AUGUST_2026.md`,
+`docs/MYSQL_CONNECTION_CHARSET_BUG_AUGUST_2026.md`, and
+`docs/PAYMENT_RECORD_CHANNEL_EMOJI_CHARSET_FIX_AUGUST_2026.md`.
 
 ## Verification
 
