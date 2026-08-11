@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9cf6777c4c89ff36c1d66e97fc82201f",
+    "content-hash": "b0859574f469bf6ac489fc9621a2a6a6",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -1872,16 +1872,16 @@
         },
         {
             "name": "cycle/database",
-            "version": "2.22.0",
+            "version": "2.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cycle/database.git",
-                "reference": "71a0a7f61ae6b6613c3b248f02a3724ace255073"
+                "reference": "8dcf9dc251f41fa8438de5c960ea844ae22b2513"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cycle/database/zipball/71a0a7f61ae6b6613c3b248f02a3724ace255073",
-                "reference": "71a0a7f61ae6b6613c3b248f02a3724ace255073",
+                "url": "https://api.github.com/repos/cycle/database/zipball/8dcf9dc251f41fa8438de5c960ea844ae22b2513",
+                "reference": "8dcf9dc251f41fa8438de5c960ea844ae22b2513",
                 "shasum": ""
             },
             "require": {
@@ -1962,7 +1962,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-09T09:56:11+00:00"
+            "time": "2026-08-11T10:04:23+00:00"
         },
         {
             "name": "cycle/entity-behavior",
