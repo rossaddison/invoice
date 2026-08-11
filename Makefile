@@ -47,11 +47,6 @@ menu: ## Show the Invoice SYSTEM MENU (Make targets)
 	@echo "make tsl               - TypeScript Lint"
 	@echo "make tsf               - TypeScript Format"
 	@echo "make nb                - npm run build"
-	@echo "make ai                - Angular: Install Dependencies"
-	@echo "make as                - Angular: Serve Development"
-	@echo "make ab                - Angular: Build Production"
-	@echo "make ag COMPONENT=name - Angular: Generate Component"
-	@echo "make al                - Angular: Lint Check"
 	@echo "make crc               - Composer Require Checker"
 	@echo "make sda               - Shipmonk Composer Dependency Analyser"
 	@echo "make ct                - PHPUnit Tests (Tests/Unit/Invoice/Entity/)"
@@ -367,60 +362,6 @@ endif
 ifeq ($(PRIMARY_GOAL),nb)
 nb: ## npm run build
 	npm run build
-endif
-
-#
-# Angular Commands
-#
-
-ifeq ($(PRIMARY_GOAL),ai)
-ai: ## Angular: Install Dependencies
-	@echo "======== ANGULAR DEPENDENCY INSTALLATION WARNING ========"
-	@echo "⚠️  WARNING: This will install Angular dependencies!"
-	@echo "📝 This may modify existing TypeScript/ESLint configuration"
-	@echo "🔄 Ensure you have reviewed package.json and tsconfig files"
-	@echo "🚨 BACKUP your current setup before proceeding!"
-	@echo "========================================================="
-	@read -p "Continue with Angular dependency installation? (Y/N): " confirm; \
-	if [ "$$confirm" = "Y" ] || [ "$$confirm" = "y" ]; then \
-		echo "Installing Angular dependencies..."; \
-		npm install; \
-		echo "Angular dependencies installed. Check for any conflicts."; \
-	else \
-		echo "Angular installation cancelled."; \
-	fi
-endif
-
-ifeq ($(PRIMARY_GOAL),as)
-as: ## Angular: Serve Development
-	@echo "Starting Angular development server..."
-	@echo "⚠️  This runs Angular in development mode"
-	@echo "📝 Angular components will be available at http://localhost:4200"
-	@echo "🔄 In production, Angular integrates with Yii3 PHP layout"
-	npm run ng:serve
-endif
-
-ifeq ($(PRIMARY_GOAL),ab)
-ab: ## Angular: Build Production
-	@echo "Building Angular for production..."
-	@echo "📝 This builds Angular components for integration with Yii3"
-	npm run ng:build
-endif
-
-ifeq ($(PRIMARY_GOAL),ag)
-ag: ## Angular: Generate Component (usage: make ag COMPONENT=dashboard)
-ifndef COMPONENT
-	$(error Please provide COMPONENT, e.g. 'make ag COMPONENT=user-profile')
-endif
-	@echo "Generating Angular component: $(COMPONENT)"
-	npm run angular:generate-component $(COMPONENT)
-endif
-
-ifeq ($(PRIMARY_GOAL),al)
-al: ## Angular: Lint Check
-	@echo "Running Angular-specific linting..."
-	@echo "📝 This checks Angular components and templates"
-	npm run lint:angular
 endif
 
 #
@@ -985,4 +926,4 @@ else
 endif
 endif
 
-.PHONY: menu help install ext-check ext-json ext-silent p pf pd pc pi cas co cwn ccl cv cda ca cu nu naf nco nsu nmu nma nes2024 nvm na crc sda ct cta ctp ccf cca cc te teu tes rdr rmc csd csf si sa sw sq sf sd sc ss sj sh sr ghi gha ghc serve ucr uar rl rlc tt ii cpv ist igt iit1 iqt2 ist3 int4 iut5 iait6 info dli csk tsb tsd tsw tst tsl tsf nb ai as ab ag al pcs pcsf pcsd pcsr sonar sonar-pr sonar-type sonar-sev sonar-hot sonar-both sonar-rule sonar-file sonar-rely sonar-rely-grp sonar-all-grp sonar-lang peppol-check ba bdi binj brt bst bdr bdb
+.PHONY: menu help install ext-check ext-json ext-silent p pf pd pc pi cas co cwn ccl cv cda ca cu nu naf nco nsu nmu nma nes2024 nvm na crc sda ct cta ctp ccf cca cc te teu tes rdr rmc csd csf si sa sw sq sf sd sc ss sj sh sr ghi gha ghc serve ucr uar rl rlc tt ii cpv ist igt iit1 iqt2 ist3 int4 iut5 iait6 info dli csk tsb tsd tsw tst tsl tsf nb pcs pcsf pcsd pcsr sonar sonar-pr sonar-type sonar-sev sonar-hot sonar-both sonar-rule sonar-file sonar-rely sonar-rely-grp sonar-all-grp sonar-lang peppol-check ba bdi binj brt bst bdr bdb
