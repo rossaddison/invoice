@@ -12,6 +12,13 @@ use App\Invoice\Unit\UnitRepository as UR;
 
 final readonly class ProductService
 {
+    /**
+     * The single shared Service-type Product every HomeCare invoice line references, now that house
+     * identity lives on Dwelling instead of one Product per address — see
+     * {@see self::findOrCreateHomeCareServiceProduct()}.
+     */
+    public const string HOMECARE_SERVICE_PRODUCT_NAME = 'HomeCare Service';
+
     public function __construct(
         private ProductRepository $repository,
         private FR $fR,
@@ -158,6 +165,44 @@ final readonly class ProductService
                 'product_description' => $buildingNumber,
                 'product_type'        => ProductType::Service->value,
                 'product_price'       => $price,
+                'family_id'           => (string) $familyId,
+                'tax_rate_id'         => (string) $taxRateId,
+                'unit_id'             => (string) $unitId,
+            ],
+        ]);
+        return $product;
+    }
+
+    /**
+     * Resolves the one shared Service-type Product every HomeCare invoice line now references, replacing
+     * the old one-Product-per-house model ({@see self::findOrCreateHouseNumberProduct()}, no longer
+     * called by the signup flow). Found by name+type (see
+     * {@see \App\Invoice\Product\ProductRepository::repoProductByNameAndTypeQuery()}), not family — the
+     * actual per-customer price lives on the InvItem, not this catalog Product, exactly as it already did
+     * for the old per-house Products (createInvoice()'s own $itemBody['price'] was always passed
+     * explicitly per-item, never read from the Product's own base price).
+     *
+     * $familyId only matters the one time this Product is first created — Product.family's BelongsTo is
+     * nullable: false, a structural FK requirement with no semantic meaning for a Product that isn't tied
+     * to any one street. Whichever signup happens to be the first to create it "owns" that FK by
+     * accident; nothing ever looks this Product up by family afterward.
+     */
+    public function findOrCreateHomeCareServiceProduct(int $familyId, int $taxRateId, int $unitId): Product
+    {
+        $existing = $this->repository->repoProductByNameAndTypeQuery(
+            self::HOMECARE_SERVICE_PRODUCT_NAME,
+            ProductType::Service->value,
+        );
+        if ($existing !== null) {
+            return $existing;
+        }
+        $product = new Product();
+        $this->saveProduct($product, [
+            'ProductForm' => [
+                'product_name'        => self::HOMECARE_SERVICE_PRODUCT_NAME,
+                'product_description' => self::HOMECARE_SERVICE_PRODUCT_NAME,
+                'product_type'        => ProductType::Service->value,
+                'product_price'       => 0.00,
                 'family_id'           => (string) $familyId,
                 'tax_rate_id'         => (string) $taxRateId,
                 'unit_id'             => (string) $unitId,

@@ -89,6 +89,22 @@ trait ClientTrait4
         return $this->postaladdress_id;
     }
 
+    /**
+     * The single Dwelling (house on a HomeCare street) this Client currently occupies, if any. Plain
+     * scalar FK, deliberately not a Cycle #[BelongsTo] relation — see
+     * {@see \App\Infrastructure\Persistence\Dwelling\Dwelling} class docblock for why, and for the
+     * accepted one-Client-to-at-most-one-Dwelling trade-off (no multi-property-landlord support).
+     */
+    public function setDwellingId(int $dwelling_id): void
+    {
+        $this->dwelling_id = $dwelling_id;
+    }
+
+    public function getDwellingId(): ?int
+    {
+        return $this->dwelling_id;
+    }
+
     public function getClientTelegramChatId(): ?string
     {
         return $this->client_telegram_chat_id;

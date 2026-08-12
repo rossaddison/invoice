@@ -122,6 +122,17 @@ trait InvTrait1
         return null;
     }
 
+    /**
+     * The house (Dwelling) this invoice's Client occupies, if any — Inv → Client → Dwelling, not derived
+     * through InvItem/Product/Family the way {@see self::getFirstItemCategorySecondaryId()} is. Most
+     * invoices have no dwelling_id set on their Client at all (non-HomeCare clients, or HomeCare clients
+     * signed up before this field existed).
+     */
+    public function getClientDwellingId(): ?int
+    {
+        return $this->getClient()?->getDwellingId();
+    }
+
     public function reqId(): int
     {
         return $this->requireId($this->id, 'Inv');

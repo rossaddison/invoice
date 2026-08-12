@@ -106,6 +106,25 @@ final class FamilyRepository extends Select\Repository
     }
 
     /**
+     * All families as a plain id => name options list, unfiltered by category — used by the Dwelling
+     * form's street dropdown.
+     *
+     * @return array<int, string>
+     */
+    public function optionsDataAllFamilyNames(): array
+    {
+        $families = $this->findAllPreloaded();
+        $optionsDataFamilyNames = [];
+        /**
+         * @var Family $family
+         */
+        foreach ($families as $family) {
+            $optionsDataFamilyNames[$family->reqId()] = ($family->getFamilyName() ?? '');
+        }
+        return $optionsDataFamilyNames;
+    }
+
+    /**
      * @return array
      */
     public function optionsDataFamilyNamesWithCategorySecondaryId(int $category_secondary_id): array

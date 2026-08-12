@@ -160,6 +160,7 @@ public function index(
                         ->withEmailRepositories($nav->etR, $nav->fdR)
                         ->withWorkerRepository($nav->wR)
                         ->withCategorySecondaryRepository($nav->csR)
+                        ->withDwellingRepository($nav->dwR)
                         ->withCsrf((string) ($request->getParsedBody()['_csrf'] ?? ''))
                         ->withDecimalPlaces(
                             (int) $this->sR->getSetting('tax_rate_decimal_places'))

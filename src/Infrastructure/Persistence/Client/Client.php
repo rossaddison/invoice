@@ -39,6 +39,9 @@ use App\Infrastructure\Persistence\Client\Trait\ClientTrait5;
 #[Index(columns: ['client_group'])]
 // Nullable FK
 #[Index(columns: ['postaladdress_id'])]
+// Nullable FK — the single Dwelling (house) this Client currently occupies, if any. Needed for the
+// worker canvassing dropdown's "which Dwellings are unclaimed" anti-join.
+#[Index(columns: ['dwelling_id'])]
 // Lookup target for the public home-care QR scan endpoint
 #[Index(columns: ['client_qr_token'])]
 class Client
@@ -134,6 +137,8 @@ class Client
         private int $client_gender = 0,
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $postaladdress_id = null,
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $dwelling_id = null,
         #[Column(type: 'string(20)', nullable: true)]
         private ?string $client_telegram_chat_id = null,
         #[Column(type: 'string(32)', nullable: true)]

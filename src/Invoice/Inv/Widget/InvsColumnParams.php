@@ -6,6 +6,7 @@ namespace App\Invoice\Inv\Widget;
 
 use App\Invoice\CategorySecondary\CategorySecondaryRepository;
 use App\Invoice\DeliveryLocation\DeliveryLocationRepository;
+use App\Invoice\Dwelling\DwellingRepository;
 use App\Invoice\Inv\InvRepository;
 use App\Invoice\InvRecurring\InvRecurringRepository;
 use App\Invoice\InvSentLog\InvSentLogRepository;
@@ -23,6 +24,7 @@ final readonly class InvsColumnParams
         public SettingRepository $sR,
         public WorkerRepository $wR,
         public CategorySecondaryRepository $csR,
+        public DwellingRepository $dwR,
         public int $dp,
         public float $totalAmount,
         public float $totalPaid,

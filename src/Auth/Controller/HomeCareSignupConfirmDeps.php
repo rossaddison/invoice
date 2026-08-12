@@ -9,6 +9,7 @@ use App\Invoice\CategoryPrimary\CategoryPrimaryRepository as cpR;
 use App\Invoice\CategorySecondary\CategorySecondaryService;
 use App\Invoice\Client\ClientRepository as cR;
 use App\Invoice\Client\ClientService;
+use App\Invoice\Dwelling\DwellingService;
 use App\Invoice\Family\FamilyRepository as fR;
 use App\Invoice\Family\FamilyService;
 use App\Invoice\HomeCarePendingSignup\HomeCarePendingSignupRepository as pendingR;
@@ -45,6 +46,7 @@ final class HomeCareSignupConfirmDeps
         public readonly ClientService $clientService,
         public readonly fR $fR,
         public readonly FamilyService $familyService,
+        public readonly DwellingService $dwellingService,
         public readonly cpR $cpR,
         public readonly CategorySecondaryService $categorySecondaryService,
         public readonly pR $pR,
