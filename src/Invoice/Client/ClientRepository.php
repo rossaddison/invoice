@@ -143,6 +143,26 @@ final class ClientRepository extends Select\Repository implements ClientReposito
     }
 
     /**
+     * Every dwelling_id currently claimed by a Client — the "already occupied" side of the worker
+     * canvassing dropdown's unclaimed-Dwelling anti-join, composed at the service layer
+     * ({@see \App\Invoice\Dwelling\DwellingService::repoUnclaimedDwellings()}).
+     *
+     * @return list<int>
+     */
+    public function repoClaimedDwellingIds(): array
+    {
+        $query = $this->select()
+            ->where(['dwelling_id' => ['not' => null]]);
+        $ids = [];
+        /** @var Client $client */
+        foreach ($query as $client) {
+            $dwellingId = $client->getDwellingId();
+            $dwellingId === null or $ids[] = $dwellingId;
+        }
+        return $ids;
+    }
+
+    /**
      * @psalm-return EntityReader
      */
     public function repoUserClient(array $available_client_id_list): EntityReader

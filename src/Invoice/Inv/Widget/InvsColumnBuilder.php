@@ -15,6 +15,7 @@ use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
 use App\Invoice\Inv\Widget\Trait\InvsCategorySecondaryRunColumnTrait;
 use App\Invoice\Inv\Widget\Trait\InvsColumnVisibilityTrait;
 use App\Invoice\Inv\Widget\Trait\InvsDoNotSendColumnTrait;
+use App\Invoice\Inv\Widget\Trait\InvsDwellingHouseNumberColumnTrait;
 use App\Invoice\Inv\Widget\Trait\InvsWorkerColumnTrait;
 use App\Invoice\Setting\SettingRepository as SR;
 use App\Widget\GridComponents;
@@ -48,6 +49,7 @@ final class InvsColumnBuilder
     use InvsCategorySecondaryRunColumnTrait;
     use InvsColumnVisibilityTrait;
     use InvsDoNotSendColumnTrait;
+    use InvsDwellingHouseNumberColumnTrait;
     use InvsWorkerColumnTrait;
 
     private const string ROUTE_EDIT          = 'inv/edit';
@@ -101,6 +103,7 @@ final class InvsColumnBuilder
             $this->buildPdfEmailColumn(!$isHidden('pdf_email')),
             $this->buildInvNumberColumn(),
             $this->buildFamilyNameColumn(!$isHidden('family_name')),
+            $this->buildDwellingHouseNumberColumn($p->dwR, $homeCareEnabled),
             $this->buildCategorySecondaryRunColumn($p->csR, $homeCareEnabled),
             $this->buildYearMonthColumn(!$isHidden('year_month')),
             $this->buildStatusColumn($iR, $irR, $sR),

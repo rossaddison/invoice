@@ -6,6 +6,7 @@ namespace App\Invoice\Inv;
 
 use App\Invoice\CategorySecondary\CategorySecondaryRepository as CSR;
 use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
+use App\Invoice\Dwelling\DwellingRepository as DwR;
 use App\Invoice\EmailTemplate\EmailTemplateRepository as ETR;
 use App\Invoice\FromDropDown\FromDropDownRepository as FDR;
 use App\Invoice\PaymentMethod\PaymentMethodRepository as PMR;
@@ -26,6 +27,7 @@ final class InvIndexNavDeps
         public readonly FDR $fdR,
         public readonly WR $wR,
         public readonly CSR $csR,
+        public readonly DwR $dwR,
     ) {
     }
 }

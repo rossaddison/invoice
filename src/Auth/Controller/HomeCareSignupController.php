@@ -10,7 +10,7 @@ use App\Auth\Trait\ClassList;
 use App\Auth\Trait\TurnstileVerification;
 use App\Infrastructure\Persistence\CategorySecondary\CategorySecondary;
 use App\Infrastructure\Persistence\Client\Client;
-use App\Infrastructure\Persistence\Family\Family;
+use App\Infrastructure\Persistence\Dwelling\Dwelling;
 use App\Infrastructure\Persistence\HomeCarePendingSignup\HomeCarePendingSignup;
 use App\Infrastructure\Persistence\Identity\Identity;
 use App\Infrastructure\Persistence\Inv\Inv;
@@ -51,8 +51,12 @@ use Yiisoft\Yii\View\Renderer\WebViewRenderer;
  * `SignupController`. Always creates and assigns a Client — unlike the
  * generic flow, it does not consult `signup_automatically_assign_client`.
  * On confirmation-link click, resolves/creates the street (Family) and
- * house-number (Product, Service-type), raises the first invoice, and
- * either records it paid (cash) or leaves it sent/unpaid, so the existing
+ * house (Dwelling) from the pending signup's free-text street/building-
+ * number fields, links the Dwelling onto the new Client via
+ * Client::setDwellingId(), raises the first invoice against the one shared
+ * "HomeCare Service" catalog Product (ProductService::findOrCreateHomeCareServiceProduct()
+ * — house identity no longer lives on Product), and either records it paid
+ * (cash) or leaves it sent/unpaid, so the existing
  * HomeCareCleaningEligibilityService can pick it up deterministically.
  */
 final class HomeCareSignupController
@@ -244,13 +248,19 @@ final class HomeCareSignupController
         }
         ['identity' => $identity, 'userId' => $userId, 'pending' => $pending, 'userInv' => $userInv] = $resolved;
 
+        $dwellingResult = $this->resolveDwellingForSignup($pending, $d);
+        if ($dwellingResult instanceof Response) {
+            return $dwellingResult;
+        }
+        ['dwelling' => $dwelling, 'taxRate' => $taxRate, 'unit' => $unit] = $dwellingResult;
+
         $email = $identity->getUser()?->getEmail() ?? '';
-        $client = $this->createClient($email, $language, $pending, $d);
+        $client = $this->createClient($email, $language, $pending, $dwelling, $d);
         $clientId = $client->reqId();
         $this->linkUserClient($userId, $clientId, $d);
         $this->assignSignupRole($userId, $userInv->reqId(), $d);
 
-        $provisioned = $this->provisionInvoice($clientId, $pending, $formHydrator, $d);
+        $provisioned = $this->provisionInvoice($clientId, $dwelling, $taxRate, $unit, $pending, $formHydrator, $d);
         if ($provisioned instanceof Response) {
             return $provisioned;
         }
@@ -386,44 +396,56 @@ final class HomeCareSignupController
 
     /**
      * Resolves (and possibly creates) the CategorySecondary, then the
-     * Family, then the TaxRate/Unit — in that exact order, since
-     * resolveSecondaryCategoryId() may create a new CategorySecondary row
-     * as a side effect that must happen regardless of whether TaxRate/Unit
-     * later turn out to be missing (mirrors the original unsplit ordering).
+     * Family, then the Dwelling (house number under that street), then the
+     * TaxRate/Unit — in that exact order, since resolveSecondaryCategoryId()
+     * may create a new CategorySecondary row as a side effect that must
+     * happen regardless of whether TaxRate/Unit later turn out to be
+     * missing (mirrors the original unsplit ordering).
      *
-     * @return Response|array{family: Family, taxRate: TaxRate, unit: Unit}
+     * HomeCareSignupForm's street/building-number fields stay free text —
+     * this resolves them against existing Family/Dwelling rows (or creates
+     * new ones) rather than requiring the customer to pick from a
+     * pre-populated list. Called before createClient() (unlike the old
+     * single-Product flow, which ran this from inside provisionInvoice(),
+     * after the Client already existed) so the resolved Dwelling can be set
+     * on the Client at creation time via Client::setDwellingId().
+     *
+     * @return Response|array{dwelling: Dwelling, taxRate: TaxRate, unit: Unit}
      */
-    private function resolveFamilyForSignup(HomeCarePendingSignup $pending, HomeCareSignupConfirmDeps $d): Response|array
+    private function resolveDwellingForSignup(HomeCarePendingSignup $pending, HomeCareSignupConfirmDeps $d): Response|array
     {
         $categorySecondaryId = $this->resolveSecondaryCategoryId($pending, $d);
         if ($categorySecondaryId === null) {
             return $this->renderConfirmed('setup_incomplete');
         }
         $family = $d->familyService->findOrCreateByStreetName($pending->getStreet(), $categorySecondaryId);
+        $dwelling = $d->dwellingService->findOrCreateDwelling($family->reqId(), $pending->getBuildingNumber());
         $taxRate = $d->trR->repoFirstByIdQuery();
         $unit = $d->unR->repoFirstByIdQuery();
         if ($taxRate === null || $unit === null) {
             return $this->renderConfirmed('setup_incomplete');
         }
-        return ['family' => $family, 'taxRate' => $taxRate, 'unit' => $unit];
+        return ['dwelling' => $dwelling, 'taxRate' => $taxRate, 'unit' => $unit];
     }
 
+    /**
+     * Every HomeCare invoice line now references the one shared "HomeCare
+     * Service" catalog Product (ProductService::findOrCreateHomeCareServiceProduct())
+     * instead of a Product created per house — house identity lives on
+     * Dwelling, resolved earlier in resolveDwellingForSignup() and already
+     * linked onto the Client by the time this runs.
+     */
     private function provisionInvoice(
         int $clientId,
+        Dwelling $dwelling,
+        TaxRate $taxRate,
+        Unit $unit,
         HomeCarePendingSignup $pending,
         FormHydrator $formHydrator,
         HomeCareSignupConfirmDeps $d,
     ): Response|int {
-        $familyResult = $this->resolveFamilyForSignup($pending, $d);
-        if ($familyResult instanceof Response) {
-            return $familyResult;
-        }
-        ['family' => $family, 'taxRate' => $taxRate, 'unit' => $unit] = $familyResult;
-
-        $product = $d->productService->findOrCreateHouseNumberProduct(
-            $family->reqId(),
-            $pending->getBuildingNumber(),
-            $pending->getPrice(),
+        $product = $d->productService->findOrCreateHomeCareServiceProduct(
+            $dwelling->reqFamilyId(),
             $taxRate->reqId(),
             $unit->reqId(),
         );
@@ -466,8 +488,19 @@ final class HomeCareSignupController
         return $categorySecondary->reqId();
     }
 
-    private function createClient(string $email, string $language, HomeCarePendingSignup $pending, HomeCareSignupConfirmDeps $d): Client
-    {
+    /**
+     * client_address_1/client_building_number stay populated from the pending signup's free text — kept
+     * as a snapshot for PDF/UBL bill-to backward compatibility, same snapshot philosophy this codebase
+     * already trusts for InvItem.name from Product.name — alongside the new, authoritative dwelling_id
+     * link.
+     */
+    private function createClient(
+        string $email,
+        string $language,
+        HomeCarePendingSignup $pending,
+        Dwelling $dwelling,
+        HomeCareSignupConfirmDeps $d,
+    ): Client {
         $client = new Client();
         $client->setClientActive(true);
         $client->setClientEmail($email);
@@ -476,6 +509,7 @@ final class HomeCareSignupController
         $client->setClientSurname($pending->getClientSurname());
         $client->setClientAddress1($pending->getStreet());
         $client->setClientBuildingNumber($pending->getBuildingNumber());
+        $client->setDwellingId($dwelling->reqId());
         $d->cR->save($client);
         return $client;
     }
