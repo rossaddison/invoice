@@ -7,24 +7,32 @@ describe('initE164PhoneFields', () => {
         initE164PhoneFields();
     });
 
-    it('reformats a UK national number to E.164 on blur, using the default region', () => {
-        document.body.innerHTML =
-            '<input id="client_mobile" data-e164 data-e164-default-region="GB" value="07726232648">';
-        const input = document.getElementById('client_mobile') as HTMLInputElement;
+    it.each([
+        {
+            description: 'reformats a UK national number to E.164 on blur, using the default region',
+            html: '<input id="client_mobile" data-e164 data-e164-default-region="GB" value="07726232648">',
+            id: 'client_mobile',
+            expectedValue: '+447726232648',
+        },
+        {
+            description: 'accepts an already-international number with no default region set',
+            html: '<input id="phone" data-e164 data-e164-default-region="" value="+447726232648">',
+            id: 'phone',
+            expectedValue: '+447726232648',
+        },
+        {
+            description: 'does not touch inputs without data-e164',
+            html: '<input id="client_web" value="not-a-phone-number">',
+            id: 'client_web',
+            expectedValue: 'not-a-phone-number',
+        },
+    ])('$description', ({ html, id, expectedValue }) => {
+        document.body.innerHTML = html;
+        const input = document.getElementById(id) as HTMLInputElement;
 
         input.dispatchEvent(new FocusEvent('blur'));
 
-        expect(input.value).toBe('+447726232648');
-        expect(input.classList.contains('is-invalid')).toBe(false);
-    });
-
-    it('accepts an already-international number with no default region set', () => {
-        document.body.innerHTML = '<input id="phone" data-e164 data-e164-default-region="" value="+447726232648">';
-        const input = document.getElementById('phone') as HTMLInputElement;
-
-        input.dispatchEvent(new FocusEvent('blur'));
-
-        expect(input.value).toBe('+447726232648');
+        expect(input.value).toBe(expectedValue);
         expect(input.classList.contains('is-invalid')).toBe(false);
     });
 
@@ -50,15 +58,5 @@ describe('initE164PhoneFields', () => {
 
         expect(input.classList.contains('is-invalid')).toBe(false);
         expect(document.getElementById('client_mobile-e164-feedback')).toBeNull();
-    });
-
-    it('does not touch inputs without data-e164', () => {
-        document.body.innerHTML = '<input id="client_web" value="not-a-phone-number">';
-        const input = document.getElementById('client_web') as HTMLInputElement;
-
-        input.dispatchEvent(new FocusEvent('blur'));
-
-        expect(input.value).toBe('not-a-phone-number');
-        expect(input.classList.contains('is-invalid')).toBe(false);
     });
 });
