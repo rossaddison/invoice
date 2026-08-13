@@ -86,7 +86,9 @@ final class CheckGatewaySecretsCommand extends Command
     /**
      * Checks a single driver/field's stored secret, writing its result line to $io whenever it was
      * actually a configured password secret. Split out of execute() purely to keep its cognitive
-     * complexity within SonarQube's limit (php:S3776).
+     * complexity within SonarQube's limit (php:S3776); the decode/report step is further split into
+     * decodeAndReportSecret() purely to keep this method's own return count within SonarQube's limit
+     * (php:S1142).
      *
      * @param array{type: string, label: string} $setting
      *
@@ -102,8 +104,14 @@ final class CheckGatewaySecretsCommand extends Command
         if ($stored === '') {
             return null; // never configured — not this regression's concern
         }
+        return $this->decodeAndReportSecret("{$driver}.{$key}", $stored, $io);
+    }
 
-        $label = "{$driver}.{$key}";
+    /**
+     * @return string '' when the secret decodes cleanly; the corrupted $label otherwise.
+     */
+    private function decodeAndReportSecret(string $label, string $stored, SymfonyStyle $io): string
+    {
         try {
             $decoded = (string) $this->sR->decode($stored);
             if ($decoded === '' || !mb_check_encoding($decoded, 'UTF-8')) {
