@@ -1600,6 +1600,14 @@ prior to importing and no existing documents e.g. Invoices.',
   'online.payment.webhookId' => 'Webhook Id',
   'online.payment.webhookSecret' => 'Webhook Secret',
   'online.payment.websiteKey' => 'Website Key',
+  // Per-gateway overrides — partial_settings_online_payment.php tries
+  // 'online.payment.{driver}.{key}' before falling back to the generic
+  // 'online.payment.{key}' above. Only add one here when a gateway's own
+  // dashboard genuinely uses different wording than the generic label —
+  // most gateways should keep sharing the generic key as-is.
+  'online.payment.checkout_com.secretKey' => 'Secret API Key',
+  'online.payment.checkout_com.publicKey' => 'Public API Key',
+  'online.payment.checkout_com.webhookSecret' => 'Webhook Signature Key',
   'online.payments' => 'Online Payments',
   'open.banking.pay.with' => 'Pay with Open Banking: ',
   'open.banking.not.configured' =>
