@@ -175,7 +175,7 @@ trait SettingPaymentTrait
             ],
             'webhookSecret' => [
                 'type' => 'password',
-                'label' => 'Webhook Secret',
+                'label' => 'Webhook Signature Key',
             ],
             'sandbox' => [
                 'type' => 'checkbox',
