@@ -142,7 +142,7 @@ class ClientFormTest extends TestCase
     public function testClientMobileAcceptsE164Format(): void
     {
         $form = $this->validFormForValidation();
-        $form->client_mobile = '+447726232648';
+        $form->client_mobile = '+447000000000';
 
         $result = new Validator()->validate($form);
 
@@ -152,7 +152,7 @@ class ClientFormTest extends TestCase
     public function testClientMobileRejectsNationalFormat(): void
     {
         $form = $this->validFormForValidation();
-        $form->client_mobile = '07726232648';
+        $form->client_mobile = '07000000000';
 
         $result = new Validator()->validate($form);
 
@@ -162,7 +162,7 @@ class ClientFormTest extends TestCase
     public function testClientMobileRejectsLeadingZeroAfterPlus(): void
     {
         $form = $this->validFormForValidation();
-        $form->client_mobile = '+0447726232648';
+        $form->client_mobile = '+0447000000000';
 
         $result = new Validator()->validate($form);
 

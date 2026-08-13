@@ -10,15 +10,15 @@ describe('initE164PhoneFields', () => {
     it.each([
         {
             description: 'reformats a UK national number to E.164 on blur, using the default region',
-            html: '<input id="client_mobile" data-e164 data-e164-default-region="GB" value="07726232648">',
+            html: '<input id="client_mobile" data-e164 data-e164-default-region="GB" value="07000000000">',
             id: 'client_mobile',
-            expectedValue: '+447726232648',
+            expectedValue: '+447000000000',
         },
         {
             description: 'accepts an already-international number with no default region set',
-            html: '<input id="phone" data-e164 data-e164-default-region="" value="+447726232648">',
+            html: '<input id="phone" data-e164 data-e164-default-region="" value="+447000000000">',
             id: 'phone',
-            expectedValue: '+447726232648',
+            expectedValue: '+447000000000',
         },
         {
             description: 'does not touch inputs without data-e164',

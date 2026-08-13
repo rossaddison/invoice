@@ -110,7 +110,7 @@ class CompanyFormTest extends TestCase
     public function testPhoneAcceptsE164Format(): void
     {
         $form = $this->validFormForValidation();
-        $form->phone = '+447726232648';
+        $form->phone = '+447000000000';
 
         $result = new Validator()->validate($form);
 
@@ -120,7 +120,7 @@ class CompanyFormTest extends TestCase
     public function testPhoneRejectsNationalFormat(): void
     {
         $form = $this->validFormForValidation();
-        $form->phone = '07726232648';
+        $form->phone = '07000000000';
 
         $result = new Validator()->validate($form);
 
