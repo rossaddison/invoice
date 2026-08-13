@@ -833,13 +833,18 @@ final class InvsColumnBuilder
             property: 'filterInvNumber',
             header: $t->translate('number'),
             content: static function (Inv $model) use ($ug): A {
+                // Family name already has its own grid column — kept here only as a
+                // tooltip (alongside the item's product name) so the button itself
+                // stays a single line instead of wrapping the family/product text
+                // across 2-3 lines in a narrow column.
                 return (new A())
                     ->addAttributes([
                         'class' => 'btn btn-primary btn-lg',
                         'style' => 'text-decoration:none',
+                        'data-bs-toggle' => 'tooltip',
+                        'title' => $model->getFirstItemFamilyProductName(),
                     ])
-                    ->content(($model->getNumber() ?? '#') . ' 🔍'
-                        . $model->getFirstItemFamilyProductName())
+                    ->content(($model->getNumber() ?? '#') . ' 🔍')
                     ->href($ug->generate('inv/view', ['id' => $model->reqId()]));
             },
             encodeContent: false,
