@@ -113,6 +113,7 @@ public function index(
                 'soR'                => $nav->soR,
                 'wR'                 => $nav->wR,
                 'csR'                => $nav->csR,
+                'dwR'                => $nav->dwR,
                 'sortString'         => $sortString,
                 'status'             => $effectiveStatus,
                 'visible'            => $visible !== '0',
