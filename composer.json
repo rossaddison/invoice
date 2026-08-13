@@ -17,7 +17,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": "8.4 - 8.5",
+        "php": "8.4 - 9.0",
         "ext-apcu": "*",
         "ext-ctype": "*",
         "ext-curl": "*",

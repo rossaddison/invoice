@@ -32,14 +32,23 @@ jobs:
     name: PHP ${{ matrix.php }}-${{ matrix.os }}
         
     runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.experimental }}
 
     strategy:
+      fail-fast: false
       matrix:
-        os:
-          - ubuntu-latest
-
-        php:
-          - 8.4
+        # PHP 8.6/9.0 are pre-release — tolerated via continue-on-error
+        # rather than blocking the required 8.4 leg.
+        include:
+          - os: ubuntu-latest
+            php: '8.4'
+            experimental: false
+          - os: ubuntu-latest
+            php: '8.6'
+            experimental: true
+          - os: ubuntu-latest
+            php: '9.0'
+            experimental: true
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
