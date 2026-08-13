@@ -116,12 +116,16 @@ describe('initGenerateCronKey', () => {
         vi.unstubAllGlobals();
     });
 
-    it('does not throw when clipboard is unavailable', async () => {
+    it('still fills the input and falls back to the repeat icon when clipboard is unavailable', async () => {
         vi.stubGlobal('navigator', { clipboard: undefined });
-        const { btn } = makeDOM();
+        const { btn, input } = makeDOM();
         initGenerateCronKey();
         btn.click();
         await vi.runAllTimersAsync();
+        // Clipboard copy is best-effort — the key still lands in the field either way,
+        // and the button shows the repeat icon (not the clipboard success checkmark).
+        expect(input.value).toBe('ab'.repeat(24));
+        expect(btn.innerHTML).toContain('bi-arrow-repeat');
         vi.unstubAllGlobals();
     });
 

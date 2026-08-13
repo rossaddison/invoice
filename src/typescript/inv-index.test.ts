@@ -58,7 +58,7 @@ describe('initInvIndex', () => {
         initInvIndex();
         document.body.innerHTML = '';
         initInvIndex();
-        expect(document.querySelectorAll('#mp-styles').length).toBe(1);
+        expect(document.querySelectorAll('#mp-styles')).toHaveLength(1);
     });
 
     it('creates toggle button with label span and dismiss button', () => {

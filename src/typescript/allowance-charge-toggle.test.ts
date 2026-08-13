@@ -83,10 +83,26 @@ describe('AllowanceChargeToggleHandler — initial applyMode', () => {
     });
     afterEach(() => { document.body.innerHTML = ''; });
 
-    it('hides baseRow on init when the selected template has mfn = 0', () => {
-        const { baseRow } = makeDOM('1');
+    it.each([
+        {
+            description: 'hides baseRow on init when the selected template has mfn = 0',
+            selectValue: '1',
+            expectedDisplay: 'none',
+        },
+        {
+            description: 'shows baseRow on init when the selected template has mfn > 0',
+            selectValue: '2',
+            expectedDisplay: '',
+        },
+        {
+            description: 'hides baseRow for an unknown select value (falls back to mfn=0)',
+            selectValue: '99', // value not in TEMPLATES → getTemplate returns { mfn:0, base:0 }
+            expectedDisplay: 'none',
+        },
+    ])('$description', ({ selectValue, expectedDisplay }) => {
+        const { baseRow } = makeDOM(selectValue);
         const _handler = new AllowanceChargeToggleHandler();
-        expect(baseRow.style.display).toBe('none');
+        expect(baseRow.style.display).toBe(expectedDisplay);
     });
 
     it('clears formulaHint on init when mfn = 0', () => {
@@ -94,12 +110,6 @@ describe('AllowanceChargeToggleHandler — initial applyMode', () => {
         formulaHint.textContent = 'leftover text';
         const _handler = new AllowanceChargeToggleHandler();
         expect(formulaHint.textContent).toBe('');
-    });
-
-    it('shows baseRow on init when the selected template has mfn > 0', () => {
-        const { baseRow } = makeDOM('2');
-        const _handler = new AllowanceChargeToggleHandler();
-        expect(baseRow.style.display).toBe('');
     });
 
     it('pre-fills baseInput with template.base on init', () => {
@@ -120,13 +130,6 @@ describe('AllowanceChargeToggleHandler — initial applyMode', () => {
         const { formulaHint } = makeDOM('2');
         const _handler = new AllowanceChargeToggleHandler();
         expect(formulaHint.textContent).toBe('10 × 500 ÷ 100 = 50.00');
-    });
-
-    it('hides baseRow for an unknown select value (falls back to mfn=0)', () => {
-        // value='99' not in TEMPLATES → getTemplate returns { mfn:0, base:0 }
-        const { baseRow } = makeDOM('99');
-        const _handler = new AllowanceChargeToggleHandler();
-        expect(baseRow.style.display).toBe('none');
     });
 });
 
