@@ -89,16 +89,40 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     timeout-minutes: 6
-    
-    strategy:
-      matrix:
-        os:
-          - ubuntu-latest
-          - windows-latest
+    continue-on-error: ${{ matrix.experimental }}
 
-        php:
-          - 8.4  
-          - 8.5
+    strategy:
+      fail-fast: false
+      matrix:
+        # PHP 8.6/9.0 are pre-release — tolerated via continue-on-error rather
+        # than blocking the required 8.4/8.5 legs. windows-latest is paired
+        # explicitly with every PHP version rather than a free os x php
+        # cross-product, so each experimental leg carries its own flag.
+        include:
+          - os: ubuntu-latest
+            php: '8.4'
+            experimental: false
+          - os: ubuntu-latest
+            php: '8.5'
+            experimental: false
+          - os: ubuntu-latest
+            php: '8.6'
+            experimental: true
+          - os: ubuntu-latest
+            php: '9.0'
+            experimental: true
+          - os: windows-latest
+            php: '8.4'
+            experimental: false
+          - os: windows-latest
+            php: '8.5'
+            experimental: false
+          - os: windows-latest
+            php: '8.6'
+            experimental: true
+          - os: windows-latest
+            php: '9.0'
+            experimental: true
 
     steps:
       - name: Checkout
