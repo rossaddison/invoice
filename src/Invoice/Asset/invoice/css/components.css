@@ -489,6 +489,8 @@ textarea.form-control {
     padding-left: 6px;
     font-size: 1rem;
     max-width: 160px;
+    width: 100%;
+    box-sizing: border-box;
     font-weight: 500;
 }
 
@@ -501,6 +503,65 @@ textarea.form-control {
 #filter-client-group           { border-left-color: #dc3545; }
 #filter-address-1              { border-left-color: #d63384; }
 #filter-category-secondary-run { border-left-color: #6c757d; }
+
+/* ── Resizable-grid column headers ─────────────────────────────────────────
+   Applies to any GridView table opted into ColumnResizer: give the table's
+   ->tableAttributes(['class' => ...]) the shared 'resizable-grid' class and
+   ->columnGrouping(true) so it renders a real <colgroup>. Currently used by
+   #table-invoice, #table-invoice-guest, #table-quote, #table-quote-guest,
+   #table-salesorder and #table-salesorder-guest. ColumnResizer (compiled
+   from src/typescript/column-resizer.ts — never inline/raw JS, see
+   feedback_no_raw_script_tags) measures each header's auto-layout width,
+   writes it onto the matching <col>, and only then flips the table to
+   table-layout:fixed — all synchronously, before paint, so there is no
+   flash of equal-width columns. That's why table-layout isn't set here
+   statically; it's applied via TS alongside the widths it depends on.
+
+   The resize handle itself is pure CSS/markup: a thin strip docked to each
+   header cell's trailing edge. */
+/* thead td = the filter row's cells (GridView renders one <td> per column
+   there, right below the <th> header row) — needs the same clipping as the
+   header, or a filter widget wider than its now-fixed column bleeds into
+   the next one. */
+.resizable-grid thead th,
+.resizable-grid thead td {
+    position: relative;
+    overflow: hidden;
+}
+
+/* ColumnResizer.autoFit() deliberately fits a column's width to its *data*,
+   not its header label — a long header on a mostly-empty column (e.g.
+   "Street Address (cont'd)") shouldn't itself force the column wide. Letting
+   the label wrap onto a second line, instead of forcing single-line width,
+   is what makes that possible. */
+.resizable-grid thead th {
+    white-space: normal;
+    word-break: break-word;
+}
+
+.col-resize-handle {
+    position: absolute;
+    top: 0;
+    right: -3px;
+    width: 6px;
+    height: 100%;
+    cursor: col-resize;
+    z-index: 3;
+    background: transparent;
+}
+
+.col-resize-handle:hover,
+.col-resize-handle.col-resizing {
+    background: rgba(13, 110, 253, 0.35);
+}
+
+/* Set while dragging (on <body>) so the resize cursor and no-select apply
+   even when the pointer briefly leaves the handle during a fast drag. */
+body.col-resizing,
+body.col-resizing * {
+    cursor: col-resize !important;
+    user-select: none !important;
+}
 
 .inv-footer-label {
     display: block;

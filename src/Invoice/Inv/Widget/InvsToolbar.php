@@ -43,6 +43,31 @@ final class InvsToolbar
             ->id('btn-all-visible')
             ->render();
 
+        // Handled client-side by ColumnResizer.autoFit()/reset() (src/typescript/
+        // inv-index.ts) — not a form submission/reload, since column widths
+        // are a pure client-side/localStorage concern (see the resizable-columns
+        // feature). Two separate buttons rather than one toggle: fitting is a
+        // one-shot action (recompute, then it's just a normal saved width again),
+        // while reset is the only way back to the original free-flowing layout
+        // once anything — a drag or a fit — has pinned widths in localStorage.
+        $autoFitColumns = new HtmlButton()
+            ->type('button')
+            ->addAttributes(['data-bs-toggle' => 'tooltip',
+                'title' => Html::encode($p->translator->translate('autofit.columns'))])
+            ->addClass('btn btn-warning me-1')
+            ->content('📐')
+            ->id('btn-autofit-columns')
+            ->render();
+
+        $resetColumnWidths = new HtmlButton()
+            ->type('button')
+            ->addAttributes(['data-bs-toggle' => 'tooltip',
+                'title' => Html::encode($p->translator->translate('reset.column.widths'))])
+            ->addClass('btn btn-warning me-1')
+            ->content('🔄')
+            ->id('btn-reset-column-widths')
+            ->render();
+
         $copyMultiple = new A()
             ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'modal',
                 'title' => Html::encode($p->translator->translate('copy.invoice'))])
@@ -110,6 +135,8 @@ final class InvsToolbar
                     ->content($p->translator->translate('invoice'))
                 . Html::openTag('div', ['class' => 'btn-group me-2', 'role' => 'group'])
                 . $allVisible
+                . $autoFitColumns
+                . $resetColumnWidths
                 . $toolbarReset
                 . $copyMultiple
                 . $copyAllToDate

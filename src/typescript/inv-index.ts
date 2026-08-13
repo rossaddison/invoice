@@ -1,4 +1,5 @@
 import { AmountMagnifier, initGroupBySelect, initGroupCollapsible } from './list-utils.js';
+import { initColumnResizer } from './column-resizer.js';
 
 // Module-level refs keep the MutationObserver and setInterval alive after setup()
 let magnifier: AmountMagnifier;
@@ -147,6 +148,8 @@ export function initInvIndex(tableId = 'table-invoice', configElId = 'inv-filter
         }
 
         mobilePreview = new MobilePreviewToggle();
+
+        initColumnResizer(tableId);
     };
 
     if (document.readyState === 'loading') {

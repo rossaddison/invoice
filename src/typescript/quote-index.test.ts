@@ -25,4 +25,18 @@ describe('initQuoteIndex', () => {
     it('skips initGroupCollapsible when no group-header is present', () => {
         expect(() => initQuoteIndex()).not.toThrow();
     });
+
+    it('wires the column resizer against the default table-quote id', () => {
+        document.body.innerHTML = '<table id="table-quote"><colgroup><col /></colgroup>' +
+            '<thead><tr><th>A</th></tr></thead></table>';
+        initQuoteIndex();
+        expect(document.querySelectorAll('#table-quote .col-resize-handle')).toHaveLength(1);
+    });
+
+    it('wires the column resizer against a custom table id, for reuse on quote/guest', () => {
+        document.body.innerHTML = '<table id="table-quote-guest"><colgroup><col /></colgroup>' +
+            '<thead><tr><th>A</th></tr></thead></table>';
+        initQuoteIndex('table-quote-guest');
+        expect(document.querySelectorAll('#table-quote-guest .col-resize-handle')).toHaveLength(1);
+    });
 });

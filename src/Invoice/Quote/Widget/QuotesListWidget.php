@@ -201,7 +201,7 @@ final class QuotesListWidget extends Widget
         ));
 
         $tableClass = ($this->visible ? 'table-responsive' : 'table')
-            . ' table-bordered table-striped h-75';
+            . ' table-bordered table-striped h-75 resizable-grid';
 
         $gridView = GridView::widget()
             ->containerAttributes(['id' => self::DOM_ID, 'class' => 'position-relative'])

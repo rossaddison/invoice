@@ -30,6 +30,7 @@ import { initCustomFieldPosition } from './customfield-position.js';
 import { initJavascriptAnalysisFaq, initCodeceptionChecklistFaq } from './faq-pages.js';
 import { initInvIndex } from './inv-index.js';
 import { initQuoteIndex } from './quote-index.js';
+import { initSalesOrderIndex } from './salesorder-index.js';
 import { initE164PhoneFields } from './phone-e164.js';
 import { initHomeCareOffline } from './homecare-offline.js';
 
@@ -97,6 +98,15 @@ class InvoiceApp {
         initHomeCareOffline(); // no-ops unless the worker-only download button is present
         if (document.getElementById('table-quote')) {
             initQuoteIndex();
+        }
+        if (document.getElementById('table-quote-guest')) {
+            initQuoteIndex('table-quote-guest');
+        }
+        if (document.getElementById('table-salesorder')) {
+            initSalesOrderIndex();
+        }
+        if (document.getElementById('table-salesorder-guest')) {
+            initSalesOrderIndex('table-salesorder-guest');
         }
 
         console.log(
@@ -179,4 +189,4 @@ if (document.readyState === 'loading') {
 }
 
 // Export for potential external usage
-export { InvoiceApp, initInvIndex, initQuoteIndex };
+export { InvoiceApp, initInvIndex, initQuoteIndex, initSalesOrderIndex };

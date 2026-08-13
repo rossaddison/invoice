@@ -198,6 +198,57 @@ final class SalesOrdersListWidgetTest extends TestCase
     }
 
     // -------------------------------------------------------------------------
+    // Toolbar — buildToolbarString() is private (only reachable via the full
+    // render() pipeline, which needs a real GridView/Yii3 widget-factory
+    // bootstrap this suite deliberately avoids elsewhere), so it's invoked
+    // directly via reflection — no framework bootstrap needed, since
+    // buildToolbarString()/buildStatusBar() only build plain
+    // Yiisoft\Html\Tag values, not GridView itself.
+    // -------------------------------------------------------------------------
+
+    private function buildToolbarStringViaReflection(SalesOrdersListWidget $widget, bool $enableGrouping): string
+    {
+        $method = new \ReflectionMethod(SalesOrdersListWidget::class, 'buildToolbarString');
+        /** @var string */
+        return $method->invoke($widget, $enableGrouping);
+    }
+
+    public function testToolbarIncludesAutoFitColumnsButton(): void
+    {
+        $widget = $this->makeWidget()->withSoR($this->makeSoRWithTranslator());
+        self::assertStringContainsString(
+            'id="btn-autofit-columns"',
+            $this->buildToolbarStringViaReflection($widget, false),
+        );
+    }
+
+    public function testToolbarIncludesResetColumnWidthsButton(): void
+    {
+        $widget = $this->makeWidget()->withSoR($this->makeSoRWithTranslator());
+        self::assertStringContainsString(
+            'id="btn-reset-column-widths"',
+            $this->buildToolbarStringViaReflection($widget, false),
+        );
+    }
+
+    public function testToolbarAutoFitAndResetButtonsAreNotFormSubmitting(): void
+    {
+        // Both are client-side-only actions (ColumnResizer.autoFit()/reset()), not a
+        // form submit/reload — type="button", not the default type="submit".
+        $widget = $this->makeWidget()->withSoR($this->makeSoRWithTranslator());
+        $html = $this->buildToolbarStringViaReflection($widget, false);
+
+        self::assertMatchesRegularExpression(
+            '/id="btn-autofit-columns"[^>]*type="button"|type="button"[^>]*id="btn-autofit-columns"/',
+            $html,
+        );
+        self::assertMatchesRegularExpression(
+            '/id="btn-reset-column-widths"[^>]*type="button"|type="button"[^>]*id="btn-reset-column-widths"/',
+            $html,
+        );
+    }
+
+    // -------------------------------------------------------------------------
     // Immutable setter pattern
     // -------------------------------------------------------------------------
 

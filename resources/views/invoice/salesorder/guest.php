@@ -6,6 +6,7 @@ use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
+use Yiisoft\Html\Tag\Button as HtmlButton;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
@@ -39,6 +40,27 @@ $toolbarReset =  new A()
     ->content( new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'salesorder/guest'))
     ->id('btn-reset')
+    ->render();
+
+// Handled client-side by ColumnResizer.autoFit()/reset() (src/typescript/
+// column-resizer.ts) — not a form submission/reload, since column widths
+// are a pure client-side/localStorage concern.
+$autoFitColumns = new HtmlButton()
+    ->type('button')
+    ->addAttributes(['data-bs-toggle' => 'tooltip',
+        'title' => Html::encode($translator->translate('autofit.columns'))])
+    ->addClass('btn btn-warning me-1')
+    ->content('📐')
+    ->id('btn-autofit-columns')
+    ->render();
+
+$resetColumnWidths = new HtmlButton()
+    ->type('button')
+    ->addAttributes(['data-bs-toggle' => 'tooltip',
+        'title' => Html::encode($translator->translate('reset.column.widths'))])
+    ->addClass('btn btn-warning me-1')
+    ->content('🔄')
+    ->id('btn-reset-column-widths')
     ->render();
 
 // see SalesOrder/SalesOrderRepository getStatuses function
@@ -243,13 +265,16 @@ $toolbarString
             $urlGenerator->generate('salesorder/guest'))->csrf($csrf)->open()
     . $statusBar
     .  new Div()->addClass(
-            'float-end m-3')->content($toolbarReset)->encode(false)->render()
+            'float-end m-3')->content(
+                $toolbarReset . $autoFitColumns . $resetColumnWidths
+            )->encode(false)->render()
     .  new Form()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
-->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' =>
-    'table-quote'])
+->tableAttributes(['class' => 'table table-striped text-center h-75 resizable-grid', 'id' =>
+    'table-salesorder-guest'])
+->columnGrouping(true)
 ->dataReader($paginator)
 ->columns(...$columns)
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])

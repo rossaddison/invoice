@@ -35,7 +35,7 @@ final class QuotesToolbar
         bool $enableGrouping,
     ): string {
         $currentRouteName = $currentRoute->getName() ?? self::ROUTE_INDEX;
-        [$toolbarReset, $allVisible, $enabledAddBtn, $disabledAddBtn]
+        [$toolbarReset, $allVisible, $enabledAddBtn, $disabledAddBtn, $autoFitColumns, $resetColumnWidths]
             = self::buildToolbarButtons($currentRouteName, $urlGenerator, $translator);
         $buttons = new QuotesToolbarButtons(
             toolbarReset:         $toolbarReset,
@@ -43,6 +43,8 @@ final class QuotesToolbar
             enabledAddBtn:        $enabledAddBtn,
             disabledAddBtn:       $disabledAddBtn,
             changeStatusDropdown: self::buildChangeStatusDropdown($translator),
+            autoFitColumns:       $autoFitColumns,
+            resetColumnWidths:    $resetColumnWidths,
         );
         return self::buildToolbarString(
             $translator, $urlGenerator, $csrf, $clientCount, $groupBy, $enableGrouping,
@@ -50,7 +52,7 @@ final class QuotesToolbar
         );
     }
 
-    /** @return array{0: string, 1: string, 2: string, 3: string} */
+    /** @return array{0: string, 1: string, 2: string, 3: string, 4: string, 5: string} */
     private static function buildToolbarButtons(
         string $currentRouteName,
         UrlGeneratorInterface $urlGenerator,
@@ -104,7 +106,28 @@ final class QuotesToolbar
             ->id('btn-disabled-quote-add-button')
             ->render();
 
-        return [$toolbarReset, $allVisible, $enabledAddBtn, $disabledAddBtn];
+        // Handled client-side by ColumnResizer.autoFit()/reset() (src/typescript/
+        // column-resizer.ts) — not a form submission/reload, since column widths
+        // are a pure client-side/localStorage concern.
+        $autoFitColumns = (new HtmlButton())
+            ->type('button')
+            ->addAttributes(['data-bs-toggle' => 'tooltip',
+                'title' => Html::encode($translator->translate('autofit.columns'))])
+            ->addClass('btn btn-warning me-1')
+            ->content('📐')
+            ->id('btn-autofit-columns')
+            ->render();
+
+        $resetColumnWidths = (new HtmlButton())
+            ->type('button')
+            ->addAttributes(['data-bs-toggle' => 'tooltip',
+                'title' => Html::encode($translator->translate('reset.column.widths'))])
+            ->addClass('btn btn-warning me-1')
+            ->content('🔄')
+            ->id('btn-reset-column-widths')
+            ->render();
+
+        return [$toolbarReset, $allVisible, $enabledAddBtn, $disabledAddBtn, $autoFitColumns, $resetColumnWidths];
     }
 
     private static function buildChangeStatusDropdown(TranslatorInterface $translator): string
@@ -221,6 +244,8 @@ final class QuotesToolbar
                     ->content($translator->translate('quote'))
                 . Html::openTag('div', ['class' => 'btn-group me-2', 'role' => 'group'])
                 . $buttons->allVisible
+                . $buttons->autoFitColumns
+                . $buttons->resetColumnWidths
                 . $buttons->toolbarReset
                 . ($clientCount == 0 ? $buttons->disabledAddBtn : $buttons->enabledAddBtn)
                 . Html::closeTag('div')
