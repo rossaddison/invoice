@@ -194,7 +194,7 @@ final class SalesOrdersListWidget extends Widget
         $gridView = GridView::widget()
             ->containerAttributes(['id' => self::DOM_ID, 'class' => 'position-relative'])
             ->bodyRowAttributes(['class' => 'align-middle'])
-            ->tableAttributes(['class' => 'table table-striped text-center h-75',
+            ->tableAttributes(['class' => 'table table-striped text-center h-75 resizable-grid',
                 'id' => 'table-salesorder'])
             ->columns(...$columns)
             ->columnGrouping(true)
@@ -254,6 +254,27 @@ final class SalesOrdersListWidget extends Widget
             ->id('btn-all-visible')
             ->render();
 
+        // Handled client-side by ColumnResizer.autoFit()/reset() (src/typescript/
+        // column-resizer.ts) — not a form submission/reload, since column widths
+        // are a pure client-side/localStorage concern.
+        $autoFitColumns = (new HtmlButton())
+            ->type('button')
+            ->addAttributes(['data-bs-toggle' => 'tooltip',
+                'title' => Html::encode($t->translate('autofit.columns'))])
+            ->addClass('btn btn-warning me-1')
+            ->content('📐')
+            ->id('btn-autofit-columns')
+            ->render();
+
+        $resetColumnWidths = (new HtmlButton())
+            ->type('button')
+            ->addAttributes(['data-bs-toggle' => 'tooltip',
+                'title' => Html::encode($t->translate('reset.column.widths'))])
+            ->addClass('btn btn-warning me-1')
+            ->content('🔄')
+            ->id('btn-reset-column-widths')
+            ->render();
+
         $groupBySelect = (new Div())
             ->addClass('d-flex align-items-center gap-1')
             ->addAttributes(['role' => 'group'])
@@ -304,6 +325,8 @@ final class SalesOrdersListWidget extends Widget
                 ->content(
                     Html::openTag('div', ['class' => 'btn-group me-2', 'role' => 'group'])
                     . $allVisible
+                    . $autoFitColumns
+                    . $resetColumnWidths
                     . $toolbarReset
                     . Html::closeTag('div')
                     . $this->buildStatusBar()
