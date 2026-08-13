@@ -833,6 +833,10 @@ if ((null !== $currentPath) && !$isGuest) {
                     'https://php.watch/versions/8.5',
                     $debugMode, false, itemAttributes: $itemFontArray +
                     ['style' => 'background-color: #ffcccb']),
+                DropdownItem::link('8.6',
+                    'https://php.watch/versions/8.6',
+                    $debugMode, false, itemAttributes: $itemFontArray +
+                    ['style' => 'background-color: #ffcccb']),
             ),
             // Emojipedia.org
             Dropdown::widget()
