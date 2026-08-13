@@ -6,6 +6,7 @@ namespace App\Auth\Controller;
 
 use App\Auth\AuthService;
 use App\Auth\Form\HomeCareSignupForm;
+use App\Auth\HomeCareSignupEmailService;
 use App\Auth\Trait\ClassList;
 use App\Auth\Trait\TurnstileVerification;
 use App\Infrastructure\Persistence\CategorySecondary\CategorySecondary;
@@ -17,7 +18,6 @@ use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\InvItem\InvItem;
 use App\Infrastructure\Persistence\Payment\Payment;
 use App\Infrastructure\Persistence\TaxRate\TaxRate;
-use App\Infrastructure\Persistence\Token\Token;
 use App\Infrastructure\Persistence\Unit\Unit;
 use App\Infrastructure\Persistence\User\User;
 use App\Infrastructure\Persistence\UserClient\UserClient;
@@ -32,12 +32,7 @@ use App\Service\WebControllerService;
 use App\User\UserRepository as UR;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Log\LoggerInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Html\Tag\A;
-use Yiisoft\Html\Tag\Body;
-use Yiisoft\Mailer\Message;
-use Yiisoft\Mailer\MailerInterface;
 use Yiisoft\Rbac\Manager;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\FastRoute\UrlGenerator;
@@ -71,11 +66,10 @@ final class HomeCareSignupController
         private readonly AuthService $authService,
         private readonly WebControllerService $webService,
         private WebViewRenderer $webViewRenderer,
-        private readonly MailerInterface $mailer,
+        private readonly HomeCareSignupEmailService $emailService,
         private readonly sR $sR,
         private readonly Translator $translator,
         private readonly UrlGenerator $urlGenerator,
-        private readonly LoggerInterface $logger,
     ) {
         $this->webViewRenderer = $webViewRenderer->withControllerName('homecaresignup');
     }
@@ -105,8 +99,8 @@ final class HomeCareSignupController
             $user = $signupForm->signup();
             $userId = $user->reqId();
             if ($userId > 0) {
-                $this->savePendingSignup($userId, $signupForm, $d);
-                $redirect = $this->processSendSignupEmail($user, $currentRoute, $d);
+                $this->emailService->savePendingSignup($userId, $signupForm, $d);
+                $redirect = $this->emailService->processSendSignupEmail($user, $currentRoute, $d);
             }
             $redirect = $redirect ?? $this->webService->getRedirectResponse('site/signupsuccess');
         }
@@ -126,110 +120,6 @@ final class HomeCareSignupController
             'categorySecondaryOptions' => $categorySecondaryOptions,
             'turnstileSiteKey' => $this->sR->getSetting('turnstile_site_key'),
         ]);
-    }
-
-    private function savePendingSignup(int $userId, HomeCareSignupForm $signupForm, HomeCareSignupDeps $d): void
-    {
-        $pending = new HomeCarePendingSignup();
-        $pending->setUserId($userId);
-        $pending->setClientName($signupForm->getClientName());
-        $pending->setClientSurname($signupForm->getClientSurname());
-        $pending->setStreet($signupForm->getStreet());
-        $pending->setBuildingNumber($signupForm->getBuildingNumber());
-        $pending->setPrice((float) $signupForm->getPrice());
-        $pending->setPaymentOption($signupForm->getPaymentOption());
-        $pending->setSecondaryCategoryId($signupForm->getSecondaryCategoryId());
-        $d->pendingR->save($pending);
-    }
-
-    private function processSendSignupEmail(
-        User $user,
-        CurrentRoute $currentRoute,
-        HomeCareSignupDeps $d,
-    ): ?Response {
-        $to = $user->getEmail();
-        $login = $user->getLogin();
-        $languageArray = $this->sR->localeLanguageArray();
-        $_language = $currentRoute->getArgument('_language');
-        /**
-         * @var string $_language
-         * @var string $language
-         */
-        $language = $languageArray[$_language];
-        $randomAndTimeToken = $this->getEmailVerificationToken($user, $d);
-        $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink(
-            $user, $d->uiR, $language, $_language, $randomAndTimeToken);
-        if (($this->sR->getSetting('email_send_method') == 'symfony')
-                || ($this->sR->mailerEnabled())) {
-            $configEmail = $this->sR->getConfigAdminEmail();
-            $tta = $this->translator->translate('administrator');
-            $email = new Message(
-                charset: 'utf-8',
-                headers: [
-                    'X-Origin' => ['0', '1'],
-                    'X-Pass' => 'pass',
-                ],
-                subject: $login . ': <' . $to . '>',
-                date: new \DateTimeImmutable('now'),
-                from: [$configEmail => $tta],
-                to: $to,
-                htmlBody: $htmlBody,
-            );
-            $email->withAddedHeader('Message-ID', $this->sR->getConfigAdminEmail());
-            try {
-                $this->mailer->send($email);
-            } catch (\Exception $e) {
-                $this->logger->error($e->getMessage());
-                return $this->webService->getRedirectResponse('site/signupfailed');
-            }
-        }
-        return null;
-    }
-
-    private function htmlBodyWithMaskedRandomAndTimeTokenLink(
-        User $user,
-        UIR $uiR,
-        string $language,
-        string $_language,
-        string $randomAndTimeToken,
-    ): string {
-        $tokenWithMask = TokenMask::apply($randomAndTimeToken);
-        $userInv = new UserInv();
-        $userId = $user->reqId();
-        $elcc = $this->translator->translate('email.link.click.confirm');
-        $userInv->setUserId($userId);
-        $userInv->setType($userId == 1 ? 0 : 1);
-        // Kept inactive until the confirmation link is clicked, same as the
-        // generic signup flow.
-        $userInv->setActive(false);
-        $userInv->setLanguage($language);
-        $uiR->save($userInv);
-        $content = new A()
-            ->href($this->urlGenerator->generateAbsolute(
-                'homecare/signup-confirm',
-                [
-                    '_language' => $_language,
-                    'language' => $language,
-                    'token' => $tokenWithMask,
-                    'tokenType' => 'homecare-email-verification',
-                ],
-            ))
-            ->content($elcc);
-        return new Body()
-            ->content($content)
-            ->render();
-    }
-
-    private function getEmailVerificationToken(User $user, HomeCareSignupDeps $d): string
-    {
-        $identity = $user->getIdentity();
-        $identityId = $identity->getId();
-        $token = new Token((int) $identityId, self::EMAIL_VERIFICATION_TOKEN);
-        $d->tR->save($token);
-        $tokenString = $token->getToken();
-        $timeString = (string) $token->getCreatedAt()->getTimestamp();
-        return null !== $tokenString ?
-            ($tokenString . '_' . $timeString) : '';
     }
 
     public function confirm(

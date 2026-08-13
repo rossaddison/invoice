@@ -21,14 +21,6 @@ use Cycle\ORM\Select;
 final class ClientDwellingRepository extends Select\Repository
 {
     /**
-     * @param Select<TEntity> $select
-     */
-    public function __construct(Select $select)
-    {
-        parent::__construct($select);
-    }
-
-    /**
      * Every dwelling_id currently claimed by a Client — the "already occupied" side of the worker
      * canvassing dropdown's unclaimed-Dwelling anti-join, composed at the service layer
      * ({@see \App\Invoice\Dwelling\DwellingService::repoUnclaimedDwellings()}).

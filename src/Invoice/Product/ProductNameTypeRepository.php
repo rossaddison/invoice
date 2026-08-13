@@ -21,14 +21,6 @@ use Cycle\ORM\Select;
 final class ProductNameTypeRepository extends Select\Repository
 {
     /**
-     * @param Select<TEntity> $select
-     */
-    public function __construct(Select $select)
-    {
-        parent::__construct($select);
-    }
-
-    /**
      * Exact match on product_name + product_type, unscoped by family — used to find-or-create the single
      * shared Service-type Product a HomeCare invoice line references (see
      * {@see \App\Invoice\Product\ProductService::findOrCreateHomeCareServiceProduct()}), where family_id
