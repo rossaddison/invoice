@@ -289,9 +289,19 @@ echo H::openTag('div', $row); //1
      'for' => $pfxGateway . $d . '_' .
      $key . ']'
     ]);
-      echo $translator->translate(
-       'online.payment.' . $key
-      );
+      // Most gateways share the generic online.payment.{key} label
+      // ('Secret Key', 'Webhook Secret', ...) — fine when every gateway
+      // really does call it that. Where a gateway's own dashboard uses
+      // different wording (e.g. Checkout.com's 'Secret API Key'/'Webhook
+      // Signature Key'), an online.payment.{driver}.{key} override takes
+      // priority. translate() returns the id itself, unchanged, when no
+      // message is defined for it — the documented Yii3 way to detect a
+      // missing key, used here rather than a separate "has key" lookup.
+      $gatewaySpecificLabelKey = 'online.payment.' . $d . '.' . $key;
+      $gatewaySpecificLabel = $translator->translate($gatewaySpecificLabelKey);
+      echo $gatewaySpecificLabel !== $gatewaySpecificLabelKey
+       ? $gatewaySpecificLabel
+       : $translator->translate('online.payment.' . $key);
      echo H::closeTag('label');
      echo H::openTag('input', [
       'type' => $setting['type'],
