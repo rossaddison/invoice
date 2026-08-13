@@ -167,11 +167,11 @@ trait SettingPaymentTrait
         return [
             'secretKey' => [
                 'type' => 'password',
-                'label' => 'Secret Key',
+                'label' => 'Secret API Key',
             ],
             'publicKey' => [
                 'type' => 'password',
-                'label' => 'Public Key',
+                'label' => 'Public API Key',
             ],
             'webhookSecret' => [
                 'type' => 'password',
