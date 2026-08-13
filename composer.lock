@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6dfd47372062d6ce66a3c4edc74c53e7",
+    "content-hash": "047537ad402ef76531178cb93aeeb595",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -3284,16 +3284,16 @@
         },
         {
             "name": "gocardless/gocardless-pro",
-            "version": "8.0.3",
+            "version": "8.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gocardless/gocardless-pro-php.git",
-                "reference": "6fd76cb669f27e55b9379ca33af309e313a1bacf"
+                "reference": "e0a6e3a76e937395a61b626878309ff67e05a8fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gocardless/gocardless-pro-php/zipball/6fd76cb669f27e55b9379ca33af309e313a1bacf",
-                "reference": "6fd76cb669f27e55b9379ca33af309e313a1bacf",
+                "url": "https://api.github.com/repos/gocardless/gocardless-pro-php/zipball/e0a6e3a76e937395a61b626878309ff67e05a8fe",
+                "reference": "e0a6e3a76e937395a61b626878309ff67e05a8fe",
                 "shasum": ""
             },
             "require": {
@@ -3304,9 +3304,9 @@
                 "php": ">=8.2"
             },
             "require-dev": {
-                "phpstan/phpstan": "^2.2",
+                "phpstan/phpstan": "^2.2.8",
                 "phpunit/phpunit": "^9.6.35",
-                "squizlabs/php_codesniffer": "^4.0"
+                "squizlabs/php_codesniffer": "^4.0.4"
             },
             "type": "library",
             "autoload": {
@@ -3333,9 +3333,9 @@
             ],
             "support": {
                 "issues": "https://github.com/gocardless/gocardless-pro-php/issues",
-                "source": "https://github.com/gocardless/gocardless-pro-php/tree/v8.0.3"
+                "source": "https://github.com/gocardless/gocardless-pro-php/tree/v8.0.6"
             },
-            "time": "2026-07-29T15:02:48+00:00"
+            "time": "2026-08-13T12:57:21+00:00"
         },
         {
             "name": "google/auth",
