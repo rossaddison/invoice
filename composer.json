@@ -155,7 +155,7 @@
         "yiisoft/yii-runner-console": "^2.2.1",
         "yiisoft/yii-runner-http": "^3.2.1",
         "yiisoft/yii-view-renderer": "^7.4.1",
-        "zircote/swagger-php": ">=6.5.2"
+        "zircote/swagger-php": ">=6.5.3"
     },
     "require-dev": {
         "codeception/c3": "^2.9",
@@ -170,7 +170,7 @@
         "mockery/mockery": "^1.6.12",
         "phpunit/php-code-coverage": ">=14.2.2",
         "phpunit/phpunit": ">=13.1.4",
-        "rector/rector": "^2.6.0",
+        "rector/rector": "^2.6.2",
         "roave/better-reflection": "^6.72",
         "roave/infection-static-analysis-plugin": ">=1.44",
         "roave/security-advisories": "dev-latest",
