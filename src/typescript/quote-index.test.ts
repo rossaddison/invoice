@@ -30,13 +30,13 @@ describe('initQuoteIndex', () => {
         document.body.innerHTML = '<table id="table-quote"><colgroup><col /></colgroup>' +
             '<thead><tr><th>A</th></tr></thead></table>';
         initQuoteIndex();
-        expect(document.querySelectorAll('#table-quote .col-resize-handle').length).toBe(1);
+        expect(document.querySelectorAll('#table-quote .col-resize-handle')).toHaveLength(1);
     });
 
     it('wires the column resizer against a custom table id, for reuse on quote/guest', () => {
         document.body.innerHTML = '<table id="table-quote-guest"><colgroup><col /></colgroup>' +
             '<thead><tr><th>A</th></tr></thead></table>';
         initQuoteIndex('table-quote-guest');
-        expect(document.querySelectorAll('#table-quote-guest .col-resize-handle').length).toBe(1);
+        expect(document.querySelectorAll('#table-quote-guest .col-resize-handle')).toHaveLength(1);
     });
 });

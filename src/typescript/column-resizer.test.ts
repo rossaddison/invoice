@@ -55,7 +55,7 @@ describe('ColumnResizer', () => {
     it('appends a resize handle to every header cell', () => {
         buildTable();
         initColumnResizer('table-invoice');
-        expect(document.querySelectorAll('.col-resize-handle').length).toBe(2);
+        expect(document.querySelectorAll('.col-resize-handle')).toHaveLength(2);
     });
 
     it('measures each header width onto the matching col and flips to fixed layout', () => {
@@ -78,7 +78,7 @@ describe('ColumnResizer', () => {
         buildTable();
         initColumnResizer('table-invoice');
         document.body.dispatchEvent(new Event('htmx:afterSwap'));
-        expect(document.querySelectorAll('.col-resize-handle').length).toBe(2);
+        expect(document.querySelectorAll('.col-resize-handle')).toHaveLength(2);
     });
 
     it('re-attaches handles to a freshly swapped-in table', () => {
@@ -87,7 +87,7 @@ describe('ColumnResizer', () => {
         document.getElementById('table-invoice')?.remove();
         buildTable();
         document.body.dispatchEvent(new Event('htmx:afterSwap'));
-        expect(document.querySelectorAll('.col-resize-handle').length).toBe(2);
+        expect(document.querySelectorAll('.col-resize-handle')).toHaveLength(2);
     });
 
     it('does not throw when the table is absent', () => {
@@ -102,7 +102,7 @@ describe('ColumnResizer', () => {
             </table>
         `;
         expect(() => initColumnResizer('table-invoice')).not.toThrow();
-        expect(document.querySelectorAll('.col-resize-handle').length).toBe(0);
+        expect(document.querySelectorAll('.col-resize-handle')).toHaveLength(0);
     });
 
     describe('dragging', () => {

@@ -21,13 +21,13 @@ describe('initSalesOrderIndex', () => {
         document.body.innerHTML = '<table id="table-salesorder"><colgroup><col /></colgroup>' +
             '<thead><tr><th>A</th></tr></thead></table>';
         initSalesOrderIndex();
-        expect(document.querySelectorAll('#table-salesorder .col-resize-handle').length).toBe(1);
+        expect(document.querySelectorAll('#table-salesorder .col-resize-handle')).toHaveLength(1);
     });
 
     it('wires the column resizer against a custom table id, for reuse on salesorder/guest', () => {
         document.body.innerHTML = '<table id="table-salesorder-guest"><colgroup><col /></colgroup>' +
             '<thead><tr><th>A</th></tr></thead></table>';
         initSalesOrderIndex('table-salesorder-guest');
-        expect(document.querySelectorAll('#table-salesorder-guest .col-resize-handle').length).toBe(1);
+        expect(document.querySelectorAll('#table-salesorder-guest .col-resize-handle')).toHaveLength(1);
     });
 });
