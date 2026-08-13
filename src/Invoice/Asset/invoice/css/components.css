@@ -492,14 +492,15 @@ textarea.form-control {
     font-weight: 500;
 }
 
-#filter-inv-number        { border-left-color: #0d6efd; }
-#filter-credit-inv-number { border-left-color: #6610f2; }
-#filter-family-name       { border-left-color: #6f42c1; }
-#filter-year-month        { border-left-color: #fd7e14; }
-#filter-status            { border-left-color: #198754; }
-#filter-client            { border-left-color: #0dcaf0; }
-#filter-client-group      { border-left-color: #dc3545; }
-#filter-address-1         { border-left-color: #d63384; }
+#filter-inv-number             { border-left-color: #0d6efd; }
+#filter-credit-inv-number      { border-left-color: #6610f2; }
+#filter-family-name            { border-left-color: #6f42c1; }
+#filter-year-month             { border-left-color: #fd7e14; }
+#filter-status                 { border-left-color: #198754; }
+#filter-client                 { border-left-color: #0dcaf0; }
+#filter-client-group           { border-left-color: #dc3545; }
+#filter-address-1              { border-left-color: #d63384; }
+#filter-category-secondary-run { border-left-color: #6c757d; }
 
 .inv-footer-label {
     display: block;
