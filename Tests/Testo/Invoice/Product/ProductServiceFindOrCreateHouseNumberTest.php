@@ -10,6 +10,7 @@ use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use App\Infrastructure\Persistence\Unit\Unit;
 use App\Invoice\Enum\ProductType;
 use App\Invoice\Family\FamilyRepository;
+use App\Invoice\Product\ProductNameTypeRepository;
 use App\Invoice\Product\ProductRepository;
 use App\Invoice\Product\ProductService;
 use App\Invoice\TaxRate\TaxRateRepository;
@@ -53,11 +54,12 @@ final class ProductServiceFindOrCreateHouseNumberTest
         $e->once()->with('12', 5)->andReturn($this->readerYielding([$existing]));
         $productR->shouldNotReceive('save');
 
+        $nameTypeR = m::mock(ProductNameTypeRepository::class);
         $fR = m::mock(FamilyRepository::class);
         $trR = m::mock(TaxRateRepository::class);
         $unR = m::mock(UnitRepository::class);
 
-        $service = new ProductService($productR, $fR, $trR, $unR);
+        $service = new ProductService($productR, $nameTypeR, $fR, $trR, $unR);
 
         Assert::same(
             $existing,
@@ -94,7 +96,8 @@ final class ProductServiceFindOrCreateHouseNumberTest
         $e5 = $unR->shouldReceive('repoUnitquery');
         $e5->andReturn(m::mock(Unit::class));
 
-        $service = new ProductService($productR, $fR, $trR, $unR);
+        $nameTypeR = m::mock(ProductNameTypeRepository::class);
+        $service = new ProductService($productR, $nameTypeR, $fR, $trR, $unR);
         $product = $service->findOrCreateHouseNumberProduct(5, '14', 35.00, 2, 3);
 
         Assert::same('14', $product->getProductName());
@@ -112,11 +115,12 @@ final class ProductServiceFindOrCreateHouseNumberTest
         $e = $productR->expects('delete');
         $e->once()->with($product);
 
+        $nameTypeR = m::mock(ProductNameTypeRepository::class);
         $fR = m::mock(FamilyRepository::class);
         $trR = m::mock(TaxRateRepository::class);
         $unR = m::mock(UnitRepository::class);
 
-        $service = new ProductService($productR, $fR, $trR, $unR);
+        $service = new ProductService($productR, $nameTypeR, $fR, $trR, $unR);
         $service->deleteProduct($product);
     }
 }

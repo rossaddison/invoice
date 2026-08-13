@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 use App\Infrastructure\Persistence\As4Message\As4Message;
 use App\Infrastructure\Persistence\As4Message\CycleOrmAs4MessageRepository;
+use App\Infrastructure\Persistence\Client\Client;
+use App\Infrastructure\Persistence\Product\Product;
 use App\Infrastructure\Persistence\UserRbacLink\UserRbacLink;
+use App\Invoice\Client\ClientDwellingRepository;
+use App\Invoice\Product\ProductNameTypeRepository;
 use App\Invoice\UserInv\UserRbacLinkRepository;
 use Cycle\Database\DatabaseInterface;
 use Cycle\Database\DatabaseManager;
@@ -54,5 +58,19 @@ return [
             $writer,
             $db,
         );
+    },
+
+    // ClientDwellingRepository is not Client's Cycle-ORM-designated repository (that's still
+    // ClientRepository, per Client's own #[Entity(repository: ...)] attribute), so it needs the same
+    // explicit Select<Client> wiring as CycleOrmAs4MessageRepository above — split out purely to keep
+    // ClientRepository under SonarQube's php:S1448 method-count ceiling.
+    ClientDwellingRepository::class => static function (ORMInterface $orm): ClientDwellingRepository {
+        return new ClientDwellingRepository(new Select($orm, Client::class));
+    },
+
+    // Same reasoning as ClientDwellingRepository above — split out purely to keep ProductRepository
+    // under SonarQube's php:S1448 method-count ceiling.
+    ProductNameTypeRepository::class => static function (ORMInterface $orm): ProductNameTypeRepository {
+        return new ProductNameTypeRepository(new Select($orm, Product::class));
     },
 ];

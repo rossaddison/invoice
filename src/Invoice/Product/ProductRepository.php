@@ -199,27 +199,6 @@ final class ProductRepository extends Select\Repository implements ProductReposi
     }
 
     /**
-     * Exact match on product_name + product_type, unscoped by family — used to find-or-create the single
-     * shared Service-type Product a HomeCare invoice line references (see
-     * {@see \App\Invoice\Product\ProductService::findOrCreateHomeCareServiceProduct()}), where family_id
-     * is a structural FK requirement only (Product.family's BelongsTo is nullable: false) and carries no
-     * semantic meaning for this particular Product — unlike repoProductWithFamilyIdQuery(), which is
-     * deliberately family-scoped for the (unrelated) commalist bulk-generation dedup check.
-     *
-     * @return Product|null
-     *
-     * @psalm-return TEntity|null
-     */
-    public function repoProductByNameAndTypeQuery(string $product_name, string $product_type): ?Product
-    {
-        $query = $this
-            ->select()
-            ->where(['product_name' => $product_name])
-            ->andWhere(['product_type' => $product_type]);
-        return $query->fetchOne() ?: null;
-    }
-
-    /**
      * Get products with filter using views/invoice/product/modal_product_lookups_inv or ...quote
      * Excludes zero-valued products for invoice/quote selection
      *
