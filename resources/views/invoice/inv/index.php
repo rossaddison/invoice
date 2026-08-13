@@ -11,6 +11,7 @@ use Yiisoft\Html\Html as H;
 /**
  * @var App\Invoice\CategorySecondary\CategorySecondaryRepository $csR
  * @var App\Invoice\DeliveryLocation\DeliveryLocationRepository $dlR
+ * @var App\Invoice\Dwelling\DwellingRepository $dwR
  * @var App\Invoice\Inv\InvRepository $iR
  * @var App\Invoice\InvRecurring\InvRecurringRepository $irR
  * @var App\Invoice\InvSentLog\InvSentLogRepository $islR
@@ -178,6 +179,7 @@ echo InvsListWidget::widget()
     ->withEmailRepositories($etR, $fdR)
     ->withWorkerRepository($wR)
     ->withCategorySecondaryRepository($csR)
+    ->withDwellingRepository($dwR)
     ->withCsrf($csrf)
     ->withDecimalPlaces($decimalPlaces)
     ->withVisible($visible)
