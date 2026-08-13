@@ -128,6 +128,7 @@ return [
   'assigned.clients' => 'Assigned Clients',
   'attachment.list' => 'Attachment List',
   'attachments' => 'Attachments',
+  'autofit.columns' => 'Auto-fit column widths to content',
   'automatic.email.on.recur' => 'Automatically Email'
     . ' recurring invoices',
   'back' => 'Back',
@@ -2317,6 +2318,7 @@ prior to importing and no existing documents e.g. Invoices.',
     'Test Fraud Prevention Headers API',
   'reports' => 'Reports',
   'reset' => 'Reset',
+  'reset.column.widths' => 'Reset column widths to default',
   'reset.password' => 'Reset password',
   'rules.peppol.en16931.001' => 'Business Process'
     . ' or the Profile ID'

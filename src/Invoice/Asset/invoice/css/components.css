@@ -489,6 +489,8 @@ textarea.form-control {
     padding-left: 6px;
     font-size: 1rem;
     max-width: 160px;
+    width: 100%;
+    box-sizing: border-box;
     font-weight: 500;
 }
 
@@ -514,9 +516,24 @@ textarea.form-control {
 
    The resize handle itself is pure CSS/markup: a thin strip docked to each
    header cell's trailing edge. */
-#table-invoice thead th {
+/* thead td = the filter row's cells (GridView renders one <td> per column
+   there, right below the <th> header row) — needs the same clipping as the
+   header, or a filter widget wider than its now-fixed column bleeds into
+   the next one. */
+#table-invoice thead th,
+#table-invoice thead td {
     position: relative;
     overflow: hidden;
+}
+
+/* ColumnResizer.autoFit() deliberately fits a column's width to its *data*,
+   not its header label — a long header on a mostly-empty column (e.g.
+   "Street Address (cont'd)") shouldn't itself force the column wide. Letting
+   the label wrap onto a second line, instead of forcing single-line width,
+   is what makes that possible. */
+#table-invoice thead th {
+    white-space: normal;
+    word-break: break-word;
 }
 
 .col-resize-handle {

@@ -193,18 +193,31 @@ describe('initInvIndex', () => {
 
         function buildTable(): void {
             document.body.innerHTML += `
+                <button id="btn-autofit-columns"></button>
+                <button id="btn-reset-column-widths"></button>
                 <table id="table-invoice">
                     <colgroup><col /><col /></colgroup>
                     <thead>
                         <tr><th id="th0">A</th><th id="th1">B</th></tr>
                         <tr><td>filter</td><td>filter</td></tr>
                     </thead>
-                    <tbody><tr><td>1</td><td>2</td></tr></tbody>
+                    <tbody>
+                        <tr><td>1</td><td>2</td></tr>
+                        <tr><td>3</td><td>4</td></tr>
+                    </tbody>
                 </table>
             `;
             document.querySelectorAll('#table-invoice thead th').forEach((th, i) => {
                 vi.spyOn(th, 'getBoundingClientRect').mockReturnValue(
                     { width: 100 + i * 20 } as DOMRect,
+                );
+            });
+            // Deliberately much narrower than the header widths above, so
+            // autoFit tests can prove it fits to this (the data), not those.
+            document.querySelectorAll('#table-invoice tbody td').forEach((td, i) => {
+                const colIndex = i % 2;
+                vi.spyOn(td, 'getBoundingClientRect').mockReturnValue(
+                    { width: 25 + colIndex * 5 } as DOMRect,
                 );
             });
         }
@@ -317,6 +330,147 @@ describe('initInvIndex', () => {
                 document.dispatchEvent(new MouseEvent('mouseup'));
                 document.dispatchEvent(new MouseEvent('mousemove', { clientX: 500 }));
                 expect(cols()[0].style.width).toBe('100px');
+            });
+        });
+
+        describe('autoFit (📐 toolbar button)', () => {
+            it('fits to the data, not the (much wider) header — overriding a previously saved width', () => {
+                localStorage.setItem(STORAGE_KEY_0, '300');
+                buildTable();
+                initInvIndex();
+                expect(cols()[0].style.width).toBe('300px');
+
+                document.getElementById('btn-autofit-columns')?.click();
+
+                // buildTable()'s th mock is 100px; the td mock (what a real column's
+                // body content usually is) is only 25px — proving autoFit reads the
+                // data, not the header, which stays untouched at 100px regardless.
+                expect(cols()[0].style.width).toBe('25px');
+                expect(localStorage.getItem(STORAGE_KEY_0)).toBe('25');
+            });
+
+            it('grows a column whose data is wider than its header, rather than clamping to the header', () => {
+                buildTable();
+                const wideCell = document.querySelector('#table-invoice tbody tr:first-child td') as HTMLElement;
+                vi.spyOn(wideCell, 'getBoundingClientRect').mockReturnValue({ width: 250 } as DOMRect);
+                initInvIndex();
+
+                document.getElementById('btn-autofit-columns')?.click();
+
+                // Header (buildTable()'s th mock) is only 100px — a real column
+                // with an interactive control or long value (e.g. a <select>, a
+                // status badge, a full name) legitimately needs more room than
+                // its short header label, and autoFit lets it.
+                expect(cols()[0].style.width).toBe('250px');
+            });
+
+            it('leaves the table on fixed layout after fitting', () => {
+                buildTable();
+                initInvIndex();
+                document.getElementById('btn-autofit-columns')?.click();
+                expect((document.getElementById('table-invoice') as HTMLTableElement).style.tableLayout)
+                    .toBe('fixed');
+            });
+
+            it('re-measures every column, not just the first', () => {
+                localStorage.setItem(STORAGE_KEY_0, '999');
+                localStorage.setItem(STORAGE_KEY_1, '999');
+                buildTable();
+                initInvIndex();
+                document.getElementById('btn-autofit-columns')?.click();
+                expect(cols()[0].style.width).toBe('25px');
+                expect(cols()[1].style.width).toBe('30px');
+            });
+
+            it('uses the widest row when body rows disagree', () => {
+                buildTable();
+                const secondRowCell = document.querySelectorAll('#table-invoice tbody tr')[1]
+                    .children[0] as HTMLElement;
+                vi.spyOn(secondRowCell, 'getBoundingClientRect').mockReturnValue({ width: 60 } as DOMRect);
+                initInvIndex();
+
+                document.getElementById('btn-autofit-columns')?.click();
+
+                expect(cols()[0].style.width).toBe('60px');
+            });
+
+            it('skips a column with no body rows at all rather than zeroing its width', () => {
+                document.body.innerHTML += `
+                    <button id="btn-autofit-columns"></button>
+                    <table id="table-invoice">
+                        <colgroup><col /></colgroup>
+                        <thead><tr><th>A</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                `;
+                initInvIndex();
+                const col = document.querySelector('#table-invoice colgroup col') as HTMLTableColElement;
+                col.style.width = '80px';
+
+                document.getElementById('btn-autofit-columns')?.click();
+
+                expect(col.style.width).toBe('');
+            });
+
+            it('does not throw when the button exists but the table is absent', () => {
+                document.body.innerHTML += '<button id="btn-autofit-columns"></button>';
+                initInvIndex();
+                expect(() => document.getElementById('btn-autofit-columns')?.click()).not.toThrow();
+            });
+
+            it('does nothing when the button is absent', () => {
+                expect(() => initInvIndex()).not.toThrow();
+            });
+        });
+
+        describe('reset (🔄 toolbar button)', () => {
+            it('clears the col width and the saved localStorage entry', () => {
+                buildTable();
+                initInvIndex();
+                expect(cols()[0].style.width).toBe('100px');
+                expect(localStorage.getItem(STORAGE_KEY_0)).toBeNull();
+
+                document.getElementById('btn-autofit-columns')?.click();
+                expect(localStorage.getItem(STORAGE_KEY_0)).toBe('25');
+
+                document.getElementById('btn-reset-column-widths')?.click();
+
+                expect(cols()[0].style.width).toBe('');
+                expect(localStorage.getItem(STORAGE_KEY_0)).toBeNull();
+            });
+
+            it('clears every column, not just the first', () => {
+                buildTable();
+                initInvIndex();
+                document.getElementById('btn-reset-column-widths')?.click();
+                expect(cols()[0].style.width).toBe('');
+                expect(cols()[1].style.width).toBe('');
+                expect(localStorage.getItem(STORAGE_KEY_1)).toBeNull();
+            });
+
+            it('reverts the table to auto layout', () => {
+                buildTable();
+                initInvIndex();
+                document.getElementById('btn-reset-column-widths')?.click();
+                expect((document.getElementById('table-invoice') as HTMLTableElement).style.tableLayout)
+                    .toBe('auto');
+            });
+
+            it('a subsequent attach() (e.g. next HTMX swap) re-measures fresh, ignoring the old saved width', () => {
+                localStorage.setItem(STORAGE_KEY_0, '777');
+                buildTable();
+                initInvIndex();
+                document.getElementById('btn-reset-column-widths')?.click();
+
+                document.body.dispatchEvent(new Event('htmx:afterSwap'));
+
+                expect(cols()[0].style.width).toBe('100px');
+            });
+
+            it('does not throw when the button exists but the table is absent', () => {
+                document.body.innerHTML += '<button id="btn-reset-column-widths"></button>';
+                initInvIndex();
+                expect(() => document.getElementById('btn-reset-column-widths')?.click()).not.toThrow();
             });
         });
     });
