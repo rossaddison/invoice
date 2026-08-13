@@ -186,4 +186,138 @@ describe('initInvIndex', () => {
             expect(toggleBtn().classList.contains(CLASS_MP_ON)).toBe(false);
         });
     });
+
+    describe('ColumnResizer', () => {
+        const STORAGE_KEY_0 = 'col-width:table-invoice:0';
+        const STORAGE_KEY_1 = 'col-width:table-invoice:1';
+
+        function buildTable(): void {
+            document.body.innerHTML += `
+                <table id="table-invoice">
+                    <colgroup><col /><col /></colgroup>
+                    <thead>
+                        <tr><th id="th0">A</th><th id="th1">B</th></tr>
+                        <tr><td>filter</td><td>filter</td></tr>
+                    </thead>
+                    <tbody><tr><td>1</td><td>2</td></tr></tbody>
+                </table>
+            `;
+            document.querySelectorAll('#table-invoice thead th').forEach((th, i) => {
+                vi.spyOn(th, 'getBoundingClientRect').mockReturnValue(
+                    { width: 100 + i * 20 } as DOMRect,
+                );
+            });
+        }
+
+        function handle(index: number): HTMLElement {
+            return document.querySelectorAll('.col-resize-handle')[index] as HTMLElement;
+        }
+
+        function cols(): HTMLTableColElement[] {
+            return Array.from(document.querySelectorAll('#table-invoice colgroup col'));
+        }
+
+        beforeEach(() => {
+            localStorage.clear();
+        });
+
+        it('appends a resize handle to every header cell', () => {
+            buildTable();
+            initInvIndex();
+            expect(document.querySelectorAll('.col-resize-handle').length).toBe(2);
+        });
+
+        it('measures each header width onto the matching col and flips to fixed layout', () => {
+            buildTable();
+            initInvIndex();
+            expect(cols()[0].style.width).toBe('100px');
+            expect(cols()[1].style.width).toBe('120px');
+            expect((document.getElementById('table-invoice') as HTMLTableElement).style.tableLayout)
+                .toBe('fixed');
+        });
+
+        it('restores a previously saved width instead of the measured one', () => {
+            localStorage.setItem(STORAGE_KEY_0, '250');
+            buildTable();
+            initInvIndex();
+            expect(cols()[0].style.width).toBe('250px');
+        });
+
+        it('does not add duplicate handles when attach runs again for an unrelated htmx swap', () => {
+            buildTable();
+            initInvIndex();
+            document.body.dispatchEvent(new Event('htmx:afterSwap'));
+            expect(document.querySelectorAll('.col-resize-handle').length).toBe(2);
+        });
+
+        it('re-attaches handles to a freshly swapped-in table', () => {
+            buildTable();
+            initInvIndex();
+            document.getElementById('table-invoice')?.remove();
+            buildTable();
+            document.body.dispatchEvent(new Event('htmx:afterSwap'));
+            expect(document.querySelectorAll('.col-resize-handle').length).toBe(2);
+        });
+
+        it('does not throw when the table is absent', () => {
+            expect(() => initInvIndex()).not.toThrow();
+        });
+
+        it('does not throw when the header/col counts mismatch', () => {
+            document.body.innerHTML += `
+                <table id="table-invoice">
+                    <colgroup><col /></colgroup>
+                    <thead><tr><th>A</th><th>B</th></tr></thead>
+                </table>
+            `;
+            expect(() => initInvIndex()).not.toThrow();
+            expect(document.querySelectorAll('.col-resize-handle').length).toBe(0);
+        });
+
+        describe('dragging', () => {
+            beforeEach(() => {
+                buildTable();
+                initInvIndex();
+            });
+
+            it('drag updates the column width live', () => {
+                handle(0).dispatchEvent(new MouseEvent('mousedown', { clientX: 100 }));
+                document.dispatchEvent(new MouseEvent('mousemove', { clientX: 150 }));
+                expect(cols()[0].style.width).toBe('150px');
+            });
+
+            it('clamps the width to a 40px minimum', () => {
+                handle(0).dispatchEvent(new MouseEvent('mousedown', { clientX: 100 }));
+                document.dispatchEvent(new MouseEvent('mousemove', { clientX: -1000 }));
+                expect(cols()[0].style.width).toBe('40px');
+            });
+
+            it('adds col-resizing to body while dragging and removes it on mouseup', () => {
+                handle(0).dispatchEvent(new MouseEvent('mousedown', { clientX: 100 }));
+                expect(document.body.classList.contains('col-resizing')).toBe(true);
+                document.dispatchEvent(new MouseEvent('mouseup'));
+                expect(document.body.classList.contains('col-resizing')).toBe(false);
+            });
+
+            it('persists the final width to localStorage on mouseup', () => {
+                handle(0).dispatchEvent(new MouseEvent('mousedown', { clientX: 100 }));
+                document.dispatchEvent(new MouseEvent('mousemove', { clientX: 175 }));
+                document.dispatchEvent(new MouseEvent('mouseup'));
+                expect(localStorage.getItem(STORAGE_KEY_0)).toBe('175');
+            });
+
+            it('does not move a different column while dragging column 0', () => {
+                handle(0).dispatchEvent(new MouseEvent('mousedown', { clientX: 100 }));
+                document.dispatchEvent(new MouseEvent('mousemove', { clientX: 150 }));
+                expect(cols()[1].style.width).toBe('120px');
+            });
+
+            it('stops responding to mousemove after mouseup', () => {
+                handle(0).dispatchEvent(new MouseEvent('mousedown', { clientX: 100 }));
+                document.dispatchEvent(new MouseEvent('mouseup'));
+                document.dispatchEvent(new MouseEvent('mousemove', { clientX: 500 }));
+                expect(cols()[0].style.width).toBe('100px');
+            });
+        });
+    });
 });

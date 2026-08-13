@@ -127,6 +127,99 @@ class MobilePreviewToggle {
     }
 }
 
+/**
+ * Drag-to-resize column widths for a <colgroup>-rendered table (GridView's
+ * columnGrouping(true), already enabled on #table-invoice). Widths persist
+ * per browser (localStorage) so a resize survives reloads and HTMX's partial
+ * table refreshes on filter/sort/page changes.
+ *
+ * On first attach() the table is still in the browser's default auto layout,
+ * so every header's current rendered width is read and written onto its
+ * matching <col> before the table is flipped to table-layout:fixed — all
+ * synchronously, so there's no visible flash of equal-width columns.
+ */
+class ColumnResizer {
+    private readonly storageKeyPrefix: string;
+    private dragging: { col: HTMLTableColElement; startX: number; startWidth: number; index: number } | null = null;
+
+    constructor(private readonly tableId: string) {
+        this.storageKeyPrefix = `col-width:${tableId}:`;
+    }
+
+    attach(): void {
+        const table = document.getElementById(this.tableId) as HTMLTableElement | null;
+        const colgroup = table?.querySelector('colgroup') ?? null;
+        const headerRow = table?.querySelector('thead tr:first-child') ?? null;
+        if (table === null || colgroup === null || headerRow === null) return;
+
+        const cols = Array.from(colgroup.querySelectorAll('col'));
+        const headerCells = Array.from(headerRow.querySelectorAll('th'));
+        if (cols.length === 0 || cols.length !== headerCells.length) return;
+
+        headerCells.forEach((th, index) => {
+            const col = cols[index];
+            if (col === undefined) return;
+            this.applyWidth(col, th, index);
+            this.addHandle(th, col, index);
+        });
+
+        table.style.tableLayout = 'fixed';
+    }
+
+    private applyWidth(col: HTMLTableColElement, th: HTMLTableCellElement, index: number): void {
+        const saved = globalThis.localStorage.getItem(this.storageKeyPrefix + String(index));
+        const width = saved !== null ? Number.parseInt(saved, 10) : Math.round(th.getBoundingClientRect().width);
+        if (width > 0) {
+            col.style.width = `${width}px`;
+        }
+    }
+
+    private addHandle(th: HTMLTableCellElement, col: HTMLTableColElement, index: number): void {
+        // Idempotent: attach() re-runs after every HTMX table refresh, and a
+        // swap that doesn't touch this specific table would otherwise double up.
+        if (th.querySelector('.col-resize-handle') !== null) return;
+
+        const handle = document.createElement('span');
+        handle.className = 'col-resize-handle';
+        handle.addEventListener('mousedown', (e: MouseEvent) => { this.startDrag(e, col, index); });
+        th.appendChild(handle);
+    }
+
+    private startDrag(e: MouseEvent, col: HTMLTableColElement, index: number): void {
+        e.preventDefault();
+        // <col> elements have no rendered box in any browser, so
+        // getBoundingClientRect() on one is unreliable — read back the width
+        // this class already wrote to its inline style instead.
+        const startWidth = Number.parseInt(col.style.width, 10) || 0;
+        this.dragging = { col, startX: e.clientX, startWidth, index };
+        document.body.classList.add('col-resizing');
+        document.addEventListener('mousemove', this.onDrag);
+        document.addEventListener('mouseup', this.stopDrag);
+    }
+
+    private readonly onDrag = (e: MouseEvent): void => {
+        if (this.dragging === null) return;
+        const delta = e.clientX - this.dragging.startX;
+        const newWidth = Math.max(40, Math.round(this.dragging.startWidth + delta));
+        this.dragging.col.style.width = `${newWidth}px`;
+    };
+
+    private readonly stopDrag = (): void => {
+        if (this.dragging !== null) {
+            const finalWidth = Number.parseInt(this.dragging.col.style.width, 10);
+            if (finalWidth > 0) {
+                globalThis.localStorage.setItem(
+                    this.storageKeyPrefix + String(this.dragging.index), String(finalWidth),
+                );
+            }
+        }
+        this.dragging = null;
+        document.body.classList.remove('col-resizing');
+        document.removeEventListener('mousemove', this.onDrag);
+        document.removeEventListener('mouseup', this.stopDrag);
+    };
+}
+
 export function initInvIndex(tableId = 'table-invoice', configElId = 'inv-filter-config'): void {
     const setup = (): void => {
         const configEl = document.getElementById(configElId);
@@ -147,6 +240,14 @@ export function initInvIndex(tableId = 'table-invoice', configElId = 'inv-filter
         }
 
         mobilePreview = new MobilePreviewToggle();
+
+        const columnResizer = new ColumnResizer(tableId);
+        columnResizer.attach();
+        // HTMX replaces #table-invoice wholesale on filter/sort/page changes
+        // (see InvsListWidget's hx-boost wiring) — re-attach afterward so the
+        // fresh table's headers get their handles and saved widths back.
+        // attach() is idempotent, so this is safe even for unrelated swaps.
+        document.body.addEventListener('htmx:afterSwap', () => { columnResizer.attach(); });
     };
 
     if (document.readyState === 'loading') {

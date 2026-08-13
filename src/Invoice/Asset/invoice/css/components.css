@@ -502,6 +502,47 @@ textarea.form-control {
 #filter-address-1              { border-left-color: #d63384; }
 #filter-category-secondary-run { border-left-color: #6c757d; }
 
+/* ── Inv list — resizable column headers ──────────────────────────────────
+   #table-invoice already renders a <colgroup> (GridView::columnGrouping(true)
+   in InvsListWidget.php). ColumnResizer (compiled from src/typescript/
+   inv-index.ts — never inline/raw JS, see feedback_no_raw_script_tags)
+   measures each header's auto-layout width, writes it onto the matching
+   <col>, and only then flips the table to table-layout:fixed — all
+   synchronously, before paint, so there is no flash of equal-width columns.
+   That's why table-layout isn't set here statically; it's applied via TS
+   alongside the widths it depends on.
+
+   The resize handle itself is pure CSS/markup: a thin strip docked to each
+   header cell's trailing edge. */
+#table-invoice thead th {
+    position: relative;
+    overflow: hidden;
+}
+
+.col-resize-handle {
+    position: absolute;
+    top: 0;
+    right: -3px;
+    width: 6px;
+    height: 100%;
+    cursor: col-resize;
+    z-index: 3;
+    background: transparent;
+}
+
+.col-resize-handle:hover,
+.col-resize-handle.col-resizing {
+    background: rgba(13, 110, 253, 0.35);
+}
+
+/* Set while dragging (on <body>) so the resize cursor and no-select apply
+   even when the pointer briefly leaves the handle during a fast drag. */
+body.col-resizing,
+body.col-resizing * {
+    cursor: col-resize !important;
+    user-select: none !important;
+}
+
 .inv-footer-label {
     display: block;
     font-size: 0.7rem;
