@@ -1,49 +1,52 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { initColumnResizer } from './column-resizer.js';
 
+const STORAGE_KEY_0 = 'col-width:table-invoice:0';
+const STORAGE_KEY_1 = 'col-width:table-invoice:1';
+
+// Module scope (not inside describe()) — SonarQube typescript:S7721: a function
+// redefined on every describe() invocation is wasted work when, as here, it
+// doesn't close over anything test-local.
+function buildTable(): void {
+    document.body.innerHTML += `
+        <button id="btn-autofit-columns"></button>
+        <button id="btn-reset-column-widths"></button>
+        <table id="table-invoice">
+            <colgroup><col /><col /></colgroup>
+            <thead>
+                <tr><th id="th0">A</th><th id="th1">B</th></tr>
+                <tr><td>filter</td><td>filter</td></tr>
+            </thead>
+            <tbody>
+                <tr><td>1</td><td>2</td></tr>
+                <tr><td>3</td><td>4</td></tr>
+            </tbody>
+        </table>
+    `;
+    document.querySelectorAll('#table-invoice thead th').forEach((th, i) => {
+        vi.spyOn(th, 'getBoundingClientRect').mockReturnValue(
+            { width: 100 + i * 20 } as DOMRect,
+        );
+    });
+    // Deliberately much narrower than the header widths above, so
+    // autoFit tests can prove it fits to this (the data), not those.
+    document.querySelectorAll('#table-invoice tbody td').forEach((td, i) => {
+        const colIndex = i % 2;
+        vi.spyOn(td, 'getBoundingClientRect').mockReturnValue(
+            { width: 25 + colIndex * 5 } as DOMRect,
+        );
+    });
+}
+
+function handle(index: number): HTMLElement {
+    return document.querySelectorAll('.col-resize-handle')[index] as HTMLElement;
+}
+
+function cols(): HTMLTableColElement[] {
+    return Array.from(document.querySelectorAll('#table-invoice colgroup col'));
+}
+
 describe('ColumnResizer', () => {
-    const STORAGE_KEY_0 = 'col-width:table-invoice:0';
-    const STORAGE_KEY_1 = 'col-width:table-invoice:1';
-
-    function buildTable(): void {
-        document.body.innerHTML += `
-            <button id="btn-autofit-columns"></button>
-            <button id="btn-reset-column-widths"></button>
-            <table id="table-invoice">
-                <colgroup><col /><col /></colgroup>
-                <thead>
-                    <tr><th id="th0">A</th><th id="th1">B</th></tr>
-                    <tr><td>filter</td><td>filter</td></tr>
-                </thead>
-                <tbody>
-                    <tr><td>1</td><td>2</td></tr>
-                    <tr><td>3</td><td>4</td></tr>
-                </tbody>
-            </table>
-        `;
-        document.querySelectorAll('#table-invoice thead th').forEach((th, i) => {
-            vi.spyOn(th, 'getBoundingClientRect').mockReturnValue(
-                { width: 100 + i * 20 } as DOMRect,
-            );
-        });
-        // Deliberately much narrower than the header widths above, so
-        // autoFit tests can prove it fits to this (the data), not those.
-        document.querySelectorAll('#table-invoice tbody td').forEach((td, i) => {
-            const colIndex = i % 2;
-            vi.spyOn(td, 'getBoundingClientRect').mockReturnValue(
-                { width: 25 + colIndex * 5 } as DOMRect,
-            );
-        });
-    }
-
-    function handle(index: number): HTMLElement {
-        return document.querySelectorAll('.col-resize-handle')[index] as HTMLElement;
-    }
-
-    function cols(): HTMLTableColElement[] {
-        return Array.from(document.querySelectorAll('#table-invoice colgroup col'));
-    }
-
     beforeEach(() => {
         document.body.innerHTML = '';
         localStorage.clear();
