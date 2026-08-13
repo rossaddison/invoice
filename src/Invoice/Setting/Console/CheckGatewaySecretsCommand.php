@@ -68,33 +68,61 @@ final class CheckGatewaySecretsCommand extends Command
         /** @var array<string, array<string, array{type: string, label: string}>> $gateways */
         $gateways = $this->sR->activePaymentGateways();
         foreach ($gateways as $driver => $fields) {
-            $d = strtolower($driver);
             foreach ($fields as $key => $setting) {
-                if ($setting['type'] !== 'password') {
+                $result = $this->checkGatewaySecret($driver, $key, $setting, $io);
+                if ($result === null) {
                     continue;
                 }
-                $stored = $this->sR->getSetting('gateway_' . $d . '_' . $key);
-                if ($stored === '') {
-                    continue; // never configured — not this regression's concern
-                }
-
                 $checked++;
-                $label = "{$driver}.{$key}";
-                try {
-                    $decoded = (string) $this->sR->decode($stored);
-                    if ($decoded === '' || !mb_check_encoding($decoded, 'UTF-8')) {
-                        $corrupted[] = $label;
-                        $io->writeln("{$label}: CORRUPTED (decodes to empty/non-UTF8)");
-                        continue;
-                    }
-                    $io->writeln("{$label}: ok");
-                } catch (CryptorException $e) {
-                    $corrupted[] = $label;
-                    $io->writeln("{$label}: CORRUPTED ({$e->getMessage()})");
+                if ($result !== '') {
+                    $corrupted[] = $result;
                 }
             }
         }
 
+        return $this->reportResults($io, $checked, $corrupted);
+    }
+
+    /**
+     * Checks a single driver/field's stored secret, writing its result line to $io whenever it was
+     * actually a configured password secret. Split out of execute() purely to keep its cognitive
+     * complexity within SonarQube's limit (php:S3776).
+     *
+     * @param array{type: string, label: string} $setting
+     *
+     * @return string|null null when this field isn't a configured password secret at all (skipped, not
+     *   counted); '' when checked and fine; the corrupted label when checked and corrupted.
+     */
+    private function checkGatewaySecret(string $driver, string $key, array $setting, SymfonyStyle $io): ?string
+    {
+        if ($setting['type'] !== 'password') {
+            return null;
+        }
+        $stored = $this->sR->getSetting('gateway_' . strtolower($driver) . '_' . $key);
+        if ($stored === '') {
+            return null; // never configured — not this regression's concern
+        }
+
+        $label = "{$driver}.{$key}";
+        try {
+            $decoded = (string) $this->sR->decode($stored);
+            if ($decoded === '' || !mb_check_encoding($decoded, 'UTF-8')) {
+                $io->writeln("{$label}: CORRUPTED (decodes to empty/non-UTF8)");
+                return $label;
+            }
+            $io->writeln("{$label}: ok");
+            return '';
+        } catch (CryptorException $e) {
+            $io->writeln("{$label}: CORRUPTED ({$e->getMessage()})");
+            return $label;
+        }
+    }
+
+    /**
+     * @param list<string> $corrupted
+     */
+    private function reportResults(SymfonyStyle $io, int $checked, array $corrupted): int
+    {
         $io->writeln("Checked {$checked} configured secret(s).");
         if ($corrupted !== []) {
             $io->error(

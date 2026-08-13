@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Invoice\Dwelling;
 
 use App\Infrastructure\Persistence\Dwelling\Dwelling;
-use App\Invoice\Client\ClientRepository;
+use App\Invoice\Client\ClientDwellingRepository;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 
 final readonly class DwellingService
 {
     public function __construct(
         private DwellingRepository $repository,
-        private ClientRepository $clientRepository,
+        private ClientDwellingRepository $clientDwellingRepository,
     ) {
     }
 
@@ -22,15 +22,35 @@ final readonly class DwellingService
      */
     public function saveDwelling(Dwelling $model, array $array): void
     {
+        $this->applyDwellingIdentityFields($model, $array);
+        $this->applyDwellingLocationFields($model, $array);
+        $this->repository->save($model);
+    }
+
+    private function applyDwellingIdentityFields(Dwelling $model, array $array): void
+    {
         isset($array['family_id']) ? $model->setFamilyId((int) $array['family_id']) : '';
         isset($array['house_number_numeric']) ? $model->setHouseNumberNumeric((int) $array['house_number_numeric']) : '';
-        isset($array['house_number_suffix']) ? $model->setHouseNumberSuffix($array['house_number_suffix'] === '' ? null : (string) $array['house_number_suffix']) : '';
-        isset($array['flat_unit']) ? $model->setFlatUnit($array['flat_unit'] === '' ? null : (string) $array['flat_unit']) : '';
+        isset($array['house_number_suffix']) ? $model->setHouseNumberSuffix(self::nullableString($array['house_number_suffix'])) : '';
+        isset($array['flat_unit']) ? $model->setFlatUnit(self::nullableString($array['flat_unit'])) : '';
+    }
+
+    private function applyDwellingLocationFields(Dwelling $model, array $array): void
+    {
         isset($array['postcode']) ? $model->setPostcode((string) $array['postcode']) : '';
-        isset($array['latitude']) ? $model->setLatitude($array['latitude'] === '' ? null : (float) $array['latitude']) : '';
-        isset($array['longitude']) ? $model->setLongitude($array['longitude'] === '' ? null : (float) $array['longitude']) : '';
-        isset($array['source']) ? $model->setSource($array['source'] === '' ? null : (string) $array['source']) : '';
-        $this->repository->save($model);
+        isset($array['latitude']) ? $model->setLatitude(self::nullableFloat($array['latitude'])) : '';
+        isset($array['longitude']) ? $model->setLongitude(self::nullableFloat($array['longitude'])) : '';
+        isset($array['source']) ? $model->setSource(self::nullableString($array['source'])) : '';
+    }
+
+    private static function nullableString(mixed $value): ?string
+    {
+        return $value === '' ? null : (string) $value;
+    }
+
+    private static function nullableFloat(mixed $value): ?float
+    {
+        return $value === '' ? null : (float) $value;
     }
 
     public function deleteDwelling(Dwelling $model): void
@@ -49,7 +69,7 @@ final readonly class DwellingService
     {
         return $this->repository->repoUnclaimedByFamilyIdQuery(
             $familyId,
-            $this->clientRepository->repoClaimedDwellingIds(),
+            $this->clientDwellingRepository->repoClaimedDwellingIds(),
         );
     }
 

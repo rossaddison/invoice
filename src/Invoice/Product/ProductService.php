@@ -21,6 +21,7 @@ final readonly class ProductService
 
     public function __construct(
         private ProductRepository $repository,
+        private ProductNameTypeRepository $nameTypeRepository,
         private FR $fR,
         private TRR $trR,
         private UR $uR,
@@ -189,7 +190,7 @@ final readonly class ProductService
      */
     public function findOrCreateHomeCareServiceProduct(int $familyId, int $taxRateId, int $unitId): Product
     {
-        $existing = $this->repository->repoProductByNameAndTypeQuery(
+        $existing = $this->nameTypeRepository->repoProductByNameAndTypeQuery(
             self::HOMECARE_SERVICE_PRODUCT_NAME,
             ProductType::Service->value,
         );

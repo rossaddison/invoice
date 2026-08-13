@@ -248,23 +248,13 @@ final class HomeCareSignupController
         }
         ['identity' => $identity, 'userId' => $userId, 'pending' => $pending, 'userInv' => $userInv] = $resolved;
 
-        $dwellingResult = $this->resolveDwellingForSignup($pending, $d);
-        if ($dwellingResult instanceof Response) {
-            return $dwellingResult;
+        $finished = $this->resolveDwellingAndProvisionInvoice(
+            $identity, $userId, $language, $pending, $userInv, $formHydrator, $d,
+        );
+        if ($finished instanceof Response) {
+            return $finished;
         }
-        ['dwelling' => $dwelling, 'taxRate' => $taxRate, 'unit' => $unit] = $dwellingResult;
-
-        $email = $identity->getUser()?->getEmail() ?? '';
-        $client = $this->createClient($email, $language, $pending, $dwelling, $d);
-        $clientId = $client->reqId();
-        $this->linkUserClient($userId, $clientId, $d);
-        $this->assignSignupRole($userId, $userInv->reqId(), $d);
-
-        $provisioned = $this->provisionInvoice($clientId, $dwelling, $taxRate, $unit, $pending, $formHydrator, $d);
-        if ($provisioned instanceof Response) {
-            return $provisioned;
-        }
-        $invId = $provisioned;
+        ['client' => $client, 'invId' => $invId] = $finished;
 
         $paidNow = false;
         if ($pending->getPaymentOption() === HomeCareSignupForm::PAYMENT_HAVE_PAID_CASH) {
@@ -426,6 +416,45 @@ final class HomeCareSignupController
             return $this->renderConfirmed('setup_incomplete');
         }
         return ['dwelling' => $dwelling, 'taxRate' => $taxRate, 'unit' => $unit];
+    }
+
+    /**
+     * Resolves the Dwelling, creates and links the Client, and provisions
+     * the first invoice — split out of confirm() purely to keep its own
+     * return count within SonarQube's limit (S1142), following the same
+     * pattern already used for resolveIdentityFromToken()/
+     * resolveAndActivateSignup(): each failure branch here happens before
+     * any side effect the other doesn't already account for, so merging
+     * them into one guard in the caller costs nothing.
+     *
+     * @return Response|array{client: Client, invId: int}
+     */
+    private function resolveDwellingAndProvisionInvoice(
+        Identity $identity,
+        int $userId,
+        string $language,
+        HomeCarePendingSignup $pending,
+        UserInv $userInv,
+        FormHydrator $formHydrator,
+        HomeCareSignupConfirmDeps $d,
+    ): Response|array {
+        $dwellingResult = $this->resolveDwellingForSignup($pending, $d);
+        if ($dwellingResult instanceof Response) {
+            return $dwellingResult;
+        }
+        ['dwelling' => $dwelling, 'taxRate' => $taxRate, 'unit' => $unit] = $dwellingResult;
+
+        $email = $identity->getUser()?->getEmail() ?? '';
+        $client = $this->createClient($email, $language, $pending, $dwelling, $d);
+        $clientId = $client->reqId();
+        $this->linkUserClient($userId, $clientId, $d);
+        $this->assignSignupRole($userId, $userInv->reqId(), $d);
+
+        $provisioned = $this->provisionInvoice($clientId, $dwelling, $taxRate, $unit, $pending, $formHydrator, $d);
+        if ($provisioned instanceof Response) {
+            return $provisioned;
+        }
+        return ['client' => $client, 'invId' => $provisioned];
     }
 
     /**
