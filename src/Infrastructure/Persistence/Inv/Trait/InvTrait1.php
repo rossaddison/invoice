@@ -102,14 +102,10 @@ trait InvTrait1
         return '';
     }
 
-    public function getFirstItemFamilyProductName(): string
+    public function getFirstItemProductName(): string
     {
         foreach ($this->items as $item) {
-            $familyName =
-                $item->getProduct()?->getFamily()?->getFamilyName() ?? '';
-            $productName =
-                $item->getProduct()?->getProductName() ?? '';
-            return $familyName . '➡️' . $productName;
+            return $item->getProduct()?->getProductName() ?? '';
         }
         return '';
     }
