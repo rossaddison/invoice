@@ -39,12 +39,20 @@
    form-floating spans the whole form (boxes, buttons and all), so once
    anything else sits above #code the label floats up to the form's own
    top instead of onto the field. Force it back to a normal in-flow label
-   whenever it's actually shown. */
+   whenever it's actually shown. Also reset the floating label's
+   single-line white-space/overflow/text-overflow (needed for a label
+   that shrinks into the input, not one sitting below it) and re-center
+   it to match the rest of this card's centered text. */
 label[for='code']:not(.otp-hidden-field) {
     position: static;
     transform: none;
     height: auto;
+    width: 100%;
     padding: 0;
     margin-bottom: 0.25rem;
     display: block;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    text-align: center;
 }
