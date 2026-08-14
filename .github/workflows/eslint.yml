@@ -43,7 +43,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload analysis results to GitHub
-        uses: github/codeql-action/upload-sarif@c2fd8f54d19fa46c94ed79cb92e6dd6606d61762 # main
+        uses: github/codeql-action/upload-sarif@d97b3428e8eebbb1810cf454d6397886d136b4ba # main
         with:
           sarif_file: eslint-results.sarif
           wait-for-processing: true
