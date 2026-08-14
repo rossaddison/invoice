@@ -110,6 +110,44 @@ echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
     ->csrf($csrf)
     ->id('twoFactorAuthenticationVerfiyForm')
     ->open(); ?>
+                    <?php
+    // Six single-digit boxes are the default entry UI for the common
+    // 6-digit OTP case (OtpBoxInput, keypad-copy-to-clipboard.ts). Backup
+    // recovery codes are 8-character hex (0-9A-F, confirmed against
+    // RecoveryCodeService::generateBackupCodes()), which digit-only boxes
+    // can't represent — "Use a recovery code instead" swaps to showing
+    // the real field below directly, letting it accept either format
+    // exactly as it always has.
+    echo Html::openTag('div', ['id' => 'otp-boxes-wrap']);
+     echo Html::openTag('div', [
+         'class' => 'otp-boxes',
+         'id' => 'otp-boxes',
+         'role' => 'group',
+         'aria-label' => $translator->translate('layout.password.otp.6.8'),
+     ]);
+      for ($i = 1; $i <= 6; $i++) {
+       echo Html::input('tel', null, null, [
+           'class' => 'otp-box form-control',
+           'inputmode' => 'numeric',
+           'pattern' => '[0-9]*',
+           'maxlength' => 1,
+           'autocomplete' => $i === 1 ? 'one-time-code' : 'off',
+           'aria-label' => 'Digit ' . $i . ' of 6',
+           'autofocus' => $i === 1,
+       ]);
+      }
+     echo Html::closeTag('div');
+    echo Html::closeTag('div');
+    echo Html::openTag('div', ['class' => 'mb-2']);
+     echo Html::button($translator->translate('layout.password.otp.use.recovery.code'), [
+         'type' => 'button',
+         'class' => 'btn btn-link btn-sm p-0',
+         'id' => 'toggle-recovery-code',
+         'data-use-recovery-label' => $translator->translate('layout.password.otp.use.recovery.code'),
+         'data-use-code-label' => $translator->translate('layout.password.otp.use.6.digit.code'),
+     ]);
+    echo Html::closeTag('div');
+?>
                     <?= Field::text($formModel, 'code')
     ->addInputAttributes(
         [
@@ -120,13 +158,12 @@ echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
             // otp = 6 digits, backup recovery code = 8 digits
             'maxlength' => 8,
             'type' => 'tel',
+            'class' => 'otp-hidden-field',
         ],
     )
     ->error($error ?? '')
     ->required(true)
-    ->inputClass('form-control form-control-lg',)
-    ->label($translator->translate('layout.password.otp.6.8'))
-    ->autofocus();
+    ->label($translator->translate('layout.password.otp.6.8'));
 ?>
                     <?= Field::submitButton()
     ->buttonId('code-button')
