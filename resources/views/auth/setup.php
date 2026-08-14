@@ -115,6 +115,7 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
       ])
       ->error($error ?? '')
       ->required(true)
+      ->labelClass('otp-hidden-field')
       ->label($translator->translate('layout.password.otp.6.first'));
      echo F::submitButton()
       ->buttonId('code-button')

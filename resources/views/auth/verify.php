@@ -163,6 +163,7 @@ echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
     )
     ->error($error ?? '')
     ->required(true)
+    ->labelClass('otp-hidden-field')
     ->label($translator->translate('layout.password.otp.6.8'));
 ?>
                     <?= Field::submitButton()

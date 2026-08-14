@@ -31,3 +31,20 @@
     font-size: 1.5rem;
     text-align: center;
 }
+
+/* verify.php's recovery-code toggle reveals #code (and its label) directly
+   inside a <form class="form-floating">. Bootstrap's floating label expects
+   .form-floating to wrap just [input, label] so its default
+   position:absolute;top:0;left:0 lands on top of the input — but here
+   form-floating spans the whole form (boxes, buttons and all), so once
+   anything else sits above #code the label floats up to the form's own
+   top instead of onto the field. Force it back to a normal in-flow label
+   whenever it's actually shown. */
+label[for='code']:not(.otp-hidden-field) {
+    position: static;
+    transform: none;
+    height: auto;
+    padding: 0;
+    margin-bottom: 0.25rem;
+    display: block;
+}

@@ -231,6 +231,12 @@ function handleToggleRecoveryCode(): void {
     const toggleBtn = document.getElementById('toggle-recovery-code');
     if (!boxesWrap || !codeField || !toggleBtn) return;
 
+    // The field's own <label for="code"> stays in the DOM (screen-reader
+    // association), but is otp-hidden-field by default same as the input
+    // itself — only shown, alongside the input, while the recovery-code
+    // field is the one actually in use.
+    const codeLabel = document.querySelector<HTMLElement>('label[for="code"]');
+
     const showingBoxes = !boxesWrap.classList.contains('d-none');
     codeField.value = '';
     otpBoxInput?.clear();
@@ -238,11 +244,13 @@ function handleToggleRecoveryCode(): void {
     if (showingBoxes) {
         boxesWrap.classList.add('d-none');
         codeField.classList.remove('otp-hidden-field');
+        codeLabel?.classList.remove('otp-hidden-field');
         toggleBtn.textContent = toggleBtn.dataset['useCodeLabel'] ?? toggleBtn.textContent;
         codeField.focus();
     } else {
         boxesWrap.classList.remove('d-none');
         codeField.classList.add('otp-hidden-field');
+        codeLabel?.classList.add('otp-hidden-field');
         toggleBtn.textContent = toggleBtn.dataset['useRecoveryLabel'] ?? toggleBtn.textContent;
         boxesWrap.querySelector<HTMLInputElement>('.otp-box')?.focus();
     }
