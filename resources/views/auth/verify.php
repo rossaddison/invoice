@@ -123,7 +123,7 @@ echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
          'class' => 'otp-boxes',
          'id' => 'otp-boxes',
          'role' => 'group',
-         'aria-label' => $translator->translate('layout.password.otp.6.8'),
+         'aria-label' => $translator->translate('layout.password.otp.verify.6'),
      ]);
       for ($i = 1; $i <= 6; $i++) {
        echo Html::input('tel', null, null, [
@@ -164,7 +164,15 @@ echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
     ->error($error ?? '')
     ->required(true)
     ->labelClass('otp-hidden-field')
-    ->label($translator->translate('layout.password.otp.6.8'));
+    ->addLabelAttributes([
+        // Read by handleToggleRecoveryCode() to swap the label's text so
+        // it always describes only the format actually expected right
+        // now, rather than a combined "OTP / recovery code" line that's
+        // irrelevant noise once the user has picked one or the other.
+        'data-otp-label' => $translator->translate('layout.password.otp.verify.6'),
+        'data-recovery-label' => $translator->translate('layout.password.otp.recovery.8'),
+    ])
+    ->label($translator->translate('layout.password.otp.verify.6'));
 ?>
                     <?= Field::submitButton()
     ->buttonId('code-button')

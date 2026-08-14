@@ -234,7 +234,10 @@ function handleToggleRecoveryCode(): void {
     // The field's own <label for="code"> stays in the DOM (screen-reader
     // association), but is otp-hidden-field by default same as the input
     // itself — only shown, alongside the input, while the recovery-code
-    // field is the one actually in use.
+    // field is the one actually in use. Its text also swaps between the
+    // OTP- and recovery-specific wording (data-otp-label/data-recovery-
+    // label) rather than staying on the old combined "OTP / recovery
+    // code" line, which is irrelevant noise once the user has picked one.
     const codeLabel = document.querySelector<HTMLElement>('label[for="code"]');
 
     const showingBoxes = !boxesWrap.classList.contains('d-none');
@@ -245,12 +248,14 @@ function handleToggleRecoveryCode(): void {
         boxesWrap.classList.add('d-none');
         codeField.classList.remove('otp-hidden-field');
         codeLabel?.classList.remove('otp-hidden-field');
+        if (codeLabel) codeLabel.textContent = codeLabel.dataset['recoveryLabel'] ?? codeLabel.textContent;
         toggleBtn.textContent = toggleBtn.dataset['useCodeLabel'] ?? toggleBtn.textContent;
         codeField.focus();
     } else {
         boxesWrap.classList.remove('d-none');
         codeField.classList.add('otp-hidden-field');
         codeLabel?.classList.add('otp-hidden-field');
+        if (codeLabel) codeLabel.textContent = codeLabel.dataset['otpLabel'] ?? codeLabel.textContent;
         toggleBtn.textContent = toggleBtn.dataset['useRecoveryLabel'] ?? toggleBtn.textContent;
         boxesWrap.querySelector<HTMLInputElement>('.otp-box')?.focus();
     }

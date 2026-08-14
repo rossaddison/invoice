@@ -1233,6 +1233,9 @@ prior to importing and no existing documents e.g. Invoices.',
   'layout.password.otp.6.8' => 'Enter Second Different Aegis Generated OTP'
     . ' Password (6 digits)'
     . ' / Backup Recovery Codes (8 digits)',
+  'layout.password.otp.verify.6' => 'Enter Second Different Aegis Generated'
+    . ' OTP Password (6 digits)',
+  'layout.password.otp.recovery.8' => 'Enter your Backup Recovery Code (8 digits)',
   'layout.password.otp.use.recovery.code' => 'Use a recovery code instead',
   'layout.password.otp.use.6.digit.code' => 'Use your 6-digit code instead',
   'layout.rbac.assign-role' => 'Assign RBAC role to user',
