@@ -1235,7 +1235,9 @@ prior to importing and no existing documents e.g. Invoices.',
     . ' / Backup Recovery Codes (8 digits)',
   'layout.password.otp.verify.6' => 'Enter Second Different Aegis Generated'
     . ' OTP Password (6 digits)',
-  'layout.password.otp.recovery.8' => 'Enter your Backup Recovery Code (8 digits)',
+  // "characters" not "digits" — a recovery code is hex (0-9A-F), not
+  // purely numeric.
+  'layout.password.otp.recovery.8' => 'Enter your Backup Recovery Code (8 characters)',
   'layout.password.otp.use.recovery.code' => 'Use a recovery code instead',
   'layout.password.otp.use.6.digit.code' => 'Use your 6-digit code instead',
   'layout.rbac.assign-role' => 'Assign RBAC role to user',
@@ -2840,6 +2842,9 @@ prior to importing and no existing documents e.g. Invoices.',
   'two.factor.authentication.new.six.digit.code' =>
     'Please enter another confirmation 6-digit authentication code'
     . ' (different to the setup code) from your app.',
+  'two.factor.authentication.new.recovery.code' =>
+    'Please enter one of your unused Backup Recovery Codes'
+    . ' (8 characters) below.',
   'two.factor.authentication.no.secret.generated' =>
     'No secret generated. Please restart setup.',
   'two.factor.authentication.qr.code.enter.manually' =>

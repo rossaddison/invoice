@@ -78,18 +78,26 @@ async function handleCopySecret(): Promise<void> {
     }
 }
 
+/** 'digit' for the 6-box OTP group, 'hex' for the 8-box recovery-code group. */
+type BoxCharset = 'digit' | 'hex';
+
+function sanitizeForCharset(raw: string, charset: BoxCharset): string {
+    return charset === 'digit'
+        ? raw.replace(/\D/g, '')
+        : raw.replace(/[^0-9a-fA-F]/g, '').toUpperCase();
+}
+
 /**
- * Six single-digit boxes mirroring into the real, FormModel-bound
- * #code input (kept in the DOM, just visually hidden via
- * .otp-hidden-field) — so validation, error display, and the existing
- * digit-pad buttons/appendDigit()/clear() all keep working against the
- * exact same field name the backend already expects, unchanged.
- *
- * A pasted value longer than the box count (an 8-character recovery
- * code, which is hex — 0-9A-F, not purely numeric, confirmed against
- * RecoveryCodeService::generateBackupCodes()) is written straight to
- * the hidden field instead of being split across boxes, since the boxes
- * are digit-only and can't represent it.
+ * A row of single-character boxes mirroring into the real, FormModel-bound
+ * #code input (kept in the DOM, permanently visually hidden via
+ * .otp-hidden-field) — so validation, error display, and submission all
+ * keep working against the exact same field name the backend already
+ * expects, unchanged. verify.php mounts two of these sharing one hidden
+ * input — 6 digit-only boxes for the common OTP case, 8 hex-character
+ * boxes (0-9A-F, confirmed against
+ * RecoveryCodeService::generateBackupCodes()) for backup recovery codes
+ * — and shows exactly one at a time via handleToggleRecoveryCode().
+ * setup.php mounts only the digit-only one.
  */
 class OtpBoxInput {
     private readonly boxes: HTMLInputElement[];
@@ -97,6 +105,7 @@ class OtpBoxInput {
     constructor(
         container: HTMLElement,
         private readonly hiddenInput: HTMLInputElement,
+        private readonly charset: BoxCharset = 'digit',
     ) {
         this.boxes = Array.from(container.querySelectorAll<HTMLInputElement>('.otp-box'));
         this.boxes.forEach((box, index) => {
@@ -112,22 +121,25 @@ class OtpBoxInput {
         if (index === -1) return;
         const box = this.boxes[index];
         if (!box) return;
-        box.value = digit;
+        box.value = sanitizeForCharset(digit, this.charset).slice(-1);
         this.boxes[index + 1]?.focus();
         this.syncHidden();
     }
 
     clear(): void {
         this.boxes.forEach((box) => { box.value = ''; });
-        this.hiddenInput.value = '';
+        this.syncHidden();
+    }
+
+    focusFirst(): void {
         this.boxes[0]?.focus();
     }
 
     private handleInput(index: number): void {
         const box = this.boxes[index];
         if (!box) return;
-        // Keep only the last digit typed — a box holds exactly one character.
-        box.value = box.value.replace(/\D/g, '').slice(-1);
+        // Keep only the last character typed — a box holds exactly one.
+        box.value = sanitizeForCharset(box.value, this.charset).slice(-1);
         if (box.value !== '') {
             this.boxes[index + 1]?.focus();
         }
@@ -149,25 +161,15 @@ class OtpBoxInput {
 
     private handlePaste(e: ClipboardEvent, index: number): void {
         const pasted = e.clipboardData?.getData('text') ?? '';
-        const digits = pasted.replace(/\D/g, '');
-        if (digits === '') return;
+        const cleaned = sanitizeForCharset(pasted, this.charset);
+        if (cleaned === '') return;
         e.preventDefault();
 
-        if (pasted.trim().length > this.boxes.length) {
-            // Longer than the box count — most likely a pasted recovery
-            // code (alphanumeric, not digit-only) rather than an OTP.
-            // Boxes can't represent that; hand the raw pasted text
-            // straight to the real field instead.
-            this.boxes.forEach((box) => { box.value = ''; });
-            this.hiddenInput.value = pasted.trim();
-            return;
-        }
-
         let lastFilled = index;
-        digits.split('').forEach((digit, offset) => {
+        cleaned.split('').forEach((char, offset) => {
             const box = this.boxes[index + offset];
             if (box) {
-                box.value = digit;
+                box.value = char;
                 lastFilled = index + offset;
             }
         });
@@ -181,29 +183,42 @@ class OtpBoxInput {
 }
 
 // Module-level so the digit-pad buttons and the recovery-code toggle
-// (both delegated document click handlers) can reach whichever OtpBoxInput
-// is live on the current page — at most one of setup.php/verify.php's
-// boxes exists per page load.
+// (both delegated document click handlers) can reach whichever group(s)
+// are live on the current page — setup.php only ever has otpBoxInput;
+// verify.php has both, with getActiveBoxInput() picking whichever isn't
+// currently hidden.
 let otpBoxInput: OtpBoxInput | null = null;
+let recoveryBoxInput: OtpBoxInput | null = null;
 
 function initOtpBoxes(): void {
-    const container = document.getElementById('otp-boxes');
     const hiddenInput = document.getElementById('code') as HTMLInputElement | null;
-    if (!container || !hiddenInput) return;
-    otpBoxInput = new OtpBoxInput(container, hiddenInput);
+    if (!hiddenInput) return;
+
+    const otpContainer = document.getElementById('otp-boxes');
+    if (otpContainer) otpBoxInput = new OtpBoxInput(otpContainer, hiddenInput, 'digit');
+
+    const recoveryContainer = document.getElementById('recovery-boxes');
+    if (recoveryContainer) recoveryBoxInput = new OtpBoxInput(recoveryContainer, hiddenInput, 'hex');
+}
+
+function getActiveBoxInput(): OtpBoxInput | null {
+    const recoveryWrap = document.getElementById('recovery-boxes-wrap');
+    if (recoveryWrap && !recoveryWrap.classList.contains('d-none')) return recoveryBoxInput;
+    return otpBoxInput;
 }
 
 function handleDigitInput(digitBtn: HTMLElement): void {
     const digit = digitBtn.dataset['digit'];
     if (!digit) return;
 
-    if (otpBoxInput) {
-        otpBoxInput.appendDigit(digit);
+    const active = getActiveBoxInput();
+    if (active) {
+        active.appendDigit(digit);
         return;
     }
 
-    // No boxes on this page (or the recovery-code field is showing instead)
-    // — fall back to appending directly, matching the pre-boxes behaviour.
+    // No boxes on this page — fall back to appending directly, matching
+    // the pre-boxes behaviour.
     const otp = document.getElementById('code') as HTMLInputElement | null;
     if (otp && otp.value.length < 6) {
         otp.value += digit;
@@ -211,8 +226,9 @@ function handleDigitInput(digitBtn: HTMLElement): void {
 }
 
 function handleClearOtp(): void {
-    if (otpBoxInput) {
-        otpBoxInput.clear();
+    const active = getActiveBoxInput();
+    if (active) {
+        active.clear();
         return;
     }
     const codeEl = document.getElementById('code') as HTMLInputElement | null;
@@ -220,44 +236,37 @@ function handleClearOtp(): void {
 }
 
 /**
- * verify.php only: swaps between the 6-box OTP view and the plain
- * recovery-code text field (the same real #code input either way —
- * only its visible presentation changes). Absent on setup.php, which
- * is 6-digit-only and has no recovery-code concept.
+ * verify.php only: swaps which box group is shown — the 6-digit OTP boxes
+ * by default, or the 8-character recovery-code boxes. Both write into the
+ * same real #code input either way; only which group is visible changes.
+ * Absent on setup.php, which is 6-digit-only and has no recovery-code
+ * concept.
  */
 function handleToggleRecoveryCode(): void {
-    const boxesWrap = document.getElementById('otp-boxes-wrap');
+    const otpWrap = document.getElementById('otp-boxes-wrap');
+    const recoveryWrap = document.getElementById('recovery-boxes-wrap');
     const codeField = document.getElementById('code') as HTMLInputElement | null;
     const toggleBtn = document.getElementById('toggle-recovery-code');
-    if (!boxesWrap || !codeField || !toggleBtn) return;
+    const header = document.getElementById('otp-header');
+    if (!otpWrap || !recoveryWrap || !codeField || !toggleBtn) return;
 
-    // The field's own <label for="code"> stays in the DOM (screen-reader
-    // association), but is otp-hidden-field by default same as the input
-    // itself — only shown, alongside the input, while the recovery-code
-    // field is the one actually in use. Its text also swaps between the
-    // OTP- and recovery-specific wording (data-otp-label/data-recovery-
-    // label) rather than staying on the old combined "OTP / recovery
-    // code" line, which is irrelevant noise once the user has picked one.
-    const codeLabel = document.querySelector<HTMLElement>('label[for="code"]');
-
-    const showingBoxes = !boxesWrap.classList.contains('d-none');
+    const showingOtp = !otpWrap.classList.contains('d-none');
     codeField.value = '';
     otpBoxInput?.clear();
+    recoveryBoxInput?.clear();
 
-    if (showingBoxes) {
-        boxesWrap.classList.add('d-none');
-        codeField.classList.remove('otp-hidden-field');
-        codeLabel?.classList.remove('otp-hidden-field');
-        if (codeLabel) codeLabel.textContent = codeLabel.dataset['recoveryLabel'] ?? codeLabel.textContent;
+    if (showingOtp) {
+        otpWrap.classList.add('d-none');
+        recoveryWrap.classList.remove('d-none');
         toggleBtn.textContent = toggleBtn.dataset['useCodeLabel'] ?? toggleBtn.textContent;
-        codeField.focus();
+        if (header) header.textContent = header.dataset['recoveryHeader'] ?? header.textContent;
+        recoveryBoxInput?.focusFirst();
     } else {
-        boxesWrap.classList.remove('d-none');
-        codeField.classList.add('otp-hidden-field');
-        codeLabel?.classList.add('otp-hidden-field');
-        if (codeLabel) codeLabel.textContent = codeLabel.dataset['otpLabel'] ?? codeLabel.textContent;
+        recoveryWrap.classList.add('d-none');
+        otpWrap.classList.remove('d-none');
         toggleBtn.textContent = toggleBtn.dataset['useRecoveryLabel'] ?? toggleBtn.textContent;
-        boxesWrap.querySelector<HTMLInputElement>('.otp-box')?.focus();
+        if (header) header.textContent = header.dataset['otpHeader'] ?? header.textContent;
+        otpBoxInput?.focusFirst();
     }
 }
 

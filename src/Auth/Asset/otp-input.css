@@ -1,10 +1,12 @@
-/* Six-box OTP entry (setup.php + verify.php) — see OtpBoxInput in
-   keypad-copy-to-clipboard.ts. The real FormModel-bound <input id="code">
-   stays in the DOM and keeps receiving the combined value (so validation,
-   error display, and the existing digit-pad buttons all keep working
-   unchanged) — it's just visually hidden via .otp-hidden-field rather
-   than removed, so a screen reader's association between its label and
-   the field it describes is unaffected. */
+/* Box-based OTP/recovery-code entry (setup.php + verify.php) — see
+   OtpBoxInput in keypad-copy-to-clipboard.ts. The real FormModel-bound
+   <input id="code"> stays in the DOM and keeps receiving the combined
+   value (so validation, error display, and the existing digit-pad
+   buttons all keep working unchanged) — it's permanently visually
+   hidden via .otp-hidden-field rather than removed, so a screen
+   reader's association with it (hideLabel() drops the visible <label>,
+   but an explicit aria-label on the input covers the same ground) is
+   unaffected. */
 .otp-hidden-field {
     position: absolute;
     width: 1px;
@@ -32,27 +34,9 @@
     text-align: center;
 }
 
-/* verify.php's recovery-code toggle reveals #code (and its label) directly
-   inside a <form class="form-floating">. Bootstrap's floating label expects
-   .form-floating to wrap just [input, label] so its default
-   position:absolute;top:0;left:0 lands on top of the input — but here
-   form-floating spans the whole form (boxes, buttons and all), so once
-   anything else sits above #code the label floats up to the form's own
-   top instead of onto the field. Force it back to a normal in-flow label
-   whenever it's actually shown. Also reset the floating label's
-   single-line white-space/overflow/text-overflow (needed for a label
-   that shrinks into the input, not one sitting below it) and re-center
-   it to match the rest of this card's centered text. */
-label[for='code']:not(.otp-hidden-field) {
-    position: static;
-    transform: none;
-    height: auto;
-    width: 100%;
-    padding: 0;
-    margin-bottom: 0.25rem;
-    display: block;
-    white-space: normal;
-    overflow: visible;
-    text-overflow: clip;
-    text-align: center;
+/* verify.php's 8-character recovery-code boxes accept hex — OtpBoxInput
+   already stores each box's value uppercased, this just keeps what's
+   drawn on screen consistent with that as the user types. */
+.recovery-box {
+    text-transform: uppercase;
 }

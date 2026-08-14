@@ -34,7 +34,11 @@ use Yiisoft\Html\Tag\Td;
                     <h5 class="fw-normal h3 text-center"><?= $translator->translate('two.factor.authentication'); ?></h5>
                 </div>
                 <div class="card-body p-2 text-center">
-                    <h6><?= $translator->translate('two.factor.authentication.new.six.digit.code'); ?></h6>
+                    <h6
+                        id="otp-header"
+                        data-otp-header="<?= Html::encode($translator->translate('two.factor.authentication.new.six.digit.code')) ?>"
+                        data-recovery-header="<?= Html::encode($translator->translate('two.factor.authentication.new.recovery.code')) ?>"
+                    ><?= $translator->translate('two.factor.authentication.new.six.digit.code'); ?></h6>
                 </div>
                 <div class="card-body p-2 text-center">
                     <?php
@@ -111,13 +115,16 @@ echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
     ->id('twoFactorAuthenticationVerfiyForm')
     ->open(); ?>
                     <?php
-    // Six single-digit boxes are the default entry UI for the common
-    // 6-digit OTP case (OtpBoxInput, keypad-copy-to-clipboard.ts). Backup
-    // recovery codes are 8-character hex (0-9A-F, confirmed against
-    // RecoveryCodeService::generateBackupCodes()), which digit-only boxes
-    // can't represent — "Use a recovery code instead" swaps to showing
-    // the real field below directly, letting it accept either format
-    // exactly as it always has.
+    // Two separate box groups (OtpBoxInput, generalized in
+    // keypad-copy-to-clipboard.ts to take a character set): 6 digit-only
+    // boxes for the common OTP case, 8 hex-character boxes for backup
+    // recovery codes (0-9A-F, confirmed against
+    // RecoveryCodeService::generateBackupCodes()). "Use a recovery code
+    // instead" swaps which group is shown. The real FormModel-bound
+    // #code field stays in the DOM throughout, permanently visually
+    // hidden — it's purely the sync target both groups write into, so
+    // validation, error display and submission all keep working against
+    // the same field name the backend already expects, unchanged.
     echo Html::openTag('div', ['id' => 'otp-boxes-wrap']);
      echo Html::openTag('div', [
          'class' => 'otp-boxes',
@@ -134,6 +141,25 @@ echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
            'autocomplete' => $i === 1 ? 'one-time-code' : 'off',
            'aria-label' => 'Digit ' . $i . ' of 6',
            'autofocus' => $i === 1,
+       ]);
+      }
+     echo Html::closeTag('div');
+    echo Html::closeTag('div');
+    echo Html::openTag('div', ['id' => 'recovery-boxes-wrap', 'class' => 'd-none']);
+     echo Html::openTag('div', [
+         'class' => 'otp-boxes',
+         'id' => 'recovery-boxes',
+         'role' => 'group',
+         'aria-label' => $translator->translate('layout.password.otp.recovery.8'),
+     ]);
+      for ($i = 1; $i <= 8; $i++) {
+       echo Html::input('text', null, null, [
+           'class' => 'otp-box recovery-box form-control',
+           'inputmode' => 'text',
+           'pattern' => '[0-9A-Fa-f]*',
+           'maxlength' => 1,
+           'autocomplete' => 'off',
+           'aria-label' => 'Character ' . $i . ' of 8',
        ]);
       }
      echo Html::closeTag('div');
@@ -155,24 +181,21 @@ echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
             'id' => 'code',
             'name' => 'code',
             'minlength' => 6,
-            // otp = 6 digits, backup recovery code = 8 digits
+            // otp = 6 digits, backup recovery code = 8 hex characters
             'maxlength' => 8,
             'type' => 'tel',
             'class' => 'otp-hidden-field',
+            // Both box groups' aria-labels already describe whichever is
+            // actually shown — this is only reached by a screen reader
+            // user tabbing directly to the (permanently hidden) sync
+            // field itself, so a combined description covers either case.
+            'aria-label' => $translator->translate('layout.password.otp.verify.6')
+                . ' / ' . $translator->translate('layout.password.otp.recovery.8'),
         ],
     )
     ->error($error ?? '')
     ->required(true)
-    ->labelClass('otp-hidden-field')
-    ->addLabelAttributes([
-        // Read by handleToggleRecoveryCode() to swap the label's text so
-        // it always describes only the format actually expected right
-        // now, rather than a combined "OTP / recovery code" line that's
-        // irrelevant noise once the user has picked one or the other.
-        'data-otp-label' => $translator->translate('layout.password.otp.verify.6'),
-        'data-recovery-label' => $translator->translate('layout.password.otp.recovery.8'),
-    ])
-    ->label($translator->translate('layout.password.otp.verify.6'));
+    ->hideLabel();
 ?>
                     <?= Field::submitButton()
     ->buttonId('code-button')
