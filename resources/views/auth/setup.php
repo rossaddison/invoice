@@ -79,28 +79,6 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
      ->csrf($csrf)
      ->id('twoFactorAuthenticationSetupForm')
      ->open();
-     // Six single-digit boxes are the visible entry UI (OtpBoxInput,
-     // keypad-copy-to-clipboard.ts); the FormModel-bound field below stays
-     // the real submitted value, just visually hidden — validation, error
-     // display, and the digit-pad buttons all keep working unchanged.
-     echo H::openTag('div', [
-         'class' => 'otp-boxes',
-         'id' => 'otp-boxes',
-         'role' => 'group',
-         'aria-label' => $translator->translate('layout.password.otp.6.first'),
-     ]);
-      for ($i = 1; $i <= 6; $i++) {
-       echo H::input('tel', null, null, [
-           'class' => 'otp-box form-control',
-           'inputmode' => 'numeric',
-           'pattern' => '[0-9]*',
-           'maxlength' => 1,
-           'autocomplete' => $i === 1 ? 'one-time-code' : 'off',
-           'aria-label' => 'Digit ' . $i . ' of 6',
-           'autofocus' => $i === 1,
-       ]);
-      }
-     echo H::closeTag('div');
      echo F::text($formModel, 'code')
       ->addInputAttributes([
           'autocomplete' => 'current-code',
@@ -111,12 +89,12 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
           // Not the recovery code (8 digit).
           'maxlength' => 6,
           'type' => 'tel',
-          'class' => 'otp-hidden-field',
       ])
       ->error($error ?? '')
       ->required(true)
-      ->labelClass('otp-hidden-field')
-      ->label($translator->translate('layout.password.otp.6.first'));
+      ->inputClass('form-control form-control-lg',)
+      ->label($translator->translate('layout.password.otp.6.first'))
+      ->autofocus();
      echo F::submitButton()
       ->buttonId('code-button')
       ->buttonClass('btn btn-primary')
