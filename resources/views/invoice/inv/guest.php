@@ -163,6 +163,7 @@ $columns = [
                     $url = $urlGenerator->generate('paymentinformation/inform', [
                         'gateway' => $gateway,
                         'url_key' => $model->getUrlKey(),
+                        '_language' => 'en',
                     ]);
                     $items .= '<li><a class="dropdown-item" href="'
                         . Html::encode($url) . '">'
