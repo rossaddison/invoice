@@ -542,10 +542,22 @@ final class PaymentInformationController
                     ),
                     // Checkout.com has its own dedicated CheckoutComPaymentController
                     // — same reasoning as every other dedicated gateway controller above.
-                    'Checkout_Com' => $this->webService->getRedirectResponse(
-                        'paymentinformation/checkoutComInForm',
-                        ['url_key' => $ctx->url_key, '_language' => 'en'],
-                    ),
+                    'Checkout_Com' => (function () use ($ctx) {
+                        // TEMPORARY DEBUG — remove once the missing-/en/ mystery is solved.
+                        $generatedUrl = $this->urlGenerator->generate(
+                            'paymentinformation/checkoutComInForm',
+                            ['url_key' => $ctx->url_key, '_language' => 'en'],
+                        );
+                        $response = $this->webService->getRedirectResponse(
+                            'paymentinformation/checkoutComInForm',
+                            ['url_key' => $ctx->url_key, '_language' => 'en'],
+                        );
+                        echo '<pre>';
+                        echo "generatedUrl (via \$this->urlGenerator, concrete class): " . $generatedUrl . "\n";
+                        echo "response Location header: " . $response->getHeaderLine('Location') . "\n";
+                        echo '</pre>';
+                        exit;
+                    })(),
                     default      => null,
                 };
                 if ($gatewayResponse !== null) {
