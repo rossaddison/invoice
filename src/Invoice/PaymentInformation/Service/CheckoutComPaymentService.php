@@ -116,6 +116,10 @@ final class CheckoutComPaymentService implements PaymentGatewayInterface
         $request->reference = $reference;
         $request->description = $description;
         $request->return_url = $returnUrl;
+        $processingChannelId = $this->processingChannelId();
+        if ($processingChannelId !== '') {
+            $request->processing_channel_id = $processingChannelId;
+        }
 
         try {
             /** @var array{_links?: array{redirect?: array{href?: string}}} $response */
@@ -264,6 +268,19 @@ final class CheckoutComPaymentService implements PaymentGatewayInterface
     {
         return (string) $this->settings->decode(
             $this->settings->getSetting('gateway_checkout_com_publicKey') ?: '');
+    }
+
+    /**
+     * Required, not optional, whenever the account has more than one
+     * processing channel (or none marked default) — confirmed live
+     * against a real sandbox account, whose Payment Link creation calls
+     * failed with a `processing_channel_id_required` (422) API error
+     * until this was set.
+     */
+    private function processingChannelId(): string
+    {
+        return (string) $this->settings->decode(
+            $this->settings->getSetting('gateway_checkout_com_processingChannelId') ?: '');
     }
 
     /**
