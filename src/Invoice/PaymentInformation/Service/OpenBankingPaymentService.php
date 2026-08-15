@@ -12,7 +12,7 @@ use GuzzleHttp\Client as GuzzleClient;
 use Psr\Http\Message\ServerRequestInterface;
 use RossAddison\OpenBankingClient\OpenBanking;
 use RossAddison\OpenBankingClient\OpenBankingProviderRegistryInterface;
-use Yiisoft\Router\FastRoute\UrlGenerator;
+use Yiisoft\Router\UrlGeneratorInterface as UrlGenerator;
 use Yiisoft\Security\Random;
 use Yiisoft\Session\SessionInterface;
 
