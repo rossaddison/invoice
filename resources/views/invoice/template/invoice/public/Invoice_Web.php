@@ -98,7 +98,10 @@ echo H::openTag('html', ['lang' => $translator->translate('cldr')]); //0
         echo $translator->translate('download.pdf') . '=>' . $translator->translate('no') . ' ' . $translator->translate('custom.fields');
        echo H::closeTag('a'); //7
        if ($s->getSetting('enable_online_payments') == 1 && $inv_amount->getBalance() > 0) :
-        echo H::openTag('a', ['href' => $urlGenerator->generate('paymentinformation/inform', ['url_key' => $inv_url_key, 'gateway' => $client_chosen_gateway, '_language' => $_language ?: 'en']), 'class' => 'btn btn-success']); //7
+        // TEMPORARY DEBUG — remove once the missing-/en/ mystery is solved.
+        $payNowHref = $urlGenerator->generate('paymentinformation/inform', ['url_key' => $inv_url_key, 'gateway' => $client_chosen_gateway, '_language' => $_language ?: 'en']);
+        error_log('DEBUG Pay Now: raw $_language=' . var_export($_language, true) . ' gateway=' . var_export($client_chosen_gateway, true) . ' href=' . $payNowHref);
+        echo H::openTag('a', ['href' => $payNowHref, 'class' => 'btn btn-success']); //7
          echo H::tag('i', '', ['class' => 'bi bi-credit-card']);
          echo $translator->translate('pay.now') . ' ' . str_replace('_', ' ', $client_chosen_gateway);
         echo H::closeTag('a'); //7
