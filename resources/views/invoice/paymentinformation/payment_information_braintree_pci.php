@@ -86,7 +86,7 @@ if ($disable_form === false) {
              'method' => 'post',
              'action' => $urlGenerator->generate(
                  'paymentinformation/inform',
-                 ['url_key' => $inv_url_key, 'gateway' => 'Braintree', '_language' => 'en'],
+                 ['url_key' => $inv_url_key, 'gateway' => 'Braintree'],
              ),
          ]);
           echo H::openTag('div', ['id' => 'dropin-container']);

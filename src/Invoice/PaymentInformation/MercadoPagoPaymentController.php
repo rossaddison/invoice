@@ -95,11 +95,10 @@ final class MercadoPagoPaymentController
         $urlKey = $invoice->getUrlKey();
         $callbackUrl = $this->urlGenerator->generateAbsolute(
             'paymentinformation/mercadoPagoComplete',
-            ['url_key' => $urlKey, '_language' => 'en'],
+            ['url_key' => $urlKey],
         );
         $notificationUrl = $this->urlGenerator->generateAbsolute(
             'paymentinformation/mercadoPagoWebhook',
-            ['_language' => 'en'],
         );
         $result = $this->mercadoPagoPaymentService->createPayment(
             $balance,

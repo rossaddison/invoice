@@ -93,7 +93,7 @@ final class RobokassaPaymentController
         $urlKey = $invoice->getUrlKey();
         $successUrl = $this->urlGenerator->generateAbsolute(
             'paymentinformation/robokassaComplete',
-            ['url_key' => $urlKey, '_language' => 'en'],
+            ['url_key' => $urlKey],
         );
         $url = $this->robokassaPaymentService->createPaymentUrl(
             $invoice->reqId(),

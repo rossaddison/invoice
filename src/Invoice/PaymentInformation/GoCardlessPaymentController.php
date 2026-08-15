@@ -107,7 +107,7 @@ final class GoCardlessPaymentController
 
         $successRedirectUrl = $this->urlGenerator->generateAbsolute(
             'paymentinformation/goCardlessComplete',
-            ['url_key' => $urlKey, '_language' => 'en'],
+            ['url_key' => $urlKey],
         );
         $flow = $this->goCardlessPaymentService->createRedirectFlow(
             'Invoice ' . ($invoice->getNumber() ?? $urlKey),

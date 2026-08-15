@@ -93,7 +93,7 @@ final class SquarePaymentController
         $urlKey = $invoice->getUrlKey();
         $completeUrl = $this->urlGenerator->generateAbsolute(
             'paymentinformation/squareComplete',
-            ['url_key' => $urlKey, '_language' => 'en'],
+            ['url_key' => $urlKey],
         );
         $result = $this->squarePaymentService->createPayment(
             $balance,

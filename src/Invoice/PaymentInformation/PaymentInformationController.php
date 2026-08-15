@@ -224,7 +224,7 @@ final class PaymentInformationController
                 $viewData['authUrl']   = $authUrl;
                 $viewData['returnUrl'] = [
                     'paymentinformation/paymentinformation_openbanking',
-                    ['url_key' => $ctx->url_key, '_language' => 'en'], [], null];
+                    ['url_key' => $ctx->url_key], [], null];
                 break;
         }
         return $this->webViewRenderer->render(
@@ -498,53 +498,53 @@ final class PaymentInformationController
                     // inline here first.
                     'Adyen'      => $this->webService->getRedirectResponse(
                         'paymentinformation/adyenInForm',
-                        ['url_key' => $ctx->url_key, '_language' => 'en'],
+                        ['url_key' => $ctx->url_key],
                     ),
                     // GoCardless has its own dedicated GoCardlessPaymentController
                     // — same reasoning as Adyen above.
                     'GoCardless' => $this->webService->getRedirectResponse(
                         'paymentinformation/goCardlessInForm',
-                        ['url_key' => $ctx->url_key, '_language' => 'en'],
+                        ['url_key' => $ctx->url_key],
                     ),
                     // Robokassa and YooKassa each have their own dedicated
                     // controller — same reasoning as Adyen/GoCardless above.
                     'Robokassa'  => $this->webService->getRedirectResponse(
                         'paymentinformation/robokassaInForm',
-                        ['url_key' => $ctx->url_key, '_language' => 'en'],
+                        ['url_key' => $ctx->url_key],
                     ),
                     'Yookassa'   => $this->webService->getRedirectResponse(
                         'paymentinformation/yookassaInForm',
-                        ['url_key' => $ctx->url_key, '_language' => 'en'],
+                        ['url_key' => $ctx->url_key],
                     ),
                     // Paystack has its own dedicated PaystackPaymentController
                     // — same reasoning as Adyen/GoCardless/Robokassa/YooKassa above.
                     'Paystack'   => $this->webService->getRedirectResponse(
                         'paymentinformation/paystackInForm',
-                        ['url_key' => $ctx->url_key, '_language' => 'en'],
+                        ['url_key' => $ctx->url_key],
                     ),
                     // Razorpay has its own dedicated RazorpayPaymentController
                     // — same reasoning as Adyen/GoCardless/Robokassa/YooKassa/Paystack above.
                     'Razorpay'   => $this->webService->getRedirectResponse(
                         'paymentinformation/razorpayInForm',
-                        ['url_key' => $ctx->url_key, '_language' => 'en'],
+                        ['url_key' => $ctx->url_key],
                     ),
                     // Paypal has its own dedicated PaypalPaymentController
                     // — same reasoning as every other dedicated gateway controller above.
                     'Paypal'     => $this->webService->getRedirectResponse(
                         'paymentinformation/paypalInForm',
-                        ['url_key' => $ctx->url_key, '_language' => 'en'],
+                        ['url_key' => $ctx->url_key],
                     ),
                     // Square has its own dedicated SquarePaymentController
                     // — same reasoning as every other dedicated gateway controller above.
                     'Square'     => $this->webService->getRedirectResponse(
                         'paymentinformation/squareInForm',
-                        ['url_key' => $ctx->url_key, '_language' => 'en'],
+                        ['url_key' => $ctx->url_key],
                     ),
                     // Checkout.com has its own dedicated CheckoutComPaymentController
                     // — same reasoning as every other dedicated gateway controller above.
                     'Checkout_Com' => $this->webService->getRedirectResponse(
                         'paymentinformation/checkoutComInForm',
-                        ['url_key' => $ctx->url_key, '_language' => 'en'],
+                        ['url_key' => $ctx->url_key],
                     ),
                     default      => null,
                 };

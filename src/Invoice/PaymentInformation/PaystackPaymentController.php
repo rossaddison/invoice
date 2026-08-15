@@ -94,7 +94,7 @@ final class PaystackPaymentController
         $urlKey = $invoice->getUrlKey();
         $callbackUrl = $this->urlGenerator->generateAbsolute(
             'paymentinformation/paystackComplete',
-            ['url_key' => $urlKey, '_language' => 'en'],
+            ['url_key' => $urlKey],
         );
         $result = $this->paystackPaymentService->createPayment(
             $balance,

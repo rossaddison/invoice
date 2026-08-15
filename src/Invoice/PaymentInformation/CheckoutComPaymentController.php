@@ -97,7 +97,7 @@ final class CheckoutComPaymentController
         $urlKey = $invoice->getUrlKey();
         $completeUrl = $this->urlGenerator->generateAbsolute(
             'paymentinformation/checkoutComComplete',
-            ['url_key' => $urlKey, '_language' => 'en'],
+            ['url_key' => $urlKey],
         );
         $redirectUrl = $this->checkoutComPaymentService->createPaymentLink(
             $balance,

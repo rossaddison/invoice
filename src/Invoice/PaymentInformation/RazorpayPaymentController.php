@@ -99,7 +99,7 @@ final class RazorpayPaymentController
         $urlKey = $invoice->getUrlKey();
         $callbackUrl = $this->urlGenerator->generateAbsolute(
             'paymentinformation/razorpayComplete',
-            ['url_key' => $urlKey, '_language' => 'en'],
+            ['url_key' => $urlKey],
         );
         $result = $this->razorpayPaymentService->createPayment(
             $balance,

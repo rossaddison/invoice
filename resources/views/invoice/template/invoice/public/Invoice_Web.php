@@ -89,16 +89,16 @@ echo H::openTag('html', ['lang' => $translator->translate('cldr')]); //0
        echo $inv->getNumber();
       echo H::closeTag('h2'); //6
       echo H::openTag('div', $btnGroup); //6
-       echo H::openTag('a', ['href' => $urlGenerator->generate('inv/pdfDownloadIncludeCf', ['url_key' => $inv_url_key, '_language' => $_language ?: 'en']), 'class' => 'btn btn-primary']); //7
+       echo H::openTag('a', ['href' => $urlGenerator->generate('inv/pdfDownloadIncludeCf', ['url_key' => $inv_url_key]), 'class' => 'btn btn-primary']); //7
         echo H::tag('i', '', ['class' => 'bi bi-file-pdf']);
         echo $translator->translate('download.pdf') . '=>' . $translator->translate('yes') . ' ' . $translator->translate('custom.fields');
        echo H::closeTag('a'); //7
-       echo H::openTag('a', ['href' => $urlGenerator->generate('inv/pdfDownloadExcludeCf', ['url_key' => $inv_url_key, '_language' => $_language ?: 'en']), 'class' => 'btn btn-danger']); //7
+       echo H::openTag('a', ['href' => $urlGenerator->generate('inv/pdfDownloadExcludeCf', ['url_key' => $inv_url_key]), 'class' => 'btn btn-danger']); //7
         echo H::tag('i', '', ['class' => 'bi bi-file-pdf']);
         echo $translator->translate('download.pdf') . '=>' . $translator->translate('no') . ' ' . $translator->translate('custom.fields');
        echo H::closeTag('a'); //7
        if ($s->getSetting('enable_online_payments') == 1 && $inv_amount->getBalance() > 0) :
-        echo H::openTag('a', ['href' => $urlGenerator->generate('paymentinformation/inform', ['url_key' => $inv_url_key, 'gateway' => $client_chosen_gateway, '_language' => $_language ?: 'en']), 'class' => 'btn btn-success']); //7
+        echo H::openTag('a', ['href' => $urlGenerator->generate('paymentinformation/inform', ['url_key' => $inv_url_key, 'gateway' => $client_chosen_gateway]), 'class' => 'btn btn-success']); //7
          echo H::tag('i', '', ['class' => 'bi bi-credit-card']);
          echo $translator->translate('pay.now') . ' ' . str_replace('_', ' ', $client_chosen_gateway);
         echo H::closeTag('a'); //7

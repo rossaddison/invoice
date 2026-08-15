@@ -228,7 +228,7 @@ final class AdyenPaymentController
         // in this codebase).
         $returnUrl = $this->urlGenerator->generateAbsolute(
             'paymentinformation/adyenComplete',
-            ['url_key' => $ctx['url_key'], '_language' => 'en'],
+            ['url_key' => $ctx['url_key']],
         );
         // countryCode must be set on the session itself, not only passed to
         // the front-end AdyenCheckout() config — otherwise Adyen returns

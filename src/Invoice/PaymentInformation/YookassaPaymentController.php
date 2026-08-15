@@ -95,7 +95,7 @@ final class YookassaPaymentController
         $urlKey = $invoice->getUrlKey();
         $returnUrl = $this->urlGenerator->generateAbsolute(
             'paymentinformation/yookassaComplete',
-            ['url_key' => $urlKey, '_language' => 'en'],
+            ['url_key' => $urlKey],
         );
         $result = $this->yookassaPaymentService->createPayment(
             $balance,

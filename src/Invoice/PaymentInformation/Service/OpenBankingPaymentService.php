@@ -54,7 +54,7 @@ final class OpenBankingPaymentService
             'scope'                 => $this->openBanking->getScope(),
             'code_challenge'        => $codeChallenge,
             'code_challenge_method' => 'S256',
-            'redirect_uri' => $this->urlGenerator->generate('paymentinformation/openbankingOauthComplete', ['url_key' => $url_key, '_language' => 'en'], [], null),
+            'redirect_uri' => $this->urlGenerator->generate('paymentinformation/openbankingOauthComplete', ['url_key' => $url_key], [], null),
         ]);
     }
 
