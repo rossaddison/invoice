@@ -1038,7 +1038,8 @@ if ((in_array($inv->reqStatusId(), [2, 3])
             echo H::openTag('a', [
                 'href' => $urlGenerator->generate('inv/urlKey',
                         ['url_key' => $inv->getUrlKey(),
-                            'gateway' => $gateway]),
+                            'gateway' => $gateway,
+                            '_language' => 'en']),
                 'class' => $dropdownItem
             ]);
              echo H::openTag('i', ['class' => $biDash]);
