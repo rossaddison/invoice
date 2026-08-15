@@ -15,9 +15,7 @@ class AuthAegisTotpKeypadAsset extends AssetBundle
     public ?string $sourcePath = '@src/Auth/Asset';
 
     /** @psalm-suppress NonInvariantDocblockPropertyType */
-    public array $css = [
-        'otp-input.css',
-    ];
+    public array $css = [];
 
     /** @psalm-suppress NonInvariantDocblockPropertyType */
     public array $js = [
