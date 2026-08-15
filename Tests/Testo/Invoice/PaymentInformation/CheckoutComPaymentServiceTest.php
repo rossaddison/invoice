@@ -9,6 +9,7 @@ use App\Invoice\Setting\SettingRepository;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 use Mockery as m;
 use Psr\Log\LoggerInterface;
@@ -43,6 +44,7 @@ final class CheckoutComPaymentServiceTest
         $sR->shouldReceive('decode')->with('enc-secret')->andReturn(self::VALID_SECRET_KEY);
         $sR->shouldReceive('getSetting')->with('gateway_checkout_com_publicKey')->andReturn('');
         $sR->shouldReceive('decode')->with('')->andReturn('');
+        $sR->shouldReceive('getSetting')->with('gateway_checkout_com_processingChannelId')->andReturn('');
         $sR->shouldReceive('getSetting')->with('gateway_checkout_com_sandbox')->andReturn($sandbox ? '1' : '0');
 
         return $sR;
@@ -139,6 +141,47 @@ final class CheckoutComPaymentServiceTest
         $result = $service->createPaymentLink(10.00, 'gbp', 'key', 'Invoice INV1', 'https://example.test/complete');
 
         Assert::null($result);
+    }
+
+    /**
+     * Confirmed live against a real sandbox account: Payment Link
+     * creation fails with a 422 `processing_channel_id_required` API
+     * error unless this is set — see checkoutComGatewayFields()'s own
+     * docblock. Asserts it actually reaches the outgoing request body
+     * when configured, via Guzzle's own history middleware rather than
+     * just checking the (mocked) response.
+     */
+    public function createPaymentLinkIncludesProcessingChannelIdWhenConfigured(): void
+    {
+        $sR = m::mock(SettingRepository::class);
+        $sR->shouldReceive('getSetting')->with('gateway_checkout_com_secretKey')->andReturn('enc-secret');
+        $sR->shouldReceive('decode')->with('enc-secret')->andReturn(self::VALID_SECRET_KEY);
+        $sR->shouldReceive('getSetting')->with('gateway_checkout_com_publicKey')->andReturn('');
+        $sR->shouldReceive('decode')->with('')->andReturn('');
+        $sR->shouldReceive('getSetting')->with('gateway_checkout_com_processingChannelId')->andReturn('enc-channel');
+        $sR->shouldReceive('decode')->with('enc-channel')->andReturn('pc_abc123');
+        $sR->shouldReceive('getSetting')->with('gateway_checkout_com_sandbox')->andReturn('1');
+
+        $history = [];
+        $mock = new MockHandler([
+            new Response(201, [], json_encode([
+                '_links' => ['redirect' => ['href' => 'https://pay.sandbox.checkout.com/link/pl_abc123']],
+            ], JSON_THROW_ON_ERROR)),
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push(Middleware::history($history));
+        $httpClient = new HttpClient(['handler' => $handlerStack]);
+
+        $service = new CheckoutComPaymentService($sR, m::spy(LoggerInterface::class), $httpClient);
+
+        $service->createPaymentLink(10.00, 'gbp', 'key', 'Invoice INV1', 'https://example.test/complete');
+
+        Assert::same(1, count($history));
+        /** @var array{request: \Psr\Http\Message\RequestInterface} $entry */
+        $entry = $history[0];
+        /** @var array{processing_channel_id?: string} $sentBody */
+        $sentBody = json_decode((string) $entry['request']->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        Assert::same('pc_abc123', $sentBody['processing_channel_id'] ?? null);
     }
 
     public function verifyPaymentReturnsPaidTrueWhenStatusIsCaptured(): void

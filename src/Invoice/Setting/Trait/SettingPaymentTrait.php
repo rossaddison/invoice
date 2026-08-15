@@ -67,6 +67,21 @@ trait SettingPaymentTrait
         ];
     }
 
+    /**
+     * Same idea as gatewayCredentialUrls(), one level more specific: a
+     * link tied to one particular field rather than the whole gateway,
+     * for a value that isn't found on the general credentials/API-keys
+     * page. User-confirmed only — same "no entry rather than a guessed
+     * one" rule as gatewayCredentialUrls(). Keyed by
+     * '{driver}.{fieldKey}' ($d . '.' . $key in the view).
+     */
+    public function gatewayFieldUrls(): array
+    {
+        return [
+            'checkout_com.processingChannelId' => 'https://dashboard.sandbox.checkout.com/settings/processing-channels',
+        ];
+    }
+
     private function adyenGatewayFields(): array
     {
         return [
@@ -160,7 +175,13 @@ trait SettingPaymentTrait
      * for the full ground-truthing. `publicKey` is genuinely optional
      * (only needed for client-side tokenization this app's
      * hosted-redirect flow never uses) but kept for parity with every
-     * other gateway's field set and possible future use.
+     * other gateway's field set and possible future use. `processingChannelId`
+     * is required, not optional, whenever the account has more than one
+     * processing channel (or none marked default) — confirmed live
+     * against a real sandbox account, whose Payment Link creation calls
+     * failed with a `processing_channel_id_required` (422) API error
+     * until this was set; found in Checkout.com's Hub under Developers →
+     * Processing Channels.
      */
     private function checkoutComGatewayFields(): array
     {
@@ -176,6 +197,10 @@ trait SettingPaymentTrait
             'webhookSecret' => [
                 'type' => 'password',
                 'label' => 'Webhook Signature Key',
+            ],
+            'processingChannelId' => [
+                'type' => 'password',
+                'label' => 'Processing Channel Id',
             ],
             'sandbox' => [
                 'type' => 'checkbox',

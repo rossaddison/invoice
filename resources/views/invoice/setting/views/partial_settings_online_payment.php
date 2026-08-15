@@ -13,6 +13,7 @@ use Yiisoft\Html\Tag\Option;
 * @var array $gateway_regions
 * @var array $payment_methods
 * @var array<string, string> $gateway_credential_urls
+* @var array<string, string> $gateway_field_urls
 * @var string $tab_index_url
 * @var string $adyen_hmac_verify_url
 */
@@ -303,6 +304,21 @@ echo H::openTag('div', $row); //1
        ? $gatewaySpecificLabel
        : $translator->translate('online.payment.' . $key);
      echo H::closeTag('label');
+     // Field-specific link (e.g. Checkout.com's Processing Channel Id,
+     // found on its own settings page, not the general credentials
+     // page the gateway-title-level link above already points to) —
+     // separate from $gateway_credential_urls, which is one link per
+     // whole gateway.
+     if (isset($gateway_field_urls[$d . '.' . $key]) && $gateway_field_urls[$d . '.' . $key] !== '') {
+     echo H::openTag('a', [
+      'href' => $gateway_field_urls[$d . '.' . $key],
+      'target' => '_blank',
+      'rel' => 'noopener noreferrer',
+      'class' => 'small ms-2',
+     ]);
+      echo $translator->translate('online.payment.find.here');
+     echo H::closeTag('a');
+     }
      echo H::openTag('input', [
       'type' => $setting['type'],
       'class' => 'form-select',

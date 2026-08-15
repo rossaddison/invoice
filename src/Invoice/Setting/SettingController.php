@@ -209,6 +209,7 @@ final class SettingController extends BaseController
                 'openBankingProviders' => $this->openBankingProviderRegistry->getProviderNames(),
                 'payment_methods' => $deps->pm->findAllPreloaded(),
                 'gateway_credential_urls' => $this->sR->gatewayCredentialUrls(),
+                'gateway_field_urls' => $this->sR->gatewayFieldUrls(),
                 // The concrete FastRoute UrlGenerator (unlike the
                 // UrlGeneratorInterface binding) has no _language default
                 // set, so it must always be passed explicitly here —
