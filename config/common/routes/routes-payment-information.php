@@ -15,6 +15,7 @@ use App\Invoice\PaymentInformation\PaystackPaymentController as PSPICLR;
 use App\Invoice\PaymentInformation\RazorpayPaymentController as RZPICLR;
 use App\Invoice\PaymentInformation\RobokassaPaymentController as RPICLR;
 use App\Invoice\PaymentInformation\SquarePaymentController as SQPICLR;
+use App\Invoice\PaymentInformation\TrueLayerPaymentController as TLPICLR;
 use App\Invoice\PaymentInformation\YookassaPaymentController as YKPICLR;
 use App\Middleware\RoutePermission;
 use Yiisoft\Http\Method;
@@ -142,6 +143,18 @@ return [
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([CKPICLR::class, 'checkoutComComplete'])
                 ->name('paymentinformation/checkoutComComplete'),
+
+            Route::methods([Method::GET, Method::POST],
+                    '/paymentinformation/trueLayerInForm/{url_key}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([TLPICLR::class, 'trueLayerInForm'])
+                ->name('paymentinformation/trueLayerInForm'),
+
+            Route::methods([Method::GET, Method::POST],
+                    '/paymentinformation/trueLayerComplete/{url_key}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([TLPICLR::class, 'trueLayerComplete'])
+                ->name('paymentinformation/trueLayerComplete'),
 
             Route::methods([Method::GET, Method::POST],
                     '/paymentinformation/amazonComplete/{url_key}')
@@ -321,4 +334,13 @@ return [
     Route::methods([Method::POST], '/paymentinformation/checkoutComWebhook')
         ->action([CKPICLR::class, 'checkoutComWebhook'])
         ->name('paymentinformation/checkoutComWebhook'),
+
+    // Not under RoutePermission::invoiceGroup(): TrueLayer's servers must
+    // be able to POST here with no app session. Secured by Tl-Signature
+    // JWS verification in the handler (against TrueLayer's own published
+    // JWKS, not a shared secret), not RBAC — see TrueLayerWebhookHandler
+    // and App\Middleware\CsrfExemptMiddleware.
+    Route::methods([Method::POST], '/paymentinformation/trueLayerWebhook')
+        ->action([TLPICLR::class, 'trueLayerWebhook'])
+        ->name('paymentinformation/trueLayerWebhook'),
 ];

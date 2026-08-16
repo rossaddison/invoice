@@ -546,6 +546,12 @@ final class PaymentInformationController
                         'paymentinformation/checkoutComInForm',
                         ['url_key' => $ctx->url_key],
                     ),
+                    // TrueLayer has its own dedicated TrueLayerPaymentController
+                    // — same reasoning as every other dedicated gateway controller above.
+                    'TrueLayer' => $this->webService->getRedirectResponse(
+                        'paymentinformation/trueLayerInForm',
+                        ['url_key' => $ctx->url_key],
+                    ),
                     default      => null,
                 };
                 if ($gatewayResponse !== null) {

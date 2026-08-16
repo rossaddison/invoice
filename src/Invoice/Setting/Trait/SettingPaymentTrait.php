@@ -36,6 +36,7 @@ trait SettingPaymentTrait
             'Square' => $this->squareGatewayFields(),
             'StoreCove' => $this->storeCoveGatewayFields(),
             'Stripe' => $this->stripeGatewayFields(),
+            'TrueLayer' => $this->trueLayerGatewayFields(),
         ];
     }
 
@@ -548,6 +549,42 @@ trait SettingPaymentTrait
     }
 
     /**
+     * UK/EU Open Banking gateway, via TrueLayer's official truelayer/client
+     * SDK. `clientId`/`clientSecret` are the Console app's own OAuth2
+     * client-credentials pair; `signingKid` is the Key ID shown next to
+     * the uploaded public key in Console > Settings > Signing Keys;
+     * `privateKey` is the PEM-format private key generated locally when
+     * that key pair was created (never uploaded to TrueLayer itself, only
+     * its public half is). See TrueLayerPaymentService's own docblock for
+     * the full ground-truthing.
+     */
+    private function trueLayerGatewayFields(): array
+    {
+        return [
+            'clientId' => [
+                'type' => 'password',
+                'label' => 'Client Id',
+            ],
+            'clientSecret' => [
+                'type' => 'password',
+                'label' => 'Client Secret',
+            ],
+            'signingKid' => [
+                'type' => 'password',
+                'label' => 'Signing Key Id (kid)',
+            ],
+            'privateKey' => [
+                'type' => 'password',
+                'label' => 'Signing Private Key (PEM)',
+            ],
+            'sandbox' => [
+                'type' => 'checkbox',
+                'label' => 'Sandbox',
+            ],
+        ];
+    }
+
+    /**
      * @return (int|string)[]
      *
      * @psalm-return list<array-key>
@@ -609,6 +646,10 @@ trait SettingPaymentTrait
             // Genuinely separate sandbox environment (its own base URL and
             // its own test seller accounts), same reasoning as PayPal above.
             'square' => 'https://developer.squareup.com/apps',
+            // Genuinely separate sandbox environment (api.truelayer-sandbox.com
+            // vs api.truelayer.com, its own Console app/credentials) —
+            // same conceptual shape as PayPal/Square above.
+            'truelayer' => 'https://console.truelayer.com/',
         ];
     }
 

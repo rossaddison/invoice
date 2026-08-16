@@ -31,6 +31,7 @@ final class CsrfExemptMiddleware implements MiddlewareInterface
         '/paymentinformation/paypalWebhook',
         '/paymentinformation/squareWebhook',
         '/paymentinformation/checkoutComWebhook',
+        '/paymentinformation/trueLayerWebhook',
         '/whatsapp/webhook',
         '/telegram/webhook',
     ];

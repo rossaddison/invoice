@@ -20,6 +20,7 @@ use App\Invoice\PaymentInformation\Service\RazorpayPaymentService;
 use App\Invoice\PaymentInformation\Service\RobokassaPaymentService;
 use App\Invoice\PaymentInformation\Service\SquarePaymentService;
 use App\Invoice\PaymentInformation\Service\StripePaymentService;
+use App\Invoice\PaymentInformation\Service\TrueLayerPaymentService;
 use App\Invoice\PaymentInformation\Service\YookassaPaymentService;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\SquareMerchant\SquareMerchantRepository;
@@ -66,6 +67,7 @@ final class PaymentRefundController
         private readonly PaypalPaymentService $paypalPaymentService,
         private readonly SquarePaymentService $squarePaymentService,
         private readonly CheckoutComPaymentService $checkoutComPaymentService,
+        private readonly TrueLayerPaymentService $trueLayerPaymentService,
     ) {
     }
 
@@ -164,6 +166,7 @@ final class PaymentRefundController
             'paypal'     => $this->paypalPaymentService->refund($reference, $amount),
             'square'     => $this->squarePaymentService->refund($reference, $amount),
             'checkout_com' => $this->checkoutComPaymentService->refund($reference, $amount),
+            'truelayer'  => $this->trueLayerPaymentService->refund($reference, $amount),
             default      => null,
         };
     }
