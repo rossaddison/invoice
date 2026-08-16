@@ -101,6 +101,40 @@ export class SettingsHandler {
 
         // Run online payment handler once to ensure initial state
         this.handleOnlinePaymentSelectChange();
+
+        // Reveal-toggle eye icon on every gateway credential password field
+        this.initPasswordRevealToggles();
+    }
+
+    /**
+     * Wires up the eye-icon reveal toggle rendered inside every gateway
+     * 'password'-type Settings field (see
+     * partial_settings_online_payment.php) — event-delegated via a shared
+     * class + data-target rather than one listener per field, since the
+     * gateway list (and therefore the field count) grows over time.
+     */
+    private initPasswordRevealToggles(): void {
+        document.addEventListener('click', e => {
+            const toggle = (e.target as HTMLElement)?.closest(
+                '.password-reveal-toggle'
+            ) as HTMLButtonElement | null;
+            if (!toggle) return;
+
+            e.preventDefault();
+
+            const targetId = toggle.dataset.target;
+            const input = targetId
+                ? (document.getElementById(targetId) as HTMLInputElement | null)
+                : null;
+            const icon = toggle.querySelector('i');
+            if (!input || !icon) return;
+
+            const revealing = input.type === 'password';
+            input.type = revealing ? 'text' : 'password';
+            icon.classList.toggle('bi-eye', !revealing);
+            icon.classList.toggle('bi-eye-slash', revealing);
+            toggle.setAttribute('aria-label', revealing ? 'Hide password' : 'Show password');
+        });
     }
 
     /**

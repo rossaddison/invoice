@@ -338,6 +338,31 @@ echo H::openTag('div', $row); //1
        'rows' => 6,
       ],
      );
+     } elseif ($setting['type'] == 'password') {
+     // Reveal toggle: wrapped in a position-relative container so the
+     // eye icon can sit inside the input itself. Wired up generically in
+     // settings.ts via the .password-reveal-toggle class + data-target,
+     // not an inline onclick — see feedback_no_raw_script_tags.
+     echo H::openTag('div', ['class' => 'position-relative']);
+      echo H::openTag('input', [
+       'type' => $setting['type'],
+       'class' => 'form-select pe-5',
+       'name' => $pfxGateway . $d . '_' .
+       $key . ']',
+       'id' => $pfxGateway . $d . '_' .
+       $key . ']',
+       'value' => $inputValue
+      ]);
+      echo H::openTag('button', [
+       'type' => 'button',
+       'class' => 'btn btn-link position-absolute top-50 end-0 translate-middle-y password-reveal-toggle',
+       'data-target' => $pfxGateway . $d . '_' . $key . ']',
+       'aria-label' => 'Show password',
+       'tabindex' => '-1',
+      ]);
+       echo H::tag('i', '', ['class' => 'bi bi-eye']);
+      echo H::closeTag('button');
+     echo H::closeTag('div');
      } else {
      echo H::openTag('input', [
       'type' => $setting['type'],
