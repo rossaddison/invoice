@@ -168,7 +168,7 @@ echo new TagHtml()
   echo Html::openTag('header', ['class' => 'mb-auto']); //2
     $this->beginBody();
    echo NavBar::widget()
-        ->addClass('navbar navbar-light navbar-expand-sm')
+        ->addClass('navbar navbar-dark navbar-expand-sm')
         ->addCssStyle([
             'background' => 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
             'color' => 'white',
@@ -318,7 +318,7 @@ echo new TagHtml()
         ),
         NavLink::to(
              new Label()
-            ->attributes(['class' => 'bi bi-credit-card-2-front-fill text-success'])
+            ->attributes(['class' => 'bi bi-credit-card-2-front-fill text-white'])
             ->content(str_repeat(' ', 1)
                 . $t->translate('menu.gateway.status')),
             $urlGenerator->generate('site/gateway-status'),
@@ -383,7 +383,7 @@ echo new TagHtml()
         ),
         NavLink::to(
              new Label()
-            ->attributes(['class' => 'bi bi-door-open-fill text-success'])
+            ->attributes(['class' => 'bi bi-door-open-fill text-white'])
             ->content(str_repeat(' ', 1)
                 . $t->translate('menu.login')),
             $urlGenerator->generate('auth/login'),
