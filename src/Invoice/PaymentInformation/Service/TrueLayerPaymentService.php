@@ -20,6 +20,7 @@ use TrueLayer\Constants\CustomerSegments;
 use TrueLayer\Constants\PaymentCurrencies;
 use TrueLayer\Constants\PaymentStatus;
 use TrueLayer\Constants\ReleaseChannels;
+use TrueLayer\Exceptions\ApiResponseUnsuccessfulException;
 use TrueLayer\Exceptions\Exception as TrueLayerException;
 use TrueLayer\Interfaces\Client\ClientInterface;
 
@@ -190,7 +191,7 @@ final class TrueLayerPaymentService implements PaymentGatewayInterface
 
             return $payment->hostedPaymentsPage()->returnUri($returnUrl)->toUrl();
         } catch (TrueLayerException $e) {
-            $this->logger->error('TrueLayer payment creation failed.', ['error' => $e->getMessage()]);
+            $this->logger->error('TrueLayer payment creation failed.', $this->errorLogContext($e));
             return null;
         }
     }
@@ -208,7 +209,7 @@ final class TrueLayerPaymentService implements PaymentGatewayInterface
         try {
             $payment = $this->client()->getPayment($providerReference);
         } catch (TrueLayerException $e) {
-            $this->logger->warning('TrueLayer verifyPayment failed.', ['error' => $e->getMessage()]);
+            $this->logger->warning('TrueLayer verifyPayment failed.', $this->errorLogContext($e));
             return new PaymentVerificationResult(
                 paid: false,
                 providerReference: $providerReference,
@@ -239,7 +240,7 @@ final class TrueLayerPaymentService implements PaymentGatewayInterface
         try {
             $payment = $this->client()->getPayment($providerReference);
         } catch (TrueLayerException $e) {
-            $this->logger->warning('TrueLayer resolveInvoiceUrlKey failed.', ['error' => $e->getMessage()]);
+            $this->logger->warning('TrueLayer resolveInvoiceUrlKey failed.', $this->errorLogContext($e));
             return null;
         }
 
@@ -375,5 +376,36 @@ final class TrueLayerPaymentService implements PaymentGatewayInterface
     {
         return (string) $this->settings->decode(
             $this->settings->getSetting('gateway_truelayer_privateKey') ?: '');
+    }
+
+    /**
+     * The SDK's plain TrueLayerException (thrown for e.g. a signer
+     * failure) only ever has a short getMessage() to go on. Its own
+     * ApiResponseUnsuccessfulException — thrown whenever TrueLayer's API
+     * itself returns a non-2xx response — carries far more: the exact
+     * field-level validation errors, TrueLayer's own trace_id (needed if
+     * this ever needs raising with their support), and a human-readable
+     * detail string. Extracting all of it here, rather than just
+     * getMessage(), is what actually made an "Invalid Parameters"-class
+     * response diagnosable in practice — same reasoning as
+     * CheckoutComPaymentService's own errorLogContext().
+     *
+     * @return array<string, mixed>
+     */
+    private function errorLogContext(TrueLayerException $e): array
+    {
+        if (!$e instanceof ApiResponseUnsuccessfulException) {
+            return ['error' => $e->getMessage()];
+        }
+
+        return [
+            'error' => $e->getMessage(),
+            'status_code' => $e->getStatusCode(),
+            'title' => $e->getTitle(),
+            'type' => $e->getType(),
+            'detail' => $e->getDetail(),
+            'trace_id' => $e->getTraceId(),
+            'errors' => $e->getErrors(),
+        ];
     }
 }
