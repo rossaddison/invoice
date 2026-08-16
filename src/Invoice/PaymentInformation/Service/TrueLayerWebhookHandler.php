@@ -79,7 +79,7 @@ final class TrueLayerWebhookHandler
                     $invoiceUrlKey = $metadata['invoice_url_key'] ?? null;
                 })
                 ->path($request->getUri()->getPath())
-                ->headers($request->getHeaders())
+                ->headers($this->flattenedHeaders($request))
                 ->body($rawBody)
                 ->execute();
         } catch (TrueLayerException $e) {
@@ -92,6 +92,34 @@ final class TrueLayerWebhookHandler
         }
 
         return $this->factory->createResponse('');
+    }
+
+    /**
+     * `ServerRequestInterface::getHeaders()` returns `array<string, string[]>`
+     * — each header name maps to an array of values, to support genuinely
+     * multi-value headers. The SDK's own `WebhookInterface::headers()`
+     * declares `array<string, string>` instead — a flat map of single
+     * string values — confirmed directly against
+     * `vendor/truelayer/client/src/Services/Webhooks/Webhook.php`'s own
+     * docblock. Passing the raw PSR-7 array straight through crashed deep
+     * inside the SDK's own JWS signer
+     * (`AbstractJws::header(): Argument #2 ($value) must be of type
+     * string, array given`), confirmed live 2026-08-16 — every webhook
+     * delivery attempt failed with a 400 as a result, so no TrueLayer
+     * payment could ever actually get marked paid. `getHeaderLine()` is
+     * PSR-7's own built-in flattening (comma-joins multiple values),
+     * exactly what's needed here.
+     *
+     * @return array<string, string>
+     */
+    private function flattenedHeaders(Request $request): array
+    {
+        $headers = [];
+        foreach (array_keys($request->getHeaders()) as $name) {
+            $name = (string) $name;
+            $headers[$name] = $request->getHeaderLine($name);
+        }
+        return $headers;
     }
 
     private function markInvoicePaidIfVerified(string $paymentId, string $invoiceUrlKey): void
