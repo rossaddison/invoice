@@ -33,6 +33,7 @@ import { initQuoteIndex } from './quote-index.js';
 import { initSalesOrderIndex } from './salesorder-index.js';
 import { initE164PhoneFields } from './phone-e164.js';
 import { initHomeCareOffline } from './homecare-offline.js';
+import { initCompanyPrivate } from './company-private.js';
 
 declare global {
     // var (not `interface Window`) — see htmx.ts for why.
@@ -175,6 +176,7 @@ if (document.readyState === 'loading') {
         initTelegramProviderPopup();
         initStreetOrder();
         initStepPopovers();
+        initCompanyPrivate();
     });
 } else {
     const _app = new InvoiceApp();
@@ -186,6 +188,7 @@ if (document.readyState === 'loading') {
     initTelegramProviderPopup();
     initStreetOrder();
     initStepPopovers();
+    initCompanyPrivate();
 }
 
 // Export for potential external usage

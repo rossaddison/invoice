@@ -65,7 +65,12 @@ final readonly class CompanyPrivateFormFields
 
     /**
      * Three 2-digit inputs for a UK sort code, combined into a hidden bacs_sort_code field.
-     * Stored format: XX-XX-XX (8 chars max).
+     * Stored format: XX-XX-XX (8 chars max). The combining logic lives in
+     * company-private.ts, not an inline <script> here — this app's CSP
+     * script-src has no 'unsafe-inline', so an inline script is silently
+     * blocked by every browser rather than erroring visibly; see that
+     * TS file's own docblock for the live bug this caused (the hidden
+     * field, and therefore the stored sort code, never actually updated).
      */
     public function companyPrivateBacsSortCodeField(CompanyPrivateForm $form): string
     {
@@ -94,16 +99,7 @@ final readonly class CompanyPrivateFormFields
             . $box('bacs_sort_code_2', $parts[1], 'Sort code middle two digits')
             . '<span class="fw-bold">-</span>'
             . $box('bacs_sort_code_3', $parts[2], 'Sort code last two digits')
-            . '</div>'
-            . '<script>(function(){'
-            . 'var b1=document.getElementById("bacs_sort_code_1");'
-            . 'var b2=document.getElementById("bacs_sort_code_2");'
-            . 'var b3=document.getElementById("bacs_sort_code_3");'
-            . 'var h=document.getElementById("bacs_sort_code");'
-            . 'function c(){h.value=b1.value+"-"+b2.value+"-"+b3.value;}'
-            . 'function a(cur,nxt){cur.addEventListener("input",function(){c();if(cur.value.length===2&&nxt){nxt.focus();}});}'
-            . 'a(b1,b2);a(b2,b3);a(b3,null);'
-            . '}());</script>';
+            . '</div>';
     }
 
     /**
