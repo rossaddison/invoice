@@ -112,7 +112,21 @@ final class TrueLayerPaymentServiceTest
     {
         $service = $this->makeService();
 
-        $result = $service->createPayment(10.0, 'USD', 'url-key', 'Jane Doe', 'jane@example.com', 'https://example.com/return');
+        $result = $service->createPayment(10.0, 'USD', 'url-key', 'Jane Doe', 'jane@example.com');
+
+        Assert::null($result);
+    }
+
+    /**
+     * The returnUrl guard runs before any company/network work too — see
+     * TrueLayerPaymentService::returnUrl()'s own docblock for why this is
+     * a fixed Setting rather than a parameter.
+     */
+    public function createPaymentReturnsNullWhenNoReturnUrlConfigured(): void
+    {
+        $service = $this->makeService();
+
+        $result = $service->createPayment(10.0, 'GBP', 'url-key', 'Jane Doe', 'jane@example.com');
 
         Assert::null($result);
     }
@@ -123,9 +137,9 @@ final class TrueLayerPaymentServiceTest
         $e = $compR->shouldReceive('repoCompanyActivequery');
         $e->once()->andReturn(null);
 
-        $service = $this->makeService([], $compR);
+        $service = $this->makeService(['gateway_truelayer_returnUrl' => 'https://example.com/return'], $compR);
 
-        $result = $service->createPayment(10.0, 'GBP', 'url-key', 'Jane Doe', 'jane@example.com', 'https://example.com/return');
+        $result = $service->createPayment(10.0, 'GBP', 'url-key', 'Jane Doe', 'jane@example.com');
 
         Assert::null($result);
     }

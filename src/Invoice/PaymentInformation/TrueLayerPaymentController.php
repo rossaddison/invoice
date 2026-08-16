@@ -20,7 +20,6 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Router\UrlGeneratorInterface as UrlGenerator;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
@@ -37,7 +36,15 @@ use Yiisoft\Yii\View\Renderer\WebViewRenderer;
  * shape as SquarePaymentController/RazorpayPaymentController/
  * PaypalPaymentController's own InForm() actions.
  *
- * `trueLayerComplete()` is read-only, the same pattern as
+ * `trueLayerComplete()` is reached via a fixed, no-suffix return URL (see
+ * TrueLayerPaymentService::returnUrl()'s own docblock for why), not a
+ * per-invoice route parameter like every other gateway's own Complete()
+ * action — TrueLayer appends only `?payment_id=...` to whatever return URL
+ * it's given (confirmed directly against TrueLayer's own docs), so the
+ * invoice itself is resolved from that payment's own `metadata` via
+ * TrueLayerPaymentService::resolveInvoiceUrlKey(), not the URL.
+ *
+ * `trueLayerComplete()` is otherwise read-only, the same pattern as
  * `SquarePaymentController::squareComplete()`: the invoice is only ever
  * actually marked paid by `TrueLayerWebhookHandler`, after its own
  * signature verification AND authenticated re-confirmation via
@@ -59,7 +66,6 @@ final class TrueLayerPaymentController
         private readonly sR $sR,
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly Translator $translator,
-        private readonly UrlGenerator $urlGenerator,
         private readonly UserService $userService,
         private WebViewRenderer $webViewRenderer,
         private readonly WebControllerService $webService,
@@ -93,19 +99,13 @@ final class TrueLayerPaymentController
         }
         ['invoice' => $invoice, 'balance' => $balance] = $resolved;
 
-        $urlKey = $invoice->getUrlKey();
         $client = $invoice->getClient();
-        $completeUrl = $this->urlGenerator->generateAbsolute(
-            'paymentinformation/trueLayerComplete',
-            ['url_key' => $urlKey],
-        );
         $redirectUrl = $this->trueLayerPaymentService->createPayment(
             $balance,
             $this->sR->getSetting('currency_code') ?: 'GBP',
-            $urlKey,
+            $invoice->getUrlKey(),
             trim(($client?->getClientName() ?? '') . ' ' . ($client?->getClientSurname() ?? '')),
             $client?->getClientEmail() ?? '',
-            $completeUrl,
         );
         if (null === $redirectUrl) {
             $this->flashMessage('warning', 'Unable to start the TrueLayer payment — please try again shortly.');
@@ -116,17 +116,21 @@ final class TrueLayerPaymentController
     }
 
     /**
-     * Customer returns here from TrueLayer's Hosted Payments Page —
-     * read-only, see this class's own docblock.
+     * Customer returns here from TrueLayer's Hosted Payments Page — see
+     * this class's own docblock for why the invoice is resolved from the
+     * `payment_id` query parameter TrueLayer appends, not a route
+     * parameter, and why this action is otherwise read-only.
      */
-    public function trueLayerComplete(CurrentRoute $currentRoute): Response
+    public function trueLayerComplete(Request $request): Response
     {
-        $invoice = $this->loadInvoice($currentRoute);
-        if ($invoice instanceof Response) {
-            return $invoice;
+        $queryParams = $request->getQueryParams();
+        $paymentId = (string) ($queryParams['payment_id'] ?? '');
+        $urlKey = $paymentId !== '' ? $this->trueLayerPaymentService->resolveInvoiceUrlKey($paymentId) : null;
+        $invoice = $urlKey !== null ? $this->iR->repoUrlKeyGuestLoaded($urlKey) : null;
+        if (null === $invoice) {
+            return $this->webService->getNotFoundResponse();
         }
 
-        $urlKey = $invoice->getUrlKey();
         /** @var InvAmount $invoiceAmountRecord */
         $invoiceAmountRecord = $this->iaR->repoInvquery($invoice->reqId());
         $isPaid = 0.00 === ($invoiceAmountRecord->getBalance() ?? 0.00);

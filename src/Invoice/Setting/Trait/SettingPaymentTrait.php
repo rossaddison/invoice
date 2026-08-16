@@ -555,8 +555,18 @@ trait SettingPaymentTrait
      * the uploaded public key in Console > Settings > Signing Keys;
      * `privateKey` is the PEM-format private key generated locally when
      * that key pair was created (never uploaded to TrueLayer itself, only
-     * its public half is). See TrueLayerPaymentService's own docblock for
-     * the full ground-truthing.
+     * its public half is). `returnUrl` is a fixed URL manually entered
+     * here (not dynamically generated per-invoice) — TrueLayer requires
+     * `authorization_flow.redirect.return_uri` to exactly match a Redirect
+     * URI pre-registered in Console (Settings > Redirect URIs), confirmed
+     * directly against TrueLayer's own docs, so it must never vary between
+     * requests. Same static-Setting pattern already established for
+     * Amazon Pay's own gateway_amazon_pay_returnUrl, chosen deliberately
+     * over dynamically generating it via this app's own UrlGeneratorInterface
+     * to sidestep the Locale-middleware-dependent locale-segment
+     * variability found during the August 2026 Checkout.com "Pay Now"
+     * investigation entirely, rather than merely arguing it away. See
+     * TrueLayerPaymentService's own docblock for the full ground-truthing.
      */
     private function trueLayerGatewayFields(): array
     {
@@ -576,6 +586,10 @@ trait SettingPaymentTrait
             'privateKey' => [
                 'type' => 'password',
                 'label' => 'Signing Private Key (PEM)',
+            ],
+            'returnUrl' => [
+                'type' => 'text',
+                'label' => 'Return Url (must exactly match a Redirect URI registered in TrueLayer Console)',
             ],
             'sandbox' => [
                 'type' => 'checkbox',

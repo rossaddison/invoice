@@ -112,10 +112,12 @@ final class TrueLayerPaymentService implements PaymentGatewayInterface
      * is this app's own invoice url_key — carried through in `metadata`
      * (not a top-level "reference" field; `payment_executed` webhooks
      * don't echo one back, confirmed directly against TrueLayer's webhook
-     * payload spec) so `TrueLayerWebhookHandler` can resolve the invoice.
-     * `$customerName`/`$customerEmail` are the paying customer's own
-     * details (distinct from the beneficiary, which is always this
-     * business's own account).
+     * payload spec) so `TrueLayerWebhookHandler`/`resolveInvoiceUrlKey()`
+     * can resolve the invoice. `$customerName`/`$customerEmail` are the
+     * paying customer's own details (distinct from the beneficiary, which
+     * is always this business's own account). The return URL is not a
+     * parameter — see `returnUrl()`'s own docblock for why it's always the
+     * fixed, manually-configured Setting value instead.
      */
     public function createPayment(
         float $balance,
@@ -123,11 +125,16 @@ final class TrueLayerPaymentService implements PaymentGatewayInterface
         string $urlKey,
         string $customerName,
         string $customerEmail,
-        string $returnUrl,
     ): ?string {
         $upperCurrency = strtoupper($currency);
         if (!in_array($upperCurrency, [PaymentCurrencies::GBP, PaymentCurrencies::EUR], true)) {
             $this->logger->error('TrueLayer only supports GBP or EUR.', ['currency' => $currency]);
+            return null;
+        }
+
+        $returnUrl = $this->returnUrl();
+        if ($returnUrl === '') {
+            $this->logger->error('TrueLayer payment creation failed: no Return Url configured.');
             return null;
         }
 
@@ -219,6 +226,30 @@ final class TrueLayerPaymentService implements PaymentGatewayInterface
     }
 
     /**
+     * Resolves the invoice url_key carried in `metadata.invoice_url_key`
+     * for a given payment. Needed because `trueLayerComplete()` is reached
+     * via a fixed, no-suffix return URL (see `returnUrl()`'s own docblock)
+     * rather than a per-invoice route parameter — TrueLayer appends only
+     * `?payment_id=...` to that return URL, confirmed directly against
+     * TrueLayer's own docs, so the invoice itself has to be resolved from
+     * the payment's own metadata, not the URL.
+     */
+    public function resolveInvoiceUrlKey(string $providerReference): ?string
+    {
+        try {
+            $payment = $this->client()->getPayment($providerReference);
+        } catch (TrueLayerException $e) {
+            $this->logger->warning('TrueLayer resolveInvoiceUrlKey failed.', ['error' => $e->getMessage()]);
+            return null;
+        }
+
+        /** @var array{invoice_url_key?: string} $metadata */
+        $metadata = $payment->getMetadata();
+
+        return $metadata['invoice_url_key'] ?? null;
+    }
+
+    /**
      * Always unsupported for this integration — see this class's own
      * docblock. TrueLayer only allows refunding settled merchant-account
      * payments; this integration pays directly into an external account
@@ -300,6 +331,26 @@ final class TrueLayerPaymentService implements PaymentGatewayInterface
         }
 
         return null;
+    }
+
+    /**
+     * A fixed URL manually entered in Settings, never dynamically
+     * generated per-invoice — TrueLayer requires
+     * `authorization_flow.redirect.return_uri` to exactly match a Redirect
+     * URI pre-registered in Console (Settings > Redirect URIs), confirmed
+     * directly against TrueLayer's own docs. Dynamically generating it via
+     * this app's own UrlGeneratorInterface would risk it varying between
+     * requests depending on the Locale middleware's per-request default
+     * argument state (the same mechanism behind the entire August 2026
+     * Checkout.com "Pay Now" redirect-loop investigation) — a fixed
+     * Setting sidesteps that risk entirely rather than merely arguing it
+     * away. Not encrypted — the 'returnUrl' field is 'text' type, matching
+     * Amazon Pay's own gateway_amazon_pay_returnUrl precedent for this
+     * exact class of problem.
+     */
+    private function returnUrl(): string
+    {
+        return $this->settings->getSetting('gateway_truelayer_returnUrl') ?: '';
     }
 
     private function clientId(): string

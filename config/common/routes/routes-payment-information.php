@@ -150,8 +150,14 @@ return [
                 ->action([TLPICLR::class, 'trueLayerInForm'])
                 ->name('paymentinformation/trueLayerInForm'),
 
+            // No {url_key} here, unlike every other gateway's own Complete()
+            // route — TrueLayer requires the return_uri to exactly match a
+            // Redirect URI pre-registered in Console, so it must be a fixed
+            // URL; the invoice is resolved from the payment_id query
+            // parameter TrueLayer appends automatically instead. See
+            // TrueLayerPaymentController's own class docblock.
             Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/trueLayerComplete/{url_key}')
+                    '/paymentinformation/trueLayerComplete')
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([TLPICLR::class, 'trueLayerComplete'])
                 ->name('paymentinformation/trueLayerComplete'),
