@@ -19,7 +19,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Service for handling Braintree payment operations
  */
-class BraintreePaymentService implements PaymentGatewayInterface
+final class BraintreePaymentService implements PaymentGatewayInterface
 {
     public function __construct(
         private readonly SettingRepository $settings,
