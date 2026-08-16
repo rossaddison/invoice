@@ -103,17 +103,20 @@ the order gateways.json lists the env var names and handed to
 `checkGateway()`'s per-gateway case in that same order.
 
 **Stripe** (`balance->retrieve()`), **Mollie** (`methods->allEnabled()`),
-**GoCardless** (`creditors()->list()`), **Square** (`GET /v2/locations`), and
+**GoCardless** (`creditors()->list()`), **Square** (`GET /v2/locations`),
 **Adyen** (`POST /paymentMethods` — a genuine read despite the verb, "Get a
-list of available payment methods" per the vendored SDK's own docblock)
-have a confirmed, genuinely read-only sandbox call wired up — all five
-verified against this app's own vendored SDK source (or, for Square, its
-non-installed-but-read-for-ground-truthing source) before wiring them in.
-Braintree and Amazon Pay still ship with `sandbox_env_var: null` until a
-safe no-side-effect call is confirmed for each (a client-token fetch, for
-instance, isn't actually read-only). Open Banking and BACS aren't classic
-gateway-SDK pings and stay
-`sandbox_env_var: null` permanently.
+list of available payment methods" per the vendored SDK's own docblock),
+**Mercado Pago** (`GET /v1/payment_methods`), and **Braintree**
+(`merchantAccount()->find($merchantId)`, a plain HTTP GET — confirmed
+directly against the vendored SDK source, 2026-08-16, once a real Braintree
+sandbox account existed to verify it against) have a confirmed, genuinely
+read-only sandbox call wired up — every one verified against this app's own
+vendored SDK source (or, for Square, its non-installed-but-read-for-ground-truthing
+source) before wiring it in. Amazon Pay still ships with
+`sandbox_env_var: null` until a safe no-side-effect call is confirmed for it
+(a client-token fetch isn't actually read-only). Open Banking and BACS
+aren't classic gateway-SDK pings and stay `sandbox_env_var: null`
+permanently.
 
 ## GitHub Actions secrets
 

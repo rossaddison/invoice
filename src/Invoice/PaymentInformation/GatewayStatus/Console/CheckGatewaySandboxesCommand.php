@@ -9,6 +9,7 @@ use Adyen\Environment as AdyenEnvironment;
 use Adyen\Model\Checkout\PaymentMethodsRequest;
 use Adyen\Service\Checkout\PaymentsApi as AdyenPaymentsApi;
 use App\Invoice\Helpers\Telegram\TelegramHelper;
+use Braintree\Gateway as BraintreeGateway;
 use App\Invoice\PaymentInformation\GatewayStatus\GatewayStatusException;
 use App\Invoice\PaymentInformation\GatewayStatus\GatewayStatusRow;
 use App\Invoice\PaymentInformation\GatewayStatus\GatewayStatusService;
@@ -43,12 +44,13 @@ use Yiisoft\Yii\Console\ExitCode;
  * lists the env var names, and handed to each checkGateway() case in that
  * order.
  *
- * Only Stripe, Mollie, GoCardless, Square, Adyen, and Mercado Pago have a
- * confirmed, genuinely side-effect-free sandbox call wired up so far (a
- * pure read each — account balance, payment methods list, creditors list,
- * business locations list, available payment methods list). Every other
- * gateway ships with `sandbox_env_var: null` in gateways.json until a safe
- * call is confirmed for it too — see docs/GATEWAY_STATUS_PAGE_AUGUST_2026.md.
+ * Only Stripe, Mollie, GoCardless, Square, Adyen, Mercado Pago, and
+ * Braintree have a confirmed, genuinely side-effect-free sandbox call wired
+ * up so far (a pure read each — account balance, payment methods list,
+ * creditors list, business locations list, available payment methods list,
+ * merchant account lookup). Every other gateway ships with
+ * `sandbox_env_var: null` in gateways.json until a safe call is confirmed
+ * for it too — see docs/GATEWAY_STATUS_PAGE_AUGUST_2026.md.
  *
  * Also checks every row's human-entered `sandbox_expiry_date`
  * (gateways.json — never written by this command, see GatewayStatusRow's
@@ -181,6 +183,7 @@ final class CheckGatewaySandboxesCommand extends Command
                 'square' => $this->checkSquare($secrets[0]),
                 'adyen' => $this->checkAdyen($secrets[0], $secrets[1]),
                 'mercado_pago' => $this->checkMercadoPago($secrets[0]),
+                'braintree' => $this->checkBraintree($secrets[0], $secrets[1], $secrets[2]),
                 default => throw new GatewayStatusException("No sandbox check wired up for gateway '{$key}'."),
             };
             return null;
@@ -269,5 +272,26 @@ final class CheckGatewaySandboxesCommand extends Command
         $client->get('https://api.mercadopago.com/v1/payment_methods', [
             'headers' => ['Authorization' => 'Bearer ' . $accessToken],
         ]);
+    }
+
+    /**
+     * `merchantAccount()->find($merchantId)` is a plain HTTP GET — confirmed
+     * directly against the vendored SDK source
+     * (Braintree\MerchantAccountGateway::find(), which calls
+     * `$this->_http->get($path)`) — no charge, no state mutation, same
+     * shape as every other gateway's sandbox check above. Needs all three
+     * of merchantId/publicKey/privateKey (unlike most gateways here, which
+     * need only one secret) since Braintree\Gateway's constructor requires
+     * all three to authenticate at all.
+     */
+    private function checkBraintree(string $merchantId, string $publicKey, string $privateKey): void
+    {
+        $gateway = new BraintreeGateway([
+            'environment' => 'sandbox',
+            'merchantId' => $merchantId,
+            'publicKey' => $publicKey,
+            'privateKey' => $privateKey,
+        ]);
+        $gateway->merchantAccount()->find($merchantId);
     }
 }

@@ -27,12 +27,16 @@
             "name": "Braintree",
             "composer_package": "braintree/braintree_php",
             "sdk_version": "6.37.0",
-            "last_updated": "2026-08-05",
-            "sandbox_env_var": null,
-            "sandbox_tested_at": null,
-            "sandbox_status": null,
+            "last_updated": "2026-08-16",
+            "sandbox_env_var": [
+                "BRAINTREE_SANDBOX_MERCHANT_ID",
+                "BRAINTREE_SANDBOX_PUBLIC_KEY",
+                "BRAINTREE_SANDBOX_PRIVATE_KEY"
+            ],
+            "sandbox_tested_at": "2026-08-16",
+            "sandbox_status": "pass",
             "sandbox_last_error": null,
-            "live_tested_at": null,
+            "live_tested_at": "2026-08-16",
             "sandbox_expiry_date": null,
             "regions": [
                 "north america",
@@ -40,7 +44,7 @@
                 "asia",
                 "oceania"
             ],
-            "notes": "Regions per Braintree's own merchant-availability docs (checked 2026-08-04): US/Canada, Europe, Singapore/Hong Kong/Malaysia, Australia/New Zealand. No South America or Africa merchant support found. Previously live-tested per docs/PAYMENT_GATEWAY_LIVE_TESTING_JULY_2026.md and docs/PAYMENT_GATEWAY_REFUND_LIVE_TESTING_JULY_2026.md (July 2026) \u2014 exact date not recorded there; fill in live_tested_at once confirmed. sandbox_env_var left null pending confirmation of a genuinely side-effect-free sandbox health-check call \u2014 a client-token fetch isn't truly read-only."
+            "notes": "Regions per Braintree's own merchant-availability docs (checked 2026-08-04): US/Canada, Europe, Singapore/Hong Kong/Malaysia, Australia/New Zealand. No South America or Africa merchant support found. Confirmed live end-to-end 2026-08-16: a free Braintree sandbox account (self-service signup, no company registration required) was created, Merchant Id/Public Key/Private Key saved in this app's own Settings, and a real Drop-in card payment (test card 4111 1111 1111 1111) submitted against a live invoice via braintreeInForm() \u2192 renderBraintreePostResponse()'s synchronous processTransaction() \u2192 sale() call \u2014 correctly flipped the invoice to paid on the first attempt, no resend needed. sandbox_env_var wired up the same day: Braintree\\MerchantAccountGateway::find($merchantId) is a plain HTTP GET (confirmed directly against the vendored SDK source, no charge/state mutation), needing all three of merchantId/publicKey/privateKey since Braintree\\Gateway's constructor requires all three to authenticate at all \u2014 the same reasoning Adyen's two-var check already established for this file's schema. sandbox_status stays 'pass' reflecting both the human-confirmed live pass above and (once the GitHub repo secrets are configured) the automated weekly ping this file's other 'pass' rows normally reflect."
         },
         {
             "key": "mollie",
