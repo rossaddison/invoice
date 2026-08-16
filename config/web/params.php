@@ -75,6 +75,21 @@ return [
             '/gii**',
             '/debug**',
             '/inspect**',
+            // TrueLayer signs its payment_executed webhook notification
+            // over the exact request path it was told to POST to (the
+            // Webhook URI registered in Console, with no locale segment)
+            // — the Locale middleware silently rewrites the incoming
+            // request's path to prepend /en/ (no visible HTTP redirect,
+            // same mechanism as TrueLayerPaymentService::returnUrl()'s own
+            // documented return_uri risk), so by the time
+            // TrueLayerWebhookHandler reads $request->getUri()->getPath()
+            // it no longer matches what TrueLayer actually signed —
+            // confirmed live 2026-08-16 ('path' logged as
+            // '/en/paymentinformation/trueLayerWebhook', every delivery
+            // failing signature verification). No other gateway's webhook
+            // signs over the URL path itself, so this is the first one
+            // this bites.
+            '/paymentinformation/trueLayerWebhook**',
         ],
     ],
     'middlewares' => [
