@@ -7,6 +7,7 @@ namespace App\Invoice\PaymentInformation;
 use App\Auth\Permissions;
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\InvAmount\InvAmount;
+use App\Invoice\Client\ClientRepository as cR;
 use App\Invoice\Inv\InvRepository as iR;
 use App\Invoice\InvAmount\InvAmountRepository as iaR;
 use App\Invoice\PaymentInformation\Service\CheckoutComPaymentService;
@@ -31,10 +32,13 @@ use Yiisoft\Yii\View\Renderer\WebViewRenderer;
  * shared controller is already at SonarQube's php:S1448 method-count
  * ceiling).
  *
- * Like Square/Razorpay/Mercado Pago, Checkout.com's own Payment Link page
- * IS the entire "in-form" step — there's no local card-entry view to
- * render, just a 302 straight to the `_links.redirect.href` URL
- * CheckoutComPaymentService::createPaymentLink() returns.
+ * checkoutComInForm() creates the Payment Link itself, same single-action
+ * shape as Square/Razorpay/Mercado Pago's own InForm() actions, but renders
+ * a landing page with a direct link to the returned hosted-page URL instead
+ * of issuing an instant 302 — a deliberate August 2026 debugging change so
+ * a routing failure (page never renders) and a Checkout.com API failure
+ * (page renders, flash warning shown, no link) are visibly distinguishable
+ * instead of both looking like the same bare 404.
  *
  * `checkoutComComplete()` is read-only, the same pattern as
  * `SquarePaymentController::squareComplete()`: the invoice is only ever
@@ -55,9 +59,11 @@ final class CheckoutComPaymentController
     public function __construct(
         private readonly CheckoutComPaymentService $checkoutComPaymentService,
         private readonly CheckoutComWebhookHandler $checkoutComWebhookHandler,
+        private readonly cR $cR,
         private readonly iR $iR,
         private readonly iaR $iaR,
         private readonly sR $sR,
+        private readonly PaymentInformationLogoRenderer $logoRenderer,
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly Translator $translator,
         private readonly UrlGenerator $urlGenerator,
@@ -80,10 +86,22 @@ final class CheckoutComPaymentController
         }
     }
 
+    private function alert(): string
+    {
+        return $this->webViewRenderer->renderPartialAsString(
+            '//invoice/layout/alert',
+            [
+                'flash'  => $this->flash,
+                'errors' => [],
+            ],
+        );
+    }
+
     /**
-     * Starts the payment flow and sends the customer straight to
-     * Checkout.com's hosted Payment Link page — there's nothing of ours
-     * to render first.
+     * Creates the Payment Link (same single-action shape as
+     * SquarePaymentController::squareInForm() etc.) and renders a landing
+     * page with a direct link to it, instead of an instant 302 — see this
+     * class's own docblock for why.
      */
     public function checkoutComInForm(CurrentRoute $currentRoute): Response
     {
@@ -108,10 +126,30 @@ final class CheckoutComPaymentController
         );
         if (null === $redirectUrl) {
             $this->flashMessage('warning', 'Unable to start the Checkout.com payment — please try again shortly.');
-            return $this->webService->getNotFoundResponse();
         }
 
-        return $this->responseFactory->createResponse(302)->withHeader('Location', $redirectUrl);
+        /** @var InvAmount $invoiceAmountRecord */
+        $invoiceAmountRecord = $this->iaR->repoInvquery($invoice->reqId());
+        $total = $invoiceAmountRecord->getTotal() ?? 0.00;
+        $isOverdue = $balance > 0.00 && strtotime($invoice->getDateDue()->format('Y-m-d')) < time();
+        $client = $this->cR->repoClientquery($invoice->reqClientId());
+
+        return $this->webViewRenderer->render('payment_information_checkout_com_pci', [
+            'alert'                  => $this->alert(),
+            'balance'                => $balance,
+            'checkoutComUrl'         => $redirectUrl,
+            'client_on_invoice'      => $client,
+            'companyLogo'            => $this->logoRenderer->companyLogo(),
+            'invoice'                => $invoice,
+            'inv_url_key'            => $urlKey,
+            'is_overdue'             => $isOverdue,
+            'partial_client_address' => $this->webViewRenderer->renderPartialAsString(
+                '//invoice/client/partial_client_address',
+                ['client' => $client],
+            ),
+            'title' => 'Checkout.com - is enabled.',
+            'total' => $total,
+        ]);
     }
 
     /**
