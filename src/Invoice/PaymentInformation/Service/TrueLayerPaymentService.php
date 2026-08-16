@@ -141,19 +141,40 @@ final class TrueLayerPaymentService implements PaymentGatewayInterface
 
         $beneficiaryDetails = $this->resolveBeneficiary();
         if ($beneficiaryDetails === null) {
-            $this->logger->error('TrueLayer payment creation failed: no active company IBAN configured.');
+            $this->logger->error('TrueLayer payment creation failed: no active company found.');
             return null;
         }
 
         try {
             $client = $this->client();
 
+            // TrueLayer rejects IBAN-identified beneficiaries for GBP
+            // payments outright ("GBP payments are not supported to iban
+            // accounts", confirmed live 2026-08-16, error type
+            // invalid-parameters) — IBAN is the SEPA/EUR identifier; UK
+            // domestic Faster Payments needs sort code + account number
+            // instead. Picking the identifier type by currency, not
+            // defaulting to IBAN for everything.
+            if ($upperCurrency === PaymentCurrencies::GBP) {
+                if ($beneficiaryDetails['sortCode'] === '' || $beneficiaryDetails['accountNumber'] === '') {
+                    $this->logger->error('TrueLayer payment creation failed: no active company BACS sort code/account number configured for GBP.');
+                    return null;
+                }
+                $accountIdentifier = $client->accountIdentifier()->sortCodeAccountNumber()
+                    ->sortCode($beneficiaryDetails['sortCode'])
+                    ->accountNumber($beneficiaryDetails['accountNumber']);
+            } else {
+                if ($beneficiaryDetails['iban'] === '') {
+                    $this->logger->error('TrueLayer payment creation failed: no active company IBAN configured for EUR.');
+                    return null;
+                }
+                $accountIdentifier = $client->accountIdentifier()->iban()->iban($beneficiaryDetails['iban']);
+            }
+
             $beneficiary = $client->beneficiary()->externalAccount()
                 ->reference(substr($customerName !== '' ? $customerName : $urlKey, 0, 18))
                 ->accountHolderName($beneficiaryDetails['name'])
-                ->accountIdentifier(
-                    $client->accountIdentifier()->iban()->iban($beneficiaryDetails['iban']),
-                );
+                ->accountIdentifier($accountIdentifier);
 
             // The SDK's own ClientInterface::providerFilter() declares a
             // return type of ProviderFilterInterface, but
@@ -301,15 +322,18 @@ final class TrueLayerPaymentService implements PaymentGatewayInterface
     }
 
     /**
-     * Resolves this business's own IBAN (and account-holder name — the
-     * receiving account's own holder name, distinct from the paying
-     * customer) to receive payment into. Same "active Company → active
-     * CompanyPrivate → IBAN" chain this app's existing Tink Open Banking
-     * integration already uses
+     * Resolves this business's own account-holder name plus both possible
+     * account-identifier shapes (IBAN and BACS sort code/account number —
+     * CompanyPrivate already has dedicated fields for both) to receive
+     * payment into. `createPayment()` picks whichever one the payment's
+     * own currency actually requires — TrueLayer rejects IBAN-identified
+     * beneficiaries for GBP payments outright, confirmed live 2026-08-16.
+     * Same "active Company → active CompanyPrivate" chain this app's
+     * existing Tink Open Banking integration already uses
      * (OpenBankingPaymentService::initiateTinkPayment()), not a new
      * Settings field.
      *
-     * @return array{iban: string, name: string}|null
+     * @return array{iban: string, sortCode: string, accountNumber: string, name: string}|null
      */
     private function resolveBeneficiary(): ?array
     {
@@ -326,8 +350,12 @@ final class TrueLayerPaymentService implements PaymentGatewayInterface
         /** @var CompanyPrivate $companyPrivate */
         foreach ($company->getCompanyPrivates() as $companyPrivate) {
             if ($companyPrivate->isActiveToday()) {
-                $iban = $companyPrivate->getIban();
-                return $iban !== null ? ['iban' => $iban, 'name' => $name] : null;
+                return [
+                    'iban' => $companyPrivate->getIban() ?? '',
+                    'sortCode' => $companyPrivate->getBacsSortCode() ?? '',
+                    'accountNumber' => $companyPrivate->getBacsAccountNumber() ?? '',
+                    'name' => $name,
+                ];
             }
         }
 
