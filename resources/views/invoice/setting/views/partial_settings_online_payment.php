@@ -249,7 +249,16 @@ echo H::openTag('div', $row); //1
     echo H::closeTag('div'); //5
 
     } else {
-    if ($setting['type'] == 'password') {
+    // 'textarea' is treated identically to 'password' for
+    // encryption/decryption purposes below — the only difference is the
+    // HTML control rendered (a real <textarea>, not a single-line
+    // <input>). Added specifically for TrueLayer's PEM-format signing
+    // private key: pasting genuinely multi-line content into a
+    // single-line <input type="password"> silently strips/collapses the
+    // internal newlines a PEM's structure depends on, corrupting the
+    // key without any visible error until the SDK later fails to parse
+    // it — confirmed live, 2026-08-16 ("Unable to load the key").
+    if ($setting['type'] == 'password' || $setting['type'] == 'textarea') {
     // $body[...] is NOT raw submitted plaintext here — the foreach
     // above (line 200-201) unconditionally overwrites it with the
     // real stored (encrypted) setting value on every render, GET or
@@ -319,6 +328,17 @@ echo H::openTag('div', $row); //1
       echo $translator->translate('online.payment.find.here');
      echo H::closeTag('a');
      }
+     if ($setting['type'] == 'textarea') {
+     echo H::textarea(
+      $pfxGateway . $d . '_' . $key . ']',
+      $inputValue,
+      [
+       'class' => 'form-control',
+       'id' => $pfxGateway . $d . '_' . $key . ']',
+       'rows' => 6,
+      ],
+     );
+     } else {
      echo H::openTag('input', [
       'type' => $setting['type'],
       'class' => 'form-select',
@@ -328,7 +348,8 @@ echo H::openTag('div', $row); //1
       $key . ']',
       'value' => $inputValue
      ]);
-     if ($setting['type'] == 'password') {
+     }
+     if ($setting['type'] == 'password' || $setting['type'] == 'textarea') {
      echo H::openTag('input', [
       'type' => 'hidden',
       'value' => '1',

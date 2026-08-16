@@ -584,7 +584,12 @@ trait SettingPaymentTrait
                 'label' => 'Signing Key Id (kid)',
             ],
             'privateKey' => [
-                'type' => 'password',
+                // 'textarea', not 'password' — a single-line <input>
+                // silently strips/collapses the internal newlines a PEM's
+                // structure depends on, corrupting the key without any
+                // visible error until the SDK later fails to parse it
+                // ("Unable to load the key") — confirmed live, 2026-08-16.
+                'type' => 'textarea',
                 'label' => 'Signing Private Key (PEM)',
             ],
             'returnUrl' => [
