@@ -46,6 +46,7 @@ final class CheckoutComPaymentServiceTest
         $sR->shouldReceive('decode')->with('')->andReturn('');
         $sR->shouldReceive('getSetting')->with('gateway_checkout_com_processingChannelId')->andReturn('');
         $sR->shouldReceive('getSetting')->with('gateway_checkout_com_sandbox')->andReturn($sandbox ? '1' : '0');
+        $sR->shouldReceive('getSetting')->with('gateway_checkout_com_environmentSubdomain')->andReturn('');
 
         return $sR;
     }
@@ -161,6 +162,7 @@ final class CheckoutComPaymentServiceTest
         $sR->shouldReceive('getSetting')->with('gateway_checkout_com_processingChannelId')->andReturn('enc-channel');
         $sR->shouldReceive('decode')->with('enc-channel')->andReturn('pc_abc123');
         $sR->shouldReceive('getSetting')->with('gateway_checkout_com_sandbox')->andReturn('1');
+        $sR->shouldReceive('getSetting')->with('gateway_checkout_com_environmentSubdomain')->andReturn('');
 
         $history = [];
         $mock = new MockHandler([

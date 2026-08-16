@@ -226,6 +226,20 @@ final class CheckoutComPaymentService implements PaymentGatewayInterface
             $builder->publicKey($publicKey);
         }
 
+        // Accounts on Checkout.com's newer Unified Payments platform are
+        // scoped to an account-specific hostname prefix (shown on the
+        // account's own "Connection Details" page as e.g.
+        // https://{subdomain}.api.sandbox.checkout.com) — every request
+        // sent to the plain, unprefixed api.sandbox.checkout.com host gets
+        // rejected with a 401 even with an otherwise fully valid secret
+        // key, confirmed live against a real sandbox account during the
+        // August 2026 "Pay Now" investigation. Optional: accounts not on
+        // that platform have no subdomain to enter and this is skipped.
+        $environmentSubdomain = $this->environmentSubdomain();
+        if ($environmentSubdomain !== '') {
+            $builder->environmentSubdomain($environmentSubdomain);
+        }
+
         if ($this->httpClient !== null) {
             $builder->httpClientBuilder($this->testHttpClientBuilder($this->httpClient));
         }
@@ -281,6 +295,17 @@ final class CheckoutComPaymentService implements PaymentGatewayInterface
     {
         return (string) $this->settings->decode(
             $this->settings->getSetting('gateway_checkout_com_processingChannelId') ?: '');
+    }
+
+    /**
+     * Not encrypted — the 'environmentSubdomain' field is 'text' type, not
+     * 'password' (see SettingPaymentTrait::checkoutComGatewayFields()), so
+     * unlike secretKey()/publicKey()/processingChannelId() this is never
+     * passed through decode().
+     */
+    private function environmentSubdomain(): string
+    {
+        return $this->settings->getSetting('gateway_checkout_com_environmentSubdomain') ?: '';
     }
 
     /**

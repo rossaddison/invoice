@@ -202,6 +202,10 @@ trait SettingPaymentTrait
                 'type' => 'password',
                 'label' => 'Processing Channel Id',
             ],
+            'environmentSubdomain' => [
+                'type' => 'text',
+                'label' => 'Environment Subdomain',
+            ],
             'sandbox' => [
                 'type' => 'checkbox',
                 'label' => 'Sandbox',

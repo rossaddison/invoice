@@ -68,6 +68,7 @@ final class CheckoutComWebhookHandlerTest
         $sR->shouldReceive('getSetting')->with('gateway_checkout_com_publicKey')->andReturn('');
         $sR->shouldReceive('decode')->with('')->andReturn('');
         $sR->shouldReceive('getSetting')->with('gateway_checkout_com_sandbox')->andReturn('1');
+        $sR->shouldReceive('getSetting')->with('gateway_checkout_com_environmentSubdomain')->andReturn('');
         $sR->shouldReceive('getSetting')->with('gateway_checkout_com_webhookSecret')->andReturn('enc-webhook-secret');
         $sR->shouldReceive('decode')->with('enc-webhook-secret')->andReturn(self::WEBHOOK_SIGNING_KEY);
         $sR->shouldReceive('sandboxUrlArray')->andReturn(['checkout_com' => 'https://hub.checkout.com/']);

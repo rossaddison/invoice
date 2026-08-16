@@ -1617,6 +1617,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'online.payment.checkout_com.publicKey' => 'Public API Key',
   'online.payment.checkout_com.webhookSecret' => 'Webhook Signature Key',
   'online.payment.checkout_com.processingChannelId' => 'Processing Channel Id',
+  'online.payment.checkout_com.environmentSubdomain' => 'Environment Subdomain',
   'online.payments' => 'Online Payments',
   'open.banking.pay.with' => 'Pay with Open Banking: ',
   'open.banking.not.configured' =>
