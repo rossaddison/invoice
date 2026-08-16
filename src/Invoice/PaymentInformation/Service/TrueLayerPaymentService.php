@@ -160,9 +160,19 @@ final class TrueLayerPaymentService implements PaymentGatewayInterface
                     $this->logger->error('TrueLayer payment creation failed: no active company BACS sort code/account number configured for GBP.');
                     return null;
                 }
+                // This app stores the sort code as XX-XX-XX (see
+                // CompanyPrivateFormFields::companyPrivateBacsSortCodeField()'s
+                // own docblock) — TrueLayer wants a plain 6-digit string
+                // with no separators at all ("Value must be 6 digits
+                // without spaces.", confirmed live 2026-08-16). Stripping
+                // any non-digit characters from both fields covers the
+                // dashes here and any accidental spaces a user might type
+                // into the account number field too.
+                $sortCode = preg_replace('/\D/', '', $beneficiaryDetails['sortCode']) ?? '';
+                $accountNumber = preg_replace('/\D/', '', $beneficiaryDetails['accountNumber']) ?? '';
                 $accountIdentifier = $client->accountIdentifier()->sortCodeAccountNumber()
-                    ->sortCode($beneficiaryDetails['sortCode'])
-                    ->accountNumber($beneficiaryDetails['accountNumber']);
+                    ->sortCode($sortCode)
+                    ->accountNumber($accountNumber);
             } else {
                 if ($beneficiaryDetails['iban'] === '') {
                     $this->logger->error('TrueLayer payment creation failed: no active company IBAN configured for EUR.');
