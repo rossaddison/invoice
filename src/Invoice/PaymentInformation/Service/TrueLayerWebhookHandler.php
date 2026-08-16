@@ -67,6 +67,19 @@ final class TrueLayerWebhookHandler
         $paymentId = null;
         $invoiceUrlKey = null;
 
+        // TEMPORARY diagnostic logging — signature verification is
+        // currently failing and this pins down exactly what path/body/
+        // headers this handler is actually working with, so the mismatch
+        // against whatever TrueLayer itself signed can be found instead of
+        // guessed. Remove once the real cause is confirmed and fixed.
+        $this->logger->debug('TrueLayer webhook: diagnostic snapshot.', [
+            'uri' => (string) $request->getUri(),
+            'path' => $request->getUri()->getPath(),
+            'body_length' => strlen($rawBody),
+            'header_names' => array_keys($request->getHeaders()),
+            'sandbox' => $this->trueLayerPaymentService->isSandboxForWebhook(),
+        ]);
+
         try {
             TrueLayerWebhook::configure()
                 ->httpClient($this->trueLayerPaymentService->httpClientForWebhook())
@@ -83,7 +96,10 @@ final class TrueLayerWebhookHandler
                 ->body($rawBody)
                 ->execute();
         } catch (TrueLayerException $e) {
-            $this->logger->warning('TrueLayer webhook: verification or handling failed.', ['error' => $e->getMessage()]);
+            $this->logger->warning('TrueLayer webhook: verification or handling failed.', [
+                'error' => $e->getMessage(),
+                'previous' => $e->getPrevious()?->getMessage(),
+            ]);
             return $this->factory->createResponse('invalid signature')->withStatus(400);
         }
 
