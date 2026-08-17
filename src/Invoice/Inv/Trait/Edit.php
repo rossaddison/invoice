@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv\Trait;
 
-use App\Auth\Permissions;
 use App\Infrastructure\Persistence\Payment\Payment;
 use App\Invoice\{
     Inv\InvEditCoreDeps,
@@ -51,8 +50,15 @@ trait Edit
         $peppol_array = new PeppolArrays();
         $note_on_tax_point = '';
         $defaultGroupId = (int) $this->sR->getSetting('default_invoice_group');
-        if (($this->sR->getSetting('debug_mode') == '1')
-                && $this->userService->hasPermission(Permissions::EDIT_INV)) {
+        // Tax point is a UK VAT concept (references informi.co.uk, UK VAT
+        // reporting rules) — only relevant, so only shown, for the GBP/UK
+        // locale. Both must hold: the session locale is 'en', and that
+        // locale's own flag (SettingLocaleTrait::getLocaleFlags()) is
+        // 'gb' — belt-and-braces against the flag mapping drifting
+        // independently of the locale code later.
+        $locale = (string) $this->session->get('_language');
+        if ($locale === 'en'
+                && ($this->sR->getLocaleFlags()[$locale] ?? null) === 'gb') {
             $note_on_tax_point = $this->webViewRenderer->renderPartialAsString(
                 '//invoice/info/taxpoint');
         }
