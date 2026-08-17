@@ -119,7 +119,7 @@ final class TrueLayerPaymentServiceTest
 
     /**
      * The returnUrl guard runs before any company/network work too — see
-     * TrueLayerPaymentService::returnUrl()'s own docblock for why this is
+     * TrueLayerCredentials::returnUrl()'s own docblock for why this is
      * a fixed Setting rather than a parameter.
      */
     public function createPaymentReturnsNullWhenNoReturnUrlConfigured(): void

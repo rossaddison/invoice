@@ -73,8 +73,10 @@ use TrueLayer\Interfaces\Client\ClientInterface;
  */
 final class TrueLayerPaymentService implements PaymentGatewayInterface
 {
+    private readonly TrueLayerCredentials $credentials;
+
     public function __construct(
-        private readonly SettingRepository $settings,
+        SettingRepository $settings,
         private readonly CompanyRepository $compR,
         private readonly LoggerInterface $logger,
         /**
@@ -85,6 +87,11 @@ final class TrueLayerPaymentService implements PaymentGatewayInterface
          */
         private readonly ?HttpClientInterface $httpClient = null,
     ) {
+        // Not kept as a property here — see TrueLayerCredentials's own
+        // docblock for why its six Settings-reading methods were moved out
+        // of this class entirely (php:S1448, this class's own method
+        // count).
+        $this->credentials = new TrueLayerCredentials($settings);
     }
 
     #[\Override]
@@ -96,15 +103,15 @@ final class TrueLayerPaymentService implements PaymentGatewayInterface
     #[\Override]
     public function isConfigured(): bool
     {
-        return $this->clientId() !== ''
-            && $this->clientSecret() !== ''
-            && $this->signingKid() !== ''
-            && $this->privateKey() !== '';
+        return $this->credentials->clientId() !== ''
+            && $this->credentials->clientSecret() !== ''
+            && $this->credentials->signingKid() !== ''
+            && $this->credentials->privateKey() !== '';
     }
 
     public function isSandbox(): bool
     {
-        return $this->settings->getSetting('gateway_truelayer_sandbox') === '1';
+        return $this->credentials->isSandbox();
     }
 
     /**
@@ -117,8 +124,9 @@ final class TrueLayerPaymentService implements PaymentGatewayInterface
      * can resolve the invoice. `$customerName`/`$customerEmail` are the
      * paying customer's own details (distinct from the beneficiary, which
      * is always this business's own account). The return URL is not a
-     * parameter — see `returnUrl()`'s own docblock for why it's always the
-     * fixed, manually-configured Setting value instead.
+     * parameter — see `TrueLayerCredentials::returnUrl()`'s own docblock
+     * for why it's always the fixed, manually-configured Setting value
+     * instead.
      */
     public function createPayment(
         float $balance,
@@ -186,7 +194,7 @@ final class TrueLayerPaymentService implements PaymentGatewayInterface
 
     private function requireReturnUrl(): ?string
     {
-        $returnUrl = $this->returnUrl();
+        $returnUrl = $this->credentials->returnUrl();
         if ($returnUrl === '') {
             $this->logger->error('TrueLayer payment creation failed: no Return Url configured.');
             return null;
@@ -349,7 +357,8 @@ final class TrueLayerPaymentService implements PaymentGatewayInterface
     /**
      * Resolves the invoice url_key carried in `metadata.invoice_url_key`
      * for a given payment. Needed because `trueLayerComplete()` is reached
-     * via a fixed, no-suffix return URL (see `returnUrl()`'s own docblock)
+     * via a fixed, no-suffix return URL (see
+     * `TrueLayerCredentials::returnUrl()`'s own docblock)
      * rather than a per-invoice route parameter — TrueLayer appends only
      * `?payment_id=...` to that return URL, confirmed directly against
      * TrueLayer's own docs, so the invoice itself has to be resolved from
@@ -406,11 +415,11 @@ final class TrueLayerPaymentService implements PaymentGatewayInterface
     private function client(): ClientInterface
     {
         return TrueLayerClient::configure()
-            ->clientId($this->clientId())
-            ->clientSecret($this->clientSecret())
-            ->keyId($this->signingKid())
-            ->pem($this->privateKey())
-            ->useProduction(!$this->isSandbox())
+            ->clientId($this->credentials->clientId())
+            ->clientSecret($this->credentials->clientSecret())
+            ->keyId($this->credentials->signingKid())
+            ->pem($this->credentials->privateKey())
+            ->useProduction(!$this->credentials->isSandbox())
             ->httpClient($this->httpClient())
             ->create();
     }
@@ -460,50 +469,6 @@ final class TrueLayerPaymentService implements PaymentGatewayInterface
         }
 
         return null;
-    }
-
-    /**
-     * A fixed URL manually entered in Settings, never dynamically
-     * generated per-invoice — TrueLayer requires
-     * `authorization_flow.redirect.return_uri` to exactly match a Redirect
-     * URI pre-registered in Console (Settings > Redirect URIs), confirmed
-     * directly against TrueLayer's own docs. Dynamically generating it via
-     * this app's own UrlGeneratorInterface would risk it varying between
-     * requests depending on the Locale middleware's per-request default
-     * argument state (the same mechanism behind the entire August 2026
-     * Checkout.com "Pay Now" redirect-loop investigation) — a fixed
-     * Setting sidesteps that risk entirely rather than merely arguing it
-     * away. Not encrypted — the 'returnUrl' field is 'text' type, matching
-     * Amazon Pay's own gateway_amazon_pay_returnUrl precedent for this
-     * exact class of problem.
-     */
-    private function returnUrl(): string
-    {
-        return $this->settings->getSetting('gateway_truelayer_returnUrl') ?: '';
-    }
-
-    private function clientId(): string
-    {
-        return (string) $this->settings->decode(
-            $this->settings->getSetting('gateway_truelayer_clientId') ?: '');
-    }
-
-    private function clientSecret(): string
-    {
-        return (string) $this->settings->decode(
-            $this->settings->getSetting('gateway_truelayer_clientSecret') ?: '');
-    }
-
-    private function signingKid(): string
-    {
-        return (string) $this->settings->decode(
-            $this->settings->getSetting('gateway_truelayer_signingKid') ?: '');
-    }
-
-    private function privateKey(): string
-    {
-        return (string) $this->settings->decode(
-            $this->settings->getSetting('gateway_truelayer_privateKey') ?: '');
     }
 
     /**

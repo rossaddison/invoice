@@ -37,7 +37,7 @@ use Yiisoft\Yii\View\Renderer\WebViewRenderer;
  * PaypalPaymentController's own InForm() actions.
  *
  * `trueLayerComplete()` is reached via a fixed, no-suffix return URL (see
- * TrueLayerPaymentService::returnUrl()'s own docblock for why), not a
+ * TrueLayerCredentials::returnUrl()'s own docblock for why), not a
  * per-invoice route parameter like every other gateway's own Complete()
  * action — TrueLayer appends only `?payment_id=...` to whatever return URL
  * it's given (confirmed directly against TrueLayer's own docs), so the
