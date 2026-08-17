@@ -36,17 +36,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # extend to ['8.4','8.5'] when 8.5 is stable. PHP 8.6/9.0 are
-        # pre-release — tolerated via continue-on-error rather than
-        # blocking the primary 8.4 leg (which also owns the "Commit
-        # results" step below).
+        # extend to ['8.4','8.5'] when 8.5 is stable. PHP 8.6 workflow
+        # deliberately removed until 8.6 actually releases — premature to
+        # carry a pre-release matrix leg for it before then.
         include:
           - php: '8.4'
             experimental: false
-          - php: '8.6'
-            experimental: true
-          - php: '9.0'
-            experimental: true
 
     steps:
       # ── Checkout ────────────────────────────────────────────────────────────
