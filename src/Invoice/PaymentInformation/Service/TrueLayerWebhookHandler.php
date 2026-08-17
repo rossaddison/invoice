@@ -47,6 +47,10 @@ use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
  *
  * The route is CSRF-exempt and unauthenticated by design — see
  * routes-payment-information.php and App\Middleware\CsrfExemptMiddleware.
+ *
+ * `markInvoicePaidIfVerified()` is public — see its own docblock —
+ * because `TrueLayerPaymentController::trueLayerComplete()` also calls it
+ * directly as a synchronous fallback, not just this class's own `handle()`.
  */
 final class TrueLayerWebhookHandler
 {
@@ -66,19 +70,6 @@ final class TrueLayerWebhookHandler
         $rawBody = (string) $request->getBody();
         $paymentId = null;
         $invoiceUrlKey = null;
-
-        // TEMPORARY diagnostic logging — signature verification is
-        // currently failing and this pins down exactly what path/body/
-        // headers this handler is actually working with, so the mismatch
-        // against whatever TrueLayer itself signed can be found instead of
-        // guessed. Remove once the real cause is confirmed and fixed.
-        $this->logger->debug('TrueLayer webhook: diagnostic snapshot.', [
-            'uri' => (string) $request->getUri(),
-            'path' => $request->getUri()->getPath(),
-            'body_length' => strlen($rawBody),
-            'header_names' => array_keys($request->getHeaders()),
-            'sandbox' => $this->trueLayerPaymentService->isSandboxForWebhook(),
-        ]);
 
         try {
             TrueLayerWebhook::configure()
@@ -138,7 +129,19 @@ final class TrueLayerWebhookHandler
         return $headers;
     }
 
-    private function markInvoicePaidIfVerified(string $paymentId, string $invoiceUrlKey): void
+    /**
+     * Public — also called directly by `TrueLayerPaymentController::
+     * trueLayerComplete()` as a synchronous fallback for when TrueLayer's
+     * own webhook delivery is delayed, or — confirmed live 2026-08-17 —
+     * paused entirely by TrueLayer itself after an earlier run of
+     * delivery failures, with no way for this app to force a resend.
+     * Calling this from two places is safe without extra guarding: the
+     * `0.00 === balance` check a few lines down is already the same
+     * idempotency guard that protects against TrueLayer's own webhook
+     * redelivery, so a webhook arriving either before or after the
+     * redirect-triggered call is a no-op the second time either way.
+     */
+    public function markInvoicePaidIfVerified(string $paymentId, string $invoiceUrlKey): void
     {
         $verification = $this->trueLayerPaymentService->verifyPayment($paymentId);
         if (!$verification->paid) {

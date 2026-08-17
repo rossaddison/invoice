@@ -44,14 +44,19 @@ use Yiisoft\Yii\View\Renderer\WebViewRenderer;
  * invoice itself is resolved from that payment's own `metadata` via
  * TrueLayerPaymentService::resolveInvoiceUrlKey(), not the URL.
  *
- * `trueLayerComplete()` is otherwise read-only, the same pattern as
- * `SquarePaymentController::squareComplete()`: the invoice is only ever
- * actually marked paid by `TrueLayerWebhookHandler`, after its own
- * signature verification AND authenticated re-confirmation via
- * `GET /v3/payments/{id}` — never by this redirect, since a customer's
- * browser returning here proves nothing about payment success on its own.
- * This action only re-reads current balance to decide which message to
- * show.
+ * `trueLayerComplete()` also calls
+ * `TrueLayerWebhookHandler::markInvoicePaidIfVerified()` directly — a
+ * synchronous fallback added 2026-08-17 after confirming live that
+ * TrueLayer can leave a webhook endpoint's delivery paused indefinitely
+ * following an earlier run of failures, with no way for this app to force
+ * a resend. This is deliberately NOT "trusting the browser redirect" in
+ * the risky sense the original design avoided: the browser only supplies
+ * which `payment_id` to check, and `markInvoicePaidIfVerified()` still
+ * requires TrueLayer's own authenticated `GET /v3/payments/{id}` response
+ * before marking anything paid — exactly the same call the webhook path
+ * uses. The webhook remains the primary/first-to-arrive trigger when it
+ * does work; `markInvoicePaidIfVerified()`'s own balance-zero guard makes
+ * calling it a second time here a safe no-op either way.
  */
 final class TrueLayerPaymentController
 {
@@ -119,7 +124,9 @@ final class TrueLayerPaymentController
      * Customer returns here from TrueLayer's Hosted Payments Page — see
      * this class's own docblock for why the invoice is resolved from the
      * `payment_id` query parameter TrueLayer appends, not a route
-     * parameter, and why this action is otherwise read-only.
+     * parameter, and for why this action also calls
+     * `markInvoicePaidIfVerified()` directly rather than only being
+     * read-only.
      */
     public function trueLayerComplete(Request $request): Response
     {
@@ -130,6 +137,10 @@ final class TrueLayerPaymentController
         if (null === $invoice) {
             return $this->webService->getNotFoundResponse();
         }
+
+        // See this class's own docblock — synchronous fallback for when
+        // TrueLayer's webhook delivery is delayed or paused.
+        $this->trueLayerWebhookHandler->markInvoicePaidIfVerified($paymentId, $urlKey ?? '');
 
         /** @var InvAmount $invoiceAmountRecord */
         $invoiceAmountRecord = $this->iaR->repoInvquery($invoice->reqId());
