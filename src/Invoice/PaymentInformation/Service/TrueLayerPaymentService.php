@@ -127,104 +127,193 @@ final class TrueLayerPaymentService implements PaymentGatewayInterface
         string $customerName,
         string $customerEmail,
     ): ?string {
+        $setup = $this->resolvePaymentSetup($currency);
+        if ($setup === null) {
+            return null;
+        }
+
+        try {
+            return $this->submitPayment($setup, $balance, $urlKey, $customerName, $customerEmail);
+        } catch (TrueLayerException $e) {
+            $this->logger->error('TrueLayer payment creation failed.', $this->errorLogContext($e));
+            return null;
+        }
+    }
+
+    /**
+     * Everything `createPayment()` needs to know is valid/available before
+     * it's safe to even build a TrueLayer SDK client — bundled into one
+     * call, rather than createPayment() itself running each guard clause
+     * in sequence, to stay under SonarQube's per-method return-count limit
+     * (php:S1142). The `!== null` chain below short-circuits the same way
+     * a sequence of `if (...) { return null; }` guards would, without each
+     * one contributing its own `return` — currency validation, the Return
+     * Url Setting, and the account-identifier inputs are resolved by their
+     * own small dedicated methods (each already under the limit on its
+     * own), and only the combined success/failure is returned here.
+     *
+     * @return array{currency: string, returnUrl: string, accountIdentifierInputs: array{name: string, iban: string, sortCode: string, accountNumber: string}}|null
+     */
+    private function resolvePaymentSetup(string $currency): ?array
+    {
+        $upperCurrency = $this->validateCurrency($currency);
+        if ($upperCurrency === null) {
+            return null;
+        }
+
+        $returnUrl = $this->requireReturnUrl();
+        $accountIdentifierInputs = $returnUrl !== null ? $this->resolveAccountIdentifierInputs($upperCurrency) : null;
+        if ($returnUrl === null || $accountIdentifierInputs === null) {
+            return null;
+        }
+
+        return [
+            'currency' => $upperCurrency,
+            'returnUrl' => $returnUrl,
+            'accountIdentifierInputs' => $accountIdentifierInputs,
+        ];
+    }
+
+    private function validateCurrency(string $currency): ?string
+    {
         $upperCurrency = strtoupper($currency);
         if (!in_array($upperCurrency, [PaymentCurrencies::GBP, PaymentCurrencies::EUR], true)) {
             $this->logger->error('TrueLayer only supports GBP or EUR.', ['currency' => $currency]);
             return null;
         }
+        return $upperCurrency;
+    }
 
+    private function requireReturnUrl(): ?string
+    {
         $returnUrl = $this->returnUrl();
         if ($returnUrl === '') {
             $this->logger->error('TrueLayer payment creation failed: no Return Url configured.');
             return null;
         }
+        return $returnUrl;
+    }
 
+    /**
+     * Resolves the beneficiary and validates the currency-specific fields
+     * it needs are actually present — TrueLayer rejects IBAN-identified
+     * beneficiaries for GBP payments outright ("GBP payments are not
+     * supported to iban accounts", confirmed live 2026-08-16), so GBP
+     * needs sort code + account number and EUR needs an IBAN, never the
+     * other. Both currency branches' missing-field checks are combined
+     * into one guard (rather than one `if`/`return` per currency) to stay
+     * under SonarQube's per-method return-count limit (php:S1142).
+     *
+     * @return array{name: string, iban: string, sortCode: string, accountNumber: string}|null
+     */
+    private function resolveAccountIdentifierInputs(string $upperCurrency): ?array
+    {
         $beneficiaryDetails = $this->resolveBeneficiary();
         if ($beneficiaryDetails === null) {
             $this->logger->error('TrueLayer payment creation failed: no active company found.');
             return null;
         }
 
-        try {
-            $client = $this->client();
+        $missingGbpFields = $upperCurrency === PaymentCurrencies::GBP
+            && ($beneficiaryDetails['sortCode'] === '' || $beneficiaryDetails['accountNumber'] === '');
+        $missingEurFields = $upperCurrency === PaymentCurrencies::EUR && $beneficiaryDetails['iban'] === '';
 
-            // TrueLayer rejects IBAN-identified beneficiaries for GBP
-            // payments outright ("GBP payments are not supported to iban
-            // accounts", confirmed live 2026-08-16, error type
-            // invalid-parameters) — IBAN is the SEPA/EUR identifier; UK
-            // domestic Faster Payments needs sort code + account number
-            // instead. Picking the identifier type by currency, not
-            // defaulting to IBAN for everything.
-            if ($upperCurrency === PaymentCurrencies::GBP) {
-                if ($beneficiaryDetails['sortCode'] === '' || $beneficiaryDetails['accountNumber'] === '') {
-                    $this->logger->error('TrueLayer payment creation failed: no active company BACS sort code/account number configured for GBP.');
-                    return null;
-                }
-                // This app stores the sort code as XX-XX-XX (see
-                // CompanyPrivateFormFields::companyPrivateBacsSortCodeField()'s
-                // own docblock) — TrueLayer wants a plain 6-digit string
-                // with no separators at all ("Value must be 6 digits
-                // without spaces.", confirmed live 2026-08-16). Stripping
-                // any non-digit characters from both fields covers the
-                // dashes here and any accidental spaces a user might type
-                // into the account number field too.
-                $sortCode = preg_replace('/\D/', '', $beneficiaryDetails['sortCode']) ?? '';
-                $accountNumber = preg_replace('/\D/', '', $beneficiaryDetails['accountNumber']) ?? '';
-                $accountIdentifier = $client->accountIdentifier()->sortCodeAccountNumber()
-                    ->sortCode($sortCode)
-                    ->accountNumber($accountNumber);
-            } else {
-                if ($beneficiaryDetails['iban'] === '') {
-                    $this->logger->error('TrueLayer payment creation failed: no active company IBAN configured for EUR.');
-                    return null;
-                }
-                $accountIdentifier = $client->accountIdentifier()->iban()->iban($beneficiaryDetails['iban']);
-            }
-
-            $beneficiary = $client->beneficiary()->externalAccount()
-                ->reference(substr($customerName !== '' ? $customerName : $urlKey, 0, 18))
-                ->accountHolderName($beneficiaryDetails['name'])
-                ->accountIdentifier($accountIdentifier);
-
-            // The SDK's own ClientInterface::providerFilter() declares a
-            // return type of ProviderFilterInterface, but
-            // UserSelectedProviderSelectionInterface::filter() type-hints
-            // the concrete ProviderFilter class, not the interface — a
-            // real inconsistency in the SDK's own type declarations
-            // (confirmed 2026-08-16), not anything this app controls.
-            // Explicit @var is the structural fix, matching
-            // CheckoutComPaymentService::buildApi()'s own docblock for the
-            // same class of untyped/mistyped third-party SDK return.
-            /** @var \TrueLayer\Entities\Provider\ProviderSelection\ProviderFilter $filter */
-            $filter = $client->providerFilter()
-                ->countries([Countries::GB])
-                ->customerSegments([CustomerSegments::RETAIL])
-                ->releaseChannel(ReleaseChannels::GENERAL_AVAILABILITY);
-
-            $providerSelection = $client->providerSelection()->userSelected()->filter($filter);
-
-            $paymentMethod = $client->paymentMethod()->bankTransfer()
-                ->beneficiary($beneficiary)
-                ->providerSelection($providerSelection);
-
-            $user = $client->user()->name($customerName);
-            if ($customerEmail !== '') {
-                $user->email($customerEmail);
-            }
-
-            $payment = $client->payment()
-                ->user($user)
-                ->amountInMinor((int) round($balance * 100))
-                ->currency($upperCurrency)
-                ->metadata(['invoice_url_key' => $urlKey])
-                ->paymentMethod($paymentMethod)
-                ->create();
-
-            return $payment->hostedPaymentsPage()->returnUri($returnUrl)->toUrl();
-        } catch (TrueLayerException $e) {
-            $this->logger->error('TrueLayer payment creation failed.', $this->errorLogContext($e));
+        if ($missingGbpFields || $missingEurFields) {
+            $this->logger->error(
+                $missingGbpFields
+                    ? 'TrueLayer payment creation failed: no active company BACS sort code/account number configured for GBP.'
+                    : 'TrueLayer payment creation failed: no active company IBAN configured for EUR.',
+            );
             return null;
         }
+
+        return $beneficiaryDetails;
+    }
+
+    /**
+     * Builds and submits the actual TrueLayer payment — all input
+     * validation already happened in `resolvePaymentSetup()`, so this
+     * method has exactly one `return`, well under SonarQube's per-method
+     * limit (php:S1142). Left to throw `TrueLayerException` outward
+     * (building the client itself, or the `create()` API call, can both
+     * throw) — `createPayment()`'s own `try`/`catch` handles it.
+     *
+     * @param array{currency: string, returnUrl: string, accountIdentifierInputs: array{name: string, iban: string, sortCode: string, accountNumber: string}} $setup
+     *
+     * @throws TrueLayerException
+     */
+    private function submitPayment(
+        array $setup,
+        float $balance,
+        string $urlKey,
+        string $customerName,
+        string $customerEmail,
+    ): string {
+        $client = $this->client();
+        $upperCurrency = $setup['currency'];
+        $beneficiaryDetails = $setup['accountIdentifierInputs'];
+
+        // Picking the identifier type by currency, not defaulting to IBAN
+        // for everything — see resolveAccountIdentifierInputs()'s own
+        // docblock for why.
+        if ($upperCurrency === PaymentCurrencies::GBP) {
+            // This app stores the sort code as XX-XX-XX (see
+            // CompanyPrivateFormFields::companyPrivateBacsSortCodeField()'s
+            // own docblock) — TrueLayer wants a plain 6-digit string with
+            // no separators at all ("Value must be 6 digits without
+            // spaces.", confirmed live 2026-08-16). Stripping any
+            // non-digit characters from both fields covers the dashes
+            // here and any accidental spaces a user might type into the
+            // account number field too.
+            $sortCode = preg_replace('/\D/', '', $beneficiaryDetails['sortCode']) ?? '';
+            $accountNumber = preg_replace('/\D/', '', $beneficiaryDetails['accountNumber']) ?? '';
+            $accountIdentifier = $client->accountIdentifier()->sortCodeAccountNumber()
+                ->sortCode($sortCode)
+                ->accountNumber($accountNumber);
+        } else {
+            $accountIdentifier = $client->accountIdentifier()->iban()->iban($beneficiaryDetails['iban']);
+        }
+
+        $beneficiary = $client->beneficiary()->externalAccount()
+            ->reference(substr($customerName !== '' ? $customerName : $urlKey, 0, 18))
+            ->accountHolderName($beneficiaryDetails['name'])
+            ->accountIdentifier($accountIdentifier);
+
+        // The SDK's own ClientInterface::providerFilter() declares a
+        // return type of ProviderFilterInterface, but
+        // UserSelectedProviderSelectionInterface::filter() type-hints
+        // the concrete ProviderFilter class, not the interface — a
+        // real inconsistency in the SDK's own type declarations
+        // (confirmed 2026-08-16), not anything this app controls.
+        // Explicit @var is the structural fix, matching
+        // CheckoutComPaymentService::buildApi()'s own docblock for the
+        // same class of untyped/mistyped third-party SDK return.
+        /** @var \TrueLayer\Entities\Provider\ProviderSelection\ProviderFilter $filter */
+        $filter = $client->providerFilter()
+            ->countries([Countries::GB])
+            ->customerSegments([CustomerSegments::RETAIL])
+            ->releaseChannel(ReleaseChannels::GENERAL_AVAILABILITY);
+
+        $providerSelection = $client->providerSelection()->userSelected()->filter($filter);
+
+        $paymentMethod = $client->paymentMethod()->bankTransfer()
+            ->beneficiary($beneficiary)
+            ->providerSelection($providerSelection);
+
+        $user = $client->user()->name($customerName);
+        if ($customerEmail !== '') {
+            $user->email($customerEmail);
+        }
+
+        $payment = $client->payment()
+            ->user($user)
+            ->amountInMinor((int) round($balance * 100))
+            ->currency($upperCurrency)
+            ->metadata(['invoice_url_key' => $urlKey])
+            ->paymentMethod($paymentMethod)
+            ->create();
+
+        return $payment->hostedPaymentsPage()->returnUri($setup['returnUrl'])->toUrl();
     }
 
     /**
@@ -348,12 +437,13 @@ final class TrueLayerPaymentService implements PaymentGatewayInterface
     private function resolveBeneficiary(): ?array
     {
         $company = $this->compR->repoCompanyActivequery();
-        if (!$company instanceof Company) {
-            return null;
-        }
-
-        $name = $company->getName();
-        if ($name === null || $name === '') {
+        $name = $company instanceof Company ? $company->getName() : null;
+        // Combined into one guard, rather than one `if`/`return` per
+        // check, to stay under SonarQube's per-method return-count limit
+        // (php:S1142) — the `instanceof` re-check right here (not just
+        // relied on via $name above) is what lets Psalm narrow $company
+        // to Company for the rest of this method.
+        if (!$company instanceof Company || $name === null || $name === '') {
             return null;
         }
 
