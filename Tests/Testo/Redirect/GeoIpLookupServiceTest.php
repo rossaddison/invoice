@@ -44,18 +44,37 @@ final class GeoIpLookupServiceTest
         Assert::same('us', $service->lookupCountryCode('8.8.8.8'));
     }
 
-    public function returnsNullOnHttpFailure(): void
+    public function returnsNullWhenBothProvidersFail(): void
     {
-        $service = $this->makeService(new MockHandler([new Response(500)]));
+        $service = $this->makeService(new MockHandler([new Response(500), new Response(500)]));
 
         Assert::null($service->lookupCountryCode('8.8.8.8'));
     }
 
-    public function returnsNullOnUnexpectedResponseShape(): void
+    public function returnsNullWhenBothProvidersReturnAnUnexpectedShape(): void
     {
-        $service = $this->makeService(new MockHandler([new Response(200, [], 'Rate limit exceeded')]));
+        $service = $this->makeService(new MockHandler([
+            new Response(200, [], 'Rate limit exceeded'),
+            new Response(200, [], '{"status":"fail","message":"invalid query"}'),
+        ]));
 
         Assert::null($service->lookupCountryCode('8.8.8.8'));
+    }
+
+    /**
+     * The exact scenario confirmed live 2026-08-18: ipapi.co returned
+     * `429 Too Many Requests` on this app's very first real production
+     * lookup — the ip-api.com fallback is what actually gets a real
+     * answer through in that case.
+     */
+    public function fallsBackToIpApiComWhenIpapiCoIsRateLimited(): void
+    {
+        $service = $this->makeService(new MockHandler([
+            new Response(429, [], "{'error': True, 'reason': 'RateLimited'}"),
+            new Response(200, [], '{"status":"success","countryCode":"GB"}'),
+        ]));
+
+        Assert::same('gb', $service->lookupCountryCode('81.110.202.224'));
     }
 
     public function returnsNullForPrivateIpWithoutMakingAnHttpCall(): void
