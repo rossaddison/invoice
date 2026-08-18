@@ -88,31 +88,15 @@ final class RedirectController
             return $this->responseFactory->createResponse(404);
         }
 
-        // TEMPORARY diagnostic logging — a real click on the homepage
-        // button isn't landing in redirect_click at all on production,
-        // confirmed via a direct DB query returning zero rows despite the
-        // redirect itself working cleanly. Logging exactly what
-        // shouldRecordClick() saw so the actual cause (leading suspect:
-        // Referer host vs $request->getUri()->getHost() mismatch behind
-        // whatever reverse proxy sits in front of this app in production
-        // — same class of bug as the Locale-middleware Checkout.com/
-        // TrueLayer saga) can be found instead of guessed. Remove once
-        // confirmed and fixed.
-        $shouldRecord = $this->shouldRecordClick($request);
-        $this->logger->debug('RedirectController: diagnostic snapshot.', [
-            'key' => $key,
-            'shouldRecord' => $shouldRecord,
-            'userAgent' => $request->getHeaderLine('User-Agent'),
-            'referer' => $request->getHeaderLine('Referer'),
-            'refererHost' => parse_url($request->getHeaderLine('Referer'), PHP_URL_HOST),
-            'requestUriHost' => $request->getUri()->getHost(),
-            'requestUri' => (string) $request->getUri(),
-        ]);
-
-        if ($shouldRecord) {
+        if ($this->shouldRecordClick($request)) {
             $ip = $this->authSecurityHelper->getClientIpAddress($request);
             $countryCode = $this->geoIpLookupService->lookupCountryCode($ip);
             $this->redirectClickRepository->save(new RedirectClick($key, $countryCode));
+            // Permanent, low-noise instrumentation (one line per recorded
+            // click, not every hit) — cheap to keep, and it's what
+            // actually showed the ipapi.co -> ip-api.com fallback path
+            // working correctly the first time a real click resolved a
+            // country live (confirmed 2026-08-18).
             $this->logger->debug('RedirectController: click recorded.', ['key' => $key, 'countryCode' => $countryCode]);
         }
 
