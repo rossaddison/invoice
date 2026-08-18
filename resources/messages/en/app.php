@@ -2301,6 +2301,7 @@ prior to importing and no existing documents e.g. Invoices.',
     'Only invoices with a status of sent can be made recurring',
   'recurring.tooltip.next' =>
     'The next date is set by means of the index.',
+  'redirect.map' => 'Redirect Map',
   'refund' => 'Refund',
   'refund.confirm' =>
     'Are you sure you wish to refund this payment via %s?',

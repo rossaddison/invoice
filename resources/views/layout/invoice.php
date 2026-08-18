@@ -1066,6 +1066,9 @@ if ((null !== $currentPath) && !$isGuest) {
             DropdownItem::link($t->translate('setting.company.profile'),
                 $urlGenerator->generate('profile/index'),
                 itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('redirect.map'),
+                $urlGenerator->generate('redirect/map'),
+                itemAttributes: $itemFontArray),
         ),
         // peppol
         Dropdown::widget()
