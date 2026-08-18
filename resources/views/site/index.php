@@ -20,14 +20,22 @@ $divHeight = (string) 250;
 <?php if ($s->getSetting('no_front_site_slider_page') == '0') { ?>
 
 <?= Html::openTag('div', ['class' => 'container py-5']); ?>
-    <?= Html::openTag('div', ['class' => 'row align-items-center gy-4']); ?>
-        <?= Html::openTag('div', ['class' => 'col-lg-2 text-center']); ?>
-            <?= new Img()->src('/img/logo.svg')->alt('Yii3-i logo')->addAttributes(['class' => 'img-fluid', 'style' => 'max-width: 120px'])->render(); ?>
-        <?= Html::closeTag('div'); ?>
+    <?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
         <?= Html::openTag('div', ['class' => 'col-lg-10']); ?>
-            <?= Html::openTag('h1', ['class' => 'display-6 fw-bold mb-2']); ?>
-                Yii3-i — Open Source Invoicing &amp; E-Invoicing System
-            <?= Html::closeTag('h1'); ?>
+            <?= Html::openTag('div', ['class' => 'd-flex align-items-center gap-3 mb-2']); ?>
+                <?= new Img()->src('/img/yii3_sign.svg')->alt('Yii 3 sign')->addAttributes(['style' => 'width: 48px; height: auto'])->render(); ?>
+                <?= Html::openTag('h1', ['class' => 'display-6 fw-bold mb-0']); ?>
+                    Yii3-i — Open Source Invoicing &amp; E-Invoicing System
+                <?= Html::closeTag('h1'); ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('p', ['class' => 'text-secondary small mb-3']); ?>
+                Built on the
+                <?= new A()->content('Yii 3')->href('https://www.yiiframework.com/')->addAttributes(['target' => '_blank', 'rel' => 'noopener'])->render(); ?>
+                PHP framework. The Yii 3 sign shown above is
+                <?= new A()->content('Yii Software\'s')->href('https://www.yiiframework.com/logo')->addAttributes(['target' => '_blank', 'rel' => 'noopener'])->render(); ?>
+                own official mark, used unmodified under their
+                <?= new A()->content('CC BY-ND 3.0 license')->href('https://creativecommons.org/licenses/by-nd/3.0/')->addAttributes(['target' => '_blank', 'rel' => 'noopener'])->render(); ?>.
+            <?= Html::closeTag('p'); ?>
             <?= Html::openTag('p', ['class' => 'fs-5 mb-3']); ?>
                 A self-hosted, open-source invoicing platform built in PHP on the
                 Yii3 framework. It produces Peppol/UBL 2.4-compliant electronic
