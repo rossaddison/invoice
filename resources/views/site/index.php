@@ -50,8 +50,8 @@ $divHeight = (string) 250;
             <?= Html::openTag('p', ['class' => 'mb-1']); ?>
                 <?= new A()
                     ->content('⭐ View the source on GitHub — github.com/rossaddison/invoice')
-                    ->href('https://github.com/rossaddison/invoice')
-                    ->addAttributes(['class' => 'btn btn-primary', 'target' => '_blank', 'rel' => 'noopener'])
+                    ->href('/go/github')
+                    ->addAttributes(['class' => 'btn btn-primary', 'target' => '_blank', 'rel' => 'noopener nofollow'])
                     ->render(); ?>
                 <?php if ($s->getSetting('no_front_gateway_status_page') == '0') { ?>
                     <?= new A()
@@ -60,6 +60,12 @@ $divHeight = (string) 250;
                         ->addAttributes(['class' => 'btn btn-outline-secondary ms-2'])
                         ->render(); ?>
                 <?php } ?>
+            <?= Html::closeTag('p'); ?>
+            <?= Html::openTag('p', ['class' => 'text-secondary small mb-2']); ?>
+                Clicking through to GitHub records which country it came from
+                (nothing more identifying than that) — it directly helps decide
+                which payment gateways get prioritized next, since regions we
+                see real interest from are the ones worth building for.
             <?= Html::closeTag('p'); ?>
             <?= Html::openTag('p', ['class' => 'text-secondary small mb-0']); ?>
                 Open source under the BSD-3-Clause license.

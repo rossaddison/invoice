@@ -13,6 +13,7 @@ use App\Invoice\{
     Prometheus\PrometheusController,
 };
 use App\Middleware\{ApiDataWrapper, RateLimiter, RoutePermission};
+use App\Redirect\RedirectController;
 use App\User\Controller\{ApiUserController, UserController};
 use Yiisoft\{
     DataResponse\ResponseFactory\DataResponseFactoryInterface as DRFI,
@@ -57,6 +58,23 @@ return [
         ->middleware(RoutePermission::check(Permissions::EDIT_INV))
         ->action([PrometheusController::class, 'dashboard'])
         ->name('prometheus/dashboard'),
+    // Small, reusable tracked-redirect endpoint — currently only the
+    // homepage's "View the source on GitHub" button
+    // (RedirectController::DESTINATIONS). Public by design (anyone
+    // clicking the homepage link hits this with no session), rate-limited
+    // the same way /scan/{token} above is to bound the cost of the
+    // outbound geo-IP lookup it triggers.
+    Route::get('/go/{key}')
+        ->middleware(RateLimiter::global(120))
+        ->middleware(RateLimiter::perIp(20, 'go_redirect_route'))
+        ->action([RedirectController::class, 'go'])
+        ->name('redirect/go'),
+    // Choropleth of all-time /go/github clicks by country — same access
+    // level as Settings, not public.
+    Route::get('/redirect-map')
+        ->middleware(RoutePermission::check(Permissions::EDIT_INV))
+        ->action([RedirectController::class, 'map'])
+        ->name('redirect/map'),
 
     // Lonely pages of site
     Route::get('/')
