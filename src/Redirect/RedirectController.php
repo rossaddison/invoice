@@ -9,6 +9,7 @@ use App\Infrastructure\Persistence\RedirectClick\RedirectClick;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Log\LoggerInterface;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
@@ -57,6 +58,7 @@ final class RedirectController
         private readonly AuthSecurityHelper $authSecurityHelper,
         private readonly ResponseFactoryInterface $responseFactory,
         private WebViewRenderer $webViewRenderer,
+        private readonly LoggerInterface $logger,
     ) {
         $this->webViewRenderer = $this->webViewRenderer->withController($this);
     }
@@ -86,10 +88,32 @@ final class RedirectController
             return $this->responseFactory->createResponse(404);
         }
 
-        if ($this->shouldRecordClick($request)) {
+        // TEMPORARY diagnostic logging — a real click on the homepage
+        // button isn't landing in redirect_click at all on production,
+        // confirmed via a direct DB query returning zero rows despite the
+        // redirect itself working cleanly. Logging exactly what
+        // shouldRecordClick() saw so the actual cause (leading suspect:
+        // Referer host vs $request->getUri()->getHost() mismatch behind
+        // whatever reverse proxy sits in front of this app in production
+        // — same class of bug as the Locale-middleware Checkout.com/
+        // TrueLayer saga) can be found instead of guessed. Remove once
+        // confirmed and fixed.
+        $shouldRecord = $this->shouldRecordClick($request);
+        $this->logger->debug('RedirectController: diagnostic snapshot.', [
+            'key' => $key,
+            'shouldRecord' => $shouldRecord,
+            'userAgent' => $request->getHeaderLine('User-Agent'),
+            'referer' => $request->getHeaderLine('Referer'),
+            'refererHost' => parse_url($request->getHeaderLine('Referer'), PHP_URL_HOST),
+            'requestUriHost' => $request->getUri()->getHost(),
+            'requestUri' => (string) $request->getUri(),
+        ]);
+
+        if ($shouldRecord) {
             $ip = $this->authSecurityHelper->getClientIpAddress($request);
             $countryCode = $this->geoIpLookupService->lookupCountryCode($ip);
             $this->redirectClickRepository->save(new RedirectClick($key, $countryCode));
+            $this->logger->debug('RedirectController: click recorded.', ['key' => $key, 'countryCode' => $countryCode]);
         }
 
         return $this->responseFactory->createResponse(302)->withHeader('Location', $destination);
