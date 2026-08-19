@@ -34,7 +34,9 @@ final class ClientNoteServiceTest
         ?ClientNoteRepository $repository = null,
         ?CR $cR = null,
     ): ClientNoteService {
+        /** @var ClientNoteRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(ClientNoteRepository::class);
+        /** @var CR&m\MockInterface $cR */
         $cR = $cR ?? m::mock(CR::class);
         return new ClientNoteService($repository, $cR);
     }
@@ -48,14 +50,15 @@ final class ClientNoteServiceTest
             'note' => 'Called client',
         ];
 
+        /** @var Client&m\MockInterface $client */
         $client = m::mock(Client::class);
+        /** @var CR&m\MockInterface $cR */
         $cR = m::mock(CR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $cR->shouldReceive('repoClientquery');
         $e->once()->with(4)->andReturn($client);
 
+        /** @var ClientNoteRepository&m\MockInterface $repository */
         $repository = m::mock(ClientNoteRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -73,11 +76,12 @@ final class ClientNoteServiceTest
         $model = new ClientNote();
         $array = [];
 
+        /** @var CR&m\MockInterface $cR */
         $cR = m::mock(CR::class);
         $cR->shouldNotReceive('repoClientquery');
 
+        /** @var ClientNoteRepository&m\MockInterface $repository */
         $repository = m::mock(ClientNoteRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('save');
         $e->once()->with($model);
 
@@ -97,14 +101,15 @@ final class ClientNoteServiceTest
             'note' => 'Follow up',
         ];
 
+        /** @var Client&m\MockInterface $client */
         $client = m::mock(Client::class);
+        /** @var CR&m\MockInterface $cR */
         $cR = m::mock(CR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $cR->shouldReceive('repoClientquery');
         $e->once()->with(8)->andReturn($client);
 
+        /** @var ClientNoteRepository&m\MockInterface $repository */
         $repository = m::mock(ClientNoteRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -121,8 +126,8 @@ final class ClientNoteServiceTest
     {
         $model = new ClientNote();
 
+        /** @var ClientNoteRepository&m\MockInterface $repository */
         $repository = m::mock(ClientNoteRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('delete');
         $e->once()->with($model);
 

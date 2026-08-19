@@ -24,7 +24,9 @@ final class ProductPropertyServiceTest
         ?ProductPropertyRepository $repository = null,
         ?PR $pR = null,
     ): ProductPropertyService {
+        /** @var ProductPropertyRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(ProductPropertyRepository::class);
+        /** @var PR&m\MockInterface $pR */
         $pR = $pR ?? m::mock(PR::class);
         return new ProductPropertyService($repository, $pR);
     }
@@ -38,14 +40,15 @@ final class ProductPropertyServiceTest
             'value' => 'Blue',
         ];
 
+        /** @var Product&m\MockInterface $product */
         $product = m::mock(Product::class);
+        /** @var PR&m\MockInterface $pR */
         $pR = m::mock(PR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $pR->shouldReceive('repoProductquery');
         $e->once()->with(7)->andReturn($product);
 
+        /** @var ProductPropertyRepository&m\MockInterface $repository */
         $repository = m::mock(ProductPropertyRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -62,11 +65,12 @@ final class ProductPropertyServiceTest
     {
         $model = new ProductProperty();
 
+        /** @var PR&m\MockInterface $pR */
         $pR = m::mock(PR::class);
         $pR->shouldNotReceive('repoProductquery');
 
+        /** @var ProductPropertyRepository&m\MockInterface $repository */
         $repository = m::mock(ProductPropertyRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('save');
         $e->once()->with($model);
 
@@ -83,7 +87,6 @@ final class ProductPropertyServiceTest
 
         /** @var ProductPropertyRepository&m\MockInterface $repository */
         $repository = m::mock(ProductPropertyRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

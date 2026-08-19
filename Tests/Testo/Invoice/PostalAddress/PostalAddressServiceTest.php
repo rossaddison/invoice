@@ -20,6 +20,7 @@ final class PostalAddressServiceTest
 {
     private function makeService(?PostalAddressRepository $repository = null): PostalAddressService
     {
+        /** @var PostalAddressRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(PostalAddressRepository::class);
         return new PostalAddressService($repository);
     }
@@ -41,7 +42,6 @@ final class PostalAddressServiceTest
 
         /** @var PostalAddressRepository&m\MockInterface $repository */
         $repository = m::mock(PostalAddressRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -64,7 +64,6 @@ final class PostalAddressServiceTest
 
         /** @var PostalAddressRepository&m\MockInterface $repository */
         $repository = m::mock(PostalAddressRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -82,7 +81,6 @@ final class PostalAddressServiceTest
 
         /** @var PostalAddressRepository&m\MockInterface $repository */
         $repository = m::mock(PostalAddressRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

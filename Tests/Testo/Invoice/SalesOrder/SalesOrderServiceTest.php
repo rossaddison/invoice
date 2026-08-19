@@ -48,7 +48,6 @@ final class SalesOrderServiceTest
     {
         /** @var EntityReader&m\MockInterface $reader */
         $reader = m::mock(EntityReader::class);
-        /** @var \Mockery\Expectation $e */
         $e = $reader->shouldReceive('getIterator');
         $e->andReturn((static function () use ($items) {
             yield from $items;
@@ -63,10 +62,15 @@ final class SalesOrderServiceTest
         ?UserRepository $userRepository = null,
         ?QuoteRepository $quoteRepository = null,
     ): SalesOrderService {
+        /** @var SalesOrderRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(SalesOrderRepository::class);
+        /** @var ClientRepository&m\MockInterface $clientRepository */
         $clientRepository = $clientRepository ?? m::mock(ClientRepository::class);
+        /** @var GroupRepository&m\MockInterface $groupRepository */
         $groupRepository = $groupRepository ?? m::mock(GroupRepository::class);
+        /** @var UserRepository&m\MockInterface $userRepository */
         $userRepository = $userRepository ?? m::mock(UserRepository::class);
+        /** @var QuoteRepository&m\MockInterface $quoteRepository */
         $quoteRepository = $quoteRepository ?? m::mock(QuoteRepository::class);
         return new SalesOrderService($repository, $clientRepository, $groupRepository, $userRepository, $quoteRepository);
     }
@@ -74,8 +78,8 @@ final class SalesOrderServiceTest
     public function addSoForNewRecordForcesStatusOneAndDateCreatedRegardlessOfArray(): void
     {
         $model = new SalesOrder();
+        /** @var User&m\MockInterface $currentUser */
         $currentUser = m::mock(User::class);
-        /** @var \Mockery\Expectation $eUser */
         $eUser = $currentUser->shouldReceive('reqId');
         $eUser->andReturn(4);
 
@@ -97,32 +101,32 @@ final class SalesOrderServiceTest
 
         $client = new Client();
         $client->setId(1);
+        /** @var ClientRepository&m\MockInterface $clientRepository */
         $clientRepository = m::mock(ClientRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $clientRepository->shouldReceive('repoClientquery');
         $e->once()->with(1)->andReturn($client);
 
         $group = new Group();
         $group->setId(2);
+        /** @var GroupRepository&m\MockInterface $groupRepository */
         $groupRepository = m::mock(GroupRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $groupRepository->shouldReceive('repoGroupquery');
         $e2->once()->with(2)->andReturn($group);
 
+        /** @var UserRepository&m\MockInterface $userRepository */
         $userRepository = m::mock(UserRepository::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $userRepository->shouldReceive('findById');
         $e3->once()->with(4)->andReturn($currentUser);
 
         $quote = new Quote();
         $quote->setId(5);
+        /** @var QuoteRepository&m\MockInterface $quoteRepository */
         $quoteRepository = m::mock(QuoteRepository::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $quoteRepository->shouldReceive('repoQuoteUnLoadedquery');
         $e4->once()->with(5)->andReturn($quote);
 
+        /** @var SalesOrderRepository&m\MockInterface $repository */
         $repository = m::mock(SalesOrderRepository::class);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $repository->shouldReceive('save');
         $e5->once()->with($model);
 
@@ -153,8 +157,8 @@ final class SalesOrderServiceTest
         // calls Random::string(32) but discards the result instead of
         // calling setUrlKey() with it, so the model's url_key stays ''.
         $model = new SalesOrder();
+        /** @var User&m\MockInterface $currentUser */
         $currentUser = m::mock(User::class);
-        /** @var \Mockery\Expectation $eUser */
         $eUser = $currentUser->shouldReceive('reqId');
         $eUser->andReturn(1);
 
@@ -162,23 +166,23 @@ final class SalesOrderServiceTest
 
         $client = new Client();
         $client->setId(1);
+        /** @var ClientRepository&m\MockInterface $clientRepository */
         $clientRepository = m::mock(ClientRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $clientRepository->shouldReceive('repoClientquery');
         $e->once()->with(1)->andReturn($client);
 
+        /** @var GroupRepository&m\MockInterface $groupRepository */
         $groupRepository = m::mock(GroupRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $groupRepository->shouldReceive('repoGroupquery');
         $e2->once()->with(1)->andReturn(null);
 
+        /** @var UserRepository&m\MockInterface $userRepository */
         $userRepository = m::mock(UserRepository::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $userRepository->shouldReceive('findById');
         $e3->once()->with(1)->andReturn($currentUser);
 
+        /** @var SalesOrderRepository&m\MockInterface $repository */
         $repository = m::mock(SalesOrderRepository::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $repository->shouldReceive('save');
         $e4->once()->with($model);
 
@@ -210,26 +214,28 @@ final class SalesOrderServiceTest
 
         $client = new Client();
         $client->setId(1);
+        /** @var ClientRepository&m\MockInterface $clientRepository */
         $clientRepository = m::mock(ClientRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $clientRepository->shouldReceive('repoClientquery');
         $e->once()->with(1)->andReturn($client);
 
         $group = new Group();
         $group->setId(2);
+        /** @var GroupRepository&m\MockInterface $groupRepository */
         $groupRepository = m::mock(GroupRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $groupRepository->shouldReceive('repoGroupquery');
         $e2->once()->with(2)->andReturn($group);
 
+        /** @var UserRepository&m\MockInterface $userRepository */
         $userRepository = m::mock(UserRepository::class);
         $userRepository->shouldNotReceive('findById');
 
+        /** @var QuoteRepository&m\MockInterface $quoteRepository */
         $quoteRepository = m::mock(QuoteRepository::class);
         $quoteRepository->shouldNotReceive('repoQuoteUnLoadedquery');
 
+        /** @var SalesOrderRepository&m\MockInterface $repository */
         $repository = m::mock(SalesOrderRepository::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $repository->shouldReceive('save');
         $e3->once()->with($model);
 
@@ -256,13 +262,17 @@ final class SalesOrderServiceTest
         ?SoIR $soiR = null,
         ?SoIS $soiS = null,
     ): SoDeleteSubEntityDeps {
-        return new SoDeleteSubEntityDeps(
-            $soR ?? m::mock(SalesOrderRepository::class),
-            $socR ?? m::mock(SoCR::class),
-            $socS ?? m::mock(SoCS::class),
-            $soiR ?? m::mock(SoIR::class),
-            $soiS ?? m::mock(SoIS::class),
-        );
+        /** @var SalesOrderRepository&m\MockInterface $soR */
+        $soR = $soR ?? m::mock(SalesOrderRepository::class);
+        /** @var SoCR&m\MockInterface $socR */
+        $socR = $socR ?? m::mock(SoCR::class);
+        /** @var SoCS&m\MockInterface $socS */
+        $socS = $socS ?? m::mock(SoCS::class);
+        /** @var SoIR&m\MockInterface $soiR */
+        $soiR = $soiR ?? m::mock(SoIR::class);
+        /** @var SoIS&m\MockInterface $soiS */
+        $soiS = $soiS ?? m::mock(SoIS::class);
+        return new SoDeleteSubEntityDeps($soR, $socR, $socS, $soiR, $soiS);
     }
 
     private function makeFinancialDeps(
@@ -271,26 +281,33 @@ final class SalesOrderServiceTest
         ?SoAR $soaR = null,
         ?SoAS $soaS = null,
     ): SoDeleteFinancialDeps {
-        return new SoDeleteFinancialDeps(
-            $sotrR ?? m::mock(SoTRR::class),
-            $sotrS ?? m::mock(SoTRS::class),
-            $soaR ?? m::mock(SoAR::class),
-            $soaS ?? m::mock(SoAS::class),
-        );
+        /** @var SoTRR&m\MockInterface $sotrR */
+        $sotrR = $sotrR ?? m::mock(SoTRR::class);
+        /** @var SoTRS&m\MockInterface $sotrS */
+        $sotrS = $sotrS ?? m::mock(SoTRS::class);
+        /** @var SoAR&m\MockInterface $soaR */
+        $soaR = $soaR ?? m::mock(SoAR::class);
+        /** @var SoAS&m\MockInterface $soaS */
+        $soaS = $soaS ?? m::mock(SoAS::class);
+        return new SoDeleteFinancialDeps($sotrR, $sotrS, $soaR, $soaS);
     }
 
     public function deleteSoOnUnpersistedModelTouchesNoRepositories(): void
     {
         $model = new SalesOrder();
 
+        /** @var SoAR&m\MockInterface $soaR */
         $soaR = m::mock(SoAR::class);
         $soaR->shouldNotReceive('repoSalesOrderAmountCount');
 
+        /** @var SalesOrderRepository&m\MockInterface $repository */
         $repository = m::mock(SalesOrderRepository::class);
         $repository->shouldNotReceive('delete');
 
         $service = $this->makeService($repository);
-        $subDeps = $this->makeSubDeps(soR: m::mock(SalesOrderRepository::class));
+        /** @var SalesOrderRepository&m\MockInterface $subDepsSoR */
+        $subDepsSoR = m::mock(SalesOrderRepository::class);
+        $subDeps = $this->makeSubDeps(soR: $subDepsSoR);
         $financialDeps = $this->makeFinancialDeps(soaR: $soaR);
 
         $service->deleteSo($model, $subDeps, $financialDeps);
@@ -301,50 +318,54 @@ final class SalesOrderServiceTest
         $model = new SalesOrder();
         $model->setId(42);
 
+        /** @var SoAR&m\MockInterface $soaR */
         $soaR = m::mock(SoAR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $soaR->shouldReceive('repoSalesOrderAmountCount');
         $e->once()->with(42)->andReturn(0);
         $soaR->shouldNotReceive('repoSalesOrderquery');
 
+        /** @var SoAS&m\MockInterface $soaS */
         $soaS = m::mock(SoAS::class);
         $soaS->shouldNotReceive('deleteSalesOrderAmount');
 
+        /** @var SalesOrderItem&m\MockInterface $item */
         $item = m::mock(SalesOrderItem::class);
+        /** @var SoIR&m\MockInterface $soiR */
         $soiR = m::mock(SoIR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $soiR->shouldReceive('repoSalesOrderItemIdquery');
         $e2->once()->with(42)->andReturn($this->readerYielding([$item]));
 
+        /** @var SoIS&m\MockInterface $soiS */
         $soiS = m::mock(SoIS::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $soiS->shouldReceive('deleteSalesOrderItem');
         $e3->once()->with($item);
 
+        /** @var SalesOrderTaxRate&m\MockInterface $taxRate */
         $taxRate = m::mock(SalesOrderTaxRate::class);
+        /** @var SoTRR&m\MockInterface $sotrR */
         $sotrR = m::mock(SoTRR::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $sotrR->shouldReceive('repoSalesOrderquery');
         $e4->once()->with(42)->andReturn($this->readerYielding([$taxRate]));
 
+        /** @var SoTRS&m\MockInterface $sotrS */
         $sotrS = m::mock(SoTRS::class);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $sotrS->shouldReceive('deleteSalesOrderTaxRate');
         $e5->once()->with($taxRate);
 
+        /** @var SalesOrderCustom&m\MockInterface $custom */
         $custom = m::mock(SalesOrderCustom::class);
+        /** @var SoCR&m\MockInterface $socR */
         $socR = m::mock(SoCR::class);
-        /** @var \Mockery\Expectation $e6 */
         $e6 = $socR->shouldReceive('repoFields');
         $e6->once()->with(42)->andReturn($this->readerYielding([$custom]));
 
+        /** @var SoCS&m\MockInterface $socS */
         $socS = m::mock(SoCS::class);
-        /** @var \Mockery\Expectation $e7 */
         $e7 = $socS->shouldReceive('deleteSalesOrderCustom');
         $e7->once()->with($custom);
 
+        /** @var SalesOrderRepository&m\MockInterface $repository */
         $repository = m::mock(SalesOrderRepository::class);
-        /** @var \Mockery\Expectation $e8 */
         $e8 = $repository->shouldReceive('delete');
         $e8->once()->with($model);
 
@@ -360,37 +381,37 @@ final class SalesOrderServiceTest
         $model = new SalesOrder();
         $model->setId(7);
 
+        /** @var SalesOrderAmount&m\MockInterface $amount */
         $amount = m::mock(SalesOrderAmount::class);
+        /** @var SoAR&m\MockInterface $soaR */
         $soaR = m::mock(SoAR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $soaR->shouldReceive('repoSalesOrderAmountCount');
         $e->once()->with(7)->andReturn(1);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $soaR->shouldReceive('repoSalesOrderquery');
         $e2->once()->with(7)->andReturn($amount);
 
+        /** @var SoAS&m\MockInterface $soaS */
         $soaS = m::mock(SoAS::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $soaS->shouldReceive('deleteSalesOrderAmount');
         $e3->once()->with($amount);
 
+        /** @var SoIR&m\MockInterface $soiR */
         $soiR = m::mock(SoIR::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $soiR->shouldReceive('repoSalesOrderItemIdquery');
         $e4->once()->with(7)->andReturn($this->readerYielding([]));
 
+        /** @var SoTRR&m\MockInterface $sotrR */
         $sotrR = m::mock(SoTRR::class);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $sotrR->shouldReceive('repoSalesOrderquery');
         $e5->once()->with(7)->andReturn($this->readerYielding([]));
 
+        /** @var SoCR&m\MockInterface $socR */
         $socR = m::mock(SoCR::class);
-        /** @var \Mockery\Expectation $e6 */
         $e6 = $socR->shouldReceive('repoFields');
         $e6->once()->with(7)->andReturn($this->readerYielding([]));
 
+        /** @var SalesOrderRepository&m\MockInterface $repository */
         $repository = m::mock(SalesOrderRepository::class);
-        /** @var \Mockery\Expectation $e7 */
         $e7 = $repository->shouldReceive('delete');
         $e7->once()->with($model);
 
@@ -406,34 +427,34 @@ final class SalesOrderServiceTest
         $model = new SalesOrder();
         $model->setId(8);
 
+        /** @var SoAR&m\MockInterface $soaR */
         $soaR = m::mock(SoAR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $soaR->shouldReceive('repoSalesOrderAmountCount');
         $e->once()->with(8)->andReturn(1);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $soaR->shouldReceive('repoSalesOrderquery');
         $e2->once()->with(8)->andReturn(null);
 
+        /** @var SoAS&m\MockInterface $soaS */
         $soaS = m::mock(SoAS::class);
         $soaS->shouldNotReceive('deleteSalesOrderAmount');
 
+        /** @var SoIR&m\MockInterface $soiR */
         $soiR = m::mock(SoIR::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $soiR->shouldReceive('repoSalesOrderItemIdquery');
         $e3->once()->with(8)->andReturn($this->readerYielding([]));
 
+        /** @var SoTRR&m\MockInterface $sotrR */
         $sotrR = m::mock(SoTRR::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $sotrR->shouldReceive('repoSalesOrderquery');
         $e4->once()->with(8)->andReturn($this->readerYielding([]));
 
+        /** @var SoCR&m\MockInterface $socR */
         $socR = m::mock(SoCR::class);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $socR->shouldReceive('repoFields');
         $e5->once()->with(8)->andReturn($this->readerYielding([]));
 
+        /** @var SalesOrderRepository&m\MockInterface $repository */
         $repository = m::mock(SalesOrderRepository::class);
-        /** @var \Mockery\Expectation $e6 */
         $e6 = $repository->shouldReceive('delete');
         $e6->once()->with($model);
 

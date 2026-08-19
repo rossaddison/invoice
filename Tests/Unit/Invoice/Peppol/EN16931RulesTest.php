@@ -72,7 +72,6 @@ final class EN16931RulesTest extends TestCase
 
         $violations = $rule->validate($xp, $this->context());
         self::assertCount(1, $violations);
-        /** @var ValidationViolation $v */
         $v = $violations[0];
         self::assertSame('PEPPOL-EN16931-R001', $v->ruleId);
         self::assertSame(Severity::Fatal, $v->severity);

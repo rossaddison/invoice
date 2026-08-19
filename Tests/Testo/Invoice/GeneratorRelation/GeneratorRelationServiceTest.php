@@ -20,6 +20,7 @@ final class GeneratorRelationServiceTest
 {
     private function makeService(?GeneratorRelationRepository $repository = null): GeneratorRelationService
     {
+        /** @var GeneratorRelationRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(GeneratorRelationRepository::class);
         return new GeneratorRelationService($repository);
     }
@@ -36,7 +37,6 @@ final class GeneratorRelationServiceTest
 
         /** @var GeneratorRelationRepository&m\MockInterface $repository */
         $repository = m::mock(GeneratorRelationRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -55,7 +55,6 @@ final class GeneratorRelationServiceTest
 
         /** @var GeneratorRelationRepository&m\MockInterface $repository */
         $repository = m::mock(GeneratorRelationRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -72,7 +71,6 @@ final class GeneratorRelationServiceTest
 
         /** @var GeneratorRelationRepository&m\MockInterface $repository */
         $repository = m::mock(GeneratorRelationRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

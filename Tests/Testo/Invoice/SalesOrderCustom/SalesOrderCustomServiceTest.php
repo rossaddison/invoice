@@ -27,8 +27,11 @@ final class SalesOrderCustomServiceTest
         ?CustomFieldRepository $customFieldRepository = null,
         ?SalesOrderRepository $salesOrderRepository = null,
     ): SalesOrderCustomService {
+        /** @var SalesOrderCustomRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(SalesOrderCustomRepository::class);
+        /** @var CustomFieldRepository&m\MockInterface $customFieldRepository */
         $customFieldRepository = $customFieldRepository ?? m::mock(CustomFieldRepository::class);
+        /** @var SalesOrderRepository&m\MockInterface $salesOrderRepository */
         $salesOrderRepository = $salesOrderRepository ?? m::mock(SalesOrderRepository::class);
         return new SalesOrderCustomService($repository, $customFieldRepository, $salesOrderRepository);
     }
@@ -42,28 +45,28 @@ final class SalesOrderCustomServiceTest
             'value' => 'Reference',
         ];
 
+        /** @var SalesOrder&m\MockInterface $salesOrder */
         $salesOrder = m::mock(SalesOrder::class);
-        /** @var \Mockery\Expectation $e */
         $e = $salesOrder->shouldReceive('reqId');
         $e->once()->andReturn(1);
 
+        /** @var SalesOrderRepository&m\MockInterface $salesOrderRepository */
         $salesOrderRepository = m::mock(SalesOrderRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $salesOrderRepository->shouldReceive('repoSalesOrderUnLoadedquery');
         $e2->once()->with(1)->andReturn($salesOrder);
 
+        /** @var CustomField&m\MockInterface $customField */
         $customField = m::mock(CustomField::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $customField->shouldReceive('reqId');
         $e3->once()->andReturn(2);
 
+        /** @var CustomFieldRepository&m\MockInterface $customFieldRepository */
         $customFieldRepository = m::mock(CustomFieldRepository::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $customFieldRepository->shouldReceive('repoCustomFieldquery');
         $e4->once()->with(2)->andReturn($customField);
 
+        /** @var SalesOrderCustomRepository&m\MockInterface $repository */
         $repository = m::mock(SalesOrderCustomRepository::class);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $repository->shouldReceive('save');
         $e5->once()->with($model);
 
@@ -85,18 +88,18 @@ final class SalesOrderCustomServiceTest
             'custom_field_id' => 8,
         ];
 
+        /** @var SalesOrderRepository&m\MockInterface $salesOrderRepository */
         $salesOrderRepository = m::mock(SalesOrderRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $salesOrderRepository->shouldReceive('repoSalesOrderUnLoadedquery');
         $e->once()->with(9)->andReturn(null);
 
+        /** @var CustomFieldRepository&m\MockInterface $customFieldRepository */
         $customFieldRepository = m::mock(CustomFieldRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $customFieldRepository->shouldReceive('repoCustomFieldquery');
         $e2->once()->with(8)->andReturn(null);
 
+        /** @var SalesOrderCustomRepository&m\MockInterface $repository */
         $repository = m::mock(SalesOrderCustomRepository::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $repository->shouldReceive('save');
         $e3->once()->with($model);
 
@@ -111,8 +114,8 @@ final class SalesOrderCustomServiceTest
     {
         $model = new SalesOrderCustom();
 
+        /** @var SalesOrderCustomRepository&m\MockInterface $repository */
         $repository = m::mock(SalesOrderCustomRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('delete');
         $e->once()->with($model);
 

@@ -30,12 +30,41 @@ use Yiisoft\Data\Cycle\Reader\EntityReader;
 #[Test]
 final class ProductServiceFindOrCreateHouseNumberTest
 {
+
+    /**
+     * @return Family&m\MockInterface
+     */
+    private function makeFamilyMock(): Family
+    {
+        /** @var Family&m\MockInterface $mock */
+        $mock = m::mock(Family::class);
+        return $mock;
+    }
+
+    /**
+     * @return TaxRate&m\MockInterface
+     */
+    private function makeTaxRateMock(): TaxRate
+    {
+        /** @var TaxRate&m\MockInterface $mock */
+        $mock = m::mock(TaxRate::class);
+        return $mock;
+    }
+
+    /**
+     * @return Unit&m\MockInterface
+     */
+    private function makeUnitMock(): Unit
+    {
+        /** @var Unit&m\MockInterface $mock */
+        $mock = m::mock(Unit::class);
+        return $mock;
+    }
     /** @param list<Product> $items */
     private function readerYielding(array $items): EntityReader
     {
         /** @var EntityReader&m\MockInterface $reader */
         $reader = m::mock(EntityReader::class);
-        /** @var \Mockery\Expectation $e */
         $e = $reader->shouldReceive('getIterator');
         $e->andReturn((static function () use ($items) {
             yield from $items;
@@ -45,18 +74,22 @@ final class ProductServiceFindOrCreateHouseNumberTest
 
     public function existingProductIsReusedAndNotCreated(): void
     {
+        /** @var Product&m\MockInterface $existing */
         $existing = m::mock(Product::class);
 
         /** @var ProductRepository&m\MockInterface $productR */
         $productR = m::mock(ProductRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $productR->expects('repoProductWithFamilyIdQuery');
         $e->once()->with('12', 5)->andReturn($this->readerYielding([$existing]));
         $productR->shouldNotReceive('save');
 
+        /** @var ProductNameTypeRepository&m\MockInterface $nameTypeR */
         $nameTypeR = m::mock(ProductNameTypeRepository::class);
+        /** @var FamilyRepository&m\MockInterface $fR */
         $fR = m::mock(FamilyRepository::class);
+        /** @var TaxRateRepository&m\MockInterface $trR */
         $trR = m::mock(TaxRateRepository::class);
+        /** @var UnitRepository&m\MockInterface $unR */
         $unR = m::mock(UnitRepository::class);
 
         $service = new ProductService($productR, $nameTypeR, $fR, $trR, $unR);
@@ -71,31 +104,27 @@ final class ProductServiceFindOrCreateHouseNumberTest
     {
         /** @var ProductRepository&m\MockInterface $productR */
         $productR = m::mock(ProductRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $productR->expects('repoProductWithFamilyIdQuery');
         $e->once()->with('14', 5)->andReturn($this->readerYielding([]));
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $productR->expects('save');
         $e2->once();
 
         /** @var FamilyRepository&m\MockInterface $fR */
         $fR = m::mock(FamilyRepository::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $fR->shouldReceive('repoFamilyquery');
-        $e3->andReturn(m::mock(Family::class));
+        $e3->andReturn($this->makeFamilyMock());
 
         /** @var TaxRateRepository&m\MockInterface $trR */
         $trR = m::mock(TaxRateRepository::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $trR->shouldReceive('repoTaxRatequery');
-        $e4->andReturn(m::mock(TaxRate::class));
+        $e4->andReturn($this->makeTaxRateMock());
 
         /** @var UnitRepository&m\MockInterface $unR */
         $unR = m::mock(UnitRepository::class);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $unR->shouldReceive('repoUnitquery');
-        $e5->andReturn(m::mock(Unit::class));
+        $e5->andReturn($this->makeUnitMock());
 
+        /** @var ProductNameTypeRepository&m\MockInterface $nameTypeR */
         $nameTypeR = m::mock(ProductNameTypeRepository::class);
         $service = new ProductService($productR, $nameTypeR, $fR, $trR, $unR);
         $product = $service->findOrCreateHouseNumberProduct(5, '14', 35.00, 2, 3);
@@ -107,17 +136,21 @@ final class ProductServiceFindOrCreateHouseNumberTest
 
     public function deleteProductCallsRepositoryDelete(): void
     {
+        /** @var Product&m\MockInterface $product */
         $product = m::mock(Product::class);
 
         /** @var ProductRepository&m\MockInterface $productR */
         $productR = m::mock(ProductRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $productR->expects('delete');
         $e->once()->with($product);
 
+        /** @var ProductNameTypeRepository&m\MockInterface $nameTypeR */
         $nameTypeR = m::mock(ProductNameTypeRepository::class);
+        /** @var FamilyRepository&m\MockInterface $fR */
         $fR = m::mock(FamilyRepository::class);
+        /** @var TaxRateRepository&m\MockInterface $trR */
         $trR = m::mock(TaxRateRepository::class);
+        /** @var UnitRepository&m\MockInterface $unR */
         $unR = m::mock(UnitRepository::class);
 
         $service = new ProductService($productR, $nameTypeR, $fR, $trR, $unR);

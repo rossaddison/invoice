@@ -12,6 +12,7 @@ final class TimerTest extends TestCase
 {
     private Timer $timer;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

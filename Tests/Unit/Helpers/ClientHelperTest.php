@@ -15,6 +15,7 @@ class ClientHelperTest extends TestCase
 {
     private ClientHelper $clientHelper;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

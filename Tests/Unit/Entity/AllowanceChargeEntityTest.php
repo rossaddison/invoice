@@ -13,6 +13,7 @@ class AllowanceChargeEntityTest extends TestCase
 {
     private Stub $taxRate;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

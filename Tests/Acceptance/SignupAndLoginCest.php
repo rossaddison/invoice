@@ -10,7 +10,7 @@ final class SignupAndLoginCest
 {
     private string $rateLimiterCacheDir = __DIR__ . '/../../runtime/rate-limiter';
 
-    public function _before(AcceptanceTester $I): void
+    public function _before(AcceptanceTester $_I): void
     {
         // Each test hits /login or /signup multiple times. The per-IP FileCache
         // rate-limiter (5 req/60 s) carries state across test methods and even
@@ -24,8 +24,13 @@ final class SignupAndLoginCest
                 ),
                 \RecursiveIteratorIterator::CHILD_FIRST,
             );
+            /** @var \SplFileInfo $file */
             foreach ($files as $file) {
-                $file->isDir() ? rmdir($file->getRealPath()) : unlink($file->getRealPath());
+                $realPath = $file->getRealPath();
+                if ($realPath === false) {
+                    continue;
+                }
+                $file->isDir() ? rmdir($realPath) : unlink($realPath);
             }
         }
     }

@@ -26,6 +26,16 @@ use Yiisoft\Aliases\Aliases;
 #[Test]
 final class GatewayStatusServiceTest
 {
+
+    /**
+     * @return GatewayStatusRepository&m\MockInterface
+     */
+    private function makeGatewayStatusRepositoryMock(): GatewayStatusRepository
+    {
+        /** @var GatewayStatusRepository&m\MockInterface $mock */
+        $mock = m::mock(GatewayStatusRepository::class);
+        return $mock;
+    }
     private function makeTempRoot(): string
     {
         $root = sys_get_temp_dir() . '/gateway_status_test_' . uniqid('', true);
@@ -100,7 +110,7 @@ final class GatewayStatusServiceTest
 
             $service = new GatewayStatusService(
                 new Aliases(['@root' => $root]),
-                m::mock(GatewayStatusRepository::class),
+                $this->makeGatewayStatusRepositoryMock(),
             );
 
             $rows = $service->loadFromJson();
@@ -125,7 +135,7 @@ final class GatewayStatusServiceTest
 
             $service = new GatewayStatusService(
                 new Aliases(['@root' => $root]),
-                m::mock(GatewayStatusRepository::class),
+                $this->makeGatewayStatusRepositoryMock(),
             );
 
             $original = new GatewayStatusRow(
@@ -165,7 +175,7 @@ final class GatewayStatusServiceTest
 
             $service = new GatewayStatusService(
                 new Aliases(['@root' => $root]),
-                m::mock(GatewayStatusRepository::class),
+                $this->makeGatewayStatusRepositoryMock(),
             );
 
             $changed = new GatewayStatusRow(
@@ -219,7 +229,7 @@ final class GatewayStatusServiceTest
 
             $service = new GatewayStatusService(
                 new Aliases(['@root' => $root]),
-                m::mock(GatewayStatusRepository::class),
+                $this->makeGatewayStatusRepositoryMock(),
             );
 
             $row = new GatewayStatusRow(
@@ -252,10 +262,8 @@ final class GatewayStatusServiceTest
         try {
             /** @var GatewayStatusRepository&m\MockInterface $repository */
             $repository = m::mock(GatewayStatusRepository::class);
-            /** @var \Mockery\Expectation $eFind */
             $eFind = $repository->shouldReceive('findByGatewayKeyquery');
             $eFind->once()->with('stripe')->andReturn(null);
-            /** @var \Mockery\Expectation $eSave */
             $eSave = $repository->shouldReceive('save');
             $eSave->once()->with(m::on(static function (GatewayStatus $entity): bool {
                 return $entity->getGatewayKey() === 'stripe'
@@ -297,10 +305,8 @@ final class GatewayStatusServiceTest
 
             /** @var GatewayStatusRepository&m\MockInterface $repository */
             $repository = m::mock(GatewayStatusRepository::class);
-            /** @var \Mockery\Expectation $eFind */
             $eFind = $repository->shouldReceive('findByGatewayKeyquery');
             $eFind->once()->with('mollie')->andReturn($existing);
-            /** @var \Mockery\Expectation $eSave */
             $eSave = $repository->shouldReceive('save');
             $eSave->once()->with($existing);
 

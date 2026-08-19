@@ -13,6 +13,7 @@ class TaxRateFormTest extends TestCase
     private TaxRate $taxRate;
     private TaxRateForm $form;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

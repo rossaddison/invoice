@@ -27,8 +27,11 @@ final class ProductCustomServiceTest
         ?PR $pR = null,
         ?CFR $cfR = null,
     ): ProductCustomService {
+        /** @var ProductCustomRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(ProductCustomRepository::class);
+        /** @var PR&m\MockInterface $pR */
         $pR = $pR ?? m::mock(PR::class);
+        /** @var CFR&m\MockInterface $cfR */
         $cfR = $cfR ?? m::mock(CFR::class);
         return new ProductCustomService($repository, $pR, $cfR);
     }
@@ -42,20 +45,22 @@ final class ProductCustomServiceTest
             'value' => 'PO-9999',
         ];
 
+        /** @var Product&m\MockInterface $product */
         $product = m::mock(Product::class);
+        /** @var PR&m\MockInterface $pR */
         $pR = m::mock(PR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $pR->shouldReceive('repoProductquery');
         $e->once()->with(5)->andReturn($product);
 
+        /** @var CustomField&m\MockInterface $customField */
         $customField = m::mock(CustomField::class);
+        /** @var CFR&m\MockInterface $cfR */
         $cfR = m::mock(CFR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $cfR->shouldReceive('repoCustomFieldquery');
         $e2->once()->with(8)->andReturn($customField);
 
+        /** @var ProductCustomRepository&m\MockInterface $repository */
         $repository = m::mock(ProductCustomRepository::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $repository->shouldReceive('save');
         $e3->once()->with($model);
 
@@ -75,7 +80,6 @@ final class ProductCustomServiceTest
 
         /** @var ProductCustomRepository&m\MockInterface $repository */
         $repository = m::mock(ProductCustomRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

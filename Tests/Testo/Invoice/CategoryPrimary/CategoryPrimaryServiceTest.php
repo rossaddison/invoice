@@ -20,6 +20,7 @@ final class CategoryPrimaryServiceTest
 {
     private function makeService(?CategoryPrimaryRepository $repository = null): CategoryPrimaryService
     {
+        /** @var CategoryPrimaryRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(CategoryPrimaryRepository::class);
         return new CategoryPrimaryService($repository);
     }
@@ -31,7 +32,6 @@ final class CategoryPrimaryServiceTest
 
         /** @var CategoryPrimaryRepository&m\MockInterface $repository */
         $repository = m::mock(CategoryPrimaryRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -47,7 +47,6 @@ final class CategoryPrimaryServiceTest
 
         /** @var CategoryPrimaryRepository&m\MockInterface $repository */
         $repository = m::mock(CategoryPrimaryRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -63,7 +62,6 @@ final class CategoryPrimaryServiceTest
 
         /** @var CategoryPrimaryRepository&m\MockInterface $repository */
         $repository = m::mock(CategoryPrimaryRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

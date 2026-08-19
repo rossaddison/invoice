@@ -27,8 +27,11 @@ final class QuoteTaxRateServiceTest
         ?QuoteRepository $quoteRepository = null,
         ?TaxRateRepository $taxRateRepository = null,
     ): QuoteTaxRateService {
+        /** @var QuoteTaxRateRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(QuoteTaxRateRepository::class);
+        /** @var QuoteRepository&m\MockInterface $quoteRepository */
         $quoteRepository = $quoteRepository ?? m::mock(QuoteRepository::class);
+        /** @var TaxRateRepository&m\MockInterface $taxRateRepository */
         $taxRateRepository = $taxRateRepository ?? m::mock(TaxRateRepository::class);
         return new QuoteTaxRateService($repository, $quoteRepository, $taxRateRepository);
     }
@@ -47,28 +50,28 @@ final class QuoteTaxRateServiceTest
             'quote_tax_rate_amount' => 12.5,
         ];
 
+        /** @var Quote&m\MockInterface $quote */
         $quote = m::mock(Quote::class);
-        /** @var \Mockery\Expectation $e */
         $e = $quote->shouldReceive('reqId');
         $e->once()->andReturn(1);
 
+        /** @var QuoteRepository&m\MockInterface $quoteRepository */
         $quoteRepository = m::mock(QuoteRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $quoteRepository->shouldReceive('repoQuoteUnLoadedquery');
         $e2->once()->with(1)->andReturn($quote);
 
+        /** @var TaxRate&m\MockInterface $taxRate */
         $taxRate = m::mock(TaxRate::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $taxRate->shouldReceive('reqId');
         $e3->once()->andReturn(2);
 
+        /** @var TaxRateRepository&m\MockInterface $taxRateRepository */
         $taxRateRepository = m::mock(TaxRateRepository::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $taxRateRepository->shouldReceive('repoTaxRatequery');
         $e4->once()->with(2)->andReturn($taxRate);
 
+        /** @var QuoteTaxRateRepository&m\MockInterface $repository */
         $repository = m::mock(QuoteTaxRateRepository::class);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $repository->shouldReceive('save');
         $e5->once()->with($model);
 
@@ -96,28 +99,28 @@ final class QuoteTaxRateServiceTest
             'quote_tax_rate_amount' => 99.0,
         ];
 
+        /** @var Quote&m\MockInterface $quote */
         $quote = m::mock(Quote::class);
-        /** @var \Mockery\Expectation $e */
         $e = $quote->shouldReceive('reqId');
         $e->once()->andReturn(1);
 
+        /** @var QuoteRepository&m\MockInterface $quoteRepository */
         $quoteRepository = m::mock(QuoteRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $quoteRepository->shouldReceive('repoQuoteUnLoadedquery');
         $e2->once()->with(1)->andReturn($quote);
 
+        /** @var TaxRate&m\MockInterface $taxRate */
         $taxRate = m::mock(TaxRate::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $taxRate->shouldReceive('reqId');
         $e3->once()->andReturn(2);
 
+        /** @var TaxRateRepository&m\MockInterface $taxRateRepository */
         $taxRateRepository = m::mock(TaxRateRepository::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $taxRateRepository->shouldReceive('repoTaxRatequery');
         $e4->once()->with(2)->andReturn($taxRate);
 
+        /** @var QuoteTaxRateRepository&m\MockInterface $repository */
         $repository = m::mock(QuoteTaxRateRepository::class);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $repository->shouldReceive('save');
         $e5->once()->with($model);
 
@@ -136,18 +139,18 @@ final class QuoteTaxRateServiceTest
             'include_item_tax' => 0,
         ];
 
+        /** @var QuoteRepository&m\MockInterface $quoteRepository */
         $quoteRepository = m::mock(QuoteRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $quoteRepository->shouldReceive('repoQuoteUnLoadedquery');
         $e->once()->with(9)->andReturn(null);
 
+        /** @var TaxRateRepository&m\MockInterface $taxRateRepository */
         $taxRateRepository = m::mock(TaxRateRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $taxRateRepository->shouldReceive('repoTaxRatequery');
         $e2->once()->with(8)->andReturn(null);
 
+        /** @var QuoteTaxRateRepository&m\MockInterface $repository */
         $repository = m::mock(QuoteTaxRateRepository::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $repository->shouldReceive('save');
         $e3->once()->with($model);
 
@@ -162,8 +165,8 @@ final class QuoteTaxRateServiceTest
     {
         $model = new QuoteTaxRate();
 
+        /** @var QuoteTaxRateRepository&m\MockInterface $repository */
         $repository = m::mock(QuoteTaxRateRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('delete');
         $e->once()->with($model);
 

@@ -25,7 +25,9 @@ final class SalesOrderItemAmountServiceTest
         ?SalesOrderItemAmountRepository $repository = null,
         ?SOIR $soiR = null,
     ): SalesOrderItemAmountService {
+        /** @var SalesOrderItemAmountRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(SalesOrderItemAmountRepository::class);
+        /** @var SOIR&m\MockInterface $soiR */
         $soiR = $soiR ?? m::mock(SOIR::class);
         return new SalesOrderItemAmountService($repository, $soiR);
     }
@@ -43,18 +45,18 @@ final class SalesOrderItemAmountServiceTest
             'total' => 121.50,
         ];
 
+        /** @var SalesOrderItem&m\MockInterface $salesOrderItem */
         $salesOrderItem = m::mock(SalesOrderItem::class);
-        /** @var \Mockery\Expectation $e */
         $e = $salesOrderItem->shouldReceive('reqId');
         $e->once()->andReturn(4);
 
+        /** @var SOIR&m\MockInterface $soiR */
         $soiR = m::mock(SOIR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $soiR->shouldReceive('repoSalesOrderItemquery');
         $e2->once()->with(4)->andReturn($salesOrderItem);
 
+        /** @var SalesOrderItemAmountRepository&m\MockInterface $repository */
         $repository = m::mock(SalesOrderItemAmountRepository::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $repository->shouldReceive('save');
         $e3->once()->with($model);
 
@@ -84,13 +86,13 @@ final class SalesOrderItemAmountServiceTest
             'total' => 0.00,
         ];
 
+        /** @var SOIR&m\MockInterface $soiR */
         $soiR = m::mock(SOIR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $soiR->shouldReceive('repoSalesOrderItemquery');
         $e->once()->with(9)->andReturn(null);
 
+        /** @var SalesOrderItemAmountRepository&m\MockInterface $repository */
         $repository = m::mock(SalesOrderItemAmountRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -104,8 +106,8 @@ final class SalesOrderItemAmountServiceTest
     {
         $model = new SalesOrderItemAmount();
 
+        /** @var SalesOrderItemAmountRepository&m\MockInterface $repository */
         $repository = m::mock(SalesOrderItemAmountRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('delete');
         $e->once()->with($model);
 

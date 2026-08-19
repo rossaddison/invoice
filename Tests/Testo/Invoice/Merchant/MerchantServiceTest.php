@@ -38,7 +38,9 @@ final class MerchantServiceTest
         ?MerchantRepository $repository = null,
         ?IR $iR = null,
     ): MerchantService {
+        /** @var MerchantRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(MerchantRepository::class);
+        /** @var IR&m\MockInterface $iR */
         $iR = $iR ?? m::mock(IR::class);
         return new MerchantService($repository, $iR);
     }
@@ -55,14 +57,15 @@ final class MerchantServiceTest
             'reference' => 'ref-123',
         ];
 
+        /** @var Inv&m\MockInterface $inv */
         $inv = m::mock(Inv::class);
+        /** @var IR&m\MockInterface $iR */
         $iR = m::mock(IR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $iR->shouldReceive('repoInvUnLoadedquery');
         $e->once()->with(11)->andReturn($inv);
 
+        /** @var MerchantRepository&m\MockInterface $repository */
         $repository = m::mock(MerchantRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -87,11 +90,12 @@ final class MerchantServiceTest
         $model = new Merchant();
         $array = ['successful' => false, 'date' => '2026-05-12'];
 
+        /** @var IR&m\MockInterface $iR */
         $iR = m::mock(IR::class);
         $iR->shouldNotReceive('repoInvUnLoadedquery');
 
+        /** @var MerchantRepository&m\MockInterface $repository */
         $repository = m::mock(MerchantRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('save');
         $e->once()->with($model);
 
@@ -116,14 +120,15 @@ final class MerchantServiceTest
             'merchant_response_provider_reference' => 'provider-789',
         ];
 
+        /** @var Inv&m\MockInterface $inv */
         $inv = m::mock(Inv::class);
+        /** @var IR&m\MockInterface $iR */
         $iR = m::mock(IR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $iR->shouldReceive('repoInvUnLoadedquery');
         $e->once()->with(22)->andReturn($inv);
 
+        /** @var MerchantRepository&m\MockInterface $repository */
         $repository = m::mock(MerchantRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -157,14 +162,15 @@ final class MerchantServiceTest
             'merchant_response_reference' => 'ref-000',
         ];
 
+        /** @var Inv&m\MockInterface $inv */
         $inv = m::mock(Inv::class);
+        /** @var IR&m\MockInterface $iR */
         $iR = m::mock(IR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $iR->shouldReceive('repoInvUnLoadedquery');
         $e->once()->with(33)->andReturn($inv);
 
+        /** @var MerchantRepository&m\MockInterface $repository */
         $repository = m::mock(MerchantRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -179,8 +185,8 @@ final class MerchantServiceTest
     {
         $model = new Merchant();
 
+        /** @var MerchantRepository&m\MockInterface $repository */
         $repository = m::mock(MerchantRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('delete');
         $e->once()->with($model);
 

@@ -27,8 +27,11 @@ final class InvCustomServiceTest
         ?IR $iR = null,
         ?CFR $cfR = null,
     ): InvCustomService {
+        /** @var InvCustomRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(InvCustomRepository::class);
+        /** @var IR&m\MockInterface $iR */
         $iR = $iR ?? m::mock(IR::class);
+        /** @var CFR&m\MockInterface $cfR */
         $cfR = $cfR ?? m::mock(CFR::class);
         return new InvCustomService($repository, $iR, $cfR);
     }
@@ -42,20 +45,22 @@ final class InvCustomServiceTest
             'value' => 'Reference',
         ];
 
+        /** @var Inv&m\MockInterface $inv */
         $inv = m::mock(Inv::class);
+        /** @var IR&m\MockInterface $iR */
         $iR = m::mock(IR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $iR->shouldReceive('repoInvUnLoadedquery');
         $e->once()->with(1)->andReturn($inv);
 
+        /** @var CustomField&m\MockInterface $customField */
         $customField = m::mock(CustomField::class);
+        /** @var CFR&m\MockInterface $cfR */
         $cfR = m::mock(CFR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $cfR->shouldReceive('repoCustomFieldquery');
         $e2->once()->with(2)->andReturn($customField);
 
+        /** @var InvCustomRepository&m\MockInterface $repository */
         $repository = m::mock(InvCustomRepository::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $repository->shouldReceive('save');
         $e3->once()->with($model);
 
@@ -74,14 +79,16 @@ final class InvCustomServiceTest
         $model = new InvCustom();
         $array = [];
 
+        /** @var IR&m\MockInterface $iR */
         $iR = m::mock(IR::class);
         $iR->shouldNotReceive('repoInvUnLoadedquery');
 
+        /** @var CFR&m\MockInterface $cfR */
         $cfR = m::mock(CFR::class);
         $cfR->shouldNotReceive('repoCustomFieldquery');
 
+        /** @var InvCustomRepository&m\MockInterface $repository */
         $repository = m::mock(InvCustomRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('save');
         $e->once()->with($model);
 
@@ -96,8 +103,8 @@ final class InvCustomServiceTest
     {
         $model = new InvCustom();
 
+        /** @var InvCustomRepository&m\MockInterface $repository */
         $repository = m::mock(InvCustomRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('delete');
         $e->once()->with($model);
 

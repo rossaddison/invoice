@@ -23,6 +23,7 @@ final class CompanyPrivateFormTest extends TestCase
 
     public string $gln = '1234567890123';
     
+    #[\Override]
     protected function setUp(): void
     {
         $this->validator = new Validator();

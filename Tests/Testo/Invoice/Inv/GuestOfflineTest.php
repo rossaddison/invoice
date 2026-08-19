@@ -15,6 +15,9 @@ use App\Invoice\BaseController;
 use App\Invoice\Inv\InvGuestDeps;
 use App\Invoice\Inv\InvRepository;
 use App\Invoice\Inv\Trait\Guest;
+use App\Invoice\UserClient\UserClientRepository as UCR;
+use Yiisoft\Data\Reader\DataReaderInterface as DRI;
+use Yiisoft\Data\Reader\SortableDataInterface as SDI;
 use App\Invoice\InvAmount\InvAmountRepository;
 use App\Invoice\InvRecurring\InvRecurringRepository;
 use App\Invoice\PaymentInformation\Service\BacsPaymentService;
@@ -55,11 +58,13 @@ final class GuestOfflineTest
         WebViewRenderer&m\MockInterface $webViewRenderer,
         WebControllerService&m\MockInterface $webService,
     ): GuestOfflineTestHarness {
+        /** @var UserService&m\MockInterface $userService */
         $userService = m::mock(UserService::class);
         $userService->shouldReceive('getUser')->andReturn($user);
         $userService->shouldReceive('hasPermission')->with(Permissions::VIEW_INV)->andReturn(true);
         $userService->shouldReceive('hasPermission')->with(Permissions::EDIT_INV)->andReturn(false);
 
+        /** @var SessionInterface&m\MockInterface $session */
         $session = m::mock(SessionInterface::class);
         $session->shouldReceive('getId')->andReturn('test-session-id');
         $session->shouldReceive('get')->with('tfa_verified')->andReturn(true);
@@ -71,20 +76,24 @@ final class GuestOfflineTest
         // not-a-worker/no-client-access path (resolveGuestAccess()) — loosely
         // stubbed here since none of these tests assert on flash content,
         // only on the resulting 404.
+        /** @var TranslatorInterface&m\MockInterface $translator */
         $translator = m::mock(TranslatorInterface::class);
         $translator->shouldReceive('translate')->andReturn('translated');
 
+        /** @var Flash&m\MockInterface $flash */
         $flash = m::mock(Flash::class);
         $flash->shouldReceive('has')->andReturn(false);
         $flash->shouldReceive('add');
 
+        /** @var SettingRepository&m\MockInterface $sR */
+        $sR = m::mock(SettingRepository::class);
         return new GuestOfflineTestHarness(
             $webService,
             $userService,
             $translator,
             $webViewRenderer,
             $session,
-            m::mock(SettingRepository::class),
+            $sR,
             $flash,
             $factory,
         );
@@ -92,32 +101,42 @@ final class GuestOfflineTest
 
     private function makeDeps(?UserInv $userInv, ?Worker $worker, InvRepository&m\MockInterface $iR): InvGuestDeps
     {
+        /** @var UserInvRepository&m\MockInterface $uiR */
         $uiR = m::mock(UserInvRepository::class);
         $uiR->shouldReceive('repoUserInvUserIdcount')->andReturn(null !== $userInv ? 1 : 0);
         $uiR->shouldReceive('repoUserInvUserIdquery')->andReturn($userInv);
 
+        /** @var WorkerRepository&m\MockInterface $wR */
         $wR = m::mock(WorkerRepository::class);
         $wR->shouldReceive('findByUserId')->andReturn($worker);
 
         // Only reached when no Worker is linked (resolveGuestAccess()'s
         // fallback to the ordinary client-assignment gate) — none of these
         // tests care about client-scoped access, only that it 404s cleanly.
+        /** @var UserClientRepository&m\MockInterface $ucR */
         $ucR = m::mock(UserClientRepository::class);
         $ucR->shouldReceive('getAssignedToUser')->andReturn([]);
 
+        /** @var InvAmountRepository&m\MockInterface $iaR */
+        $iaR = m::mock(InvAmountRepository::class);
+        /** @var InvRecurringRepository&m\MockInterface $irR */
+        $irR = m::mock(InvRecurringRepository::class);
+        /** @var BacsPaymentService&m\MockInterface $bacsPaymentService */
+        $bacsPaymentService = m::mock(BacsPaymentService::class);
         return new InvGuestDeps(
-            m::mock(InvAmountRepository::class),
-            m::mock(InvRecurringRepository::class),
+            $iaR,
+            $irR,
             $iR,
             $ucR,
             $uiR,
-            m::mock(BacsPaymentService::class),
+            $bacsPaymentService,
             $wR,
         );
     }
 
     private function makeUser(int $id): User&m\MockInterface
     {
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
         $user->shouldReceive('reqId')->andReturn($id);
         return $user;
@@ -125,6 +144,7 @@ final class GuestOfflineTest
 
     private function makeUserInv(): UserInv&m\MockInterface
     {
+        /** @var UserInv&m\MockInterface $userInv */
         $userInv = m::mock(UserInv::class);
         $userInv->shouldReceive('getActive')->andReturn(true);
         return $userInv;
@@ -132,29 +152,41 @@ final class GuestOfflineTest
 
     public function guestOfflineDataReturns404WhenNotLoggedIn(): void
     {
+        /** @var DataResponseFactoryInterface&m\MockInterface $factory */
         $factory = m::mock(DataResponseFactoryInterface::class);
+        /** @var WebViewRenderer&m\MockInterface $webViewRenderer */
         $webViewRenderer = m::mock(WebViewRenderer::class);
+        /** @var WebControllerService&m\MockInterface $webService */
         $webService = m::mock(WebControllerService::class);
+        /** @var Response&m\MockInterface $notFound */
         $notFound = m::mock(Response::class);
         $webService->shouldReceive('getNotFoundResponse')->andReturn($notFound);
 
         $harness = $this->makeHarness(null, $factory, $webViewRenderer, $webService);
-        $result = $harness->guestOfflineData($this->makeDeps(null, null, m::mock(InvRepository::class)));
+        /** @var InvRepository&m\MockInterface $iR */
+        $iR = m::mock(InvRepository::class);
+        $result = $harness->guestOfflineData($this->makeDeps(null, null, $iR));
 
         Assert::same($notFound, $result);
     }
 
     public function guestOfflineDataReturns404WhenNotAWorker(): void
     {
+        /** @var DataResponseFactoryInterface&m\MockInterface $factory */
         $factory = m::mock(DataResponseFactoryInterface::class);
+        /** @var WebViewRenderer&m\MockInterface $webViewRenderer */
         $webViewRenderer = m::mock(WebViewRenderer::class);
+        /** @var WebControllerService&m\MockInterface $webService */
         $webService = m::mock(WebControllerService::class);
+        /** @var Response&m\MockInterface $notFound */
         $notFound = m::mock(Response::class);
         $webService->shouldReceive('getNotFoundResponse')->andReturn($notFound);
 
         $harness = $this->makeHarness($this->makeUser(7), $factory, $webViewRenderer, $webService);
         // A UserInv exists but no linked Worker — the ordinary client-guest path, not offline-eligible.
-        $deps = $this->makeDeps($this->makeUserInv(), null, m::mock(InvRepository::class));
+        /** @var InvRepository&m\MockInterface $iR */
+        $iR = m::mock(InvRepository::class);
+        $deps = $this->makeDeps($this->makeUserInv(), null, $iR);
 
         $result = $harness->guestOfflineData($deps);
 
@@ -163,6 +195,7 @@ final class GuestOfflineTest
 
     public function guestOfflineDataReturnsWorkerScopedInvoicesWithoutAmountFields(): void
     {
+        /** @var Client&m\MockInterface $client */
         $client = m::mock(Client::class);
         $client->shouldReceive('getClientFullName')->andReturn('Jane Smith');
         $client->shouldReceive('getClientAddress1')->andReturn('1 High Street');
@@ -176,6 +209,7 @@ final class GuestOfflineTest
         $client->shouldReceive('getClientMobile')->andReturn(null);
         $client->shouldReceive('getClientEmail')->andReturn('jane@example.com');
 
+        /** @var InvItem&m\MockInterface $item */
         $item = m::mock(InvItem::class);
         $item->shouldReceive('getName')->andReturn('Standard Clean');
         $item->shouldReceive('getDescription')->andReturn('Weekly visit');
@@ -183,6 +217,7 @@ final class GuestOfflineTest
         $item->shouldReceive('getProductUnit')->andReturn('visit');
         $item->shouldReceive('getNote')->andReturn(null);
 
+        /** @var Inv&m\MockInterface $inv */
         $inv = m::mock(Inv::class);
         $inv->shouldReceive('reqId')->andReturn(101);
         $inv->shouldReceive('getNumber')->andReturn('INV-101');
@@ -205,16 +240,20 @@ final class GuestOfflineTest
             yield $inv;
         })());
 
+        /** @var InvRepository&m\MockInterface $iR */
         $iR = m::mock(InvRepository::class);
         $iR->shouldReceive('repoWorkerVisible')->with(0, 55)->andReturn($entityReader);
         $iR->shouldReceive('getSpecificStatusArrayLabel')->with('2')->andReturn('Sent');
 
+        /** @var Worker&m\MockInterface $worker */
         $worker = m::mock(Worker::class);
         $worker->shouldReceive('reqId')->andReturn(55);
 
+        /** @var DataResponseFactoryInterface&m\MockInterface $factory */
         $factory = m::mock(DataResponseFactoryInterface::class);
         /** @var string|null $capturedJson */
         $capturedJson = null;
+        /** @var Response&m\MockInterface $response */
         $response = m::mock(Response::class);
         $factory->shouldReceive('createResponse')
             ->withArgs(function (string $json) use (&$capturedJson): bool {
@@ -223,7 +262,9 @@ final class GuestOfflineTest
             })
             ->andReturn($response);
 
+        /** @var WebViewRenderer&m\MockInterface $webViewRenderer */
         $webViewRenderer = m::mock(WebViewRenderer::class);
+        /** @var WebControllerService&m\MockInterface $webService */
         $webService = m::mock(WebControllerService::class);
 
         $harness = $this->makeHarness($this->makeUser(9), $factory, $webViewRenderer, $webService);
@@ -233,8 +274,14 @@ final class GuestOfflineTest
 
         Assert::same($response, $result);
         Assert::notNull($capturedJson);
-        /** @var array{downloadedAt: string, invoices: list<array<string, mixed>>} $decoded */
-        $decoded = json_decode((string) $capturedJson, true, 512, JSON_THROW_ON_ERROR);
+        /**
+         * @var array{downloadedAt: string, invoices: list<array{
+         *     number: string, statusLabel: string, urlKey: string,
+         *     client: array{fullName: string, email: string},
+         *     items: list<array{name: string}>,
+         * }>} $decoded
+         */
+        $decoded = json_decode($capturedJson, true, 512, JSON_THROW_ON_ERROR);
         Assert::same(1, count($decoded['invoices']));
 
         $payloadInvoice = $decoded['invoices'][0];
@@ -257,14 +304,20 @@ final class GuestOfflineTest
 
     public function guestOfflineReturns404WhenNotAWorker(): void
     {
+        /** @var DataResponseFactoryInterface&m\MockInterface $factory */
         $factory = m::mock(DataResponseFactoryInterface::class);
+        /** @var WebViewRenderer&m\MockInterface $webViewRenderer */
         $webViewRenderer = m::mock(WebViewRenderer::class);
+        /** @var WebControllerService&m\MockInterface $webService */
         $webService = m::mock(WebControllerService::class);
+        /** @var Response&m\MockInterface $notFound */
         $notFound = m::mock(Response::class);
         $webService->shouldReceive('getNotFoundResponse')->andReturn($notFound);
 
         $harness = $this->makeHarness($this->makeUser(7), $factory, $webViewRenderer, $webService);
-        $deps = $this->makeDeps($this->makeUserInv(), null, m::mock(InvRepository::class));
+        /** @var InvRepository&m\MockInterface $iR */
+        $iR = m::mock(InvRepository::class);
+        $deps = $this->makeDeps($this->makeUserInv(), null, $iR);
 
         $result = $harness->guestOffline($deps);
 
@@ -273,16 +326,23 @@ final class GuestOfflineTest
 
     public function guestOfflineRendersTheStandaloneShellPageForAWorker(): void
     {
+        /** @var DataResponseFactoryInterface&m\MockInterface $factory */
         $factory = m::mock(DataResponseFactoryInterface::class);
+        /** @var WebControllerService&m\MockInterface $webService */
         $webService = m::mock(WebControllerService::class);
+        /** @var Response&m\MockInterface $response */
         $response = m::mock(Response::class);
 
+        /** @var WebViewRenderer&m\MockInterface $webViewRenderer */
         $webViewRenderer = m::mock(WebViewRenderer::class);
         $webViewRenderer->shouldReceive('renderPartial')->with('offline', [])->andReturn($response);
 
+        /** @var Worker&m\MockInterface $worker */
         $worker = m::mock(Worker::class);
         $harness = $this->makeHarness($this->makeUser(9), $factory, $webViewRenderer, $webService);
-        $deps = $this->makeDeps($this->makeUserInv(), $worker, m::mock(InvRepository::class));
+        /** @var InvRepository&m\MockInterface $iR */
+        $iR = m::mock(InvRepository::class);
+        $deps = $this->makeDeps($this->makeUserInv(), $worker, $iR);
 
         $result = $harness->guestOffline($deps);
 
@@ -291,7 +351,7 @@ final class GuestOfflineTest
 }
 
 /**
- * @internal test-only harness — mixes in the real Guest trait against a
+ * Test-only harness — mixes in the real Guest trait against a
  * minimal BaseController subclass, avoiding InvController's much larger
  * unrelated dependency graph. $factory matches InvController's own
  * private readonly DataResponseFactoryInterface property exactly, since
@@ -313,5 +373,38 @@ final class GuestOfflineTestHarness extends BaseController
         private readonly DataResponseFactoryInterface $factory,
     ) {
         parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
+    }
+
+    // Guest::open() (a different action from the two this harness actually
+    // tests, guestOfflineData()/guestOffline()) calls these via $this->,
+    // requiring App\Invoice\Inv\Trait\OptionsData's methods to resolve
+    // against *some* declared shape — real signatures, never actually
+    // invoked by guestOfflineData()/guestOffline() themselves. Declared
+    // directly rather than `use OptionsData;`, which would pull in that
+    // trait's other methods (editOptionsData() etc., needing a $dateHelper
+    // property this harness deliberately doesn't have) too.
+
+    /** @return array<string, string> */
+    public function optionsDataUserClientsFilter(UCR $ucR, int $userId): array
+    {
+        throw new \LogicException('Not exercised by GuestOfflineTest.');
+    }
+
+    /** @return array<string, string> */
+    public function optionsDataInvNumberGuestFilter(SDI&DRI $invs): array
+    {
+        throw new \LogicException('Not exercised by GuestOfflineTest.');
+    }
+
+    /** @return array<string, string> */
+    public function optionsDataCreditInvNumberGuestFilter(SDI&DRI $invs, InvRepository $iR): array
+    {
+        throw new \LogicException('Not exercised by GuestOfflineTest.');
+    }
+
+    /** @return array<string, string> */
+    public function optionsDataStatusFilter(InvRepository $iR): array
+    {
+        throw new \LogicException('Not exercised by GuestOfflineTest.');
     }
 }

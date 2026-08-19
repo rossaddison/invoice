@@ -21,6 +21,7 @@ final class FromDropDownServiceTest
 {
     private function makeService(?FromDropDownRepository $repository = null): FromDropDownService
     {
+        /** @var FromDropDownRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(FromDropDownRepository::class);
         return new FromDropDownService($repository);
     }
@@ -36,7 +37,6 @@ final class FromDropDownServiceTest
 
         /** @var FromDropDownRepository&m\MockInterface $repository */
         $repository = m::mock(FromDropDownRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -58,7 +58,6 @@ final class FromDropDownServiceTest
 
         /** @var FromDropDownRepository&m\MockInterface $repository */
         $repository = m::mock(FromDropDownRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -76,7 +75,6 @@ final class FromDropDownServiceTest
 
         /** @var FromDropDownRepository&m\MockInterface $repository */
         $repository = m::mock(FromDropDownRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

@@ -24,7 +24,9 @@ final class DeliveryLocationServiceTest
         ?DeliveryLocationRepository $repository = null,
         ?CR $cR = null,
     ): DeliveryLocationService {
+        /** @var DeliveryLocationRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(DeliveryLocationRepository::class);
+        /** @var CR&m\MockInterface $cR */
         $cR = $cR ?? m::mock(CR::class);
         return new DeliveryLocationService($repository, $cR);
     }
@@ -46,14 +48,15 @@ final class DeliveryLocationServiceTest
             'electronic_address_scheme' => '0088',
         ];
 
+        /** @var Client&m\MockInterface $client */
         $client = m::mock(Client::class);
+        /** @var CR&m\MockInterface $cR */
         $cR = m::mock(CR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $cR->shouldReceive('repoClientquery');
         $e->once()->with(3)->andReturn($client);
 
+        /** @var DeliveryLocationRepository&m\MockInterface $repository */
         $repository = m::mock(DeliveryLocationRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -79,11 +82,12 @@ final class DeliveryLocationServiceTest
         $model = new DeliveryLocation();
         $array = [];
 
+        /** @var CR&m\MockInterface $cR */
         $cR = m::mock(CR::class);
         $cR->shouldNotReceive('repoClientquery');
 
+        /** @var DeliveryLocationRepository&m\MockInterface $repository */
         $repository = m::mock(DeliveryLocationRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('save');
         $e->once()->with($model);
 
@@ -100,7 +104,6 @@ final class DeliveryLocationServiceTest
 
         /** @var DeliveryLocationRepository&m\MockInterface $repository */
         $repository = m::mock(DeliveryLocationRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

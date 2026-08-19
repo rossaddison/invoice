@@ -20,6 +20,7 @@ final class DeliveryPartyServiceTest
 {
     private function makeService(?DeliveryPartyRepository $repository = null): DeliveryPartyService
     {
+        /** @var DeliveryPartyRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(DeliveryPartyRepository::class);
         return new DeliveryPartyService($repository);
     }
@@ -31,7 +32,6 @@ final class DeliveryPartyServiceTest
 
         /** @var DeliveryPartyRepository&m\MockInterface $repository */
         $repository = m::mock(DeliveryPartyRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -47,7 +47,6 @@ final class DeliveryPartyServiceTest
 
         /** @var DeliveryPartyRepository&m\MockInterface $repository */
         $repository = m::mock(DeliveryPartyRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -63,7 +62,6 @@ final class DeliveryPartyServiceTest
 
         /** @var DeliveryPartyRepository&m\MockInterface $repository */
         $repository = m::mock(DeliveryPartyRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

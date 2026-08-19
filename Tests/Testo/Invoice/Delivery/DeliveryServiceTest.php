@@ -26,7 +26,9 @@ final class DeliveryServiceTest
         ?DeliveryRepository $repository = null,
         ?DLR $dlR = null,
     ): DeliveryService {
+        /** @var DeliveryRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(DeliveryRepository::class);
+        /** @var DLR&m\MockInterface $dlR */
         $dlR = $dlR ?? m::mock(DLR::class);
         return new DeliveryService($repository, $dlR);
     }
@@ -44,14 +46,15 @@ final class DeliveryServiceTest
             'inv_item_id' => 4,
         ];
 
+        /** @var DeliveryLocation&m\MockInterface $deliveryLocation */
         $deliveryLocation = m::mock(DeliveryLocation::class);
+        /** @var DLR&m\MockInterface $dlR */
         $dlR = m::mock(DLR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $dlR->shouldReceive('repoDeliveryLocationquery');
         $e->once()->with(7)->andReturn($deliveryLocation);
 
+        /** @var DeliveryRepository&m\MockInterface $repository */
         $repository = m::mock(DeliveryRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -79,11 +82,12 @@ final class DeliveryServiceTest
             'end_date' => 'not-a-date',
         ];
 
+        /** @var DLR&m\MockInterface $dlR */
         $dlR = m::mock(DLR::class);
         $dlR->shouldNotReceive('repoDeliveryLocationquery');
 
+        /** @var DeliveryRepository&m\MockInterface $repository */
         $repository = m::mock(DeliveryRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('save');
         $e->once()->with($model);
 
@@ -101,7 +105,6 @@ final class DeliveryServiceTest
 
         /** @var DeliveryRepository&m\MockInterface $repository */
         $repository = m::mock(DeliveryRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

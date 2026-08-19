@@ -18,10 +18,10 @@ use Yiisoft\Translator\TranslatorInterface;
 #[Test]
 final class PlaywrightRenderFailedExceptionTest
 {
-    private function makeTranslator(): TranslatorInterface
+    private function makeTranslator(): TranslatorInterface&m\MockInterface
     {
+        /** @var TranslatorInterface&m\MockInterface $translator */
         $translator = m::mock(TranslatorInterface::class);
-        /** @var \Mockery\Expectation $e */
         $e = $translator->shouldReceive('translate');
         $e->andReturnUsing(static fn (string $key): string => $key);
         return $translator;

@@ -21,6 +21,7 @@ final class TaxRateServiceTest
 {
     private function makeService(?TaxRateRepository $repository = null): TaxRateService
     {
+        /** @var TaxRateRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(TaxRateRepository::class);
         return new TaxRateService($repository);
     }
@@ -38,8 +39,8 @@ final class TaxRateServiceTest
             'storecove_tax_type' => 'standard',
         ];
 
+        /** @var TaxRateRepository&m\MockInterface $repository */
         $repository = m::mock(TaxRateRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('save');
         $e->once()->with($model);
 
@@ -64,8 +65,8 @@ final class TaxRateServiceTest
             'tax_rate_default' => '1',
         ];
 
+        /** @var TaxRateRepository&m\MockInterface $repository */
         $repository = m::mock(TaxRateRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('save');
         $e->once()->with($model);
 
@@ -79,8 +80,8 @@ final class TaxRateServiceTest
     {
         $model = new TaxRate();
 
+        /** @var TaxRateRepository&m\MockInterface $repository */
         $repository = m::mock(TaxRateRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('delete');
         $e->once()->with($model);
 

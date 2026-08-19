@@ -826,10 +826,13 @@ final class SalesOrderController extends BaseController
         return $result ?? $this->webService->getNotFoundResponse();
     }
 
+    /**
+     * @psalm-param \Yiisoft\Data\Cycle\Reader\EntityReader<array-key, array|object>|null $salesorder_tax_rates
+     */
     private function renderSalesOrderForGuest(
         SalesOrder $salesorder,
         SoUrlKeyDeps $deps,
-        mixed $salesorder_tax_rates,
+        \Yiisoft\Data\Cycle\Reader\EntityReader|null $salesorder_tax_rates,
         string $url_key,
         CurrentUser $currentUser,
     ): ?Response {

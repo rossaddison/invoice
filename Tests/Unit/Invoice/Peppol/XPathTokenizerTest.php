@@ -11,6 +11,7 @@ final class XPathTokenizerTest extends TestCase
 {
     private XPathTokenizer $t;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->t = new XPathTokenizer();

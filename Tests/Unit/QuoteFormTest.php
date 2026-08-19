@@ -23,6 +23,7 @@ final class QuoteFormTest extends TestCase
     private ValidatorInterface $validator;
     private Quote $quote;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->validator = new Validator();

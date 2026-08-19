@@ -25,7 +25,9 @@ final class ClientPeppolServiceTest
         ?ClientPeppolRepository $repository = null,
         ?CR $cR = null,
     ): ClientPeppolService {
+        /** @var ClientPeppolRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(ClientPeppolRepository::class);
+        /** @var CR&m\MockInterface $cR */
         $cR = $cR ?? m::mock(CR::class);
         return new ClientPeppolService($repository, $cR);
     }
@@ -52,17 +54,16 @@ final class ClientPeppolServiceTest
             'taxschemeid' => 'VAT',
         ];
 
+        /** @var Client&m\MockInterface $client */
         $client = m::mock(Client::class);
 
         /** @var CR&m\MockInterface $cR */
         $cR = m::mock(CR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $cR->expects('repoClientquery');
         $e->once()->with(2)->andReturn($client);
 
         /** @var ClientPeppolRepository&m\MockInterface $repository */
         $repository = m::mock(ClientPeppolRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->expects('save');
         $e2->once()->with($model);
 
@@ -98,7 +99,6 @@ final class ClientPeppolServiceTest
 
         /** @var ClientPeppolRepository&m\MockInterface $repository */
         $repository = m::mock(ClientPeppolRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -114,7 +114,6 @@ final class ClientPeppolServiceTest
 
         /** @var ClientPeppolRepository&m\MockInterface $repository */
         $repository = m::mock(ClientPeppolRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

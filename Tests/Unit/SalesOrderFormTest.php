@@ -23,6 +23,7 @@ final class SalesOrderFormTest extends TestCase
     private ValidatorInterface $validator;
     private SalesOrder $salesOrder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->validator = new Validator();

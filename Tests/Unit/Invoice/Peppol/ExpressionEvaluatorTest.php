@@ -41,6 +41,7 @@ final class ExpressionEvaluatorTest extends TestCase
 
     private ExpressionEvaluator $ev;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->ev = new ExpressionEvaluator();

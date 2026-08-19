@@ -21,6 +21,7 @@ final class InvFormTest extends TestCase
     private ValidatorInterface $validator;
     private Inv $inv;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->validator = new Validator();

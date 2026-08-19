@@ -53,18 +53,17 @@ final class HomeCareRunContextResolutionTest
 
     public function untouchedQueryDefaultsToConfiguredRunAndAppliesDateFilter(): void
     {
+        /** @var Request&m\MockInterface $request */
         $request = m::mock(Request::class);
-        /** @var \Mockery\Expectation $e */
         $e = $request->shouldReceive('getQueryParams');
         $e->once()->andReturn([]);
 
         $filter = new InvIndexFilter();
 
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $sR->shouldReceive('getSetting');
         $e2->once()->with('homecare_current_run_category_secondary_id')->andReturn('5');
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $sR->shouldReceive('getSetting');
         $e3->once()->with('homecare_current_run_last_run_date')->andReturn(self::LAST_RUN_DATE);
 
@@ -77,19 +76,18 @@ final class HomeCareRunContextResolutionTest
 
     public function explicitlyClearedFilterShowsEveryCategorySecondary(): void
     {
+        /** @var Request&m\MockInterface $request */
         $request = m::mock(Request::class);
-        /** @var \Mockery\Expectation $e */
         $e = $request->shouldReceive('getQueryParams');
         $e->once()->andReturn(['filterCategorySecondaryRun' => '']);
 
         $filter = new InvIndexFilter();
         $filter->filterCategorySecondaryRun = '';
 
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $sR->shouldReceive('getSetting');
         $e2->once()->with('homecare_current_run_category_secondary_id')->andReturn('5');
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $sR->shouldReceive('getSetting');
         $e3->once()->with('homecare_current_run_last_run_date')->andReturn(self::LAST_RUN_DATE);
 
@@ -101,19 +99,18 @@ final class HomeCareRunContextResolutionTest
 
     public function browsingADifferentCategorySecondaryDoesNotApplyTheConfiguredDate(): void
     {
+        /** @var Request&m\MockInterface $request */
         $request = m::mock(Request::class);
-        /** @var \Mockery\Expectation $e */
         $e = $request->shouldReceive('getQueryParams');
         $e->once()->andReturn(['filterCategorySecondaryRun' => '9']);
 
         $filter = new InvIndexFilter();
         $filter->filterCategorySecondaryRun = '9';
 
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $sR->shouldReceive('getSetting');
         $e2->once()->with('homecare_current_run_category_secondary_id')->andReturn('5');
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $sR->shouldReceive('getSetting');
         $e3->once()->with('homecare_current_run_last_run_date')->andReturn(self::LAST_RUN_DATE);
 
@@ -125,19 +122,18 @@ final class HomeCareRunContextResolutionTest
 
     public function selectingTheConfiguredRunExplicitlyStillAppliesTheDateFilter(): void
     {
+        /** @var Request&m\MockInterface $request */
         $request = m::mock(Request::class);
-        /** @var \Mockery\Expectation $e */
         $e = $request->shouldReceive('getQueryParams');
         $e->once()->andReturn(['filterCategorySecondaryRun' => '5']);
 
         $filter = new InvIndexFilter();
         $filter->filterCategorySecondaryRun = '5';
 
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $sR->shouldReceive('getSetting');
         $e2->once()->with('homecare_current_run_category_secondary_id')->andReturn('5');
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $sR->shouldReceive('getSetting');
         $e3->once()->with('homecare_current_run_last_run_date')->andReturn(self::LAST_RUN_DATE);
 
@@ -149,18 +145,17 @@ final class HomeCareRunContextResolutionTest
 
     public function noConfiguredRunNeverAppliesTheDateFilter(): void
     {
+        /** @var Request&m\MockInterface $request */
         $request = m::mock(Request::class);
-        /** @var \Mockery\Expectation $e */
         $e = $request->shouldReceive('getQueryParams');
         $e->once()->andReturn([]);
 
         $filter = new InvIndexFilter();
 
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $sR->shouldReceive('getSetting');
         $e2->once()->with('homecare_current_run_category_secondary_id')->andReturn('0');
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $sR->shouldReceive('getSetting');
         $e3->once()->with('homecare_current_run_last_run_date')->andReturn('');
 

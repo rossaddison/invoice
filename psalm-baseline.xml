@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="6.16.1@f1f5de594dc76faf8784e02d3dc4716c91c6f6ac">
+  <file src="Tests/Testo/Invoice/Helpers/WhatsApp/WhatsAppServiceTest.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$sR]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[SettingRepository&m\MockInterface]]></code>
+    </InvalidReturnType>
+    <NoValue>
+      <code><![CDATA[$this->makeSettings($settings)]]></code>
+    </NoValue>
+  </file>
+  <file src="Tests/Testo/Invoice/Inv/GuestOfflineTest.php">
+    <InvalidArgument>
+      <code><![CDATA[$iR]]></code>
+      <code><![CDATA[$iR]]></code>
+      <code><![CDATA[$iR]]></code>
+      <code><![CDATA[$iR]]></code>
+      <code><![CDATA[$iR]]></code>
+      <code><![CDATA[$webService]]></code>
+      <code><![CDATA[$webService]]></code>
+      <code><![CDATA[$webService]]></code>
+      <code><![CDATA[$webService]]></code>
+      <code><![CDATA[$webService]]></code>
+    </InvalidArgument>
+    <NoValue>
+      <code><![CDATA[$iR]]></code>
+      <code><![CDATA[$webService]]></code>
+    </NoValue>
+    <ReservedWord>
+      <code><![CDATA[InvRepository&m\MockInterface $iR]]></code>
+      <code><![CDATA[WebControllerService&m\MockInterface $webService]]></code>
+    </ReservedWord>
+    <UnusedParam>
+      <code><![CDATA[$iR]]></code>
+      <code><![CDATA[$iR]]></code>
+      <code><![CDATA[$invs]]></code>
+      <code><![CDATA[$invs]]></code>
+      <code><![CDATA[$ucR]]></code>
+      <code><![CDATA[$userId]]></code>
+    </UnusedParam>
+  </file>
+  <file src="Tests/Testo/Invoice/InvRecurring/InvRecurringCronServiceTest.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$sR]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[SR&m\MockInterface]]></code>
+    </InvalidReturnType>
+    <NoValue>
+      <code><![CDATA[$sR]]></code>
+      <code><![CDATA[$sR]]></code>
+      <code><![CDATA[$sR]]></code>
+    </NoValue>
+    <UnevaluatedCode>
+      <code><![CDATA[$gR = m::mock(GR::class);]]></code>
+      <code><![CDATA[$gR = m::mock(GR::class);]]></code>
+      <code><![CDATA[$gR = m::mock(GR::class);]]></code>
+      <code><![CDATA[$iS = m::mock(IS::class);]]></code>
+      <code><![CDATA[$iS = m::mock(IS::class);]]></code>
+      <code><![CDATA[$invItemService = m::mock(InvItemService::class);]]></code>
+      <code><![CDATA[$invItemService = m::mock(InvItemService::class);]]></code>
+      <code><![CDATA[$result = $service->process(
+            $user,
+            $this->makeItemDeps($pR),
+            $this->makeCronUserDeps(uclR: $uclR, uiR: $uiR),
+        );]]></code>
+      <code><![CDATA[$result = $service->process(
+            $user,
+            $this->makeItemDeps(),
+            $this->makeCronUserDeps(uclR: $uclR, uiR: $uiR),
+        );]]></code>
+      <code><![CDATA[$result = $service->process($user, $this->makeItemDeps(), $this->makeCronUserDeps());]]></code>
+      <code><![CDATA[$service = $this->makeService($irR, $iR, $gR, $pcR, $iS, $invItemService, $sR);]]></code>
+      <code><![CDATA[$service = $this->makeService($irR, $iR, $gR, $pcR, $iS, $invItemService, $sR);]]></code>
+      <code><![CDATA[$service = $this->makeService($irR, $iR, $gR, $pcR, $iS, $invItemService, $sR);]]></code>
+      <code><![CDATA[$user = m::mock(User::class);]]></code>
+      <code><![CDATA[$user = m::mock(User::class);]]></code>
+      <code><![CDATA[$user = m::mock(User::class);]]></code>
+      <code><![CDATA[Assert::same(['created' => 0, 'reminded' => 0], $result);]]></code>
+      <code><![CDATA[Assert::same(['created' => 0, 'reminded' => 0], $result);]]></code>
+      <code><![CDATA[Assert::same(['created' => 1, 'reminded' => 0], $result);]]></code>
+    </UnevaluatedCode>
+    <UnusedVariable>
+      <code><![CDATA[$sR]]></code>
+      <code><![CDATA[$sR]]></code>
+      <code><![CDATA[$sR]]></code>
+    </UnusedVariable>
+  </file>
+  <file src="Tests/Testo/Invoice/PaymentInformation/BraintreePaymentServiceTest.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$repo]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[SettingRepository&m\MockInterface]]></code>
+    </InvalidReturnType>
+    <NoValue>
+      <code><![CDATA[$this->makeSettingsRepo($settings)]]></code>
+    </NoValue>
+  </file>
+  <file src="Tests/Testo/Invoice/PaymentInformation/CheckoutComPaymentServiceTest.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$sR]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[SettingRepository&m\MockInterface]]></code>
+    </InvalidReturnType>
+    <NoValue>
+      <code><![CDATA[$this->makeSettingRepository($sandbox)]]></code>
+    </NoValue>
+  </file>
+  <file src="Tests/Testo/Invoice/PaymentInformation/CheckoutComWebhookHandlerTest.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$sR]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[SettingRepository&m\MockInterface]]></code>
+    </InvalidReturnType>
+    <NoValue>
+      <code><![CDATA[$sR]]></code>
+      <code><![CDATA[$sR]]></code>
+      <code><![CDATA[$sR]]></code>
+      <code><![CDATA[$sR]]></code>
+      <code><![CDATA[$sR]]></code>
+      <code><![CDATA[$sR]]></code>
+      <code><![CDATA[$this->makeSettingRepository()]]></code>
+    </NoValue>
+    <UnevaluatedCode>
+      <code><![CDATA[$handler = new CheckoutComWebhookHandler(
+            $this->makePaymentService($mock),
+            new CheckoutComSignatureService(),
+            $sR,
+            $iR,
+            $iaR,
+            $invPaymentSettlementService,
+            $recorder,
+            $this->makeDataResponseFactory(),
+            $this->makeLoggerSpy(),
+        );]]></code>
+      <code><![CDATA[$handler = new CheckoutComWebhookHandler(
+            $this->makePaymentService($mock),
+            new CheckoutComSignatureService(),
+            $sR,
+            $iR,
+            $iaR,
+            $invPaymentSettlementService,
+            $recorder,
+            $this->makeDataResponseFactory(),
+            $this->makeLoggerSpy(),
+        );]]></code>
+      <code><![CDATA[$handler = new CheckoutComWebhookHandler(
+            $this->makePaymentService($mock),
+            new CheckoutComSignatureService(),
+            $sR,
+            $iR,
+            $iaR,
+            $invPaymentSettlementService,
+            $recorder,
+            $this->makeDataResponseFactory(),
+            $this->makeLoggerSpy(),
+        );]]></code>
+      <code><![CDATA[$handler = new CheckoutComWebhookHandler(
+            $this->makePaymentService($mock),
+            new CheckoutComSignatureService(),
+            $sR,
+            $iR,
+            $iaR,
+            $invPaymentSettlementService,
+            $recorder,
+            $this->makeDataResponseFactory(),
+            $this->makeLoggerSpy(),
+        );]]></code>
+      <code><![CDATA[$handler = new CheckoutComWebhookHandler(
+            $this->makePaymentService(new MockHandler([])),
+            new CheckoutComSignatureService(),
+            $sR,
+            $iR,
+            $iaR,
+            $invPaymentSettlementService,
+            $recorder,
+            $this->makeDataResponseFactory(),
+            $this->makeLoggerSpy(),
+        );]]></code>
+      <code><![CDATA[$handler = new CheckoutComWebhookHandler(
+            $this->makePaymentService(new MockHandler([])),
+            new CheckoutComSignatureService(),
+            $sR,
+            $iR,
+            $iaR,
+            $invPaymentSettlementService,
+            $recorder,
+            $this->makeDataResponseFactory(),
+            $this->makeLoggerSpy(),
+        );]]></code>
+      <code><![CDATA[$rawBody = json_encode(
+            ['type' => 'payment_approved', 'data' => ['id' => 'pay_123', 'reference' => 'abc123']],
+            JSON_THROW_ON_ERROR,
+        );]]></code>
+      <code><![CDATA[$rawBody = json_encode(
+            ['type' => 'payment_captured', 'data' => ['id' => 'pay_123', 'reference' => 'abc123']],
+            JSON_THROW_ON_ERROR,
+        );]]></code>
+      <code><![CDATA[$rawBody = json_encode(
+            ['type' => 'payment_captured', 'data' => ['id' => 'pay_123', 'reference' => 'abc123']],
+            JSON_THROW_ON_ERROR,
+        );]]></code>
+      <code><![CDATA[$rawBody = json_encode(
+            ['type' => 'payment_captured', 'data' => ['id' => 'pay_123', 'reference' => 'abc123']],
+            JSON_THROW_ON_ERROR,
+        );]]></code>
+      <code><![CDATA[$rawBody = json_encode(
+            ['type' => 'payment_captured', 'data' => ['id' => 'pay_123', 'reference' => 'unknown-key']],
+            JSON_THROW_ON_ERROR,
+        );]]></code>
+      <code><![CDATA[$rawBody = json_encode(['type' => 'payment_captured', 'data' => ['id' => 'pay_123']], JSON_THROW_ON_ERROR);]]></code>
+      <code><![CDATA[$response = $handler->handle($this->makeRequest($rawBody, $this->sign($rawBody)));]]></code>
+      <code><![CDATA[$response = $handler->handle($this->makeRequest($rawBody, $this->sign($rawBody)));]]></code>
+      <code><![CDATA[$response = $handler->handle($this->makeRequest($rawBody, $this->sign($rawBody)));]]></code>
+      <code><![CDATA[$response = $handler->handle($this->makeRequest($rawBody, $this->sign($rawBody)));]]></code>
+      <code><![CDATA[$response = $handler->handle($this->makeRequest($rawBody, $this->sign($rawBody)));]]></code>
+      <code><![CDATA[$response = $handler->handle($this->makeRequest($rawBody, 'not-the-real-signature'));]]></code>
+      <code><![CDATA[Assert::same(200, $response->getStatusCode());]]></code>
+      <code><![CDATA[Assert::same(200, $response->getStatusCode());]]></code>
+      <code><![CDATA[Assert::same(200, $response->getStatusCode());]]></code>
+      <code><![CDATA[Assert::same(200, $response->getStatusCode());]]></code>
+      <code><![CDATA[Assert::same(200, $response->getStatusCode());]]></code>
+      <code><![CDATA[Assert::same(400, $response->getStatusCode());]]></code>
+    </UnevaluatedCode>
+    <UnusedVariable>
+      <code><![CDATA[$iR]]></code>
+      <code><![CDATA[$iaR]]></code>
+      <code><![CDATA[$iaR]]></code>
+      <code><![CDATA[$iaR]]></code>
+      <code><![CDATA[$iaR]]></code>
+      <code><![CDATA[$mock]]></code>
+      <code><![CDATA[$mock]]></code>
+      <code><![CDATA[$mock]]></code>
+      <code><![CDATA[$mock]]></code>
+      <code><![CDATA[$sR]]></code>
+      <code><![CDATA[$sR]]></code>
+      <code><![CDATA[$sR]]></code>
+      <code><![CDATA[$sR]]></code>
+      <code><![CDATA[$sR]]></code>
+      <code><![CDATA[$sR]]></code>
+    </UnusedVariable>
+  </file>
+  <file src="Tests/Testo/Invoice/PaymentInformation/MercadoPagoPaymentServiceTest.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$sR]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[SettingRepository&m\MockInterface]]></code>
+    </InvalidReturnType>
+    <NoValue>
+      <code><![CDATA[$this->makeSettingRepository($sandbox)]]></code>
+    </NoValue>
+  </file>
+  <file src="Tests/Testo/Invoice/PaymentInformation/MollieWebhookHandlerTest.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$sR]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[SettingRepository&m\MockInterface]]></code>
+    </InvalidReturnType>
+    <NoValue>
+      <code><![CDATA[$this->makeSettingRepository()]]></code>
+      <code><![CDATA[$this->makeSettingRepository()]]></code>
+      <code><![CDATA[$this->makeSettingRepository()]]></code>
+      <code><![CDATA[$this->makeSettingRepository()]]></code>
+    </NoValue>
+    <UnevaluatedCode>
+      <code><![CDATA[$response = $handler->handle($this->makeRequest(['id' => 'tr_123']));]]></code>
+      <code><![CDATA[$response = $handler->handle($this->makeRequest(['id' => 'tr_123']));]]></code>
+      <code><![CDATA[$response = $handler->handle($this->makeRequest(['id' => 'tr_123']));]]></code>
+      <code><![CDATA[$response = $handler->handle($this->makeRequest(['id' => 'tr_123']));]]></code>
+      <code><![CDATA[Assert::same(200, $response->getStatusCode());]]></code>
+      <code><![CDATA[Assert::same(200, $response->getStatusCode());]]></code>
+      <code><![CDATA[Assert::same(200, $response->getStatusCode());]]></code>
+      <code><![CDATA[Assert::same(200, $response->getStatusCode());]]></code>
+    </UnevaluatedCode>
+    <UnusedVariable>
+      <code><![CDATA[$handler]]></code>
+      <code><![CDATA[$handler]]></code>
+      <code><![CDATA[$handler]]></code>
+      <code><![CDATA[$handler]]></code>
+    </UnusedVariable>
+  </file>
+  <file src="Tests/Testo/Invoice/PaymentInformation/PaypalPaymentServiceTest.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$sR]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[SettingRepository&m\MockInterface]]></code>
+    </InvalidReturnType>
+    <NoValue>
+      <code><![CDATA[$this->makeSettingRepository()]]></code>
+    </NoValue>
+  </file>
+  <file src="Tests/Testo/Invoice/PaymentInformation/PaystackPaymentServiceTest.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$sR]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[SettingRepository&m\MockInterface]]></code>
+    </InvalidReturnType>
+    <NoValue>
+      <code><![CDATA[$this->makeSettingRepository()]]></code>
+    </NoValue>
+  </file>
+  <file src="Tests/Testo/Invoice/PaymentInformation/RazorpayPaymentServiceTest.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$sR]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[SettingRepository&m\MockInterface]]></code>
+    </InvalidReturnType>
+    <NoValue>
+      <code><![CDATA[$this->makeSettingRepository()]]></code>
+    </NoValue>
+  </file>
+  <file src="Tests/Testo/Invoice/PaymentInformation/RobokassaPaymentServiceTest.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$sR]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[SettingRepository&m\MockInterface]]></code>
+    </InvalidReturnType>
+    <NoValue>
+      <code><![CDATA[$this->makeSettingRepository($refundEnabled)]]></code>
+    </NoValue>
+  </file>
+  <file src="Tests/Testo/Invoice/PaymentInformation/SquarePaymentServiceTest.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$sR]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[SettingRepository&m\MockInterface]]></code>
+    </InvalidReturnType>
+    <NoValue>
+      <code><![CDATA[$this->makeSettingRepository()]]></code>
+    </NoValue>
+  </file>
+  <file src="Tests/Testo/Invoice/PaymentInformation/TrueLayerPaymentServiceTest.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$repo]]></code>
+      <code><![CDATA[$repo]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[CompanyRepository&m\MockInterface]]></code>
+      <code><![CDATA[SettingRepository&m\MockInterface]]></code>
+    </InvalidReturnType>
+    <NoValue>
+      <code><![CDATA[$compR]]></code>
+      <code><![CDATA[$this->makeSettingsRepo($settings)]]></code>
+    </NoValue>
+    <UnevaluatedCode>
+      <code><![CDATA[$e = $compR->shouldReceive('repoCompanyActivequery');]]></code>
+      <code><![CDATA[$e->once()->andReturn(null);]]></code>
+      <code><![CDATA[$result = $service->createPayment(10.0, 'GBP', 'url-key', 'Jane Doe', 'jane@example.com');]]></code>
+      <code><![CDATA[$service = $this->makeService(['gateway_truelayer_returnUrl' => 'https://example.com/return'], $compR);]]></code>
+      <code><![CDATA[Assert::null($result);]]></code>
+    </UnevaluatedCode>
+    <UnusedVariable>
+      <code><![CDATA[$compR]]></code>
+    </UnusedVariable>
+  </file>
+  <file src="Tests/Testo/Invoice/PaymentInformation/YookassaPaymentServiceTest.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$sR]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[SettingRepository&m\MockInterface]]></code>
+    </InvalidReturnType>
+    <NoValue>
+      <code><![CDATA[$this->makeSettingRepository()]]></code>
+    </NoValue>
+  </file>
+  <file src="resources/views/invoice/layout/sidebar.php">
+    <UnnecessaryVarAnnotation>
+      <code><![CDATA[App\Invoice\Setting\SettingRepository]]></code>
+      <code><![CDATA[Yiisoft\Router\CurrentRoute]]></code>
+      <code><![CDATA[Yiisoft\Router\UrlGeneratorInterface]]></code>
+      <code><![CDATA[Yiisoft\Translator\TranslatorInterface]]></code>
+    </UnnecessaryVarAnnotation>
+  </file>
+</files>

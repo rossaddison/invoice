@@ -29,25 +29,25 @@ final class QuoteServiceTest
 {
     public function existingDraftQuoteWithoutNumberGetsNumberGeneratedAndSaved(): void
     {
+        /** @var Client&m\MockInterface $client */
         $client = m::mock(Client::class);
+        /** @var Group&m\MockInterface $group */
         $group = m::mock(Group::class);
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
 
         /** @var CR&m\MockInterface $cR */
         $cR = m::mock(CR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $cR->expects('repoClientquery');
         $e->once()->with(2)->andReturn($client);
 
         /** @var GR&m\MockInterface $gR */
         $gR = m::mock(GR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $gR->expects('repoGroupquery');
         $e2->once()->with(3)->andReturn($group);
 
         /** @var UR&m\MockInterface $uR */
         $uR = m::mock(UR::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $uR->expects('findById');
         $e3->once()->with(4)->andReturn($user);
 
@@ -57,17 +57,16 @@ final class QuoteServiceTest
 
         /** @var QuoteRepository&m\MockInterface $repo */
         $repo = m::mock(QuoteRepository::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $repo->expects('save');
         $e4->once();
 
+        /** @var SR&m\MockInterface $sR */
         $sR = m::mock(SR::class);
         $sR->shouldNotReceive('repoCount');
         $sR->shouldNotReceive('getSetting');
 
         /** @var GR&m\MockInterface $gRParam */
         $gRParam = m::mock(GR::class);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $gRParam->expects('generateNumber');
         $e5->once()->with(3, true)->andReturn('Q-0001');
 
@@ -109,11 +108,11 @@ final class QuoteServiceTest
 
     public function newQuoteWithoutIdentityInitializesDefaultsAndSaves(): void
     {
+        /** @var Client&m\MockInterface $client */
         $client = m::mock(Client::class);
 
         /** @var CR&m\MockInterface $cR */
         $cR = m::mock(CR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $cR->expects('repoClientquery');
         $e->once()->with(9)->andReturn($client);
 
@@ -130,7 +129,6 @@ final class QuoteServiceTest
 
         /** @var QuoteRepository&m\MockInterface $repo */
         $repo = m::mock(QuoteRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repo->expects('save');
         $e2->once();
 
@@ -140,16 +138,13 @@ final class QuoteServiceTest
 
         /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $user->shouldReceive('reqId');
         $e3->once()->andReturn(77);
 
         /** @var SR&m\MockInterface $sR */
         $sR = m::mock(SR::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $sR->shouldReceive('getSetting');
         $e4->once()->with('generate_quote_number_for_draft')->andReturn('0');
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $sR->shouldReceive('repoCount');
         $e5->once()->with('quotes_expire_after')->andReturn(0);
 
@@ -182,18 +177,19 @@ final class QuoteServiceTest
 
         /** @var QDS&m\MockInterface $deletionService */
         $deletionService = m::mock(QDS::class);
-        /** @var \Mockery\Expectation $e */
         $e = $deletionService->expects('delete');
         $e->once()->with($quote);
 
         /** @var QuoteRepository&m\MockInterface $repo */
         $repo = m::mock(QuoteRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repo->expects('delete');
         $e2->once()->with($quote);
 
+        /** @var CR&m\MockInterface $cR */
         $cR = m::mock(CR::class);
+        /** @var GR&m\MockInterface $gR */
         $gR = m::mock(GR::class);
+        /** @var UR&m\MockInterface $uR */
         $uR = m::mock(UR::class);
 
         $service = new QuoteService($repo, $cR, $gR, $uR, $deletionService);

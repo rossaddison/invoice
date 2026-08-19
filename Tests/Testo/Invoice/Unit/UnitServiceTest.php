@@ -19,6 +19,7 @@ final class UnitServiceTest
 {
     private function makeService(?UnitRepository $repository = null): UnitService
     {
+        /** @var UnitRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(UnitRepository::class);
         return new UnitService($repository);
     }
@@ -33,7 +34,6 @@ final class UnitServiceTest
 
         /** @var UnitRepository&m\MockInterface $repository */
         $repository = m::mock(UnitRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -50,7 +50,6 @@ final class UnitServiceTest
 
         /** @var UnitRepository&m\MockInterface $repository */
         $repository = m::mock(UnitRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -67,7 +66,6 @@ final class UnitServiceTest
 
         /** @var UnitRepository&m\MockInterface $repository */
         $repository = m::mock(UnitRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

@@ -11,6 +11,7 @@ class ContactFormTest extends TestCase
 {
     private ContactForm $form;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

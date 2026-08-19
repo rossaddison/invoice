@@ -24,7 +24,9 @@ final class CategorySecondaryServiceTest
         ?CategorySecondaryRepository $repository = null,
         ?CPR $cpR = null,
     ): CategorySecondaryService {
+        /** @var CategorySecondaryRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(CategorySecondaryRepository::class);
+        /** @var CPR&m\MockInterface $cpR */
         $cpR = $cpR ?? m::mock(CPR::class);
         return new CategorySecondaryService($repository, $cpR);
     }
@@ -34,17 +36,16 @@ final class CategorySecondaryServiceTest
         $model = new CategorySecondary();
         $array = ['category_primary_id' => 4, 'name' => 'Cloud Hosting'];
 
+        /** @var CategoryPrimary&m\MockInterface $categoryPrimary */
         $categoryPrimary = m::mock(CategoryPrimary::class);
 
         /** @var CPR&m\MockInterface $cpR */
         $cpR = m::mock(CPR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $cpR->expects('repoCategoryPrimaryQuery');
         $e->once()->with(4)->andReturn($categoryPrimary);
 
         /** @var CategorySecondaryRepository&m\MockInterface $repository */
         $repository = m::mock(CategorySecondaryRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->expects('save');
         $e2->once()->with($model);
 
@@ -66,7 +67,6 @@ final class CategorySecondaryServiceTest
 
         /** @var CategorySecondaryRepository&m\MockInterface $repository */
         $repository = m::mock(CategorySecondaryRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -82,7 +82,6 @@ final class CategorySecondaryServiceTest
 
         /** @var CategorySecondaryRepository&m\MockInterface $repository */
         $repository = m::mock(CategorySecondaryRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

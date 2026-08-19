@@ -34,7 +34,6 @@ final class QuoteAmountServiceTest
 
         /** @var QuoteAmountRepository&m\MockInterface $repo */
         $repo = m::mock(QuoteAmountRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->expects('save');
         $e->once()->with($model);
 
@@ -60,31 +59,23 @@ final class QuoteAmountServiceTest
 
         /** @var QuoteAmountForm&m\MockInterface $form */
         $form = m::mock(QuoteAmountForm::class);
-        /** @var \Mockery\Expectation $e */
         $e = $form->shouldReceive('getQuoteId');
         $e->twice()->andReturn(9);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $form->shouldReceive('getItemSubtotal');
         $e2->once()->andReturn(10.5);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $form->shouldReceive('getItemTaxTotal');
         $e3->once()->andReturn(2.5);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $form->shouldReceive('getPackhandleshipTotal');
         $e4->once()->andReturn(1.0);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $form->shouldReceive('getPackhandleshipTax');
         $e5->once()->andReturn(0.5);
-        /** @var \Mockery\Expectation $e6 */
         $e6 = $form->shouldReceive('getTaxTotal');
         $e6->once()->andReturn(3.0);
-        /** @var \Mockery\Expectation $e7 */
         $e7 = $form->shouldReceive('getTotal');
         $e7->once()->andReturn(16.5);
 
         /** @var QuoteAmountRepository&m\MockInterface $repo */
         $repo = m::mock(QuoteAmountRepository::class);
-        /** @var \Mockery\Expectation $e8 */
         $e8 = $repo->expects('save');
         $e8->once()->with($model);
 
@@ -109,31 +100,23 @@ final class QuoteAmountServiceTest
 
         /** @var QuoteAmountForm&m\MockInterface $form */
         $form = m::mock(QuoteAmountForm::class);
-        /** @var \Mockery\Expectation $e */
         $e = $form->shouldReceive('getQuoteId');
         $e->once()->andReturn(null);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $form->shouldReceive('getItemSubtotal');
         $e2->once()->andReturn(null);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $form->shouldReceive('getItemTaxTotal');
         $e3->once()->andReturn(null);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $form->shouldReceive('getPackhandleshipTotal');
         $e4->once()->andReturn(null);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $form->shouldReceive('getPackhandleshipTax');
         $e5->once()->andReturn(null);
-        /** @var \Mockery\Expectation $e6 */
         $e6 = $form->shouldReceive('getTaxTotal');
         $e6->once()->andReturn(null);
-        /** @var \Mockery\Expectation $e7 */
         $e7 = $form->shouldReceive('getTotal');
         $e7->once()->andReturn(null);
 
         /** @var QuoteAmountRepository&m\MockInterface $repo */
         $repo = m::mock(QuoteAmountRepository::class);
-        /** @var \Mockery\Expectation $e8 */
         $e8 = $repo->expects('save');
         $e8->once()->with($model);
 
@@ -159,13 +142,11 @@ final class QuoteAmountServiceTest
 
         /** @var QuoteAmountRepository&m\MockInterface $repo */
         $repo = m::mock(QuoteAmountRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->expects('save');
         $e->once()->with($model);
 
         /** @var QuoteRepository&m\MockInterface $qR */
         $qR = m::mock(QuoteRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $qR->expects('repoQuoteUnLoadedquery');
         $e2->once()->with(5)->andReturn($quote);
 
@@ -196,13 +177,11 @@ final class QuoteAmountServiceTest
 
         /** @var QuoteAmountRepository&m\MockInterface $repo */
         $repo = m::mock(QuoteAmountRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->expects('save');
         $e->once()->with($model);
 
         /** @var QuoteRepository&m\MockInterface $qR */
         $qR = m::mock(QuoteRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $qR->expects('repoQuoteUnLoadedquery');
         $e2->once()->with(6)->andReturn(null);
 
@@ -225,7 +204,6 @@ final class QuoteAmountServiceTest
     {
         /** @var QuoteAmountRepository&m\MockInterface $repo */
         $repo = m::mock(QuoteAmountRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->expects('repoQuotequery');
         $e->once()->with(3)->andReturn(null);
         $repo->shouldNotReceive('save');
@@ -254,7 +232,6 @@ final class QuoteAmountServiceTest
 
         /** @var QuoteAmountRepository&m\MockInterface $repo */
         $repo = m::mock(QuoteAmountRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->expects('repoQuotequery');
         $e->once()->with(4)->andReturn($model);
         $repo->shouldNotReceive('save');
@@ -292,10 +269,8 @@ final class QuoteAmountServiceTest
 
         /** @var QuoteAmountRepository&m\MockInterface $repo */
         $repo = m::mock(QuoteAmountRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->expects('repoQuotequery');
         $e->once()->with(10)->andReturn($model);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repo->expects('save');
         $e2->once()->with($model);
 
@@ -307,13 +282,10 @@ final class QuoteAmountServiceTest
 
         /** @var QuoteItemAmountRepository&m\MockInterface $qiaR */
         $qiaR = m::mock(QuoteItemAmountRepository::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $qiaR->expects('repoQuoteItemAmountquery');
         $e3->once()->with(1)->andReturn($qia1);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $qiaR->expects('repoQuoteItemAmountquery');
         $e4->once()->with(2)->andReturn($qia2);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $qiaR->expects('repoQuoteItemAmountquery');
         $e5->once()->with(3)->andReturn(null);
 
@@ -324,7 +296,6 @@ final class QuoteAmountServiceTest
 
         /** @var NumberHelper&m\MockInterface $numberHelper */
         $numberHelper = m::mock(NumberHelper::class);
-        /** @var \Mockery\Expectation $e6 */
         $e6 = $numberHelper->expects('calculateQuoteTaxes');
         $e6->once()->with(10, $qtrR, $qaR)->andReturn(12.34);
 
@@ -345,7 +316,6 @@ final class QuoteAmountServiceTest
 
         /** @var QuoteAmountRepository&m\MockInterface $repo */
         $repo = m::mock(QuoteAmountRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->expects('delete');
         $e->once()->with($model);
 
@@ -360,7 +330,6 @@ final class QuoteAmountServiceTest
     {
         /** @var QuoteAmountRepository&m\MockInterface $repo */
         $repo = m::mock(QuoteAmountRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->expects('delete');
         $e->once()->with(null);
 

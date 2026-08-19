@@ -16,6 +16,7 @@ class DeliveryEntityTest extends TestCase
     
     public string $ymdHis = 'Y-m-d H:i:s';
     
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

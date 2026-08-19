@@ -20,6 +20,7 @@ final class EmailTemplateServiceTest
 {
     private function makeService(?EmailTemplateRepository $repository = null): EmailTemplateService
     {
+        /** @var EmailTemplateRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(EmailTemplateRepository::class);
         return new EmailTemplateService($repository);
     }
@@ -41,7 +42,6 @@ final class EmailTemplateServiceTest
 
         /** @var EmailTemplateRepository&m\MockInterface $repository */
         $repository = m::mock(EmailTemplateRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -65,7 +65,6 @@ final class EmailTemplateServiceTest
 
         /** @var EmailTemplateRepository&m\MockInterface $repository */
         $repository = m::mock(EmailTemplateRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -82,7 +81,6 @@ final class EmailTemplateServiceTest
 
         /** @var EmailTemplateRepository&m\MockInterface $repository */
         $repository = m::mock(EmailTemplateRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

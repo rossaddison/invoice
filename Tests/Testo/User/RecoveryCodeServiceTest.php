@@ -28,7 +28,6 @@ final class RecoveryCodeServiceTest
     {
         /** @var EntityReader&m\MockInterface $reader */
         $reader = m::mock(EntityReader::class);
-        /** @var \Mockery\Expectation $e */
         $e = $reader->shouldReceive('getIterator');
         $e->andReturn((static function () use ($items) {
             yield from $items;
@@ -38,22 +37,20 @@ final class RecoveryCodeServiceTest
 
     public function saveRecoveryCodeSetsFieldsAndSaves(): void
     {
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
 
+        /** @var RecoveryCode&m\MockInterface $model */
         $model = m::mock(RecoveryCode::class);
-        /** @var \Mockery\Expectation $e */
         $e = $model->shouldReceive('setUser');
         $e->once()->with($user);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $model->shouldReceive('setCodeHash');
         $e2->once()->with('hashed-value');
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $model->shouldReceive('setUsed');
         $e3->once()->with(true);
 
         /** @var RecoveryCodeRepository&m\MockInterface $repo */
         $repo = m::mock(RecoveryCodeRepository::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $repo->expects('save');
         $e4->once()->with($model);
 
@@ -63,11 +60,11 @@ final class RecoveryCodeServiceTest
 
     public function deleteRecoveryCodeCallsRepositoryDelete(): void
     {
+        /** @var RecoveryCode&m\MockInterface $model */
         $model = m::mock(RecoveryCode::class);
 
         /** @var RecoveryCodeRepository&m\MockInterface $repo */
         $repo = m::mock(RecoveryCodeRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->expects('delete');
         $e->once()->with($model);
 
@@ -77,19 +74,19 @@ final class RecoveryCodeServiceTest
 
     public function removeBackupRecoveryCodesDeletesEachCodeReturnedForUser(): void
     {
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
+        /** @var RecoveryCode&m\MockInterface $code1 */
         $code1 = m::mock(RecoveryCode::class);
+        /** @var RecoveryCode&m\MockInterface $code2 */
         $code2 = m::mock(RecoveryCode::class);
 
         /** @var RecoveryCodeRepository&m\MockInterface $repo */
         $repo = m::mock(RecoveryCodeRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->expects('findByUser');
         $e->once()->with($user)->andReturn($this->readerYielding([$code1, $code2]));
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repo->expects('delete');
         $e2->once()->with($code1);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $repo->expects('delete');
         $e3->once()->with($code2);
 
@@ -99,11 +96,11 @@ final class RecoveryCodeServiceTest
 
     public function removeBackupRecoveryCodesDoesNothingWhenUserHasNoCodes(): void
     {
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
 
         /** @var RecoveryCodeRepository&m\MockInterface $repo */
         $repo = m::mock(RecoveryCodeRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->expects('findByUser');
         $e->once()->with($user)->andReturn($this->readerYielding([]));
         $repo->shouldNotReceive('delete');
@@ -114,11 +111,11 @@ final class RecoveryCodeServiceTest
 
     public function userHasBackupCodesReturnsTrueWhenCountIsPositive(): void
     {
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
 
         /** @var RecoveryCodeRepository&m\MockInterface $repo */
         $repo = m::mock(RecoveryCodeRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->expects('findByUserCount');
         $e->once()->with($user)->andReturn(3);
 
@@ -129,11 +126,11 @@ final class RecoveryCodeServiceTest
 
     public function userHasBackupCodesReturnsFalseWhenCountIsZero(): void
     {
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
 
         /** @var RecoveryCodeRepository&m\MockInterface $repo */
         $repo = m::mock(RecoveryCodeRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->expects('findByUserCount');
         $e->once()->with($user)->andReturn(0);
 
@@ -202,11 +199,11 @@ final class RecoveryCodeServiceTest
 
     public function persistBackupCodesHashesAndSavesEachPlainCode(): void
     {
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
 
         /** @var RecoveryCodeRepository&m\MockInterface $repo */
         $repo = m::mock(RecoveryCodeRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->expects('save');
         $e->once()->with(m::on(
             static fn (mixed $rc): bool => $rc instanceof RecoveryCode
@@ -214,7 +211,6 @@ final class RecoveryCodeServiceTest
                 && $rc->isUsed() === false
                 && password_verify('AAAA1111', $rc->getCodeHash())
         ));
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repo->expects('save');
         $e2->once()->with(m::on(
             static fn (mixed $rc): bool => $rc instanceof RecoveryCode
@@ -229,6 +225,7 @@ final class RecoveryCodeServiceTest
 
     public function persistBackupCodesWithEmptyArraySavesNothing(): void
     {
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
 
         /** @var RecoveryCodeRepository&m\MockInterface $repo */
@@ -241,16 +238,15 @@ final class RecoveryCodeServiceTest
 
     public function validateAndMarkCodeAsUsedMarksMatchingUnusedCodeAsUsedAndReturnsTrue(): void
     {
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
         $wrong = new RecoveryCode($user, password_hash('other-code', PASSWORD_DEFAULT), false);
         $match = new RecoveryCode($user, password_hash('secret-code', PASSWORD_DEFAULT), false);
 
         /** @var RecoveryCodeRepository&m\MockInterface $repo */
         $repo = m::mock(RecoveryCodeRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->expects('findByUser');
         $e->once()->with($user)->andReturn($this->readerYielding([$wrong, $match]));
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repo->expects('save');
         $e2->once()->with($match);
 
@@ -263,13 +259,13 @@ final class RecoveryCodeServiceTest
 
     public function validateAndMarkCodeAsUsedReturnsFalseWhenNoCodeMatches(): void
     {
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
         $codeA = new RecoveryCode($user, password_hash('code-a', PASSWORD_DEFAULT), false);
         $codeB = new RecoveryCode($user, password_hash('code-b', PASSWORD_DEFAULT), false);
 
         /** @var RecoveryCodeRepository&m\MockInterface $repo */
         $repo = m::mock(RecoveryCodeRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->expects('findByUser');
         $e->once()->with($user)->andReturn($this->readerYielding([$codeA, $codeB]));
         $repo->shouldNotReceive('save');
@@ -281,12 +277,12 @@ final class RecoveryCodeServiceTest
 
     public function validateAndMarkCodeAsUsedIgnoresAlreadyUsedCodeEvenIfItMatches(): void
     {
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
         $usedMatch = new RecoveryCode($user, password_hash('secret-code', PASSWORD_DEFAULT), true);
 
         /** @var RecoveryCodeRepository&m\MockInterface $repo */
         $repo = m::mock(RecoveryCodeRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->expects('findByUser');
         $e->once()->with($user)->andReturn($this->readerYielding([$usedMatch]));
         $repo->shouldNotReceive('save');

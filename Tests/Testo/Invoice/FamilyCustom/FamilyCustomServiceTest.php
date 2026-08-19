@@ -27,8 +27,11 @@ final class FamilyCustomServiceTest
         ?FR $fR = null,
         ?CFR $cfR = null,
     ): FamilyCustomService {
+        /** @var FamilyCustomRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(FamilyCustomRepository::class);
+        /** @var FR&m\MockInterface $fR */
         $fR = $fR ?? m::mock(FR::class);
+        /** @var CFR&m\MockInterface $cfR */
         $cfR = $cfR ?? m::mock(CFR::class);
         return new FamilyCustomService($repository, $fR, $cfR);
     }
@@ -42,20 +45,22 @@ final class FamilyCustomServiceTest
             'value' => 'Reference',
         ];
 
+        /** @var Family&m\MockInterface $family */
         $family = m::mock(Family::class);
+        /** @var FR&m\MockInterface $fR */
         $fR = m::mock(FR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $fR->shouldReceive('repoFamilyquery');
         $e->once()->with(1)->andReturn($family);
 
+        /** @var CustomField&m\MockInterface $customField */
         $customField = m::mock(CustomField::class);
+        /** @var CFR&m\MockInterface $cfR */
         $cfR = m::mock(CFR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $cfR->shouldReceive('repoCustomFieldquery');
         $e2->once()->with(2)->andReturn($customField);
 
+        /** @var FamilyCustomRepository&m\MockInterface $repository */
         $repository = m::mock(FamilyCustomRepository::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $repository->shouldReceive('save');
         $e3->once()->with($model);
 
@@ -74,14 +79,16 @@ final class FamilyCustomServiceTest
         $model = new FamilyCustom();
         $array = [];
 
+        /** @var FR&m\MockInterface $fR */
         $fR = m::mock(FR::class);
         $fR->shouldNotReceive('repoFamilyquery');
 
+        /** @var CFR&m\MockInterface $cfR */
         $cfR = m::mock(CFR::class);
         $cfR->shouldNotReceive('repoCustomFieldquery');
 
+        /** @var FamilyCustomRepository&m\MockInterface $repository */
         $repository = m::mock(FamilyCustomRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('save');
         $e->once()->with($model);
 
@@ -96,8 +103,8 @@ final class FamilyCustomServiceTest
     {
         $model = new FamilyCustom();
 
+        /** @var FamilyCustomRepository&m\MockInterface $repository */
         $repository = m::mock(FamilyCustomRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('delete');
         $e->once()->with($model);
 

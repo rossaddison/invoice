@@ -375,7 +375,6 @@ final class QuotesListWidgetTest extends TestCase
     private function resolveGroup(string $groupBy, Quote $quote, ?QR $qR = null): string
     {
         $qR ??= $this->makeQR();
-        /** @var \Closure(Quote): string $resolver */
         $resolver = QuotesGroupingHelper::makeGroupValueResolver($qR, $groupBy);
         return $resolver($quote);
     }
@@ -485,7 +484,6 @@ final class QuotesListWidgetTest extends TestCase
         $paginator = $this->makeEmptyPaginator();
         $getGroupValue = static fn(Quote $_q): string => 'unused';
 
-        /** @var array<string, array{count: int, total: float}> $result */
         $result = QuotesGroupingHelper::computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertSame([], $result);
@@ -498,7 +496,6 @@ final class QuotesListWidgetTest extends TestCase
         $paginator = new OffsetPaginator(new IterableDataReader([$q1, $q2]));
         $getGroupValue = static fn(Quote $_q): string => 'All';
 
-        /** @var array<string, array{count: int, total: float}> $result */
         $result = QuotesGroupingHelper::computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertCount(1, $result);
@@ -514,10 +511,8 @@ final class QuotesListWidgetTest extends TestCase
 
         $paginator = new OffsetPaginator(new IterableDataReader([$q1, $q2, $q3]));
         $qR        = $this->makeQR();
-        /** @var \Closure(Quote): string $getGroupValue */
         $getGroupValue = QuotesGroupingHelper::makeGroupValueResolver($qR, 'client');
 
-        /** @var array<string, array{count: int, total: float}> $result */
         $result = QuotesGroupingHelper::computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertCount(2, $result);
@@ -538,7 +533,6 @@ final class QuotesListWidgetTest extends TestCase
         $paginator     = new OffsetPaginator(new IterableDataReader([$quote]));
         $getGroupValue = static fn(Quote $_q): string => 'NullAmounts';
 
-        /** @var array<string, array{count: int, total: float}> $result */
         $result = QuotesGroupingHelper::computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertSame(1,    $result['NullAmounts']['count']);

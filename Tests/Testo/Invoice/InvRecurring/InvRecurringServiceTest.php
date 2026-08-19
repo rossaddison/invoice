@@ -59,8 +59,11 @@ final class InvRecurringServiceTest
         ?IR $invR = null,
         ?SettingRepository $s = null,
     ): InvRecurringService {
+        /** @var InvRecurringRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(InvRecurringRepository::class);
+        /** @var IR&m\MockInterface $invR */
         $invR = $invR ?? m::mock(IR::class);
+        /** @var SettingRepository&m\MockInterface $s */
         $s = $s ?? m::mock(SettingRepository::class);
         return new InvRecurringService($repository, $invR, $s);
     }
@@ -70,11 +73,12 @@ final class InvRecurringServiceTest
         $model = new InvRecurring();
         $array = ['inv_id' => 3, 'frequency' => 'P1M'];
 
+        /** @var IR&m\MockInterface $invR */
         $invR = m::mock(IR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $invR->shouldReceive('repoInvUnLoadedquery');
         $e->twice()->with(3)->andReturn(null);
 
+        /** @var InvRecurringRepository&m\MockInterface $repository */
         $repository = m::mock(InvRecurringRepository::class);
         $repository->shouldNotReceive('save');
 
@@ -95,14 +99,15 @@ final class InvRecurringServiceTest
             'start' => '2026-01-01',
         ];
 
+        /** @var Inv&m\MockInterface $inv */
         $inv = m::mock(Inv::class);
+        /** @var IR&m\MockInterface $invR */
         $invR = m::mock(IR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $invR->shouldReceive('repoInvUnLoadedquery');
         $e->twice()->with(7)->andReturn($inv);
 
+        /** @var InvRecurringRepository&m\MockInterface $repository */
         $repository = m::mock(InvRecurringRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -141,12 +146,14 @@ final class InvRecurringServiceTest
             'start' => '2026-03-01',
         ];
 
+        /** @var Inv&m\MockInterface $inv */
         $inv = m::mock(Inv::class);
+        /** @var IR&m\MockInterface $invR */
         $invR = m::mock(IR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $invR->shouldReceive('repoInvUnLoadedquery');
         $e->twice()->with(7)->andReturn($inv);
 
+        /** @var InvRecurringRepository&m\MockInterface $repository */
         $repository = m::mock(InvRecurringRepository::class);
         $repository->shouldNotReceive('save');
 
@@ -162,14 +169,15 @@ final class InvRecurringServiceTest
             'end' => '2026-12-31',
         ];
 
+        /** @var Inv&m\MockInterface $inv */
         $inv = m::mock(Inv::class);
+        /** @var IR&m\MockInterface $invR */
         $invR = m::mock(IR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $invR->shouldReceive('repoInvUnLoadedquery');
         $e->twice()->with(2)->andReturn($inv);
 
+        /** @var InvRecurringRepository&m\MockInterface $repository */
         $repository = m::mock(InvRecurringRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -186,14 +194,15 @@ final class InvRecurringServiceTest
         $model = new InvRecurring();
         $array = ['inv_id' => 2, 'frequency' => 'P1M'];
 
+        /** @var Inv&m\MockInterface $inv */
         $inv = m::mock(Inv::class);
+        /** @var IR&m\MockInterface $invR */
         $invR = m::mock(IR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $invR->shouldReceive('repoInvUnLoadedquery');
         $e->twice()->with(2)->andReturn($inv);
 
+        /** @var InvRecurringRepository&m\MockInterface $repository */
         $repository = m::mock(InvRecurringRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -209,7 +218,6 @@ final class InvRecurringServiceTest
 
         /** @var InvRecurringRepository&m\MockInterface $repository */
         $repository = m::mock(InvRecurringRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

@@ -143,7 +143,6 @@ final class SalesOrdersListWidgetTest extends TestCase
     ): string {
         $soR      = $withTranslator ? $this->makeSoRWithTranslator() : $this->makeSoR();
         $renderer = $this->makeGroupingRenderer($soR);
-        /** @var \Closure(SalesOrder): string $resolver */
         $resolver = $renderer->makeGroupValueResolver($groupBy);
         return $resolver($so);
     }
@@ -478,7 +477,6 @@ final class SalesOrdersListWidgetTest extends TestCase
         $paginator     = $this->makeEmptyPaginator();
         $getGroupValue = static fn(SalesOrder $_so): string => 'unused';
 
-        /** @var array<string, array{count: int, total: float}> $result */
         $result = $this->makeGroupingRenderer()->computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertSame([], $result);
@@ -492,7 +490,6 @@ final class SalesOrdersListWidgetTest extends TestCase
 
         $getGroupValue = static fn(SalesOrder $_so): string => 'All';
 
-        /** @var array<string, array{count: int, total: float}> $result */
         $result = $this->makeGroupingRenderer()->computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertCount(1, $result);
@@ -509,10 +506,8 @@ final class SalesOrdersListWidgetTest extends TestCase
         $paginator = new OffsetPaginator(new IterableDataReader([$so1, $so2, $so3]));
         $renderer  = $this->makeGroupingRenderer($this->makeSoR());
 
-        /** @var \Closure(SalesOrder): string $getGroupValue */
         $getGroupValue = $renderer->makeGroupValueResolver('client');
 
-        /** @var array<string, array{count: int, total: float}> $result */
         $result = $renderer->computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertCount(2, $result);
@@ -533,7 +528,6 @@ final class SalesOrdersListWidgetTest extends TestCase
         $paginator     = new OffsetPaginator(new IterableDataReader([$so]));
         $getGroupValue = static fn(SalesOrder $_so): string => 'NullTotal';
 
-        /** @var array<string, array{count: int, total: float}> $result */
         $result = $this->makeGroupingRenderer()->computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertSame(1,    $result['NullTotal']['count']);

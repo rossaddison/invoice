@@ -27,8 +27,11 @@ final class PaymentCustomServiceTest
         ?PR $pR = null,
         ?CFR $cfR = null,
     ): PaymentCustomService {
+        /** @var PaymentCustomRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(PaymentCustomRepository::class);
+        /** @var PR&m\MockInterface $pR */
         $pR = $pR ?? m::mock(PR::class);
+        /** @var CFR&m\MockInterface $cfR */
         $cfR = $cfR ?? m::mock(CFR::class);
         return new PaymentCustomService($repository, $pR, $cfR);
     }
@@ -42,20 +45,22 @@ final class PaymentCustomServiceTest
             'value' => 'Reference',
         ];
 
+        /** @var Payment&m\MockInterface $payment */
         $payment = m::mock(Payment::class);
+        /** @var PR&m\MockInterface $pR */
         $pR = m::mock(PR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $pR->shouldReceive('repoPaymentquery');
         $e->once()->with(1)->andReturn($payment);
 
+        /** @var CustomField&m\MockInterface $customField */
         $customField = m::mock(CustomField::class);
+        /** @var CFR&m\MockInterface $cfR */
         $cfR = m::mock(CFR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $cfR->shouldReceive('repoCustomFieldquery');
         $e2->once()->with(2)->andReturn($customField);
 
+        /** @var PaymentCustomRepository&m\MockInterface $repository */
         $repository = m::mock(PaymentCustomRepository::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $repository->shouldReceive('save');
         $e3->once()->with($model);
 
@@ -74,13 +79,13 @@ final class PaymentCustomServiceTest
         $model = new PaymentCustom();
         $array = ['payment_id' => 99, 'value' => 'Reference'];
 
+        /** @var PR&m\MockInterface $pR */
         $pR = m::mock(PR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $pR->shouldReceive('repoPaymentquery');
         $e->once()->with(99)->andReturn(null);
 
+        /** @var PaymentCustomRepository&m\MockInterface $repository */
         $repository = m::mock(PaymentCustomRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -95,14 +100,16 @@ final class PaymentCustomServiceTest
         $model = new PaymentCustom();
         $array = [];
 
+        /** @var PR&m\MockInterface $pR */
         $pR = m::mock(PR::class);
         $pR->shouldNotReceive('repoPaymentquery');
 
+        /** @var CFR&m\MockInterface $cfR */
         $cfR = m::mock(CFR::class);
         $cfR->shouldNotReceive('repoCustomFieldquery');
 
+        /** @var PaymentCustomRepository&m\MockInterface $repository */
         $repository = m::mock(PaymentCustomRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('save');
         $e->once()->with($model);
 
@@ -117,8 +124,8 @@ final class PaymentCustomServiceTest
     {
         $model = new PaymentCustom();
 
+        /** @var PaymentCustomRepository&m\MockInterface $repository */
         $repository = m::mock(PaymentCustomRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('delete');
         $e->once()->with($model);
 

@@ -39,14 +39,17 @@ final class InvServiceTest
         ?UserRepository $uR = null,
         ?DatabaseManager $dbal = null,
     ): InvService {
-        return new InvService(
-            $repository,
-            $translator ?? m::mock(TranslatorInterface::class),
-            $cR ?? m::mock(ClientRepository::class),
-            $gR ?? m::mock(GroupRepository::class),
-            $uR ?? m::mock(UserRepository::class),
-            $dbal ?? m::mock(DatabaseManager::class),
-        );
+        /** @var TranslatorInterface&m\MockInterface $translator */
+        $translator = $translator ?? m::mock(TranslatorInterface::class);
+        /** @var ClientRepository&m\MockInterface $cR */
+        $cR = $cR ?? m::mock(ClientRepository::class);
+        /** @var GroupRepository&m\MockInterface $gR */
+        $gR = $gR ?? m::mock(GroupRepository::class);
+        /** @var UserRepository&m\MockInterface $uR */
+        $uR = $uR ?? m::mock(UserRepository::class);
+        /** @var DatabaseManager&m\MockInterface $dbal */
+        $dbal = $dbal ?? m::mock(DatabaseManager::class);
+        return new InvService($repository, $translator, $cR, $gR, $uR, $dbal);
     }
 
     /**
@@ -71,31 +74,22 @@ final class InvServiceTest
 
         /** @var SettingRepository&m\MockInterface $s */
         $s = m::mock(SettingRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $s->shouldReceive('loadSettings');
         $e->andReturnNull();
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $s->shouldReceive('getSetting');
         $e2->with('invoices_due_after')->andReturn($settings['invoices_due_after']);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $s->shouldReceive('getSetting');
         $e3->with('stand_in_code')->andReturn($settings['stand_in_code']);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $s->shouldReceive('getSetting');
         $e4->with('mark_invoices_sent_copy')->andReturn($settings['mark_invoices_sent_copy']);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $s->shouldReceive('getSetting');
         $e5->with('generate_invoice_number_for_draft')->andReturn($settings['generate_invoice_number_for_draft']);
-        /** @var \Mockery\Expectation $e6 */
         $e6 = $s->shouldReceive('getSetting');
         $e6->with('invoice_default_payment_method')->andReturn($settings['invoice_default_payment_method']);
-        /** @var \Mockery\Expectation $e7 */
         $e7 = $s->shouldReceive('getSetting');
         $e7->with('date_format')->andReturn($settings['date_format']);
-        /** @var \Mockery\Expectation $e8 */
         $e8 = $s->shouldReceive('getSetting');
         $e8->with('first_day_of_week')->andReturn($settings['first_day_of_week']);
-        /** @var \Mockery\Expectation $e9 */
         $e9 = $s->shouldReceive('getSetting');
         $e9->with('time_zone')->andReturn($settings['time_zone']);
 
@@ -109,16 +103,17 @@ final class InvServiceTest
         $callback = static function (): void {
         };
 
+        /** @var DatabaseInterface&m\MockInterface $database */
         $database = m::mock(DatabaseInterface::class);
-        /** @var \Mockery\Expectation $e */
         $e = $database->shouldReceive('transaction');
         $e->once()->with($callback)->andReturn(true);
 
+        /** @var DatabaseManager&m\MockInterface $dbal */
         $dbal = m::mock(DatabaseManager::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $dbal->shouldReceive('database');
         $e2->once()->andReturn($database);
 
+        /** @var InvRepository&m\MockInterface $repo */
         $repo = m::mock(InvRepository::class);
         $service = $this->makeService($repo, null, null, null, null, $dbal);
 
@@ -131,8 +126,8 @@ final class InvServiceTest
     {
         $inv = new Inv();
 
+        /** @var InvRepository&m\MockInterface $repo */
         $repo = m::mock(InvRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->shouldReceive('delete');
         $e->once()->with($inv);
 
@@ -144,8 +139,8 @@ final class InvServiceTest
     {
         $inv = new Inv();
 
+        /** @var InvRepository&m\MockInterface $repo */
         $repo = m::mock(InvRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->shouldReceive('save');
         $e->once()->with($inv);
 
@@ -162,6 +157,7 @@ final class InvServiceTest
         $inv = new Inv();
         $inv->setClient(new Client());
 
+        /** @var InvRepository&m\MockInterface $repo */
         $repo = m::mock(InvRepository::class);
         $service = $this->makeService($repo);
 
@@ -176,6 +172,7 @@ final class InvServiceTest
         $inv = new Inv();
         $inv->setClient(new Client());
 
+        /** @var InvRepository&m\MockInterface $repo */
         $repo = m::mock(InvRepository::class);
         $service = $this->makeService($repo);
 
@@ -190,6 +187,7 @@ final class InvServiceTest
         $inv = new Inv();
         $inv->setClient(new Client());
 
+        /** @var InvRepository&m\MockInterface $repo */
         $repo = m::mock(InvRepository::class);
         $service = $this->makeService($repo);
 
@@ -204,6 +202,7 @@ final class InvServiceTest
         $inv = new Inv();
         $inv->setClient(new Client());
 
+        /** @var InvRepository&m\MockInterface $repo */
         $repo = m::mock(InvRepository::class);
         $service = $this->makeService($repo);
 
@@ -217,6 +216,7 @@ final class InvServiceTest
     {
         $inv = new Inv();
 
+        /** @var InvRepository&m\MockInterface $repo */
         $repo = m::mock(InvRepository::class);
         $service = $this->makeService($repo);
 
@@ -231,18 +231,19 @@ final class InvServiceTest
     public function saveInvOnNewInvoiceInitializesDefaultsAndSaves(): void
     {
         $model = new Inv(status_id: 9, is_read_only: true, number: 'OLD-1');
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
-        /** @var \Mockery\Expectation $e */
         $e = $user->shouldReceive('reqId');
         $e->andReturn(9);
 
         $s = $this->makeSettingRepo();
+        /** @var GroupRepository&m\MockInterface $gR */
         $gR = m::mock(GroupRepository::class);
         $gR->shouldNotReceive('generateNumber');
         $gR->shouldNotReceive('repoGroupquery');
 
+        /** @var InvRepository&m\MockInterface $repo */
         $repo = m::mock(InvRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repo->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -261,17 +262,18 @@ final class InvServiceTest
     public function saveInvRecomputesDateDueWhenNoDirectDebitDateScheduled(): void
     {
         $model = new Inv();
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
-        /** @var \Mockery\Expectation $e */
         $e = $user->shouldReceive('reqId');
         $e->andReturn(1);
 
         $s = $this->makeSettingRepo();
+        /** @var GroupRepository&m\MockInterface $gR */
         $gR = m::mock(GroupRepository::class);
         $gR->shouldNotReceive('generateNumber');
 
+        /** @var InvRepository&m\MockInterface $repo */
         $repo = m::mock(InvRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repo->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -292,17 +294,18 @@ final class InvServiceTest
         $model->setDirectDebitDate(new DateTimeImmutable('2026-08-07'));
         $originalDateDue = $model->getDateDue();
 
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
-        /** @var \Mockery\Expectation $e */
         $e = $user->shouldReceive('reqId');
         $e->andReturn(1);
 
         $s = $this->makeSettingRepo();
+        /** @var GroupRepository&m\MockInterface $gR */
         $gR = m::mock(GroupRepository::class);
         $gR->shouldNotReceive('generateNumber');
 
+        /** @var InvRepository&m\MockInterface $repo */
         $repo = m::mock(InvRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repo->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -315,17 +318,18 @@ final class InvServiceTest
     public function saveInvOnNewInvoiceMarksSentAndReadOnlyWhenSettingEnabled(): void
     {
         $model = new Inv(status_id: 9, is_read_only: false);
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
-        /** @var \Mockery\Expectation $e */
         $e = $user->shouldReceive('reqId');
         $e->andReturn(1);
 
         $s = $this->makeSettingRepo(['mark_invoices_sent_copy' => '1']);
+        /** @var GroupRepository&m\MockInterface $gR */
         $gR = m::mock(GroupRepository::class);
         $gR->shouldNotReceive('generateNumber');
 
+        /** @var InvRepository&m\MockInterface $repo */
         $repo = m::mock(InvRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repo->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -339,24 +343,23 @@ final class InvServiceTest
     public function saveInvGeneratesNumberForDraftWhenSettingEnabled(): void
     {
         $model = new Inv();
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
-        /** @var \Mockery\Expectation $e */
         $e = $user->shouldReceive('reqId');
         $e->andReturn(1);
 
         $s = $this->makeSettingRepo(['generate_invoice_number_for_draft' => '1']);
         $group = new Group();
 
+        /** @var GroupRepository&m\MockInterface $gR */
         $gR = m::mock(GroupRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $gR->shouldReceive('generateNumber');
         $e2->once()->with(5, true)->andReturn('DRAFT-777');
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $gR->shouldReceive('repoGroupquery');
         $e3->once()->with(5)->andReturn($group);
 
+        /** @var InvRepository&m\MockInterface $repo */
         $repo = m::mock(InvRepository::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $repo->shouldReceive('save');
         $e4->once()->with($model);
 
@@ -371,22 +374,22 @@ final class InvServiceTest
     {
         $model = new Inv();
         $model->setId(42);
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
         $user->shouldNotReceive('reqId');
 
         $s = $this->makeSettingRepo();
         $group = new Group();
 
+        /** @var GroupRepository&m\MockInterface $gR */
         $gR = m::mock(GroupRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $gR->shouldReceive('generateNumber');
         $e->once()->with(3, true)->andReturn('INV-0100');
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $gR->shouldReceive('repoGroupquery');
         $e2->once()->with(3)->andReturn($group);
 
+        /** @var InvRepository&m\MockInterface $repo */
         $repo = m::mock(InvRepository::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $repo->shouldReceive('save');
         $e3->once()->with($model);
 
@@ -400,20 +403,21 @@ final class InvServiceTest
     {
         $model = new Inv(number: 'INV-EXISTING');
         $model->setId(42);
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
         $user->shouldNotReceive('reqId');
 
         $s = $this->makeSettingRepo();
         $group = new Group();
 
+        /** @var GroupRepository&m\MockInterface $gR */
         $gR = m::mock(GroupRepository::class);
         $gR->shouldNotReceive('generateNumber');
-        /** @var \Mockery\Expectation $e */
         $e = $gR->shouldReceive('repoGroupquery');
         $e->once()->with(3)->andReturn($group);
 
+        /** @var InvRepository&m\MockInterface $repo */
         $repo = m::mock(InvRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repo->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -426,22 +430,23 @@ final class InvServiceTest
     public function saveInvLeavesTermsUnchangedWhenArrayOmitsTermsDespiteCallingTranslator(): void
     {
         $model = new Inv();
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
-        /** @var \Mockery\Expectation $e */
         $e = $user->shouldReceive('reqId');
         $e->andReturn(1);
 
         $s = $this->makeSettingRepo();
+        /** @var GroupRepository&m\MockInterface $gR */
         $gR = m::mock(GroupRepository::class);
         $gR->shouldNotReceive('generateNumber');
 
+        /** @var TranslatorInterface&m\MockInterface $translator */
         $translator = m::mock(TranslatorInterface::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $translator->shouldReceive('translate');
         $e2->once()->with('payment.term.general')->andReturn('Net 30 (translated)');
 
+        /** @var InvRepository&m\MockInterface $repo */
         $repo = m::mock(InvRepository::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $repo->shouldReceive('save');
         $e3->once()->with($model);
 
@@ -457,35 +462,36 @@ final class InvServiceTest
     public function saveInvPersistsClientGroupAndUserWhenIdsProvidedInArray(): void
     {
         $model = new Inv();
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
-        /** @var \Mockery\Expectation $e */
         $e = $user->shouldReceive('reqId');
         $e->andReturn(20);
 
         $client = new Client();
         $group = new Group();
+        /** @var User&m\MockInterface $fetchedUser */
         $fetchedUser = m::mock(User::class);
 
+        /** @var ClientRepository&m\MockInterface $cR */
         $cR = m::mock(ClientRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $cR->shouldReceive('repoClientquery');
         $e2->once()->with(3)->andReturn($client);
 
+        /** @var GroupRepository&m\MockInterface $gR */
         $gR = m::mock(GroupRepository::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $gR->shouldReceive('repoGroupquery');
         $e3->once()->with(5)->andReturn($group);
         $gR->shouldNotReceive('generateNumber');
 
+        /** @var UserRepository&m\MockInterface $uR */
         $uR = m::mock(UserRepository::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $uR->shouldReceive('findById');
         $e4->once()->with(9)->andReturn($fetchedUser);
 
         $s = $this->makeSettingRepo();
 
+        /** @var InvRepository&m\MockInterface $repo */
         $repo = m::mock(InvRepository::class);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $repo->shouldReceive('save');
         $e5->once()->with($model);
 
@@ -509,15 +515,15 @@ final class InvServiceTest
     public function copyInvMapsProvidedArrayFieldsOntoModelAndSaves(): void
     {
         $model = new Inv();
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
-        /** @var \Mockery\Expectation $e */
         $e = $user->shouldReceive('reqId');
         $e->andReturn(3);
 
         $s = $this->makeSettingRepo();
 
+        /** @var TranslatorInterface&m\MockInterface $translator */
         $translator = m::mock(TranslatorInterface::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $translator->shouldReceive('translate');
         $e2->once()->with('payment.term.general')->andReturn('Net 30');
 
@@ -547,8 +553,8 @@ final class InvServiceTest
             'contract_id' => 9,
         ];
 
+        /** @var InvRepository&m\MockInterface $repo */
         $repo = m::mock(InvRepository::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $repo->shouldReceive('save');
         $e3->once()->with($model);
 
@@ -584,13 +590,14 @@ final class InvServiceTest
     public function copyInvUsesProvidedDateTimeImmutableInstancesDirectlyAndSkipsTranslatorWhenTermsGiven(): void
     {
         $model = new Inv();
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
-        /** @var \Mockery\Expectation $e */
         $e = $user->shouldReceive('reqId');
         $e->andReturn(1);
 
         $s = $this->makeSettingRepo();
 
+        /** @var TranslatorInterface&m\MockInterface $translator */
         $translator = m::mock(TranslatorInterface::class);
         $translator->shouldNotReceive('translate');
 
@@ -610,8 +617,8 @@ final class InvServiceTest
             'client_po_number' => 'PO1', 'client_po_person' => 'Jane',
         ];
 
+        /** @var InvRepository&m\MockInterface $repo */
         $repo = m::mock(InvRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repo->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -633,6 +640,7 @@ final class InvServiceTest
         $model = new Inv();
         $model->setId(77);
 
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
         $user->shouldNotReceive('reqId');
 
@@ -657,8 +665,8 @@ final class InvServiceTest
             'date_tax_point' => '2026-05-03',
         ];
 
+        /** @var InvRepository&m\MockInterface $repo */
         $repo = m::mock(InvRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->shouldReceive('save');
         $e->once()->with($model);
 
@@ -681,6 +689,7 @@ final class InvServiceTest
     public function saveInvFromRecurringOnNewInvoiceResetsCoreFieldsToFreshDefaultsAndSaves(): void
     {
         $model = new Inv();
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
 
         $s = $this->makeSettingRepo();
@@ -705,8 +714,8 @@ final class InvServiceTest
             'date_tax_point' => '2026-05-03',
         ];
 
+        /** @var InvRepository&m\MockInterface $repo */
         $repo = m::mock(InvRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->shouldReceive('save');
         $e->once()->with($model);
 

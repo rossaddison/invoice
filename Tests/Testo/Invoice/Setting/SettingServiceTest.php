@@ -19,6 +19,7 @@ final class SettingServiceTest
 {
     private function makeService(?SettingRepository $repository = null): SettingService
     {
+        /** @var SettingRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(SettingRepository::class);
         return new SettingService($repository);
     }
@@ -33,7 +34,6 @@ final class SettingServiceTest
 
         /** @var SettingRepository&m\MockInterface $repository */
         $repository = m::mock(SettingRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -50,7 +50,6 @@ final class SettingServiceTest
 
         /** @var SettingRepository&m\MockInterface $repository */
         $repository = m::mock(SettingRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -67,7 +66,6 @@ final class SettingServiceTest
 
         /** @var SettingRepository&m\MockInterface $repository */
         $repository = m::mock(SettingRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

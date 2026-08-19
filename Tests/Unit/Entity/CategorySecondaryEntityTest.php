@@ -13,6 +13,7 @@ class CategorySecondaryEntityTest extends TestCase
 {
     private Stub $categoryPrimary;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

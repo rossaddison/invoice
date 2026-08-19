@@ -38,7 +38,9 @@ final class UploadServiceTest
         ?UploadRepository $repository = null,
         ?CR $cR = null,
     ): UploadService {
+        /** @var UploadRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(UploadRepository::class);
+        /** @var CR&m\MockInterface $cR */
         $cR = $cR ?? m::mock(CR::class);
         return new UploadService($repository, $cR);
     }
@@ -55,17 +57,17 @@ final class UploadServiceTest
             'description' => 'Signed contract',
         ];
 
+        /** @var Client&m\MockInterface $client */
         $client = m::mock(Client::class);
-        /** @var \Mockery\Expectation $reqIdExpectation */
         $reqIdExpectation = $client->shouldReceive('reqId');
         $reqIdExpectation->andReturn(3);
+        /** @var CR&m\MockInterface $cR */
         $cR = m::mock(CR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $cR->shouldReceive('repoClientquery');
         $e->once()->with(3)->andReturn($client);
 
+        /** @var UploadRepository&m\MockInterface $repository */
         $repository = m::mock(UploadRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -87,17 +89,17 @@ final class UploadServiceTest
         $defaultDate = $model->getUploadedDate()->format('Y-m-d');
         $array = ['client_id' => 4, 'uploaded_date' => 'not-a-date'];
 
+        /** @var Client&m\MockInterface $client */
         $client = m::mock(Client::class);
-        /** @var \Mockery\Expectation $reqIdExpectation */
         $reqIdExpectation = $client->shouldReceive('reqId');
         $reqIdExpectation->andReturn(4);
+        /** @var CR&m\MockInterface $cR */
         $cR = m::mock(CR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $cR->shouldReceive('repoClientquery');
         $e->once()->with(4)->andReturn($client);
 
+        /** @var UploadRepository&m\MockInterface $repository */
         $repository = m::mock(UploadRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -119,14 +121,13 @@ final class UploadServiceTest
             $model->setFileNameNew('x1y2z3.pdf');
 
             $aliases = new Aliases(['@customer_files' => $tempDir]);
+            /** @var SettingRepository&m\MockInterface $sR */
             $sR = m::mock(SettingRepository::class);
-            /** @var \Mockery\Expectation $e */
             $e = $sR->shouldReceive('getCustomerFilesFolderAliases');
             $e->once()->andReturn($aliases);
 
             /** @var UploadRepository&m\MockInterface $repository */
             $repository = m::mock(UploadRepository::class);
-            /** @var \Mockery\Expectation $e2 */
             $e2 = $repository->expects('delete');
             $e2->once()->with($model);
 
@@ -146,11 +147,12 @@ final class UploadServiceTest
         $model->setFileNameNew('missing.pdf');
 
         $aliases = new Aliases(['@customer_files' => sys_get_temp_dir() . '/invoice-does-not-exist-' . uniqid()]);
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $sR->shouldReceive('getCustomerFilesFolderAliases');
         $e->once()->andReturn($aliases);
 
+        /** @var UploadRepository&m\MockInterface $repository */
         $repository = m::mock(UploadRepository::class);
         $repository->shouldNotReceive('delete');
 

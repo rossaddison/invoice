@@ -35,7 +35,9 @@ final class ContractServiceTest
         ?ContractRepository $repository = null,
         ?CR $cR = null,
     ): ContractService {
+        /** @var ContractRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(ContractRepository::class);
+        /** @var CR&m\MockInterface $cR */
         $cR = $cR ?? m::mock(CR::class);
         return new ContractService($repository, $cR);
     }
@@ -51,14 +53,15 @@ final class ContractServiceTest
             'reference' => 'REF-001',
         ];
 
+        /** @var Client&m\MockInterface $client */
         $client = m::mock(Client::class);
+        /** @var CR&m\MockInterface $cR */
         $cR = m::mock(CR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $cR->shouldReceive('repoClientquery');
         $e->once()->with(6)->andReturn($client);
 
+        /** @var ContractRepository&m\MockInterface $repository */
         $repository = m::mock(ContractRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -83,11 +86,12 @@ final class ContractServiceTest
             'period_end' => 'not-a-date',
         ];
 
+        /** @var CR&m\MockInterface $cR */
         $cR = m::mock(CR::class);
         $cR->shouldNotReceive('repoClientquery');
 
+        /** @var ContractRepository&m\MockInterface $repository */
         $repository = m::mock(ContractRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('save');
         $e->once()->with($model);
 
@@ -107,7 +111,6 @@ final class ContractServiceTest
 
         /** @var ContractRepository&m\MockInterface $repository */
         $repository = m::mock(ContractRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

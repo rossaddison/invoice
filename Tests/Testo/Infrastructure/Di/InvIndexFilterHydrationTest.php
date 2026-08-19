@@ -46,7 +46,9 @@ final class InvIndexFilterHydrationTest
         $provider  = new RequestProvider($request);
         $container = new class ($provider) implements ContainerInterface {
             public function __construct(private readonly RequestProvider $p) {}
+            #[\Override]
             public function get(string $id): mixed { return new FromQueryResolver($this->p); }
+            #[\Override]
             public function has(string $id): bool  { return $id === FromQueryResolver::class; }
         };
         return new RequestInputParametersResolver(

@@ -150,7 +150,7 @@ final class QuoteToSalesOrderToInvoiceWorkflowTest extends TestCase
         // Pattern from QuoteController::copy_quote_item_allowance_charges_to_so (lines 3153-3183)
         $copiedCount = 0;
         foreach ($quoteItemAllowancesCharges as $ac) {
-            $newSoItemAC = [
+            [
                 'sales_order_item_id' => 'new_so_item_id',
                 'allowance_charge_id' => $ac['allowance_charge_id'],
                 'amount' => $ac['amount'],
@@ -177,7 +177,7 @@ final class QuoteToSalesOrderToInvoiceWorkflowTest extends TestCase
         // Pattern from QuoteController::quote_to_so_quote_allowance_charges (lines 3242-3265)
         $copiedCount = 0;
         foreach ($quoteAllowancesCharges as $ac) {
-            $newSoAC = [
+            [
                 'sales_order_id' => 'new_so_id',
                 'allowance_charge_id' => $ac['allowance_charge_id'],
                 'amount' => $ac['amount'],
@@ -195,7 +195,7 @@ final class QuoteToSalesOrderToInvoiceWorkflowTest extends TestCase
         
         $invCopiedCount = 0;
         foreach ($soAllowancesCharges as $ac) {
-            $newInvAC = [
+            [
                 'inv_id' => 'new_inv_id',
                 'allowance_charge_id' => $ac['allowance_charge_id'],
                 'amount' => $ac['amount'],
@@ -224,8 +224,8 @@ final class QuoteToSalesOrderToInvoiceWorkflowTest extends TestCase
         $taxBase = $subtotalAfterDocumentAC - $discount;
         $total = $taxBase + $itemTaxTotal;
         
-        $expectedSubtotal = 188.00; // 195 - 15 + 8
-        $expectedTotal = 227.00; // 188 + 39 (assuming tax already calculated on item level)
+         // 195 - 15 + 8
+         // 188 + 39 (assuming tax already calculated on item level)
         
         // Note: In actual implementation, tax might be recalculated at document level
         // This test shows the pattern of including document-level allowances/charges
@@ -332,7 +332,6 @@ final class QuoteToSalesOrderToInvoiceWorkflowTest extends TestCase
     public function testCashDiscountWorkflow(): void
     {
         // Scenario with cash discount at document level
-        $itemSubtotal = 200.00;
         $itemTax = 40.00; // 20% tax
         $cashDiscount = 20.00; // discount_amount field
         

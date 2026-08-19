@@ -20,6 +20,7 @@ final class GeneratorServiceTest
 {
     private function makeService(?GeneratorRepository $repository = null): GeneratorService
     {
+        /** @var GeneratorRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(GeneratorRepository::class);
         return new GeneratorService($repository);
     }
@@ -46,7 +47,6 @@ final class GeneratorServiceTest
 
         /** @var GeneratorRepository&m\MockInterface $repository */
         $repository = m::mock(GeneratorRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -82,7 +82,6 @@ final class GeneratorServiceTest
 
         /** @var GeneratorRepository&m\MockInterface $repository */
         $repository = m::mock(GeneratorRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -100,7 +99,6 @@ final class GeneratorServiceTest
 
         /** @var GeneratorRepository&m\MockInterface $repository */
         $repository = m::mock(GeneratorRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

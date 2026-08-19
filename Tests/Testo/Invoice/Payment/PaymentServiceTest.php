@@ -41,8 +41,11 @@ final class PaymentServiceTest
         ?IR $iR = null,
         ?PMR $pmR = null,
     ): PaymentService {
+        /** @var PaymentRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(PaymentRepository::class);
+        /** @var IR&m\MockInterface $iR */
         $iR = $iR ?? m::mock(IR::class);
+        /** @var PMR&m\MockInterface $pmR */
         $pmR = $pmR ?? m::mock(PMR::class);
         return new PaymentService($repository, $iR, $pmR);
     }
@@ -58,20 +61,22 @@ final class PaymentServiceTest
             'note' => 'Paid in full',
         ];
 
+        /** @var Inv&m\MockInterface $inv */
         $inv = m::mock(Inv::class);
+        /** @var IR&m\MockInterface $iR */
         $iR = m::mock(IR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $iR->shouldReceive('repoInvUnLoadedquery');
         $e->once()->with(10)->andReturn($inv);
 
+        /** @var PaymentMethod&m\MockInterface $paymentMethod */
         $paymentMethod = m::mock(PaymentMethod::class);
+        /** @var PMR&m\MockInterface $pmR */
         $pmR = m::mock(PMR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $pmR->shouldReceive('repoPaymentMethodquery');
         $e2->once()->with(3)->andReturn($paymentMethod);
 
+        /** @var PaymentRepository&m\MockInterface $repository */
         $repository = m::mock(PaymentRepository::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $repository->shouldReceive('save');
         $e3->once()->with($model);
 
@@ -96,14 +101,16 @@ final class PaymentServiceTest
         $model = new Payment();
         $array = [];
 
+        /** @var IR&m\MockInterface $iR */
         $iR = m::mock(IR::class);
         $iR->shouldNotReceive('repoInvUnLoadedquery');
 
+        /** @var PMR&m\MockInterface $pmR */
         $pmR = m::mock(PMR::class);
         $pmR->shouldNotReceive('repoPaymentMethodquery');
 
+        /** @var PaymentRepository&m\MockInterface $repository */
         $repository = m::mock(PaymentRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('save');
         $e->once()->with($model);
 
@@ -126,20 +133,22 @@ final class PaymentServiceTest
             'note' => 'Handler payment',
         ];
 
+        /** @var Inv&m\MockInterface $inv */
         $inv = m::mock(Inv::class);
+        /** @var IR&m\MockInterface $iR */
         $iR = m::mock(IR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $iR->shouldReceive('repoInvUnLoadedquery');
         $e->once()->with(20)->andReturn($inv);
 
+        /** @var PaymentMethod&m\MockInterface $paymentMethod */
         $paymentMethod = m::mock(PaymentMethod::class);
+        /** @var PMR&m\MockInterface $pmR */
         $pmR = m::mock(PMR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $pmR->shouldReceive('repoPaymentMethodquery');
         $e2->once()->with(5)->andReturn($paymentMethod);
 
+        /** @var PaymentRepository&m\MockInterface $repository */
         $repository = m::mock(PaymentRepository::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $repository->shouldReceive('save');
         $e3->once()->with($model);
 
@@ -161,8 +170,8 @@ final class PaymentServiceTest
     {
         $model = new Payment();
 
+        /** @var PaymentRepository&m\MockInterface $repository */
         $repository = m::mock(PaymentRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('delete');
         $e->once()->with($model);
 

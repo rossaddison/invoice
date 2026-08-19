@@ -21,13 +21,12 @@ use Yiisoft\Aliases\Aliases;
 #[Test]
 final class PlaywrightDocumentHtmlBuilderTest
 {
-    private function makeAliases(string $publicPath, string $root = '/nonexistent-root'): Aliases
+    private function makeAliases(string $publicPath, string $root = '/nonexistent-root'): Aliases&m\MockInterface
     {
+        /** @var Aliases&m\MockInterface $aliases */
         $aliases = m::mock(Aliases::class);
-        /** @var \Mockery\Expectation $e */
         $e = $aliases->shouldReceive('get');
         $e->with('@root')->andReturn($root);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $aliases->shouldReceive('get');
         $e2->with('@public')->andReturn($publicPath);
         return $aliases;

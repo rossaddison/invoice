@@ -28,8 +28,11 @@ final class InvSentLogServiceTest
         ?CR $cR = null,
         ?IR $iR = null,
     ): InvSentLogService {
+        /** @var InvSentLogRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(InvSentLogRepository::class);
+        /** @var CR&m\MockInterface $cR */
         $cR = $cR ?? m::mock(CR::class);
+        /** @var IR&m\MockInterface $iR */
         $iR = $iR ?? m::mock(IR::class);
         return new InvSentLogService($repository, $cR, $iR);
     }
@@ -43,20 +46,22 @@ final class InvSentLogServiceTest
             'date_sent' => '2026-05-10',
         ];
 
+        /** @var Client&m\MockInterface $client */
         $client = m::mock(Client::class);
+        /** @var CR&m\MockInterface $cR */
         $cR = m::mock(CR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $cR->shouldReceive('repoClientquery');
         $e->once()->with(4)->andReturn($client);
 
+        /** @var Inv&m\MockInterface $inv */
         $inv = m::mock(Inv::class);
+        /** @var IR&m\MockInterface $iR */
         $iR = m::mock(IR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $iR->shouldReceive('repoInvUnLoadedquery');
         $e2->once()->with(9)->andReturn($inv);
 
+        /** @var InvSentLogRepository&m\MockInterface $repository */
         $repository = m::mock(InvSentLogRepository::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $repository->shouldReceive('save');
         $e3->once()->with($model);
 
@@ -74,13 +79,15 @@ final class InvSentLogServiceTest
         $model = new InvSentLog();
         $array = ['date_sent' => 'not-a-date'];
 
+        /** @var CR&m\MockInterface $cR */
         $cR = m::mock(CR::class);
         $cR->shouldNotReceive('repoClientquery');
+        /** @var IR&m\MockInterface $iR */
         $iR = m::mock(IR::class);
         $iR->shouldNotReceive('repoInvUnLoadedquery');
 
+        /** @var InvSentLogRepository&m\MockInterface $repository */
         $repository = m::mock(InvSentLogRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('save');
         $e->once()->with($model);
 
@@ -98,7 +105,6 @@ final class InvSentLogServiceTest
 
         /** @var InvSentLogRepository&m\MockInterface $repository */
         $repository = m::mock(InvSentLogRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

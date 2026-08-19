@@ -11,6 +11,7 @@ class CustomFieldEntityTest extends TestCase
 {
     private CustomField $customField;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

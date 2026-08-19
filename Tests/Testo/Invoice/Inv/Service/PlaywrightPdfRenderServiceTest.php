@@ -20,8 +20,8 @@ final class PlaywrightPdfRenderServiceTest
 {
     private function makeService(string $root): PlaywrightPdfRenderService
     {
+        /** @var Aliases&m\MockInterface $aliases */
         $aliases = m::mock(Aliases::class);
-        /** @var \Mockery\Expectation $e */
         $e = $aliases->shouldReceive('get');
         $e->with('@root')->andReturn($root);
         return new PlaywrightPdfRenderService($aliases);

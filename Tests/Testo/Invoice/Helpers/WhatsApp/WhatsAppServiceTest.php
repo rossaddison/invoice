@@ -18,18 +18,27 @@ use Testo\Test;
 #[Test]
 final class WhatsAppServiceTest
 {
+
+    /**
+     * @return LoggerInterface&m\MockInterface
+     */
+    private function makeLoggerInterfaceSpy(): LoggerInterface
+    {
+        /** @var LoggerInterface&m\MockInterface $mock */
+        $mock = m::spy(LoggerInterface::class);
+        return $mock;
+    }
     private const string TO = '+447700900123';
 
     /**
      * @param array<string, string> $settings
      */
-    private function makeSettings(array $settings): SettingRepository
+    private function makeSettings(array $settings): SettingRepository&m\MockInterface
     {
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $sR->shouldReceive('getSetting');
         $e->andReturnUsing(static fn (string $key): string => $settings[$key] ?? '');
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $sR->shouldReceive('decode');
         $e2->andReturnUsing(static fn (string $value): string => $value);
 
@@ -43,12 +52,14 @@ final class WhatsAppServiceTest
     {
         $factory = new Psr17Factory();
 
+        /** @var ClientInterface&m\MockInterface $httpClient */
+        $httpClient = $httpClient ?? m::mock(ClientInterface::class);
         return new WhatsAppService(
             $this->makeSettings($settings),
-            $httpClient ?? m::mock(ClientInterface::class),
+            $httpClient,
             $factory,
             $factory,
-            m::spy(LoggerInterface::class),
+            $this->makeLoggerInterfaceSpy(),
         );
     }
 
@@ -104,8 +115,8 @@ final class WhatsAppServiceTest
         $responseBody = '{"messages":[{"id":"wamid.HBg"}]}';
 
         $capturedPath = '';
+        /** @var ClientInterface&m\MockInterface $httpClient */
         $httpClient = m::mock(ClientInterface::class);
-        /** @var \Mockery\Expectation $e */
         $e = $httpClient->shouldReceive('sendRequest');
         $e->once()->andReturnUsing(function (RequestInterface $request) use (&$capturedPath, $factory, $responseBody): ResponseInterface {
             $capturedPath = $request->getUri()->getPath();
@@ -123,8 +134,8 @@ final class WhatsAppServiceTest
     public function sendTemplateMessageReturnsErrorOnHttpFailureStatus(): void
     {
         $factory = new Psr17Factory();
+        /** @var ClientInterface&m\MockInterface $httpClient */
         $httpClient = m::mock(ClientInterface::class);
-        /** @var \Mockery\Expectation $e */
         $e = $httpClient->shouldReceive('sendRequest');
         $e->once()->andReturn(
             $factory->createResponse(401)->withBody($factory->createStream('{"error":"invalid token"}')),

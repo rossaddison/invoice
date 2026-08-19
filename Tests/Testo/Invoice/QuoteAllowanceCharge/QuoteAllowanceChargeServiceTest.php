@@ -29,8 +29,11 @@ final class QuoteAllowanceChargeServiceTest
         ?ACR $acR = null,
         ?QR $qR = null,
     ): QuoteAllowanceChargeService {
+        /** @var QuoteAllowanceChargeRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(QuoteAllowanceChargeRepository::class);
+        /** @var ACR&m\MockInterface $acR */
         $acR = $acR ?? m::mock(ACR::class);
+        /** @var QR&m\MockInterface $qR */
         $qR = $qR ?? m::mock(QR::class);
         return new QuoteAllowanceChargeService($repository, $acR, $qR);
     }
@@ -45,32 +48,33 @@ final class QuoteAllowanceChargeServiceTest
             'amount' => 200.00,
         ];
 
+        /** @var Quote&m\MockInterface $quote */
         $quote = m::mock(Quote::class);
+        /** @var QR&m\MockInterface $qR */
         $qR = m::mock(QR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $qR->shouldReceive('repoQuoteUnLoadedquery');
         $e->once()->with(2)->andReturn($quote);
 
+        /** @var TaxRate&m\MockInterface $taxRate */
         $taxRate = m::mock(TaxRate::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $taxRate->shouldReceive('getTaxRatePercent');
         $e2->once()->andReturn(10.0);
 
+        /** @var AllowanceCharge&m\MockInterface $allowanceCharge */
         $allowanceCharge = m::mock(AllowanceCharge::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $allowanceCharge->shouldReceive('getTaxRate');
         $e3->twice()->andReturn($taxRate);
 
         // repoAllowanceChargequery is called once from persist() (to set the
         // relation) and again unconditionally in saveQuoteAllowanceCharge
         // itself (for the VAT calc) - two calls with the same id.
+        /** @var ACR&m\MockInterface $acR */
         $acR = m::mock(ACR::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $acR->shouldReceive('repoAllowanceChargequery');
         $e4->twice()->with(3)->andReturn($allowanceCharge);
 
+        /** @var QuoteAllowanceChargeRepository&m\MockInterface $repository */
         $repository = m::mock(QuoteAllowanceChargeRepository::class);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $repository->shouldReceive('save');
         $e5->once()->with($model);
 
@@ -96,24 +100,25 @@ final class QuoteAllowanceChargeServiceTest
             'amount' => 50.00,
         ];
 
+        /** @var Quote&m\MockInterface $quote */
         $quote = m::mock(Quote::class);
+        /** @var QR&m\MockInterface $qR */
         $qR = m::mock(QR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $qR->shouldReceive('repoQuoteUnLoadedquery');
         $e->once()->with(2)->andReturn($quote);
 
+        /** @var AllowanceCharge&m\MockInterface $allowanceCharge */
         $allowanceCharge = m::mock(AllowanceCharge::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $allowanceCharge->shouldReceive('getTaxRate');
         $e2->once()->andReturn(null);
 
+        /** @var ACR&m\MockInterface $acR */
         $acR = m::mock(ACR::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $acR->shouldReceive('repoAllowanceChargequery');
         $e3->twice()->with(3)->andReturn($allowanceCharge);
 
+        /** @var QuoteAllowanceChargeRepository&m\MockInterface $repository */
         $repository = m::mock(QuoteAllowanceChargeRepository::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $repository->shouldReceive('save');
         $e4->once()->with($model);
 
@@ -127,8 +132,8 @@ final class QuoteAllowanceChargeServiceTest
     {
         $model = new QuoteAllowanceCharge();
 
+        /** @var QuoteAllowanceChargeRepository&m\MockInterface $repository */
         $repository = m::mock(QuoteAllowanceChargeRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('delete');
         $e->once()->with($model);
 

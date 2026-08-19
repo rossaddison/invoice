@@ -92,13 +92,11 @@ final class DatabaseBackupServiceTest
     {
         /** @var TableInterface&m\MockInterface $table */
         $table = m::mock(TableInterface::class);
-        /** @var \Mockery\Expectation $getName */
         $getName = $table->expects('getName');
         $getName->andReturn('widgets');
 
         /** @var DriverInterface&m\MockInterface $driver */
         $driver = m::mock(DriverInterface::class);
-        /** @var \Mockery\Expectation $quote */
         $quote = $driver->expects('quote');
         $quote->andReturnUsing(static fn (mixed $value): string => "'" . addslashes((string) $value) . "'");
         $quote->times(3);
@@ -113,13 +111,10 @@ final class DatabaseBackupServiceTest
 
         /** @var DatabaseInterface&m\MockInterface $database */
         $database = m::mock(DatabaseInterface::class);
-        /** @var \Mockery\Expectation $getDriver */
         $getDriver = $database->expects('getDriver');
         $getDriver->andReturn($driver);
-        /** @var \Mockery\Expectation $getTables */
         $getTables = $database->expects('getTables');
         $getTables->andReturn([$table]);
-        /** @var \Mockery\Expectation $query */
         $query = $database->expects('query');
         $query->andReturnUsing(
             static fn (string $sql): FakeStatement => str_starts_with($sql, 'SHOW CREATE TABLE')

@@ -27,8 +27,11 @@ final class ClientCustomServiceTest
         ?CR $cR = null,
         ?CFR $cfR = null,
     ): ClientCustomService {
+        /** @var ClientCustomRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(ClientCustomRepository::class);
+        /** @var CR&m\MockInterface $cR */
         $cR = $cR ?? m::mock(CR::class);
+        /** @var CFR&m\MockInterface $cfR */
         $cfR = $cfR ?? m::mock(CFR::class);
         return new ClientCustomService($repository, $cR, $cfR);
     }
@@ -42,20 +45,22 @@ final class ClientCustomServiceTest
             'value' => 'Reference',
         ];
 
+        /** @var Client&m\MockInterface $client */
         $client = m::mock(Client::class);
+        /** @var CR&m\MockInterface $cR */
         $cR = m::mock(CR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $cR->shouldReceive('repoClientquery');
         $e->once()->with(1)->andReturn($client);
 
+        /** @var CustomField&m\MockInterface $customField */
         $customField = m::mock(CustomField::class);
+        /** @var CFR&m\MockInterface $cfR */
         $cfR = m::mock(CFR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $cfR->shouldReceive('repoCustomFieldquery');
         $e2->once()->with(2)->andReturn($customField);
 
+        /** @var ClientCustomRepository&m\MockInterface $repository */
         $repository = m::mock(ClientCustomRepository::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $repository->shouldReceive('save');
         $e3->once()->with($model);
 
@@ -74,14 +79,16 @@ final class ClientCustomServiceTest
         $model = new ClientCustom();
         $array = [];
 
+        /** @var CR&m\MockInterface $cR */
         $cR = m::mock(CR::class);
         $cR->shouldNotReceive('repoClientquery');
 
+        /** @var CFR&m\MockInterface $cfR */
         $cfR = m::mock(CFR::class);
         $cfR->shouldNotReceive('repoCustomFieldquery');
 
+        /** @var ClientCustomRepository&m\MockInterface $repository */
         $repository = m::mock(ClientCustomRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('save');
         $e->once()->with($model);
 
@@ -96,8 +103,8 @@ final class ClientCustomServiceTest
     {
         $model = new ClientCustom();
 
+        /** @var ClientCustomRepository&m\MockInterface $repository */
         $repository = m::mock(ClientCustomRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('delete');
         $e->once()->with($model);
 

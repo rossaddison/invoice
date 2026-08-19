@@ -687,7 +687,7 @@ class CustomValuesHelper
         return '';
     }
 
-    private function htmlEncodeOrEmpty(mixed $v): string
+    private function htmlEncodeOrEmpty(int|string $v): string
     {
         return Html::encode((string) $v ?: '');
     }
@@ -696,7 +696,7 @@ class CustomValuesHelper
         FormModel $formModel,
         string $customBracketCustomField,
         int $customFieldId,
-        mixed $fieldValue,
+        int|string $fieldValue,
         CustomField $custom_field,
     ): void {
         $selChoices = $this->isSerialized($fieldValue, true) ? (array) unserialize((string) $fieldValue) : [];

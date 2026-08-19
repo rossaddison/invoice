@@ -23,21 +23,28 @@ use Yiisoft\Validator\Validator;
 #[Test]
 final class HomeCareSignupFormTest
 {
+
+    /**
+     * @return User&m\MockInterface
+     */
+    private function makeUserMock(): User
+    {
+        /** @var User&m\MockInterface $mock */
+        $mock = m::mock(User::class);
+        return $mock;
+    }
     private function makeForm(?UserRepository $userR = null, ?CategorySecondaryRepository $csR = null): HomeCareSignupForm
     {
         /** @var TranslatorInterface&m\MockInterface $translator */
         $translator = m::mock(TranslatorInterface::class);
-        /** @var \Mockery\Expectation $e */
         $e = $translator->shouldReceive('translate');
         $e->andReturnUsing(static fn (string $key): string => $key);
 
         if ($userR === null) {
             /** @var UserRepository&m\MockInterface $userR */
             $userR = m::mock(UserRepository::class);
-            /** @var \Mockery\Expectation $e2 */
             $e2 = $userR->shouldReceive('findByLogin');
             $e2->andReturn(null);
-            /** @var \Mockery\Expectation $e3 */
             $e3 = $userR->shouldReceive('findByEmail');
             $e3->andReturn(null);
         }
@@ -45,7 +52,6 @@ final class HomeCareSignupFormTest
         if ($csR === null) {
             /** @var CategorySecondaryRepository&m\MockInterface $csR */
             $csR = m::mock(CategorySecondaryRepository::class);
-            /** @var \Mockery\Expectation $e4 */
             $e4 = $csR->shouldReceive('optionsDataCategorySecondaries');
             $e4->andReturn([7 => 'Weekly Round A']);
         }
@@ -133,10 +139,8 @@ final class HomeCareSignupFormTest
     {
         /** @var UserRepository&m\MockInterface $userR */
         $userR = m::mock(UserRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $userR->shouldReceive('findByLogin');
-        $e->andReturn(m::mock(User::class));
-        /** @var \Mockery\Expectation $e2 */
+        $e->andReturn($this->makeUserMock());
         $e2 = $userR->shouldReceive('findByEmail');
         $e2->andReturn(null);
 

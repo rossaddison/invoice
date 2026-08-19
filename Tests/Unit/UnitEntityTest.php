@@ -11,6 +11,7 @@ class UnitEntityTest extends TestCase
 {
     private Unit $unit;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

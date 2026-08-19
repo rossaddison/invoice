@@ -21,6 +21,7 @@ final class CustomFieldServiceTest
 {
     private function makeService(?CustomFieldRepository $repository = null): CustomFieldService
     {
+        /** @var CustomFieldRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(CustomFieldRepository::class);
         return new CustomFieldService($repository);
     }
@@ -53,7 +54,6 @@ final class CustomFieldServiceTest
 
         /** @var CustomFieldRepository&m\MockInterface $repository */
         $repository = m::mock(CustomFieldRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -92,7 +92,6 @@ final class CustomFieldServiceTest
 
         /** @var CustomFieldRepository&m\MockInterface $repository */
         $repository = m::mock(CustomFieldRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -110,7 +109,6 @@ final class CustomFieldServiceTest
 
         /** @var CustomFieldRepository&m\MockInterface $repository */
         $repository = m::mock(CustomFieldRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

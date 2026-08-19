@@ -17,7 +17,6 @@ class InvFormTest extends TestCase
         int $statusId = 1,
         bool $readOnly = false,
     ): Inv {
-        /** @var Inv&\PHPUnit\Framework\MockObject\Stub $inv */
         $inv = $this->createStub(Inv::class);
         $inv->method('getNumber')->willReturn('');
         $inv->method('getDateCreated')->willReturn(new DateTimeImmutable('2026-01-01'));
@@ -74,7 +73,6 @@ class InvFormTest extends TestCase
 
     public function testShowPopulatesCoreFields(): void
     {
-        /** @var Inv&\PHPUnit\Framework\MockObject\Stub $inv */
         $inv = $this->createStub(Inv::class);
         $inv->method('getNumber')->willReturn('INV-0001');
         $inv->method('getDateCreated')->willReturn(new DateTimeImmutable('2026-01-01'));

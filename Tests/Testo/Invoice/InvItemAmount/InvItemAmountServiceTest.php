@@ -24,7 +24,9 @@ final class InvItemAmountServiceTest
         ?InvItemAmountRepository $repository = null,
         ?IIR $iiR = null,
     ): InvItemAmountService {
+        /** @var InvItemAmountRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(InvItemAmountRepository::class);
+        /** @var IIR&m\MockInterface $iiR */
         $iiR = $iiR ?? m::mock(IIR::class);
         return new InvItemAmountService($repository, $iiR);
     }
@@ -42,14 +44,15 @@ final class InvItemAmountServiceTest
             'total' => 116.0,
         ];
 
+        /** @var InvItem&m\MockInterface $invItem */
         $invItem = m::mock(InvItem::class);
+        /** @var IIR&m\MockInterface $iiR */
         $iiR = m::mock(IIR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $iiR->shouldReceive('repoInvItemquery');
         $e->once()->with(6)->andReturn($invItem);
 
+        /** @var InvItemAmountRepository&m\MockInterface $repository */
         $repository = m::mock(InvItemAmountRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -79,13 +82,13 @@ final class InvItemAmountServiceTest
             'total' => 0.0,
         ];
 
+        /** @var IIR&m\MockInterface $iiR */
         $iiR = m::mock(IIR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $iiR->shouldReceive('repoInvItemquery');
         $e->once()->with(9)->andReturn(null);
 
+        /** @var InvItemAmountRepository&m\MockInterface $repository */
         $repository = m::mock(InvItemAmountRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -99,8 +102,8 @@ final class InvItemAmountServiceTest
     {
         $model = new InvItemAmount();
 
+        /** @var InvItemAmountRepository&m\MockInterface $repository */
         $repository = m::mock(InvItemAmountRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('delete');
         $e->once()->with($model);
 

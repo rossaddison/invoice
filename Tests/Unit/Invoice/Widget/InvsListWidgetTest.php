@@ -469,7 +469,6 @@ final class InvsListWidgetTest extends TestCase
     private function resolveGroup(string $groupBy, Inv $inv, ?IR $iR = null): string
     {
         $iR ??= $this->makeIR();
-        /** @var \Closure(Inv): string $resolver */
         $resolver = InvsGroupingHelper::makeGroupValueResolver($groupBy, $iR);
         return $resolver($inv);
     }
@@ -577,7 +576,6 @@ final class InvsListWidgetTest extends TestCase
         $paginator     = $this->makeEmptyPaginator();
         $getGroupValue = static fn(Inv $_inv): string => 'unused';
 
-        /** @var array<string, array{count: int, total: float, paid: float, balance: float}> $result */
         $result = InvsGroupingHelper::computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertSame([], $result);
@@ -591,7 +589,6 @@ final class InvsListWidgetTest extends TestCase
 
         $getGroupValue = static fn(Inv $_inv): string => 'All';
 
-        /** @var array<string, array{count: int, total: float, paid: float, balance: float}> $result */
         $result = InvsGroupingHelper::computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertCount(1, $result);
@@ -609,10 +606,8 @@ final class InvsListWidgetTest extends TestCase
 
         $paginator = new OffsetPaginator(new IterableDataReader([$i1, $i2, $i3]));
 
-        /** @var \Closure(Inv): string $getGroupValue */
         $getGroupValue = InvsGroupingHelper::makeGroupValueResolver('client', $this->makeIR());
 
-        /** @var array<string, array{count: int, total: float, paid: float, balance: float}> $result */
         $result = InvsGroupingHelper::computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertCount(2, $result);
@@ -642,7 +637,6 @@ final class InvsListWidgetTest extends TestCase
         $paginator     = new OffsetPaginator(new IterableDataReader([$inv]));
         $getGroupValue = static fn(Inv $_i): string => 'NullAmounts';
 
-        /** @var array<string, array{count: int, total: float, paid: float, balance: float}> $result */
         $result = InvsGroupingHelper::computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertSame(1,    $result['NullAmounts']['count']);
@@ -657,7 +651,6 @@ final class InvsListWidgetTest extends TestCase
         $paginator     = new OffsetPaginator(new IterableDataReader([$inv]));
         $getGroupValue = static fn(Inv $_i): string => 'Check';
 
-        /** @var array<string, array{count: int, total: float, paid: float, balance: float}> $result */
         $result = InvsGroupingHelper::computeGroupTotals($paginator, $getGroupValue);
 
         // paid + balance = total

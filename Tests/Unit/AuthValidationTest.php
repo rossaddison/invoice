@@ -100,8 +100,14 @@ final class AuthValidationTest extends TestCase
 
     /**
      * Replicate code sanitization logic
+     *
+     * @param int|string $input
+     *
+     * @psalm-param 123456|string $input
+     *
+     * @return null|string
      */
-    private function sanitizeCode(mixed $input): string
+    private function sanitizeCode(string|int $input): string|null
     {
         if ($input === null) {
             return '';
@@ -116,8 +122,12 @@ final class AuthValidationTest extends TestCase
 
     /**
      * Replicate sanitize and validate logic
+     *
+     * @param \stdClass|array|null|string $input
+     *
+     * @psalm-param '1a2b3c4d5e6f'|'AB-CD-12-34'|\stdClass|array|null $input
      */
-    private function sanitizeAndValidateCode(mixed $input, bool $digitsOnly = false): ?string
+    private function sanitizeAndValidateCode(array|string|\stdClass|null $input, bool $digitsOnly = false): ?string
     {
         if ($input === null || is_array($input) || is_object($input)) {
             return null;

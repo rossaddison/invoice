@@ -20,6 +20,7 @@ final class PaymentMethodServiceTest
 {
     private function makeService(?PaymentMethodRepository $repository = null): PaymentMethodService
     {
+        /** @var PaymentMethodRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(PaymentMethodRepository::class);
         return new PaymentMethodService($repository);
     }
@@ -31,7 +32,6 @@ final class PaymentMethodServiceTest
 
         /** @var PaymentMethodRepository&m\MockInterface $repository */
         $repository = m::mock(PaymentMethodRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -49,7 +49,6 @@ final class PaymentMethodServiceTest
 
         /** @var PaymentMethodRepository&m\MockInterface $repository */
         $repository = m::mock(PaymentMethodRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -66,7 +65,6 @@ final class PaymentMethodServiceTest
 
         /** @var PaymentMethodRepository&m\MockInterface $repository */
         $repository = m::mock(PaymentMethodRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

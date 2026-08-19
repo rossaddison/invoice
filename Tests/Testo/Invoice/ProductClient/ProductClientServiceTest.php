@@ -27,8 +27,11 @@ final class ProductClientServiceTest
         ?PR $pR = null,
         ?CR $cR = null,
     ): ProductClientService {
+        /** @var ProductClientRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(ProductClientRepository::class);
+        /** @var PR&m\MockInterface $pR */
         $pR = $pR ?? m::mock(PR::class);
+        /** @var CR&m\MockInterface $cR */
         $cR = $cR ?? m::mock(CR::class);
         return new ProductClientService($repository, $pR, $cR);
     }
@@ -42,20 +45,22 @@ final class ProductClientServiceTest
             'updated_at' => '2026-06-01',
         ];
 
+        /** @var Product&m\MockInterface $product */
         $product = m::mock(Product::class);
+        /** @var PR&m\MockInterface $pR */
         $pR = m::mock(PR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $pR->shouldReceive('repoProductquery');
         $e->once()->with(7)->andReturn($product);
 
+        /** @var Client&m\MockInterface $client */
         $client = m::mock(Client::class);
+        /** @var CR&m\MockInterface $cR */
         $cR = m::mock(CR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $cR->shouldReceive('repoClientquery');
         $e2->once()->with(3)->andReturn($client);
 
+        /** @var ProductClientRepository&m\MockInterface $repository */
         $repository = m::mock(ProductClientRepository::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $repository->shouldReceive('save');
         $e3->once()->with($model);
 
@@ -74,17 +79,19 @@ final class ProductClientServiceTest
         $model = new ProductClient();
         $array = ['client_id' => 3, 'updated_at' => '2026-06-01'];
 
+        /** @var PR&m\MockInterface $pR */
         $pR = m::mock(PR::class);
         $pR->shouldNotReceive('repoProductquery');
 
+        /** @var Client&m\MockInterface $client */
         $client = m::mock(Client::class);
+        /** @var CR&m\MockInterface $cR */
         $cR = m::mock(CR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $cR->shouldReceive('repoClientquery');
         $e->once()->with(3)->andReturn($client);
 
+        /** @var ProductClientRepository&m\MockInterface $repository */
         $repository = m::mock(ProductClientRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -96,14 +103,16 @@ final class ProductClientServiceTest
 
     public function syncFromInvItemsSkipsAlreadyAssociatedProducts(): void
     {
+        /** @var ProductClientRepository&m\MockInterface $repository */
         $repository = m::mock(ProductClientRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('isProductAssociatedWithClient');
         $e->once()->with(7, 3)->andReturn(true);
         $repository->shouldNotReceive('save');
 
+        /** @var PR&m\MockInterface $pR */
         $pR = m::mock(PR::class);
         $pR->shouldNotReceive('repoProductquery');
+        /** @var CR&m\MockInterface $cR */
         $cR = m::mock(CR::class);
         $cR->shouldNotReceive('repoClientquery');
 
@@ -113,30 +122,30 @@ final class ProductClientServiceTest
 
     public function syncFromInvItemsSavesNewAssociationForEachUnassociatedProduct(): void
     {
+        /** @var Client&m\MockInterface $client */
         $client = m::mock(Client::class);
+        /** @var CR&m\MockInterface $cR */
         $cR = m::mock(CR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $cR->shouldReceive('repoClientquery');
         $e->twice()->with(3)->andReturn($client);
 
+        /** @var Product&m\MockInterface $product1 */
         $product1 = m::mock(Product::class);
+        /** @var Product&m\MockInterface $product2 */
         $product2 = m::mock(Product::class);
+        /** @var PR&m\MockInterface $pR */
         $pR = m::mock(PR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $pR->shouldReceive('repoProductquery');
         $e2->once()->with(7)->andReturn($product1);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $pR->shouldReceive('repoProductquery');
         $e3->once()->with(9)->andReturn($product2);
 
+        /** @var ProductClientRepository&m\MockInterface $repository */
         $repository = m::mock(ProductClientRepository::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $repository->shouldReceive('isProductAssociatedWithClient');
         $e4->once()->with(7, 3)->andReturn(false);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $repository->shouldReceive('isProductAssociatedWithClient');
         $e5->once()->with(9, 3)->andReturn(false);
-        /** @var \Mockery\Expectation $e6 */
         $e6 = $repository->shouldReceive('save');
         $e6->twice()->with(m::on(fn (mixed $arg): bool => $arg instanceof ProductClient));
 
@@ -148,8 +157,8 @@ final class ProductClientServiceTest
     {
         $model = new ProductClient();
 
+        /** @var ProductClientRepository&m\MockInterface $repository */
         $repository = m::mock(ProductClientRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('delete');
         $e->once()->with($model);
 

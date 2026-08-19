@@ -26,6 +26,7 @@ final class GroupServiceTest
 
     private function makeService(?GroupRepository $repository = null): GroupService
     {
+        /** @var GroupRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(GroupRepository::class);
         return new GroupService($repository);
     }
@@ -42,7 +43,6 @@ final class GroupServiceTest
 
         /** @var GroupRepository&m\MockInterface $repository */
         $repository = m::mock(GroupRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -61,7 +61,6 @@ final class GroupServiceTest
 
         /** @var GroupRepository&m\MockInterface $repository */
         $repository = m::mock(GroupRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -81,7 +80,6 @@ final class GroupServiceTest
 
         /** @var GroupRepository&m\MockInterface $repository */
         $repository = m::mock(GroupRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

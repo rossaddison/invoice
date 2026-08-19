@@ -29,7 +29,6 @@ final class InvTaxRateServiceTest
     {
         /** @var EntityReader&m\MockInterface $reader */
         $reader = m::mock(EntityReader::class);
-        /** @var \Mockery\Expectation $e */
         $e = $reader->shouldReceive('getIterator');
         $e->andReturn((static function () use ($items) {
             yield from $items;
@@ -42,8 +41,11 @@ final class InvTaxRateServiceTest
         ?IR $iR = null,
         ?TRR $trR = null,
     ): InvTaxRateService {
+        /** @var InvTaxRateRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(InvTaxRateRepository::class);
+        /** @var IR&m\MockInterface $iR */
         $iR = $iR ?? m::mock(IR::class);
+        /** @var TRR&m\MockInterface $trR */
         $trR = $trR ?? m::mock(TRR::class);
         return new InvTaxRateService($repository, $iR, $trR);
     }
@@ -58,20 +60,22 @@ final class InvTaxRateServiceTest
             'inv_tax_rate_amount' => 12.5,
         ];
 
+        /** @var Inv&m\MockInterface $inv */
         $inv = m::mock(Inv::class);
+        /** @var IR&m\MockInterface $iR */
         $iR = m::mock(IR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $iR->shouldReceive('repoInvUnLoadedquery');
         $e->once()->with(1)->andReturn($inv);
 
+        /** @var TaxRate&m\MockInterface $taxRate */
         $taxRate = m::mock(TaxRate::class);
+        /** @var TRR&m\MockInterface $trR */
         $trR = m::mock(TRR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $trR->shouldReceive('repoTaxRatequery');
         $e2->once()->with(2)->andReturn($taxRate);
 
+        /** @var InvTaxRateRepository&m\MockInterface $repository */
         $repository = m::mock(InvTaxRateRepository::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $repository->shouldReceive('save');
         $e3->once()->with($model);
 
@@ -91,14 +95,16 @@ final class InvTaxRateServiceTest
         $model = new InvTaxRate();
         $array = [];
 
+        /** @var IR&m\MockInterface $iR */
         $iR = m::mock(IR::class);
         $iR->shouldNotReceive('repoInvUnLoadedquery');
 
+        /** @var TRR&m\MockInterface $trR */
         $trR = m::mock(TRR::class);
         $trR->shouldNotReceive('repoTaxRatequery');
 
+        /** @var InvTaxRateRepository&m\MockInterface $repository */
         $repository = m::mock(InvTaxRateRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('save');
         $e->once()->with($model);
 
@@ -114,11 +120,10 @@ final class InvTaxRateServiceTest
         $basis1 = new InvTaxRate(inv_id: 1, tax_rate_id: 5, include_item_tax: 1, inv_tax_rate_amount: 10.00);
         $basis2 = new InvTaxRate(inv_id: 1, tax_rate_id: 6, include_item_tax: 0, inv_tax_rate_amount: 20.00);
 
+        /** @var InvTaxRateRepository&m\MockInterface $repository */
         $repository = m::mock(InvTaxRateRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('repoInvquery');
         $e->once()->with(1)->andReturn($this->readerYielding([$basis1, $basis2]));
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with(m::on(
             fn (mixed $arg): bool => $arg instanceof InvTaxRate
@@ -127,7 +132,6 @@ final class InvTaxRateServiceTest
                 && $arg->getIncludeItemTax() === 1
                 && $arg->getInvTaxRateAmount() === -10.00
         ));
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $repository->shouldReceive('save');
         $e3->once()->with(m::on(
             fn (mixed $arg): bool => $arg instanceof InvTaxRate
@@ -145,8 +149,8 @@ final class InvTaxRateServiceTest
     {
         $model = new InvTaxRate();
 
+        /** @var InvTaxRateRepository&m\MockInterface $repository */
         $repository = m::mock(InvTaxRateRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('delete');
         $e->once()->with($model);
 

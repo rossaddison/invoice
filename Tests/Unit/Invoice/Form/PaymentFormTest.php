@@ -29,7 +29,6 @@ class PaymentFormTest extends TestCase
 
     public function testShowPopulatesFromMockedPayment(): void
     {
-        /** @var Payment&\PHPUnit\Framework\MockObject\Stub $payment */
         $payment = $this->createStub(Payment::class);
         $payment->method('reqPaymentMethodId')->willReturn(2);
         $payment->method('getPaymentDate')->willReturn('2026-01-10');
@@ -50,7 +49,6 @@ class PaymentFormTest extends TestCase
 
     public function testShowWithZeroAmount(): void
     {
-        /** @var Payment&\PHPUnit\Framework\MockObject\Stub $payment */
         $payment = $this->createStub(Payment::class);
         $payment->method('reqPaymentMethodId')->willReturn(1);
         $payment->method('getPaymentDate')->willReturn('2026-02-01');
@@ -66,7 +64,6 @@ class PaymentFormTest extends TestCase
 
     public function testShowWithLargeAmount(): void
     {
-        /** @var Payment&\PHPUnit\Framework\MockObject\Stub $payment */
         $payment = $this->createStub(Payment::class);
         $payment->method('reqPaymentMethodId')->willReturn(3);
         $payment->method('getPaymentDate')->willReturn('2026-03-15');
@@ -83,7 +80,6 @@ class PaymentFormTest extends TestCase
 
     public function testShowReturnsNewInstance(): void
     {
-        /** @var Payment&\PHPUnit\Framework\MockObject\Stub $payment */
         $payment = $this->createStub(Payment::class);
         $payment->method('reqPaymentMethodId')->willReturn(1);
         $payment->method('getPaymentDate')->willReturn('2026-01-01');

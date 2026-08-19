@@ -24,7 +24,9 @@ final class ProjectServiceTest
         ?ProjectRepository $repository = null,
         ?CR $cR = null,
     ): ProjectService {
+        /** @var ProjectRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(ProjectRepository::class);
+        /** @var CR&m\MockInterface $cR */
         $cR = $cR ?? m::mock(CR::class);
         return new ProjectService($repository, $cR);
     }
@@ -37,14 +39,15 @@ final class ProjectServiceTest
             'name' => 'Website Redesign',
         ];
 
+        /** @var Client&m\MockInterface $client */
         $client = m::mock(Client::class);
+        /** @var CR&m\MockInterface $cR */
         $cR = m::mock(CR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $cR->shouldReceive('repoClientquery');
         $e->once()->with(9)->andReturn($client);
 
+        /** @var ProjectRepository&m\MockInterface $repository */
         $repository = m::mock(ProjectRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -60,11 +63,12 @@ final class ProjectServiceTest
     {
         $model = new Project();
 
+        /** @var CR&m\MockInterface $cR */
         $cR = m::mock(CR::class);
         $cR->shouldNotReceive('repoClientquery');
 
+        /** @var ProjectRepository&m\MockInterface $repository */
         $repository = m::mock(ProjectRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('save');
         $e->once()->with($model);
 
@@ -81,7 +85,6 @@ final class ProjectServiceTest
 
         /** @var ProjectRepository&m\MockInterface $repository */
         $repository = m::mock(ProjectRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

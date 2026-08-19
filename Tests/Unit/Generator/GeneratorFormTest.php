@@ -13,6 +13,7 @@ class GeneratorFormTest extends TestCase
 {
     private Stub $gentor;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -12,6 +12,7 @@ class CryptorTest extends TestCase
     private Cryptor $cryptor;
     private string $testKey = 'test_encryption_key_12345';
     
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -25,7 +25,9 @@ final class CompanyPrivateServiceTest
         ?CompanyPrivateRepository $repository = null,
         ?CR $cR = null,
     ): CompanyPrivateService {
+        /** @var CompanyPrivateRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(CompanyPrivateRepository::class);
+        /** @var CR&m\MockInterface $cR */
         $cR = $cR ?? m::mock(CR::class);
         return new CompanyPrivateService($repository, $cR);
     }
@@ -50,17 +52,16 @@ final class CompanyPrivateServiceTest
             'end_date' => '2026-12-31',
         ];
 
+        /** @var Company&m\MockInterface $company */
         $company = m::mock(Company::class);
 
         /** @var CR&m\MockInterface $cR */
         $cR = m::mock(CR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $cR->expects('repoCompanyquery');
         $e->once()->with(3)->andReturn($company);
 
         /** @var CompanyPrivateRepository&m\MockInterface $repository */
         $repository = m::mock(CompanyPrivateRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->expects('save');
         $e2->once()->with($model);
 
@@ -94,7 +95,6 @@ final class CompanyPrivateServiceTest
 
         /** @var CompanyPrivateRepository&m\MockInterface $repository */
         $repository = m::mock(CompanyPrivateRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -110,7 +110,6 @@ final class CompanyPrivateServiceTest
 
         /** @var CompanyPrivateRepository&m\MockInterface $repository */
         $repository = m::mock(CompanyPrivateRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

@@ -48,8 +48,11 @@ final class TaskServiceTest
         ?PR $pR = null,
         ?TRR $trR = null,
     ): TaskService {
+        /** @var TaskRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(TaskRepository::class);
+        /** @var PR&m\MockInterface $pR */
         $pR = $pR ?? m::mock(PR::class);
+        /** @var TRR&m\MockInterface $trR */
         $trR = $trR ?? m::mock(TRR::class);
         return new TaskService($repository, $pR, $trR);
     }
@@ -59,10 +62,13 @@ final class TaskServiceTest
     {
         $model = new Task();
 
+        /** @var PR&m\MockInterface $pR */
         $pR = m::mock(PR::class);
         $pR->shouldNotReceive('repoProjectquery');
+        /** @var TRR&m\MockInterface $trR */
         $trR = m::mock(TRR::class);
         $trR->shouldNotReceive('repoTaxRatequery');
+        /** @var TaskRepository&m\MockInterface $repository */
         $repository = m::mock(TaskRepository::class);
         $repository->shouldNotReceive('save');
 
@@ -82,26 +88,26 @@ final class TaskServiceTest
             'finish_date' => '2026-06-15',
         ];
 
+        /** @var Project&m\MockInterface $project */
         $project = m::mock(Project::class);
-        /** @var \Mockery\Expectation $reqIdExpectation */
         $reqIdExpectation = $project->shouldReceive('reqId');
         $reqIdExpectation->andReturn(5);
+        /** @var PR&m\MockInterface $pR */
         $pR = m::mock(PR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $pR->shouldReceive('repoProjectquery');
         $e->once()->with(5)->andReturn($project);
 
+        /** @var TaxRate&m\MockInterface $taxRate */
         $taxRate = m::mock(TaxRate::class);
-        /** @var \Mockery\Expectation $taxRateReqIdExpectation */
         $taxRateReqIdExpectation = $taxRate->shouldReceive('reqId');
         $taxRateReqIdExpectation->andReturn(2);
+        /** @var TRR&m\MockInterface $trR */
         $trR = m::mock(TRR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $trR->shouldReceive('repoTaxRatequery');
         $e2->once()->with(2)->andReturn($taxRate);
 
+        /** @var TaskRepository&m\MockInterface $repository */
         $repository = m::mock(TaskRepository::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $repository->shouldReceive('save');
         $e3->once()->with($model);
 
@@ -127,13 +133,15 @@ final class TaskServiceTest
         $model = new Task();
         $array = ['finish_date' => '2026-06-15'];
 
+        /** @var PR&m\MockInterface $pR */
         $pR = m::mock(PR::class);
         $pR->shouldNotReceive('repoProjectquery');
+        /** @var TRR&m\MockInterface $trR */
         $trR = m::mock(TRR::class);
         $trR->shouldNotReceive('repoTaxRatequery');
 
+        /** @var TaskRepository&m\MockInterface $repository */
         $repository = m::mock(TaskRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('save');
         $e->once()->with($model);
 
@@ -149,7 +157,6 @@ final class TaskServiceTest
 
         /** @var TaskRepository&m\MockInterface $repository */
         $repository = m::mock(TaskRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

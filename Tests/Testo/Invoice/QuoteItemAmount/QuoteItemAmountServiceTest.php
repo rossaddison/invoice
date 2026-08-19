@@ -24,7 +24,9 @@ final class QuoteItemAmountServiceTest
         ?QuoteItemAmountRepository $repository = null,
         ?QuoteItemRepository $quoteItemRepository = null,
     ): QuoteItemAmountService {
+        /** @var QuoteItemAmountRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(QuoteItemAmountRepository::class);
+        /** @var QuoteItemRepository&m\MockInterface $quoteItemRepository */
         $quoteItemRepository = $quoteItemRepository ?? m::mock(QuoteItemRepository::class);
         return new QuoteItemAmountService($repository, $quoteItemRepository);
     }
@@ -42,14 +44,15 @@ final class QuoteItemAmountServiceTest
             'total' => 121.50,
         ];
 
+        /** @var QuoteItem&m\MockInterface $quoteItem */
         $quoteItem = m::mock(QuoteItem::class);
+        /** @var QuoteItemRepository&m\MockInterface $quoteItemRepository */
         $quoteItemRepository = m::mock(QuoteItemRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $quoteItemRepository->shouldReceive('repoQuoteItemquery');
         $e->once()->with(4)->andReturn($quoteItem);
 
+        /** @var QuoteItemAmountRepository&m\MockInterface $repository */
         $repository = m::mock(QuoteItemAmountRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -78,13 +81,13 @@ final class QuoteItemAmountServiceTest
             'total' => 0.00,
         ];
 
+        /** @var QuoteItemRepository&m\MockInterface $quoteItemRepository */
         $quoteItemRepository = m::mock(QuoteItemRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $quoteItemRepository->shouldReceive('repoQuoteItemquery');
         $e->once()->with(9)->andReturn(null);
 
+        /** @var QuoteItemAmountRepository&m\MockInterface $repository */
         $repository = m::mock(QuoteItemAmountRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -98,8 +101,8 @@ final class QuoteItemAmountServiceTest
     {
         $model = new QuoteItemAmount();
 
+        /** @var QuoteItemAmountRepository&m\MockInterface $repository */
         $repository = m::mock(QuoteItemAmountRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('delete');
         $e->once()->with($model);
 

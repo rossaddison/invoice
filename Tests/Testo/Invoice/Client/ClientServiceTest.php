@@ -49,7 +49,6 @@ final class ClientServiceTest
 
         /** @var ClientRepository&m\MockInterface $repo */
         $repo = m::mock(ClientRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->expects('save');
         $e->once()->with($client);
 
@@ -67,7 +66,6 @@ final class ClientServiceTest
 
         /** @var ClientRepository&m\MockInterface $repo */
         $repo = m::mock(ClientRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->expects('save');
         $e->once()->with($client);
 
@@ -120,7 +118,6 @@ final class ClientServiceTest
 
         /** @var ClientRepository&m\MockInterface $repo */
         $repo = m::mock(ClientRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->expects('save');
         $e->once()->with($client);
 
@@ -147,7 +144,6 @@ final class ClientServiceTest
 
         /** @var ClientRepository&m\MockInterface $repo */
         $repo = m::mock(ClientRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->expects('save');
         $e->once()->with($client);
 
@@ -171,7 +167,6 @@ final class ClientServiceTest
 
         /** @var ClientRepository&m\MockInterface $repo */
         $repo = m::mock(ClientRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->expects('save');
         $e->once()->with($client);
 
@@ -189,7 +184,6 @@ final class ClientServiceTest
 
         /** @var ClientRepository&m\MockInterface $repo */
         $repo = m::mock(ClientRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->expects('save');
         $e->once()->with($client);
 
@@ -203,11 +197,11 @@ final class ClientServiceTest
 
     public function deleteClientCallsRepositoryDeleteWithGivenClient(): void
     {
+        /** @var Client&m\MockInterface $client */
         $client = m::mock(Client::class);
 
         /** @var ClientRepository&m\MockInterface $repo */
         $repo = m::mock(ClientRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->expects('delete');
         $e->once()->with($client);
 
@@ -219,7 +213,6 @@ final class ClientServiceTest
     {
         /** @var ClientRepository&m\MockInterface $repo */
         $repo = m::mock(ClientRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->expects('delete');
         $e->once()->with(null);
 

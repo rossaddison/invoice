@@ -16,6 +16,7 @@ final class PrometheusIntegrationTest extends TestCase
 {
     private CollectorRegistry $registry;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

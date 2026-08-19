@@ -30,8 +30,11 @@ final class SalesOrderAllowanceChargeServiceTest
         ?ACR $acR = null,
         ?SOR $soR = null,
     ): SalesOrderAllowanceChargeService {
+        /** @var SalesOrderAllowanceChargeRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(SalesOrderAllowanceChargeRepository::class);
+        /** @var ACR&m\MockInterface $acR */
         $acR = $acR ?? m::mock(ACR::class);
+        /** @var SOR&m\MockInterface $soR */
         $soR = $soR ?? m::mock(SOR::class);
         return new SalesOrderAllowanceChargeService($repository, $acR, $soR);
     }
@@ -55,25 +58,21 @@ final class SalesOrderAllowanceChargeServiceTest
 
         /** @var ACR&m\MockInterface $acR */
         $acR = m::mock(ACR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $acR->expects('repoAllowanceChargequery');
         $e->twice()->with(3)->andReturn($ac);
 
         /** @var SalesOrder&m\MockInterface $salesOrder */
         $salesOrder = m::mock(SalesOrder::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $salesOrder->shouldReceive('reqId');
         $e2->once()->andReturn(4);
 
         /** @var SOR&m\MockInterface $soR */
         $soR = m::mock(SOR::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $soR->expects('repoSalesOrderUnLoadedquery');
         $e3->once()->with(4)->andReturn($salesOrder);
 
         /** @var SalesOrderAllowanceChargeRepository&m\MockInterface $repository */
         $repository = m::mock(SalesOrderAllowanceChargeRepository::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $repository->expects('save');
         $e4->once()->with($model);
 
@@ -103,19 +102,16 @@ final class SalesOrderAllowanceChargeServiceTest
 
         /** @var ACR&m\MockInterface $acR */
         $acR = m::mock(ACR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $acR->expects('repoAllowanceChargequery');
         $e->twice()->with(5)->andReturn($ac);
 
         /** @var SOR&m\MockInterface $soR */
         $soR = m::mock(SOR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $soR->expects('repoSalesOrderUnLoadedquery');
         $e2->once()->with(6)->andReturn(null);
 
         /** @var SalesOrderAllowanceChargeRepository&m\MockInterface $repository */
         $repository = m::mock(SalesOrderAllowanceChargeRepository::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $repository->expects('save');
         $e3->once()->with($model);
 
@@ -134,7 +130,6 @@ final class SalesOrderAllowanceChargeServiceTest
 
         /** @var SalesOrderAllowanceChargeRepository&m\MockInterface $repository */
         $repository = m::mock(SalesOrderAllowanceChargeRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

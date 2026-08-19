@@ -28,43 +28,38 @@ final class ButtonsToolbarFullTest
 {
     private function render(bool $canPlaywrightPdf): string
     {
+        /** @var TranslatorInterface&m\MockInterface $translator */
         $translator = m::mock(TranslatorInterface::class);
-        /** @var \Mockery\Expectation $e */
         $e = $translator->shouldReceive('translate');
         $e->andReturnUsing(static fn (string $key): string => $key);
 
+        /** @var UrlGeneratorInterface&m\MockInterface $urlGenerator */
         $urlGenerator = m::mock(UrlGeneratorInterface::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $urlGenerator->shouldReceive('generate');
         $e2->andReturn('/dummy-url');
 
+        /** @var SettingRepository&m\MockInterface $settingRepository */
         $settingRepository = m::mock(SettingRepository::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $settingRepository->shouldReceive('getSetting');
         $e3->andReturn('0');
 
+        /** @var Inv&m\MockInterface $inv */
         $inv = m::mock(Inv::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $inv->shouldReceive('reqId');
         $e4->andReturn(233);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $inv->shouldReceive('reqStatusId');
         $e5->andReturn(2);
-        /** @var \Mockery\Expectation $e6 */
         $e6 = $inv->shouldReceive('getSoId');
         $e6->andReturn(0);
-        /** @var \Mockery\Expectation $e7 */
         $e7 = $inv->shouldReceive('getQuoteId');
         $e7->andReturn(0);
-        /** @var \Mockery\Expectation $e8 */
         $e8 = $inv->shouldReceive('getCreditinvoiceParentId');
         $e8->andReturn(0);
-        /** @var \Mockery\Expectation $e9 */
         $e9 = $inv->shouldReceive('getIsReadOnly');
         $e9->andReturn(false);
 
+        /** @var InvAmountRepository&m\MockInterface $iaR */
         $iaR = m::mock(InvAmountRepository::class);
-        /** @var \Mockery\Expectation $e10 */
         $e10 = $iaR->shouldReceive('repoInvAmountcount');
         $e10->andReturn(0);
 

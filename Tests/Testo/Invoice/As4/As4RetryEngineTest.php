@@ -28,89 +28,87 @@ final class As4RetryEngineTest
 {
     public function detectMissingReceiptsReturnsZeroForEmptyQueue(): void
     {
+        /** @var As4MessageRepositoryInterface&m\MockInterface $repo */
         $repo = m::mock(As4MessageRepositoryInterface::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->shouldReceive('findAwaitingReceipts');
         $e->once()->andReturn([]);
 
-        $engine = new As4RetryEngine(
-            $repo,
-            m::spy(As4SenderInterface::class),
-            m::spy(LoggerInterface::class),
-            m::spy(As4ReceiptParserInterface::class),
-        );
+        /** @var As4SenderInterface&m\MockInterface $sender */
+        $sender = m::spy(As4SenderInterface::class);
+        /** @var LoggerInterface&m\MockInterface $logger */
+        $logger = m::spy(LoggerInterface::class);
+        /** @var As4ReceiptParserInterface&m\MockInterface $receiptParser */
+        $receiptParser = m::spy(As4ReceiptParserInterface::class);
+        $engine = new As4RetryEngine($repo, $sender, $logger, $receiptParser);
 
         Assert::same(0, $engine->detectMissingReceipts());
     }
 
     public function detectMissingReceiptsSkipsMessageWithNullFirstSentAt(): void
     {
+        /** @var As4RetryState&m\MockInterface $retryState */
         $retryState = m::mock(As4RetryState::class);
-        /** @var \Mockery\Expectation $e */
         $e = $retryState->shouldReceive('getFirstSentAt');
         $e->andReturn(null);
 
+        /** @var As4Message&m\MockInterface $message */
         $message = m::mock(As4Message::class);
-        /** @var \Mockery\Expectation $e */
         $e = $message->shouldReceive('getRetryState');
         $e->andReturn($retryState);
 
+        /** @var As4MessageRepositoryInterface&m\MockInterface $repo */
         $repo = m::mock(As4MessageRepositoryInterface::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->shouldReceive('findAwaitingReceipts');
         $e->once()->andReturn([$message]);
         $repo->shouldNotReceive('save');
 
-        $engine = new As4RetryEngine(
-            $repo,
-            m::spy(As4SenderInterface::class),
-            m::spy(LoggerInterface::class),
-            m::spy(As4ReceiptParserInterface::class),
-        );
+        /** @var As4SenderInterface&m\MockInterface $sender */
+        $sender = m::spy(As4SenderInterface::class);
+        /** @var LoggerInterface&m\MockInterface $logger */
+        $logger = m::spy(LoggerInterface::class);
+        /** @var As4ReceiptParserInterface&m\MockInterface $receiptParser */
+        $receiptParser = m::spy(As4ReceiptParserInterface::class);
+        $engine = new As4RetryEngine($repo, $sender, $logger, $receiptParser);
 
         Assert::same(0, $engine->detectMissingReceipts());
     }
 
     public function detectMissingReceiptsMarksTimedOutMessageFailed(): void
     {
+        /** @var As4RetryState&m\MockInterface $retryState */
         $retryState = m::mock(As4RetryState::class);
-        /** @var \Mockery\Expectation $e */
         $e = $retryState->shouldReceive('getFirstSentAt');
         $e->andReturn(new DateTime('2000-01-01'));
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $retryState->shouldReceive('getMaxAttempts');
         $e2->andReturn(3);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $retryState->shouldReceive('getRetryIntervalSeconds');
         $e3->andReturn(300);
 
+        /** @var As4Message&m\MockInterface $message */
         $message = m::mock(As4Message::class);
-        /** @var \Mockery\Expectation $e */
         $e = $message->shouldReceive('getRetryState');
         $e->andReturn($retryState);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $message->shouldReceive('getMessageId');
         $e4->andReturn('<timed-out@example.com>');
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $message->shouldReceive('markFailed');
         $e5->once()
            ->with('EBMS:0301', 'Receipt not received within timeout period')
            ->andReturn($message);
 
+        /** @var As4MessageRepositoryInterface&m\MockInterface $repo */
         $repo = m::mock(As4MessageRepositoryInterface::class);
-        /** @var \Mockery\Expectation $e6 */
         $e6 = $repo->shouldReceive('findAwaitingReceipts');
         $e6->once()->andReturn([$message]);
-        /** @var \Mockery\Expectation $e7 */
         $e7 = $repo->shouldReceive('save');
         $e7->once()->with($message);
 
-        $engine = new As4RetryEngine(
-            $repo,
-            m::spy(As4SenderInterface::class),
-            m::spy(LoggerInterface::class),
-            m::spy(As4ReceiptParserInterface::class),
-        );
+        /** @var As4SenderInterface&m\MockInterface $sender */
+        $sender = m::spy(As4SenderInterface::class);
+        /** @var LoggerInterface&m\MockInterface $logger */
+        $logger = m::spy(LoggerInterface::class);
+        /** @var As4ReceiptParserInterface&m\MockInterface $receiptParser */
+        $receiptParser = m::spy(As4ReceiptParserInterface::class);
+        $engine = new As4RetryEngine($repo, $sender, $logger, $receiptParser);
 
         Assert::same(1, $engine->detectMissingReceipts());
     }

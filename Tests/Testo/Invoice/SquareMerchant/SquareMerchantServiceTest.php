@@ -31,7 +31,9 @@ final class SquareMerchantServiceTest
         ?SquareMerchantRepository $repository = null,
         ?IR $iR = null,
     ): SquareMerchantService {
+        /** @var SquareMerchantRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(SquareMerchantRepository::class);
+        /** @var IR&m\MockInterface $iR */
         $iR = $iR ?? m::mock(IR::class);
         return new SquareMerchantService($repository, $iR);
     }
@@ -50,14 +52,15 @@ final class SquareMerchantServiceTest
             'merchant_response_payment_id' => 'payment-xyz',
         ];
 
+        /** @var Inv&m\MockInterface $inv */
         $inv = m::mock(Inv::class);
+        /** @var IR&m\MockInterface $iR */
         $iR = m::mock(IR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $iR->shouldReceive('repoInvUnLoadedquery');
         $e->once()->with(22)->andReturn($inv);
 
+        /** @var SquareMerchantRepository&m\MockInterface $repository */
         $repository = m::mock(SquareMerchantRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -90,14 +93,15 @@ final class SquareMerchantServiceTest
             'merchant_response_reference' => 'INV-0033-square',
         ];
 
+        /** @var Inv&m\MockInterface $inv */
         $inv = m::mock(Inv::class);
+        /** @var IR&m\MockInterface $iR */
         $iR = m::mock(IR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $iR->shouldReceive('repoInvUnLoadedquery');
         $e->once()->with(33)->andReturn($inv);
 
+        /** @var SquareMerchantRepository&m\MockInterface $repository */
         $repository = m::mock(SquareMerchantRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 

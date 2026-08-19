@@ -18,6 +18,7 @@ final class PrometheusEndpointTest extends TestCase
 {
     private CollectorRegistry $registry;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -115,14 +116,13 @@ final class PrometheusEndpointTest extends TestCase
         $this->assertGreaterThan(10, count($metricLines),
                 'Should have multiple metric lines');
         
+        // $metricLines is already filtered to non-empty lines above.
         foreach ($metricLines as $line) {
-            if (!empty($line)) {
-                $this->assertMatchesRegularExpression(
-                    '/^[a-zA-Z_:][a-zA-Z0-9_.:]*(\{[^}]*\})?\s+[\d.eE+-]+$/',
-                    trim($line),
-                    "Metric line should match Prometheus format: $line"
-                );
-            }
+            $this->assertMatchesRegularExpression(
+                '/^[a-zA-Z_:][a-zA-Z0-9_.:]*(\{[^}]*\})?\s+[\d.eE+-]+$/',
+                trim($line),
+                "Metric line should match Prometheus format: $line"
+            );
         }
     }
 
@@ -240,6 +240,9 @@ final class PrometheusEndpointTest extends TestCase
             ->observe(0.5, ['api']);
     }
 
+    /**
+     * @param list<string> $prefixes
+     */
     private function assertStringStartsWithAnyOf(array $prefixes, string $string): void
     {
         foreach ($prefixes as $prefix) {

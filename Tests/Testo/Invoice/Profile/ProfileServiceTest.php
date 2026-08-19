@@ -25,7 +25,9 @@ final class ProfileServiceTest
         ?ProfileRepository $repository = null,
         ?CR $cR = null,
     ): ProfileService {
+        /** @var ProfileRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(ProfileRepository::class);
+        /** @var CR&m\MockInterface $cR */
         $cR = $cR ?? m::mock(CR::class);
         return new ProfileService($repository, $cR);
     }
@@ -41,14 +43,15 @@ final class ProfileServiceTest
             'description' => 'Main profile',
         ];
 
+        /** @var Company&m\MockInterface $company */
         $company = m::mock(Company::class);
+        /** @var CR&m\MockInterface $cR */
         $cR = m::mock(CR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $cR->shouldReceive('repoCompanyquery');
         $e->once()->with(2)->andReturn($company);
 
+        /** @var ProfileRepository&m\MockInterface $repository */
         $repository = m::mock(ProfileRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -68,11 +71,12 @@ final class ProfileServiceTest
         $model = new Profile();
         $array = ['current' => '0'];
 
+        /** @var CR&m\MockInterface $cR */
         $cR = m::mock(CR::class);
         $cR->shouldNotReceive('repoCompanyquery');
 
+        /** @var ProfileRepository&m\MockInterface $repository */
         $repository = m::mock(ProfileRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('save');
         $e->once()->with($model);
 
@@ -89,7 +93,6 @@ final class ProfileServiceTest
 
         /** @var ProfileRepository&m\MockInterface $repository */
         $repository = m::mock(ProfileRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

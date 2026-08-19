@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Yiisoft\Html\Html as H;
 
 /**
- * @psalm-suppress UnnecessaryVarAnnotation
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Translator\TranslatorInterface $translator

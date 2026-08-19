@@ -6,6 +6,7 @@ namespace Tests\PHPUnit\Middleware;
 
 use App\Middleware\PageOutOfRangeMiddleware;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -18,7 +19,7 @@ use Yiisoft\Data\Paginator\PageNotFoundException;
 #[AllowMockObjectsWithoutExpectations]
 final class PageOutOfRangeMiddlewareTest extends TestCase
 {
-    private ResponseFactoryInterface $responseFactory;
+    private ResponseFactoryInterface&MockObject $responseFactory;
     private PageOutOfRangeMiddleware $middleware;
 
     #[\Override]

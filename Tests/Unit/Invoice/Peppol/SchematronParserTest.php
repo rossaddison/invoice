@@ -16,6 +16,7 @@ final class SchematronParserTest extends TestCase
 {
     private SchematronParser $parser;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->parser = new SchematronParser();
@@ -105,11 +106,9 @@ final class SchematronParserTest extends TestCase
         );
         $doc = $this->parser->parseString($xml);
         self::assertCount(1, $doc->rules);
-        /** @var Rule $rule */
         $rule = $doc->rules[0];
         self::assertSame('//ubl:Invoice', $rule->context);
         self::assertCount(1, $rule->assertions);
-        /** @var Assertion $a */
         $a = $rule->assertions[0];
         self::assertSame('PEPPOL-EN16931-R001', $a->id);
         self::assertSame('fatal', $a->flag);

@@ -50,23 +50,25 @@ final class HomeCareCleaningEligibilityServiceTest
         ?HomeCareVisitRepositoryInterface $visitR = null,
         ?ClientRepositoryInterface $clientR = null,
     ): HomeCareCleaningEligibilityService {
+        /** @var InvItemRepositoryInterface&m\MockInterface $invItemR */
         $invItemR = $invItemR ?? m::mock(InvItemRepositoryInterface::class);
+        /** @var ProductRepositoryInterface&m\MockInterface $productR */
         $productR = $productR ?? m::mock(ProductRepositoryInterface::class);
         if ($settingR === null) {
+            /** @var SettingRepositoryInterface&m\MockInterface $settingR */
             $settingR = m::mock(SettingRepositoryInterface::class);
-            /** @var \Mockery\Expectation $e */
             $e = $settingR->shouldReceive('getSetting');
             $e->once()->with('homecare_auto_invoice_enabled')->andReturn('1');
         }
         if ($visitR === null) {
+            /** @var HomeCareVisitRepositoryInterface&m\MockInterface $visitR */
             $visitR = m::mock(HomeCareVisitRepositoryInterface::class);
-            /** @var \Mockery\Expectation $e2 */
             $e2 = $visitR->shouldReceive('repoLatestGeneratedVisitquery');
             $e2->once()->andReturn(null);
         }
         if ($clientR === null) {
+            /** @var ClientRepositoryInterface&m\MockInterface $clientR */
             $clientR = m::mock(ClientRepositoryInterface::class);
-            /** @var \Mockery\Expectation $e3 */
             $e3 = $clientR->shouldReceive('repoClientqueryOrig');
             $e3->once()->andReturn(null);
         }
@@ -81,7 +83,6 @@ final class HomeCareCleaningEligibilityServiceTest
     {
         /** @var Product&m\MockInterface $product */
         $product = m::mock(Product::class);
-        /** @var \Mockery\Expectation $e */
         $e = $product->shouldReceive('getProductType');
         $e->andReturn($type);
         return $product;
@@ -94,7 +95,6 @@ final class HomeCareCleaningEligibilityServiceTest
     {
         /** @var InvItem&m\MockInterface $item */
         $item = m::mock(InvItem::class);
-        /** @var \Mockery\Expectation $e */
         $e = $item->shouldReceive('getProductId');
         $e->andReturn($productId);
         return $item;
@@ -102,17 +102,20 @@ final class HomeCareCleaningEligibilityServiceTest
 
     public function settingDisabledIsNotEligible(): void
     {
+        /** @var InvRepositoryInterface&m\MockInterface $invR */
         $invR = m::mock(InvRepositoryInterface::class);
         $invR->shouldNotReceive('repoClientInvoiceCountquery');
 
+        /** @var HomeCareVisitRepositoryInterface&m\MockInterface $visitR */
         $visitR = m::mock(HomeCareVisitRepositoryInterface::class);
         $visitR->shouldNotReceive('repoLatestGeneratedVisitquery');
 
+        /** @var ClientRepositoryInterface&m\MockInterface $clientR */
         $clientR = m::mock(ClientRepositoryInterface::class);
         $clientR->shouldNotReceive('repoClientqueryOrig');
 
+        /** @var SettingRepositoryInterface&m\MockInterface $settingR */
         $settingR = m::mock(SettingRepositoryInterface::class);
-        /** @var \Mockery\Expectation $e */
         $e = $settingR->shouldReceive('getSetting');
         $e->once()->with('homecare_auto_invoice_enabled')->andReturn('0');
 
@@ -123,15 +126,17 @@ final class HomeCareCleaningEligibilityServiceTest
 
     public function noInvoicesAtAllIsNotEligible(): void
     {
+        /** @var InvRepositoryInterface&m\MockInterface $invR */
         $invR = m::mock(InvRepositoryInterface::class);
-        /** @var \Mockery\Expectation $e */
         $e = $invR->shouldReceive('repoClientInvoiceCountquery');
         $e->once()->with(1)->andReturn(0);
         $invR->shouldNotReceive('repoClientPaidInvoicesquery');
 
+        /** @var ClientRepositoryInterface&m\MockInterface $clientR */
         $clientR = m::mock(ClientRepositoryInterface::class);
         $clientR->shouldNotReceive('repoClientqueryOrig');
 
+        /** @var HomeCareVisitRepositoryInterface&m\MockInterface $visitR */
         $visitR = m::mock(HomeCareVisitRepositoryInterface::class);
         $visitR->shouldNotReceive('repoLatestGeneratedVisitquery');
 
@@ -142,22 +147,23 @@ final class HomeCareCleaningEligibilityServiceTest
 
     public function pausedForThisClientIsNotEligible(): void
     {
+        /** @var InvRepositoryInterface&m\MockInterface $invR */
         $invR = m::mock(InvRepositoryInterface::class);
-        /** @var \Mockery\Expectation $e */
         $e = $invR->shouldReceive('repoClientInvoiceCountquery');
         $e->once()->with(1)->andReturn(2);
         $invR->shouldNotReceive('repoClientPaidInvoicesquery');
 
+        /** @var Client&m\MockInterface $client */
         $client = m::mock(Client::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $client->shouldReceive('getHomecareAutoInvoicePaused');
         $e2->once()->andReturn(true);
 
+        /** @var ClientRepositoryInterface&m\MockInterface $clientR */
         $clientR = m::mock(ClientRepositoryInterface::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $clientR->shouldReceive('repoClientqueryOrig');
         $e3->once()->with(1)->andReturn($client);
 
+        /** @var HomeCareVisitRepositoryInterface&m\MockInterface $visitR */
         $visitR = m::mock(HomeCareVisitRepositoryInterface::class);
         $visitR->shouldNotReceive('repoLatestGeneratedVisitquery');
 
@@ -168,11 +174,10 @@ final class HomeCareCleaningEligibilityServiceTest
 
     public function invoicesExistButNoneEverPaidIsNotEligible(): void
     {
+        /** @var InvRepositoryInterface&m\MockInterface $invR */
         $invR = m::mock(InvRepositoryInterface::class);
-        /** @var \Mockery\Expectation $e */
         $e = $invR->shouldReceive('repoClientInvoiceCountquery');
         $e->once()->with(1)->andReturn(2);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $invR->shouldReceive('repoClientPaidInvoicesquery');
         $e2->once()->with(1)->andReturn([]);
 
@@ -183,27 +188,26 @@ final class HomeCareCleaningEligibilityServiceTest
 
     public function lastGeneratedVisitInvoiceStillUnpaidIsNotEligible(): void
     {
+        /** @var InvRepositoryInterface&m\MockInterface $invR */
         $invR = m::mock(InvRepositoryInterface::class);
-        /** @var \Mockery\Expectation $e */
         $e = $invR->shouldReceive('repoClientInvoiceCountquery');
         $e->once()->with(1)->andReturn(2);
         $invR->shouldNotReceive('repoClientPaidInvoicesquery');
 
+        /** @var Inv&m\MockInterface $unpaidInvoice */
         $unpaidInvoice = m::mock(Inv::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $unpaidInvoice->shouldReceive('reqStatusId');
         $e2->once()->andReturn(2);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $invR->shouldReceive('repoInvUnLoadedquery');
         $e3->once()->with(99)->andReturn($unpaidInvoice);
 
+        /** @var HomeCareVisit&m\MockInterface $visit */
         $visit = m::mock(HomeCareVisit::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $visit->shouldReceive('getInvoiceId');
         $e4->once()->andReturn(99);
 
+        /** @var HomeCareVisitRepositoryInterface&m\MockInterface $visitR */
         $visitR = m::mock(HomeCareVisitRepositoryInterface::class);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $visitR->shouldReceive('repoLatestGeneratedVisitquery');
         $e5->once()->with(1)->andReturn($visit);
 
@@ -214,37 +218,34 @@ final class HomeCareCleaningEligibilityServiceTest
 
     public function allPaidInvoicesLackServiceItemIsNotEligible(): void
     {
+        /** @var Inv&m\MockInterface $mostRecent */
         $mostRecent = m::mock(Inv::class);
-        /** @var \Mockery\Expectation $e */
         $e = $mostRecent->shouldReceive('reqId');
         $e->andReturn(42);
 
+        /** @var Inv&m\MockInterface $older */
         $older = m::mock(Inv::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $older->shouldReceive('reqId');
         $e2->andReturn(41);
 
+        /** @var InvRepositoryInterface&m\MockInterface $invR */
         $invR = m::mock(InvRepositoryInterface::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $invR->shouldReceive('repoClientInvoiceCountquery');
         $e3->once()->with(1)->andReturn(3);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $invR->shouldReceive('repoClientPaidInvoicesquery');
         $e4->once()->with(1)->andReturn([$mostRecent, $older]);
 
+        /** @var InvItemRepositoryInterface&m\MockInterface $invItemR */
         $invItemR = m::mock(InvItemRepositoryInterface::class);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $invItemR->shouldReceive('repoInvItemIdquery');
         $e5->once()->with(42)->andReturn([$this->itemForProduct(7)]);
-        /** @var \Mockery\Expectation $e6 */
         $e6 = $invItemR->shouldReceive('repoInvItemIdquery');
         $e6->once()->with(41)->andReturn([$this->itemForProduct(8)]);
 
+        /** @var ProductRepositoryInterface&m\MockInterface $productR */
         $productR = m::mock(ProductRepositoryInterface::class);
-        /** @var \Mockery\Expectation $e7 */
         $e7 = $productR->shouldReceive('repoProductquery');
         $e7->once()->with(7)->andReturn($this->productOfType('product'));
-        /** @var \Mockery\Expectation $e8 */
         $e8 = $productR->shouldReceive('repoProductquery');
         $e8->once()->with(8)->andReturn($this->productOfType('product'));
 
@@ -255,27 +256,26 @@ final class HomeCareCleaningEligibilityServiceTest
 
     public function noPriorGeneratedVisitAndServiceItemIsEligibleAndReturnsLastPaidInvoice(): void
     {
+        /** @var Inv&m\MockInterface $lastPaid */
         $lastPaid = m::mock(Inv::class);
-        /** @var \Mockery\Expectation $e */
         $e = $lastPaid->shouldReceive('reqId');
         $e->once()->andReturn(42);
 
+        /** @var InvRepositoryInterface&m\MockInterface $invR */
         $invR = m::mock(InvRepositoryInterface::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $invR->shouldReceive('repoClientInvoiceCountquery');
         $e2->once()->with(1)->andReturn(3);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $invR->shouldReceive('repoClientPaidInvoicesquery');
         $e3->once()->with(1)->andReturn([$lastPaid]);
         $invR->shouldNotReceive('repoInvUnLoadedquery');
 
+        /** @var InvItemRepositoryInterface&m\MockInterface $invItemR */
         $invItemR = m::mock(InvItemRepositoryInterface::class);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $invItemR->shouldReceive('repoInvItemIdquery');
         $e5->once()->with(42)->andReturn([$this->itemForProduct(7)]);
 
+        /** @var ProductRepositoryInterface&m\MockInterface $productR */
         $productR = m::mock(ProductRepositoryInterface::class);
-        /** @var \Mockery\Expectation $e7 */
         $e7 = $productR->shouldReceive('repoProductquery');
         $e7->once()->with(7)->andReturn($this->productOfType('service'));
 
@@ -291,37 +291,34 @@ final class HomeCareCleaningEligibilityServiceTest
      */
     public function searchesBackwardsPastNonServiceInvoiceToFindServiceItem(): void
     {
+        /** @var Inv&m\MockInterface $mostRecent */
         $mostRecent = m::mock(Inv::class);
-        /** @var \Mockery\Expectation $e */
         $e = $mostRecent->shouldReceive('reqId');
         $e->andReturn(42);
 
+        /** @var Inv&m\MockInterface $olderWithService */
         $olderWithService = m::mock(Inv::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $olderWithService->shouldReceive('reqId');
         $e2->andReturn(41);
 
+        /** @var InvRepositoryInterface&m\MockInterface $invR */
         $invR = m::mock(InvRepositoryInterface::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $invR->shouldReceive('repoClientInvoiceCountquery');
         $e3->once()->with(1)->andReturn(3);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $invR->shouldReceive('repoClientPaidInvoicesquery');
         $e4->once()->with(1)->andReturn([$mostRecent, $olderWithService]);
 
+        /** @var InvItemRepositoryInterface&m\MockInterface $invItemR */
         $invItemR = m::mock(InvItemRepositoryInterface::class);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $invItemR->shouldReceive('repoInvItemIdquery');
         $e5->once()->with(42)->andReturn([$this->itemForProduct(7)]);
-        /** @var \Mockery\Expectation $e6 */
         $e6 = $invItemR->shouldReceive('repoInvItemIdquery');
         $e6->once()->with(41)->andReturn([$this->itemForProduct(8)]);
 
+        /** @var ProductRepositoryInterface&m\MockInterface $productR */
         $productR = m::mock(ProductRepositoryInterface::class);
-        /** @var \Mockery\Expectation $e7 */
         $e7 = $productR->shouldReceive('repoProductquery');
         $e7->once()->with(7)->andReturn($this->productOfType('product'));
-        /** @var \Mockery\Expectation $e8 */
         $e8 = $productR->shouldReceive('repoProductquery');
         $e8->once()->with(8)->andReturn($this->productOfType('service'));
 
@@ -332,44 +329,42 @@ final class HomeCareCleaningEligibilityServiceTest
 
     public function lastGeneratedVisitInvoicePaidIsEligibleAndReturnsLastPaidInvoice(): void
     {
+        /** @var Inv&m\MockInterface $lastPaid */
         $lastPaid = m::mock(Inv::class);
-        /** @var \Mockery\Expectation $e */
         $e = $lastPaid->shouldReceive('reqId');
         $e->once()->andReturn(42);
 
+        /** @var Inv&m\MockInterface $paidInvoice */
         $paidInvoice = m::mock(Inv::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $paidInvoice->shouldReceive('reqStatusId');
         $e2->once()->andReturn(4);
 
+        /** @var InvRepositoryInterface&m\MockInterface $invR */
         $invR = m::mock(InvRepositoryInterface::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $invR->shouldReceive('repoClientInvoiceCountquery');
         $e3->once()->with(1)->andReturn(3);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $invR->shouldReceive('repoClientPaidInvoicesquery');
         $e4->once()->with(1)->andReturn([$lastPaid]);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $invR->shouldReceive('repoInvUnLoadedquery');
         $e5->once()->with(99)->andReturn($paidInvoice);
 
+        /** @var HomeCareVisit&m\MockInterface $visit */
         $visit = m::mock(HomeCareVisit::class);
-        /** @var \Mockery\Expectation $e6 */
         $e6 = $visit->shouldReceive('getInvoiceId');
         $e6->once()->andReturn(99);
 
+        /** @var HomeCareVisitRepositoryInterface&m\MockInterface $visitR */
         $visitR = m::mock(HomeCareVisitRepositoryInterface::class);
-        /** @var \Mockery\Expectation $e7 */
         $e7 = $visitR->shouldReceive('repoLatestGeneratedVisitquery');
         $e7->once()->with(1)->andReturn($visit);
 
+        /** @var InvItemRepositoryInterface&m\MockInterface $invItemR */
         $invItemR = m::mock(InvItemRepositoryInterface::class);
-        /** @var \Mockery\Expectation $e9 */
         $e9 = $invItemR->shouldReceive('repoInvItemIdquery');
         $e9->once()->with(42)->andReturn([$this->itemForProduct(7)]);
 
+        /** @var ProductRepositoryInterface&m\MockInterface $productR */
         $productR = m::mock(ProductRepositoryInterface::class);
-        /** @var \Mockery\Expectation $e11 */
         $e11 = $productR->shouldReceive('repoProductquery');
         $e11->once()->with(7)->andReturn($this->productOfType('service'));
 

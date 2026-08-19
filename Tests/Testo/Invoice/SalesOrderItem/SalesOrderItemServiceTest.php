@@ -44,7 +44,6 @@ final class SalesOrderItemServiceTest
     {
         /** @var EntityReader&m\MockInterface $reader */
         $reader = m::mock(EntityReader::class);
-        /** @var \Mockery\Expectation $e */
         $e = $reader->shouldReceive('getIterator');
         $e->andReturn((static function () use ($items) {
             yield from $items;
@@ -60,11 +59,17 @@ final class SalesOrderItemServiceTest
         ?PR $pR = null,
         ?TaskR $taskR = null,
     ): SalesOrderItemService {
+        /** @var ACSOIR&m\MockInterface $acsoiR */
         $acsoiR = $acsoiR ?? m::mock(ACSOIR::class);
+        /** @var SOIR&m\MockInterface $repository */
         $repository = $repository ?? m::mock(SOIR::class);
+        /** @var SOR&m\MockInterface $soR */
         $soR = $soR ?? m::mock(SOR::class);
+        /** @var TRR&m\MockInterface $trR */
         $trR = $trR ?? m::mock(TRR::class);
+        /** @var PR&m\MockInterface $pR */
         $pR = $pR ?? m::mock(PR::class);
+        /** @var TaskR&m\MockInterface $taskR */
         $taskR = $taskR ?? m::mock(TaskR::class);
         return new SalesOrderItemService($acsoiR, $repository, $soR, $trR, $pR, $taskR);
     }
@@ -85,64 +90,63 @@ final class SalesOrderItemServiceTest
 
         $salesOrder = new SalesOrder();
         $salesOrder->setId(55);
+        /** @var SOR&m\MockInterface $soR */
         $soR = m::mock(SOR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $soR->shouldReceive('repoSalesOrderUnLoadedquery');
         $e->once()->with(55)->andReturn($salesOrder);
 
+        /** @var TRR&m\MockInterface $trR */
         $trR = m::mock(TRR::class);
         $taxRate = new TaxRate();
         $taxRate->setTaxRateId(3);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $trR->shouldReceive('repoTaxRatequery');
         $e2->once()->with(3)->andReturn($taxRate);
 
         $constructorProduct = new Product();
         $constructorProduct->setId(7);
+        /** @var PR&m\MockInterface $pR */
         $pR = m::mock(PR::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $pR->shouldReceive('repoProductquery');
         $e3->once()->with(7)->andReturn($constructorProduct);
 
         $constructorTask = new Task();
         $constructorTask->setId(9);
+        /** @var TaskR&m\MockInterface $taskRCtor */
         $taskRCtor = m::mock(TaskR::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $taskRCtor->shouldReceive('repoTaskquery');
         $e4->once()->with(9)->andReturn($constructorTask);
 
+        /** @var SOIR&m\MockInterface $repository */
         $repository = m::mock(SOIR::class);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $repository->shouldReceive('save');
         $e5->once()->with($model);
 
         $service = $this->makeService(soR: $soR, trR: $trR, pR: $pR, taskR: $taskRCtor, repository: $repository);
 
         $methodProduct = new Product(product_name: 'Widget', product_description: 'A nice widget');
+        /** @var PR&m\MockInterface $pr */
         $pr = m::mock(PR::class);
-        /** @var \Mockery\Expectation $e6 */
         $e6 = $pr->shouldReceive('repoProductquery');
         $e6->once()->with(7)->andReturn($methodProduct);
-        /** @var \Mockery\Expectation $e7 */
         $e7 = $pr->shouldReceive('repoCount');
         $e7->once()->with(7)->andReturn(2);
 
         $methodTask = new Task(name: 'Task Nine', description: 'Task description');
+        /** @var TaskR&m\MockInterface $taskR */
         $taskR = m::mock(TaskR::class);
-        /** @var \Mockery\Expectation $e8 */
         $e8 = $taskR->shouldReceive('repoTaskquery');
         $e8->once()->with(9)->andReturn($methodTask);
-        /** @var \Mockery\Expectation $e9 */
         $e9 = $taskR->shouldReceive('repoCount');
         $e9->once()->with(9)->andReturn(1);
 
         $unit = new Unit(unit_name: 'Box');
         $unit->setId(4);
+        /** @var UR&m\MockInterface $uR */
         $uR = m::mock(UR::class);
-        /** @var \Mockery\Expectation $e10 */
         $e10 = $uR->shouldReceive('repoUnitquery');
         $e10->once()->with(4)->andReturn($unit);
 
+        /** @var Translator&m\MockInterface $translator */
         $translator = m::mock(Translator::class);
         $translator->shouldNotReceive('translate');
 
@@ -168,37 +172,43 @@ final class SalesOrderItemServiceTest
         $model = new SalesOrderItem();
         $array = ['product_unit_id' => 0];
 
+        /** @var SOR&m\MockInterface $soR */
         $soR = m::mock(SOR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $soR->shouldReceive('repoSalesOrderUnLoadedquery');
         $e->once()->with(10)->andReturn(null);
 
+        /** @var TRR&m\MockInterface $trR */
         $trR = m::mock(TRR::class);
         $trR->shouldNotReceive('repoTaxRatequery');
 
+        /** @var PR&m\MockInterface $pR */
         $pR = m::mock(PR::class);
         $pR->shouldNotReceive('repoProductquery');
 
+        /** @var TaskR&m\MockInterface $taskRCtor */
         $taskRCtor = m::mock(TaskR::class);
         $taskRCtor->shouldNotReceive('repoTaskquery');
 
+        /** @var SOIR&m\MockInterface $repository */
         $repository = m::mock(SOIR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
         $service = $this->makeService(soR: $soR, trR: $trR, pR: $pR, taskR: $taskRCtor, repository: $repository);
 
+        /** @var PR&m\MockInterface $pr */
         $pr = m::mock(PR::class);
         $pr->shouldNotReceive('repoProductquery');
+        /** @var TaskR&m\MockInterface $taskR */
         $taskR = m::mock(TaskR::class);
         $taskR->shouldNotReceive('repoTaskquery');
 
+        /** @var UR&m\MockInterface $uR */
         $uR = m::mock(UR::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $uR->shouldReceive('repoUnitquery');
         $e3->once()->with(0)->andReturn(null);
 
+        /** @var Translator&m\MockInterface $translator */
         $translator = m::mock(Translator::class);
         $translator->shouldNotReceive('translate');
 
@@ -218,47 +228,50 @@ final class SalesOrderItemServiceTest
         $model = new SalesOrderItem();
         $array = ['product_id' => 20, 'description' => 'Custom desc', 'product_unit_id' => 0];
 
+        /** @var SOR&m\MockInterface $soR */
         $soR = m::mock(SOR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $soR->shouldReceive('repoSalesOrderUnLoadedquery');
         $e->once()->with(1)->andReturn(null);
 
         $constructorProduct = new Product();
         $constructorProduct->setId(20);
+        /** @var PR&m\MockInterface $pR */
         $pR = m::mock(PR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $pR->shouldReceive('repoProductquery');
         $e2->once()->with(20)->andReturn($constructorProduct);
 
+        /** @var TRR&m\MockInterface $trR */
         $trR = m::mock(TRR::class);
         $trR->shouldNotReceive('repoTaxRatequery');
+        /** @var TaskR&m\MockInterface $taskRCtor */
         $taskRCtor = m::mock(TaskR::class);
         $taskRCtor->shouldNotReceive('repoTaskquery');
 
+        /** @var SOIR&m\MockInterface $repository */
         $repository = m::mock(SOIR::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $repository->shouldReceive('save');
         $e3->once()->with($model);
 
         $service = $this->makeService(soR: $soR, pR: $pR, trR: $trR, taskR: $taskRCtor, repository: $repository);
 
         $methodProduct = new Product(product_name: 'Gadget', product_description: 'Gadget description');
+        /** @var PR&m\MockInterface $pr */
         $pr = m::mock(PR::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $pr->shouldReceive('repoProductquery');
         $e4->once()->with(20)->andReturn($methodProduct);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $pr->shouldReceive('repoCount');
         $e5->once()->with(20)->andReturn(5);
 
+        /** @var TaskR&m\MockInterface $taskR */
         $taskR = m::mock(TaskR::class);
         $taskR->shouldNotReceive('repoTaskquery');
 
+        /** @var UR&m\MockInterface $uR */
         $uR = m::mock(UR::class);
-        /** @var \Mockery\Expectation $e6 */
         $e6 = $uR->shouldReceive('repoUnitquery');
         $e6->once()->with(0)->andReturn(null);
 
+        /** @var Translator&m\MockInterface $translator */
         $translator = m::mock(Translator::class);
         $translator->shouldNotReceive('translate');
 
@@ -274,42 +287,46 @@ final class SalesOrderItemServiceTest
         $model = new SalesOrderItem();
         $array = ['product_id' => 99, 'product_unit_id' => 0];
 
+        /** @var SOR&m\MockInterface $soR */
         $soR = m::mock(SOR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $soR->shouldReceive('repoSalesOrderUnLoadedquery');
         $e->once()->with(1)->andReturn(null);
 
+        /** @var PR&m\MockInterface $pR */
         $pR = m::mock(PR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $pR->shouldReceive('repoProductquery');
         $e2->once()->with(99)->andReturn(null);
 
+        /** @var TRR&m\MockInterface $trR */
         $trR = m::mock(TRR::class);
         $trR->shouldNotReceive('repoTaxRatequery');
+        /** @var TaskR&m\MockInterface $taskRCtor */
         $taskRCtor = m::mock(TaskR::class);
         $taskRCtor->shouldNotReceive('repoTaskquery');
 
+        /** @var SOIR&m\MockInterface $repository */
         $repository = m::mock(SOIR::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $repository->shouldReceive('save');
         $e3->once()->with($model);
 
         $service = $this->makeService(soR: $soR, pR: $pR, trR: $trR, taskR: $taskRCtor, repository: $repository);
 
+        /** @var PR&m\MockInterface $pr */
         $pr = m::mock(PR::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $pr->shouldReceive('repoProductquery');
         $e4->once()->with(99)->andReturn(null);
         $pr->shouldNotReceive('repoCount');
 
+        /** @var TaskR&m\MockInterface $taskR */
         $taskR = m::mock(TaskR::class);
         $taskR->shouldNotReceive('repoTaskquery');
 
+        /** @var UR&m\MockInterface $uR */
         $uR = m::mock(UR::class);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $uR->shouldReceive('repoUnitquery');
         $e5->once()->with(0)->andReturn(null);
 
+        /** @var Translator&m\MockInterface $translator */
         $translator = m::mock(Translator::class);
         $translator->shouldNotReceive('translate');
 
@@ -324,49 +341,51 @@ final class SalesOrderItemServiceTest
         $model = new SalesOrderItem();
         $array = ['task_id' => 30, 'product_unit_id' => 0];
 
+        /** @var SOR&m\MockInterface $soR */
         $soR = m::mock(SOR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $soR->shouldReceive('repoSalesOrderUnLoadedquery');
         $e->once()->with(1)->andReturn(null);
 
         $constructorTask = new Task();
         $constructorTask->setId(30);
+        /** @var TaskR&m\MockInterface $taskRCtor */
         $taskRCtor = m::mock(TaskR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $taskRCtor->shouldReceive('repoTaskquery');
         $e2->once()->with(30)->andReturn($constructorTask);
 
+        /** @var PR&m\MockInterface $pR */
         $pR = m::mock(PR::class);
         $pR->shouldNotReceive('repoProductquery');
+        /** @var TRR&m\MockInterface $trR */
         $trR = m::mock(TRR::class);
         $trR->shouldNotReceive('repoTaxRatequery');
 
+        /** @var SOIR&m\MockInterface $repository */
         $repository = m::mock(SOIR::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $repository->shouldReceive('save');
         $e3->once()->with($model);
 
         $service = $this->makeService(soR: $soR, taskR: $taskRCtor, pR: $pR, trR: $trR, repository: $repository);
 
+        /** @var PR&m\MockInterface $pr */
         $pr = m::mock(PR::class);
         $pr->shouldNotReceive('repoProductquery');
 
         $methodTask = new Task(name: 'Cleanup', description: '');
+        /** @var TaskR&m\MockInterface $taskR */
         $taskR = m::mock(TaskR::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $taskR->shouldReceive('repoTaskquery');
         $e4->once()->with(30)->andReturn($methodTask);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $taskR->shouldReceive('repoCount');
         $e5->once()->with(30)->andReturn(2);
 
+        /** @var UR&m\MockInterface $uR */
         $uR = m::mock(UR::class);
-        /** @var \Mockery\Expectation $e6 */
         $e6 = $uR->shouldReceive('repoUnitquery');
         $e6->once()->with(0)->andReturn(null);
 
+        /** @var Translator&m\MockInterface $translator */
         $translator = m::mock(Translator::class);
-        /** @var \Mockery\Expectation $e7 */
         $e7 = $translator->shouldReceive('translate');
         $e7->once()->with('not.available')->andReturn('N/A');
 
@@ -392,30 +411,31 @@ final class SalesOrderItemServiceTest
             'product_unit_id' => 6,
         ];
 
+        /** @var SOR&m\MockInterface $soR */
         $soR = m::mock(SOR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $soR->shouldReceive('repoSalesOrderUnLoadedquery');
         $e->once()->with(77)->andReturn(null);
 
         $taxRate = new TaxRate();
         $taxRate->setTaxRateId(8);
+        /** @var TRR&m\MockInterface $trR */
         $trR = m::mock(TRR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $trR->shouldReceive('repoTaxRatequery');
         $e2->once()->with(8)->andReturn($taxRate);
 
         $constructorProduct = new Product();
         $constructorProduct->setId(12);
+        /** @var PR&m\MockInterface $pR */
         $pR = m::mock(PR::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $pR->shouldReceive('repoProductquery');
         $e3->once()->with(12)->andReturn($constructorProduct);
 
+        /** @var TaskR&m\MockInterface $taskRCtor */
         $taskRCtor = m::mock(TaskR::class);
         $taskRCtor->shouldNotReceive('repoTaskquery');
 
+        /** @var SOIR&m\MockInterface $repository */
         $repository = m::mock(SOIR::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $repository->shouldReceive('save');
         $e4->once()->with($model);
 
@@ -423,18 +443,17 @@ final class SalesOrderItemServiceTest
 
         $methodProduct = new Product(product_name: 'Thing', product_description: 'Thing description');
         $methodProduct->setId(12);
+        /** @var PR&m\MockInterface $pr */
         $pr = m::mock(PR::class);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $pr->shouldReceive('repoProductquery');
         $e5->once()->with(12)->andReturn($methodProduct);
-        /** @var \Mockery\Expectation $e6 */
         $e6 = $pr->shouldReceive('repoCount');
         $e6->once()->with(12)->andReturn(1);
 
         $unit = new Unit(unit_name: 'Each');
         $unit->setId(6);
+        /** @var UR&m\MockInterface $uR */
         $uR = m::mock(UR::class);
-        /** @var \Mockery\Expectation $e7 */
         $e7 = $uR->shouldReceive('repoUnitquery');
         $e7->once()->with(6)->andReturn($unit);
 
@@ -460,31 +479,35 @@ final class SalesOrderItemServiceTest
         $model = new SalesOrderItem();
         $array = ['product_unit_id' => 0];
 
+        /** @var SOR&m\MockInterface $soR */
         $soR = m::mock(SOR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $soR->shouldReceive('repoSalesOrderUnLoadedquery');
         $e->once()->with(3)->andReturn(null);
 
+        /** @var TRR&m\MockInterface $trR */
         $trR = m::mock(TRR::class);
         $trR->shouldNotReceive('repoTaxRatequery');
+        /** @var PR&m\MockInterface $pR */
         $pR = m::mock(PR::class);
         $pR->shouldNotReceive('repoProductquery');
+        /** @var TaskR&m\MockInterface $taskRCtor */
         $taskRCtor = m::mock(TaskR::class);
         $taskRCtor->shouldNotReceive('repoTaskquery');
 
+        /** @var SOIR&m\MockInterface $repository */
         $repository = m::mock(SOIR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
         $service = $this->makeService(soR: $soR, trR: $trR, pR: $pR, taskR: $taskRCtor, repository: $repository);
 
+        /** @var PR&m\MockInterface $pr */
         $pr = m::mock(PR::class);
         $pr->shouldNotReceive('repoProductquery');
         $pr->shouldNotReceive('repoCount');
 
+        /** @var UR&m\MockInterface $uR */
         $uR = m::mock(UR::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $uR->shouldReceive('repoUnitquery');
         $e3->once()->with(0)->andReturn(null);
 
@@ -506,36 +529,38 @@ final class SalesOrderItemServiceTest
         $model = new SalesOrderItem();
         $array = ['product_id' => 55, 'product_unit_id' => 0];
 
+        /** @var SOR&m\MockInterface $soR */
         $soR = m::mock(SOR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $soR->shouldReceive('repoSalesOrderUnLoadedquery');
         $e->once()->with(1)->andReturn(null);
 
+        /** @var PR&m\MockInterface $pR */
         $pR = m::mock(PR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $pR->shouldReceive('repoProductquery');
         $e2->once()->with(55)->andReturn(null);
 
+        /** @var TRR&m\MockInterface $trR */
         $trR = m::mock(TRR::class);
         $trR->shouldNotReceive('repoTaxRatequery');
+        /** @var TaskR&m\MockInterface $taskRCtor */
         $taskRCtor = m::mock(TaskR::class);
         $taskRCtor->shouldNotReceive('repoTaskquery');
 
+        /** @var SOIR&m\MockInterface $repository */
         $repository = m::mock(SOIR::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $repository->shouldReceive('save');
         $e3->once()->with($model);
 
         $service = $this->makeService(soR: $soR, pR: $pR, trR: $trR, taskR: $taskRCtor, repository: $repository);
 
+        /** @var PR&m\MockInterface $pr */
         $pr = m::mock(PR::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $pr->shouldReceive('repoProductquery');
         $e4->once()->with(55)->andReturn(null);
         $pr->shouldNotReceive('repoCount');
 
+        /** @var UR&m\MockInterface $uR */
         $uR = m::mock(UR::class);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $uR->shouldReceive('repoUnitquery');
         $e5->once()->with(0)->andReturn(null);
 
@@ -550,8 +575,8 @@ final class SalesOrderItemServiceTest
         $model = new SalesOrderItem();
         $array = ['peppol_po_itemid' => 'ABC123'];
 
+        /** @var SOIR&m\MockInterface $repository */
         $repository = m::mock(SOIR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('save');
         $e->once()->with($model)->andReturn(null);
 
@@ -571,8 +596,8 @@ final class SalesOrderItemServiceTest
         $model = new SalesOrderItem();
         $array = [];
 
+        /** @var SOIR&m\MockInterface $repository */
         $repository = m::mock(SOIR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('save');
         $e->once()->with($model)->andReturn(null);
 
@@ -589,8 +614,8 @@ final class SalesOrderItemServiceTest
         $model = new SalesOrderItem();
         $array = ['peppol_po_lineid' => 'XYZ789'];
 
+        /** @var SOIR&m\MockInterface $repository */
         $repository = m::mock(SOIR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('save');
         $e->once()->with($model)->andReturn(null);
 
@@ -607,8 +632,8 @@ final class SalesOrderItemServiceTest
         $model = new SalesOrderItem();
         $array = [];
 
+        /** @var SOIR&m\MockInterface $repository */
         $repository = m::mock(SOIR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('save');
         $e->once()->with($model)->andReturn(null);
 
@@ -625,8 +650,8 @@ final class SalesOrderItemServiceTest
         $taxRate = new TaxRate(tax_rate_percent: 17.5);
         $taxRate->setTaxRateId(5);
 
+        /** @var TRR&m\MockInterface $trr */
         $trr = m::mock(TRR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $trr->shouldReceive('repoTaxRatequery');
         $e->once()->with(5)->andReturn($taxRate);
 
@@ -637,8 +662,8 @@ final class SalesOrderItemServiceTest
 
     public function taxratePercentageReturnsNullWhenNotFound(): void
     {
+        /** @var TRR&m\MockInterface $trr */
         $trr = m::mock(TRR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $trr->shouldReceive('repoTaxRatequery');
         $e->once()->with(6)->andReturn(null);
 
@@ -657,15 +682,15 @@ final class SalesOrderItemServiceTest
         $allowanceItem = new SalesOrderItemAllowanceCharge(amount: 1.0);
         $allowanceItem->setAllowanceCharge($allowanceAc);
 
+        /** @var ACSOIR&m\MockInterface $acsoiR */
         $acsoiR = m::mock(ACSOIR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $acsoiR->shouldReceive('repoSalesOrderItemquery');
         $e->once()->with(5)->andReturn($this->readerYielding([$chargeItem, $allowanceItem]));
 
         $service = $this->makeService(acsoiR: $acsoiR);
 
+        /** @var SoIAR&m\MockInterface $soiar */
         $soiar = m::mock(SoIAR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $soiar->shouldReceive('repoCount');
         $e2->once()->with(5)->andReturn(0);
         $soiar->shouldNotReceive('repoSalesOrderItemAmountquery');
@@ -683,8 +708,8 @@ final class SalesOrderItemServiceTest
             'total' => 22.0,
         ];
 
+        /** @var SoIAS&m\MockInterface $soias */
         $soias = m::mock(SoIAS::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $soias->shouldReceive('saveSalesOrderItemAmountNoForm');
         $e3->once()->with(
             m::on(fn (mixed $arg): bool => $arg instanceof SalesOrderItemAmount && !$arg->hasIdentity()),
@@ -696,15 +721,15 @@ final class SalesOrderItemServiceTest
 
     public function saveSalesOrderItemAmountTaxTotalZeroWhenPercentageNull(): void
     {
+        /** @var ACSOIR&m\MockInterface $acsoiR */
         $acsoiR = m::mock(ACSOIR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $acsoiR->shouldReceive('repoSalesOrderItemquery');
         $e->once()->with(6)->andReturn($this->readerYielding([]));
 
         $service = $this->makeService(acsoiR: $acsoiR);
 
+        /** @var SoIAR&m\MockInterface $soiar */
         $soiar = m::mock(SoIAR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $soiar->shouldReceive('repoCount');
         $e2->once()->with(6)->andReturn(0);
 
@@ -718,8 +743,8 @@ final class SalesOrderItemServiceTest
             'total' => 5.0,
         ];
 
+        /** @var SoIAS&m\MockInterface $soias */
         $soias = m::mock(SoIAS::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $soias->shouldReceive('saveSalesOrderItemAmountNoForm');
         $e3->once()->with(
             m::on(fn (mixed $arg): bool => $arg instanceof SalesOrderItemAmount),
@@ -731,8 +756,8 @@ final class SalesOrderItemServiceTest
 
     public function saveSalesOrderItemAmountUpdatesExistingAmountWhenFound(): void
     {
+        /** @var ACSOIR&m\MockInterface $acsoiR */
         $acsoiR = m::mock(ACSOIR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $acsoiR->shouldReceive('repoSalesOrderItemquery');
         $e->once()->with(7)->andReturn($this->readerYielding([]));
 
@@ -741,11 +766,10 @@ final class SalesOrderItemServiceTest
         $existingAmount = new SalesOrderItemAmount();
         $existingAmount->setId(99);
 
+        /** @var SoIAR&m\MockInterface $soiar */
         $soiar = m::mock(SoIAR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $soiar->shouldReceive('repoCount');
         $e2->once()->with(7)->andReturn(2);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $soiar->shouldReceive('repoSalesOrderItemAmountquery');
         $e3->once()->with(7)->andReturn($existingAmount);
 
@@ -759,8 +783,8 @@ final class SalesOrderItemServiceTest
             'total' => 5.5,
         ];
 
+        /** @var SoIAS&m\MockInterface $soias */
         $soias = m::mock(SoIAS::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $soias->shouldReceive('saveSalesOrderItemAmountNoForm');
         $e4->once()->with($existingAmount, $expectedArray);
 
@@ -769,21 +793,21 @@ final class SalesOrderItemServiceTest
 
     public function saveSalesOrderItemAmountSkipsSaveWhenExistingAmountNotFound(): void
     {
+        /** @var ACSOIR&m\MockInterface $acsoiR */
         $acsoiR = m::mock(ACSOIR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $acsoiR->shouldReceive('repoSalesOrderItemquery');
         $e->once()->with(8)->andReturn($this->readerYielding([]));
 
         $service = $this->makeService(acsoiR: $acsoiR);
 
+        /** @var SoIAR&m\MockInterface $soiar */
         $soiar = m::mock(SoIAR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $soiar->shouldReceive('repoCount');
         $e2->once()->with(8)->andReturn(1);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $soiar->shouldReceive('repoSalesOrderItemAmountquery');
         $e3->once()->with(8)->andReturn(null);
 
+        /** @var SoIAS&m\MockInterface $soias */
         $soias = m::mock(SoIAS::class);
         $soias->shouldNotReceive('saveSalesOrderItemAmountNoForm');
 
@@ -794,8 +818,8 @@ final class SalesOrderItemServiceTest
     {
         $model = new SalesOrderItem();
 
+        /** @var SOIR&m\MockInterface $repository */
         $repository = m::mock(SOIR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('delete');
         $e->once()->with($model);
 

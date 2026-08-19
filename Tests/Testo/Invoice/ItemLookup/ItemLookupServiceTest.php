@@ -20,6 +20,7 @@ final class ItemLookupServiceTest
 {
     private function makeService(?ItemLookupRepository $repository = null): ItemLookupService
     {
+        /** @var ItemLookupRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(ItemLookupRepository::class);
         return new ItemLookupService($repository);
     }
@@ -35,7 +36,6 @@ final class ItemLookupServiceTest
 
         /** @var ItemLookupRepository&m\MockInterface $repository */
         $repository = m::mock(ItemLookupRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -53,7 +53,6 @@ final class ItemLookupServiceTest
 
         /** @var ItemLookupRepository&m\MockInterface $repository */
         $repository = m::mock(ItemLookupRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -71,7 +70,6 @@ final class ItemLookupServiceTest
 
         /** @var ItemLookupRepository&m\MockInterface $repository */
         $repository = m::mock(ItemLookupRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

@@ -36,7 +36,9 @@ final class ProductImageServiceTest
         ?ProductImageRepository $repository = null,
         ?PR $pR = null,
     ): ProductImageService {
+        /** @var ProductImageRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(ProductImageRepository::class);
+        /** @var PR&m\MockInterface $pR */
         $pR = $pR ?? m::mock(PR::class);
         return new ProductImageService($repository, $pR);
     }
@@ -52,14 +54,15 @@ final class ProductImageServiceTest
             'uploaded_date' => '2026-05-10',
         ];
 
+        /** @var Product&m\MockInterface $product */
         $product = m::mock(Product::class);
+        /** @var PR&m\MockInterface $pR */
         $pR = m::mock(PR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $pR->shouldReceive('repoProductquery');
         $e->once()->with(4)->andReturn($product);
 
+        /** @var ProductImageRepository&m\MockInterface $repository */
         $repository = m::mock(ProductImageRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -79,11 +82,12 @@ final class ProductImageServiceTest
         $model = new ProductImage();
         $array = ['uploaded_date' => 'not-a-date'];
 
+        /** @var PR&m\MockInterface $pR */
         $pR = m::mock(PR::class);
         $pR->shouldNotReceive('repoProductquery');
 
+        /** @var ProductImageRepository&m\MockInterface $repository */
         $repository = m::mock(ProductImageRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('save');
         $e->once()->with($model);
 
@@ -106,14 +110,13 @@ final class ProductImageServiceTest
             $model->setFileNameNew('a1b2c3.png');
 
             $aliases = new Aliases(['@public_product_images' => $tempDir]);
+            /** @var SettingRepository&m\MockInterface $sR */
             $sR = m::mock(SettingRepository::class);
-            /** @var \Mockery\Expectation $e */
             $e = $sR->shouldReceive('getProductimagesFilesFolderAliases');
             $e->once()->andReturn($aliases);
 
             /** @var ProductImageRepository&m\MockInterface $repository */
             $repository = m::mock(ProductImageRepository::class);
-            /** @var \Mockery\Expectation $e2 */
             $e2 = $repository->expects('delete');
             $e2->once()->with($model);
 
@@ -133,11 +136,12 @@ final class ProductImageServiceTest
         $model->setFileNameNew('missing.png');
 
         $aliases = new Aliases(['@public_product_images' => sys_get_temp_dir() . '/invoice-does-not-exist-' . uniqid()]);
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $sR->shouldReceive('getProductimagesFilesFolderAliases');
         $e->once()->andReturn($aliases);
 
+        /** @var ProductImageRepository&m\MockInterface $repository */
         $repository = m::mock(ProductImageRepository::class);
         $repository->shouldNotReceive('delete');
 

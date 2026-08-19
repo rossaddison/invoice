@@ -26,7 +26,9 @@ final class InvAllowanceChargeServiceTest
         ?InvAllowanceChargeRepository $repository = null,
         ?ACR $acR = null,
     ): InvAllowanceChargeService {
+        /** @var InvAllowanceChargeRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(InvAllowanceChargeRepository::class);
+        /** @var ACR&m\MockInterface $acR */
         $acR = $acR ?? m::mock(ACR::class);
         return new InvAllowanceChargeService($repository, $acR);
     }
@@ -41,23 +43,23 @@ final class InvAllowanceChargeServiceTest
             'amount' => 200.00,
         ];
 
+        /** @var TaxRate&m\MockInterface $taxRate */
         $taxRate = m::mock(TaxRate::class);
-        /** @var \Mockery\Expectation $e */
         $e = $taxRate->shouldReceive('getTaxRatePercent');
         $e->once()->andReturn(10.0);
 
+        /** @var AllowanceCharge&m\MockInterface $allowanceCharge */
         $allowanceCharge = m::mock(AllowanceCharge::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $allowanceCharge->shouldReceive('getTaxRate');
         $e2->twice()->andReturn($taxRate);
 
+        /** @var ACR&m\MockInterface $acR */
         $acR = m::mock(ACR::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $acR->shouldReceive('repoAllowanceChargequery');
         $e3->once()->with(3)->andReturn($allowanceCharge);
 
+        /** @var InvAllowanceChargeRepository&m\MockInterface $repository */
         $repository = m::mock(InvAllowanceChargeRepository::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $repository->shouldReceive('save');
         $e4->once()->with($model);
 
@@ -84,13 +86,13 @@ final class InvAllowanceChargeServiceTest
             'amount' => 50.00,
         ];
 
+        /** @var ACR&m\MockInterface $acR */
         $acR = m::mock(ACR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $acR->shouldReceive('repoAllowanceChargequery');
         $e->once()->with(9)->andReturn(null);
 
+        /** @var InvAllowanceChargeRepository&m\MockInterface $repository */
         $repository = m::mock(InvAllowanceChargeRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -110,18 +112,18 @@ final class InvAllowanceChargeServiceTest
             'amount' => 50.00,
         ];
 
+        /** @var AllowanceCharge&m\MockInterface $allowanceCharge */
         $allowanceCharge = m::mock(AllowanceCharge::class);
-        /** @var \Mockery\Expectation $e */
         $e = $allowanceCharge->shouldReceive('getTaxRate');
         $e->once()->andReturn(null);
 
+        /** @var ACR&m\MockInterface $acR */
         $acR = m::mock(ACR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $acR->shouldReceive('repoAllowanceChargequery');
         $e2->once()->with(3)->andReturn($allowanceCharge);
 
+        /** @var InvAllowanceChargeRepository&m\MockInterface $repository */
         $repository = m::mock(InvAllowanceChargeRepository::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $repository->shouldReceive('save');
         $e3->once()->with($model);
 
@@ -135,8 +137,8 @@ final class InvAllowanceChargeServiceTest
     {
         $model = new InvAllowanceCharge();
 
+        /** @var InvAllowanceChargeRepository&m\MockInterface $repository */
         $repository = m::mock(InvAllowanceChargeRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('delete');
         $e->once()->with($model);
 

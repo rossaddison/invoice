@@ -25,21 +25,34 @@ use Yiisoft\User\CurrentUser;
 #[Test]
 final class UserServiceTest
 {
+
+    /**
+     * @return IdentityInterface&m\MockInterface
+     */
+    private function makeIdentityInterfaceMock(): IdentityInterface
+    {
+        /** @var IdentityInterface&m\MockInterface $mock */
+        $mock = m::mock(IdentityInterface::class);
+        return $mock;
+    }
     private function makeService(
         ?CurrentUser $currentUser = null,
         ?UserRepository $repository = null,
         ?AccessCheckerInterface $accessChecker = null,
     ): UserService {
+        /** @var CurrentUser&m\MockInterface $currentUser */
         $currentUser = $currentUser ?? m::mock(CurrentUser::class);
+        /** @var UserRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(UserRepository::class);
+        /** @var AccessCheckerInterface&m\MockInterface $accessChecker */
         $accessChecker = $accessChecker ?? m::mock(AccessCheckerInterface::class);
         return new UserService($currentUser, $repository, $accessChecker);
     }
 
-    private function mockIdentityWithUserId(int $userId): Identity
+    private function mockIdentityWithUserId(int $userId): m\MockInterface
     {
+        /** @var Identity&m\MockInterface $identity */
         $identity = m::mock(Identity::class);
-        /** @var \Mockery\Expectation $e */
         $e = $identity->shouldReceive('getUserId');
         $e->once()->andReturn($userId);
         return $identity;
@@ -47,14 +60,15 @@ final class UserServiceTest
 
     public function getUserReturnsUserForLoggedInId(): void
     {
+        /** @var CurrentUser&m\MockInterface $currentUser */
         $currentUser = m::mock(CurrentUser::class);
-        /** @var \Mockery\Expectation $e */
         $e = $currentUser->shouldReceive('getIdentity');
         $e->once()->andReturn($this->mockIdentityWithUserId(42));
 
+        /** @var User&m\MockInterface $user */
         $user = m::mock(User::class);
+        /** @var UserRepository&m\MockInterface $repository */
         $repository = m::mock(UserRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('findById');
         $e2->once()->with(42)->andReturn($user);
 
@@ -65,11 +79,12 @@ final class UserServiceTest
 
     public function getUserReturnsNullWhenNoCurrentId(): void
     {
+        /** @var CurrentUser&m\MockInterface $currentUser */
         $currentUser = m::mock(CurrentUser::class);
-        /** @var \Mockery\Expectation $e */
         $e = $currentUser->shouldReceive('getIdentity');
-        $e->once()->andReturn(m::mock(IdentityInterface::class));
+        $e->once()->andReturn($this->makeIdentityInterfaceMock());
 
+        /** @var UserRepository&m\MockInterface $repository */
         $repository = m::mock(UserRepository::class);
         $repository->shouldNotReceive('findById');
 
@@ -80,13 +95,13 @@ final class UserServiceTest
 
     public function hasPermissionReturnsTrueWhenAccessCheckerGrants(): void
     {
+        /** @var CurrentUser&m\MockInterface $currentUser */
         $currentUser = m::mock(CurrentUser::class);
-        /** @var \Mockery\Expectation $e */
         $e = $currentUser->shouldReceive('getIdentity');
         $e->once()->andReturn($this->mockIdentityWithUserId(7));
 
+        /** @var AccessCheckerInterface&m\MockInterface $accessChecker */
         $accessChecker = m::mock(AccessCheckerInterface::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $accessChecker->shouldReceive('userHasPermission');
         $e2->once()->with(7, 'invoice.edit')->andReturn(true);
 
@@ -97,13 +112,13 @@ final class UserServiceTest
 
     public function hasPermissionReturnsFalseWhenAccessCheckerDenies(): void
     {
+        /** @var CurrentUser&m\MockInterface $currentUser */
         $currentUser = m::mock(CurrentUser::class);
-        /** @var \Mockery\Expectation $e */
         $e = $currentUser->shouldReceive('getIdentity');
         $e->once()->andReturn($this->mockIdentityWithUserId(7));
 
+        /** @var AccessCheckerInterface&m\MockInterface $accessChecker */
         $accessChecker = m::mock(AccessCheckerInterface::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $accessChecker->shouldReceive('userHasPermission');
         $e2->once()->with(7, 'invoice.delete')->andReturn(false);
 
@@ -114,11 +129,12 @@ final class UserServiceTest
 
     public function hasPermissionShortCircuitsWhenNoCurrentId(): void
     {
+        /** @var CurrentUser&m\MockInterface $currentUser */
         $currentUser = m::mock(CurrentUser::class);
-        /** @var \Mockery\Expectation $e */
         $e = $currentUser->shouldReceive('getIdentity');
-        $e->once()->andReturn(m::mock(IdentityInterface::class));
+        $e->once()->andReturn($this->makeIdentityInterfaceMock());
 
+        /** @var AccessCheckerInterface&m\MockInterface $accessChecker */
         $accessChecker = m::mock(AccessCheckerInterface::class);
         $accessChecker->shouldNotReceive('userHasPermission');
 

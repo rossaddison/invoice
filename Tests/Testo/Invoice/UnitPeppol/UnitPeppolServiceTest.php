@@ -24,7 +24,9 @@ final class UnitPeppolServiceTest
         ?UnitPeppolRepository $repository = null,
         ?UR $uR = null,
     ): UnitPeppolService {
+        /** @var UnitPeppolRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(UnitPeppolRepository::class);
+        /** @var UR&m\MockInterface $uR */
         $uR = $uR ?? m::mock(UR::class);
         return new UnitPeppolService($repository, $uR);
     }
@@ -40,17 +42,17 @@ final class UnitPeppolServiceTest
             'description' => 'Unit of time',
         ];
 
+        /** @var Unit&m\MockInterface $unit */
         $unit = m::mock(Unit::class);
-        /** @var \Mockery\Expectation $reqIdExpectation */
         $reqIdExpectation = $unit->shouldReceive('reqId');
         $reqIdExpectation->andReturn(6);
+        /** @var UR&m\MockInterface $uR */
         $uR = m::mock(UR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $uR->shouldReceive('repoUnitquery');
         $e->once()->with(6)->andReturn($unit);
 
+        /** @var UnitPeppolRepository&m\MockInterface $repository */
         $repository = m::mock(UnitPeppolRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -71,7 +73,6 @@ final class UnitPeppolServiceTest
 
         /** @var UnitPeppolRepository&m\MockInterface $repository */
         $repository = m::mock(UnitPeppolRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

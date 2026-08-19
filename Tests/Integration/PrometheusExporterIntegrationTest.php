@@ -139,6 +139,7 @@ final class PrometheusExporterIntegrationTest extends TestCase
         );
 
         // Simulate various HTTP requests
+        /** @var list<array{0: string, 1: string, 2: string}> $endpoints */
         $endpoints = [
             ['GET', '200', '/invoice/index'],
             ['GET', '200', '/product/view'],

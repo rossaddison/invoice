@@ -20,6 +20,7 @@ final class QaServiceTest
 {
     private function makeService(?QaRepository $repository = null): QaService
     {
+        /** @var QaRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(QaRepository::class);
         return new QaService($repository);
     }
@@ -35,7 +36,6 @@ final class QaServiceTest
 
         /** @var QaRepository&m\MockInterface $repository */
         $repository = m::mock(QaRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -54,7 +54,6 @@ final class QaServiceTest
 
         /** @var QaRepository&m\MockInterface $repository */
         $repository = m::mock(QaRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('save');
         $e->once()->with($model);
 
@@ -71,7 +70,6 @@ final class QaServiceTest
 
         /** @var QaRepository&m\MockInterface $repository */
         $repository = m::mock(QaRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->expects('delete');
         $e->once()->with($model);
 

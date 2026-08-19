@@ -40,6 +40,7 @@ final class XPathParserTest extends TestCase
 {
     private XPathParser $p;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->p = new XPathParser();

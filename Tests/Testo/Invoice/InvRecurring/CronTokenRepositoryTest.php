@@ -37,7 +37,7 @@ final class CronTokenRepositoryTest
         $identity = $repository->findIdentityByToken('correct-horse-battery-staple');
 
         Assert::instanceOf($identity, CronIdentity::class);
-        Assert::same('cron', $identity?->getId());
+        Assert::same('cron', $identity->getId());
     }
 
     public function wrongTokenReturnsNull(): void

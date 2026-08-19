@@ -24,7 +24,9 @@ final class AllowanceChargeServiceTest
         ?AllowanceChargeRepository $repository = null,
         ?trR $trR = null,
     ): AllowanceChargeService {
+        /** @var AllowanceChargeRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(AllowanceChargeRepository::class);
+        /** @var trR&m\MockInterface $trR */
         $trR = $trR ?? m::mock(trR::class);
         return new AllowanceChargeService($repository, $trR);
     }
@@ -44,13 +46,13 @@ final class AllowanceChargeServiceTest
 
         $taxRate = new TaxRate();
         $taxRate->setTaxRateId(3);
+        /** @var trR&m\MockInterface $trR */
         $trR = m::mock(trR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $trR->shouldReceive('repoTaxRatequery');
         $e->once()->with(3)->andReturn($taxRate);
 
+        /** @var AllowanceChargeRepository&m\MockInterface $repository */
         $repository = m::mock(AllowanceChargeRepository::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repository->shouldReceive('save');
         $e2->once()->with($model);
 
@@ -73,11 +75,12 @@ final class AllowanceChargeServiceTest
         $model = new AC();
         $array = ['identifier' => false, 'reason_code' => '95', 'reason' => 'Charge'];
 
+        /** @var trR&m\MockInterface $trR */
         $trR = m::mock(trR::class);
         $trR->shouldNotReceive('repoTaxRatequery');
 
+        /** @var AllowanceChargeRepository&m\MockInterface $repository */
         $repository = m::mock(AllowanceChargeRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('save');
         $e->once()->with($model);
 
@@ -92,8 +95,8 @@ final class AllowanceChargeServiceTest
     {
         $model = new AC();
 
+        /** @var AllowanceChargeRepository&m\MockInterface $repository */
         $repository = m::mock(AllowanceChargeRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('delete');
         $e->once()->with($model);
 

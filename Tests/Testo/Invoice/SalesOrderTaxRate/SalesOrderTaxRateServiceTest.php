@@ -27,8 +27,11 @@ final class SalesOrderTaxRateServiceTest
         ?SOR $soR = null,
         ?TRR $trR = null,
     ): SalesOrderTaxRateService {
+        /** @var SalesOrderTaxRateRepository&m\MockInterface $repository */
         $repository = $repository ?? m::mock(SalesOrderTaxRateRepository::class);
+        /** @var SOR&m\MockInterface $soR */
         $soR = $soR ?? m::mock(SOR::class);
+        /** @var TRR&m\MockInterface $trR */
         $trR = $trR ?? m::mock(TRR::class);
         return new SalesOrderTaxRateService($repository, $soR, $trR);
     }
@@ -43,28 +46,28 @@ final class SalesOrderTaxRateServiceTest
             'sales_order_tax_rate_amount' => 12.5,
         ];
 
+        /** @var SalesOrder&m\MockInterface $salesOrder */
         $salesOrder = m::mock(SalesOrder::class);
-        /** @var \Mockery\Expectation $e */
         $e = $salesOrder->shouldReceive('reqId');
         $e->once()->andReturn(1);
 
+        /** @var SOR&m\MockInterface $soR */
         $soR = m::mock(SOR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $soR->shouldReceive('repoSalesOrderUnLoadedquery');
         $e2->once()->with(1)->andReturn($salesOrder);
 
+        /** @var TaxRate&m\MockInterface $taxRate */
         $taxRate = m::mock(TaxRate::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $taxRate->shouldReceive('reqId');
         $e3->once()->andReturn(2);
 
+        /** @var TRR&m\MockInterface $trR */
         $trR = m::mock(TRR::class);
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $trR->shouldReceive('repoTaxRatequery');
         $e4->once()->with(2)->andReturn($taxRate);
 
+        /** @var SalesOrderTaxRateRepository&m\MockInterface $repository */
         $repository = m::mock(SalesOrderTaxRateRepository::class);
-        /** @var \Mockery\Expectation $e5 */
         $e5 = $repository->shouldReceive('save');
         $e5->once()->with($model);
 
@@ -90,18 +93,18 @@ final class SalesOrderTaxRateServiceTest
             'sales_order_tax_rate_amount' => 0.00,
         ];
 
+        /** @var SOR&m\MockInterface $soR */
         $soR = m::mock(SOR::class);
-        /** @var \Mockery\Expectation $e */
         $e = $soR->shouldReceive('repoSalesOrderUnLoadedquery');
         $e->once()->with(9)->andReturn(null);
 
+        /** @var TRR&m\MockInterface $trR */
         $trR = m::mock(TRR::class);
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $trR->shouldReceive('repoTaxRatequery');
         $e2->once()->with(8)->andReturn(null);
 
+        /** @var SalesOrderTaxRateRepository&m\MockInterface $repository */
         $repository = m::mock(SalesOrderTaxRateRepository::class);
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $repository->shouldReceive('save');
         $e3->once()->with($model);
 
@@ -116,8 +119,8 @@ final class SalesOrderTaxRateServiceTest
     {
         $model = new SalesOrderTaxRate();
 
+        /** @var SalesOrderTaxRateRepository&m\MockInterface $repository */
         $repository = m::mock(SalesOrderTaxRateRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repository->shouldReceive('delete');
         $e->once()->with($model);
 
