@@ -25,6 +25,26 @@ final readonly class OrdersController
 
     public function create(ServerRequestInterface $request, OrderService $orderService): ResponseInterface
     {
+        $parsed = $this->parsePayload($request);
+        if ($parsed instanceof ResponseInterface) {
+            return $parsed;
+        }
+
+        $urlKey = $orderService->createOrder($parsed['customer'], $parsed['items']);
+        if ($urlKey === null) {
+            return $this->responseFactory->createResponse('Could not create order', 422);
+        }
+
+        return $this->responseFactory->createResponse(['url_key' => $urlKey], 201);
+    }
+
+    /**
+     * @return array{customer: array{name: string, surname: string, email: string, address1?: string,
+     *     address2?: string, city?: string, zip?: string, country?: string, phone?: string},
+     *     items: list<array{product_id: int, quantity: float}>}|ResponseInterface
+     */
+    private function parsePayload(ServerRequestInterface $request): array|ResponseInterface
+    {
         /** @var mixed $payload */
         $payload = json_decode($request->getBody()->getContents(), true);
         if (!is_array($payload)) {
@@ -40,12 +60,7 @@ final readonly class OrdersController
             );
         }
 
-        $urlKey = $orderService->createOrder($customer, $items);
-        if ($urlKey === null) {
-            return $this->responseFactory->createResponse('Could not create order', 422);
-        }
-
-        return $this->responseFactory->createResponse(['url_key' => $urlKey], 201);
+        return ['customer' => $customer, 'items' => $items];
     }
 
     /**
@@ -94,17 +109,27 @@ final readonly class OrdersController
         $items = [];
         /** @var mixed $rawItem */
         foreach ($rawItems as $rawItem) {
-            if (!is_array($rawItem)) {
+            $item = $this->extractItem($rawItem);
+            if ($item === null) {
                 return null;
             }
-            $productId = (int) ($rawItem['product_id'] ?? 0);
-            $quantity = (float) ($rawItem['quantity'] ?? 0);
-            if ($productId <= 0 || $quantity <= 0.0) {
-                return null;
-            }
-            $items[] = ['product_id' => $productId, 'quantity' => $quantity];
+            $items[] = $item;
         }
 
         return $items;
+    }
+
+    /** @return array{product_id: int, quantity: float}|null */
+    private function extractItem(mixed $rawItem): ?array
+    {
+        if (!is_array($rawItem)) {
+            return null;
+        }
+        $productId = (int) ($rawItem['product_id'] ?? 0);
+        $quantity = (float) ($rawItem['quantity'] ?? 0);
+        if ($productId <= 0 || $quantity <= 0.0) {
+            return null;
+        }
+        return ['product_id' => $productId, 'quantity' => $quantity];
     }
 }

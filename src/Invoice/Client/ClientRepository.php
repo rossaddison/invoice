@@ -6,6 +6,7 @@ namespace App\Invoice\Client;
 
 use Cycle\ORM\Select;
 use App\Infrastructure\Persistence\Client\Client;
+use App\Invoice\Client\Trait\ClientRepositoryFilterTrait;
 use App\Invoice\UserClient\UserClientRepository;
 use Cycle\Database\Injection\Parameter;
 use Throwable;
@@ -19,6 +20,8 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class ClientRepository extends Select\Repository implements ClientRepositoryInterface
 {
+    use ClientRepositoryFilterTrait;
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -222,27 +225,5 @@ final class ClientRepository extends Select\Repository implements ClientReposito
             }
         }
         return $optionsData;
-    }
-
-    public function filterClientName(string $client_name): EntityReader
-    {
-        $select = $this->select();
-        $query = $select->where(['client_name' => ltrim(rtrim($client_name))]);
-        return $this->prepareDataReader($query);
-    }
-
-    public function filterClientSurname(string $client_surname): EntityReader
-    {
-        $select = $this->select();
-        $query = $select->where(['client_surname' => ltrim(rtrim($client_surname))]);
-        return $this->prepareDataReader($query);
-    }
-
-    public function filterClientNameSurname(string $client_name, string $client_surname): EntityReader
-    {
-        $select = $this->select();
-        $query = $select->where(['client_name' => ltrim(rtrim($client_name))])
-                        ->andWhere(['client_surname' => ltrim(rtrim($client_surname))]);
-        return $this->prepareDataReader($query);
     }
 }

@@ -42,13 +42,8 @@ final class OrderService
      */
     public function createOrder(array $customer, array $items): ?string
     {
-        if ($items === [] || $customer['email'] === '') {
-            return null;
-        }
-
-        $user = $this->resolveApiOrderUser();
-        $groupId = (int) $this->d->sR->getSetting('default_invoice_group');
-        if ($user === null || $groupId <= 0) {
+        $context = $this->resolveOrderContext($customer, $items);
+        if ($context === null) {
             return null;
         }
 
@@ -56,8 +51,8 @@ final class OrderService
 
         $invId = null;
         $this->d->invService->withTransaction(
-            function () use ($user, $client, $groupId, $items, &$invId): void {
-                $invId = $this->createInvoiceShell($user, $client, $groupId);
+            function () use ($context, $client, $items, &$invId): void {
+                $invId = $this->createInvoiceShell($context['user'], $client, $context['groupId']);
                 if ($invId === null) {
                     return;
                 }
@@ -72,6 +67,27 @@ final class OrderService
 
         $urlKey = $this->finalizeInvAmount($invId);
         return $urlKey === '' ? null : $urlKey;
+    }
+
+    /**
+     * @param array{name: string, surname: string, email: string, address1?: string,
+     *     address2?: string, city?: string, zip?: string, country?: string, phone?: string} $customer
+     * @param list<array{product_id: int, quantity: float}> $items
+     * @return array{user: User, groupId: int}|null
+     */
+    private function resolveOrderContext(array $customer, array $items): ?array
+    {
+        if ($items === [] || $customer['email'] === '') {
+            return null;
+        }
+
+        $user = $this->resolveApiOrderUser();
+        $groupId = (int) $this->d->sR->getSetting('default_invoice_group');
+        if ($user === null || $groupId <= 0) {
+            return null;
+        }
+
+        return ['user' => $user, 'groupId' => $groupId];
     }
 
     /**

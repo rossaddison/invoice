@@ -111,24 +111,31 @@ final class RedirectController
     private function shouldRecordClick(Request $request): bool
     {
         $userAgent = strtolower($request->getHeaderLine('User-Agent'));
-        if ($userAgent === '') {
+        if ($userAgent === '' || $this->isBotUserAgent($userAgent)) {
             return false;
         }
+
+        return !$this->isCrossSiteReferer($request);
+    }
+
+    private function isBotUserAgent(string $userAgent): bool
+    {
         foreach (self::BOT_USER_AGENT_SIGNATURES as $signature) {
             if (str_contains($userAgent, $signature)) {
-                return false;
+                return true;
             }
         }
+        return false;
+    }
 
+    private function isCrossSiteReferer(Request $request): bool
+    {
         $referer = $request->getHeaderLine('Referer');
-        if ($referer !== '') {
-            $refererHost = parse_url($referer, PHP_URL_HOST);
-            if (is_string($refererHost) && strcasecmp($refererHost, $request->getUri()->getHost()) !== 0) {
-                return false;
-            }
+        if ($referer === '') {
+            return false;
         }
-
-        return true;
+        $refererHost = parse_url($referer, PHP_URL_HOST);
+        return is_string($refererHost) && strcasecmp($refererHost, $request->getUri()->getHost()) !== 0;
     }
 
     public function map(): Response
