@@ -176,6 +176,20 @@ final class ClientRepository extends Select\Repository implements ClientReposito
     }
 
     /**
+     * Lookup used by the external `/api/orders` endpoint
+     * (`App\Api\OrderService`) to find an existing Client for a repeat
+     * webshop customer by the email they checked out with, rather than
+     * creating a duplicate Client per order.
+     */
+    public function findByEmail(string $email): ?Client
+    {
+        $query = $this
+            ->select()
+            ->where(['client_email' => $email]);
+        return $query->fetchOne() ?: null;
+    }
+
+    /**
      * Lookup for the public home-care scan endpoint: resolves a client
      * from their printed QR token. Only active clients are eligible.
      *

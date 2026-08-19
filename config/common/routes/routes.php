@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Api\{OrdersController, ProductsController};
 use App\Auth\Controller\{
     AuthController, ChangePasswordController, ForgotPasswordController,
     ResetPasswordController, SignupController};
@@ -12,7 +13,7 @@ use App\Invoice\{
     Inv\InvController,
     Prometheus\PrometheusController,
 };
-use App\Middleware\{ApiDataWrapper, RateLimiter, RoutePermission};
+use App\Middleware\{ApiDataWrapper, ApiKeyAuthMiddleware, RateLimiter, RoutePermission};
 use App\Redirect\RedirectController;
 use App\User\Controller\{ApiUserController, UserController};
 use Yiisoft\{
@@ -315,5 +316,24 @@ return [
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->middleware(JsonDataResponseMiddleware::class)
                 ->action([ApiUserController::class, 'profile']),
+            // External-partner endpoints (e.g. the future webshop
+            // storefront) — key-authenticated via ApiKeyAuthMiddleware,
+            // not the session/cookie RoutePermission gate the routes above
+            // use. See docs/WEBSHOP_HEADLESS_STOREFRONT_DESIGN_AUGUST_2026.md.
+            Route::get('/products')
+                ->name('api/products/index')
+                ->middleware(ApiKeyAuthMiddleware::class)
+                ->middleware(JsonDataResponseMiddleware::class)
+                ->action([ProductsController::class, 'index']),
+            Route::get('/products/{id}')
+                ->name('api/products/show')
+                ->middleware(ApiKeyAuthMiddleware::class)
+                ->middleware(JsonDataResponseMiddleware::class)
+                ->action([ProductsController::class, 'show']),
+            Route::post('/orders')
+                ->name('api/orders/create')
+                ->middleware(ApiKeyAuthMiddleware::class)
+                ->middleware(JsonDataResponseMiddleware::class)
+                ->action([OrdersController::class, 'create']),
         ),
 ];

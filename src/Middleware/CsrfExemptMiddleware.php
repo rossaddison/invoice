@@ -34,6 +34,11 @@ final class CsrfExemptMiddleware implements MiddlewareInterface
         '/paymentinformation/trueLayerWebhook',
         '/whatsapp/webhook',
         '/telegram/webhook',
+        // External-partner API, gated by ApiKeyAuthMiddleware instead of a
+        // browser session — a separately-deployed caller (e.g. the future
+        // webshop storefront) has no CSRF token to send. See
+        // docs/WEBSHOP_HEADLESS_STOREFRONT_DESIGN_AUGUST_2026.md.
+        '/api/orders',
     ];
 
     public function __construct(

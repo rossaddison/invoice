@@ -16,6 +16,7 @@ use App\Command\Invoice\SalesOrderTruncate3Command;
 use App\Command\Invoice\UserRelatedTruncate5Command;
 use App\Command\Router\ListCommand;
 use App\Command\Translation\TranslateCommand;
+use App\Api\Console\GenerateApiKeyCommand;
 use App\Invoice\As4\Console\As4MonitorCommand;
 use App\Invoice\As4\Console\As4ResendCommand;
 use App\Invoice\As4\Console\As4RetryCommand;
@@ -57,6 +58,7 @@ return [
             'user/create' => CreateCommand::class,
             'user/assignRole' => AssignRoleCommand::class,
             'router/list' => ListCommand::class,
+            'api-client/generate' => GenerateApiKeyCommand::class,
             'translator/translate' => TranslateCommand::class,
             /**
              * Build a randomly generated items list for an invoice with a summary table
