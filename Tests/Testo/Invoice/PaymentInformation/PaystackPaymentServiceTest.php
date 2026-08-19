@@ -28,8 +28,19 @@ use Testo\Test;
 #[Test]
 final class PaystackPaymentServiceTest
 {
+
+    /**
+     * @return LoggerInterface&m\MockInterface
+     */
+    private function makeLoggerInterfaceSpy(): LoggerInterface
+    {
+        /** @var LoggerInterface&m\MockInterface $mock */
+        $mock = m::spy(LoggerInterface::class);
+        return $mock;
+    }
     private function makeSettingRepository(): SettingRepository&m\MockInterface
     {
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
         $sR->shouldReceive('getSetting')->with('gateway_paystack_secretKey')->andReturn('enc-secret-key');
         $sR->shouldReceive('decode')->with('enc-secret-key')->andReturn('sk_test_live123');
@@ -47,7 +58,7 @@ final class PaystackPaymentServiceTest
     {
         return new PaystackPaymentService(
             $this->makeSettingRepository(),
-            m::spy(LoggerInterface::class),
+            $this->makeLoggerInterfaceSpy(),
             $this->makeHttpClient($mock),
         );
     }
@@ -68,11 +79,12 @@ final class PaystackPaymentServiceTest
 
     public function isConfiguredReturnsFalseWhenSecretKeyIsMissing(): void
     {
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
         $sR->shouldReceive('getSetting')->with('gateway_paystack_secretKey')->andReturn('');
         $sR->shouldReceive('decode')->with('')->andReturn('');
 
-        $service = new PaystackPaymentService($sR, m::spy(LoggerInterface::class), $this->makeHttpClient(new MockHandler([])));
+        $service = new PaystackPaymentService($sR, $this->makeLoggerInterfaceSpy(), $this->makeHttpClient(new MockHandler([])));
 
         Assert::false($service->isConfigured());
     }
@@ -106,6 +118,7 @@ final class PaystackPaymentServiceTest
         Assert::true(str_starts_with($result['reference'], 'inv-'));
 
         $sentRequest = $mock->getLastRequest();
+        Assert::notNull($sentRequest);
         Assert::same('Bearer sk_test_live123', $sentRequest->getHeaderLine('Authorization'));
 
         /** @var array{amount: int, email: string, currency: string, reference: string, callback_url: string, metadata: array{invoiceUrlKey: string}} $body */
@@ -197,6 +210,7 @@ final class PaystackPaymentServiceTest
         Assert::same('inv-123', $result->providerReference);
 
         $sentRequest = $mock->getLastRequest();
+        Assert::notNull($sentRequest);
         /** @var array{transaction: string, amount: int} $body */
         $body = json_decode((string) $sentRequest->getBody(), true, 512, JSON_THROW_ON_ERROR);
         Assert::same('inv-123', $body['transaction']);

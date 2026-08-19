@@ -30,6 +30,7 @@ final class RobokassaPaymentServiceTest
 {
     private function makeSettingRepository(bool $refundEnabled = false): SettingRepository&m\MockInterface
     {
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
         $sR->shouldReceive('getSetting')->with('gateway_robokassa_login')->andReturn('demo-login');
         $sR->shouldReceive('getSetting')->with('gateway_robokassa_password1')->andReturn('enc-password1');
@@ -55,10 +56,12 @@ final class RobokassaPaymentServiceTest
 
     private function makeService(MockHandler $mock, bool $refundEnabled = false): RobokassaPaymentService
     {
+        /** @var LoggerInterface&m\MockInterface $logger */
+        $logger = m::spy(LoggerInterface::class);
         return new RobokassaPaymentService(
             $this->makeSettingRepository($refundEnabled),
             new RobokassaSignatureService(),
-            m::spy(LoggerInterface::class),
+            $logger,
             $this->makeHttpClient($mock),
         );
     }
@@ -79,6 +82,7 @@ final class RobokassaPaymentServiceTest
 
     public function isConfiguredReturnsFalseWhenAPasswordIsMissing(): void
     {
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
         $sR->shouldReceive('getSetting')->with('gateway_robokassa_login')->andReturn('demo-login');
         $sR->shouldReceive('getSetting')->with('gateway_robokassa_password1')->andReturn('');
@@ -86,10 +90,12 @@ final class RobokassaPaymentServiceTest
         $sR->shouldReceive('getSetting')->with('gateway_robokassa_password2')->andReturn('enc-password2');
         $sR->shouldReceive('decode')->with('enc-password2')->andReturn('password2');
 
+        /** @var LoggerInterface&m\MockInterface $logger */
+        $logger = m::spy(LoggerInterface::class);
         $service = new RobokassaPaymentService(
             $sR,
             new RobokassaSignatureService(),
-            m::spy(LoggerInterface::class),
+            $logger,
             $this->makeHttpClient(new MockHandler([])),
         );
 
@@ -125,14 +131,17 @@ final class RobokassaPaymentServiceTest
         $service->createPaymentUrl(1, 10.0, 'test', 'https://invoice.example/return');
 
         $sentRequest = $mock->getLastRequest();
+        Assert::notNull($sentRequest);
         /** @var string $jwt */
         $jwt = json_decode((string) $sentRequest->getBody(), true, 512, JSON_THROW_ON_ERROR);
         $payloadJson = base64_decode(strtr(explode('.', $jwt)[1], '-_', '+/'), true);
         /** @var array{SuccessUrl2Data?: array{Url: string, Method: string}} $payload */
         $payload = json_decode((string) $payloadJson, true, 512, JSON_THROW_ON_ERROR);
 
-        Assert::same('https://invoice.example/return', $payload['SuccessUrl2Data']['Url']);
-        Assert::same('GET', $payload['SuccessUrl2Data']['Method']);
+        $successUrl2Data = $payload['SuccessUrl2Data'] ?? null;
+        Assert::notNull($successUrl2Data);
+        Assert::same('https://invoice.example/return', $successUrl2Data['Url']);
+        Assert::same('GET', $successUrl2Data['Method']);
     }
 
     public function createPaymentUrlOmitsSuccessUrl2DataWhenNoSuccessUrlIsGiven(): void
@@ -145,6 +154,7 @@ final class RobokassaPaymentServiceTest
         $service->createPaymentUrl(1, 10.0, 'test');
 
         $sentRequest = $mock->getLastRequest();
+        Assert::notNull($sentRequest);
         /** @var string $jwt */
         $jwt = json_decode((string) $sentRequest->getBody(), true, 512, JSON_THROW_ON_ERROR);
         $payloadJson = base64_decode(strtr(explode('.', $jwt)[1], '-_', '+/'), true);
@@ -164,6 +174,7 @@ final class RobokassaPaymentServiceTest
         $service->createPaymentUrl(1, 10.0, 'test');
 
         $sentRequest = $mock->getLastRequest();
+        Assert::notNull($sentRequest);
         /** @var string $jwt */
         $jwt = json_decode((string) $sentRequest->getBody(), true, 512, JSON_THROW_ON_ERROR);
         $signature = explode('.', $jwt)[2];
@@ -322,6 +333,7 @@ final class RobokassaPaymentServiceTest
         $service->refund('789', 50.0);
 
         $sentRequest = $mock->getLastRequest();
+        Assert::notNull($sentRequest);
         /** @var string $jwt */
         $jwt = json_decode((string) $sentRequest->getBody(), true, 512, JSON_THROW_ON_ERROR);
         [$encodedHeader, $encodedPayload, $signature] = explode('.', $jwt);

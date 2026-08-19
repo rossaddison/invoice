@@ -93,6 +93,21 @@ class Product
         private ?int $unit_peppol_id = null,
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $family_id = null,
+        // Whether this product's stock is tracked at all via
+        // App\Infrastructure\Persistence\StockMovement\StockMovement.
+        // Defaults true for physical products; a Service-type product (see
+        // App\Invoice\Enum\ProductType) should be created with this false —
+        // that's a form-layer decision, not enforced here.
+        #[Column(type: 'boolean', nullable: false, default: true)]
+        private bool $track_stock = true,
+        // Denormalized cache of StockMovementRepository::currentBalance()
+        // for this product — kept in sync by applying each StockMovement's
+        // quantity_delta here in the same transaction as it's written, the
+        // same "cached total, ledger detail rows are the source of truth"
+        // relationship InvAmount already has to InvItemAmount. Meaningless
+        // (and unmaintained) while track_stock is false.
+        #[Column(type: 'decimal(20,2)', nullable: false, default: 0)]
+        private float $stock_quantity = 0.00,
     ) {
         $this->client_associations = new ArrayCollection();
     }

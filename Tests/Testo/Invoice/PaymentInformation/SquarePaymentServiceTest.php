@@ -26,8 +26,19 @@ use Testo\Test;
 #[Test]
 final class SquarePaymentServiceTest
 {
+
+    /**
+     * @return LoggerInterface&m\MockInterface
+     */
+    private function makeLoggerInterfaceSpy(): LoggerInterface
+    {
+        /** @var LoggerInterface&m\MockInterface $mock */
+        $mock = m::spy(LoggerInterface::class);
+        return $mock;
+    }
     private function makeSettingRepository(): SettingRepository&m\MockInterface
     {
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
         $sR->shouldReceive('getSetting')->with('gateway_square_accessToken')->andReturn('enc-access-token');
         $sR->shouldReceive('decode')->with('enc-access-token')->andReturn('plain-access-token');
@@ -47,7 +58,7 @@ final class SquarePaymentServiceTest
     {
         return new SquarePaymentService(
             $this->makeSettingRepository(),
-            m::spy(LoggerInterface::class),
+            $this->makeLoggerInterfaceSpy(),
             $this->makeHttpClient($mock),
         );
     }
@@ -68,12 +79,13 @@ final class SquarePaymentServiceTest
 
     public function isConfiguredReturnsFalseWhenLocationIdIsMissing(): void
     {
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
         $sR->shouldReceive('getSetting')->with('gateway_square_accessToken')->andReturn('enc-access-token');
         $sR->shouldReceive('decode')->with('enc-access-token')->andReturn('plain-access-token');
         $sR->shouldReceive('getSetting')->with('gateway_square_locationId')->andReturn('');
 
-        $service = new SquarePaymentService($sR, m::spy(LoggerInterface::class), $this->makeHttpClient(new MockHandler([])));
+        $service = new SquarePaymentService($sR, $this->makeLoggerInterfaceSpy(), $this->makeHttpClient(new MockHandler([])));
 
         Assert::false($service->isConfigured());
     }
@@ -98,6 +110,7 @@ final class SquarePaymentServiceTest
         Assert::same('https://square.link/u/abc123', $result['paymentLinkUrl']);
 
         $sentRequest = $mock->getLastRequest();
+        Assert::notNull($sentRequest);
         Assert::same('Bearer plain-access-token', $sentRequest->getHeaderLine('Authorization'));
         Assert::notSame('', $sentRequest->getHeaderLine('Square-Version'));
 
@@ -207,6 +220,7 @@ final class SquarePaymentServiceTest
         Assert::same('refund_1', $result->providerReference);
 
         $sentRequest = $mock->getLastRequest();
+        Assert::notNull($sentRequest);
         /** @var array{payment_id: string, amount_money: array{amount: int, currency: string}} $body */
         $body = json_decode((string) $sentRequest->getBody(), true, 512, JSON_THROW_ON_ERROR);
         Assert::same('pay_1', $body['payment_id']);

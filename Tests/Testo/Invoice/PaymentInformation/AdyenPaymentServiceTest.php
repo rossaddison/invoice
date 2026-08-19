@@ -29,16 +29,27 @@ use Testo\Test;
 #[Test]
 final class AdyenPaymentServiceTest
 {
+
+    /**
+     * @return LoggerInterface&m\MockInterface
+     */
+    private function makeLoggerInterfaceSpy(): LoggerInterface
+    {
+        /** @var LoggerInterface&m\MockInterface $mock */
+        $mock = m::spy(LoggerInterface::class);
+        return $mock;
+    }
     private const string KNOWN_KEY = '0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCD';
     private const string KNOWN_KEY_KCV = 'E3CAEE';
 
     private function makeService(string $storedHmacKey): AdyenPaymentService
     {
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
         $sR->shouldReceive('getSetting')->with('gateway_adyen_webhookHmacKey')->andReturn($storedHmacKey);
         $sR->shouldReceive('decode')->with($storedHmacKey)->andReturn($storedHmacKey === '' ? '' : $storedHmacKey);
 
-        return new AdyenPaymentService($sR, m::spy(LoggerInterface::class));
+        return new AdyenPaymentService($sR, $this->makeLoggerInterfaceSpy());
     }
 
     public function hmacKeyKcvComputesTheCorrectValueForAKnownKey(): void

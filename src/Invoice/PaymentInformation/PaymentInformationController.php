@@ -15,6 +15,7 @@ use App\Infrastructure\Persistence\InvItem\InvItem;
 // Libraries
 use App\Invoice\Helpers\DateHelper;
 // Psr
+use App\Invoice\Inv\InvPaymentSettlementService;
 use App\Invoice\Inv\InvRepository as iR;
 use App\Invoice\InvAmount\InvAmountRepository as iaR;
 // Repositories
@@ -76,6 +77,7 @@ final class PaymentInformationController
         private Session $session,
         private iaR $iaR,
         private iR $iR,
+        private InvPaymentSettlementService $invPaymentSettlementService,
         private sR $sR,
         private UrlGenerator $urlGenerator,
         private UserService $userService,
@@ -686,14 +688,10 @@ final class PaymentInformationController
         $transactionResult  = $this->braintreePaymentService->processTransaction(
             $ctx->balance, $paymentMethodNonce);
         if ($transactionResult['success']) {
-            $ctx->invoice->setPaymentMethod(4);
-            $ctx->invoice->setStatusId(4);
             /** @var InvAmount $invoice_amount_record */
             $invoice_amount_record = $this->iaR->repoInvquery($ctx->invoice->reqId());
             if (null !== $invoice_amount_record->getTotal()) {
-                $invoice_amount_record->setBalance(0.00);
-                $invoice_amount_record->setPaid($invoice_amount_record->getTotal() ?? 0.00);
-                $this->iaR->save($invoice_amount_record);
+                $this->invPaymentSettlementService->markInvoicePaidAndAdjustStock($ctx->invoice, $invoice_amount_record);
                 $this->paymentRecorder->record(
                     new PaymentRecordContext(
                         reference: $ctx->invoice->getNumber() ??
@@ -963,11 +961,8 @@ final class PaymentInformationController
         $paymentId = $lastPayment->id;
         // Related logic: see vendor\mollie\mollie-api-php\examples\payments\webhook.php
         if ($lastPayment->isPaid() && !$lastPayment->hasRefunds() && !$lastPayment->hasChargebacks()) {
-            $invoice->setStatusId(4);
             $payment_method = 4;
-            $invoice->setPaymentMethod(4);
             $heading = sprintf($this->translator->translate('online.payment.payment.successful'), $invoiceNumber);
-            $this->iR->save($invoice);
             /** @var int $invoice->reqId() */
             $invoice_amount_record = $this->iaR->repoInvquery($invoice->reqId());
             /** @var InvAmount $invoice_amount_record */
@@ -978,10 +973,15 @@ final class PaymentInformationController
             // redirected" — it can just as easily arrive first), in which
             // case balance is already 0 and re-running this would create a
             // duplicate Merchant audit row via paymentRecorder->record().
+            // markInvoicePaidAndAdjustStock() itself is also idempotent
+            // (status_id 4 already set is a no-op), so this is belt and
+            // braces against the same race from two directions.
             if (null !== $balance && $balance > 0.00) {
-                $invoice_amount_record->setBalance(0);
-                $invoice_amount_record->setPaid($invoice_amount_record->getTotal() ?? 0.00);
-                $this->iaR->save($invoice_amount_record);
+                $this->invPaymentSettlementService->markInvoicePaidAndAdjustStock(
+                    $invoice,
+                    $invoice_amount_record,
+                    $payment_method,
+                );
                 $this->paymentRecorder->record(
                     new PaymentRecordContext(
                         reference: $invoiceNumber . '-' . $lastPayment->status,

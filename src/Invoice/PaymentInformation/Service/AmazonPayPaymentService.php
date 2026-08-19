@@ -6,7 +6,7 @@ namespace App\Invoice\PaymentInformation\Service;
 
 use Amazon\Pay\API\Client;
 use App\Infrastructure\Persistence\Inv\Inv;
-use App\Invoice\Inv\InvRepository;
+use App\Invoice\Inv\InvPaymentSettlementService;
 use App\Invoice\InvAmount\InvAmountRepository;
 use App\Invoice\PaymentInformation\PaymentGatewayInterface;
 use App\Invoice\PaymentInformation\PaymentRefundResult;
@@ -19,6 +19,7 @@ class AmazonPayPaymentService implements PaymentGatewayInterface
 {
     public function __construct(
         private readonly sR $sR,
+        private readonly InvPaymentSettlementService $invPaymentSettlementService,
     ) {
     }
 
@@ -132,12 +133,10 @@ class AmazonPayPaymentService implements PaymentGatewayInterface
         }
         /** @var Inv $invoice */
         $invoice = $payload['invoice'];
-        /** @var InvRepository $invoiceRepository */
-        $invoiceRepository = $payload['iR'];
         /** @var InvAmountRepository $invoiceAmountRepository */
         $invoiceAmountRepository = $payload['iaR'];
         try {
-            return $this->processAmazonCheckoutSession($sessionId, $invoice, $invoiceRepository, $invoiceAmountRepository);
+            return $this->processAmazonCheckoutSession($sessionId, $invoice, $invoiceAmountRepository);
         } catch (\Throwable $e) {
             return ['success' => false, 'message' => 'Amazon Pay callback error: ' . $e->getMessage(), 'details' => null];
         }
@@ -146,7 +145,6 @@ class AmazonPayPaymentService implements PaymentGatewayInterface
     private function processAmazonCheckoutSession(
         string $sessionId,
         Inv $invoice,
-        InvRepository $invoiceRepository,
         InvAmountRepository $invoiceAmountRepository,
     ): array {
         $sandboxOrLive = $this->sR->getSetting('gateway_amazon_pay_sandbox') === '1' ? 'SANDBOX-' : 'LIVE-';
@@ -166,17 +164,9 @@ class AmazonPayPaymentService implements PaymentGatewayInterface
         if ($paymentState !== 'Completed') {
             return ['success' => false, 'message' => 'Amazon Pay session not completed.', 'details' => $responseData];
         }
-        $invoice->setPaymentMethod(4); // 4 = Card/Direct Debit
-        $invoice->setStatusId(4);      // 4 = Paid
-        $invoiceRepository->save($invoice);
         $invoiceAmountRecord = $invoiceAmountRepository->repoInvquery($invoice->reqId());
-        if ($invoiceAmountRecord !== null && $invoiceAmountRecord->getBalance() !== null) {
-            $total = $invoiceAmountRecord->getTotal();
-            $invoiceAmountRecord->setBalance(0);
-            if ($total !== null) {
-                $invoiceAmountRecord->setPaid($total);
-            }
-            $invoiceAmountRepository->save($invoiceAmountRecord);
+        if ($invoiceAmountRecord !== null) {
+            $this->invPaymentSettlementService->markInvoicePaidAndAdjustStock($invoice, $invoiceAmountRecord);
         }
         return ['success' => true, 'message' => 'Amazon Pay session completed and invoice updated.', 'details' => $responseData];
     }

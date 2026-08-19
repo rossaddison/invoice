@@ -6,6 +6,7 @@ namespace Tests\Testo\Invoice\PaymentInformation;
 
 use App\Infrastructure\Persistence\Client\Client as ClientEntity;
 use App\Infrastructure\Persistence\Inv\Inv;
+use App\Invoice\Inv\InvPaymentSettlementService;
 use App\Invoice\PaymentInformation\Service\AmazonPayPaymentService;
 use App\Invoice\Setting\SettingRepository;
 use Mockery as m;
@@ -90,11 +91,22 @@ final class AmazonPayPaymentServiceTest
         @rmdir($dir);
     }
 
+    /**
+     * @return InvPaymentSettlementService&m\MockInterface
+     */
+    private function makeInvPaymentSettlementService(): InvPaymentSettlementService
+    {
+        /** @var InvPaymentSettlementService&m\MockInterface $service */
+        $service = m::mock(InvPaymentSettlementService::class);
+        return $service;
+    }
+
     public function createPaymentRequestReturnsOrderReferenceAmountAndCurrency(): void
     {
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
 
-        $service = new AmazonPayPaymentService($sR);
+        $service = new AmazonPayPaymentService($sR, $this->makeInvPaymentSettlementService());
 
         $result = $service->createPaymentRequest(99.50, 'GBP');
 
@@ -108,31 +120,29 @@ final class AmazonPayPaymentServiceTest
 
     public function getDriverKeyReturnsAmazonPay(): void
     {
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
 
-        $service = new AmazonPayPaymentService($sR);
+        $service = new AmazonPayPaymentService($sR, $this->makeInvPaymentSettlementService());
 
         Assert::same('amazon_pay', $service->getDriverKey());
     }
 
     public function isConfiguredReturnsFalseWhenPublicKeyIdMissing(): void
     {
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $sR->shouldReceive('getSetting');
         $e->once()->with('gateway_amazon_pay_publicKeyId')->andReturn('');
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $sR->shouldReceive('decode');
         $e2->once()->with('')->andReturn('');
-        /** @var \Mockery\Expectation $e3 */
         $e3 = $sR->shouldReceive('getSetting');
         $e3->once()->with('gateway_amazon_pay_merchantId')->andReturn('enc-merchant');
-        /** @var \Mockery\Expectation $e4 */
         $e4 = $sR->shouldReceive('decode');
         $e4->once()->with('enc-merchant')->andReturn('merchant123');
         $sR->shouldNotReceive('getAmazonPemFileFolderAliases');
 
-        $service = new AmazonPayPaymentService($sR);
+        $service = new AmazonPayPaymentService($sR, $this->makeInvPaymentSettlementService());
 
         Assert::false($service->isConfigured());
     }
@@ -141,24 +151,20 @@ final class AmazonPayPaymentServiceTest
     {
         $dir = $this->makeTempPemDir(withPrivateKey: false);
         try {
+            /** @var SettingRepository&m\MockInterface $sR */
             $sR = m::mock(SettingRepository::class);
-            /** @var \Mockery\Expectation $e */
             $e = $sR->shouldReceive('getSetting');
             $e->once()->with('gateway_amazon_pay_publicKeyId')->andReturn('enc-pub');
-            /** @var \Mockery\Expectation $e2 */
             $e2 = $sR->shouldReceive('decode');
             $e2->once()->with('enc-pub')->andReturn('pub123');
-            /** @var \Mockery\Expectation $e3 */
             $e3 = $sR->shouldReceive('getSetting');
             $e3->once()->with('gateway_amazon_pay_merchantId')->andReturn('enc-merchant');
-            /** @var \Mockery\Expectation $e4 */
             $e4 = $sR->shouldReceive('decode');
             $e4->once()->with('enc-merchant')->andReturn('merchant123');
-            /** @var \Mockery\Expectation $e5 */
             $e5 = $sR->shouldReceive('getAmazonPemFileFolderAliases');
             $e5->once()->andReturn(new Aliases(['@pem_file_unique_folder' => $dir]));
 
-            $service = new AmazonPayPaymentService($sR);
+            $service = new AmazonPayPaymentService($sR, $this->makeInvPaymentSettlementService());
 
             Assert::false($service->isConfigured());
         } finally {
@@ -170,24 +176,20 @@ final class AmazonPayPaymentServiceTest
     {
         $dir = $this->makeTempPemDir(withPrivateKey: true);
         try {
+            /** @var SettingRepository&m\MockInterface $sR */
             $sR = m::mock(SettingRepository::class);
-            /** @var \Mockery\Expectation $e */
             $e = $sR->shouldReceive('getSetting');
             $e->once()->with('gateway_amazon_pay_publicKeyId')->andReturn('enc-pub');
-            /** @var \Mockery\Expectation $e2 */
             $e2 = $sR->shouldReceive('decode');
             $e2->once()->with('enc-pub')->andReturn('pub123');
-            /** @var \Mockery\Expectation $e3 */
             $e3 = $sR->shouldReceive('getSetting');
             $e3->once()->with('gateway_amazon_pay_merchantId')->andReturn('enc-merchant');
-            /** @var \Mockery\Expectation $e4 */
             $e4 = $sR->shouldReceive('decode');
             $e4->once()->with('enc-merchant')->andReturn('merchant123');
-            /** @var \Mockery\Expectation $e5 */
             $e5 = $sR->shouldReceive('getAmazonPemFileFolderAliases');
             $e5->once()->andReturn(new Aliases(['@pem_file_unique_folder' => $dir]));
 
-            $service = new AmazonPayPaymentService($sR);
+            $service = new AmazonPayPaymentService($sR, $this->makeInvPaymentSettlementService());
 
             Assert::true($service->isConfigured());
         } finally {
@@ -199,12 +201,12 @@ final class AmazonPayPaymentServiceTest
     {
         $dir = $this->makeTempPemDir(withPrivateKey: false);
         try {
+            /** @var SettingRepository&m\MockInterface $sR */
             $sR = m::mock(SettingRepository::class);
-            /** @var \Mockery\Expectation $e */
             $e = $sR->shouldReceive('getAmazonPemFileFolderAliases');
             $e->once()->andReturn(new Aliases(['@pem_file_unique_folder' => $dir]));
 
-            $service = new AmazonPayPaymentService($sR);
+            $service = new AmazonPayPaymentService($sR, $this->makeInvPaymentSettlementService());
 
             $expected = [
                 'heading' => '',
@@ -228,12 +230,12 @@ final class AmazonPayPaymentServiceTest
     {
         $dir = $this->makeTempPemDir(withPrivateKey: true);
         try {
+            /** @var SettingRepository&m\MockInterface $sR */
             $sR = m::mock(SettingRepository::class);
-            /** @var \Mockery\Expectation $e */
             $e = $sR->shouldReceive('getAmazonPemFileFolderAliases');
             $e->once()->andReturn(new Aliases(['@pem_file_unique_folder' => $dir]));
 
-            $service = new AmazonPayPaymentService($sR);
+            $service = new AmazonPayPaymentService($sR, $this->makeInvPaymentSettlementService());
 
             Assert::null($service->checkPrivatePemFile());
         } finally {
@@ -243,9 +245,10 @@ final class AmazonPayPaymentServiceTest
 
     public function handleCallbackReturnsErrorWhenSessionIdMissing(): void
     {
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
 
-        $service = new AmazonPayPaymentService($sR);
+        $service = new AmazonPayPaymentService($sR, $this->makeInvPaymentSettlementService());
 
         $result = $service->handleCallback(['amazonCheckoutSessionId' => '']);
 
@@ -258,9 +261,10 @@ final class AmazonPayPaymentServiceTest
 
     public function handleCallbackReturnsErrorWhenPayloadInvoiceIsInvalid(): void
     {
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
 
-        $service = new AmazonPayPaymentService($sR);
+        $service = new AmazonPayPaymentService($sR, $this->makeInvPaymentSettlementService());
 
         // A malformed payload (wrong types for invoice/repositories) fails
         // the processAmazonCheckoutSession() parameter type check with a
@@ -284,18 +288,18 @@ final class AmazonPayPaymentServiceTest
     {
         $dir = $this->makeTempPemDir(withPrivateKey: true);
         try {
+            /** @var ClientEntity&m\MockInterface $clientEntity */
             $clientEntity = m::mock(ClientEntity::class);
-            /** @var \Mockery\Expectation $eLang */
             $eLang = $clientEntity->shouldReceive('getClientLanguage');
             $eLang->once()->andReturn('French');
 
+            /** @var Inv&m\MockInterface $invoice */
             $invoice = m::mock(Inv::class);
-            /** @var \Mockery\Expectation $eClient */
             $eClient = $invoice->shouldReceive('getClient');
             $eClient->once()->andReturn($clientEntity);
 
+            /** @var SettingRepository&m\MockInterface $sR */
             $sR = m::mock(SettingRepository::class);
-            /** @var \Mockery\Expectation $e */
             $e = $sR->shouldReceive('amazonLanguages');
             $e->once()->andReturn([
                 'English' => 'en_GB',
@@ -305,44 +309,32 @@ final class AmazonPayPaymentServiceTest
                 'Italian' => 'it_IT',
                 'Spanish' => 'es_ES',
             ]);
-            /** @var \Mockery\Expectation $e2 */
             $e2 = $sR->shouldReceive('getSetting');
             $e2->once()->with('currency_code')->andReturn('GBP');
-            /** @var \Mockery\Expectation $e3 */
             $e3 = $sR->shouldReceive('getSetting');
             $e3->once()->with('gateway_amazon_pay_merchantId')->andReturn('enc-merchant');
-            /** @var \Mockery\Expectation $e4 */
             $e4 = $sR->shouldReceive('decode');
             $e4->once()->with('enc-merchant')->andReturn('merchant123');
-            /** @var \Mockery\Expectation $e5 */
             $e5 = $sR->shouldReceive('getSetting');
             $e5->twice()->with('gateway_amazon_pay_publicKeyId')->andReturn('enc-pub');
-            /** @var \Mockery\Expectation $e6 */
             $e6 = $sR->shouldReceive('decode');
             $e6->twice()->with('enc-pub')->andReturn('pub123');
-            /** @var \Mockery\Expectation $e7 */
             $e7 = $sR->shouldReceive('getSetting');
             $e7->once()->with('gateway_amazon_pay_returnUrl')->andReturn('https://example.com/return');
-            /** @var \Mockery\Expectation $e8 */
             $e8 = $sR->shouldReceive('getSetting');
             $e8->once()->with('gateway_amazon_pay_storeId')->andReturn('enc-store');
-            /** @var \Mockery\Expectation $e9 */
             $e9 = $sR->shouldReceive('decode');
             $e9->once()->with('enc-store')->andReturn('store123');
-            /** @var \Mockery\Expectation $e10 */
             $e10 = $sR->shouldReceive('getAmazonPemFileFolderAliases');
             $e10->once()->andReturn(new Aliases(['@pem_file_unique_folder' => $dir]));
-            /** @var \Mockery\Expectation $e11 */
             $e11 = $sR->shouldReceive('amazonRegions');
             $e11->once()->andReturn(['Europe' => 'eu']);
-            /** @var \Mockery\Expectation $e12 */
             $e12 = $sR->shouldReceive('getSetting');
             $e12->once()->with('gateway_amazon_pay_region')->andReturn('Europe');
-            /** @var \Mockery\Expectation $e13 */
             $e13 = $sR->shouldReceive('getSetting');
             $e13->once()->with('gateway_amazon_pay_sandbox')->andReturn('0');
 
-            $service = new AmazonPayPaymentService($sR);
+            $service = new AmazonPayPaymentService($sR, $this->makeInvPaymentSettlementService());
 
             $result = $service->getButtonData($invoice, 'urlkey123', 123.45);
 

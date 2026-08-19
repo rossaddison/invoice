@@ -27,8 +27,19 @@ use Testo\Test;
 #[Test]
 final class MercadoPagoPaymentServiceTest
 {
+
+    /**
+     * @return LoggerInterface&m\MockInterface
+     */
+    private function makeLoggerInterfaceSpy(): LoggerInterface
+    {
+        /** @var LoggerInterface&m\MockInterface $mock */
+        $mock = m::spy(LoggerInterface::class);
+        return $mock;
+    }
     private function makeSettingRepository(bool $sandbox = false): SettingRepository&m\MockInterface
     {
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
         $sR->shouldReceive('getSetting')->with('gateway_mercado_pago_accessToken')->andReturn('enc-access-token');
         $sR->shouldReceive('decode')->with('enc-access-token')->andReturn('APP_USR-plain-access-token');
@@ -47,7 +58,7 @@ final class MercadoPagoPaymentServiceTest
     {
         return new MercadoPagoPaymentService(
             $this->makeSettingRepository($sandbox),
-            m::spy(LoggerInterface::class),
+            $this->makeLoggerInterfaceSpy(),
             $this->makeHttpClient($mock),
         );
     }
@@ -68,11 +79,12 @@ final class MercadoPagoPaymentServiceTest
 
     public function isConfiguredReturnsFalseWhenAccessTokenIsMissing(): void
     {
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
         $sR->shouldReceive('getSetting')->with('gateway_mercado_pago_accessToken')->andReturn('');
         $sR->shouldReceive('decode')->with('')->andReturn('');
 
-        $service = new MercadoPagoPaymentService($sR, m::spy(LoggerInterface::class), $this->makeHttpClient(new MockHandler([])));
+        $service = new MercadoPagoPaymentService($sR, $this->makeLoggerInterfaceSpy(), $this->makeHttpClient(new MockHandler([])));
 
         Assert::false($service->isConfigured());
     }
@@ -101,6 +113,7 @@ final class MercadoPagoPaymentServiceTest
         Assert::same('https://www.mercadopago.com/checkout/v1/redirect?pref_id=pref_abc123', $result['checkoutUrl']);
 
         $sentRequest = $mock->getLastRequest();
+        Assert::notNull($sentRequest);
         Assert::same('Bearer APP_USR-plain-access-token', $sentRequest->getHeaderLine('Authorization'));
 
         /** @var array{items: list<array{title: string, quantity: int, unit_price: float, currency_id: string}>, external_reference: string, back_urls: array{success: string, pending: string, failure: string}, notification_url: string, auto_return: string} $body */
@@ -226,6 +239,7 @@ final class MercadoPagoPaymentServiceTest
         Assert::same('111222', $result->providerReference);
 
         $sentRequest = $mock->getLastRequest();
+        Assert::notNull($sentRequest);
         Assert::same('/v1/payments/pay_999/refunds', $sentRequest->getUri()->getPath());
         /** @var array{amount: int|float} $body */
         $body = json_decode((string) $sentRequest->getBody(), true, 512, JSON_THROW_ON_ERROR);

@@ -23,4 +23,27 @@ trait ProductTrait4
     {
         return $this->client_associations;
     }
+
+    public function isTrackStock(): bool
+    {
+        return $this->track_stock;
+    }
+
+    public function setTrackStock(bool $track_stock): void
+    {
+        $this->track_stock = $track_stock;
+    }
+
+    // Cache only — see App\Infrastructure\Persistence\StockMovement\StockMovement
+    // for the ledger this is derived from. Never write this directly outside
+    // of the code path that also writes the corresponding StockMovement row.
+    public function getStockQuantity(): float
+    {
+        return $this->stock_quantity;
+    }
+
+    public function setStockQuantity(float $stock_quantity): void
+    {
+        $this->stock_quantity = $stock_quantity;
+    }
 }

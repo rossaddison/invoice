@@ -33,11 +33,10 @@ final class TrueLayerPaymentServiceTest
     /** @param array<string, string> $settings */
     private function makeSettingsRepo(array $settings = []): SettingRepository&m\MockInterface
     {
+        /** @var SettingRepository&m\MockInterface $repo */
         $repo = m::mock(SettingRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->shouldReceive('getSetting');
         $e->andReturnUsing(static fn(string $key): string => $settings[$key] ?? '');
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repo->shouldReceive('decode');
         $e2->andReturnUsing(static fn(string $value): string => $value);
 
@@ -46,7 +45,9 @@ final class TrueLayerPaymentServiceTest
 
     private function makeCompanyRepo(): CompanyRepository&m\MockInterface
     {
-        return m::mock(CompanyRepository::class);
+        /** @var CompanyRepository&m\MockInterface $repo */
+        $repo = m::mock(CompanyRepository::class);
+        return $repo;
     }
 
     /** @param array<string, string> $settings */

@@ -35,10 +35,21 @@ use Testo\Test;
 #[Test]
 final class CheckoutComPaymentServiceTest
 {
+
+    /**
+     * @return LoggerInterface&m\MockInterface
+     */
+    private function makeLoggerInterfaceSpy(): LoggerInterface
+    {
+        /** @var LoggerInterface&m\MockInterface $mock */
+        $mock = m::spy(LoggerInterface::class);
+        return $mock;
+    }
     private const string VALID_SECRET_KEY = 'sk_sbox_abcdefghijklmnopqrstuvwxyza';
 
     private function makeSettingRepository(bool $sandbox = true): SettingRepository&m\MockInterface
     {
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
         $sR->shouldReceive('getSetting')->with('gateway_checkout_com_secretKey')->andReturn('enc-secret');
         $sR->shouldReceive('decode')->with('enc-secret')->andReturn(self::VALID_SECRET_KEY);
@@ -60,7 +71,7 @@ final class CheckoutComPaymentServiceTest
     {
         return new CheckoutComPaymentService(
             $this->makeSettingRepository($sandbox),
-            m::spy(LoggerInterface::class),
+            $this->makeLoggerInterfaceSpy(),
             $this->makeHttpClient($mock),
         );
     }
@@ -74,11 +85,12 @@ final class CheckoutComPaymentServiceTest
 
     public function isConfiguredIsFalseWithoutASecretKey(): void
     {
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
         $sR->shouldReceive('getSetting')->with('gateway_checkout_com_secretKey')->andReturn('');
         $sR->shouldReceive('decode')->with('')->andReturn('');
 
-        $service = new CheckoutComPaymentService($sR, m::spy(LoggerInterface::class));
+        $service = new CheckoutComPaymentService($sR, $this->makeLoggerInterfaceSpy());
 
         Assert::false($service->isConfigured());
     }
@@ -154,6 +166,7 @@ final class CheckoutComPaymentServiceTest
      */
     public function createPaymentLinkIncludesProcessingChannelIdWhenConfigured(): void
     {
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
         $sR->shouldReceive('getSetting')->with('gateway_checkout_com_secretKey')->andReturn('enc-secret');
         $sR->shouldReceive('decode')->with('enc-secret')->andReturn(self::VALID_SECRET_KEY);
@@ -174,10 +187,11 @@ final class CheckoutComPaymentServiceTest
         $handlerStack->push(Middleware::history($history));
         $httpClient = new HttpClient(['handler' => $handlerStack]);
 
-        $service = new CheckoutComPaymentService($sR, m::spy(LoggerInterface::class), $httpClient);
+        $service = new CheckoutComPaymentService($sR, $this->makeLoggerInterfaceSpy(), $httpClient);
 
         $service->createPaymentLink(10.00, 'gbp', 'key', 'Invoice INV1', 'https://example.test/complete');
 
+        /** @var array $history */
         Assert::same(1, count($history));
         /** @var array{request: \Psr\Http\Message\RequestInterface} $entry */
         $entry = $history[0];
@@ -264,11 +278,12 @@ final class CheckoutComPaymentServiceTest
 
     public function webhookSigningKeyReturnsTheDecodedWebhookSecret(): void
     {
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
         $sR->shouldReceive('getSetting')->with('gateway_checkout_com_webhookSecret')->andReturn('enc-webhook-secret');
         $sR->shouldReceive('decode')->with('enc-webhook-secret')->andReturn('plain-webhook-signing-key');
 
-        $service = new CheckoutComPaymentService($sR, m::spy(LoggerInterface::class));
+        $service = new CheckoutComPaymentService($sR, $this->makeLoggerInterfaceSpy());
 
         Assert::same('plain-webhook-signing-key', $service->webhookSigningKey());
     }

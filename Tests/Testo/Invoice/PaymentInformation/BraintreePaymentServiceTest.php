@@ -33,11 +33,10 @@ final class BraintreePaymentServiceTest
     /** @param array<string, string> $settings */
     private function makeSettingsRepo(array $settings = []): SettingRepository&m\MockInterface
     {
+        /** @var SettingRepository&m\MockInterface $repo */
         $repo = m::mock(SettingRepository::class);
-        /** @var \Mockery\Expectation $e */
         $e = $repo->shouldReceive('getSetting');
         $e->andReturnUsing(static fn(string $key): string => $settings[$key] ?? '');
-        /** @var \Mockery\Expectation $e2 */
         $e2 = $repo->shouldReceive('decode');
         $e2->andReturnUsing(static fn(string $value): string => $value);
 
@@ -47,7 +46,9 @@ final class BraintreePaymentServiceTest
     /** @param array<string, string> $settings */
     private function makeService(array $settings = []): BraintreePaymentService
     {
-        return new BraintreePaymentService($this->makeSettingsRepo($settings), m::spy(\Psr\Log\LoggerInterface::class));
+        /** @var \Psr\Log\LoggerInterface&m\MockInterface $logger */
+        $logger = m::spy(\Psr\Log\LoggerInterface::class);
+        return new BraintreePaymentService($this->makeSettingsRepo($settings), $logger);
     }
 
     public function getDriverKeyReturnsBraintree(): void

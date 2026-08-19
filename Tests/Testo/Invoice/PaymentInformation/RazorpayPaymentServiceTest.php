@@ -27,8 +27,19 @@ use Testo\Test;
 #[Test]
 final class RazorpayPaymentServiceTest
 {
+
+    /**
+     * @return LoggerInterface&m\MockInterface
+     */
+    private function makeLoggerInterfaceSpy(): LoggerInterface
+    {
+        /** @var LoggerInterface&m\MockInterface $mock */
+        $mock = m::spy(LoggerInterface::class);
+        return $mock;
+    }
     private function makeSettingRepository(): SettingRepository&m\MockInterface
     {
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
         $sR->shouldReceive('getSetting')->with('gateway_razorpay_keyId')->andReturn('rzp_test_abc123');
         $sR->shouldReceive('getSetting')->with('gateway_razorpay_keySecret')->andReturn('enc-key-secret');
@@ -47,7 +58,7 @@ final class RazorpayPaymentServiceTest
     {
         return new RazorpayPaymentService(
             $this->makeSettingRepository(),
-            m::spy(LoggerInterface::class),
+            $this->makeLoggerInterfaceSpy(),
             $this->makeHttpClient($mock),
         );
     }
@@ -68,12 +79,13 @@ final class RazorpayPaymentServiceTest
 
     public function isConfiguredReturnsFalseWhenKeyIdIsMissing(): void
     {
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
         $sR->shouldReceive('getSetting')->with('gateway_razorpay_keyId')->andReturn('');
         $sR->shouldReceive('getSetting')->with('gateway_razorpay_keySecret')->andReturn('enc-key-secret');
         $sR->shouldReceive('decode')->with('enc-key-secret')->andReturn('plain_key_secret');
 
-        $service = new RazorpayPaymentService($sR, m::spy(LoggerInterface::class), $this->makeHttpClient(new MockHandler([])));
+        $service = new RazorpayPaymentService($sR, $this->makeLoggerInterfaceSpy(), $this->makeHttpClient(new MockHandler([])));
 
         Assert::false($service->isConfigured());
     }
@@ -96,6 +108,7 @@ final class RazorpayPaymentServiceTest
         Assert::same('https://rzp.io/i/abc123', $result['paymentLinkUrl']);
 
         $sentRequest = $mock->getLastRequest();
+        Assert::notNull($sentRequest);
         Assert::same('Basic ' . base64_encode('rzp_test_abc123:plain_key_secret'), $sentRequest->getHeaderLine('Authorization'));
 
         /** @var array{amount: int, currency: string, description: string, reference_id: string, callback_url: string, callback_method: string, notes: array{invoiceUrlKey: string}} $body */
@@ -175,6 +188,7 @@ final class RazorpayPaymentServiceTest
         Assert::same('rfnd_1', $result->providerReference);
 
         $sentRequest = $mock->getLastRequest();
+        Assert::notNull($sentRequest);
         /** @var array{payment_id: string, amount: int} $body */
         $body = json_decode((string) $sentRequest->getBody(), true, 512, JSON_THROW_ON_ERROR);
         Assert::same('pay_xyz789', $body['payment_id']);

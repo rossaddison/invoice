@@ -31,6 +31,16 @@ use Testo\Test;
 #[Test]
 final class PaypalPaymentServiceTest
 {
+
+    /**
+     * @return LoggerInterface&m\MockInterface
+     */
+    private function makeLoggerInterfaceSpy(): LoggerInterface
+    {
+        /** @var LoggerInterface&m\MockInterface $mock */
+        $mock = m::spy(LoggerInterface::class);
+        return $mock;
+    }
     private function tokenResponse(): Response
     {
         return new Response(200, [], json_encode([
@@ -42,6 +52,7 @@ final class PaypalPaymentServiceTest
 
     private function makeSettingRepository(): SettingRepository&m\MockInterface
     {
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
         $sR->shouldReceive('getSetting')->with('gateway_paypal_clientId')->andReturn('test-client-id');
         $sR->shouldReceive('getSetting')->with('gateway_paypal_clientSecret')->andReturn('enc-client-secret');
@@ -59,9 +70,11 @@ final class PaypalPaymentServiceTest
 
     private function makeService(MockHandler $mock, ?LoggerInterface $logger = null): PaypalPaymentService
     {
+        /** @var LoggerInterface&m\MockInterface $logger */
+        $logger = $logger ?? m::spy(LoggerInterface::class);
         return new PaypalPaymentService(
             $this->makeSettingRepository(),
-            $logger ?? m::spy(LoggerInterface::class),
+            $logger,
             $this->makeHttpClient($mock),
         );
     }
@@ -82,12 +95,13 @@ final class PaypalPaymentServiceTest
 
     public function isConfiguredReturnsFalseWhenClientIdIsMissing(): void
     {
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
         $sR->shouldReceive('getSetting')->with('gateway_paypal_clientId')->andReturn('');
         $sR->shouldReceive('getSetting')->with('gateway_paypal_clientSecret')->andReturn('enc-client-secret');
         $sR->shouldReceive('decode')->with('enc-client-secret')->andReturn('plain-client-secret');
 
-        $service = new PaypalPaymentService($sR, m::spy(LoggerInterface::class), $this->makeHttpClient(new MockHandler([])));
+        $service = new PaypalPaymentService($sR, $this->makeLoggerInterfaceSpy(), $this->makeHttpClient(new MockHandler([])));
 
         Assert::false($service->isConfigured());
     }
@@ -119,6 +133,7 @@ final class PaypalPaymentServiceTest
         Assert::same('https://www.sandbox.paypal.com/checkoutnow?token=ORDER123', $result['approveUrl']);
 
         $sentRequest = $mock->getLastRequest();
+        Assert::notNull($sentRequest);
         Assert::same('Bearer test-access-token', $sentRequest->getHeaderLine('Authorization'));
 
         /** @var array{intent: string, purchase_units: list<array{amount: array{currency_code: string, value: string}, invoice_id: string, description: string}>, application_context: array{return_url: string, cancel_url: string, user_action: string}} $body */
@@ -182,7 +197,6 @@ final class PaypalPaymentServiceTest
         ]);
         /** @var LoggerInterface&m\MockInterface $logger */
         $logger = m::mock(LoggerInterface::class);
-        /** @var \Mockery\Expectation $eError */
         $eError = $logger->shouldReceive('error');
         $eError->once()->with('PayPal createPayment failed.', m::on(static function (array $context): bool {
             return $context['issue'] === 'INVALID_PARAMETER_SYNTAX'
@@ -250,7 +264,6 @@ final class PaypalPaymentServiceTest
         ]);
         /** @var LoggerInterface&m\MockInterface $logger */
         $logger = m::mock(LoggerInterface::class);
-        /** @var \Mockery\Expectation $eError */
         $eError = $logger->shouldReceive('error');
         $eError->once()->with('PayPal captureOrder rejected by PayPal.', m::on(static function (array $context): bool {
             return $context['order_id'] === 'ORDER123'
@@ -311,6 +324,7 @@ final class PaypalPaymentServiceTest
         Assert::same('REFUND1', $result->providerReference);
 
         $sentRequest = $mock->getLastRequest();
+        Assert::notNull($sentRequest);
         /** @var array{amount: array{currency_code: string, value: string}} $body */
         $body = json_decode((string) $sentRequest->getBody(), true, 512, JSON_THROW_ON_ERROR);
         Assert::same('USD', $body['amount']['currency_code']);
@@ -347,7 +361,6 @@ final class PaypalPaymentServiceTest
         ]);
         /** @var LoggerInterface&m\MockInterface $logger */
         $logger = m::mock(LoggerInterface::class);
-        /** @var \Mockery\Expectation $eError */
         $eError = $logger->shouldReceive('error');
         $eError->once()->with('PayPal refund rejected by PayPal.', m::on(static function (array $context): bool {
             return $context['provider_reference'] === 'CAP123'
@@ -393,6 +406,7 @@ final class PaypalPaymentServiceTest
         Assert::true($result);
 
         $sentRequest = $mock->getLastRequest();
+        Assert::notNull($sentRequest);
         /** @var array{transmission_id: string, transmission_time: string, cert_url: string, auth_algo: string, transmission_sig: string, webhook_id: string, webhook_event: array{event_type: string}} $body */
         $body = json_decode((string) $sentRequest->getBody(), true, 512, JSON_THROW_ON_ERROR);
         Assert::same('tx-1', $body['transmission_id']);

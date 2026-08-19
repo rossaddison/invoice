@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\PaymentInformation\Service;
 
+use App\Invoice\Inv\InvPaymentSettlementService;
 use App\Invoice\Inv\InvRepository as iR;
 use App\Invoice\InvAmount\InvAmountRepository as iaR;
 use App\Invoice\PaymentInformation\PaymentRecordContext;
@@ -33,6 +34,7 @@ final class StripeWebhookHandler
         private readonly iR $iR,
         private readonly iaR $iaR,
         private readonly sR $sR,
+        private readonly InvPaymentSettlementService $invPaymentSettlementService,
         private readonly OnlinePaymentRecorderService $recorder,
         private readonly DataResponseFactoryInterface $factory,
         private readonly Logger $logger,
@@ -125,12 +127,7 @@ final class StripeWebhookHandler
         );
 
         if ($succeeded) {
-            $invoice->setStatusId(4);
-            $invoice->setPaymentMethod(4);
-            $this->iR->save($invoice);
-            $invoiceAmountRecord->setBalance(0);
-            $invoiceAmountRecord->setPaid($invoiceAmountRecord->getTotal() ?? 0.00);
-            $this->iaR->save($invoiceAmountRecord);
+            $this->invPaymentSettlementService->markInvoicePaidAndAdjustStock($invoice, $invoiceAmountRecord);
         } else {
             $invoice->setStatusId(6);
             $this->iR->save($invoice);

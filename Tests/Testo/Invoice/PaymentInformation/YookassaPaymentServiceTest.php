@@ -28,8 +28,19 @@ use Testo\Test;
 #[Test]
 final class YookassaPaymentServiceTest
 {
+
+    /**
+     * @return LoggerInterface&m\MockInterface
+     */
+    private function makeLoggerInterfaceSpy(): LoggerInterface
+    {
+        /** @var LoggerInterface&m\MockInterface $mock */
+        $mock = m::spy(LoggerInterface::class);
+        return $mock;
+    }
     private function makeSettingRepository(): SettingRepository&m\MockInterface
     {
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
         $sR->shouldReceive('getSetting')->with('gateway_yookassa_shopId')->andReturn('demo-shop-id');
         $sR->shouldReceive('getSetting')->with('gateway_yookassa_secretKey')->andReturn('enc-secret-key');
@@ -48,7 +59,7 @@ final class YookassaPaymentServiceTest
     {
         return new YookassaPaymentService(
             $this->makeSettingRepository(),
-            m::spy(LoggerInterface::class),
+            $this->makeLoggerInterfaceSpy(),
             $this->makeHttpClient($mock),
         );
     }
@@ -69,12 +80,13 @@ final class YookassaPaymentServiceTest
 
     public function isConfiguredReturnsFalseWhenShopIdIsMissing(): void
     {
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
         $sR->shouldReceive('getSetting')->with('gateway_yookassa_shopId')->andReturn('');
         $sR->shouldReceive('getSetting')->with('gateway_yookassa_secretKey')->andReturn('enc-secret-key');
         $sR->shouldReceive('decode')->with('enc-secret-key')->andReturn('live_secretkey123');
 
-        $service = new YookassaPaymentService($sR, m::spy(LoggerInterface::class), $this->makeHttpClient(new MockHandler([])));
+        $service = new YookassaPaymentService($sR, $this->makeLoggerInterfaceSpy(), $this->makeHttpClient(new MockHandler([])));
 
         Assert::false($service->isConfigured());
     }
@@ -97,6 +109,7 @@ final class YookassaPaymentServiceTest
         Assert::same('https://yookassa.ru/checkout/payments/v2/contract?orderId=payment-uuid-123', $result['confirmationUrl']);
 
         $sentRequest = $mock->getLastRequest();
+        Assert::notNull($sentRequest);
         Assert::same('Basic ' . base64_encode('demo-shop-id:live_secretkey123'), $sentRequest->getHeaderLine('Authorization'));
         Assert::notSame('', $sentRequest->getHeaderLine('Idempotence-Key'));
 
@@ -178,6 +191,7 @@ final class YookassaPaymentServiceTest
         Assert::same('refund-uuid-1', $result->providerReference);
 
         $sentRequest = $mock->getLastRequest();
+        Assert::notNull($sentRequest);
         /** @var array{payment_id: string, amount: array{value: string, currency: string}} $body */
         $body = json_decode((string) $sentRequest->getBody(), true, 512, JSON_THROW_ON_ERROR);
         Assert::same('payment-uuid-123', $body['payment_id']);

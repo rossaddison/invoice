@@ -6,6 +6,7 @@ namespace Tests\Testo\Invoice\PaymentInformation;
 
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\InvAmount\InvAmount;
+use App\Invoice\Inv\InvPaymentSettlementService;
 use App\Invoice\Inv\InvRepository;
 use App\Invoice\InvAmount\InvAmountRepository;
 use App\Invoice\PaymentInformation\Service\MollieWebhookHandler;
@@ -52,6 +53,7 @@ final class MollieWebhookHandlerTest
 
     private function makeSettingRepository(): SettingRepository&m\MockInterface
     {
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
         $sR->shouldReceive('getSetting')->with('gateway_mollie_testOrLiveApiKey')->andReturn('enc-key');
         $sR->shouldReceive('decode')->with('enc-key')->andReturn('test_abcdefghijklmnopqrstuvwxyz1234567890');
@@ -60,14 +62,47 @@ final class MollieWebhookHandlerTest
         return $sR;
     }
 
+    /**
+     * @return InvPaymentSettlementService&m\MockInterface
+     */
+    private function makeUncalledInvPaymentSettlementService(): InvPaymentSettlementService
+    {
+        /** @var InvPaymentSettlementService&m\MockInterface $service */
+        $service = m::mock(InvPaymentSettlementService::class);
+        $service->shouldNotReceive('markInvoicePaidAndAdjustStock');
+        return $service;
+    }
+
+    /**
+     * @return LoggerInterface&m\MockInterface
+     */
+    private function makeLoggerSpy(): LoggerInterface
+    {
+        /** @var LoggerInterface&m\MockInterface $logger */
+        $logger = m::spy(LoggerInterface::class);
+        return $logger;
+    }
+
     public function handleReturnsBadRequestWhenIdIsMissing(): void
     {
+        /** @var InvRepository&m\MockInterface $iR */
         $iR = m::mock(InvRepository::class);
+        /** @var InvAmountRepository&m\MockInterface $iaR */
         $iaR = m::mock(InvAmountRepository::class);
+        /** @var OnlinePaymentRecorderService&m\MockInterface $recorder */
         $recorder = m::mock(OnlinePaymentRecorderService::class);
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
 
-        $handler = new MollieWebhookHandler($iR, $iaR, $sR, $recorder, $this->makeDataResponseFactory(), m::spy(LoggerInterface::class));
+        $handler = new MollieWebhookHandler(
+            $iR,
+            $iaR,
+            $sR,
+            $this->makeUncalledInvPaymentSettlementService(),
+            $recorder,
+            $this->makeDataResponseFactory(),
+            $this->makeLoggerSpy(),
+        );
 
         $response = $handler->handle($this->makeRequest([]));
 
@@ -76,13 +111,25 @@ final class MollieWebhookHandlerTest
 
     public function handleAcknowledgesWithOkWhenGatewayNotConfigured(): void
     {
+        /** @var InvRepository&m\MockInterface $iR */
         $iR = m::mock(InvRepository::class);
+        /** @var InvAmountRepository&m\MockInterface $iaR */
         $iaR = m::mock(InvAmountRepository::class);
+        /** @var OnlinePaymentRecorderService&m\MockInterface $recorder */
         $recorder = m::mock(OnlinePaymentRecorderService::class);
+        /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
         $sR->shouldReceive('getSetting')->with('gateway_mollie_testOrLiveApiKey')->andReturn('');
 
-        $handler = new MollieWebhookHandler($iR, $iaR, $sR, $recorder, $this->makeDataResponseFactory(), m::spy(LoggerInterface::class));
+        $handler = new MollieWebhookHandler(
+            $iR,
+            $iaR,
+            $sR,
+            $this->makeUncalledInvPaymentSettlementService(),
+            $recorder,
+            $this->makeDataResponseFactory(),
+            $this->makeLoggerSpy(),
+        );
 
         $response = $handler->handle($this->makeRequest(['id' => 'tr_123']));
 
@@ -102,27 +149,34 @@ final class MollieWebhookHandlerTest
             ]),
         ]);
 
+        /** @var Inv&m\MockInterface $invoice */
         $invoice = m::mock(Inv::class);
         $invoice->shouldReceive('reqId')->andReturn(42);
         $invoice->shouldReceive('getNumber')->andReturn('INV-0001');
-        $invoice->shouldReceive('setStatusId')->once()->with(4);
-        $invoice->shouldReceive('setPaymentMethod')->once()->with(4);
+        // setStatusId/setPaymentMethod/save and the InvAmount balance/paid
+        // settlement are InvPaymentSettlementService's own responsibility
+        // now (covered by InvPaymentSettlementServiceTest) — this test only
+        // needs to confirm the handler hands off the right objects.
 
+        /** @var InvAmount&m\MockInterface $invoiceAmountRecord */
         $invoiceAmountRecord = m::mock(InvAmount::class);
         $invoiceAmountRecord->shouldReceive('getBalance')->andReturn(99.50);
         $invoiceAmountRecord->shouldReceive('reqInvId')->andReturn(42);
-        $invoiceAmountRecord->shouldReceive('getTotal')->andReturn(99.50);
-        $invoiceAmountRecord->shouldReceive('setBalance')->once()->with(0);
-        $invoiceAmountRecord->shouldReceive('setPaid')->once()->with(99.50);
 
+        /** @var InvRepository&m\MockInterface $iR */
         $iR = m::mock(InvRepository::class);
         $iR->shouldReceive('repoUrlKeyGuestLoaded')->once()->with('abc123')->andReturn($invoice);
-        $iR->shouldReceive('save')->once()->with($invoice);
 
+        /** @var InvAmountRepository&m\MockInterface $iaR */
         $iaR = m::mock(InvAmountRepository::class);
         $iaR->shouldReceive('repoInvquery')->once()->with(42)->andReturn($invoiceAmountRecord);
-        $iaR->shouldReceive('save')->once()->with($invoiceAmountRecord);
 
+        /** @var InvPaymentSettlementService&m\MockInterface $invPaymentSettlementService */
+        $invPaymentSettlementService = m::mock(InvPaymentSettlementService::class);
+        $invPaymentSettlementService->shouldReceive('markInvoicePaidAndAdjustStock')
+            ->once()->with($invoice, $invoiceAmountRecord);
+
+        /** @var OnlinePaymentRecorderService&m\MockInterface $recorder */
         $recorder = m::mock(OnlinePaymentRecorderService::class);
         $recorder->shouldReceive('record')->once();
 
@@ -130,9 +184,10 @@ final class MollieWebhookHandlerTest
             $iR,
             $iaR,
             $this->makeSettingRepository(),
+            $invPaymentSettlementService,
             $recorder,
             $this->makeDataResponseFactory(),
-            m::spy(LoggerInterface::class),
+            $this->makeLoggerSpy(),
             $mollieClient,
         );
 
@@ -154,26 +209,27 @@ final class MollieWebhookHandlerTest
             ]),
         ]);
 
+        /** @var Inv&m\MockInterface $invoice */
         $invoice = m::mock(Inv::class);
         $invoice->shouldReceive('reqId')->andReturn(42);
-        $invoice->shouldNotReceive('setStatusId');
-        $invoice->shouldNotReceive('setPaymentMethod');
 
+        /** @var InvAmount&m\MockInterface $invoiceAmountRecord */
         $invoiceAmountRecord = m::mock(InvAmount::class);
         // Already recorded — e.g. mollieComplete()'s own redirect-time
         // check got there first.
         $invoiceAmountRecord->shouldReceive('getBalance')->andReturn(0.00);
-        $invoiceAmountRecord->shouldNotReceive('setBalance');
-        $invoiceAmountRecord->shouldNotReceive('setPaid');
 
+        /** @var InvRepository&m\MockInterface $iR */
         $iR = m::mock(InvRepository::class);
         $iR->shouldReceive('repoUrlKeyGuestLoaded')->once()->with('abc123')->andReturn($invoice);
         $iR->shouldNotReceive('save');
 
+        /** @var InvAmountRepository&m\MockInterface $iaR */
         $iaR = m::mock(InvAmountRepository::class);
         $iaR->shouldReceive('repoInvquery')->once()->with(42)->andReturn($invoiceAmountRecord);
         $iaR->shouldNotReceive('save');
 
+        /** @var OnlinePaymentRecorderService&m\MockInterface $recorder */
         $recorder = m::mock(OnlinePaymentRecorderService::class);
         $recorder->shouldNotReceive('record');
 
@@ -181,9 +237,10 @@ final class MollieWebhookHandlerTest
             $iR,
             $iaR,
             $this->makeSettingRepository(),
+            $this->makeUncalledInvPaymentSettlementService(),
             $recorder,
             $this->makeDataResponseFactory(),
-            m::spy(LoggerInterface::class),
+            $this->makeLoggerSpy(),
             $mollieClient,
         );
 
@@ -204,10 +261,13 @@ final class MollieWebhookHandlerTest
             ]),
         ]);
 
+        /** @var InvRepository&m\MockInterface $iR */
         $iR = m::mock(InvRepository::class);
         $iR->shouldNotReceive('repoUrlKeyGuestLoaded');
 
+        /** @var InvAmountRepository&m\MockInterface $iaR */
         $iaR = m::mock(InvAmountRepository::class);
+        /** @var OnlinePaymentRecorderService&m\MockInterface $recorder */
         $recorder = m::mock(OnlinePaymentRecorderService::class);
         $recorder->shouldNotReceive('record');
 
@@ -215,9 +275,10 @@ final class MollieWebhookHandlerTest
             $iR,
             $iaR,
             $this->makeSettingRepository(),
+            $this->makeUncalledInvPaymentSettlementService(),
             $recorder,
             $this->makeDataResponseFactory(),
-            m::spy(LoggerInterface::class),
+            $this->makeLoggerSpy(),
             $mollieClient,
         );
 
@@ -239,10 +300,13 @@ final class MollieWebhookHandlerTest
             ]),
         ]);
 
+        /** @var InvRepository&m\MockInterface $iR */
         $iR = m::mock(InvRepository::class);
         $iR->shouldReceive('repoUrlKeyGuestLoaded')->once()->with('unknown-key')->andReturn(null);
 
+        /** @var InvAmountRepository&m\MockInterface $iaR */
         $iaR = m::mock(InvAmountRepository::class);
+        /** @var OnlinePaymentRecorderService&m\MockInterface $recorder */
         $recorder = m::mock(OnlinePaymentRecorderService::class);
         $recorder->shouldNotReceive('record');
 
@@ -250,9 +314,10 @@ final class MollieWebhookHandlerTest
             $iR,
             $iaR,
             $this->makeSettingRepository(),
+            $this->makeUncalledInvPaymentSettlementService(),
             $recorder,
             $this->makeDataResponseFactory(),
-            m::spy(LoggerInterface::class),
+            $this->makeLoggerSpy(),
             $mollieClient,
         );
 
