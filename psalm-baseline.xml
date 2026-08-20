@@ -41,6 +41,16 @@
       <code><![CDATA[$userId]]></code>
     </UnusedParam>
   </file>
+  <file src="Tests/Testo/Invoice/Inv/SetWorkerTest.php">
+    <UnusedParam>
+      <code><![CDATA[$cR]]></code>
+      <code><![CDATA[$iR]]></code>
+      <code><![CDATA[$iR]]></code>
+      <code><![CDATA[$iR]]></code>
+      <code><![CDATA[$iR]]></code>
+      <code><![CDATA[$iR]]></code>
+    </UnusedParam>
+  </file>
   <file src="Tests/Testo/Invoice/InvRecurring/InvRecurringCronServiceTest.php">
     <InvalidReturnStatement>
       <code><![CDATA[$sR]]></code>

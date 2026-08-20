@@ -211,6 +211,11 @@ public function index(
         if ($inv !== null) {
             $worker = $worker_id !== '' ? $wR->repoWorkerquery((int) $worker_id) : null;
             $inv->setWorker($worker);
+            // The moment of allocation, not the invoice's own id/date_created,
+            // is what repoWorkerVisible() sorts inv/guest by for a worker —
+            // see Inv::$worker_allocated_at's own docblock. Re-set on every
+            // reassignment; cleared back to null when unassigned.
+            $inv->setWorkerAllocatedAt($worker !== null ? new \DateTimeImmutable() : null);
             $iR->save($inv);
             $this->flashMessage('info', $this->translator->translate('worker.assigned'));
         }
