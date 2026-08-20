@@ -1,9 +1,13 @@
 # Webshop — Headless Storefront Design (August 2026)
 
-> **Status: design only. Nothing built yet.** This document captures a
-> settled architecture for a future sibling repo, written up so the
-> decision trail survives even if the build itself doesn't start for a
-> while.
+> **Status: `invoice`-side prerequisites built; the `webshop` repo itself
+> not started.** This document originally captured a settled architecture
+> before any code existed. Steps 1-2 of "Not yet started" below (API-key
+> auth, the two endpoints) are now implemented — see
+> [`STOCK_MOVEMENT_LEDGER_AND_WEBSHOP_API_AUGUST_2026.md`](STOCK_MOVEMENT_LEDGER_AND_WEBSHOP_API_AUGUST_2026.md)
+> for what was actually built. Steps 3-4 (scaffolding the `webshop` repo
+> itself, the storefront UI) remain untouched — the design below is
+> otherwise still the settled plan.
 
 ## Why
 
@@ -96,14 +100,19 @@ pattern borrowed from anywhere; it's bespoke to this project's
 particular situation of already having a fully-built checkout to hand
 off to.
 
-## Not yet started — next concrete steps whenever picked up
+## Status of the four steps
 
-1. API-key auth mechanism for the new `/api` endpoints on `invoice`.
-2. The two new endpoints themselves (`GET /api/products`,
-   `POST /api/orders`).
-3. Scaffold the new `webshop` repo from `ddd-template`.
-4. Product listing + cart + checkout form + handoff redirect.
+1. ~~API-key auth mechanism for the new `/api` endpoints on `invoice`.~~
+   **Done** — `ApiKeyAuthMiddleware` + `ApiClient` persistence entity +
+   `api-client/generate` console command. See the implementation doc
+   linked above.
+2. ~~The two new endpoints themselves (`GET /api/products`,
+   `POST /api/orders`).~~ **Done** — `ProductsController`/
+   `OrdersController`/`OrderService`, same doc.
+3. Scaffold the new `webshop` repo from `ddd-template`. **Not started.**
+4. Product listing + cart + checkout form + handoff redirect. **Not
+   started.**
 
-No code has been written for any of these — this document exists purely
-to preserve the settled design decisions above so a future session (or
-another contributor) doesn't have to re-derive them.
+This document still exists to preserve the settled design decisions
+above (the two-repo split, the "zero local DB" choice, the handoff
+sequence) so steps 3-4 don't have to re-derive them whenever picked up.
