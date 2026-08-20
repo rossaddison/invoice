@@ -8,6 +8,7 @@ use App\Infrastructure\Persistence\Inv\Inv;
 use Cycle\Database\Injection\Parameter;
 use Cycle\ORM\Select;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
+use Yiisoft\Data\Reader\Sort;
 
 trait InvGuestTrait
 {
@@ -102,6 +103,17 @@ trait InvGuestTrait
      * counterpart to repoGuestClientsPostDraft(), keyed on worker_id instead
      * of client_id.
      *
+     * Sorted by worker_allocated_at ascending — earliest-allocated first —
+     * rather than the shared prepareDataReader()'s id-desc default. Staff
+     * allocates invoices to a worker one at a time from inv/index while
+     * walking a street-ordered list (family-street-order.ts); the order
+     * those allocations happened in is this worker's definitive cleaning
+     * order (see Inv::$worker_allocated_at's own docblock), and inv/guest
+     * needs to actually reflect it. Pre-existing rows allocated before this
+     * column existed have a null timestamp and sort first (MySQL's default
+     * ASC null ordering) — a harmless one-time transition artifact, not a
+     * correctness issue.
+     *
      * @param int $status_id
      * @param int $worker_id
      * @return EntityReader
@@ -114,12 +126,20 @@ trait InvGuestTrait
                     ->where(['worker_id' => $worker_id])
                     ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
                     ->where('deleted_at', null);
-            return $this->prepareDataReader($query);
+            return $this->workerVisibleDataReader($query);
         }
         $query = $this->select()
                      ->where(['worker_id' => $worker_id])
                      ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
                      ->where('deleted_at', null);
-        return $this->prepareDataReader($query);
+        return $this->workerVisibleDataReader($query);
+    }
+
+    private function workerVisibleDataReader(Select $query): EntityReader
+    {
+        return (new EntityReader($query))->withSort(
+            Sort::only(['worker_allocated_at'])
+                ->withOrder(['worker_allocated_at' => 'asc']),
+        );
     }
 }

@@ -186,6 +186,16 @@ class Inv
         private ?int $contract_id = null,
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $worker_id = null,
+        // Set (and re-set on every reassignment) the moment worker_id
+        // actually changes to a real worker — see Inv\Trait\Index::setWorker().
+        // Cleared back to null when unassigned. This, not id/date_created,
+        // is what InvRepository::repoWorkerVisible() sorts inv/guest by for
+        // a HomeCare field worker: the order staff worked through their
+        // (already street-ordered, see family-street-order.ts)
+        // allocation list is the worker's definitive cleaning order — no
+        // separate manually-dragged sequence needed.
+        #[Column(type: 'datetime', nullable: true)]
+        private ?DateTimeImmutable $worker_allocated_at = null,
         //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/cbc-DescriptionCode/
         #[Column(type: 'string(3)', nullable: false)]
         private string $stand_in_code = '',

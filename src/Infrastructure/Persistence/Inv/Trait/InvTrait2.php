@@ -102,4 +102,14 @@ trait InvTrait2
     {
         $this->worker_id = $worker_id;
     }
+
+    public function getWorkerAllocatedAt(): ?\DateTimeImmutable
+    {
+        return $this->worker_allocated_at;
+    }
+
+    public function setWorkerAllocatedAt(?\DateTimeImmutable $worker_allocated_at): void
+    {
+        $this->worker_allocated_at = $worker_allocated_at;
+    }
 }
