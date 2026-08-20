@@ -15,4 +15,11 @@ final class AppConstants
     public const string ROLE_WORKER      = 'worker';
 
     public const string LABEL_API_KEY    = 'Api Key';
+
+    // Token type for the one-time login link OrderService issues after a
+    // webshop checkout — see WebshopOrderLoginController. The stored Token
+    // ->type value is this constant plus ':{inv_id}', not just this
+    // constant alone, so the redemption controller can recover which
+    // invoice to redirect to without trusting an unsigned request param.
+    public const string TOKEN_TYPE_WEBSHOP_ORDER_LOGIN = 'webshop-order-login';
 }

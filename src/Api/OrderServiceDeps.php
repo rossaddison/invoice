@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Api;
 
+use App\Auth\TokenRepository as tR;
 use App\Invoice\Client\ClientRepository as cR;
 use App\Invoice\Group\GroupRepository as gR;
 use App\Invoice\Helpers\NumberHelper;
@@ -17,9 +18,13 @@ use App\Invoice\Product\ProductRepository as pR;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\TaxRate\TaxRateRepository as trR;
 use App\Invoice\Unit\UnitRepository as unR;
+use App\Invoice\UserClient\UserClientRepository as ucR;
 use App\Invoice\UserInv\UserInvRepository as uiR;
+use App\Invoice\UserInv\UserRbacLinkRepository as urlR;
 use App\User\UserRepository as uR;
 use Yiisoft\FormModel\FormHydrator;
+use Yiisoft\Rbac\Manager;
+use Yiisoft\Router\FastRoute\UrlGenerator;
 
 /**
  * Bundles OrderService's dependencies — matches this codebase's established
@@ -44,6 +49,11 @@ final class OrderServiceDeps
         public readonly sR $sR,
         public readonly uR $uR,
         public readonly uiR $uiR,
+        public readonly ucR $ucR,
+        public readonly urlR $urlR,
+        public readonly tR $tR,
+        public readonly Manager $manager,
+        public readonly UrlGenerator $urlGenerator,
         public readonly FormHydrator $formHydrator,
     ) {
     }

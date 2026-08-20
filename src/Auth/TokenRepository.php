@@ -48,6 +48,22 @@ final class TokenRepository extends Select\Repository implements IdentityWithTok
     }
 
     /**
+     * Token-only lookup, no type filter — used where the caller doesn't
+     * know the exact type value up front (e.g. WebshopOrderLoginController,
+     * whose token type embeds a variable invoice id it needs to *read back*
+     * from the found row, not supply as a search filter). `token` values
+     * are `Yiisoft\Security\Random::string(32)`-generated, so a collision
+     * across different token types is not a practical concern.
+     *
+     * @param string $token
+     * @return Token|null
+     */
+    public function findTokenByToken(string $token): ?Token
+    {
+        return $this->findOne(['token' => $token]);
+    }
+
+    /**
      * @param int $identityId
      * @param string|null $type
      * @return Token|null

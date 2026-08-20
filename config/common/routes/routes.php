@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Api\{OrdersController, ProductsController};
+use App\Api\{OrdersController, ProductsController, WebshopOrderLoginController};
 use App\Auth\Controller\{
     AuthController, ChangePasswordController, ForgotPasswordController,
     ResetPasswordController, SignupController};
@@ -53,6 +53,17 @@ return [
         ->middleware(RateLimiter::perIp(10, 'homecare_scan_route'))
         ->action([InvController::class, 'homeCareScan'])
         ->name('public/homecare-scan'),
+    // Redeems the one-time login link App\Api\OrderService issues after a
+    // webshop checkout — see WebshopOrderLoginController's own docblock.
+    // Not under RoutePermission::invoiceGroup(): a brand-new customer has
+    // no session yet. Secured by the masked, time-limited, single-use
+    // token in the URL itself instead, same precedent as /scan/{token}
+    // above and userinv/signup's own email-verification link.
+    Route::get('/webshop/orderLogin/{token}')
+        ->middleware(RateLimiter::global(60))
+        ->middleware(RateLimiter::perIp(10, 'webshop_order_login_route'))
+        ->action([WebshopOrderLoginController::class, 'login'])
+        ->name('webshopOrderLogin'),
     // Admin dashboard that can use the existing authentication middleware
     // if needed.
     Route::get('/prometheus/dashboard')

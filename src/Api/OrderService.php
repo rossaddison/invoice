@@ -7,9 +7,14 @@ namespace App\Api;
 use App\Infrastructure\Persistence\Client\Client;
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\InvItem\InvItem;
+use App\Infrastructure\Persistence\Token\Token;
 use App\Infrastructure\Persistence\User\User;
+use App\Infrastructure\Persistence\UserClient\UserClient;
 use App\Infrastructure\Persistence\UserInv\UserInv;
+use App\Invoice\AppConstants;
 use App\Invoice\Inv\InvForm;
+use Yiisoft\Security\Random;
+use Yiisoft\Security\TokenMask;
 
 /**
  * Creates a guest order for the external `/api/orders` endpoint (see
@@ -18,11 +23,15 @@ use App\Invoice\Inv\InvForm;
  * cart, mirroring the shape of `HomeCareSignupController::createInvoice()`
  * (its own `saveInv()`/`addInvItemProduct()`/`InvRecalculator` sequence)
  * but for an arbitrary product cart rather than one fixed HomeCare service
- * line, and with no logged-in customer account involved at all — the
- * "creating user" is resolved the same way `InvRecurringCronService::
- * resolveAdminUser()` does for its own unattended/system context (the
- * first admin-type UserInv on file), since a webshop order has no admin
- * session to attribute it to.
+ * line. The invoice is *authored* by a system/admin account (resolved the
+ * same way `InvRecurringCronService::resolveAdminUser()` does for its own
+ * unattended context — the first admin-type UserInv on file), since a
+ * webshop order has no staff session to attribute it to — but the
+ * customer themselves also gets a real account: `/invoice/inv/view/{id}`
+ * (like every other invoice page in this app) requires an authenticated,
+ * RBAC-permitted session, so `createOrder()` returns a one-time login
+ * link (see `WebshopOrderLoginController`) rather than a bare url_key a
+ * fresh, never-logged-in customer could never actually reach.
  *
  * Item prices are always the product's own current `product_price` —
  * never trusted from the storefront's request body — so a tampered cart
@@ -39,6 +48,7 @@ final class OrderService
      * @param array{name: string, surname: string, email: string, address1?: string,
      *     address2?: string, city?: string, zip?: string, country?: string, phone?: string} $customer
      * @param list<array{product_id: int, quantity: float}> $items
+     * @return string|null Absolute one-time login link, or null on failure.
      */
     public function createOrder(array $customer, array $items): ?string
     {
@@ -48,7 +58,20 @@ final class OrderService
         }
 
         $client = $this->findOrCreateClient($customer);
+        $invId = $this->createInvoiceAndItems($context, $client, $items);
+        if ($invId === null) {
+            return null;
+        }
 
+        return $this->buildOrderLoginRedirectUrl($client, $invId);
+    }
+
+    /**
+     * @param array{user: User, groupId: int} $context
+     * @param list<array{product_id: int, quantity: float}> $items
+     */
+    private function createInvoiceAndItems(array $context, Client $client, array $items): ?int
+    {
         $invId = null;
         $this->d->invService->withTransaction(
             function () use ($context, $client, $items, &$invId): void {
@@ -66,7 +89,7 @@ final class OrderService
         }
 
         $urlKey = $this->finalizeInvAmount($invId);
-        return $urlKey === '' ? null : $urlKey;
+        return ($urlKey === null || $urlKey === '') ? null : $invId;
     }
 
     /**
@@ -140,6 +163,111 @@ final class OrderService
         $this->d->iaR->save($invAmount);
 
         return $inv->getUrlKey();
+    }
+
+    /**
+     * Resolves (or, for a first-time customer, creates) the account the
+     * customer themselves logs into via the one-time link, then issues
+     * that link. Distinct from `resolveApiOrderUser()`/`$context['user']`
+     * above, which is the *system* account that authored the invoice, not
+     * the customer's own.
+     */
+    private function buildOrderLoginRedirectUrl(Client $client, int $invId): ?string
+    {
+        $orderUser = $this->resolveOrCreateOrderUser($client);
+        if ($orderUser === null) {
+            return null;
+        }
+
+        $maskedToken = $this->issueOrderLoginToken($orderUser, $invId);
+        if ($maskedToken === null) {
+            return null;
+        }
+
+        return $this->d->urlGenerator->generateAbsolute('webshopOrderLogin', ['token' => $maskedToken]);
+    }
+
+    /**
+     * Reuses the existing linked account on a repeat order from the same
+     * email (same `UserClientRepository::repoUserquery()` lookup
+     * `InvController::activeUser()` already relies on elsewhere), rather
+     * than creating a duplicate `User` per order.
+     */
+    private function resolveOrCreateOrderUser(Client $client): ?User
+    {
+        $existingLink = $this->d->ucR->repoUserquery($client->reqId());
+        if ($existingLink !== null) {
+            return $this->d->uR->findById($existingLink->reqUserId());
+        }
+
+        return $this->createOrderUser($client);
+    }
+
+    /**
+     * Mirrors `UserInvController::handleSignupClientAssignment()`/
+     * `assignSignupRole()`'s User+UserInv+UserClient+RBAC sequence for the
+     * existing self-service signup flow — same account shape (RBAC role
+     * `observer`), just system-created rather than filled in by hand. The
+     * password is a random value never surfaced to the customer: they only
+     * ever arrive via the one-time login link, never a password form.
+     * `UserInv::active` is set true immediately, unlike that existing
+     * flow's email-verification-gated `false` — this is a same-transaction,
+     * server-verified context already, not an untrusted public form.
+     */
+    private function createOrderUser(Client $client): ?User
+    {
+        $email = $client->getClientEmail();
+        if ($email === '' || $this->d->uR->findByLogin($email) !== null) {
+            return null;
+        }
+
+        $user = new User($email, $email, Random::string(32));
+        $this->d->uR->save($user);
+
+        $userInv = new UserInv();
+        $userInv->setUserId($user->reqId());
+        $userInv->setType(1);
+        $userInv->setActive(true);
+        $userInv->setLanguage('en');
+        $this->d->uiR->save($userInv);
+
+        $userClient = new UserClient();
+        $userClient->setUserId($user->reqId());
+        $userClient->setClientId($client->reqId());
+        $this->d->ucR->save($userClient);
+
+        $this->d->manager->revokeAll((string) $user->reqId());
+        $this->d->manager->assign(AppConstants::ROLE_OBSERVER, (string) $user->reqId());
+        $this->d->urlR->upsert($userInv->reqId(), $user->reqId());
+
+        return $user;
+    }
+
+    /**
+     * Same masked-token-plus-timestamp shape as
+     * `SignupController::getEmailVerificationToken()`/
+     * `htmlBodyWithMaskedRandomAndTimeTokenLink()` — a random 32-char
+     * token concatenated with its creation timestamp, then masked. The
+     * stored `Token`->type is this constant plus ':{inv_id}' rather than
+     * the bare constant, so `WebshopOrderLoginController` can recover
+     * which invoice to redirect to directly from the token row itself.
+     */
+    private function issueOrderLoginToken(User $user, int $invId): ?string
+    {
+        $identityId = $user->getIdentity()->getId();
+        if ($identityId === null) {
+            return null;
+        }
+
+        $token = new Token((int) $identityId, AppConstants::TOKEN_TYPE_WEBSHOP_ORDER_LOGIN . ':' . $invId);
+        $this->d->tR->save($token);
+
+        $rawToken = $token->getToken();
+        if ($rawToken === null) {
+            return null;
+        }
+
+        return TokenMask::apply($rawToken . '_' . (string) $token->getCreatedAt()->getTimestamp());
     }
 
     /**

@@ -30,12 +30,12 @@ final readonly class OrdersController
             return $parsed;
         }
 
-        $urlKey = $orderService->createOrder($parsed['customer'], $parsed['items']);
-        if ($urlKey === null) {
+        $redirectUrl = $orderService->createOrder($parsed['customer'], $parsed['items']);
+        if ($redirectUrl === null) {
             return $this->responseFactory->createResponse('Could not create order', 422);
         }
 
-        return $this->responseFactory->createResponse(['url_key' => $urlKey], 201);
+        return $this->responseFactory->createResponse(['redirect_url' => $redirectUrl], 201);
     }
 
     /**
