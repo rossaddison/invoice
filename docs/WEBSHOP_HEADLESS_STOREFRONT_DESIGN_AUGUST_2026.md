@@ -1,13 +1,21 @@
 # Webshop — Headless Storefront Design (August 2026)
 
-> **Status: `invoice`-side prerequisites built; the `webshop` repo itself
-> not started.** This document originally captured a settled architecture
-> before any code existed. Steps 1-2 of "Not yet started" below (API-key
-> auth, the two endpoints) are now implemented — see
-> [`STOCK_MOVEMENT_LEDGER_AND_WEBSHOP_API_AUGUST_2026.md`](STOCK_MOVEMENT_LEDGER_AND_WEBSHOP_API_AUGUST_2026.md)
-> for what was actually built. Steps 3-4 (scaffolding the `webshop` repo
-> itself, the storefront UI) remain untouched — the design below is
-> otherwise still the settled plan.
+> **Status: all four steps below now have a v1.** This document
+> originally captured a settled architecture before any code existed.
+> Steps 1-2 (API-key auth, the two endpoints) are implemented on this
+> side — see
+> [`STOCK_MOVEMENT_LEDGER_AND_WEBSHOP_API_AUGUST_2026.md`](STOCK_MOVEMENT_LEDGER_AND_WEBSHOP_API_AUGUST_2026.md).
+> Building the actual handoff surfaced a real blocker not anticipated
+> here — `POST /api/orders` returning a bare `url_key` was never usable
+> by a fresh customer, since viewing any invoice requires a real logged-in
+> account — closed with a one-time login link instead (same doc). Steps
+> 3-4 (the `webshop` repo itself, `c:\wamp64\www\webshop`) are also now
+> built: product listing, session cart, checkout form, and the redirect
+> handoff, verified end-to-end against a local dev server. See that
+> repo's own `docs/DESIGN.md` for what's built vs. still open (TypeScript
+> cart interactivity, live verification against a real deployed
+> `invoice` instance). The design below is otherwise still the settled
+> plan it always was.
 
 ## Why
 
@@ -109,10 +117,14 @@ off to.
 2. ~~The two new endpoints themselves (`GET /api/products`,
    `POST /api/orders`).~~ **Done** — `ProductsController`/
    `OrdersController`/`OrderService`, same doc.
-3. Scaffold the new `webshop` repo from `ddd-template`. **Not started.**
-4. Product listing + cart + checkout form + handoff redirect. **Not
-   started.**
+3. ~~Scaffold the new `webshop` repo from `ddd-template`.~~ **Done** —
+   `c:\wamp64\www\webshop`, trimmed hard (no Cycle/DB/Auth/RBAC).
+4. ~~Product listing + cart + checkout form + handoff redirect.~~
+   **Done (v1)** — verified end-to-end against a local dev server.
+   `webshop`'s own `docs/DESIGN.md` has the full status, including
+   what's still open (TypeScript cart interactivity, real deployment).
 
 This document still exists to preserve the settled design decisions
 above (the two-repo split, the "zero local DB" choice, the handoff
-sequence) so steps 3-4 don't have to re-derive them whenever picked up.
+sequence) — historical record now that all four steps have a v1, not an
+open task list.
