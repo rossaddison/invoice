@@ -68,8 +68,8 @@ flowchart LR
 ## Out of scope here
 
 `P2` is a plain online `POST` — no offline queue. The existing
-[offline PWA](HOMECARE_OFFLINE_PWA_AUGUST_2026.md) only ever snapshots a
-worker's round for zero-connectivity *viewing*; flagging a problem
-still needs a live connection. Also not built at all: any worker action
+[offline PWA](HOMECARE_OFFLINE_PWA_DATA_FLOW_AUGUST_2026.md) only ever
+snapshots a worker's round for zero-connectivity *viewing*; flagging a
+problem still needs a live connection. Also not built at all: any worker action
 for "job done" (no completion status, no GPS capture) — the worker's
 entire write surface today is this one flag.

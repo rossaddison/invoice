@@ -1,5 +1,10 @@
 # HomeCare Offline Invoice Viewer (PWA) — August 2026
 
+> See [`HOMECARE_OFFLINE_PWA_DATA_FLOW_AUGUST_2026.md`](HOMECARE_OFFLINE_PWA_DATA_FLOW_AUGUST_2026.md)
+> for a diagram of the mechanism below — the two client-side stores
+> (Cache Storage vs. IndexedDB) and why `inv/guest` itself is never
+> cached.
+
 ## Why
 
 HomeCare field workers use `inv/guest` (the "worker" RBAC role, see
