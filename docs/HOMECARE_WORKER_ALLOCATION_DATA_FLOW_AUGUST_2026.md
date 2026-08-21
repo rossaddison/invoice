@@ -76,7 +76,7 @@ flowchart LR
 ## Out of scope here
 
 Where `D3`/`D4` rows themselves come from (client signup, dwelling
-creation/geocoding), invoice generation (`P1`'s missing upstream
-neighbor), and what a Worker does once they're looking at a house
-(marking a job done, flagging `do_not_send` on an on-site problem) —
-each is a real, separate data flow worth its own diagram.
+creation/geocoding) and invoice generation (`P1`'s missing upstream
+neighbor) are each a real, separate data flow worth their own diagram.
+What a Worker does once they're looking at a house is covered in
+[`HOMECARE_WORKER_ONSITE_ACTIONS_DATA_FLOW_AUGUST_2026.md`](HOMECARE_WORKER_ONSITE_ACTIONS_DATA_FLOW_AUGUST_2026.md).
