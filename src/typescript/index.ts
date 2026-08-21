@@ -33,6 +33,7 @@ import { initQuoteIndex } from './quote-index.js';
 import { initSalesOrderIndex } from './salesorder-index.js';
 import { initE164PhoneFields } from './phone-e164.js';
 import { initHomeCareOffline } from './homecare-offline.js';
+import { initHomeCareInstallPrompt } from './homecare-install-prompt.js';
 import { initCompanyPrivate } from './company-private.js';
 
 declare global {
@@ -97,6 +98,7 @@ class InvoiceApp {
             initInvIndex('table-invoice-guest', 'inv-guest-filter-config');
         }
         initHomeCareOffline(); // no-ops unless the worker-only download button is present
+        initHomeCareInstallPrompt(); // no-ops unless the worker-only install banner is present
         if (document.getElementById('table-quote')) {
             initQuoteIndex();
         }

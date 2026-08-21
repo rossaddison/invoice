@@ -527,6 +527,48 @@ $homeCareOfflineButtons = $worker !== null
         . Html::tag('span', '', ['id' => 'homecare-offline-status', 'class' => 'ms-2'])
     : '';
 
+// "Add to Home Screen" install nudge — worker-only, same gating as
+// above. Exists because of a real, verified risk (see
+// docs/HOMECARE_OFFLINE_PWA_DATA_FLOW_AUGUST_2026.md's "Out of scope"
+// section): iOS Safari evicts IndexedDB/Cache Storage after 7 days
+// without a visit unless the site is added to the home screen, and
+// nothing here previously nudged a worker to do that. Starts fully
+// hidden (d-none throughout) — initHomeCareInstallPrompt()
+// (src/typescript/homecare-install-prompt.ts) decides at runtime
+// whether to reveal it at all, and which of the two message spans
+// applies, since that depends on the actual browser/platform.
+$homeCareInstallBanner = $worker !== null
+    ? Html::openTag('div', [
+            'id' => 'homecare-install-banner',
+            'class' => 'alert alert-info d-none d-flex align-items-center justify-content-between mb-3',
+            'role' => 'alert',
+        ])
+        . Html::openTag('div')
+        . Html::tag('span', $translator->translate('homecare.offline.install.ios.message'), [
+            'id' => 'homecare-install-message-ios', 'class' => 'd-none',
+        ])
+        . Html::tag('span', $translator->translate('homecare.offline.install.generic.message'), [
+            'id' => 'homecare-install-message-generic', 'class' => 'd-none',
+        ])
+        . Html::closeTag('div')
+        . Html::openTag('div', ['class' => 'd-flex align-items-center'])
+        . Html::openTag('button', [
+            'type' => 'button',
+            'id' => 'homecare-install-button',
+            'class' => 'btn btn-sm btn-primary ms-2 d-none',
+        ])
+        . Html::encode($translator->translate('homecare.offline.install.button'))
+        . Html::closeTag('button')
+        . Html::tag('button', '', [
+            'type' => 'button',
+            'id' => 'homecare-install-dismiss',
+            'class' => 'btn-close ms-2',
+            'aria-label' => $translator->translate('close'),
+        ])
+        . Html::closeTag('div')
+        . Html::closeTag('div')
+    : '';
+
 $toolbarString =  new Form()->post(
                 $urlGenerator->generate('inv/guest'))->csrf($csrf)->open()
         .  new Div()->addClass('float-start m-3')->content(
@@ -557,6 +599,8 @@ $gridSummary = $s->gridSummary(
 $urlCreator = new UrlCreator($urlGenerator);
 $order =  OrderHelper::stringToArray($sortString);
 $urlCreator->__invoke([], $order);
+
+echo $homeCareInstallBanner;
 
 echo GridView::widget()
     ->bodyRowAttributes(['class' => 'align-middle'])
