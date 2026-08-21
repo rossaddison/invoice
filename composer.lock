@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a3efce779d47e1666496e27aa0288129",
+    "content-hash": "262404f2f9c7c622dbd9955f6b5dfba4",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -1575,16 +1575,16 @@
         },
         {
             "name": "composer/ca-bundle",
-            "version": "1.5.13",
+            "version": "1.5.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "c008272789979f709f7fcb32c2ecf1d2db5e84e5"
+                "reference": "0c8abba0634f637bd78c4e451981da368d403463"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/c008272789979f709f7fcb32c2ecf1d2db5e84e5",
-                "reference": "c008272789979f709f7fcb32c2ecf1d2db5e84e5",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/0c8abba0634f637bd78c4e451981da368d403463",
+                "reference": "0c8abba0634f637bd78c4e451981da368d403463",
                 "shasum": ""
             },
             "require": {
@@ -1631,7 +1631,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/ca-bundle/issues",
-                "source": "https://github.com/composer/ca-bundle/tree/1.5.13"
+                "source": "https://github.com/composer/ca-bundle/tree/1.5.14"
             },
             "funding": [
                 {
@@ -1643,7 +1643,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-07-18T12:35:13+00:00"
+            "time": "2026-08-21T14:57:29+00:00"
         },
         {
             "name": "composer/pcre",
@@ -8677,7 +8677,7 @@
             "version": "dev-main",
             "source": {
                 "type": "git",
-                "url": "git@github.com:rossaddison/openbanking-client.git",
+                "url": "https://github.com/rossaddison/openbanking-client.git",
                 "reference": "f167fb5036a5994adbb4cd2b4e37f95730e52b52"
             },
             "dist": {
@@ -10696,16 +10696,16 @@
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v21.2.0",
+            "version": "v21.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "edf8118f0b96d69f06f372da9168d613d1aed072"
+                "reference": "da798f6224c5ff6f89d8d78025044f418ee27db8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/edf8118f0b96d69f06f372da9168d613d1aed072",
-                "reference": "edf8118f0b96d69f06f372da9168d613d1aed072",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/da798f6224c5ff6f89d8d78025044f418ee27db8",
+                "reference": "da798f6224c5ff6f89d8d78025044f418ee27db8",
                 "shasum": ""
             },
             "require": {
@@ -10727,8 +10727,7 @@
             },
             "autoload": {
                 "files": [
-                    "lib/version_check.php",
-                    "lib/agent_plugin_hint.php"
+                    "lib/version_check.php"
                 ],
                 "psr-4": {
                     "Stripe\\": "lib/"
@@ -10753,9 +10752,9 @@
             ],
             "support": {
                 "issues": "https://github.com/stripe/stripe-php/issues",
-                "source": "https://github.com/stripe/stripe-php/tree/v21.2.0"
+                "source": "https://github.com/stripe/stripe-php/tree/v21.2.1"
             },
-            "time": "2026-08-10T22:11:35+00:00"
+            "time": "2026-08-20T21:06:13+00:00"
         },
         {
             "name": "symfony/cache",
@@ -15844,7 +15843,7 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git@github.com:rossaddison/data-cycle.git",
+                "url": "https://github.com/rossaddison/data-cycle.git",
                 "reference": "c104176f9c27b75c3dd042b0c6c5dabceae3b35a"
             },
             "dist": {
@@ -19542,7 +19541,7 @@
             "version": "dev-fix/csp-dropdownfilter-onchange",
             "source": {
                 "type": "git",
-                "url": "git@github.com:rossaddison/yii-dataview.git",
+                "url": "https://github.com/rossaddison/yii-dataview.git",
                 "reference": "f546ef28faa637ff45ac4b4daf071bce5d040da3"
             },
             "dist": {
@@ -21495,16 +21494,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v3.95.20",
+            "version": "v3.95.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "4d6c9886a77dbc1db3b9eaca6472cedf9eb1fab7"
+                "reference": "1228a1cd06e867846b5922a09d2ee948d8182e91"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/4d6c9886a77dbc1db3b9eaca6472cedf9eb1fab7",
-                "reference": "4d6c9886a77dbc1db3b9eaca6472cedf9eb1fab7",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/1228a1cd06e867846b5922a09d2ee948d8182e91",
+                "reference": "1228a1cd06e867846b5922a09d2ee948d8182e91",
                 "shasum": ""
             },
             "require": {
@@ -21587,7 +21586,7 @@
             ],
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/issues",
-                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.95.20"
+                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.95.21"
             },
             "funding": [
                 {
@@ -21595,7 +21594,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-19T16:28:14+00:00"
+            "time": "2026-08-21T17:03:47+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",
@@ -22316,19 +22315,20 @@
         },
         {
             "name": "justinrainbow/json-schema",
-            "version": "6.10.0",
+            "version": "6.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jsonrainbow/json-schema.git",
-                "reference": "8b1308a9d7bdbdb20ce87ef920f82b4564bb2d33"
+                "reference": "7e420a943a6fbc95e60e3cf67acfbee85b3b4da7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jsonrainbow/json-schema/zipball/8b1308a9d7bdbdb20ce87ef920f82b4564bb2d33",
-                "reference": "8b1308a9d7bdbdb20ce87ef920f82b4564bb2d33",
+                "url": "https://api.github.com/repos/jsonrainbow/json-schema/zipball/7e420a943a6fbc95e60e3cf67acfbee85b3b4da7",
+                "reference": "7e420a943a6fbc95e60e3cf67acfbee85b3b4da7",
                 "shasum": ""
             },
             "require": {
+                "ext-filter": "*",
                 "ext-json": "*",
                 "marc-mabe/php-enum": "^4.4",
                 "php": "^7.2 || ^8.0"
@@ -22361,20 +22361,9 @@
             ],
             "authors": [
                 {
-                    "name": "Bruno Prieto Reis",
-                    "email": "bruno.p.reis@gmail.com"
-                },
-                {
-                    "name": "Justin Rainbow",
-                    "email": "justin.rainbow@gmail.com"
-                },
-                {
-                    "name": "Igor Wiedler",
-                    "email": "igor@wiedler.ch"
-                },
-                {
-                    "name": "Robert Schönthal",
-                    "email": "seroscho@googlemail.com"
+                    "name": "Danny van der Sluijs",
+                    "email": "danny.vandersluijs@icloud.com",
+                    "role": "Maintainer"
                 }
             ],
             "description": "A library to validate a json schema.",
@@ -22385,9 +22374,9 @@
             ],
             "support": {
                 "issues": "https://github.com/jsonrainbow/json-schema/issues",
-                "source": "https://github.com/jsonrainbow/json-schema/tree/6.10.0"
+                "source": "https://github.com/jsonrainbow/json-schema/tree/6.11.0"
             },
-            "time": "2026-06-16T20:50:26+00:00"
+            "time": "2026-08-21T10:30:42+00:00"
         },
         {
             "name": "marc-mabe/php-enum",
@@ -24075,12 +24064,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "4a8b10995f6b62488cf92b121cfcc644d060cd94"
+                "reference": "6c0be3a74b4e70c18693ae5dc183132b4d17603a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/4a8b10995f6b62488cf92b121cfcc644d060cd94",
-                "reference": "4a8b10995f6b62488cf92b121cfcc644d060cd94",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/6c0be3a74b4e70c18693ae5dc183132b4d17603a",
+                "reference": "6c0be3a74b4e70c18693ae5dc183132b4d17603a",
                 "shasum": ""
             },
             "conflict": {
@@ -24147,7 +24136,7 @@
                 "azuracast/azuracast": "<=0.23.5",
                 "b13/seo_basics": "<0.8.2",
                 "backdrop/backdrop": "<=1.32",
-                "backpack/crud": "<4.0.63|>=4.1,<4.1.69|>=5,<5.0.13",
+                "backpack/crud": "<6.8.15|>=7,<7.0.47",
                 "backpack/filemanager": "<2.0.2|>=3,<3.0.9",
                 "bacula-web/bacula-web": "<9.7.1",
                 "badaso/core": "<=2.9.11",
@@ -24412,7 +24401,7 @@
                 "georgringer/news": "<10.0.4|>=11,<11.4.4|>=12,<12.3.2|>=13,<13.0.2|>=14,<14.0.3",
                 "geshi/geshi": "<=1.0.9.1",
                 "getformwork/formwork": "<=2.3.3",
-                "getgrav/grav": "<2.0.4",
+                "getgrav/grav": "<=2.0.19",
                 "getgrav/grav-plugin-api": "<1.0.0.0-beta15",
                 "getgrav/grav-plugin-form": "<9.1",
                 "getkirby/cms": "<=4.9.3|>=5,<=5.4.3",
@@ -24712,6 +24701,7 @@
                 "pegasus/google-for-jobs": "<1.5.1|>=2,<2.1.1",
                 "personnummer/personnummer": "<3.0.2",
                 "ph7software/ph7builder": "<=17.9.1",
+                "phalcon/cphalcon": "<=5.15",
                 "phanan/koel": "<=9.7",
                 "pheditor/pheditor": "<2.0.8",
                 "phenx/php-svg-lib": "<0.5.2",
@@ -25080,10 +25070,10 @@
                 "wikibase/wikibase": "<=1.39.3",
                 "wikimedia/parsoid": "<0.12.2",
                 "willdurand/js-translation-bundle": "<2.1.1",
-                "winter/wn-backend-module": "<1.2.13",
+                "winter/wn-backend-module": "<1.2.14",
                 "winter/wn-cms-module": "<=1.2.12",
                 "winter/wn-dusk-plugin": "<2.1",
-                "winter/wn-system-module": "<1.2.4",
+                "winter/wn-system-module": "<1.2.13",
                 "wintercms/winter": "<=1.2.3",
                 "wireui/wireui": "<1.19.3|>=2,<2.1.3",
                 "wnx/laravel-backup-restore": "<=1.9.3",
@@ -25117,7 +25107,7 @@
                 "yikesinc/yikes-inc-easy-mailchimp-extender": "<6.8.6",
                 "yoast-seo-for-typo3/yoast_seo": "<7.2.3",
                 "yoast/duplicate-post": "<=4.5",
-                "yourls/yourls": "<=1.10.2",
+                "yourls/yourls": "<=1.10.3",
                 "yuan1994/tpadmin": "<=1.3.12",
                 "yungifez/skuul": "<=2.6.5",
                 "z-push/z-push-dev": "<2.7.6",
@@ -25196,14 +25186,14 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-08-19T20:26:39+00:00"
+            "time": "2026-08-21T21:23:53+00:00"
         },
         {
             "name": "rossaddison/translator-extractor",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git@github.com:rossaddison/translator-extractor.git",
+                "url": "https://github.com/rossaddison/translator-extractor.git",
                 "reference": "b2b3ff2ee3f691ab41b297a902a656e96d539ecf"
             },
             "dist": {
