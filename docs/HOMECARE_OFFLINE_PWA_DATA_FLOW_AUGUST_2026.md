@@ -145,7 +145,18 @@ flowchart LR
   unverified.** Desktop devtools' offline throttle exercises the
   `fetch` handler's logic, but not full service worker
   installability/registration edge cases on mobile Safari/Chrome — the
-  actual target platform.
+  actual target platform. No automated test can close this one — jsdom
+  doesn't implement service workers, and there's no real device in CI.
+  What `Tests/Testo/Invoice/Inv/OfflinePwaInstallabilityTest.php` does
+  instead: guards every *precondition* a real-device check would
+  depend on (the manifest's icons actually exist at their declared
+  size, `sw.js`'s precache list still matches the real registered
+  routes, the JSON data endpoint never gets precached by mistake) —
+  catching the class of regression that would make a phone check moot
+  before anyone's spent the 10 minutes, and its own class docblock
+  says outright that a green run there isn't "verified," it's "still
+  outstanding, and here's how to know if this codebase drifted while
+  it waits."
 
 - **The two app icons are still a placeholder monogram**, not a real
   design.
