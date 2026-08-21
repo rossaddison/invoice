@@ -75,6 +75,42 @@ flowchart LR
   There's no code path in this page that can produce "offline error" in
   the way a normal fetch failure would.
 
+## Fixed since this was first published
+
+- **Install nudge, closing the eviction gap above.** This doc originally
+  flagged two compounding gaps: nothing prompted a worker to add the app
+  to their home screen, and iOS Safari's Intelligent Tracking Prevention
+  deletes script-writable storage — `D1` and `D2` both — after 7 days
+  without a visit *unless* it's been added to the home screen, which is
+  explicitly exempted
+  ([lapcatsoftware.com](https://lapcatsoftware.com/articles/2023/8/5.html),
+  [Apple Developer Forums](https://developer.apple.com/forums/thread/710157),
+  [iTnews](https://www.itnews.com.au/news/apple-cops-flak-for-deleting-local-browser-storage-after-7-days-539833)).
+  A worker who'd bookmarked rather than installed — the likelier
+  outcome, since nothing prompted otherwise — could have both stores
+  silently wiped after a week off, then open the offline shell to find
+  it empty with no explanation why.
+
+  Fixed with `src/typescript/homecare-install-prompt.ts`
+  (`initHomeCareInstallPrompt()`, wired into `index.ts`, worker-only
+  banner markup in `guest.php`). Two genuinely different paths, since
+  iOS Safari never fires `beforeinstallprompt` at all:
+  - **Chrome/Edge/Android** — the real event is captured and a
+    one-tap "📲 Install app" button calls its own `.prompt()`.
+  - **iOS Safari** — no programmatic install trigger exists at all, so
+    this is a static "tap Share, then Add to Home Screen" instruction
+    instead.
+
+  Both stay hidden if already running installed
+  (`display-mode: standalone` / the legacy `navigator.standalone`
+  flag), and a dismiss button suppresses the banner for 14 days
+  (`localStorage`, fails open — a private-browsing worker with storage
+  disabled just sees the banner every visit rather than never being
+  able to dismiss it). Verified: 7 new Vitest tests
+  (`homecare-install-prompt.test.ts`) covering the standalone check,
+  the dismissal window, both browser paths, and the dismiss action
+  itself; full project Psalm and Testo still clean.
+
 ## Out of scope here
 
 - **No write-back, and nothing built to support it.** View-only is a
@@ -87,30 +123,6 @@ flowchart LR
   still needs a live connection — it's a plain `POST`, and building an
   offline queue for just that one action would be real new machinery,
   not a gap in this one.
-
-- **Not installed to the home screen, and nothing nudges a worker to.**
-  `manifest.json` exists (`display: standalone`, real icons, a
-  `start_url`), so the app is *technically* installable — but there's
-  no `beforeinstallprompt` handling or "Add to Home Screen" button
-  anywhere in this codebase (checked: none). A worker who never opens
-  Safari/Chrome's own share menu and taps "Add to Home Screen" is just
-  using this as an ordinary bookmarked tab, same as any other page —
-  which matters because of the next point.
-
-- **Safari's 7-day storage eviction applies to an ordinary tab, but not
-  a home-screen install.** iOS Safari's Intelligent Tracking Prevention
-  deletes script-writable storage — IndexedDB and Cache Storage both
-  included — after 7 days without the worker opening the site, *unless*
-  it's been added to the home screen, which is explicitly exempted
-  ([lapcatsoftware.com](https://lapcatsoftware.com/articles/2023/8/5.html),
-  [Apple Developer Forums](https://developer.apple.com/forums/thread/710157),
-  [iTnews](https://www.itnews.com.au/news/apple-cops-flak-for-deleting-local-browser-storage-after-7-days-539833)).
-  Combined with the point above, a worker on iOS who bookmarks rather
-  than installs this — the likelier outcome, since nothing prompts
-  otherwise — can have both `D1` and `D2` silently wiped after a week
-  off (leave, illness, a seasonal gap), then open the offline shell to
-  find it empty with no explanation why, rather than "not yet
-  downloaded" reading as "wiped by the OS."
 
 - **A failed silent refresh is completely silent.** `downloadForOffline()`
   on the *manual* button path calls `showStatus()` on failure; the
