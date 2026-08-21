@@ -77,9 +77,63 @@ flowchart LR
 
 ## Out of scope here
 
-Nothing is ever written back to the server from this flow — it's
-view-only by design (see the prose doc's own "two scoping decisions").
-Also unverified: real airplane-mode behavior on a physical device
-(desktop devtools' offline throttle doesn't fully exercise service
-worker installability on mobile Safari/Chrome), and the two app icons
-are still a placeholder monogram, not a real design.
+- **No write-back, and nothing built to support it.** View-only is a
+  deliberate scoping decision (see the prose doc's own "two scoping
+  decisions"), not just an unfinished feature — there's no offline
+  mutation queue, no conflict-resolution logic, nothing to reconcile
+  when connectivity returns, because nothing is ever staged offline in
+  the first place. This is also why flagging `do_not_send`
+  ([`HOMECARE_WORKER_ONSITE_ACTIONS_DATA_FLOW_AUGUST_2026.md`](HOMECARE_WORKER_ONSITE_ACTIONS_DATA_FLOW_AUGUST_2026.md))
+  still needs a live connection — it's a plain `POST`, and building an
+  offline queue for just that one action would be real new machinery,
+  not a gap in this one.
+
+- **Not installed to the home screen, and nothing nudges a worker to.**
+  `manifest.json` exists (`display: standalone`, real icons, a
+  `start_url`), so the app is *technically* installable — but there's
+  no `beforeinstallprompt` handling or "Add to Home Screen" button
+  anywhere in this codebase (checked: none). A worker who never opens
+  Safari/Chrome's own share menu and taps "Add to Home Screen" is just
+  using this as an ordinary bookmarked tab, same as any other page —
+  which matters because of the next point.
+
+- **Safari's 7-day storage eviction applies to an ordinary tab, but not
+  a home-screen install.** iOS Safari's Intelligent Tracking Prevention
+  deletes script-writable storage — IndexedDB and Cache Storage both
+  included — after 7 days without the worker opening the site, *unless*
+  it's been added to the home screen, which is explicitly exempted
+  ([lapcatsoftware.com](https://lapcatsoftware.com/articles/2023/8/5.html),
+  [Apple Developer Forums](https://developer.apple.com/forums/thread/710157),
+  [iTnews](https://www.itnews.com.au/news/apple-cops-flak-for-deleting-local-browser-storage-after-7-days-539833)).
+  Combined with the point above, a worker on iOS who bookmarks rather
+  than installs this — the likelier outcome, since nothing prompts
+  otherwise — can have both `D1` and `D2` silently wiped after a week
+  off (leave, illness, a seasonal gap), then open the offline shell to
+  find it empty with no explanation why, rather than "not yet
+  downloaded" reading as "wiped by the OS."
+
+- **A failed silent refresh is completely silent.** `downloadForOffline()`
+  on the *manual* button path calls `showStatus()` on failure; the
+  *silent* background refresh's own call
+  (`homecare-offline.ts:downloadForOffline().catch(() => undefined)`)
+  swallows the error with no UI signal at all. The only way a worker
+  could notice their copy is stale is the `downloadedAt` timestamp
+  rendered on the shell page itself (`homecare-offline-shell.ts`) — real,
+  but passive: nothing draws their attention to it or warns them it's
+  old.
+
+- **No IndexedDB schema migration path.** `openDb()`'s
+  `onupgradeneeded` handler only ever creates the object store if it
+  doesn't exist yet (`DB_VERSION` has been `1` since this shipped) —
+  there's no branch for what happens to an existing snapshot the day
+  this schema needs to change. Not a live bug, since nothing has needed
+  to change it yet, but worth knowing before that day arrives.
+
+- **Real airplane-mode behavior on a physical device is still
+  unverified.** Desktop devtools' offline throttle exercises the
+  `fetch` handler's logic, but not full service worker
+  installability/registration edge cases on mobile Safari/Chrome — the
+  actual target platform.
+
+- **The two app icons are still a placeholder monogram**, not a real
+  design.
