@@ -6,7 +6,6 @@ use App\Widget\Button;
 use Yiisoft\{
     FormModel\Field as F,
     Html\Html as H,
-    Html\Tag\A,
     Html\Tag\Form,
     Html\Tag\Img
 };
@@ -40,14 +39,9 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
    echo H::openTag('div', ['class' => (string) $class[17]]);
     echo H::openTag('p');
      echo $translator->translate($tfa . '.scan');
-     echo  new A()
-          ->href('https://getaegis.app')
-          ->addAttributes(['target' => '_blank'])
-          ->content( new Img()
-                    ->size(60, 60)
-                    ->src('/img/aegis.png')
-                    ->alt('Opensource Two Factor Authentication Software'))
-          ->render();
+    echo H::closeTag('p');
+    echo H::openTag('p', ['class' => 'text-muted small']);
+     echo $translator->translate($tfa . '.compatible.apps');
     echo H::closeTag('p');
     echo  new Img()
     ->width(160)
