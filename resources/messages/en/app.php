@@ -1228,11 +1228,10 @@ prior to importing and no existing documents e.g. Invoices.',
   'layout.password-verify' => 'Confirm your password',
   'layout.password-verify.new' => 'Confirm your new password',
   'layout.password.new' => 'New Password',
-  'layout.password.otp.6.first' => 'Enter First of Two Aegis Generated OTP'
-    . ' Passwords (6 digits)',
-  'layout.password.otp.6.8' => 'Enter Second Different Aegis Generated OTP'
-    . ' Password (6 digits)'
-    . ' / Backup Recovery Codes (8 digits)',
+  'layout.password.otp.6.first' => 'Enter the 6-digit code from your'
+    . ' authenticator app',
+  'layout.password.otp.6.8' => 'Enter the 6-digit code from your'
+    . ' authenticator app, or an 8-digit backup recovery code',
   'layout.password.otp.verify.6' => 'Enter Second Different Aegis Generated'
     . ' OTP Password (6 digits)',
   // "characters" not "digits" — a recovery code is hex (0-9A-F), not
@@ -2822,8 +2821,8 @@ prior to importing and no existing documents e.g. Invoices.',
     . ' has now been disabled for additional security.',
   'two.factor.authentication.enable' =>
     'Enable Two Factor Authentication',
-  'two.factor.authentication.enabled.aegis' =>
-    'Aegis Two Factor Authentication',
+  'two.factor.authentication.enabled.badge' =>
+    'Two Factor Authentication Enabled',
   'two.factor.authentication.enabled.with.disabling' =>
     'Two Factor Authentication is currently enabled.'
     . ' Compulsory scanning of Qr code.'
@@ -2853,11 +2852,16 @@ prior to importing and no existing documents e.g. Invoices.',
   'two.factor.authentication.no.secret.generated' =>
     'No secret generated. Please restart setup.',
   'two.factor.authentication.qr.code.enter.manually' =>
-    'Or enter this code into the android app manually: ',
+    'Or enter this code manually into your authenticator app: ',
   'two.factor.authentication.rate.limit.reached' =>
     'Rate Limit reached. Please wait 10 seconds.',
   'two.factor.authentication.scan' =>
-    'Scan this QR code with your Aegis app:',
+    'Scan this QR code with your authenticator app:',
+  'two.factor.authentication.compatible.apps' =>
+    'Works with any TOTP authenticator app — for example Google'
+    . ' Authenticator, Microsoft Authenticator, Authy, 1Password,'
+    . ' Bitwarden, Yandex ID, or Aegis. Use whichever one you already'
+    . ' have.',
   'two.factor.authentication.setup' =>
     'Setup Two Factor Authentication',
   'type' => 'Type',

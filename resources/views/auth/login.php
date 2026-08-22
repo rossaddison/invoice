@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Widget\Button;
 use App\Widget\IdentityProviderButton;
 use Yiisoft\{FormModel\Field as F};
-use Yiisoft\Html\{Html as H, Tag\A, Tag\Img, Tag\Form, Tag\Span};
+use Yiisoft\Html\{Html as H, Tag\A, Tag\Form, Tag\Span};
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\AuthClient\Widget\AuthChoice;
 
@@ -99,20 +99,12 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
                 ? $translator->translate($tfaEnabled . '.with.disabling')
                 : $translator->translate($tfaEnabled . '.without.disabling'
              )])
-             ->content($translator->translate($tfaEnabled . '.aegis'))
+             ->content($translator->translate($tfaEnabled . '.badge'))
              ->render();
         echo H::openTag('br');
-        echo  new A()
-         ->href('https://getaegis.app')
-         ->addAttributes([
-            'target' => '_blank',
-            'data-toggle-bs' => 'tooltip',
-            'title' => $translator->translate('download')
-         ])
-         ->content( new Img()
-                    ->size(60, 60)
-                    ->src('/img/aegis.png')
-                    ->alt('Opensource Two Factor Authentication Software'))
+        echo  new Span()
+         ->addAttributes(['class' => 'text-muted small'])
+         ->content($translator->translate('two.factor.authentication.compatible.apps'))
          ->render();
       echo H::closeTag('div');
     }
