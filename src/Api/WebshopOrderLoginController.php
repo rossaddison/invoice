@@ -13,6 +13,7 @@ use Psr\Http\Message\ResponseInterface;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Security\TokenMask;
 use Yiisoft\Session\Flash\Flash;
+use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 
 /**
@@ -39,6 +40,7 @@ final class WebshopOrderLoginController
         private readonly Flash $flash,
         private readonly AuthService $authService,
         private readonly TokenRepository $tokenRepository,
+        private readonly SessionInterface $session,
     ) {
     }
 
@@ -48,6 +50,29 @@ final class WebshopOrderLoginController
         if ($context === null || !$this->authService->oauthLogin($context['login'])) {
             return $this->fail();
         }
+
+        // No interactive password+TOTP prompt happens on this one-time-link
+        // path — same situation every other non-password login in this app
+        // is already in (see e.g. Callback::callbackGovUk()'s own
+        // `$this->session->set('tfa_verified', true)` right after its own
+        // oauth-style login), and the same flag `BaseController::
+        // initializeViewRenderer()` requires before it will ever call
+        // `WebViewRenderer::withControllerName()` for a VIEW_INV-only
+        // (observer) account. Without it, `$this->webViewRenderer` is left
+        // as the raw, un-configured renderer with no controller name set,
+        // and `InvController::view()`'s own `render('view', ...)` call —
+        // reached only *after* the RBAC ownership check now passes (see
+        // OrderService's class docblock for that fix) — throws
+        // ViewNotFoundException trying to resolve the bare `resources/
+        // views/view.php` instead of `resources/views/invoice/inv/view.php`.
+        // Confirmed live: a real webshop checkout → one-time-login-link →
+        // inv/view 500'd on exactly this before this line was added. The
+        // token itself is already a single-use, time-limited, masked
+        // server-issued secret (see resolveLoginContext()) — at least as
+        // strong a guarantee as a password, so trusting it in place of an
+        // interactive TOTP prompt is consistent with the rest of the app's
+        // own oauth-login precedent, not a new exception carved out here.
+        $this->session->set('tfa_verified', true);
 
         return $this->webService->getRedirectResponse('inv/view', ['id' => (string) $context['invId']]);
     }

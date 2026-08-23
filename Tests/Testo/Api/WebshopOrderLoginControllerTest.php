@@ -18,6 +18,7 @@ use Testo\Assert;
 use Testo\Test;
 use Yiisoft\Security\TokenMask;
 use Yiisoft\Session\Flash\Flash;
+use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 
 /**
@@ -31,6 +32,13 @@ use Yiisoft\Translator\TranslatorInterface;
  * `Token`/`Identity`/`User` are `final`, mockable only because
  * Tests/testo.php enables DG\BypassFinals — same established pattern as
  * InvPaymentSettlementServiceTest/OrderServiceTest.
+ *
+ * The success case also asserts `tfa_verified` is set on the session —
+ * regression coverage for a bug confirmed live: without it,
+ * `BaseController::initializeViewRenderer()` never calls
+ * `WebViewRenderer::withControllerName()` for this VIEW_INV-only
+ * (observer) account, so the `inv/view` redirect this method returns
+ * 500s with `ViewNotFoundException` the moment the browser follows it.
  */
 #[Test]
 final class WebshopOrderLoginControllerTest
@@ -88,7 +96,11 @@ final class WebshopOrderLoginControllerTest
         $webService->shouldReceive('getRedirectResponse')
             ->once()->with('inv/view', ['id' => '900'])->andReturn($expectedResponse);
 
-        $controller = $this->makeController($webService, $authService, $tokenRepository);
+        /** @var SessionInterface&m\MockInterface $session */
+        $session = m::mock(SessionInterface::class);
+        $session->shouldReceive('set')->once()->with('tfa_verified', true);
+
+        $controller = $this->makeController($webService, $authService, $tokenRepository, $session);
 
         $response = $controller->login($masked);
 
@@ -179,7 +191,12 @@ final class WebshopOrderLoginControllerTest
         $webService = m::mock(WebControllerService::class);
         $webService->shouldReceive('getRedirectResponse')->once()->with('site/index')->andReturn($expectedResponse);
 
-        $controller = $this->makeController($webService, $authService, $tokenRepository);
+        // A failed/rejected login must never mark the session TFA-verified.
+        /** @var SessionInterface&m\MockInterface $session */
+        $session = m::mock(SessionInterface::class);
+        $session->shouldNotReceive('set');
+
+        $controller = $this->makeController($webService, $authService, $tokenRepository, $session);
 
         $response = $controller->login($masked);
 
@@ -190,6 +207,7 @@ final class WebshopOrderLoginControllerTest
         WebControllerService $webService,
         AuthService $authService,
         TokenRepository $tokenRepository,
+        SessionInterface $session,
     ): WebshopOrderLoginController {
         /** @var TranslatorInterface&m\MockInterface $translator */
         $translator = m::mock(TranslatorInterface::class);
@@ -200,6 +218,13 @@ final class WebshopOrderLoginControllerTest
         $flash->shouldReceive('has')->andReturn(false);
         $flash->shouldReceive('add');
 
-        return new WebshopOrderLoginController($webService, $translator, $flash, $authService, $tokenRepository);
+        return new WebshopOrderLoginController(
+            $webService,
+            $translator,
+            $flash,
+            $authService,
+            $tokenRepository,
+            $session,
+        );
     }
 }
