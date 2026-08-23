@@ -14,7 +14,6 @@ import { SettingsHandler } from './settings.js';
 import { initTooltips, initSimpleSelects, showFullpageLoader, hideFullpageLoader, initPasswordMeter } from './scripts.js';
 import './family-commalist-picker.js';
 import { initStripePayment } from './payment-stripe.js';
-import { initAmazonPayment } from './payment-amazon.js';
 import { initBraintreePayment } from './payment-braintree.js';
 import { initAdyenPayment } from './payment-adyen.js';
 import { initBacsQuickPay } from './bacs-quickpay.js';
@@ -171,7 +170,6 @@ if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
         const _app = new InvoiceApp();
         initStripePayment();
-        initAmazonPayment();
         initBraintreePayment();
         initAdyenPayment();
         initBacsQuickPay();
@@ -183,7 +181,6 @@ if (document.readyState === 'loading') {
 } else {
     const _app = new InvoiceApp();
     initStripePayment();
-    initAmazonPayment();
     initBraintreePayment();
     initAdyenPayment();
     initBacsQuickPay();

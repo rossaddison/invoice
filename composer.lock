@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "262404f2f9c7c622dbd9955f6b5dfba4",
+    "content-hash": "c3747cf3d66a81e43b27ab17ff04c150",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -919,61 +919,6 @@
                 }
             ],
             "time": "2024-08-03T19:31:26+00:00"
-        },
-        {
-            "name": "amzn/amazon-pay-api-sdk-php",
-            "version": "2.7.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/amzn/amazon-pay-api-sdk-php.git",
-                "reference": "f78ef40b67061458d8564d3ee3e8dab1b72abca0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/amzn/amazon-pay-api-sdk-php/zipball/f78ef40b67061458d8564d3ee3e8dab1b72abca0",
-                "reference": "f78ef40b67061458d8564d3ee3e8dab1b72abca0",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "php": ">=5.6.1",
-                "phpseclib/phpseclib": ">=3.0.34"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^8"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Amazon\\Pay\\API\\": "Amazon/Pay/API/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Amazon Pay API SDK",
-                    "email": "amazon-pay-sdk@amazon.com"
-                }
-            ],
-            "description": "Amazon Pay API SDK (PHP)",
-            "homepage": "https://github.com/amzn/amazon-pay-api-sdk-php",
-            "keywords": [
-                "amazon",
-                "amazon pay",
-                "amazon payments",
-                "pay",
-                "pay with amazon",
-                "payment",
-                "payments"
-            ],
-            "support": {
-                "issues": "https://github.com/amzn/amazon-pay-api-sdk-php/issues",
-                "source": "https://github.com/amzn/amazon-pay-api-sdk-php/tree/2.7.2"
-            },
-            "time": "2026-07-02T04:48:12+00:00"
         },
         {
             "name": "braintree/braintree_php",

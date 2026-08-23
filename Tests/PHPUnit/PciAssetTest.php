@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\PHPUnit;
 
-use App\Invoice\Asset\pciAsset\AmazonPayTwoSevenAsset;
 use App\Invoice\Asset\pciAsset\BraintreeDropInOneThirtyThreeSevenAsset;
 use App\Invoice\Asset\pciAsset\StripeVersionTenAsset;
 use PHPUnit\Framework\TestCase;
@@ -23,12 +22,6 @@ class PciAssetTest extends TestCase
     public function testBraintreeAssetLoadsInHead(): void
     {
         $asset = new BraintreeDropInOneThirtyThreeSevenAsset();
-        $this->assertSame(WebView::POSITION_HEAD, $asset->jsPosition);
-    }
-
-    public function testAmazonPayAssetLoadsInHead(): void
-    {
-        $asset = new AmazonPayTwoSevenAsset();
         $this->assertSame(WebView::POSITION_HEAD, $asset->jsPosition);
     }
 
@@ -61,16 +54,6 @@ class PciAssetTest extends TestCase
         foreach ($asset->css as $entry) {
             $url = is_array($entry) ? $entry[0] : $entry;
             $this->assertStringStartsWith('https://', $url, "Braintree CSS URL must use https://: $url");
-        }
-    }
-
-    public function testAmazonPayJsUrlUsesHttps(): void
-    {
-        $asset = new AmazonPayTwoSevenAsset();
-        /** @var string|array<string|int, string> $entry */
-        foreach ($asset->js as $entry) {
-            $url = is_array($entry) ? $entry[0] : $entry;
-            $this->assertStringStartsWith('https://', $url, "Amazon Pay JS URL must use https://: $url");
         }
     }
 

@@ -794,9 +794,7 @@ trait SettingTooltipTrait
             'time_zone' => [
                 'why' => 'This is used in the DateHelper function'
                 . ' datetime_zone_style which is used in TaskForm to get'
-                . ' an accurate Finish Date for a Task.' . '/n'
-                . 'It is also used in paymentinformation/amazon_signature'
-                . ' to get a region from a time zone.',
+                . ' an accurate Finish Date for a Task.',
                 'where' => '',
             ],
         ];

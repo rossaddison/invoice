@@ -163,12 +163,6 @@ return [
                 ->name('paymentinformation/trueLayerComplete'),
 
             Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/amazonComplete/{url_key}')
-                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
-                ->action([PICLR::class, 'amazonComplete'])
-                ->name('paymentinformation/amazonComplete'),
-
-            Route::methods([Method::GET, Method::POST],
                     '/paymentinformation/braintreeComplete/{url_key}')
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([PICLR::class, 'braintreeComplete'])

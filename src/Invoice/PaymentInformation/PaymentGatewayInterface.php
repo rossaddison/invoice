@@ -12,7 +12,7 @@ interface PaymentGatewayInterface
 {
     /**
      * Matches the suffix used in the `gateway_{driver}_enabled` setting key,
-     * e.g. 'stripe', 'braintree', 'amazon_pay'.
+     * e.g. 'stripe', 'braintree', 'adyen'.
      */
     public function getDriverKey(): string;
 

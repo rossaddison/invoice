@@ -1761,18 +1761,6 @@ return [
 	. 'Peržiūrėti.'
 	. 'Mokėjimas internetu',
 'payment.history' => 'Mokėjimų istorija',
-'payment.information.amazon.no.omnipay.version' =>
-	'Šiuo metu nėra „Amazon Pay '
-	. 'Omnipay“ versijos.'
-	. 'Nustatymų rodinyje panaikinkite žymėjimą prie '
-	. '„Omnipay“ versijos, kad naudotumėte PCI '
-	. 'suderinamą versiją.',
-'payment.information.amazon.payment.session.complete' =>
-	'„Amazon“ mokėjimo sesija baigta – '
-	. 'sesijos ID:',
-'payment.information.amazon.payment.session.incomplete' =>
-	'„Amazon“ mokėjimo sesija neužbaigta – '
-	. 'bandykite dar kartą',
 'payment.information.braintree.braintree.no.omnipay.version' =>
 	'Šiuo metu nėra „Braintree Omnipay“ '
 	. 'versijos, suderinamos su „Braintree“ 6.'

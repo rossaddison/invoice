@@ -20,7 +20,6 @@ trait SettingPaymentTrait
     {
         return [
             'Adyen' => $this->adyenGatewayFields(),
-            'Amazon_Pay' => $this->amazonPayGatewayFields(),
             'Braintree' => $this->braintreeGatewayFields(),
             'Checkout_Com' => $this->checkoutComGatewayFields(),
             'GoCardless' => $this->goCardlessGatewayFields(),
@@ -101,40 +100,6 @@ trait SettingPaymentTrait
             'webhookHmacKey' => [
                 'type' => 'password',
                 'label' => 'Webhook Hmac Key',
-            ],
-            'sandbox' => [
-                'type' => 'checkbox',
-                'label' => 'Sandbox',
-            ],
-        ];
-    }
-
-    private function amazonPayGatewayFields(): array
-    {
-        return [
-            'publicKeyId' => [
-                'type' => 'password',
-                'label' => 'Public Key ID',
-            ],
-            'merchantId' => [
-                'type' => 'password',
-                'label' => 'Merchant ID',
-            ],
-            'clientId' => [
-                'type' => 'password',
-                'label' => 'Client ID',
-            ],
-            'clientSecret' => [
-                'type' => 'password',
-                'label' => 'Client Secret',
-            ],
-            'returnUrl' => [
-                'type' => 'text',
-                'label' => 'Return Url',
-            ],
-            'storeId' => [
-                'type' => 'password',
-                'label' => 'Store Id',
             ],
             'sandbox' => [
                 'type' => 'checkbox',
@@ -560,9 +525,8 @@ trait SettingPaymentTrait
      * `authorization_flow.redirect.return_uri` to exactly match a Redirect
      * URI pre-registered in Console (Settings > Redirect URIs), confirmed
      * directly against TrueLayer's own docs, so it must never vary between
-     * requests. Same static-Setting pattern already established for
-     * Amazon Pay's own gateway_amazon_pay_returnUrl, chosen deliberately
-     * over dynamically generating it via this app's own UrlGeneratorInterface
+     * requests. A static-Setting field, chosen deliberately over
+     * dynamically generating it via this app's own UrlGeneratorInterface
      * to sidestep the Locale-middleware-dependent locale-segment
      * variability found during the August 2026 Checkout.com "Pay Now"
      * investigation entirely, rather than merely arguing it away. See
@@ -628,8 +592,6 @@ trait SettingPaymentTrait
     {
         return [
             'stripe' => 'https://dashboard.stripe.com',
-            'amazon_pay' => 'https://sellercentral-europe.amazon.com/'
-            . 'external-payments/sandbox/home',
             'braintree' => 'https://sandbox.braintreegateway.com/login',
             // The Hub is the same dashboard URL for both sandbox and live
             // accounts, distinguished by which account you're logged into

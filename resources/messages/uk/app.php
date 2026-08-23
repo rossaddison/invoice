@@ -1646,18 +1646,6 @@ return [
 	. 'Онлайн-платежі не налаштовано жодних платіжних '
 	. 'шлюзів',
 'payment.history' => 'Історія платежів',
-'payment.information.amazon.no.omnipay.version' =>
-	'Наразі немає версії Amazon Pay '
-	. 'Omnipay.'
-	. 'Зніміть позначку з опції «Версія '
-	. 'Omnipay», щоб використовувати версію, сумісну '
-	. 'з PCI, у розділі «Налаштування».',
-'payment.information.amazon.payment.session.complete' =>
-	'Сеанс оплати Amazon завершено – '
-	. 'ідентифікатор сеансу:',
-'payment.information.amazon.payment.session.incomplete' =>
-	'Сеанс оплати Amazon не завершено.'
-	. 'Спробуйте ще раз.',
 'payment.information.braintree.braintree.no.omnipay.version' =>
 	'Наразі немає версії Braintree Omnipay,'
 	. 'сумісної з Braintree версії 6.'

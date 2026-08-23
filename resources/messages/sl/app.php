@@ -1607,19 +1607,6 @@ return [
 	. 'Spletno plačilo ni nastavljenih nobenih '
 	. 'plačilnih prehodov.',
 'payment.history' => 'Zgodovina plačil',
-'payment.information.amazon.no.omnipay.version' =>
-	'Trenutno ni na voljo različice '
-	. 'Amazon Pay Omnipay.'
-	. 'V pogledu nastavitev počistite polje '
-	. 'za različico Omnipay, da uporabite '
-	. 'različico, ki je skladna s '
-	. 'PCI.',
-'payment.information.amazon.payment.session.complete' =>
-	'Seja plačila Amazon je končana '
-	. '- ID seje:',
-'payment.information.amazon.payment.session.incomplete' =>
-	'Plačilna seja Amazon ni končana '
-	. '- poskusite znova',
 'payment.information.braintree.braintree.no.omnipay.version' =>
 	'Trenutno ni različice Braintree Omnipay,'
 	. 'ki bi bila združljiva z '

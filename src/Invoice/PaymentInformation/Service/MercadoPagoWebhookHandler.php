@@ -133,8 +133,8 @@ final class MercadoPagoWebhookHandler
         // same key verbatim as the route's {gateway} argument, and
         // MerchantRepository::repoMerchantLatestSuccessfulByInvIdAndDriver()
         // does an exact-string WHERE match against whatever gets stored
-        // here — same convention already used for Amazon_Pay
-        // (PaymentInformationController's 'gateway' => 'Amazon_Pay').
+        // here — same convention every other gateway's own recorded
+        // 'gateway' value already follows.
         $this->recorder->record(
             new PaymentRecordContext(
                 reference: $invoiceNumber . '-mercado_pago-' . $paymentId,

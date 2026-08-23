@@ -1047,7 +1047,6 @@ if ((in_array($inv->reqStatusId(), [2, 3])
                 . '➡️'
                 . (ucfirst($gateway) == 'Braintree' ? PaymentGatewayButton::braintree() : '')
                 . (ucfirst($gateway) == 'Stripe' ? PaymentGatewayButton::stripe() : '')
-                . (ucfirst($gateway) == 'Amazon_Pay' ? PaymentGatewayButton::amazon() : '')
                 . (ucfirst($gateway) == 'Mollie' ? PaymentGatewayButton::mollie() : '');
 
             echo H::closeTag('a');

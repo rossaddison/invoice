@@ -1653,18 +1653,6 @@ return [
 	. 'Прагляд .'
 	. 'Інтэрнэт-аплата&quot; не настроены плацежныя шлюзы',
 'payment.history' => 'Гісторыя плацяжоў',
-'payment.information.amazon.no.omnipay.version' =>
-	'На дадзены момант няма версіі '
-	. 'Amazon Pay Omnipay.'
-	. 'Зніміце сцяжок з опцыі «Версія '
-	. 'Omnipay», каб выкарыстоўваць версію, сумяшчальную '
-	. 'з PCI, у раздзеле «Налады».',
-'payment.information.amazon.payment.session.complete' =>
-	'Сеанс аплаты Amazon завершаны - '
-	. 'ідэнтыфікатар сеансу:',
-'payment.information.amazon.payment.session.incomplete' =>
-	'Сеанс аплаты Amazon не завершаны '
-	. '— паспрабуйце яшчэ раз',
 'payment.information.braintree.braintree.no.omnipay.version' =>
 	'На дадзены момант няма версіі '
 	. 'Braintree Omnipay, сумяшчальнай з Braintree '

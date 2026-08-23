@@ -9,17 +9,7 @@ use Yiisoft\Html\Tag\Img;
 
 final class PaymentGatewayButton
 {
-    public static function amazon(): string
-    {
-        return
-        Html::openTag('div', ['class' => 'btn-group', 'role' => 'group'])
-            .  new Img()
-            ->size(40, 25)
-            ->src('/img/amazon.png')
-            ->addClass('btn btn-warning')
-            ->render()
-        . Html::closeTag('div');
-    }
+    private const BTN_LIGHT = 'btn btn-light';
 
     public static function braintree(): string
     {
@@ -28,7 +18,7 @@ final class PaymentGatewayButton
             .  new Img()
             ->size(100, 50)
             ->src('/img/braintree.png')
-            ->addClass('btn btn-light')
+            ->addClass(self::BTN_LIGHT)
             ->render()
         . Html::closeTag('div');
     }
@@ -40,7 +30,7 @@ final class PaymentGatewayButton
             .  new Img()
             ->size(75, 50)
             ->src('/img/stripe.png')
-            ->addClass('btn btn-light')
+            ->addClass(self::BTN_LIGHT)
             ->render()
         . Html::closeTag('div');
     }
@@ -52,7 +42,7 @@ final class PaymentGatewayButton
             .  new Img()
             ->size(75, 50)
             ->src('/img/mollie.png')
-            ->addClass('btn btn-light')
+            ->addClass(self::BTN_LIGHT)
             ->render()
         . Html::closeTag('div');
     }

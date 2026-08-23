@@ -44,9 +44,8 @@ final readonly class TrueLayerCredentials
      * argument state (the same mechanism behind the entire August 2026
      * Checkout.com "Pay Now" redirect-loop investigation) — a fixed
      * Setting sidesteps that risk entirely rather than merely arguing it
-     * away. Not encrypted — the 'returnUrl' field is 'text' type, matching
-     * Amazon Pay's own gateway_amazon_pay_returnUrl precedent for this
-     * exact class of problem.
+     * away. Not encrypted — the 'returnUrl' field is 'text' type, since a
+     * fixed redirect URL is not secret.
      */
     public function returnUrl(): string
     {

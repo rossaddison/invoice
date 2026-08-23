@@ -1802,21 +1802,6 @@ return [
         . 'Ver.'
         . 'Pago en línea',
 'payment.history' => 'Historial de pagos',
-'payment.information.amazon.no.omnipay.version' =>
-        'Actualmente no existe una versión'
-        . 'de Amazon Pay Omnipay.'
-        . 'Desmarque la opción &quot;Versión de '
-        . 'Omnipay&quot; para usar la versión '
-        . 'compatible con PCI en la '
-        . 'vista de configuración.',
-'payment.information.amazon.payment.session.complete' =>
-        'Sesión de pago de Amazon'
-        . 'completada - Id.'
-        . 'de sesión:',
-'payment.information.amazon.payment.session.incomplete' =>
-        'Sesión de pago de Amazon'
-        . 'incompleta:'
-        . 'inténtelo de nuevo',
 'payment.information.braintree.braintree.no.omnipay.version' =>
         'Actualmente no existe ninguna versión'
         . 'de Braintree Omnipay compatible con '

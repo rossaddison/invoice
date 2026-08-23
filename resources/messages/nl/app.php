@@ -1595,17 +1595,6 @@ return [
 	. 'Bekijken .'
 	. 'Online betaling',
 'payment.history' => 'Betalingsgeschiedenis',
-'payment.information.amazon.no.omnipay.version' =>
-	'Er is momenteel geen Amazon '
-	. 'Pay Omnipay-versie beschikbaar.'
-	. 'Schakel Omnipay-versie uit om de '
-	. 'PCI-compatibele versie te gebruiken in '
-	. 'het Instellingenoverzicht.',
-'payment.information.amazon.payment.session.complete' =>
-	'Amazon-betalingssessie voltooid - Sessie-ID:',
-'payment.information.amazon.payment.session.incomplete' =>
-	'Amazon-betalingssessie onvolledig - Probeer het '
-	. 'opnieuw',
 'payment.information.braintree.braintree.no.omnipay.version' =>
 	'Er is momenteel geen Braintree '
 	. 'Omnipay-versie compatibel met Braintree-versie 6.'

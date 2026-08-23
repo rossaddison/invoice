@@ -1988,20 +1988,6 @@ return [
 	. 'Xem .'
 	. 'Thanh toán trực tuyến',
 'payment.history' => 'Lịch sử thanh toán',
-'payment.information.amazon.no.omnipay.version' =>
-	'Hiện tại không có phiên '
-	. 'bản Amazon Pay Omnipay.'
-	. 'Bỏ chọn Phiên bản Omnipay '
-	. 'để sử dụng phiên bản '
-	. 'tuân thủ PCI trong Cài '
-	. 'đặt Xem',
-'payment.information.amazon.payment.session.complete' =>
-	'Phiên thanh toán Amazon đã '
-	. 'hoàn tất - Mã phiên:',
-'payment.information.amazon.payment.session.incomplete' =>
-	'Phiên thanh toán của Amazon '
-	. 'không hoàn tất - Vui '
-	. 'lòng thử lại',
 'payment.information.braintree.braintree.no.omnipay.version' =>
 	'Hiện tại không có phiên '
 	. 'bản Braintree Omnipay nào tương '

@@ -1208,13 +1208,6 @@ return [
 	. '查看.'
 	. '線上支付',
 'payment.history' => '付款記錄',
-'payment.information.amazon.no.omnipay.version' =>
-	'目前沒有 Amazon Pay Omnipay 版本。在「設定檢視」下取消勾選「Omnipay '
-	. '版本」即可使用符合 PCI 標準的版本。',
-'payment.information.amazon.payment.session.complete' =>
-	'亞馬遜付款會話完成 - 會話 ID：',
-'payment.information.amazon.payment.session.incomplete' =>
-	'亞馬遜付款會話未完成 - 請重試',
 'payment.information.braintree.braintree.no.omnipay.version' =>
 	'目前沒有與 Braintree 6.'
 	. '9.'

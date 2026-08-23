@@ -1548,18 +1548,6 @@ return [
 	. 'Onlayn to‘lov ostida hech qanday '
 	. 'to‘lov shlyuzlari o‘rnatilmagan',
 'payment.history' => 'To\'lov tarixi',
-'payment.information.amazon.no.omnipay.version' =>
-	'Hozirda Amazon Pay Omnipay versiyasi '
-	. 'mavjud emas.'
-	. 'Sozlamalar ko\'rinishida PCI-ga mos keladigan '
-	. 'versiyadan foydalanish uchun Omnipay Version '
-	. 'belgisini olib tashlang',
-'payment.information.amazon.payment.session.complete' =>
-	'Amazon toʻlov sessiyasi tugallandi - '
-	. 'sessiya identifikatori:',
-'payment.information.amazon.payment.session.incomplete' =>
-	'Amazon toʻlov sessiyasi tugallanmagan - '
-	. 'Qayta urinib koʻring',
 'payment.information.braintree.braintree.no.omnipay.version' =>
 	'Hozirda Braintree 6.'
 	. '9.'

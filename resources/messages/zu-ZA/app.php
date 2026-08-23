@@ -1504,18 +1504,6 @@ return [
 	. 'Buka .'
 	. 'Inkokhelo Ye-inthanethi',
 'payment.history' => 'Umlando Wokukhokha',
-'payment.information.amazon.no.omnipay.version' =>
-	'Okwamanje ayikho inguqulo ye-Amazon Pay '
-	. 'Omnipay.'
-	. 'Susa ukumaka Inguqulo ye-Omnipay ukuze '
-	. 'usebenzise inguqulo ethobelana ne-PCI ngaphansi '
-	. 'kokuthi Ukubuka Kwezilungiselelo',
-'payment.information.amazon.payment.session.complete' =>
-	'I-Amazon Payment Session Iqediwe - '
-	. 'I-Id Yeseshini:',
-'payment.information.amazon.payment.session.incomplete' =>
-	'I-Amazon Payment Session ayiphelele - '
-	. 'Sicela uzame futhi',
 'payment.information.braintree.braintree.no.omnipay.version' =>
 	'Okwamanje ayikho i-Braintree Omnipay Version '
 	. 'ehambisana ne-Braintree Version 6.'

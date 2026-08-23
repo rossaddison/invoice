@@ -13,7 +13,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  * Adds a Content-Security-Policy header to every response.
  *
  * The policy string is injected via DI from config/web/params.php so that
- * payment-provider domains (Stripe, Braintree, Mollie, Amazon Pay) can be
+ * payment-provider domains (Stripe, Braintree, Mollie, Adyen) can be
  * appended without touching this class.
  *
  * Directives summary:

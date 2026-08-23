@@ -1646,18 +1646,6 @@ return [
 	. 'Online platba neboli nastavené žiadne '
 	. 'platobné brány.',
 'payment.history' => 'História platieb',
-'payment.information.amazon.no.omnipay.version' =>
-	'Momentálne neexistuje žiadna verzia Amazon '
-	. 'Pay Omnipay.'
-	. 'Zrušte začiarknutie políčka Verzia Omnipay '
-	. 'v zobrazení Nastavenia a použite '
-	. 'verziu kompatibilnú s PCI.',
-'payment.information.amazon.payment.session.complete' =>
-	'Relácia platby Amazon dokončená – '
-	. 'ID relácie:',
-'payment.information.amazon.payment.session.incomplete' =>
-	'Platobná relácia Amazonu nedokončená – '
-	. 'skúste to znova',
 'payment.information.braintree.braintree.no.omnipay.version' =>
 	'Momentálne neexistuje žiadna verzia Braintree '
 	. 'Omnipay kompatibilná s verziou Braintree '

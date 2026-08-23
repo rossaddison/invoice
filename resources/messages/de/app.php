@@ -1615,17 +1615,6 @@ return [
 	. 'Anzeigen .'
 	. 'Online-Zahlung',
 'payment.history' => 'Zahlungsverlauf',
-'payment.information.amazon.no.omnipay.version' =>
-	'Derzeit ist keine Amazon Pay '
-	. 'Omnipay-Version verfügbar.'
-	. 'Deaktivieren Sie die Omnipay-Version, um '
-	. 'die PCI-kompatible Version unter „Einstellungen“ '
-	. 'zu verwenden.',
-'payment.information.amazon.payment.session.complete' =>
-	'Amazon-Zahlungssitzung abgeschlossen – Sitzungs-ID:',
-'payment.information.amazon.payment.session.incomplete' =>
-	'Amazon-Zahlungssitzung unvollständig – Bitte versuchen '
-	. 'Sie es erneut',
 'payment.information.braintree.braintree.no.omnipay.version' =>
 	'Derzeit ist keine Braintree Omnipay-Version '
 	. 'verfügbar, die mit Braintree Version '

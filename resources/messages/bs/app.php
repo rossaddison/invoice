@@ -1602,18 +1602,6 @@ return [
 	. 'Pogledaj .'
 	. 'Online plaćanje',
 'payment.history' => 'Historija plaćanja',
-'payment.information.amazon.no.omnipay.version' =>
-	'Trenutno ne postoji Amazon Pay '
-	. 'Omnipay verzija.'
-	. 'U postavkama poništite odabir opcije '
-	. 'Omnipay verzija da biste koristili '
-	. 'PCI kompatibilnu verziju.',
-'payment.information.amazon.payment.session.complete' =>
-	'Sesija plaćanja na Amazonu završena '
-	. '- ID sesije:',
-'payment.information.amazon.payment.session.incomplete' =>
-	'Sesija plaćanja na Amazonu nije '
-	. 'završena - Pokušajte ponovo',
 'payment.information.braintree.braintree.no.omnipay.version' =>
 	'Trenutno ne postoji verzija Braintree '
 	. 'Omnipay-a kompatibilna s verzijom Braintree '

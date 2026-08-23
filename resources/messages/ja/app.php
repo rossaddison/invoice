@@ -1218,12 +1218,6 @@ return [
 	. '表示.'
 	. 'オンライン支払いで支払いゲートウェイが設定されていません',
 'payment.history' => '支払い履歴',
-'payment.information.amazon.no.omnipay.version' =>
-	'現在、Amazon Pay Omnipayバージョンはありません。設定画面でPCI準拠バージョンを使用するには、Omnipayバージョンのチェックを外してください。',
-'payment.information.amazon.payment.session.complete' =>
-	'Amazon 支払いセッション完了 - セッション ID:',
-'payment.information.amazon.payment.session.incomplete' =>
-	'Amazon の支払いセッションが完了していません - もう一度お試しください',
 'payment.information.braintree.braintree.no.omnipay.version' =>
 	'現在、Braintree バージョン 6.'
 	. '9.'

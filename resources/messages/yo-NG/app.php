@@ -1848,18 +1848,6 @@ return [
 	. 'Wo .'
 	. 'Sisanwo Ayelujara',
 'payment.history' => 'Itan sisan',
-'payment.information.amazon.no.omnipay.version' =>
-	'Lọwọlọwọ ko si ẹya Amazon '
-	. 'Pay Omnipay.'
-	. 'Yọ Ẹya Omnipay kuro lati '
-	. 'lo ẹya ibamu PCI labẹ '
-	. 'Wiwo Eto',
-'payment.information.amazon.payment.session.complete' =>
-	'Ikoni Isanwo Amazon Pari - '
-	. 'Idanimọ Ikoni:',
-'payment.information.amazon.payment.session.incomplete' =>
-	'Akoko Isanwo Amazon Ko pari '
-	. '- Jọwọ Gbiyanju Lẹẹkansi',
 'payment.information.braintree.braintree.no.omnipay.version' =>
 	'Lọwọlọwọ ko si Ẹya Braintree '
 	. 'Omnipay ti o ni ibamu '

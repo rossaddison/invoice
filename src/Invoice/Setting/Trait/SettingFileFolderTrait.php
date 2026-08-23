@@ -228,17 +228,6 @@ trait SettingFileFolderTrait
     }
 
     /**
-     * @return Aliases
-     */
-    public function getAmazonPemFileFolderAliases(): Aliases
-    {
-        return new Aliases(['@base' => dirname(__DIR__, 4),
-            '@pem_file_unique_folder' => '@base/src/Invoice'
-            . self::getPemFileFolder(),
-        ]);
-    }
-
-    /**
      * @param array $files
      * @return array
      */

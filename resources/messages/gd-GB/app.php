@@ -1644,15 +1644,6 @@ return [
 	. 'stèidheachadh'
     . ' fo Roghainnean ... Seall ... Pàigheadh ​​Air-loidhne',
 'payment.history' => 'Eachdraidh Pàighidh',
-'payment.information.amazon.no.omnipay.version' =>
-	'Chan eil dreach Omnipay'
-    . ' de Amazon Pay ann an-dràsta. Thoir air falbh an comharra'
-    . ' bho Tionndadh Omnipay gus an dreach a tha co-chòrdail ri '
-    . 'PCI a chleachdadh fo Shealladh nan Roghainnean.',
-'payment.information.amazon.payment.session.complete' =>
-    'Seisean Pàighidh Amazon Crìochnaichte - ID Seisein: ',
-'payment.information.amazon.payment.session.incomplete' =>
-    'Seisean Pàighidh Amazon Neo-chrìochnaichte - Feuch ris a-rithist',
 'payment.information.braintree.braintree.no.omnipay.version' =>
     'Chan eil dreach Braintree Omnipay co-chòrdail ri'
     . ' Braintree Version 6.9.1 ann an-dràsta.'

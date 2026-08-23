@@ -1609,18 +1609,6 @@ return [
 	. 'הצג .'
 	. 'תשלום מקוון',
 'payment.history' => 'היסטוריית תשלומים',
-'payment.information.amazon.no.omnipay.version' =>
-	'אין כרגע גרסת Omnipay של '
-	. 'Amazon Pay.'
-	. 'בטל את הסימון של גרסת '
-	. 'Omnipay כדי להשתמש בגרסה התואמת '
-	. 'PCI תחת תצוגת הגדרות.',
-'payment.information.amazon.payment.session.complete' =>
-	'סשן תשלום באמזון הושלם - '
-	. 'מזהה סשן:',
-'payment.information.amazon.payment.session.incomplete' =>
-	'סשן התשלום באמזון לא הושלם '
-	. '- אנא נסה שוב',
 'payment.information.braintree.braintree.no.omnipay.version' =>
 	'נכון לעכשיו, אין גרסת Braintree '
 	. 'Omnipay התואמת לגרסת Braintree 6.'

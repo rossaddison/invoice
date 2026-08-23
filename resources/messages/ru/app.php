@@ -1585,18 +1585,6 @@ return [
 	. 'Просмотр.'
 	. 'Онлайн-платежи',
 'payment.history' => 'История платежей',
-'payment.information.amazon.no.omnipay.version' =>
-	'В настоящее время нет версии '
-	. 'Amazon Pay Omnipay.'
-	. 'Снимите флажок Omnipay Version, чтобы '
-	. 'использовать версию, совместимую с PCI,'
-	. 'в разделе Settings View.',
-'payment.information.amazon.payment.session.complete' =>
-	'Сеанс оплаты Amazon завершен — '
-	. 'идентификатор сеанса:',
-'payment.information.amazon.payment.session.incomplete' =>
-	'Сеанс оплаты Amazon не завершен '
-	. '— попробуйте еще раз',
 'payment.information.braintree.braintree.no.omnipay.version' =>
 	'В настоящее время нет версии '
 	. 'Braintree Omnipay, совместимой с версией '

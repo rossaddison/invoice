@@ -8,7 +8,6 @@ use App\Infrastructure\Persistence\Payment\Payment;
 use App\Invoice\Merchant\MerchantRepository;
 use App\Invoice\Payment\PaymentRepository;
 use App\Invoice\PaymentInformation\Service\AdyenPaymentService;
-use App\Invoice\PaymentInformation\Service\AmazonPayPaymentService;
 use App\Invoice\PaymentInformation\Service\BraintreePaymentService;
 use App\Invoice\PaymentInformation\Service\CheckoutComPaymentService;
 use App\Invoice\PaymentInformation\Service\GoCardlessPaymentService;
@@ -54,7 +53,6 @@ final class PaymentRefundController
         private readonly WebControllerService $webService,
         private readonly Logger $logger,
         private readonly AdyenPaymentService $adyenPaymentService,
-        private readonly AmazonPayPaymentService $amazonPayPaymentService,
         private readonly BraintreePaymentService $braintreePaymentService,
         private readonly GoCardlessPaymentService $goCardlessPaymentService,
         private readonly MolliePaymentService $molliePaymentService,
@@ -156,7 +154,6 @@ final class PaymentRefundController
             'adyen'      => $this->adyenPaymentService->refund($reference, $amount),
             'braintree'  => $this->braintreePaymentService->refund($reference, $amount),
             'mollie'     => $this->molliePaymentService->refund($reference, $amount),
-            'amazon_pay' => $this->amazonPayPaymentService->refund($reference, $amount),
             'gocardless' => $this->goCardlessPaymentService->refund($reference, $amount),
             'robokassa'  => $this->robokassaPaymentService->refund($reference, $amount),
             'yookassa'   => $this->yookassaPaymentService->refund($reference, $amount),

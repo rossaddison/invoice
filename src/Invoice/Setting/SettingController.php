@@ -205,7 +205,6 @@ final class SettingController extends BaseController
             'online_payment' => $this->webViewRenderer->renderPartialAsString($p . 'online_payment', [
                 'gateway_drivers' => $this->sR->activePaymentGateways(),
                 'gateway_currency_codes' => CurrencyHelper::all(),
-                'gateway_regions' => $this->sR->amazonRegions(),
                 'openBankingProviders' => $this->openBankingProviderRegistry->getProviderNames(),
                 'payment_methods' => $deps->pm->findAllPreloaded(),
                 'gateway_credential_urls' => $this->sR->gatewayCredentialUrls(),

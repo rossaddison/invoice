@@ -1822,19 +1822,6 @@ return [
 	. 'Duba .'
 	. 'Biyan Kan layi',
 'payment.history' => 'Tarihin Biyan Kuɗi',
-'payment.information.amazon.no.omnipay.version' =>
-	'A halin yanzu babu Amazon '
-	. 'Pay Omnipay Version.'
-	. 'Cire sigar Omnipay don amfani '
-	. 'da sigar yarda da PCI '
-	. 'a ƙarƙashin Duba Saituna',
-'payment.information.amazon.payment.session.complete' =>
-	'An Kammala Zaman Biyan Amazon '
-	. '- Id Zama:',
-'payment.information.amazon.payment.session.incomplete' =>
-	'Zaman Biyan Amazon Bai Kammala '
-	. 'ba - Da fatan za '
-	. 'a sake gwadawa',
 'payment.information.braintree.braintree.no.omnipay.version' =>
 	'A halin yanzu babu Braintree '
 	. 'Omnipay Version da ya dace '

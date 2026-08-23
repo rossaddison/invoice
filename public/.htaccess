@@ -21,8 +21,6 @@ RewriteEngine on
         https://cdn.jsdelivr.net \
         https://js.stripe.com \
         https://*.stripe.com \
-        https://*.payments-amazon.com \
-        https://*.amazon.com \
         https://*.adyen.com \
         https://*.cdn.adyen.com \
         https://assets.braintreegateway.com \
@@ -42,9 +40,6 @@ RewriteEngine on
         https://*.stripe.com \
         https://assets.braintreegateway.com \
         https://s3.amazonaws.com \
-        https://*.payments-amazon.com \
-        https://*.amazon.com \
-        https://*.media-amazon.com \
         https://*.adyen.com \
         https://*.cdn.adyen.com \
         https://www.mollie.com; \
@@ -54,8 +49,6 @@ RewriteEngine on
         https://*.stripe.com \
         https://*.braintreegateway.com \
         https://*.braintree-api.com \
-        https://*.payments-amazon.com \
-        https://*.amazon.com \
         https://*.adyen.com \
         https://*.cdn.adyen.com \
         https://challenges.cloudflare.com; \
@@ -64,8 +57,6 @@ RewriteEngine on
         https://*.stripe.com \
         https://hooks.stripe.com \
         https://assets.braintreegateway.com \
-        https://*.payments-amazon.com \
-        https://*.amazon.com \
         https://*.adyen.com \
         https://*.cdn.adyen.com \
         https://challenges.cloudflare.com; \

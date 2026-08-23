@@ -20,11 +20,10 @@ use Testo\Test;
  * `truelayer/client` SDK builds its own fluent object graph internally
  * (Client::configure()->...->create()) requiring a genuine EC private key
  * for its JWS signer to construct at all, with no seam to substitute a
- * mock HTTP response without a real, validly-formatted key — matching the
- * same documented limitation already accepted for
- * AmazonPayPaymentServiceTest (a different SDK, same "no injection seam
- * without real crypto material" shape). Verified instead via a real
- * TrueLayer sandbox account once Console credentials are available — see
+ * mock HTTP response without a real, validly-formatted key — a "no
+ * injection seam without real crypto material" limitation. Verified
+ * instead via a real TrueLayer sandbox account once Console credentials
+ * are available — see
  * gateways.json's own truelayer row.
  */
 #[Test]

@@ -1592,19 +1592,6 @@ return [
 	. 'عرض .'
 	. 'الدفع عبر الإنترنت',
 'payment.history' => 'سجل الدفع',
-'payment.information.amazon.no.omnipay.version' =>
-	'لا يوجد حاليًا إصدار Amazon '
-	. 'Pay Omnipay.'
-	. 'ألغِ تحديد خيار Omnipay Version '
-	. 'لاستخدام الإصدار المتوافق مع PCI '
-	. 'من &quot;عرض الإعدادات&quot;.',
-'payment.information.amazon.payment.session.complete' =>
-	'جلسة الدفع من أمازون اكتملت '
-	. '- معرف الجلسة:',
-'payment.information.amazon.payment.session.incomplete' =>
-	'جلسة الدفع في أمازون غير '
-	. 'مكتملة - يُرجى المحاولة مرة '
-	. 'أخرى',
 'payment.information.braintree.braintree.no.omnipay.version' =>
 	'لا يوجد حاليًا إصدار متوافق '
 	. 'مع Braintree Omnipay الإصدار 6.'

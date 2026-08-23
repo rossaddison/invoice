@@ -23,11 +23,6 @@ trait SettingStaticPathsTrait
         return DIRECTORY_SEPARATOR . 'Customer_files';
     }
 
-    public static function getPemFileFolder(): string
-    {
-        return DIRECTORY_SEPARATOR . 'Pem_unique_folder';
-    }
-
     public static function getGoogleTranslateJsonFileFolder(): string
     {
         return DIRECTORY_SEPARATOR . 'Google_translate_unique_folder';

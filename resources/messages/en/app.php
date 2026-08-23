@@ -1680,14 +1680,6 @@ prior to importing and no existing documents e.g. Invoices.',
   'payment.gateway.no' => 'No payment gateways'
     . ' have been setup under Settings ... View ... Online Payment',
   'payment.history' => 'Payment History',
-  'payment.information.amazon.no.omnipay.version' =>
-    'There currrently is no Amazon Pay Omnipay Version.'
-    . ' Uncheck Omnipay Version to use the '
-    . 'PCI compliant version under Settings View',
-  'payment.information.amazon.payment.session.complete' =>
-    'Amazon Payment Session Complete - Session Id: ',
-  'payment.information.amazon.payment.session.incomplete' =>
-    'Amazon Payment Session Incomplete - Please Try Again',
   'payment.information.braintree.braintree.no.omnipay.version' =>
     'There currrently is no Braintree Omnipay Version'
     . ' compatible with Braintree Version 6.9.1.'

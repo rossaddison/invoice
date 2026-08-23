@@ -9,41 +9,6 @@ use App\Invoice\Libraries\Lang;
 trait SettingLocaleTrait
 {
 
-/**
- * @return string[]
- *
- * @psalm-return array{
-    English: 'en_GB',
-    French: 'fr_FR',
-    German: 'de_DE',
-    Japan: 'jp_JP',
-    Italian: 'it_IT',
-    Spanish: 'es_ES'}
- */
-    public function amazonLanguages(): array
-    {
-        return [
-            'English' => 'en_GB',
-            'French' => 'fr_FR',
-            'German' => 'de_DE',
-            'Japan' => 'jp_JP',
-            'Italian' => 'it_IT',
-            'Spanish' => 'es_ES',
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function amazonRegions(): array
-    {
-        return [
-            'North America' => 'na',
-            'Japan' => 'jp',
-            'Europe' => 'eu',
-        ];
-    }
-
     /**
      * @return array
      */

@@ -10,7 +10,6 @@ use Yiisoft\Html\Tag\Option;
 * @var array $body
 * @var array $gateway_drivers
 * @var array $gateway_currency_codes
-* @var array $gateway_regions
 * @var array $payment_methods
 * @var array<string, string> $gateway_credential_urls
 * @var array<string, string> $gateway_field_urls
@@ -30,7 +29,6 @@ $noMargin = ['class' => 'form-check'];
 $panelBodySmall = ['class' => 'card-body small'];
 $pfxGateway = 'settings[gateway_';
 $sfxEnabled = '_enabled]';
-$sfxRegion = '_region]';
 $sfxCurrency = '_currency]';
 $sfxLocale = '_locale]';
 $sfxPaymentMethod = '_payment_method]';
@@ -408,35 +406,6 @@ echo H::openTag('div', $row); //1
     }
 
     echo H::openTag('hr');
-
-    // regions are specific to Amazon Pay
-    if ($d == 'amazon_pay') {
-    echo H::openTag('div', $formGroup); //5
-     echo H::openTag('label', [
-      'for' => $pfxGateway . $d . $sfxRegion
-     ]);
-      echo $translator->translate('online.payment.region');
-     echo H::closeTag('label');
-     $body[$pfxGateway . $d . $sfxRegion] =
-     $s->getSetting('gateway_' . $d . '_region');
-     echo H::openTag('select', [
-      'name' => $pfxGateway . $d . $sfxRegion,
-      'id' => $pfxGateway . $d . $sfxRegion,
-      'class' => 'form-select',
-     ]);
-      /**
-      * @var string $val
-      */
-      foreach (array_keys($gateway_regions) as $val) {
-      echo  new Option()
-       ->value($val)
-       ->selected($body[$pfxGateway .
-        $d . $sfxRegion] == $val)
-        ->content($val);
-        }
-        echo H::closeTag('select');
-        echo H::closeTag('div'); //9
-        }
 
         echo H::openTag('div', $formGroup); //9
         echo H::openTag('label', [

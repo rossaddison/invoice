@@ -24,8 +24,6 @@ use Testo\Test;
  * invoking them for real would perform a genuine network call to
  * Braintree's API. Only processTransaction()'s empty-nonce fast-fail path
  * is exercised, since it returns before createGateway() is ever called.
- * Matches the same documented limitation already accepted for
- * AmazonPayPaymentServiceTest.
  */
 #[Test]
 final class BraintreePaymentServiceTest

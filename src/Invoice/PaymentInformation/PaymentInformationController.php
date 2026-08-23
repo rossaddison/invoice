@@ -23,7 +23,6 @@ use App\Invoice\InvItem\InvItemRepository as iiR;
 use App\Invoice\Libraries\Crypt;
 use App\Invoice\PaymentInformation\PaymentInformationLogoRenderer;
 use App\Invoice\PaymentInformation\PaymentInformationQueryHelper;
-use App\Invoice\PaymentInformation\Service\AmazonPayPaymentService;
 use App\Invoice\PaymentInformation\Service\BraintreePaymentService;
 use App\Invoice\PaymentInformation\Service\OnlinePaymentRecorderService;
 use App\Invoice\PaymentInformation\Service\OpenBankingPaymentService;
@@ -66,7 +65,6 @@ final class PaymentInformationController
     public function __construct(
         private DataResponseFactoryInterface $factory,
         private Flash $flash,
-        private AmazonPayPaymentService $amazonPayPaymentService,
         private BraintreePaymentService $braintreePaymentService,
         private StripePaymentService $stripePaymentService,
         private StripeWebhookHandler $stripeWebhookHandler,
@@ -90,7 +88,6 @@ final class PaymentInformationController
     ) {
         $this->factory                   = $factory;
         $this->flash                     = $flash;
-        $this->amazonPayPaymentService   = $amazonPayPaymentService;
         $this->braintreePaymentService   = $braintreePaymentService;
         $this->stripePaymentService      = $stripePaymentService;
         $this->stripeWebhookHandler      = $stripeWebhookHandler;
@@ -231,77 +228,6 @@ final class PaymentInformationController
         }
         return $this->webViewRenderer->render(
         '//invoice/paymentinformation/payment_information_openbanking', $viewData);
-    }
-
-/**
- * Update: 29 May 2025
- * Related logic: https://developer.amazon.com/docs/amazon-pay-api-v2.7/
- * checkout-session.html#create-checkout-session.
- */
-    public function amazonComplete(Request $request, CurrentRoute $currentRoute): \Psr\Http\Message\ResponseInterface
-    {
-        $invoice_url_key = $currentRoute->getArgument('url_key');
-        $invoice = null !== $invoice_url_key && $this->iR->repoUrlKeyGuestCount($invoice_url_key) > 0
-            ? $this->iR->repoUrlKeyGuestLoaded($invoice_url_key)
-            : null;
-        $query_params = $request->getQueryParams();
-        /** @var string $query_params['amazonCheckoutSessionId'] */
-        $checkout_session_id = $query_params['amazonCheckoutSessionId'] ?? null;
-        if (null === $invoice_url_key || null === $invoice || null === $checkout_session_id) {
-            return $this->webService->getNotFoundResponse();
-        }
-
-        $sandbox_url_array = $this->sR->sandboxUrlArray();
-
-        // Use service to check completion status and handle invoice updates
-        $result = $this->amazonPayPaymentService->handleCallback([
-            'amazonCheckoutSessionId' => $checkout_session_id,
-            // Pass the entity if needed in service
-            'invoice'                 => $invoice,
-            'iR'                      => $this->iR,
-            'iaR'                     => $this->iaR,
-        ]);
-
-        // Update invoice/payment status if successful
-        if ($result['success']) {
-            $view_data = [
-                'render' => $this->webViewRenderer->renderPartialAsString(
-                    '//invoice/setting/payment_message',
-                    [
-                        'heading'     =>
-                            $this->translator->translate(
-                        'payment.information.amazon.payment.session.complete')
-                            . $checkout_session_id,
-                        'message'     => $this->translator->translate('payment')
-                            . ':' . $this->translator->translate('complete'),
-                        'url'         => 'inv/urlKey',
-                        'url_key'     => $invoice_url_key,
-                        'gateway'     => 'Amazon_Pay',
-                        'sandbox_url' => $sandbox_url_array['amazon_pay'],
-                    ],
-                ),
-            ];
-            $this->updateInvoicePaymentMethod($invoice_url_key);
-        } else {
-            $view_data = [
-                'render' => $this->webViewRenderer->renderPartialAsString(
-                    '//invoice/setting/payment_message',
-                    [
-                        'heading'     => $this->translator->translate(
-                        'payment.information.amazon.payment.session.incomplete'),
-                        'message'     => $result['message'] ??
-                            ($this->translator->translate('payment')
-                            . ':' . $this->translator->translate('incomplete')),
-                        'url'         => 'inv/urlKey',
-                        'url_key'     => $invoice_url_key,
-                        'gateway'     => 'Amazon_Pay',
-                        'sandbox_url' => $sandbox_url_array['amazon_pay'],
-                    ],
-                ),
-            ];
-        }
-
-        return $this->webViewRenderer->render('payment_completion_page', $view_data);
     }
 
     public function openbankingOauthComplete(Request $request,
@@ -486,7 +412,6 @@ final class PaymentInformationController
                 $gatewayResponse = match ($gateway) {
                     'Open_Banking_With_Wonderful', 'Open_Banking_With_Tink'
                                  => $this->openBankingInForm($ctx, $yii_invoice_array),
-                    'Amazon_Pay' => $this->amazonInForm($ctx),
                     'Stripe'     => $this->stripeInForm($ctx, $yii_invoice_array),
                     'Braintree'  => $this->brainTreeInForm($ctx, $request, $invoice_id, $sandbox_url_array),
                     'Mollie'     => $this->mollieInForm(
@@ -568,58 +493,6 @@ final class PaymentInformationController
         return $this->webService->getNotFoundResponse();
     }
 
-    public function amazonInForm(PaymentInformationGatewayContext $ctx): Response
-    {
-        // Let service check for private.pem and return error message if missing
-        $pemCheck = $this->amazonPayPaymentService->checkPrivatePemFile();
-        if (null !== $pemCheck) {
-            $this->flashMessage('warning', (string) $pemCheck['message']);
-
-            return $this->webViewRenderer->render(
-                '//invoice/setting/payment_message',
-                [
-                    'heading' => '',
-                    'message' => 'Amazon_Pay private.pem File Not Downloaded'
-                    . ' from Amazon and saved in Pem_unique_folder as private.pem',
-                    'url'     => 'inv/urlKey',
-                    'url_key' => $ctx->url_key,
-                    'gateway' => 'Amazon_Pay',
-                ],
-            );
-        }
-
-        // Get Amazon Pay button data from the service
-        $amazonPayButton = $this->amazonPayPaymentService->getButtonData(
-            $ctx->invoice, $ctx->url_key, $ctx->balance);
-
-        $amazon_pci_view_data = [
-            'alert'                  => $this->alert(),
-            'amazonPayButton'        => $amazonPayButton,
-            'balance'                => $ctx->balance,
-            'client_chosen_gateway'  => $ctx->client_chosen_gateway,
-            'client_on_invoice'      => $ctx->cR->repoClientquery($ctx->invoice->reqClientId()),
-            'crypt'                  => $this->sR,
-            'disable_form'           => $ctx->disable_form,
-            'invoice'                => $ctx->invoice,
-            'inv_url_key'            => $ctx->url_key,
-            'is_overdue'             => $ctx->is_overdue,
-            'json_encoded_items'     => Json::encode($ctx->items_array),
-            'companyLogo'            => $this->logoRenderer->companyLogo(),
-            'partial_client_address' => $this->webViewRenderer
-                ->renderPartialAsString(
-                    '//invoice/client/partial_client_address',
-                    ['client' => $ctx->cR->repoClientquery($ctx->invoice->reqClientId())],
-                ),
-            'payment_method' => $ctx->payment_method_for_this_invoice,
-            'return_url'     => ['paymentinformation/amazonComplete',
-                                                        ['url_key' => $ctx->url_key]],
-            'title'          => 'Amazon Pay is enabled',
-            'total'          => $ctx->total,
-        ];
-
-        return $this->webViewRenderer->render('payment_information_amazon_pci',
-                                                        $amazon_pci_view_data);
-    }
 
     public function brainTreeInForm(
         PaymentInformationGatewayContext $ctx,

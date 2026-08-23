@@ -20,7 +20,7 @@
                 "asia",
                 "oceania"
             ],
-            "notes": "Regions per stripe.com/global (checked 2026-08-04): fully supported in North/South America, Europe, Asia, Oceania; Africa is \"extended network\" only (via Paystack), not direct Stripe support, so Africa is deliberately omitted here. Previously live-tested per docs/PAYMENT_GATEWAY_LIVE_TESTING_JULY_2026.md and docs/PAYMENT_GATEWAY_REFUND_LIVE_TESTING_JULY_2026.md (July 2026) \u2014 exact date not recorded there; fill in live_tested_at once confirmed."
+            "notes": "Regions per stripe.com/global (checked 2026-08-04): fully supported in North/South America, Europe, Asia, Oceania; Africa is \"extended network\" only (via Paystack), not direct Stripe support, so Africa is deliberately omitted here. Previously live-tested per docs/PAYMENT_GATEWAY_LIVE_TESTING_JULY_2026.md and docs/PAYMENT_GATEWAY_REFUND_LIVE_TESTING_JULY_2026.md (July 2026) \u2014 exact date not recorded there; fill in live_tested_at once confirmed. 2026-08-23: the standalone 'amazon_pay' gateway entry (amzn/amazon-pay-api-sdk-php) was removed from this file and the codebase \u2014 it stayed permanently blocked on external Amazon Seller Central sandbox setup (storeId/clientId), never a code defect. Confirmed directly from docs.stripe.com/payments/amazon-pay that Amazon Pay is available as a payment method THROUGH Stripe instead, with zero separate Amazon merchant account/Seller Central application needed \u2014 Stripe fully intermediates it. This app's existing PaymentIntent already uses automatic_payment_methods.enabled=true and the frontend already uses the redirect-capable Payment Element (payment-stripe.ts), so enabling Amazon Pay is a one-click Stripe Dashboard action (Settings > Payment methods), not new code \u2014 same mechanism already confirmed for Klarna. Stripe GB business accounts and GBP are both supported. Not yet turned on/verified live as of this note."
         },
         {
             "key": "braintree",
@@ -62,25 +62,6 @@
                 "europe"
             ],
             "notes": "Mollie requires the merchant itself to be based in the EEA, Switzerland, or UK (checked 2026-08-04, mollie.com) \u2014 Europe-only by design. Previously live-tested per docs/PAYMENT_GATEWAY_LIVE_TESTING_JULY_2026.md and docs/PAYMENT_GATEWAY_REFUND_LIVE_TESTING_JULY_2026.md (July 2026) \u2014 exact date not recorded there; fill in live_tested_at once confirmed."
-        },
-        {
-            "key": "amazon_pay",
-            "name": "Amazon Pay",
-            "composer_package": "amzn/amazon-pay-api-sdk-php",
-            "sdk_version": "2.7.2",
-            "last_updated": "2026-08-04",
-            "sandbox_env_var": null,
-            "sandbox_tested_at": null,
-            "sandbox_status": null,
-            "sandbox_last_error": null,
-            "live_tested_at": null,
-            "sandbox_expiry_date": null,
-            "regions": [
-                "north america",
-                "europe",
-                "asia"
-            ],
-            "notes": "Regions per Amazon Pay's merchant-establishment country list (checked 2026-08-04): US, UK/EU, Japan. No confirmed South America/Africa/Oceania merchant support found. Per docs/PAYMENT_GATEWAY_LIVE_TESTING_JULY_2026.md, live payment testing stayed blocked on external Seller Central sandbox setup (storeId/clientId) \u2014 confirmed as a config gap, not a code defect \u2014 so live_tested_at is deliberately left unset. sandbox_env_var left null pending confirmation of a genuinely side-effect-free sandbox health-check call."
         },
         {
             "key": "adyen",

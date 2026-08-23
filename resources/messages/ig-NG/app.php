@@ -1155,12 +1155,6 @@ return [
 'payment.gateway.no' =>
     'Enweghị ụzọ nkwụnye ụgwọ edobere n\'okpuru Ntọala ... Lelee ... Ịkwụ Ụgwọ Ọnlaịnụ',
 'payment.history' => 'Akụkọ ịkwụ ụgwọ',
-'payment.information.amazon.no.omnipay.version' =>
-    'Ugbu a enweghị Amazon Pay Omnipay Version. Wepụ ụdị Omnipay ka iji ụdị nnabata'
-    . ' PCI n\'okpuru nlele Ntọala',
-'payment.information.amazon.payment.session.complete' => 'Oge Ịkwụ Ụgwọ Amazon zuru ezu - NJ nnọkọ: ',
-'payment.information.amazon.payment.session.incomplete' =>
-    'Oge ịkwụ ụgwọ Amazon ezughi oke - Biko nwaa ọzọ',
 'payment.information.braintree.braintree.no.omnipay.version' =>
     'Ugbu a enweghị ụdị Braintree Omnipay dakọtara na ụdị Braintree 6.9.1.'
     . ' Wepụ ụdị Omnipay ka iji ụdị nnabata PCI n\'okpuru nlele Ntọala',

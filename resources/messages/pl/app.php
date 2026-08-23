@@ -1634,18 +1634,6 @@ return [
 	. 'Wyświetl .'
 	. 'Płatność online',
 'payment.history' => 'Historia płatności',
-'payment.information.amazon.no.omnipay.version' =>
-	'Obecnie nie ma wersji Amazon '
-	. 'Pay Omnipay.'
-	. 'Odznacz opcję Wersja Omnipay, aby '
-	. 'użyć wersji zgodnej z PCI '
-	. 'w obszarze Ustawienia Widok',
-'payment.information.amazon.payment.session.complete' =>
-	'Zakończono sesję płatności Amazon — '
-	. 'identyfikator sesji:',
-'payment.information.amazon.payment.session.incomplete' =>
-	'Sesja płatności Amazon niekompletna — '
-	. 'spróbuj ponownie',
 'payment.information.braintree.braintree.no.omnipay.version' =>
 	'Obecnie nie ma wersji Braintree '
 	. 'Omnipay kompatybilnej z wersją Braintree '

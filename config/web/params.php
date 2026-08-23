@@ -18,15 +18,6 @@ use App\Middleware\SecurityHeadersMiddleware;
 use Yiisoft\Yii\Middleware\Locale;
 
 // yii3-i
-// Amazon Pay serves its SDK, button graphics, and checkout iframe from
-// *.payments-amazon.com, but the promotional-messaging/checkout-session API
-// (fetched client-side by the SDK, e.g. promotionalMicrotextMessage) lives
-// on region-specific payments-{eu,na,fe}.amazon.com subdomains instead. CSP
-// host-source wildcards can only replace a whole label (*.amazon.com), not
-// a partial one (payments-*.amazon.com is invalid and silently ignored by
-// browsers), so *.amazon.com is used here despite being broader than
-// strictly needed — referenced across four separate CSP directives below.
-$amazonPayCsp = ' https://*.payments-amazon.com https://*.amazon.com';
 // Adyen's Web SDK, Drop-in styling, and 3DS/redirect payment method iframes
 // come from checkoutshopper-{test,live[-region]}.adyen.com; the live
 // endpoint is region-specific (some regions use a *.cdn.adyen.com variant),
@@ -118,7 +109,6 @@ return [
                 . " https://cdn.jsdelivr.net"
                 . " https://js.stripe.com"
                 . " https://*.stripe.com"
-                . $amazonPayCsp
                 . $adyenCsp
                 . " https://assets.braintreegateway.com"
                 . " https://js.braintreegateway.com"
@@ -135,9 +125,8 @@ return [
                 . " https://flagcdn.com"
                 . " https://*.stripe.com"
                 . " https://assets.braintreegateway.com"
+                // Braintree's own verification badge image (braintreeLogo.php)
                 . " https://s3.amazonaws.com"
-                . $amazonPayCsp
-                . " https://*.media-amazon.com"
                 . $adyenCsp
                 . " https://www.mollie.com",
             "connect-src 'self'"
@@ -149,7 +138,6 @@ return [
                 // a separate domain from the gateway itself — e.g.
                 // payments.braintree-api.com / payments.sandbox.braintree-api.com
                 . " https://*.braintree-api.com"
-                . $amazonPayCsp
                 . $adyenCsp
                 . " https://challenges.cloudflare.com",
             "frame-src 'self'"
@@ -157,7 +145,6 @@ return [
                 . " https://*.stripe.com"
                 . " https://hooks.stripe.com"
                 . " https://assets.braintreegateway.com"
-                . $amazonPayCsp
                 . $adyenCsp
                 . " https://challenges.cloudflare.com",
             "child-src 'self'"

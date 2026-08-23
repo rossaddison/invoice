@@ -61,7 +61,7 @@ use TrueLayer\Interfaces\Client\ClientInterface;
  *   returns a clear "not supported" result rather than attempting a call
  *   guaranteed to fail. Refunds for TrueLayer payments must be issued
  *   manually (a normal bank transfer back to the customer) outside this
- *   app, same as this app's own documented Amazon Pay refund limitation.
+ *   app.
  * - Terminal status for a payment into an `external_account` beneficiary
  *   is `executed`, confirmed via TrueLayer's own support docs — `settled`
  *   only ever appears for payments into a TrueLayer `merchant_account`.
