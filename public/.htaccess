@@ -75,7 +75,6 @@ RewriteEngine on
         https://try.access.worldpay.com \
         https://access.worldpay.com \
         https://centinelapistag.cardinalcommerce.com \
-        https://centinelapi.cardinalcommerce.com \
         https://challenges.cloudflare.com; \
     child-src 'self' \
         https://js.stripe.com \
@@ -83,7 +82,6 @@ RewriteEngine on
         https://try.access.worldpay.com \
         https://access.worldpay.com \
         https://centinelapistag.cardinalcommerce.com \
-        https://centinelapi.cardinalcommerce.com \
         https://challenges.cloudflare.com; \
     form-action 'self'; \
     base-uri 'self'; \

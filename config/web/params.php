@@ -39,14 +39,13 @@ $adyenCsp = ' https://*.adyen.com https://*.cdn.adyen.com';
 // choice. The 3DS Device Data Collection / challenge iframes are a
 // SEPARATE host entirely (confirmed real from the downloaded OpenAPI
 // spec's own examples): Worldpay's 3DS is built on Cardinal Commerce,
-// centinelapistag.cardinalcommerce.com for test, centinelapi.cardinalcommerce.com
-// for live — both confirmed directly from docs.worldpay.com's own
-// 3DS/integrated-3ds/web page (2026-08-23), which states this exact
-// test/live mapping in its postMessage-origin-verification table. Both
-// are listed even though a live challenge hasn't been exercised yet,
-// since this specific pair is doc-confirmed rather than assumed.
+// e.g. centinelapistag.cardinalcommerce.com for test — the live
+// equivalent is NOT yet confirmed (no live challenge exercised yet);
+// only the test host is listed until that's verified against a real
+// challenge, matching every other gateway's CSP host list here having
+// been derived empirically rather than assumed.
 $worldpayCsp = ' https://try.access.worldpay.com https://access.worldpay.com';
-$worldpayCardinalCsp = ' https://centinelapistag.cardinalcommerce.com https://centinelapi.cardinalcommerce.com';
+$worldpayCardinalCsp = ' https://centinelapistag.cardinalcommerce.com';
 
 return [
     'locale' => [
