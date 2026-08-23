@@ -38,7 +38,6 @@ use App\User\UserRepository as uR;
 use Mockery as m;
 use Testo\Assert;
 use Testo\Test;
-use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Rbac\Manager;
 use Yiisoft\Router\FastRoute\UrlGenerator;
@@ -101,33 +100,6 @@ final class OrderServiceTest
         return $product;
     }
 
-    private function systemAdminUser(): User
-    {
-        $user = new User('admin', 'admin@example.test', 'irrelevant');
-        $this->setPrivateId($user, 1);
-        return $user;
-    }
-
-    private function adminUserInv(): UserInv
-    {
-        $userInv = new UserInv();
-        $userInv->setUserId(1);
-        $userInv->setType(0);
-        return $userInv;
-    }
-
-    /** @param list<UserInv> $userInvs */
-    private function fakeUserInvReader(array $userInvs): EntityReader
-    {
-        /** @var EntityReader&m\MockInterface $reader */
-        $reader = m::mock(EntityReader::class);
-        $generator = (static function () use ($userInvs) {
-            yield from $userInvs;
-        })();
-        $reader->shouldReceive('getIterator')->andReturn($generator);
-        return $reader;
-    }
-
     /**
      * The Inv the mocked InvService::saveInv() returns — already has an
      * id and a number, so createInvoiceShell() never needs
@@ -182,8 +154,6 @@ final class OrderServiceTest
 
         $cR->shouldReceive('findByEmail')->once()->with('ada@example.test')->andReturn($client);
         $sR->shouldReceive('getSetting')->with('default_invoice_group')->andReturn('3');
-        $uiR->shouldReceive('findAllPreloaded')->once()->andReturn($this->fakeUserInvReader([$this->adminUserInv()]));
-        $uR->shouldReceive('findById')->with(1)->andReturn($this->systemAdminUser());
         $pR->shouldReceive('repoProductquery')->with(7)->andReturn($this->trackedProduct());
         $iR->shouldReceive('save')->once()->with($savedInv);
         $iR->shouldReceive('repoInvLoadInvAmountquery')->once()->with(900)->andReturn($this->invWithAmount(900));
@@ -263,7 +233,6 @@ final class OrderServiceTest
 
         $cR->shouldReceive('findByEmail')->once()->with('bob@example.test')->andReturn($client);
         $sR->shouldReceive('getSetting')->with('default_invoice_group')->andReturn('3');
-        $uiR->shouldReceive('findAllPreloaded')->once()->andReturn($this->fakeUserInvReader([$this->adminUserInv()]));
         $pR->shouldReceive('repoProductquery')->with(7)->andReturn($this->trackedProduct());
         $iR->shouldReceive('save')->once()->with($savedInv);
         $iR->shouldReceive('repoInvLoadInvAmountquery')->once()->with(901)->andReturn($this->invWithAmount(901));
@@ -272,7 +241,6 @@ final class OrderServiceTest
         // Repeat order — existing UserClient link found, so no new
         // User/UserInv/UserClient/RBAC assignment happens.
         $ucR->shouldReceive('repoUserquery')->once()->with(51)->andReturn($existingLink);
-        $uR->shouldReceive('findById')->with(1)->andReturn($this->systemAdminUser());
         $uR->shouldReceive('findById')->with(201)->andReturn($bobUser);
         $uR->shouldNotReceive('save');
         $uiR->shouldNotReceive('save');

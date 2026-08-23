@@ -23,15 +23,30 @@ use Yiisoft\Security\TokenMask;
  * cart, mirroring the shape of `HomeCareSignupController::createInvoice()`
  * (its own `saveInv()`/`addInvItemProduct()`/`InvRecalculator` sequence)
  * but for an arbitrary product cart rather than one fixed HomeCare service
- * line. The invoice is *authored* by a system/admin account (resolved the
- * same way `InvRecurringCronService::resolveAdminUser()` does for its own
- * unattended context — the first admin-type UserInv on file), since a
- * webshop order has no staff session to attribute it to — but the
- * customer themselves also gets a real account: `/invoice/inv/view/{id}`
- * (like every other invoice page in this app) requires an authenticated,
- * RBAC-permitted session, so `createOrder()` returns a one-time login
- * link (see `WebshopOrderLoginController`) rather than a bare url_key a
- * fresh, never-logged-in customer could never actually reach.
+ * line.
+ *
+ * The invoice is *authored* by the customer's own account — resolved (or,
+ * for a first-time customer, created) up front via
+ * `resolveOrCreateOrderUser()`, before the invoice itself exists — rather
+ * than a system/admin account. This matches the existing
+ * `InvController::activeUser()` convention (the Add/Credit/MultipleCopy
+ * invoice-creation flows already resolve the client's own single linked
+ * User this same way and use it as the new invoice's author) and is
+ * required for `InvController::rbacObserver()`'s own-invoice check
+ * (`$inv->reqUserId() === $this->userService->getUser()?->reqId()`) to
+ * ever pass: an invoice authored by a system/admin account can never be
+ * "this user's own invoice" for any real customer, so a customer
+ * following the one-time login link this class hands back would 404 on
+ * `/invoice/inv/view/{id}` even though the order itself was created
+ * successfully — confirmed live before this fix. `InvService::saveInv()`
+ * (via `initNewInvFields()`) only ever uses its `$user` argument for
+ * `Inv::setUserId()` — no permission check runs against it at save time,
+ * those all happen at *view* time via `rbacObserver()` — so passing the
+ * customer's own (observer-role) account here is safe. `/invoice/inv/view/{id}`
+ * still requires an authenticated, RBAC-permitted session, so
+ * `createOrder()` returns a one-time login link (see
+ * `WebshopOrderLoginController`) rather than a bare url_key a fresh,
+ * never-logged-in customer could never actually reach.
  *
  * Item prices are always the product's own current `product_price` —
  * never trusted from the storefront's request body — so a tampered cart
@@ -52,30 +67,32 @@ final class OrderService
      */
     public function createOrder(array $customer, array $items): ?string
     {
-        $context = $this->resolveOrderContext($customer, $items);
-        if ($context === null) {
+        $groupId = $this->resolveOrderGroupId($customer, $items);
+        if ($groupId === null) {
             return null;
         }
 
         $client = $this->findOrCreateClient($customer);
-        $invId = $this->createInvoiceAndItems($context, $client, $items);
+        $orderUser = $this->resolveOrCreateOrderUser($client);
+        if ($orderUser === null) {
+            return null;
+        }
+
+        $invId = $this->createInvoiceAndItems($orderUser, $groupId, $client, $items);
         if ($invId === null) {
             return null;
         }
 
-        return $this->buildOrderLoginRedirectUrl($client, $invId);
+        return $this->buildOrderLoginRedirectUrl($orderUser, $invId);
     }
 
-    /**
-     * @param array{user: User, groupId: int} $context
-     * @param list<array{product_id: int, quantity: float}> $items
-     */
-    private function createInvoiceAndItems(array $context, Client $client, array $items): ?int
+    /** @param list<array{product_id: int, quantity: float}> $items */
+    private function createInvoiceAndItems(User $orderUser, int $groupId, Client $client, array $items): ?int
     {
         $invId = null;
         $this->d->invService->withTransaction(
-            function () use ($context, $client, $items, &$invId): void {
-                $invId = $this->createInvoiceShell($context['user'], $client, $context['groupId']);
+            function () use ($orderUser, $groupId, $client, $items, &$invId): void {
+                $invId = $this->createInvoiceShell($orderUser, $client, $groupId);
                 if ($invId === null) {
                     return;
                 }
@@ -96,21 +113,15 @@ final class OrderService
      * @param array{name: string, surname: string, email: string, address1?: string,
      *     address2?: string, city?: string, zip?: string, country?: string, phone?: string} $customer
      * @param list<array{product_id: int, quantity: float}> $items
-     * @return array{user: User, groupId: int}|null
      */
-    private function resolveOrderContext(array $customer, array $items): ?array
+    private function resolveOrderGroupId(array $customer, array $items): ?int
     {
         if ($items === [] || $customer['email'] === '') {
             return null;
         }
 
-        $user = $this->resolveApiOrderUser();
         $groupId = (int) $this->d->sR->getSetting('default_invoice_group');
-        if ($user === null || $groupId <= 0) {
-            return null;
-        }
-
-        return ['user' => $user, 'groupId' => $groupId];
+        return $groupId > 0 ? $groupId : null;
     }
 
     /**
@@ -166,25 +177,37 @@ final class OrderService
     }
 
     /**
-     * Resolves (or, for a first-time customer, creates) the account the
-     * customer themselves logs into via the one-time link, then issues
-     * that link. Distinct from `resolveApiOrderUser()`/`$context['user']`
-     * above, which is the *system* account that authored the invoice, not
-     * the customer's own.
+     * Issues the one-time login link for `$orderUser` — the same account
+     * `resolveOrCreateOrderUser()` resolved earlier in `createOrder()`
+     * (before invoice creation, so it could also be used as the invoice's
+     * own `user_id`; see the class docblock).
      */
-    private function buildOrderLoginRedirectUrl(Client $client, int $invId): ?string
+    private function buildOrderLoginRedirectUrl(User $orderUser, int $invId): ?string
     {
-        $orderUser = $this->resolveOrCreateOrderUser($client);
-        if ($orderUser === null) {
-            return null;
-        }
-
         $maskedToken = $this->issueOrderLoginToken($orderUser, $invId);
         if ($maskedToken === null) {
             return null;
         }
 
-        return $this->d->urlGenerator->generateAbsolute('webshopOrderLogin', ['token' => $maskedToken]);
+        // Every route lives under Group::create('/{_language}')
+        // (config/common/di/router.php), so `_language` is a required
+        // generate() argument despite UrlGeneratorInterface's own
+        // `setDefaultArgument('_language', 'en')` — that default only
+        // ever applies to the *matching* side (inbound requests), not
+        // to generate()'s own required-argument check, confirmed live:
+        // omitting it here throws `Route \`webshopOrderLogin\` expects
+        // at least argument values for [_language,token], but received
+        // [token]` and silently fails the entire order (OrdersController
+        // catches this as "could not place your order" — no invoice
+        // ever gets created). This endpoint has no real request-locale
+        // context to inherit anyway — it's the server-to-server
+        // POST /api/orders call, not a browser navigation — so 'en'
+        // (the same value the default above already intends) is the
+        // correct, not just convenient, value to pass explicitly.
+        return $this->d->urlGenerator->generateAbsolute(
+            'webshopOrderLogin',
+            ['_language' => 'en', 'token' => $maskedToken],
+        );
     }
 
     /**
@@ -268,24 +291,6 @@ final class OrderService
         }
 
         return TokenMask::apply($rawToken . '_' . (string) $token->getCreatedAt()->getTimestamp());
-    }
-
-    /**
-     * Same lookup InvRecurringCronService::resolveAdminUser() uses for its
-     * own unattended context — the first admin-type (type 0) UserInv on
-     * file. A webshop order has no logged-in session to attribute the
-     * created invoice to, so it borrows the same system-user convention
-     * rather than inventing a second one.
-     */
-    private function resolveApiOrderUser(): ?User
-    {
-        /** @var UserInv $userInv */
-        foreach ($this->d->uiR->findAllPreloaded() as $userInv) {
-            if ($userInv->getType() === 0) {
-                return $this->d->uR->findById($userInv->reqUserId());
-            }
-        }
-        return null;
     }
 
     /**
