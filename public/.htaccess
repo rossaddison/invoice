@@ -25,6 +25,8 @@ RewriteEngine on
         https://*.amazon.com \
         https://*.adyen.com \
         https://*.cdn.adyen.com \
+        https://try.access.worldpay.com \
+        https://access.worldpay.com \
         https://assets.braintreegateway.com \
         https://js.braintreegateway.com \
         https://challenges.cloudflare.com; \
@@ -58,6 +60,8 @@ RewriteEngine on
         https://*.amazon.com \
         https://*.adyen.com \
         https://*.cdn.adyen.com \
+        https://try.access.worldpay.com \
+        https://access.worldpay.com \
         https://challenges.cloudflare.com; \
     frame-src 'self' \
         https://js.stripe.com \
@@ -68,10 +72,16 @@ RewriteEngine on
         https://*.amazon.com \
         https://*.adyen.com \
         https://*.cdn.adyen.com \
+        https://try.access.worldpay.com \
+        https://access.worldpay.com \
+        https://centinelapistag.cardinalcommerce.com \
         https://challenges.cloudflare.com; \
     child-src 'self' \
         https://js.stripe.com \
         https://*.stripe.com \
+        https://try.access.worldpay.com \
+        https://access.worldpay.com \
+        https://centinelapistag.cardinalcommerce.com \
         https://challenges.cloudflare.com; \
     form-action 'self'; \
     base-uri 'self'; \

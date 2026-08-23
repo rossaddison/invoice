@@ -17,6 +17,7 @@ import { initStripePayment } from './payment-stripe.js';
 import { initAmazonPayment } from './payment-amazon.js';
 import { initBraintreePayment } from './payment-braintree.js';
 import { initAdyenPayment } from './payment-adyen.js';
+import { initWorldpayPayment, initWorldpayCompleteEscape } from './payment-worldpay.js';
 import { initBacsQuickPay } from './bacs-quickpay.js';
 import { initTelegramProviderPopup } from './telegram-providers.js';
 import { initStreetOrder } from './family-street-order.js';
@@ -174,6 +175,8 @@ if (document.readyState === 'loading') {
         initAmazonPayment();
         initBraintreePayment();
         initAdyenPayment();
+        initWorldpayPayment();
+        initWorldpayCompleteEscape();
         initBacsQuickPay();
         initTelegramProviderPopup();
         initStreetOrder();

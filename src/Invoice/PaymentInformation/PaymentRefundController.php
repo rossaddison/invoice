@@ -21,9 +21,11 @@ use App\Invoice\PaymentInformation\Service\RobokassaPaymentService;
 use App\Invoice\PaymentInformation\Service\SquarePaymentService;
 use App\Invoice\PaymentInformation\Service\StripePaymentService;
 use App\Invoice\PaymentInformation\Service\TrueLayerPaymentService;
+use App\Invoice\PaymentInformation\Service\WorldpayPaymentService;
 use App\Invoice\PaymentInformation\Service\YookassaPaymentService;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\SquareMerchant\SquareMerchantRepository;
+use App\Invoice\WorldpayMerchant\WorldpayMerchantRepository;
 use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -49,6 +51,7 @@ final class PaymentRefundController
         private readonly PaymentRepository $paymentRepository,
         private readonly MerchantRepository $merchantRepository,
         private readonly SquareMerchantRepository $squareMerchantRepository,
+        private readonly WorldpayMerchantRepository $worldpayMerchantRepository,
         private readonly sR $sR,
         private readonly Translator $translator,
         private readonly WebControllerService $webService,
@@ -68,6 +71,7 @@ final class PaymentRefundController
         private readonly SquarePaymentService $squarePaymentService,
         private readonly CheckoutComPaymentService $checkoutComPaymentService,
         private readonly TrueLayerPaymentService $trueLayerPaymentService,
+        private readonly WorldpayPaymentService $worldpayPaymentService,
     ) {
     }
 
@@ -111,11 +115,12 @@ final class PaymentRefundController
     }
 
     /**
-     * Square has its own per-provider Merchant entity (SquareMerchant),
-     * refund-capable by its payment_id column, not the generic Merchant
-     * table's provider_reference — see SquareMerchant's own docblock.
-     * Every other gateway still resolves through the shared Merchant
-     * table, unchanged.
+     * Square and Worldpay each have their own per-provider Merchant
+     * entity — Square (SquareMerchant), refund-capable by its
+     * payment_id column, and Worldpay (WorldpayMerchant), refund-only-
+     * possible via its self_href (a full URL, not a bare ID — see
+     * WorldpayMerchant's own docblock for why). Every other gateway
+     * still resolves through the shared Merchant table, unchanged.
      */
     private function resolveProviderReference(int $invId, string $driver): ?string
     {
@@ -123,6 +128,11 @@ final class PaymentRefundController
             return $this->squareMerchantRepository
                 ->repoSquareMerchantLatestSuccessfulByInvId($invId)
                 ?->getPaymentId();
+        }
+        if (strtolower($driver) === 'worldpay') {
+            return $this->worldpayMerchantRepository
+                ->repoWorldpayMerchantLatestSuccessfulByInvId($invId)
+                ?->getSelfHref();
         }
 
         return $this->merchantRepository
@@ -167,6 +177,7 @@ final class PaymentRefundController
             'square'     => $this->squarePaymentService->refund($reference, $amount),
             'checkout_com' => $this->checkoutComPaymentService->refund($reference, $amount),
             'truelayer'  => $this->trueLayerPaymentService->refund($reference, $amount),
+            'worldpay'   => $this->worldpayPaymentService->refund($reference, $amount),
             default      => null,
         };
     }

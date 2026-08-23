@@ -16,6 +16,7 @@ use App\Invoice\PaymentInformation\RazorpayPaymentController as RZPICLR;
 use App\Invoice\PaymentInformation\RobokassaPaymentController as RPICLR;
 use App\Invoice\PaymentInformation\SquarePaymentController as SQPICLR;
 use App\Invoice\PaymentInformation\TrueLayerPaymentController as TLPICLR;
+use App\Invoice\PaymentInformation\WorldpayPaymentController as WPPICLR;
 use App\Invoice\PaymentInformation\YookassaPaymentController as YKPICLR;
 use App\Middleware\RoutePermission;
 use Yiisoft\Http\Method;
@@ -143,6 +144,39 @@ return [
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([CKPICLR::class, 'checkoutComComplete'])
                 ->name('paymentinformation/checkoutComComplete'),
+
+            Route::methods([Method::GET, Method::POST],
+                    '/paymentinformation/worldpayInForm/{url_key}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([WPPICLR::class, 'worldpayInForm'])
+                ->name('paymentinformation/worldpayInForm'),
+
+            // Genuine AJAX endpoints, not full-page navigations — unlike
+            // every other gateway here, Worldpay's Checkout SDK + mandatory
+            // 3DS flow needs the browser to round-trip with this app's own
+            // backend mid-payment. See WorldpayPaymentController's own
+            // docblock and payment-worldpay.ts.
+            Route::methods([Method::POST],
+                    '/paymentinformation/worldpayCreatePayment/{url_key}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([WPPICLR::class, 'worldpayCreatePayment'])
+                ->name('paymentinformation/worldpayCreatePayment'),
+
+            Route::methods([Method::POST],
+                    '/paymentinformation/worldpaySupply3dsDeviceData/{url_key}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([WPPICLR::class, 'worldpaySupply3dsDeviceData'])
+                ->name('paymentinformation/worldpaySupply3dsDeviceData'),
+
+            // GET (normal completion) and POST (Cardinal's ACS posts back
+            // here directly after a 3DS challenge — see
+            // instruction.threeDS.challenge.returnUrl on the original
+            // payment request).
+            Route::methods([Method::GET, Method::POST],
+                    '/paymentinformation/worldpayComplete/{url_key}')
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([WPPICLR::class, 'worldpayComplete'])
+                ->name('paymentinformation/worldpayComplete'),
 
             Route::methods([Method::GET, Method::POST],
                     '/paymentinformation/trueLayerInForm/{url_key}')
@@ -349,4 +383,13 @@ return [
     Route::methods([Method::POST], '/paymentinformation/trueLayerWebhook')
         ->action([TLPICLR::class, 'trueLayerWebhook'])
         ->name('paymentinformation/trueLayerWebhook'),
+
+    // Not under RoutePermission::invoiceGroup(): Worldpay's servers must be
+    // able to POST here with no app session. Secured by Event-Signature
+    // HMAC-SHA256 verification in the handler, not RBAC — see
+    // WorldpaySignatureService::verifyWebhookSignature() and
+    // App\Middleware\CsrfExemptMiddleware.
+    Route::methods([Method::POST], '/paymentinformation/worldpayWebhook')
+        ->action([WPPICLR::class, 'worldpayWebhook'])
+        ->name('paymentinformation/worldpayWebhook'),
 ];

@@ -32,6 +32,7 @@ final class CsrfExemptMiddleware implements MiddlewareInterface
         '/paymentinformation/squareWebhook',
         '/paymentinformation/checkoutComWebhook',
         '/paymentinformation/trueLayerWebhook',
+        '/paymentinformation/worldpayWebhook',
         '/whatsapp/webhook',
         '/telegram/webhook',
         // External-partner API, gated by ApiKeyAuthMiddleware instead of a
