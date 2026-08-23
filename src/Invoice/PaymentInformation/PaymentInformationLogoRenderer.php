@@ -88,11 +88,4 @@ final class PaymentInformationLogoRenderer
             '//invoice/paymentinformation/logo/adyenLogo',
         );
     }
-
-    public function worldpayLogo(): string
-    {
-        return $this->webViewRenderer->renderPartialAsString(
-            '//invoice/paymentinformation/logo/worldpayLogo',
-        );
-    }
 }

@@ -32,20 +32,6 @@ $amazonPayCsp = ' https://*.payments-amazon.com https://*.amazon.com';
 // endpoint is region-specific (some regions use a *.cdn.adyen.com variant),
 // so both wildcard forms are included rather than one fixed subdomain.
 $adyenCsp = ' https://*.adyen.com https://*.cdn.adyen.com';
-// Worldpay's Access Checkout SDK (checkout.js) and its session-creation
-// endpoint both live on try.access.worldpay.com (sandbox) /
-// access.worldpay.com (live) — both listed since this app switches
-// between them via the gateway's own sandbox setting, not a build-time
-// choice. The 3DS Device Data Collection / challenge iframes are a
-// SEPARATE host entirely (confirmed real from the downloaded OpenAPI
-// spec's own examples): Worldpay's 3DS is built on Cardinal Commerce,
-// e.g. centinelapistag.cardinalcommerce.com for test — the live
-// equivalent is NOT yet confirmed (no live challenge exercised yet);
-// only the test host is listed until that's verified against a real
-// challenge, matching every other gateway's CSP host list here having
-// been derived empirically rather than assumed.
-$worldpayCsp = ' https://try.access.worldpay.com https://access.worldpay.com';
-$worldpayCardinalCsp = ' https://centinelapistag.cardinalcommerce.com';
 
 return [
     'locale' => [
@@ -134,7 +120,6 @@ return [
                 . " https://*.stripe.com"
                 . $amazonPayCsp
                 . $adyenCsp
-                . $worldpayCsp
                 . " https://assets.braintreegateway.com"
                 . " https://js.braintreegateway.com"
                 . " https://challenges.cloudflare.com",
@@ -166,7 +151,6 @@ return [
                 . " https://*.braintree-api.com"
                 . $amazonPayCsp
                 . $adyenCsp
-                . $worldpayCsp
                 . " https://challenges.cloudflare.com",
             "frame-src 'self'"
                 . " https://js.stripe.com"
@@ -175,14 +159,10 @@ return [
                 . " https://assets.braintreegateway.com"
                 . $amazonPayCsp
                 . $adyenCsp
-                . $worldpayCsp
-                . $worldpayCardinalCsp
                 . " https://challenges.cloudflare.com",
             "child-src 'self'"
                 . " https://js.stripe.com"
                 . " https://*.stripe.com"
-                . $worldpayCsp
-                . $worldpayCardinalCsp
                 . " https://challenges.cloudflare.com",
             "form-action 'self'",
             "frame-ancestors 'none'",
