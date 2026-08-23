@@ -37,6 +37,7 @@ trait SettingPaymentTrait
             'StoreCove' => $this->storeCoveGatewayFields(),
             'Stripe' => $this->stripeGatewayFields(),
             'TrueLayer' => $this->trueLayerGatewayFields(),
+            'Worldpay' => $this->worldpayGatewayFields(),
         ];
     }
 
@@ -65,6 +66,12 @@ trait SettingPaymentTrait
             // Credentials/Locations/Webhooks pages.
             'square' => 'https://app.squareup.com/dashboard/apps/my-applications',
             'stripe' => 'https://dashboard.stripe.com',
+            // User-confirmed: the docs landing page for the Access
+            // Worldpay dashboard, sandbox (Try) credentials included —
+            // see the Credentials tab found live during research
+            // (project_worldpay_gateway_idea memory), an ACTIVE Try
+            // credential is issued there immediately on signup.
+            'worldpay' => 'https://docs.worldpay.com/dashboard',
         ];
     }
 
@@ -604,6 +611,43 @@ trait SettingPaymentTrait
     }
 
     /**
+     * `entity`/`tradingName` are `text`-type, not `password` — matches
+     * Adyen's `merchantAccount` precedent exactly (see
+     * WorldpayPaymentService's own docblock: running either through
+     * decode() would corrupt it, since text-type settings are never
+     * encrypted on save).
+     */
+    private function worldpayGatewayFields(): array
+    {
+        return [
+            'username' => [
+                'type' => 'password',
+                'label' => AppConstants::LABEL_API_KEY,
+            ],
+            'password' => [
+                'type' => 'password',
+                'label' => 'Password',
+            ],
+            'entity' => [
+                'type' => 'text',
+                'label' => 'Merchant Entity',
+            ],
+            'tradingName' => [
+                'type' => 'text',
+                'label' => 'Trading Name',
+            ],
+            'webhookSecret' => [
+                'type' => 'password',
+                'label' => 'Webhook Secret',
+            ],
+            'sandbox' => [
+                'type' => 'checkbox',
+                'label' => 'Sandbox',
+            ],
+        ];
+    }
+
+    /**
      * @return (int|string)[]
      *
      * @psalm-return list<array-key>
@@ -669,6 +713,11 @@ trait SettingPaymentTrait
             // vs api.truelayer.com, its own Console app/credentials) —
             // same conceptual shape as PayPal/Square above.
             'truelayer' => 'https://console.truelayer.com/',
+            // Genuinely separate Try/Live environments
+            // (try.access.worldpay.com vs access.worldpay.com) — the
+            // dashboard itself is the same login regardless of which
+            // environment's credentials are currently in view.
+            'worldpay' => 'https://developer.worldpay.com/',
         ];
     }
 

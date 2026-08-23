@@ -25,8 +25,10 @@ use App\Invoice\PaymentInformation\Service\SquarePaymentService;
 use App\Invoice\PaymentInformation\Service\StripePaymentService;
 use App\Invoice\PaymentInformation\Service\TrueLayerPaymentService;
 use App\Invoice\PaymentInformation\Service\YookassaPaymentService;
+use App\Invoice\PaymentInformation\Service\WorldpayPaymentService;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\SquareMerchant\SquareMerchantRepository;
+use App\Invoice\WorldpayMerchant\WorldpayMerchantRepository;
 use App\Service\WebControllerService;
 use GuzzleHttp\Psr7\HttpFactory;
 use PHPUnit\Framework\TestCase;
@@ -126,6 +128,7 @@ final class PaymentRefundControllerTest extends TestCase
             $paymentRepository,
             $merchantRepository,
             $this->createStub(SquareMerchantRepository::class),
+            $this->createStub(WorldpayMerchantRepository::class),
             $sR,
             $this->makeTranslator($translatorPlaceholders),
             $this->makeWebService(),
@@ -145,6 +148,7 @@ final class PaymentRefundControllerTest extends TestCase
             $this->createStub(SquarePaymentService::class),
             $this->createStub(CheckoutComPaymentService::class),
             $this->createStub(TrueLayerPaymentService::class),
+            $this->createStub(WorldpayPaymentService::class),
         );
     }
 
