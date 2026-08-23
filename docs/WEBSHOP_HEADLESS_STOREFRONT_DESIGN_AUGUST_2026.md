@@ -41,6 +41,15 @@ Gains a small, deliberately narrow new API surface:
 - `POST /api/orders` — creates a `Client` if one doesn't already exist,
   then an `Inv` + `InvItem`s from a finished cart, and returns that
   invoice's `url_key`.
+- `GET /api/currency` — this shop's Peppol dual-currency setup
+  (`native`/`document` currency codes + the two conversion rates,
+  straight from the same four `Setting` rows
+  `SettingRepository::currencyConverter()` already uses for real
+  invoice amounts). Added for webshop's own navbar currency picker —
+  see `CurrencyController`'s own docblock. A single admin-configured
+  pair, not a live-rate multi-currency feed: rates are whatever was
+  last typed into the Peppol settings tab (manually, via xe.com), same
+  as everywhere else this data is used in this app.
 
 **Needs real API-key auth first.** The existing `/api` group
 (`config/common/routes/routes.php`, `Group::create('/api')`) only has

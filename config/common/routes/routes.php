@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Api\{OrdersController, ProductsController, WebshopOrderLoginController};
+use App\Api\{CurrencyController, OrdersController, ProductsController, WebshopOrderLoginController};
 use App\Auth\Controller\{
     AuthController, ChangePasswordController, ForgotPasswordController,
     ResetPasswordController, SignupController};
@@ -346,5 +346,10 @@ return [
                 ->middleware(ApiKeyAuthMiddleware::class)
                 ->middleware(JsonDataResponseMiddleware::class)
                 ->action([OrdersController::class, 'create']),
+            Route::get('/currency')
+                ->name('api/currency/index')
+                ->middleware(ApiKeyAuthMiddleware::class)
+                ->middleware(JsonDataResponseMiddleware::class)
+                ->action([CurrencyController::class, 'index']),
         ),
 ];
