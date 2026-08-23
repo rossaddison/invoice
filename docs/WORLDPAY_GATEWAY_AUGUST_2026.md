@@ -80,7 +80,9 @@ Confirmed directly from the spec + real docs pages:
   touchpoint for webhook setup even in the best case.
 - 3DS is built on **Cardinal Commerce** (confirmed twice from real example
   URLs: `centinelapistag.cardinalcommerce.com` for both the DDC Collect and
-  StepUp challenge endpoints, test environment).
+  StepUp challenge endpoints, test environment; live equivalent
+  `centinelapi.cardinalcommerce.com` confirmed 2026-08-23 from Worldpay's
+  own docs, see "Genuinely still open" below).
 
 **Cross-checked against two official Worldpay reference implementations**
 (read directly for research purposes only — not installed, different
@@ -189,19 +191,40 @@ Genuinely still open, resolvable only by live testing, not more reading:
   (`docs.worldpay.com/products/card-payments/testing`) are confirmed **not**
   sufficient on their own — this app always requests a 3DS challenge
   (`threeDS.challenge.preference: "challengeRequested"`), and the docs
-  explicitly warn plain test cards will fail to load a challenge. The
-  **3DS-specific test card numbers**
-  (`docs.worldpay.com/products/3ds/testing`) are needed for a real
-  end-to-end run.
-- Whether the dashboard's self-serve Events → Notifications tab actually
-  lets you register this app's webhook URL
-  (`/paymentinformation/worldpayWebhook`) and returns a shared secret, or
-  routes to "contact your Implementation Manager" instead — the docs and
-  the live dashboard UI genuinely disagree on this, not yet resolved either
-  way.
-- The live (non-`try.`) Cardinal Commerce host for the CSP `frame-src`/
-  `child-src` entries — only the test host is in there currently, since no
-  live challenge has been exercised yet to observe it.
+  explicitly warn plain test cards will fail to load a challenge.
+  **RESOLVED, 2026-08-23 — full 3DS-specific test card set confirmed**
+  from `docs.worldpay.com/access/products/3ds/testing`:
+
+  | Outcome | Visa | Mastercard | Amex | Discover/Diners | JCB |
+  |---|---|---|---|---|---|
+  | Frictionless (no challenge) | 4000000000002701 | 5200000000002235 | 340000000002708 | 6011000000002117 | 3338000000000296 |
+  | Challenge required | 4000000000002503 | 5200000000002151 | 340000000002534 | 6011000000002265 | 3338000000000569 |
+  | Authentication declined | 4000000000002925 | 5200000000002276 | 340000000002096 | 6011000000002364 | 3338000000000361 |
+
+  No expiry/CVV convention given — use any future expiry / any CVV, matching
+  the general test-card pattern. **Caveat**: the docs label this set
+  specifically for "API v3 on the Try environment" and warn against mixing
+  with older v1/v2 3DS test values — worth re-confirming compatibility with
+  this app's `2024-06-01` orchestration Payments API version at the moment
+  of the actual test run, rather than assuming label parity.
+- **RESOLVED, 2026-08-23 — no longer ambiguous.** Whether the dashboard's
+  self-serve Events → Notifications tab lets you register this app's
+  webhook URL and returns a shared secret, or requires an Implementation
+  Manager: **confirmed NOT self-serve.** The Events product's own
+  onboarding docs state directly: *"Contact your Worldpay Implementation
+  Manager to add your webhook URL and enable or disable the events based on
+  your requirement."* This is a genuine go-live blocker requiring a human
+  touchpoint, independent of whatever the dashboard UI itself appears to
+  offer — matches the same shape of issue hit with Checkout.com's account
+  provisioning.
+- **RESOLVED, 2026-08-23** — the live (non-`try.`/non-`stag.`) Cardinal
+  Commerce host is `centinelapi.cardinalcommerce.com`, confirmed directly
+  from `docs.worldpay.com/access/products/payments/enable-features/3ds-authentication/integrated-3ds/web`'s
+  own postMessage-origin-verification table (test/live mapping stated
+  explicitly). Added to both `config/web/params.php` and
+  `public/.htaccess`'s `frame-src`/`child-src` alongside the test host —
+  still not exercised against a real live challenge, but now doc-confirmed
+  rather than assumed.
 - `gatewayCredentialUrls()['worldpay']` is set to
   `https://docs.worldpay.com/dashboard` (user-confirmed).
 
