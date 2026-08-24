@@ -34,6 +34,7 @@ final class RoutePermission
         // alone; see the identical fix/rationale in routes-backend.php.
         return Group::create('/invoice')
             ->middleware(self::check(Permissions::ENTRY_TO_BASE_CONTROLLER))
+            ->middleware(ExchangeRateAutoUpdateMiddleware::class)
             ->routes(...$routes);
     }
 }

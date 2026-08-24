@@ -65,6 +65,16 @@ return [
         Route::post('/currency')
             ->action([CurrencyController::class, 'update'])
             ->name('shop/currency'),
+        // The "Refresh now" button next to "Change currency" — only
+        // rendered when auto_update_exchange_rate is on. Rate-limited
+        // like every other public mutating /shop route, even though
+        // ExchangeRateUpdateService::updateIfDue() is already
+        // effectively harmless to call repeatedly (see
+        // CurrencyController::refreshRate()'s own docblock).
+        Route::post('/currency/refresh-rate')
+            ->middleware(RateLimiter::perIp(5, 'shop_currency_refresh_rate'))
+            ->action([CurrencyController::class, 'refreshRate'])
+            ->name('shop/currency/refresh-rate'),
 
         Route::get('/checkout')
             ->action([CheckoutController::class, 'index'])

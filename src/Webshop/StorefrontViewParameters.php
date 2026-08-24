@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Webshop;
 
+use App\Invoice\Setting\SettingRepository;
 use App\Webshop\Cart\CartService;
 use App\Webshop\Currency\CurrencyContext;
 use App\Webshop\Delivery\DeliveryAddressService;
@@ -48,10 +49,17 @@ final readonly class StorefrontViewParameters implements LayoutParametersInjecti
         private DeliveryAddressService $deliveryAddressService,
         private CurrentUser $currentUser,
         private Flash $flash,
+        // Exposed as 's' — the same variable name/trait-backed instance
+        // (App\Invoice\Setting\Trait\SettingTooltipTrait) every
+        // partial_settings_*.php admin view already calls
+        // $s->infoIcon('some_key') on. The storefront's "Change currency"
+        // widget uses it the same way — see SettingTooltipTrait's own
+        // 'webshop_currency_preference' entry.
+        private SettingRepository $settingRepository,
     ) {
     }
 
-    /** @return array{cartCount: int, currency: CurrencyContext, deliveryAddress: ?\App\Webshop\Delivery\DeliveryAddress, isGuest: bool, flash: Flash} */
+    /** @return array{cartCount: int, currency: CurrencyContext, deliveryAddress: ?\App\Webshop\Delivery\DeliveryAddress, isGuest: bool, flash: Flash, s: SettingRepository} */
     #[\Override]
     public function getLayoutParameters(): array
     {
@@ -61,6 +69,7 @@ final readonly class StorefrontViewParameters implements LayoutParametersInjecti
             'deliveryAddress' => $this->deliveryAddressService->get(),
             'isGuest' => $this->currentUser->isGuest(),
             'flash' => $this->flash,
+            's' => $this->settingRepository,
         ];
     }
 }

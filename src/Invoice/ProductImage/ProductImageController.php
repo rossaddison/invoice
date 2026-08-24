@@ -13,7 +13,6 @@ use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Reader\Sort;
-use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
@@ -28,8 +27,9 @@ final class ProductImageController extends BaseController
 {
     protected string $controllerName = 'invoice/productimage';
 
+    private const string PRODUCTIMAGE_INDEX_ROUTE = 'productimage/index';
+
     public function __construct(
-        private DataResponseFactoryInterface $factory,
         private ProductImageService $productimageService,
         SessionInterface $session,
         sR $sR,
@@ -40,7 +40,6 @@ final class ProductImageController extends BaseController
         Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
-        $this->factory = $factory;
         $this->productimageService = $productimageService;
     }
 
@@ -114,7 +113,7 @@ final class ProductImageController extends BaseController
                  * @psalm-suppress PossiblyInvalidArgument
                  */
                 $this->productimageService->saveProductImage($productImage, $body);
-                return $this->webService->getRedirectResponse('productimage/index');
+                return $this->webService->getRedirectResponse(self::PRODUCTIMAGE_INDEX_ROUTE);
             }
             $parameters['errors'] = $productImageForm->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $productImageForm;
@@ -137,20 +136,27 @@ final class ProductImageController extends BaseController
                 $this->productimageService->deleteProductImage($productimage, $this->sR);
                 $product_id = (string) $productimage->getProduct()?->reqId();
                 $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
-                return $this->factory->createResponse($this->webViewRenderer->renderPartialAsString(
-                    '//invoice/setting/inv_message',
-                    [
-                        'heading' => '',
-                        'message' => $this->translator->translate('record.successfully.deleted'),
-                        'url' => 'product/view',
-                        'id' => $product_id,
-                    ],
-                ));
+                // Was `$this->factory->createResponse($htmlString)` —
+                // DataResponseFactoryInterface JSON-encodes whatever it's
+                // given, HTML included, so this used to render as an
+                // escaped JSON string instead of a page. See
+                // App\Invoice\Product\ProductAttachmentController::
+                // imageAttachment() for the same anti-pattern and this
+                // app's own established fix: a real redirect, never
+                // JSON-wrapped HTML. The hash sends the admin back to the
+                // tab they were deleting from — see src/typescript/
+                // tab-hash-restore.ts.
+                return $this->webService->getRedirectResponse(
+                    'product/view',
+                    ['id' => $product_id],
+                    [],
+                    'product-images',
+                );
             }
-            return $this->webService->getRedirectResponse('productimage/index');
+            return $this->webService->getRedirectResponse(self::PRODUCTIMAGE_INDEX_ROUTE);
         } catch (Exception $e) {
             $this->flashMessage('danger', $e->getMessage());
-            return $this->webService->getRedirectResponse('productimage/index');
+            return $this->webService->getRedirectResponse(self::PRODUCTIMAGE_INDEX_ROUTE);
         }
     }
 
@@ -186,7 +192,7 @@ final class ProductImageController extends BaseController
                     $body = $request->getParsedBody() ?? [];
                     if (is_array($body)) {
                         $this->productimageService->saveProductImage($productImage, $body);
-                        return $this->webService->getRedirectResponse('productimage/index');
+                        return $this->webService->getRedirectResponse(self::PRODUCTIMAGE_INDEX_ROUTE);
                     }
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -194,7 +200,7 @@ final class ProductImageController extends BaseController
             }
             return $this->webViewRenderer->render('_form', $parameters);
         }
-        return $this->webService->getRedirectResponse('productimage/index');
+        return $this->webService->getRedirectResponse(self::PRODUCTIMAGE_INDEX_ROUTE);
     }
 
     /**
@@ -216,7 +222,7 @@ final class ProductImageController extends BaseController
             ];
             return $this->webViewRenderer->render('_view', $parameters);
         }
-        return $this->webService->getRedirectResponse('productimage/index');
+        return $this->webService->getRedirectResponse(self::PRODUCTIMAGE_INDEX_ROUTE);
     }
 
     /**

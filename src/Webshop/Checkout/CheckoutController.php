@@ -5,14 +5,18 @@ declare(strict_types=1);
 namespace App\Webshop\Checkout;
 
 use App\Api\OrderService;
+use App\Invoice\Enum\FlashScope;
+use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use App\Webshop\Cart\CartService;
+use App\Webshop\Catalog\CatalogQueryService;
 use App\Webshop\Controller\StorefrontController;
 use App\Webshop\Delivery\DeliveryAddressService;
 use App\Webshop\StorefrontViewParameters;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\FormModel\FormHydrator;
+use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
@@ -29,14 +33,22 @@ use Yiisoft\Yii\View\Renderer\WebViewRenderer;
  */
 final class CheckoutController extends StorefrontController
 {
+    use FlashMessage;
+
     public function __construct(
         WebViewRenderer $webViewRenderer,
         private readonly WebControllerService $webService,
         private readonly CartService $cartService,
         private readonly TranslatorInterface $translator,
+        // Not read directly in this class — the FlashMessage trait's own
+        // flashMessage() method reads/writes $this->flash. Flagged as an
+        // "unused private field" by tools that don't resolve trait method
+        // bodies against the host class; it's genuinely used.
         private readonly Flash $flash,
         private readonly DeliveryAddressService $deliveryAddressService,
         private readonly StorefrontViewParameters $chrome,
+        private readonly CatalogQueryService $catalog,
+        private readonly UrlGeneratorInterface $urlGenerator,
     ) {
         parent::__construct($webViewRenderer, 'shop/checkout');
     }
@@ -54,12 +66,7 @@ final class CheckoutController extends StorefrontController
             $form->fillFromDeliveryAddress($delivery);
         }
 
-        return $this->render('index', [
-            ...$this->chrome->getLayoutParameters(),
-            'form' => $form,
-            'items' => $this->cartService->getItems(),
-            'total' => $this->cartService->getTotal(),
-        ]);
+        return $this->renderForm($form);
     }
 
     public function submit(
@@ -73,12 +80,7 @@ final class CheckoutController extends StorefrontController
         }
 
         if (!$formHydrator->populateFromPostAndValidate($form, $request)) {
-            return $this->render('index', [
-                ...$this->chrome->getLayoutParameters(),
-                'form' => $form,
-                'items' => $this->cartService->getItems(),
-                'total' => $this->cartService->getTotal(),
-            ]);
+            return $this->renderForm($form);
         }
 
         $items = [];
@@ -88,7 +90,7 @@ final class CheckoutController extends StorefrontController
 
         $invId = $orderService->createOrder($form->toCustomerArray(), $items);
         if ($invId === null) {
-            $this->flash->add('danger', $this->translator->translate('checkout.failed'), true);
+            $this->flashMessage('danger', $this->translator->translate('checkout.failed'), FlashScope::Shop);
             return $this->webService->getRedirectResponse('shop/checkout/index');
         }
 
@@ -99,5 +101,31 @@ final class CheckoutController extends StorefrontController
         // (see OrderService's own docblock) — a plain named-route
         // redirect is enough, no external/cross-app URL involved.
         return $this->webService->getRedirectResponse('inv/view', ['_language' => 'en', 'id' => (string) $invId]);
+    }
+
+    /**
+     * Shared by index()'s success path and submit()'s validation-failure
+     * path — both render the exact same page, just with the form in a
+     * different state. Includes the "Add something else" gallery with a
+     * $returnTo of this page itself, so adding one more product from here
+     * (see resources/views/shop/_shared/product_gallery.php) lands the
+     * customer straight back on checkout, not the cart page.
+     */
+    private function renderForm(CheckoutForm $form): ResponseInterface
+    {
+        $chrome = $this->chrome->getLayoutParameters();
+        $currency = $chrome['currency'];
+
+        return $this->render('index', [
+            ...$chrome,
+            'form' => $form,
+            'items' => $this->cartService->getItems(),
+            'total' => $this->cartService->getTotal(),
+            'gallery' => $this->productGallery(
+                $this->catalog->listAll(),
+                $currency,
+                $this->urlGenerator->generate('shop/checkout/index'),
+            ),
+        ]);
     }
 }

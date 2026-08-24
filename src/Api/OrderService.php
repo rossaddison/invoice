@@ -54,10 +54,13 @@ use Yiisoft\Security\Random;
  * ever configure the view renderer for a VIEW_INV-only (observer)
  * account — without it, `inv/view` 500s with `ViewNotFoundException`.
  *
- * Item prices are always the product's own current `product_price` —
- * never trusted from the storefront's request body — so a tampered cart
- * payload can change quantities but never charge a different amount per
- * unit than what this app's own catalog says.
+ * Item prices are always the product's own current `webshopPrice()`
+ * (retail_price when set, else product_price — see that method's own
+ * docblock; the same value `App\Webshop\Catalog\CatalogQueryService::
+ * toListing()` showed the customer while browsing) — never trusted from
+ * the storefront's request body — so a tampered cart payload can change
+ * quantities but never charge a different amount per unit than what
+ * this app's own catalog says.
  */
 final class OrderService
 {
@@ -332,7 +335,7 @@ final class OrderService
             'tax_rate_id' => $product->reqTaxRateId(),
             'product_id' => $product->reqId(),
             'quantity' => $item['quantity'],
-            'price' => $product->getProductPrice() ?? 0.00,
+            'price' => $product->webshopPrice(),
             'discount_amount' => 0.00,
             'product_unit_id' => $product->reqUnitId(),
         ];

@@ -81,6 +81,27 @@ final readonly class ProductService
                 (float) $apf['product_price_base_quantity']) : '';
         isset($apf['purchase_price']) ?
             $model->setPurchasePrice((float) $apf['purchase_price']) : '';
+        isset($apf['retail_price']) ?
+            $model->setRetailPrice((float) $apf['retail_price']) : '';
+        // Real HTML checkboxes only submit a value when checked — the
+        // form is expected to pair this with a hidden '0' fallback input
+        // of the same name (same convention as, e.g., partial_settings_
+        // front_page.php's own checkboxes), so isset() alone is enough
+        // to tell "the field was on this form at all" from "genuinely
+        // absent" (a non-webshop context posting this same array shape).
+        isset($apf['available_on_webshop']) ?
+            $model->setAvailableOnWebshop((bool) $apf['available_on_webshop']) : '';
+        // Both optional (see ProductForm::$trade_min_order_qty's own
+        // docblock) — an empty-string post (the field left blank) must
+        // resolve to null, not (int) '' === 0 / (float) '' === 0.00,
+        // otherwise a blank field would wrongly read as "trade terms:
+        // qty 0" and show the storefront button anyway.
+        isset($apf['trade_min_order_qty']) && $apf['trade_min_order_qty'] !== '' ?
+            $model->setTradeMinOrderQty((int) $apf['trade_min_order_qty']) :
+            $model->setTradeMinOrderQty(null);
+        isset($apf['trade_min_order_spend']) && $apf['trade_min_order_spend'] !== '' ?
+            $model->setTradeMinOrderSpend((float) $apf['trade_min_order_spend']) :
+            $model->setTradeMinOrderSpend(null);
         isset($apf['provider_name']) ?
             $model->setProviderName((string) $apf['provider_name']) : '';
         isset($apf['product_additional_item_property_name']) ?

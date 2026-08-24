@@ -50,6 +50,7 @@ final readonly class CurrencyInfoProvider
             'document' => $info?->document,
             'nativeToDocumentRate' => $info?->nativeToDocumentRate,
             'documentToNativeRate' => $info?->documentToNativeRate,
+            'rateUpdatedAt' => $info?->rateUpdatedAt,
         ]);
         return $info;
     }
@@ -62,11 +63,13 @@ final readonly class CurrencyInfoProvider
             return null;
         }
 
+        $rateUpdatedAt = $this->settingRepository->getSetting('currency_rate_updated_at');
         return new CurrencyInfo(
             native: $native,
             document: $this->settingRepository->getSetting('peppol_document_currency'),
             nativeToDocumentRate: self::toFloat($this->settingRepository->getSetting('currency_from_to')),
             documentToNativeRate: self::toFloat($this->settingRepository->getSetting('currency_to_from')),
+            rateUpdatedAt: $rateUpdatedAt !== '' ? $rateUpdatedAt : null,
         );
     }
 
@@ -90,12 +93,15 @@ final readonly class CurrencyInfoProvider
 
         /** @var mixed $document */
         $document = $cached['document'] ?? null;
+        /** @var mixed $rateUpdatedAt */
+        $rateUpdatedAt = $cached['rateUpdatedAt'] ?? null;
 
         return new CurrencyInfo(
             native: $native,
             document: is_string($document) ? $document : '',
             nativeToDocumentRate: self::toFloat($cached['nativeToDocumentRate'] ?? null),
             documentToNativeRate: self::toFloat($cached['documentToNativeRate'] ?? null),
+            rateUpdatedAt: is_string($rateUpdatedAt) && $rateUpdatedAt !== '' ? $rateUpdatedAt : null,
         );
     }
 

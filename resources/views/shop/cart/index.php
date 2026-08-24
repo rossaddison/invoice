@@ -20,11 +20,14 @@ use Yiisoft\Yii\View\Renderer\Csrf;
  * @var CurrencyContext $currency
  * @var list<CartItem> $items
  * @var float $total
+ * @var string $gallery Pre-rendered "Add something else" carousel — see
+ *     App\Webshop\Controller\StorefrontController::productGallery().
  */
 
 $this->setTitle('Cart');
 ?>
 <h1 class="mb-4">Your cart</h1>
+<?= $gallery ?>
 <?php if ($items === []): ?>
     <p class="text-muted">Your cart is empty.</p>
     <?= Html::a('Browse products', $urlGenerator->generate('shop/catalog/index'), ['class' => 'btn btn-primary']) ?>

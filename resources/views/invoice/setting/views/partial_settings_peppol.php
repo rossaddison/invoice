@@ -27,6 +27,7 @@ $kCurrencyToFrom = 'settings[currency_to_from]';
 $kStandInCode = 'settings[stand_in_code]';
 $kEnableClientPeppol = 'settings[enable_client_peppol_defaults]';
 $kIncludeDelivery = 'settings[include_delivery_period]';
+$kAutoUpdateExchangeRate = 'settings[auto_update_exchange_rate]';
 $inputSmFormControl = 'form-select form-select-sm';
 
 $row = ['class' => 'row'];
@@ -329,6 +330,39 @@ echo H::openTag('div', $row); //1
        'value' => $body[$kCurrencyToFrom]
       ]);
 
+     echo H::closeTag('div'); //6
+     /* Auto-update the two rates above from a live rate instead of xe.com */
+     echo H::openTag('div', $formGroup); //6
+      echo H::openTag('div', $checkbox); //7
+       $body[$kAutoUpdateExchangeRate] =
+       $s->getSetting('auto_update_exchange_rate') ?: '0';
+       echo H::openTag('input', [
+        'type' => 'hidden',
+        'name' => $kAutoUpdateExchangeRate,
+        'value' => '0'
+       ]);
+       echo H::openTag('input', [
+        'type' => 'checkbox',
+        'class' => 'form-check-input',
+        'id' => 'auto_update_exchange_rate',
+        'name' => $kAutoUpdateExchangeRate,
+        'value' => '1',
+        'checked' => ($body[$kAutoUpdateExchangeRate] == '1') ? 'checked' : null
+       ]);
+       echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'auto_update_exchange_rate']);
+        echo $translator->translate('peppol.auto.update.exchange.rate');
+        echo $s->infoIcon('auto_update_exchange_rate');
+       echo H::closeTag('label');
+      echo H::closeTag('div'); //7
+      $currencyRateUpdatedAt = $s->getSetting('currency_rate_updated_at');
+      if ($currencyRateUpdatedAt !== '') {
+          echo H::openTag('small', ['class' => 'text-muted d-block mt-1']);
+          echo $translator->translate(
+              'peppol.currency.rate.last.updated',
+              ['date' => $currencyRateUpdatedAt],
+          );
+          echo H::closeTag('small');
+      }
      echo H::closeTag('div'); //6
      echo H::openTag('div', $colMd6); //6
       echo H::openTag('div', $formGroup); //7

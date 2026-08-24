@@ -18,9 +18,13 @@ use App\Invoice\ProductImage\ProductImageRepository;
  * This is a near-direct port of the now-decommissioned
  * `App\Api\ProductsController`'s own `toArray()`/`firstImagePath()`/
  * `categoryPrimaryName()`/`categorySecondaryName()` mapping — same
- * non-zero-price filter (`ProductRepository::findAllPreloadedWithPrice()`,
- * the same one this app's own invoice/quote product-lookup modals use),
- * same static-file image path convention.
+ * static-file image path convention. Unlike the old cross-origin feed,
+ * this now also gates on `available_on_webshop`
+ * (`ProductRepository::findAllPreloadedWithPriceAvailableOnWebshop()`,
+ * distinct from `findAllPreloadedWithPrice()`, which the staff
+ * invoice/quote product-lookup modals still use and which deliberately
+ * ignores this flag) — a B2B-only priced Product must never appear here,
+ * including via a direct `find($id)` lookup by URL.
  */
 final readonly class CatalogQueryService
 {
@@ -37,7 +41,7 @@ final readonly class CatalogQueryService
     {
         $listings = [];
         /** @var Product $product */
-        foreach ($this->productRepository->findAllPreloadedWithPrice() as $product) {
+        foreach ($this->productRepository->findAllPreloadedWithPriceAvailableOnWebshop() as $product) {
             $listings[] = $this->toListing($product);
         }
         return $listings;
@@ -46,7 +50,10 @@ final readonly class CatalogQueryService
     public function find(int $id): ?ProductListing
     {
         $product = $id > 0 ? $this->productRepository->repoProductquery($id) : null;
-        if ($product === null || ($product->getProductPrice() ?? 0.00) <= 0.00) {
+        if ($product === null
+            || ($product->getProductPrice() ?? 0.00) <= 0.00
+            || !$product->isAvailableOnWebshop()
+        ) {
             return null;
         }
         return $this->toListing($product);
@@ -61,12 +68,21 @@ final readonly class CatalogQueryService
             sku: $product->getProductSku(),
             name: $product->getProductName(),
             description: $product->getProductDescription(),
-            price: $product->getProductPrice() ?? 0.00,
+            // Retail (webshop) price wins when actually set, else falls
+            // back to product_price ("wholesale") — see
+            // Product::webshopPrice()'s own docblock. App\Api\
+            // OrderService::addOrderItem() bills the resulting InvItem at
+            // this exact same value, so a customer is never shown one
+            // price here and charged another there.
+            price: $product->webshopPrice(),
             unit: $product->getUnit()?->getUnitName(),
             imageUrl: $this->firstImagePath($product->reqId()),
             family: $family?->getFamilyName(),
             category: $this->categoryPrimaryName($family?->getCategoryPrimaryId()),
             subcategory: $this->categorySecondaryName($family?->getCategorySecondaryId()),
+            tradePrice: $product->getProductPrice() ?? 0.00,
+            tradeMinOrderQty: $product->getTradeMinOrderQty(),
+            tradeMinOrderSpend: $product->getTradeMinOrderSpend(),
         );
     }
 

@@ -99,6 +99,20 @@ final class OrderServiceTest
     }
 
     /**
+     * Deliberately gives retail_price a different value from product_price
+     * — see chargesTheInvItemAtWebshopPriceNotWholesaleProductPrice(),
+     * which needs the two to diverge to prove addOrderItem() bills at
+     * Product::webshopPrice() (retail_price here) rather than the staff/
+     * B2B product_price ("wholesale").
+     */
+    private function trackedProductWithRetailPrice(): Product
+    {
+        $product = $this->trackedProduct();
+        $product->setRetailPrice(6.49);
+        return $product;
+    }
+
+    /**
      * The Inv the mocked InvService::saveInv() returns — already has an
      * id and a number, so createInvoiceShell() never needs
      * GroupRepository::generateNumber().
@@ -254,6 +268,79 @@ final class OrderServiceTest
         Assert::same(901, $invId);
     }
 
+    /**
+     * See App\Api\OrderService::addOrderItem()'s own docblock — the
+     * InvItem must be billed at the exact price the customer was shown
+     * on the storefront (App\Webshop\Catalog\CatalogQueryService::
+     * toListing()'s webshopPrice()), never at the staff/B2B
+     * product_price ("wholesale"), when the two diverge.
+     */
+    public function chargesTheInvItemAtWebshopPriceNotWholesaleProductPrice(): void
+    {
+        $client = $this->existingClient(52, 'carol@example.test');
+        $savedInv = $this->savedInv(902);
+
+        $existingLink = new UserClient();
+        $existingLink->setUserId(202);
+        $existingLink->setClientId(52);
+
+        $carolUser = new User('carol@example.test', 'carol@example.test', 'irrelevant');
+        $this->setPrivateId($carolUser, 202);
+        $this->setPrivateId($carolUser->getIdentity(), 2020);
+
+        /** @var iR&m\MockInterface $iR */
+        $iR = m::mock(iR::class);
+        /** @var iaR&m\MockInterface $iaR */
+        $iaR = m::mock(iaR::class);
+        /** @var pR&m\MockInterface $pR */
+        $pR = m::mock(pR::class);
+        /** @var cR&m\MockInterface $cR */
+        $cR = m::mock(cR::class);
+        /** @var sR&m\MockInterface $sR */
+        $sR = m::mock(sR::class);
+        /** @var uR&m\MockInterface $uR */
+        $uR = m::mock(uR::class);
+        /** @var uiR&m\MockInterface $uiR */
+        $uiR = m::mock(uiR::class);
+        /** @var ucR&m\MockInterface $ucR */
+        $ucR = m::mock(ucR::class);
+        /** @var urlR&m\MockInterface $urlR */
+        $urlR = m::mock(urlR::class);
+        /** @var Manager&m\MockInterface $manager */
+        $manager = m::mock(Manager::class);
+        /** @var AuthService&m\MockInterface $authService */
+        $authService = m::mock(AuthService::class);
+        /** @var SessionInterface&m\MockInterface $session */
+        $session = m::mock(SessionInterface::class);
+
+        $cR->shouldReceive('findByEmail')->once()->with('carol@example.test')->andReturn($client);
+        $sR->shouldReceive('getSetting')->with('default_invoice_group')->andReturn('3');
+        $pR->shouldReceive('repoProductquery')->with(7)->andReturn($this->trackedProductWithRetailPrice());
+        $iR->shouldReceive('save')->once()->with($savedInv);
+        $iR->shouldReceive('repoInvLoadInvAmountquery')->once()->with(902)->andReturn($this->invWithAmount(902));
+        $iaR->shouldReceive('save')->once();
+
+        $ucR->shouldReceive('repoUserquery')->once()->with(52)->andReturn($existingLink);
+        $uR->shouldReceive('findById')->with(202)->andReturn($carolUser);
+        $uR->shouldNotReceive('save');
+        $uiR->shouldNotReceive('save');
+        $ucR->shouldNotReceive('save');
+        $manager->shouldNotReceive('revokeAll');
+        $manager->shouldNotReceive('assign');
+        $urlR->shouldNotReceive('upsert');
+        $authService->shouldReceive('oauthLogin')->once()->with('carol@example.test')->andReturn(true);
+        $session->shouldReceive('set')->once()->with('tfa_verified', true);
+
+        $service = $this->makeService(
+            $iR, $iaR, $pR, $cR, $sR, $uR, $uiR, $ucR, $urlR, $manager, $authService, $session, $savedInv,
+            expectedItemPrice: 6.49,
+        );
+
+        $invId = $service->createOrder($this->customer('carol@example.test'), $this->items());
+
+        Assert::same(902, $invId);
+    }
+
     private function makeService(
         iR $iR,
         iaR $iaR,
@@ -268,6 +355,12 @@ final class OrderServiceTest
         AuthService $authService,
         SessionInterface $session,
         Inv $savedInv,
+        // Asserted against the InvItem's own 'price' array key when given
+        // — see chargesTheInvItemAtWebshopPriceNotWholesaleProductPrice(),
+        // which needs this to confirm addOrderItem() actually bills at
+        // Product::webshopPrice(), not just that addInvItemProduct() was
+        // called at all (the other tests here only need the latter).
+        ?float $expectedItemPrice = null,
     ): OrderService {
         /** @var IS&m\MockInterface $invService */
         $invService = m::mock(IS::class);
@@ -287,7 +380,16 @@ final class OrderServiceTest
 
         /** @var InvItemService&m\MockInterface $invItemService */
         $invItemService = m::mock(InvItemService::class);
-        $invItemService->shouldReceive('addInvItemProduct')->once();
+        if ($expectedItemPrice === null) {
+            $invItemService->shouldReceive('addInvItemProduct')->once();
+        } else {
+            $invItemService->shouldReceive('addInvItemProduct')->once()->with(
+                m::type(\App\Infrastructure\Persistence\InvItem\InvItem::class),
+                m::on(static fn (array $itemBody): bool => ($itemBody['price'] ?? null) === $expectedItemPrice),
+                m::type('string'),
+                m::any(),
+            );
+        }
 
         /** @var iiaR&m\MockInterface $iiaRMock */
         $iiaRMock = m::mock(iiaR::class);

@@ -7,6 +7,7 @@ namespace Tests\Testo\Webshop\Cart;
 use App\Service\WebControllerService;
 use App\Webshop\Cart\CartController;
 use App\Webshop\Cart\CartService;
+use App\Webshop\Catalog\CatalogQueryService;
 use App\Webshop\Currency\CurrencyContext;
 use App\Webshop\Currency\CurrencyInfo;
 use App\Webshop\Currency\CurrencyInfoProvider;
@@ -94,6 +95,12 @@ final class CartControllerTest
         /** @var StorefrontViewParameters&m\MockInterface $chrome */
         $chrome = m::mock(StorefrontViewParameters::class);
 
+        // Never actually called by the update()/remove() actions this
+        // test class covers (see the class docblock) — only index()/
+        // add() touch the catalog, and neither is exercised here.
+        /** @var CatalogQueryService&m\MockInterface $catalog */
+        $catalog = m::mock(CatalogQueryService::class);
+
         return new CartController(
             $renderer,
             new WebControllerService($psr17, $psr17, $urlGenerator),
@@ -105,6 +112,7 @@ final class CartControllerTest
             // so existing assertions below still hold.
             $currency ?? $this->currencyContext(null, CurrencyPreferenceService::NATIVE),
             $chrome,
+            $catalog,
         );
     }
 

@@ -418,6 +418,15 @@ return [
             // render($view, $parameters) call ever reaches the layout on
             // its own.
             Reference::to(LayoutSpecificInjections::class),
+            // Scoped to the guest layout only, same mechanism as the
+            // storefront entry directly above — its own definition lives
+            // in config/common/di/guest-layout.php, registered under a
+            // separate string container id ('guestLayoutSpecificInjections')
+            // since LayoutSpecificInjections::class itself is already
+            // bound to the storefront one. Whether to show the Quote/
+            // SalesOrder nav dropdowns at all — see
+            // App\ViewInjection\GuestLayoutViewParameters's own docblock.
+            Reference::to('guestLayoutSpecificInjections'),
         ],
     ],
     'yiisoft/yii-cycle' => [

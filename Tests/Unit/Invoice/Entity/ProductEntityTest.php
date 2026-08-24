@@ -194,4 +194,62 @@ class ProductEntityTest extends TestCase
         $p->setProductType('service');
         $this->assertSame('service', $p->getProductType());
     }
+
+    public function testAvailableOnWebshopDefaultsFalse(): void
+    {
+        $p = new Product();
+        $this->assertFalse($p->isAvailableOnWebshop());
+        $p->setAvailableOnWebshop(true);
+        $this->assertTrue($p->isAvailableOnWebshop());
+    }
+
+    public function testSetAndGetRetailPrice(): void
+    {
+        $p = new Product();
+        $this->assertSame(0.00, $p->getRetailPrice());
+        $p->setRetailPrice(24.99);
+        $this->assertSame(24.99, $p->getRetailPrice());
+        $p->setRetailPrice(null);
+        $this->assertNull($p->getRetailPrice());
+    }
+
+    public function testSetAndGetTradeMinOrderQty(): void
+    {
+        $p = new Product();
+        $this->assertNull($p->getTradeMinOrderQty());
+        $p->setTradeMinOrderQty(10);
+        $this->assertSame(10, $p->getTradeMinOrderQty());
+    }
+
+    public function testSetAndGetTradeMinOrderSpend(): void
+    {
+        $p = new Product();
+        $this->assertNull($p->getTradeMinOrderSpend());
+        $p->setTradeMinOrderSpend(150.00);
+        $this->assertSame(150.00, $p->getTradeMinOrderSpend());
+    }
+
+    public function testWebshopPricePrefersRetailPriceWhenSet(): void
+    {
+        $p = new Product();
+        $p->setProductPrice(19.99);
+        $p->setRetailPrice(24.99);
+        $this->assertSame(24.99, $p->webshopPrice());
+    }
+
+    public function testWebshopPriceFallsBackToProductPriceWhenRetailPriceIsNull(): void
+    {
+        $p = new Product();
+        $p->setProductPrice(19.99);
+        $p->setRetailPrice(null);
+        $this->assertSame(19.99, $p->webshopPrice());
+    }
+
+    public function testWebshopPriceFallsBackToProductPriceWhenRetailPriceIsZero(): void
+    {
+        $p = new Product();
+        $p->setProductPrice(19.99);
+        $p->setRetailPrice(0.00);
+        $this->assertSame(19.99, $p->webshopPrice());
+    }
 }

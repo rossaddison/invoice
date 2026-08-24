@@ -1,0 +1,1 @@
+"use strict";(()=>{document.addEventListener("DOMContentLoaded",()=>{let t=globalThis.bootstrap;t?.Tooltip&&document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(e=>{try{t.Tooltip.getOrCreateInstance(e)}catch(o){console.warn("Storefront tooltip initialization failed:",o)}})});})();

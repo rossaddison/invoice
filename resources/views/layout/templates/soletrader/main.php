@@ -64,6 +64,7 @@ use Yiisoft\Yii\AuthClient\Asset\AuthChoiceAsset;
  * @var bool $noFrontPagePrivacyPolicy
  * @var bool $noFrontPageTermsOfService
  * @var bool $noFrontPageGatewayStatus
+ * @var bool $noFrontPageWebshop
  * @var bool $stopLoggingIn
  * @var bool $stopSigningUp
  * @var bool $stopHomecareSigningUp
@@ -264,6 +265,26 @@ echo new TagHtml()
             [],
             [],
             $isGuest && !$noFrontPageAbout,
+        ),
+        // Same guest-only, no_front_webshop_page-gated visibility as every
+        // other front-page link here (Settings...Front Page) — see
+        // resources/views/invoice/setting/views/partial_settings_front_page.php
+        // and src/ViewInjection/LayoutViewInjection.php's own
+        // noFrontPageWebshop. `shop/catalog/index` sits outside the
+        // `/{_language}` group (config/common/routes/routes-shop.php's
+        // own docblock), so — unlike every other generate() call in this
+        // file — no `_language` argument is needed here.
+        NavLink::to(
+             new Label()
+            ->attributes(['class' => 'bi bi-bag-fill text-white'])
+            ->content(str_repeat(' ', 1) . $t->translate('menu.webshop')),
+            $urlGenerator->generate('shop/catalog/index'),
+            $isGuest && !$noFrontPageWebshop,
+            !$isGuest && $noFrontPageWebshop,
+            false,
+            [],
+            [],
+            $isGuest && !$noFrontPageWebshop,
         ),
         NavLink::to(
              new Label()

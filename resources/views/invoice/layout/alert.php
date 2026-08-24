@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Invoice\Enum\FlashScope;
 use Yiisoft\Bootstrap5\Alert;
 use Yiisoft\Bootstrap5\AlertVariant;
 
@@ -27,7 +28,22 @@ $warning = AlertVariant::WARNING;
 $light = AlertVariant::LIGHT;
 $dark = AlertVariant::DARK;
 
-$flashMessages = $flash->getAll();
+// This is the staff/guest-portal reader — the storefront layout
+// (resources/views/layout/templates/storefront/main.php) reads its own,
+// separately FlashScope::Shop-prefixed keys. Enumerating FlashScope's
+// fixed, known level names and reading each with get() (rather than
+// getAll()) means this reader only ever touches — and only ever expires —
+// its own unscoped keys, never a shop-scoped message meant for the other
+// layout. See FlashScope's own docblock.
+/** @var array<string, array|string> $flashMessages */
+$flashMessages = [];
+foreach (FlashScope::levels() as $level) {
+    /** @var array|string|null $value */
+    $value = $flash->get($level);
+    if (null !== $value) {
+        $flashMessages[$level] = $value;
+    }
+}
 
 // Debug: Check if there are any flash messages
 if (empty($flashMessages)) {
@@ -113,10 +129,6 @@ if (empty($flashMessages)) {
 // into invoice-typescript-iife.js) so script-src no longer needs
 // 'unsafe-inline'. It self-initializes unconditionally from index.ts.
 
-/**
- * @var array|string $value
- * @var string $key
- */
 foreach ($flashMessages as $key => $value) {
     if (is_array($value)) {
         /**

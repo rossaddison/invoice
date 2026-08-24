@@ -83,6 +83,10 @@ final class CatalogQueryServiceTest
         $product->shouldReceive('getProductName')->andReturn('Wireless Mouse');
         $product->shouldReceive('getProductDescription')->andReturn('Ergonomic wireless mouse.');
         $product->shouldReceive('getProductPrice')->andReturn(19.99);
+        $product->shouldReceive('webshopPrice')->andReturn(24.99);
+        $product->shouldReceive('isAvailableOnWebshop')->andReturn(true);
+        $product->shouldReceive('getTradeMinOrderQty')->andReturn(10);
+        $product->shouldReceive('getTradeMinOrderSpend')->andReturn(150.00);
         $product->shouldReceive('getUnit')->andReturn(null);
         $product->shouldReceive('getFamily')->andReturn($family);
 
@@ -117,7 +121,9 @@ final class CatalogQueryServiceTest
         Assert::same(7, $listing->id);
         Assert::same('WS-MOUSE-01', $listing->sku);
         Assert::same('Wireless Mouse', $listing->name);
-        Assert::same(19.99, $listing->price);
+        // Retail (webshop) price wins over product_price ("wholesale")
+        // when actually set — see toListing()'s own comment.
+        Assert::same(24.99, $listing->price);
         Assert::same('Input Devices', $listing->family);
         Assert::same('Computing', $listing->category);
         Assert::same('Input Devices', $listing->subcategory);
@@ -125,6 +131,58 @@ final class CatalogQueryServiceTest
         // this runs in-process (see the class's own docblock); the
         // filename is URL-encoded since it may contain spaces.
         Assert::same('/products/mouse%20photo.jpg', $listing->imageUrl);
+        // Trade (B2B/wholesale) terms — always product_price, never the
+        // retail price above.
+        Assert::same(19.99, $listing->tradePrice);
+        Assert::same(10, $listing->tradeMinOrderQty);
+        Assert::same(150.00, $listing->tradeMinOrderSpend);
+        Assert::true($listing->hasTradeTerms());
+    }
+
+    public function findReturnsNullWhenTheProductIsNotAvailableOnWebshop(): void
+    {
+        /** @var Product&m\MockInterface $product */
+        $product = m::mock(Product::class);
+        $product->shouldReceive('getProductPrice')->andReturn(19.99);
+        $product->shouldReceive('isAvailableOnWebshop')->once()->andReturn(false);
+
+        /** @var pR&m\MockInterface $pR */
+        $pR = m::mock(pR::class);
+        $pR->shouldReceive('repoProductquery')->once()->with(7)->andReturn($product);
+
+        Assert::null($this->serviceWithoutCategories($pR, $this->emptyImages())->find(7));
+    }
+
+    public function toListingFallsBackToProductPriceWhenRetailPriceIsUnset(): void
+    {
+        /** @var Product&m\MockInterface $product */
+        $product = m::mock(Product::class);
+        $product->shouldReceive('reqId')->andReturn(9);
+        $product->shouldReceive('getProductSku')->andReturn(null);
+        $product->shouldReceive('getProductName')->andReturn('Unpriced Retail');
+        $product->shouldReceive('getProductDescription')->andReturn(null);
+        $product->shouldReceive('getProductPrice')->andReturn(12.50);
+        // Fallback ("never filled in", or still at its uninitialized 0.00
+        // default) now lives entirely in Product::webshopPrice() itself —
+        // see ProductEntityTest's own coverage of that fallback. This
+        // test only needs to confirm CatalogQueryService uses whatever
+        // that method returns.
+        $product->shouldReceive('webshopPrice')->andReturn(12.50);
+        $product->shouldReceive('isAvailableOnWebshop')->andReturn(true);
+        $product->shouldReceive('getTradeMinOrderQty')->andReturn(null);
+        $product->shouldReceive('getTradeMinOrderSpend')->andReturn(null);
+        $product->shouldReceive('getUnit')->andReturn(null);
+        $product->shouldReceive('getFamily')->andReturn(null);
+
+        /** @var pR&m\MockInterface $pR */
+        $pR = m::mock(pR::class);
+        $pR->shouldReceive('repoProductquery')->once()->with(9)->andReturn($product);
+
+        $listing = $this->serviceWithoutCategories($pR, $this->emptyImages())->find(9);
+
+        Assert::notNull($listing);
+        Assert::same(12.50, $listing->price);
+        Assert::false($listing->hasTradeTerms());
     }
 
     public function findReturnsNullForAZeroPricedProductEvenIfItExists(): void
@@ -167,6 +225,10 @@ final class CatalogQueryServiceTest
         $product->shouldReceive('getProductName')->andReturn('Unfiled Product');
         $product->shouldReceive('getProductDescription')->andReturn(null);
         $product->shouldReceive('getProductPrice')->andReturn(5.00);
+        $product->shouldReceive('webshopPrice')->andReturn(5.00);
+        $product->shouldReceive('isAvailableOnWebshop')->andReturn(true);
+        $product->shouldReceive('getTradeMinOrderQty')->andReturn(null);
+        $product->shouldReceive('getTradeMinOrderSpend')->andReturn(null);
         $product->shouldReceive('getUnit')->andReturn(null);
         $product->shouldReceive('getFamily')->andReturn(null);
 
@@ -192,6 +254,9 @@ final class CatalogQueryServiceTest
         $a->shouldReceive('getProductName')->andReturn('A');
         $a->shouldReceive('getProductDescription')->andReturn(null);
         $a->shouldReceive('getProductPrice')->andReturn(1.00);
+        $a->shouldReceive('webshopPrice')->andReturn(1.00);
+        $a->shouldReceive('getTradeMinOrderQty')->andReturn(null);
+        $a->shouldReceive('getTradeMinOrderSpend')->andReturn(null);
         $a->shouldReceive('getUnit')->andReturn(null);
         $a->shouldReceive('getFamily')->andReturn(null);
 
@@ -202,12 +267,19 @@ final class CatalogQueryServiceTest
         $b->shouldReceive('getProductName')->andReturn('B');
         $b->shouldReceive('getProductDescription')->andReturn(null);
         $b->shouldReceive('getProductPrice')->andReturn(2.00);
+        $b->shouldReceive('webshopPrice')->andReturn(2.00);
+        $b->shouldReceive('getTradeMinOrderQty')->andReturn(null);
+        $b->shouldReceive('getTradeMinOrderSpend')->andReturn(null);
         $b->shouldReceive('getUnit')->andReturn(null);
         $b->shouldReceive('getFamily')->andReturn(null);
 
         /** @var pR&m\MockInterface $pR */
         $pR = m::mock(pR::class);
-        $pR->shouldReceive('findAllPreloadedWithPrice')->once()->andReturn($this->reader([$a, $b]));
+        // listAll() must use the webshop-gated query method, not
+        // findAllPreloadedWithPrice() (which the staff invoice/quote
+        // pickers still use, deliberately ignoring available_on_webshop —
+        // see ProductWebshopQueryTrait's own docblock).
+        $pR->shouldReceive('findAllPreloadedWithPriceAvailableOnWebshop')->once()->andReturn($this->reader([$a, $b]));
 
         $listings = $this->serviceWithoutCategories($pR, $this->emptyImages())->listAll();
 

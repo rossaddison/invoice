@@ -119,6 +119,15 @@ $readOnlyLabel = match($s->getSetting('read_only_toggle')) {
     default => $translator->translate('not.set'),
 };
 
+// Staff/admin only — this whole block is "jump to the setting that
+// controls this behaviour" quick-links (Default Invoice Group, Peppol
+// toggles, etc.), meaningless and inappropriate for an observer/client
+// viewing their own invoice. inv/view is shared between both (see
+// routes-inv.php's own comment: "accessible to the observer and the
+// admin... further refined with rbac") — $invEdit is the exact same
+// EDIT_INV check the controller already computes for this view, reused
+// here rather than adding a second permission check.
+if ($invEdit) {
 $breadcrumbLinks = [
      // ── Invoice settings ──────────────────────────────────────────────
      BreadcrumbLink::to(
@@ -607,6 +616,57 @@ echo Breadcrumbs::widget()
  ->links(...$breadcrumbLinks)
  ->listId(false)
  ->render();
+} else {
+    // Checkout -> Sent -> Pay Now: the observer's own equivalent of the
+    // staff-only breadcrumbs above — orientation, not a settings
+    // shortcut. Webshop checkout always creates its order at status_id
+    // 2 (App\Api\OrderService::createOrder(), see InvStatusTrait::
+    // getStatuses() for the full code list), i.e. every customer lands
+    // here on "Sent" — hence focusing that step by default. Treats
+    // every non-paid status (viewed/overdue/unpaid/reminder/letter/
+    // claim, not just plain "sent") the same way: still on "Sent",
+    // "Pay Now" still pending — this is a 3-step orientation aid, not a
+    // full status timeline.
+    $isPaid = $inv->reqStatusId() === 4;
+    $steps = [
+        ['label' => $translator->translate('checkout'), 'state' => 'done'],
+        ['label' => $translator->translate('sent'), 'state' => $isPaid ? 'done' : 'active'],
+        ['label' => $translator->translate('pay.now'), 'state' => $isPaid ? 'done' : 'pending'],
+    ];
+    echo H::openTag('div', ['class' => 'd-flex justify-content-center align-items-start my-4']);
+    foreach ($steps as $i => $step) {
+        if ($i > 0) {
+            $prevDone = $steps[$i - 1]['state'] === 'done';
+            echo H::openTag('div', [
+                'class' => 'flex-grow-1 border-top mt-3 mx-2 '
+                    . ($prevDone ? 'border-success' : 'border-secondary-subtle'),
+                'style' => 'max-width: 4rem;',
+            ]);
+            echo H::closeTag('div');
+        }
+        $circleClass = match ($step['state']) {
+            'done' => 'bg-success text-white',
+            'active' => 'bg-primary text-white',
+            default => 'bg-body-secondary text-muted border',
+        };
+        echo H::openTag('div', ['class' => 'text-center', 'style' => 'width: 5rem;']);
+         echo H::openTag('div', [
+            'class' => 'rounded-circle d-inline-flex align-items-center justify-content-center mb-1 ' . $circleClass,
+            'style' => 'width: 2.25rem; height: 2.25rem;',
+         ]);
+          echo $step['state'] === 'done'
+              ? H::tag('i', '', ['class' => 'bi bi-check-lg'])->render()
+              : H::encode((string) ($i + 1));
+         echo H::closeTag('div');
+         echo H::openTag('div', [
+            'class' => 'small ' . ($step['state'] === 'active' ? 'fw-bold text-primary' : 'text-muted'),
+         ]);
+          echo H::encode($step['label']);
+         echo H::closeTag('div');
+        echo H::closeTag('div');
+    }
+    echo H::closeTag('div');
+}
 
 $vat          = $s->getSetting('enable_vat_registration');
 $biBiPlus     = 'bi bi-plus';

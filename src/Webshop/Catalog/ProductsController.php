@@ -70,13 +70,29 @@ final class ProductsController extends StorefrontController
         return $distinct;
     }
 
-    public function show(#[RouteArgument('id')] int $id): ResponseInterface
-    {
+    public function show(
+        ServerRequestInterface $request,
+        #[RouteArgument('id')] int $id,
+    ): ResponseInterface {
         $product = $this->catalog->find($id);
         if ($product === null) {
             return $this->webService->getNotFoundResponse();
         }
 
-        return $this->render('view', [...$this->chrome->getLayoutParameters(), 'product' => $product]);
+        // Set only when this page was reached from the cart/checkout
+        // "Add something else" gallery (see resources/views/shop/_shared/
+        // product_gallery.php) — carried through to the Add-to-cart
+        // form's own hidden `redirect` field (shop/catalog/view.php) so
+        // App\Webshop\Cart\CartController::add() can send the customer
+        // back to whichever of those two pages they actually came from,
+        // instead of always landing on the cart page.
+        /** @var mixed $redirect */
+        $redirect = $request->getQueryParams()['redirect'] ?? null;
+
+        return $this->render('view', [
+            ...$this->chrome->getLayoutParameters(),
+            'product' => $product,
+            'redirect' => is_string($redirect) ? $redirect : null,
+        ]);
     }
 }

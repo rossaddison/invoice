@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Webshop\Controller;
 
+use App\Webshop\Catalog\ProductListing;
+use App\Webshop\Currency\CurrencyContext;
 use Psr\Http\Message\ResponseInterface as Response;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
@@ -48,5 +50,25 @@ abstract class StorefrontController
     protected function render(string $view, array $parameters = []): Response
     {
         return $this->webViewRenderer->render($view, $parameters);
+    }
+
+    /**
+     * The "Add something else" carousel — see
+     * resources/views/shop/_shared/product_gallery.php's own docblock.
+     * Not stored as a constructor dependency: only the two callers that
+     * actually use it (`App\Webshop\Cart\CartController`, `App\Webshop\
+     * Checkout\CheckoutController`) need to inject `CatalogQueryService`
+     * at all — `ProductsController` (the third subclass) already builds
+     * the full catalog page itself and has no use for this.
+     *
+     * @param list<ProductListing> $products
+     */
+    protected function productGallery(array $products, CurrencyContext $currency, ?string $returnTo = null): string
+    {
+        return $this->webViewRenderer->renderPartialAsString('//shop/_shared/product_gallery', [
+            'galleryProducts' => $products,
+            'currency' => $currency,
+            'galleryReturnTo' => $returnTo,
+        ]);
     }
 }

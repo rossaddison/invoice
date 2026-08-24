@@ -243,8 +243,17 @@ return [
   'cc' => 'CC',
   'change.client' => 'Change Client',
   'change.password' => 'Change Password',
+  'checkout' => 'Checkout',
   'checking.for.news' => 'Checking for News...',
   'checking.for.updates' => 'Checking for Updates...',
+  // Was missing entirely — App\Webshop\Checkout\CheckoutController::
+  // submit() has called translate('checkout.failed') since the original
+  // webshop merge, silently falling back to the raw key. Same bug class
+  // as 'error_duplicate_file' found live this session (see
+  // ExchangeRateUpdateService's own siblings for context) — a translate()
+  // call with no matching resources/messages entry anywhere.
+  'checkout.failed' => 'Sorry, we could not place your order.'
+    . ' Please try again.',
   'city' => 'City',
   'claim' => 'Started a Legal Claim',
   'cldr' => 'en',
@@ -1322,6 +1331,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'menu.terms.of.service' => 'Terms of Service',
   'menu.testimonial' => 'Testimonial',
   'menu.users' => 'Users',
+  'menu.webshop' => 'Webshop',
   'merchant' => 'Merchant',
   'merchant.add' => 'Merchant Add',
   'merchant.driver' => 'Driver',
@@ -1818,6 +1828,11 @@ prior to importing and no existing documents e.g. Invoices.',
     . ' converts to this of To Currency',
   'peppol.currency.to.from' =>
     'One of To Currency today converts to this of From Currency',
+  'peppol.auto.update.exchange.rate' =>
+    'Auto-update exchange rate daily (European Central Bank rate,'
+    . ' no manual xe.com lookup)',
+  'peppol.currency.rate.last.updated' =>
+    'Last updated: {date}',
   'peppol.debug.with.emojis' => 'Debug e-invoices with emojis',
   'peppol.debug.with.internal.validator' => 'Debug e-invoices with'
     . ' Internal Validator',
@@ -2023,6 +2038,13 @@ prior to importing and no existing documents e.g. Invoices.',
     . ' - eg. If ItemClassification is provided'
     . ' from Danish suppliers, UNSPSC version '
     . '19.0501 should be used.',
+  'product.availability' => 'Availability',
+  'product.availability.b2b' => 'B2B Client Portal (Wholesale)',
+  'product.availability.hint' => 'Webshop (Retail) lists this product on'
+    . ' the public /shop storefront at its Retail Price below. B2B Client'
+    . ' Portal (Wholesale) keeps it available only to staff and'
+    . ' client-portal quotes/sales orders/invoices, at the Price above.',
+  'product.availability.webshop' => 'Webshop (Retail)',
   'product.id' => 'Product Id',
   'product.image' => 'Image',
   'product.item.classification.code.scheme.id.not.found' =>
@@ -2032,6 +2054,12 @@ prior to importing and no existing documents e.g. Invoices.',
   'product.peppol.unit' => 'Unit with Peppol',
   'product.price' => 'Price',
   'product.price.base.quantity' => 'qty in Product',
+  'product.trade.min.order.quantity' => 'Trade Minimum Order Quantity'
+    . ' (blank = no trade terms, hides the storefront\'s Trade Pricing'
+    . ' button)',
+  'product.trade.min.order.spend' => 'Trade Minimum Order Spend'
+    . ' (blank = no trade terms, hides the storefront\'s Trade Pricing'
+    . ' button)',
   'product.property' => 'Product Property',
   'product.property.add' => 'Product Property Add',
   'product.property.edit' => 'Product Property Edit',
@@ -2041,6 +2069,8 @@ prior to importing and no existing documents e.g. Invoices.',
   'product.property.value' => 'Value',
   'product.record.successfully.added' =>
     'Product Record successfully added',
+  'product.retail.price' => 'Retail Price (webshop only — leave blank to'
+    . ' use Price above)',
   'product.sii.id' => 'Peppol Standard Item Identification'
     . ' id associated with the above scheme - eg.'
     . ' 14 digit zero-padded identifier in'
@@ -3024,6 +3054,13 @@ prior to importing and no existing documents e.g. Invoices.',
   'warning' => 'Warning',
   'web' => 'Web',
   'web.address' => 'Web Address',
+  'webshop.currency.refresh.updated' => 'Exchange rate updated.',
+  'webshop.currency.refresh.already.current' =>
+    'Exchange rate is already up to date for today.',
+  'webshop.currency.refresh.disabled' =>
+    'Automatic exchange rate updates are turned off.',
+  'webshop.currency.refresh.failed' =>
+    'Could not fetch a current exchange rate — please try again shortly.',
   'welcome' => 'Welcome',
   'whatsapp' => 'WhatsApp',
   'whatsapp.business.cloud.api.access.token' =>

@@ -52,6 +52,12 @@ use Yiisoft\Bootstrap5\NavStyle;
  * @var string $bootstrap5LayoutGuestNavbarFontSize
  * @var int $bootstrap5FormInputHeight
  * @var int $bootstrap5FormFontSize
+ * @var bool $hasQuotesOrSalesOrders Whether to show the Quote/SalesOrder
+ *     nav dropdowns at all — see App\ViewInjection\
+ *     GuestLayoutViewParameters's own docblock for why this isn't gated
+ *     on "webshop customer vs. traditional client" (no such distinction
+ *     exists in this app) but on whether the observer's assigned
+ *     client(s) actually have any.
  * @var string $csrf
  * @var string $content
  * @var string $brandLabel
@@ -186,6 +192,12 @@ if ((null !== $currentPath) && !$isGuest) {
     )
     ->render();
 
+    // Quote / SalesOrder — a webshop-checkout customer never has either
+    // (see App\ViewInjection\GuestLayoutViewParameters's own docblock),
+    // so showing these nav buttons to them is empty, confusing clutter,
+    // not a real destination. $hasQuotesOrSalesOrders covers both in one
+    // flag since neither makes sense to show without the other missing.
+    if ($hasQuotesOrSalesOrders) {
     // Quote
     echo Dropdown::widget()
     ->addClass('navbar')
@@ -219,6 +231,7 @@ if ((null !== $currentPath) && !$isGuest) {
             itemAttributes: $itemFontArray)
     )
     ->render();
+    }
 
     // Invoice
     echo Dropdown::widget()

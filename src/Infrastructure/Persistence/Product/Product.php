@@ -77,6 +77,17 @@ class Product
         private ?float $product_price = 0.00,
         #[Column(type: 'decimal(20,2)', nullable: true)]
         private ?float $purchase_price = 0.00,
+        // The public /shop storefront's own sale price — deliberately a
+        // separate column from $product_price, not a discount/markup
+        // percentage applied to it: staff/B2B invoicing (quotes, sales
+        // orders, invoices) always uses $product_price ("wholesale"),
+        // the webshop always uses this ("retail") when set. Null/0.00
+        // (unset) falls back to $product_price in App\Webshop\Catalog\
+        // CatalogQueryService::toListing() — so flagging a product
+        // available_on_webshop without also filling this in doesn't
+        // silently show a £0.00 listing.
+        #[Column(type: 'decimal(20,2)', nullable: true)]
+        private ?float $retail_price = 0.00,
         #[Column(type: 'decimal(20,2)', nullable: false, default: 1)]
         private float $product_price_base_quantity = 1.00,
         #[Column(type: 'text', nullable: true)]
@@ -93,6 +104,26 @@ class Product
         private ?int $unit_peppol_id = null,
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $family_id = null,
+        // Gates the public /shop catalog (App\Webshop\Catalog\
+        // CatalogQueryService::listAll()/find()) — off by default so an
+        // existing B2B-only product never appears there just because it
+        // has a price. Has no effect on the staff invoice/quote/sales-
+        // order product picker, which still shows every priced product
+        // regardless (App\Invoice\Product\ProductRepository::
+        // findAllPreloadedWithPrice()).
+        #[Column(type: 'boolean', nullable: false, default: false)]
+        private bool $available_on_webshop = false,
+        // Trade (B2B/wholesale) ordering terms surfaced to webshop retail
+        // customers via a "Trade Pricing" button on the storefront product
+        // page (App\Webshop\Catalog\CatalogQueryService::toListing(),
+        // resources/views/shop/catalog/view.php) — null means this product
+        // has no trade terms configured, so the button doesn't appear at
+        // all. The trade price shown alongside these is always
+        // $product_price ("wholesale"), never $retail_price.
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $trade_min_order_qty = null,
+        #[Column(type: 'decimal(20,2)', nullable: true)]
+        private ?float $trade_min_order_spend = null,
         // Whether this product's stock is tracked at all via
         // App\Infrastructure\Persistence\StockMovement\StockMovement.
         // Defaults true for physical products; a Service-type product (see

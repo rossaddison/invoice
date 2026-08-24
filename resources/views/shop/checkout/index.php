@@ -20,11 +20,15 @@ use Yiisoft\Yii\View\Renderer\Csrf;
  * @var CheckoutForm $form
  * @var list<CartItem> $items
  * @var float $total
+ * @var string $gallery Pre-rendered "Add something else" carousel — see
+ *     App\Webshop\Controller\StorefrontController::productGallery().
  */
 
 $this->setTitle('Checkout');
 ?>
 <h1 class="mb-4">Checkout</h1>
+
+<?= $gallery ?>
 
 <h2 class="h5">Order summary</h2>
 <ul class="list-group mb-4">

@@ -11,8 +11,13 @@ namespace App\Webshop\Currency;
  * arbitrary multi-currency price list: a single admin-configured
  * native/document currency pair plus the two conversion rates between
  * them, the same values `SettingRepository::currencyConverter()` uses to
- * convert real invoice amounts. Rates are whatever the admin last typed
- * in manually (via xe.com) — not a live market rate.
+ * convert real invoice amounts. Rates are either whatever the admin last
+ * typed in manually (via xe.com), or — if `auto_update_exchange_rate` is
+ * on — a once-daily live fetch, see `App\Invoice\Helpers\Peppol\
+ * ExchangeRateUpdateService`. Either way, never assume it's this exact
+ * instant's rate: $rateUpdatedAt is the honest "as of" caveat the
+ * storefront widget shows next to it, rather than presenting the
+ * conversion as a live fact it never was, even under auto-update.
  */
 final readonly class CurrencyInfo
 {
@@ -21,6 +26,9 @@ final readonly class CurrencyInfo
         public string $document,
         public float $nativeToDocumentRate,
         public float $documentToNativeRate,
+        // 'Y-m-d', or null when never set (a rate typed in before this
+        // existed, or an install that's never had one auto-fetched).
+        public ?string $rateUpdatedAt = null,
     ) {
     }
 

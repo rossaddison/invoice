@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use App\Invoice\Asset\BootstrapCssOnlyAsset;
 use App\Invoice\Asset\BootstrapJsOnlyAsset;
+use App\Invoice\Enum\FlashScope;
+use App\Invoice\Setting\SettingRepository;
+use App\Webshop\Asset\StorefrontTooltipAsset;
 use App\Webshop\Currency\CurrencyContext;
 use App\Webshop\Currency\CurrencyPreferenceService;
 use App\Webshop\Currency\CurrencySymbols;
@@ -47,12 +50,26 @@ use Yiisoft\Yii\View\Renderer\Csrf;
  * @var Flash $flash
  * @var AssetManager $assetManager
  * @var Csrf $csrf
+ * @var SettingRepository $s Same `$s->infoIcon('key')` convention every
+ *     partial_settings_*.php admin view already uses (see
+ *     App\Invoice\Setting\Trait\SettingTooltipTrait) — used below on the
+ *     "Change currency" dropdown, the one piece of storefront chrome a
+ *     developer is most likely to need a "why is this here" pointer for.
  */
 
 // $this->beginPage() must be the first statement after the docblock —
 // matches the ddd-template layout's own note on this Psalm-parser quirk.
 $this->beginPage();
 $siteName = 'Webshop';
+// Same expression App\ViewInjection\LayoutViewInjection::resolveUserState()
+// uses for the staff layouts' own $debugMode — computed directly here
+// rather than threaded through StorefrontViewParameters, since that
+// class's own value is a side effect of a *staff* page having already
+// loaded this request (it persists YII_DEBUG into a debug_mode setting
+// row as it computes it), which the storefront has no business depending
+// on. Gates the currency tooltip below — see SettingTooltipTrait::
+// infoIcon()'s own $debug_mode parameter.
+$debugMode = $_ENV['YII_DEBUG'] == 'true';
 
 // A root-relative path, not (string) $currentRoute->getUri() — confirmed
 // live that the latter is a *full* absolute URI (scheme+host+path) in
@@ -236,8 +253,54 @@ if ($info !== null && $info->hasDualCurrency()) {
         ->content($flagImg((string) $currency->activeCode()) . Html::encode((string) $currency->activeCode()))
         ->encode(false);
 
-    $currencyWidget = '<div class="dropdown">'
+    // Not $s->infoIcon() (SettingTooltipTrait's own helper, used
+    // throughout every partial_settings_*.php admin view) — that
+    // hardcodes a Bootstrap Icons font class (`bi bi-info-circle`), and
+    // the storefront deliberately never loads that font (every other
+    // icon in this layout — logo, pin, search — is inline SVG instead;
+    // confirmed live: the bi- class rendered as an invisible, unhoverable
+    // 0×0 element with no icon font behind it). Same tooltip content
+    // (why + where, from SettingTooltipTrait's own
+    // 'webshop_currency_preference' entry), an inline SVG glyph instead.
+    // Html::encode() is ENT_NOQUOTES — it never escapes `"`, so hand-
+    // concatenating it into a quoted attribute string is unsafe whenever
+    // the value itself contains a literal `"` (this tooltip's own text
+    // does: `...navbar's "Change currency" toggle...`). Confirmed live:
+    // that quote closed the title="..." attribute early and the rest of
+    // the sentence got parsed as a stream of bogus HTML attributes.
+    // Html::openTag() (same as SettingTooltipTrait::infoIcon() already
+    // uses) escapes attribute values correctly — building this tag with
+    // it instead of raw string concatenation, unlike every other small
+    // inline SVG in this file, specifically because this one has a
+    // user-supplied-shaped attribute value (arbitrary tooltip text),
+    // not a handful of known-safe static strings.
+    $currencyTooltipText = $s->tooltipTitle('webshop_currency_preference');
+    $currencyInfoIcon = $debugMode && $currencyTooltipText !== ' | '
+        ? Html::openTag('span', [
+            'data-bs-toggle' => 'tooltip',
+            'data-bs-placement' => 'bottom',
+            'title' => $currencyTooltipText,
+            'class' => 'ms-1 d-inline-flex align-items-center',
+            'style' => 'cursor: help;',
+        ])
+        . '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"'
+        . ' viewBox="0 0 16 16" aria-hidden="true">'
+        . '<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>'
+        . '<path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-'
+        . '.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-'
+        . '.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>'
+        . '</svg>'
+        . Html::closeTag('span')
+        : '';
+
+    $currencyWidget = '<div class="dropdown d-flex align-items-center">'
         . $currencyTrigger->render()
+        // On the trigger button itself, not buried inside the
+        // dropdown-menu — that panel is display:none until the button
+        // is clicked, so a tooltip on something inside it can never be
+        // hovered without opening the dropdown first (confirmed live:
+        // exactly the report that led to moving it here).
+        . $currencyInfoIcon
         . '<div class="dropdown-menu currency-dropdown-menu p-3">'
         . '<h6 class="dropdown-header px-0 pt-0">Change currency</h6>'
         . '<hr class="dropdown-divider mx-0">'
@@ -253,10 +316,33 @@ if ($info !== null && $info->hasDualCurrency()) {
         . $nativeFlagImg
         . 'You are always billed in ' . Html::encode($info->native) . ' at checkout'
         . ' (1 ' . Html::encode($info->native) . ' = ' . number_format($info->nativeToDocumentRate, 4)
-        . ' ' . Html::encode($info->document) . ').'
+        . ' ' . Html::encode($info->document)
+        // Never state the rate as a flat, live fact — it's an admin-set
+        // value (manual or, if App\Invoice\Helpers\Peppol\
+        // ExchangeRateUpdateService's auto-update is on, refreshed at
+        // most once a day), so "as of {date}" when that date is known
+        // is the honest framing; omit the parenthetical entirely rather
+        // than imply freshness the app can't back up when it isn't.
+        . ($info->rateUpdatedAt !== null ? ', as of ' . Html::encode($info->rateUpdatedAt) : '')
+        . ').'
         . '</p>'
         . Html::submitButton('Save changes', ['class' => 'btn btn-primary btn-sm w-100'])->render()
         . new Form()->close()
+        // Separate <form> — a submit button can't nest inside the one
+        // above (rate preference vs. this rate refresh are two different
+        // routes/actions). Only shown when auto_update_exchange_rate is
+        // on; see CurrencyController::refreshRate()'s own docblock for
+        // why this is safe to leave unauthenticated like every other
+        // /shop route, not just rate-limited.
+        . ($s->getSetting('auto_update_exchange_rate') === '1'
+            ? new Form()
+                ->post($urlGenerator->generate('shop/currency/refresh-rate'))
+                ->csrf($csrf)
+                ->open()
+            . Html::hiddenInput('redirect', $currentPath)
+            . Html::submitButton('Refresh exchange rate now', ['class' => 'btn btn-outline-secondary btn-sm w-100 mt-2'])->render()
+            . new Form()->close()
+            : '')
         . '</div>'
         . '</div>';
 }
@@ -293,6 +379,13 @@ $returnsOrdersWidget = Html::a(
 // loaded from a CDN.
 $assetManager->register(BootstrapCssOnlyAsset::class);
 $assetManager->register(BootstrapJsOnlyAsset::class);
+// Registered after BootstrapJsOnlyAsset — it reads globalThis.bootstrap
+// at DOMContentLoaded, which only exists once Bootstrap's own bundle has
+// executed. Activates the "Change currency" tooltip below (and any
+// future data-bs-toggle="tooltip" element on /shop) — Bootstrap never
+// auto-initializes tooltips on its own. See StorefrontTooltipAsset's own
+// docblock for why this isn't the staff app's index.ts bundle instead.
+$assetManager->register(StorefrontTooltipAsset::class);
 $this->addCssFiles($assetManager->getCssFiles());
 $this->addJsFiles($assetManager->getJsFiles());
 ?>
@@ -365,8 +458,19 @@ echo Html::closeTag('nav');
 echo Html::closeTag('header');
 
 echo Html::openTag('main', ['class' => 'container py-4']);
+// Reads only its own FlashScope::Shop-prefixed keys, one at a time via
+// get() rather than getAll() — so a message set for the staff/guest-
+// portal reader (resources/views/invoice/layout/alert.php) is never
+// touched, let alone expired, here. See FlashScope's own docblock.
 /** @var array<string, list<string>> $flashes */
-$flashes = $flash->getAll();
+$flashes = [];
+foreach (FlashScope::levels() as $level) {
+    /** @var list<string>|null $messages */
+    $messages = $flash->get(FlashScope::Shop->prefix($level));
+    if (null !== $messages) {
+        $flashes[$level] = $messages;
+    }
+}
 foreach ($flashes as $level => $messages) {
     foreach ($messages as $message) {
         $alertClass = match ($level) {

@@ -7,10 +7,17 @@ namespace App\Widget;
 use App\Invoice\Product\ProductForm;
 use App\Invoice\Setting\SettingRepository;
 use Yiisoft\FormModel\Field;
+use Yiisoft\Html\Html;
 use Yiisoft\Translator\TranslatorInterface;
 
 final readonly class ProductFormFields
 {
+    // Extracted per this project's own SonarQube-duplication mandate —
+    // both were already repeated 5-6 times across this file's various
+    // select()/text() field builders before this constant existed.
+    private const string REQUIRED_FIELD_CLASS = 'form-control form-control-lg alert alert-warning';
+    private const string OPTIONAL_FIELD_CLASS = 'form-control form-control-lg alert alert-success';
+
     public function __construct(
         private TranslatorInterface $translator,
         private SettingRepository $settingRepository,
@@ -26,8 +33,8 @@ final readonly class ProductFormFields
     {
         $hintKey = $required ? 'hint.this.field.is.required' :
                 'hint.this.field.is.not.required';
-        $cssClass = $required ? 'form-control form-control-lg alert alert-warning' :
-                'form-control form-control-lg alert alert-success';
+        $cssClass = $required ? self::REQUIRED_FIELD_CLASS :
+                self::OPTIONAL_FIELD_CLASS;
 
         return Field::select($form, 'family_id')
             ->label($this->translator->translate('family'))
@@ -48,8 +55,8 @@ final readonly class ProductFormFields
     {
         $hintKey = $required ? 'hint.this.field.is.required' :
                 'hint.this.field.is.not.required';
-        $cssClass = $required ? 'form-control form-control-lg alert alert-warning' :
-                'form-control form-control-lg alert alert-success';
+        $cssClass = $required ? self::REQUIRED_FIELD_CLASS :
+                self::OPTIONAL_FIELD_CLASS;
 
         return Field::select($form, 'product_type')
             ->label($this->translator->translate('product.type'))
@@ -70,8 +77,8 @@ final readonly class ProductFormFields
     {
         $hintKey = $required ? 'hint.this.field.is.required' :
                 'hint.this.field.is.not.required';
-        $cssClass = $required ? 'form-control form-control-lg alert alert-warning' :
-                'form-control form-control-lg alert alert-success';
+        $cssClass = $required ? self::REQUIRED_FIELD_CLASS :
+                self::OPTIONAL_FIELD_CLASS;
 
         return Field::select($form, 'unit_id')
             ->label($this->translator->translate('unit'))
@@ -92,7 +99,7 @@ final readonly class ProductFormFields
     {
         $hintKey = $required ? 'hint.this.field.is.required' :
                 'hint.this.field.is.not.required';
-        $cssClass = $required ? 'form-control form-control-lg alert alert-warning' :
+        $cssClass = $required ? self::REQUIRED_FIELD_CLASS :
                 'form-control alert alert-success';
 
         return Field::select($form, 'tax_rate_id')
@@ -117,8 +124,8 @@ final readonly class ProductFormFields
     ): string {
         $hintKey = $required ? 'hint.this.field.is.required' :
                 'hint.this.field.is.not.required';
-        $cssClass = $required ? 'form-control form-control-lg alert alert-warning' :
-                'form-control form-control-lg alert alert-success';
+        $cssClass = $required ? self::REQUIRED_FIELD_CLASS :
+                self::OPTIONAL_FIELD_CLASS;
 
         /** @var string|float|int|bool|null $value */
         $value = match ($fieldName) {
@@ -127,6 +134,9 @@ final readonly class ProductFormFields
             'product_sku' => $form->product_sku,
             'purchase_price' => $form->purchase_price,
             'product_price' => $form->product_price,
+            'retail_price' => $form->retail_price,
+            'trade_min_order_qty' => $form->trade_min_order_qty,
+            'trade_min_order_spend' => $form->trade_min_order_spend,
             'product_price_base_quantity' => $form->product_price_base_quantity,
             'product_sii_id' => $form->product_sii_id,
             'product_sii_schemeid' => $form->product_sii_schemeid,
@@ -171,6 +181,54 @@ final readonly class ProductFormFields
     }
 
     /**
+     * The webshop-retail vs. B2B/wholesale option-button toggle — two
+     * Bootstrap "checkbox/radio toggle buttons" (btn-check + label.btn),
+     * not Field::radioList() (that binds a list of option values against
+     * the form property directly, awkward for a bool-typed property like
+     * available_on_webshop) and not a plain Field::checkbox() single
+     * switch either — the point is naming both sides ("B2B / Wholesale"
+     * vs. "Webshop / Retail"), not just an on/off toggle with one label.
+     * Posts as ProductForm[available_on_webshop] either way (matching
+     * $form->getFormName()), so App\Invoice\Product\ProductForm/
+     * ProductService populate exactly the same as any other field here —
+     * this is presentation only, not a different data path.
+     */
+    public function productAvailabilityField(ProductForm $form): string
+    {
+        $name = $form->getFormName() . '[available_on_webshop]';
+        $webshopChecked = $form->available_on_webshop;
+        $b2bId = 'product-availability-b2b';
+        $webshopId = 'product-availability-webshop';
+
+        return '<div class="mb-3">'
+            . '<label class="form-label d-block">'
+            . Html::encode($this->translator->translate('product.availability'))
+            . '</label>'
+            . '<div class="btn-group" role="group">'
+            . Html::radio($name, '0', [
+                'id' => $b2bId,
+                'class' => 'btn-check',
+                'autocomplete' => 'off',
+            ])->checked(!$webshopChecked)->render()
+            . '<label class="btn btn-outline-secondary" for="' . Html::encode($b2bId) . '">'
+            . Html::encode($this->translator->translate('product.availability.b2b'))
+            . '</label>'
+            . Html::radio($name, '1', [
+                'id' => $webshopId,
+                'class' => 'btn-check',
+                'autocomplete' => 'off',
+            ])->checked($webshopChecked)->render()
+            . '<label class="btn btn-outline-primary" for="' . Html::encode($webshopId) . '">'
+            . Html::encode($this->translator->translate('product.availability.webshop'))
+            . '</label>'
+            . '</div>'
+            . '<div class="form-text">'
+            . Html::encode($this->translator->translate('product.availability.hint'))
+            . '</div>'
+            . '</div>';
+    }
+
+    /**
      * Unit Peppol selection dropdown field for products
      * @param array<array-key, array<array-key, string>|string> $unitPeppolsData
      */
@@ -179,8 +237,8 @@ final readonly class ProductFormFields
     {
         $hintKey = $required ? 'hint.this.field.is.required' :
                 'hint.this.field.is.not.required';
-        $cssClass = $required ? 'form-control form-control-lg alert alert-warning' :
-                'form-control form-control-lg alert alert-success';
+        $cssClass = $required ? self::REQUIRED_FIELD_CLASS :
+                self::OPTIONAL_FIELD_CLASS;
 
         return Field::select($form, 'unit_peppol_id')
             ->label($this->translator->translate('product.peppol.unit'))

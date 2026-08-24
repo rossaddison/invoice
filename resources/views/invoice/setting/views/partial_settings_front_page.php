@@ -20,7 +20,6 @@ echo H::openTag('div', ['class' => 'row']); //1
   echo H::openTag('div', ['class' => 'card']); //3
    echo H::openTag('div', ['class' => 'card-header']); //4
     echo H::openTag('label');
-     echo  new I()->addClass('bi bi-info-circle')->render();
      echo ' ' . $translator->translate('front.page') . ' ' . '⛔';
     echo H::closeTag('label');
    echo H::closeTag('div'); //4
@@ -268,6 +267,27 @@ echo H::openTag('div', ['class' => 'row']); //1
       ]);
       echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'no_front_gateway_status_page']);
        echo $translator->translate('menu.gateway.status');
+      echo H::closeTag('label');
+     echo H::closeTag('div'); //6
+
+     echo H::openTag('div', ['class' => 'form-check']); //6
+      $snfwsp = 'settings[no_front_webshop_page]';
+      $body[$snfwsp] = $s->getSetting('no_front_webshop_page');
+      echo H::openTag('input', [
+       'type' => 'hidden',
+       'name' => $snfwsp,
+       'value' => '0'
+      ]);
+      echo H::openTag('input', [
+       'type' => 'checkbox',
+       'class' => 'form-check-input',
+       'id' => 'no_front_webshop_page',
+       'name' => $snfwsp,
+       'value' => '1',
+       'checked' => ($body[$snfwsp] == 1) ? 'checked' : null
+      ]);
+      echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'no_front_webshop_page']);
+       echo $translator->translate('menu.webshop');
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
 

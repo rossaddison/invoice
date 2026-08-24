@@ -928,7 +928,15 @@ echo H::openTag('div', $row); //1
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     echo H::openTag('div', $colMd6); //6
+     // Not $colMd6 (its col-md-6 sibling, bcc_mails_to_admin, is a plain
+     // Yes/No dropdown and doesn't need the room) — a 32-character hex
+     // value plus the pe-5 reserved for the regenerate button genuinely
+     // doesn't fit in a half-width column at normal font size; confirmed
+     // live: the tail of the key was clipped, which first looked like a
+     // z-index/stacking problem but was actually the input just not
+     // being wide enough. col-12 wraps this field onto its own full-
+     // width row below (Bootstrap's grid: 6 + 12 > 12 columns).
+     echo H::openTag('div', ['class' => 'col-12']); //6
       echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
         'for' => $kCronKey
@@ -936,23 +944,34 @@ echo H::openTag('div', $row); //1
         echo $translator->translate('cron.key');
         echo $s->infoIcon('cron_key');
        echo H::closeTag('label');
-       echo H::openTag('div'); //8
+       // Same position-relative + position-absolute/top-50/end-0/
+       // translate-middle-y technique as the password-reveal-toggle
+       // field just above in partial_settings_online_payment.php — puts
+       // the button inside the input visually via plain Bootstrap
+       // utility classes, not .input-group (that component has
+       // repeatedly caused layout problems in this app; this exact
+       // field is one of the past incidents — never use it here).
+       // pe-5 gives the input enough right-padding that its own text
+       // never sits under the button, and z-3 (Bootstrap's z-index:3
+       // utility) makes sure the button itself always stacks above the
+       // input's own text layer regardless of any inherited stacking
+       // context — confirmed live: without it the 32-char cron key value
+       // could still render underneath the button's edge.
+       echo H::openTag('div', ['class' => 'position-relative']); //8
         echo H::openTag('input', [
          'type' => 'text',
          'name' => $kCronKey,
          'id' => $kCronKey,
-         'class' => 'cron_key form-control',
+         'class' => 'cron_key form-control pe-5',
          'value' => (string) ($body[$kCronKey] ??
          $s->getSetting('cron_key'))
         ]);
-        echo H::openTag('span'); //9
-         echo Button::widget()
-              ->label('<i class="bi bi-recycle" aria-hidden="true"></i>', false)
-              ->class('btn', 'btn-primary')
-              ->attribute('type', 'button')
-              ->id('btn_generate_cron_key')
-              ->render();
-        echo H::closeTag('span'); //9
+        echo Button::widget()
+             ->label('<i class="bi bi-recycle" aria-hidden="true"></i>', false)
+             ->class('btn', 'btn-primary', 'position-absolute', 'top-50', 'end-0', 'translate-middle-y', 'z-3')
+             ->attribute('type', 'button')
+             ->id('btn_generate_cron_key')
+             ->render();
        echo H::closeTag('div'); //8
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6

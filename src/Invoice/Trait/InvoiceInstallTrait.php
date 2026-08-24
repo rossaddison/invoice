@@ -66,6 +66,10 @@ trait InvoiceInstallTrait
             'currency_code' => 'GBP',
             'currency_code_from' => 'GBP',
             'currency_code_to' => 'GBP',
+            // Off by default — some installs will genuinely want to keep
+            // hand-typing a negotiated rate rather than the market rate.
+            // See App\Invoice\Helpers\Peppol\ExchangeRateUpdateService.
+            'auto_update_exchange_rate' => 0,
             'custom_title' => 'Yii-invoice',
             // Use the mySql Y-m-d date format as  default
             'date_format' => 'Y-m-d',
@@ -164,6 +168,7 @@ trait InvoiceInstallTrait
             'no_front_site_slider_page' => 1,
             'no_front_team_page' => 1,
             'no_front_testimonial_page' => 1,
+            'no_front_webshop_page' => 1,
             'no_facebook_continue_button' => 1,
             'no_github_continue_button' => 1,
             'no_google_continue_button' => 1,

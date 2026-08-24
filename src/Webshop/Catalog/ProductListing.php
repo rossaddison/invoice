@@ -29,7 +29,21 @@ final readonly class ProductListing
         public ?string $family,
         public ?string $category,
         public ?string $subcategory,
+        // Trade (B2B/wholesale) ordering terms — always $product_price
+        // ("wholesale"), never $price above (which may be $retail_price).
+        // $tradeMinOrderQty/$tradeMinOrderSpend both null means this
+        // product has no trade terms configured, so the storefront's
+        // "Trade Pricing" button (resources/views/shop/catalog/view.php)
+        // doesn't render at all — see Product::$trade_min_order_qty.
+        public float $tradePrice = 0.00,
+        public ?int $tradeMinOrderQty = null,
+        public ?float $tradeMinOrderSpend = null,
     ) {
+    }
+
+    public function hasTradeTerms(): bool
+    {
+        return $this->tradeMinOrderQty !== null || $this->tradeMinOrderSpend !== null;
     }
 
     public function displayName(): string

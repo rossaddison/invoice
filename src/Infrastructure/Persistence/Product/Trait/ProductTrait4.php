@@ -24,6 +24,64 @@ trait ProductTrait4
         return $this->client_associations;
     }
 
+    public function isAvailableOnWebshop(): bool
+    {
+        return $this->available_on_webshop;
+    }
+
+    public function setAvailableOnWebshop(bool $available_on_webshop): void
+    {
+        $this->available_on_webshop = $available_on_webshop;
+    }
+
+    public function getRetailPrice(): ?float
+    {
+        return $this->retail_price;
+    }
+
+    public function setRetailPrice(?float $retail_price): void
+    {
+        $this->retail_price = $retail_price;
+    }
+
+    /**
+     * The price actually charged on the public /shop storefront for this
+     * product — $retail_price when actually set (not left at its
+     * null/0.00 "never filled in" default), else $product_price
+     * ("wholesale"). Single source of truth for this fallback: used
+     * identically by both App\Webshop\Catalog\CatalogQueryService::
+     * toListing() (what the customer sees before ordering) and
+     * App\Api\OrderService::addOrderItem() (what the resulting InvItem is
+     * actually billed at) — those two must never diverge, or a customer
+     * could be shown one price and charged another.
+     */
+    public function webshopPrice(): float
+    {
+        return $this->retail_price !== null && $this->retail_price > 0.00
+            ? $this->retail_price
+            : ($this->product_price ?? 0.00);
+    }
+
+    public function getTradeMinOrderQty(): ?int
+    {
+        return $this->trade_min_order_qty;
+    }
+
+    public function setTradeMinOrderQty(?int $trade_min_order_qty): void
+    {
+        $this->trade_min_order_qty = $trade_min_order_qty;
+    }
+
+    public function getTradeMinOrderSpend(): ?float
+    {
+        return $this->trade_min_order_spend;
+    }
+
+    public function setTradeMinOrderSpend(?float $trade_min_order_spend): void
+    {
+        $this->trade_min_order_spend = $trade_min_order_spend;
+    }
+
     public function isTrackStock(): bool
     {
         return $this->track_stock;

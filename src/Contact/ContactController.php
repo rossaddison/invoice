@@ -37,6 +37,18 @@ final class ContactController
     ): ResponseInterface {
         $form = new ContactForm();
         if (!$formHydrator->populateFromPostAndValidate($form, $request)) {
+            // Only meaningful on the initial GET — a failed POST re-renders
+            // with $form already carrying the submitted (invalid) values,
+            // which take priority over the deep-link prefill.
+            if ($request->getMethod() === 'GET') {
+                $query = $request->getQueryParams();
+                if (isset($query['subject']) || isset($query['body'])) {
+                    $form->prefill(
+                        (string) ($query['subject'] ?? ''),
+                        (string) ($query['body'] ?? ''),
+                    );
+                }
+            }
             return $this->webViewRenderer->render('form', ['form' => $form]);
         }
 
