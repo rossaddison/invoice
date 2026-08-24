@@ -6,12 +6,11 @@ namespace Tests\Testo\Api;
 
 use App\Api\OrderService;
 use App\Api\OrderServiceDeps;
-use App\Auth\TokenRepository as tR;
+use App\Auth\AuthService;
 use App\Infrastructure\Persistence\Client\Client;
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\InvAmount\InvAmount;
 use App\Infrastructure\Persistence\Product\Product;
-use App\Infrastructure\Persistence\Token\Token;
 use App\Infrastructure\Persistence\User\User;
 use App\Infrastructure\Persistence\UserClient\UserClient;
 use App\Infrastructure\Persistence\UserInv\UserInv;
@@ -40,18 +39,17 @@ use Testo\Assert;
 use Testo\Test;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Rbac\Manager;
-use Yiisoft\Router\FastRoute\UrlGenerator;
+use Yiisoft\Session\SessionInterface;
 
 /**
- * Covers OrderService::createOrder() — specifically the account-resolution
- * and one-time-login-token behaviour added to unblock the webshop's
- * checkout handoff (see
- * docs/STOCK_MOVEMENT_LEDGER_AND_WEBSHOP_API_AUGUST_2026.md). Both cases
+ * Covers OrderService::createOrder() — account resolution (new customer
+ * vs. repeat customer) and the direct in-session login that replaced the
+ * one-time-login-link handoff once the `/shop` storefront started running
+ * in-process (see docs/WEBSHOP_INPROCESS_MERGE_AUGUST_2026.md). Both cases
  * here use an already-existing Client (ClientRepository::findByEmail()
- * returns non-null) so the test surface stays focused on the new
- * account/token logic rather than re-proving the pre-existing
- * Client-creation/invoice-shell/item-adding code path, which is untouched
- * by this change.
+ * returns non-null) so the test surface stays focused on the account/
+ * login logic rather than re-proving the pre-existing Client-creation/
+ * invoice-shell/item-adding code path, which is untouched by this change.
  *
  * All repositories/services here are `final`, mockable only because
  * Tests/testo.php enables DG\BypassFinals — same established pattern as
@@ -122,7 +120,7 @@ final class OrderServiceTest
         return $inv;
     }
 
-    public function createsANewCustomerAccountAndReturnsAOneTimeLoginLink(): void
+    public function createsANewCustomerAccountAndLogsThemIn(): void
     {
         $client = $this->existingClient(50, 'ada@example.test');
         $savedInv = $this->savedInv(900);
@@ -145,12 +143,12 @@ final class OrderServiceTest
         $ucR = m::mock(ucR::class);
         /** @var urlR&m\MockInterface $urlR */
         $urlR = m::mock(urlR::class);
-        /** @var tR&m\MockInterface $tR */
-        $tR = m::mock(tR::class);
         /** @var Manager&m\MockInterface $manager */
         $manager = m::mock(Manager::class);
-        /** @var UrlGenerator&m\MockInterface $urlGenerator */
-        $urlGenerator = m::mock(UrlGenerator::class);
+        /** @var AuthService&m\MockInterface $authService */
+        $authService = m::mock(AuthService::class);
+        /** @var SessionInterface&m\MockInterface $session */
+        $session = m::mock(SessionInterface::class);
 
         $cR->shouldReceive('findByEmail')->once()->with('ada@example.test')->andReturn($client);
         $sR->shouldReceive('getSetting')->with('default_invoice_group')->andReturn('3');
@@ -175,22 +173,18 @@ final class OrderServiceTest
         $manager->shouldReceive('revokeAll')->once()->with('200');
         $manager->shouldReceive('assign')->once()->with(AppConstants::ROLE_OBSERVER, '200');
         $urlR->shouldReceive('upsert')->once()->with(300, 200);
-        $tR->shouldReceive('save')->once()->with(m::on(
-            static fn (Token $t): bool =>
-                str_starts_with((string) $t->getType(), AppConstants::TOKEN_TYPE_WEBSHOP_ORDER_LOGIN . ':900'),
-        ));
-        $urlGenerator->shouldReceive('generateAbsolute')
-            ->once()
-            ->with('webshopOrderLogin', m::type('array'))
-            ->andReturn('https://example.test/webshop/orderLogin/masked-token');
+        // The new customer account is logged into the caller's own
+        // session directly — no one-time token issued at all.
+        $authService->shouldReceive('oauthLogin')->once()->with('ada@example.test')->andReturn(true);
+        $session->shouldReceive('set')->once()->with('tfa_verified', true);
 
         $service = $this->makeService(
-            $iR, $iaR, $pR, $cR, $sR, $uR, $uiR, $ucR, $urlR, $tR, $manager, $urlGenerator, $savedInv,
+            $iR, $iaR, $pR, $cR, $sR, $uR, $uiR, $ucR, $urlR, $manager, $authService, $session, $savedInv,
         );
 
-        $redirectUrl = $service->createOrder($this->customer('ada@example.test'), $this->items());
+        $invId = $service->createOrder($this->customer('ada@example.test'), $this->items());
 
-        Assert::same('https://example.test/webshop/orderLogin/masked-token', $redirectUrl);
+        Assert::same(900, $invId);
     }
 
     public function reusesTheExistingAccountForARepeatCustomer(): void
@@ -224,12 +218,12 @@ final class OrderServiceTest
         $ucR = m::mock(ucR::class);
         /** @var urlR&m\MockInterface $urlR */
         $urlR = m::mock(urlR::class);
-        /** @var tR&m\MockInterface $tR */
-        $tR = m::mock(tR::class);
         /** @var Manager&m\MockInterface $manager */
         $manager = m::mock(Manager::class);
-        /** @var UrlGenerator&m\MockInterface $urlGenerator */
-        $urlGenerator = m::mock(UrlGenerator::class);
+        /** @var AuthService&m\MockInterface $authService */
+        $authService = m::mock(AuthService::class);
+        /** @var SessionInterface&m\MockInterface $session */
+        $session = m::mock(SessionInterface::class);
 
         $cR->shouldReceive('findByEmail')->once()->with('bob@example.test')->andReturn($client);
         $sR->shouldReceive('getSetting')->with('default_invoice_group')->andReturn('3');
@@ -248,18 +242,16 @@ final class OrderServiceTest
         $manager->shouldNotReceive('revokeAll');
         $manager->shouldNotReceive('assign');
         $urlR->shouldNotReceive('upsert');
-        $tR->shouldReceive('save')->once();
-        $urlGenerator->shouldReceive('generateAbsolute')
-            ->once()
-            ->andReturn('https://example.test/webshop/orderLogin/masked-token-2');
+        $authService->shouldReceive('oauthLogin')->once()->with('bob@example.test')->andReturn(true);
+        $session->shouldReceive('set')->once()->with('tfa_verified', true);
 
         $service = $this->makeService(
-            $iR, $iaR, $pR, $cR, $sR, $uR, $uiR, $ucR, $urlR, $tR, $manager, $urlGenerator, $savedInv,
+            $iR, $iaR, $pR, $cR, $sR, $uR, $uiR, $ucR, $urlR, $manager, $authService, $session, $savedInv,
         );
 
-        $redirectUrl = $service->createOrder($this->customer('bob@example.test'), $this->items());
+        $invId = $service->createOrder($this->customer('bob@example.test'), $this->items());
 
-        Assert::same('https://example.test/webshop/orderLogin/masked-token-2', $redirectUrl);
+        Assert::same(901, $invId);
     }
 
     private function makeService(
@@ -272,9 +264,9 @@ final class OrderServiceTest
         uiR $uiR,
         ucR $ucR,
         urlR $urlR,
-        tR $tR,
         Manager $manager,
-        UrlGenerator $urlGenerator,
+        AuthService $authService,
+        SessionInterface $session,
         Inv $savedInv,
     ): OrderService {
         /** @var IS&m\MockInterface $invService */
@@ -320,7 +312,7 @@ final class OrderServiceTest
 
         return new OrderService(new OrderServiceDeps(
             $cR, $pR, $trR, $unR, $iR, $invService, $gR, $iaR, $iiR, $invItemService, $iiaDeps,
-            $numberHelper, $sR, $uR, $uiR, $ucR, $urlR, $tR, $manager, $urlGenerator, $formHydrator,
+            $numberHelper, $sR, $uR, $uiR, $ucR, $urlR, $manager, $authService, $session, $formHydrator,
         ));
     }
 }

@@ -16,8 +16,18 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+echo "[pre-commit] Building webshop TypeScript..."
+npm run build:typescript:webshop
+if [ $? -ne 0 ]; then
+    echo "[pre-commit] Webshop TypeScript build FAILED — commit aborted."
+    exit 1
+fi
+
 git add src/Invoice/Asset/rebuild/js/invoice-typescript-iife.js \
         src/Invoice/Asset/rebuild/js/invoice-typescript-iife.min.js \
-        src/Auth/Asset/rebuild/js/keypad-copy-to-clipboard-iife.js
+        src/Auth/Asset/rebuild/js/keypad-copy-to-clipboard-iife.js \
+        src/Webshop/Cart/Asset/rebuild/js/cart-iife.js \
+        src/Webshop/Catalog/Asset/rebuild/js/price-range-iife.js \
+        src/Webshop/Catalog/Asset/rebuild/js/product-zoom-iife.js
 
 echo "[pre-commit] IIFE rebuilt and staged."

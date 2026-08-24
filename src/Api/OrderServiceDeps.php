@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Api;
 
-use App\Auth\TokenRepository as tR;
+use App\Auth\AuthService;
 use App\Invoice\Client\ClientRepository as cR;
 use App\Invoice\Group\GroupRepository as gR;
 use App\Invoice\Helpers\NumberHelper;
@@ -24,12 +24,18 @@ use App\Invoice\UserInv\UserRbacLinkRepository as urlR;
 use App\User\UserRepository as uR;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Rbac\Manager;
-use Yiisoft\Router\FastRoute\UrlGenerator;
+use Yiisoft\Session\SessionInterface;
 
 /**
  * Bundles OrderService's dependencies — matches this codebase's established
  * "Deps" bag convention (see e.g. HomeCareSignupConfirmDeps, IiAddProductDeps)
  * rather than a single sprawling constructor.
+ *
+ * `TokenRepository`/`UrlGenerator` were dropped (they only ever backed the
+ * one-time masked-login-link handoff `OrderService` used before the
+ * `/shop` storefront ran in-process — see that class's own docblock);
+ * `AuthService`/`SessionInterface` were added in their place, for the
+ * direct in-session login that replaced it.
  */
 final class OrderServiceDeps
 {
@@ -51,9 +57,9 @@ final class OrderServiceDeps
         public readonly uiR $uiR,
         public readonly ucR $ucR,
         public readonly urlR $urlR,
-        public readonly tR $tR,
         public readonly Manager $manager,
-        public readonly UrlGenerator $urlGenerator,
+        public readonly AuthService $authService,
+        public readonly SessionInterface $session,
         public readonly FormHydrator $formHydrator,
     ) {
     }

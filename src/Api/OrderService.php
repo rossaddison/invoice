@@ -7,20 +7,18 @@ namespace App\Api;
 use App\Infrastructure\Persistence\Client\Client;
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\InvItem\InvItem;
-use App\Infrastructure\Persistence\Token\Token;
 use App\Infrastructure\Persistence\User\User;
 use App\Infrastructure\Persistence\UserClient\UserClient;
 use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\AppConstants;
 use App\Invoice\Inv\InvForm;
 use Yiisoft\Security\Random;
-use Yiisoft\Security\TokenMask;
 
 /**
- * Creates a guest order for the external `/api/orders` endpoint (see
- * `docs/WEBSHOP_HEADLESS_STOREFRONT_DESIGN_AUGUST_2026.md`) — finds or
- * creates a Client by the checkout email, then an Inv + InvItems from the
- * cart, mirroring the shape of `HomeCareSignupController::createInvoice()`
+ * Creates a guest order for the in-process `/shop` storefront (see
+ * docs/WEBSHOP_INPROCESS_MERGE_AUGUST_2026.md) — finds or creates a
+ * Client by the checkout email, then an Inv + InvItems from the cart,
+ * mirroring the shape of `HomeCareSignupController::createInvoice()`
  * (its own `saveInv()`/`addInvItemProduct()`/`InvRecalculator` sequence)
  * but for an arbitrary product cart rather than one fixed HomeCare service
  * line.
@@ -35,18 +33,26 @@ use Yiisoft\Security\TokenMask;
  * required for `InvController::rbacObserver()`'s own-invoice check
  * (`$inv->reqUserId() === $this->userService->getUser()?->reqId()`) to
  * ever pass: an invoice authored by a system/admin account can never be
- * "this user's own invoice" for any real customer, so a customer
- * following the one-time login link this class hands back would 404 on
- * `/invoice/inv/view/{id}` even though the order itself was created
- * successfully — confirmed live before this fix. `InvService::saveInv()`
+ * "this user's own invoice" for any real customer. `InvService::saveInv()`
  * (via `initNewInvFields()`) only ever uses its `$user` argument for
  * `Inv::setUserId()` — no permission check runs against it at save time,
  * those all happen at *view* time via `rbacObserver()` — so passing the
- * customer's own (observer-role) account here is safe. `/invoice/inv/view/{id}`
- * still requires an authenticated, RBAC-permitted session, so
- * `createOrder()` returns a one-time login link (see
- * `WebshopOrderLoginController`) rather than a bare url_key a fresh,
- * never-logged-in customer could never actually reach.
+ * customer's own (observer-role) account here is safe.
+ *
+ * `/invoice/inv/view/{id}` still requires an authenticated, RBAC-permitted
+ * session, so `createOrder()` logs the resolved customer account in
+ * directly (`AuthService::oauthLogin()` — the same call the app's other
+ * non-password logins already use) before returning, rather than handing
+ * back a one-time login link the way this class did when the storefront
+ * was still a separate HTTP-API-calling app: checkout now runs in the
+ * same request/session as browsing, so there's no cross-app handoff left
+ * to bridge with a masked token at all. (That handoff previously lived in
+ * `WebshopOrderLoginController`, since decommissioned — see the merge
+ * doc.) `$this->d->session->set('tfa_verified', true)` is set for the
+ * same reason that controller's own docblock used to document:
+ * `BaseController::initializeViewRenderer()` requires it before it will
+ * ever configure the view renderer for a VIEW_INV-only (observer)
+ * account — without it, `inv/view` 500s with `ViewNotFoundException`.
  *
  * Item prices are always the product's own current `product_price` —
  * never trusted from the storefront's request body — so a tampered cart
@@ -63,9 +69,12 @@ final class OrderService
      * @param array{name: string, surname: string, email: string, address1?: string,
      *     address2?: string, city?: string, zip?: string, country?: string, phone?: string} $customer
      * @param list<array{product_id: int, quantity: float}> $items
-     * @return string|null Absolute one-time login link, or null on failure.
+     * @return int|null The new invoice's id, or null on failure. The
+     *     caller's session is already authenticated as the resolved
+     *     customer account by the time this returns — see the class
+     *     docblock.
      */
-    public function createOrder(array $customer, array $items): ?string
+    public function createOrder(array $customer, array $items): ?int
     {
         $groupId = $this->resolveOrderGroupId($customer, $items);
         if ($groupId === null) {
@@ -83,7 +92,9 @@ final class OrderService
             return null;
         }
 
-        return $this->buildOrderLoginRedirectUrl($orderUser, $invId);
+        $this->logInOrderUser($orderUser);
+
+        return $invId;
     }
 
     /** @param list<array{product_id: int, quantity: float}> $items */
@@ -177,37 +188,19 @@ final class OrderService
     }
 
     /**
-     * Issues the one-time login link for `$orderUser` — the same account
+     * Logs the caller's session in as `$orderUser` — the same account
      * `resolveOrCreateOrderUser()` resolved earlier in `createOrder()`
      * (before invoice creation, so it could also be used as the invoice's
-     * own `user_id`; see the class docblock).
+     * own `user_id`; see the class docblock). Reuses `AuthService::
+     * oauthLogin()` rather than calling `CurrentUser::login()` directly —
+     * it already does exactly the `findByLoginWithAuthIdentity()` +
+     * `$currentUser->login($identity)` sequence needed here, and it's the
+     * same method the app's other non-password logins already call.
      */
-    private function buildOrderLoginRedirectUrl(User $orderUser, int $invId): ?string
+    private function logInOrderUser(User $orderUser): void
     {
-        $maskedToken = $this->issueOrderLoginToken($orderUser, $invId);
-        if ($maskedToken === null) {
-            return null;
-        }
-
-        // Every route lives under Group::create('/{_language}')
-        // (config/common/di/router.php), so `_language` is a required
-        // generate() argument despite UrlGeneratorInterface's own
-        // `setDefaultArgument('_language', 'en')` — that default only
-        // ever applies to the *matching* side (inbound requests), not
-        // to generate()'s own required-argument check, confirmed live:
-        // omitting it here throws `Route \`webshopOrderLogin\` expects
-        // at least argument values for [_language,token], but received
-        // [token]` and silently fails the entire order (OrdersController
-        // catches this as "could not place your order" — no invoice
-        // ever gets created). This endpoint has no real request-locale
-        // context to inherit anyway — it's the server-to-server
-        // POST /api/orders call, not a browser navigation — so 'en'
-        // (the same value the default above already intends) is the
-        // correct, not just convenient, value to pass explicitly.
-        return $this->d->urlGenerator->generateAbsolute(
-            'webshopOrderLogin',
-            ['_language' => 'en', 'token' => $maskedToken],
-        );
+        $this->d->authService->oauthLogin($orderUser->getLogin());
+        $this->d->session->set('tfa_verified', true);
     }
 
     /**
@@ -231,9 +224,9 @@ final class OrderService
      * `assignSignupRole()`'s User+UserInv+UserClient+RBAC sequence for the
      * existing self-service signup flow — same account shape (RBAC role
      * `observer`), just system-created rather than filled in by hand. The
-     * password is a random value never surfaced to the customer: they only
-     * ever arrive via the one-time login link, never a password form.
-     * `UserInv::active` is set true immediately, unlike that existing
+     * password is a random value never surfaced to the customer: they're
+     * logged in directly by `logInOrderUser()` once checkout succeeds,
+     * never via a password form. `UserInv::active` is set true immediately, unlike that existing
      * flow's email-verification-gated `false` — this is a same-transaction,
      * server-verified context already, not an untrusted public form.
      */
@@ -264,33 +257,6 @@ final class OrderService
         $this->d->urlR->upsert($userInv->reqId(), $user->reqId());
 
         return $user;
-    }
-
-    /**
-     * Same masked-token-plus-timestamp shape as
-     * `SignupController::getEmailVerificationToken()`/
-     * `htmlBodyWithMaskedRandomAndTimeTokenLink()` — a random 32-char
-     * token concatenated with its creation timestamp, then masked. The
-     * stored `Token`->type is this constant plus ':{inv_id}' rather than
-     * the bare constant, so `WebshopOrderLoginController` can recover
-     * which invoice to redirect to directly from the token row itself.
-     */
-    private function issueOrderLoginToken(User $user, int $invId): ?string
-    {
-        $identityId = $user->getIdentity()->getId();
-        if ($identityId === null) {
-            return null;
-        }
-
-        $token = new Token((int) $identityId, AppConstants::TOKEN_TYPE_WEBSHOP_ORDER_LOGIN . ':' . $invId);
-        $this->d->tR->save($token);
-
-        $rawToken = $token->getToken();
-        if ($rawToken === null) {
-            return null;
-        }
-
-        return TokenMask::apply($rawToken . '_' . (string) $token->getCreatedAt()->getTimestamp());
     }
 
     /**
