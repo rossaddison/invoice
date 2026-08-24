@@ -15,6 +15,7 @@ use App\Invoice\PaymentInformation\Service\GoCardlessWebhookHandler;
 use App\Invoice\PaymentInformation\Service\OnlinePaymentRecorderService;
 use App\Invoice\Setting\SettingRepository;
 use GuzzleHttp\Psr7\HttpFactory;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -160,6 +161,7 @@ final class GoCardlessWebhookHandlerTest extends TestCase
         self::assertSame(200, $response->getStatusCode());
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testHandleMarksInvoicePaidOnConfirmedPayment(): void
     {
         $invoice = $this->createMock(Inv::class);

@@ -60,6 +60,16 @@ class SalesOrderEntityTest extends TestCase
         $this->assertNull($so->getClient());
         $this->assertNull($so->getGroup());
         $this->assertNull($so->getUser());
+        $this->assertNull($so->getPeppolOrderResponseCode());
+    }
+
+    public function testSetAndGetPeppolOrderResponseCode(): void
+    {
+        $so = new SalesOrder();
+        $so->setPeppolOrderResponseCode('AP');
+        $this->assertSame('AP', $so->getPeppolOrderResponseCode());
+        $so->setPeppolOrderResponseCode(null);
+        $this->assertNull($so->getPeppolOrderResponseCode());
     }
 
     public function testSetAndGetNumber(): void

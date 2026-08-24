@@ -63,7 +63,14 @@ class SalesOrder
     #[BelongsTo(target: User::class, nullable: false)]
     private ?User $user = null;
 
-    #[BelongsTo(target: Quote::class, nullable: false)]
+    // Nullable — unlike every other relation here, a SalesOrder does not
+    // always descend from a staff-authored Quote. A Peppol-inbound Order
+    // (App\Invoice\As4\As4OrderImportService) has no quote at all: the
+    // buyer sent an Order directly, there was no prior quotation
+    // exchange. Was nullable: false until that import path was added —
+    // every pre-existing row still has a real quote_id, this only opens
+    // the door for new quote-less ones.
+    #[BelongsTo(target: Quote::class, nullable: true)]
     private ?Quote $quote = null;
 
     #[HasOne(
@@ -132,6 +139,15 @@ class SalesOrder
         private ?string $notes = '',
         #[Column(type: 'longText', nullable: true)]
         private ?string $payment_term = '',
+        // Peppol BIS Ordering's own OrderResponseAdvanced status —
+        // AB/AP/RE/CA (see docs.peppol.eu/poacc/upgrade-3/syntax/OrderResponse/)
+        // — deliberately orthogonal to $status_id above, which drives the
+        // pre-existing staff-authored SalesOrder workflow (draft → sent →
+        // confirmed → fulfilled) and has no state that means "awaiting a
+        // Peppol response". Null means either "not a Peppol-sourced order"
+        // or "sourced from Peppol but no OrderResponseAdvanced sent yet".
+        #[Column(type: 'string(2)', nullable: true)]
+        private ?string $peppol_order_response_code = null,
     ) {
         $this->items = new ArrayCollection();
         $this->sales_order_amount = new SalesOrderAmount();

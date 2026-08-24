@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\As4;
 
 use App\Invoice\Ubl\Schema;
-use DateTimeImmutable;
-use DOMDocument;
 use DOMElement;
 use DOMXPath;
 
@@ -17,6 +15,8 @@ use DOMXPath;
  */
 final class UblXmlParser
 {
+    use UblXmlHelperTrait;
+
     /**
      * @throws As4ParseException when the payload is not valid XML or missing cbc:ID
      */
@@ -62,20 +62,6 @@ final class UblXmlParser
             lines:                    $this->parseLines($xpath, $lineTag, $qtyTag),
             documentType:             $documentType,
         );
-    }
-
-    private function loadXml(string $xml): DOMDocument
-    {
-        $doc  = new DOMDocument();
-        $prev = libxml_use_internal_errors(true);
-        $ok   = $doc->loadXML($xml);
-        libxml_use_internal_errors($prev);
-        libxml_clear_errors();
-
-        if (!$ok) {
-            throw new As4ParseException('UBL payload is not valid XML');
-        }
-        return $doc;
     }
 
     /** @return array{string, string} */
@@ -132,35 +118,5 @@ final class UblXmlParser
             peppolPoItemId:      $this->rel($xpath, Schema::CAC . 'OrderLineReference/' . Schema::CBC . 'LineID', $lineNode),
             peppolPoLineId:      $this->rel($xpath, Schema::CAC . 'DocumentReference/' . Schema::CBC . 'ID', $lineNode),
         );
-    }
-
-    private function text(DOMXPath $xpath, string $query): string
-    {
-        $nodes = $xpath->query($query);
-        if ($nodes === false || $nodes->length === 0) {
-            return '';
-        }
-        return $nodes->item(0)?->textContent ?? '';
-    }
-
-    private function rel(DOMXPath $xpath, string $query, DOMElement $context): string
-    {
-        $nodes = $xpath->query($query, $context);
-        if ($nodes === false || $nodes->length === 0) {
-            return '';
-        }
-        return $nodes->item(0)?->textContent ?? '';
-    }
-
-    private function nullable(DOMXPath $xpath, string $query): ?string
-    {
-        $val = $this->text($xpath, $query);
-        return $val !== '' ? $val : null;
-    }
-
-    private function parseDate(string $text): DateTimeImmutable
-    {
-        $d = DateTimeImmutable::createFromFormat('Y-m-d', $text);
-        return $d !== false ? $d : new DateTimeImmutable('now');
     }
 }

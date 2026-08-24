@@ -15,6 +15,7 @@ use App\Invoice\PaymentInformation\Service\StripePaymentService;
 use App\Invoice\PaymentInformation\Service\StripeWebhookHandler;
 use App\Invoice\Setting\SettingRepository;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -161,6 +162,7 @@ final class StripeWebhookHandlerTest extends TestCase
         self::assertSame(200, $response->getStatusCode());
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testHandleMarksInvoicePaidOnSucceededEvent(): void
     {
         $invoice = $this->createMock(Inv::class);

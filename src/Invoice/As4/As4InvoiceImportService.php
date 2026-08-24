@@ -16,6 +16,8 @@ use Yiisoft\Security\Random;
 
 final class As4InvoiceImportService implements As4PayloadHandlerInterface
 {
+    use As4PartyIdSplitTrait;
+
     public function __construct(
         private readonly UblXmlParser           $parser,
         private readonly ClientPeppolRepositoryInterface $clientPeppolRepository,
@@ -53,16 +55,6 @@ final class As4InvoiceImportService implements As4PayloadHandlerInterface
             'invId'         => $inv->reqId(),
             'lineCount'     => count($data->lines),
         ]);
-    }
-
-    /** @return array{string, string} */
-    private function splitPartyId(string $partyId): array
-    {
-        $pos = strpos($partyId, ':');
-        if ($pos === false) {
-            return ['', $partyId];
-        }
-        return [substr($partyId, 0, $pos), substr($partyId, $pos + 1)];
     }
 
     private function buildInv(UblInvoiceData $data, int $clientId): Inv

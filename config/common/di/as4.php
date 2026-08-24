@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use App\Infrastructure\Persistence\As4Message\CycleOrmAs4MessageRepository;
+use App\Invoice\ClientPeppol\ClientPeppolRepository;
+use App\Invoice\ClientPeppol\ClientPeppolRepositoryInterface;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
 use Yiisoft\Data\Writer\DataWriterInterface;
 use App\Invoice\As4\As4DuplicateDetector;
@@ -11,9 +13,9 @@ use App\Invoice\As4\As4EnvelopeBuilderInterface;
 use App\Invoice\As4\As4EnvelopeSignerInterface;
 use App\Invoice\As4\As4ExponentialBackoffRetryPolicy;
 use App\Invoice\As4\As4FixedIntervalRetryPolicy;
-use App\Invoice\As4\As4InvoiceImportService;
 use App\Invoice\As4\As4MessageRepositoryInterface;
 use App\Invoice\As4\As4PayloadHandlerInterface;
+use App\Invoice\As4\As4PayloadRouter;
 use App\Invoice\As4\As4ReceiptGenerator;
 use App\Invoice\As4\As4ReceiptGeneratorInterface;
 use App\Invoice\As4\As4ReceiptParser;
@@ -71,10 +73,20 @@ return [
     // ── Inbound interfaces (always active) ────────────────────────────────────
     DataWriterInterface::class            => EntityWriter::class,
     As4MessageRepositoryInterface::class  => CycleOrmAs4MessageRepository::class,
+    // Needed by both As4InvoiceImportService and As4OrderImportService —
+    // had no binding anywhere at all until this, meaning the whole
+    // inbound AS4 pipeline (Invoice included) was never actually
+    // resolvable through the container in any context, not just here.
+    ClientPeppolRepositoryInterface::class => ClientPeppolRepository::class,
     As4DuplicateDetectorInterface::class  => As4DuplicateDetector::class,
     As4ReceiptGeneratorInterface::class   => As4ReceiptGenerator::class,
     As4UserMessageHandlerInterface::class => As4UserMessageHandlerService::class,
-    As4PayloadHandlerInterface::class     => As4InvoiceImportService::class,
+    // Was As4InvoiceImportService::class directly, back when Invoice/
+    // CreditNote were the only documents this app ever received over
+    // AS4. As4PayloadRouter now fans out by document type — see its own
+    // docblock — to that same class for Invoice/CreditNote and to
+    // As4OrderImportService for an inbound Peppol Order.
+    As4PayloadHandlerInterface::class     => As4PayloadRouter::class,
 
     // ── Outbound interfaces ───────────────────────────────────────────────────
     As4HttpTransportInterface::class    => As4HttpClient::class,

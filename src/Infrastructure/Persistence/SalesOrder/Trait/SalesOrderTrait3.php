@@ -101,4 +101,14 @@ trait SalesOrderTrait3
     {
         $this->payment_term = $payment_term;
     }
+
+    public function getPeppolOrderResponseCode(): ?string
+    {
+        return $this->peppol_order_response_code;
+    }
+
+    public function setPeppolOrderResponseCode(?string $peppol_order_response_code): void
+    {
+        $this->peppol_order_response_code = $peppol_order_response_code;
+    }
 }
