@@ -48,19 +48,34 @@ $this->setTitle('Checkout');
 </p>
 <?php endif; ?>
 
+<?php
+// This app's *default* Field theme (config/common/params.php's
+// 'yiisoft/form'.themes.default) wraps every field in a Bootstrap
+// "form-floating" container, which assumes a visible <label> is always
+// present (its CSS reserves space for, and animates, that label).
+// ->hideLabel() removes the label but not the floating-label
+// container/height — confirmed live: every field on this page rendered
+// as a tall, visually blank box with no visible placeholder text at
+// all. 'bootstrap5-vertical' (also registered in that same config) is
+// a plain, non-floating theme — explicitly selecting it here restores
+// the minimalist placeholder-only look this form was designed for,
+// without touching the floating-label theme every *staff*-facing form
+// elsewhere in this app still relies on.
+$theme = 'bootstrap5-vertical';
+?>
 <?= new Form()
     ->post($urlGenerator->generate('shop/checkout/submit'))
     ->csrf($csrf)
     ->open() ?>
-<?= Field::errorSummary($form)->header('') ?>
-<?= Field::text($form, 'name')->hideLabel()->placeholder('First name') ?>
-<?= Field::text($form, 'surname')->hideLabel()->placeholder('Last name') ?>
-<?= Field::text($form, 'email')->hideLabel()->placeholder('Email')->addInputAttributes(['type' => 'email']) ?>
-<?= Field::text($form, 'address1')->hideLabel()->placeholder('Address line 1') ?>
-<?= Field::text($form, 'address2')->hideLabel()->placeholder('Address line 2') ?>
-<?= Field::text($form, 'city')->hideLabel()->placeholder('City') ?>
-<?= Field::text($form, 'zip')->hideLabel()->placeholder('Postal / ZIP code') ?>
-<?= Field::text($form, 'country')->hideLabel()->placeholder('Country') ?>
-<?= Field::text($form, 'phone')->hideLabel()->placeholder('Phone') ?>
-<?= Field::submitButton()->content('Place order') ?>
+<?= Field::errorSummary($form, theme: $theme)->header('') ?>
+<?= Field::text($form, 'name', theme: $theme)->hideLabel()->placeholder('First name') ?>
+<?= Field::text($form, 'surname', theme: $theme)->hideLabel()->placeholder('Last name') ?>
+<?= Field::text($form, 'email', theme: $theme)->hideLabel()->placeholder('Email')->addInputAttributes(['type' => 'email']) ?>
+<?= Field::text($form, 'address1', theme: $theme)->hideLabel()->placeholder('Address line 1') ?>
+<?= Field::text($form, 'address2', theme: $theme)->hideLabel()->placeholder('Address line 2') ?>
+<?= Field::text($form, 'city', theme: $theme)->hideLabel()->placeholder('City') ?>
+<?= Field::text($form, 'zip', theme: $theme)->hideLabel()->placeholder('Postal / ZIP code') ?>
+<?= Field::text($form, 'country', theme: $theme)->hideLabel()->placeholder('Country') ?>
+<?= Field::text($form, 'phone', theme: $theme)->hideLabel()->placeholder('Phone') ?>
+<?= Field::submitButton(theme: $theme)->content('Place order') ?>
 <?= new Form()->close() ?>
