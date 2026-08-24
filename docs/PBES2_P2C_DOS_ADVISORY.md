@@ -26,7 +26,7 @@ and multi-key JWKSets multiply the cost.
 
 `web-token/jwt-framework` enters as a **transitive dependency** via
 `rossaddison/yii-auth-client`. The project's own JWT work (`GovUk.php`) uses
-`phpseclib3` and never registers or invokes any PBES2 algorithm. There is no
+`phpseclib4` and never registers or invokes any PBES2 algorithm. There is no
 call path from application code to `PBES2AESKW::unwrapKey()`.
 
 ### Already fixed in installed version

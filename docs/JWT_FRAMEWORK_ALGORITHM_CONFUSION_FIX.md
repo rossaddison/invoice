@@ -12,7 +12,7 @@ header — a classic TOCTOU (Time-of-Check / Time-of-Use) split.
 
 The `web-token/jwt-framework` package enters this project as a transitive
 dependency via `rossaddison/yii-auth-client`. The project itself uses
-`phpseclib3` directly in `src/Auth/Client/GovUk.php` for all JWT/RSA
+`phpseclib4` directly in `src/Auth/Client/GovUk.php` for all JWT/RSA
 operations and never calls `JWSVerifier` or `JWEDecrypter`, so there is no
 direct attack surface. The fix was contributed upstream as a public good.
 
