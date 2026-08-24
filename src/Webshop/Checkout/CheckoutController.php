@@ -83,6 +83,18 @@ final class CheckoutController extends StorefrontController
             return $this->renderForm($form);
         }
 
+        return $this->completeOrder($form, $orderService);
+    }
+
+    /**
+     * Split out of submit() purely to keep its own return count within
+     * SonarQube's limit (php:S1142) — the cart-empty/validation-failure
+     * guard clauses above both happen before any order-creation side
+     * effect, so this only needs to cover order creation's own two
+     * outcomes.
+     */
+    private function completeOrder(CheckoutForm $form, OrderService $orderService): ResponseInterface
+    {
         $items = [];
         foreach ($this->cartService->getItems() as $item) {
             $items[] = ['product_id' => $item->productId, 'quantity' => $item->quantity];

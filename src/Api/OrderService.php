@@ -90,6 +90,20 @@ final class OrderService
             return null;
         }
 
+        return $this->createInvoiceAndLogIn($orderUser, $groupId, $client, $items);
+    }
+
+    /**
+     * Split out of createOrder() purely to keep its own return count
+     * within SonarQube's limit (php:S1142) — the group/client/order-user
+     * resolution guard clauses above all happen before any
+     * invoice-creation side effect, so this only needs to cover invoice
+     * creation's own two outcomes.
+     *
+     * @param list<array{product_id: int, quantity: float}> $items
+     */
+    private function createInvoiceAndLogIn(User $orderUser, int $groupId, Client $client, array $items): ?int
+    {
         $invId = $this->createInvoiceAndItems($orderUser, $groupId, $client, $items);
         if ($invId === null) {
             return null;
