@@ -123,6 +123,17 @@ use Yiisoft\Html\Tag\Form;
             $form, 'product_price', 'product.price', true); ?>
         <?= Html::tag('br'); ?>
         <?= $formFields->productPriceField(
+            $form, 'retail_price', 'product.retail.price', false); ?>
+        <?= Html::tag('br'); ?>
+        <?= $formFields->productAvailabilityField($form); ?>
+        <?= Html::tag('br'); ?>
+        <?= $formFields->productTextField(
+            $form, 'trade_min_order_qty', 'product.trade.min.order.quantity', false); ?>
+        <?= Html::tag('br'); ?>
+        <?= $formFields->productPriceField(
+            $form, 'trade_min_order_spend', 'product.trade.min.order.spend', false); ?>
+        <?= Html::tag('br'); ?>
+        <?= $formFields->productPriceField(
             $form, 'product_price_base_quantity', 'product.price.base.quantity', true); ?>
         <?= Html::tag('br'); ?>
         <?= $formFields->productPriceField(

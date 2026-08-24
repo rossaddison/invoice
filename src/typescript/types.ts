@@ -24,6 +24,9 @@ declare global {
                   show(): void;
                   hide(): void;
               };
+              Tab: (new (element: Element) => { show(): void }) & {
+                  getOrCreateInstance(element: Element): { show(): void };
+              };
           }
         | undefined;
     var lastTaggableClicked: Element | undefined;

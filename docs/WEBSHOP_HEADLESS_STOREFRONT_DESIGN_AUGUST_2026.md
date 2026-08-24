@@ -1,5 +1,13 @@
 # Webshop — Headless Storefront Design (August 2026)
 
+> **SUPERSEDED (August 2026):** the two-app, HTTP-API architecture this
+> document describes has been replaced — the storefront now runs
+> in-process inside this repo under `/shop`, calling repositories/
+> services directly instead of over HTTP. See
+> [`WEBSHOP_INPROCESS_MERGE_AUGUST_2026.md`](WEBSHOP_INPROCESS_MERGE_AUGUST_2026.md)
+> for the current architecture. Kept here as historical record of why
+> the API-key/HTTP design was built the way it was.
+
 > **Status: all four steps below now have a v1.** This document
 > originally captured a settled architecture before any code existed.
 > Steps 1-2 (API-key auth, the two endpoints) are implemented on this
@@ -41,6 +49,15 @@ Gains a small, deliberately narrow new API surface:
 - `POST /api/orders` — creates a `Client` if one doesn't already exist,
   then an `Inv` + `InvItem`s from a finished cart, and returns that
   invoice's `url_key`.
+- `GET /api/currency` — this shop's Peppol dual-currency setup
+  (`native`/`document` currency codes + the two conversion rates,
+  straight from the same four `Setting` rows
+  `SettingRepository::currencyConverter()` already uses for real
+  invoice amounts). Added for webshop's own navbar currency picker —
+  see `CurrencyController`'s own docblock. A single admin-configured
+  pair, not a live-rate multi-currency feed: rates are whatever was
+  last typed into the Peppol settings tab (manually, via xe.com), same
+  as everywhere else this data is used in this app.
 
 **Needs real API-key auth first.** The existing `/api` group
 (`config/common/routes/routes.php`, `Group::create('/api')`) only has

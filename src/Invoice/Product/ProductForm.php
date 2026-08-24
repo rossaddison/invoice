@@ -58,6 +58,22 @@ final class ProductForm extends FormModel
     #[Number(min: 0, max: 999999999999999999)]
     public ?float  $purchase_price = 0.00;
 
+    // Never required — omitting it means "fall back to product_price for
+    // the webshop too" (see Product::$retail_price's own docblock).
+    #[Number(min: 0, max: 999999999999999999)]
+    public ?float  $retail_price = 0.00;
+
+    public bool $available_on_webshop = false;
+
+    // Trade-terms pair — both optional; leaving either blank means "this
+    // product has no trade terms", which hides the storefront's "Trade
+    // Pricing" button entirely (see Product::$trade_min_order_qty).
+    #[Number(min: 1, max: 999999999999999999)]
+    public ?int $trade_min_order_qty = null;
+
+    #[Number(min: 0, max: 999999999999999999)]
+    public ?float $trade_min_order_spend = null;
+
     #[Length(min: 0, max: 255, skipOnEmpty: true)]
     public ?string $provider_name = null;
 
@@ -90,6 +106,10 @@ final class ProductForm extends FormModel
         $form->product_price_base_quantity =
             $product->getProductPriceBaseQuantity();
         $form->purchase_price = $product->getPurchasePrice();
+        $form->retail_price = $product->getRetailPrice();
+        $form->available_on_webshop = $product->isAvailableOnWebshop();
+        $form->trade_min_order_qty = $product->getTradeMinOrderQty();
+        $form->trade_min_order_spend = $product->getTradeMinOrderSpend();
         $form->provider_name = $product->getProviderName();
         $form->product_additional_item_property_name =
             $product->getProductAdditionalItemPropertyName();

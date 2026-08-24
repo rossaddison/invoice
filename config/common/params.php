@@ -25,6 +25,7 @@ use Cycle\Schema\Provider\PhpFileSchemaProvider;
 use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\View\Renderer\CsrfViewInjection;
+use Yiisoft\Yii\View\Renderer\LayoutSpecificInjections;
 // yii3-i
 use App\Invoice\Helpers\ClientHelper;
 use App\Invoice\Helpers\CountryHelper;
@@ -402,6 +403,30 @@ return [
             Reference::to(LinkTagsViewInjection::class),
             Reference::to(MetaTagsViewInjection::class),
             Reference::to(SettingRepository::class),
+            // Scoped to the storefront layout only (LayoutSpecificInjections
+            // — see WebViewRenderer::getInjections(); the actual definition
+            // lives in config/common/di/webshop.php, since a
+            // LayoutSpecificInjections instance needs constructor arguments
+            // Reference::to() alone can't express here) — cart badge/
+            // currency/delivery-widget/login-state data the public `/shop`
+            // routes' layout needs, that LayoutViewInjection above (the
+            // staff-facing soletrader/guest/invoice layouts' own data) has
+            // no reason to carry. See StorefrontViewParameters's own
+            // docblock for why this registration exists at all: the layout
+            // is rendered as a separate pass from the view, so nothing a
+            // storefront controller passes to its own
+            // render($view, $parameters) call ever reaches the layout on
+            // its own.
+            Reference::to(LayoutSpecificInjections::class),
+            // Scoped to the guest layout only, same mechanism as the
+            // storefront entry directly above — its own definition lives
+            // in config/common/di/guest-layout.php, registered under a
+            // separate string container id ('guestLayoutSpecificInjections')
+            // since LayoutSpecificInjections::class itself is already
+            // bound to the storefront one. Whether to show the Quote/
+            // SalesOrder nav dropdowns at all — see
+            // App\ViewInjection\GuestLayoutViewParameters's own docblock.
+            Reference::to('guestLayoutSpecificInjections'),
         ],
     ],
     'yiisoft/yii-cycle' => [

@@ -35,6 +35,28 @@ trait SettingTooltipTrait
                 . 'partial_settings_invoices.php and src/Invoice/'
                 . 'InvoiceController.php',
             ],
+            'auto_update_exchange_rate' => [
+                'why' => 'When on, currency_from_to/currency_to_from below'
+                . ' are refreshed automatically from a live rate (European'
+                . ' Central Bank daily reference rates, via'
+                . ' api.frankfurter.app — free, no API key) instead of'
+                . ' requiring a manual xe.com lookup, at most once per'
+                . ' calendar day, on the first authenticated /invoice page'
+                . ' load that day. Off by default: leave off to keep'
+                . ' typing in a negotiated rate rather than the market'
+                . ' rate. A failed fetch (network error, API down) is'
+                . ' logged and silently skipped — it never blocks a page'
+                . ' load or a login.',
+                'where' => 'App\Invoice\Helpers\Peppol\\'
+                . 'ExchangeRateUpdateService::updateIfDue(), called from'
+                . ' App\Middleware\ExchangeRateAutoUpdateMiddleware, wired'
+                . ' into every /invoice/* request via'
+                . ' RoutePermission::invoiceGroup() (not'
+                . ' App\Invoice\BaseController — that class is extended by'
+                . ' ~80 controllers, each hand-forwarding its own'
+                . ' constructor params, so a shared middleware avoids'
+                . ' touching every one of them).',
+            ],
             'bcc_mails_to_admin' => [
                 'why' => 'A blind carbon copy email, unseen to the recipient'
                 . ' of the email, is sent to the administrator.',
@@ -797,6 +819,51 @@ trait SettingTooltipTrait
                 . ' an accurate Finish Date for a Task.',
                 'where' => '',
             ],
+            'webshop_currency_preference' => [
+                'why' => 'The /shop storefront navbar\'s "Change currency"'
+                . ' toggle — a session-only display preference (native vs.'
+                . ' this shop\'s Peppol document currency, no DB row of its'
+                . ' own, unlike the mutual exchange rates it converts'
+                . ' between — those are real settings, currency_from_to/'
+                . ' currency_to_from below). Only rendered at all when the'
+                . ' current Peppol dual-currency setup actually has two'
+                . ' distinct currencies to choose between'
+                . ' (CurrencyInfo::hasDualCurrency()). Purely cosmetic:'
+                . ' every price shown through it is a converted copy for'
+                . ' display only — the customer is always billed in the'
+                . ' native currency at checkout regardless of which option'
+                . ' is selected here. The conversion rate behind it is'
+                . ' either a manual xe.com-style admin-typed value, or —'
+                . ' when the auto_update_exchange_rate setting is on — a'
+                . ' live European Central Bank rate refreshed at most once'
+                . ' a day (see that setting\'s own tooltip entry), either'
+                . ' way shown with an honest "as of {date}" caveat'
+                . ' (CurrencyInfo::$rateUpdatedAt), never presented as'
+                . ' this exact instant\'s rate. When auto-update is on, a'
+                . ' second, "Refresh exchange rate now" button also'
+                . ' appears in this same dropdown, letting anyone trigger'
+                . ' that day\'s refresh early rather than waiting for the'
+                . ' first admin login of the day.',
+                'where' => 'App\Webshop\Currency\CurrencyContext (info()/'
+                . 'format() — the lazily-resolved service every storefront'
+                . ' view renders a price through; see that class\'s own'
+                . ' docblock for why resolution must stay lazy), App\\'
+                . 'Webshop\Currency\CurrencyPreferenceService (get()/set()'
+                . ' — session-only NATIVE/DOCUMENT choice, no DB row),'
+                . ' App\Webshop\Currency\CurrencyController::update() (the'
+                . ' POST handler the currency-preference form submits to)'
+                . ' and ::refreshRate() (the "Refresh exchange rate now"'
+                . ' button\'s own handler, POST /shop/currency/refresh-'
+                . 'rate). The actual rate refresh:'
+                . ' App\Invoice\Helpers\Peppol\ExchangeRateUpdateService::'
+                . 'updateIfDue(), called automatically from'
+                . ' App\Middleware\ExchangeRateAutoUpdateMiddleware on'
+                . ' every /invoice/* staff request (see'
+                . ' auto_update_exchange_rate\'s own tooltip entry for why'
+                . ' there, not a login controller). Widget markup itself:'
+                . ' resources/views/layout/templates/storefront/main.php'
+                . ' ($currencyWidget).',
+            ],
         ];
     }
 
@@ -856,9 +923,30 @@ trait SettingTooltipTrait
      *
      * Returns an empty string when the setting has no entry in tooltipArray(),
      * so it is safe to call on any key without a guard.
+     *
+     * Hidden outside debug mode by default (checked directly against
+     * $_ENV['YII_DEBUG'], same expression App\ViewInjection\
+     * LayoutViewInjection::resolveUserState() and the storefront layout
+     * both use) — every existing partial_settings_*.php call site passes
+     * nothing here, so this is what actually makes all ~40 of them
+     * respect debug mode, with zero edits to any of those files.
+     * Confirmed live: the user's own report that turning YII_DEBUG off
+     * hid the storefront currency tooltip but *not* these was exactly
+     * the bug this fixes.
+     *
+     * @param bool|null $debug_mode Override for a caller that's already
+     *     resolved its own debug-mode value and doesn't want a second,
+     *     possibly-inconsistent computation of it (the storefront
+     *     currency tooltip does this, though it doesn't call infoIcon()
+     *     itself — see that view's own $debugMode). Leave null to use
+     *     the real, live YII_DEBUG value.
      */
-    public function infoIcon(string $setting): string
+    public function infoIcon(string $setting, ?bool $debug_mode = null): string
     {
+        $debugMode = $debug_mode ?? ($_ENV['YII_DEBUG'] == 'true');
+        if (!$debugMode) {
+            return '';
+        }
         $title = $this->tooltipTitle($setting);
         if ($title === ' | ') {
             return '';

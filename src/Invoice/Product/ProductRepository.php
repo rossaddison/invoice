@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Product;
 
 use App\Infrastructure\Persistence\Product\Product;
+use App\Invoice\Product\Trait\ProductWebshopQueryTrait;
 use Cycle\ORM\Select;
 use Throwable;
 use Cycle\Database\Injection\Parameter;
@@ -20,6 +21,8 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class ProductRepository extends Select\Repository implements ProductRepositoryInterface
 {
+    use ProductWebshopQueryTrait;
+
     /**
     * @param Select<TEntity> $select
     *

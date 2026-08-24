@@ -24,6 +24,21 @@ final class ContactForm extends FormModel implements RulesProviderInterface, Pro
     private array $attachFiles = [];
 
     /**
+     * Pre-fills subject/body for a deep link into this form — e.g. the
+     * storefront's "Request a Trade Quote" button
+     * (resources/views/shop/catalog/view.php), which sends the customer
+     * here via GET with the product's trade terms already summarized, so
+     * they only need to fill in name/email. Never called from POST
+     * handling — App\Contact\ContactController::interest() only reads
+     * these query params on the initial GET.
+     */
+    public function prefill(string $subject, string $body): void
+    {
+        $this->subject = $subject;
+        $this->body = $body;
+    }
+
+    /**
      * @return string[]
      *
      * @psalm-return array{name: 'Name', email: 'Email', subject: 'Subject', body: 'Body'}

@@ -14,7 +14,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\UploadedFileInterface;
 use RuntimeException;
-use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
@@ -34,7 +33,6 @@ final class ProductAttachmentController extends BaseController
     private const int MAX_IMAGE_UPLOAD_BYTES = 5 * 1024 * 1024;
 
     public function __construct(
-        private DataResponseFactoryInterface $responseFactory,
         private ValidatorInterface $validator,
         WebControllerService $webService,
         UserService $userService,
@@ -69,13 +67,16 @@ final class ProductAttachmentController extends BaseController
         /** @var UploadedFileInterface|null $file */
         $file = $request->getUploadedFiles()['ImageAttachForm']['attachFile'] ?? null;
         if (!is_writable($targetPath)) {
-            $content = $this->imageAttachmentNotWritable($product_id);
+            $this->flashMessage(
+                'danger',
+                $this->translator->translate('path') . $this->translator->translate('is.not.writable'),
+            );
         } elseif (
             !$file instanceof UploadedFileInterface
             || $file->getError() === UPLOAD_ERR_NO_FILE
             || !$this->validateImageFile($file, $piR)
         ) {
-            $content = $this->imageAttachmentNoFileUploaded($product_id);
+            $this->flashMessage('warning', $this->translator->translate('productimage.no.file.uploaded'));
         } else {
             $original_file_name = preg_replace('/\s+/', '_', (string) $file->getClientFilename());
             if ($original_file_name === null || $original_file_name === '') {
@@ -85,11 +86,31 @@ final class ProductAttachmentController extends BaseController
                 $file, $targetPath . '/' . $original_file_name,
                 $product_id, $original_file_name, $piR
             );
-            $content = $moved
-                ? $this->imageAttachmentSuccessfullyCreated($product_id)
-                : $this->imageAttachmentNoFileUploaded($product_id);
+            if ($moved) {
+                $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
+            }
+            // else: imageAttachmentMoveTo() already flashed its own,
+            // more specific warning (duplicate filename / possible
+            // upload attack) before returning false — nothing more to
+            // add here.
         }
-        return $this->responseFactory->createResponse($content);
+        // Was `$this->responseFactory->createResponse($content)` with
+        // $content a rendered HTML string — DataResponseFactoryInterface
+        // JSON-encodes whatever it's given (raw HTML included), which is
+        // exactly why this used to render as an escaped JSON string
+        // instead of a page. See ProductImageController::delete() for
+        // the same anti-pattern, and this app's own established fix:
+        // flash + redirect, a real ResponseInterface, never JSON-wrapped
+        // HTML. The '#product-images' hash (no leading '#' — UrlGenerator
+        // adds it) sends the customer back to the tab they were actually
+        // using — see src/typescript/tab-hash-restore.ts, which reads it
+        // back on load since Bootstrap's own tab JS never does.
+        return $this->webService->getRedirectResponse(
+            'product/view',
+            ['id' => (string) $product_id],
+            [],
+            'product-images',
+        );
     }
 
     /**
@@ -156,7 +177,7 @@ final class ProductAttachmentController extends BaseController
         piR $piR,
     ): bool {
         if (file_exists($target)) {
-            $this->flashMessage('warning', $this->translator->translate('error_duplicate_file'));
+            $this->flashMessage('warning', $this->translator->translate('error.duplicate.file'));
             return false;
         }
         try {
@@ -179,42 +200,5 @@ final class ProductAttachmentController extends BaseController
             $this->translator->translate('productimage.uploaded.to') . $target
         );
         return true;
-    }
-
-    private function imageAttachmentNotWritable(int $product_id): string
-    {
-        return $this->webViewRenderer->renderPartialAsString(
-            '//invoice/setting/inv_message',
-            [
-                'heading' => $this->translator->translate('errors'),
-                'message' => $this->translator->translate('path')
-                    . $this->translator->translate('is.not.writable'),
-                'url' => 'product/view', 'id' => $product_id,
-            ],
-        );
-    }
-
-    private function imageAttachmentSuccessfullyCreated(int $product_id): string
-    {
-        return $this->webViewRenderer->renderPartialAsString(
-            '//invoice/setting/inv_message',
-            [
-                'heading' => '',
-                'message' => $this->translator->translate('record.successfully.created'),
-                'url' => 'product/view', 'id' => $product_id,
-            ],
-        );
-    }
-
-    private function imageAttachmentNoFileUploaded(int $product_id): string
-    {
-        return $this->webViewRenderer->renderPartialAsString(
-            '//invoice/setting/inv_message',
-            [
-                'heading' => $this->translator->translate('errors'),
-                'message' => $this->translator->translate('productimage.no.file.uploaded'),
-                'url' => 'product/view', 'id' => $product_id,
-            ],
-        );
     }
 }

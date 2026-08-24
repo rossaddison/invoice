@@ -11,6 +11,7 @@ use App\Infrastructure\Persistence\InvItem\InvItem;
 use App\Infrastructure\Persistence\User\User;
 use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\Enum\DoNotSendReason;
+use App\Invoice\Enum\FlashScope;
 
 use App\Invoice\{
     Client\ClientRepository as ClientR,
@@ -56,7 +57,23 @@ trait Guest
         }
         $access = $this->resolveGuestAccess($d, $user_id);
         if (null === $access) {
-            return $this->webService->getNotFoundResponse();
+            // resolveGuestAccess() already flashed *why* (no UserInv row yet,
+            // account not active, or no Client assigned) via
+            // flashGuestAccessWarnings() — the common case since the /shop
+            // merge is a customer who's logged in (checkout's oauthLogin())
+            // but hasn't placed an order yet, so no UserInv/Client exists
+            // for them at all. getNotFoundResponse() used to be returned
+            // here directly: a bare, bodyless 404 that never rendered the
+            // flash, leaving it to sit in the session and surface — often
+            // duplicated, one retry at a time (FlashMessage::flashMessage()'s
+            // has() guard checks the message text, not a real flash key, so
+            // it never actually de-dupes) — on whatever unrelated page the
+            // visitor happened to land on next. Redirecting back into the
+            // storefront instead means the flash renders immediately, in
+            // context, exactly once. Confirmed live: no-orders-yet customer
+            // clicking "Returns & Orders" now lands on shop/catalog/index
+            // with the explanatory message, not a blank tab.
+            return $this->webService->getRedirectResponse('shop/catalog/index');
         }
         return $this->renderGuestView($d, $filter, $page, $status, $user_id, $access);
     }
@@ -262,15 +279,22 @@ trait Guest
         ]);
     }
 
+    /**
+     * Every caller of resolveGuestAccess() (i.e. guest()) now redirects
+     * this null-access case straight into shop/catalog/index — see that
+     * method's own docblock — so the storefront layout is the only reader
+     * that will ever see these; scope them accordingly (FlashScope::Shop)
+     * so they can't instead surface on a later staff/guest-portal page.
+     */
     private function flashGuestAccessWarnings(?UserInv $userInv, array $user_clients): void
     {
         if (null === $userInv || !$userInv->getActive()) {
-            $this->flashMessage('info', $this->translator->translate('user.inv.active.not'));
+            $this->flashMessage('info', $this->translator->translate('user.inv.active.not'), FlashScope::Shop);
             return;
         }
         if (empty($user_clients)) {
-            $this->flashMessage('warning', $this->translator->translate('user.clients.assigned.not'));
-            $this->flashMessage('info', $this->translator->translate('user.inv.active.not'));
+            $this->flashMessage('warning', $this->translator->translate('user.clients.assigned.not'), FlashScope::Shop);
+            $this->flashMessage('info', $this->translator->translate('user.inv.active.not'), FlashScope::Shop);
         }
     }
 

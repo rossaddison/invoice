@@ -26,6 +26,7 @@ import { initFamilyFormValidation } from './family-form-validation.js';
 import { initDataActions } from './data-actions.js';
 import { initHtmxHooks } from './htmx-hooks.js';
 import { initCustomFieldPosition } from './customfield-position.js';
+import { initTabHashRestore } from './tab-hash-restore.js';
 import { initJavascriptAnalysisFaq, initCodeceptionChecklistFaq } from './faq-pages.js';
 import { initInvIndex } from './inv-index.js';
 import { initQuoteIndex } from './quote-index.js';
@@ -85,6 +86,7 @@ class InvoiceApp {
         initDataActions();
         initHtmxHooks();
         initCustomFieldPosition();
+        initTabHashRestore();
         initJavascriptAnalysisFaq();
         initCodeceptionChecklistFaq();
         initE164PhoneFields();

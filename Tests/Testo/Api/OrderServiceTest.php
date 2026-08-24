@@ -6,12 +6,11 @@ namespace Tests\Testo\Api;
 
 use App\Api\OrderService;
 use App\Api\OrderServiceDeps;
-use App\Auth\TokenRepository as tR;
+use App\Auth\AuthService;
 use App\Infrastructure\Persistence\Client\Client;
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\InvAmount\InvAmount;
 use App\Infrastructure\Persistence\Product\Product;
-use App\Infrastructure\Persistence\Token\Token;
 use App\Infrastructure\Persistence\User\User;
 use App\Infrastructure\Persistence\UserClient\UserClient;
 use App\Infrastructure\Persistence\UserInv\UserInv;
@@ -38,21 +37,19 @@ use App\User\UserRepository as uR;
 use Mockery as m;
 use Testo\Assert;
 use Testo\Test;
-use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Rbac\Manager;
-use Yiisoft\Router\FastRoute\UrlGenerator;
+use Yiisoft\Session\SessionInterface;
 
 /**
- * Covers OrderService::createOrder() — specifically the account-resolution
- * and one-time-login-token behaviour added to unblock the webshop's
- * checkout handoff (see
- * docs/STOCK_MOVEMENT_LEDGER_AND_WEBSHOP_API_AUGUST_2026.md). Both cases
+ * Covers OrderService::createOrder() — account resolution (new customer
+ * vs. repeat customer) and the direct in-session login that replaced the
+ * one-time-login-link handoff once the `/shop` storefront started running
+ * in-process (see docs/WEBSHOP_INPROCESS_MERGE_AUGUST_2026.md). Both cases
  * here use an already-existing Client (ClientRepository::findByEmail()
- * returns non-null) so the test surface stays focused on the new
- * account/token logic rather than re-proving the pre-existing
- * Client-creation/invoice-shell/item-adding code path, which is untouched
- * by this change.
+ * returns non-null) so the test surface stays focused on the account/
+ * login logic rather than re-proving the pre-existing Client-creation/
+ * invoice-shell/item-adding code path, which is untouched by this change.
  *
  * All repositories/services here are `final`, mockable only because
  * Tests/testo.php enables DG\BypassFinals — same established pattern as
@@ -101,31 +98,18 @@ final class OrderServiceTest
         return $product;
     }
 
-    private function systemAdminUser(): User
+    /**
+     * Deliberately gives retail_price a different value from product_price
+     * — see chargesTheInvItemAtWebshopPriceNotWholesaleProductPrice(),
+     * which needs the two to diverge to prove addOrderItem() bills at
+     * Product::webshopPrice() (retail_price here) rather than the staff/
+     * B2B product_price ("wholesale").
+     */
+    private function trackedProductWithRetailPrice(): Product
     {
-        $user = new User('admin', 'admin@example.test', 'irrelevant');
-        $this->setPrivateId($user, 1);
-        return $user;
-    }
-
-    private function adminUserInv(): UserInv
-    {
-        $userInv = new UserInv();
-        $userInv->setUserId(1);
-        $userInv->setType(0);
-        return $userInv;
-    }
-
-    /** @param list<UserInv> $userInvs */
-    private function fakeUserInvReader(array $userInvs): EntityReader
-    {
-        /** @var EntityReader&m\MockInterface $reader */
-        $reader = m::mock(EntityReader::class);
-        $generator = (static function () use ($userInvs) {
-            yield from $userInvs;
-        })();
-        $reader->shouldReceive('getIterator')->andReturn($generator);
-        return $reader;
+        $product = $this->trackedProduct();
+        $product->setRetailPrice(6.49);
+        return $product;
     }
 
     /**
@@ -150,7 +134,7 @@ final class OrderServiceTest
         return $inv;
     }
 
-    public function createsANewCustomerAccountAndReturnsAOneTimeLoginLink(): void
+    public function createsANewCustomerAccountAndLogsThemIn(): void
     {
         $client = $this->existingClient(50, 'ada@example.test');
         $savedInv = $this->savedInv(900);
@@ -173,17 +157,15 @@ final class OrderServiceTest
         $ucR = m::mock(ucR::class);
         /** @var urlR&m\MockInterface $urlR */
         $urlR = m::mock(urlR::class);
-        /** @var tR&m\MockInterface $tR */
-        $tR = m::mock(tR::class);
         /** @var Manager&m\MockInterface $manager */
         $manager = m::mock(Manager::class);
-        /** @var UrlGenerator&m\MockInterface $urlGenerator */
-        $urlGenerator = m::mock(UrlGenerator::class);
+        /** @var AuthService&m\MockInterface $authService */
+        $authService = m::mock(AuthService::class);
+        /** @var SessionInterface&m\MockInterface $session */
+        $session = m::mock(SessionInterface::class);
 
         $cR->shouldReceive('findByEmail')->once()->with('ada@example.test')->andReturn($client);
         $sR->shouldReceive('getSetting')->with('default_invoice_group')->andReturn('3');
-        $uiR->shouldReceive('findAllPreloaded')->once()->andReturn($this->fakeUserInvReader([$this->adminUserInv()]));
-        $uR->shouldReceive('findById')->with(1)->andReturn($this->systemAdminUser());
         $pR->shouldReceive('repoProductquery')->with(7)->andReturn($this->trackedProduct());
         $iR->shouldReceive('save')->once()->with($savedInv);
         $iR->shouldReceive('repoInvLoadInvAmountquery')->once()->with(900)->andReturn($this->invWithAmount(900));
@@ -205,22 +187,18 @@ final class OrderServiceTest
         $manager->shouldReceive('revokeAll')->once()->with('200');
         $manager->shouldReceive('assign')->once()->with(AppConstants::ROLE_OBSERVER, '200');
         $urlR->shouldReceive('upsert')->once()->with(300, 200);
-        $tR->shouldReceive('save')->once()->with(m::on(
-            static fn (Token $t): bool =>
-                str_starts_with((string) $t->getType(), AppConstants::TOKEN_TYPE_WEBSHOP_ORDER_LOGIN . ':900'),
-        ));
-        $urlGenerator->shouldReceive('generateAbsolute')
-            ->once()
-            ->with('webshopOrderLogin', m::type('array'))
-            ->andReturn('https://example.test/webshop/orderLogin/masked-token');
+        // The new customer account is logged into the caller's own
+        // session directly — no one-time token issued at all.
+        $authService->shouldReceive('oauthLogin')->once()->with('ada@example.test')->andReturn(true);
+        $session->shouldReceive('set')->once()->with('tfa_verified', true);
 
         $service = $this->makeService(
-            $iR, $iaR, $pR, $cR, $sR, $uR, $uiR, $ucR, $urlR, $tR, $manager, $urlGenerator, $savedInv,
+            $iR, $iaR, $pR, $cR, $sR, $uR, $uiR, $ucR, $urlR, $manager, $authService, $session, $savedInv,
         );
 
-        $redirectUrl = $service->createOrder($this->customer('ada@example.test'), $this->items());
+        $invId = $service->createOrder($this->customer('ada@example.test'), $this->items());
 
-        Assert::same('https://example.test/webshop/orderLogin/masked-token', $redirectUrl);
+        Assert::same(900, $invId);
     }
 
     public function reusesTheExistingAccountForARepeatCustomer(): void
@@ -254,16 +232,15 @@ final class OrderServiceTest
         $ucR = m::mock(ucR::class);
         /** @var urlR&m\MockInterface $urlR */
         $urlR = m::mock(urlR::class);
-        /** @var tR&m\MockInterface $tR */
-        $tR = m::mock(tR::class);
         /** @var Manager&m\MockInterface $manager */
         $manager = m::mock(Manager::class);
-        /** @var UrlGenerator&m\MockInterface $urlGenerator */
-        $urlGenerator = m::mock(UrlGenerator::class);
+        /** @var AuthService&m\MockInterface $authService */
+        $authService = m::mock(AuthService::class);
+        /** @var SessionInterface&m\MockInterface $session */
+        $session = m::mock(SessionInterface::class);
 
         $cR->shouldReceive('findByEmail')->once()->with('bob@example.test')->andReturn($client);
         $sR->shouldReceive('getSetting')->with('default_invoice_group')->andReturn('3');
-        $uiR->shouldReceive('findAllPreloaded')->once()->andReturn($this->fakeUserInvReader([$this->adminUserInv()]));
         $pR->shouldReceive('repoProductquery')->with(7)->andReturn($this->trackedProduct());
         $iR->shouldReceive('save')->once()->with($savedInv);
         $iR->shouldReceive('repoInvLoadInvAmountquery')->once()->with(901)->andReturn($this->invWithAmount(901));
@@ -272,7 +249,6 @@ final class OrderServiceTest
         // Repeat order — existing UserClient link found, so no new
         // User/UserInv/UserClient/RBAC assignment happens.
         $ucR->shouldReceive('repoUserquery')->once()->with(51)->andReturn($existingLink);
-        $uR->shouldReceive('findById')->with(1)->andReturn($this->systemAdminUser());
         $uR->shouldReceive('findById')->with(201)->andReturn($bobUser);
         $uR->shouldNotReceive('save');
         $uiR->shouldNotReceive('save');
@@ -280,18 +256,89 @@ final class OrderServiceTest
         $manager->shouldNotReceive('revokeAll');
         $manager->shouldNotReceive('assign');
         $urlR->shouldNotReceive('upsert');
-        $tR->shouldReceive('save')->once();
-        $urlGenerator->shouldReceive('generateAbsolute')
-            ->once()
-            ->andReturn('https://example.test/webshop/orderLogin/masked-token-2');
+        $authService->shouldReceive('oauthLogin')->once()->with('bob@example.test')->andReturn(true);
+        $session->shouldReceive('set')->once()->with('tfa_verified', true);
 
         $service = $this->makeService(
-            $iR, $iaR, $pR, $cR, $sR, $uR, $uiR, $ucR, $urlR, $tR, $manager, $urlGenerator, $savedInv,
+            $iR, $iaR, $pR, $cR, $sR, $uR, $uiR, $ucR, $urlR, $manager, $authService, $session, $savedInv,
         );
 
-        $redirectUrl = $service->createOrder($this->customer('bob@example.test'), $this->items());
+        $invId = $service->createOrder($this->customer('bob@example.test'), $this->items());
 
-        Assert::same('https://example.test/webshop/orderLogin/masked-token-2', $redirectUrl);
+        Assert::same(901, $invId);
+    }
+
+    /**
+     * See App\Api\OrderService::addOrderItem()'s own docblock — the
+     * InvItem must be billed at the exact price the customer was shown
+     * on the storefront (App\Webshop\Catalog\CatalogQueryService::
+     * toListing()'s webshopPrice()), never at the staff/B2B
+     * product_price ("wholesale"), when the two diverge.
+     */
+    public function chargesTheInvItemAtWebshopPriceNotWholesaleProductPrice(): void
+    {
+        $client = $this->existingClient(52, 'carol@example.test');
+        $savedInv = $this->savedInv(902);
+
+        $existingLink = new UserClient();
+        $existingLink->setUserId(202);
+        $existingLink->setClientId(52);
+
+        $carolUser = new User('carol@example.test', 'carol@example.test', 'irrelevant');
+        $this->setPrivateId($carolUser, 202);
+        $this->setPrivateId($carolUser->getIdentity(), 2020);
+
+        /** @var iR&m\MockInterface $iR */
+        $iR = m::mock(iR::class);
+        /** @var iaR&m\MockInterface $iaR */
+        $iaR = m::mock(iaR::class);
+        /** @var pR&m\MockInterface $pR */
+        $pR = m::mock(pR::class);
+        /** @var cR&m\MockInterface $cR */
+        $cR = m::mock(cR::class);
+        /** @var sR&m\MockInterface $sR */
+        $sR = m::mock(sR::class);
+        /** @var uR&m\MockInterface $uR */
+        $uR = m::mock(uR::class);
+        /** @var uiR&m\MockInterface $uiR */
+        $uiR = m::mock(uiR::class);
+        /** @var ucR&m\MockInterface $ucR */
+        $ucR = m::mock(ucR::class);
+        /** @var urlR&m\MockInterface $urlR */
+        $urlR = m::mock(urlR::class);
+        /** @var Manager&m\MockInterface $manager */
+        $manager = m::mock(Manager::class);
+        /** @var AuthService&m\MockInterface $authService */
+        $authService = m::mock(AuthService::class);
+        /** @var SessionInterface&m\MockInterface $session */
+        $session = m::mock(SessionInterface::class);
+
+        $cR->shouldReceive('findByEmail')->once()->with('carol@example.test')->andReturn($client);
+        $sR->shouldReceive('getSetting')->with('default_invoice_group')->andReturn('3');
+        $pR->shouldReceive('repoProductquery')->with(7)->andReturn($this->trackedProductWithRetailPrice());
+        $iR->shouldReceive('save')->once()->with($savedInv);
+        $iR->shouldReceive('repoInvLoadInvAmountquery')->once()->with(902)->andReturn($this->invWithAmount(902));
+        $iaR->shouldReceive('save')->once();
+
+        $ucR->shouldReceive('repoUserquery')->once()->with(52)->andReturn($existingLink);
+        $uR->shouldReceive('findById')->with(202)->andReturn($carolUser);
+        $uR->shouldNotReceive('save');
+        $uiR->shouldNotReceive('save');
+        $ucR->shouldNotReceive('save');
+        $manager->shouldNotReceive('revokeAll');
+        $manager->shouldNotReceive('assign');
+        $urlR->shouldNotReceive('upsert');
+        $authService->shouldReceive('oauthLogin')->once()->with('carol@example.test')->andReturn(true);
+        $session->shouldReceive('set')->once()->with('tfa_verified', true);
+
+        $service = $this->makeService(
+            $iR, $iaR, $pR, $cR, $sR, $uR, $uiR, $ucR, $urlR, $manager, $authService, $session, $savedInv,
+            expectedItemPrice: 6.49,
+        );
+
+        $invId = $service->createOrder($this->customer('carol@example.test'), $this->items());
+
+        Assert::same(902, $invId);
     }
 
     private function makeService(
@@ -304,10 +351,16 @@ final class OrderServiceTest
         uiR $uiR,
         ucR $ucR,
         urlR $urlR,
-        tR $tR,
         Manager $manager,
-        UrlGenerator $urlGenerator,
+        AuthService $authService,
+        SessionInterface $session,
         Inv $savedInv,
+        // Asserted against the InvItem's own 'price' array key when given
+        // — see chargesTheInvItemAtWebshopPriceNotWholesaleProductPrice(),
+        // which needs this to confirm addOrderItem() actually bills at
+        // Product::webshopPrice(), not just that addInvItemProduct() was
+        // called at all (the other tests here only need the latter).
+        ?float $expectedItemPrice = null,
     ): OrderService {
         /** @var IS&m\MockInterface $invService */
         $invService = m::mock(IS::class);
@@ -327,7 +380,16 @@ final class OrderServiceTest
 
         /** @var InvItemService&m\MockInterface $invItemService */
         $invItemService = m::mock(InvItemService::class);
-        $invItemService->shouldReceive('addInvItemProduct')->once();
+        if ($expectedItemPrice === null) {
+            $invItemService->shouldReceive('addInvItemProduct')->once();
+        } else {
+            $invItemService->shouldReceive('addInvItemProduct')->once()->with(
+                m::type(\App\Infrastructure\Persistence\InvItem\InvItem::class),
+                m::on(static fn (array $itemBody): bool => ($itemBody['price'] ?? null) === $expectedItemPrice),
+                m::type('string'),
+                m::any(),
+            );
+        }
 
         /** @var iiaR&m\MockInterface $iiaRMock */
         $iiaRMock = m::mock(iiaR::class);
@@ -352,7 +414,7 @@ final class OrderServiceTest
 
         return new OrderService(new OrderServiceDeps(
             $cR, $pR, $trR, $unR, $iR, $invService, $gR, $iaR, $iiR, $invItemService, $iiaDeps,
-            $numberHelper, $sR, $uR, $uiR, $ucR, $urlR, $tR, $manager, $urlGenerator, $formHydrator,
+            $numberHelper, $sR, $uR, $uiR, $ucR, $urlR, $manager, $authService, $session, $formHydrator,
         ));
     }
 }

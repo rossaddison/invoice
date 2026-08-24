@@ -41,7 +41,6 @@ echo H::openTag('div', ['class' => 'row']); //1
   echo H::openTag('div', ['class' => 'card']); //3
    echo H::openTag('div', ['class' => 'card-header']); //4
     echo H::openTag('label');
-     echo H::openTag('i', ['class' => 'bi bi-info-circle']);
      echo H::closeTag('i');
      echo $translator->translate('oauth2') . ' ' . '⛔';
     echo H::closeTag('label');
