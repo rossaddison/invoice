@@ -1,5 +1,13 @@
 # Webshop — Headless Storefront Design (August 2026)
 
+> **SUPERSEDED (August 2026):** the two-app, HTTP-API architecture this
+> document describes has been replaced — the storefront now runs
+> in-process inside this repo under `/shop`, calling repositories/
+> services directly instead of over HTTP. See
+> [`WEBSHOP_INPROCESS_MERGE_AUGUST_2026.md`](WEBSHOP_INPROCESS_MERGE_AUGUST_2026.md)
+> for the current architecture. Kept here as historical record of why
+> the API-key/HTTP design was built the way it was.
+
 > **Status: all four steps below now have a v1.** This document
 > originally captured a settled architecture before any code existed.
 > Steps 1-2 (API-key auth, the two endpoints) are implemented on this

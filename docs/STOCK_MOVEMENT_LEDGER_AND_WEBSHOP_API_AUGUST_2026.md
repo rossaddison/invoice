@@ -1,5 +1,14 @@
 # Stock Movement Ledger + Webshop API Auth (August 2026)
 
+> **The webshop-API half of this document is SUPERSEDED (August 2026):**
+> `ApiKeyAuthMiddleware`, `App\Api\ProductsController`/`OrdersController`/
+> `CurrencyController`, and the `/api/products`/`/api/orders`/
+> `/api/currency` routes have all been removed — the storefront now runs
+> in-process under `/shop` instead of calling this API over HTTP. See
+> [`WEBSHOP_INPROCESS_MERGE_AUGUST_2026.md`](WEBSHOP_INPROCESS_MERGE_AUGUST_2026.md).
+> The stock-movement-ledger half of this document is unaffected and
+> still current.
+
 Two related pieces of work: a ledger-based inventory feature triggered by
 invoice payment, and the API-key-authenticated `/api` surface that the
 planned headless webshop storefront needs (design settled earlier in

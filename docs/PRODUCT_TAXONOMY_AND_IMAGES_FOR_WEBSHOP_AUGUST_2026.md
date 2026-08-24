@@ -1,5 +1,14 @@
 # Product Category/Subcategory/Family Taxonomy + Images for the Webshop Feed (August 2026)
 
+> **The "feed" framing here is SUPERSEDED (August 2026):** there's no
+> `GET /api/products` HTTP feed any more — `App\Webshop\Catalog\
+> CatalogQueryService` reads the same taxonomy (`ProductRepository`/
+> `ProductImageRepository`/`CategoryPrimaryRepository`/
+> `CategorySecondaryRepository`) directly, in-process. The taxonomy
+> model/mapping this document describes is otherwise unchanged and still
+> current — see
+> [`WEBSHOP_INPROCESS_MERGE_AUGUST_2026.md`](WEBSHOP_INPROCESS_MERGE_AUGUST_2026.md).
+
 Follow-on to
 [`STOCK_MOVEMENT_LEDGER_AND_WEBSHOP_API_AUGUST_2026.md`](STOCK_MOVEMENT_LEDGER_AND_WEBSHOP_API_AUGUST_2026.md)'s
 `GET /api/products` feed — the headless `webshop` storefront (a separate
