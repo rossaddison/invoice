@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Api\{CurrencyController, OrdersController, ProductsController, WebshopOrderLoginController};
 use App\Auth\Controller\{
     AuthController, ChangePasswordController, ForgotPasswordController,
     ResetPasswordController, SignupController};
@@ -13,7 +12,7 @@ use App\Invoice\{
     Inv\InvController,
     Prometheus\PrometheusController,
 };
-use App\Middleware\{ApiDataWrapper, ApiKeyAuthMiddleware, RateLimiter, RoutePermission};
+use App\Middleware\{ApiDataWrapper, RateLimiter, RoutePermission};
 use App\Redirect\RedirectController;
 use App\User\Controller\{ApiUserController, UserController};
 use Yiisoft\{
@@ -53,17 +52,6 @@ return [
         ->middleware(RateLimiter::perIp(10, 'homecare_scan_route'))
         ->action([InvController::class, 'homeCareScan'])
         ->name('public/homecare-scan'),
-    // Redeems the one-time login link App\Api\OrderService issues after a
-    // webshop checkout — see WebshopOrderLoginController's own docblock.
-    // Not under RoutePermission::invoiceGroup(): a brand-new customer has
-    // no session yet. Secured by the masked, time-limited, single-use
-    // token in the URL itself instead, same precedent as /scan/{token}
-    // above and userinv/signup's own email-verification link.
-    Route::get('/webshop/orderLogin/{token}')
-        ->middleware(RateLimiter::global(60))
-        ->middleware(RateLimiter::perIp(10, 'webshop_order_login_route'))
-        ->action([WebshopOrderLoginController::class, 'login'])
-        ->name('webshopOrderLogin'),
     // Admin dashboard that can use the existing authentication middleware
     // if needed.
     Route::get('/prometheus/dashboard')
@@ -327,29 +315,5 @@ return [
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->middleware(JsonDataResponseMiddleware::class)
                 ->action([ApiUserController::class, 'profile']),
-            // External-partner endpoints (e.g. the future webshop
-            // storefront) — key-authenticated via ApiKeyAuthMiddleware,
-            // not the session/cookie RoutePermission gate the routes above
-            // use. See docs/WEBSHOP_HEADLESS_STOREFRONT_DESIGN_AUGUST_2026.md.
-            Route::get('/products')
-                ->name('api/products/index')
-                ->middleware(ApiKeyAuthMiddleware::class)
-                ->middleware(JsonDataResponseMiddleware::class)
-                ->action([ProductsController::class, 'index']),
-            Route::get('/products/{id}')
-                ->name('api/products/show')
-                ->middleware(ApiKeyAuthMiddleware::class)
-                ->middleware(JsonDataResponseMiddleware::class)
-                ->action([ProductsController::class, 'show']),
-            Route::post('/orders')
-                ->name('api/orders/create')
-                ->middleware(ApiKeyAuthMiddleware::class)
-                ->middleware(JsonDataResponseMiddleware::class)
-                ->action([OrdersController::class, 'create']),
-            Route::get('/currency')
-                ->name('api/currency/index')
-                ->middleware(ApiKeyAuthMiddleware::class)
-                ->middleware(JsonDataResponseMiddleware::class)
-                ->action([CurrencyController::class, 'index']),
         ),
 ];
