@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b2b49438f897276a829e1076d74069ec",
+    "content-hash": "f00393bdbe770bd878df6c742a4b98f1",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -7405,16 +7405,16 @@
         },
         {
             "name": "phptg/bot-api",
-            "version": "0.21.2",
+            "version": "0.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phptg/bot-api.git",
-                "reference": "eddb4363b5339501ecda5e523ad6082c209abee3"
+                "reference": "d2ea861dc333944f3d2f802cc76e6adf921d31bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phptg/bot-api/zipball/eddb4363b5339501ecda5e523ad6082c209abee3",
-                "reference": "eddb4363b5339501ecda5e523ad6082c209abee3",
+                "url": "https://api.github.com/repos/phptg/bot-api/zipball/d2ea861dc333944f3d2f802cc76e6adf921d31bb",
+                "reference": "d2ea861dc333944f3d2f802cc76e6adf921d31bb",
                 "shasum": ""
             },
             "require": {
@@ -7477,7 +7477,7 @@
                     "type": "cloudtips"
                 }
             ],
-            "time": "2026-07-14T22:15:21+00:00"
+            "time": "2026-08-25T09:40:22+00:00"
         },
         {
             "name": "promphp/prometheus_client_php",
