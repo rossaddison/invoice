@@ -66,7 +66,20 @@ final readonly class ProductService
                 (string) $apf['product_country_of_origin_code']) : '';
     }
 
+    /**
+     * Split into applyProductIdentityFields()/applyProductPricingAndStockFields()
+     * purely to keep this orchestrator (and each half) under SonarQube's
+     * php:S3776 cognitive-complexity ceiling — every isset()-ternary line
+     * below is independent of every other, so the split is a mechanical
+     * grouping with no behaviour change.
+     */
     private function applyProductCoreFields(Product $model, array $apf): void
+    {
+        $this->applyProductIdentityFields($model, $apf);
+        $this->applyProductPricingAndStockFields($model, $apf);
+    }
+
+    private function applyProductIdentityFields(Product $model, array $apf): void
     {
         isset($apf['product_name']) ?
             $model->setProductName((string) $apf['product_name']) : '';
@@ -74,6 +87,18 @@ final readonly class ProductService
             $model->setProductDescription((string) $apf['product_description']) : '';
         isset($apf['product_type']) ?
             $model->setProductType((string) $apf['product_type']) : '';
+        isset($apf['provider_name']) ?
+            $model->setProviderName((string) $apf['provider_name']) : '';
+        isset($apf['product_additional_item_property_name']) ?
+            $model->setProductAdditionalItemPropertyName(
+                (string) $apf['product_additional_item_property_name']) : '';
+        isset($apf['product_additional_item_property_value']) ?
+            $model->setProductAdditionalItemPropertyValue(
+                (string) $apf['product_additional_item_property_value']) : '';
+    }
+
+    private function applyProductPricingAndStockFields(Product $model, array $apf): void
+    {
         isset($apf['product_price']) ?
             $model->setProductPrice((float) $apf['product_price']) : '';
         isset($apf['product_price_base_quantity']) ?
@@ -114,14 +139,6 @@ final readonly class ProductService
         isset($apf['reorder_threshold']) && $apf['reorder_threshold'] !== '' ?
             $model->setReorderThreshold((float) $apf['reorder_threshold']) :
             $model->setReorderThreshold(null);
-        isset($apf['provider_name']) ?
-            $model->setProviderName((string) $apf['provider_name']) : '';
-        isset($apf['product_additional_item_property_name']) ?
-            $model->setProductAdditionalItemPropertyName(
-                (string) $apf['product_additional_item_property_name']) : '';
-        isset($apf['product_additional_item_property_value']) ?
-            $model->setProductAdditionalItemPropertyValue(
-                (string) $apf['product_additional_item_property_value']) : '';
     }
 
     private function applyProductReferenceIds(Product $model, array $apf): void
