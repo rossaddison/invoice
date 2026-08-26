@@ -103,6 +103,33 @@ echo H::openTag('div', ['class' => 'row']); //1
      echo H::closeTag('div'); //6
 
      echo H::openTag('div', ['class' => 'form-check']); //6
+      // Gates App\Contact\ContactController::interest() (route /interest)
+      // -- the "Request a Trade Quote" form linked from a product's Trade
+      // Pricing modal (resources/views/shop/catalog/view.php), not the
+      // site/contact page above. Newly wired up 2026-08-26 -- this
+      // setting previously had a default value but no checkbox and no
+      // route check at all.
+      $snfcip = 'settings[no_front_contact_interest_page]';
+      $body[$snfcip] = $s->getSetting('no_front_contact_interest_page');
+      echo H::openTag('input', [
+       'type' => 'hidden',
+       'name' => $snfcip,
+       'value' => '0'
+      ]);
+      echo H::openTag('input', [
+       'type' => 'checkbox',
+       'class' => 'form-check-input',
+       'id' => 'no_front_contact_interest_page',
+       'name' => $snfcip,
+       'value' => '1',
+       'checked' => ($body[$snfcip] == 1) ? 'checked' : null
+      ]);
+      echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'no_front_contact_interest_page']);
+       echo $translator->translate('menu.contact.interest');
+      echo H::closeTag('label');
+     echo H::closeTag('div'); //6
+
+     echo H::openTag('div', ['class' => 'form-check']); //6
       $snfgp = 'settings[no_front_gallery_page]';
       $body[$snfgp] = $s->getSetting('no_front_gallery_page');
       echo H::openTag('input', [

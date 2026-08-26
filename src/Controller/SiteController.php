@@ -130,11 +130,10 @@ final class SiteController
         // anywhere in this app (found 2026-08-26, removed the same day):
         // this contact() page has always been address/phone/email details,
         // not a form, so the dead checkbox was pure noise, not a second
-        // page silently left unlinked. A distinct, still-live "Contact Us"
-        // interest form does exist (App\Contact\ContactController::
-        // interest(), route /interest) but has no settings gate of its own
-        // -- see no_front_contact_interest_page's own comment in
-        // InvoiceInstallTrait for that separate, still-open finding.
+        // page silently left unlinked. A distinct "Trade Quote"/contact
+        // form (App\Contact\ContactController::interest(), route
+        // /interest) is gated separately by no_front_contact_interest_page
+        // -- see that controller's own comment.
         return $this->renderUnlessDisabled('contact', 'no_front_contact_us_page', $sR, $webService);
     }
 

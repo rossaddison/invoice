@@ -1314,6 +1314,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'menu.blog' => 'Blog',
   'menu.comments-feed' => 'Comments Feed',
   'menu.contact.details' => 'Contact Details',
+  'menu.contact.interest' => 'Trade Quote / Contact Form',
   'menu.contact.soon' => 'Thank you for contacting us,'
     . ' we\'ll get in touch with'
     . ' you as soon as possible.',
