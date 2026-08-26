@@ -54,7 +54,6 @@ use Yiisoft\Yii\AuthClient\Asset\AuthChoiceAsset;
  * @var bool $debugMode
  * @var bool $noFrontPageAbout
  * @var bool $noFrontPageAccreditations
- * @var bool $noFrontPageContactDetails
  * @var bool $noFrontPageContactUs
  * @var bool $noFrontPageGallery
  * @var bool $noFrontPagePricing

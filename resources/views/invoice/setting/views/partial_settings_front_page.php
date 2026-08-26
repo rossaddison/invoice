@@ -82,27 +82,6 @@ echo H::openTag('div', ['class' => 'row']); //1
      echo H::closeTag('div'); //6
 
      echo H::openTag('div', ['class' => 'form-check']); //6
-      $snfcdp = 'settings[no_front_contact_details_page]';
-      $body[$snfcdp] = $s->getSetting('no_front_contact_details_page');
-      echo H::openTag('input', [
-       'type' => 'hidden',
-       'name' => $snfcdp,
-       'value' => '0'
-      ]);
-      echo H::openTag('input', [
-       'type' => 'checkbox',
-       'class' => 'form-check-input',
-       'id' => 'no_front_contact_details_page',
-       'name' => $snfcdp,
-       'value' => '1',
-       'checked' => ($body[$snfcdp] == 1) ? 'checked' : null
-      ]);
-      echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'no_front_contact_details_page']);
-       echo $translator->translate('menu.contact.details');
-      echo H::closeTag('label');
-     echo H::closeTag('div'); //6
-
-     echo H::openTag('div', ['class' => 'form-check']); //6
       $snfcup = 'settings[no_front_contact_us_page]';
       $body[$snfcup] = $s->getSetting('no_front_contact_us_page');
       echo H::openTag('input', [

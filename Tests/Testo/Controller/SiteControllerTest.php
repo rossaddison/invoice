@@ -163,10 +163,9 @@ final class SiteControllerTest
     }
 
     /**
-     * Gated by no_front_contact_us_page -- not no_front_contact_details_page,
-     * a separate, pre-existing dead setting with no view or route of its
-     * own anywhere in this app (see SiteController::contact()'s own
-     * comment).
+     * Gated by no_front_contact_us_page -- see SiteController::contact()'s
+     * own comment for the sibling dead setting that was removed alongside
+     * this test (no_front_contact_details_page).
      */
     public function contactIsGatedByNoFrontContactUsPage(): void
     {

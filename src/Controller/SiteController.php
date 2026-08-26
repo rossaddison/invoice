@@ -123,12 +123,18 @@ final class SiteController
 
     public function contact(sR $sR, WebControllerService $webService): Response
     {
-        // Gated by no_front_contact_us_page, not no_front_contact_details_page
-        // -- main.php's menu.contact.us NavLink is the only one of the two
-        // that actually points at this route (see its own noFrontPageContactUs
-        // check); no_front_contact_details_page has no associated view or
-        // route anywhere in this app -- its main.php docblock @var is
-        // declared but never read, a separate, pre-existing dead setting.
+        // Gated by no_front_contact_us_page -- main.php's menu.contact.us
+        // NavLink is what actually points at this route. A second setting,
+        // no_front_contact_details_page, used to exist alongside it with a
+        // checkbox in Settings > Front Page but no route or view of its own
+        // anywhere in this app (found 2026-08-26, removed the same day):
+        // this contact() page has always been address/phone/email details,
+        // not a form, so the dead checkbox was pure noise, not a second
+        // page silently left unlinked. A distinct, still-live "Contact Us"
+        // interest form does exist (App\Contact\ContactController::
+        // interest(), route /interest) but has no settings gate of its own
+        // -- see no_front_contact_interest_page's own comment in
+        // InvoiceInstallTrait for that separate, still-open finding.
         return $this->renderUnlessDisabled('contact', 'no_front_contact_us_page', $sR, $webService);
     }
 

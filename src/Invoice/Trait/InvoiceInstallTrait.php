@@ -159,7 +159,21 @@ trait InvoiceInstallTrait
             'mpdf_show_image_errors' => 1,
             'no_front_about_page' => 1,
             'no_front_accreditations_page' => 1,
-            'no_front_contact_details_page' => 1,
+            // Still dead as of 2026-08-26: no Settings > Front Page
+            // checkbox and no route/controller anywhere reads this key,
+            // unlike every other no_front_X_page setting here. Its name
+            // matches App\Contact\ContactController::interest() (route
+            // /interest, a real public "Contact Us" form, currently
+            // reachable only from the webshop product page and with no
+            // gate of its own) closely enough that it looks like the
+            // intended pairing was never finished -- flagged, not fixed,
+            // since wiring it up means adding a new settings checkbox and
+            // deciding this form's default availability, a product call
+            // beyond this pass. See SiteController::contact()'s own
+            // comment for the sibling setting that WAS cleaned up the same
+            // day (no_front_contact_details_page, since removed -- that
+            // one had a checkbox but no page to gate; this one is the
+            // reverse).
             'no_front_contact_interest_page' => 1,
             'no_front_gallery_page' => 1,
             'no_front_pricing_page' => 1,

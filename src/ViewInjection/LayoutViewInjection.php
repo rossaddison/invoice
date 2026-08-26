@@ -134,7 +134,6 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
             'noFrontPageTestimonial' => $bs['noFrontPageTestimonial'],
             'noFrontPagePrivacyPolicy' => $bs['noFrontPagePrivacyPolicy'],
             'noFrontPageTermsOfService' => $bs['noFrontPageTermsOfService'],
-            'noFrontPageContactDetails' => $bs['noFrontPageContactDetails'],
             'noFrontPageContactUs' => $bs['noFrontPageContactUs'],
             'noFrontPageGatewayStatus' => $bs['noFrontPageGatewayStatus'],
             'noFrontPageWebshop' => $bs['noFrontPageWebshop'],
@@ -274,7 +273,6 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
      *     noFrontPageTestimonial: bool,
      *     noFrontPagePrivacyPolicy: bool,
      *     noFrontPageTermsOfService: bool,
-     *     noFrontPageContactDetails: bool,
      *     noFrontPageContactUs: bool,
      *     noFrontPageGatewayStatus: bool,
      *     noFrontPageWebshop: bool,
@@ -332,8 +330,6 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
                 $s->getSetting('no_front_privacy_policy_page') == '1',
             'noFrontPageTermsOfService' =>
                 $s->getSetting('no_front_terms_of_service_page') == '1',
-            'noFrontPageContactDetails' =>
-                $s->getSetting('no_front_contact_details_page') == '1',
             'noFrontPageContactUs' =>
                 $s->getSetting('no_front_contact_us_page') == '1',
             'noFrontPageGatewayStatus' =>
