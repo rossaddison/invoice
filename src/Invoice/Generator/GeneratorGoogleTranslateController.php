@@ -250,6 +250,27 @@ final class GeneratorGoogleTranslateController extends BaseController
         if ($missing === []) {
             return "{$locale}: already up to date";
         }
+        return $this->translateMergeAndWriteLocale(
+            $translationClient, $projectId, $locale, $targetAppPath, $existing, $missing
+        );
+    }
+
+    /**
+     * The translate/merge/write half of translateOneLocaleDiff() -- split
+     * out purely to keep that method's own return count under
+     * SonarQube's php:S1142 ceiling (max 3).
+     *
+     * @param array<string, string> $existing
+     * @param array<string, string> $missing
+     */
+    private function translateMergeAndWriteLocale(
+        TranslationServiceClient $translationClient,
+        string $projectId,
+        string $locale,
+        string $targetAppPath,
+        array $existing,
+        array $missing,
+    ): string {
         try {
             /** @var array<string, string> $translated */
             $translated = $this->translateContentBatch($translationClient, $projectId, $missing, $locale);
