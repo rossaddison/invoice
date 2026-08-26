@@ -20,6 +20,13 @@ interface CartUpdateResponse {
     subtotal: number | null;
     subtotalFormatted: string | null;
     removed: boolean;
+    // True when the requested quantity exceeded available stock and was
+    // reduced to fit — see CartController::jsonCartResponse()'s own
+    // docblock. The quantity input already gets corrected to the real
+    // (possibly clamped) value below regardless; this only adds a visible
+    // reason so that correction doesn't look like the site just ignored
+    // what was typed.
+    clamped: boolean;
     total: number;
     totalFormatted: string;
     count: number;
@@ -92,6 +99,10 @@ class CartInteractivity {
             const qtyInput = row.querySelector<HTMLInputElement>('.js-cart-qty');
             if (qtyInput) {
                 qtyInput.value = String(data.quantity);
+                qtyInput.title = data.clamped
+                    ? 'Reduced to the quantity actually available in stock.'
+                    : '';
+                qtyInput.classList.toggle('is-invalid', data.clamped);
             }
         }
 

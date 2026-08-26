@@ -38,12 +38,23 @@ final readonly class ProductListing
         public float $tradePrice = 0.00,
         public ?int $tradeMinOrderQty = null,
         public ?float $tradeMinOrderSpend = null,
+        // Product::availableStock() — null means stock isn't tracked for
+        // this product at all (unlimited, nothing shown). Otherwise the
+        // real "stock left" figure after the reserved reorder_threshold
+        // buffer is set aside; 0.00 means out of stock to the public even
+        // though physical stock inside the buffer may still exist.
+        public ?float $availableStock = null,
     ) {
     }
 
     public function hasTradeTerms(): bool
     {
         return $this->tradeMinOrderQty !== null || $this->tradeMinOrderSpend !== null;
+    }
+
+    public function isOutOfStock(): bool
+    {
+        return $this->availableStock !== null && $this->availableStock <= 0.0;
     }
 
     public function displayName(): string

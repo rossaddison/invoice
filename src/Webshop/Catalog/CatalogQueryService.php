@@ -83,6 +83,7 @@ final readonly class CatalogQueryService
             tradePrice: $product->getProductPrice() ?? 0.00,
             tradeMinOrderQty: $product->getTradeMinOrderQty(),
             tradeMinOrderSpend: $product->getTradeMinOrderSpend(),
+            availableStock: $product->availableStock(),
         );
     }
 

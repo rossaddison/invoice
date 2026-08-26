@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Webshop\Cart;
 
+use App\Invoice\Enum\FlashScope;
+use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use App\Webshop\Catalog\CatalogQueryService;
+use App\Webshop\Catalog\ProductListing;
 use App\Webshop\Controller\StorefrontController;
 use App\Webshop\Currency\CurrencyContext;
 use App\Webshop\StorefrontViewParameters;
@@ -14,10 +17,14 @@ use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\DataResponse\ResponseFactory\JsonResponseFactory;
 use Yiisoft\Http\Header;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
+use Yiisoft\Session\Flash\Flash;
+use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class CartController extends StorefrontController
 {
+    use FlashMessage;
+
     private const string CART_INDEX_ROUTE = 'shop/cart/index';
 
     public function __construct(
@@ -28,6 +35,11 @@ final class CartController extends StorefrontController
         private readonly CurrencyContext $currency,
         private readonly StorefrontViewParameters $chrome,
         private readonly CatalogQueryService $catalog,
+        private readonly TranslatorInterface $translator,
+        // Not read directly in this class — FlashMessage's own
+        // flashMessage() method reads/writes $this->flash (see
+        // CheckoutController's identical precedent).
+        private readonly Flash $flash,
     ) {
         parent::__construct($webViewRenderer, 'shop/cart');
     }
@@ -49,7 +61,10 @@ final class CartController extends StorefrontController
      * Re-resolves name/price from the catalog rather than trusting the
      * submitted form — the same "catalog is the only source of truth for
      * price" principle `App\Api\OrderService` already enforces for the
-     * cart-to-order handoff.
+     * cart-to-order handoff. Requested quantity (cumulative with whatever
+     * is already in the cart) is clamped to `ProductListing::availableStock`
+     * the same way — this is UX only, never the enforcement boundary; see
+     * `App\Api\OrderService::addOrderItem()`'s own authoritative check.
      */
     public function add(ServerRequestInterface $request): ResponseInterface
     {
@@ -66,12 +81,29 @@ final class CartController extends StorefrontController
 
         $product = $this->catalog->find($productId);
         if ($product !== null && $quantity > 0.0) {
-            $this->cartService->add($product->id, $product->displayName(), $product->price, $quantity);
+            $this->addClampedToStock($product, $quantity);
         }
 
         return $redirect !== ''
             ? $this->webService->getRedirectToSameOriginPathResponse($redirect)
             : $this->webService->getRedirectResponse(self::CART_INDEX_ROUTE);
+    }
+
+    private function addClampedToStock(ProductListing $product, float $requestedQuantity): void
+    {
+        $currentQuantity = $this->currentCartQuantity($product->id);
+        $requestedTotal = $currentQuantity + $requestedQuantity;
+        $allowedTotal = $product->availableStock !== null
+            ? min($requestedTotal, $product->availableStock)
+            : $requestedTotal;
+
+        $delta = $allowedTotal - $currentQuantity;
+        if ($delta > 0.0) {
+            $this->cartService->add($product->id, $product->displayName(), $product->price, $delta);
+        }
+        if ($allowedTotal < $requestedTotal) {
+            $this->flashMessage('warning', $this->translator->translate('cart.insufficient.stock'), FlashScope::Shop);
+        }
     }
 
     public function update(ServerRequestInterface $request): ResponseInterface
@@ -80,11 +112,30 @@ final class CartController extends StorefrontController
         $productId = (int) ($body['product_id'] ?? 0);
         $quantity = (float) ($body['quantity'] ?? 0);
 
-        $this->cartService->updateQuantity($productId, $quantity);
+        $product = $this->catalog->find($productId);
+        $availableStock = $product?->availableStock;
+        $allowedQuantity = $availableStock !== null ? min($quantity, $availableStock) : $quantity;
+        $clamped = $allowedQuantity < $quantity;
+        if ($clamped) {
+            $this->flashMessage('warning', $this->translator->translate('cart.insufficient.stock'), FlashScope::Shop);
+        }
+
+        $this->cartService->updateQuantity($productId, $allowedQuantity);
 
         return $this->wantsJson($request)
-            ? $this->jsonCartResponse($productId)
+            ? $this->jsonCartResponse($productId, $clamped)
             : $this->webService->getRedirectResponse(self::CART_INDEX_ROUTE);
+    }
+
+    /** Matches jsonCartResponse()'s own linear-search-by-productId shape. */
+    private function currentCartQuantity(int $productId): float
+    {
+        foreach ($this->cartService->getItems() as $item) {
+            if ($item->productId === $productId) {
+                return $item->quantity;
+            }
+        }
+        return 0.0;
     }
 
     public function remove(ServerRequestInterface $request, #[RouteArgument('id')] int $id): ResponseInterface
@@ -108,7 +159,7 @@ final class CartController extends StorefrontController
         return str_contains($request->getHeaderLine(Header::ACCEPT), 'application/json');
     }
 
-    private function jsonCartResponse(int $productId): ResponseInterface
+    private function jsonCartResponse(int $productId, bool $clamped = false): ResponseInterface
     {
         $item = null;
         foreach ($this->cartService->getItems() as $candidate) {
@@ -130,6 +181,11 @@ final class CartController extends StorefrontController
             'subtotal' => $item?->subtotal(),
             'subtotalFormatted' => $item !== null ? $this->currency->format($item->subtotal()) : null,
             'removed' => $item === null,
+            // True when the requested quantity exceeded availableStock and
+            // was reduced to fit — cart.ts surfaces this as an inline
+            // notice rather than silently applying a different number
+            // than what the customer typed.
+            'clamped' => $clamped,
             'total' => $this->cartService->getTotal(),
             'totalFormatted' => $this->currency->format($this->cartService->getTotal()),
             'count' => count($this->cartService->getItems()),

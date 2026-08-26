@@ -74,6 +74,14 @@ final class ProductForm extends FormModel
     #[Number(min: 0, max: 999999999999999999)]
     public ?float $trade_min_order_spend = null;
 
+    public bool $track_stock = true;
+
+    // Blank means "no reserved buffer" — the webshop then sees the full
+    // stock_quantity as available (see Product::$reorder_threshold's own
+    // docblock).
+    #[Number(min: 0, max: 999999999999999999)]
+    public ?float $reorder_threshold = null;
+
     #[Length(min: 0, max: 255, skipOnEmpty: true)]
     public ?string $provider_name = null;
 
@@ -110,6 +118,8 @@ final class ProductForm extends FormModel
         $form->available_on_webshop = $product->isAvailableOnWebshop();
         $form->trade_min_order_qty = $product->getTradeMinOrderQty();
         $form->trade_min_order_spend = $product->getTradeMinOrderSpend();
+        $form->track_stock = $product->isTrackStock();
+        $form->reorder_threshold = $product->getReorderThreshold();
         $form->provider_name = $product->getProviderName();
         $form->product_additional_item_property_name =
             $product->getProductAdditionalItemPropertyName();

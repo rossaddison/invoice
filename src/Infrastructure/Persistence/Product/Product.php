@@ -139,6 +139,19 @@ class Product
         // (and unmaintained) while track_stock is false.
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0)]
         private float $stock_quantity = 0.00,
+        // A reserved buffer: physically in stock but never shown or sold to
+        // the public. Null means no buffer configured — the webshop then
+        // sees the full stock_quantity as available. See
+        // ProductTrait4::availableStock() for the single place this is
+        // actually applied (customer-facing "stock left" = stock_quantity
+        // minus this, floored at 0) and App\Invoice\StockMovement\
+        // LowStockNotifier for the staff-facing side: a Telegram alert
+        // fires the moment stock_quantity crosses at/below this value,
+        // early enough that the buffer itself is still there to fulfil
+        // orders from while restocking. Meaningless while track_stock is
+        // false, same as stock_quantity itself.
+        #[Column(type: 'decimal(20,2)', nullable: true)]
+        private ?float $reorder_threshold = null,
     ) {
         $this->client_associations = new ArrayCollection();
     }

@@ -240,6 +240,9 @@ return [
   'caution.deleted.invoices' => 'Testing Only:'
     . ' All invoice and related fields'
     . ' have been deleted.',
+  'cart.insufficient.stock' => 'We only had enough in stock to add part of'
+    . ' what you asked for — your cart has been updated to the largest'
+    . ' quantity currently available.',
   'cc' => 'CC',
   'change.client' => 'Change Client',
   'change.password' => 'Change Password',
@@ -2072,6 +2075,12 @@ prior to importing and no existing documents e.g. Invoices.',
     'Product Record successfully added',
   'product.retail.price' => 'Retail Price (webshop only — leave blank to'
     . ' use Price above)',
+  'product.reorder.threshold' => 'Reorder Threshold (a reserved buffer —'
+    . ' blank = no buffer, the full stock quantity is shown/sold)',
+  'product.stock.quantity' => 'Current Stock',
+  'product.stock.quantity.not.yet.available' => 'Not available until this'
+    . ' product is saved',
+  'product.track.stock' => 'Track Stock',
   'product.sii.id' => 'Peppol Standard Item Identification'
     . ' id associated with the above scheme - eg.'
     . ' 14 digit zero-padded identifier in'

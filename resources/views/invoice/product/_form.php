@@ -22,6 +22,7 @@ use Yiisoft\Html\Tag\Form;
  * @var string $csrf
  * @var string $actionName
  * @var string $title
+ * @var float|null $stockQuantity
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  * @psalm-var array<string,list<string>> $errors
  * @psalm-var array<array-key, array<array-key, string>|string> $taxRates
@@ -132,6 +133,12 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::tag('br'); ?>
         <?= $formFields->productPriceField(
             $form, 'trade_min_order_spend', 'product.trade.min.order.spend', false); ?>
+        <?= Html::tag('br'); ?>
+        <?= $formFields->productStockTrackingField($form); ?>
+        <?= $formFields->productPriceField(
+            $form, 'reorder_threshold', 'product.reorder.threshold', false); ?>
+        <?= Html::tag('br'); ?>
+        <?= $formFields->productStockQuantityDisplay($stockQuantity); ?>
         <?= Html::tag('br'); ?>
         <?= $formFields->productPriceField(
             $form, 'product_price_base_quantity', 'product.price.base.quantity', true); ?>

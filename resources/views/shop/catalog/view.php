@@ -86,6 +86,13 @@ if ($product->imageUrl !== null) {
                 <span class="fs-6 text-muted">/ <?= Html::encode($product->unit) ?></span>
             <?php endif; ?>
         </p>
+        <?php if ($product->availableStock !== null): ?>
+        <p class="<?= $product->isOutOfStock() ? 'text-danger fw-bold' : 'text-muted' ?>">
+            <?= $product->isOutOfStock()
+                ? 'Out of stock'
+                : Html::encode((string) $product->availableStock) . ' in stock' ?>
+        </p>
+        <?php endif; ?>
         <?php if ($product->hasTradeTerms()):
             $tradeModalId = 'trade-pricing-modal';
             $tradeQuoteBody = 'Product: ' . $product->displayName()
@@ -138,6 +145,7 @@ if ($product->imageUrl !== null) {
             ->verticalCentered()
             ->render() ?></p>
         <?php endif; ?>
+        <?php if (!$product->isOutOfStock()): ?>
         <?= new Form()
             ->post($urlGenerator->generate('shop/cart/add'))
             ->csrf($csrf)
@@ -149,5 +157,8 @@ if ($product->imageUrl !== null) {
         </div>
         <button type="submit" class="btn btn-primary">Add to cart</button>
         <?= new Form()->close() ?>
+        <?php else: ?>
+        <button type="button" class="btn btn-secondary" disabled>Out of stock</button>
+        <?php endif; ?>
     </div>
 </div>

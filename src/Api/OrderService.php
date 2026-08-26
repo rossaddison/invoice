@@ -118,17 +118,22 @@ final class OrderService
     private function createInvoiceAndItems(User $orderUser, int $groupId, Client $client, array $items): ?int
     {
         $invId = null;
-        $this->d->invService->withTransaction(
-            function () use ($orderUser, $groupId, $client, $items, &$invId): void {
-                $invId = $this->createInvoiceShell($orderUser, $client, $groupId);
-                if ($invId === null) {
-                    return;
-                }
-                foreach ($items as $item) {
-                    $this->addOrderItem($invId, $item);
-                }
-            },
-        );
+        try {
+            $this->d->invService->withTransaction(
+                function () use ($orderUser, $groupId, $client, $items, &$invId): void {
+                    $invId = $this->createInvoiceShell($orderUser, $client, $groupId);
+                    if ($invId === null) {
+                        return;
+                    }
+                    foreach ($items as $item) {
+                        $this->addOrderItem($invId, $item);
+                    }
+                },
+            );
+        } catch (InsufficientStockException $e) {
+            $this->d->logger->warning('Webshop checkout: ' . $e->getMessage());
+            return null;
+        }
         if ($invId === null) {
             return null;
         }
@@ -336,12 +341,26 @@ final class OrderService
         return $saved->reqId();
     }
 
-    /** @param array{product_id: int, quantity: float} $item */
+    /**
+     * @param array{product_id: int, quantity: float} $item
+     * @throws InsufficientStockException When this item's quantity would
+     *   sell past Product::availableStock() — see that method's own
+     *   docblock for the reorder_threshold buffer it already accounts for.
+     *   Never possible for an untracked product (availableStock() is null
+     *   there, unlimited, same as today).
+     */
     private function addOrderItem(int $invId, array $item): void
     {
         $product = $this->d->pR->repoProductquery($item['product_id']);
         if ($product === null) {
             return;
+        }
+        $availableStock = $product->availableStock();
+        if ($availableStock !== null && $item['quantity'] > $availableStock) {
+            throw new InsufficientStockException(
+                'Insufficient stock for product #' . $product->reqId()
+                . ': requested ' . $item['quantity'] . ', available ' . $availableStock,
+            );
         }
 
         $invItem = new InvItem();

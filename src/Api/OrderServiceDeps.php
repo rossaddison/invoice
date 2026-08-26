@@ -22,6 +22,7 @@ use App\Invoice\UserClient\UserClientRepository as ucR;
 use App\Invoice\UserInv\UserInvRepository as uiR;
 use App\Invoice\UserInv\UserRbacLinkRepository as urlR;
 use App\User\UserRepository as uR;
+use Psr\Log\LoggerInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Rbac\Manager;
 use Yiisoft\Session\SessionInterface;
@@ -61,6 +62,7 @@ final class OrderServiceDeps
         public readonly AuthService $authService,
         public readonly SessionInterface $session,
         public readonly FormHydrator $formHydrator,
+        public readonly LoggerInterface $logger,
     ) {
     }
 }

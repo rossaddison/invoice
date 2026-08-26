@@ -102,6 +102,18 @@ final readonly class ProductService
         isset($apf['trade_min_order_spend']) && $apf['trade_min_order_spend'] !== '' ?
             $model->setTradeMinOrderSpend((float) $apf['trade_min_order_spend']) :
             $model->setTradeMinOrderSpend(null);
+        // Same real-checkbox-plus-hidden-fallback convention as
+        // available_on_webshop above.
+        isset($apf['track_stock']) ?
+            $model->setTrackStock((bool) $apf['track_stock']) : '';
+        // Same optional-blank-means-null convention as the trade-terms
+        // pair above — a blank reorder_threshold must resolve to null
+        // (no reserved buffer), not 0.00 (a buffer of zero, which would
+        // behave identically to null here but reads misleadingly in the
+        // form afterwards).
+        isset($apf['reorder_threshold']) && $apf['reorder_threshold'] !== '' ?
+            $model->setReorderThreshold((float) $apf['reorder_threshold']) :
+            $model->setReorderThreshold(null);
         isset($apf['provider_name']) ?
             $model->setProviderName((string) $apf['provider_name']) : '';
         isset($apf['product_additional_item_property_name']) ?

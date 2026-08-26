@@ -16,6 +16,7 @@ use App\Invoice\Inv\InvService as IS;
 use App\Invoice\InvAmount\InvAmountRepository as IAR;
 use App\Invoice\InvItem\InvItemRepository as IIR;
 use App\Invoice\Product\ProductRepository as PR;
+use App\Invoice\StockMovement\LowStockNotifier;
 use App\Invoice\StockMovement\StockMovementRepository as SMR;
 use Mockery as m;
 use Testo\Assert;
@@ -108,6 +109,46 @@ final class InvPaymentSettlementServiceTest
         Assert::same(0.00, $invoiceAmountRecord->getBalance());
         Assert::same(30.00, $invoiceAmountRecord->getPaid());
         Assert::same(41.00, $product->getStockQuantity());
+    }
+
+    /**
+     * See LowStockNotifier's own docblock — it decides whether to
+     * actually alert; this only proves recordStockMovementsForSale()
+     * calls it with the correct pre-mutation stock figure (44.00, not the
+     * already-decremented 41.00), for the product it just adjusted.
+     */
+    public function callsLowStockNotifierWithTheStockFigureFromBeforeTheSale(): void
+    {
+        $invoice = new Inv();
+        $invoice->setId(105);
+        $invoice->setStatusId(1);
+        $invoiceAmountRecord = new InvAmount(inv_id: 105, total: 30.00, balance: 30.00);
+
+        $product = $this->trackedProduct(8, 44.00);
+        $item = $this->invItem($product, 3.00);
+
+        /** @var IR&m\MockInterface $iR */
+        $iR = m::mock(IR::class);
+        $iR->shouldReceive('save')->once()->with($invoice);
+        /** @var IAR&m\MockInterface $iaR */
+        $iaR = m::mock(IAR::class);
+        $iaR->shouldReceive('save')->once()->with($invoiceAmountRecord);
+        /** @var IIR&m\MockInterface $iiR */
+        $iiR = m::mock(IIR::class);
+        $iiR->shouldReceive('repoInvquery')->once()->with(105)->andReturn($this->fakeReader([$item]));
+        /** @var PR&m\MockInterface $pR */
+        $pR = m::mock(PR::class);
+        $pR->shouldReceive('save')->once()->with($product);
+        /** @var SMR&m\MockInterface $smR */
+        $smR = m::mock(SMR::class);
+        $smR->shouldReceive('save')->once()->with(m::type(StockMovement::class));
+
+        /** @var LowStockNotifier&m\MockInterface $lowStockNotifier */
+        $lowStockNotifier = m::mock(LowStockNotifier::class);
+        $lowStockNotifier->shouldReceive('notifyIfCrossed')->once()->with($product, 44.00);
+
+        $service = $this->makeService($iR, $iaR, $iiR, $pR, $smR, $lowStockNotifier);
+        $service->markInvoicePaidAndAdjustStock($invoice, $invoiceAmountRecord);
     }
 
     public function honoursAnExplicitPaymentMethod(): void
@@ -209,8 +250,14 @@ final class InvPaymentSettlementServiceTest
         $service->markInvoicePaidAndAdjustStock($invoice, $invoiceAmountRecord);
     }
 
-    private function makeService(IR $iR, IAR $iaR, IIR $iiR, PR $pR, SMR $smR): InvPaymentSettlementService
-    {
+    private function makeService(
+        IR $iR,
+        IAR $iaR,
+        IIR $iiR,
+        PR $pR,
+        SMR $smR,
+        ?LowStockNotifier $lowStockNotifier = null,
+    ): InvPaymentSettlementService {
         /** @var IS&m\MockInterface $invService */
         $invService = m::mock(IS::class);
         /**
@@ -221,8 +268,14 @@ final class InvPaymentSettlementServiceTest
                 $fn();
             });
 
+        if ($lowStockNotifier === null) {
+            /** @var LowStockNotifier&m\MockInterface $lowStockNotifier */
+            $lowStockNotifier = m::mock(LowStockNotifier::class);
+            $lowStockNotifier->shouldReceive('notifyIfCrossed')->byDefault();
+        }
+
         return new InvPaymentSettlementService(
-            new InvPaymentSettlementDeps($iR, $iaR, $iiR, $pR, $smR, $invService),
+            new InvPaymentSettlementDeps($iR, $iaR, $iiR, $pR, $smR, $invService, $lowStockNotifier),
         );
     }
 }

@@ -89,6 +89,7 @@ final class CatalogQueryServiceTest
         $product->shouldReceive('getTradeMinOrderSpend')->andReturn(150.00);
         $product->shouldReceive('getUnit')->andReturn(null);
         $product->shouldReceive('getFamily')->andReturn($family);
+        $product->shouldReceive('availableStock')->andReturn(15.0);
 
         /** @var pR&m\MockInterface $pR */
         $pR = m::mock(pR::class);
@@ -137,6 +138,7 @@ final class CatalogQueryServiceTest
         Assert::same(10, $listing->tradeMinOrderQty);
         Assert::same(150.00, $listing->tradeMinOrderSpend);
         Assert::true($listing->hasTradeTerms());
+        Assert::same(15.0, $listing->availableStock);
     }
 
     public function findReturnsNullWhenTheProductIsNotAvailableOnWebshop(): void
@@ -173,6 +175,7 @@ final class CatalogQueryServiceTest
         $product->shouldReceive('getTradeMinOrderSpend')->andReturn(null);
         $product->shouldReceive('getUnit')->andReturn(null);
         $product->shouldReceive('getFamily')->andReturn(null);
+        $product->shouldReceive('availableStock')->andReturn(null);
 
         /** @var pR&m\MockInterface $pR */
         $pR = m::mock(pR::class);
@@ -231,6 +234,7 @@ final class CatalogQueryServiceTest
         $product->shouldReceive('getTradeMinOrderSpend')->andReturn(null);
         $product->shouldReceive('getUnit')->andReturn(null);
         $product->shouldReceive('getFamily')->andReturn(null);
+        $product->shouldReceive('availableStock')->andReturn(null);
 
         /** @var pR&m\MockInterface $pR */
         $pR = m::mock(pR::class);
@@ -259,6 +263,7 @@ final class CatalogQueryServiceTest
         $a->shouldReceive('getTradeMinOrderSpend')->andReturn(null);
         $a->shouldReceive('getUnit')->andReturn(null);
         $a->shouldReceive('getFamily')->andReturn(null);
+        $a->shouldReceive('availableStock')->andReturn(null);
 
         /** @var Product&m\MockInterface $b */
         $b = m::mock(Product::class);
@@ -272,6 +277,7 @@ final class CatalogQueryServiceTest
         $b->shouldReceive('getTradeMinOrderSpend')->andReturn(null);
         $b->shouldReceive('getUnit')->andReturn(null);
         $b->shouldReceive('getFamily')->andReturn(null);
+        $b->shouldReceive('availableStock')->andReturn(null);
 
         /** @var pR&m\MockInterface $pR */
         $pR = m::mock(pR::class);

@@ -104,4 +104,32 @@ trait ProductTrait4
     {
         $this->stock_quantity = $stock_quantity;
     }
+
+    public function getReorderThreshold(): ?float
+    {
+        return $this->reorder_threshold;
+    }
+
+    public function setReorderThreshold(?float $reorder_threshold): void
+    {
+        $this->reorder_threshold = $reorder_threshold;
+    }
+
+    /**
+     * Single source of truth for "how much of this product can actually be
+     * shown to or bought by the public" — null when stock isn't tracked at
+     * all (unlimited, same as today), otherwise stock_quantity minus the
+     * reserved reorder_threshold buffer, floored at 0 so a product already
+     * inside its own buffer never reads as negative. Every consumer (the
+     * storefront listing, cart, and checkout's own authoritative check)
+     * calls this one method rather than re-deriving the arithmetic — see
+     * $reorder_threshold's own docblock for why the buffer exists.
+     */
+    public function availableStock(): ?float
+    {
+        if (!$this->track_stock) {
+            return null;
+        }
+        return max(0.0, $this->stock_quantity - ($this->reorder_threshold ?? 0.0));
+    }
 }

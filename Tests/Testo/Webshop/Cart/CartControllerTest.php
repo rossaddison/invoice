@@ -8,6 +8,7 @@ use App\Service\WebControllerService;
 use App\Webshop\Cart\CartController;
 use App\Webshop\Cart\CartService;
 use App\Webshop\Catalog\CatalogQueryService;
+use App\Webshop\Catalog\ProductListing;
 use App\Webshop\Currency\CurrencyContext;
 use App\Webshop\Currency\CurrencyInfo;
 use App\Webshop\Currency\CurrencyInfoProvider;
@@ -22,7 +23,9 @@ use Testo\Test;
 use Yiisoft\DataResponse\Formatter\JsonFormatter;
 use Yiisoft\DataResponse\ResponseFactory\JsonResponseFactory;
 use Yiisoft\Router\UrlGeneratorInterface;
+use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
+use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 /**
@@ -32,11 +35,16 @@ use Yiisoft\Yii\View\Renderer\WebViewRenderer;
  * redirect branch this app already had is only re-checked here for the
  * "no json Accept header" case; it isn't otherwise duplicated, since it
  * hasn't changed since the standalone webshop app this was merged from
- * (see docs/WEBSHOP_INPROCESS_MERGE_AUGUST_2026.md).
+ * (see docs/WEBSHOP_INPROCESS_MERGE_AUGUST_2026.md). Stock-clamping
+ * behaviour (both add() and update()) has its own dedicated tests below,
+ * separate from this pre-existing coverage.
  */
 #[Test]
 final class CartControllerTest
 {
+    private const string CART_ADD_URI = '/shop/cart/add';
+    private const string CART_PATH = '/shop/cart';
+
     private function fakeSession(): SessionInterface
     {
         /** @var array<string, mixed> $store */
@@ -79,6 +87,7 @@ final class CartControllerTest
         CartService $cartService,
         ?UrlGeneratorInterface $urlGenerator = null,
         ?CurrencyContext $currency = null,
+        ?CatalogQueryService $catalog = null,
     ): CartController {
         /** @var WebViewRenderer&m\MockInterface $renderer */
         $renderer = m::mock(WebViewRenderer::class);
@@ -88,6 +97,7 @@ final class CartControllerTest
         if ($urlGenerator === null) {
             /** @var UrlGeneratorInterface&m\MockInterface $urlGenerator */
             $urlGenerator = m::mock(UrlGeneratorInterface::class);
+            $urlGenerator->shouldReceive('generate')->andReturn(self::CART_PATH)->byDefault();
         }
 
         $psr17 = new Psr17Factory();
@@ -95,11 +105,26 @@ final class CartControllerTest
         /** @var StorefrontViewParameters&m\MockInterface $chrome */
         $chrome = m::mock(StorefrontViewParameters::class);
 
-        // Never actually called by the update()/remove() actions this
-        // test class covers (see the class docblock) — only index()/
-        // add() touch the catalog, and neither is exercised here.
-        /** @var CatalogQueryService&m\MockInterface $catalog */
-        $catalog = m::mock(CatalogQueryService::class);
+        if ($catalog === null) {
+            // update()/remove() both call catalog->find() now (the new
+            // stock-clamping check) — stubbed to "product not found" by
+            // default so every pre-existing test below (none of which
+            // care about stock) keeps its exact original behaviour: a
+            // null ProductListing means availableStock is null too, so
+            // the new clamp is a no-op. Dedicated stock-clamping tests
+            // pass a real $catalog instead.
+            /** @var CatalogQueryService&m\MockInterface $catalog */
+            $catalog = m::mock(CatalogQueryService::class);
+            $catalog->shouldReceive('find')->andReturn(null)->byDefault();
+        }
+
+        /** @var TranslatorInterface&m\MockInterface $translator */
+        $translator = m::mock(TranslatorInterface::class);
+        $translator->shouldReceive('translate')->andReturnUsing(static fn (string $key): string => $key)->byDefault();
+        /** @var Flash&m\MockInterface $flash */
+        $flash = m::mock(Flash::class);
+        $flash->shouldReceive('add')->byDefault();
+        $flash->shouldReceive('has')->andReturn(false)->byDefault();
 
         return new CartController(
             $renderer,
@@ -113,6 +138,8 @@ final class CartControllerTest
             $currency ?? $this->currencyContext(null, CurrencyPreferenceService::NATIVE),
             $chrome,
             $catalog,
+            $translator,
+            $flash,
         );
     }
 
@@ -210,7 +237,7 @@ final class CartControllerTest
 
         /** @var UrlGeneratorInterface&m\MockInterface $urlGenerator */
         $urlGenerator = m::mock(UrlGeneratorInterface::class);
-        $urlGenerator->shouldReceive('generate')->with('shop/cart/index', [], [], null)->andReturn('/shop/cart');
+        $urlGenerator->shouldReceive('generate')->with('shop/cart/index', [], [], null)->andReturn(self::CART_PATH);
 
         $request = new Psr17Factory()
             ->createServerRequest('POST', '/shop/cart/update')
@@ -219,6 +246,141 @@ final class CartControllerTest
         $response = $this->controller($cartService, $urlGenerator)->update($request);
 
         Assert::same(302, $response->getStatusCode());
-        Assert::same('/shop/cart', $response->getHeaderLine('Location'));
+        Assert::same(self::CART_PATH, $response->getHeaderLine('Location'));
+    }
+
+    private function listing(int $id, float $price, ?float $availableStock): ProductListing
+    {
+        return new ProductListing(
+            id: $id,
+            sku: null,
+            name: 'Widget',
+            description: null,
+            price: $price,
+            unit: null,
+            imageUrl: null,
+            family: null,
+            category: null,
+            subcategory: null,
+            availableStock: $availableStock,
+        );
+    }
+
+    private function catalogFinding(ProductListing $listing): CatalogQueryService
+    {
+        /** @var CatalogQueryService&m\MockInterface $catalog */
+        $catalog = m::mock(CatalogQueryService::class);
+        $catalog->shouldReceive('find')->with($listing->id)->andReturn($listing);
+        return $catalog;
+    }
+
+    public function addClampsToAvailableStockAndFlashesAWarning(): void
+    {
+        $catalog = $this->catalogFinding($this->listing(1, 9.99, availableStock: 3.0));
+        $cartService = new CartService($this->fakeSession());
+
+        /** @var Flash&m\MockInterface $flash */
+        $flash = m::mock(Flash::class);
+        $flash->shouldReceive('has')->andReturn(false);
+        $flash->shouldReceive('add')->once();
+
+        $request = new Psr17Factory()
+            ->createServerRequest('POST', self::CART_ADD_URI)
+            ->withParsedBody(['product_id' => '1', 'quantity' => '5']);
+
+        $controller = $this->controllerWithFlash($cartService, $catalog, $flash);
+        $controller->add($request);
+
+        Assert::same(3.0, $cartService->getItems()[0]->quantity);
+    }
+
+    public function addDoesNotClampOrFlashWhenRequestedQuantityFitsWithinStock(): void
+    {
+        $catalog = $this->catalogFinding($this->listing(1, 9.99, availableStock: 10.0));
+        $cartService = new CartService($this->fakeSession());
+
+        /** @var Flash&m\MockInterface $flash */
+        $flash = m::mock(Flash::class);
+        $flash->shouldNotReceive('add');
+
+        $request = new Psr17Factory()
+            ->createServerRequest('POST', self::CART_ADD_URI)
+            ->withParsedBody(['product_id' => '1', 'quantity' => '5']);
+
+        $controller = $this->controllerWithFlash($cartService, $catalog, $flash);
+        $controller->add($request);
+
+        Assert::same(5.0, $cartService->getItems()[0]->quantity);
+    }
+
+    public function addDoesNotClampWhenStockIsUntracked(): void
+    {
+        $catalog = $this->catalogFinding($this->listing(1, 9.99, availableStock: null));
+        $cartService = new CartService($this->fakeSession());
+
+        $request = new Psr17Factory()
+            ->createServerRequest('POST', self::CART_ADD_URI)
+            ->withParsedBody(['product_id' => '1', 'quantity' => '500']);
+
+        $this->controller($cartService, catalog: $catalog)->add($request);
+
+        Assert::same(500.0, $cartService->getItems()[0]->quantity);
+    }
+
+    public function updateClampsToAvailableStockAndReportsItAsClampedInJson(): void
+    {
+        $catalog = $this->catalogFinding($this->listing(1, 9.99, availableStock: 2.0));
+        $cartService = new CartService($this->fakeSession());
+        $cartService->add(1, 'Widget', 9.99, 1.0);
+
+        $request = $this->jsonRequest()->withParsedBody(['product_id' => '1', 'quantity' => '10']);
+        $response = $this->controller($cartService, catalog: $catalog)->update($request);
+        $data = $this->decode($response);
+
+        Assert::same(2.0, (float) $data['quantity']);
+        Assert::true($data['clamped']);
+    }
+
+    public function updateReportsNotClampedWhenRequestedQuantityFitsWithinStock(): void
+    {
+        $catalog = $this->catalogFinding($this->listing(1, 9.99, availableStock: 10.0));
+        $cartService = new CartService($this->fakeSession());
+        $cartService->add(1, 'Widget', 9.99, 1.0);
+
+        $request = $this->jsonRequest()->withParsedBody(['product_id' => '1', 'quantity' => '4']);
+        $response = $this->controller($cartService, catalog: $catalog)->update($request);
+        $data = $this->decode($response);
+
+        Assert::same(4.0, (float) $data['quantity']);
+        Assert::false($data['clamped']);
+    }
+
+    private function controllerWithFlash(CartService $cartService, CatalogQueryService $catalog, Flash $flash): CartController
+    {
+        /** @var WebViewRenderer&m\MockInterface $renderer */
+        $renderer = m::mock(WebViewRenderer::class);
+        $renderer->shouldReceive('withControllerName')->andReturnSelf();
+        $renderer->shouldReceive('withLayout')->andReturnSelf();
+        /** @var UrlGeneratorInterface&m\MockInterface $urlGenerator */
+        $urlGenerator = m::mock(UrlGeneratorInterface::class);
+        $urlGenerator->shouldReceive('generate')->andReturn(self::CART_PATH);
+        $psr17 = new Psr17Factory();
+        /** @var StorefrontViewParameters&m\MockInterface $chrome */
+        $chrome = m::mock(StorefrontViewParameters::class);
+        /** @var TranslatorInterface&m\MockInterface $translator */
+        $translator = m::mock(TranslatorInterface::class);
+        $translator->shouldReceive('translate')->andReturnUsing(static fn (string $key): string => $key);
+
+        return new CartController(
+            $renderer,
+            new WebControllerService($psr17, $psr17, $urlGenerator),
+            $cartService,
+            new JsonResponseFactory($psr17, new JsonFormatter()),
+            $this->currencyContext(null, CurrencyPreferenceService::NATIVE),
+            $chrome,
+            $catalog,
+            $translator,
+            $flash,
+        );
     }
 }

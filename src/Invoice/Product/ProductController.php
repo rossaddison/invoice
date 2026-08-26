@@ -95,6 +95,9 @@ final class ProductController extends BaseController
             'productCustomValues'  => [],
             'productCustomForm'    => $productCustomForm,
             'formFields'     => $this->formFields,
+            // Nothing to show yet — stock tracking only means anything
+            // once this product actually exists (see edit()'s own value).
+            'stockQuantity'  => null,
         ];
         if ($request->getMethod() === Method::POST) {
             $redirect = $this->handleAddPost($request, $formHydrator, $form, $parameters);
@@ -215,6 +218,10 @@ final class ProductController extends BaseController
             'productCustomValues' => $this->productCustomValues($product_id, $pcR),
             'productCustomForm'   => $productCustomForm,
             'formFields'     => $this->formFields,
+            // Read-only — see Product::$stock_quantity's own docblock,
+            // never bound to ProductForm/ProductService, only ever written
+            // by the StockMovement ledger.
+            'stockQuantity'  => $product->getStockQuantity(),
         ];
         $redirect = null;
         if ($request->getMethod() === Method::POST) {

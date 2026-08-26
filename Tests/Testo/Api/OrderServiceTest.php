@@ -35,6 +35,7 @@ use App\Invoice\UserInv\UserInvRepository as uiR;
 use App\Invoice\UserInv\UserRbacLinkRepository as urlR;
 use App\User\UserRepository as uR;
 use Mockery as m;
+use Psr\Log\LoggerInterface;
 use Testo\Assert;
 use Testo\Test;
 use Yiisoft\FormModel\FormHydrator;
@@ -95,6 +96,12 @@ final class OrderServiceTest
         $product->setTaxRateId(1);
         $product->setUnitId(1);
         $product->setProductPrice(9.99);
+        // Comfortably above every quantity these tests order (2.0) — see
+        // OrderService::addOrderItem()'s new availableStock() check.
+        // track_stock defaults to true and stock_quantity defaults to
+        // 0.00, so without this every order here would now be rejected
+        // as insufficient stock.
+        $product->setStockQuantity(100.0);
         return $product;
     }
 
@@ -341,6 +348,119 @@ final class OrderServiceTest
         Assert::same(902, $invId);
     }
 
+    /**
+     * See App\Api\InsufficientStockException's own docblock — the
+     * invoice shell is already saved by the time addOrderItem() throws
+     * (createInvoiceShell() runs first inside the same withTransaction()
+     * closure), but everything after that — item creation, InvAmount
+     * finalization, and the customer login createInvoiceAndLogIn() would
+     * otherwise do — must never happen. Built with its own minimal mocks
+     * rather than makeService() (whose expectations assume every step of
+     * a successful order all the way through login).
+     */
+    public function createOrderReturnsNullAndNeverLogsInWhenRequestedQuantityExceedsAvailableStock(): void
+    {
+        $client = $this->existingClient(60, 'dave@example.test');
+        $savedInv = $this->savedInv(910);
+
+        $existingLink = new UserClient();
+        $existingLink->setUserId(210);
+        $existingLink->setClientId(60);
+        $daveUser = new User('dave@example.test', 'dave@example.test', 'irrelevant');
+        $this->setPrivateId($daveUser, 210);
+
+        $product = new Product();
+        $product->setId(7);
+        $product->setTaxRateId(1);
+        $product->setUnitId(1);
+        $product->setProductPrice(9.99);
+        // Only 1 in stock — this.items() below requests 2.0.
+        $product->setStockQuantity(1.0);
+
+        /** @var iR&m\MockInterface $iR */
+        $iR = m::mock(iR::class);
+        /** @var iaR&m\MockInterface $iaR */
+        $iaR = m::mock(iaR::class);
+        /** @var pR&m\MockInterface $pR */
+        $pR = m::mock(pR::class);
+        /** @var cR&m\MockInterface $cR */
+        $cR = m::mock(cR::class);
+        /** @var sR&m\MockInterface $sR */
+        $sR = m::mock(sR::class);
+        /** @var uR&m\MockInterface $uR */
+        $uR = m::mock(uR::class);
+        /** @var ucR&m\MockInterface $ucR */
+        $ucR = m::mock(ucR::class);
+        /** @var AuthService&m\MockInterface $authService */
+        $authService = m::mock(AuthService::class);
+        /** @var SessionInterface&m\MockInterface $session */
+        $session = m::mock(SessionInterface::class);
+        /** @var IS&m\MockInterface $invService */
+        $invService = m::mock(IS::class);
+        /** @var InvItemService&m\MockInterface $invItemService */
+        $invItemService = m::mock(InvItemService::class);
+        /** @var FormHydrator&m\MockInterface $formHydrator */
+        $formHydrator = m::mock(FormHydrator::class);
+        /** @var LoggerInterface&m\MockInterface $logger */
+        $logger = m::mock(LoggerInterface::class);
+
+        $cR->shouldReceive('findByEmail')->once()->with('dave@example.test')->andReturn($client);
+        $sR->shouldReceive('getSetting')->with('default_invoice_group')->andReturn('3');
+        $pR->shouldReceive('repoProductquery')->with(7)->andReturn($product);
+        $ucR->shouldReceive('repoUserquery')->once()->with(60)->andReturn($existingLink);
+        $uR->shouldReceive('findById')->with(210)->andReturn($daveUser);
+
+        $formHydrator->shouldReceive('populateAndValidate')->once()->andReturn(true);
+        $invService->shouldReceive('withTransaction')->andReturnUsing(static function (callable $fn): void {
+            $fn();
+        });
+        $invService->shouldReceive('saveInv')->once()->andReturn($savedInv);
+        $iR->shouldReceive('save')->once()->with($savedInv);
+
+        // Never reached — the exception unwinds before item creation,
+        // InvAmount finalization, or login.
+        $invItemService->shouldNotReceive('addInvItemProduct');
+        $iR->shouldNotReceive('repoInvLoadInvAmountquery');
+        $iaR->shouldNotReceive('save');
+        $authService->shouldNotReceive('oauthLogin');
+        $session->shouldNotReceive('set');
+        $logger->shouldReceive('warning')->once()->with(m::on(
+            static fn (string $message): bool => str_contains($message, 'Insufficient stock'),
+        ));
+
+        /** @var gR&m\MockInterface $gR */
+        $gR = m::mock(gR::class);
+        /** @var trR&m\MockInterface $trR */
+        $trR = m::mock(trR::class);
+        /** @var unR&m\MockInterface $unR */
+        $unR = m::mock(unR::class);
+        /** @var iiR&m\MockInterface $iiR */
+        $iiR = m::mock(iiR::class);
+        /** @var iiaR&m\MockInterface $iiaRMock */
+        $iiaRMock = m::mock(iiaR::class);
+        /** @var iias&m\MockInterface $iiasMock */
+        $iiasMock = m::mock(iias::class);
+        $iiaDeps = new IiAddProductDeps($pR, $trR, $iiasMock, $iiaRMock, $sR, $unR);
+        /** @var NumberHelper&m\MockInterface $numberHelper */
+        $numberHelper = m::mock(NumberHelper::class);
+        /** @var uiR&m\MockInterface $uiR */
+        $uiR = m::mock(uiR::class);
+        /** @var urlR&m\MockInterface $urlR */
+        $urlR = m::mock(urlR::class);
+        /** @var Manager&m\MockInterface $manager */
+        $manager = m::mock(Manager::class);
+
+        $service = new OrderService(new OrderServiceDeps(
+            $cR, $pR, $trR, $unR, $iR, $invService, $gR, $iaR, $iiR, $invItemService, $iiaDeps,
+            $numberHelper, $sR, $uR, $uiR, $ucR, $urlR, $manager, $authService, $session, $formHydrator,
+            $logger,
+        ));
+
+        $invId = $service->createOrder($this->customer('dave@example.test'), $this->items());
+
+        Assert::null($invId);
+    }
+
     private function makeService(
         iR $iR,
         iaR $iaR,
@@ -412,9 +532,14 @@ final class OrderServiceTest
         $formHydrator = m::mock(FormHydrator::class);
         $formHydrator->shouldReceive('populateAndValidate')->once()->andReturn(true);
 
+        /** @var LoggerInterface&m\MockInterface $logger */
+        $logger = m::mock(LoggerInterface::class);
+        $logger->shouldReceive('warning')->byDefault();
+
         return new OrderService(new OrderServiceDeps(
             $cR, $pR, $trR, $unR, $iR, $invService, $gR, $iaR, $iiR, $invItemService, $iiaDeps,
             $numberHelper, $sR, $uR, $uiR, $ucR, $urlR, $manager, $authService, $session, $formHydrator,
+            $logger,
         ));
     }
 }

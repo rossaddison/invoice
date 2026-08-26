@@ -7,6 +7,7 @@ namespace App\Invoice\Inv;
 use App\Invoice\InvAmount\InvAmountRepository as iaR;
 use App\Invoice\InvItem\InvItemRepository as iiR;
 use App\Invoice\Product\ProductRepository as pR;
+use App\Invoice\StockMovement\LowStockNotifier;
 use App\Invoice\StockMovement\StockMovementRepository as smR;
 
 /**
@@ -24,6 +25,7 @@ final class InvPaymentSettlementDeps
         public readonly pR $pR,
         public readonly smR $smR,
         public readonly InvService $invService,
+        public readonly LowStockNotifier $lowStockNotifier,
     ) {
     }
 }

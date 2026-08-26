@@ -117,8 +117,10 @@ final readonly class InvPaymentSettlementService
             $movement->setInv($invoice);
             $this->d->smR->save($movement);
 
-            $product->setStockQuantity($product->getStockQuantity() - $quantity);
+            $stockBeforeSale = $product->getStockQuantity();
+            $product->setStockQuantity($stockBeforeSale - $quantity);
             $this->d->pR->save($product);
+            $this->d->lowStockNotifier->notifyIfCrossed($product, $stockBeforeSale);
         }
     }
 }

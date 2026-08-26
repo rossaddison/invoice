@@ -137,6 +137,7 @@ final readonly class ProductFormFields
             'retail_price' => $form->retail_price,
             'trade_min_order_qty' => $form->trade_min_order_qty,
             'trade_min_order_spend' => $form->trade_min_order_spend,
+            'reorder_threshold' => $form->reorder_threshold,
             'product_price_base_quantity' => $form->product_price_base_quantity,
             'product_sii_id' => $form->product_sii_id,
             'product_sii_schemeid' => $form->product_sii_schemeid,
@@ -225,6 +226,52 @@ final readonly class ProductFormFields
             . '<div class="form-text">'
             . Html::encode($this->translator->translate('product.availability.hint'))
             . '</div>'
+            . '</div>';
+    }
+
+    /**
+     * Stock-tracking toggle — a plain checkbox with the hidden '0'
+     * fallback convention ProductService::saveProduct()'s isset()-only
+     * check for track_stock expects (same shape as
+     * partial_settings_front_page.php's own checkboxes and this class's
+     * own productAvailabilityField() docblock note). Posts as
+     * ProductForm[track_stock].
+     */
+    public function productStockTrackingField(ProductForm $form): string
+    {
+        $name = $form->getFormName() . '[track_stock]';
+        $id = 'product-track-stock';
+
+        return '<div class="mb-3 form-check">'
+            . Html::hiddenInput($name, '0')->render()
+            . Html::checkbox($name, '1', [
+                'id' => $id,
+                'class' => 'form-check-input',
+            ])->checked($form->track_stock)->render()
+            . '<label class="form-check-label" for="' . Html::encode($id) . '">'
+            . Html::encode($this->translator->translate('product.track.stock'))
+            . '</label>'
+            . '</div>';
+    }
+
+    /**
+     * Current stock — plain text, never a form input: Product::$stock_quantity
+     * is a StockMovement-ledger cache, never editable directly (see that
+     * property's own docblock). Null (a not-yet-saved product on the add()
+     * screen) shows a placeholder instead of a number that would otherwise
+     * misleadingly read as "0 in stock".
+     */
+    public function productStockQuantityDisplay(?float $stockQuantity): string
+    {
+        $value = $stockQuantity === null
+            ? $this->translator->translate('product.stock.quantity.not.yet.available')
+            : $this->settingRepository->formatAmount($stockQuantity);
+
+        return '<div class="mb-3">'
+            . '<label class="form-label d-block">'
+            . Html::encode($this->translator->translate('product.stock.quantity'))
+            . '</label>'
+            . '<span class="form-control-plaintext">' . Html::encode($value) . '</span>'
             . '</div>';
     }
 
