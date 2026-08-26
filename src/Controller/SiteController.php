@@ -32,44 +32,68 @@ final class SiteController
         return $this->webViewRenderer->render('index');
     }
 
-    public function about(): Response
-    {
-        return $this->webViewRenderer->render('about');
+    /**
+     * Nine near-identical "lonely page" actions below (about, accreditations,
+     * gallery, team, pricing, privacypolicy, termsofservice, testimonial,
+     * contact) all gated the same way as gatewayStatus() -- see that
+     * method's own docblock for why. Previously only LayoutViewInjection/
+     * main.php's `no_front_X_page` reads hid these pages' navbar links
+     * while the routes themselves stayed reachable by direct URL (found
+     * live 2026-08-26, starting from the same gap already fixed for
+     * `no_front_webshop_page` -- see WebshopAvailabilityMiddleware). Kept
+     * as one shared private helper rather than 9 copies of the same
+     * if/return, per this project's own duplication-reduction convention.
+     */
+    private function renderUnlessDisabled(
+        string $view,
+        string $settingKey,
+        sR $sR,
+        WebControllerService $webService,
+    ): Response {
+        if ($sR->getSetting($settingKey) == '1') {
+            return $webService->getNotFoundResponse();
+        }
+        return $this->webViewRenderer->render($view);
     }
 
-    public function accreditations(): Response
+    public function about(sR $sR, WebControllerService $webService): Response
     {
-        return $this->webViewRenderer->render('accreditations');
+        return $this->renderUnlessDisabled('about', 'no_front_about_page', $sR, $webService);
     }
 
-    public function gallery(): Response
+    public function accreditations(sR $sR, WebControllerService $webService): Response
     {
-        return $this->webViewRenderer->render('gallery');
+        return $this->renderUnlessDisabled('accreditations', 'no_front_accreditations_page', $sR, $webService);
     }
 
-    public function team(): Response
+    public function gallery(sR $sR, WebControllerService $webService): Response
     {
-        return $this->webViewRenderer->render('team');
+        return $this->renderUnlessDisabled('gallery', 'no_front_gallery_page', $sR, $webService);
     }
 
-    public function pricing(): Response
+    public function team(sR $sR, WebControllerService $webService): Response
     {
-        return $this->webViewRenderer->render('pricing');
+        return $this->renderUnlessDisabled('team', 'no_front_team_page', $sR, $webService);
     }
 
-    public function privacypolicy(): Response
+    public function pricing(sR $sR, WebControllerService $webService): Response
     {
-        return $this->webViewRenderer->render('privacypolicy');
+        return $this->renderUnlessDisabled('pricing', 'no_front_pricing_page', $sR, $webService);
     }
 
-    public function termsofservice(): Response
+    public function privacypolicy(sR $sR, WebControllerService $webService): Response
     {
-        return $this->webViewRenderer->render('termsofservice');
+        return $this->renderUnlessDisabled('privacypolicy', 'no_front_privacy_policy_page', $sR, $webService);
     }
 
-    public function testimonial(): Response
+    public function termsofservice(sR $sR, WebControllerService $webService): Response
     {
-        return $this->webViewRenderer->render('testimonial');
+        return $this->renderUnlessDisabled('termsofservice', 'no_front_terms_of_service_page', $sR, $webService);
+    }
+
+    public function testimonial(sR $sR, WebControllerService $webService): Response
+    {
+        return $this->renderUnlessDisabled('testimonial', 'no_front_testimonial_page', $sR, $webService);
     }
 
     public function oauth2autherror(#[RouteArgument('message')] string $message): Response
@@ -97,9 +121,15 @@ final class SiteController
         return $this->webViewRenderer->render('emailnotverified');
     }
 
-    public function contact(): Response
+    public function contact(sR $sR, WebControllerService $webService): Response
     {
-        return $this->webViewRenderer->render('contact');
+        // Gated by no_front_contact_us_page, not no_front_contact_details_page
+        // -- main.php's menu.contact.us NavLink is the only one of the two
+        // that actually points at this route (see its own noFrontPageContactUs
+        // check); no_front_contact_details_page has no associated view or
+        // route anywhere in this app -- its main.php docblock @var is
+        // declared but never read, a separate, pre-existing dead setting.
+        return $this->renderUnlessDisabled('contact', 'no_front_contact_us_page', $sR, $webService);
     }
 
     /**
