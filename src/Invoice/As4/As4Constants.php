@@ -51,6 +51,22 @@ class As4Constants
         'busdox-docid-qns::urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote' .
         '##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1';
 
+    // Peppol BIS 65 Advanced Ordering — process and document type identifiers for the
+    // OrderResponseAdvanced this app sends back to a buyer (see App\Invoice\Ubl\Schema's own
+    // ORDER_RESPONSE_ADVANCED_* constants, both confirmed against docs.peppol.eu). The
+    // PEPPOL_PROCESS_ADVANCED_ORDERING value below is confirmed (it's the transaction's own
+    // ProfileID). PEPPOL_DOCTYPE_ORDER_RESPONSE_ADVANCED is *not* independently confirmed from a
+    // live docs.peppol.eu page for T116 (that page 404'd) — it is constructed by the same
+    // busdox-docid-qns pattern as PEPPOL_DOCTYPE_INVOICE_BIS3 above, from the confirmed
+    // namespace + CustomizationID. Verify against a real SMP lookup before relying on it in
+    // production — the whole outbound AS4 subsystem currently only runs in bilateral test mode
+    // (StaticAs4SmpResolver), same caveat as everywhere else in this file.
+    public const string PEPPOL_PROCESS_ADVANCED_ORDERING =
+        'urn:fdc:peppol.eu:poacc:bis:advanced_ordering:3';
+    public const string PEPPOL_DOCTYPE_ORDER_RESPONSE_ADVANCED =
+        'busdox-docid-qns::urn:oasis:names:specification:ubl:schema:xsd:OrderResponse-2::OrderResponse' .
+        '##urn:fdc:peppol.eu:poacc:trns:order_response_advanced:3::2.1';
+
     // ebMS3 party roles (composed from EBMS3_NS to avoid hardcoded URIs)
     public const string ROLE_INITIATOR = self::EBMS3_NS . 'initiator';
     public const string ROLE_RESPONDER = self::EBMS3_NS . 'responder';

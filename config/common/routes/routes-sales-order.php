@@ -70,5 +70,25 @@ Route::get(
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([SalesOrderController::class, 'changeStatus'])
                 ->name('salesorder/changeStatus'),
+
+            Route::methods([Method::GET, Method::POST], '/salesorder/sendOrderResponse/{id}')
+                ->name('salesorder/sendOrderResponse')
+                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
+                ->action([SalesOrderController::class, 'sendOrderResponse']),
+
+            Route::get('/salesorder/previewOrderResponse/{id}')
+                ->name('salesorder/previewOrderResponse')
+                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
+                ->action([SalesOrderController::class, 'previewOrderResponse']),
+
+            Route::methods([Method::GET, Method::POST], '/salesorder/sendOrderResponsePerLine/{id}')
+                ->name('salesorder/sendOrderResponsePerLine')
+                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
+                ->action([SalesOrderController::class, 'sendOrderResponsePerLine']),
+
+            Route::get('/salesorder/previewOrderResponsePerLine/{id}')
+                ->name('salesorder/previewOrderResponsePerLine')
+                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
+                ->action([SalesOrderController::class, 'previewOrderResponsePerLine']),
         ), // invoice
 ];

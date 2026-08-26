@@ -34,6 +34,9 @@ use App\Invoice\Helpers\CountryHelper;
  * @var string $quoteNumber
  * @var string $modal_salesorder_to_pdf
  * @var string $modal_so_to_invoice
+ * @var string $modal_acknowledge_order_response
+ * @var string $modal_send_order_response_per_line
+ * @var bool $clientHasPeppol
  * @var string $partial_item_table
  * @var string $partial_quote_delivery_location
  * @var string $view_custom_fields
@@ -53,6 +56,8 @@ $countryhelper = new CountryHelper();
 
 echo $modal_salesorder_to_pdf;
 echo $modal_so_to_invoice;
+echo $modal_acknowledge_order_response;
+echo $modal_send_order_response_per_line;
 
 echo H::openTag('div', ['class' => 'card']); //0
  echo H::openTag('div', ['class' => 'card-header']); //1
@@ -71,6 +76,13 @@ echo H::openTag('div', ['class' => 'card']); //0
    echo $translator->translate('salesorder');
    $soNumber = $so->getNumber();
    echo null !== $soNumber ? ' #' . $soNumber : $so->reqId();
+   $peppolResponseCode = $so->getPeppolOrderResponseCode();
+   if (null !== $peppolResponseCode) {
+    echo ' ' . H::tag('span', H::encode($peppolResponseCode), [
+     'class' => 'badge bg-info',
+     'title' => $translator->translate('salesorder.peppol.response.sent'),
+    ]);
+   }
   echo H::closeTag('h1'); //2
   echo H::tag('br', '');
   echo H::openTag('div', ['class' => 'headerbar-item float-start btn-group']); //2
@@ -139,6 +151,34 @@ echo H::openTag('div', ['class' => 'card']); //0
         echo H::closeTag('a'); //6
        echo H::closeTag('li'); //5
       }
+     }
+     // Only a SalesOrder from an inbound Peppol Order can be answered this
+     // way -- gated on the client having a ClientPeppol registration (no
+     // dedicated "came from Peppol" flag exists) -- and only before a
+     // response has already been sent.
+     if ($clientHasPeppol && $invEdit && $so->getPeppolOrderResponseCode() === null) {
+      echo H::openTag('li'); //5
+       echo H::openTag('a', [
+        'href' => '#send-order-response',
+        'data-bs-toggle' => 'modal',
+        'class' => $dropdownItem,
+       ]); //6
+        echo H::openTag('i', ['class' => 'bi bi-send-check']); //7
+        echo H::closeTag('i'); //7
+        echo ' ' . $translator->translate('salesorder.peppol.response.send');
+       echo H::closeTag('a'); //6
+      echo H::closeTag('li'); //5
+      echo H::openTag('li'); //5
+       echo H::openTag('a', [
+        'href' => '#acknowledge-order-response',
+        'data-bs-toggle' => 'modal',
+        'class' => $dropdownItem,
+       ]); //6
+        echo H::openTag('i', ['class' => 'bi bi-reply']); //7
+        echo H::closeTag('i'); //7
+        echo ' ' . $translator->translate('salesorder.peppol.response.acknowledge');
+       echo H::closeTag('a'); //6
+      echo H::closeTag('li'); //5
      }
     echo H::closeTag('ul'); //4
    echo H::closeTag('div'); //3

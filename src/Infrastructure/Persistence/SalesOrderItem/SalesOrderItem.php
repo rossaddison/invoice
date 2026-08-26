@@ -88,6 +88,14 @@ class SalesOrderItem
         private ?int $task_id = null,
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $product_unit_id = null,
+        // Peppol BIS Advanced Ordering's per-line cbc:LineStatusCode --
+        // see App\Invoice\Ubl\OrderResponseLineStatusCode. Deliberately
+        // orthogonal to SalesOrder.peppol_order_response_code, the same
+        // way that column is orthogonal to $status_id (see its own
+        // comment): null means either "not part of a Peppol-sourced
+        // order" or "no per-line OrderResponseAdvanced sent yet".
+        #[Column(type: 'string(2)', nullable: true)]
+        private ?string $peppol_line_response_code = null,
     ) {
         $this->date_added = new DateTimeImmutable();
     }

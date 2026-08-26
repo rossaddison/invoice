@@ -71,4 +71,14 @@ trait SalesOrderItemTrait3
     {
         $this->product_unit_id = $product_unit_id;
     }
+
+    public function getPeppolLineResponseCode(): ?string
+    {
+        return $this->peppol_line_response_code;
+    }
+
+    public function setPeppolLineResponseCode(?string $peppol_line_response_code): void
+    {
+        $this->peppol_line_response_code = $peppol_line_response_code;
+    }
 }

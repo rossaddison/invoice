@@ -101,7 +101,12 @@ class SalesOrder
     private DateTimeImmutable $date_expires;
 
     public function __construct(
-        #[Column(type: 'integer(11)', nullable: false, default: 0)]
+        // nullable: true here to match the BelongsTo(Quote::class, nullable: true)
+        // relation above -- previously nullable: false, which conflicted with that
+        // relation and with the real DB column (nullable since the Phase 1 migration),
+        // and made Cycle's schema sync try to ALTER it back to NOT NULL every time it
+        // ran, which fails because it's used in a foreign key constraint (MySQL 1832).
+        #[Column(type: 'integer(11)', nullable: true)]
         private ?int $quote_id = null,
         #[Column(type: 'integer(11)', nullable: true, default: 0)]
         private ?int $inv_id = null,

@@ -2406,6 +2406,29 @@ prior to importing and no existing documents e.g. Invoices.',
   'salesorder.invoice.number' => 'Invoice Number',
   'salesorder.number' => 'Sales Order Number',
   'salesorder.number.status' => 'Sales Order No. Status',
+  'salesorder.peppol.response.ab' => 'Acknowledged -- received, not yet processed',
+  'salesorder.peppol.response.acknowledge' => 'Acknowledge Only',
+  'salesorder.peppol.response.acknowledge.description' => 'Sends a whole-order'
+    . ' "received, not yet processed" reply, without deciding any line yet.'
+    . ' Use "Send Peppol Order Response" instead once you\'re ready to accept,'
+    . ' reject or change individual lines.',
+  'salesorder.peppol.response.ap' => 'Accepted',
+  'salesorder.peppol.response.ca' => 'Accepted with changes',
+  'salesorder.peppol.response.failed' => 'Could not send the Peppol order response.',
+  'salesorder.peppol.response.failed.no.client' =>
+    'Could not send the Peppol order response: Sales Order has no Client.',
+  'salesorder.peppol.response.failed.no.peppol' => 'Could not send the Peppol order response:'
+    . ' Client has no Peppol registration.',
+  'salesorder.peppol.response.linestatus.accepted' => 'Accepted',
+  'salesorder.peppol.response.linestatus.added' => 'Added',
+  'salesorder.peppol.response.linestatus.alreadydelivered' => 'Already delivered',
+  'salesorder.peppol.response.linestatus.changed' => 'Changed',
+  'salesorder.peppol.response.linestatus.rejected' => 'Rejected',
+  'salesorder.peppol.response.perline' => 'Peppol Order Response',
+  'salesorder.peppol.response.preview' => 'Preview XML',
+  'salesorder.peppol.response.re' => 'Rejected',
+  'salesorder.peppol.response.send' => 'Send Peppol Order Response',
+  'salesorder.peppol.response.sent' => 'Peppol order response sent',
   'salesorder.password' => 'Sales Order Password',
   'salesorder.payment.terms' => 'Sales Order Payment Terms eg.'
     . ' Please pay within 30 days',

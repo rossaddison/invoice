@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrder;
 
+use App\Invoice\ClientPeppol\ClientPeppolRepository as CpR;
 use App\Invoice\CustomField\CustomFieldRepository as CFR;
 use App\Invoice\CustomValue\CustomValueRepository as CVR;
 use App\Invoice\Group\GroupRepository as GR;
@@ -18,6 +19,7 @@ final class SoViewMetaDeps
         public readonly GR $gR,
         public readonly InvRepo $invRepo,
         public readonly SettingRepository $settingRepository,
+        public readonly CpR $cpR,
     ) {
     }
 }
